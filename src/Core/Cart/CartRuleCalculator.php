@@ -19,6 +19,12 @@ use PrestaShopDatabaseException;
 class CartRuleCalculator
 {
     /**
+     * reduction_product value meaning the amount reduction applies to the whole order
+     * (as opposed to a specific product id, -1 for the cheapest or -2 for a selection).
+     */
+    private const REDUCTION_ON_WHOLE_ORDER = 0;
+
+    /**
      * @var Calculator
      */
     protected $calculator;
@@ -269,6 +275,8 @@ class CartRuleCalculator
             // apply weighted discount:
             // on each line we apply a part of the discount corresponding to discount*rowWeight/total
             $taxRate = 0;
+            $lastConcernedRow = null;
+            $appliedDiscountTaxIncl = $appliedDiscountTaxExcl = 0;
             foreach ($concernedRows as $concernedRow) {
                 // Get current line tax rate
                 $taxRate = $this->getTaxRateFromRow($concernedRow);
@@ -303,6 +311,35 @@ class CartRuleCalculator
 
                 // Apply the discount amount
                 $cartRuleData->addDiscountApplied($amount);
+
+                $appliedDiscountTaxIncl += $discountAmountTaxIncl;
+                $appliedDiscountTaxExcl += $discountAmountTaxExcl;
+                $lastConcernedRow = $concernedRow;
+            }
+
+            // When an order-level amount discount is greater than or equal to the whole
+            // products total, the discount is distributed row by row on each row's rounded
+            // final price. The sum of those per-row rounded amounts can fall a fraction short
+            // of the (unrounded) products total the cart total is subtracted from, leaving a
+            // residual cent on an order that should be free (see #39436). Offset that
+            // remainder on the last concerned row so the discount fully covers the products.
+            $productsTotal = $cartRule->reduction_tax ? $totalTaxIncl : $totalTaxExcl;
+            if ($lastConcernedRow !== null
+                && $cartRule->reduction_product == self::REDUCTION_ON_WHOLE_ORDER
+                && $totalDiscountConverted >= $productsTotal
+            ) {
+                $rowsTotalTaxIncl = $rowsTotalTaxExcl = 0;
+                foreach ($concernedRows as $concernedRow) {
+                    $rowsTotalTaxIncl += $concernedRow->getInitialTotalPrice()->getTaxIncluded();
+                    $rowsTotalTaxExcl += $concernedRow->getInitialTotalPrice()->getTaxExcluded();
+                }
+                $remainderTaxIncl = max(0, $rowsTotalTaxIncl - $appliedDiscountTaxIncl);
+                $remainderTaxExcl = max(0, $rowsTotalTaxExcl - $appliedDiscountTaxExcl);
+                if ($remainderTaxIncl > 0 || $remainderTaxExcl > 0) {
+                    $remainder = new AmountImmutable($remainderTaxIncl, $remainderTaxExcl);
+                    $lastConcernedRow->applyFlatDiscount($remainder);
+                    $cartRuleData->addDiscountApplied($remainder);
+                }
             }
 
             if ($this->isDiscountFeatureFlagEnabled() && $cartRule->getType() === DiscountType::ORDER_LEVEL) {
