@@ -802,18 +802,32 @@ abstract class PaymentModuleCore extends Module
             // otherwise keep current_state = 0, which the back office then renders with
             // the first status pre-selected. Move each one to the payment error status
             // so the merchant can spot and handle it.
-            $errorState = (int) Configuration::get('PS_OS_ERROR');
-            if ($errorState && !empty($order_list)) {
-                foreach ($order_list as $brokenOrder) {
-                    // Skip orders that never got persisted or already have a status.
-                    if (!Validate::isLoadedObject($brokenOrder) || (int) $brokenOrder->current_state) {
-                        continue;
+            try {
+                $errorState = (int) Configuration::get('PS_OS_ERROR');
+                if ($errorState) {
+                    /** @var Order $brokenOrder */
+                    foreach (Order::getByReference($reference) as $brokenOrder) {
+                        if (!Validate::isLoadedObject($brokenOrder)
+                            || (int) $brokenOrder->id_cart !== (int) $id_cart
+                            || (int) $brokenOrder->current_state
+                        ) {
+                            continue;
+                        }
+                        $errorHistory = new OrderHistory();
+                        $errorHistory->id_order = (int) $brokenOrder->id;
+                        $errorHistory->changeIdOrderState($errorState, $brokenOrder, true);
+                        $errorHistory->add();
                     }
-                    $errorHistory = new OrderHistory();
-                    $errorHistory->id_order = (int) $brokenOrder->id;
-                    $errorHistory->changeIdOrderState($errorState, $brokenOrder, true);
-                    $errorHistory->add();
                 }
+            } catch (Throwable $recoveryException) {
+                PrestaShopLogger::addLog(
+                    'PaymentModule::validateOrder - Unable to set the payment error status on the incomplete order(s): ' . $recoveryException->getMessage(),
+                    3,
+                    null,
+                    'Cart',
+                    (int) $id_cart,
+                    true
+                );
             }
 
             // Re-throw so the existing error flow (logging, 500 page) stays unchanged.
