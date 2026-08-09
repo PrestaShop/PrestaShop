@@ -1601,7 +1601,7 @@ class CartRuleCore extends ObjectModel
             // Discount (%) on the cheapest product
             if ((float) $this->reduction_percent && $this->reduction_product == -1) {
                 // First search for cheapest product
-                $cheapestProduct = $this->getCheapestProduct($all_products, $package_products, $use_tax);
+                $cheapestProduct = $this->getCheapestProduct($all_products, $package_products, $use_tax, $context->cart);
                 if ($cheapestProduct) {
                     $cheapestProductPrice = $use_tax ? $cheapestProduct['price_with_reduction'] : $cheapestProduct['price_with_reduction_without_tax'];
                     // For product level discount, the percent discount is applied on all targeted products
@@ -1669,7 +1669,7 @@ class CartRuleCore extends ObjectModel
                 if (self::isDiscountFeatureFlagEnabled() && $this->getType() === DiscountType::PRODUCT_LEVEL && ($this->reduction_product == -1 || $this->reduction_product == -2)) {
                     // Find matching products
                     if ($this->reduction_product == -1) {
-                        $cheapestProduct = $this->getCheapestProduct($all_products, $package_products, $use_tax);
+                        $cheapestProduct = $this->getCheapestProduct($all_products, $package_products, $use_tax, $context->cart);
                         $selectedProducts = $cheapestProduct ? [$cheapestProduct] : [];
                     } else {
                         $selectedProducts = $this->getProductsMatchingSelection($package_products, $context->cart);
@@ -1839,11 +1839,25 @@ class CartRuleCore extends ObjectModel
         return $reduction_value;
     }
 
-    protected function getCheapestProduct(array $allProducts, array $packageProducts, bool $useTax): ?array
+    protected function getCheapestProduct(array $allProducts, array $packageProducts, bool $useTax, ?Cart $cart = null): ?array
     {
+        // Gift rows keep their catalog price: skip them unless some units were bought
+        $giftedQuantities = [];
+        if ($cart !== null && !empty($cart->getOrderedCartRulesIds(CartRule::FILTER_ACTION_GIFT))) {
+            foreach ($cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $giftRule) {
+                $giftKey = (int) $giftRule['gift_product'] . '-' . (int) $giftRule['gift_product_attribute'];
+                $giftedQuantities[$giftKey] = ($giftedQuantities[$giftKey] ?? 0) + 1;
+            }
+        }
+
         $minPrice = false;
         $cheapestProduct = null;
         foreach ($allProducts as $product) {
+            $giftKey = (int) $product['id_product'] . '-' . (int) ($product['id_product_attribute'] ?? 0);
+            if (empty($product['id_customization']) && ($giftedQuantities[$giftKey] ?? 0) >= (int) $product['cart_quantity']) {
+                continue;
+            }
+
             $price = $useTax ? $product['price_with_reduction'] : $product['price_with_reduction_without_tax'];
             if ($price > 0 && ($minPrice === false || $minPrice > $price) && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                 $minPrice = $price;

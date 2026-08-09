@@ -355,13 +355,39 @@ class CartRuleCalculator
         return $concernedRows;
     }
 
+    /**
+     * @return array<string, int> given away quantity, keyed by "id_product-id_product_attribute"
+     */
+    protected function getGiftedQuantities(): array
+    {
+        // Not iterating the collection, which would move the cursor of applyCartRules()
+        $giftedQuantities = [];
+        foreach ($this->cartRules->getCartRules() as $cartRuleData) {
+            $cartRule = $cartRuleData->getCartRule();
+            if (!(int) $cartRule->gift_product) {
+                continue;
+            }
+            $giftKey = (int) $cartRule->gift_product . '-' . (int) $cartRule->gift_product_attribute;
+            $giftedQuantities[$giftKey] = ($giftedQuantities[$giftKey] ?? 0) + 1;
+        }
+
+        return $giftedQuantities;
+    }
+
     protected function getCheapestCartRow(CartRuleData $cartRuleData): ?CartRow
     {
         /** @var CartRow|null $cartRowCheapest */
         $cartRowCheapest = null;
         $cartRule = $cartRuleData->getCartRule();
+        $giftedQuantities = $this->getGiftedQuantities();
         foreach ($this->cartRows as $cartRow) {
             $product = $cartRow->getRowData();
+            // Gift rows keep their catalog price: skip them unless some units were bought
+            $giftKey = (int) $product['id_product'] . '-' . (int) $product['id_product_attribute'];
+            if (empty($product['id_customization']) && ($giftedQuantities[$giftKey] ?? 0) >= (int) $product['cart_quantity']) {
+                continue;
+            }
+
             if (
                 (
                     ($cartRule->reduction_exclude_special && !$product['reduction_applies'])
