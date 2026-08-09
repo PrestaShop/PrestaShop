@@ -984,7 +984,7 @@ class CategoryCore extends ObjectModel
             return false;
         }
 
-        $front = in_array($context->controller->controller_type, ['front', 'modulefront']);
+        $front = in_array($context->controller?->controller_type, ['front', 'modulefront']);
         $idSupplier = (int) Tools::getValue('id_supplier');
 
         /* Return only the number of products */
