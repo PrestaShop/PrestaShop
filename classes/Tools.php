@@ -3483,7 +3483,12 @@ exit;
     {
         $file_attachment = null;
         if (isset($_FILES[$input]['name']) && !empty($_FILES[$input]['name']) && !empty($_FILES[$input]['tmp_name'])) {
-            $file_attachment['rename'] = uniqid() . Tools::strtolower(substr($_FILES[$input]['name'], -5));
+            $extension = preg_replace(
+                '/[^a-z0-9]/',
+                '',
+                Tools::strtolower(pathinfo($_FILES[$input]['name'], PATHINFO_EXTENSION))
+            );
+            $file_attachment['rename'] = uniqid() . ($extension !== '' ? '.' . $extension : '');
             if ($return_content) {
                 $file_attachment['content'] = file_get_contents($_FILES[$input]['tmp_name']);
             }
