@@ -88,6 +88,15 @@ class AddOrderCartRuleType extends AbstractType
                     'message' => $this->trans('Discount value must be a number', [], 'Admin.Notifications.Error'),
                 ]),
             ])
+            ->add('value_tax_included', ChoiceType::class, [
+                'choices' => [
+                    $this->trans('Tax included', [], 'Admin.Global') => 1,
+                    $this->trans('Tax excluded', [], 'Admin.Global') => 0,
+                ],
+                'data' => 1,
+                'required' => false,
+                'placeholder' => false,
+            ])
             ->add('invoice_id', ChoiceType::class, [
                 'choices' => $invoices,
                 'required' => false,
