@@ -148,7 +148,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
 
             // if rounding type is set to "per item" we must round the unit price now, otherwise values won't match
             // the totals in the order summary
-            if ((int) $order->round_type === Order::ROUND_ITEM) {
+            $roundsPerItem = (int) $order->round_type === Order::ROUND_ITEM;
+            if ($roundsPerItem) {
                 $unitPrice = (new DecimalNumber((string) $unitPrice))->round($precision, $this->getNumberRoundMode());
             }
 
@@ -229,8 +230,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $totalPriceFormatted,
                 $product['current_stock'],
                 $imagePath,
-                (new DecimalNumber((string) $product['unit_price_tax_excl']))->round($precision, $this->getNumberRoundMode()),
-                (new DecimalNumber((string) $product['unit_price_tax_incl']))->round($precision, $this->getNumberRoundMode()),
+                $this->roundUnitPriceIfNeeded((string) $product['unit_price_tax_excl'], $roundsPerItem, $precision),
+                $this->roundUnitPriceIfNeeded((string) $product['unit_price_tax_incl'], $roundsPerItem, $precision),
                 (string) $product['tax_rate'],
                 $this->locale->formatPrice($product['amount_refunded'], $currency->iso_code),
                 $product['product_quantity_refunded'] + $product['product_quantity_return'],
@@ -259,6 +260,15 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         }
 
         return new OrderProductsForViewing($productsForViewing);
+    }
+
+    private function roundUnitPriceIfNeeded(string $unitPrice, bool $roundsPerItem, int $precision): string
+    {
+        if (!$roundsPerItem) {
+            return (string) new DecimalNumber($unitPrice);
+        }
+
+        return (string) (new DecimalNumber($unitPrice))->round($precision, $this->getNumberRoundMode());
     }
 
     /**
