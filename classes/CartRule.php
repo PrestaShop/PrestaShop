@@ -1601,7 +1601,7 @@ class CartRuleCore extends ObjectModel
             // Discount (%) on the cheapest product
             if ((float) $this->reduction_percent && $this->reduction_product == -1) {
                 // First search for cheapest product
-                $cheapestProduct = $this->getCheapestProduct($all_products, $package_products, $use_tax);
+                $cheapestProduct = $this->getCheapestProduct($all_products, $package_products, $use_tax, $context->cart);
                 if ($cheapestProduct) {
                     $cheapestProductPrice = $use_tax ? $cheapestProduct['price_with_reduction'] : $cheapestProduct['price_with_reduction_without_tax'];
                     // For product level discount, the percent discount is applied on all targeted products
@@ -1669,7 +1669,7 @@ class CartRuleCore extends ObjectModel
                 if (self::isDiscountFeatureFlagEnabled() && $this->getType() === DiscountType::PRODUCT_LEVEL && ($this->reduction_product == -1 || $this->reduction_product == -2)) {
                     // Find matching products
                     if ($this->reduction_product == -1) {
-                        $cheapestProduct = $this->getCheapestProduct($all_products, $package_products, $use_tax);
+                        $cheapestProduct = $this->getCheapestProduct($all_products, $package_products, $use_tax, $context->cart);
                         $selectedProducts = $cheapestProduct ? [$cheapestProduct] : [];
                     } else {
                         $selectedProducts = $this->getProductsMatchingSelection($package_products, $context->cart);
@@ -1839,11 +1839,29 @@ class CartRuleCore extends ObjectModel
         return $reduction_value;
     }
 
-    protected function getCheapestProduct(array $allProducts, array $packageProducts, bool $useTax): ?array
+    protected function getCheapestProduct(array $allProducts, array $packageProducts, bool $useTax, ?Cart $cart = null): ?array
     {
+        // A product given away by another cart rule costs the customer nothing, so it must not be picked
+        // as the cheapest one. Its row still carries the catalog price, which the price test below cannot
+        // see, so the given away quantity is resolved from the gift rules applied to the cart. A line is
+        // only skipped when every unit of it is a gift, so a product the customer also paid for stays
+        // eligible.
+        $giftedQuantities = [];
+        if ($cart !== null) {
+            foreach ($cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $giftRule) {
+                $giftKey = (int) $giftRule['gift_product'] . '-' . (int) $giftRule['gift_product_attribute'];
+                $giftedQuantities[$giftKey] = ($giftedQuantities[$giftKey] ?? 0) + 1;
+            }
+        }
+
         $minPrice = false;
         $cheapestProduct = null;
         foreach ($allProducts as $product) {
+            $giftKey = (int) $product['id_product'] . '-' . (int) ($product['id_product_attribute'] ?? 0);
+            if (($giftedQuantities[$giftKey] ?? 0) >= (int) $product['cart_quantity']) {
+                continue;
+            }
+
             $price = $useTax ? $product['price_with_reduction'] : $product['price_with_reduction_without_tax'];
             if ($price > 0 && ($minPrice === false || $minPrice > $price) && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                 $minPrice = $price;
