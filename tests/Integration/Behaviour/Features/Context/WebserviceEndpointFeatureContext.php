@@ -183,6 +183,18 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
 
             $postFields = '<prestashop xmlns:xlink="http://www.w3.org/1999/xlink"><' . $itemNode . '>';
             foreach ($rows as $hash) {
+                // A multilang field is only accepted wrapped in a language node, so the table can carry
+                // an optional "language" column holding the language id to wrap the value with.
+                if (!empty($hash['language'])) {
+                    $postFields .= sprintf('<%s><language id="%d"><![CDATA[%s]]></language></%s>',
+                        $hash['key'],
+                        (int) $hash['language'],
+                        $hash['value'],
+                        $hash['key']
+                    );
+
+                    continue;
+                }
                 $postFields .= sprintf('<%s><![CDATA[%s]]></%s>',
                     $hash['key'],
                     $hash['value'],
