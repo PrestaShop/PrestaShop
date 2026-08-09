@@ -1202,11 +1202,11 @@ class WebserviceRequestCore
 
                                     return false;
                                 } else {
-                                    if (isset($this->resourceConfiguration['retrieveData']['tableAlias'])) {
-                                        $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param, $this->resourceConfiguration['retrieveData']['tableAlias'] . '.');
-                                    } else {
-                                        $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param);
-                                    }
+                                    $sql_filter .= $this->getSQLRetrieveFilter(
+                                        $this->resourceConfiguration['fields'][$field]['sqlId'],
+                                        $url_param,
+                                        $this->getFilterTableAlias($this->resourceConfiguration['fields'][$field]['sqlId'])
+                                    );
                                 }
                             }
                         }
@@ -1695,6 +1695,35 @@ class WebserviceRequestCore
         }
 
         return false;
+    }
+
+    /**
+     * Returns the table alias a filter on $sqlId has to be qualified with.
+     */
+    private function getFilterTableAlias(string $sqlId): string
+    {
+        if (isset($this->resourceConfiguration['retrieveData']['tableAlias'])) {
+            return $this->resourceConfiguration['retrieveData']['tableAlias'] . '.';
+        }
+
+        $defaultAlias = 'main.';
+
+        if (!isset($this->resourceConfiguration['retrieveData']['className'])) {
+            return $defaultAlias;
+        }
+
+        $definition = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
+        if (empty($definition['fields'][$sqlId]['shop'])) {
+            return $defaultAlias;
+        }
+
+        // Only a non fk_shop association produces the multi_shop_<table> join.
+        $assoc = Shop::getAssoTable($definition['table']);
+        if ($assoc === false || $assoc['type'] === 'fk_shop') {
+            return $defaultAlias;
+        }
+
+        return 'multi_shop_' . $definition['table'] . '.';
     }
 
     /**
