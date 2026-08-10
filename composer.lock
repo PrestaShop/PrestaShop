@@ -5082,21 +5082,21 @@
         },
         {
             "name": "prestashop/hummingbird",
-            "version": "v2.0.0",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/hummingbird.git",
-                "reference": "b481f9d67dbf2852df34ab6de9b89882d8154886"
+                "reference": "440d4f9134bcfb4f2812831006440d6cb54a7ef3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/b481f9d67dbf2852df34ab6de9b89882d8154886",
-                "reference": "b481f9d67dbf2852df34ab6de9b89882d8154886",
+                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/440d4f9134bcfb4f2812831006440d6cb54a7ef3",
+                "reference": "440d4f9134bcfb4f2812831006440d6cb54a7ef3",
                 "shasum": ""
             },
             "require-dev": {
-                "symfony/console": "~4.4 || ^5.0 || ^6.4",
-                "symfony/yaml": "~4.4 || ^5.0 || ^6.4"
+                "prestashop/autoindex": "^2.1",
+                "prestashop/header-stamp": "^3.1"
             },
             "type": "prestashop-theme",
             "notification-url": "https://packagist.org/downloads/",
@@ -5116,9 +5116,9 @@
             "description": "Hummingbird development theme for PrestaShop",
             "support": {
                 "issues": "https://github.com/PrestaShop/hummingbird/issues",
-                "source": "https://github.com/PrestaShop/hummingbird/tree/v2.0.0"
+                "source": "https://github.com/PrestaShop/hummingbird/tree/v2.1.0"
             },
-            "time": "2026-02-11T08:38:15+00:00"
+            "time": "2026-07-14T08:13:28+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",
@@ -5160,16 +5160,16 @@
         },
         {
             "name": "prestashop/productcomments",
-            "version": "v8.0.0",
+            "version": "8.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productcomments.git",
-                "reference": "9e6a1f63b70cd2cfc416faea56aa000c3c220eec"
+                "reference": "6314ef9fa92867a6008f92194caac64bc305cf52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/9e6a1f63b70cd2cfc416faea56aa000c3c220eec",
-                "reference": "9e6a1f63b70cd2cfc416faea56aa000c3c220eec",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/6314ef9fa92867a6008f92194caac64bc305cf52",
+                "reference": "6314ef9fa92867a6008f92194caac64bc305cf52",
                 "shasum": ""
             },
             "require": {
@@ -5201,9 +5201,10 @@
             "description": "PrestaShop module productcomments",
             "homepage": "https://github.com/PrestaShop/productcomments",
             "support": {
-                "source": "https://github.com/PrestaShop/productcomments/tree/v8.0.0"
+                "issues": "https://github.com/PrestaShop/productcomments/issues",
+                "source": "https://github.com/PrestaShop/productcomments/tree/8.0.1"
             },
-            "time": "2025-11-13T14:46:03+00:00"
+            "time": "2026-08-07T09:18:57+00:00"
         },
         {
             "name": "prestashop/ps_apiresources",
@@ -7509,16 +7510,16 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v6.1.0",
+            "version": "v6.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "b939f9833c222fd26b46c0f2225b0828259077e1"
+                "reference": "f2766d229e5eab6bf46c6d0b666cc25deda24653"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/b939f9833c222fd26b46c0f2225b0828259077e1",
-                "reference": "b939f9833c222fd26b46c0f2225b0828259077e1",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/f2766d229e5eab6bf46c6d0b666cc25deda24653",
+                "reference": "f2766d229e5eab6bf46c6d0b666cc25deda24653",
                 "shasum": ""
             },
             "require": {
@@ -7531,7 +7532,7 @@
             "require-dev": {
                 "doctrine/common": "^3",
                 "friendsofphp/php-cs-fixer": "^3.2",
-                "phpunit/phpunit": "~9.5.10",
+                "phpunit/phpunit": "~9.6",
                 "symfony/framework-bundle": "^3.4 || ^4.4 || ^5.0 || ^6.0",
                 "symfony/symfony": "^6.0",
                 "symfony/translation": "^3.4 || ^4.4 || ^5.0 || ^6.0"
@@ -7564,9 +7565,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PrestaShop/TranslationToolsBundle/issues",
-                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v6.1.0"
+                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v6.1.1"
             },
-            "time": "2025-04-11T09:24:35+00:00"
+            "time": "2026-07-08T09:12:01+00:00"
         },
         {
             "name": "psr/cache",
