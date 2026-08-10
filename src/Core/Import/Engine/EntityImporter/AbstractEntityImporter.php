@@ -27,6 +27,11 @@ use PrestaShop\PrestaShop\Core\Import\File\ResumableFileReaderInterface;
 abstract class AbstractEntityImporter implements EntityImporterInterface
 {
     /**
+     * @var list<string>|null memoized getPhases() ids (assertKnownPhase runs on every batch)
+     */
+    protected ?array $knownPhaseIds = null;
+
+    /**
      * @param ResumableFileReaderInterface $fileReader reads the run's working file
      * @param RowMapper $rowMapper applies the run's column-to-field mapping
      */
@@ -63,11 +68,11 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
         $processed = 0;
         $cursor = $context->getResumeCursor();
 
-        foreach ($this->fileReader->readFrom($context->getWorkingFile(), $cursor) as $rowCursor => $record) {
-            if ($processed >= $limit) {
-                break;
-            }
+        if ($limit <= 0) {
+            return new PhaseBatchResult(0, [], [], $cursor);
+        }
 
+        foreach ($this->fileReader->readFrom($context->getWorkingFile(), $cursor) as $rowCursor => $record) {
             $rowIndex = $context->getCurrentOffset() + $processed;
             $outcome = $rowProcessor($this->rowMapper->map($record, $context), $rowIndex);
 
@@ -78,6 +83,12 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
 
             ++$processed;
             $cursor = $rowCursor;
+
+            // checked AFTER consuming, not at loop top: re-entering the
+            // generator would read (and discard) one record past the batch
+            if ($processed >= $limit) {
+                break;
+            }
         }
 
         return new PhaseBatchResult($processed, $messages, $newlySkippedRows, $cursor);
@@ -88,8 +99,8 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
      */
     protected function assertKnownPhase(string $phaseId): void
     {
-        $knownPhaseIds = array_map(static fn (ImportPhaseDefinition $definition): string => $definition->id, $this->getPhases());
-        if (!in_array($phaseId, $knownPhaseIds, true)) {
+        $this->knownPhaseIds ??= array_map(static fn (ImportPhaseDefinition $definition): string => $definition->id, $this->getPhases());
+        if (!in_array($phaseId, $this->knownPhaseIds, true)) {
             throw new UnknownPhaseException(sprintf('Unknown phase "%s" for the %s importer', $phaseId, $this->getEntityType()));
         }
     }

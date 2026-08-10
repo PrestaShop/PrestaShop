@@ -23,6 +23,14 @@ class FileDownloader
     protected const DOWNLOAD_TIMEOUT_SECONDS = 20;
 
     /**
+     * Hard cap on the fetched size, whatever the source claims: without it a
+     * single file_url row could exhaust the disk. 128 MB, because virtual
+     * product files (the largest legitimate use) can be big — images are
+     * re-validated by the image commands anyway.
+     */
+    protected const MAX_FILE_SIZE_BYTES = 128 * 1024 * 1024;
+
+    /**
      * @return string path of the temporary file — the caller is responsible for deleting it
      *
      * @throws FileDownloadException
@@ -70,13 +78,19 @@ class FileDownloader
             throw new FileDownloadException(sprintf('Could not open temporary file "%s"', $targetPath));
         }
 
-        $copiedBytes = stream_copy_to_stream($source, $target);
+        // copy at most one byte over the cap: landing exactly at cap+1 is the
+        // cheapest way to tell "too big" from "exactly max size"
+        $copiedBytes = stream_copy_to_stream($source, $target, static::MAX_FILE_SIZE_BYTES + 1);
         fclose($source);
         fclose($target);
 
         if (false === $copiedBytes || 0 === $copiedBytes) {
             @unlink($targetPath);
             throw new FileDownloadException(sprintf('Downloaded file from "%s" is empty', $url));
+        }
+        if ($copiedBytes > static::MAX_FILE_SIZE_BYTES) {
+            @unlink($targetPath);
+            throw new FileDownloadException(sprintf('File from "%s" exceeds the maximum import file size (%d bytes)', $url, static::MAX_FILE_SIZE_BYTES));
         }
 
         return $targetPath;
@@ -88,6 +102,12 @@ class FileDownloader
             throw new FileDownloadException(sprintf('Local file "%s" does not exist or is not readable', $path));
         }
 
+        $this->assertAllowedLocalPath($path);
+
+        if (filesize($path) > static::MAX_FILE_SIZE_BYTES) {
+            throw new FileDownloadException(sprintf('Local file "%s" exceeds the maximum import file size (%d bytes)', $path, static::MAX_FILE_SIZE_BYTES));
+        }
+
         $targetPath = $this->createTemporaryFile();
         if (!copy($path, $targetPath)) {
             @unlink($targetPath);
@@ -95,6 +115,35 @@ class FileDownloader
         }
 
         return $targetPath;
+    }
+
+    /**
+     * Local paths are confined to the shop directory and the system temp dir.
+     * Import is admin-only, but the fetched file becomes DOWNLOADABLE content
+     * (a virtual product file): without this check a file_url cell pointing at
+     * e.g. app/config/parameters.php would expose it to customers. realpath()
+     * also resolves symlinks and ../ traversal before the comparison.
+     */
+    protected function assertAllowedLocalPath(string $path): void
+    {
+        $realPath = realpath($path);
+        if (false === $realPath) {
+            throw new FileDownloadException(sprintf('Local file "%s" does not exist', $path));
+        }
+
+        $allowedRoots = [sys_get_temp_dir()];
+        if (defined('_PS_ROOT_DIR_')) {
+            $allowedRoots[] = _PS_ROOT_DIR_;
+        }
+
+        foreach ($allowedRoots as $allowedRoot) {
+            $realRoot = realpath($allowedRoot);
+            if (false !== $realRoot && str_starts_with($realPath, rtrim($realRoot, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR)) {
+                return;
+            }
+        }
+
+        throw new FileDownloadException(sprintf('Local file "%s" is outside the allowed import locations', $path));
     }
 
     protected function createTemporaryFile(): string

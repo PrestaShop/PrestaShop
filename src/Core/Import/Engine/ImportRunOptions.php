@@ -24,7 +24,6 @@ class ImportRunOptions
         public readonly bool $matchRef = false,
         public readonly bool $regenerate = false,
         public readonly bool $sendEmail = false,
-        public readonly bool $skipAssociationPrecheck = false,
         public readonly bool $dryRun = false,
     ) {
     }
@@ -40,7 +39,6 @@ class ImportRunOptions
             matchRef: (bool) ($options['matchRef'] ?? false),
             regenerate: (bool) ($options['regenerate'] ?? false),
             sendEmail: (bool) ($options['sendEmail'] ?? false),
-            skipAssociationPrecheck: (bool) ($options['skipAssociationPrecheck'] ?? false),
             dryRun: (bool) ($options['dryRun'] ?? false),
         );
     }
@@ -56,7 +54,6 @@ class ImportRunOptions
             'matchRef' => $this->matchRef,
             'regenerate' => $this->regenerate,
             'sendEmail' => $this->sendEmail,
-            'skipAssociationPrecheck' => $this->skipAssociationPrecheck,
             'dryRun' => $this->dryRun,
         ];
     }

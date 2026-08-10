@@ -13,10 +13,9 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
-use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
@@ -43,10 +42,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\EntityMatch;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
 use PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader;
@@ -56,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
@@ -81,13 +81,14 @@ class ProductRowImporter
         protected readonly ProductAssociationResolver $associationResolver,
         protected readonly ProductRepository $productRepository,
         protected readonly StockAvailableRepository $stockAvailableRepository,
-        protected readonly TaxRulesGroupRepository $taxRulesGroupRepository,
+        protected readonly ImportEntityExistenceChecker $existenceChecker,
         protected readonly TaxComputer $taxComputer,
         protected readonly LanguageRepositoryInterface $languageRepository,
         protected readonly Tools $tools,
         protected readonly FileDownloader $fileDownloader,
-        protected readonly ConfigurationInterface $configuration,
+        protected readonly ShopConfigurationInterface $configuration,
         protected readonly TranslatorInterface $translator,
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
@@ -108,22 +109,25 @@ class ProductRowImporter
             $productId = $this->resolveTargetProduct($row, $match, $context);
 
             $this->updateProductType($row, $match, $productId, $context);
-            $manufacturerId = $this->resolveManufacturer($row, $context, $messages);
+            $manufacturerId = $this->resolveManufacturer($row, $rowIndex, $context, $messages);
             $this->dispatchProductUpdate($row, $rowIndex, $productId, $isCreation, $languageId, $context, $manufacturerId, $messages);
             $this->dispatchStockUpdate($row, $productId, $context);
             $this->dispatchCategories($row, $rowIndex, $productId, $context, $messages);
-            $this->dispatchSuppliers($row, $rowIndex, $productId, $messages);
+            $this->dispatchSuppliers($row, $rowIndex, $productId, $context, $messages);
             $this->dispatchTags($row, $productId, $isCreation, $languageId, $context);
-            $this->dispatchFeatures($row, $rowIndex, $productId, $context, $messages);
+            $this->dispatchFeatures($row, $rowIndex, $productId, $isCreation, $context, $messages);
             $this->dispatchImages($row, $rowIndex, $productId, $isCreation, $languageId, $context, $messages);
             $this->dispatchVirtualProductFile($row, $rowIndex, $productId, $messages);
             $this->dispatchCustomizationFields($row, $rowIndex, $productId, $isCreation, $languageId, $context, $messages);
             $this->dispatchSpecificPrice($row, $productId);
             $this->dispatchShops($row, $rowIndex, $productId, $context, $messages);
-            $this->applyDateAdd($row, $productId);
+            $this->applyDateAdd($row, $productId, $context);
         } catch (Throwable $e) {
             // deliberate catch-all: a failing command must fail THIS ROW only
-            // (structured error, remaining commands skipped), never the batch
+            // (structured error, remaining commands skipped), never the batch.
+            // The full throwable goes to the log — the structured message only
+            // carries the message string.
+            $this->logger->error('Import: product row could not be fully imported', ['row' => $rowIndex, 'exception' => $e]);
             $messages[] = new ImportMessage(
                 ImportMessage::SEVERITY_ERROR,
                 ImportPhaseDefinition::PHASE_DATABASE,
@@ -183,14 +187,14 @@ class ProductRowImporter
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    protected function resolveManufacturer(array $row, ImportRunContext $context, array &$messages): ?int
+    protected function resolveManufacturer(array $row, int $rowIndex, ImportRunContext $context, array &$messages): ?int
     {
         $manufacturer = $row['manufacturer'] ?? '';
         if ('' === $manufacturer) {
             return null;
         }
 
-        $resolved = $this->associationResolver->resolveManufacturer($manufacturer, $context);
+        $resolved = $this->associationResolver->resolveManufacturer($manufacturer, $context, $rowIndex);
         $messages = array_merge($messages, $resolved->messages);
 
         return $resolved->id;
@@ -293,13 +297,13 @@ class ProductRowImporter
         }
 
         // prices
-        $price = $this->resolvePrice($row);
+        $price = $this->resolvePrice($row, $context);
         if (null !== $price) {
             $command->setPrice((string) $price);
             $hasUpdate = true;
         }
         $taxRulesGroupId = $row['id_tax_rules_group'] ?? '';
-        if ('' !== $taxRulesGroupId && ctype_digit($taxRulesGroupId) && $this->taxRulesGroupExists((int) $taxRulesGroupId)) {
+        if ('' !== $taxRulesGroupId && ctype_digit($taxRulesGroupId) && $this->existenceChecker->exists('tax_rules_group', (int) $taxRulesGroupId)) {
             $command->setTaxRulesGroupId((int) $taxRulesGroupId);
             $hasUpdate = true;
         }
@@ -324,7 +328,7 @@ class ProductRowImporter
             }
         }
         if ('' !== ($row['ecotax'] ?? '')) {
-            $ecotax = (bool) $this->configuration->get('PS_USE_ECOTAX')
+            $ecotax = (bool) $this->configuration->get('PS_USE_ECOTAX', null, $context->getShopConstraint())
                 ? $this->valueParser->parseDecimal($row['ecotax'])
                 : new DecimalNumber('0');
             if (null !== $ecotax) {
@@ -334,12 +338,13 @@ class ProductRowImporter
         }
 
         // stock-related fields living on the product row
-        if ('' !== ($row['minimal_quantity'] ?? '') && preg_match('/^[0-9]+$/', $row['minimal_quantity'])) {
-            $command->setMinimalQuantity((int) $row['minimal_quantity']);
+        $minimalQuantity = $this->valueParser->parseCount($row['minimal_quantity'] ?? '');
+        if (null !== $minimalQuantity) {
+            $command->setMinimalQuantity($minimalQuantity);
             $hasUpdate = true;
         }
-        if ('' !== ($row['low_stock_threshold'] ?? '') && preg_match('/^-?[0-9]+$/', $row['low_stock_threshold'])) {
-            $threshold = (int) $row['low_stock_threshold'];
+        $threshold = $this->valueParser->parseInteger($row['low_stock_threshold'] ?? '');
+        if (null !== $threshold) {
             $command->setLowStockThreshold($threshold);
             $hasUpdate = true;
 
@@ -358,6 +363,14 @@ class ProductRowImporter
                     );
                 }
             }
+        } elseif ('' !== ($row['low_stock_alert'] ?? '')) {
+            $messages[] = new ImportMessage(
+                ImportMessage::SEVERITY_WARNING,
+                ImportPhaseDefinition::PHASE_DATABASE,
+                $this->translator->trans('low_stock_alert requires a valid low_stock_threshold value; the field was ignored.', [], 'Admin.Advparameters.Notification'),
+                $rowIndex,
+                'low_stock_alert'
+            );
         }
         if ('' !== ($row['available_date'] ?? '')) {
             $availableDate = $this->valueParser->parseDate($row['available_date']);
@@ -384,7 +397,7 @@ class ProductRowImporter
      *
      * @param array<string, string> $row
      */
-    protected function resolvePrice(array $row): ?DecimalNumber
+    protected function resolvePrice(array $row, ImportRunContext $context): ?DecimalNumber
     {
         $priceTaxExcluded = $row['price_tex'] ?? '';
         if ('' !== $priceTaxExcluded) {
@@ -402,10 +415,10 @@ class ProductRowImporter
         }
 
         $taxRulesGroupId = $row['id_tax_rules_group'] ?? '';
-        if ('' !== $taxRulesGroupId && ctype_digit($taxRulesGroupId) && $this->taxRulesGroupExists((int) $taxRulesGroupId)) {
+        if ('' !== $taxRulesGroupId && ctype_digit($taxRulesGroupId) && $this->existenceChecker->exists('tax_rules_group', (int) $taxRulesGroupId)) {
             $rate = $this->taxComputer->getTaxRate(
                 new TaxRulesGroupId((int) $taxRulesGroupId),
-                new CountryId($this->getShopCountryId())
+                new CountryId($this->getShopCountryId($context))
             );
             $divisor = $rate->dividedBy(new DecimalNumber('100'), 6)->plus(new DecimalNumber('1'));
             $price = $price->dividedBy($divisor, 6);
@@ -418,11 +431,11 @@ class ProductRowImporter
      * Legacy Shop::getAddress() country resolution — the country whose tax
      * rate de-taxes price_tin values.
      */
-    protected function getShopCountryId(): int
+    protected function getShopCountryId(ImportRunContext $context): int
     {
-        $shopCountryId = (int) $this->configuration->get('PS_SHOP_COUNTRY_ID');
+        $shopCountryId = (int) $this->configuration->get('PS_SHOP_COUNTRY_ID', null, $context->getShopConstraint());
 
-        return $shopCountryId > 0 ? $shopCountryId : (int) $this->configuration->get('PS_COUNTRY_DEFAULT');
+        return $shopCountryId > 0 ? $shopCountryId : (int) $this->configuration->get('PS_COUNTRY_DEFAULT', null, $context->getShopConstraint());
     }
 
     /**
@@ -437,17 +450,19 @@ class ProductRowImporter
             $command->setLocation($row['location']);
             $hasUpdate = true;
         }
-        $outOfStock = $row['out_of_stock'] ?? '';
-        if ('' !== $outOfStock && in_array((int) $outOfStock, [0, 1, 2], true)) {
-            $command->setOutOfStockType((int) $outOfStock);
+        // strict integer parsing first: '(int) "abc"' would silently become
+        // a valid enum value 0
+        $outOfStock = $this->valueParser->parseInteger($row['out_of_stock'] ?? '');
+        if (null !== $outOfStock && in_array($outOfStock, [0, 1, 2], true)) {
+            $command->setOutOfStockType($outOfStock);
             $hasUpdate = true;
         }
-        $quantity = $row['quantity'] ?? '';
-        if ('' !== $quantity && preg_match('/^-?[0-9]+$/', $quantity)) {
+        $quantity = $this->valueParser->parseInteger($row['quantity'] ?? '');
+        if (null !== $quantity) {
             // the stock command only expresses deltas: read the current
             // quantity and convert the file's absolute value (delta 0 is
             // illegal and means nothing to change)
-            $delta = (int) $quantity - $this->getCurrentStockQuantity($productId, $context->getShopId());
+            $delta = $quantity - $this->getCurrentStockQuantity($productId, $context->getShopId());
             if (0 !== $delta) {
                 $command->setDeltaQuantity($delta);
                 $hasUpdate = true;
@@ -490,7 +505,7 @@ class ProductRowImporter
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    protected function dispatchSuppliers(array $row, int $rowIndex, int $productId, array &$messages): void
+    protected function dispatchSuppliers(array $row, int $rowIndex, int $productId, ImportRunContext $context, array &$messages): void
     {
         $supplier = $row['supplier'] ?? '';
         if ('' === $supplier) {
@@ -510,7 +525,7 @@ class ProductRowImporter
         $this->commandBus->handle(new UpdateProductSuppliersCommand($productId, [
             [
                 'supplier_id' => $resolved->id,
-                'currency_id' => (int) $this->configuration->get('PS_CURRENCY_DEFAULT'),
+                'currency_id' => (int) $this->configuration->get('PS_CURRENCY_DEFAULT', null, $context->getShopConstraint()),
                 'reference' => $supplierReference,
                 'price_tax_excluded' => (string) $wholesalePrice,
             ],
@@ -549,7 +564,7 @@ class ProductRowImporter
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    protected function dispatchFeatures(array $row, int $rowIndex, int $productId, ImportRunContext $context, array &$messages): void
+    protected function dispatchFeatures(array $row, int $rowIndex, int $productId, bool $isCreation, ImportRunContext $context, array &$messages): void
     {
         $featuresCell = $row['features'] ?? '';
         if ('' === $featuresCell) {
@@ -557,7 +572,7 @@ class ProductRowImporter
         }
 
         $entries = $this->valueParser->split($featuresCell, $context->getMultipleValueSeparator());
-        $resolved = $this->associationResolver->resolveFeatures($entries, $context, $rowIndex);
+        $resolved = $this->associationResolver->resolveFeatures($entries, $context, $rowIndex, $isCreation, $isCreation ? null : $productId);
         $messages = array_merge($messages, $resolved['messages']);
 
         if ([] !== $resolved['featureValues']) {
@@ -585,7 +600,9 @@ class ProductRowImporter
         }
 
         $imageUrls = $this->valueParser->split($imagesCell, $context->getMultipleValueSeparator());
-        $imageAlts = $this->valueParser->split($row['image_alt'] ?? '', $context->getMultipleValueSeparator());
+        // alts are POSITIONAL (alt N belongs to image N): empty entries must
+        // be kept so a hole doesn't shift the following alts onto the wrong image
+        $imageAlts = $this->valueParser->splitPreservingEmpty($row['image_alt'] ?? '', $context->getMultipleValueSeparator());
 
         foreach ($imageUrls as $index => $imageUrl) {
             try {
@@ -644,8 +661,8 @@ class ProductRowImporter
         }
 
         try {
-            $accessDays = preg_match('/^[0-9]+$/', $row['nb_days_accessible'] ?? '') ? (int) $row['nb_days_accessible'] : null;
-            $downloadTimesLimit = preg_match('/^[0-9]+$/', $row['nb_downloadable'] ?? '') ? (int) $row['nb_downloadable'] : null;
+            $accessDays = $this->valueParser->parseCount($row['nb_days_accessible'] ?? '');
+            $downloadTimesLimit = $this->valueParser->parseCount($row['nb_downloadable'] ?? '');
             $expirationDate = $this->valueParser->parseDate($row['date_expiration'] ?? '');
 
             $this->commandBus->handle(new AddVirtualProductFileCommand(
@@ -674,8 +691,8 @@ class ProductRowImporter
      */
     protected function dispatchCustomizationFields(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context, array &$messages): void
     {
-        $fileCount = $this->parseCount($row['uploadable_files'] ?? '');
-        $textCount = $this->parseCount($row['text_fields'] ?? '');
+        $fileCount = $this->valueParser->parseCount($row['uploadable_files'] ?? '');
+        $textCount = $this->valueParser->parseCount($row['text_fields'] ?? '');
         $customizable = true === $this->valueParser->parseBoolean($row['customizable'] ?? '');
 
         if (null === $fileCount && null === $textCount) {
@@ -718,14 +735,6 @@ class ProductRowImporter
         }
 
         $this->commandBus->handle(new SetProductCustomizationFieldsCommand($productId, $fields, $context->getShopConstraint()));
-    }
-
-    /**
-     * @return int|null null when the cell is empty or not a non-negative integer
-     */
-    protected function parseCount(string $value): ?int
-    {
-        return preg_match('/^[0-9]+$/', $value) ? (int) $value : null;
     }
 
     /**
@@ -797,31 +806,12 @@ class ProductRowImporter
     /**
      * @param array<string, string> $row
      */
-    protected function applyDateAdd(array $row, int $productId): void
+    protected function applyDateAdd(array $row, int $productId, ImportRunContext $context): void
     {
         $dateAdd = $this->valueParser->parseDate($row['date_add'] ?? '');
         if (null !== $dateAdd) {
-            $this->productRepository->setDateAdd($productId, $dateAdd);
+            $this->productRepository->setDateAdd($productId, $dateAdd, $context->getShopConstraint());
         }
-    }
-
-    /**
-     * Soft-deleted (historized) groups are treated as absent — assigning one
-     * would resurrect it on the product.
-     */
-    protected function taxRulesGroupExists(int $taxRulesGroupId): bool
-    {
-        if ($taxRulesGroupId <= 0) {
-            return false;
-        }
-
-        try {
-            $taxRulesGroup = $this->taxRulesGroupRepository->get(new TaxRulesGroupId($taxRulesGroupId));
-        } catch (TaxRulesGroupNotFoundException) {
-            return false;
-        }
-
-        return !(bool) $taxRulesGroup->deleted;
     }
 
     /**

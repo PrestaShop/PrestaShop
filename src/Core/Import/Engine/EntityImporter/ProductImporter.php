@@ -11,7 +11,6 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
-use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\AccessoriesPrecheck;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductIdentityResolver;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowValidator;
@@ -25,18 +24,29 @@ use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollectionInterface;
 use PrestaShop\PrestaShop\Core\Import\File\ResumableFileReaderInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 /**
  * Product importer: validation (pausing, no writes) -> database (one CQRS
- * command dispatch chain per row) -> association (accessories, resolved
- * after every row exists so file order never matters, including mutual
- * A<->B references).
+ * command dispatch chain per row) -> association_validation (pausing, no
+ * writes: every row exists in the database by then, so accessories targets
+ * are checked with per-batch DB probes — stateless and cursor-resumable) ->
+ * association (accessories links, resolved after every row exists so file
+ * order never matters, including mutual A<->B references).
  */
 class ProductImporter extends AbstractEntityImporter
 {
     public const ENTITY_TYPE = 'product';
+
+    /**
+     * Product-specific phase (the ids are an open string model): pausing
+     * pre-check of the accessories targets, between database and association.
+     */
+    public const PHASE_ASSOCIATION_VALIDATION = 'association_validation';
+
+    protected ?EntityFieldCollectionInterface $fields = null;
 
     public function __construct(
         protected readonly TranslatorInterface $translator,
@@ -44,10 +54,10 @@ class ProductImporter extends AbstractEntityImporter
         RowMapper $rowMapper,
         protected readonly ProductRowValidator $rowValidator,
         protected readonly ProductRowImporter $rowImporter,
-        protected readonly AccessoriesPrecheck $accessoriesPrecheck,
         protected readonly ProductIdentityResolver $identityResolver,
         protected readonly ValueParser $valueParser,
         protected readonly CommandBusInterface $commandBus,
+        protected readonly LoggerInterface $logger,
     ) {
         parent::__construct($fileReader, $rowMapper);
     }
@@ -64,6 +74,12 @@ class ProductImporter extends AbstractEntityImporter
 
     public function getFields(): EntityFieldCollectionInterface
     {
+        // built once per instance: the collection is immutable and getFields()
+        // is called by every RowMapper::map()
+        if (null !== $this->fields) {
+            return $this->fields;
+        }
+
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('active', $this->trans('Active (0/1)', 'Admin.Advparameters.Feature')),
@@ -146,7 +162,7 @@ class ProductImporter extends AbstractEntityImporter
             new EntityField('accessories', $this->trans('Accessories (x,y,z...)', 'Admin.Advparameters.Feature')),
         ];
 
-        return EntityFieldCollection::createFromArray($fields);
+        return $this->fields = EntityFieldCollection::createFromArray($fields);
     }
 
     public function getPhases(): array
@@ -162,6 +178,11 @@ class ProductImporter extends AbstractEntityImporter
                 $this->trans('Importing products', 'Admin.Advparameters.Feature')
             ),
             new ImportPhaseDefinition(
+                self::PHASE_ASSOCIATION_VALIDATION,
+                $this->trans('Checking accessories', 'Admin.Advparameters.Feature'),
+                true
+            ),
+            new ImportPhaseDefinition(
                 ImportPhaseDefinition::PHASE_ASSOCIATION,
                 $this->trans('Linking accessories', 'Admin.Advparameters.Feature')
             ),
@@ -172,7 +193,8 @@ class ProductImporter extends AbstractEntityImporter
     {
         $this->assertKnownPhase($phaseId);
 
-        if (ImportPhaseDefinition::PHASE_ASSOCIATION === $phaseId && !$context->isFieldMapped('accessories')) {
+        $accessoriesPhases = [self::PHASE_ASSOCIATION_VALIDATION, ImportPhaseDefinition::PHASE_ASSOCIATION];
+        if (in_array($phaseId, $accessoriesPhases, true) && !$context->isFieldMapped('accessories')) {
             return 0;
         }
 
@@ -186,6 +208,7 @@ class ProductImporter extends AbstractEntityImporter
         return match ($phaseId) {
             ImportPhaseDefinition::PHASE_VALIDATION => $this->processValidationBatch($context, $limit),
             ImportPhaseDefinition::PHASE_DATABASE => $this->processDatabaseBatch($context, $limit),
+            self::PHASE_ASSOCIATION_VALIDATION => $this->processAssociationValidationBatch($context, $limit),
             default => $this->processAssociationBatch($context, $limit),
         };
     }
@@ -227,20 +250,7 @@ class ProductImporter extends AbstractEntityImporter
             return ['messages' => $rowMessages, 'skipped' => $this->containsError($rowMessages)];
         });
 
-        $messages = array_merge($messages, $result->messages);
-
-        // end-of-phase association pre-check (in-memory identity set)
-        if (
-            $this->batchCompletesPhase($context, $result)
-            && $context->isFieldMapped('accessories')
-            && !$context->getOptions()->skipAssociationPrecheck
-        ) {
-            $messages = array_merge($messages, $this->accessoriesPrecheck->run(
-                $this->contextWithBatchApplied($context, $result)
-            ));
-        }
-
-        return new PhaseBatchResult($result->processedUnitCount, $messages, $result->newlySkippedRows, $result->resumeCursor);
+        return new PhaseBatchResult($result->processedUnitCount, array_merge($messages, $result->messages), $result->newlySkippedRows, $result->resumeCursor);
     }
 
     protected function processDatabaseBatch(ImportRunContext $context, int $limit): PhaseBatchResult
@@ -253,6 +263,23 @@ class ProductImporter extends AbstractEntityImporter
             $rowMessages = $this->rowImporter->importRow($row, $rowIndex, $context);
 
             return ['messages' => $rowMessages, 'skipped' => $this->containsError($rowMessages)];
+        });
+    }
+
+    /**
+     * Pausing pre-check of the accessories targets, once every row exists in
+     * the database: pure per-batch DB probes through the same decision point
+     * as the association phase (no cross-batch state, cursor-resumable).
+     * Misses are warnings — the association phase will drop the links.
+     */
+    protected function processAssociationValidationBatch(ImportRunContext $context, int $limit): PhaseBatchResult
+    {
+        return $this->iterateBatch($context, $limit, function (array $row, int $rowIndex) use ($context): array {
+            if ($context->isRowSkipped($rowIndex)) {
+                return ['messages' => [], 'skipped' => false];
+            }
+
+            return ['messages' => $this->checkAccessories($row, $rowIndex, $context), 'skipped' => false];
         });
     }
 
@@ -272,6 +299,39 @@ class ProductImporter extends AbstractEntityImporter
      *
      * @return list<ImportMessage>
      */
+    protected function checkAccessories(array $row, int $rowIndex, ImportRunContext $context): array
+    {
+        $accessories = $row['accessories'] ?? '';
+        if ('' === $accessories || EntityImporterInterface::CLEAR_ASSOCIATION_MARKER === $accessories) {
+            return [];
+        }
+
+        $messages = [];
+
+        if (null === $this->resolveAssociationOwner($row, $context)) {
+            $messages[] = $this->accessoryWarning($rowIndex, $this->trans('The accessories owner could not be identified (no matching id or reference); the accessories will be dropped.', 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
+        }
+
+        foreach ($this->valueParser->split($accessories, $context->getMultipleValueSeparator()) as $target) {
+            $resolved = $this->identityResolver->resolveProductTarget($target, $context);
+
+            if ($resolved['ambiguous']) {
+                $messages[] = $this->accessoryWarning($rowIndex, $this->trans('Accessory "%target%" matches both a product id and a product reference; it will be linked by id.', 'Admin.Advparameters.Notification', ['%target%' => $target]), self::PHASE_ASSOCIATION_VALIDATION);
+            } elseif (null === $resolved['resolvedId']) {
+                $messages[] = $this->accessoryWarning($rowIndex, $this->trans('Accessory "%target%" matches no product; the link will be dropped.', 'Admin.Advparameters.Notification', ['%target%' => $target]), self::PHASE_ASSOCIATION_VALIDATION);
+            } elseif (ProductIdentityResolver::TARGET_MATCHED_BY_REFERENCE === $resolved['matchedBy'] && ctype_digit($target)) {
+                $messages[] = $this->accessoryWarning($rowIndex, $this->trans('Accessory "%target%" matches no product id; it will be linked by reference.', 'Admin.Advparameters.Notification', ['%target%' => $target]), self::PHASE_ASSOCIATION_VALIDATION);
+            }
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param array<string, string> $row
+     *
+     * @return list<ImportMessage>
+     */
     protected function associateAccessories(array $row, int $rowIndex, ImportRunContext $context): array
     {
         $accessories = $row['accessories'] ?? '';
@@ -284,7 +344,7 @@ class ProductImporter extends AbstractEntityImporter
         try {
             $ownerId = $this->resolveAssociationOwner($row, $context);
             if (null === $ownerId) {
-                return [$this->associationError($rowIndex, $this->trans('The accessories owner could not be identified (no matching id or reference); the accessories were dropped.', 'Admin.Advparameters.Notification'))];
+                return [$this->accessoryError($rowIndex, $this->trans('The accessories owner could not be identified (no matching id or reference); the accessories were dropped.', 'Admin.Advparameters.Notification'))];
             }
 
             if (EntityImporterInterface::CLEAR_ASSOCIATION_MARKER === $accessories) {
@@ -295,10 +355,18 @@ class ProductImporter extends AbstractEntityImporter
 
             $accessoryIds = [];
             foreach ($this->valueParser->split($accessories, $context->getMultipleValueSeparator()) as $target) {
-                $resolved = $this->resolveAccessoryTarget($target, $rowIndex, $context);
-                $messages = array_merge($messages, $resolved->messages);
-                if (null !== $resolved->id) {
-                    $accessoryIds[] = $resolved->id;
+                $resolved = $this->identityResolver->resolveProductTarget($target, $context);
+
+                if ($resolved['ambiguous']) {
+                    $messages[] = $this->accessoryWarning($rowIndex, $this->trans('Accessory "%target%" matches both a product id and a product reference; it was linked by id.', 'Admin.Advparameters.Notification', ['%target%' => $target]));
+                } elseif (null === $resolved['resolvedId']) {
+                    $messages[] = $this->accessoryError($rowIndex, $this->trans('Accessory "%target%" could not be resolved; the link was dropped.', 'Admin.Advparameters.Notification', ['%target%' => $target]));
+                } elseif (ProductIdentityResolver::TARGET_MATCHED_BY_REFERENCE === $resolved['matchedBy'] && ctype_digit($target)) {
+                    $messages[] = $this->accessoryWarning($rowIndex, $this->trans('Accessory "%target%" matches no product id; it was linked by reference.', 'Admin.Advparameters.Notification', ['%target%' => $target]));
+                }
+
+                if (null !== $resolved['resolvedId']) {
+                    $accessoryIds[] = $resolved['resolvedId'];
                 }
             }
 
@@ -306,7 +374,8 @@ class ProductImporter extends AbstractEntityImporter
                 $this->commandBus->handle(new SetRelatedProductsCommand($ownerId, array_values(array_unique($accessoryIds))));
             }
         } catch (Throwable $e) {
-            $messages[] = $this->associationError($rowIndex, $this->trans('Accessories could not be linked: %error%', 'Admin.Advparameters.Notification', ['%error%' => $e->getMessage()]));
+            $this->logger->error('Import: accessories could not be linked', ['row' => $rowIndex, 'exception' => $e]);
+            $messages[] = $this->accessoryError($rowIndex, $this->trans('Accessories could not be linked: %error%', 'Admin.Advparameters.Notification', ['%error%' => $e->getMessage()]));
         }
 
         return $messages;
@@ -324,56 +393,17 @@ class ProductImporter extends AbstractEntityImporter
         $id = $row['id'] ?? '';
         $usableId = $context->getOptions()->forceIds && ctype_digit($id) ? (int) $id : null;
 
-        return $this->identityResolver->findExistingByReferenceThenId($row['reference'] ?? '', $usableId, $context->getShopId());
+        return $this->identityResolver->findExistingByReferenceThenId($row['reference'] ?? '', $usableId, $context);
     }
 
-    /**
-     * A NUMERIC target is treated as a product id first, but may equally be
-     * a reference that merely looks numeric: an id match wins (with a warning
-     * when a reference also matches), a reference match is the fallback
-     * (also warned). Unresolvable targets produce an error naming the link;
-     * the link is dropped and the run completes.
-     */
-    protected function resolveAccessoryTarget(string $target, int $rowIndex, ImportRunContext $context): ResolvedAssociation
+    protected function accessoryError(int $rowIndex, string $message, string $phaseId = ImportPhaseDefinition::PHASE_ASSOCIATION): ImportMessage
     {
-        if (ctype_digit($target)) {
-            $probe = $this->identityResolver->classifyNumericTarget((int) $target, $context->getShopId());
-
-            if ($probe['idExists']) {
-                if (null !== $probe['referenceMatchId']) {
-                    return new ResolvedAssociation((int) $target, [
-                        $this->associationWarning($rowIndex, $this->trans('Accessory "%target%" matches both a product id and a product reference; it was linked by id.', 'Admin.Advparameters.Notification', ['%target%' => $target])),
-                    ]);
-                }
-
-                return new ResolvedAssociation((int) $target);
-            }
-
-            if (null !== $probe['referenceMatchId']) {
-                return new ResolvedAssociation($probe['referenceMatchId'], [
-                    $this->associationWarning($rowIndex, $this->trans('Accessory "%target%" matches no product id; it was linked by reference.', 'Admin.Advparameters.Notification', ['%target%' => $target])),
-                ]);
-            }
-        } else {
-            $accessoryId = $this->identityResolver->findExistingByReferenceThenId($target, null, $context->getShopId());
-            if (null !== $accessoryId) {
-                return new ResolvedAssociation($accessoryId);
-            }
-        }
-
-        return new ResolvedAssociation(null, [
-            $this->associationError($rowIndex, $this->trans('Accessory "%target%" could not be resolved; the link was dropped.', 'Admin.Advparameters.Notification', ['%target%' => $target])),
-        ]);
+        return new ImportMessage(ImportMessage::SEVERITY_ERROR, $phaseId, $message, $rowIndex, 'accessories');
     }
 
-    protected function associationError(int $rowIndex, string $message): ImportMessage
+    protected function accessoryWarning(int $rowIndex, string $message, string $phaseId = ImportPhaseDefinition::PHASE_ASSOCIATION): ImportMessage
     {
-        return new ImportMessage(ImportMessage::SEVERITY_ERROR, ImportPhaseDefinition::PHASE_ASSOCIATION, $message, $rowIndex, 'accessories');
-    }
-
-    protected function associationWarning(int $rowIndex, string $message): ImportMessage
-    {
-        return new ImportMessage(ImportMessage::SEVERITY_WARNING, ImportPhaseDefinition::PHASE_ASSOCIATION, $message, $rowIndex, 'accessories');
+        return new ImportMessage(ImportMessage::SEVERITY_WARNING, $phaseId, $message, $rowIndex, 'accessories');
     }
 
     /**

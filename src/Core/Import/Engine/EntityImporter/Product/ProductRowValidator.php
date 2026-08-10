@@ -9,15 +9,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
-use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
@@ -44,15 +39,16 @@ class ProductRowValidator
     protected const DIMENSION_FIELDS = ['width', 'height', 'depth', 'weight'];
     protected const DATE_FIELDS = ['available_date', 'date_add', 'reduction_from', 'reduction_to', 'date_expiration'];
     protected const BOOLEAN_FIELDS = ['active', 'on_sale', 'online_only', 'available_for_order', 'show_price', 'delete_existing_images', 'is_virtual', 'customizable', 'low_stock_alert'];
-    protected const INTEGER_FIELDS = ['quantity', 'minimal_quantity', 'low_stock_threshold', 'nb_downloadable', 'nb_days_accessible'];
+    protected const INTEGER_FIELDS = ['quantity', 'low_stock_threshold'];
+    /** Non-negative integer counts — a negative value is meaningless and the field is ignored, mirroring the database phase */
+    protected const COUNT_FIELDS = ['minimal_quantity', 'nb_days_accessible', 'nb_downloadable'];
     /** Non-negative integer COUNTS of customization fields to create (not booleans) */
-    protected const CUSTOMIZATION_COUNT_FIELDS = ['uploadable_files', 'text_fields'];
+    protected const CUSTOMIZATION_COUNT_FIELDS = ['text_fields', 'uploadable_files'];
 
     public function __construct(
         protected readonly ValueParser $valueParser,
         protected readonly ProductIdentityResolver $identityResolver,
-        protected readonly CategoryRepository $categoryRepository,
-        protected readonly TaxRulesGroupRepository $taxRulesGroupRepository,
+        protected readonly ImportEntityExistenceChecker $existenceChecker,
         protected readonly TranslatorInterface $translator,
     ) {
     }
@@ -66,12 +62,19 @@ class ProductRowValidator
     {
         $messages = [];
 
+        // fail fast: resolve() would throw for the same reason (a match_ref
+        // creation must never duplicate a reference living on another shop)
+        $reference = $row['reference'] ?? '';
+        if ($context->getOptions()->matchRef && '' !== $reference && $this->identityResolver->referenceExistsOutsideScope($reference, $context)) {
+            return [$this->error($rowIndex, 'reference', $this->translator->trans('The reference "%value%" matches a product outside the run\'s shop scope; the row was skipped to avoid creating a duplicate product.', ['%value%' => $reference], 'Admin.Advparameters.Notification'))];
+        }
+
         $match = $this->identityResolver->resolve($row, $context);
         if (!$match->isUpdate() && '' === ($row['name'] ?? '')) {
             $messages[] = $this->error($rowIndex, 'name', $this->translator->trans('The name is required when creating a product.', [], 'Admin.Advparameters.Notification'));
         }
 
-        $this->validateFormats($row, $rowIndex, $messages);
+        $this->validateFormats($row, $rowIndex, $context, $messages);
         $this->validateEnums($row, $rowIndex, $messages);
         $this->validateNumbers($row, $rowIndex, $messages);
         $this->validateDatesAndBooleans($row, $rowIndex, $messages);
@@ -85,7 +88,7 @@ class ProductRowValidator
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    protected function validateFormats(array $row, int $rowIndex, array &$messages): void
+    protected function validateFormats(array $row, int $rowIndex, ImportRunContext $context, array &$messages): void
     {
         $reference = $row['reference'] ?? '';
         if ('' !== $reference && (mb_strlen($reference) > self::REFERENCE_MAX_LENGTH || !preg_match(self::REFERENCE_PATTERN, $reference))) {
@@ -106,12 +109,14 @@ class ProductRowValidator
         }
 
         $isbn = $row['isbn'] ?? '';
-        if (mb_strlen($isbn) > self::ISBN_MAX_LENGTH) {
+        if ('' !== $isbn && mb_strlen($isbn) > self::ISBN_MAX_LENGTH) {
             $messages[] = $this->error($rowIndex, 'isbn', $this->translator->trans('Invalid ISBN "%value%".', ['%value%' => $isbn], 'Admin.Advparameters.Notification'));
         }
 
+        // without force IDs the id column is ignored entirely, so a malformed
+        // value must not fail the row
         $id = $row['id'] ?? '';
-        if ('' !== $id && !ctype_digit($id)) {
+        if ($context->getOptions()->forceIds && '' !== $id && !ctype_digit($id)) {
             $messages[] = $this->error($rowIndex, 'id', $this->translator->trans('Invalid id "%value%", expected a positive number.', ['%value%' => $id], 'Admin.Advparameters.Notification'));
         }
     }
@@ -132,9 +137,14 @@ class ProductRowValidator
             $messages[] = $this->error($rowIndex, 'condition', $this->translator->trans('Invalid condition "%value%".', ['%value%' => $condition], 'Admin.Advparameters.Notification'));
         }
 
+        // strict integer parsing first: '(int) "abc"' would silently pass as
+        // the valid enum value 0
         $outOfStock = $row['out_of_stock'] ?? '';
-        if ('' !== $outOfStock && !in_array((int) $outOfStock, [OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE, OutOfStockType::OUT_OF_STOCK_AVAILABLE, OutOfStockType::OUT_OF_STOCK_DEFAULT], true)) {
-            $messages[] = $this->warning($rowIndex, 'out_of_stock', $this->translator->trans('Invalid out-of-stock action "%value%", the field will be ignored.', ['%value%' => $outOfStock], 'Admin.Advparameters.Notification'));
+        if ('' !== $outOfStock) {
+            $parsedOutOfStock = $this->valueParser->parseInteger($outOfStock);
+            if (null === $parsedOutOfStock || !in_array($parsedOutOfStock, [OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE, OutOfStockType::OUT_OF_STOCK_AVAILABLE, OutOfStockType::OUT_OF_STOCK_DEFAULT], true)) {
+                $messages[] = $this->warning($rowIndex, 'out_of_stock', $this->translator->trans('Invalid out-of-stock action "%value%", the field will be ignored.', ['%value%' => $outOfStock], 'Admin.Advparameters.Notification'));
+            }
         }
     }
 
@@ -180,14 +190,21 @@ class ProductRowValidator
 
         foreach (self::INTEGER_FIELDS as $field) {
             $value = $row[$field] ?? '';
-            if ('' !== $value && !preg_match('/^-?[0-9]+$/', $value)) {
+            if ('' !== $value && null === $this->valueParser->parseInteger($value)) {
+                $messages[] = $this->warning($rowIndex, $field, $this->translator->trans('Invalid number "%value%", the field will be ignored.', ['%value%' => $value], 'Admin.Advparameters.Notification'));
+            }
+        }
+
+        foreach (self::COUNT_FIELDS as $field) {
+            $value = $row[$field] ?? '';
+            if ('' !== $value && null === $this->valueParser->parseCount($value)) {
                 $messages[] = $this->warning($rowIndex, $field, $this->translator->trans('Invalid number "%value%", the field will be ignored.', ['%value%' => $value], 'Admin.Advparameters.Notification'));
             }
         }
 
         foreach (self::CUSTOMIZATION_COUNT_FIELDS as $field) {
             $value = $row[$field] ?? '';
-            if ('' !== $value && !preg_match('/^[0-9]+$/', $value)) {
+            if ('' !== $value && null === $this->valueParser->parseCount($value)) {
                 $messages[] = $this->warning($rowIndex, $field, $this->translator->trans('Invalid count "%value%" (expected a number of customization fields, 0 or more), the field will be ignored.', ['%value%' => $value], 'Admin.Advparameters.Notification'));
             }
         }
@@ -229,7 +246,7 @@ class ProductRowValidator
         }
 
         foreach ($this->valueParser->split($categories, $context->getMultipleValueSeparator()) as $entry) {
-            if (ctype_digit($entry) && !$this->categoryExists((int) $entry)) {
+            if (ctype_digit($entry) && !$this->existenceChecker->exists('category', (int) $entry)) {
                 $messages[] = $this->error($rowIndex, 'category', $this->translator->trans('Category with id %id% does not exist.', ['%id%' => $entry], 'Admin.Advparameters.Notification'));
             }
         }
@@ -246,43 +263,9 @@ class ProductRowValidator
             return;
         }
 
-        if (!ctype_digit($taxRulesGroupId) || !$this->taxRulesGroupExists((int) $taxRulesGroupId)) {
+        if (!ctype_digit($taxRulesGroupId) || !$this->existenceChecker->exists('tax_rules_group', (int) $taxRulesGroupId)) {
             $messages[] = $this->warning($rowIndex, 'id_tax_rules_group', $this->translator->trans('Tax rules group %id% does not exist, the field will be ignored (tax rules groups are never auto-created).', ['%id%' => $taxRulesGroupId], 'Admin.Advparameters.Notification'));
         }
-    }
-
-    protected function categoryExists(int $categoryId): bool
-    {
-        if ($categoryId <= 0) {
-            return false;
-        }
-
-        try {
-            $this->categoryRepository->assertCategoryExists(new CategoryId($categoryId));
-        } catch (CategoryNotFoundException) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Soft-deleted (historized) groups are treated as absent — assigning one
-     * would resurrect it on the product.
-     */
-    protected function taxRulesGroupExists(int $taxRulesGroupId): bool
-    {
-        if ($taxRulesGroupId <= 0) {
-            return false;
-        }
-
-        try {
-            $taxRulesGroup = $this->taxRulesGroupRepository->get(new TaxRulesGroupId($taxRulesGroupId));
-        } catch (TaxRulesGroupNotFoundException) {
-            return false;
-        }
-
-        return !(bool) $taxRulesGroup->deleted;
     }
 
     protected function error(int $rowIndex, string $field, string $message): ImportMessage

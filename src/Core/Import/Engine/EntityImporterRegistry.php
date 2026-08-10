@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Import\Engine;
 
+use PrestaShop\PrestaShop\Core\Import\Engine\Exception\DuplicateEntityTypeException;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\UnknownEntityTypeException;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
@@ -63,13 +64,19 @@ class EntityImporterRegistry
 
     /**
      * @return array<string, EntityImporterInterface>
+     *
+     * @throws DuplicateEntityTypeException when two importers declare the same entity type
      */
     protected function getIndex(): array
     {
         if (null === $this->index) {
             $this->index = [];
             foreach ($this->importers as $importer) {
-                $this->index[$importer->getEntityType()] = $importer;
+                $entityType = $importer->getEntityType();
+                if (isset($this->index[$entityType])) {
+                    throw new DuplicateEntityTypeException(sprintf('Entity type "%s" is declared by both %s and %s; to replace an importer, decorate its service instead', $entityType, get_class($this->index[$entityType]), get_class($importer)));
+                }
+                $this->index[$entityType] = $importer;
             }
         }
 

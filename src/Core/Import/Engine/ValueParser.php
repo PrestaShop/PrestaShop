@@ -84,6 +84,45 @@ class ValueParser
     }
 
     /**
+     * Like split(), but empty entries are KEPT (trimmed to ''): positional
+     * multi-value cells (image_alt aligned on image) need the holes to keep
+     * the values aligned with their sibling column.
+     *
+     * @return list<string>
+     */
+    public function splitPreservingEmpty(string $value, string $separator): array
+    {
+        if ('' === trim($value)) {
+            return [];
+        }
+
+        return array_map(static fn (?string $part): string => trim((string) $part), str_getcsv($value, $separator, '"', ''));
+    }
+
+    /**
+     * Strict signed-integer parsing (optional leading '-'). Returns null when
+     * the cell is not an integer string — callers warn and ignore the field.
+     */
+    public function parseInteger(string $value): ?int
+    {
+        $value = trim($value);
+
+        return preg_match('/^-?[0-9]+$/', $value) ? (int) $value : null;
+    }
+
+    /**
+     * Strict non-negative integer parsing, for fields that count things
+     * (quantities of fields to create, numbers of days/downloads). Returns
+     * null for anything else, including negative integers.
+     */
+    public function parseCount(string $value): ?int
+    {
+        $value = trim($value);
+
+        return preg_match('/^[0-9]+$/', $value) ? (int) $value : null;
+    }
+
+    /**
      * Parses 'Y-m-d' or 'Y-m-d H:i:s' dates. Returns null when unparseable.
      */
     public function parseDate(string $value): ?DateTimeImmutable

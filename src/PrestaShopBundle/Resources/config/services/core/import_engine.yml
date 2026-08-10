@@ -1,6 +1,5 @@
 services:
   _defaults:
-    public: true
     autowire: true
     autoconfigure: true
 
@@ -14,7 +13,6 @@ services:
 
   PrestaShop\PrestaShop\Core\Import\File\ResumableFileReaderInterface:
     alias: prestashop.core.import.engine.csv_file_reader
-    public: true
 
   PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer: ~
   PrestaShop\PrestaShop\Core\Import\Engine\ValueParser: ~
@@ -24,10 +22,19 @@ services:
   # any autoconfigured service implementing EntityImporterInterface
   # (registerForAutoconfiguration in PrestaShopExtension) - including module
   # services, as long as their definitions enable autoconfiguration.
-  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterRegistry: ~
+  # Public: it is the engine's single entry point — nothing injects it yet
+  # (the PR2 CQRS handlers will), so it must stay resolvable by id, and its
+  # reference is what keeps the tagged importers alive in the container.
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterRegistry:
+    public: true
 
   # Shared entity-importer internals
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\RowMapper: ~
+
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
 
   # Product importer and its internals (persistence goes through CQRS
   # commands and the existing Adapter repositories)
@@ -38,6 +45,5 @@ services:
     arguments:
       $dataFormatter: '@prestashop.adapter.import.data_formatter'
 
-  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\AccessoriesPrecheck: ~
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter: ~
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ProductImporter: ~

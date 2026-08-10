@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
 
 use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ImportEngineException;
 use SplFileInfo;
 
 /**
@@ -23,10 +24,15 @@ use SplFileInfo;
  *
  * Row indexes are 0-based DATA-RECORD indexes in the working file. The
  * working file is produced once by CsvImportFileNormalizer using the canonical
- * CSV dialect, with the configured skip rows already stripped: csvSeparator
- * and the skip count are properties of the ORIGINAL upload, consumed at
- * normalization time only — the engine never sees either. Presenters add the
- * run's skip count back when they need source-file line numbers.
+ * CSV dialect, with the configured skip rows already stripped: the original
+ * CSV separator and the skip count are properties of the ORIGINAL upload,
+ * consumed at normalization time only — the engine never sees either.
+ * Presenters add the run's skip count back when they need source-file line
+ * numbers.
+ *
+ * The ShopConstraint is the run's frozen shop scope reference: every
+ * shop-sensitive read (configuration, scoped entity lookups) and every shop
+ * association written during the run derives from it.
  */
 class ImportRunContext
 {
@@ -59,11 +65,10 @@ class ImportRunContext
         protected readonly string $workingFilePath,
         protected readonly int $dataRecordCount,
         protected readonly string $langIso,
-        protected readonly string $csvSeparator,
         protected readonly string $multipleValueSeparator,
         protected readonly array $fieldMapping,
         protected readonly ImportRunOptions $options,
-        protected readonly int $shopId,
+        protected readonly ShopConstraint $shopConstraint,
     ) {
     }
 
@@ -94,11 +99,6 @@ class ImportRunContext
     public function getLangIso(): string
     {
         return $this->langIso;
-    }
-
-    public function getCsvSeparator(): string
-    {
-        return $this->csvSeparator;
     }
 
     public function getMultipleValueSeparator(): string
@@ -137,14 +137,25 @@ class ImportRunContext
         return $this->options;
     }
 
-    public function getShopId(): int
-    {
-        return $this->shopId;
-    }
-
     public function getShopConstraint(): ShopConstraint
     {
-        return ShopConstraint::shop($this->shopId);
+        return $this->shopConstraint;
+    }
+
+    /**
+     * Concrete shop id DERIVED from the constraint, for the few paths that
+     * genuinely need exactly one shop (stock reads, forced-id creation).
+     * Scope-aware code must use getShopConstraint() instead.
+     *
+     * @throws ImportEngineException when the run is not scoped to a single shop
+     */
+    public function getShopId(): int
+    {
+        if (!$this->shopConstraint->isSingleShopContext()) {
+            throw new ImportEngineException('This import run is not scoped to a single shop; use getShopConstraint() instead of getShopId()');
+        }
+
+        return $this->shopConstraint->getShopId()->getValue();
     }
 
     /**
