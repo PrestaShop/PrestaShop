@@ -93,6 +93,7 @@ class CarrierFormDataProviderTest extends TestCase
         $zonesChoiceProvider = $this->createMock(ZoneByIdChoiceProvider::class);
         $zonesChoiceProvider
             ->method('getChoices')
+            ->with(['mark_inactive' => true])
             ->willReturn([
                 'Zone A' => 1,
                 'Zone B' => 2,

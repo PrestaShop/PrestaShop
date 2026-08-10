@@ -53,6 +53,7 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                 'label_help_box' => $this->trans('Zones that the carrier can handle', 'Admin.Shipping.Help'),
                 'required' => true,
                 'multiple' => true,
+                'mark_inactive' => true,
                 'external_link' => [
                     'text' => $this->trans('[1]Manage locations[/1]', 'Admin.Shipping.Feature'),
                     'position' => 'below',
