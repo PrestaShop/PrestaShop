@@ -1832,7 +1832,7 @@ class AdminImportControllerCore extends AdminController
                 if ($product->getType() == Product::PTYPE_VIRTUAL) {
                     $product_download = new ProductDownload();
                     $product_download->filename = ProductDownload::getNewFilename();
-                    Tools::copy($info['file_url'], _PS_DOWNLOAD_DIR_ . $product_download->filename, null, ['restrict_ssrf' => true]);
+                    Tools::copyFromUntrustedSource($info['file_url'], _PS_DOWNLOAD_DIR_ . $product_download->filename);
                     $product_download->id_product = (int) $product->id;
                     $product_download->nb_downloadable = (int) $info['nb_downloadable'];
                     $product_download->date_expiration = $info['date_expiration'];

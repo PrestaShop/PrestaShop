@@ -785,7 +785,9 @@ class ImageManagerCore
         $url = urldecode(trim($url));
         $parced_url = parse_url($url);
 
-        if ($parced_url === false || !self::isImportImageUrlSafe($parced_url)) {
+        // A malformed URL would blow up in http_build_url() below.
+        // The scheme/host allow-list itself lives in Tools::copyFromUntrustedSource().
+        if ($parced_url === false) {
             @unlink($tmpfile);
 
             return false;
@@ -812,7 +814,7 @@ class ImageManagerCore
         $orig_tmpfile = $tmpfile;
 
         // Untrusted URL (import): use the SSRF-hardened download path.
-        if (Tools::copy($url, $tmpfile, null, ['restrict_ssrf' => true])) {
+        if (Tools::copyFromUntrustedSource($url, $tmpfile)) {
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (!ImageManager::checkImageMemoryLimit($tmpfile)) {
                 @unlink($tmpfile);
@@ -869,31 +871,6 @@ class ImageManagerCore
             return false;
         }
         unlink($orig_tmpfile);
-
-        return true;
-    }
-
-    /**
-     * Validates an import image target URL.
-     * Remote URLs are restricted to Tools::UNTRUSTED_URL_ALLOWED_SCHEMES.
-     *
-     * @param array $parsedUrl
-     *
-     * @return bool
-     */
-    protected static function isImportImageUrlSafe($parsedUrl)
-    {
-        if (!isset($parsedUrl['scheme'])) {
-            return true;
-        }
-
-        if (!Tools::isUntrustedUrlSchemeAllowed($parsedUrl['scheme'])) {
-            return false;
-        }
-
-        if (empty($parsedUrl['host'])) {
-            return false;
-        }
 
         return true;
     }

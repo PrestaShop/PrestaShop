@@ -38,14 +38,60 @@ class ToolsCore
      * Schemes an untrusted (user-supplied) URL is allowed to use, mapped to their default port.
      * Any other wrapper (phar://, file://, gopher://, data://, ...) is rejected.
      *
-     * @see Tools::copy() $options['restrict_ssrf']
+     * Must stay in sync with the CURLPROTO_* mask applied in file_get_contents_curl():
+     * a scheme accepted here has to be one curl is also allowed to speak, otherwise a URL
+     * passes our own validation only for curl to refuse it -- or, when CURLPROTO_HTTP is
+     * not defined and no mask can be applied, to be fetched with a protocol we never
+     * meant to allow. That is why sftp is absent.
+     *
+     * @see Tools::copyFromUntrustedSource()
      */
     public const UNTRUSTED_URL_ALLOWED_SCHEMES = [
         'http' => 80,
         'https' => 443,
         'ftp' => 21,
         'ftps' => 990,
-        'sftp' => 22,
+    ];
+
+    /**
+     * IPv4 ranges that FILTER_FLAG_NO_PRIV_RANGE|FILTER_FLAG_NO_RES_RANGE does
+     * NOT reject but that are never a legitimate remote source.
+     * Each entry is [network, prefix length].
+     */
+    protected const SSRF_BLOCKED_IPV4_RANGES = [
+        ['100.64.0.0', 10],   // RFC 6598 shared address space (CGNAT), used as internal range by some hosts
+        ['192.0.0.0', 24],    // RFC 6890 IETF protocol assignments
+        ['192.0.2.0', 24],    // RFC 5737 TEST-NET-1
+        ['198.18.0.0', 15],   // RFC 2544 benchmarking
+        ['198.51.100.0', 24], // RFC 5737 TEST-NET-2
+        ['203.0.113.0', 24],  // RFC 5737 TEST-NET-3
+        ['224.0.0.0', 4],     // multicast
+    ];
+
+    /**
+     * IPv6 ranges that FILTER_FLAG_NO_PRIV_RANGE|FILTER_FLAG_NO_RES_RANGE does
+     * NOT reject but that are never a legitimate remote source.
+     * Each entry is [network, prefix length].
+     */
+    protected const SSRF_BLOCKED_IPV6_RANGES = [
+        ['ff00::', 8],   // multicast (fe80::1 is caught by filter_var, ff02::1 is not)
+        ['100::', 64],   // RFC 6666 discard-only
+        ['fec0::', 10],  // deprecated site-local (filter_var only catches fe80::/10)
+        ['2001::', 32],  // Teredo: embeds an obfuscated IPv4 address, reject wholesale
+    ];
+
+    /**
+     * IPv6 ranges that carry an IPv4 address inside them. Such an address must be
+     * range-checked as the IPv4 address it really reaches, because the IPv4 flags of
+     * filter_var() do not apply to IPv6 notation: without this, ::ffff:169.254.169.254
+     * is reported as a public address and the cloud metadata endpoint stays reachable.
+     * Each entry is [network, prefix length, byte offset of the embedded IPv4].
+     */
+    protected const SSRF_IPV4_IN_IPV6_RANGES = [
+        ['::ffff:0:0', 96, 12], // IPv4-mapped
+        ['64:ff9b::', 96, 12],  // RFC 6052 NAT64
+        ['::', 96, 12],         // deprecated IPv4-compatible
+        ['2002::', 16, 2],      // RFC 3056 6to4
     ];
 
     protected static $file_exists_cache = [];
@@ -58,6 +104,14 @@ class ToolsCore
     protected static $cldr_cache = [];
     protected static $colorBrightnessCalculator;
     protected static $fallbackParameters = [];
+
+    /**
+     * Memoizes resolvePublicIps() for the duration of the request: importing a few
+     * thousand images from the same host would otherwise issue as many DNS lookups.
+     *
+     * @var array<string, string[]>
+     */
+    protected static $untrusted_url_resolve_cache = [];
 
     public static $round_mode = null;
 
@@ -77,6 +131,7 @@ class ToolsCore
     public static function resetStaticCache()
     {
         static::$cldr_cache = [];
+        static::$untrusted_url_resolve_cache = [];
     }
 
     /**
@@ -1851,7 +1906,11 @@ class ToolsCore
                 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
                 // curl connects to this exact address, so the hostname cannot be
                 // re-pointed at an internal host after our check (DNS rebinding).
-                curl_setopt($curl, CURLOPT_RESOLVE, [$pinnedResolve]);
+                // An empty entry means the host was validated but is not pinnable
+                // (outbound proxy), in which case there is nothing to set.
+                if ('' !== $pinnedResolve) {
+                    curl_setopt($curl, CURLOPT_RESOLVE, [$pinnedResolve]);
+                }
                 if (defined('CURLPROTO_HTTP')) {
                     $allowedProtocols = CURLPROTO_HTTP | CURLPROTO_HTTPS | CURLPROTO_FTP | CURLPROTO_FTPS;
                     curl_setopt($curl, CURLOPT_PROTOCOLS, $allowedProtocols);
@@ -1916,7 +1975,8 @@ class ToolsCore
      *
      * @param string $url
      *
-     * @return string|null a "host:port:ip" entry, or null when the URL must not be fetched
+     * @return string|null a "host:port:ip" entry, an empty string when the URL is valid but
+     *                     cannot be pinned (see below), or null when it must not be fetched
      */
     protected static function getPinnedResolveEntry($url)
     {
@@ -1931,16 +1991,73 @@ class ToolsCore
         }
 
         // Strips the brackets of an IPv6 literal.
-        $host = trim($parts['host'], '[]');
+        $host = static::hostToAscii(trim($parts['host'], '[]'));
+        if (null === $host) {
+            return null;
+        }
 
         $publicIps = static::resolvePublicIps($host);
         if (empty($publicIps)) {
             return null;
         }
 
-        $port = isset($parts['port']) ? (int) $parts['port'] : static::UNTRUSTED_URL_ALLOWED_SCHEMES[$scheme];
+        // An outbound proxy does the resolving itself, so CURLOPT_RESOLVE would be ignored.
+        // The host has still been validated above; returning an empty entry keeps the
+        // download working on a proxy-only server instead of failing it outright, at the
+        // cost of the anti-rebinding guarantee, which is unobtainable through a proxy.
+        if (static::hasOutboundProxy()) {
+            return '';
+        }
 
-        return $host . ':' . $port . ':' . $publicIps[0];
+        $port = isset($parts['port']) ? (int) $parts['port'] : static::UNTRUSTED_URL_ALLOWED_SCHEMES[$scheme];
+        $ip = $publicIps[0];
+
+        return $host . ':' . $port . ':' . (strpos($ip, ':') === false ? $ip : '[' . $ip . ']');
+    }
+
+    /**
+     * Converts an internationalised host name to its ASCII (punycode) form.
+     *
+     * Required for two reasons: PHP's resolver functions do not perform the conversion
+     * themselves the way libcurl does, so an IDN host resolves partially at best and is
+     * then refused; and the CURLOPT_RESOLVE cache key has to be the ASCII form, which is
+     * what libcurl actually looks up.
+     *
+     * @param string $host
+     *
+     * @return string|null null when the host cannot be represented in ASCII
+     */
+    protected static function hostToAscii($host)
+    {
+        // Nothing to do for a plain ASCII host, which is the overwhelming majority.
+        if (!preg_match('/[^\x20-\x7f]/', $host)) {
+            return $host;
+        }
+
+        if (!function_exists('idn_to_ascii')) {
+            return null;
+        }
+
+        $ascii = idn_to_ascii($host, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+
+        return $ascii === false ? null : $ascii;
+    }
+
+    /**
+     * Whether an outbound proxy is configured through the environment. libcurl picks these
+     * up on its own, and when it does it resolves host names itself.
+     *
+     * @return bool
+     */
+    protected static function hasOutboundProxy()
+    {
+        foreach (['http_proxy', 'HTTP_PROXY', 'https_proxy', 'HTTPS_PROXY', 'all_proxy', 'ALL_PROXY'] as $var) {
+            if (!empty(getenv($var))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -1975,7 +2092,6 @@ class ToolsCore
      * @param resource $stream_context third parameter of http://php.net/manual/en/function.file-get-contents.php
      * @param int $curl_timeout
      * @param bool $fallback whether or not to use the fallback if the main solution fails
-     * @param array $options behaviour flags, see Tools::file_get_contents_curl()
      *
      * @return string|false false or the file content
      */
@@ -1984,15 +2100,8 @@ class ToolsCore
         $use_include_path = false,
         $stream_context = null,
         $curl_timeout = 5,
-        $fallback = false,
-        array $options = []
+        $fallback = false
     ) {
-        // Untrusted source: always go through the hardened curl path, never through the
-        // stream wrappers, and never fall back to fopen.
-        if (!empty($options['restrict_ssrf'])) {
-            return Tools::file_get_contents_curl($url, $curl_timeout, null, $options);
-        }
-
         $is_local_file = !preg_match('/^https?:\/\//', $url);
         $require_fopen = false;
         $opts = null;
@@ -2086,49 +2195,67 @@ class ToolsCore
     }
 
     /**
-     * $options['restrict_ssrf'] turns on hardening for untrusted (user-supplied) sources,
-     * e.g. CSV imports. It is off by default to preserve backward compatibility for the many
-     * internal callers.
+     * Copies a local or remote source to a local destination.
      *
-     * Hardened mode is a defense in depth against CWE-918: remote sources are restricted to
-     * the UNTRUSTED_URL_ALLOWED_SCHEMES allow-list, so any other wrapper (phar://, file://,
-     * gopher://, data://, ...) is rejected; hosts must resolve to public addresses only; the
-     * resolved IP is pinned (anti DNS-rebinding) and every redirect hop is re-validated.
-     * Local (scheme-less) sources keep the historical copy() behaviour.
+     * WARNING: this follows the source wherever it points, which means an
+     * attacker-controlled $source can reach the local network (CWE-918) or a PHP stream
+     * wrapper such as phar://. Any caller whose $source can be influenced by user input
+     * MUST use copyFromUntrustedSource() instead.
      *
      * @param string $source
      * @param string $destination
      * @param resource|null $stream_context
-     * @param array $options behaviour flags, see above
      *
-     * @return bool
+     * @return bool|int
      */
-    public static function copy($source, $destination, $stream_context = null, array $options = [])
+    public static function copy($source, $destination, $stream_context = null)
     {
-        if (!empty($options['restrict_ssrf'])) {
-            $parsed = parse_url($source);
-            if ($parsed === false) {
-                return false;
-            }
-
-            // No scheme => local path: preserve the historical copy behaviour.
-            if (!isset($parsed['scheme'])) {
-                return @copy($source, $destination);
-            }
-
-            $content = Tools::file_get_contents($source, false, null, 30, false, $options);
-            if (false === $content) {
-                return false;
-            }
-
-            return (bool) @file_put_contents($destination, $content);
-        }
-
         if (null === $stream_context && !preg_match('/^https?:\/\//', $source)) {
             return @copy($source, $destination);
         }
 
         return @file_put_contents($destination, Tools::file_get_contents($source, false, $stream_context));
+    }
+
+    /**
+     * SSRF-hardened variant of copy(), for sources that can be influenced by user input,
+     * e.g. CSV imports.
+     *
+     * Defense in depth against CWE-918: remote sources are restricted to the
+     * UNTRUSTED_URL_ALLOWED_SCHEMES allow-list, so any other wrapper (phar://, file://,
+     * gopher://, data://, ...) is rejected; hosts must resolve to public addresses only; the
+     * resolved IP is pinned (anti DNS-rebinding) and every redirect hop is re-validated.
+     * Local (scheme-less) sources keep the historical copy() behaviour.
+     *
+     * This is a separate method rather than an extra argument on copy() on purpose:
+     * adding a parameter to a public method turns every shop that overrides it into a
+     * fatal "declaration must be compatible" error.
+     *
+     * @param string $source
+     * @param string $destination
+     *
+     * @return bool
+     */
+    public static function copyFromUntrustedSource($source, $destination)
+    {
+        $parsed = parse_url($source);
+        if ($parsed === false) {
+            return false;
+        }
+
+        // No scheme => local path: preserve the historical copy behaviour.
+        if (!isset($parsed['scheme'])) {
+            return @copy($source, $destination);
+        }
+
+        // Straight to the hardened curl path: never the stream wrappers, never a fopen
+        // fallback, so that a rejected URL cannot be retried through a weaker route.
+        $content = Tools::file_get_contents_curl($source, 30, null, ['restrict_ssrf' => true]);
+        if (false === $content) {
+            return false;
+        }
+
+        return (bool) @file_put_contents($destination, $content);
     }
 
     /**
@@ -2142,9 +2269,14 @@ class ToolsCore
      */
     public static function resolvePublicIps($host)
     {
-        // IP literal: validate directly.
+        // IP literal: validate directly, no lookup and nothing worth caching.
         if (filter_var($host, FILTER_VALIDATE_IP)) {
             return static::isPublicIp($host) ? [$host] : [];
+        }
+
+        // Refusals are cached too: a CSV full of bad rows must not re-resolve every time.
+        if (isset(static::$untrusted_url_resolve_cache[$host])) {
+            return static::$untrusted_url_resolve_cache[$host];
         }
 
         $ips = [];
@@ -2163,18 +2295,20 @@ class ToolsCore
             }
         }
 
-        if (empty($ips)) {
-            return [];
-        }
-
         // Every resolved address must be public, otherwise refuse.
-        foreach ($ips as $ip) {
-            if (!static::isPublicIp($ip)) {
-                return [];
+        $result = [];
+        if (!empty($ips)) {
+            $result = array_values(array_unique($ips));
+            foreach ($result as $ip) {
+                if (!static::isPublicIp($ip)) {
+                    $result = [];
+
+                    break;
+                }
             }
         }
 
-        return array_values(array_unique($ips));
+        return static::$untrusted_url_resolve_cache[$host] = $result;
     }
 
     /**
@@ -2184,11 +2318,100 @@ class ToolsCore
      */
     public static function isPublicIp($ip)
     {
-        return (bool) filter_var(
-            $ip,
-            FILTER_VALIDATE_IP,
-            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
-        );
+        // An IPv6 address that embeds an IPv4 one must be judged on the IPv4 address it
+        // actually reaches; the IPv4 range flags below are not applied to IPv6 notation.
+        $ip = static::normalizeIpForRangeCheck($ip);
+        if ($ip === null) {
+            return false;
+        }
+
+        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return false;
+        }
+
+        // filter_var() leaves a number of non-routable ranges through, complete the job.
+        $packed = @inet_pton($ip);
+        if ($packed === false) {
+            return false;
+        }
+        $ranges = strlen($packed) === 4 ? static::SSRF_BLOCKED_IPV4_RANGES : static::SSRF_BLOCKED_IPV6_RANGES;
+        foreach ($ranges as $range) {
+            if (static::packedIpInRange($packed, $range[0], $range[1])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Canonicalises an IP address for range checking: IPv6 forms that embed an IPv4
+     * address (IPv4-mapped, IPv4-compatible, NAT64, 6to4) are reduced to that IPv4
+     * address, everything else is returned unchanged.
+     *
+     * @param string $ip
+     *
+     * @return string|null null when $ip is not a valid IP address
+     */
+    protected static function normalizeIpForRangeCheck($ip)
+    {
+        if (!is_string($ip) || !filter_var($ip, FILTER_VALIDATE_IP)) {
+            return null;
+        }
+
+        $packed = @inet_pton($ip);
+        if ($packed === false) {
+            return null;
+        }
+
+        // Only IPv6 addresses can wrap an IPv4 one.
+        if (strlen($packed) !== 16) {
+            return $ip;
+        }
+
+        foreach (static::SSRF_IPV4_IN_IPV6_RANGES as $range) {
+            if (!static::packedIpInRange($packed, $range[0], $range[1])) {
+                continue;
+            }
+
+            $embedded = @inet_ntop(substr($packed, $range[2], 4));
+
+            return $embedded === false ? null : $embedded;
+        }
+
+        return $ip;
+    }
+
+    /**
+     * Tests a packed IP address (as returned by inet_pton) against a CIDR range.
+     * Works for both address families; a family mismatch is never a match.
+     *
+     * @param string $packedIp
+     * @param string $network
+     * @param int $prefixLength
+     *
+     * @return bool
+     */
+    protected static function packedIpInRange($packedIp, $network, $prefixLength)
+    {
+        $packedNetwork = @inet_pton($network);
+        if ($packedNetwork === false || strlen($packedNetwork) !== strlen($packedIp)) {
+            return false;
+        }
+
+        $wholeBytes = intdiv($prefixLength, 8);
+        if ($wholeBytes > 0 && strncmp($packedIp, $packedNetwork, $wholeBytes) !== 0) {
+            return false;
+        }
+
+        $remainingBits = $prefixLength % 8;
+        if ($remainingBits === 0) {
+            return true;
+        }
+
+        $mask = (0xFF << (8 - $remainingBits)) & 0xFF;
+
+        return (ord($packedIp[$wholeBytes]) & $mask) === (ord($packedNetwork[$wholeBytes]) & $mask);
     }
 
     /**
