@@ -10,6 +10,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Module\QueryResult;
 
 class ModuleInfos
 {
+    /**
+     * @param string[] $overriddenFiles Paths of the files overriding this module, relative to the shop root
+     */
     public function __construct(
         private readonly ?int $moduleId,
         private readonly string $technicalName,
@@ -17,6 +20,8 @@ class ModuleInfos
         private readonly ?string $installedVersion,
         private readonly bool $enabled,
         private readonly bool $installed,
+        private readonly bool $overridden = false,
+        private readonly array $overriddenFiles = [],
     ) {
     }
 
@@ -48,5 +53,22 @@ class ModuleInfos
     public function isInstalled(): bool
     {
         return $this->installed;
+    }
+
+    /**
+     * Whether files in the shop `override/modules/` folder customize this module, which an update
+     * is likely to break.
+     */
+    public function isOverridden(): bool
+    {
+        return $this->overridden;
+    }
+
+    /**
+     * @return string[] Paths of the files overriding this module, relative to the shop root
+     */
+    public function getOverriddenFiles(): array
+    {
+        return $this->overriddenFiles;
     }
 }

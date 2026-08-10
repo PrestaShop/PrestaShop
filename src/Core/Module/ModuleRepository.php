@@ -65,6 +65,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         HookManager $hookManager,
         string $modulePath,
         private LanguageContext $languageContext,
+        private OverriddenModulesProvider $overriddenModulesProvider,
     ) {
         $this->moduleDataProvider = $moduleDataProvider;
         $this->adminModuleDataProvider = $adminModuleDataProvider;
@@ -149,7 +150,10 @@ class ModuleRepository implements ModuleRepositoryInterface
             /** @var Module $module */
             $module = $this->cacheProvider->fetch($cacheKey);
             if ($module->getDiskAttributes()->get('filemtime') === $filemtime) {
-                return $this->enrichModuleAttributesFromHook($module);
+                /** @var Module $enrichedModule */
+                $enrichedModule = $this->enrichModuleAttributesFromHook($module);
+
+                return $this->enrichModuleOverrides($enrichedModule);
             }
         }
 
@@ -165,7 +169,10 @@ class ModuleRepository implements ModuleRepositoryInterface
         $coreModule = new Module($attributes, $disk, $database);
         $this->cacheProvider->save($cacheKey, $coreModule);
 
-        return $this->enrichModuleAttributesFromHook($coreModule);
+        /** @var Module $enrichedModule */
+        $enrichedModule = $this->enrichModuleAttributesFromHook($coreModule);
+
+        return $this->enrichModuleOverrides($enrichedModule);
     }
 
     public function getModulePath(string $moduleName): ?string
@@ -331,6 +338,24 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @return Module
      */
+    /**
+     * Fills the overrides of a module, deliberately after the cache has been read or written: the
+     * cached module is only invalidated when its own files change, while the files overriding it
+     * live outside the module folder and can appear or disappear at any time.
+     */
+    protected function enrichModuleOverrides(Module $module): Module
+    {
+        $moduleName = (string) $module->get('name');
+        $module->setOverrides(array_map(
+            static function (string $overriddenFile) use ($moduleName): string {
+                return 'override/modules/' . $moduleName . '/' . $overriddenFile;
+            },
+            $this->overriddenModulesProvider->getOverriddenFiles($moduleName)
+        ));
+
+        return $module;
+    }
+
     protected function enrichModuleAttributesFromHook(Module $module): ModuleInterface
     {
         try {

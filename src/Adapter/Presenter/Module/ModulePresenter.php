@@ -14,7 +14,6 @@ use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
-use PrestaShop\PrestaShop\Core\Module\OverriddenModulesProvider;
 
 class ModulePresenter implements PresenterInterface
 {
@@ -26,17 +25,10 @@ class ModulePresenter implements PresenterInterface
     /** @var PriceFormatter */
     private $priceFormatter;
 
-    /** @var OverriddenModulesProvider */
-    private $overriddenModulesProvider;
-
-    public function __construct(
-        Currency $currency,
-        PriceFormatter $priceFormatter,
-        OverriddenModulesProvider $overriddenModulesProvider
-    ) {
+    public function __construct(Currency $currency, PriceFormatter $priceFormatter)
+    {
         $this->currency = $currency;
         $this->priceFormatter = $priceFormatter;
-        $this->overriddenModulesProvider = $overriddenModulesProvider;
     }
 
     /**
@@ -62,22 +54,11 @@ class ModulePresenter implements PresenterInterface
             $attributes['multistoreCompatibility'] = $moduleInstance->getMultistoreCompatibility();
         }
 
-        $overriddenFiles = $this->overriddenModulesProvider->getOverriddenFiles($attributes['name']);
-
         $result = [
             'attributes' => $attributes,
             'disk' => $module->disk->all(),
             'database' => $module->database->all(),
-            'overrides' => [
-                'is_overridden' => [] !== $overriddenFiles,
-                // Displayed as is, so paths are relative to the shop root to be locatable
-                'files' => array_map(
-                    static function (string $overriddenFile) use ($attributes): string {
-                        return 'override/modules/' . $attributes['name'] . '/' . $overriddenFile;
-                    },
-                    $overriddenFiles
-                ),
-            ],
+            'overrides' => $module->overrides->all(),
         ];
 
         Hook::exec('actionPresentModule',
