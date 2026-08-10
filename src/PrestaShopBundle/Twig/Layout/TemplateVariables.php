@@ -65,6 +65,18 @@ class TemplateVariables
         return $this->isoUser;
     }
 
+    /**
+     * TinyMCE ships a language file per iso code and fails to load when one is missing, which is the
+     * case for several languages PrestaShop ships. Callers that hand an iso code to the editor must
+     * use this instead of the raw one.
+     */
+    public function getIsoUserForEditor(): string
+    {
+        return file_exists(_PS_CORE_DIR_ . '/js/tiny_mce/langs/' . $this->isoUser . '.js')
+            ? $this->isoUser
+            : 'en';
+    }
+
     public function isRtlLanguage(): bool
     {
         return $this->isRtlLanguage;

@@ -36,6 +36,11 @@ class TinyMCEEditor {
     if (typeof opts.langIsRtl === 'undefined') {
       opts.langIsRtl = typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
     }
+    if (typeof opts.language === 'undefined') {
+      // Not window.iso_user: TinyMCE has no language file for some of the shipped iso codes and
+      // fails to load when it is pointed at a missing one.
+      opts.language = typeof window.iso_user_editor !== 'undefined' ? window.iso_user_editor : 'en';
+    }
     this.setupTinyMCE(opts);
   }
 
@@ -68,7 +73,7 @@ class TinyMCEEditor {
         /* eslint-disable-next-line max-len */
         'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect,hr',
       toolbar2: '',
-      language: window.iso_user,
+      language: config.language,
       external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
       filemanager_title: 'File manager',
       external_plugins: {
