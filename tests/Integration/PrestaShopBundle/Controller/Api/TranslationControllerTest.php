@@ -9,16 +9,32 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShopBundle\Entity\Translation;
 use Tests\Integration\Utility\LoginTrait;
 
 class TranslationControllerTest extends ApiTestCase
 {
     use LoginTrait;
 
+    private const NON_CORE_THEME = 'fakeThemeForTranslations';
+    private const NON_CORE_THEME_DOMAIN = 'ShopThemeActions';
+    private const NON_CORE_THEME_MESSAGE = 'Refresh';
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->loginUser(self::$client);
+    }
+
+    protected function tearDown(): void
+    {
+        self::getContainer()->get('doctrine')->getManager()
+            ->createQuery('DELETE FROM ' . Translation::class . ' t WHERE t.theme = :theme')
+            ->setParameter('theme', self::NON_CORE_THEME)
+            ->execute()
+        ;
+
+        parent::tearDown();
     }
 
     /**
@@ -153,6 +169,42 @@ class TranslationControllerTest extends ApiTestCase
     public function testItShouldReturnValidResponseWhenRequestingTranslationsEdition(array $params): void
     {
         $this->assertOkResponseOnTranslationEdition($params);
+    }
+
+    /**
+     * An edited translation is stored under the theme it was edited for, and the database lookup is
+     * scoped to that same theme. Serving the catalogue of a theme that is not a core one through the
+     * core domain provider queries `theme IS NULL` instead, so the value that was just saved is never
+     * read back.
+     */
+    public function testItReadsBackATranslationSavedForANonCoreTheme(): void
+    {
+        $edited = 'Translated for a non core theme';
+
+        $this->assertOkResponseOnTranslationEdition([
+            'locale' => 'en-US',
+            'domain' => self::NON_CORE_THEME_DOMAIN,
+            'default' => self::NON_CORE_THEME_MESSAGE,
+            'edited' => $edited,
+            'theme' => self::NON_CORE_THEME,
+        ]);
+
+        self::$client->request('GET', $this->router->generate('api_translation_domain_catalog', [
+            'locale' => 'en-US',
+            'domain' => self::NON_CORE_THEME_DOMAIN,
+            'theme' => self::NON_CORE_THEME,
+        ]));
+        $catalogue = $this->assertResponseBodyValidJson(200)['data'];
+
+        $this->assertSame(
+            self::NON_CORE_THEME,
+            $catalogue['info']['theme'],
+            'A theme that is not a core one must be served by the theme provider.'
+        );
+
+        $messages = array_column($catalogue['data'], 'user', 'default');
+        $this->assertArrayHasKey(self::NON_CORE_THEME_MESSAGE, $messages);
+        $this->assertSame($edited, $messages[self::NON_CORE_THEME_MESSAGE]);
     }
 
     /**
