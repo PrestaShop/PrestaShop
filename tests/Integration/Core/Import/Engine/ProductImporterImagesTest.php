@@ -53,6 +53,23 @@ class ProductImporterImagesTest extends AbstractProductImportEngineTestCase
         }
     }
 
+    public function testImageAltHoleKeepsTheFollowingAltsAligned(): void
+    {
+        // image_alt is positional: ",Second only" leaves image 1 without a
+        // legend and must NOT shift "Second only" onto image 1
+        [, $messages] = $this->runImport('product_images_alt_hole.csv', self::IMAGE_FIELDS);
+        $this->assertNoErrors($messages);
+
+        $productId = $this->getProductIdByReference('IMG-HOLE-1');
+        $this->assertNotNull($productId);
+
+        $images = $this->fetchAll('SELECT id_image FROM {p}image WHERE id_product = :id ORDER BY position', ['id' => $productId]);
+        $this->assertCount(2, $images);
+
+        $this->assertSame('', (string) $this->fetchOne('SELECT legend FROM {p}image_lang WHERE id_image = :id AND id_lang = 1', ['id' => $images[0]['id_image']]));
+        $this->assertSame('Second only', (string) $this->fetchOne('SELECT legend FROM {p}image_lang WHERE id_image = :id AND id_lang = 1', ['id' => $images[1]['id_image']]));
+    }
+
     public function testDeleteExistingImagesReplacesThePreviousOnes(): void
     {
         $this->runImport('product_images.csv', self::IMAGE_FIELDS);

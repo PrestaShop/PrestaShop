@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\Import\Engine;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
 use PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
@@ -94,7 +95,9 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
         array $fieldMapping,
         array $options = [],
         int $skipRows = 1,
-        string $sourceCsvSeparator = ';'
+        string $sourceCsvSeparator = ';',
+        string $multipleValueSeparator = ',',
+        ?ShopConstraint $shopConstraint = null
     ): ImportRunContext {
         $fixturePath = $this->prepareFixture($fixtureName);
 
@@ -110,11 +113,10 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
             $workingFilePath,
             $normalizedFile->dataRecordCount,
             static::DEFAULT_LANG_ISO,
-            $sourceCsvSeparator,
-            ',',
+            $multipleValueSeparator,
             $fieldMapping,
             ImportRunOptions::fromArray($options),
-            static::DEFAULT_SHOP_ID
+            $shopConstraint ?? ShopConstraint::shop(static::DEFAULT_SHOP_ID)
         );
     }
 

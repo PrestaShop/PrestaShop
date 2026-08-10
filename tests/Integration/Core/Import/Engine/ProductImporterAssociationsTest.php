@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Import\Engine;
 
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ProductImporter;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
 use Tests\Resources\Resetter\ProductResetter;
@@ -43,10 +44,11 @@ class ProductImporterAssociationsTest extends AbstractProductImportEngineTestCas
         $this->assertSame([$idB], $this->getAccessoryIds($idA));
         $this->assertSame([$idA], $this->getAccessoryIds($idB));
 
-        // pre-check warned about the unknown target during validation
+        // the association_validation phase warned about the unknown target
+        // before any link was written
         $precheckWarnings = array_values(array_filter(
             $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_WARNING),
-            static fn (ImportMessage $message): bool => 'accessories' === $message->field && ImportPhaseDefinition::PHASE_VALIDATION === $message->phase
+            static fn (ImportMessage $message): bool => 'accessories' === $message->field && ProductImporter::PHASE_ASSOCIATION_VALIDATION === $message->phase
         ));
         $this->assertCount(1, $precheckWarnings);
         $this->assertStringContainsString('UNKNOWN-TARGET-REF', $precheckWarnings[0]->message);
@@ -61,15 +63,14 @@ class ProductImporterAssociationsTest extends AbstractProductImportEngineTestCas
         $this->assertSame([], $this->getAccessoryIds($idC));
     }
 
-    public function testSkipAssociationPrecheckSuppressesTheValidationWarning(): void
+    public function testAccessoriesPhasesAreSkippedWhenTheColumnIsNotMapped(): void
     {
-        [, $messages] = $this->runImport('product_accessories_mutual.csv', self::FIELDS, ['matchRef' => true, 'skipAssociationPrecheck' => true]);
+        $context = $this->buildContext('product_accessories_mutual.csv', ['name', 'reference']);
+        $importer = $this->getEntityImporter();
 
-        $precheckWarnings = array_values(array_filter(
-            $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_WARNING),
-            static fn (ImportMessage $message): bool => 'accessories' === $message->field && ImportPhaseDefinition::PHASE_VALIDATION === $message->phase
-        ));
-        $this->assertSame([], $precheckWarnings);
+        $this->assertSame(0, $importer->countPhaseUnits(ProductImporter::PHASE_ASSOCIATION_VALIDATION, $context));
+        $this->assertSame(0, $importer->countPhaseUnits(ImportPhaseDefinition::PHASE_ASSOCIATION, $context));
+        $this->assertGreaterThan(0, $importer->countPhaseUnits(ImportPhaseDefinition::PHASE_VALIDATION, $context));
     }
 
     public function testClearMarkerEmptiesTheAssociation(): void

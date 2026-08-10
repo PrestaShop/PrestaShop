@@ -45,4 +45,32 @@ class FileDownloaderTest extends TestCase
         $this->expectException(FileDownloadException::class);
         $this->downloader->download('file:///etc/hosts');
     }
+
+    public function testLocalFileOutsideTheAllowedLocationsIsRejected(): void
+    {
+        // exists and is readable, but lives outside the shop dir and the
+        // system temp dir — the two roots local imports are confined to
+        $this->expectException(FileDownloadException::class);
+        $this->expectExceptionMessage('outside the allowed import locations');
+        $this->downloader->download('/etc/hosts');
+    }
+
+    public function testLocalFileBiggerThanTheSizeCapIsRejected(): void
+    {
+        $sourcePath = tempnam(sys_get_temp_dir(), 'ps_import_test');
+        file_put_contents($sourcePath, str_repeat('a', 10));
+
+        // the cap is a protected const precisely so it can be overridden
+        $downloader = new class() extends FileDownloader {
+            protected const MAX_FILE_SIZE_BYTES = 5;
+        };
+
+        try {
+            $this->expectException(FileDownloadException::class);
+            $this->expectExceptionMessage('maximum import file size');
+            $downloader->download($sourcePath);
+        } finally {
+            @unlink($sourcePath);
+        }
+    }
 }

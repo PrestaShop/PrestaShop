@@ -64,11 +64,10 @@ class ProductImporterBenchmarkTest extends AbstractProductImportEngineTestCase
             $workingFilePath,
             $normalizedFile->dataRecordCount,
             self::DEFAULT_LANG_ISO,
-            ';',
             ',',
             self::FIELDS,
             new \PrestaShop\PrestaShop\Core\Import\Engine\ImportRunOptions(),
-            self::DEFAULT_SHOP_ID
+            \PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint::shop(self::DEFAULT_SHOP_ID)
         );
 
         $stopwatch = new Stopwatch(true);
