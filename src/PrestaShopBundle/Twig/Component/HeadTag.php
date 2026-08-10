@@ -142,6 +142,11 @@ class HeadTag
         return $this->languageContext->getLanguageCode();
     }
 
+    public function getMomentLanguageCode(): string
+    {
+        return $this->templateVariables->getMomentLanguageCode($this->languageContext->getLanguageCode());
+    }
+
     public function getFullCldrLanguageCode(): string
     {
         return $this->languageContext->getLanguageCode();

@@ -31,6 +31,33 @@ class TemplateVariablesTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider getLanguageCodes
+     */
+    public function testTheMomentLanguageCodeIsMappedOnlyWhenMomentCannotResolveItItself(
+        string $isoUser,
+        string $fullLanguageCode,
+        string $expected
+    ): void {
+        $this->assertSame($expected, $this->buildFor($isoUser)->getMomentLanguageCode($fullLanguageCode));
+    }
+
+    public function getLanguageCodes(): array
+    {
+        return [
+            // moment walks "xx-yy" down to "xx" on its own, so these must be passed through untouched
+            'moment resolves the region code itself' => ['bg', 'bg-bg', 'bg-bg'],
+            'moment resolves en-us itself' => ['en', 'en-us', 'en-us'],
+            'moment resolves vi-vn itself' => ['vn', 'vi-vn', 'vi-vn'],
+            // moment carries these under a different name
+            'Traditional Chinese, reported in the issue' => ['tw', 'tw-tw', 'zh-tw'],
+            'Norwegian, reported in the issue' => ['no', 'no', 'nb'],
+            'French Quebec' => ['qc', 'qc', 'fr-ca'],
+            // mapped on the iso when the language code carries no region
+            'Vietnamese by iso alone' => ['vn', 'vn', 'vi'],
+        ];
+    }
+
     private function buildFor(string $isoUser): TemplateVariables
     {
         return new TemplateVariables(
