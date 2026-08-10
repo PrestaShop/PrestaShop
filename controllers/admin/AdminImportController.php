@@ -1824,12 +1824,20 @@ class AdminImportControllerCore extends AdminController
                     StockAvailable::setProductOutOfStock((int) $product->id, (int) $product->out_of_stock);
                 }
 
-                if ($product_download_id = ProductDownload::getIdFromIdProduct((int) $product->id)) {
+                // The column mapping decides which keys reach $info, so an import that does not carry the
+                // file columns must leave an existing attachment alone instead of deleting the row and
+                // the file with it. A product that is no longer virtual still has its download removed.
+                $importsDownloadData = isset($info['file_url']);
+                $isVirtual = $product->getType() == Product::PTYPE_VIRTUAL;
+
+                if (($importsDownloadData || !$isVirtual)
+                    && ($product_download_id = ProductDownload::getIdFromIdProduct((int) $product->id))
+                ) {
                     $product_download = new ProductDownload($product_download_id);
                     $product_download->delete(true);
                 }
 
-                if ($product->getType() == Product::PTYPE_VIRTUAL) {
+                if ($isVirtual && $importsDownloadData) {
                     $product_download = new ProductDownload();
                     $product_download->filename = ProductDownload::getNewFilename();
                     Tools::copy($info['file_url'], _PS_DOWNLOAD_DIR_ . $product_download->filename);
