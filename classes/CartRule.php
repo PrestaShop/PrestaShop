@@ -1273,8 +1273,7 @@ class CartRuleCore extends ObjectModel
 								FROM `' . _DB_PREFIX_ . 'cart_product` cp
 								LEFT JOIN `' . _DB_PREFIX_ . 'category_product` catp ON cp.id_product = catp.id_product
 								WHERE cp.`id_cart` = ' . (int) $cart->id . '
-								AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')
-								AND cp.`id_product` <> ' . (int) $this->gift_product);
+								AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')');
                                 $count_matching_products = 0;
                                 $matching_products_list = [];
                                 foreach ($cart_categories as $cart_category) {
@@ -1285,6 +1284,14 @@ class CartRuleCore extends ObjectModel
                                          */
                                         && !in_array($cart_category['id_product'] . '-' . $cart_category['id_product_attribute'], $matching_products_list)) {
                                         $count_matching_products += $cart_category['quantity'];
+                                        // The free unit itself must not pay for the rule that granted it, but the
+                                        // ones the customer bought have to count, even when they are the same product.
+                                        if (
+                                            $alreadyInCart
+                                            && $this->gift_product == $cart_category['id_product']
+                                            && $this->gift_product_attribute == $cart_category['id_product_attribute']) {
+                                            --$count_matching_products;
+                                        }
                                         $matching_products_list[] = $cart_category['id_product'] . '-' . $cart_category['id_product_attribute'];
                                     }
                                 }
