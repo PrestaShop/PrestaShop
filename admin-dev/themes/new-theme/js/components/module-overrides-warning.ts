@@ -97,7 +97,7 @@ function buildWarning(message: string, listIntro: string, items: string[]): stri
  * Override file paths and module names are injected through innerHTML, they come from the
  * filesystem and from module manifests, so they must not be trusted as markup.
  */
-function escapeHtml(value: string): string {
+export function escapeHtml(value: string): string {
   const container = document.createElement('div');
   container.textContent = value;
 

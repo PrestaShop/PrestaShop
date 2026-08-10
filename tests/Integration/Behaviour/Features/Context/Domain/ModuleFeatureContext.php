@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledExcepti
 use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
 use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
 use PrestaShop\PrestaShop\Core\Module\OverriddenModulesProvider;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -47,6 +48,17 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
     {
         $overriddenFilePath = _PS_OVERRIDE_DIR_ . 'modules/' . $technicalName . '/' . $overrideFile;
         $overriddenFileDir = dirname($overriddenFilePath);
+
+        // The scenario writes in the shop override folder, which may hold real overrides on a
+        // developer machine: never overwrite a file the scenario did not create, as the clean up
+        // would then delete it for good
+        if (file_exists($overriddenFilePath) && !in_array($overriddenFilePath, $this->createdOverrideFiles, true)) {
+            throw new RuntimeException(sprintf(
+                'Cannot override module %s for the test, %s already exists',
+                $technicalName,
+                $overriddenFilePath
+            ));
+        }
 
         if (!is_dir($overriddenFileDir)) {
             mkdir($overriddenFileDir, 0777, true);

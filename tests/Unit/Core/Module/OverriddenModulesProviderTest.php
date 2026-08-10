@@ -53,6 +53,24 @@ class OverriddenModulesProviderTest extends TestCase
         $this->assertSame([], $provider->getOverriddenFiles('unknownmodule'));
     }
 
+    public function testGetOverriddenFilePathsReturnsPathsRelativeToTheShopRoot(): void
+    {
+        $provider = new OverriddenModulesProvider($this->overrideDir);
+
+        $this->assertSame(
+            ['override/modules/overriddenmoduleclass/overriddenmoduleclass.php'],
+            $provider->getOverriddenFilePaths('overriddenmoduleclass')
+        );
+        $this->assertSame(
+            [
+                'override/modules/overriddenfrontcontroller/controllers/front/ajax.php',
+                'override/modules/overriddenfrontcontroller/controllers/front/display.php',
+            ],
+            $provider->getOverriddenFilePaths('overriddenfrontcontroller')
+        );
+        $this->assertSame([], $provider->getOverriddenFilePaths('unknownmodule'));
+    }
+
     /**
      * The blank index.php guard files PrestaShop generates in every folder are not overrides,
      * and neither are non-PHP leftovers.

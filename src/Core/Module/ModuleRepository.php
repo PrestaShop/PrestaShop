@@ -334,11 +334,6 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * @param Module $module
-     *
-     * @return Module
-     */
-    /**
      * Fills the overrides of a module, deliberately after the cache has been read or written: the
      * cached module is only invalidated when its own files change, while the files overriding it
      * live outside the module folder and can appear or disappear at any time.
@@ -346,16 +341,16 @@ class ModuleRepository implements ModuleRepositoryInterface
     protected function enrichModuleOverrides(Module $module): Module
     {
         $moduleName = (string) $module->get('name');
-        $module->setOverrides(array_map(
-            static function (string $overriddenFile) use ($moduleName): string {
-                return 'override/modules/' . $moduleName . '/' . $overriddenFile;
-            },
-            $this->overriddenModulesProvider->getOverriddenFiles($moduleName)
-        ));
+        $module->setOverrides($this->overriddenModulesProvider->getOverriddenFilePaths($moduleName));
 
         return $module;
     }
 
+    /**
+     * @param Module $module
+     *
+     * @return Module
+     */
     protected function enrichModuleAttributesFromHook(Module $module): ModuleInterface
     {
         try {

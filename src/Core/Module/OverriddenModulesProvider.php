@@ -61,6 +61,22 @@ final class OverriddenModulesProvider implements ResetInterface
     }
 
     /**
+     * Same list as getOverriddenFiles(), with paths relative to the shop root so they can be
+     * displayed or located as is.
+     *
+     * @return string[]
+     */
+    public function getOverriddenFilePaths(string $moduleName): array
+    {
+        return array_map(
+            static function (string $overriddenFile) use ($moduleName): string {
+                return 'override/modules/' . $moduleName . '/' . $overriddenFile;
+            },
+            $this->getOverriddenFiles($moduleName)
+        );
+    }
+
+    /**
      * The override folder is scanned once, so that listing pages displaying hundreds of modules
      * only pay for a single filesystem traversal.
      *
@@ -91,7 +107,9 @@ final class OverriddenModulesProvider implements ResetInterface
             ->name('*.php')
             ->notName(self::IGNORED_FILE_NAMES)
             // An override always sits in a folder named after the module it applies to
-            ->depth('>= 1');
+            ->depth('>= 1')
+            // A folder the shop cannot read must not bring down every page listing modules
+            ->ignoreUnreadableDirs();
 
         $overriddenFiles = [];
         foreach ($finder as $file) {

@@ -5,6 +5,7 @@
 
 import ConfirmModal, {Modal} from '@components/modal';
 import {
+  escapeHtml,
   getModuleOverrides,
   getModulesOverridesWarning,
   getOverriddenFilesWarning,
@@ -146,7 +147,8 @@ class AdminModuleController {
 
       new Modal({
         id: 'module-overrides-modal',
-        modalTitle: `${window.moduleTranslations.overridesModalTitle} - ${overrides.displayName}`,
+        // The title is assigned with innerHTML, and the display name comes from the module manifest
+        modalTitle: `${window.moduleTranslations.overridesModalTitle} - ${escapeHtml(overrides.displayName)}`,
         closable: true,
       })
         .render(getOverriddenFilesWarning(overrides.files))
@@ -662,6 +664,9 @@ class AdminModuleController {
       timeout: 0,
       addedfile: () => {
         $(`${self.moduleImportSuccessSelector}, ${self.moduleImportFailureSelector}`).hide();
+        // A pending confirmation belongs to the previous archive, keeping it would let the
+        // employee install a file they have moved on from
+        self.clearImportConfirm();
         self.animateStartUpload();
       },
       processing: () => {

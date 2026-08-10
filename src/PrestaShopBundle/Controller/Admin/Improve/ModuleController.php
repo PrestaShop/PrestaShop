@@ -392,7 +392,7 @@ class ModuleController extends ModuleAbstractController
             // Uploading over an installed module replaces its files, which is likely to break the
             // customizations made in override/modules. The archive is the only place the target module
             // name can be read from, so the confirmation can only be asked for at this point.
-            $overriddenFiles = $overriddenModulesProvider->getOverriddenFiles($moduleName);
+            $overriddenFiles = $overriddenModulesProvider->getOverriddenFilePaths($moduleName);
             if (
                 $moduleWasAlreadyInstalled
                 && [] !== $overriddenFiles
@@ -402,12 +402,7 @@ class ModuleController extends ModuleAbstractController
                     'status' => false,
                     'confirmation_needed' => 'overrides',
                     'module_name' => $moduleName,
-                    'overridden_files' => array_map(
-                        static function (string $overriddenFile) use ($moduleName): string {
-                            return 'override/modules/' . $moduleName . '/' . $overriddenFile;
-                        },
-                        $overriddenFiles
-                    ),
+                    'overridden_files' => $overriddenFiles,
                     // Also stated as a plain message, so a client unaware of the confirmation
                     // does not report an empty failure
                     'msg' => $this->trans(

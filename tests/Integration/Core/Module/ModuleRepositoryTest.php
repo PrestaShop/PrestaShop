@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Module\OverriddenModulesProvider;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Translation\Translator;
 
@@ -93,6 +94,7 @@ class ModuleRepositoryTest extends TestCase
                 'm/d/Y H:i:s',
                 $this->createMock(LocaleInterface::class),
             ),
+            new OverriddenModulesProvider(_PS_OVERRIDE_DIR_),
         );
     }
 
