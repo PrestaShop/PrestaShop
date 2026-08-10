@@ -66,15 +66,31 @@ class TemplateVariables
     }
 
     /**
+     * Shipped iso codes TinyMCE carries under a different name. Without these the editor would fall
+     * all the way back to English for a language it actually supports.
+     */
+    private const EDITOR_LANGUAGES = [
+        'mx' => 'es_MX',
+        'no' => 'nb',
+        'qc' => 'fr',
+        'tw' => 'zh_TW',
+        'vn' => 'vi',
+    ];
+
+    /**
      * TinyMCE ships a language file per iso code and fails to load when one is missing, which is the
      * case for several languages PrestaShop ships. Callers that hand an iso code to the editor must
      * use this instead of the raw one.
      */
     public function getIsoUserForEditor(): string
     {
-        return file_exists(_PS_CORE_DIR_ . '/js/tiny_mce/langs/' . $this->isoUser . '.js')
-            ? $this->isoUser
-            : 'en';
+        foreach ([self::EDITOR_LANGUAGES[$this->isoUser] ?? null, $this->isoUser, 'en'] as $candidate) {
+            if ($candidate !== null && file_exists(_PS_CORE_DIR_ . '/js/tiny_mce/langs/' . $candidate . '.js')) {
+                return $candidate;
+            }
+        }
+
+        return 'en';
     }
 
     /**

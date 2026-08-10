@@ -23,10 +23,17 @@ class TemplateVariablesTest extends TestCase
     public function getIsoCodes(): array
     {
         return [
-            'shipped language TinyMCE knows' => ['fr', 'fr'],
-            // js/tiny_mce/langs carries no file for these, they are shipped under install-dev/langs
-            'shipped language TinyMCE does not know' => ['tw', 'en'],
-            'Norwegian, reported in the issue' => ['no', 'en'],
+            'shipped language TinyMCE knows under the same name' => ['fr', 'fr'],
+            // TinyMCE carries these, under a different name than the iso PrestaShop ships
+            'Traditional Chinese' => ['tw', 'zh_TW'],
+            'Norwegian, reported in #13131 and #10012' => ['no', 'nb'],
+            'Mexican Spanish' => ['mx', 'es_MX'],
+            'Vietnamese' => ['vn', 'vi'],
+            // no French Canadian file, the closest one TinyMCE has is French
+            'Quebec French' => ['qc', 'fr'],
+            // TinyMCE has nothing for these at all
+            'Hindi' => ['hi', 'en'],
+            'Albanian' => ['sq', 'en'],
             'unknown iso code' => ['zz', 'en'],
         ];
     }
