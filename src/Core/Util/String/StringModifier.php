@@ -105,6 +105,9 @@ final class StringModifier implements StringModifierInterface
         if ($allow_accented_chars) {
             $return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-\p{L}]/u', '', $return_str);
         } else {
+            // ICU transliterates the Cyrillic soft sign as an apostrophe, which
+            // the URL sanitizer then treats as a word separator.
+            $return_str = str_replace('ь', '', $return_str);
             $return_str = $this->replaceAccentedChars($return_str);
             $return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-]/', '', $return_str);
         }

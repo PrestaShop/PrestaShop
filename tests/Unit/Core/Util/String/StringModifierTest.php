@@ -164,6 +164,9 @@ class StringModifierTest extends TestCase
         yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-', false];
         yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou', false];
         yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-áéíóú', true];
+        yield 'Cyrillic soft signs do not split transliterated words' => ['Нейтральный очиститель', 'nejtralnyj-ocistitel', false];
+        yield 'Cyrillic soft signs remain when accented characters are allowed' => ['Нейтральный очиститель', 'нейтральный-очиститель', true];
+        yield 'Regular apostrophes remain word separators' => ["O'Connor", 'o-connor', false];
     }
 
     /**
