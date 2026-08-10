@@ -957,7 +957,17 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         /* @phpstan-ignore-next-line */
         $this->deleted = true;
 
-        return $this->update();
+        // Only the flag is written. An object whose other fields are already invalid, an address
+        // left behind by an import or an older version for instance, can then still be soft deleted
+        // instead of being impossible to remove or to correct.
+        $previousFieldsToUpdate = $this->getFieldsToUpdate();
+        $this->setFieldsToUpdate(['deleted' => true]);
+
+        try {
+            return $this->update();
+        } finally {
+            $this->setFieldsToUpdate($previousFieldsToUpdate);
+        }
     }
 
     /**
@@ -1001,7 +1011,10 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                 continue;
             }
 
-            if (is_array($this->update_fields) && empty($this->update_fields[$field]) && isset($this->def['fields'][$field]['shop']) && $this->def['fields'][$field]['shop']) {
+            // A field that is not in the update list is not written by formatFields(), so validating
+            // it rejects an update over data it never touches. validateFieldsLang() already skips on
+            // the update list alone, this is the same rule for the other fields.
+            if (is_array($this->update_fields) && empty($this->update_fields[$field])) {
                 continue;
             }
 
