@@ -107,6 +107,11 @@ class HeadTag
         return $this->templateVariables->getIsoUser();
     }
 
+    public function getIsoUserForEditor(): string
+    {
+        return $this->templateVariables->getIsoUserForEditor();
+    }
+
     public function getCountryIsoCode(): string
     {
         return $this->countryContext->getIsoCode();
