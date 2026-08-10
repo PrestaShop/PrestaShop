@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Module;
 
 use Symfony\Component\Finder\Finder;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * Lists the modules customized through the shop `override/modules/` folder.
@@ -20,7 +21,7 @@ use Symfony\Component\Finder\Finder;
  * Any other PHP file found in a module override folder is reported too: it does not alter the module
  * behaviour on its own, but it means the module has been customized and an update may break it.
  */
-final class OverriddenModulesProvider
+final class OverriddenModulesProvider implements ResetInterface
 {
     /**
      * Blank guard files PrestaShop generates in every folder, they are never actual overrides.
@@ -40,6 +41,15 @@ final class OverriddenModulesProvider
     public function isOverridden(string $moduleName): bool
     {
         return [] !== $this->getOverriddenFiles($moduleName);
+    }
+
+    /**
+     * The scan is memoized for the request, which is long enough for a web request but not for a
+     * worker or a test suite, where override files can be added or removed while the process lives.
+     */
+    public function reset(): void
+    {
+        $this->overriddenFiles = null;
     }
 
     /**
