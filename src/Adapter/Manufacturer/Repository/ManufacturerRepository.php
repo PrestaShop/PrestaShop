@@ -40,10 +40,16 @@ class ManufacturerRepository extends AbstractObjectModelRepository
      */
     public function getManufacturerIdByName(string $name): ?int
     {
-        $manufacturerId = $this->connection->fetchOne(
-            'SELECT id_manufacturer FROM ' . $this->dbPrefix . 'manufacturer WHERE name = :name ORDER BY id_manufacturer ASC',
-            ['name' => $name]
-        );
+        $manufacturerId = $this->connection->createQueryBuilder()
+            ->select('m.id_manufacturer')
+            ->from($this->dbPrefix . 'manufacturer', 'm')
+            ->where('m.name = :name')
+            ->orderBy('m.id_manufacturer', 'ASC')
+            ->setMaxResults(1)
+            ->setParameter('name', $name)
+            ->executeQuery()
+            ->fetchOne()
+        ;
 
         return false === $manufacturerId ? null : (int) $manufacturerId;
     }

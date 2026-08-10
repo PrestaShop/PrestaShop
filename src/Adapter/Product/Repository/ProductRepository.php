@@ -320,19 +320,28 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
      * to now — this direct write exists only for the import date_add column.
      * Do NOT use it outside the import engine.
      */
-    public function setDateAdd(int $productId, DateTimeImmutable $dateAdd): void
+    public function setDateAdd(int $productId, DateTimeImmutable $dateAdd, ShopConstraint $shopConstraint): void
     {
         $formattedDate = $dateAdd->format('Y-m-d H:i:s');
 
         try {
-            $this->connection->executeStatement(
-                'UPDATE ' . $this->dbPrefix . 'product SET date_add = :dateAdd WHERE id_product = :productId',
-                ['dateAdd' => $formattedDate, 'productId' => $productId]
-            );
-            $this->connection->executeStatement(
-                'UPDATE ' . $this->dbPrefix . 'product_shop SET date_add = :dateAdd WHERE id_product = :productId',
-                ['dateAdd' => $formattedDate, 'productId' => $productId]
-            );
+            // the product table row is shared by every shop: always updated
+            $this->connection->createQueryBuilder()
+                ->update($this->dbPrefix . 'product')
+                ->set('date_add', ':dateAdd')
+                ->where('id_product = :productId')
+                ->setParameter('dateAdd', $formattedDate)
+                ->setParameter('productId', $productId)
+                ->executeStatement();
+
+            $shopQb = $this->connection->createQueryBuilder()
+                ->update($this->dbPrefix . 'product_shop')
+                ->set('date_add', ':dateAdd')
+                ->where('id_product = :productId')
+                ->setParameter('dateAdd', $formattedDate)
+                ->setParameter('productId', $productId);
+            $this->applyShopConstraint($shopQb, 'id_shop', $shopConstraint);
+            $shopQb->executeStatement();
         } catch (ExceptionAlias $e) {
             throw new CannotUpdateProductException(sprintf('Could not set date_add on product %d', $productId), 0, $e);
         }
@@ -341,21 +350,45 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
     /**
      * Shop-scoped reference lookup, as used by the import match_ref option
      * (the legacy import had two divergent reference lookups; this is the
-     * unified one).
+     * unified one). The constraint restricts the product_shop association:
+     * pass ShopConstraint::allShops() for a catalog-wide lookup.
      */
-    public function getProductIdByReference(string $reference, int $shopId): ?int
+    public function getProductIdByReference(string $reference, ShopConstraint $shopConstraint): ?int
     {
-        $productId = $this->connection->fetchOne(
-            'SELECT p.id_product
-            FROM ' . $this->dbPrefix . 'product p
-            INNER JOIN ' . $this->dbPrefix . 'product_shop ps
-                ON ps.id_product = p.id_product AND ps.id_shop = :shopId
-            WHERE p.reference = :reference
-            ORDER BY p.id_product ASC',
-            ['reference' => $reference, 'shopId' => $shopId]
-        );
+        $qb = $this->connection->createQueryBuilder()
+            ->select('p.id_product')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->innerJoin('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product')
+            ->where('p.reference = :reference')
+            ->setParameter('reference', $reference)
+            ->groupBy('p.id_product')
+            ->orderBy('p.id_product', 'ASC')
+            ->setMaxResults(1);
+        $this->applyShopConstraint($qb, 'ps.id_shop', $shopConstraint);
+
+        $productId = $qb->executeQuery()->fetchOne();
 
         return false === $productId ? null : (int) $productId;
+    }
+
+    /**
+     * Restricts a query on a shop-association column to the constraint's
+     * shops: single shop = equality, shop group = subquery on the shop table,
+     * all shops = no predicate (any association matches).
+     */
+    private function applyShopConstraint(QueryBuilder $qb, string $shopIdColumn, ShopConstraint $shopConstraint): void
+    {
+        if ($shopConstraint->getShopId()) {
+            $qb
+                ->andWhere($shopIdColumn . ' = :constraintShopId')
+                ->setParameter('constraintShopId', $shopConstraint->getShopId()->getValue())
+            ;
+        } elseif ($shopConstraint->getShopGroupId()) {
+            $qb
+                ->andWhere($shopIdColumn . ' IN (SELECT s.id_shop FROM ' . $this->dbPrefix . 'shop s WHERE s.id_shop_group = :constraintShopGroupId)')
+                ->setParameter('constraintShopGroupId', $shopConstraint->getShopGroupId()->getValue())
+            ;
+        }
     }
 
     /**

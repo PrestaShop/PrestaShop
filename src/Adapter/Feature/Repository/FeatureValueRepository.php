@@ -404,6 +404,40 @@ class FeatureValueRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Localized texts of the product's current CUSTOM value for one feature,
+     * [] when the product carries none. Import uses it to update a custom
+     * value without losing the other languages: SetProductFeatureValuesCommand
+     * REPLACES the custom value row, so keeping a translation means re-sending
+     * it.
+     *
+     * @return array<int, string> language id => value
+     */
+    public function getProductCustomFeatureValueTexts(int $featureId, int $productId): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('fvl.id_lang, fvl.value')
+            ->from($this->dbPrefix . 'feature_product', 'fp')
+            ->innerJoin('fp', $this->dbPrefix . 'feature_value', 'fv', 'fv.id_feature_value = fp.id_feature_value')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value')
+            ->where('fp.id_product = :productId')
+            ->andWhere('fp.id_feature = :featureId')
+            ->andWhere('fv.custom = 1')
+            ->orderBy('fv.id_feature_value', 'ASC')
+            ->setParameter('productId', $productId)
+            ->setParameter('featureId', $featureId)
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $texts = [];
+        foreach ($rows as $row) {
+            $texts[(int) $row['id_lang']] = (string) $row['value'];
+        }
+
+        return $texts;
+    }
+
+    /**
      * Exact pre-defined (non custom) value lookup within a feature, resolving
      * a single id (unlike the listing-oriented getFeatureValuesByLang() which
      * loads every value).

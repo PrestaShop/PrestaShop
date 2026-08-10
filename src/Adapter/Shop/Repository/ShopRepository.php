@@ -134,10 +134,16 @@ class ShopRepository extends AbstractObjectModelRepository
      */
     public function getShopIdByName(string $name): ?int
     {
-        $shopId = $this->connection->fetchOne(
-            'SELECT id_shop FROM ' . $this->dbPrefix . 'shop WHERE name = :name ORDER BY id_shop ASC',
-            ['name' => $name]
-        );
+        $shopId = $this->connection->createQueryBuilder()
+            ->select('s.id_shop')
+            ->from($this->dbPrefix . 'shop', 's')
+            ->where('s.name = :name')
+            ->orderBy('s.id_shop', 'ASC')
+            ->setMaxResults(1)
+            ->setParameter('name', $name)
+            ->executeQuery()
+            ->fetchOne()
+        ;
 
         return false === $shopId ? null : (int) $shopId;
     }

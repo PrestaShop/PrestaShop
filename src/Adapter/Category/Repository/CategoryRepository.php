@@ -497,15 +497,20 @@ class CategoryRepository extends AbstractObjectModelRepository
      */
     public function getChildCategoryIdByName(int $parentCategoryId, string $name, int $languageId): ?int
     {
-        $categoryId = $this->connection->fetchOne(
-            'SELECT c.id_category
-            FROM ' . $this->dbPrefix . 'category c
-            INNER JOIN ' . $this->dbPrefix . 'category_lang cl
-                ON cl.id_category = c.id_category AND cl.id_lang = :languageId
-            WHERE cl.name = :name AND c.id_parent = :parentCategoryId
-            ORDER BY c.id_category ASC',
-            ['languageId' => $languageId, 'name' => $name, 'parentCategoryId' => $parentCategoryId]
-        );
+        $categoryId = $this->connection->createQueryBuilder()
+            ->select('c.id_category')
+            ->from($this->dbPrefix . 'category', 'c')
+            ->innerJoin('c', $this->dbPrefix . 'category_lang', 'cl', 'cl.id_category = c.id_category AND cl.id_lang = :languageId')
+            ->where('cl.name = :name')
+            ->andWhere('c.id_parent = :parentCategoryId')
+            ->orderBy('c.id_category', 'ASC')
+            ->setMaxResults(1)
+            ->setParameter('languageId', $languageId)
+            ->setParameter('name', $name)
+            ->setParameter('parentCategoryId', $parentCategoryId)
+            ->executeQuery()
+            ->fetchOne()
+        ;
 
         return false === $categoryId ? null : (int) $categoryId;
     }

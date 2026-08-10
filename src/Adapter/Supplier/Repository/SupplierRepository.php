@@ -59,10 +59,16 @@ class SupplierRepository extends AbstractObjectModelRepository
      */
     public function getSupplierIdByName(string $name): ?int
     {
-        $supplierId = $this->connection->fetchOne(
-            'SELECT id_supplier FROM ' . $this->dbPrefix . 'supplier WHERE name = :name ORDER BY id_supplier ASC',
-            ['name' => $name]
-        );
+        $supplierId = $this->connection->createQueryBuilder()
+            ->select('s.id_supplier')
+            ->from($this->dbPrefix . 'supplier', 's')
+            ->where('s.name = :name')
+            ->orderBy('s.id_supplier', 'ASC')
+            ->setMaxResults(1)
+            ->setParameter('name', $name)
+            ->executeQuery()
+            ->fetchOne()
+        ;
 
         return false === $supplierId ? null : (int) $supplierId;
     }
