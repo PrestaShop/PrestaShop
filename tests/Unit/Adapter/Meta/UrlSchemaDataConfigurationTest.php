@@ -10,6 +10,7 @@ namespace Tests\Unit\Adapter\Meta;
 
 use PrestaShop\PrestaShop\Adapter\Meta\UrlSchemaDataConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
@@ -63,12 +64,23 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
     ];
 
     /**
-     * @var array
+     * The service definition injects the result of the language repository, which is
+     * LanguageInterface objects. Feeding plain ['id_lang' => n] arrays here is what let
+     * array_column() keep working in the test while returning nothing in production.
+     *
+     * @return LanguageInterface[]
      */
-    private const LANGUAGES = [
-        ['id_lang' => 1],
-        ['id_lang' => 2],
-    ];
+    private function getLanguages(): array
+    {
+        $languages = [];
+        foreach ([1, 2] as $id) {
+            $language = $this->createMock(LanguageInterface::class);
+            $language->method('getId')->willReturn($id);
+            $languages[] = $language;
+        }
+
+        return $languages;
+    }
 
     /**
      * @dataProvider provideShopConstraints
@@ -82,7 +94,7 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
             self::RULES,
-            self::LANGUAGES
+            $this->getLanguages()
         );
 
         $this->mockShopConfiguration
@@ -109,6 +121,74 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
     }
 
     /**
+     * A value stored before a language existed has no entry for it. Returning it unchanged leaves
+     * that language's field empty - the same symptom this fix is about - so the default fills the gap.
+     *
+     * @dataProvider provideShopConstraints
+     *
+     * @param ShopConstraint $shopConstraint
+     */
+    public function testGetConfigurationFillsLanguagesMissingFromAStoredValue(ShopConstraint $shopConstraint): void
+    {
+        $urlSchemaDataConfiguration = new UrlSchemaDataConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature,
+            self::RULES,
+            $this->getLanguages()
+        );
+
+        $this->mockShopConfiguration->method('getShopConstraint')->willReturn($shopConstraint);
+        // Language 2 is absent, and language 9 no longer exists.
+        $this->mockConfiguration->method('get')->willReturn([1 => 'stored/{id}', 9 => 'ghost/{id}']);
+
+        $result = $urlSchemaDataConfiguration->getConfiguration();
+
+        self::assertSame(
+            [1 => 'stored/{id}', 2 => self::RULES['category_rule']],
+            $result['category_rule'],
+            'a language missing from the stored value takes the default, and a removed one is dropped'
+        );
+    }
+
+    /**
+     * The case no test covered: nothing stored for the route, so the default has to be
+     * offered for every language. It rendered as an empty field instead.
+     *
+     * @dataProvider provideShopConstraints
+     *
+     * @param ShopConstraint $shopConstraint
+     */
+    public function testGetConfigurationFallsBackToTheDefaultRouteForEveryLanguage(ShopConstraint $shopConstraint): void
+    {
+        $urlSchemaDataConfiguration = new UrlSchemaDataConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature,
+            self::RULES,
+            $this->getLanguages()
+        );
+
+        $this->mockShopConfiguration
+            ->method('getShopConstraint')
+            ->willReturn($shopConstraint);
+
+        $this->mockConfiguration
+            ->method('get')
+            ->willReturn(null);
+
+        $result = $urlSchemaDataConfiguration->getConfiguration();
+
+        foreach (self::RULES as $routeId => $defaultRule) {
+            self::assertSame(
+                [1 => $defaultRule, 2 => $defaultRule],
+                $result[$routeId],
+                sprintf('route "%s" should offer its default for every language', $routeId)
+            );
+        }
+    }
+
+    /**
      * @dataProvider provideShopConstraints
      *
      * @param ShopConstraint $shopConstraint
@@ -120,7 +200,7 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
             self::RULES,
-            self::LANGUAGES
+            $this->getLanguages()
         );
 
         $this->mockShopConfiguration
@@ -180,7 +260,7 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
             self::RULES,
-            self::LANGUAGES
+            $this->getLanguages()
         );
 
         $this->expectException($exception);
@@ -210,7 +290,7 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
             self::RULES,
-            self::LANGUAGES
+            $this->getLanguages()
         );
 
         $res = $urlSchemaDataConfiguration->updateConfiguration(self::VALID_CONFIGURATION);

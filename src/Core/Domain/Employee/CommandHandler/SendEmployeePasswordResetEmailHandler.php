@@ -18,8 +18,8 @@ class SendEmployeePasswordResetEmailHandler implements SendEmployeePasswordReset
     ) {
     }
 
-    public function handle(SendEmployeePasswordResetEmailCommand $command): string
+    public function handle(SendEmployeePasswordResetEmailCommand $command): void
     {
-        return $this->employeePasswordResetter->sendResetEmail($command->getEmail()->getValue());
+        $this->employeePasswordResetter->sendResetEmail($command->getEmail()->getValue());
     }
 }
