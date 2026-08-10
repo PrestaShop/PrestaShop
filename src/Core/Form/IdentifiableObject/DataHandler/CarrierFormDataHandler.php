@@ -53,8 +53,10 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
             $logoPath,
         ));
 
-        // Then, we need to add ranges for this carrier
-        $carrierId = $this->setCarrierRange($carrierId, $data);
+        // Then, we need to add ranges for this carrier only if shipping is paid
+        if (!$data['shipping_settings']['is_free']) {
+            $carrierId = $this->setCarrierRange($carrierId, $data);
+        }
 
         // Finally we save the tax rules group
         $carrierId = $this->setCarrierTaxRuleGroup($carrierId, $data);

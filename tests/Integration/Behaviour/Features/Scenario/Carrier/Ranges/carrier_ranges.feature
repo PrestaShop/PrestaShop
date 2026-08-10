@@ -172,3 +172,11 @@ Feature: Carrier ranges
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0         | -100      | 10          |
     Then carrier should throw an error with error code "INVALID_RANGE_NEGATIVE"
+    When I create carrier "carrier3" with specified properties:
+      | name           | Carrier 3    |
+      | shippingMethod | weight       |
+      | zones          | zone1, zone2 |
+    Then I set ranges for carrier "carrier3" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 100      | -10         |
+    Then carrier should throw an error with error code "INVALID_RANGE_PRICE_NEGATIVE"
