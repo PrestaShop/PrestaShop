@@ -15,6 +15,7 @@ use Language;
 use Link;
 use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShopDatabaseException;
 use PrestaShopException;
@@ -194,6 +195,7 @@ class ImageRetriever
         $image_types = ImageType::getImagesTypes($type, true);
         foreach ($image_types as $image_type) {
             $sources = [];
+            $resizedImagePath = null;
             $formattedName = ImageType::getFormattedName('small');
 
             if ($type === 'categories' && $formattedName === $image_type['name']) {
@@ -209,8 +211,8 @@ class ImageRetriever
             ]);
 
             foreach ($configuredImageFormats as $imageFormat) {
-                // Generate the thumbnail
-                $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
+                // Generate the thumbnail and return its path
+                $resizedImagePath = $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
 
                 // Get the URL of the thumb and add it to sources
                 // Manufacturer and supplier use only IDs
@@ -231,11 +233,14 @@ class ImageRetriever
                 $baseUrl = reset($sources);
             }
 
+            // Sometimes, the thumbnail size can differ from the configured dimensions (a bound fitment), so we get the real dimensions
+            [$width, $height] = $this->getThumbnailDimensions($resizedImagePath, $image_type);
+
             // And add this size to our list
             $urls[$image_type['name']] = [
                 'url' => $baseUrl,
-                'width' => (int) $image_type['width'],
-                'height' => (int) $image_type['height'],
+                'width' => $width,
+                'height' => $height,
                 'sources' => $sources,
             ];
         }
@@ -268,9 +273,9 @@ class ImageRetriever
      * @param array $imageTypeData
      * @param string $imageFormat
      *
-     * @return void
+     * @return string
      */
-    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int|string $idImage, array $imageTypeData, string $imageFormat)
+    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int|string $idImage, array $imageTypeData, string $imageFormat): string
     {
         $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $imageFormat);
         $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
@@ -302,6 +307,41 @@ class ImageRetriever
                 $imageTypeData['image_fitment']
             );
         }
+
+        return $resizedImagePath;
+    }
+
+    /**
+     * Gets the generated thumbnail dimensions when its fitment can change the configured dimensions
+     *
+     * @param string|null $resizedImagePath
+     * @param array $imageTypeData
+     *
+     * @return array{0: int, 1: int}
+     */
+    private function getThumbnailDimensions(?string $resizedImagePath, array $imageTypeData): array
+    {
+        // First, we start with the configured size
+        $configuredDimensions = [
+            (int) $imageTypeData['width'],
+            (int) $imageTypeData['height'],
+        ];
+
+        // If the fitment is not bound, the thumbnail size is exactly the configured one, no need to read anything
+        if ($imageTypeData['image_fitment'] !== ImageFitment::BOUND || $resizedImagePath === null) {
+            return $configuredDimensions;
+        }
+
+        // Try to read the dimensions, but do not fail because of it
+        $generatedDimensions = @getimagesize($resizedImagePath);
+        if ($generatedDimensions === false) {
+            return $configuredDimensions;
+        }
+
+        return [
+            (int) $generatedDimensions[0],
+            (int) $generatedDimensions[1],
+        ];
     }
 
     /**
@@ -417,6 +457,9 @@ class ImageRetriever
                     );
                 }
 
+                // Sometimes, the thumbnail size can differ from the configured dimensions (a bound fitment), so we get the real dimensions
+                [$width, $height] = $this->getThumbnailDimensions($resizedImagePath, $imageType);
+
                 // Build image URL for that thumbnail
                 $imageUrl = $this->link->getImageLink(
                     '',
@@ -427,8 +470,8 @@ class ImageRetriever
                 // And add it to the list
                 $urls[$imageType['name']] = [
                     'url' => $imageUrl,
-                    'width' => (int) $imageType['width'],
-                    'height' => (int) $imageType['height'],
+                    'width' => $width,
+                    'height' => $height,
                 ];
             }
         }
