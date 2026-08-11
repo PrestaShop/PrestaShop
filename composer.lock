@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9802c92ab1ca020505db94c84762b46",
+    "content-hash": "f9f0fd914ebd8fcdd5fe1230edf15854",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5160,16 +5160,16 @@
         },
         {
             "name": "prestashop/productcomments",
-            "version": "v8.0.0",
+            "version": "8.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productcomments.git",
-                "reference": "9e6a1f63b70cd2cfc416faea56aa000c3c220eec"
+                "reference": "6314ef9fa92867a6008f92194caac64bc305cf52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/9e6a1f63b70cd2cfc416faea56aa000c3c220eec",
-                "reference": "9e6a1f63b70cd2cfc416faea56aa000c3c220eec",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/6314ef9fa92867a6008f92194caac64bc305cf52",
+                "reference": "6314ef9fa92867a6008f92194caac64bc305cf52",
                 "shasum": ""
             },
             "require": {
@@ -5201,22 +5201,23 @@
             "description": "PrestaShop module productcomments",
             "homepage": "https://github.com/PrestaShop/productcomments",
             "support": {
-                "source": "https://github.com/PrestaShop/productcomments/tree/v8.0.0"
+                "issues": "https://github.com/PrestaShop/productcomments/issues",
+                "source": "https://github.com/PrestaShop/productcomments/tree/8.0.1"
             },
-            "time": "2025-11-13T14:46:03+00:00"
+            "time": "2026-08-07T09:18:57+00:00"
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "v0.6.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "030aa750d52ff3f13936b394fd9f7988a80921f4"
+                "reference": "86d4883698e4e132b357e512f09eff0e773e029f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/030aa750d52ff3f13936b394fd9f7988a80921f4",
-                "reference": "030aa750d52ff3f13936b394fd9f7988a80921f4",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/86d4883698e4e132b357e512f09eff0e773e029f",
+                "reference": "86d4883698e4e132b357e512f09eff0e773e029f",
                 "shasum": ""
             },
             "require": {
@@ -5296,10 +5297,10 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_apiresources/tree/v0.6.0",
+                "source": "https://github.com/PrestaShop/ps_apiresources/tree/v0.8.0",
                 "issues": "https://github.com/PrestaShop/ps_apiresources/issues"
             },
-            "time": "2026-05-07T12:01:32+00:00"
+            "time": "2026-07-07T17:24:43+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -7509,16 +7510,16 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v6.1.0",
+            "version": "v6.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "b939f9833c222fd26b46c0f2225b0828259077e1"
+                "reference": "f2766d229e5eab6bf46c6d0b666cc25deda24653"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/b939f9833c222fd26b46c0f2225b0828259077e1",
-                "reference": "b939f9833c222fd26b46c0f2225b0828259077e1",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/f2766d229e5eab6bf46c6d0b666cc25deda24653",
+                "reference": "f2766d229e5eab6bf46c6d0b666cc25deda24653",
                 "shasum": ""
             },
             "require": {
@@ -7531,7 +7532,7 @@
             "require-dev": {
                 "doctrine/common": "^3",
                 "friendsofphp/php-cs-fixer": "^3.2",
-                "phpunit/phpunit": "~9.5.10",
+                "phpunit/phpunit": "~9.6",
                 "symfony/framework-bundle": "^3.4 || ^4.4 || ^5.0 || ^6.0",
                 "symfony/symfony": "^6.0",
                 "symfony/translation": "^3.4 || ^4.4 || ^5.0 || ^6.0"
@@ -7564,9 +7565,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PrestaShop/TranslationToolsBundle/issues",
-                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v6.1.0"
+                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v6.1.1"
             },
-            "time": "2025-04-11T09:24:35+00:00"
+            "time": "2026-07-08T09:12:01+00:00"
         },
         {
             "name": "psr/cache",
@@ -18443,5 +18444,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
