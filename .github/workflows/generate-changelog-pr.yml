@@ -30,6 +30,11 @@ on:
         required: false
         type: string
         default: ''
+      fallback_repository:
+        description: 'Fallback repository (owner/repo) used to resolve PRs not found in this repository (useful when running on a private mirror). Ignored when it matches the current repository.'
+        required: false
+        type: string
+        default: 'PrestaShop/PrestaShop'
 
 permissions:
   contents: write
@@ -59,6 +64,7 @@ jobs:
           echo target_ref: ${{ inputs.target_ref || inputs.base_branch }}
           echo next_version: ${{ inputs.next_version }}
           echo release_date: ${{ inputs.release_date }}
+          echo fallback_repository: ${{ inputs.fallback_repository }}
 
       - name: Generate changelog
         id: changelog
@@ -66,6 +72,7 @@ jobs:
         with:
           github_token: ${{ github.token }}
           repository: ${{ github.repository }}
+          fallback_repository: ${{ inputs.fallback_repository }}
           previous_ref: ${{ inputs.previous_ref }}
           target_ref: ${{ inputs.target_ref || inputs.base_branch }}
           next_version: ${{ inputs.next_version }}
