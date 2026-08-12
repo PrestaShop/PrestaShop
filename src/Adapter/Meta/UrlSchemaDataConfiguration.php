@@ -54,19 +54,36 @@ final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
         $configResult = [];
         $shopConstraint = $this->getShopConstraint();
 
+        // The languages arrive as LanguageInterface objects, so array_column() cannot reach their id:
+        // it reads public properties and Lang exposes the id through getId() only. It answered an empty
+        // list for every route, which made both fallbacks below produce an empty value - so a route with
+        // no stored configuration, and a route still holding the pre-translation string, both rendered
+        // as an empty field instead of the default.
+        $languageIds = array_map(
+            static function (LanguageInterface $language): int {
+                return $language->getId();
+            },
+            $this->languages
+        );
+
         foreach ($this->rules as $routeId => $defaultRule) {
             // Get value from configuration
             $currentValue = $this->configuration->get($this->getConfigurationKey($routeId), null, $shopConstraint);
-            if (is_array($currentValue)) {
-                $configResult[$routeId] = $currentValue;
-                continue;
-            } elseif (is_string($currentValue)) {
-                $configResult[$routeId] = array_fill_keys(array_column($this->languages, 'id_lang'), $currentValue);
-                continue;
-            } else {
-                $configResult[$routeId] = array_fill_keys(array_column($this->languages, 'id_lang'), $defaultRule);
-                continue;
+            // A value stored before a language was added holds no entry for it, and one stored
+            // before a language was removed still holds its key. Starting from the default for
+            // every current language and overlaying only the keys that are still languages covers
+            // both: a missing entry falls back instead of rendering empty, a stale one is dropped.
+            if (is_string($currentValue)) {
+                $currentValue = array_fill_keys($languageIds, $currentValue);
             }
+            if (!is_array($currentValue)) {
+                $currentValue = [];
+            }
+
+            $configResult[$routeId] = array_replace(
+                array_fill_keys($languageIds, $defaultRule),
+                array_intersect_key($currentValue, array_flip($languageIds))
+            );
         }
 
         return $configResult;

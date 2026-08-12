@@ -12,8 +12,6 @@ interface SendEmployeePasswordResetEmailHandlerInterface
 {
     /**
      * @param SendEmployeePasswordResetEmailCommand $command
-     *
-     * @return string The url to reset the password
      */
-    public function handle(SendEmployeePasswordResetEmailCommand $command): string;
+    public function handle(SendEmployeePasswordResetEmailCommand $command): void;
 }
