@@ -13,7 +13,7 @@ use Doctrine\ORM\UnexpectedResultException;
 use Mail;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeByEmailNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
 use PrestaShopBundle\Routing\AdminUrlGenerator;
@@ -36,7 +36,7 @@ class EmployeePasswordResetter
 
     /**
      * @throws PasswordResetTemporarilyBlockedException
-     * @throws EmployeeByEmailNotFoundException
+     * @throws EmployeeNotFoundException
      * @throws RuntimeException
      */
     public function sendResetEmail(string $email): void
@@ -45,11 +45,11 @@ class EmployeePasswordResetter
             /** @var Employee|null $employee */
             $employee = $this->employeeRepository->loadEmployeeByIdentifier($email);
         } catch (UnexpectedResultException) {
-            throw new EmployeeByEmailNotFoundException(sprintf('Employee with email "%s" does not exist.', $email));
+            throw new EmployeeNotFoundException(null, sprintf('Employee with email "%s" does not exist.', $email));
         }
 
         if (empty($employee)) {
-            throw new EmployeeByEmailNotFoundException(sprintf('Employee with email "%s" does not exist.', $email));
+            throw new EmployeeNotFoundException(null, sprintf('Employee with email "%s" does not exist.', $email));
         }
 
         $this->checkLastPasswordGeneration($employee);
