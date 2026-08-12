@@ -97,6 +97,8 @@ GitHub contributors:
 - Atchworks
 - Atef Ben Ali
 - Aude
+- Audrius
+- AureRita
 - Aurone
 - Aurélien Pelletier
 - Aurélien Rita
@@ -227,6 +229,7 @@ GitHub contributors:
 - David Gonzalez
 - David Oury
 - David Paris
+- David Prochazka
 - David Sivocha
 - David-Julian BUCH
 - Davide
@@ -246,6 +249,7 @@ GitHub contributors:
 - Dheeraj Sharma
 - Dickriven Chellemboyee
 - Dimitrios Karvounaris
+- Dindault Lucas
 - Dinesh Badrukhiya
 - Dingedi
 - Dinis Lage
@@ -368,6 +372,7 @@ GitHub contributors:
 - Guillaume Leseur
 - Guillaume Marsille
 - Guillaume P
+- Guillaume-L
 - GuillaumeKadolis
 - Guisardo
 - Gustavo
@@ -426,6 +431,7 @@ GitHub contributors:
 - Jean Traullé
 - Jean-François Viguier
 - Jean-Philippe Beauve
+- Jean-Philippe Bidegain
 - jeanbe
 - jeckyl
 - Jens Wilke
@@ -573,6 +579,7 @@ GitHub contributors:
 - Manuel Jose Pulgar Anguita
 - Manuel Valentin
 - manuelbcd
+- MaoDev
 - Marc González Majoral
 - Marcin Kurek
 - Marcin Sz
@@ -690,6 +697,7 @@ GitHub contributors:
 - nezenmoins
 - Nicklas Holmen
 - Nicko
+- Nico H
 - Nicolas Camenisch
 - Nicolas Lœuillet
 - Nicolas Martin
@@ -729,6 +737,7 @@ GitHub contributors:
 - Patrick Mettraux
 - Patrick Peters
 - Patrick Weinstein
+- Paul
 - Paul Campbell
 - Paul Coudeville
 - Paulo Baptista
