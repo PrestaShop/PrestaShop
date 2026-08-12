@@ -1581,7 +1581,8 @@ $product-page-padding-bottom: 80px !default;
     border: none;
   }
 
-  .employee_preview {
+  .employee_preview,
+  .api_client_preview {
     display: inline-block;
     max-width: 300px;
     overflow: hidden;
