@@ -52,6 +52,16 @@ class StockMovement
     protected $employeeName = null;
 
     /**
+     * @var int[]
+     */
+    protected $apiClientIds = [];
+
+    /**
+     * @var string[]
+     */
+    protected $apiClientNames = [];
+
+    /**
      * @var int
      */
     protected $deltaQuantity;
@@ -65,6 +75,8 @@ class StockMovement
      * @param int[] $employeeIds
      * @param string|null $employeeName
      * @param int $deltaQuantity
+     * @param int[] $apiClientIds
+     * @param string[] $apiClientNames
      */
     protected function __construct(
         string $type,
@@ -74,7 +86,9 @@ class StockMovement
         array $orderIds,
         array $employeeIds,
         ?string $employeeName,
-        int $deltaQuantity
+        int $deltaQuantity,
+        array $apiClientIds = [],
+        array $apiClientNames = []
     ) {
         $this->type = $type;
         $this->dates = $this->initializeDates($dates);
@@ -82,9 +96,10 @@ class StockMovement
         $this->stockIds = $this->initializeIds($stockIds);
         $this->orderIds = $this->initializeIds($orderIds);
         $this->employeeIds = $this->initializeIds($employeeIds);
-        $this->stockMovementIds = $this->initializeIds($stockMovementIds);
         $this->employeeName = $employeeName;
         $this->deltaQuantity = $deltaQuantity;
+        $this->apiClientIds = $this->initializeIds($apiClientIds);
+        $this->apiClientNames = array_values(array_filter($apiClientNames));
     }
 
     /**
@@ -118,6 +133,10 @@ class StockMovement
         );
     }
 
+    /**
+     * @param int[] $apiClientIds
+     * @param string[] $apiClientNames
+     */
     public static function createEditionMovement(
         string $dateAdd,
         int $stockMovementId,
@@ -125,7 +144,9 @@ class StockMovement
         ?int $orderId,
         int $employeeId,
         ?string $employeeName,
-        int $deltaQuantity
+        int $deltaQuantity,
+        array $apiClientIds = [],
+        array $apiClientNames = []
     ): self {
         return new static(
             static::EDITION_TYPE,
@@ -137,7 +158,9 @@ class StockMovement
             $orderId !== null ? [$orderId] : [],
             [$employeeId],
             $employeeName,
-            $deltaQuantity
+            $deltaQuantity,
+            $apiClientIds,
+            $apiClientNames
         );
     }
 
@@ -149,6 +172,8 @@ class StockMovement
      * @param string[]|int[] $orderIds
      * @param string[]|int[] $employeeIds
      * @param int $deltaQuantity
+     * @param int[] $apiClientIds
+     * @param string[] $apiClientNames
      */
     public static function createOrdersMovement(
         string $fromDate,
@@ -157,7 +182,9 @@ class StockMovement
         array $stockIds,
         array $orderIds,
         array $employeeIds,
-        int $deltaQuantity
+        int $deltaQuantity,
+        array $apiClientIds = [],
+        array $apiClientNames = []
     ): self {
         return new static(
             static::ORDERS_TYPE,
@@ -170,7 +197,9 @@ class StockMovement
             $orderIds,
             $employeeIds,
             null,
-            $deltaQuantity
+            $deltaQuantity,
+            $apiClientIds,
+            $apiClientNames
         );
     }
 
@@ -227,6 +256,22 @@ class StockMovement
     public function getEmployeeName(): ?string
     {
         return $this->employeeName;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getApiClientIds(): array
+    {
+        return $this->apiClientIds;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getApiClientNames(): array
+    {
+        return $this->apiClientNames;
     }
 
     public function getDeltaQuantity(): int
