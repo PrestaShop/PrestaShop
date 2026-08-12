@@ -148,6 +148,8 @@ describe('API : Check endpoints', async () => {
         // tests/UI/campaigns/functional/API/02_endpoints/02_attribute/10_postAttributesGroup.ts
         '/attributes/groups: POST',
         // @todo: add tests
+        '/cart-rules/search: GET',
+        // @todo: add tests
         '/categories/bulk-delete/{deleteMode}: DELETE',
         // @todo: add tests
         '/categories/bulk-update-status: PUT',
@@ -180,6 +182,10 @@ describe('API : Check endpoints', async () => {
         // @todo: add tests
         '/countries/{countryId}: GET',
         // @todo: add tests
+        '/countries/{countryId}: PATCH',
+        // @todo: add tests
+        '/countries: GET',
+        // @todo: add tests
         '/countries: POST',
         // @todo: add tests
         '/customers/bulk-delete: DELETE',
@@ -209,24 +215,6 @@ describe('API : Check endpoints', async () => {
         '/customers/{customerId}: PATCH',
         // @todo: add tests
         '/customers: POST',
-        // @todo: add tests
-        '/discounts/bulk-delete: DELETE',
-        // @todo: add tests
-        '/discounts/bulk-update-status: PATCH',
-        // @todo: add tests
-        '/discounts/types: GET',
-        // @todo: add tests
-        '/discounts/{discountId}/duplicate: POST',
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
-        '/discounts/{discountId}: DELETE',
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/38647
-        '/discounts/{discountId}: GET',
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/39682
-        '/discounts/{discountId}: PATCH',
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
-        '/discounts: GET',
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
-        '/discounts: POST',
         // @todo: add tests
         '/features/bulk-delete: DELETE',
         // @todo: add tests
@@ -295,6 +283,34 @@ describe('API : Check endpoints', async () => {
         '/modules/{technicalName}: GET',
         // tests/UI/campaigns/functional/API/02_endpoints/07_module/11_getModules.ts
         '/modules: GET',
+        // @todo: add tests
+        '/order-messages/bulk-delete: DELETE',
+        // @todo: add tests
+        '/order-messages/{orderMessageId}: DELETE',
+        // @todo: add tests
+        '/order-messages/{orderMessageId}: GET',
+        // @todo: add tests
+        '/order-messages/{orderMessageId}: PATCH',
+        // @todo: add tests
+        '/order-messages: GET',
+        // @todo: add tests
+        '/order-messages: POST',
+        // @todo: add tests
+        '/order-return-states/bulk-delete: DELETE',
+        // @todo: add tests
+        '/order-return-states/{orderReturnStateId}: DELETE',
+        // @todo: add tests
+        '/order-return-states/{orderReturnStateId}: GET',
+        // @todo: add tests
+        '/order-return-states/{orderReturnStateId}: PATCH',
+        // @todo: add tests
+        '/order-return-states: GET',
+        // @todo: add tests
+        '/order-return-states: POST',
+        // @todo: add tests
+        '/order-returns/{orderReturnId}: GET',
+        // @todo: add tests
+        '/order-returns/{orderReturnId}: PATCH',
         // @todo: add tests
         '/products/combinations/{combinationId}: GET',
         // tests/UI/campaigns/functional/API/02_endpoints/08_product/01_deleteProductImageId.ts
