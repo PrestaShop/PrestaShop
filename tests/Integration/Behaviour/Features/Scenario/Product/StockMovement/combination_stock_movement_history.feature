@@ -183,3 +183,26 @@ Feature: Search stock movements from Back Office (BO)
       | orders  |            | -2             |
       | edition | Puffin Mummy | -5             |
       | edition | Puffin Mummy | 15             |
+
+  Scenario: A combination stock update triggered by an API client records the movement related to it
+    Given I create an api client "combinationStockApiClient" with following properties:
+      | clientName  | Combination stock API client    |
+      | clientId    | combination-stock-api-client    |
+      | enabled     | true                            |
+      | description | client used to update the stock |
+      | lifetime    | 3600                            |
+    When I update combination "product1MBlack" stock with following details:
+      | delta quantity | 10 |
+    Then combination "product1MBlack" should have 10 available items
+    # The Admin API context: an API client is authenticated and the employee has no id
+    When the current employee context has no id
+    And I am logged in as api client with id "combination-stock-api-client"
+    And I update combination "product1MBlack" stock with following details:
+      | delta quantity | -4 |
+    Then combination "product1MBlack" should have 6 available items
+    When I search stock movements of combination "product1MBlack" I should get following results:
+      | type    | employee     | api_client_names             | delta_quantity |
+      | edition |              | Combination stock API client | -4             |
+      | edition | Puffin Mummy |                              | 10             |
+    # Reset the API client context so it does not leak into the following scenarios
+    And I am not logged in as an api client
