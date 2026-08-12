@@ -29,7 +29,11 @@ Changelog for PrestaShop 8
 
 - Core:
   - Improvement:
-    - #311: Security fixes for 8.2.8 (by @matthieu-rolland)
+    - GHSA-xrwj-pq6w-f8m4 Validate image URLs on CSV import to prevent Server-Side Request Forgery (by @clotairer & @matthieu-rolland, vulnerability reported by lrui1)
+    - GHSA-w6j9-q9rq-wrqg Escape leading formula characters in CSV exports (by @clotairer & @matthieu-rolland, vulnerability reported by Suphawith Phusanbai)
+    - GHSA-2cr4-vw9p-pjvf Parse the X-Forwarded-For header from right to left to prevent IP spoofing (by @clotairer & @matthieu-rolland, vulnerability reported by Pedro Gabaldón Juliá from ITRESIT)
+    - GHSA-whxq-pxj5-qq7v Escape identifiers in legacy admin list filters to prevent SQL injection (by @clotairer & @matthieu-rolland, found by Savio from Doyensec in collaboration with Anthropic Research)
+    - GHSA-jf3w-9rmr-5rcr Restrict the notifications endpoints to authorised employees (by @clotairer & @matthieu-rolland, vulnerability reported by Robert Scherer)
 
 ####################################
 #   v8.2.7 - (2026-06-03)
