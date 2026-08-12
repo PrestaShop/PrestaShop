@@ -18,6 +18,8 @@ use Pack;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Mutation\MutationTracker;
+use PrestaShopBundle\Entity\MutationAction;
 use PrestaShopBundle\Entity\StockMvt;
 use PrestaShopException;
 use Product;
@@ -28,6 +30,15 @@ use StockAvailable;
  */
 class StockManager
 {
+    /**
+     * The tracker is optional because this class is still instantiated without the
+     * container in some legacy paths (e.g. OrderHistory); no mutation is recorded there.
+     */
+    public function __construct(
+        private readonly ?MutationTracker $mutationTracker = null,
+    ) {
+    }
+
     /**
      * This will update a Pack quantity and will decrease the quantity of containing Products if needed.
      *
@@ -347,8 +358,15 @@ class StockManager
         }
 
         $stockMvtRepository = $sfContainer->get('prestashop.core.api.stock_movement.repository');
+        $stockMovementId = $stockMvtRepository->saveStockMvt($stockMvt);
 
-        return $stockMvtRepository->saveStockMvt($stockMvt);
+        if ($stockMovementId) {
+            // Records which API client created the movement (no-op when the request is not
+            // authenticated with an API client), since StockMvt has no api client relation
+            $this->mutationTracker?->addMutationForApiClient('stock_mvt', (int) $stockMovementId, MutationAction::CREATE);
+        }
+
+        return $stockMovementId;
     }
 
     /**
