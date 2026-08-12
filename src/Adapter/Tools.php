@@ -164,6 +164,20 @@ class Tools
     }
 
     /**
+     * Copy content from a source that can be influenced by user input, blocking requests
+     * to private/reserved hosts and non-HTTP(S)/FTP(S) stream wrappers.
+     *
+     * @param string $source
+     * @param string $destination
+     *
+     * @return bool
+     */
+    public function copyFromUntrustedSource($source, $destination)
+    {
+        return LegacyTools::copyFromUntrustedSource($source, $destination);
+    }
+
+    /**
      * Sanitize a string.
      *
      * @param string $value
