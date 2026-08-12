@@ -24,6 +24,14 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.2.8 - (2026-08-12)
+####################################
+
+- Core:
+  - Improvement:
+    - #311: Security fixes for 8.2.8 (by @matthieu-rolland)
+
+####################################
 #   v8.2.7 - (2026-06-03)
 ####################################
 
