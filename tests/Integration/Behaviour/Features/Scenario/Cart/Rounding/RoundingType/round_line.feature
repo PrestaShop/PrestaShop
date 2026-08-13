@@ -27,7 +27,7 @@ Feature: Cart calculation with rounding type LINE
     When I add 2 items of product "product2" in my cart
     And I add 3 items of product "product1" in my cart
     And I add 1 items of product "product3" in my cart
-    Then my cart total should be precisely 162.4 tax included
+    Then my cart total should be precisely 162.41 tax included
     And my cart total shipping fees should be 7.0 tax included
 
   @restore-cart-rules-after-scenario

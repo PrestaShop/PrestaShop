@@ -26,7 +26,9 @@ class StockMovementTest extends TestCase
         ?int $orderId,
         int $employeeId,
         ?string $employeeName,
-        int $deltaQuantity
+        int $deltaQuantity,
+        array $apiClientIds = [],
+        array $apiClientNames = []
     ): void {
         $history = StockMovement::createEditionMovement(
             $dateAdd,
@@ -35,7 +37,9 @@ class StockMovementTest extends TestCase
             $orderId,
             $employeeId,
             $employeeName,
-            $deltaQuantity
+            $deltaQuantity,
+            $apiClientIds,
+            $apiClientNames
         );
         Assert::assertTrue($history->isEdition());
         Assert::assertFalse($history->isFromOrders());
@@ -47,9 +51,12 @@ class StockMovementTest extends TestCase
             $orderId !== null ? [$orderId] : [],
             $history->getOrderIds()
         );
-        Assert::assertSame([$employeeId], $history->getEmployeeIds());
+        // Falsy ids are filtered (0 is the "no employee" value)
+        Assert::assertSame($employeeId !== 0 ? [$employeeId] : [], $history->getEmployeeIds());
         Assert::assertSame($employeeName, $history->getEmployeeName());
         Assert::assertSame($deltaQuantity, $history->getDeltaQuantity());
+        Assert::assertSame($apiClientIds, $history->getApiClientIds());
+        Assert::assertSame($apiClientNames, $history->getApiClientNames());
     }
 
     public function getSingleHistoryValidValues(): Generator
@@ -81,6 +88,17 @@ class StockMovementTest extends TestCase
             'employeeName' => null,
             'deltaQuantity' => 5,
         ];
+        yield 'single history related to an api client' => [
+            'dateAdd' => '2022-01-13 18:21:33',
+            'stockMovementId' => 1,
+            'stockId' => 2,
+            'orderId' => null,
+            'employeeId' => 0,
+            'employeeName' => null,
+            'deltaQuantity' => 5,
+            'apiClientIds' => [3],
+            'apiClientNames' => ['My API client'],
+        ];
     }
 
     /**
@@ -101,7 +119,9 @@ class StockMovementTest extends TestCase
         array $stockIds,
         array $orderIds,
         array $employeeIds,
-        int $deltaQuantity
+        int $deltaQuantity,
+        array $apiClientIds = [],
+        array $apiClientNames = []
     ): void {
         $history = StockMovement::createOrdersMovement(
             $fromDate,
@@ -110,7 +130,9 @@ class StockMovementTest extends TestCase
             $stockIds,
             $orderIds,
             $employeeIds,
-            $deltaQuantity
+            $deltaQuantity,
+            $apiClientIds,
+            $apiClientNames
         );
         Assert::assertFalse($history->isEdition());
         Assert::assertTrue($history->isFromOrders());
@@ -122,6 +144,8 @@ class StockMovementTest extends TestCase
         Assert::assertEquals($orderIds, $history->getOrderIds());
         Assert::assertEquals($employeeIds, $history->getEmployeeIds());
         Assert::assertEquals($deltaQuantity, $history->getDeltaQuantity());
+        Assert::assertEquals($apiClientIds, $history->getApiClientIds());
+        Assert::assertEquals($apiClientNames, $history->getApiClientNames());
     }
 
     public function getGroupHistoryValidValues(): Generator
@@ -152,6 +176,17 @@ class StockMovementTest extends TestCase
             'orderIds' => ['5', '6'],
             'employeeIds' => ['7', '8'],
             'deltaQuantity' => 9,
+        ];
+        yield 'group history related to api clients' => [
+            'fromDate' => '2022-01-13 18:20:58',
+            'toDate' => '2022-01-13 18:21:18',
+            'stockMovementIds' => [1, 2],
+            'stockIds' => [3, 4],
+            'orderIds' => [5, 6],
+            'employeeIds' => [],
+            'deltaQuantity' => 9,
+            'apiClientIds' => [3, 4],
+            'apiClientNames' => ['First API client', 'Second API client'],
         ];
     }
 

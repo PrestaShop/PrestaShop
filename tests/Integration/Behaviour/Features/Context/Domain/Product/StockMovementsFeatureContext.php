@@ -84,6 +84,20 @@ class StockMovementsFeatureContext extends AbstractProductFeatureContext
                     $stockMovement->getEmployeeName()
                 )
             );
+            if (array_key_exists('api_client_names', $tableRow)) {
+                $expectedApiClientNames = '' === $tableRow['api_client_names']
+                    ? []
+                    : array_map('trim', explode(',', $tableRow['api_client_names']));
+                Assert::assertSame(
+                    $expectedApiClientNames,
+                    $stockMovement->getApiClientNames(),
+                    sprintf(
+                        'Invalid api client names of stock movement event, expected "%s" instead of "%s"',
+                        $tableRow['api_client_names'],
+                        implode(', ', $stockMovement->getApiClientNames())
+                    )
+                );
+            }
             Assert::assertSame(
                 (int) $tableRow['delta_quantity'],
                 $stockMovement->getDeltaQuantity(),
