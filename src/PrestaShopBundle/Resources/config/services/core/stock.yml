@@ -2,4 +2,6 @@ services:
   _defaults:
     public: false
 
-  PrestaShop\PrestaShop\Core\Stock\StockManager: ~
+  PrestaShop\PrestaShop\Core\Stock\StockManager:
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Mutation\MutationTracker'

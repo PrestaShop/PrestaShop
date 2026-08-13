@@ -92,6 +92,46 @@ class StockMovementRepository
         return $result;
     }
 
+    /**
+     * Returns the API clients that created the given stock movements, based on the mutation
+     * table (StockMvt has no api client relation). The result is indexed by stock movement id:
+     *
+     *     [<id_stock_mvt> => ['id_api_client' => int, 'client_name' => string]]
+     *
+     * @param int[]|string[] $stockMovementIds
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getApiClientsByStockMovementIds(array $stockMovementIds): array
+    {
+        if (empty($stockMovementIds)) {
+            return [];
+        }
+
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $queryBuilder
+            ->select('m.mutation_row_id', 'ac.id_api_client', 'ac.client_name')
+            ->from($this->dbPrefix . 'mutation', 'm')
+            ->innerJoin('m', $this->dbPrefix . 'api_client', 'ac', 'ac.id_api_client = m.mutator_identifier')
+            ->andWhere('m.mutation_table = :mutationTable')
+            ->andWhere('m.mutator_type = :mutatorType')
+            ->andWhere('m.mutation_row_id IN (:stockMovementIds)')
+            ->setParameter('mutationTable', 'stock_mvt')
+            ->setParameter('mutatorType', 'api_client')
+            ->setParameter('stockMovementIds', array_map('intval', $stockMovementIds), Connection::PARAM_INT_ARRAY)
+        ;
+
+        $apiClientsByStockMovementId = [];
+        foreach ($queryBuilder->executeQuery()->fetchAllAssociative() as $row) {
+            $apiClientsByStockMovementId[(int) $row['mutation_row_id']] = [
+                'id_api_client' => (int) $row['id_api_client'],
+                'client_name' => $row['client_name'],
+            ];
+        }
+
+        return $apiClientsByStockMovementId;
+    }
+
     private function addGroupingCondition(QueryBuilder $queryBuilder): void
     {
         /**
