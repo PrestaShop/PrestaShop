@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
@@ -129,9 +130,10 @@ class LoginController extends PrestaShopAdminController
                     $infoMessage = $this->trans('Please, check your mailbox.', [], 'Admin.Login.Notification') . '<br/>' .
                         $this->trans('If this email address has been registered in our store, you will receive a link to reset your password.', [], 'Admin.Login.Notification')
                     ;
-                } catch (UserNotFoundException) {
+                } catch (EmployeeNotFoundException|UserNotFoundException) {
                     // If the email doesn't match a known employee we still display a generic success message to avoid any hacker using this
                     // to find out the employee's emails via brute force.
+                    // UserNotFoundException is no longer thrown by EmployeePasswordResetter but is still caught for safety.
                     $infoMessage = $this->trans('Please, check your mailbox.', [], 'Admin.Login.Notification') . '<br/>' .
                         $this->trans('If this email address has been registered in our store, you will receive a link to reset your password.', [], 'Admin.Login.Notification')
                     ;

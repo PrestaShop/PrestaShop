@@ -52,11 +52,20 @@ abstract class AbstractGetStockMovementsHandler
             $limit
         );
 
+        $apiClients = $this->stockMovementRepository->getApiClientsByStockMovementIds(
+            array_merge([], ...array_map(
+                static function (array $historyRow): array {
+                    return explode(',', (string) $historyRow['id_stock_mvt_list']);
+                },
+                array_values($lastStockMovements)
+            ))
+        );
+
         return array_map(
-            function (array $historyRow): StockMovement {
+            function (array $historyRow) use ($apiClients): StockMovement {
                 return $historyRow['grouping_type'] === StockMovement::EDITION_TYPE
-                    ? $this->createEditionStockMovement($historyRow)
-                    : $this->createOrdersStockMovement($historyRow)
+                    ? $this->createEditionStockMovement($historyRow, $apiClients)
+                    : $this->createOrdersStockMovement($historyRow, $apiClients)
                 ;
             },
             $lastStockMovements
@@ -64,18 +73,51 @@ abstract class AbstractGetStockMovementsHandler
     }
 
     /**
+     * Extracts the api clients related to the row's stock movements, as two aligned
+     * deduplicated lists [ids[], names[]].
+     *
      * @param array<string, string|int|null> $historyRow
+     * @param array<int, array<string, mixed>> $apiClients indexed by stock movement id
+     *
+     * @return array{0: int[], 1: string[]}
+     */
+    protected function extractApiClients(array $historyRow, array $apiClients): array
+    {
+        $apiClientIds = [];
+        $apiClientNames = [];
+        foreach (explode(',', (string) $historyRow['id_stock_mvt_list']) as $stockMovementId) {
+            $apiClient = $apiClients[(int) $stockMovementId] ?? null;
+            if (null === $apiClient || in_array($apiClient['id_api_client'], $apiClientIds, true)) {
+                continue;
+            }
+            $apiClientIds[] = $apiClient['id_api_client'];
+            $apiClientNames[] = $apiClient['client_name'];
+        }
+
+        return [$apiClientIds, $apiClientNames];
+    }
+
+    /**
+     * @param array<string, string|int|null> $historyRow
+     * @param array<int, array<string, mixed>> $apiClients indexed by stock movement id
      *
      * @return StockMovement
      */
-    protected function createEditionStockMovement(array $historyRow): StockMovement
+    protected function createEditionStockMovement(array $historyRow, array $apiClients = []): StockMovement
     {
-        $employeeName = $this->translator->trans('%firstname% %lastname%', [
-            '%firstname%' => $historyRow['employee_firstname'],
-            '%lastname%' => $historyRow['employee_lastname'],
-        ],
-            'Admin.Global'
-        );
+        // A movement can have no employee (e.g. when it was created through the Admin API)
+        if (empty($historyRow['employee_firstname']) && empty($historyRow['employee_lastname'])) {
+            $employeeName = null;
+        } else {
+            $employeeName = $this->translator->trans('%firstname% %lastname%', [
+                '%firstname%' => $historyRow['employee_firstname'],
+                '%lastname%' => $historyRow['employee_lastname'],
+            ],
+                'Admin.Global'
+            );
+        }
+
+        [$apiClientIds, $apiClientNames] = $this->extractApiClients($historyRow, $apiClients);
 
         return StockMovement::createEditionMovement(
             $historyRow['date_add_min'],
@@ -84,17 +126,22 @@ abstract class AbstractGetStockMovementsHandler
             (int) $historyRow['id_order_list'],
             (int) $historyRow['id_employee_list'],
             $employeeName,
-            (int) $historyRow['delta_quantity']
+            (int) $historyRow['delta_quantity'],
+            $apiClientIds,
+            $apiClientNames
         );
     }
 
     /**
      * @param array<string, string|int|null> $historyRow
+     * @param array<int, array<string, mixed>> $apiClients indexed by stock movement id
      *
      * @return StockMovement
      */
-    protected function createOrdersStockMovement(array $historyRow): StockMovement
+    protected function createOrdersStockMovement(array $historyRow, array $apiClients = []): StockMovement
     {
+        [$apiClientIds, $apiClientNames] = $this->extractApiClients($historyRow, $apiClients);
+
         return StockMovement::createOrdersMovement(
             $historyRow['date_add_min'],
             $historyRow['date_add_max'],
@@ -102,7 +149,9 @@ abstract class AbstractGetStockMovementsHandler
             explode(',', $historyRow['id_stock_list']),
             explode(',', $historyRow['id_order_list']),
             explode(',', $historyRow['id_employee_list']),
-            (int) $historyRow['delta_quantity']
+            (int) $historyRow['delta_quantity'],
+            $apiClientIds,
+            $apiClientNames
         );
     }
 }
