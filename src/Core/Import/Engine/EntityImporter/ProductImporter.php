@@ -69,7 +69,7 @@ class ProductImporter extends AbstractEntityImporter
 
     public function getLabel(): string
     {
-        return $this->trans('Products', 'Admin.Global');
+        return $this->translator->trans('Products', [], 'Admin.Global');
     }
 
     public function getFields(): EntityFieldCollectionInterface
@@ -81,85 +81,85 @@ class ProductImporter extends AbstractEntityImporter
         }
 
         $fields = [
-            new EntityField('id', $this->trans('ID', 'Admin.Global')),
-            new EntityField('active', $this->trans('Active (0/1)', 'Admin.Advparameters.Feature')),
-            new EntityField('name', $this->trans('Name', 'Admin.Global'), '', true),
-            new EntityField('category', $this->trans('Categories (x,y,z...)', 'Admin.Advparameters.Feature')),
-            new EntityField('price_tex', $this->trans('Price tax excluded', 'Admin.Advparameters.Feature')),
-            new EntityField('price_tin', $this->trans('Price tax included', 'Admin.Advparameters.Feature')),
-            new EntityField('id_tax_rules_group', $this->trans('Tax rule ID', 'Admin.Advparameters.Feature')),
-            new EntityField('wholesale_price', $this->trans('Cost price', 'Admin.Catalog.Feature')),
-            new EntityField('on_sale', $this->trans('On sale (0/1)', 'Admin.Advparameters.Feature')),
-            new EntityField('reduction_price', $this->trans('Discount amount', 'Admin.Advparameters.Feature')),
-            new EntityField('reduction_percent', $this->trans('Discount percent', 'Admin.Advparameters.Feature')),
-            new EntityField('reduction_from', $this->trans('Discount from (yyyy-mm-dd)', 'Admin.Advparameters.Feature')),
-            new EntityField('reduction_to', $this->trans('Discount to (yyyy-mm-dd)', 'Admin.Advparameters.Feature')),
-            new EntityField('reference', $this->trans('Reference #', 'Admin.Advparameters.Feature')),
-            new EntityField('supplier_reference', $this->trans('Supplier reference #', 'Admin.Advparameters.Feature')),
-            new EntityField('supplier', $this->trans('Supplier', 'Admin.Global')),
-            new EntityField('manufacturer', $this->trans('Brand', 'Admin.Global')),
-            new EntityField('gtin', $this->trans('GTIN', 'Admin.Catalog.Feature')),
-            new EntityField('ean13', $this->trans('EAN-13', 'Admin.Advparameters.Feature')),
-            new EntityField('isbn', $this->trans('ISBN', 'Admin.Catalog.Feature')),
-            new EntityField('upc', $this->trans('UPC', 'Admin.Advparameters.Feature')),
-            new EntityField('mpn', $this->trans('MPN', 'Admin.Catalog.Feature')),
-            new EntityField('ecotax', $this->trans('Ecotax', 'Admin.Catalog.Feature')),
-            new EntityField('width', $this->trans('Width', 'Admin.Global')),
-            new EntityField('height', $this->trans('Height', 'Admin.Global')),
-            new EntityField('depth', $this->trans('Depth', 'Admin.Global')),
-            new EntityField('weight', $this->trans('Weight', 'Admin.Global')),
-            new EntityField('delivery_in_stock', $this->trans('Delivery time of in-stock products:', 'Admin.Catalog.Feature')),
-            new EntityField('delivery_out_stock', $this->trans('Delivery time of out-of-stock products with allowed orders:', 'Admin.Advparameters.Feature')),
-            new EntityField('quantity', $this->trans('Quantity', 'Admin.Global')),
-            new EntityField('minimal_quantity', $this->trans('Minimal quantity', 'Admin.Advparameters.Feature')),
-            new EntityField('low_stock_threshold', $this->trans('Low stock level', 'Admin.Catalog.Feature')),
-            new EntityField('low_stock_alert', $this->trans('Receive a low stock alert by email', 'Admin.Catalog.Feature')),
-            new EntityField('location', $this->trans('Stock location', 'Admin.Catalog.Feature')),
-            new EntityField('visibility', $this->trans('Visibility', 'Admin.Catalog.Feature')),
-            new EntityField('additional_shipping_cost', $this->trans('Additional shipping cost', 'Admin.Advparameters.Feature')),
-            new EntityField('unity', $this->trans('Unit for the price per unit', 'Admin.Advparameters.Feature')),
-            new EntityField('unit_price', $this->trans('Price per unit', 'Admin.Advparameters.Feature')),
-            new EntityField('description_short', $this->trans('Summary', 'Admin.Catalog.Feature')),
-            new EntityField('description', $this->trans('Description', 'Admin.Global')),
-            new EntityField('tags', $this->trans('Tags (x,y,z...)', 'Admin.Advparameters.Feature')),
-            new EntityField('meta_title', $this->trans('Meta title', 'Admin.Global')),
-            new EntityField('meta_description', $this->trans('Meta description', 'Admin.Global')),
-            new EntityField('link_rewrite', $this->trans('Rewritten URL', 'Admin.Advparameters.Feature')),
-            new EntityField('available_now', $this->trans('Label when in stock', 'Admin.Catalog.Feature')),
-            new EntityField('available_later', $this->trans('Label when backorder allowed', 'Admin.Advparameters.Feature')),
-            new EntityField('available_for_order', $this->trans('Available for order (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
-            new EntityField('available_date', $this->trans('Product availability date', 'Admin.Advparameters.Feature')),
-            new EntityField('date_add', $this->trans('Product creation date', 'Admin.Advparameters.Feature')),
-            new EntityField('show_price', $this->trans('Show price (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
-            new EntityField('image', $this->trans('Image URLs (x,y,z...)', 'Admin.Advparameters.Feature')),
-            new EntityField('image_alt', $this->trans('Image alt texts (x,y,z...)', 'Admin.Advparameters.Feature')),
-            new EntityField('delete_existing_images', $this->trans('Delete existing images (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
-            new EntityField('features', $this->trans('Feature (Name:Value:Position:Customized)', 'Admin.Advparameters.Feature')),
-            new EntityField('online_only', $this->trans('Available online only (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
-            new EntityField('condition', $this->trans('Condition', 'Admin.Catalog.Feature')),
-            new EntityField('customizable', $this->trans('Customizable (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
-            new EntityField('uploadable_files', $this->trans('Number of file upload fields to create', 'Admin.Advparameters.Feature')),
-            new EntityField('text_fields', $this->trans('Number of text fields to create', 'Admin.Advparameters.Feature')),
-            new EntityField('out_of_stock', $this->trans('Action when out of stock', 'Admin.Advparameters.Feature')),
-            new EntityField('is_virtual', $this->trans('Virtual product (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
-            new EntityField('file_url', $this->trans('File URL', 'Admin.Advparameters.Feature')),
+            new EntityField('id', $this->translator->trans('ID', [], 'Admin.Global')),
+            new EntityField('active', $this->translator->trans('Active (0/1)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('name', $this->translator->trans('Name', [], 'Admin.Global'), '', true),
+            new EntityField('category', $this->translator->trans('Categories (x,y,z...)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('price_tex', $this->translator->trans('Price tax excluded', [], 'Admin.Advparameters.Feature')),
+            new EntityField('price_tin', $this->translator->trans('Price tax included', [], 'Admin.Advparameters.Feature')),
+            new EntityField('id_tax_rules_group', $this->translator->trans('Tax rule ID', [], 'Admin.Advparameters.Feature')),
+            new EntityField('wholesale_price', $this->translator->trans('Cost price', [], 'Admin.Catalog.Feature')),
+            new EntityField('on_sale', $this->translator->trans('On sale (0/1)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('reduction_price', $this->translator->trans('Discount amount', [], 'Admin.Advparameters.Feature')),
+            new EntityField('reduction_percent', $this->translator->trans('Discount percent', [], 'Admin.Advparameters.Feature')),
+            new EntityField('reduction_from', $this->translator->trans('Discount from (yyyy-mm-dd)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('reduction_to', $this->translator->trans('Discount to (yyyy-mm-dd)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('reference', $this->translator->trans('Reference #', [], 'Admin.Advparameters.Feature')),
+            new EntityField('supplier_reference', $this->translator->trans('Supplier reference #', [], 'Admin.Advparameters.Feature')),
+            new EntityField('supplier', $this->translator->trans('Supplier', [], 'Admin.Global')),
+            new EntityField('manufacturer', $this->translator->trans('Brand', [], 'Admin.Global')),
+            new EntityField('gtin', $this->translator->trans('GTIN', [], 'Admin.Catalog.Feature')),
+            new EntityField('ean13', $this->translator->trans('EAN-13', [], 'Admin.Advparameters.Feature')),
+            new EntityField('isbn', $this->translator->trans('ISBN', [], 'Admin.Catalog.Feature')),
+            new EntityField('upc', $this->translator->trans('UPC', [], 'Admin.Advparameters.Feature')),
+            new EntityField('mpn', $this->translator->trans('MPN', [], 'Admin.Catalog.Feature')),
+            new EntityField('ecotax', $this->translator->trans('Ecotax', [], 'Admin.Catalog.Feature')),
+            new EntityField('width', $this->translator->trans('Width', [], 'Admin.Global')),
+            new EntityField('height', $this->translator->trans('Height', [], 'Admin.Global')),
+            new EntityField('depth', $this->translator->trans('Depth', [], 'Admin.Global')),
+            new EntityField('weight', $this->translator->trans('Weight', [], 'Admin.Global')),
+            new EntityField('delivery_in_stock', $this->translator->trans('Delivery time of in-stock products:', [], 'Admin.Catalog.Feature')),
+            new EntityField('delivery_out_stock', $this->translator->trans('Delivery time of out-of-stock products with allowed orders:', [], 'Admin.Advparameters.Feature')),
+            new EntityField('quantity', $this->translator->trans('Quantity', [], 'Admin.Global')),
+            new EntityField('minimal_quantity', $this->translator->trans('Minimal quantity', [], 'Admin.Advparameters.Feature')),
+            new EntityField('low_stock_threshold', $this->translator->trans('Low stock level', [], 'Admin.Catalog.Feature')),
+            new EntityField('low_stock_alert', $this->translator->trans('Receive a low stock alert by email', [], 'Admin.Catalog.Feature')),
+            new EntityField('location', $this->translator->trans('Stock location', [], 'Admin.Catalog.Feature')),
+            new EntityField('visibility', $this->translator->trans('Visibility', [], 'Admin.Catalog.Feature')),
+            new EntityField('additional_shipping_cost', $this->translator->trans('Additional shipping cost', [], 'Admin.Advparameters.Feature')),
+            new EntityField('unity', $this->translator->trans('Unit for the price per unit', [], 'Admin.Advparameters.Feature')),
+            new EntityField('unit_price', $this->translator->trans('Price per unit', [], 'Admin.Advparameters.Feature')),
+            new EntityField('description_short', $this->translator->trans('Summary', [], 'Admin.Catalog.Feature')),
+            new EntityField('description', $this->translator->trans('Description', [], 'Admin.Global')),
+            new EntityField('tags', $this->translator->trans('Tags (x,y,z...)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('meta_title', $this->translator->trans('Meta title', [], 'Admin.Global')),
+            new EntityField('meta_description', $this->translator->trans('Meta description', [], 'Admin.Global')),
+            new EntityField('link_rewrite', $this->translator->trans('Rewritten URL', [], 'Admin.Advparameters.Feature')),
+            new EntityField('available_now', $this->translator->trans('Label when in stock', [], 'Admin.Catalog.Feature')),
+            new EntityField('available_later', $this->translator->trans('Label when backorder allowed', [], 'Admin.Advparameters.Feature')),
+            new EntityField('available_for_order', $this->translator->trans('Available for order (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('available_date', $this->translator->trans('Product availability date', [], 'Admin.Advparameters.Feature')),
+            new EntityField('date_add', $this->translator->trans('Product creation date', [], 'Admin.Advparameters.Feature')),
+            new EntityField('show_price', $this->translator->trans('Show price (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('image', $this->translator->trans('Image URLs (x,y,z...)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('image_alt', $this->translator->trans('Image alt texts (x,y,z...)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('delete_existing_images', $this->translator->trans('Delete existing images (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('features', $this->translator->trans('Feature (Name:Value:Position:Customized)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('online_only', $this->translator->trans('Available online only (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('condition', $this->translator->trans('Condition', [], 'Admin.Catalog.Feature')),
+            new EntityField('customizable', $this->translator->trans('Customizable (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('uploadable_files', $this->translator->trans('Number of file upload fields to create', [], 'Admin.Advparameters.Feature')),
+            new EntityField('text_fields', $this->translator->trans('Number of text fields to create', [], 'Admin.Advparameters.Feature')),
+            new EntityField('out_of_stock', $this->translator->trans('Action when out of stock', [], 'Admin.Advparameters.Feature')),
+            new EntityField('is_virtual', $this->translator->trans('Virtual product (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Feature')),
+            new EntityField('file_url', $this->translator->trans('File URL', [], 'Admin.Advparameters.Feature')),
             new EntityField(
                 'nb_downloadable',
-                $this->trans('Number of allowed downloads', 'Admin.Catalog.Feature'),
-                $this->trans('Number of days this file can be accessed by customers. Set to zero for unlimited access.', 'Admin.Catalog.Help')
+                $this->translator->trans('Number of allowed downloads', [], 'Admin.Catalog.Feature'),
+                $this->translator->trans('Number of days this file can be accessed by customers. Set to zero for unlimited access.', [], 'Admin.Catalog.Help')
             ),
-            new EntityField('date_expiration', $this->trans('Expiration date (yyyy-mm-dd)', 'Admin.Advparameters.Feature')),
+            new EntityField('date_expiration', $this->translator->trans('Expiration date (yyyy-mm-dd)', [], 'Admin.Advparameters.Feature')),
             new EntityField(
                 'nb_days_accessible',
-                $this->trans('Number of days', 'Admin.Advparameters.Feature'),
-                $this->trans('Number of days this file can be accessed by customers. Set to zero for unlimited access.', 'Admin.Catalog.Help')
+                $this->translator->trans('Number of days', [], 'Admin.Advparameters.Feature'),
+                $this->translator->trans('Number of days this file can be accessed by customers. Set to zero for unlimited access.', [], 'Admin.Catalog.Help')
             ),
             new EntityField(
                 'shop',
-                $this->trans('ID / Name of the store', 'Admin.Advparameters.Feature'),
-                $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', 'Admin.Advparameters.Help')
+                $this->translator->trans('ID / Name of the store', [], 'Admin.Advparameters.Feature'),
+                $this->translator->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', [], 'Admin.Advparameters.Help')
             ),
-            new EntityField('accessories', $this->trans('Accessories (x,y,z...)', 'Admin.Advparameters.Feature')),
+            new EntityField('accessories', $this->translator->trans('Accessories (x,y,z...)', [], 'Admin.Advparameters.Feature')),
         ];
 
         return $this->fields = EntityFieldCollection::createFromArray($fields);
@@ -170,21 +170,21 @@ class ProductImporter extends AbstractEntityImporter
         return [
             new ImportPhaseDefinition(
                 ImportPhaseDefinition::PHASE_VALIDATION,
-                $this->trans('Validating the file', 'Admin.Advparameters.Feature'),
+                $this->translator->trans('Validating the file', [], 'Admin.Advparameters.Feature'),
                 true
             ),
             new ImportPhaseDefinition(
                 ImportPhaseDefinition::PHASE_DATABASE,
-                $this->trans('Importing products', 'Admin.Advparameters.Feature')
+                $this->translator->trans('Importing products', [], 'Admin.Advparameters.Feature')
             ),
             new ImportPhaseDefinition(
                 self::PHASE_ASSOCIATION_VALIDATION,
-                $this->trans('Checking accessories', 'Admin.Advparameters.Feature'),
+                $this->translator->trans('Checking accessories', [], 'Admin.Advparameters.Feature'),
                 true
             ),
             new ImportPhaseDefinition(
                 ImportPhaseDefinition::PHASE_ASSOCIATION,
-                $this->trans('Linking accessories', 'Admin.Advparameters.Feature')
+                $this->translator->trans('Linking accessories', [], 'Admin.Advparameters.Feature')
             ),
         ];
     }
@@ -225,7 +225,7 @@ class ProductImporter extends AbstractEntityImporter
                 $messages[] = new ImportMessage(
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_VALIDATION,
-                    $this->trans('Importing accessories requires an id column (with the force IDs option) or a reference column to identify the owning product; the accessories will be dropped.', 'Admin.Advparameters.Notification'),
+                    $this->translator->trans('Importing accessories requires an id column (with the force IDs option) or a reference column to identify the owning product; the accessories will be dropped.', [], 'Admin.Advparameters.Notification'),
                     null,
                     'accessories'
                 );
@@ -238,7 +238,7 @@ class ProductImporter extends AbstractEntityImporter
                     'messages' => [new ImportMessage(
                         ImportMessage::SEVERITY_NOTICE,
                         ImportPhaseDefinition::PHASE_VALIDATION,
-                        $this->trans('The row is empty and was skipped.', 'Admin.Advparameters.Notification'),
+                        $this->translator->trans('The row is empty and was skipped.', [], 'Admin.Advparameters.Notification'),
                         $rowIndex
                     )],
                     'skipped' => true,
@@ -309,18 +309,18 @@ class ProductImporter extends AbstractEntityImporter
         $messages = [];
 
         if (null === $this->resolveAssociationOwner($row, $context)) {
-            $messages[] = $this->accessoryWarning($rowIndex, $this->trans('The accessories owner could not be identified (no matching id or reference); the accessories will be dropped.', 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
+            $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('The accessories owner could not be identified (no matching id or reference); the accessories will be dropped.', [], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
         }
 
         foreach ($this->valueParser->split($accessories, $context->getMultipleValueSeparator()) as $target) {
             $resolved = $this->identityResolver->resolveProductTarget($target, $context);
 
             if ($resolved['ambiguous']) {
-                $messages[] = $this->accessoryWarning($rowIndex, $this->trans('Accessory "%target%" matches both a product id and a product reference; it will be linked by id.', 'Admin.Advparameters.Notification', ['%target%' => $target]), self::PHASE_ASSOCIATION_VALIDATION);
+                $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches both a product id and a product reference; it will be linked by id.', ['%target%' => $target], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
             } elseif (null === $resolved['resolvedId']) {
-                $messages[] = $this->accessoryWarning($rowIndex, $this->trans('Accessory "%target%" matches no product; the link will be dropped.', 'Admin.Advparameters.Notification', ['%target%' => $target]), self::PHASE_ASSOCIATION_VALIDATION);
+                $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches no product; the link will be dropped.', ['%target%' => $target], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
             } elseif (ProductIdentityResolver::TARGET_MATCHED_BY_REFERENCE === $resolved['matchedBy'] && ctype_digit($target)) {
-                $messages[] = $this->accessoryWarning($rowIndex, $this->trans('Accessory "%target%" matches no product id; it will be linked by reference.', 'Admin.Advparameters.Notification', ['%target%' => $target]), self::PHASE_ASSOCIATION_VALIDATION);
+                $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches no product id; it will be linked by reference.', ['%target%' => $target], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
             }
         }
 
@@ -344,7 +344,7 @@ class ProductImporter extends AbstractEntityImporter
         try {
             $ownerId = $this->resolveAssociationOwner($row, $context);
             if (null === $ownerId) {
-                return [$this->accessoryError($rowIndex, $this->trans('The accessories owner could not be identified (no matching id or reference); the accessories were dropped.', 'Admin.Advparameters.Notification'))];
+                return [$this->accessoryError($rowIndex, $this->translator->trans('The accessories owner could not be identified (no matching id or reference); the accessories were dropped.', [], 'Admin.Advparameters.Notification'))];
             }
 
             if (EntityImporterInterface::CLEAR_ASSOCIATION_MARKER === $accessories) {
@@ -358,11 +358,11 @@ class ProductImporter extends AbstractEntityImporter
                 $resolved = $this->identityResolver->resolveProductTarget($target, $context);
 
                 if ($resolved['ambiguous']) {
-                    $messages[] = $this->accessoryWarning($rowIndex, $this->trans('Accessory "%target%" matches both a product id and a product reference; it was linked by id.', 'Admin.Advparameters.Notification', ['%target%' => $target]));
+                    $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches both a product id and a product reference; it was linked by id.', ['%target%' => $target], 'Admin.Advparameters.Notification'));
                 } elseif (null === $resolved['resolvedId']) {
-                    $messages[] = $this->accessoryError($rowIndex, $this->trans('Accessory "%target%" could not be resolved; the link was dropped.', 'Admin.Advparameters.Notification', ['%target%' => $target]));
+                    $messages[] = $this->accessoryError($rowIndex, $this->translator->trans('Accessory "%target%" could not be resolved; the link was dropped.', ['%target%' => $target], 'Admin.Advparameters.Notification'));
                 } elseif (ProductIdentityResolver::TARGET_MATCHED_BY_REFERENCE === $resolved['matchedBy'] && ctype_digit($target)) {
-                    $messages[] = $this->accessoryWarning($rowIndex, $this->trans('Accessory "%target%" matches no product id; it was linked by reference.', 'Admin.Advparameters.Notification', ['%target%' => $target]));
+                    $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches no product id; it was linked by reference.', ['%target%' => $target], 'Admin.Advparameters.Notification'));
                 }
 
                 if (null !== $resolved['resolvedId']) {
@@ -375,7 +375,7 @@ class ProductImporter extends AbstractEntityImporter
             }
         } catch (Throwable $e) {
             $this->logger->error('Import: accessories could not be linked', ['row' => $rowIndex, 'exception' => $e]);
-            $messages[] = $this->accessoryError($rowIndex, $this->trans('Accessories could not be linked: %error%', 'Admin.Advparameters.Notification', ['%error%' => $e->getMessage()]));
+            $messages[] = $this->accessoryError($rowIndex, $this->translator->trans('Accessories could not be linked: %error%', ['%error%' => $e->getMessage()], 'Admin.Advparameters.Notification'));
         }
 
         return $messages;
@@ -404,13 +404,5 @@ class ProductImporter extends AbstractEntityImporter
     protected function accessoryWarning(int $rowIndex, string $message, string $phaseId = ImportPhaseDefinition::PHASE_ASSOCIATION): ImportMessage
     {
         return new ImportMessage(ImportMessage::SEVERITY_WARNING, $phaseId, $message, $rowIndex, 'accessories');
-    }
-
-    /**
-     * @param array<string, string> $parameters
-     */
-    protected function trans(string $id, string $domain, array $parameters = []): string
-    {
-        return $this->translator->trans($id, $parameters, $domain);
     }
 }

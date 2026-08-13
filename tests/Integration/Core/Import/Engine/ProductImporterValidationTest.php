@@ -14,7 +14,7 @@ use Tests\Resources\Resetter\ProductResetter;
 
 class ProductImporterValidationTest extends AbstractProductImportEngineTestCase
 {
-    private const FIELDS = ['name', 'reference', 'visibility', 'ean13', 'category', 'active'];
+    private const FIELDS = ['name', 'reference', 'visibility', 'ean13', 'category', 'active', 'isbn'];
 
     public static function setUpBeforeClass(): void
     {
@@ -58,6 +58,7 @@ class ProductImporterValidationTest extends AbstractProductImportEngineTestCase
         $this->assertSame([2], $errorsByField['ean13'] ?? [], 'bad gtin row');
         $this->assertSame([3], $errorsByField['name'] ?? [], 'missing name row');
         $this->assertSame([5], $errorsByField['category'] ?? [], 'unknown numeric category row');
+        $this->assertSame([7], $errorsByField['isbn'] ?? [], 'bad isbn row (full ISBN format mirrored from the Isbn value object)');
 
         // the message texts name the offending value / expectation
         $errorTextsByField = [];
@@ -68,6 +69,7 @@ class ProductImporterValidationTest extends AbstractProductImportEngineTestCase
         $this->assertStringContainsString('Invalid GTIN', $errorTextsByField['ean13'][0]);
         $this->assertStringContainsString('name is required', $errorTextsByField['name'][0]);
         $this->assertStringContainsString('does not exist', $errorTextsByField['category'][0]);
+        $this->assertStringContainsString('Invalid ISBN "ABC"', $errorTextsByField['isbn'][0]);
 
         // blank line = notice + skip, not an abort
         $notices = $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_NOTICE);
@@ -84,8 +86,8 @@ class ProductImporterValidationTest extends AbstractProductImportEngineTestCase
         $this->assertStringContainsString('Unrecognized boolean', $booleanWarnings[0]->message);
         $this->assertStringContainsString('"false" will be used', $booleanWarnings[0]->message);
 
-        // skipped rows = the 4 error rows + the blank row
-        $this->assertSame([1, 2, 3, 4, 5], $context->getSkippedRows(ImportPhaseDefinition::PHASE_VALIDATION));
+        // skipped rows = the 5 error rows + the blank row
+        $this->assertSame([1, 2, 3, 4, 5, 7], $context->getSkippedRows(ImportPhaseDefinition::PHASE_VALIDATION));
 
         // valid rows imported, invalid ones absent
         $this->assertNotNull($this->getProductIdByReference('INV-OK-1'));
@@ -94,6 +96,7 @@ class ProductImporterValidationTest extends AbstractProductImportEngineTestCase
         $this->assertNull($this->getProductIdByReference('INV-BAD-GTIN'));
         $this->assertNull($this->getProductIdByReference('INV-NO-NAME'));
         $this->assertNull($this->getProductIdByReference('INV-BAD-CAT'));
+        $this->assertNull($this->getProductIdByReference('INV-BAD-ISBN'));
 
         // the fuzzy boolean was treated as false
         $fuzzyId = $this->getProductIdByReference('INV-FUZZY-BOOL');

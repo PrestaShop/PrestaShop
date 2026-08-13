@@ -10,8 +10,12 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Gtin;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
@@ -29,12 +33,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ProductRowValidator
 {
-    protected const REFERENCE_MAX_LENGTH = 64;
-    protected const REFERENCE_PATTERN = '/^[^<>;={}]*$/u';
-    protected const GTIN_PATTERN = '/^[0-9]{0,14}$/';
-    protected const UPC_PATTERN = '/^[0-9]{0,12}$/';
-    protected const ISBN_MAX_LENGTH = 32;
-
     protected const DECIMAL_FIELDS = ['price_tex', 'price_tin', 'wholesale_price', 'unit_price', 'ecotax', 'additional_shipping_cost', 'reduction_price', 'reduction_percent'];
     protected const DIMENSION_FIELDS = ['width', 'height', 'depth', 'weight'];
     protected const DATE_FIELDS = ['available_date', 'date_add', 'reduction_from', 'reduction_to', 'date_expiration'];
@@ -90,26 +88,32 @@ class ProductRowValidator
      */
     protected function validateFormats(array $row, int $rowIndex, ImportRunContext $context, array &$messages): void
     {
+        // constraints mirrored from the VOs the database-phase commands will
+        // build, so a bad value is a clear validation error instead of a
+        // generic row failure later
         $reference = $row['reference'] ?? '';
-        if ('' !== $reference && (mb_strlen($reference) > self::REFERENCE_MAX_LENGTH || !preg_match(self::REFERENCE_PATTERN, $reference))) {
+        if ('' !== $reference && (strlen($reference) > Reference::MAX_LENGTH || !preg_match(Reference::VALID_PATTERN, $reference))) {
             $messages[] = $this->error($rowIndex, 'reference', $this->translator->trans('Invalid reference "%value%".', ['%value%' => $reference], 'Admin.Advparameters.Notification'));
         }
 
-        // gtin and its legacy alias ean13 share the same storage and pattern
+        // gtin and its legacy alias ean13 share the same storage (both cells
+        // feed setGtin()), hence the same Gtin constraints
         foreach (['gtin', 'ean13'] as $gtinField) {
             $gtin = $row[$gtinField] ?? '';
-            if ('' !== $gtin && !preg_match(self::GTIN_PATTERN, $gtin)) {
+            if ('' !== $gtin && (strlen($gtin) > Gtin::MAX_LENGTH || !preg_match(Gtin::VALID_PATTERN, $gtin))) {
                 $messages[] = $this->error($rowIndex, $gtinField, $this->translator->trans('Invalid GTIN "%value%".', ['%value%' => $gtin], 'Admin.Advparameters.Notification'));
             }
         }
 
         $upc = $row['upc'] ?? '';
-        if ('' !== $upc && !preg_match(self::UPC_PATTERN, $upc)) {
+        if ('' !== $upc && (strlen($upc) > Upc::MAX_LENGTH || !preg_match(Upc::VALID_PATTERN, $upc))) {
             $messages[] = $this->error($rowIndex, 'upc', $this->translator->trans('Invalid UPC "%value%".', ['%value%' => $upc], 'Admin.Advparameters.Notification'));
         }
 
+        // the Isbn VO validates the full ISBN-10/13 format but accepts the
+        // empty string — mirrored by the '' guard
         $isbn = $row['isbn'] ?? '';
-        if ('' !== $isbn && mb_strlen($isbn) > self::ISBN_MAX_LENGTH) {
+        if ('' !== $isbn && (strlen($isbn) > Isbn::MAX_LENGTH || !preg_match(Isbn::VALID_PATTERN, $isbn))) {
             $messages[] = $this->error($rowIndex, 'isbn', $this->translator->trans('Invalid ISBN "%value%".', ['%value%' => $isbn], 'Admin.Advparameters.Notification'));
         }
 
