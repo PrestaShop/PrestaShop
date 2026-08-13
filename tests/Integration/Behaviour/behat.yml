@@ -467,6 +467,7 @@ default:
         - Tests\Integration\Behaviour\Features\Context\Configuration\EmailConfigurationFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\ApiClientManagementFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
