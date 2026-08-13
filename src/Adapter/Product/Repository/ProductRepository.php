@@ -319,6 +319,10 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
      * WARNING: the CQRS product commands deliberately force date_upd/date_add
      * to now — this direct write exists only for the import date_add column.
      * Do NOT use it outside the import engine.
+     *
+     * The shop restriction relies on the ShopConstraintTrait convention:
+     * product_shop carries no id_shop_group column, so a shop-group
+     * constraint is not supported here (single shop, shop list or all shops).
      */
     public function setDateAdd(int $productId, DateTimeImmutable $dateAdd, ShopConstraint $shopConstraint): void
     {
@@ -340,7 +344,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
                 ->where('id_product = :productId')
                 ->setParameter('dateAdd', $formattedDate)
                 ->setParameter('productId', $productId);
-            $this->applyShopConstraint($shopQb, 'id_shop', $shopConstraint);
+            $this->applyShopConstraint($shopQb, $shopConstraint);
             $shopQb->executeStatement();
         } catch (ExceptionAlias $e) {
             throw new CannotUpdateProductException(sprintf('Could not set date_add on product %d', $productId), 0, $e);
@@ -352,6 +356,11 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
      * (the legacy import had two divergent reference lookups; this is the
      * unified one). The constraint restricts the product_shop association:
      * pass ShopConstraint::allShops() for a catalog-wide lookup.
+     *
+     * The shop restriction relies on the ShopConstraintTrait convention: the
+     * unqualified id_shop resolves to product_shop (the product table has no
+     * such column), and since product_shop carries no id_shop_group column a
+     * shop-group constraint is not supported here.
      */
     public function getProductIdByReference(string $reference, ShopConstraint $shopConstraint): ?int
     {
@@ -364,31 +373,11 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             ->groupBy('p.id_product')
             ->orderBy('p.id_product', 'ASC')
             ->setMaxResults(1);
-        $this->applyShopConstraint($qb, 'ps.id_shop', $shopConstraint);
+        $this->applyShopConstraint($qb, $shopConstraint);
 
         $productId = $qb->executeQuery()->fetchOne();
 
         return false === $productId ? null : (int) $productId;
-    }
-
-    /**
-     * Restricts a query on a shop-association column to the constraint's
-     * shops: single shop = equality, shop group = subquery on the shop table,
-     * all shops = no predicate (any association matches).
-     */
-    private function applyShopConstraint(QueryBuilder $qb, string $shopIdColumn, ShopConstraint $shopConstraint): void
-    {
-        if ($shopConstraint->getShopId()) {
-            $qb
-                ->andWhere($shopIdColumn . ' = :constraintShopId')
-                ->setParameter('constraintShopId', $shopConstraint->getShopId()->getValue())
-            ;
-        } elseif ($shopConstraint->getShopGroupId()) {
-            $qb
-                ->andWhere($shopIdColumn . ' IN (SELECT s.id_shop FROM ' . $this->dbPrefix . 'shop s WHERE s.id_shop_group = :constraintShopGroupId)')
-                ->setParameter('constraintShopGroupId', $shopConstraint->getShopGroupId()->getValue())
-            ;
-        }
     }
 
     /**

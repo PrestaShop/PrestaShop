@@ -323,7 +323,7 @@ class ProductAssociationResolver
                 continue;
             }
 
-            $categoryId = $this->categoryRepository->getChildCategoryIdByName($currentCategoryId, $categoryName, $languageId);
+            $categoryId = $this->categoryRepository->getChildCategoryIdByName($currentCategoryId, $categoryName, $languageId, $context->getShopConstraint());
             if (null === $categoryId) {
                 $categoryId = $this->commandBus->handle(new AddCategoryCommand(
                     $this->localizeForCreation($categoryName),
