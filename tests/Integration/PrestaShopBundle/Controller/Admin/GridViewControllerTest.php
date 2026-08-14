@@ -15,6 +15,7 @@ use PrestaShopBundle\Entity\AdminGridConfiguration;
 use PrestaShopBundle\Entity\AdminGridView;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\FeatureFlag;
+use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\Routing\RouterInterface;
 use Tests\Integration\Utility\LoginTrait;
 use Tests\TestCase\SymfonyIntegrationTestCase;
@@ -259,8 +260,12 @@ class GridViewControllerTest extends SymfonyIntegrationTestCase
         $crawler = $this->client->request('GET', $this->router->generate(self::GRID_ROUTE));
 
         $form = $crawler->filter('form[name="grid_configuration_order"]')->form();
-        $form['grid_configuration_order[display_totals]']->untick();
-        $form['grid_configuration_order[display_shared_filters]']->tick();
+        $displayTotalsField = $form['grid_configuration_order[display_totals]'];
+        $this->assertInstanceOf(ChoiceFormField::class, $displayTotalsField);
+        $displayTotalsField->untick();
+        $displaySharedFiltersField = $form['grid_configuration_order[display_shared_filters]'];
+        $this->assertInstanceOf(ChoiceFormField::class, $displaySharedFiltersField);
+        $displaySharedFiltersField->tick();
         $this->client->submit($form);
 
         $this->assertJsonSuccess();
