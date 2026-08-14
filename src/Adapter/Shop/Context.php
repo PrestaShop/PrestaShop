@@ -16,6 +16,8 @@ use ShopGroup;
 
 /**
  * This class will provide legacy shop context.
+ *
+ * @deprecated: Will be removed in next major, please use PrestaShop\PrestaShop\Core\Context\ShopContext instead
  */
 class Context implements MultistoreContextCheckerInterface, ShopContextInterface, ShopConstraintContextInterface
 {
