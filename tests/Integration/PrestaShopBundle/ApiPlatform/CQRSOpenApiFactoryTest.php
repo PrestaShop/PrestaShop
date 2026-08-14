@@ -512,6 +512,10 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                         ],
                     ]),
                 ],
+                // The productType parameter of the command has no default value, the localizedNames one has
+                'required' => [
+                    'type',
+                ],
             ]),
         ];
 
@@ -709,6 +713,149 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                         'type' => 'string',
                         'example' => '2025-11-05',
                     ]),
+                ],
+            ]),
+        ];
+
+        // AddCarrierCommand is the interesting case for the CQRSCommandMapping: its constructor parameters are
+        // named differently from the accessors ApiPlatform detects the properties from ($max_width against
+        // getMaxWidth, $isFree against isFree, $hasAdditionalHandlingFee against hasAdditionalHandlingFee), so
+        // those properties used to be documented as read only, and then removed from the payload, although the
+        // command requires them.
+        yield 'Carrier input for creation, mapped properties are all documented as writable' => [
+            'Carrier.AddCarrierCommand',
+            new ArrayObject([
+                'type' => 'object',
+                'description' => '',
+                'deprecated' => false,
+                'properties' => [
+                    'name' => new ArrayObject([
+                        'type' => 'string',
+                    ]),
+                    'grade' => new ArrayObject([
+                        'type' => 'integer',
+                    ]),
+                    'trackingUrl' => new ArrayObject([
+                        'type' => 'string',
+                    ]),
+                    'position' => new ArrayObject([
+                        'type' => 'integer',
+                    ]),
+                    // Constructor parameters in snake_case, detected via their getters
+                    'maxWidth' => new ArrayObject([
+                        'type' => 'integer',
+                    ]),
+                    'maxHeight' => new ArrayObject([
+                        'type' => 'integer',
+                    ]),
+                    'maxDepth' => new ArrayObject([
+                        'type' => 'integer',
+                    ]),
+                    'maxWeight' => new ArrayObject([
+                        'type' => 'number',
+                        'example' => 42.99,
+                    ]),
+                    // The identifier collections are documented as integers by the openapiContext of the resource,
+                    // the command only exposes them as arrays of strings
+                    'associatedGroupIds' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            'type' => 'integer',
+                        ],
+                    ]),
+                    // Constructor parameters detected via their has/is accessors
+                    'additionalHandlingFee' => new ArrayObject([
+                        'type' => 'boolean',
+                    ]),
+                    'free' => new ArrayObject([
+                        'type' => 'boolean',
+                    ]),
+                    'shippingMethod' => new ArrayObject([
+                        'type' => 'integer',
+                    ]),
+                    'rangeBehavior' => new ArrayObject([
+                        'type' => 'integer',
+                    ]),
+                    'associatedShopIds' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            'type' => 'integer',
+                        ],
+                    ]),
+                    'zones' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            'type' => 'integer',
+                        ],
+                    ]),
+                    // Renamed by the mapping, the localizedDelay and active parameters are not documented
+                    'delays' => new ArrayObject([
+                        'type' => 'object',
+                        'example' => [
+                            'en-US' => 'value',
+                            'fr-FR' => 'valeur',
+                        ],
+                    ]),
+                    'enabled' => new ArrayObject([
+                        'type' => 'boolean',
+                    ]),
+                ],
+                // Every parameter of the command without a default value, so the ones the request must provide.
+                // The carrierId is absent since it is a URI variable, and the shop constraint since the API fills
+                // it from the request context.
+                'required' => [
+                    'name',
+                    'delays',
+                    'grade',
+                    'trackingUrl',
+                    'enabled',
+                    'associatedGroupIds',
+                    'additionalHandlingFee',
+                    'free',
+                    'shippingMethod',
+                    'rangeBehavior',
+                    'zones',
+                    'associatedShopIds',
+                ],
+            ]),
+        ];
+
+        // The openapiContext declared on the resource must win over the format detected from the CQRS command, here
+        // SetCarrierRangesCommand only exposes an array of ranges so the collection of objects documented by the
+        // resource used to be reduced to a collection of strings in the request body.
+        yield 'Carrier ranges input, the openapiContext of the resource is applied on the command schema' => [
+            'CarrierRanges.SetCarrierRangesCommand',
+            new ArrayObject([
+                'type' => 'object',
+                'description' => '',
+                'deprecated' => false,
+                'properties' => [
+                    'carrierId' => new ArrayObject([
+                        'type' => 'integer',
+                    ]),
+                    'ranges' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'zoneId' => [
+                                    'type' => 'integer',
+                                ],
+                                'rangeFrom' => [
+                                    'type' => 'number',
+                                ],
+                                'rangeTo' => [
+                                    'type' => 'number',
+                                ],
+                                'rangePrice' => [
+                                    'type' => 'number',
+                                ],
+                            ],
+                        ],
+                    ]),
+                ],
+                'required' => [
+                    'ranges',
                 ],
             ]),
         ];
