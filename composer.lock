@@ -5216,12 +5216,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "808fcfca6c09d976b6b7b954c037a50648db6a8d"
+                "reference": "444209168c9d773c14c0f1a9d97afb4c67cd20ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/808fcfca6c09d976b6b7b954c037a50648db6a8d",
-                "reference": "808fcfca6c09d976b6b7b954c037a50648db6a8d",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/444209168c9d773c14c0f1a9d97afb4c67cd20ec",
+                "reference": "444209168c9d773c14c0f1a9d97afb4c67cd20ec",
                 "shasum": ""
             },
             "require": {
@@ -5247,7 +5247,11 @@
             "autoload-dev": {
                 "psr-4": {
                     "PsApiResourcesTest\\": "tests/"
-                }
+                },
+                "exclude-from-classmap": [
+                    "tests/Unit/PHPStan/Fixture/",
+                    "tests/Unit/Rector/Fixture/"
+                ]
             },
             "scripts": {
                 "clear-test-cache": [
@@ -5304,7 +5308,7 @@
                 "source": "https://github.com/PrestaShop/ps_apiresources/tree/41972-carrier-endpoints",
                 "issues": "https://github.com/PrestaShop/ps_apiresources/issues"
             },
-            "time": "2026-08-14T07:28:54+00:00"
+            "time": "2026-08-18T17:25:40+00:00"
         },
         {
             "name": "prestashop/ps_banner",
