@@ -402,13 +402,11 @@ class ContextCore
             return $this->translator;
         }
 
-        $sfContainer = SymfonyContainer::getInstance();
-
-        if ($isInstaller || null === $sfContainer) {
-            // symfony's container isn't available in front office, so we load and configure the translator component
+        if ($isInstaller || !defined('_PS_ADMIN_DIR_')) {
+            // we load and configure the translator component otherwise some theme translations would not work
             $this->translator = $this->getTranslatorFromLocale($this->language->locale);
         } else {
-            $this->translator = $sfContainer->get(TranslatorInterface::class);
+            $this->translator = SymfonyContainer::getInstance()->get(TranslatorInterface::class);
             // We need to set the locale here because in legacy BO pages, the translator is used
             // before the TranslatorListener does its job of setting the locale according to the Request object
             $this->translator->setLocale($this->language->locale);
