@@ -49,11 +49,11 @@ class EditAttachmentCommand
     private $fileSize;
 
     /**
-     * @param AttachmentId $attachmentId
+     * @param int $attachmentId
      */
-    public function __construct(AttachmentId $attachmentId)
+    public function __construct(int $attachmentId)
     {
-        $this->attachmentId = $attachmentId;
+        $this->attachmentId = new AttachmentId($attachmentId);
     }
 
     /**
