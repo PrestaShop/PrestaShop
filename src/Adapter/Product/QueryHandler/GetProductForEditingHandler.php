@@ -375,11 +375,11 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
     private function getDetails(Product $product): ProductDetails
     {
         return new ProductDetails(
-            $product->isbn,
-            $product->upc,
-            $product->ean13,
-            $product->mpn,
-            $product->reference
+            (string) $product->isbn,
+            (string) $product->upc,
+            (string) $product->ean13,
+            (string) $product->mpn,
+            (string) $product->reference
         );
     }
 
