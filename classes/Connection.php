@@ -189,9 +189,6 @@ class ConnectionCore extends ObjectModel
 				ORDER BY `date_add` DESC';
         $result = Db::getInstance()->getRow($sql, false);
         if (empty($result['id_guest']) && (int) $cookie->id_guest) {
-            // The old connections details are removed from the database in order to spare some memory
-            Connection::cleanConnectionsPages();
-
             $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
             $arrayUrl = parse_url($referer);
             if (!isset($arrayUrl['host']) || preg_replace('/^www./', '', $arrayUrl['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) {
@@ -240,30 +237,5 @@ class ConnectionCore extends ObjectModel
 		WHERE `id_connections` = ' . (int) $idConnections . '
 		AND `id_page` = ' . (int) $idPage . '
 		AND `time_start` = \'' . pSQL($timeStart) . '\'');
-    }
-
-    /**
-     * Clean connections page.
-     */
-    public static function cleanConnectionsPages()
-    {
-        $period = Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN');
-
-        if ($period === 'week') {
-            $interval = '1 WEEK';
-        } elseif ($period === 'month') {
-            $interval = '1 MONTH';
-        } elseif ($period === 'year') {
-            $interval = '1 YEAR';
-        } else {
-            return;
-        }
-
-        if ($interval != null) {
-            // Records of connections details older than the beginning of the  specified interval are deleted
-            Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'connections_page`
-			WHERE time_start < LAST_DAY(DATE_SUB(NOW(), INTERVAL ' . $interval . '))');
-        }
     }
 }
