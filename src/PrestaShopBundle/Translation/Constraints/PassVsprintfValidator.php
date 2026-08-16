@@ -36,8 +36,12 @@ class PassVsprintfValidator extends ConstraintValidator
         if (empty($property)) {
             return 0;
         }
+        // Strip %word% classic placeholders before counting printf-style specifiers to avoid
+        // false positives where a closing % followed by a letter (e.g. "% o" in "%count% order")
+        // is misidentified as a space-padded printf octal/string specifier.
+        $cleaned = preg_replace(Translator::$regexClassicParams, '', $property);
         $matches = [];
-        if (preg_match_all(Translator::$regexSprintfParams, $property, $matches) === false) {
+        if (preg_match_all(Translator::$regexSprintfParams, $cleaned, $matches) === false) {
             throw new Exception('Preg_match failed');
         }
 
