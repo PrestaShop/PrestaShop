@@ -1712,6 +1712,43 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * Batched equivalent of {@see isNewStatic}: resolves the "new" flag for several products at once.
+     * Returns a map keyed by product identifier (products that do not qualify are set to false), so a
+     * whole product listing's "new" flags can be resolved in a single query instead of one per product.
+     *
+     * @param int[] $idProducts
+     *
+     * @return array<int, bool>
+     */
+    public static function getNewProductsFlags(array $idProducts)
+    {
+        $idProducts = array_values(array_unique(array_map('intval', $idProducts)));
+        if (empty($idProducts)) {
+            return [];
+        }
+
+        $nbDaysNewProduct = Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
+        if (!Validate::isUnsignedInt($nbDaysNewProduct)) {
+            $nbDaysNewProduct = 20;
+        }
+
+        $newProductRows = Db::getInstance()->executeS(
+            'SELECT p.id_product
+            FROM `' . _DB_PREFIX_ . 'product` p
+            ' . Shop::addSqlAssociation('product', 'p') . '
+            WHERE p.id_product IN (' . implode(',', $idProducts) . ')
+            AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_add`) < ' . (int) $nbDaysNewProduct
+        ) ?: [];
+
+        $flags = array_fill_keys($idProducts, false);
+        foreach ($newProductRows as $row) {
+            $flags[(int) $row['id_product']] = true;
+        }
+
+        return $flags;
+    }
+
+    /**
      * Webservice getter : get if product is new.
      *
      * @return int
