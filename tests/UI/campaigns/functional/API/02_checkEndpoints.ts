@@ -68,6 +68,8 @@ describe('API : Check endpoints', async () => {
     '/attributes/attributes/{attributeId}: PATCH',
     // tests/UI/campaigns/functional/API/02_endpoints/attributes/04_postAttributesAttribute.ts
     '/attributes/attributes: POST',
+    // @todo: add tests
+    '/attributes/groups-with-attributes: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/attribute/11_deleteAttributesGroupsBulkDelete.ts
     '/attributes/groups/bulk-delete: DELETE',
     // @todo: add tests
@@ -145,6 +147,8 @@ describe('API : Check endpoints', async () => {
     // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/05_postCustomersGroup.ts
     '/customers/groups: POST',
     // @todo: add tests
+    '/customers/required-fields: GET',
+    // @todo: add tests
     '/customers/required-fields: PUT',
     // @todo: add tests
     '/customers/search: GET',
@@ -176,6 +180,8 @@ describe('API : Check endpoints', async () => {
     '/discounts: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/discount/03_postDiscounts.ts
     '/discounts: POST',
+    // @todo: add tests
+    '/employees/send-password-reset-email: POST',
     // @todo: add tests
     '/features/bulk-delete: DELETE',
     // @todo: add tests
@@ -273,6 +279,18 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/order-returns/{orderReturnId}: PATCH',
     // @todo: add tests
+    '/orders/{orderId}/available-shipments: GET',
+    // @todo: add tests
+    '/orders/{orderId}/order-details/{orderDetailId}/shipments: GET',
+    // @todo: add tests
+    '/orders/{orderId}/products/{productId}/available-shipments: GET',
+    // @todo: add tests
+    '/orders/{orderId}/shipments/{shipmentId}/products: POST',
+    // @todo: add tests
+    '/orders/{orderId}/shipments/{shipmentId}: GET',
+    // @todo: add tests
+    '/orders/{orderId}/shipments: POST',
+    // @todo: add tests
     '/products/combinations/{combinationId}: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/product/01_deleteProductImageId.ts
     '/products/images/{imageId}: DELETE',
@@ -340,6 +358,10 @@ describe('API : Check endpoints', async () => {
     '/search-engines: GET',
     // @todo: add tests
     '/search-engines: POST',
+    // @todo: add tests
+    '/shipments/{shipmentId}/carriers: PATCH',
+    // @todo: add tests
+    '/shipments/{shipmentId}/fulfill: PATCH',
     // @todo: add tests
     '/showcase-cards/{showcaseCardName}/{employeeId}/close: PUT',
     // @todo: add tests
