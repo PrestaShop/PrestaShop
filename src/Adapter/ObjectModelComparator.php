@@ -9,10 +9,12 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use ObjectModelCore;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertiesBag;
 
 /**
  * Compares two instances of the same ObjectModel class and exposes their differences,
- * based on the fields declared in the ObjectModel definition.
+ * based on the fields declared in the ObjectModel definition and on the extra
+ * properties carried by the objects (see the ExtraProperty component).
  */
 final class ObjectModelComparator
 {
@@ -39,6 +41,9 @@ final class ObjectModelComparator
     /**
      * Returns the differences between the two objects, indexed by field name.
      * Each entry contains the "old" and "new" values (indexed by language id for multilang fields).
+     *
+     * Extra property differences, when any, are exposed under the "extra_properties" key,
+     * with "old" and "new" values indexed by module key and property name.
      *
      * @return array<string, array{old: mixed, new: mixed}>
      */
@@ -73,6 +78,11 @@ final class ObjectModelComparator
             }
         }
 
+        $extraPropertiesDiff = $this->getExtraPropertiesDiff();
+        if ([] !== $extraPropertiesDiff) {
+            $differences['extra_properties'] = $extraPropertiesDiff;
+        }
+
         return $differences;
     }
 
@@ -89,6 +99,45 @@ final class ObjectModelComparator
     public function getNewObject(): ObjectModelCore
     {
         return $this->newObject;
+    }
+
+    /**
+     * Returns the differences between the two objects' extra properties, in the same
+     * "old"/"new" shape as multilang fields, indexed by module key and property name.
+     *
+     * The comparison only runs when the new object carries pending extra property writes:
+     * without any write, both bags resolve to the same stored values, so this method
+     * costs nothing (no database read) on objects that do not use extra properties.
+     *
+     * @return array{}|array{old: array<string, array<string, mixed>>, new: array<string, array<string, mixed>>}
+     */
+    private function getExtraPropertiesDiff(): array
+    {
+        $oldBag = $this->oldObject->extra_properties;
+        $newBag = $this->newObject->extra_properties;
+
+        if (!$oldBag instanceof ExtraPropertiesBag
+            || !$newBag instanceof ExtraPropertiesBag
+            || !$newBag->hasModifications()
+        ) {
+            return [];
+        }
+
+        $differences = [];
+        $oldValues = $oldBag->jsonSerialize();
+
+        foreach ($newBag->getModifiedValues() as $moduleKey => $moduleValues) {
+            foreach ($moduleValues as $propertyName => $newValue) {
+                $oldValue = $oldValues[$moduleKey][$propertyName] ?? null;
+
+                if (!$this->isSameValue($oldValue, $newValue, null)) {
+                    $differences['old'][$moduleKey][$propertyName] = $oldValue;
+                    $differences['new'][$moduleKey][$propertyName] = $newValue;
+                }
+            }
+        }
+
+        return $differences;
     }
 
     /**

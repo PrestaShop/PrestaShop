@@ -13,6 +13,7 @@ use ObjectModel;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ObjectModelComparator;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertiesBag;
 use Product;
 use Tests\Resources\classes\ExampleObjectModel;
 
@@ -102,6 +103,94 @@ final class ObjectModelComparatorTest extends TestCase
             $this->getMockObjectModel(Product::class),
             $this->getMockObjectModel(Category::class)
         );
+    }
+
+    /**
+     * @return void
+     *
+     * @throws InvalidArgumentException
+     */
+    public function testObjectComparatorWithExtraPropertiesDiff(): void
+    {
+        $storedValues = ['mymodule' => ['my_field' => 'stored_value']];
+        $oldObject = $this->getExampleObjectModelWithExtraProperties(new ExtraPropertiesBag(static fn (): array => $storedValues));
+        $newObject = $this->getExampleObjectModelWithExtraProperties(new ExtraPropertiesBag(static fn (): array => $storedValues));
+
+        $newObject->extra_properties['mymodule']['my_field'] = 'new_value';
+
+        $comparator = new ObjectModelComparator($oldObject, $newObject);
+
+        $this->assertTrue($comparator->hasChanges());
+        $this->assertSame(
+            [
+                'old' => ['mymodule' => ['my_field' => 'stored_value']],
+                'new' => ['mymodule' => ['my_field' => 'new_value']],
+            ],
+            $comparator->getDiff()['extra_properties']
+        );
+    }
+
+    /**
+     * An extra property written with its already stored value must not be reported as a change.
+     *
+     * @return void
+     *
+     * @throws InvalidArgumentException
+     */
+    public function testObjectComparatorWithExtraPropertyModifiedWithSameValue(): void
+    {
+        $storedValues = ['mymodule' => ['my_field' => 'stored_value']];
+        $oldObject = $this->getExampleObjectModelWithExtraProperties(new ExtraPropertiesBag(static fn (): array => $storedValues));
+        $newObject = $this->getExampleObjectModelWithExtraProperties(new ExtraPropertiesBag(static fn (): array => $storedValues));
+
+        $newObject->extra_properties['mymodule']['my_field'] = 'stored_value';
+
+        $comparator = new ObjectModelComparator($oldObject, $newObject);
+
+        $this->assertFalse($comparator->hasChanges());
+        $this->assertArrayNotHasKey('extra_properties', $comparator->getDiff());
+    }
+
+    /**
+     * Without any pending extra property write, the comparison must not trigger
+     * the lazy load of either bag (no database read in real conditions).
+     *
+     * @return void
+     *
+     * @throws InvalidArgumentException
+     */
+    public function testObjectComparatorDoesNotLoadExtraPropertiesWhenNothingWasWritten(): void
+    {
+        $loaderCalls = 0;
+        $loader = function () use (&$loaderCalls): array {
+            ++$loaderCalls;
+
+            return [];
+        };
+
+        $oldObject = $this->getExampleObjectModelWithExtraProperties(new ExtraPropertiesBag($loader));
+        $newObject = $this->getExampleObjectModelWithExtraProperties(new ExtraPropertiesBag($loader));
+
+        $comparator = new ObjectModelComparator($oldObject, $newObject);
+
+        $this->assertFalse($comparator->hasChanges());
+        $this->assertSame(0, $loaderCalls);
+    }
+
+    /**
+     * @param ExtraPropertiesBag $extraPropertiesBag
+     *
+     * @return ExampleObjectModel
+     */
+    private function getExampleObjectModelWithExtraProperties(ExtraPropertiesBag $extraPropertiesBag): ExampleObjectModel
+    {
+        $exampleObjectModel = $this->getMockBuilder(ExampleObjectModel::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+        $exampleObjectModel->method('__get')->willReturnMap([['extra_properties', $extraPropertiesBag]]);
+
+        return $exampleObjectModel;
     }
 
     /**

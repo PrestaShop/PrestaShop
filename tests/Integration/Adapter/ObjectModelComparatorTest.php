@@ -366,6 +366,34 @@ final class ObjectModelComparatorTest extends TestCase
     }
 
     /**
+     * Tests that the ObjectModel update process is still triggered when the only
+     * pending change is an extra property write and the "skipUpdateIfUnchanged"
+     * flag is enabled.
+     *
+     * @return void
+     *
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws InvalidArgumentException
+     */
+    public function testObjectModelUpdateProcessIfOnlyExtraPropertyChangedAndSkipUpdateIfUnchangedIsEnabled(): void
+    {
+        $productObject = $this->productObject;
+        $productObject->price = 100;
+        $productObject->name = 'my_product_name';
+        $productObject->skipUpdateIfUnchanged = true;
+        $productObject->extra_properties[self::MODULE_NAME]['custom_field'] = 'custom_value';
+
+        $module = self::getModuleToTest();
+
+        $this->assertTrue($productObject->update());
+        $this->assertEquals(
+            'Called_during_update_Product_object_model_' . $productObject->id,
+            $module->getHookLastCallStatus()
+        );
+    }
+
+    /**
      *  Generate a product
      *
      * @return int
