@@ -4,7 +4,6 @@ admin_business_entities_list:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::listAction
     _legacy_controller: AdminBusinessEntities
-    _legacy_link: AdminBusinessEntities
 
 admin_business_entities_search:
   path: /
@@ -12,7 +11,6 @@ admin_business_entities_search:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     _legacy_controller: AdminBusinessEntities
-    _legacy_link: AdminBusinessEntities:submitFilterbusiness_entity
     gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BusinessEntityGridDefinitionFactory
     redirectRoute: admin_business_entities_list
 
@@ -22,9 +20,6 @@ admin_business_entities_view:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::viewAction
     _legacy_controller: AdminBusinessEntities
-    _legacy_link: AdminBusinessEntities:viewbusiness_entity
-    _legacy_parameters:
-      id_business_entity: businessEntityId
   requirements:
     businessEntityId: \d+
 
@@ -34,4 +29,3 @@ admin_business_entities_create:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::createAction
     _legacy_controller: AdminBusinessEntities
-    _legacy_link: AdminBusinessEntities:addbusiness_entity

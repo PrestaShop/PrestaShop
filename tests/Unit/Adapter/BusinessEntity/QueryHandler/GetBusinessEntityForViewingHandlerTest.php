@@ -10,19 +10,23 @@ namespace Tests\Unit\Adapter\BusinessEntity\QueryHandler;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\BusinessEntity\QueryHandler\GetBusinessEntityForViewingHandler;
 use PrestaShop\PrestaShop\Adapter\BusinessEntity\Repository\BusinessEntityAddressRepository;
-use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
+use PrestaShop\PrestaShop\Adapter\BusinessEntity\Repository\BusinessEntityAddressRow;
+use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Core\Address\AddressFormatterInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShopBundle\Entity\B2B\BusinessEntity;
 use PrestaShopBundle\Entity\B2B\BusinessEntityIdentifier;
 use PrestaShopBundle\Entity\B2B\BusinessIdentifier;
+use PrestaShopBundle\Entity\Enum\AddressTypeEnum;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Entity\Repository\BusinessEntityRepository;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -40,7 +44,7 @@ class GetBusinessEntityForViewingHandlerTest extends TestCase
         $handler = new GetBusinessEntityForViewingHandler(
             $repository,
             $this->createMock(BusinessEntityAddressRepository::class),
-            $this->createMock(GroupDataProvider::class),
+            $this->createMock(GroupRepository::class),
             $this->getMockLanguageContext(),
             $this->getMockShopContext(false, [2, 3]),
             $this->createMock(AddressFormatterInterface::class),
@@ -63,14 +67,16 @@ class GetBusinessEntityForViewingHandlerTest extends TestCase
         $addressRepository = $this->createMock(BusinessEntityAddressRepository::class);
         $addressRepository->method('getAddresses')->willReturn([]);
 
-        $groupDataProvider = $this->createMock(GroupDataProvider::class);
-        // Customer group 99 is absent from the returned groups -> the handler must fall back to ''.
-        $groupDataProvider->method('getGroups')->willReturn([['id_group' => 1, 'name' => 'Visitor']]);
+        // The schema has no foreign key and deleting a customer group never cleans up
+        // business_entity, so a merchant can delete group 99 in three clicks and leave this entity
+        // pointing at nothing. The handler must fall back to '' rather than 500 the detail page.
+        $groupRepository = $this->createMock(GroupRepository::class);
+        $groupRepository->method('get')->willThrowException(new GroupNotFoundException());
 
         $handler = new GetBusinessEntityForViewingHandler(
             $repository,
             $addressRepository,
-            $groupDataProvider,
+            $groupRepository,
             $this->getMockLanguageContext(),
             $this->getMockShopContext(true),
             $this->createMock(AddressFormatterInterface::class),
@@ -81,11 +87,42 @@ class GetBusinessEntityForViewingHandlerTest extends TestCase
 
         $this->assertSame('', $result->getCustomerGroupName());
         $this->assertSame('Acme', $result->getName());
-        $this->assertSame('active', $result->getStatus());
+        $this->assertSame(BusinessEntityStatus::ACTIVE, $result->getStatus());
         $this->assertSame('Active', $result->getStatusLabel());
         $this->assertSame('2026-01-01 10:00:00', $result->getCreatedAt()->format('Y-m-d H:i:s'));
         $this->assertSame(0, $result->getAddressesCount());
         $this->assertSame(4, $result->getLinkedCustomersCount(), 'AC11 summary count must reach the DTO');
+    }
+
+    public function testItFallsBackToAnEmptyCustomerGroupNameWhenTheGroupHasNoNameInTheCurrentLanguage(): void
+    {
+        // A group that exists but was created before the current language was installed has no
+        // group_lang row for it, so the multilang array has no entry for that language id. This is
+        // NOT covered by the GroupNotFoundException catch: the group is found, its name is not.
+        $entity = $this->getMockBusinessEntity();
+        $entity->method('getBusinessEntityIdentifiers')->willReturn(new ArrayCollection());
+
+        $repository = $this->createMock(BusinessEntityRepository::class);
+        $repository->method('findById')->willReturn($entity);
+        $repository->method('getLinkedCustomersCount')->willReturn(0);
+
+        $addressRepository = $this->createMock(BusinessEntityAddressRepository::class);
+        $addressRepository->method('getAddresses')->willReturn([]);
+
+        $handler = new GetBusinessEntityForViewingHandler(
+            $repository,
+            $addressRepository,
+            // Language 1 is the context language; the group only has a name for language 2.
+            $this->getMockGroupRepository(null, [2 => 'Grossistes']),
+            $this->getMockLanguageContext(),
+            $this->getMockShopContext(true),
+            $this->createMock(AddressFormatterInterface::class),
+            $this->getMockTranslator()
+        );
+
+        $result = $handler->handle(new GetBusinessEntityForViewing(5));
+
+        $this->assertSame('', $result->getCustomerGroupName());
     }
 
     public function testItMapsTheDefaultFlagAndSplitsAddressesByTypeWithoutCountingTheSharedOneTwice(): void
@@ -100,20 +137,16 @@ class GetBusinessEntityForViewingHandlerTest extends TestCase
         $repository->method('findById')->willReturn($entity);
         $repository->method('getLinkedCustomersCount')->willReturn(0);
 
-        // Keys and order mirror what BusinessEntityAddressRepository::getAddresses() selects.
         $addressRepository = $this->createMock(BusinessEntityAddressRepository::class);
         $addressRepository->method('getAddresses')->willReturn([
-            ['id_address' => 10, 'alias' => 'HQ', 'address_type' => 'both', 'is_default' => '1'],
-            ['id_address' => 11, 'alias' => 'Warehouse', 'address_type' => 'delivery', 'is_default' => '0'],
+            new BusinessEntityAddressRow(10, 'HQ', AddressTypeEnum::BOTH, true),
+            new BusinessEntityAddressRow(11, 'Warehouse', AddressTypeEnum::DELIVERY, false),
         ]);
-
-        $groupDataProvider = $this->createMock(GroupDataProvider::class);
-        $groupDataProvider->method('getGroups')->willReturn([['id_group' => 99, 'name' => 'Customers B2B']]);
 
         $handler = new GetBusinessEntityForViewingHandler(
             $repository,
             $addressRepository,
-            $groupDataProvider,
+            $this->getMockGroupRepository('Customers B2B'),
             $this->getMockLanguageContext(),
             $this->getMockShopContext(true),
             $this->createMock(AddressFormatterInterface::class),
@@ -158,13 +191,10 @@ class GetBusinessEntityForViewingHandlerTest extends TestCase
         $addressRepository = $this->createMock(BusinessEntityAddressRepository::class);
         $addressRepository->method('getAddresses')->willReturn([]);
 
-        $groupDataProvider = $this->createMock(GroupDataProvider::class);
-        $groupDataProvider->method('getGroups')->willReturn([['id_group' => 99, 'name' => 'Customers B2B']]);
-
         $handler = new GetBusinessEntityForViewingHandler(
             $repository,
             $addressRepository,
-            $groupDataProvider,
+            $this->getMockGroupRepository('Customers B2B'),
             $this->getMockLanguageContext(),
             $this->getMockShopContext(true),
             $this->createMock(AddressFormatterInterface::class),
@@ -213,6 +243,23 @@ class GetBusinessEntityForViewingHandlerTest extends TestCase
         $businessEntityIdentifier->method('getValue')->willReturn($value);
 
         return $businessEntityIdentifier;
+    }
+
+    /**
+     * GroupRepository::get() returns the legacy ObjectModel, loaded without a language, so its
+     * multilang name is an array keyed by language id.
+     *
+     * @param array<int, string>|null $namePerLanguage
+     */
+    private function getMockGroupRepository(?string $name, ?array $namePerLanguage = null): GroupRepository
+    {
+        $group = $this->createMock(Group::class);
+        $group->name = $namePerLanguage ?? [1 => $name];
+
+        $repository = $this->createMock(GroupRepository::class);
+        $repository->method('get')->willReturn($group);
+
+        return $repository;
     }
 
     private function getMockTranslator(): TranslatorInterface

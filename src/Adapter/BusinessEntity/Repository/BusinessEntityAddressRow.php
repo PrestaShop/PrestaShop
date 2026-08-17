@@ -6,16 +6,19 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult;
+namespace PrestaShop\PrestaShop\Adapter\BusinessEntity\Repository;
 
 use PrestaShopBundle\Entity\Enum\AddressTypeEnum;
 
-class AddressForViewing
+/**
+ * A business entity to address link, with the alias resolved from the address table.
+ * Typed counterpart of what BusinessEntityAddressRepository::getAddresses() selects.
+ */
+class BusinessEntityAddressRow
 {
     public function __construct(
         private readonly int $addressId,
         private readonly string $alias,
-        private readonly string $formattedAddress,
         private readonly AddressTypeEnum $addressType,
         private readonly bool $isDefault,
     ) {
@@ -29,11 +32,6 @@ class AddressForViewing
     public function getAlias(): string
     {
         return $this->alias;
-    }
-
-    public function getFormattedAddress(): string
-    {
-        return $this->formattedAddress;
     }
 
     public function getAddressType(): AddressTypeEnum

@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\BusinessEntity\Repository;
 
-use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use PrestaShopBundle\Entity\Enum\AddressTypeEnum;
 
 class BusinessEntityAddressRepository
 {
@@ -20,13 +20,13 @@ class BusinessEntityAddressRepository
     }
 
     /**
-     * @param string[] $addressTypes
+     * Default addresses first, then insertion order, soft-deleted addresses excluded.
      *
-     * @return array<int, array<string, mixed>>
+     * @return BusinessEntityAddressRow[]
      */
-    public function getAddresses(int $businessEntityId, array $addressTypes): array
+    public function getAddresses(int $businessEntityId): array
     {
-        return $this->connection->createQueryBuilder()
+        $rows = $this->connection->createQueryBuilder()
             ->select(
                 'a.id_address',
                 'a.alias',
@@ -36,13 +36,21 @@ class BusinessEntityAddressRepository
             ->from($this->dbPrefix . 'business_entity_address', 'bea')
             ->innerJoin('bea', $this->dbPrefix . 'address', 'a', 'a.id_address = bea.id_address')
             ->where('bea.id_business_entity = :businessEntityId')
-            ->andWhere('bea.address_type IN (:addressTypes)')
             ->andWhere('a.deleted = 0')
             ->orderBy('bea.is_default', 'DESC')
             ->addOrderBy('bea.id_business_entity_address', 'ASC')
             ->setParameter('businessEntityId', $businessEntityId)
-            ->setParameter('addressTypes', $addressTypes, ArrayParameterType::STRING)
             ->executeQuery()
             ->fetchAllAssociative();
+
+        return array_map(
+            static fn (array $row): BusinessEntityAddressRow => new BusinessEntityAddressRow(
+                (int) $row['id_address'],
+                (string) $row['alias'],
+                AddressTypeEnum::from((string) $row['address_type']),
+                (bool) $row['is_default'],
+            ),
+            $rows
+        );
     }
 }

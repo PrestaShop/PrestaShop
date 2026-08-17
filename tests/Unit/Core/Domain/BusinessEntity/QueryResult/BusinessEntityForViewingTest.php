@@ -13,13 +13,15 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\AddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\BusinessEntityForViewing;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\IdentifierForViewing;
+use PrestaShopBundle\Entity\Enum\AddressTypeEnum;
+use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 
 class BusinessEntityForViewingTest extends TestCase
 {
     public function testItExposesAllConstructorParamsViaGetters(): void
     {
-        $invoice = [$this->buildAddress(1, 'invoice', true)];
-        $delivery = [$this->buildAddress(2, 'delivery', false)];
+        $invoice = [$this->buildAddress(1, AddressTypeEnum::INVOICE, true)];
+        $delivery = [$this->buildAddress(2, AddressTypeEnum::DELIVERY, false)];
         $identifiers = [new IdentifierForViewing(7, 'VAT number', 'FR123')];
 
         $businessEntity = new BusinessEntityForViewing(
@@ -28,7 +30,7 @@ class BusinessEntityForViewingTest extends TestCase
             'Tan Emporium',
             'Tan Emporium SAS',
             true,
-            'active',
+            BusinessEntityStatus::ACTIVE,
             'Active',
             new DateTimeImmutable('2026-01-01 10:00:00'),
             new DateTimeImmutable('2026-02-02 11:00:00'),
@@ -46,7 +48,7 @@ class BusinessEntityForViewingTest extends TestCase
         $this->assertSame('Tan Emporium', $businessEntity->getName());
         $this->assertSame('Tan Emporium SAS', $businessEntity->getLegalName());
         $this->assertTrue($businessEntity->isDeliveryAuthorized());
-        $this->assertSame('active', $businessEntity->getStatus());
+        $this->assertSame(BusinessEntityStatus::ACTIVE, $businessEntity->getStatus());
         $this->assertSame('Active', $businessEntity->getStatusLabel());
         $this->assertSame('2026-01-01 10:00:00', $businessEntity->getCreatedAt()->format('Y-m-d H:i:s'));
         $this->assertSame('2026-02-02 11:00:00', $businessEntity->getUpdatedAt()->format('Y-m-d H:i:s'));
@@ -67,7 +69,7 @@ class BusinessEntityForViewingTest extends TestCase
             'Tan Emporium',
             null,
             true,
-            'active',
+            BusinessEntityStatus::ACTIVE,
             'Active',
             new DateTimeImmutable('2026-01-01 10:00:00'),
             new DateTimeImmutable('2026-02-02 11:00:00'),
@@ -112,7 +114,7 @@ class BusinessEntityForViewingTest extends TestCase
             $name,
             null,
             true,
-            'active',
+            BusinessEntityStatus::ACTIVE,
             'Active',
             new DateTimeImmutable('2026-01-01 10:00:00'),
             new DateTimeImmutable('2026-02-02 11:00:00'),
@@ -126,7 +128,7 @@ class BusinessEntityForViewingTest extends TestCase
         );
     }
 
-    private function buildAddress(int $id, string $type, bool $isDefault): AddressForViewing
+    private function buildAddress(int $id, AddressTypeEnum $type, bool $isDefault): AddressForViewing
     {
         return new AddressForViewing(
             $id,

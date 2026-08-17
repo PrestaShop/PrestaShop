@@ -272,7 +272,7 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
             Assert::assertSame($data['legal_name'], $viewed->getLegalName());
         }
         if (isset($data['status'])) {
-            Assert::assertSame($data['status'], $viewed->getStatus());
+            Assert::assertSame(BusinessEntityStatus::from($data['status']), $viewed->getStatus());
         }
         if (isset($data['linked_customers_count'])) {
             Assert::assertSame((int) $data['linked_customers_count'], $viewed->getLinkedCustomersCount());

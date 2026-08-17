@@ -28,4 +28,17 @@ enum BusinessEntityStatus: string implements TranslatableInterface
             self::REJECTED => $translator->trans('Rejected', [], 'Admin.Global', $locale),
         };
     }
+
+    /**
+     * Badge type expected by BadgeColumn and by the detail page status badge.
+     */
+    public function badgeType(): string
+    {
+        return match ($this) {
+            self::PENDING => 'info',
+            self::ACTIVE => 'success',
+            self::INACTIVE => 'light-info',
+            self::REJECTED => 'danger',
+        };
+    }
 }

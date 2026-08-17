@@ -167,6 +167,8 @@ class LegacyLinkLinterCommand extends Command
      */
     private const CONTROLLER_WHITE_LIST = [
         'AdminAdminAPI',
+        'AdminBusinessEntities',
+        'AdminCustomersB2B',
         'AdminExtraPropertyDefinitions',
     ];
 

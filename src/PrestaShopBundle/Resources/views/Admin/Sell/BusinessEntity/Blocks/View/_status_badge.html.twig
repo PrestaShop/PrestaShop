@@ -3,11 +3,4 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
-{% set badgeType = {
-  active: 'success',
-  pending: 'info',
-  inactive: 'light-info',
-  rejected: 'danger',
-}[businessEntity.status]|default('') %}
-
-<span class="badge rounded badge-{{ badgeType }}{{ extraClass is defined ? ' ' ~ extraClass }}">{{ businessEntity.statusLabel }}</span>
+<span class="badge rounded badge-{{ businessEntity.status.badgeType }}{{ extraClass is defined ? ' ' ~ extraClass }}">{{ businessEntity.statusLabel }}</span>

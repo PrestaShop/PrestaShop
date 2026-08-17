@@ -39,9 +39,8 @@ class BusinessEntitiesController extends PrestaShopAdminController
     /**
      * Lists the business entities the employee is allowed to see, scoped to the current shop context.
      */
-    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    #[AdminSecurity("is_granted('read', 'AdminBusinessEntities')")]
     public function listAction(
-        Request $request,
         BusinessEntityFilters $filters,
         #[Autowire(service: 'prestashop.core.grid.factory.business_entity')]
         GridFactoryInterface $businessEntityGridFactory,
@@ -61,7 +60,7 @@ class BusinessEntitiesController extends PrestaShopAdminController
             '@PrestaShop/Admin/Sell/BusinessEntity/list.html.twig',
             [
                 'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'help_link' => $this->generateSidebarLink('AdminBusinessEntities'),
                 'layoutTitle' => $this->trans('Business entities', [], 'Admin.Navigation.Menu'),
                 'layoutHeaderToolbarBtn' => $this->getBusinessEntitiesToolbarButtons(),
                 'businessEntityGrid' => $this->presentGrid($businessEntityGridFactory->getGrid($filters)),
@@ -76,9 +75,8 @@ class BusinessEntitiesController extends PrestaShopAdminController
      * Shows a single business entity in read-only. An entity belonging to another shop is reported
      * as not found rather than as an access error, so the listing does not leak its existence.
      */
-    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_business_entities_list')]
+    #[AdminSecurity("is_granted('read', 'AdminBusinessEntities')", redirectRoute: 'admin_business_entities_list')]
     public function viewAction(
-        Request $request,
         int $businessEntityId,
     ): Response {
         try {
@@ -96,7 +94,7 @@ class BusinessEntitiesController extends PrestaShopAdminController
             '@PrestaShop/Admin/Sell/BusinessEntity/view.html.twig',
             [
                 'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'help_link' => $this->generateSidebarLink('AdminBusinessEntities'),
                 'layoutTitle' => $this->trans(
                     'Business entity %name%',
                     [
@@ -109,7 +107,7 @@ class BusinessEntitiesController extends PrestaShopAdminController
         );
     }
 
-    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.', redirectRoute: 'admin_business_entities_list')]
+    #[AdminSecurity("is_granted('create', 'AdminBusinessEntities')", message: 'You do not have permission to create this.', redirectRoute: 'admin_business_entities_list')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.business_entity_form_builder')]
@@ -155,7 +153,7 @@ class BusinessEntitiesController extends PrestaShopAdminController
                 'layoutTitle' => $this->trans('New business entity', [], 'Admin.Navigation.Menu'),
                 'businessEntityForm' => $form->createView(),
                 'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'help_link' => $this->generateSidebarLink('AdminBusinessEntities'),
             ]
         );
     }

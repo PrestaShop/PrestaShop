@@ -10,7 +10,8 @@ namespace PrestaShop\PrestaShop\Adapter\BusinessEntity\QueryHandler;
 
 use DateTimeImmutable;
 use PrestaShop\PrestaShop\Adapter\BusinessEntity\Repository\BusinessEntityAddressRepository;
-use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
+use PrestaShop\PrestaShop\Adapter\BusinessEntity\Repository\BusinessEntityAddressRow;
+use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Core\Address\AddressFormatterInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
@@ -22,6 +23,8 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryHandler\GetBusinessEnt
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\AddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\BusinessEntityForViewing;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\IdentifierForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShopBundle\Entity\B2B\BusinessEntity;
 use PrestaShopBundle\Entity\Enum\AddressTypeEnum;
 use PrestaShopBundle\Entity\Repository\BusinessEntityRepository;
@@ -33,7 +36,7 @@ final class GetBusinessEntityForViewingHandler implements GetBusinessEntityForVi
     public function __construct(
         private readonly BusinessEntityRepository $businessEntityRepository,
         private readonly BusinessEntityAddressRepository $businessEntityAddressRepository,
-        private readonly GroupDataProvider $groupDataProvider,
+        private readonly GroupRepository $groupRepository,
         private readonly LanguageContext $languageContext,
         private readonly ShopContext $shopContext,
         private readonly AddressFormatterInterface $addressFormatter,
@@ -42,19 +45,19 @@ final class GetBusinessEntityForViewingHandler implements GetBusinessEntityForVi
     }
 
     /**
-     * @return string[]
+     * @return AddressTypeEnum[]
      */
     private static function invoiceAddressTypes(): array
     {
-        return [AddressTypeEnum::INVOICE->value, AddressTypeEnum::BOTH->value];
+        return [AddressTypeEnum::INVOICE, AddressTypeEnum::BOTH];
     }
 
     /**
-     * @return string[]
+     * @return AddressTypeEnum[]
      */
     private static function deliveryAddressTypes(): array
     {
-        return [AddressTypeEnum::DELIVERY->value, AddressTypeEnum::BOTH->value];
+        return [AddressTypeEnum::DELIVERY, AddressTypeEnum::BOTH];
     }
 
     /**
@@ -72,7 +75,7 @@ final class GetBusinessEntityForViewingHandler implements GetBusinessEntityForVi
         }
 
         $languageId = $this->languageContext->getId();
-        $addresses = $this->mapAddresses($this->businessEntityAddressRepository->getAddresses($businessEntityId, AddressTypeEnum::values()));
+        $addresses = $this->mapAddresses($this->businessEntityAddressRepository->getAddresses($businessEntityId));
         $invoiceAddresses = $this->filterAddressesByType($addresses, self::invoiceAddressTypes());
         $deliveryAddresses = $this->filterAddressesByType($addresses, self::deliveryAddressTypes());
         $identifiers = $this->mapIdentifiers($businessEntity);
@@ -86,7 +89,7 @@ final class GetBusinessEntityForViewingHandler implements GetBusinessEntityForVi
             $businessEntity->getName(),
             $businessEntity->getLegalName(),
             $businessEntity->isDeliveryAuthorized(),
-            $businessEntity->getStatus()->value,
+            $businessEntity->getStatus(),
             $businessEntity->getStatus()->trans($this->translator),
             DateTimeImmutable::createFromInterface($businessEntity->getCreatedAt()),
             DateTimeImmutable::createFromInterface($businessEntity->getUpdatedAt()),
@@ -102,16 +105,15 @@ final class GetBusinessEntityForViewingHandler implements GetBusinessEntityForVi
 
     /**
      * @param AddressForViewing[] $addresses
-     * @param string[] $types
+     * @param AddressTypeEnum[] $types
      *
      * @return AddressForViewing[]
      */
     private function filterAddressesByType(array $addresses, array $types): array
     {
-        return array_values(array_filter(
-            $addresses,
-            static fn (AddressForViewing $address): bool => in_array($address->getAddressType(), $types, true)
-        ));
+        $hasOneOfTheTypes = static fn (AddressForViewing $address): bool => in_array($address->getAddressType(), $types, true);
+
+        return array_values(array_filter($addresses, $hasOneOfTheTypes));
     }
 
     /**
@@ -129,17 +131,17 @@ final class GetBusinessEntityForViewingHandler implements GetBusinessEntityForVi
 
     private function getCustomerGroupName(int $idGroup, int $idLang): string
     {
-        foreach ($this->groupDataProvider->getGroups($idLang) as $group) {
-            if ((int) $group['id_group'] === $idGroup) {
-                return (string) $group['name'];
-            }
+        // The schema has no foreign key and deleting a customer group never cleans up
+        // business_entity, so an entity can outlive its group: fall back instead of failing.
+        try {
+            return $this->groupRepository->get(new GroupId($idGroup))->name[$idLang] ?? '';
+        } catch (GroupNotFoundException) {
+            return '';
         }
-
-        return '';
     }
 
     /**
-     * @param array<int, array<string, mixed>> $rows
+     * @param BusinessEntityAddressRow[] $rows
      *
      * @return AddressForViewing[]
      */
@@ -147,13 +149,12 @@ final class GetBusinessEntityForViewingHandler implements GetBusinessEntityForVi
     {
         $addresses = [];
         foreach ($rows as $row) {
-            $addressId = (int) $row['id_address'];
             $addresses[] = new AddressForViewing(
-                $addressId,
-                (string) $row['alias'],
-                $this->addressFormatter->format(new AddressId($addressId)),
-                (string) $row['address_type'],
-                (bool) $row['is_default'],
+                $row->getAddressId(),
+                $row->getAlias(),
+                $this->addressFormatter->format(new AddressId($row->getAddressId())),
+                $row->getAddressType(),
+                $row->isDefault(),
             );
         }
 

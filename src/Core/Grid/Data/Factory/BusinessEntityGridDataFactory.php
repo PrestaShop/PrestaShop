@@ -46,25 +46,12 @@ final class BusinessEntityGridDataFactory implements GridDataFactoryInterface
     {
         $modifiedRecords = [];
         foreach ($records as $record) {
-            $status = BusinessEntityStatus::tryFrom((string) $record['status']);
-            $record['status_label'] = null === $status
-                ? (string) $record['status']
-                : $status->trans($this->translator);
-            $record['status_badge_type'] = $this->getStatusBadgeType($status);
+            $status = BusinessEntityStatus::from((string) $record['status']);
+            $record['status_label'] = $status->trans($this->translator);
+            $record['status_badge_type'] = $status->badgeType();
             $modifiedRecords[] = $record;
         }
 
         return new RecordCollection($modifiedRecords);
-    }
-
-    private function getStatusBadgeType(?BusinessEntityStatus $status): string
-    {
-        return match ($status) {
-            BusinessEntityStatus::ACTIVE => 'success',
-            BusinessEntityStatus::PENDING => 'info',
-            BusinessEntityStatus::INACTIVE => 'light-info',
-            BusinessEntityStatus::REJECTED => 'danger',
-            default => '',
-        };
     }
 }

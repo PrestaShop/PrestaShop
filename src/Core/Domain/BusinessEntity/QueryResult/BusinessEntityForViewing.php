@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult;
 
 use DateTimeImmutable;
+use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 
 class BusinessEntityForViewing
 {
@@ -23,7 +24,7 @@ class BusinessEntityForViewing
         private readonly string $name,
         private readonly ?string $legalName,
         private readonly bool $deliveryAuthorized,
-        private readonly string $status,
+        private readonly BusinessEntityStatus $status,
         private readonly string $statusLabel,
         private readonly DateTimeImmutable $createdAt,
         private readonly DateTimeImmutable $updatedAt,
@@ -57,7 +58,7 @@ class BusinessEntityForViewing
      */
     public function getInitials(): string
     {
-        $words = array_slice(array_values(array_filter(explode(' ', trim($this->name)))), 0, 2);
+        $words = array_slice(array_filter(explode(' ', trim($this->name))), 0, 2);
 
         $initials = '';
         foreach ($words as $word) {
@@ -77,7 +78,7 @@ class BusinessEntityForViewing
         return $this->deliveryAuthorized;
     }
 
-    public function getStatus(): string
+    public function getStatus(): BusinessEntityStatus
     {
         return $this->status;
     }

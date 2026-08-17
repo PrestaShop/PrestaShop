@@ -70,7 +70,7 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
                 'class' => BusinessEntityStatus::class,
             ])
             ->add(self::FIELD_CUSTOMER_GROUP_ID, ChoiceType::class, [
-                'label' => $this->trans('Customer group', 'Admin.Orderscustomers.Feature'),
+                'label' => $this->trans('Customer group', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Customer group attached to this business entity.', 'Admin.Catalog.Feature'),
                 'choices' => $this->groupByIdChoiceProvider->getChoices(),
                 'required' => true,
