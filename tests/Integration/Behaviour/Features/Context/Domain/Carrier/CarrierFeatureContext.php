@@ -24,6 +24,9 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\CarrierFilters;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Resources\DummyFileUploader;
@@ -548,6 +551,76 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then the carriers list should be ordered as following:
+     */
+    public function assertCarriersListOrder(TableNode $tableNode): void
+    {
+        $listedPositions = $this->getPositionsFromCarriersList();
+        $previousPosition = null;
+        foreach ($tableNode->getColumnsHash() as $expectedCarrier) {
+            $reference = $expectedCarrier['reference'];
+            $carrierId = $this->getSharedStorage()->get($reference);
+            Assert::assertArrayHasKey($carrierId, $listedPositions, sprintf('Carrier %s is not in the carriers list', $reference));
+
+            if (null !== $previousPosition) {
+                Assert::assertGreaterThan(
+                    $previousPosition,
+                    $listedPositions[$carrierId],
+                    sprintf('Carrier %s is not listed after the previous one', $reference)
+                );
+            }
+            $previousPosition = $listedPositions[$carrierId];
+        }
+    }
+
+    /**
+     * @Then carrier :reference should be at position :position in the carriers list
+     */
+    public function assertCarrierPositionInList(string $reference, int $position): void
+    {
+        $listedPositions = $this->getPositionsFromCarriersList();
+        $carrierId = $this->getSharedStorage()->get($reference);
+        Assert::assertArrayHasKey($carrierId, $listedPositions, sprintf('Carrier %s is not in the carriers list', $reference));
+        Assert::assertSame($position, $listedPositions[$carrierId], sprintf('Unexpected position for carrier %s', $reference));
+    }
+
+    /**
+     * This is the invariant broken by assigning a position without reordering the other carriers.
+     *
+     * @Then no carriers should share the same position
+     */
+    public function assertCarrierPositionsAreUnique(): void
+    {
+        $listedPositions = $this->getPositionsFromCarriersList();
+        Assert::assertSame(
+            array_unique($listedPositions),
+            $listedPositions,
+            'Some carriers of the list share the same position'
+        );
+    }
+
+    /**
+     * No CQRS query returns the positions, so they are read from the data of the carriers list, which is also what the
+     * drag and drop reordering relies on. The grid factory itself is not used because it builds the filter form, which
+     * needs the admin theme templates and is not available from the CLI.
+     *
+     * @return array<int, int> the listed positions, indexed by carrier id
+     */
+    private function getPositionsFromCarriersList(): array
+    {
+        /** @var GridDataFactoryInterface $carrierGridDataFactory */
+        $carrierGridDataFactory = CommonFeatureContext::getContainer()->get('prestashop.core.grid.data.factory.carrier_decorator');
+        $carrierGridData = $carrierGridDataFactory->getData(new CarrierFilters(CarrierFilters::getDefaults()));
+
+        $listedPositions = [];
+        foreach ($carrierGridData->getRecords()->all() as $carrierRecord) {
+            $listedPositions[(int) $carrierRecord['id_carrier']] = (int) $carrierRecord['position'];
+        }
+
+        return $listedPositions;
+    }
+
+    /**
      * @param string $shippingMethod
      *
      * @return int
@@ -555,6 +628,8 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     protected function convertShippingMethodToInt(string $shippingMethod): int
     {
         $intValues = [
+            // Falls back to the shipping method of the shop configuration
+            'default' => ShippingMethod::DEFAULT,
             'weight' => ShippingMethod::BY_WEIGHT,
             'price' => ShippingMethod::BY_PRICE,
             'invalid' => 42, // This random number is hardcoded intentionally to reflect invalid shipping method

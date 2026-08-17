@@ -98,6 +98,7 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
             ->add('shipping_method', ChoiceType::class, [
                 'label' => $this->trans('Shipping costs', 'Admin.Shipping.Feature'),
                 'choices' => [
+                    $this->trans('Based on the shop configuration', 'Admin.Shipping.Feature') => ShippingMethod::DEFAULT,
                     $this->trans("Based on the order's total price", 'Admin.Shipping.Feature') => ShippingMethod::BY_PRICE,
                     $shippingWeightTraduction => ShippingMethod::BY_WEIGHT,
                 ],

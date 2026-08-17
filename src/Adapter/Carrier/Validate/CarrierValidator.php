@@ -12,9 +12,12 @@ use Carrier;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
+use PrestaShop\PrestaShop\Adapter\Zone\Repository\ZoneRepository;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
@@ -31,6 +34,7 @@ class CarrierValidator extends AbstractObjectModelValidator
 
     public function __construct(
         private readonly GroupRepository $groupRepository,
+        private readonly ZoneRepository $zoneRepository,
     ) {
     }
 
@@ -73,6 +77,18 @@ class CarrierValidator extends AbstractObjectModelValidator
     {
         foreach ($groupIds as $groupId) {
             $this->groupRepository->assertGroupExists(new GroupId((int) $groupId));
+        }
+    }
+
+    /**
+     * @param int[] $zoneIds
+     *
+     * @throws ZoneNotFoundException
+     */
+    public function validateZonesExist(array $zoneIds): void
+    {
+        foreach ($zoneIds as $zoneId) {
+            $this->zoneRepository->assertZoneExists(new ZoneId((int) $zoneId));
         }
     }
 

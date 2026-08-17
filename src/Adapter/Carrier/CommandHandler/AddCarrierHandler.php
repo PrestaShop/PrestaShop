@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 
 use Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
+use PrestaShop\PrestaShop\Adapter\Carrier\Update\CarrierPositionUpdater;
 use PrestaShop\PrestaShop\Adapter\Carrier\Validate\CarrierValidator;
 use PrestaShop\PrestaShop\Adapter\File\Uploader\CarrierLogoFileUploader;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
@@ -29,6 +30,7 @@ class AddCarrierHandler implements AddCarrierHandlerInterface
         private readonly CarrierLogoFileUploader $carrierLogoFileUploader,
         private readonly CarrierValidator $carrierValidator,
         private readonly ShopRepository $shopRepository,
+        private readonly CarrierPositionUpdater $carrierPositionUpdater,
     ) {
     }
 
@@ -49,12 +51,10 @@ class AddCarrierHandler implements AddCarrierHandlerInterface
         $carrier->max_weight = $command->getMaxWeight();
         $carrier->max_depth = $command->getMaxDepth();
 
-        if (null !== $command->getPosition()) {
-            $carrier->position = $command->getPosition();
-        } else {
-            $lastPosition = $this->carrierRepository->getLastPosition();
-            $carrier->position = $lastPosition !== null ? $lastPosition + 1 : 0;
-        }
+        // The carrier is always created at the end of the list, it is then moved to the requested position once it
+        // exists, so that the other carriers are shifted instead of sharing a position with it
+        $lastPosition = $this->carrierRepository->getLastPosition();
+        $carrier->position = $lastPosition !== null ? $lastPosition + 1 : 0;
 
         // Shipping information
         $carrier->shipping_handling = $command->hasAdditionalHandlingFee();
@@ -68,6 +68,7 @@ class AddCarrierHandler implements AddCarrierHandlerInterface
         $this->carrierValidator->validateGroupsExist(
             $command->getAssociatedGroupIds()
         );
+        $this->carrierValidator->validateZonesExist($command->getZones());
 
         foreach ($command->getAssociatedShopIds() as $shopId) {
             $this->shopRepository->assertShopExists($shopId);
@@ -75,6 +76,10 @@ class AddCarrierHandler implements AddCarrierHandlerInterface
 
         $carrierId = $this->carrierRepository->add($carrier, $command->getAssociatedShopIds());
         $carrier->setGroups($command->getAssociatedGroupIds());
+
+        if (null !== $command->getPosition()) {
+            $this->carrierPositionUpdater->updatePosition($carrierId, (int) $carrier->position, $command->getPosition());
+        }
 
         if ($command->getLogoPathName() !== null) {
             $this->carrierValidator->validateLogoUpload(

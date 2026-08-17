@@ -15,6 +15,12 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
+  # Uses the same position services as the carriers list, so a position assigned through a command shifts the other
+  # carriers exactly like a drag and drop in the list does
+  PrestaShop\PrestaShop\Adapter\Carrier\Update\CarrierPositionUpdater:
+    arguments:
+      $positionDefinition: '@prestashop.core.grid.carrier.position_definition'
+
   prestashop.adapter.carrier.carrier_thumbnail_logo_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierThumbnailLogoProvider'
     arguments:
