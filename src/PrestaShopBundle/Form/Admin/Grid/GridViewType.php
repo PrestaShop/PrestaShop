@@ -60,6 +60,13 @@ class GridViewType extends TranslatorAwareType
 
         if ($options['with_grid_context']) {
             $builder
+                ->add('grid_id', HiddenType::class, [
+                    'constraints' => [
+                        new NotBlank(),
+                        new Length(['max' => 191]),
+                        new Regex(['pattern' => '/^[a-zA-Z0-9_-]+$/']),
+                    ],
+                ])
                 ->add('controller_route', HiddenType::class, [
                     'constraints' => [
                         new NotBlank(),

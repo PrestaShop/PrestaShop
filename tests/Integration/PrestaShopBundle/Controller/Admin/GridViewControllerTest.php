@@ -54,8 +54,8 @@ class GridViewControllerTest extends SymfonyIntegrationTestCase
 
         $this->assertTrue($this->client->getResponse()->isSuccessful());
         $this->assertCount(1, $crawler->filter('.js-grid-views'));
-        $this->assertCount(1, $crawler->filter('form[name="grid_view_order"]'));
-        $this->assertCount(1, $crawler->filter('form[name="grid_configuration_order"]'));
+        $this->assertCount(1, $crawler->filter('form[name="grid_view"]'));
+        $this->assertCount(1, $crawler->filter('form[name="grid_configuration"]'));
     }
 
     public function testPanelAndEndpointsAreDisabledWithTheFeatureFlag(): void
@@ -78,10 +78,10 @@ class GridViewControllerTest extends SymfonyIntegrationTestCase
             'order' => ['filters' => ['date_add' => ['from' => '2020-01-01', 'to' => '2039-12-31']]],
         ]));
 
-        $form = $crawler->filter('form[name="grid_view_order"]')->form();
-        $form['grid_view_order[name]'] = 'Recent orders';
-        $form['grid_view_order[shared]'] = '1';
-        $form['grid_view_order[dynamic_date_rules][date_add][date_rule]'] = 'current_year';
+        $form = $crawler->filter('form[name="grid_view"]')->form();
+        $form['grid_view[name]'] = 'Recent orders';
+        $form['grid_view[shared]'] = '1';
+        $form['grid_view[dynamic_date_rules][date_add][date_rule]'] = 'current_year';
         $this->client->submit($form);
 
         $this->assertJsonSuccess();
@@ -104,8 +104,8 @@ class GridViewControllerTest extends SymfonyIntegrationTestCase
 
         $crawler = $this->client->request('GET', $this->router->generate(self::GRID_ROUTE));
 
-        $form = $crawler->filter('form[name="grid_view_order"]')->form();
-        $form['grid_view_order[name]'] = 'All orders';
+        $form = $crawler->filter('form[name="grid_view"]')->form();
+        $form['grid_view[name]'] = 'All orders';
         $this->client->submit($form);
 
         $this->assertJsonSuccess();
@@ -259,11 +259,11 @@ class GridViewControllerTest extends SymfonyIntegrationTestCase
     {
         $crawler = $this->client->request('GET', $this->router->generate(self::GRID_ROUTE));
 
-        $form = $crawler->filter('form[name="grid_configuration_order"]')->form();
-        $displayTotalsField = $form['grid_configuration_order[display_totals]'];
+        $form = $crawler->filter('form[name="grid_configuration"]')->form();
+        $displayTotalsField = $form['grid_configuration[display_totals]'];
         $this->assertInstanceOf(ChoiceFormField::class, $displayTotalsField);
         $displayTotalsField->untick();
-        $displaySharedFiltersField = $form['grid_configuration_order[display_shared_filters]'];
+        $displaySharedFiltersField = $form['grid_configuration[display_shared_filters]'];
         $this->assertInstanceOf(ChoiceFormField::class, $displaySharedFiltersField);
         $displaySharedFiltersField->tick();
         $this->client->submit($form);

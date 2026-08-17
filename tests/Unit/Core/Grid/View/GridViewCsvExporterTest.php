@@ -10,10 +10,10 @@ namespace Tests\Unit\Core\Grid\View;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\GridView\Exception\GridViewException;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Exception\GridViewException;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryProvider;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;

@@ -17,6 +17,28 @@ use PrestaShopBundle\Entity\AdminGridView;
 class AdminGridViewRepository extends EntityRepository
 {
     /**
+     * @param AdminGridView $gridView
+     *
+     * @return void
+     */
+    public function save(AdminGridView $gridView): void
+    {
+        $this->getEntityManager()->persist($gridView);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @param AdminGridView $gridView
+     *
+     * @return void
+     */
+    public function remove(AdminGridView $gridView): void
+    {
+        $this->getEntityManager()->remove($gridView);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * @return AdminGridView[]
      */
     public function findSharedViews(int $shopId, string $gridId, string $controllerRoute, int $excludedEmployeeId): array

@@ -8,21 +8,23 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\GridView\GridViewProvider;
+use PrestaShop\PrestaShop\Core\Domain\GridView\Command\DeleteGridViewCommand;
+use PrestaShop\PrestaShop\Core\Domain\GridView\Command\DuplicateGridViewCommand;
+use PrestaShop\PrestaShop\Core\Domain\GridView\Exception\GridViewAccessDeniedException;
+use PrestaShop\PrestaShop\Core\Domain\GridView\Exception\GridViewException;
+use PrestaShop\PrestaShop\Core\Domain\GridView\Exception\GridViewLimitReachedException;
+use PrestaShop\PrestaShop\Core\Domain\GridView\Exception\GridViewNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\GridView\ValueObject\GridViewId;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\Grid\Exception\GridViewException;
-use PrestaShop\PrestaShop\Core\Grid\View\GridState;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\View\GridViewCounter;
 use PrestaShop\PrestaShop\Core\Grid\View\GridViewCsvExporter;
-use PrestaShop\PrestaShop\Core\Grid\View\GridViewHandler;
-use PrestaShop\PrestaShop\Core\Grid\View\GridViewsPanelPresenter;
 use PrestaShop\PrestaShop\Core\Grid\View\GridViewsPresenter;
 use PrestaShopBundle\Component\CsvResponse;
-use PrestaShopBundle\Entity\AdminGridView;
-use PrestaShopBundle\Entity\Repository\AdminGridViewRepository;
-use PrestaShopBundle\Form\Admin\Grid\GridConfigurationType;
-use PrestaShopBundle\Form\Admin\Grid\GridViewType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
-use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +36,8 @@ use Symfony\Component\Routing\RouterInterface;
 class GridViewController extends PrestaShopAdminController
 {
     private const GRID_ID_REGEX = '/^[a-zA-Z0-9_-]+$/';
+
+    private const VIEW_FORM_NAME = 'grid_view';
 
     /**
      * @param string $gridId
@@ -94,8 +98,9 @@ class GridViewController extends PrestaShopAdminController
     /**
      * @param string $gridId
      * @param Request $request
-     * @param FormFactoryInterface $formFactory
-     * @param GridViewHandler $gridViewHandler
+     * @param RouterInterface $router
+     * @param FormBuilderInterface $gridViewFormBuilder
+     * @param FormHandlerInterface $gridViewFormHandler
      *
      * @return JsonResponse
      */
@@ -104,16 +109,17 @@ class GridViewController extends PrestaShopAdminController
         string $gridId,
         Request $request,
         RouterInterface $router,
-        FormFactoryInterface $formFactory,
-        GridViewHandler $gridViewHandler,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.grid_view_form_builder')]
+        FormBuilderInterface $gridViewFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.grid_view_form_handler')]
+        FormHandlerInterface $gridViewFormHandler,
     ): JsonResponse {
         $this->assertFeatureIsEnabled();
         $this->assertValidGridId($gridId);
 
-        $formName = GridViewsPanelPresenter::SAVE_FORM_NAME_PREFIX . $gridId;
-        $submittedData = $request->request->all($formName);
-
-        $form = $formFactory->createNamed($formName, GridViewType::class, null, [
+        // The dynamic date rule fields depend on the date filters the client submitted
+        $submittedData = $request->request->all(self::VIEW_FORM_NAME);
+        $form = $gridViewFormBuilder->getForm([], [
             'active_date_filters' => $this->getSubmittedDateRuleFields($submittedData),
         ]);
         $form->handleRequest($request);
@@ -122,10 +128,12 @@ class GridViewController extends PrestaShopAdminController
             return $this->formErrorResponse($form);
         }
 
-        $this->assertCanReadGridRoute((string) ($form->getData()['controller_route'] ?? ''), $router);
+        $data = $form->getData();
+        $this->assertGridIdMatches($gridId, (string) ($data['grid_id'] ?? ''));
+        $this->assertCanReadGridRoute((string) ($data['controller_route'] ?? ''), $router);
 
         try {
-            $gridViewHandler->createFromPersistedFilters($gridId, $form->getData());
+            $gridViewFormHandler->handle($form);
         } catch (GridViewException $e) {
             return $this->gridViewExceptionResponse($e);
         }
@@ -139,9 +147,8 @@ class GridViewController extends PrestaShopAdminController
     /**
      * @param int $gridViewId
      * @param Request $request
-     * @param FormFactoryInterface $formFactory
-     * @param AdminGridViewRepository $gridViewRepository
-     * @param GridViewHandler $gridViewHandler
+     * @param FormBuilderInterface $gridViewFormBuilder
+     * @param FormHandlerInterface $gridViewFormHandler
      *
      * @return Response
      */
@@ -149,28 +156,18 @@ class GridViewController extends PrestaShopAdminController
     public function editAction(
         int $gridViewId,
         Request $request,
-        FormFactoryInterface $formFactory,
-        AdminGridViewRepository $gridViewRepository,
-        GridViewHandler $gridViewHandler,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.grid_view_form_builder')]
+        FormBuilderInterface $gridViewFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.grid_view_form_handler')]
+        FormHandlerInterface $gridViewFormHandler,
     ): Response {
         $this->assertFeatureIsEnabled();
 
-        $gridView = $this->getOwnGridView($gridViewId, $gridViewRepository);
-        $gridId = $gridView->getGridConfiguration()->getGridId();
-
-        $form = $formFactory->createNamed(
-            GridViewsPanelPresenter::SAVE_FORM_NAME_PREFIX . $gridId,
-            GridViewType::class,
-            [
-                'name' => $gridView->getName(),
-                'shared' => $gridView->isShared(),
-                'dynamic_date_rules' => $gridView->getDynamicDateRules() ?? [],
-            ],
-            [
-                'with_grid_context' => false,
-                'active_date_filters' => $this->getStoredDateRuleFields($gridView),
-            ]
-        );
+        try {
+            $form = $gridViewFormBuilder->getFormFor($gridViewId);
+        } catch (GridViewException $e) {
+            throw $this->httpExceptionFor($e, 'This view cannot be edited.');
+        }
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -178,7 +175,13 @@ class GridViewController extends PrestaShopAdminController
                 return $this->formErrorResponse($form);
             }
 
-            $gridViewHandler->update($gridView, $form->getData());
+            try {
+                $gridViewFormHandler->handleFor($gridViewId, $form);
+            } catch (GridViewNotFoundException|GridViewAccessDeniedException $e) {
+                throw $this->httpExceptionFor($e, 'This view cannot be edited.');
+            } catch (GridViewException $e) {
+                return $this->gridViewExceptionResponse($e);
+            }
 
             return $this->json([
                 'success' => true,
@@ -197,21 +200,21 @@ class GridViewController extends PrestaShopAdminController
 
     /**
      * @param int $gridViewId
-     * @param AdminGridViewRepository $gridViewRepository
-     * @param GridViewHandler $gridViewHandler
      *
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('ROLE_EMPLOYEE')")]
-    public function deleteAction(
-        int $gridViewId,
-        AdminGridViewRepository $gridViewRepository,
-        GridViewHandler $gridViewHandler,
-    ): JsonResponse {
+    public function deleteAction(int $gridViewId): JsonResponse
+    {
         $this->assertFeatureIsEnabled();
 
-        $gridView = $this->getOwnGridView($gridViewId, $gridViewRepository);
-        $gridViewHandler->delete($gridView);
+        try {
+            $this->dispatchCommand(new DeleteGridViewCommand($gridViewId));
+        } catch (GridViewNotFoundException|GridViewAccessDeniedException $e) {
+            throw $this->httpExceptionFor($e, 'This view cannot be deleted.');
+        } catch (GridViewException $e) {
+            return $this->gridViewExceptionResponse($e);
+        }
 
         return $this->json([
             'success' => true,
@@ -221,8 +224,8 @@ class GridViewController extends PrestaShopAdminController
 
     /**
      * @param int $gridViewId
-     * @param AdminGridViewRepository $gridViewRepository
-     * @param GridViewHandler $gridViewHandler
+     * @param RouterInterface $router
+     * @param GridViewProvider $gridViewProvider
      *
      * @return JsonResponse
      */
@@ -230,19 +233,20 @@ class GridViewController extends PrestaShopAdminController
     public function duplicateAction(
         int $gridViewId,
         RouterInterface $router,
-        AdminGridViewRepository $gridViewRepository,
-        GridViewHandler $gridViewHandler,
+        GridViewProvider $gridViewProvider,
     ): JsonResponse {
         $this->assertFeatureIsEnabled();
 
-        $gridView = $this->getAccessibleGridView($gridViewId, $gridViewRepository);
-        $this->assertCanReadGridRoute($gridView->getGridConfiguration()->getControllerRoute(), $router);
-
         try {
-            $gridViewHandler->duplicate(
-                $gridView,
+            $gridView = $gridViewProvider->getAccessibleGridView(new GridViewId($gridViewId));
+            $this->assertCanReadGridRoute($gridView->getGridConfiguration()->getControllerRoute(), $router);
+
+            $this->dispatchCommand(new DuplicateGridViewCommand(
+                $gridViewId,
                 $this->trans('Copy of %name%', ['%name%' => $gridView->getName()], 'Admin.Global')
-            );
+            ));
+        } catch (GridViewNotFoundException|GridViewAccessDeniedException $e) {
+            throw $this->httpExceptionFor($e, 'This view cannot be duplicated.');
         } catch (GridViewException $e) {
             return $this->gridViewExceptionResponse($e);
         }
@@ -256,8 +260,8 @@ class GridViewController extends PrestaShopAdminController
     /**
      * @param string $gridId
      * @param Request $request
-     * @param FormFactoryInterface $formFactory
-     * @param GridViewHandler $gridViewHandler
+     * @param FormBuilderInterface $gridConfigurationFormBuilder
+     * @param FormHandlerInterface $gridConfigurationFormHandler
      *
      * @return JsonResponse
      */
@@ -265,24 +269,25 @@ class GridViewController extends PrestaShopAdminController
     public function saveConfigurationAction(
         string $gridId,
         Request $request,
-        FormFactoryInterface $formFactory,
-        GridViewHandler $gridViewHandler,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.grid_configuration_form_builder')]
+        FormBuilderInterface $gridConfigurationFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.grid_configuration_form_handler')]
+        FormHandlerInterface $gridConfigurationFormHandler,
     ): JsonResponse {
         $this->assertFeatureIsEnabled();
         $this->assertValidGridId($gridId);
 
-        $form = $formFactory->createNamed(
-            GridViewsPanelPresenter::CONFIGURATION_FORM_NAME_PREFIX . $gridId,
-            GridConfigurationType::class
-        );
+        $form = $gridConfigurationFormBuilder->getForm();
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
             return $this->formErrorResponse($form);
         }
 
+        $this->assertGridIdMatches($gridId, (string) ($form->getData()['grid_id'] ?? ''));
+
         try {
-            $gridViewHandler->saveConfiguration($gridId, $form->getData());
+            $gridConfigurationFormHandler->handle($form);
         } catch (GridViewException $e) {
             return $this->gridViewExceptionResponse($e);
         }
@@ -296,7 +301,7 @@ class GridViewController extends PrestaShopAdminController
     /**
      * @param int $gridViewId
      * @param RouterInterface $router
-     * @param AdminGridViewRepository $gridViewRepository
+     * @param GridViewProvider $gridViewProvider
      * @param GridViewCsvExporter $gridViewCsvExporter
      *
      * @return CsvResponse
@@ -305,12 +310,16 @@ class GridViewController extends PrestaShopAdminController
     public function exportAction(
         int $gridViewId,
         RouterInterface $router,
-        AdminGridViewRepository $gridViewRepository,
+        GridViewProvider $gridViewProvider,
         GridViewCsvExporter $gridViewCsvExporter,
     ): CsvResponse {
         $this->assertFeatureIsEnabled();
 
-        $gridView = $this->getAccessibleGridView($gridViewId, $gridViewRepository);
+        try {
+            $gridView = $gridViewProvider->getAccessibleGridView(new GridViewId($gridViewId));
+        } catch (GridViewException $e) {
+            throw $this->httpExceptionFor($e, 'This view cannot be exported.');
+        }
         $this->assertCanReadGridRoute($gridView->getGridConfiguration()->getControllerRoute(), $router);
 
         try {
@@ -331,67 +340,6 @@ class GridViewController extends PrestaShopAdminController
     }
 
     /**
-     * @param int $gridViewId
-     * @param AdminGridViewRepository $repository
-     *
-     * @return AdminGridView
-     */
-    private function getGridView(int $gridViewId, AdminGridViewRepository $repository): AdminGridView
-    {
-        $gridView = $repository->find($gridViewId);
-
-        if (null === $gridView) {
-            throw new NotFoundHttpException(sprintf('Grid view %d was not found', $gridViewId));
-        }
-
-        return $gridView;
-    }
-
-    /**
-     * @param int $gridViewId
-     * @param AdminGridViewRepository $repository
-     *
-     * @return AdminGridView
-     */
-    private function getAccessibleGridView(int $gridViewId, AdminGridViewRepository $repository): AdminGridView
-    {
-        $gridView = $this->getGridView($gridViewId, $repository);
-        $configuration = $gridView->getGridConfiguration();
-        $employee = $this->getEmployeeContext()->getEmployee();
-
-        $isOwn = null !== $employee && $configuration->getEmployeeId() === $employee->getId();
-        if ((!$isOwn && !$gridView->isShared())
-            || !$this->getEmployeeContext()->hasAuthorizationOnShop($configuration->getShopId())
-        ) {
-            throw new AccessDeniedHttpException('You cannot use this view.');
-        }
-
-        return $gridView;
-    }
-
-    /**
-     * @param int $gridViewId
-     * @param AdminGridViewRepository $repository
-     *
-     * @return AdminGridView
-     */
-    private function getOwnGridView(int $gridViewId, AdminGridViewRepository $repository): AdminGridView
-    {
-        $gridView = $this->getGridView($gridViewId, $repository);
-        $configuration = $gridView->getGridConfiguration();
-        $employee = $this->getEmployeeContext()->getEmployee();
-
-        if (null === $employee
-            || $configuration->getEmployeeId() !== $employee->getId()
-            || !$this->getEmployeeContext()->hasAuthorizationOnShop($configuration->getShopId())
-        ) {
-            throw new AccessDeniedHttpException('You cannot modify this view.');
-        }
-
-        return $gridView;
-    }
-
-    /**
      * @return array<string, array{id: string, name: string}>
      */
     private function getSubmittedDateRuleFields(array $submittedData): array
@@ -404,34 +352,6 @@ class GridViewController extends PrestaShopAdminController
             if (preg_match(self::GRID_ID_REGEX, $field)) {
                 $dateRuleFields[$field] = ['id' => $field, 'name' => $field];
             }
-        }
-
-        return $dateRuleFields;
-    }
-
-    /**
-     * @return array<string, array{id: string, name: string}>
-     */
-    private function getStoredDateRuleFields(AdminGridView $gridView): array
-    {
-        $searchCriteria = json_decode($gridView->getFilters(), true) ?: [];
-        $gridState = GridState::fromArray($gridView->getGridState() ?? []);
-
-        $columnNames = [];
-        foreach ($gridState->columns as $column) {
-            $columnNames[$column->id] = $column->name;
-        }
-
-        $dateRuleFields = [];
-        foreach ($searchCriteria['filters'] ?? [] as $field => $value) {
-            if (!is_array($value) || (!isset($value['from']) && !isset($value['to']))) {
-                continue;
-            }
-
-            $dateRuleFields[$field] = [
-                'id' => $field,
-                'name' => $columnNames[$field] ?? $field,
-            ];
         }
 
         return $dateRuleFields;
@@ -457,8 +377,8 @@ class GridViewController extends PrestaShopAdminController
      */
     private function gridViewExceptionResponse(GridViewException $e): JsonResponse
     {
-        $message = match ($e->getCode()) {
-            GridViewException::VIEW_LIMIT_REACHED => $this->trans('You have reached the maximum number of views for this grid.', [], 'Admin.Notifications.Error'),
+        $message = match (true) {
+            $e instanceof GridViewLimitReachedException => $this->trans('You have reached the maximum number of views for this grid.', [], 'Admin.Notifications.Error'),
             default => $this->trans('An unexpected error occurred.', [], 'Admin.Notifications.Error'),
         };
 
@@ -466,6 +386,23 @@ class GridViewController extends PrestaShopAdminController
             'success' => false,
             'message' => $message,
         ], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * Maps a domain exception raised while targeting a specific view to the matching HTTP exception.
+     *
+     * @param GridViewException $e
+     * @param string $message
+     *
+     * @return NotFoundHttpException|AccessDeniedHttpException
+     */
+    private function httpExceptionFor(GridViewException $e, string $message): NotFoundHttpException|AccessDeniedHttpException
+    {
+        if ($e instanceof GridViewAccessDeniedException) {
+            return new AccessDeniedHttpException($message, $e);
+        }
+
+        return new NotFoundHttpException($message, $e);
     }
 
     /**
@@ -477,6 +414,22 @@ class GridViewController extends PrestaShopAdminController
     {
         if (!preg_match(self::GRID_ID_REGEX, $gridId)) {
             throw new NotFoundHttpException('Invalid grid id');
+        }
+    }
+
+    /**
+     * The grid id is carried both by the route and by the submitted form: the form value feeds
+     * the command, so both must designate the same grid.
+     *
+     * @param string $routeGridId
+     * @param string $formGridId
+     *
+     * @return void
+     */
+    private function assertGridIdMatches(string $routeGridId, string $formGridId): void
+    {
+        if ($routeGridId !== $formGridId) {
+            throw new NotFoundHttpException(sprintf('Submitted grid id "%s" does not match the requested grid "%s"', $formGridId, $routeGridId));
         }
     }
 

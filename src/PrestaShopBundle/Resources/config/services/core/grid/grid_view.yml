@@ -16,8 +16,11 @@ services:
 
   PrestaShop\PrestaShop\Core\Grid\View\GridViewUrlGenerator: ~
 
-  PrestaShop\PrestaShop\Core\Grid\View\GridViewHandler: ~
+  PrestaShop\PrestaShop\Core\Grid\View\GridViewDataSanitizer: ~
 
   PrestaShop\PrestaShop\Core\Grid\View\GridViewsPresenter: ~
 
-  PrestaShop\PrestaShop\Core\Grid\View\GridViewsPanelPresenter: ~
+  PrestaShop\PrestaShop\Core\Grid\View\GridViewsPanelPresenter:
+    arguments:
+      $gridViewFormBuilder: '@prestashop.core.form.identifiable_object.builder.grid_view_form_builder'
+      $gridConfigurationFormBuilder: '@prestashop.core.form.identifiable_object.builder.grid_configuration_form_builder'

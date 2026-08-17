@@ -20,6 +20,17 @@ use RuntimeException;
 class AdminGridConfigurationRepository extends EntityRepository
 {
     /**
+     * @param AdminGridConfiguration $configuration
+     *
+     * @return void
+     */
+    public function save(AdminGridConfiguration $configuration): void
+    {
+        $this->getEntityManager()->persist($configuration);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * @param int $employeeId
      * @param int $shopId
      * @param string $gridId

@@ -86,9 +86,9 @@ Common slips unrelated to the feature itself — check before pushing:
 
 ## Domain contexts
 
-All 58 domains under `src/Core/Domain/` have a context file at `Domain/{DomainName}/CONTEXT.md`. Read the relevant one before working in a domain.
+All 59 domains under `src/Core/Domain/` have a context file at `Domain/{DomainName}/CONTEXT.md`. Read the relevant one before working in a domain.
 
-Domains: Address, Alias, ApiClient, Attachment, AttributeGroup, Carrier, Cart, CartRule, CatalogPriceRule, Category, CmsPage, CmsPageCategory, Combination (code lives under `src/Core/Domain/Product/Combination/`), Configuration, Contact, Country, CreditSlip, Currency, Customer, CustomerMessage, CustomerService, Discount, Employee, Feature, Hook, ImageSettings, Language, MailTemplate, Manufacturer, Meta, Module, Notification, Order, OrderMessage, OrderReturn, OrderReturnState, OrderState, Position, Product, Profile, Search, SearchEngine, Security, Shipment, Shop, ShowcaseCard, SqlManagement, State, Store, Supplier, Tab, Tag, Tax, TaxRulesGroup, Theme, Title, Webservice, Zone
+Domains: Address, Alias, ApiClient, Attachment, AttributeGroup, Carrier, Cart, CartRule, CatalogPriceRule, Category, CmsPage, CmsPageCategory, Combination (code lives under `src/Core/Domain/Product/Combination/`), Configuration, Contact, Country, CreditSlip, Currency, Customer, CustomerMessage, CustomerService, Discount, Employee, Feature, GridView, Hook, ImageSettings, Language, MailTemplate, Manufacturer, Meta, Module, Notification, Order, OrderMessage, OrderReturn, OrderReturnState, OrderState, Position, Product, Profile, Search, SearchEngine, Security, Shipment, Shop, ShowcaseCard, SqlManagement, State, Store, Supplier, Tab, Tag, Tax, TaxRulesGroup, Theme, Title, Webservice, Zone
 
 ## Component contexts
 
