@@ -1,69 +1,51 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use ObjectModel;
+use ObjectModelCore;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
-class ObjectModelComparator
+/**
+ * Compares two instances of the same ObjectModel class and exposes their differences,
+ * based on the fields declared in the ObjectModel definition.
+ */
+final class ObjectModelComparator
 {
-    /** @var ObjectModel old object model */
-    protected $oldObject;
-
-    /** @var ObjectModel new object model */
-    protected $newObject;
+    /**
+     * Fields that are not part of the ObjectModel definition but are still persisted.
+     */
+    private const EXTRA_FIELDS = [
+        'id_shop_list' => ['type' => ObjectModelCore::TYPE_NOTHING],
+        'id_shop_default' => ['type' => ObjectModelCore::TYPE_INT],
+    ];
 
     /**
-     * @param ObjectModel $oldObject
-     * @param ObjectModel $newObject
-     *
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException when the two objects are not of the same class
      */
-    public function __construct(ObjectModel $oldObject, ObjectModel $newObject)
-    {
+    public function __construct(
+        private readonly ObjectModelCore $oldObject,
+        private readonly ObjectModelCore $newObject
+    ) {
         if (get_class($oldObject) !== get_class($newObject)) {
-            throw new InvalidArgumentException('Cant compare different objects type');
+            throw new InvalidArgumentException('Only objects of the same class can be compared.');
         }
-
-        $this->oldObject = $oldObject;
-        $this->newObject = $newObject;
     }
 
     /**
-     * Returns an array of two objectModels differences
+     * Returns the differences between the two objects, indexed by field name.
+     * Each entry contains the "old" and "new" values (indexed by language id for multilang fields).
      *
-     * @return array
+     * @return array<string, array{old: mixed, new: mixed}>
      */
     public function getDiff(): array
     {
         $differences = [];
-        $objectFields = array_merge($this->getObjectDefinedFields($this->oldObject), $this->getObjectNotDefinedFields());
+        $objectFields = array_merge($this->getObjectDefinedFields(), self::EXTRA_FIELDS);
 
         foreach ($objectFields as $field => $definition) {
             if (!property_exists($this->oldObject, $field)) {
@@ -72,22 +54,22 @@ class ObjectModelComparator
 
             $fieldType = $definition['type'] ?? null;
 
-            if (!empty($definition['lang']) && $definition['lang'] && is_array($this->newObject->$field)) {
-                foreach ($this->newObject->$field as $idLang => $newValue) {
-                    $oldValue = $this->oldObject->$field[$idLang] ?? null;
+            if (!empty($definition['lang']) && is_array($this->newObject->$field)) {
+                $oldValues = is_array($this->oldObject->$field) ? $this->oldObject->$field : [];
 
-                    if (!$this->fieldValueComparator($oldValue, $newValue, $fieldType)) {
+                foreach ($this->newObject->$field as $idLang => $newValue) {
+                    $oldValue = $oldValues[$idLang] ?? null;
+
+                    if (!$this->isSameValue($oldValue, $newValue, $fieldType)) {
                         $differences[$field]['old'][$idLang] = $oldValue;
                         $differences[$field]['new'][$idLang] = $newValue;
                     }
                 }
-            } else {
-                if (!$this->fieldValueComparator($this->oldObject->$field, $this->newObject->$field, $fieldType)) {
-                    $differences[$field] = [
-                        'old' => $this->oldObject->$field,
-                        'new' => $this->newObject->$field,
-                    ];
-                }
+            } elseif (!$this->isSameValue($this->oldObject->$field, $this->newObject->$field, $fieldType)) {
+                $differences[$field] = [
+                    'old' => $this->oldObject->$field,
+                    'new' => $this->newObject->$field,
+                ];
             }
         }
 
@@ -99,62 +81,53 @@ class ObjectModelComparator
         return !empty($this->getDiff());
     }
 
-    /**
-     * Returns old ObjectModel
-     *
-     * @return ObjectModel
-     */
-    public function getOldObject(): ObjectModel
+    public function getOldObject(): ObjectModelCore
     {
         return $this->oldObject;
     }
 
-    /**
-     * Returns new ObjectModel
-     *
-     * @return ObjectModel
-     */
-    public function getNewObject(): ObjectModel
+    public function getNewObject(): ObjectModelCore
     {
         return $this->newObject;
     }
 
     /**
-     * Returns ObjectModel fields list
-     *
-     * @param ObjectModel $objectModel
-     *
-     * @return array
+     * @return array<string, array<string, mixed>>
      */
-    protected function getObjectDefinedFields(ObjectModel $objectModel): array
+    private function getObjectDefinedFields(): array
     {
-        return $objectModel::$definition['fields'] ?? [];
+        return $this->oldObject::$definition['fields'] ?? [];
     }
 
     /**
-     * Returns ObjectModel not defined fields list
-     *
-     * @return array
+     * Compares two field values strictly, after normalizing them
+     * according to the ObjectModel field type.
      */
-    protected function getObjectNotDefinedFields(): array
+    private function isSameValue(mixed $oldValue, mixed $newValue, ?int $fieldType): bool
     {
-        return [
-            'id_shop_list' => ['type' => ObjectModel::TYPE_NOTHING],
-            'id_shop_default' => ['type' => ObjectModel::TYPE_INT],
-        ];
+        return $this->normalize($oldValue, $fieldType) === $this->normalize($newValue, $fieldType);
     }
 
     /**
-     * Compare field values
-     *
-     * @param $oldValue
-     * @param $newValue
-     * @param int|null $fieldType
-     *
-     * @return bool
+     * Casts a value to a canonical representation of its ObjectModel field type,
+     * so that equivalent values ('10' and 10, '1' and true, ...) compare as equal.
      */
-    private function fieldValueComparator($oldValue, $newValue, ?int $fieldType = null): bool
+    private function normalize(mixed $value, ?int $fieldType): mixed
     {
-        return $oldValue == $newValue;
+        if ($value === null) {
+            return null;
+        }
+
+        if (is_array($value)) {
+            return array_map(fn (mixed $item): mixed => $this->normalize($item, $fieldType), $value);
+        }
+
+        return match ($fieldType) {
+            ObjectModelCore::TYPE_INT => (int) $value,
+            ObjectModelCore::TYPE_BOOL => (bool) $value,
+            ObjectModelCore::TYPE_FLOAT => (float) $value,
+            ObjectModelCore::TYPE_STRING, ObjectModelCore::TYPE_HTML, ObjectModelCore::TYPE_SQL, ObjectModelCore::TYPE_DATE => (string) $value,
+            default => is_scalar($value) ? (string) $value : $value,
+        };
     }
 }

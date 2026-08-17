@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -47,21 +27,17 @@ use Tests\Integration\Utility\ContextMockerTrait;
 use Tools;
 use Validate;
 
-class ObjectModelComparatorTest extends TestCase
+final class ObjectModelComparatorTest extends TestCase
 {
     use ContextMockerTrait;
 
-    /* @var int id current lang id */
-    protected int $currentLangId;
+    private const MODULE_NAME = 'ps_objectmodel_comparator_test';
 
-    /* @var int current shop id */
-    protected int $currentShopId;
+    private int $currentLangId;
 
-    /* @var Product current product object */
-    protected Product $productObject;
+    private int $currentShopId;
 
-    /* @const test module name */
-    protected const MODULE_NAME = 'ps_objectmodel_comparator_test';
+    private Product $productObject;
 
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
@@ -74,7 +50,7 @@ class ObjectModelComparatorTest extends TestCase
     /**
      * @return ModuleManager
      */
-    protected static function getModuleManager(): ModuleManager
+    private static function getModuleManager(): ModuleManager
     {
         return ModuleManagerBuilder::getInstance()->build();
     }
@@ -82,7 +58,7 @@ class ObjectModelComparatorTest extends TestCase
     /**
      * @return ModuleRepository
      */
-    protected static function getModuleRepository(): ModuleRepository
+    private static function getModuleRepository(): ModuleRepository
     {
         return ModuleManagerBuilder::getInstance()->buildRepository();
     }
@@ -90,7 +66,7 @@ class ObjectModelComparatorTest extends TestCase
     /**
      * @return Ps_objectmodel_comparator_test|null
      */
-    protected static function getModuleToTest(): ?Ps_objectmodel_comparator_test
+    private static function getModuleToTest(): ?Ps_objectmodel_comparator_test
     {
         $module = self::getModuleRepository()
             ->getModule(self::MODULE_NAME)
@@ -145,7 +121,7 @@ class ObjectModelComparatorTest extends TestCase
         parent::setUpBeforeClass();
         static::backupContext();
 
-        $moduleToTestPath = _PS_TESTS_DIR_ . 'Resources/modules_tests/' . self::MODULE_NAME;
+        $moduleToTestPath = dirname(__DIR__, 2) . '/Resources/modules_tests/' . self::MODULE_NAME;
 
         if (is_dir($moduleToTestPath)) {
             Tools::recurseCopy($moduleToTestPath, _PS_MODULE_DIR_ . self::MODULE_NAME);

@@ -162,7 +162,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     protected static $cache_objects = true;
 
     /**
-     * Skip the update process when no change detected to improve performances
+     * When enabled, update() skips the whole update process if no change is detected,
+     * to avoid useless database queries and improve performance.
      *
      * @var bool
      */
@@ -715,34 +716,16 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @throws PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
      */
     public function update($null_values = false)
     {
-        $currentClassName = $this->getObjectName();
-        $oldObject = new $currentClassName($this->id, $this->id_lang, $this->id_shop);
-        $comparator = new ObjectModelComparator($oldObject, $this);
+        $className = $this->getObjectName();
+        $comparator = new ObjectModelComparator(new $className($this->id, $this->id_lang, $this->id_shop), $this);
 
         if ($this->skipUpdateIfUnchanged && !$comparator->hasChanges()) {
             return true;
         }
 
-        return $this->processUpdateAction((bool) $null_values, $comparator);
-    }
-
-    /**
-     * Updates the current object in the database.
-     *
-     * @param bool $null_values
-     * @param ObjectModelComparator|null $comparator
-     *
-     * @return bool
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     */
-    protected function processUpdateAction(bool $null_values = false, ?ObjectModelComparator $comparator = null): bool
-    {
         // @hook actionObject<ObjectClassName>UpdateBefore
         Hook::exec('actionObjectUpdateBefore', ['object' => $this, 'objectComparator' => $comparator]);
         Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateBefore', ['object' => $this, 'objectComparator' => $comparator]);

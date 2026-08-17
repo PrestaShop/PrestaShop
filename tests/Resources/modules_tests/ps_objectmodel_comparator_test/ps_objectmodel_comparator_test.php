@@ -40,8 +40,8 @@ class Ps_objectmodel_comparator_test extends Module
         $this->name = 'ps_objectmodel_comparator_test';
         $this->need_instance = 1;
         $this->displayName = 'Ps object model comparator test';
-        $this->description = 'Ps object model comparator test';
-        $this->confirmUninstall = 'Are you sure that you want to delete all of your contacts?';
+        $this->description = 'Test module for the ObjectModelComparator hook parameter';
+        $this->confirmUninstall = 'Are you sure that you want to uninstall this test module?';
         $this->ps_versions_compliancy = ['min' => '9.0', 'max' => _PS_VERSION_];
 
         $this->version = '1.0.0';
@@ -112,7 +112,7 @@ class Ps_objectmodel_comparator_test extends Module
     {
         $stringFormat = '%s_%d_%s_has_been_changed_old_value_%s_new_value_%s';
 
-        if ($oldValue == $newValue) {
+        if ($oldValue === $newValue) {
             $stringFormat = '%s_%d_%s_no_change_detected_old_value_%s_new_value_%s';
         }
 
