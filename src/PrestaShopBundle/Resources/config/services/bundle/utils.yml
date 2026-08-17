@@ -14,5 +14,4 @@ services:
 
   prestashop.util.database.entity_schema_manager:
     class: PrestaShopBundle\Utils\Database\EntitySchemaManager
-    arguments:
-      - "@doctrine.orm.default_entity_manager"
+    autowire: true
