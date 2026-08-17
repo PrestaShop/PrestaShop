@@ -92,6 +92,19 @@ class CartCore extends ObjectModel
 
     protected $_products = null;
     protected $_products_with_separated_gifts = null;
+
+    /**
+     * Request-scoped memo of whole-cart getOrderTotal() results, keyed by a
+     * signature of the cart's pricing-relevant state (id, date_upd, product
+     * quantity, delivery address, carrier, customer, currency, cart shop,
+     * context shop, with-taxes flag and calculation type). Never persisted; it
+     * lives for the current request only and is invalidated on every cart
+     * mutation through resetProductRelatedStaticCache(). See getOrderTotal().
+     *
+     * @var array<string, float>
+     */
+    protected static $cartTotalMemo = [];
+
     protected static $_totalWeight = [];
     protected $_taxCalculationMethod = PS_TAX_EXC;
     protected static $_carriers = null;
@@ -240,6 +253,7 @@ class CartCore extends ObjectModel
         static::$cachePackageList = [];
         static::$cacheDeliveryOptionList = [];
         static::$cacheMultiAddressDelivery = [];
+        static::$cartTotalMemo = [];
     }
 
     public function resetProductRelatedStaticCache()
@@ -252,6 +266,35 @@ class CartCore extends ObjectModel
         }
         $this->_products = null;
         $this->_products_with_separated_gifts = null;
+        // Pricing-relevant cart state just changed; drop the whole-cart total memo.
+        self::$cartTotalMemo = [];
+    }
+
+    /**
+     * Signature of the global pricing configuration that getOrderTotal() depends on
+     * but that is not part of the cart's own state. Folded into the getOrderTotal()
+     * memo key so that toggling any of these settings (which a normal request never
+     * does mid-flight, but tests and back-office saves do) invalidates the memo
+     * instead of returning a stale total.
+     *
+     * @return string
+     */
+    private static function getOrderTotalConfigSignature()
+    {
+        return implode('~', [
+            Configuration::get('PS_TAX'),
+            Configuration::get('PS_TAX_ADDRESS_TYPE'),
+            Configuration::get('PS_ATCP_SHIPWRAP'),
+            Configuration::get('PS_ROUND_TYPE'),
+            Configuration::get('PS_PRICE_ROUND_MODE'),
+            Configuration::get('PS_USE_ECOTAX'),
+            Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID'),
+            Configuration::get('PS_GIFT_WRAPPING_PRICE'),
+            Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'),
+            Configuration::get('PS_SHIPPING_FREE_PRICE'),
+            Configuration::get('PS_SHIPPING_FREE_WEIGHT'),
+            Configuration::get('PS_CART_RULE_FEATURE_ACTIVE'),
+        ]);
     }
 
     /**
@@ -399,6 +442,9 @@ class CartCore extends ObjectModel
             || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'cart_product` WHERE `id_cart` = ' . (int) $this->id)) {
             return false;
         }
+
+        // The cart is being torn down; reset its caches (incl. the total memo).
+        $this->resetProductRelatedStaticCache();
 
         return parent::delete();
     }
@@ -1445,6 +1491,10 @@ class CartCore extends ObjectModel
             return false;
         }
 
+        // Adding a rule does not bump date_upd, so reset the cart caches (incl. the
+        // whole-cart total memo) explicitly here.
+        $this->resetProductRelatedStaticCache();
+
         Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL);
         Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING);
         Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION);
@@ -1934,6 +1984,11 @@ class CartCore extends ObjectModel
      */
     public function removeCartRule($id_cart_rule, bool $useOrderPrices = false)
     {
+        // Removing a rule does not bump date_upd, so reset the cart caches (incl. the
+        // whole-cart total memo) explicitly. This also covers
+        // CartRule::autoRemoveFromCart(), which routes through this method.
+        $this->resetProductRelatedStaticCache();
+
         Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL);
         Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING);
         Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION);
@@ -2200,6 +2255,36 @@ class CartCore extends ObjectModel
         $use_cache = false,
         bool $keepOrderPrices = false
     ) {
+        // Request-scoped memoization of the WHOLE-CART total only. Calls scoped to
+        // an explicit product subset, to a specific carrier, or that reuse
+        // order-saved prices ($keepOrderPrices, which depends on mutable external
+        // Order state) carry inputs this signature cannot capture, so they are
+        // always computed live. A cart with no id has nothing stable to key on.
+        $useMemo = !($products !== null || (int) $id_carrier > 0 || $keepOrderPrices || !$this->id);
+        $memoKey = null;
+        if ($useMemo) {
+            $memoKey = implode('|', [
+                (int) $this->id,
+                (string) $this->date_upd,
+                (int) Cart::getNbProducts((int) $this->id),
+                (int) $this->id_address_delivery,
+                (int) $this->id_carrier,
+                (int) $this->id_customer,
+                (int) $this->id_currency,
+                (int) $this->id_shop,
+                (int) Shop::getContextShopID(true),
+                (int) $withTaxes,
+                (int) $type,
+                // Global pricing configuration the total depends on but which is not
+                // part of the cart's own state (e.g. toggling PS_TAX). Without it a
+                // configuration change would return a stale memoized total.
+                self::getOrderTotalConfigSignature(),
+            ]);
+            if (array_key_exists($memoKey, self::$cartTotalMemo)) {
+                return self::$cartTotalMemo[$memoKey];
+            }
+        }
+
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
         }
@@ -2323,8 +2408,15 @@ class CartCore extends ObjectModel
         // Apply taxes if required
         $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
 
-        // Round it, return it
-        return Tools::ps_round($value, $computePrecision);
+        // Round it
+        $total = Tools::ps_round($value, $computePrecision);
+
+        // Cache the whole-cart result for the rest of the request (see top of method).
+        if ($useMemo) {
+            self::$cartTotalMemo[$memoKey] = $total;
+        }
+
+        return $total;
     }
 
     /**
@@ -4766,6 +4858,10 @@ class CartCore extends ObjectModel
             Db::getInstance()->execute(rtrim($query, ','));
         }
 
+        // Webservice bulk row replacement bypasses update(); reset the cart caches
+        // (incl. the whole-cart total memo).
+        $this->resetProductRelatedStaticCache();
+
         return true;
     }
 
@@ -4867,6 +4963,10 @@ class CartCore extends ObjectModel
 
     public function deleteAssociations()
     {
+        // Raw cart_product DELETE that bypasses update(); reset the cart caches
+        // (incl. the whole-cart total memo).
+        $this->resetProductRelatedStaticCache();
+
         return Db::getInstance()->execute('
                 DELETE FROM `' . _DB_PREFIX_ . 'cart_product`
                 WHERE `id_cart` = ' . (int) $this->id) !== false;
