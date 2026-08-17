@@ -27,8 +27,10 @@
 namespace Tests\Integration\PrestaShopBundle\Utils\Database;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use PrestaShop\PrestaShop\Core\Util\Database\EntitySchemaManagerInterface;
+use PrestaShopBundle\Entity\Lang;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Resources\Entity\TestEntityOne;
 use Tests\Resources\Entity\TestEntityTwo;
@@ -63,6 +65,31 @@ class EntitySchemaManagerTest extends KernelTestCase
 
     /**
      * @depends testTableCreate
+     */
+    public function testTableUpdate(): void
+    {
+        $this->assertTrue($this->getEntitySchemaManager()->update(TestEntityOne::class));
+        $this->assertTrue($this->checkIfTableExists('my_table_test_entity_one_for_pr_35527'));
+    }
+
+    /**
+     * Registering an extra entity path must not override the core metadata drivers.
+     *
+     * @depends testService
+     */
+    public function testCoreEntityMappingIsPreservedAfterAddEntityPath(): void
+    {
+        $this->getEntitySchemaManager();
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::$kernel->getContainer()->get('doctrine.orm.default_entity_manager');
+        $classMetadata = $entityManager->getClassMetadata(Lang::class);
+
+        $this->assertSame(Lang::class, $classMetadata->getName());
+    }
+
+    /**
+     * @depends testTableUpdate
      */
     public function testTableDrop(): void
     {
@@ -100,7 +127,9 @@ class EntitySchemaManagerTest extends KernelTestCase
             return null;
         }
 
-        $service->addEntityPath('%kernel.project_dir%/tests/Resources/Entity');
+        $service->addEntityPath(
+            self::$kernel->getContainer()->getParameter('kernel.project_dir') . '/tests/Resources/Entity'
+        );
 
         return $service;
     }

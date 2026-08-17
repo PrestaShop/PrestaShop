@@ -27,6 +27,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Util\Database;
 
+use PrestaShop\PrestaShop\Core\Exception\DatabaseException;
+
 /**
  * Interface EntitySchemaManagerInterface
  * This interface defines the methods for managing entity schemas in the database (create, update, drop).
@@ -40,6 +42,8 @@ interface EntitySchemaManagerInterface
      * @param bool $dropIfExist Whether to drop the table if it already exists. Defaults to true.
      *
      * @return bool true on success, false on failure
+     *
+     * @throws DatabaseException
      */
     public function create(string $entityClassName, bool $dropIfExist = true): bool;
 
@@ -49,6 +53,8 @@ interface EntitySchemaManagerInterface
      * @param string $entityClassName the class name of the entity
      *
      * @return bool true on success, false on failure
+     *
+     * @throws DatabaseException
      */
     public function update(string $entityClassName): bool;
 
@@ -58,6 +64,8 @@ interface EntitySchemaManagerInterface
      * @param string $entityClassName the class name of the entity
      *
      * @return bool true on success, false on failure
+     *
+     * @throws DatabaseException
      */
     public function drop(string $entityClassName): bool;
 
@@ -68,6 +76,8 @@ interface EntitySchemaManagerInterface
      * @param bool $dropIfExist Whether to drop tables if they already exist. Defaults to true.
      *
      * @return bool true on success, false if any operation failed
+     *
+     * @throws DatabaseException
      */
     public function createMultiple(array $entitiesClassesName, bool $dropIfExist = true): bool;
 
@@ -77,6 +87,8 @@ interface EntitySchemaManagerInterface
      * @param array $entitiesClassesName an array of entity class names
      *
      * @return bool true on success, false if any operation failed
+     *
+     * @throws DatabaseException
      */
     public function updateMultiple(array $entitiesClassesName): bool;
 
@@ -86,6 +98,8 @@ interface EntitySchemaManagerInterface
      * @param array $entitiesClassesName an array of entity class names
      *
      * @return bool true on success, false if any operation failed
+     *
+     * @throws DatabaseException
      */
     public function dropMultiple(array $entitiesClassesName): bool;
 

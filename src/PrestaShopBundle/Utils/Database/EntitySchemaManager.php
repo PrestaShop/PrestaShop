@@ -29,9 +29,11 @@ namespace PrestaShopBundle\Utils\Database;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\ORM\Tools\ToolsException;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+use Exception;
 use PrestaShop\PrestaShop\Core\Exception\DatabaseException;
 use PrestaShop\PrestaShop\Core\Util\Database\EntitySchemaManagerInterface;
 
@@ -54,7 +56,7 @@ class EntitySchemaManager implements EntitySchemaManagerInterface
     }
 
     /**
-     * create entity table
+     * Create entity table
      *
      * @param string $entityClassName
      * @param bool $dropIfExist
@@ -65,19 +67,7 @@ class EntitySchemaManager implements EntitySchemaManagerInterface
      */
     public function create(string $entityClassName, bool $dropIfExist = true): bool
     {
-        $entityMetaData = $this->entityManager->getClassMetadata($entityClassName);
-
-        if ($dropIfExist) {
-            $this->drop($entityClassName);
-        }
-
-        try {
-            $this->schemaTool->createSchema([$entityMetaData]);
-        } catch (ToolsException $exception) {
-            throw new DatabaseException($exception->getMessage());
-        }
-
-        return true;
+        return $this->createMultiple([$entityClassName], $dropIfExist);
     }
 
     /**
@@ -86,13 +76,12 @@ class EntitySchemaManager implements EntitySchemaManagerInterface
      * @param string $entityClassName
      *
      * @return bool
+     *
+     * @throws DatabaseException
      */
     public function update(string $entityClassName): bool
     {
-        $classMetadata = $this->entityManager->getClassMetadata($entityClassName);
-        $this->schemaTool->updateSchema([$classMetadata], true);
-
-        return true;
+        return $this->updateMultiple([$entityClassName]);
     }
 
     /**
@@ -101,17 +90,17 @@ class EntitySchemaManager implements EntitySchemaManagerInterface
      * @param string $entityClassName
      *
      * @return bool
+     *
+     * @throws DatabaseException
      */
     public function drop(string $entityClassName): bool
     {
-        $classMetadata = $this->entityManager->getClassMetadata($entityClassName);
-        $this->schemaTool->dropSchema([$classMetadata]);
-
-        return true;
+        return $this->dropMultiple([$entityClassName]);
     }
 
     /**
-     * create multiple entities tables
+     * Create multiple entities tables in a single schema operation,
+     * so foreign keys between entities of the same batch are resolved properly.
      *
      * @param array $entitiesClassesName
      * @param bool $dropIfExist
@@ -122,67 +111,113 @@ class EntitySchemaManager implements EntitySchemaManagerInterface
      */
     public function createMultiple(array $entitiesClassesName, bool $dropIfExist = true): bool
     {
-        $status = true;
-
-        foreach ($entitiesClassesName as $entityClassName) {
-            if (!$this->create($entityClassName, $dropIfExist)) {
-                $status = false;
-            }
+        if ($dropIfExist) {
+            $this->dropMultiple($entitiesClassesName);
         }
 
-        return $status;
+        try {
+            $this->schemaTool->createSchema($this->getClassesMetadata($entitiesClassesName));
+        } catch (Exception $exception) {
+            throw new DatabaseException($exception->getMessage(), 0, $exception);
+        }
+
+        return true;
     }
 
     /**
-     * update multiple entities tables
+     * Update multiple entities tables in a single schema operation
      *
      * @param array $entitiesClassesName
      *
      * @return bool
+     *
+     * @throws DatabaseException
      */
     public function updateMultiple(array $entitiesClassesName): bool
     {
-        $status = true;
-
-        foreach ($entitiesClassesName as $entityClassName) {
-            if (!$this->update($entityClassName)) {
-                $status = false;
-            }
+        try {
+            $this->schemaTool->updateSchema($this->getClassesMetadata($entitiesClassesName), true);
+        } catch (Exception $exception) {
+            throw new DatabaseException($exception->getMessage(), 0, $exception);
         }
 
-        return $status;
+        return true;
     }
 
     /**
-     * drop multiple entities tables
+     * Drop multiple entities tables in a single schema operation
      *
      * @param array $entitiesClassesName
      *
      * @return bool
+     *
+     * @throws DatabaseException
      */
     public function dropMultiple(array $entitiesClassesName): bool
     {
-        $status = true;
-
-        foreach ($entitiesClassesName as $entityClassName) {
-            if (!$this->drop($entityClassName)) {
-                $status = false;
-            }
+        try {
+            $this->schemaTool->dropSchema($this->getClassesMetadata($entitiesClassesName));
+        } catch (Exception $exception) {
+            throw new DatabaseException($exception->getMessage(), 0, $exception);
         }
 
-        return $status;
+        return true;
     }
 
     /**
      * Adds a new path for entities to the entity manager (Ex.: %kernel.project_dir%/modules/MyModule/src/Entity)
+     *
+     * The path is appended to the already configured metadata drivers so the
+     * mappings of the core entities remain available.
      *
      * @param string $entityPath The path where Doctrine should look for entities
      */
     public function addEntityPath(string $entityPath): void
     {
         $configuration = $this->entityManager->getConfiguration();
-        $annotationReader = new AnnotationReader();
-        $driver = new AnnotationDriver($annotationReader, [$entityPath]);
-        $configuration->setMetadataDriverImpl($driver);
+        $currentDriver = $configuration->getMetadataDriverImpl();
+
+        if ($currentDriver instanceof MappingDriverChain) {
+            $defaultDriver = $currentDriver->getDefaultDriver();
+
+            if ($defaultDriver instanceof AnnotationDriver) {
+                $defaultDriver->addPaths([$entityPath]);
+            } else {
+                $currentDriver->setDefaultDriver($this->createAnnotationDriver($entityPath));
+            }
+
+            return;
+        }
+
+        if ($currentDriver instanceof AnnotationDriver) {
+            $currentDriver->addPaths([$entityPath]);
+
+            return;
+        }
+
+        $configuration->setMetadataDriverImpl($this->createAnnotationDriver($entityPath));
+    }
+
+    /**
+     * @param string $entityPath
+     *
+     * @return AnnotationDriver
+     */
+    private function createAnnotationDriver(string $entityPath): AnnotationDriver
+    {
+        return new AnnotationDriver(new AnnotationReader(), [$entityPath]);
+    }
+
+    /**
+     * @param array $entitiesClassesName
+     *
+     * @return ClassMetadata[]
+     */
+    private function getClassesMetadata(array $entitiesClassesName): array
+    {
+        return array_map(
+            fn (string $entityClassName): ClassMetadata => $this->entityManager->getClassMetadata($entityClassName),
+            $entitiesClassesName
+        );
     }
 }
