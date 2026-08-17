@@ -76,7 +76,7 @@ export default class ProductOptionsManager {
         const selectedChoiceDescription = input.dataset.description as string;
 
         if (input.checked) {
-          descriptionField.innerHTML = selectedChoiceDescription;
+          descriptionField.innerText = selectedChoiceDescription;
         }
       });
     });
