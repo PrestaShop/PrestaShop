@@ -1516,6 +1516,52 @@ class CarrierCore extends ObjectModel
     }
 
     /**
+     * Primes, in a single query, the product->carrier mapping that getAvailableCarrierList() looks up
+     * once per product (issue #14979). Stores under the exact cache key getAvailableCarrierList() reads,
+     * with the same row shape ([['id_carrier' => x], ...]), so the per-product method is unchanged and
+     * simply finds the entry already stored. Products with no specific carrier are stored as an empty
+     * array so they keep falling through to the "all carriers" default identically.
+     *
+     * @param int[] $idsProduct Product identifiers (duplicates allowed)
+     * @param int $idShop Shop identifier
+     */
+    public static function prefetchAvailableCarrierLists(array $idsProduct, $idShop)
+    {
+        $idShop = (int) $idShop;
+
+        $missing = [];
+        foreach (array_unique(array_map('intval', $idsProduct)) as $idProduct) {
+            if ($idProduct && !Cache::isStored('Carrier::getAvailableCarrierList_' . $idProduct . '-' . $idShop)) {
+                $missing[] = $idProduct;
+            }
+        }
+        if (empty($missing)) {
+            return;
+        }
+
+        $byProduct = array_fill_keys($missing, []);
+
+        $query = new DbQuery();
+        $query->select('pc.id_product, c.id_carrier');
+        $query->from('product_carrier', 'pc');
+        $query->innerJoin('carrier', 'c', 'c.id_reference = pc.id_carrier_reference AND c.deleted = 0 AND c.active = 1');
+        $query->where('pc.id_product IN (' . implode(',', $missing) . ')');
+        $query->where('pc.id_shop = ' . $idShop);
+
+        $rows = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
+                // Keep the exact row shape getAvailableCarrierList() stores (only `id_carrier`).
+                $byProduct[(int) $row['id_product']][] = ['id_carrier' => $row['id_carrier']];
+            }
+        }
+
+        foreach ($byProduct as $idProduct => $carriersForProduct) {
+            Cache::store('Carrier::getAvailableCarrierList_' . (int) $idProduct . '-' . $idShop, $carriersForProduct);
+        }
+    }
+
+    /**
      * For a given product, gets the carrier available.
      *
      * @param Product $product The id of the product, or an array with at least the package size and weight

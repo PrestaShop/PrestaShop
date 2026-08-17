@@ -394,6 +394,12 @@ class ProductCore extends ObjectModel
     /** @var array */
     protected static $_cacheFeatures = [];
 
+    /** @var array request-scoped cache for getImages(), primed in batch by cacheProductsImages() (issue #14979) */
+    protected static $_cacheImages = [];
+
+    /** @var array request-scoped cache for getAttributesColorList() single-product lookups (issue #14979) */
+    protected static $_cacheColorsList = [];
+
     /** @var array */
     protected static $_frontFeaturesCache = [];
 
@@ -1214,6 +1220,8 @@ class ProductCore extends ObjectModel
         static::$loaded_classes = [];
         static::$productPropertiesCache = [];
         static::$_cacheFeatures = [];
+        static::$_cacheImages = [];
+        static::$_cacheColorsList = [];
         static::$_frontFeaturesCache = [];
         static::$_frontFeaturesCombinationCache = [];
         static::$_prices = [];
@@ -3294,7 +3302,15 @@ class ProductCore extends ObjectModel
      */
     public function getImages($id_lang, ?Context $context = null)
     {
-        return Db::getInstance()->executeS(
+        // Request-scoped memo so a cart of N products does not run N separate image queries; the cart
+        // primes this in one batch via Product::cacheProductsImages() (issue #14979). Keyed by the same
+        // inputs the query varies on: product id, language, and the current shop context.
+        $id_shop = (int) Shop::getContextShopID(true);
+        if (isset(self::$_cacheImages[(int) $this->id][(int) $id_lang][$id_shop])) {
+            return self::$_cacheImages[(int) $this->id][(int) $id_lang][$id_shop];
+        }
+
+        $images = Db::getInstance()->executeS(
             '
             SELECT image_shop.`cover`, i.`id_image`, il.`legend`, i.`position`
             FROM `' . _DB_PREFIX_ . 'image` i
@@ -3303,6 +3319,10 @@ class ProductCore extends ObjectModel
             WHERE i.`id_product` = ' . (int) $this->id . '
             ORDER BY `position`'
         );
+
+        self::$_cacheImages[(int) $this->id][(int) $id_lang][$id_shop] = $images;
+
+        return $images;
     }
 
     /**
@@ -4334,6 +4354,23 @@ class ProductCore extends ObjectModel
         $id_lang = Context::getContext()->language->id;
 
         $check_stock = !Configuration::get('PS_DISP_UNAVAILABLE_ATTR');
+
+        // Request-scoped cache (issue #14979): the cart primes every product line in ONE call (see
+        // Cart::getProducts()), then the per-product ProductColorsRetriever calls are served from here
+        // instead of running one query each. Namespaced by every input that changes the result.
+        $ns = (int) $id_lang . '-' . (int) Shop::getContextShopID(true) . '-' . (int) Shop::getContext() . '-' . (int) $check_stock;
+        if (!isset(self::$_cacheColorsList[$ns])) {
+            self::$_cacheColorsList[$ns] = [];
+        }
+        // Fast path: a single, already-primed product returns its memoized value verbatim.
+        if (count($products) === 1) {
+            $only = (int) reset($products);
+            if (array_key_exists($only, self::$_cacheColorsList[$ns])) {
+                return self::$_cacheColorsList[$ns][$only];
+            }
+        }
+
+        $requested = array_map('intval', array_values($products));
         if (!$res = Db::getInstance()->executeS(
             'SELECT pa.`id_product`, a.`color`, pac.`id_product_attribute`, ' . ($check_stock ? 'SUM(IF(stock.`quantity` > 0, 1, 0))' : '0') . ' qty, a.`id_attribute`, al.`name`, IF(color = "", a.id_attribute, color) group_by
             FROM `' . _DB_PREFIX_ . 'product_attribute` pa
@@ -4343,17 +4380,25 @@ class ProductCore extends ObjectModel
             JOIN `' . _DB_PREFIX_ . 'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
             JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $id_lang . ')
             JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON (a.id_attribute_group = ag.`id_attribute_group`)
-            WHERE pa.`id_product` IN (' . implode(',', array_map('intval', $products)) . ') AND ag.`is_color_group` = 1
+            WHERE pa.`id_product` IN (' . implode(',', $requested) . ') AND ag.`is_color_group` = 1
             GROUP BY pa.`id_product`, a.`id_attribute`, `group_by`
             ' . ($check_stock ? 'HAVING qty > 0' : '') . '
             ORDER BY a.`position` ASC;'
         )) {
+            // No colour rows for the whole set: each requested product memoizes to false (the original
+            // single-product return) and the call returns false (the original multi-product return).
+            foreach ($requested as $idProduct) {
+                self::$_cacheColorsList[$ns][$idProduct] = false;
+            }
+
             return false;
         }
 
         $colors = [];
+        $resIds = [];
         /** @var array{id_product: int, id_attribute: int, id_product_attribute: int, color: string, texture: string, name: string,} $row */
         foreach ($res as $row) {
+            $resIds[(int) $row['id_product']] = true;
             $row['texture'] = '';
 
             if (@filemtime(_PS_COL_IMG_DIR_ . $row['id_attribute'] . '.jpg')) {
@@ -4370,6 +4415,20 @@ class ProductCore extends ObjectModel
                 'name' => $row['name'],
                 'id_attribute' => $row['id_attribute'],
             ];
+        }
+
+        // Memoize each requested product's exact single-call return value:
+        //   present in $colors -> [id => [...]]   (had kept rows)
+        //   had rows, none kept -> []             (matches $colors === [] for a single product)
+        //   no rows at all      -> false          (matches `if (!$res) return false;`)
+        foreach ($requested as $idProduct) {
+            if (isset($colors[$idProduct])) {
+                self::$_cacheColorsList[$ns][$idProduct] = [$idProduct => $colors[$idProduct]];
+            } elseif (isset($resIds[$idProduct])) {
+                self::$_cacheColorsList[$ns][$idProduct] = [];
+            } else {
+                self::$_cacheColorsList[$ns][$idProduct] = false;
+            }
         }
 
         return $colors;
@@ -4707,6 +4766,109 @@ class ProductCore extends ObjectModel
                 self::$_cacheFeatures[$row['id_product']] = [];
             }
             self::$_cacheFeatures[$row['id_product']][] = $row;
+        }
+    }
+
+    /**
+     * Primes, in a single query, the per-product image lists that getImages() returns, so a cart of
+     * N products runs one image query instead of N (issue #14979). Stored under the exact key the
+     * memoized getImages() reads, so it is consumed transparently.
+     *
+     * @param int[] $id_products Product identifier(s)
+     * @param int $id_lang Language identifier
+     */
+    public static function cacheProductsImages(array $id_products, $id_lang)
+    {
+        $id_shop = (int) Shop::getContextShopID(true);
+
+        $missing = [];
+        foreach (array_unique(array_map('intval', $id_products)) as $idProduct) {
+            if ($idProduct && !isset(self::$_cacheImages[$idProduct][(int) $id_lang][$id_shop])) {
+                $missing[] = $idProduct;
+            }
+        }
+        if (empty($missing)) {
+            return;
+        }
+        // Pre-seed empty so products with no image stay "cached" and never re-query.
+        foreach ($missing as $idProduct) {
+            self::$_cacheImages[$idProduct][(int) $id_lang][$id_shop] = [];
+        }
+
+        $result = Db::getInstance()->executeS(
+            '
+            SELECT image_shop.`cover`, i.`id_image`, il.`legend`, i.`position`, i.`id_product`
+            FROM `' . _DB_PREFIX_ . 'image` i
+            ' . Shop::addSqlAssociation('image', 'i') . '
+            LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang . ')
+            WHERE i.`id_product` IN (' . implode(',', $missing) . ')
+            ORDER BY i.`id_product`, `position`'
+        );
+        if (is_array($result)) {
+            foreach ($result as $row) {
+                $idProduct = (int) $row['id_product'];
+                // Drop the extra grouping column so each row matches getImages() byte-for-byte
+                // (cover, id_image, legend, position).
+                unset($row['id_product']);
+                self::$_cacheImages[$idProduct][(int) $id_lang][$id_shop][] = $row;
+            }
+        }
+    }
+
+    /**
+     * Primes, in a single query, the base price/ecotax rows that Product::priceCalculation() looks up
+     * once per product (issue #14979). Mirrors that method's SELECT exactly (same columns, same
+     * Combination feature gate, same context shop) and fills the same static cache, so the per-product
+     * path is left unchanged and simply finds the bucket already populated.
+     *
+     * @param int[] $product_ids Product identifier(s)
+     * @param int|null $id_shop Shop identifier (defaults to the current context shop, as getPriceStatic does)
+     */
+    public static function cachePriceCalculationData(array $product_ids, $id_shop = null)
+    {
+        if (empty($product_ids)) {
+            return;
+        }
+        $id_shop = ($id_shop === null) ? (int) Context::getContext()->shop->id : (int) $id_shop;
+
+        $missing = [];
+        foreach (array_unique(array_map('intval', $product_ids)) as $idProduct) {
+            if ($idProduct && !isset(self::$_pricesLevel2[$idProduct . '-' . $id_shop])) {
+                $missing[] = $idProduct;
+            }
+        }
+        if (empty($missing)) {
+            return;
+        }
+
+        $sql = new DbQuery();
+        $sql->select('p.`id_product`, product_shop.`price`, product_shop.`ecotax`');
+        $sql->from('product', 'p');
+        $sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_product=p.id_product AND product_shop.id_shop = ' . $id_shop . ')');
+        $sql->where('p.`id_product` IN (' . implode(',', $missing) . ')');
+        if (Combination::isFeatureActive()) {
+            $sql->select('IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on, product_attribute_shop.`ecotax` AS attribute_ecotax');
+            $sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product = p.id_product AND product_attribute_shop.id_shop = ' . $id_shop . ')');
+        } else {
+            $sql->select('0 as id_product_attribute');
+        }
+
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+        if (is_array($res)) {
+            foreach ($res as $row) {
+                $cache_id_2 = (int) $row['id_product'] . '-' . $id_shop;
+                $array_tmp = [
+                    'price' => $row['price'],
+                    'ecotax' => $row['ecotax'],
+                    'attribute_price' => $row['attribute_price'] ?? null,
+                    'attribute_ecotax' => $row['attribute_ecotax'] ?? null,
+                ];
+                self::$_pricesLevel2[$cache_id_2][(int) $row['id_product_attribute']] = $array_tmp;
+
+                if (isset($row['default_on']) && $row['default_on'] == 1) {
+                    self::$_pricesLevel2[$cache_id_2][0] = $array_tmp;
+                }
+            }
         }
     }
 

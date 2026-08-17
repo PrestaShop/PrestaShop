@@ -121,6 +121,15 @@ class CartLazyArray extends AbstractLazyArray
             $rawProducts[$k] = array_merge($assembledProducts[$k], $v);
         }
 
+        // Prime the default-category names for every line in one query (issue #14979) so the
+        // per-product ProductLazyArray::getCategoryName() calls are served from cache instead of
+        // running one `SELECT name FROM category_lang` each.
+        ProductLazyArray::cacheCategoryNames(
+            array_column($rawProducts, 'id_category_default'),
+            (int) Context::getContext()->language->id,
+            (int) Context::getContext()->shop->id
+        );
+
         // Present them
         $presentedProducts = array_map([$this, 'presentProduct'], $rawProducts);
 
