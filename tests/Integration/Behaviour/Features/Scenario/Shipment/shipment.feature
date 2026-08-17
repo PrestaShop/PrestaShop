@@ -35,6 +35,15 @@ Feature: Retrieving shipment for orders
       | Mug The best is yet to come |        1 |
       | Mug Today is a good day     |        2 |
 
+  Scenario: Retrieve shipment for editing
+    Given the order "bo_order1" should have the following shipments:
+      | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
+    Then the shipment "shipment1" of order "bo_order1" should be editable with the following products:
+      | product_name                | quantity |
+      | Mug The best is yet to come |        1 |
+      | Mug Today is a good day     |        2 |
+
   Scenario: Switch shipment carrier
     Given the order "bo_order1" should have the following shipments:
       | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
