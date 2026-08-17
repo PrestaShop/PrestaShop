@@ -35,6 +35,13 @@ class GridConfigurationType extends TranslatorAwareType
                 'label' => $this->trans('Display record counts', 'Admin.Global'),
                 'required' => false,
             ])
+            ->add('grid_id', HiddenType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(['max' => 191]),
+                    new Regex(['pattern' => '/^[a-zA-Z0-9_-]+$/']),
+                ],
+            ])
             ->add('controller_route', HiddenType::class, [
                 'constraints' => [
                     new NotBlank(),

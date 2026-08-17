@@ -12,24 +12,20 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShopBundle\Entity\Repository\AdminGridConfigurationRepository;
-use PrestaShopBundle\Form\Admin\Grid\GridConfigurationType;
-use PrestaShopBundle\Form\Admin\Grid\GridViewType;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class GridViewsPanelPresenter
 {
-    public const SAVE_FORM_NAME_PREFIX = 'grid_view_';
-    public const CONFIGURATION_FORM_NAME_PREFIX = 'grid_configuration_';
-
     /**
      * @param FeatureFlagStateCheckerInterface $featureFlagStateChecker
      * @param EmployeeContext $employeeContext
      * @param ShopContext $shopContext
      * @param AdminGridConfigurationRepository $configurationRepository
-     * @param FormFactoryInterface $formFactory
+     * @param FormBuilderInterface $gridViewFormBuilder
+     * @param FormBuilderInterface $gridConfigurationFormBuilder
      * @param RequestStack $requestStack
      */
     public function __construct(
@@ -37,7 +33,8 @@ class GridViewsPanelPresenter
         private readonly EmployeeContext $employeeContext,
         private readonly ShopContext $shopContext,
         private readonly AdminGridConfigurationRepository $configurationRepository,
-        private readonly FormFactoryInterface $formFactory,
+        private readonly FormBuilderInterface $gridViewFormBuilder,
+        private readonly FormBuilderInterface $gridConfigurationFormBuilder,
         private readonly RequestStack $requestStack,
     ) {
     }
@@ -75,10 +72,9 @@ class GridViewsPanelPresenter
         $displaySharedFilters = $configuration?->displaySharedFilters() ?? true;
         $displayTotals = $configuration?->displayTotals() ?? true;
 
-        $saveViewForm = $this->formFactory->createNamed(
-            self::SAVE_FORM_NAME_PREFIX . $gridId,
-            GridViewType::class,
+        $saveViewForm = $this->gridViewFormBuilder->getForm(
             [
+                'grid_id' => $gridId,
                 'controller_route' => $route,
                 'filter_id' => $gridState->filterId,
                 'grid_state' => json_encode($gridState->toArray()),
@@ -88,16 +84,13 @@ class GridViewsPanelPresenter
             ]
         );
 
-        $configurationForm = $this->formFactory->createNamed(
-            self::CONFIGURATION_FORM_NAME_PREFIX . $gridId,
-            GridConfigurationType::class,
-            [
-                'display_shared_filters' => $displaySharedFilters,
-                'display_totals' => $displayTotals,
-                'controller_route' => $route,
-                'filter_id' => $gridState->filterId,
-            ]
-        );
+        $configurationForm = $this->gridConfigurationFormBuilder->getForm([
+            'display_shared_filters' => $displaySharedFilters,
+            'display_totals' => $displayTotals,
+            'grid_id' => $gridId,
+            'controller_route' => $route,
+            'filter_id' => $gridState->filterId,
+        ]);
 
         return [
             'grid_id' => $gridId,

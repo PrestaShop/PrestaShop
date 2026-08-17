@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\View;
 
-use PrestaShop\PrestaShop\Core\Grid\Exception\GridViewException;
+use PrestaShop\PrestaShop\Core\Domain\GridView\Exception\GridViewException;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryProvider;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
