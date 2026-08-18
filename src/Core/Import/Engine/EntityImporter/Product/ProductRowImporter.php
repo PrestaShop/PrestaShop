@@ -24,6 +24,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\NoCountryId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\NoGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
@@ -59,6 +60,7 @@ use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\EntityMatch;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
+use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ImportEngineException;
 use PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
@@ -139,18 +141,34 @@ class ProductRowImporter
         } catch (Throwable $e) {
             // deliberate catch-all: a failing command must fail THIS ROW only
             // (structured error, remaining commands skipped), never the batch.
-            // The full throwable goes to the log — the structured message only
-            // carries the message string.
+            // The full throwable ALWAYS goes to the log; only domain exception
+            // messages reach the user (see buildRowFailureMessage()).
             $this->logger->error('Import: product row could not be fully imported', ['row' => $rowIndex, 'exception' => $e]);
             $messages[] = new ImportMessage(
                 ImportMessage::SEVERITY_ERROR,
                 ImportPhaseDefinition::PHASE_DATABASE,
-                $this->translator->trans('The row could not be fully imported: %error%', ['%error%' => $e->getMessage()], 'Admin.Advparameters.Notification'),
+                $this->buildRowFailureMessage($e),
                 $rowIndex
             );
         }
 
         return $messages;
+    }
+
+    /**
+     * Domain and import-engine exceptions carry a message written for a human
+     * (a violated business rule, an ambiguous reference...), so it is worth
+     * showing. Anything else — DBAL errors, TypeError... — carries implementation
+     * detail such as table and constraint names, which has no place in a
+     * back-office notification and is already in the log in full.
+     */
+    protected function buildRowFailureMessage(Throwable $e): string
+    {
+        if ($e instanceof DomainException || $e instanceof ImportEngineException) {
+            return $this->translator->trans('The row could not be fully imported: %error%', ['%error%' => $e->getMessage()], 'Admin.Advparameters.Notification');
+        }
+
+        return $this->translator->trans('The row could not be fully imported because of an unexpected error; see the logs for details.', [], 'Admin.Advparameters.Notification');
     }
 
     /**
