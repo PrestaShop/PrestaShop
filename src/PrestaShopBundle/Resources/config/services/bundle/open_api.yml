@@ -70,6 +70,12 @@ services:
     tags:
       - { name: 'prestashop.openapi.schema_adapter.operation', priority: -60 }
 
+  # Documents the default values declared by an operation. Runs after the required properties are listed, since a
+  # property the API defaults itself is not required in the payload.
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\DefaultValuesAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: -70 }
+
   PrestaShopBundle\ApiPlatform\OpenApi\FileUploadRequestBodyBuilder: ~
 
   # Documents the extraProperties sub-object. Runs LAST (after SchemaSynchronizer, which would otherwise strip

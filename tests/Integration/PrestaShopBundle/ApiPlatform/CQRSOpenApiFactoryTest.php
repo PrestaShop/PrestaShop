@@ -12,6 +12,8 @@ use ApiPlatform\OpenApi\Model\SecurityScheme;
 use ApiPlatform\OpenApi\Model\Server;
 use ApiPlatform\OpenApi\OpenApi;
 use ArrayObject;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionWriterInterface;
@@ -763,18 +765,23 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                             'type' => 'integer',
                         ],
                     ]),
-                    // Constructor parameters detected via their has/is accessors
+                    // Constructor parameters detected via their has/is accessors, defaulted by the operation so their
+                    // default value is documented and they are absent from the required properties below
                     'additionalHandlingFee' => new ArrayObject([
                         'type' => 'boolean',
+                        'default' => false,
                     ]),
                     'free' => new ArrayObject([
                         'type' => 'boolean',
+                        'default' => false,
                     ]),
                     'shippingMethod' => new ArrayObject([
                         'type' => 'integer',
+                        'default' => ShippingMethod::BY_PRICE,
                     ]),
                     'rangeBehavior' => new ArrayObject([
                         'type' => 'integer',
+                        'default' => OutOfRangeBehavior::USE_HIGHEST_RANGE,
                     ]),
                     'associatedShopIds' => new ArrayObject([
                         'type' => 'array',
@@ -801,8 +808,8 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     ]),
                 ],
                 // Every parameter of the command without a default value, so the ones the request must provide.
-                // The carrierId is absent since it is a URI variable, and the shop constraint since the API fills
-                // it from the request context.
+                // The carrierId is absent since it is a URI variable, the shop constraint since the API fills it from
+                // the request context, and the four fields above since the operation defaults them.
                 'required' => [
                     'name',
                     'delays',
@@ -810,10 +817,6 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     'trackingUrl',
                     'enabled',
                     'associatedGroupIds',
-                    'additionalHandlingFee',
-                    'free',
-                    'shippingMethod',
-                    'rangeBehavior',
                     'zones',
                     'associatedShopIds',
                 ],
