@@ -632,6 +632,7 @@ class MailCore extends ObjectModel
             // Hook to alter Symfony Mailer before sending mail
             Hook::exec('actionMailAlterMessageBeforeSend', [
                 'message' => &$email,
+                'id_lang' => (int) $idLang,
             ]);
 
             // Create new message and DKIM sign it, if enabled and all data for signature are provided
