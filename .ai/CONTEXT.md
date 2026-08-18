@@ -41,7 +41,7 @@ Breaking changes are only allowed in major versions. See [ADR 0017](https://gith
 - No ObjectModel in new code — use Doctrine entities or CQRS commands
 - All services defined in YAML; no `new` in controllers
 - No `Db::getInstance()` in new code — use Doctrine repositories
-- New repository/DBAL queries use the QueryBuilder (never string-built SQL, whatever the surrounding file's historical style); single-row lookups add `setMaxResults(1)`
+- New repository/DBAL queries use the QueryBuilder (never string-built SQL, whatever the surrounding file's historical style); single-row lookups add `setMaxResults(1)`. When the matched column has no unique constraint, prefer returning ALL matches (`fetchFirstColumn()` + `ORDER BY <pk> ASC`) so the caller can detect ambiguity instead of silently picking the oldest row
 - No business logic in controllers — delegate to Handlers
 - Catch specific domain exceptions, not generic `\Exception`
 - Run `php vendor/bin/php-cs-fixer fix` to apply coding style (config: `.php-cs-fixer.dist.php`)
