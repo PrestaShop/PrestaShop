@@ -21,7 +21,6 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecution
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface as ConfigurationFormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -223,9 +222,7 @@ class SqlManagerController extends PrestaShopAdminController
     public function deleteAction(int $sqlRequestId): RedirectResponse
     {
         try {
-            $deleteSqlRequestCommand = new DeleteSqlRequestCommand(
-                new SqlRequestId($sqlRequestId)
-            );
+            $deleteSqlRequestCommand = new DeleteSqlRequestCommand($sqlRequestId);
 
             $this->dispatchCommand($deleteSqlRequestCommand);
 
