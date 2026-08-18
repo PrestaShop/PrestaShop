@@ -95,6 +95,13 @@ final class ImageCopier
         $url = urldecode(trim($url));
         $parsedUrl = parse_url($url);
 
+        // A malformed URL would blow up in http_build_url() below.
+        if ($parsedUrl === false) {
+            @unlink($tmpFile);
+
+            return false;
+        }
+
         if (isset($parsedUrl['path'])) {
             $uri = ltrim($parsedUrl['path'], '/');
             $parts = explode('/', $uri);
@@ -115,7 +122,8 @@ final class ImageCopier
 
         $origTmpfile = $tmpFile;
 
-        if ($this->tools->copy($url, $tmpFile)) {
+        // Untrusted URL (import): use the SSRF-hardened download path.
+        if ($this->tools->copyFromUntrustedSource($url, $tmpFile)) {
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (!ImageManager::checkImageMemoryLimit($tmpFile)) {
                 @unlink($tmpFile);

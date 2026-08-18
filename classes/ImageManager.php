@@ -785,6 +785,14 @@ class ImageManagerCore
         $url = urldecode(trim($url));
         $parced_url = parse_url($url);
 
+        // A malformed URL would blow up in http_build_url() below.
+        // The scheme/host allow-list itself lives in Tools::copyFromUntrustedSource().
+        if ($parced_url === false) {
+            @unlink($tmpfile);
+
+            return false;
+        }
+
         if (isset($parced_url['path'])) {
             $uri = ltrim($parced_url['path'], '/');
             $parts = explode('/', $uri);
@@ -805,7 +813,8 @@ class ImageManagerCore
 
         $orig_tmpfile = $tmpfile;
 
-        if (Tools::copy($url, $tmpfile)) {
+        // Untrusted URL (import): use the SSRF-hardened download path.
+        if (Tools::copyFromUntrustedSource($url, $tmpfile)) {
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (!ImageManager::checkImageMemoryLimit($tmpfile)) {
                 @unlink($tmpfile);
