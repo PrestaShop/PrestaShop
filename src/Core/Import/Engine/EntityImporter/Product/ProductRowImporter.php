@@ -210,7 +210,7 @@ class ProductRowImporter
             return;
         }
 
-        if ('' !== ($row['is_virtual'] ?? '') && $this->isVirtual($row)) {
+        if ($this->hasValue($row, 'is_virtual') && $this->isVirtual($row)) {
             $this->commandBus->handle(new UpdateProductTypeCommand($productId, ProductType::TYPE_VIRTUAL));
         }
     }
@@ -246,7 +246,7 @@ class ProductRowImporter
         $localize = fn (string $value): array => $isCreation ? $this->localizeForCreation($value) : [$languageId => $value];
 
         // localized fields (name is only re-written on update: creation already set it)
-        if (!$isCreation && '' !== ($row['name'] ?? '')) {
+        if (!$isCreation && $this->hasValue($row, 'name')) {
             $command->setLocalizedNames($localize($row['name']));
             $hasUpdate = true;
         }
@@ -260,18 +260,18 @@ class ProductRowImporter
             'available_later' => 'setLocalizedAvailableLaterLabels',
         ];
         foreach ($localizedSetters as $field => $setter) {
-            if ('' !== ($row[$field] ?? '')) {
+            if ($this->hasValue($row, $field)) {
                 $command->{$setter}($localize($row[$field]));
                 $hasUpdate = true;
             }
         }
 
-        if ('' !== ($row['delivery_in_stock'] ?? '') || '' !== ($row['delivery_out_stock'] ?? '')) {
+        if ($this->hasValue($row, 'delivery_in_stock') || $this->hasValue($row, 'delivery_out_stock')) {
             $command->setDeliveryTimeNoteType(DeliveryTimeNoteType::TYPE_SPECIFIC);
-            if ('' !== ($row['delivery_in_stock'] ?? '')) {
+            if ($this->hasValue($row, 'delivery_in_stock')) {
                 $command->setLocalizedDeliveryTimeInStockNotes($localize($row['delivery_in_stock']));
             }
-            if ('' !== ($row['delivery_out_stock'] ?? '')) {
+            if ($this->hasValue($row, 'delivery_out_stock')) {
                 $command->setLocalizedDeliveryTimeOutOfStockNotes($localize($row['delivery_out_stock']));
             }
             $hasUpdate = true;
@@ -286,44 +286,44 @@ class ProductRowImporter
             'show_price' => 'setShowPrice',
         ];
         foreach ($booleanSetters as $field => $setter) {
-            if ('' !== ($row[$field] ?? '')) {
+            if ($this->hasValue($row, $field)) {
                 $command->{$setter}($this->valueParser->parseBoolean($row[$field]) ?? false);
                 $hasUpdate = true;
             }
         }
 
         // enums / plain strings
-        if ('' !== ($row['visibility'] ?? '')) {
+        if ($this->hasValue($row, 'visibility')) {
             $command->setVisibility($row['visibility']);
             $hasUpdate = true;
         }
-        if ('' !== ($row['condition'] ?? '')) {
+        if ($this->hasValue($row, 'condition')) {
             $command->setCondition($row['condition']);
             $hasUpdate = true;
         }
-        if ('' !== ($row['unity'] ?? '')) {
+        if ($this->hasValue($row, 'unity')) {
             $command->setUnity($row['unity']);
             $hasUpdate = true;
         }
-        if ('' !== ($row['mpn'] ?? '')) {
+        if ($this->hasValue($row, 'mpn')) {
             $command->setMpn($row['mpn']);
             $hasUpdate = true;
         }
-        if ('' !== ($row['reference'] ?? '')) {
+        if ($this->hasValue($row, 'reference')) {
             $command->setReference($row['reference']);
             $hasUpdate = true;
         }
         // gtin wins over its legacy alias ean13 when both are mapped and filled
-        $gtin = '' !== ($row['gtin'] ?? '') ? $row['gtin'] : ($row['ean13'] ?? '');
+        $gtin = $this->hasValue($row, 'gtin') ? $row['gtin'] : ($row['ean13'] ?? '');
         if ('' !== $gtin) {
             $command->setGtin($gtin);
             $hasUpdate = true;
         }
-        if ('' !== ($row['isbn'] ?? '')) {
+        if ($this->hasValue($row, 'isbn')) {
             $command->setIsbn($row['isbn']);
             $hasUpdate = true;
         }
-        if ('' !== ($row['upc'] ?? '')) {
+        if ($this->hasValue($row, 'upc')) {
             $command->setUpc($row['upc']);
             $hasUpdate = true;
         }
@@ -359,7 +359,7 @@ class ProductRowImporter
                 $hasUpdate = true;
             }
         }
-        if ('' !== ($row['ecotax'] ?? '')) {
+        if ($this->hasValue($row, 'ecotax')) {
             $ecotax = (bool) $this->configuration->get('PS_USE_ECOTAX', null, $context->getShopConstraint())
                 ? $this->valueParser->parseDecimal($row['ecotax'])
                 : new DecimalNumber('0');
@@ -395,7 +395,7 @@ class ProductRowImporter
                     );
                 }
             }
-        } elseif ('' !== ($row['low_stock_alert'] ?? '')) {
+        } elseif ($this->hasValue($row, 'low_stock_alert')) {
             $messages[] = new ImportMessage(
                 ImportMessage::SEVERITY_WARNING,
                 ImportPhaseDefinition::PHASE_DATABASE,
@@ -404,7 +404,7 @@ class ProductRowImporter
                 'low_stock_alert'
             );
         }
-        if ('' !== ($row['available_date'] ?? '')) {
+        if ($this->hasValue($row, 'available_date')) {
             $availableDate = $this->valueParser->parseDate($row['available_date']);
             if (null !== $availableDate) {
                 $command->setAvailableDate($availableDate);
@@ -478,7 +478,7 @@ class ProductRowImporter
         $command = new UpdateProductStockAvailableCommand($productId, $context->getShopConstraint());
         $hasUpdate = false;
 
-        if ('' !== ($row['location'] ?? '')) {
+        if ($this->hasValue($row, 'location')) {
             $command->setLocation($row['location']);
             $hasUpdate = true;
         }
@@ -618,7 +618,7 @@ class ProductRowImporter
      */
     protected function dispatchImages(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context, array &$messages): void
     {
-        if ('' !== ($row['delete_existing_images'] ?? '') && true === $this->valueParser->parseBoolean($row['delete_existing_images'])) {
+        if ($this->hasValue($row, 'delete_existing_images') && true === $this->valueParser->parseBoolean($row['delete_existing_images'])) {
             /** @var array<int, \PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage> $existingImages */
             $existingImages = $this->commandBus->handle(new GetProductImages($productId, $context->getShopConstraint()));
             foreach ($existingImages as $existingImage) {
@@ -730,6 +730,20 @@ class ProductRowImporter
         }
     }
 
+    /**
+     * Whether the column is mapped AND carries a non-blank value.
+     *
+     * Deliberately NOT !empty(): "0" is a legitimate imported value (disabling a
+     * boolean field, a zero price or dimension, low_stock_alert...), and !empty()
+     * would silently skip those cells.
+     *
+     * @param array<string, string> $row
+     */
+    protected function hasValue(array $row, string $field): bool
+    {
+        return '' !== ($row[$field] ?? '');
+    }
+
     protected function findExistingVirtualProductFileId(int $productId): ?int
     {
         return $this->virtualProductFileRepository->findIdByProductId(new ProductId($productId))?->getValue();
@@ -814,7 +828,7 @@ class ProductRowImporter
      */
     protected function dispatchSpecificPrice(array $row, int $productId): void
     {
-        if ('' !== ($row['reduction_price'] ?? '') && '' !== ($row['reduction_percent'] ?? '')) {
+        if ($this->hasValue($row, 'reduction_price') && $this->hasValue($row, 'reduction_percent')) {
             return;
         }
 
