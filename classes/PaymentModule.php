@@ -659,7 +659,7 @@ abstract class PaymentModuleCore extends Module
                 $orderLanguage = new Language((int) $order->id_lang);
 
                 // Join PDF invoice
-                if ((int) Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number) {
+                if ((int) Configuration::get('PS_INVOICE') && $order_status->pdf_invoice && $order->invoice_number) {
                     $currentLanguage = $this->context->language;
                     $this->context->language = $orderLanguage;
                     $this->context->getTranslator()->setLocale($orderLanguage->locale);
