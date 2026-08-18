@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\EntityMatch;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
+use PrestaShop\PrestaShop\Core\Import\Engine\Exception\AmbiguousReferenceException;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ReferenceOutsideShopScopeException;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 
@@ -46,6 +47,10 @@ class ProductIdentityResolver
      *
      * @param array<string, string> $row mapped row values
      *
+     * @throws AmbiguousReferenceException when match_ref is on and the reference
+     *                                     matches SEVERAL in-scope products — updating an arbitrary one of them
+     *                                     is destructive (validation normally already skipped the row; this is
+     *                                     the database-phase defense)
      * @throws ReferenceOutsideShopScopeException when match_ref is on and the
      *                                            reference exists in the catalog but on none of the run's shops —
      *                                            creating would duplicate the reference (validation normally already
@@ -57,9 +62,12 @@ class ProductIdentityResolver
 
         $reference = $row['reference'] ?? '';
         if ($options->matchRef && '' !== $reference) {
-            $productId = $this->productRepository->getProductIdByReference($reference, $context->getShopConstraint());
-            if (null !== $productId) {
-                return new EntityMatch($productId, EntityMatch::MATCHED_BY_REFERENCE);
+            $productIds = $this->productRepository->getProductIdsByReference($reference, $context->getShopConstraint());
+            if (count($productIds) > 1) {
+                throw new AmbiguousReferenceException($reference, count($productIds));
+            }
+            if ([] !== $productIds) {
+                return new EntityMatch($productIds[0], EntityMatch::MATCHED_BY_REFERENCE);
             }
             if ($this->referenceExistsOutsideScope($reference, $context)) {
                 throw new ReferenceOutsideShopScopeException(sprintf('The reference "%s" matches a product outside the run\'s shop scope; the row was skipped to avoid creating a duplicate product.', $reference));
@@ -90,28 +98,48 @@ class ProductIdentityResolver
             return false;
         }
 
-        return null === $this->productRepository->getProductIdByReference($reference, $shopConstraint)
-            && null !== $this->productRepository->getProductIdByReference($reference, ShopConstraint::allShops());
+        return [] === $this->productRepository->getProductIdsByReference($reference, $shopConstraint)
+            && [] !== $this->productRepository->getProductIdsByReference($reference, ShopConstraint::allShops());
+    }
+
+    /**
+     * How many in-scope products carry the reference. Used by the validator to
+     * report the ambiguity as a row error in the pausing validation phase, before
+     * anything is written.
+     */
+    public function countProductsByReference(string $reference, ImportRunContext $context): int
+    {
+        if ('' === $reference) {
+            return 0;
+        }
+
+        return count($this->productRepository->getProductIdsByReference($reference, $context->getShopConstraint()));
     }
 
     /**
      * Option-independent existing-product lookup: reference first (shop-scoped),
-     * then the id when one is provided. Returns null when neither matches.
+     * then the id when one is provided; a no-match EntityMatch when neither does.
+     *
+     * Several products may carry the reference; entityId is then the lowest id
+     * and matchCount reports how many matched, so the caller can warn. This is
+     * the association path, where the row is already written — an ambiguous
+     * owner or target only affects the link, so it warns instead of failing
+     * (contrast resolve(), which throws AmbiguousReferenceException).
      */
-    public function findExistingByReferenceThenId(string $reference, ?int $productId, ImportRunContext $context): ?int
+    public function findExistingByReferenceThenId(string $reference, ?int $productId, ImportRunContext $context): EntityMatch
     {
         if ('' !== $reference) {
-            $existingId = $this->productRepository->getProductIdByReference($reference, $context->getShopConstraint());
-            if (null !== $existingId) {
-                return $existingId;
+            $existingIds = $this->productRepository->getProductIdsByReference($reference, $context->getShopConstraint());
+            if ([] !== $existingIds) {
+                return new EntityMatch($existingIds[0], EntityMatch::MATCHED_BY_REFERENCE, null, count($existingIds));
             }
         }
 
         if (null !== $productId && $this->existenceChecker->exists('product', $productId)) {
-            return $productId;
+            return new EntityMatch($productId, EntityMatch::MATCHED_BY_ID);
         }
 
-        return null;
+        return new EntityMatch(null);
     }
 
     /**
@@ -124,26 +152,37 @@ class ProductIdentityResolver
      * the coincidence is flagged as ambiguous; otherwise the target resolves
      * by reference. Callers only choose message wording and severity.
      *
-     * @return array{resolvedId: ?int, matchedBy: self::TARGET_MATCHED_BY_*|null, ambiguous: bool}
+     * Two INDEPENDENT kinds of ambiguity are reported, so callers can word them
+     * differently:
+     * - 'ambiguous': the numeric target matches both a product id AND some
+     *   product's reference (id wins);
+     * - 'referenceMatchCount' > 1: the reference itself matches several products
+     *   (the lowest id is used).
+     *
+     * @return array{resolvedId: ?int, matchedBy: self::TARGET_MATCHED_BY_*|null, ambiguous: bool, referenceMatchCount: int}
      */
     public function resolveProductTarget(string $target, ImportRunContext $context): array
     {
-        $referenceMatchId = $this->productRepository->getProductIdByReference($target, $context->getShopConstraint());
+        $referenceMatchIds = $this->productRepository->getProductIdsByReference($target, $context->getShopConstraint());
+        $referenceMatchCount = count($referenceMatchIds);
 
         if (ctype_digit($target)) {
             if ($this->existenceChecker->exists('product', (int) $target)) {
                 return [
                     'resolvedId' => (int) $target,
                     'matchedBy' => self::TARGET_MATCHED_BY_ID,
-                    'ambiguous' => null !== $referenceMatchId,
+                    'ambiguous' => [] !== $referenceMatchIds,
+                    // the id won, so the reference multiplicity is irrelevant here
+                    'referenceMatchCount' => 0,
                 ];
             }
         }
 
         return [
-            'resolvedId' => $referenceMatchId,
-            'matchedBy' => null !== $referenceMatchId ? self::TARGET_MATCHED_BY_REFERENCE : null,
+            'resolvedId' => $referenceMatchIds[0] ?? null,
+            'matchedBy' => [] !== $referenceMatchIds ? self::TARGET_MATCHED_BY_REFERENCE : null,
             'ambiguous' => false,
+            'referenceMatchCount' => $referenceMatchCount,
         ];
     }
 }

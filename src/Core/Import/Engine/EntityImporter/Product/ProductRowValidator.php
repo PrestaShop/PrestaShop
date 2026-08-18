@@ -60,11 +60,22 @@ class ProductRowValidator
     {
         $messages = [];
 
-        // fail fast: resolve() would throw for the same reason (a match_ref
-        // creation must never duplicate a reference living on another shop)
+        // fail fast: resolve() would throw for the same reasons. Both checks must
+        // stay AHEAD of the resolve() call below, which is what throws.
         $reference = $row['reference'] ?? '';
-        if ($context->getOptions()->matchRef && '' !== $reference && $this->identityResolver->referenceExistsOutsideScope($reference, $context)) {
-            return [$this->error($rowIndex, 'reference', $this->translator->trans('The reference "%value%" matches a product outside the run\'s shop scope; the row was skipped to avoid creating a duplicate product.', ['%value%' => $reference], 'Admin.Advparameters.Notification'))];
+        if ($context->getOptions()->matchRef && '' !== $reference) {
+            if ($this->identityResolver->referenceExistsOutsideScope($reference, $context)) {
+                return [$this->error($rowIndex, 'reference', $this->translator->trans('The reference "%value%" matches a product outside the run\'s shop scope; the row was skipped to avoid creating a duplicate product.', ['%value%' => $reference], 'Admin.Advparameters.Notification'))];
+            }
+
+            // product.reference has no unique constraint: updating an arbitrary
+            // one of several homonyms is destructive, so the row fails here
+            // instead (an ambiguous association LINK only warns — see
+            // ProductAssociationResolver)
+            $referenceMatchCount = $this->identityResolver->countProductsByReference($reference, $context);
+            if ($referenceMatchCount > 1) {
+                return [$this->error($rowIndex, 'reference', $this->translator->trans('The reference "%value%" matches %count% products; the row was skipped to avoid updating the wrong one.', ['%value%' => $reference, '%count%' => $referenceMatchCount], 'Admin.Advparameters.Notification'))];
+            }
         }
 
         $match = $this->identityResolver->resolve($row, $context);

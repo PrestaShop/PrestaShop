@@ -111,6 +111,45 @@ class ProductImporterAssociationsTest extends AbstractProductImportEngineTestCas
     }
 
     /**
+     * product.reference has no unique constraint, so a reference can match several
+     * products. The severity depends on the blast radius: an ambiguous LINK warns
+     * and uses the lowest id, while an ambiguous IDENTITY (match_ref) fails the row
+     * rather than update an arbitrary product.
+     */
+    public function testDuplicateReferenceWarnsOnLinksAndFailsTheMatchRefIdentity(): void
+    {
+        ProductResetter::resetProducts();
+
+        [, $messages] = $this->runImport('product_duplicate_reference.csv', ['id', 'name', 'reference', 'accessories'], ['forceIds' => true]);
+        $this->assertNoErrors($messages);
+
+        // two products share DUP-REF, so the accessory link is ambiguous
+        $this->assertSame([9301, 9302], $this->getProductIdsByReference('DUP-REF'));
+        $ownerId = $this->getProductIdByReference('DUP-OWNER');
+        $this->assertNotNull($ownerId);
+        $this->assertSame([9301], $this->getAccessoryIds($ownerId), 'The lowest matching id must be linked');
+        $this->assertNotEmpty(
+            $this->warningsContaining($messages, 'matches 2 products'),
+            'An accessory target matching several products must be warned, with the match count'
+        );
+
+        // the SAME ambiguity on the identity column is an error, not a warning:
+        // match_ref would otherwise rename an arbitrary one of the two products
+        [, $messages] = $this->runImport('product_duplicate_reference_match.csv', ['reference', 'name'], ['matchRef' => true]);
+
+        $errors = $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_ERROR);
+        $this->assertNotEmpty($errors, 'An ambiguous match_ref reference must fail the row');
+        $this->assertStringContainsString('matches 2 products', $errors[0]->message);
+        $this->assertSame('reference', $errors[0]->field);
+        $this->assertSame(ImportPhaseDefinition::PHASE_VALIDATION, $errors[0]->phase, 'The error must be raised by the pausing validation phase, before any write');
+
+        // neither product was renamed, and no third one was created
+        $this->assertSame([9301, 9302], $this->getProductIdsByReference('DUP-REF'));
+        $this->assertSame('Duplicate Reference One', (string) $this->fetchOne('SELECT name FROM {p}product_lang WHERE id_product = 9301 AND id_lang = 1 AND id_shop = 1'));
+        $this->assertSame('Duplicate Reference Two', (string) $this->fetchOne('SELECT name FROM {p}product_lang WHERE id_product = 9302 AND id_lang = 1 AND id_shop = 1'));
+    }
+
+    /**
      * @param list<ImportMessage> $messages
      *
      * @return list<ImportMessage>

@@ -361,8 +361,16 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
      * unqualified id_shop resolves to product_shop (the product table has no
      * such column), and since product_shop carries no id_shop_group column a
      * shop-group constraint is not supported here.
+     *
+     * product.reference carries a plain (non unique) index, so EVERY match is
+     * returned, ordered by id ASC. Callers MUST handle more than one: legacy
+     * resolved this with Db::getValue() and no ORDER BY, i.e. it updated whichever
+     * homonym MySQL happened to return first. The GROUP BY collapses the
+     * product_shop fan-out, so each returned id is a distinct product.
+     *
+     * @return list<int>
      */
-    public function getProductIdByReference(string $reference, ShopConstraint $shopConstraint): ?int
+    public function getProductIdsByReference(string $reference, ShopConstraint $shopConstraint): array
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('p.id_product')
@@ -371,13 +379,10 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             ->where('p.reference = :reference')
             ->setParameter('reference', $reference)
             ->groupBy('p.id_product')
-            ->orderBy('p.id_product', 'ASC')
-            ->setMaxResults(1);
+            ->orderBy('p.id_product', 'ASC');
         $this->applyShopConstraint($qb, $shopConstraint);
 
-        $productId = $qb->executeQuery()->fetchOne();
-
-        return false === $productId ? null : (int) $productId;
+        return array_map('intval', $qb->executeQuery()->fetchFirstColumn());
     }
 
     /**
