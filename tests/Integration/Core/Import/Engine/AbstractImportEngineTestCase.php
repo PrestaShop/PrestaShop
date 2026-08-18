@@ -49,6 +49,11 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
      */
     private array $temporaryFiles = [];
 
+    /**
+     * @var list<string>
+     */
+    private array $temporaryDirectories = [];
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -80,6 +85,11 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
             @unlink($temporaryFile);
         }
         $this->temporaryFiles = [];
+
+        foreach ($this->temporaryDirectories as $temporaryDirectory) {
+            $this->removeDirectory($temporaryDirectory);
+        }
+        $this->temporaryDirectories = [];
 
         parent::tearDown();
     }
@@ -150,9 +160,15 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
     abstract protected function getEntityImporter(): EntityImporterInterface;
 
     /**
-     * Copies the fixture to a temporary location, substituting the
-     * {FIXTURE_DIR} placeholder with the absolute tests/Resources path so
-     * fixtures can reference bundled files (images, downloads).
+     * Copies the fixture to a temporary location and resolves the {FIXTURE_DIR}
+     * placeholder so fixtures can reference bundled files (images, downloads).
+     *
+     * The placeholder does NOT resolve to tests/Resources directly: FileDownloader
+     * confines local paths to the shop CONTENT directories plus the system temp
+     * dir, and the bundled fixture assets live in neither. Every referenced asset
+     * is therefore staged into a temp directory (an allowed root) and the
+     * placeholder points there — so the tests exercise the real confinement
+     * instead of needing it widened for their own convenience.
      */
     protected function prepareFixture(string $fixtureName): string
     {
@@ -165,9 +181,63 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
         }
 
         $substitutedPath = $this->createTemporaryFilePath('fixture_', '.csv');
-        file_put_contents($substitutedPath, str_replace('{FIXTURE_DIR}', $this->getFixtureDir(), $content));
+        file_put_contents($substitutedPath, str_replace('{FIXTURE_DIR}', $this->stageReferencedAssets($content), $content));
 
         return $substitutedPath;
+    }
+
+    /**
+     * Copies every {FIXTURE_DIR}-relative asset the fixture references into a
+     * temp staging directory, keeping the relative sub-path so the substitution
+     * stays a plain string replacement.
+     *
+     * @return string the staging directory, without a trailing separator
+     */
+    private function stageReferencedAssets(string $content): string
+    {
+        $stagingDirectory = sys_get_temp_dir() . '/' . uniqid('ps_import_assets_', true);
+        if (!mkdir($stagingDirectory, 0777, true) && !is_dir($stagingDirectory)) {
+            static::fail(sprintf('Could not create the fixture staging directory "%s".', $stagingDirectory));
+        }
+        $this->temporaryDirectories[] = $stagingDirectory;
+
+        preg_match_all('#\{FIXTURE_DIR\}(/[^;,\r\n"]+)#', $content, $matches);
+        foreach (array_unique($matches[1]) as $relativePath) {
+            $source = $this->getFixtureDir() . $relativePath;
+            if (!is_file($source)) {
+                continue;
+            }
+
+            // flattening is not an option (two assets could share a basename),
+            // so mirror the sub-directories inside the staging dir
+            $target = $stagingDirectory . $relativePath;
+            $targetDirectory = dirname($target);
+            if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0777, true) && !is_dir($targetDirectory)) {
+                static::fail(sprintf('Could not create the fixture staging directory "%s".', $targetDirectory));
+            }
+            copy($source, $target);
+        }
+
+        return $stagingDirectory;
+    }
+
+    /**
+     * The staging directory mirrors the fixture sub-directories, so cleanup has
+     * to walk depth-first rather than glob a single level.
+     */
+    private function removeDirectory(string $directory): void
+    {
+        foreach ((array) glob($directory . '/*') as $entry) {
+            $entry = (string) $entry;
+            if (is_dir($entry)) {
+                $this->removeDirectory($entry);
+
+                continue;
+            }
+            @unlink($entry);
+        }
+
+        @rmdir($directory);
     }
 
     protected function getFixtureDir(): string

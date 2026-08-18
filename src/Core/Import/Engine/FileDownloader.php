@@ -31,6 +31,19 @@ class FileDownloader
     protected const MAX_FILE_SIZE_BYTES = 128 * 1024 * 1024;
 
     /**
+     * @param list<string> $allowedLocalRoots directories a LOCAL source path may
+     *                                        live in (see assertAllowedLocalPath); the shop's content
+     *                                        directories in production, wired in the service definition —
+     *                                        the engine class itself stays decoupled from the legacy
+     *                                        configuration constants. The system temp dir is always
+     *                                        allowed on top (it is also where the fetched copies land).
+     */
+    public function __construct(
+        protected readonly array $allowedLocalRoots = [],
+    ) {
+    }
+
+    /**
      * @return string path of the temporary file — the caller is responsible for deleting it
      *
      * @throws FileDownloadException
@@ -118,7 +131,11 @@ class FileDownloader
     }
 
     /**
-     * Local paths are confined to the shop directory and the system temp dir.
+     * Local paths are confined to the directories that legitimately hold shop
+     * CONTENT (the import directory, uploads, images, downloads) plus the system
+     * temp dir - deliberately NOT the whole shop directory, which also contains
+     * app/config/parameters.php, .env, var/ and vendor/.
+     *
      * Import is admin-only, but the fetched file becomes DOWNLOADABLE content
      * (a virtual product file): without this check a file_url cell pointing at
      * e.g. app/config/parameters.php would expose it to customers. realpath()
@@ -131,12 +148,7 @@ class FileDownloader
             throw new FileDownloadException(sprintf('Local file "%s" does not exist', $path));
         }
 
-        $allowedRoots = [sys_get_temp_dir()];
-        if (defined('_PS_ROOT_DIR_')) {
-            $allowedRoots[] = _PS_ROOT_DIR_;
-        }
-
-        foreach ($allowedRoots as $allowedRoot) {
+        foreach ($this->getAllowedLocalRoots() as $allowedRoot) {
             $realRoot = realpath($allowedRoot);
             if (false !== $realRoot && str_starts_with($realPath, rtrim($realRoot, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR)) {
                 return;
@@ -144,6 +156,18 @@ class FileDownloader
         }
 
         throw new FileDownloadException(sprintf('Local file "%s" is outside the allowed import locations', $path));
+    }
+
+    /**
+     * The directories a local source path may point at: the injected content
+     * directories plus the system temp dir, which is intrinsic to the class
+     * (its own fetched copies are created there).
+     *
+     * @return list<string>
+     */
+    protected function getAllowedLocalRoots(): array
+    {
+        return array_merge([sys_get_temp_dir()], $this->allowedLocalRoots);
     }
 
     protected function createTemporaryFile(): string

@@ -25,13 +25,19 @@ class FileDownloaderTest extends TestCase
 
     public function testLocalPathIsCopiedToATemporaryFile(): void
     {
-        $sourcePath = DummyFileUploader::getDummyFilePath('logo.jpg');
+        // upload() stages the dummy file in the system temp dir, which is one of
+        // the allowed roots - the bundled tests/Resources/dummyFile path is not
+        $sourcePath = DummyFileUploader::upload('logo.jpg');
 
-        $temporaryPath = $this->downloader->download($sourcePath);
+        try {
+            $temporaryPath = $this->downloader->download($sourcePath);
 
-        $this->assertFileExists($temporaryPath);
-        $this->assertSame(md5_file($sourcePath), md5_file($temporaryPath));
-        @unlink($temporaryPath);
+            $this->assertFileExists($temporaryPath);
+            $this->assertSame(md5_file($sourcePath), md5_file($temporaryPath));
+            @unlink($temporaryPath);
+        } finally {
+            @unlink($sourcePath);
+        }
     }
 
     public function testMissingLocalFileIsRejected(): void
@@ -48,11 +54,28 @@ class FileDownloaderTest extends TestCase
 
     public function testLocalFileOutsideTheAllowedLocationsIsRejected(): void
     {
-        // exists and is readable, but lives outside the shop dir and the
-        // system temp dir — the two roots local imports are confined to
+        // exists and is readable, but lives outside the content directories and
+        // the system temp dir — the roots local imports are confined to
         $this->expectException(FileDownloadException::class);
         $this->expectExceptionMessage('outside the allowed import locations');
         $this->downloader->download('/etc/hosts');
+    }
+
+    /**
+     * The confinement is deliberately narrower than the shop directory: a
+     * fetched file can become a downloadable virtual product file, so the
+     * config files living under the shop root must stay out of reach.
+     */
+    public function testLocalFileInsideTheShopButOutsideTheContentDirectoriesIsRejected(): void
+    {
+        $configurationFile = _PS_ROOT_DIR_ . '/app/config/parameters.php';
+        if (!is_file($configurationFile)) {
+            $this->markTestSkipped('The shop is not configured, app/config/parameters.php does not exist.');
+        }
+
+        $this->expectException(FileDownloadException::class);
+        $this->expectExceptionMessage('outside the allowed import locations');
+        $this->downloader->download($configurationFile);
     }
 
     public function testLocalFileBiggerThanTheSizeCapIsRejected(): void
