@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "93fa6fdcc7e64557a53fcbce50e6ce77",
+    "content-hash": "d477c15f07de83536f10b3e9f4121bed",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5873,16 +5873,16 @@
         },
         {
             "name": "prestashop/productcomments",
-            "version": "v7.0.0",
+            "version": "8.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productcomments.git",
-                "reference": "7287476cb44969af58721cb9ad7b5cb89393b2c8"
+                "reference": "6314ef9fa92867a6008f92194caac64bc305cf52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/7287476cb44969af58721cb9ad7b5cb89393b2c8",
-                "reference": "7287476cb44969af58721cb9ad7b5cb89393b2c8",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/6314ef9fa92867a6008f92194caac64bc305cf52",
+                "reference": "6314ef9fa92867a6008f92194caac64bc305cf52",
                 "shasum": ""
             },
             "require": {
@@ -5914,9 +5914,10 @@
             "description": "PrestaShop module productcomments",
             "homepage": "https://github.com/PrestaShop/productcomments",
             "support": {
-                "source": "https://github.com/PrestaShop/productcomments/tree/v7.0.0"
+                "issues": "https://github.com/PrestaShop/productcomments/issues",
+                "source": "https://github.com/PrestaShop/productcomments/tree/8.0.1"
             },
-            "time": "2024-04-24T14:10:24+00:00"
+            "time": "2026-08-07T09:18:57+00:00"
         },
         {
             "name": "prestashop/ps_banner",
