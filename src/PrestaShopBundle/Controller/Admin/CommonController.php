@@ -57,6 +57,11 @@ class CommonController extends FrameworkBundleAdminController
      * - Registered customers
      * - New messages.
      *
+     * @AdminSecurity(
+     *     "is_granted('read', 'AdminOrders') || is_granted('read', 'AdminCustomers') || is_granted('read', 'AdminCustomerThreads')",
+     *     message="You do not have permission to view this."
+     * )
+     *
      * @return JsonResponse
      */
     public function notificationsAction()
@@ -70,6 +75,11 @@ class CommonController extends FrameworkBundleAdminController
 
     /**
      * Update the last time a notification type has been seen.
+     *
+     * @AdminSecurity(
+     *     "is_granted('read', 'AdminOrders') || is_granted('read', 'AdminCustomers') || is_granted('read', 'AdminCustomerThreads')",
+     *     message="You do not have permission to view this."
+     * )
      *
      * @param Request $request
      *

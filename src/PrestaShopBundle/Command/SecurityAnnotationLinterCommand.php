@@ -60,8 +60,6 @@ final class SecurityAnnotationLinterCommand extends Command
      */
     private const EXCEPTION_ROUTES = [
         'admin_category_simple_add_form',
-        'admin_common_notifications',
-        'admin_common_notifications_ack',
         'admin_common_pagination',
         'admin_common_reset_search',
         'admin_common_reset_search_by_filter_id',

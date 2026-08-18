@@ -885,7 +885,8 @@ final class ProductImportHandler extends AbstractImportHandler
                     $entityFields,
                     'file_url'
                 );
-                $this->tools->copy($virtualProductFileUrl, $downloadDir . $productDownload->filename);
+                // Untrusted URL (import): use the SSRF-hardened download path.
+                $this->tools->copyFromUntrustedSource($virtualProductFileUrl, $downloadDir . $productDownload->filename);
                 $productDownload->id_product = (int) $product->id;
                 $productDownload->nb_downloadable = (int) $this->fetchDataValueByKey(
                     $dataRow,

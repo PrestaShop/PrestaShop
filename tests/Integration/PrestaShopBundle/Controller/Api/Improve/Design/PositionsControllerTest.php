@@ -120,6 +120,18 @@ class PositionsControllerTest extends TestCase
 
         $this->client = self::createClient();
         $this->router = self::$container->get('router');
+
+        // Compile the URL matcher now, with warnings muted: on PHP >= 7.3 (PCRE2 < 10.43) the
+        // routing dumper probes route sub-patterns with a variable-length lookbehind that PCRE2
+        // rejects, and Symfony 4.4 only silences the PCRE1 wording of that warning. This test runs
+        // in an isolated process, so any warning printed on stderr during the request would make
+        // PHPUnit report the test as errored.
+        $errorReportingLevel = error_reporting(E_ALL & ~E_WARNING);
+        try {
+            $this->router->getMatcher();
+        } finally {
+            error_reporting($errorReportingLevel);
+        }
     }
 
     protected function tearDown(): void
