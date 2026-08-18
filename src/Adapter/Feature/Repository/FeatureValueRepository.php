@@ -438,13 +438,20 @@ class FeatureValueRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * Exact pre-defined (non custom) value lookup within a feature, resolving
-     * a single id (unlike the listing-oriented getFeatureValuesByLang() which
-     * loads every value).
+     * Exact pre-defined (non custom) value lookup within a feature, resolving ids
+     * directly (unlike the listing-oriented getFeatureValuesByLang() which loads
+     * every value).
+     *
+     * feature_value_lang.value carries no unique constraint per feature, so EVERY
+     * match is returned, ordered by id ASC: callers use the first one and report
+     * the count when there is more than one, rather than silently picking the
+     * oldest duplicate.
+     *
+     * @return list<int>
      */
-    public function getFeatureValueIdByValue(int $featureId, string $value, int $languageId): ?int
+    public function getFeatureValueIdsByValue(int $featureId, string $value, int $languageId): array
     {
-        $featureValueId = $this->connection->createQueryBuilder()
+        $featureValueIds = $this->connection->createQueryBuilder()
             ->select('fv.id_feature_value')
             ->from($this->dbPrefix . 'feature_value', 'fv')
             ->innerJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value AND fvl.id_lang = :languageId')
@@ -452,14 +459,13 @@ class FeatureValueRepository extends AbstractObjectModelRepository
             ->andWhere('fv.custom = 0')
             ->andWhere('fvl.value = :value')
             ->orderBy('fv.id_feature_value', 'ASC')
-            ->setMaxResults(1)
             ->setParameter('languageId', $languageId)
             ->setParameter('featureId', $featureId)
             ->setParameter('value', $value)
             ->executeQuery()
-            ->fetchOne()
+            ->fetchFirstColumn()
         ;
 
-        return false === $featureValueId ? null : (int) $featureValueId;
+        return array_map('intval', $featureValueIds);
     }
 }

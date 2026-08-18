@@ -343,24 +343,29 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
-     * Exact-name lookup in one language, resolving a single id (unlike the
+     * Exact-name lookup in one language, resolving ids directly (unlike the
      * listing-oriented getFeaturesByLang() which loads every feature).
+     *
+     * feature_lang.name carries no unique constraint, so EVERY match is returned,
+     * ordered by id ASC: callers use the first one and report the count when there
+     * is more than one, rather than silently picking the oldest homonym.
+     *
+     * @return list<int>
      */
-    public function getFeatureIdByName(string $name, int $languageId): ?int
+    public function getFeatureIdsByName(string $name, int $languageId): array
     {
-        $featureId = $this->connection->createQueryBuilder()
+        $featureIds = $this->connection->createQueryBuilder()
             ->select('f.id_feature')
             ->from($this->dbPrefix . 'feature', 'f')
             ->innerJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature AND fl.id_lang = :languageId')
             ->where('fl.name = :name')
             ->orderBy('f.id_feature', 'ASC')
-            ->setMaxResults(1)
             ->setParameter('languageId', $languageId)
             ->setParameter('name', $name)
             ->executeQuery()
-            ->fetchOne()
+            ->fetchFirstColumn()
         ;
 
-        return false === $featureId ? null : (int) $featureId;
+        return array_map('intval', $featureIds);
     }
 }

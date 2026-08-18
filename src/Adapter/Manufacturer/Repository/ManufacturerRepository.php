@@ -37,20 +37,25 @@ class ManufacturerRepository extends AbstractObjectModelRepository
 
     /**
      * Exact-name lookup (legacy Manufacturer::getIdByName parity).
+     *
+     * manufacturer.name carries no unique constraint, so EVERY match is returned,
+     * ordered by id ASC: callers use the first one and report the count when there
+     * is more than one, rather than silently picking the oldest homonym.
+     *
+     * @return list<int>
      */
-    public function getManufacturerIdByName(string $name): ?int
+    public function getManufacturerIdsByName(string $name): array
     {
-        $manufacturerId = $this->connection->createQueryBuilder()
+        $manufacturerIds = $this->connection->createQueryBuilder()
             ->select('m.id_manufacturer')
             ->from($this->dbPrefix . 'manufacturer', 'm')
             ->where('m.name = :name')
             ->orderBy('m.id_manufacturer', 'ASC')
-            ->setMaxResults(1)
             ->setParameter('name', $name)
             ->executeQuery()
-            ->fetchOne()
+            ->fetchFirstColumn()
         ;
 
-        return false === $manufacturerId ? null : (int) $manufacturerId;
+        return array_map('intval', $manufacturerIds);
     }
 }

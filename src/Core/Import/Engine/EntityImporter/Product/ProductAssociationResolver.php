@@ -44,6 +44,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Name-to-id resolutions are cached for the lifetime of the service
  * (one batch request), so a 1000-row file creates each missing
  * category/manufacturer/feature once.
+ *
+ * None of these names carries a DB unique constraint, so a lookup can match
+ * SEVERAL entities. The first one (lowest id) is used and a WARNING reports the
+ * match count — an ambiguous LINK is recoverable, unlike an ambiguous product
+ * identity, which fails the row (see ProductIdentityResolver). Because the
+ * resolutions are cached, the warning is emitted once per run, not once per row.
  */
 class ProductAssociationResolver
 {
@@ -70,9 +76,22 @@ class ProductAssociationResolver
     protected array $featureValueCache = [];
 
     /**
+     * @var array<string, list<int>> shop name => every matching shop id
+     */
+    protected array $shopCache = [];
+
+    /**
      * @var array<int, true> feature ids whose shop association was already ensured this run
      */
     protected array $featureShopEnsured = [];
+
+    /**
+     * The run's ShopConstraint is frozen, so its concrete shop ids are constant
+     * for the whole run — resolved once instead of on every auto-creation.
+     *
+     * @var list<int>|null
+     */
+    protected ?array $runShopIds = null;
 
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
@@ -123,7 +142,7 @@ class ProductAssociationResolver
                 continue;
             }
 
-            $ids[] = $this->resolveCategoryPath($entry, $languageId, $context);
+            $ids[] = $this->resolveCategoryPath($entry, $languageId, $context, $rowIndex, $messages);
         }
 
         return ['ids' => array_values(array_unique($ids)), 'messages' => $messages];
@@ -153,15 +172,27 @@ class ProductAssociationResolver
             return new ResolvedAssociation($this->manufacturerCache[$value]);
         }
 
-        $manufacturerId = $this->manufacturerRepository->getManufacturerIdByName($value);
-        if (null === $manufacturerId) {
+        $messages = [];
+        $manufacturerIds = $this->manufacturerRepository->getManufacturerIdsByName($value);
+        if ([] === $manufacturerIds) {
             $manufacturerId = $this->commandBus->handle(
                 new AddManufacturerCommand($value, true, [], [], [], [], $this->getRunShopIds($context))
             )->getValue();
+        } else {
+            $manufacturerId = $manufacturerIds[0];
+            if (count($manufacturerIds) > 1) {
+                $messages[] = new ImportMessage(
+                    ImportMessage::SEVERITY_WARNING,
+                    ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('Brand "%name%" matches %count% brands; the first one (id %id%) was used.', ['%name%' => $value, '%count%' => count($manufacturerIds), '%id%' => $manufacturerId], 'Admin.Advparameters.Notification'),
+                    $rowIndex,
+                    'manufacturer'
+                );
+            }
         }
         $this->manufacturerCache[$value] = $manufacturerId;
 
-        return new ResolvedAssociation($manufacturerId);
+        return new ResolvedAssociation($manufacturerId, $messages);
     }
 
     /**
@@ -174,9 +205,20 @@ class ProductAssociationResolver
             return new ResolvedAssociation((int) $value);
         }
 
-        $supplierId = $this->supplierRepository->getSupplierIdByName($value);
-        if (null !== $supplierId) {
-            return new ResolvedAssociation($supplierId);
+        $supplierIds = $this->supplierRepository->getSupplierIdsByName($value);
+        if ([] !== $supplierIds) {
+            $messages = [];
+            if (count($supplierIds) > 1) {
+                $messages[] = new ImportMessage(
+                    ImportMessage::SEVERITY_WARNING,
+                    ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('Supplier "%name%" matches %count% suppliers; the first one (id %id%) was used.', ['%name%' => $value, '%count%' => count($supplierIds), '%id%' => $supplierIds[0]], 'Admin.Advparameters.Notification'),
+                    $rowIndex,
+                    'supplier'
+                );
+            }
+
+            return new ResolvedAssociation($supplierIds[0], $messages);
         }
 
         return new ResolvedAssociation(null, [
@@ -226,7 +268,7 @@ class ProductAssociationResolver
                 continue;
             }
 
-            $featureId = $this->resolveFeature($featureName, $languageId, $context);
+            $featureId = $this->resolveFeature($featureName, $languageId, $context, $rowIndex, $messages);
 
             if ($isCustom) {
                 $featureValues[] = [
@@ -238,7 +280,7 @@ class ProductAssociationResolver
 
             $featureValues[] = [
                 'feature_id' => $featureId,
-                'feature_value_id' => $this->resolveFeatureValue($featureId, $featureValue, $languageId),
+                'feature_value_id' => $this->resolveFeatureValue($featureId, $featureValue, $languageId, $rowIndex, $messages),
             ];
         }
 
@@ -272,9 +314,18 @@ class ProductAssociationResolver
                 }
                 continue;
             }
-            $shopId = $this->shopRepository->getShopIdByName($entry);
-            if (null !== $shopId) {
-                $shopIds[] = $shopId;
+            $matchedShopIds = $this->shopCache[$entry] ??= $this->shopRepository->getShopIdsByName($entry);
+            if ([] !== $matchedShopIds) {
+                $shopIds[] = $matchedShopIds[0];
+                if (count($matchedShopIds) > 1) {
+                    $messages[] = new ImportMessage(
+                        ImportMessage::SEVERITY_WARNING,
+                        ImportPhaseDefinition::PHASE_DATABASE,
+                        $this->translator->trans('Shop "%name%" matches %count% shops; the first one (id %id%) was used.', ['%name%' => $entry, '%count%' => count($matchedShopIds), '%id%' => $matchedShopIds[0]], 'Admin.Advparameters.Notification'),
+                        $rowIndex,
+                        'shop'
+                    );
+                }
             } else {
                 $messages[] = new ImportMessage(
                     ImportMessage::SEVERITY_WARNING,
@@ -299,10 +350,12 @@ class ProductAssociationResolver
      * Path segments are ALWAYS names: numeric ids are whole-entry values,
      * handled by resolveCategories() before the walk.
      *
+     * @param list<ImportMessage> $messages
+     *
      * @return int the id of the DEEPEST path segment (the last one walked) —
      *             the category the product will be associated with
      */
-    protected function resolveCategoryPath(string $path, int $languageId, ImportRunContext $context): int
+    protected function resolveCategoryPath(string $path, int $languageId, ImportRunContext $context, int $rowIndex, array &$messages): int
     {
         if (isset($this->categoryCache[$path])) {
             return $this->categoryCache[$path];
@@ -323,14 +376,25 @@ class ProductAssociationResolver
                 continue;
             }
 
-            $categoryId = $this->categoryRepository->getChildCategoryIdByName($currentCategoryId, $categoryName, $languageId, $context->getShopConstraint());
-            if (null === $categoryId) {
+            $categoryIds = $this->categoryRepository->getChildCategoryIdsByName($currentCategoryId, $categoryName, $languageId, $context->getShopConstraint());
+            if ([] === $categoryIds) {
                 $categoryId = $this->commandBus->handle(new AddCategoryCommand(
                     $this->localizeForCreation($categoryName),
                     $this->localizeForCreation($this->dataFormatter->createFriendlyUrl($categoryName)),
                     true,
                     $currentCategoryId
                 ))->getValue();
+            } else {
+                $categoryId = $categoryIds[0];
+                if (count($categoryIds) > 1) {
+                    $messages[] = new ImportMessage(
+                        ImportMessage::SEVERITY_WARNING,
+                        ImportPhaseDefinition::PHASE_DATABASE,
+                        $this->translator->trans('Category "%name%" matches %count% sibling categories; the first one (id %id%) was used.', ['%name%' => $categoryName, '%count%' => count($categoryIds), '%id%' => $categoryId], 'Admin.Advparameters.Notification'),
+                        $rowIndex,
+                        'category'
+                    );
+                }
             }
 
             $this->categoryCache[$walkedPath] = $categoryId;
@@ -364,18 +428,31 @@ class ProductAssociationResolver
         return $this->localizeForCreation($value);
     }
 
-    protected function resolveFeature(string $name, int $languageId, ImportRunContext $context): int
+    /**
+     * @param list<ImportMessage> $messages
+     */
+    protected function resolveFeature(string $name, int $languageId, ImportRunContext $context, int $rowIndex, array &$messages): int
     {
         if (isset($this->featureCache[$name])) {
             return $this->featureCache[$name];
         }
 
-        $featureId = $this->featureRepository->getFeatureIdByName($name, $languageId);
-        if (null === $featureId) {
+        $featureIds = $this->featureRepository->getFeatureIdsByName($name, $languageId);
+        if ([] === $featureIds) {
             $featureId = $this->commandBus->handle(
                 new AddFeatureCommand($this->localizeForCreation($name), $this->getRunShopIds($context))
             )->getValue();
         } else {
+            $featureId = $featureIds[0];
+            if (count($featureIds) > 1) {
+                $messages[] = new ImportMessage(
+                    ImportMessage::SEVERITY_WARNING,
+                    ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('Feature "%name%" matches %count% features; the first one (id %id%) was used.', ['%name%' => $name, '%count%' => count($featureIds), '%id%' => $featureId], 'Admin.Advparameters.Notification'),
+                    $rowIndex,
+                    'features'
+                );
+            }
             $this->ensureFeatureShopAssociation($featureId, $context);
         }
         $this->featureCache[$name] = $featureId;
@@ -410,27 +487,42 @@ class ProductAssociationResolver
 
     /**
      * The concrete shops of the run's frozen scope — what auto-created
-     * entities get associated with.
+     * entities get associated with. Memoized: the constraint cannot change
+     * during a run, and this is called on every auto-creation.
      *
      * @return list<int>
      */
     protected function getRunShopIds(ImportRunContext $context): array
     {
-        return $this->shopRepository->getAssociatedShopIds($context->getShopConstraint());
+        return $this->runShopIds ??= $this->shopRepository->getAssociatedShopIds($context->getShopConstraint());
     }
 
-    protected function resolveFeatureValue(int $featureId, string $value, int $languageId): int
+    /**
+     * @param list<ImportMessage> $messages
+     */
+    protected function resolveFeatureValue(int $featureId, string $value, int $languageId, int $rowIndex, array &$messages): int
     {
         $cacheKey = $featureId . ':' . $value;
         if (isset($this->featureValueCache[$cacheKey])) {
             return $this->featureValueCache[$cacheKey];
         }
 
-        $featureValueId = $this->featureValueRepository->getFeatureValueIdByValue($featureId, $value, $languageId);
-        if (null === $featureValueId) {
+        $featureValueIds = $this->featureValueRepository->getFeatureValueIdsByValue($featureId, $value, $languageId);
+        if ([] === $featureValueIds) {
             $featureValueId = $this->commandBus->handle(
                 new AddFeatureValueCommand($featureId, $this->localizeForCreation($value))
             )->getValue();
+        } else {
+            $featureValueId = $featureValueIds[0];
+            if (count($featureValueIds) > 1) {
+                $messages[] = new ImportMessage(
+                    ImportMessage::SEVERITY_WARNING,
+                    ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('Feature value "%value%" matches %count% values of the same feature; the first one (id %id%) was used.', ['%value%' => $value, '%count%' => count($featureValueIds), '%id%' => $featureValueId], 'Admin.Advparameters.Notification'),
+                    $rowIndex,
+                    'features'
+                );
+            }
         }
         $this->featureValueCache[$cacheKey] = $featureValueId;
 

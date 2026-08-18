@@ -505,8 +505,16 @@ class CategoryRepository extends AbstractObjectModelRepository
      * unqualified id_shop resolves to category_lang, and since that table
      * carries no id_shop_group column a shop-group constraint is not
      * supported here (single shop, shop list or all shops).
+     *
+     * Sibling categories may share a name, so EVERY match is returned, ordered by
+     * id ASC: callers use the first one and report the count when there is more
+     * than one, rather than silently picking the oldest homonym. The GROUP BY
+     * collapses the per-shop category_lang rows of the SAME category, so each
+     * returned id is a distinct category.
+     *
+     * @return list<int>
      */
-    public function getChildCategoryIdByName(int $parentCategoryId, string $name, int $languageId, ShopConstraint $shopConstraint): ?int
+    public function getChildCategoryIdsByName(int $parentCategoryId, string $name, int $languageId, ShopConstraint $shopConstraint): array
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('c.id_category')
@@ -516,15 +524,12 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->andWhere('c.id_parent = :parentCategoryId')
             ->groupBy('c.id_category')
             ->orderBy('c.id_category', 'ASC')
-            ->setMaxResults(1)
             ->setParameter('languageId', $languageId)
             ->setParameter('name', $name)
             ->setParameter('parentCategoryId', $parentCategoryId)
         ;
         $this->applyShopConstraint($qb, $shopConstraint);
 
-        $categoryId = $qb->executeQuery()->fetchOne();
-
-        return false === $categoryId ? null : (int) $categoryId;
+        return array_map('intval', $qb->executeQuery()->fetchFirstColumn());
     }
 }

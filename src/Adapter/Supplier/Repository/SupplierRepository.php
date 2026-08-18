@@ -56,20 +56,25 @@ class SupplierRepository extends AbstractObjectModelRepository
 
     /**
      * Exact-name lookup (legacy Supplier::getIdByName parity).
+     *
+     * supplier.name carries no unique constraint, so EVERY match is returned,
+     * ordered by id ASC: callers use the first one and report the count when there
+     * is more than one, rather than silently picking the oldest homonym.
+     *
+     * @return list<int>
      */
-    public function getSupplierIdByName(string $name): ?int
+    public function getSupplierIdsByName(string $name): array
     {
-        $supplierId = $this->connection->createQueryBuilder()
+        $supplierIds = $this->connection->createQueryBuilder()
             ->select('s.id_supplier')
             ->from($this->dbPrefix . 'supplier', 's')
             ->where('s.name = :name')
             ->orderBy('s.id_supplier', 'ASC')
-            ->setMaxResults(1)
             ->setParameter('name', $name)
             ->executeQuery()
-            ->fetchOne()
+            ->fetchFirstColumn()
         ;
 
-        return false === $supplierId ? null : (int) $supplierId;
+        return array_map('intval', $supplierIds);
     }
 }
