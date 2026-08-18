@@ -1708,6 +1708,10 @@ class CartCore extends ObjectModel
         // Wipe all product-related caches, because something may just changed and we will need fresh data
         $this->resetProductRelatedStaticCache();
 
+        if (!(int) $this->id && !$this->add()) {
+            return false;
+        }
+
         $data = [
             'cart' => $this,
             'product' => $product,
