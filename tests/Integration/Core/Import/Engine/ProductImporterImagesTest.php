@@ -72,6 +72,10 @@ class ProductImporterImagesTest extends AbstractProductImportEngineTestCase
 
     public function testDeleteExistingImagesReplacesThePreviousOnes(): void
     {
+        // fresh catalog: re-running the creation fixture on top of the first
+        // test's products would create a second IMG-P1, and the matchRef run
+        // below would then fail the row as an ambiguous reference
+        ProductResetter::resetProducts();
         $this->runImport('product_images.csv', self::IMAGE_FIELDS);
         $productId = $this->getProductIdByReference('IMG-P1');
         $this->assertCount(2, $this->fetchAll('SELECT id_image FROM {p}image WHERE id_product = :id', ['id' => $productId]));
@@ -105,7 +109,10 @@ class ProductImporterImagesTest extends AbstractProductImportEngineTestCase
 
     public function testNonVirtualReimportDoesNotTouchTheVirtualFile(): void
     {
-        $this->runImport('product_virtual.csv', self::VIRTUAL_FIELDS);
+        // matchRef: VIRT-1 exists since the previous test — a plain run would
+        // CREATE a duplicate-reference product and every later matchRef run
+        // would then fail the row as ambiguous
+        $this->runImport('product_virtual.csv', self::VIRTUAL_FIELDS, ['matchRef' => true]);
         $productId = $this->getProductIdByReference('VIRT-1');
         $downloadId = $this->fetchOne('SELECT id_product_download FROM {p}product_download WHERE id_product = :id AND active = 1', ['id' => $productId]);
         $this->assertNotFalse($downloadId);
@@ -121,5 +128,28 @@ class ProductImporterImagesTest extends AbstractProductImportEngineTestCase
             (string) $this->fetchOne('SELECT id_product_download FROM {p}product_download WHERE id_product = :id AND active = 1', ['id' => $productId]),
             'Re-importing without virtual columns must not touch product_download'
         );
+    }
+
+    /**
+     * Unlike the test above, this one keeps file_url MAPPED on the second run.
+     * That used to fail the whole row: AddVirtualProductFileCommand hit
+     * ALREADY_HAS_A_FILE because a product can only hold one virtual file.
+     */
+    public function testVirtualFileReimportUpdatesInsteadOfFailingTheRow(): void
+    {
+        $this->runImport('product_virtual.csv', self::VIRTUAL_FIELDS, ['matchRef' => true]);
+        $productId = $this->getProductIdByReference('VIRT-1');
+        $this->assertNotNull($productId);
+        $downloadId = $this->fetchOne('SELECT id_product_download FROM {p}product_download WHERE id_product = :id AND active = 1', ['id' => $productId]);
+        $this->assertNotFalse($downloadId);
+
+        [, $messages] = $this->runImport('product_virtual.csv', self::VIRTUAL_FIELDS, ['matchRef' => true]);
+        $this->assertNoErrors($messages);
+
+        $downloads = $this->fetchAll('SELECT * FROM {p}product_download WHERE id_product = :id AND active = 1', ['id' => $productId]);
+        $this->assertCount(1, $downloads, 'A product must never end up with two active virtual files');
+        $this->assertSame((string) $downloadId, (string) $downloads[0]['id_product_download'], 'The existing file must be updated, not replaced');
+        $this->assertSame('test_text_file.txt', (string) $downloads[0]['display_filename']);
+        $this->assertSame('5', (string) $downloads[0]['nb_downloadable']);
     }
 }

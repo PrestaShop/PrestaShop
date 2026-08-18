@@ -60,6 +60,29 @@ class VirtualProductFileRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Id-only variant of findByProductId(): callers that merely need to know
+     * whether the product already has a file (and which one) get the identifier
+     * without receiving the legacy ObjectModel. Used by the import engine, whose
+     * importers live in Core and must not handle ObjectModel instances.
+     *
+     * @throws CoreException
+     */
+    public function findIdByProductId(ProductId $productId): ?VirtualProductFileId
+    {
+        try {
+            $id = (int) VirtualProductFile::getIdFromIdProduct($productId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to find VirtualProductFile by product id #%d', $productId->getValue()),
+                0,
+                $e
+            );
+        }
+
+        return $id ? new VirtualProductFileId($id) : null;
+    }
+
+    /**
      * @param VirtualProductFileId $virtualProductFileId
      */
     public function delete(VirtualProductFileId $virtualProductFileId): void

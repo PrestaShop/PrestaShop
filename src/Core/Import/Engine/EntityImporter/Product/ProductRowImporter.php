@@ -9,14 +9,22 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product;
 
 use DateTime;
+use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\NoCountryId;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\NoGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
@@ -32,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
@@ -41,6 +50,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
@@ -54,6 +65,7 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -80,7 +92,9 @@ class ProductRowImporter
         protected readonly ProductIdentityResolver $identityResolver,
         protected readonly ProductAssociationResolver $associationResolver,
         protected readonly ProductRepository $productRepository,
+        protected readonly SpecificPriceRepository $specificPriceRepository,
         protected readonly StockAvailableRepository $stockAvailableRepository,
+        protected readonly VirtualProductFileRepository $virtualProductFileRepository,
         protected readonly ImportEntityExistenceChecker $existenceChecker,
         protected readonly TaxComputer $taxComputer,
         protected readonly LanguageRepositoryInterface $languageRepository,
@@ -636,6 +650,12 @@ class ProductRowImporter
     }
 
     /**
+     * A product can only ever hold ONE virtual file, so re-importing a row is an
+     * UPDATE: VirtualProductUpdater::addFile() throws ALREADY_HAS_A_FILE when the
+     * product already has one, and because that lands in the row catch-all it
+     * would fail the whole row and get its accessories dropped in the
+     * association phase.
+     *
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
@@ -664,11 +684,25 @@ class ProductRowImporter
             $accessDays = $this->valueParser->parseCount($row['nb_days_accessible'] ?? '');
             $downloadTimesLimit = $this->valueParser->parseCount($row['nb_downloadable'] ?? '');
             $expirationDate = $this->valueParser->parseDate($row['date_expiration'] ?? '');
+            $displayName = basename(parse_url($fileUrl, PHP_URL_PATH) ?: $fileUrl) ?: 'file';
+
+            $existingFileId = $this->findExistingVirtualProductFileId($productId);
+            if (null !== $existingFileId) {
+                $updateCommand = new UpdateVirtualProductFileCommand($existingFileId);
+                $updateCommand->setFilePath($temporaryFile);
+                $updateCommand->setDisplayName($displayName);
+                $updateCommand->setAccessDays($accessDays);
+                $updateCommand->setDownloadTimesLimit($downloadTimesLimit);
+                $updateCommand->setExpirationDate($expirationDate);
+                $this->commandBus->handle($updateCommand);
+
+                return;
+            }
 
             $this->commandBus->handle(new AddVirtualProductFileCommand(
                 $productId,
                 $temporaryFile,
-                basename(parse_url($fileUrl, PHP_URL_PATH) ?: $fileUrl) ?: 'file',
+                $displayName,
                 $accessDays,
                 $downloadTimesLimit,
                 $expirationDate
@@ -676,6 +710,11 @@ class ProductRowImporter
         } finally {
             @unlink($temporaryFile);
         }
+    }
+
+    protected function findExistingVirtualProductFileId(int $productId): ?int
+    {
+        return $this->virtualProductFileRepository->findIdByProductId(new ProductId($productId))?->getValue();
     }
 
     /**
@@ -742,6 +781,17 @@ class ProductRowImporter
      * countries/groups, from quantity 1. A row carrying BOTH reduction kinds
      * is ambiguous: both are dropped (the validator already warned).
      *
+     * Re-importing a row is an UPDATE, not an error: the repository rejects a
+     * duplicate rule (SpecificPriceConstraintException::NOT_UNIQUE_PER_PRODUCT),
+     * and because that lands in the row catch-all it would fail the whole row
+     * and get its accessories dropped in the association phase. So the existing
+     * rule is looked up first and edited when found.
+     *
+     * KNOWN LIMITATION: the lookup is keyed on the rule's dates, so a row that
+     * only changes reduction_from/reduction_to does not match and adds a second
+     * rule. Defining what identifies "the import's basic reduction" independently
+     * of its dates is a separate discussion (see PLAN.md).
+     *
      * @param array<string, string> $row
      */
     protected function dispatchSpecificPrice(array $row, int $productId): void
@@ -762,6 +812,17 @@ class ProductRowImporter
 
         $from = $this->valueParser->parseDate($row['reduction_from'] ?? '');
         $to = $this->valueParser->parseDate($row['reduction_to'] ?? '');
+        $dateTimeFrom = null !== $from ? DateTime::createFromImmutable($from) : new NullDateTime();
+        $dateTimeTo = null !== $to ? DateTime::createFromImmutable($to) : new NullDateTime();
+
+        $existingSpecificPriceId = $this->findExistingBasicSpecificPriceId($productId, $dateTimeFrom, $dateTimeTo);
+        if (null !== $existingSpecificPriceId) {
+            $editCommand = new EditSpecificPriceCommand($existingSpecificPriceId);
+            $editCommand->setReduction($reductionType, (string) $reductionValue);
+            $this->commandBus->handle($editCommand);
+
+            return;
+        }
 
         $this->commandBus->handle(new AddSpecificPriceCommand(
             $productId,
@@ -770,9 +831,35 @@ class ProductRowImporter
             true,
             '-1',
             1,
-            null !== $from ? DateTime::createFromImmutable($from) : new NullDateTime(),
-            null !== $to ? DateTime::createFromImmutable($to) : new NullDateTime()
+            $dateTimeFrom,
+            $dateTimeTo
         ));
+    }
+
+    /**
+     * The uniqueness key AddSpecificPriceCommand produces: no combination, no
+     * shop, no group, no country, no currency, no customer, from quantity 1.
+     * Mirroring it here is what makes the re-import idempotent.
+     */
+    protected function findExistingBasicSpecificPriceId(
+        int $productId,
+        DateTimeInterface $dateTimeFrom,
+        DateTimeInterface $dateTimeTo
+    ): ?int {
+        $existingSpecificPriceId = $this->specificPriceRepository->findExisting(
+            $productId,
+            NoCombinationId::NO_COMBINATION_ID,
+            NoShopId::NO_SHOP_ID,
+            NoGroupId::NO_GROUP_ID,
+            NoCountryId::NO_COUNTRY_ID_VALUE,
+            NoCurrencyId::NO_CURRENCY_ID,
+            NoCustomerId::NO_CUSTOMER_ID_VALUE,
+            1,
+            $dateTimeFrom->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+            $dateTimeTo->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT)
+        );
+
+        return $existingSpecificPriceId?->getValue();
     }
 
     /**
