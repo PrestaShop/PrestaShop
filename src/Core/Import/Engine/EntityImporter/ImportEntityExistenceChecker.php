@@ -24,6 +24,18 @@ use Doctrine\DBAL\Connection;
 class ImportEntityExistenceChecker
 {
     /**
+     * Tables using soft deletion: a historized row still exists but must be
+     * treated as absent, otherwise assigning it would resurrect it on the
+     * imported entity. Only the tables the importers actually probe are listed
+     * (other soft-deleted entities - carrier, currency... - are not reachable
+     * from any importer yet; add them along with their importer).
+     */
+    protected const SOFT_DELETE_TABLES = [
+        'shop',
+        'tax_rules_group',
+    ];
+
+    /**
      * @var array<string, true> memoized POSITIVE probes, keyed '<table>:<id>'
      */
     protected array $cache = [];
@@ -38,7 +50,7 @@ class ImportEntityExistenceChecker
      * Whether a row of the given table (un-prefixed name) exists for the id.
      * The primary key is derived from the table name (id_<table>, the
      * PrestaShop convention). Tables whose existence semantics are richer
-     * than "a row exists" are special-cased in probe() — see tax_rules_group.
+     * than "a row exists" are special-cased in probe() — see SOFT_DELETE_TABLES.
      */
     public function exists(string $table, int $id): bool
     {
@@ -68,9 +80,7 @@ class ImportEntityExistenceChecker
             ->setMaxResults(1)
         ;
 
-        // soft-deleted (historized) tax rules groups are treated as absent:
-        // assigning one would resurrect it on the product
-        if ('tax_rules_group' === $table) {
+        if (in_array($table, static::SOFT_DELETE_TABLES, true)) {
             $qb->andWhere('deleted = 0');
         }
 

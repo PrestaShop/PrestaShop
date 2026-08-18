@@ -130,7 +130,8 @@ class ShopRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * Exact-name lookup (legacy Shop::getIdByName parity).
+     * Exact-name lookup (legacy Shop::getIdByName parity). Soft-deleted shops are
+     * excluded: assigning one would resurrect it on the imported entity.
      */
     public function getShopIdByName(string $name): ?int
     {
@@ -138,6 +139,7 @@ class ShopRepository extends AbstractObjectModelRepository
             ->select('s.id_shop')
             ->from($this->dbPrefix . 'shop', 's')
             ->where('s.name = :name')
+            ->andWhere('s.deleted = 0')
             ->orderBy('s.id_shop', 'ASC')
             ->setMaxResults(1)
             ->setParameter('name', $name)

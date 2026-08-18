@@ -11,6 +11,7 @@ namespace Tests\Integration\Core\Import\Engine;
 use Configuration as LegacyConfiguration;
 use Db;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use Shop as LegacyShop;
 use Tests\Resources\DatabaseDump;
@@ -26,8 +27,11 @@ use Tests\Resources\Resetter\ShopResetter;
 class ProductImporterMultishopTest extends AbstractProductImportEngineTestCase
 {
     private const FIELDS = ['name', 'reference', 'price_tex', 'features'];
+    private const DELETED_SHOP_NAME = 'deleted_shop_import';
 
     private static int $secondShopId;
+
+    private static int $deletedShopId;
 
     public static function setUpBeforeClass(): void
     {
@@ -52,6 +56,15 @@ class ProductImporterMultishopTest extends AbstractProductImportEngineTestCase
             'id_category' => 2, 'theme_name' => 'classic', 'active' => 1, 'deleted' => 0,
         ]);
         self::$secondShopId = (int) $db->Insert_ID();
+
+        // soft-deleted shop: the row still exists, so the import must treat it as
+        // absent instead of assigning (and thereby resurrecting) it
+        $db->insert('shop', [
+            'id_shop_group' => $secondGroupId, 'name' => self::DELETED_SHOP_NAME, 'color' => '',
+            'id_category' => 2, 'theme_name' => 'classic', 'active' => 1, 'deleted' => 1,
+        ]);
+        self::$deletedShopId = (int) $db->Insert_ID();
+
         LegacyShop::resetStaticCache();
     }
 
@@ -109,6 +122,42 @@ class ProductImporterMultishopTest extends AbstractProductImportEngineTestCase
 
         $this->assertSame(1, (int) $this->fetchOne("SELECT COUNT(DISTINCT fl.id_feature) FROM {p}feature_lang fl WHERE fl.name = 'Multishop Feature' AND fl.id_lang = 1"), 'The feature must be reused, not duplicated per shop');
         $this->assertSame([1, self::$secondShopId], $this->getFeatureShopIds($featureId));
+    }
+
+    /**
+     * A soft-deleted shop row still exists, so both the name lookup and the
+     * generic id probe must treat it as absent — assigning it would resurrect it
+     * on the imported product.
+     */
+    public function testSoftDeletedShopsAreTreatedAsAbsent(): void
+    {
+        self::bootKernel();
+        $GLOBALS['kernel'] = self::$kernel;
+
+        // the id probe (ImportEntityExistenceChecker::SOFT_DELETE_TABLES)
+        $existenceChecker = self::getContainer()->get(ImportEntityExistenceChecker::class);
+        $this->assertFalse($existenceChecker->exists('shop', self::$deletedShopId), 'A soft-deleted shop must not be reported as existing');
+        $this->assertTrue($existenceChecker->exists('shop', self::$secondShopId));
+
+        // the name lookup (ShopRepository::getShopIdsByName)
+        [$context, $messages] = $this->runImport('product_shop_deleted.csv', ['name', 'reference', 'shop']);
+        $this->assertNoErrors($messages);
+
+        $shopWarnings = array_values(array_filter(
+            $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_WARNING),
+            static fn (ImportMessage $message): bool => 'shop' === $message->field
+        ));
+        $this->assertCount(1, $shopWarnings);
+        $this->assertStringContainsString(self::DELETED_SHOP_NAME, $shopWarnings[0]->message);
+
+        // the entry was dropped, so the product falls back to the run's shop
+        $productId = $this->getProductIdByReference('DEL-SHP-1');
+        $this->assertNotNull($productId);
+        $this->assertFalse(
+            $this->fetchOne('SELECT 1 FROM {p}product_shop WHERE id_product = :id AND id_shop = :shop', ['id' => $productId, 'shop' => self::$deletedShopId]),
+            'The product must never be associated with a soft-deleted shop'
+        );
+        $this->assertNotFalse($this->fetchOne('SELECT 1 FROM {p}product_shop WHERE id_product = :id AND id_shop = :shop', ['id' => $productId, 'shop' => $context->getShopId()]));
     }
 
     private function getMultishopFeatureId(): int
