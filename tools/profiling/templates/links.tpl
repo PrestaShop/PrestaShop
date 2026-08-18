@@ -5,6 +5,7 @@
 
 <div id="profiling-links">
   <span>Profiling</span>
+  <a download="profiling-report.md" href="{$profilingMarkdownUrl}">⬇ Download Markdown</a>
   <ol>
     <li>
       <a href="#summary">Summary</a>
