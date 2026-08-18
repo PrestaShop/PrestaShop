@@ -13,6 +13,8 @@ use Exception;
 use Order;
 use OrderDetail;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\CreateShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\DeleteProductFromShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\FulfillShipmentCommand;
@@ -27,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentProducts;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentsForOrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\ListAvailableShipments;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\ListAvailableShipmentsForProduct;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForOrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForViewing;
@@ -181,6 +184,95 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
             $selectedQuantities,
             sprintf('Wrong selected products reported by the edit view of shipment "%s"', $shipmentReference)
         );
+    }
+
+    /**
+     * @When I try to switch the carrier for shipment :shipmentReference to a carrier that does not exist
+     */
+    public function switchShipmentCarrierToUnknownCarrier(string $shipmentReference): void
+    {
+        $shipmentId = SharedStorage::getStorage()->get($shipmentReference);
+
+        try {
+            $this->getCommandBus()->handle(new SwitchShipmentCarrierCommand($shipmentId, 999999));
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get an error that the carrier was not found
+     */
+    public function assertCarrierNotFoundException(): void
+    {
+        $this->assertLastErrorIs(CarrierNotFoundException::class);
+    }
+
+    /**
+     * @When I list the available shipments of order :orderReference for the ordered product :productName
+     */
+    public function listAvailableShipmentsForOrderedProduct(string $orderReference, string $productName): void
+    {
+        $orderId = $this->referenceToId($orderReference);
+
+        $productId = 0;
+        foreach ((new Order($orderId))->getOrderDetailList() as $orderDetail) {
+            if ($orderDetail['product_name'] === $productName) {
+                $productId = (int) $orderDetail['product_id'];
+                break;
+            }
+        }
+
+        Assert::assertNotSame(
+            0,
+            $productId,
+            sprintf('Product "%s" was not found in order "%s"', $productName, $orderReference)
+        );
+
+        $this->listAvailableShipments($orderId, $productId);
+    }
+
+    /**
+     * @When I list the available shipments of order :orderReference for product :productReference
+     */
+    public function listAvailableShipmentsForProduct(string $orderReference, string $productReference): void
+    {
+        $this->listAvailableShipments($this->referenceToId($orderReference), $this->referenceToId($productReference));
+    }
+
+    private function listAvailableShipments(int $orderId, int $productId): void
+    {
+        try {
+            $shipments = $this->getQueryBus()->handle(new ListAvailableShipmentsForProduct($orderId, $productId));
+            SharedStorage::getStorage()->set('available_shipments_for_product', $shipments);
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then the listed available shipments should contain the shipment :shipmentReference
+     */
+    public function assertAvailableShipmentsContain(string $shipmentReference): void
+    {
+        $expectedShipmentId = SharedStorage::getStorage()->get($shipmentReference);
+        $shipments = SharedStorage::getStorage()->get('available_shipments_for_product');
+
+        $shipmentIds = array_map(static fn ($shipment) => $shipment->getId(), $shipments);
+
+        Assert::assertContains(
+            $expectedShipmentId,
+            $shipmentIds,
+            sprintf('Shipment "%s" was not listed as available for the product', $shipmentReference)
+        );
+    }
+
+    /**
+     * @Then I should get an error that the product was not found in the order
+     */
+    public function assertCannotFindProductInOrderException(): void
+    {
+        $this->assertLastErrorIs(CannotFindProductInOrderException::class);
     }
 
     /**
