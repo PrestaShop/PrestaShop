@@ -1126,6 +1126,15 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     if ($error = ImageManager::validateUpload($file, $imgMaxUploadSize)) {
                         throw new WebserviceException('Bad image : ' . $error, [76, 400]);
                     }
+                    
+                    // Validate image dimensions for customization images
+                    if ($this->imageType == 'customizations') {
+                        $productPictureWidth = (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH');
+                        $productPictureHeight = (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT');
+                        if ($dimensionError = ImageManager::validateImageDimensions($file, $productPictureWidth, $productPictureHeight)) {
+                            throw new WebserviceException('Image dimension error: ' . $dimensionError, [76, 400]);
+                        }
+                    }
 
                     if ($this->imageType == 'products' && isset($image, $product)) {
                         $image = new Image($image->id);
