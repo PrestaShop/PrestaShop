@@ -34,8 +34,46 @@ class ThemeValidator
 
     public function isValid(Theme $theme)
     {
-        return $this->hasRequiredFiles($theme)
+        return $this->hasValidName($theme)
+            && $this->hasRequiredFiles($theme)
             && $this->hasRequiredProperties($theme);
+    }
+
+    private function hasValidName(Theme $theme)
+    {
+        $themeName = $theme->getName();
+
+        // The name is later concatenated to _PS_ALL_THEMES_DIR_ to build the theme folder, so a
+        // value like "../../evil" or "/var/www/evil" would let an uploaded theme be written outside
+        // themes/, and an empty name would resolve to the themes root itself. We make sure the name
+        // stays a single, safe directory segment here rather than relying on hasRequiredProperties,
+        // which only checks that the "name" key exists, not that it holds a usable value.
+        if ($this->isSafePathSegment($themeName)) {
+            return true;
+        }
+
+        if (!array_key_exists($themeName, $this->errors)) {
+            $this->errors[$themeName] = [];
+        }
+
+        $this->errors[$themeName][] = $this->translator->trans(
+            'Invalid theme name. It must not contain a directory separator or a path traversal sequence.',
+            [],
+            'Admin.Design.Notification'
+        );
+
+        return false;
+    }
+
+    private function isSafePathSegment($themeName)
+    {
+        if (!is_string($themeName) || '' === $themeName || '.' === $themeName || '..' === $themeName) {
+            return false;
+        }
+
+        return false === strpos($themeName, '/')
+            && false === strpos($themeName, '\\')
+            && false === strpos($themeName, "\0");
     }
 
     private function hasRequiredProperties(Theme $theme)
