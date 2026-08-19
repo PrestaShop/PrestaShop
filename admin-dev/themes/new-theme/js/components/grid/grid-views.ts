@@ -87,12 +87,21 @@ function loadAllFilters(): void {
   getPanels().forEach((panel) => loadFilters(panel));
 }
 
+function setAllTotals(panel: HTMLElement, content: string): void {
+  panel.querySelectorAll<HTMLSpanElement>(componentMap.filterTotal).forEach((totalSpan) => {
+    // eslint-disable-next-line no-param-reassign
+    totalSpan.textContent = content;
+  });
+}
+
 function loadTotals(panel: HTMLElement): void {
   const {countsUrl} = panel.dataset;
 
   if (!countsUrl) {
     return;
   }
+
+  setAllTotals(panel, '(…)');
 
   fetch(countsUrl, {headers: {'X-Requested-With': 'XMLHttpRequest'}})
     .then((response) => {
@@ -115,7 +124,15 @@ function loadTotals(panel: HTMLElement): void {
         }
       });
     })
-    .catch(() => undefined);
+    .catch(() => setAllTotals(panel, ''));
+}
+
+function loadAllTotals(): void {
+  getPanels().forEach((panel) => {
+    if (panel.dataset.displayTotals === '1') {
+      loadTotals(panel);
+    }
+  });
 }
 
 function initDateRuleInputs(container: HTMLElement | Document): void {
@@ -321,7 +338,7 @@ function init(): void {
   initDelegatedEvents();
   initConfigurationForms();
   initDateRuleInputs(document);
-  loadAllFilters();
+  loadAllTotals();
 }
 
 if (document.readyState === 'loading') {

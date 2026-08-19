@@ -24,6 +24,7 @@ class GridViewsPanelPresenter
      * @param EmployeeContext $employeeContext
      * @param ShopContext $shopContext
      * @param AdminGridConfigurationRepository $configurationRepository
+     * @param GridViewsPresenter $gridViewsPresenter
      * @param FormBuilderInterface $gridViewFormBuilder
      * @param FormBuilderInterface $gridConfigurationFormBuilder
      * @param RequestStack $requestStack
@@ -33,6 +34,7 @@ class GridViewsPanelPresenter
         private readonly EmployeeContext $employeeContext,
         private readonly ShopContext $shopContext,
         private readonly AdminGridConfigurationRepository $configurationRepository,
+        private readonly GridViewsPresenter $gridViewsPresenter,
         private readonly FormBuilderInterface $gridViewFormBuilder,
         private readonly FormBuilderInterface $gridConfigurationFormBuilder,
         private readonly RequestStack $requestStack,
@@ -98,6 +100,7 @@ class GridViewsPanelPresenter
             'controller_route' => $route,
             'display_totals' => $displayTotals,
             'selected_view_id' => $request->query->getInt(GridViewUrlGenerator::SELECTED_VIEW_PARAM),
+            'views' => $this->gridViewsPresenter->presentViews($gridId, $route),
             'save_view_form' => $saveViewForm->createView(),
             'configuration_form' => $configurationForm->createView(),
         ];
