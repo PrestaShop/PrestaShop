@@ -3068,7 +3068,18 @@ exit;
             return null;
         }
 
-        $ret = $smarty->clearCompiledTemplate();
+        try {
+            $ret = $smarty->clearCompiledTemplate();
+        } catch (UnexpectedValueException $e) {
+            // Smarty iterates the compile directory with RecursiveIteratorIterator
+            // without CATCH_GET_CHILD; a subdirectory removed by another process
+            // (concurrent request, cron, deploy) between the parent enumeration
+            // and the descent makes getChildren() throw UnexpectedValueException.
+            // Absorb it: any module _clearCache() call bubbling this exception
+            // can crash unrelated critical paths (payment webhooks, order
+            // validation…) — see PrestaShop/ps_crossselling.
+            $ret = null;
+        }
 
         Hook::exec('actionClearCompileCache');
 
