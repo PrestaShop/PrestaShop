@@ -45,42 +45,18 @@ concurrency:
 
 jobs:
   # 1) Gate: only members of the prestashop-sa team may run this.
-  #    Copied verbatim from create-build-branch.yml.
+  #    The org is hardcoded because this workflow also runs on mirrors/forks,
+  #    where the repository owner is not the PrestaShop organization.
   check-membership:
     name: Check team membership
     runs-on: ubuntu-latest
-    env:
-      TEAM_SLUG: prestashop-sa
     steps:
-      - name: Verify actor belongs to ${{ env.TEAM_SLUG }}
-        env:
-          TOKEN: ${{ secrets.JARVIS_TOKEN }}
-          ACTOR: ${{ github.actor }}
-        run: |
-          if [ -z "$TOKEN" ]; then
-            echo "::error::JARVIS_TOKEN secret is empty. Configure a token with read:org scope before running this workflow."
-            exit 1
-          fi
-
-          API_URL="https://api.github.com/orgs/PrestaShop/teams/${TEAM_SLUG}/memberships/${ACTOR}"
-          echo "Checking membership: ${API_URL}"
-
-          RESPONSE=$(curl -s -w "\n%{http_code}" \
-            -H "Authorization: Bearer $TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            "$API_URL")
-          STATUS=$(echo "$RESPONSE" | tail -1)
-          BODY=$(echo "$RESPONSE" | sed '$d')
-
-          if [ "$STATUS" = "200" ]; then
-            ROLE=$(echo "$BODY" | jq -r '.role // "unknown"')
-            STATE=$(echo "$BODY" | jq -r '.state // "unknown"')
-            echo "✅ ${ACTOR} is a member of ${TEAM_SLUG} (role=${ROLE}, state=${STATE})." >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "::error::${ACTOR} is not a member of ${TEAM_SLUG} (HTTP ${STATUS}). Only members of this team can run this sync."
-            echo "⛔ ${ACTOR} is not a member of ${TEAM_SLUG} (HTTP ${STATUS})." >> "$GITHUB_STEP_SUMMARY"
-            exit 1
-          fi
+      - name: Verify actor belongs to prestashop-sa
+        uses: PrestaShop/.github/.github/actions/team-guard@master
+        with:
+          team_slug: prestashop-sa
+          org: PrestaShop
+          token: ${{ secrets.JARVIS_TOKEN }}
 
   # 2) Sync: bare-clone upstream, then force-push the working branches and
   #    all tags into the repository this workflow runs on. Never deletes
