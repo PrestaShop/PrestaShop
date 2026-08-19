@@ -20,6 +20,7 @@ use Tab as LegacyTab;
 class MenuBuilder
 {
     private ?Tab $currentTab = null;
+    private ?Tab $parentTab = null;
     /** @var array<int, Tab[]> */
     private array $ancestorsTab = [];
 
@@ -57,6 +58,29 @@ class MenuBuilder
         return $tab;
     }
 
+    /**
+     * Returns the Tab associated with the '_parent' route attribute, or null if none.
+     * Used as a fallback for pages (create/edit) that have no Tab of their own.
+     */
+    public function getParentTab(): ?Tab
+    {
+        if ($this->parentTab !== null) {
+            return $this->parentTab;
+        }
+
+        $request = $this->requestStack->getMainRequest();
+        if (!$request) {
+            return null;
+        }
+
+        $parentRoute = $request->attributes->get('_parent');
+        $this->parentTab = !empty($parentRoute)
+            ? $this->tabRepository->findOneByRouteName($parentRoute)
+            : null;
+
+        return $this->parentTab;
+    }
+
     public function getCurrentTabLevel(): int
     {
         $currentTab = $this->getCurrentTab();
@@ -86,7 +110,7 @@ class MenuBuilder
      */
     public function getBreadcrumbLinks(): array
     {
-        $currentTab = $this->getCurrentTab();
+        $currentTab = $this->getCurrentTab() ?? $this->getParentTab();
         if (null === $currentTab) {
             return [];
         }

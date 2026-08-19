@@ -51,7 +51,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      *
      * @return Response
      */
-    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    #[AdminSecurity("is_granted('read', 'AdminExtraPropertyDefinitions')")]
     public function indexAction(
         ExtraPropertyDefinitionFilters $filters,
         #[Autowire(service: 'prestashop.core.grid.factory.extra_property_definition')]
@@ -80,7 +80,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      *
      * @return Response|RedirectResponse
      */
-    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[AdminSecurity("is_granted('create', 'AdminExtraPropertyDefinitions')")]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.builder.extra_property_definition_form_builder')]
@@ -128,7 +128,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      * Always responds 200: an unknown or un-introspectable form yields {"available": false}
      * and the UI falls back to a free-text path input.
      */
-    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    #[AdminSecurity("is_granted('read', 'AdminExtraPropertyDefinitions')")]
     public function formFieldsAction(string $formId, FormFieldTreeProvider $treeProvider): JsonResponse
     {
         $fields = $treeProvider->getTree($formId);
@@ -155,7 +155,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      *
      * @return Response|RedirectResponse
      */
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_extra_property_definitions_index')]
+    #[AdminSecurity("is_granted('update', 'AdminExtraPropertyDefinitions')", redirectRoute: 'admin_extra_property_definitions_index')]
     public function editAction(
         int $extraPropertyDefinitionId,
         Request $request,
@@ -223,7 +223,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      *
      * @return Response|RedirectResponse
      */
-    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_extra_property_definitions_index')]
+    #[AdminSecurity("is_granted('read', 'AdminExtraPropertyDefinitions')", redirectRoute: 'admin_extra_property_definitions_index')]
     public function viewAction(
         int $extraPropertyDefinitionId,
         #[Autowire(service: 'prestashop.core.form.builder.extra_property_definition_form_builder')]
@@ -263,7 +263,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_extra_property_definitions_index')]
-    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.')]
+    #[AdminSecurity("is_granted('delete', 'AdminExtraPropertyDefinitions')", message: 'You do not have permission to delete this.')]
     public function deleteAction(int $extraPropertyDefinitionId): RedirectResponse
     {
         return $this->doDelete($extraPropertyDefinitionId, false);
@@ -277,7 +277,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_extra_property_definitions_index')]
-    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.')]
+    #[AdminSecurity("is_granted('delete', 'AdminExtraPropertyDefinitions')", message: 'You do not have permission to delete this.')]
     public function deleteDropColumnAction(int $extraPropertyDefinitionId): RedirectResponse
     {
         return $this->doDelete($extraPropertyDefinitionId, true);
@@ -309,7 +309,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_extra_property_definitions_index')]
-    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.')]
+    #[AdminSecurity("is_granted('delete', 'AdminExtraPropertyDefinitions')", message: 'You do not have permission to delete this.')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         return $this->doBulkDelete($request, false);
@@ -323,7 +323,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_extra_property_definitions_index')]
-    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.')]
+    #[AdminSecurity("is_granted('delete', 'AdminExtraPropertyDefinitions')", message: 'You do not have permission to delete this.')]
     public function bulkDeleteDropColumnAction(Request $request): RedirectResponse
     {
         return $this->doBulkDelete($request, true);
