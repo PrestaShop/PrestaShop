@@ -174,7 +174,7 @@ class GridViewControllerTest extends SymfonyIntegrationTestCase
         $this->assertSame(0, $counts[$matchingNone->getId()]);
     }
 
-    public function testCountsAndExportWorkOnTheProductGrid(): void
+    public function testCountsWorkOnTheProductGrid(): void
     {
         $productView = $this->createViewFixture(
             'All products',
@@ -192,32 +192,6 @@ class GridViewControllerTest extends SymfonyIntegrationTestCase
         $counts = json_decode((string) $this->client->getResponse()->getContent(), true)['counts'];
         $this->assertIsInt($counts[$productView->getId()]);
         $this->assertGreaterThan(0, $counts[$productView->getId()]);
-
-        $this->client->request('GET', $this->router->generate('admin_grid_views_export', [
-            'gridViewId' => $productView->getId(),
-        ]));
-
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-        $csvContent = (string) $this->client->getInternalResponse()->getContent();
-        $this->assertGreaterThan(1, count(array_filter(explode("\n", $csvContent))));
-    }
-
-    public function testExportReturnsACsvOfTheViewRecords(): void
-    {
-        $gridView = $this->createViewFixture('Export me', ['filters' => ['date_add' => ['from' => '2000-01-01', 'to' => '2099-12-31']]]);
-
-        $this->client->request('GET', $this->router->generate('admin_grid_views_export', [
-            'gridViewId' => $gridView->getId(),
-        ]));
-        $response = $this->client->getResponse();
-
-        $this->assertTrue($response->isSuccessful());
-        $this->assertStringContainsString('text/csv', (string) $response->headers->get('content-type'));
-        $this->assertStringContainsString('attachment', (string) $response->headers->get('content-disposition'));
-
-        $csvContent = (string) $this->client->getInternalResponse()->getContent();
-        $this->assertNotEmpty($csvContent);
-        $this->assertGreaterThan(1, count(array_filter(explode("\n", $csvContent))));
     }
 
     public function testDuplicateThenDeleteOwnView(): void

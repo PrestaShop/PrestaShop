@@ -22,14 +22,6 @@ admin_grid_views_create:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\GridViewController::createAction'
 
-admin_grid_views_export:
-  path: /export/{gridViewId}
-  methods: [ GET ]
-  requirements:
-    gridViewId: \d+
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\GridViewController::exportAction'
-
 admin_grid_views_edit:
   path: /edit/{gridViewId}
   methods: [ GET, POST ]

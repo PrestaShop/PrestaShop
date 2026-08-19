@@ -10,8 +10,6 @@ services:
 
   PrestaShop\PrestaShop\Core\Grid\View\GridViewCounter: ~
 
-  PrestaShop\PrestaShop\Core\Grid\View\GridViewCsvExporter: ~
-
   PrestaShop\PrestaShop\Core\Grid\View\DynamicDateRuleApplier: ~
 
   PrestaShop\PrestaShop\Core\Grid\View\GridViewUrlGenerator: ~
