@@ -44,12 +44,6 @@
             {{ 'Duplicate'|trans({}, 'Admin.Actions') }}
           </button>
 
-          <a class="dropdown-item"
-             href="{{ path('admin_grid_views_export', {gridViewId: view.id}) }}">
-            <i class="material-icons mr-1">file_download</i>
-            {{ 'Export to CSV'|trans({}, 'Admin.Actions') }}
-          </a>
-
           {% if view.is_own %}
             <div class="dropdown-divider"></div>
             <button class="dropdown-item text-danger js-grid-view-delete"

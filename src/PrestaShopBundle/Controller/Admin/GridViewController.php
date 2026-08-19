@@ -20,9 +20,7 @@ use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\View\GridViewCounter;
-use PrestaShop\PrestaShop\Core\Grid\View\GridViewCsvExporter;
 use PrestaShop\PrestaShop\Core\Grid\View\GridViewsPresenter;
-use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
@@ -296,47 +294,6 @@ class GridViewController extends PrestaShopAdminController
             'success' => true,
             'message' => $this->trans('Update successful', [], 'Admin.Notifications.Success'),
         ]);
-    }
-
-    /**
-     * @param int $gridViewId
-     * @param RouterInterface $router
-     * @param GridViewProvider $gridViewProvider
-     * @param GridViewCsvExporter $gridViewCsvExporter
-     *
-     * @return CsvResponse
-     */
-    #[AdminSecurity("is_granted('ROLE_EMPLOYEE')")]
-    public function exportAction(
-        int $gridViewId,
-        RouterInterface $router,
-        GridViewProvider $gridViewProvider,
-        GridViewCsvExporter $gridViewCsvExporter,
-    ): CsvResponse {
-        $this->assertFeatureIsEnabled();
-
-        try {
-            $gridView = $gridViewProvider->getAccessibleGridView(new GridViewId($gridViewId));
-        } catch (GridViewException $e) {
-            throw $this->httpExceptionFor($e, 'This view cannot be exported.');
-        }
-        $this->assertCanReadGridRoute($gridView->getGridConfiguration()->getControllerRoute(), $router);
-
-        try {
-            $exportedData = $gridViewCsvExporter->export($gridView);
-        } catch (GridViewException $e) {
-            throw new NotFoundHttpException('This view cannot be exported.', $e);
-        }
-
-        $fileNameSlug = trim(preg_replace('/[^a-zA-Z0-9_-]+/', '-', $gridView->getName()) ?? '', '-');
-
-        return (new CsvResponse())
-            ->setData($exportedData['rows_provider'])
-            ->setModeType(CsvResponse::MODE_OFFSET)
-            ->setLimit(GridViewCsvExporter::CHUNK_SIZE)
-            ->setHeadersData($exportedData['headers'])
-            ->setFileName('grid_view_' . ('' !== $fileNameSlug ? $fileNameSlug . '_' : '') . date('Y-m-d_His') . '.csv')
-        ;
     }
 
     /**

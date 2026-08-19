@@ -12,14 +12,14 @@ Employee-saved grid views: named, optionally shared snapshots of a back-office g
 | Handlers + access & business validation | `src/Adapter/GridView/` |
 | Doctrine entities | `src/PrestaShopBundle/Entity/AdminGridView.php`, `AdminGridConfiguration.php` |
 | Repositories | `src/PrestaShopBundle/Entity/Repository/AdminGridViewRepository.php`, `AdminGridConfigurationRepository.php` |
-| Grid views component (presenters, counter, CSV export, filters builder) | `src/Core/Grid/View/` |
+| Grid views component (presenters, counter, filters builder) | `src/Core/Grid/View/` |
 | CRUD form layer (providers/handlers/options provider) | `src/Core/Form/IdentifiableObject/` |
 | Controller | `src/PrestaShopBundle/Controller/Admin/GridViewController.php` |
 
 ## Non-obvious patterns
 
 - **Saved criteria are never read from the client**: `AddGridViewHandler` reads the employee's persisted filters from `ps_admin_filter` (`AdminFilterRepository`); only `grid_state` and `dynamic_date_rules` come from the form and are sanitized server-side (`GridViewDataSanitizer`).
-- **Access rules live in `Adapter/GridView/GridViewProvider`**: `getOwnedGridView()` (edit/delete — owner only) vs `getAccessibleGridView()` (duplicate/export — owner or shared), both also requiring shop authorization. Handlers AND the controller reuse it; violations throw `GridViewNotFoundException` / `GridViewAccessDeniedException`, mapped to 404/403 in the controller.
+- **Access rules live in `Adapter/GridView/GridViewProvider`**: `getOwnedGridView()` (edit/delete — owner only) vs `getAccessibleGridView()` (duplicate — owner or shared), both also requiring shop authorization. Handlers AND the controller reuse it; violations throw `GridViewNotFoundException` / `GridViewAccessDeniedException`, mapped to 404/403 in the controller.
 - **`SaveGridConfigurationCommand` is an upsert** keyed on (employee, shop, grid id, route) — `AdminGridConfigurationRepository::findOrCreateForEmployee()` recovers from concurrent-insert unique violations via DBAL insert.
 - **The employee/shop context is resolved in the handlers** (`EmployeeContext`/`ShopContext`), not carried by the commands: the actor is never client-supplied.
 - **`filter_id` must belong to the grid** (equal to the grid id or prefixed by `{gridId}_` for dynamic grids) — validated in the command constructors (`AbstractGridViewCommand`).
@@ -36,6 +36,6 @@ Employee-saved grid views: named, optionally shared snapshots of a back-office g
 
 ## Related
 
-- [Component/Grid/CONTEXT.md](../../Component/Grid/CONTEXT.md) — grid views panel, counter, CSV export, `GridFactoryProvider`
+- [Component/Grid/CONTEXT.md](../../Component/Grid/CONTEXT.md) — grid views panel, counter, `GridFactoryProvider`
 - [Component/Forms/CONTEXT.md](../../Component/Forms/CONTEXT.md) — identifiable-object CRUD form pattern
 - [Component/CQRS/CONTEXT.md](../../Component/CQRS/CONTEXT.md) — command/query conventions
