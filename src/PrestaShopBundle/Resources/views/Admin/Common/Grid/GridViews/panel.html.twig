@@ -46,7 +46,14 @@
   {% endblock %}
 
   {% block grid_views_list_container %}
-    <div class="grid-views-list js-grid-views-list d-flex flex-wrap align-items-center ml-2"></div>
+    <div class="grid-views-list js-grid-views-list d-flex flex-wrap align-items-center ml-2">
+      {{ include('@PrestaShop/Admin/Common/Grid/GridViews/views.html.twig', {
+        grid_views: grid_views.views,
+        grid_id: grid.id,
+        selected_view_id: grid_views.selected_view_id,
+        display_totals: grid_views.display_totals,
+      }) }}
+    </div>
   {% endblock %}
 
   {% block grid_views_create_modal %}
