@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
@@ -46,12 +47,7 @@ class ForwardCustomerThreadCommand
      */
     public static function toAnotherEmployee($customerThreadId, $employeeId, $comment)
     {
-        $command = new self();
-        $command->employeeId = new EmployeeId($employeeId);
-        $command->customerThreadId = new CustomerThreadId($customerThreadId);
-        $command->comment = $comment;
-
-        return $command;
+        return new self((int) $customerThreadId, (string) $comment, (int) $employeeId);
     }
 
     /**
@@ -65,19 +61,38 @@ class ForwardCustomerThreadCommand
      */
     public static function toSomeoneElse($customerThreadId, $email, $comment)
     {
-        $command = new self();
-        $command->email = new Email($email);
-        $command->customerThreadId = new CustomerThreadId($customerThreadId);
-        $command->comment = $comment;
-
-        return $command;
+        return new self((int) $customerThreadId, (string) $comment, null, (string) $email);
     }
 
     /**
-     * Command should be created using static factories
+     * @param int $customerThreadId
+     * @param string $comment
+     * @param int|null $employeeId Forward to another employee. Mutually exclusive with $email.
+     * @param string|null $email Forward to someone else by email. Mutually exclusive with $employeeId.
+     *
+     * @throws CustomerServiceException if neither or both of $employeeId and $email are provided
      */
-    private function __construct()
-    {
+    public function __construct(
+        int $customerThreadId,
+        string $comment,
+        ?int $employeeId = null,
+        ?string $email = null
+    ) {
+        if ((null === $employeeId) === (null === $email)) {
+            throw new CustomerServiceException(
+                'Exactly one of $employeeId or $email must be provided to forward a customer thread',
+                CustomerServiceException::INVALID_FORWARD_TARGET
+            );
+        }
+
+        $this->customerThreadId = new CustomerThreadId($customerThreadId);
+        $this->comment = $comment;
+        if (null !== $employeeId) {
+            $this->employeeId = new EmployeeId($employeeId);
+        }
+        if (null !== $email) {
+            $this->email = new Email($email);
+        }
     }
 
     /**
