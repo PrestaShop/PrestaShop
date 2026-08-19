@@ -1443,7 +1443,7 @@ class FrontControllerCore extends Controller
                 'content_only' => $content_only,
             ]
         );
-        
+
         if ($hookLayout !== $layout) {
             return $hookLayout;
         }
@@ -1497,7 +1497,7 @@ class FrontControllerCore extends Controller
             [
                 'controller' => $this,
                 'template_file' => &$overridden_template,
-                'original_template_file' => $template,
+                'default_template_file' => $template,
                 'entity' => $params['entity'],
                 'id' => $params['id'],
                 'locale' => $locale,
