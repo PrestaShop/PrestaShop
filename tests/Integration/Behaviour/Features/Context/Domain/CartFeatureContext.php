@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
@@ -1313,6 +1314,24 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->assertLastErrorIs(CartNotFoundException::class);
+    }
+
+    /**
+     * @When I view the current cart in the back office
+     */
+    public function viewCurrentCartInBackOffice(): void
+    {
+        $this->getQueryBus()->handle(new GetCartForViewing((int) Context::getContext()->cart->id));
+    }
+
+    /**
+     * @Then the current cart should have :count cart rules
+     */
+    public function currentCartShouldHaveCartRules(int $count): void
+    {
+        $cart = new Cart((int) Context::getContext()->cart->id);
+
+        Assert::assertCount($count, $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false));
     }
 
     /**
