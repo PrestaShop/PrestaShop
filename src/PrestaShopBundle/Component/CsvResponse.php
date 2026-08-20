@@ -200,6 +200,29 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
+     * Sanitizes a row of data to prevent CSV formula injection (OWASP).
+     * Values starting with =, +, -, @, tab or carriage return are prefixed with a single quote.
+     *
+     * @param array $row
+     *
+     * @return array
+     */
+    private function sanitizeRow(array $row): array
+    {
+        return array_map(function ($value) {
+            if ($value === null) {
+                return '';
+            }
+            $value = (string) $value;
+            if (strlen($value) > 0 && in_array($value[0], ['=', '+', '-', '@', "\t", "\r"], true)) {
+                $value = "'" . $value;
+            }
+
+            return $value;
+        }, $row);
+    }
+
+    /**
      * Process to data export if $this->data is an array.
      */
     private function processDataArray()
@@ -207,11 +230,11 @@ class CsvResponse extends StreamedResponse
         $handle = tmpfile();
 
         if ($this->includeHeaderRow) {
-            fputcsv($handle, $this->headersData, ';', '"', '');
+            fputcsv($handle, $this->sanitizeRow($this->headersData), ';', '"', '');
         }
 
         foreach ($this->data as $line) {
-            fputcsv($handle, $line, ';', '"', '');
+            fputcsv($handle, $this->sanitizeRow($line), ';', '"', '');
         }
 
         $this->dumpFile($handle);
@@ -225,7 +248,7 @@ class CsvResponse extends StreamedResponse
         $handle = tmpfile();
 
         if ($this->includeHeaderRow) {
-            fputcsv($handle, $this->headersData, ';', '"', '');
+            fputcsv($handle, $this->sanitizeRow($this->headersData), ';', '"', '');
         }
 
         do {
@@ -245,7 +268,7 @@ class CsvResponse extends StreamedResponse
                     }
                 }
 
-                fputcsv($handle, $lineData, ';', '"', '');
+                fputcsv($handle, $this->sanitizeRow($lineData), ';', '"', '');
             }
 
             $this->incrementData();

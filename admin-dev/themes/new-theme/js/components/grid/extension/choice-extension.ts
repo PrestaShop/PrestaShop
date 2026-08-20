@@ -28,6 +28,8 @@ export default class ChoiceExtension {
       .getContainer()
       .find(GridMap.bulks.choiceOptions);
 
+    this.letOpenMenusEscapeTheScrollingTable(grid);
+
     $choiceOptionsContainer.find(GridMap.dropdownItem).on('click', (e) => {
       e.preventDefault();
       const $button = $(e.currentTarget);
@@ -35,6 +37,37 @@ export default class ChoiceExtension {
       const url = $parent.data('url');
 
       this.submitForm(url, $button);
+    });
+  }
+
+  /**
+   * The grid sits inside a `.table-responsive`, which sets `overflow-x: auto`. Once either axis is
+   * not `visible` the other one clips too, so a status menu taller than the table is cut off - which
+   * is what happens on a short list, where the table is only a few rows high.
+   *
+   * The horizontal scrolling is still wanted for wide grids, so rather than dropping it the
+   * container is allowed to overflow only while a menu is open.
+   *
+   * @param {Grid} grid
+   * @private
+   */
+  private letOpenMenusEscapeTheScrollingTable(grid: Grid): void {
+    const $container = grid.getContainer();
+
+    $container.on('show.bs.dropdown', (e: JQuery.TriggeredEvent) => {
+      if ($(e.target).find(GridMap.bulks.choiceOptions).length === 0) {
+        return;
+      }
+
+      $(e.target).closest('.table-responsive').css('overflow', 'visible');
+    });
+
+    $container.on('hide.bs.dropdown', (e: JQuery.TriggeredEvent) => {
+      if ($(e.target).find(GridMap.bulks.choiceOptions).length === 0) {
+        return;
+      }
+
+      $(e.target).closest('.table-responsive').css('overflow', '');
     });
   }
 

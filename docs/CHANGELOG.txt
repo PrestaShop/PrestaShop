@@ -418,6 +418,127 @@ Changelog for PrestaShop 9
     - #37161: Functional tests - Migrate link list pages to ui-testing-library and refacto CRUD linkList (by @nesrineabdmouleh)
 
 ####################################
+#   v9.1.5 - (2026-08-12)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #41942: Add shared stock help message to combination availability form (by @Codencode)
+    - #41776: Change badge color for product quantity display (by @Maofree)
+    - GHSA-xrwj-pq6w-f8m4 Validate image URLs on CSV import to prevent Server-Side Request Forgery (by @clotairer & @matthieu-rolland, vulnerability reported by lrui1)
+    - GHSA-w6j9-q9rq-wrqg Escape leading formula characters in CSV exports (by @clotairer & @matthieu-rolland, vulnerability reported by Suphawith Phusanbai)
+    - GHSA-2cr4-vw9p-pjvf Parse the X-Forwarded-For header from right to left to prevent IP spoofing (by @clotairer & @matthieu-rolland, vulnerability reported by Pedro Gabaldón Juliá from ITRESIT)
+    - GHSA-whxq-pxj5-qq7v Escape identifiers in legacy admin list filters to prevent SQL injection (by @clotairer & @matthieu-rolland, found by Savio from Doyensec in collaboration with Anthropic Research)
+    - GHSA-jf3w-9rmr-5rcr Restrict the notifications endpoints to authorised employees (by @clotairer & @matthieu-rolland, vulnerability reported by Robert Scherer)
+  - Bug fix:
+    - #42203: Let a grid status menu show past the scrolling table (by @boo-code)
+    - #42057: Fix changing an employee role when the default page is specific to the new role (by @boo-code)
+    - #42004: Fix UTF-8 string truncation in StringModifier::cutEnd() (by @Codencode)
+    - #42001: Guard order message name-uniqueness check on partial edit (backport 9.1.x) (by @mattgoud)
+    - #41950: Show an empty order status dropdown when the order has no status (by @boo-code)
+    - #41944: Connect `GET /discount-types` to the BO (by @nicosomb)
+    - #41929: Fix catalog price rule links when feature flag is enabled (by @Codencode)
+    - #41923: Changing stock behaviour not working with multistore. (by @Prestaworks)
+    - #41919: Fix: Problem with manual special price setting with comma becoming dot (product page) (by @Codencode)
+    - #41871: Use the small_default thumbnail for product/combination cover URLs (by @boo-code)
+    - #41797: Fix: Color preview is still displayed after changing an attribute group from color to another type (by @Codencode)
+    - #41736: Fix custom feature value selection when no predefined values exist (by @Codencode)
+    - #41735: Fix feature values grid to exclude custom values (by @Codencode)
+    - #41727: Fix: Module Development and Distribution: Prestashop deletes automatically src/Entity/index.php, but it does not recursively in subfolders (by @Codencode)
+    - #41675: Fix: HTMLPurifier through twig extension is not adhering to cache dir config (by @Codencode)
+    - #41665: Display invoice prefix in employee language on order view page (by @PrestaEdit)
+    - #41652: Fix:  Changing an order's status throws "Duplicate entry '<idp>-<idpa>-0-0' for product_sqlstock" when the order contains a deleted combination (single-shop) (by @Codencode)
+    - #41611: Cart rule compatibility search does not filter results for new cart rule (by @LaBisquerie)
+    - #41573: Fix highlight option missing in Discount V2 form (by @mattgoud)
+    - #41570: Use position as default sorting for feature grid (by @Codencode)
+    - #41552: Fix #41189 - Allow changing discount status on edit page (by @mattgoud)
+    - #41551: Fix shop selector lists overflowing their container (by @david-prochazka)
+    - #41530: Shopping Carts : For combinations, if no image defined, use the cover  image (by @Progi1984)
+    - #41524: Invoice : If no payments, display the payment method (by @Progi1984)
+    - #41468: Fix: Multishop: cache_default_attribute is not reset for all shops when changing a product with combinations to a standard product (by @Codencode)
+    - #41457: Enhance invoice filename safety by sanitizing number (by @Maofree)
+    - #41394: Fix: [Multishop] Error when updating "Schema of URLs" for a single shop (by @Codencode)
+    - #41307: Fix PDF downloads using Symfony responses (by @Codencode)
+    - #41303: Fix address state selection after country states reload (by @Codencode)
+    - #41238: Fix: Inconsistent escaping of displayCustomization output (by @Codencode)
+    - #41206: Bugfix: prevent email shortcodes automatically being moved. Fixes #38563 issue (by @aleksiuno)
+    - #41204: Change the redirection of combination button learn more (by @AureRita)
+    - #41036: Fix: Error 500 if I enter a space in a customer's first or last name field (by @Codencode)
+    - #41007: Fix: CountryQueryBuilder::getCountQueryBuilder() always returns 1 instead of the true total (by @Codencode)
+    - #40999: Fix/40997 default currency import on shop copy (by @Codencode)
+    - #40898: Fix: Bug: reserved_quantity not updated when "Share available quantities for sale" is enabled (Multishop) (by @Codencode)
+    - #40099: Fix: Cart rule combinations lost when saving if lazy-loaded list (jscroll) is not fully loaded (by @Codencode)
+- Front Office:
+  - New feature:
+    - #41824: Add hook actionNotFound (by @Hlavtox)
+  - Improvement:
+    - #41281: Harden and depreciate /init.php for 9.1.x (by @jf-viguier)
+    - #40977: Add prices in all variants to make displaying them easier in templates (by @Hlavtox)
+  - Bug fix:
+    - #42000: Fix ProductController::getProduct() nullable return type (by @Codencode)
+    - #41899: Scope Image::getCover() to the shop (by @boo-code)
+    - #41649: Add missing breadcrumb link to OrderDetailController (by @Codencode)
+    - #41590: Add missing breadcrumb link to CartController (by @Codencode)
+    - #41509: Avoid bad URL on invalid media with media servers enabled and CCC disabled (by @gross-nvs)
+    - #41299: Guard product page when product is null (by @Codencode)
+    - #41298: Fix: hook extra content issues with multi shipment (by @Nakahiru)
+  - Refactoring:
+    - #41845: Add simple HTML to text stripper, refactor getting meta (by @Hlavtox)
+- Core:
+  - New feature:
+    - #40654: Theme helper to check framework's compatibility (by @kpodemski)
+  - Improvement:
+    - #42239: Update Symfony components after 6.4.43 release (by @nicosomb)
+    - #41883: Update Symfony components after 6.4.42 release (by @nicosomb)
+    - #41647: Bump version 9.1.5 (by @jolelievre)
+    - #41567: Update Symfony components after 6.4.41 release (by @nicosomb)
+    - #41529: Set version to 9.1.4 (by @Progi1984)
+    - #41465: Update Symfony components after 6.4.39 release (by @nicosomb)
+    - #310: Implement URL safety validation for image imports (build-915) (by @matthieu-rolland)
+  - Bug fix:
+    - #41842: Fix: Update cache directory handling in HTMLPurifier constructor (by @Progi1984)
+    - #41840: Keep word separation when stripping HTML for the search index (by @boo-code)
+    - #41808: Fix meta title appended to CMS page, CMS category, manufacturer, and supplier URLs (by @Codencode)
+    - #41761: Fix Hummingbird development files included in release package (by @Codencode)
+    - #41760: Fix image-types list endpoint returning 405 by making grid data facto… (by @axel-paillaud)
+    - #41750: Prevent empty ean13 into product URL (by @hadjedjvincent)
+    - #41708: Fix states lookup using row indexes instead of country IDs (by @paulschwahn)
+    - #41626: Fix multilang fallback for fields using isRequiredWhenActive and defaultLanguageRequiredWhenActive validators (by @guillaume60240)
+    - #41431: Backport #41356 : Add CartId into product search handler when employeeId not provided (by @Progi1984)
+    - #41386: Fix route management and comment Dispatcher (by @Hlavtox)
+    - #41273: Fix: cast bool field in get cms page category for editing handler (by @axel-paillaud)
+    - #41225: Fix attribute and attribute group position ordering in core methods (by @nicohery)
+    - #41130: Fix: guard against null employee in associateWithShops() (by @axel-paillaud)
+    - #40744: Fix translation catalogue filename corruption during export (by @aeyoll)
+    - #39837: Change matching method in ShopContextSubscriber (by @djbuch)
+    - #317: Update modules and dependencies (by @jolelievre)
+  - Refactoring:
+    - #41713: Fix unit price ratio currency conversion and specific price issue (by @Hlavtox)
+    - #41579: Fix some deprecations (by @Hlavtox)
+- Tests:
+  - Improvement:
+    - #42134: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #42090: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #42033: Add integration tests for ModuleHtmlAuthorizationChecker (by @Codencode)
+    - #41987: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #41810: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #41805: Functional Tests : Fixed after #41570 (by @Progi1984)
+    - #41788: Functional Tests : Improved for Klavyio (by @Progi1984)
+    - #41780: Functional Tests : Improved for Klavyio (by @Progi1984)
+    - #41747: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #41737: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #41659: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #41518: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #41503: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #41476: Functional Tests : Remove numbering in endpoints directoriess (by @Progi1984)
+    - #41475: Functional Tests : @prestashop-core/ui-testing (by @Progi1984)
+    - #41462: Functional Tests : @prestashop-core/ui-testing (by @Progi1984)
+  - Bug fix:
+    - #42031: Fix CI matrix generator crashing on backticks in PR description (by @boo-code)
+    - #41982: Pin maildev image to 2.2.1 in behaviour tests workflow (by @nicosomb)
+    - #41755: Fix flaky quick access filter UI test (multi-tab) (by @mattgoud)
+
+####################################
 #   v9.1.4 - (2026-06-03)
 ####################################
 
