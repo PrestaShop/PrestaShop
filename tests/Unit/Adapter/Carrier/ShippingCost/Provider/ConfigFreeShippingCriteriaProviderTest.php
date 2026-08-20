@@ -55,7 +55,7 @@ class ConfigFreeShippingCriteriaProviderTest extends TestCase
 
     public function testGetCriteriaConvertsPriceBeforeHookAndUsesResolvedZoneId(): void
     {
-        $context = $this->createContext(2, 5); // currencyId = 2, resolvedZoneId = 5
+        $context = $this->createContext(2, 5); // currencyId = 2, zoneId = 5
 
         $this->configuration->method('get')->willReturnCallback(function ($key) {
             if ($key === 'PS_SHIPPING_FREE_PRICE') {
@@ -101,24 +101,86 @@ class ConfigFreeShippingCriteriaProviderTest extends TestCase
         $this->assertEquals(new DecimalNumber('10.5'), $criteria->getFreeWeight());
     }
 
-    private function createContext(int $currencyId, ?int $resolvedZoneId = null): ShippingCostPriceInterface
+    public function testGetCriteriaFallsBackToCountryZoneIdWhenResolvedZoneIdIsNull(): void
+    {
+        $context = $this->createContext(2, null, 7); // zoneId = null (unresolved), countryZoneId = 7
+
+        $this->configuration->method('get')->willReturn(false);
+
+        $zoneIdsPassedToHooks = [];
+        $this->hookManager->expects($this->exactly(2))
+            ->method('exec')
+            ->willReturnCallback(function (string $hookName, array $params) use (&$zoneIdsPassedToHooks) {
+                $zoneIdsPassedToHooks[$hookName] = $params['id_zone'];
+            });
+
+        $this->provider->getCriteria($context);
+
+        $this->assertSame(7, $zoneIdsPassedToHooks['actionOverrideShippingFreePrice']);
+        $this->assertSame(7, $zoneIdsPassedToHooks['actionOverrideShippingFreeWeight']);
+    }
+
+    public function testGetCriteriaDoesNotConvertPriceWhenFreePriceIsDisabled(): void
+    {
+        $context = $this->createContext(2, 5);
+
+        $this->configuration->method('get')->willReturn(false);
+
+        $this->currencyRepository->expects($this->never())->method('get');
+        $this->tools->expects($this->never())->method('convertPrice');
+
+        $criteria = $this->provider->getCriteria($context);
+
+        $this->assertFalse($criteria->hasFreePrice());
+        $this->assertFalse($criteria->hasFreeWeight());
+    }
+
+    public function testGetCriteriaAppliesModuleOverrideThroughHookReferenceParameters(): void
+    {
+        $context = $this->createContext(2, 5);
+
+        $this->configuration->method('get')->willReturnCallback(function ($key) {
+            if ($key === 'PS_SHIPPING_FREE_PRICE') {
+                return '100.00';
+            }
+            if ($key === 'PS_SHIPPING_FREE_WEIGHT') {
+                return '10.5';
+            }
+
+            return false;
+        });
+
+        $currency = $this->createMock(Currency::class);
+        $this->currencyRepository->method('get')->willReturn($currency);
+        $this->tools->method('convertPrice')->willReturn(120.0);
+
+        $this->hookManager->method('exec')->willReturnCallback(function (string $hookName, array $params) {
+            if ($hookName === 'actionOverrideShippingFreePrice') {
+                $params['shippingFreePrice'] = 42.0;
+            } elseif ($hookName === 'actionOverrideShippingFreeWeight') {
+                $params['shippingFreeWeight'] = 7.0;
+            }
+        });
+
+        $criteria = $this->provider->getCriteria($context);
+
+        $this->assertEquals(new DecimalNumber('42'), $criteria->getFreePrice());
+        $this->assertEquals(new DecimalNumber('7'), $criteria->getFreeWeight());
+    }
+
+    private function createContext(int $currencyId, ?int $zoneId = null, int $countryZoneId = 0): ShippingCostPriceInterface
     {
         $request = new ShippingCalculationRequest(
             [], // products
             1, // carrierId
-            1, // zoneId
+            $zoneId,
             null, // addressId
-            0, // countryZoneId
+            $countryZoneId,
             $currencyId,
             null, // customerId
             100.0 // orderTotal
         );
 
-        $context = ShippingCostPrice::createFromRequest($request);
-        if ($resolvedZoneId !== null) {
-            $context->setResolvedZoneId($resolvedZoneId);
-        }
-
-        return $context;
+        return ShippingCostPrice::createFromRequest($request);
     }
 }
