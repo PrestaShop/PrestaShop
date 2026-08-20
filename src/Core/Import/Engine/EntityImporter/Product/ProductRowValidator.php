@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
@@ -45,7 +46,7 @@ class ProductRowValidator
 
     public function __construct(
         protected readonly ValueParser $valueParser,
-        protected readonly ProductIdentityResolver $identityResolver,
+        protected readonly ProductFinder $productFinder,
         protected readonly ImportEntityExistenceChecker $existenceChecker,
         protected readonly TranslatorInterface $translator,
     ) {
@@ -60,26 +61,22 @@ class ProductRowValidator
     {
         $messages = [];
 
-        // fail fast: resolve() would throw for the same reasons. Both checks must
-        // stay AHEAD of the resolve() call below, which is what throws.
-        $reference = $row['reference'] ?? '';
-        if ($context->getOptions()->matchRef && '' !== $reference) {
-            if ($this->identityResolver->referenceExistsOutsideScope($reference, $context)) {
-                return [$this->error($rowIndex, 'reference', $this->translator->trans('The reference "%value%" matches a product outside the run\'s shop scope; the row was skipped to avoid creating a duplicate product.', ['%value%' => $reference], 'Admin.Advparameters.Notification'))];
-            }
+        $match = $this->productFinder->findRowMatch($row, $context);
 
-            // product.reference has no unique constraint: updating an arbitrary
-            // one of several homonyms is destructive, so the row fails here
-            // instead (an ambiguous association LINK only warns — see
-            // ProductAssociationResolver)
-            $referenceMatchCount = $this->identityResolver->countProductsByReference($reference, $context);
-            if ($referenceMatchCount > 1) {
-                return [$this->error($rowIndex, 'reference', $this->translator->trans('The reference "%value%" matches %count% products; the row was skipped to avoid updating the wrong one.', ['%value%' => $reference, '%count%' => $referenceMatchCount], 'Admin.Advparameters.Notification'))];
-            }
+        // the finder only reports these identity problems as data; turning
+        // them into ROW ERRORS is this validator's policy: creating would
+        // duplicate a reference living on another shop, and updating an
+        // arbitrary one of several homonyms is destructive (an ambiguous
+        // association LINK only warns — see the row importer)
+        $reference = $row['reference'] ?? '';
+        if ($match->foundOutsideShopScope) {
+            return [$this->error($rowIndex, 'reference', $this->translator->trans('The reference "%value%" matches a product outside the run\'s shop scope; the row was skipped to avoid creating a duplicate product.', ['%value%' => $reference], 'Admin.Advparameters.Notification'))];
+        }
+        if ($match->isAmbiguous()) {
+            return [$this->error($rowIndex, 'reference', $this->translator->trans('The reference "%value%" matches %count% products; the row was skipped to avoid updating the wrong one.', ['%value%' => $reference, '%count%' => $match->count()], 'Admin.Advparameters.Notification'))];
         }
 
-        $match = $this->identityResolver->resolve($row, $context);
-        if (!$match->isUpdate() && '' === ($row['name'] ?? '')) {
+        if (null === $match->first() && '' === ($row['name'] ?? '')) {
             $messages[] = $this->error($rowIndex, 'name', $this->translator->trans('The name is required when creating a product.', [], 'Admin.Advparameters.Notification'));
         }
 

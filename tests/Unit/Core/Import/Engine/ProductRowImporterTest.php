@@ -11,7 +11,7 @@ namespace Tests\Unit\Core\Import\Engine;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter;
-use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ReferenceOutsideShopScopeException;
+use PrestaShop\PrestaShop\Core\Import\Engine\Exception\InvalidResumeCursorException;
 use ReflectionClass;
 use RuntimeException;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -73,7 +73,7 @@ class ProductRowImporterTest extends TestCase
             true,
         ];
         yield 'import engine exception' => [
-            new ReferenceOutsideShopScopeException('The reference "REF-1" matches a product outside the run\'s shop scope'),
+            new InvalidResumeCursorException('The persisted resume cursor "abc" cannot be interpreted'),
             true,
         ];
         // implementation detail (table names, constraint names, stack context)

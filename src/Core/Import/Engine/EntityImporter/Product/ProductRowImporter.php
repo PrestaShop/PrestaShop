@@ -56,7 +56,8 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
-use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\EntityMatch;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\EntityLookupResult;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
@@ -91,7 +92,7 @@ class ProductRowImporter
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
         protected readonly ValueParser $valueParser,
-        protected readonly ProductIdentityResolver $identityResolver,
+        protected readonly ProductFinder $productFinder,
         protected readonly ProductAssociationResolver $associationResolver,
         protected readonly ProductRepository $productRepository,
         protected readonly SpecificPriceRepository $specificPriceRepository,
@@ -119,8 +120,37 @@ class ProductRowImporter
 
         try {
             $languageId = $this->getLanguageId($context);
-            $match = $this->identityResolver->resolve($row, $context);
-            $isCreation = !$match->isUpdate();
+            $match = $this->productFinder->findRowMatch($row, $context);
+
+            // database-phase defense (validation normally already skipped these
+            // rows, but the DB may have changed between phases): the finder only
+            // reports the identity problems as data — failing the row is THIS
+            // caller's policy, with the same wording as the validator
+            $reference = $row['reference'] ?? '';
+            if ($match->foundOutsideShopScope) {
+                $messages[] = new ImportMessage(
+                    ImportMessage::SEVERITY_ERROR,
+                    ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('The reference "%value%" matches a product outside the run\'s shop scope; the row was skipped to avoid creating a duplicate product.', ['%value%' => $reference], 'Admin.Advparameters.Notification'),
+                    $rowIndex,
+                    'reference'
+                );
+
+                return $messages;
+            }
+            if ($match->isAmbiguous()) {
+                $messages[] = new ImportMessage(
+                    ImportMessage::SEVERITY_ERROR,
+                    ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('The reference "%value%" matches %count% products; the row was skipped to avoid updating the wrong one.', ['%value%' => $reference, '%count%' => $match->count()], 'Admin.Advparameters.Notification'),
+                    $rowIndex,
+                    'reference'
+                );
+
+                return $messages;
+            }
+
+            $isCreation = null === $match->first();
 
             $productId = $this->resolveTargetProduct($row, $match, $context);
 
@@ -174,10 +204,10 @@ class ProductRowImporter
     /**
      * @param array<string, string> $row
      */
-    protected function resolveTargetProduct(array $row, EntityMatch $match, ImportRunContext $context): int
+    protected function resolveTargetProduct(array $row, EntityLookupResult $match, ImportRunContext $context): int
     {
-        if ($match->isUpdate()) {
-            return (int) $match->entityId;
+        if (null !== $match->first()) {
+            return $match->first();
         }
 
         $productType = $this->isVirtual($row) ? ProductType::TYPE_VIRTUAL : ProductType::TYPE_STANDARD;
@@ -204,9 +234,9 @@ class ProductRowImporter
      *
      * @param array<string, string> $row
      */
-    protected function updateProductType(array $row, EntityMatch $match, int $productId, ImportRunContext $context): void
+    protected function updateProductType(array $row, EntityLookupResult $match, int $productId, ImportRunContext $context): void
     {
-        if (!$match->isUpdate()) {
+        if (null === $match->first()) {
             return;
         }
 

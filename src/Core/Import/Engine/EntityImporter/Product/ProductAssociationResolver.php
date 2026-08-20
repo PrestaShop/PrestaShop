@@ -48,7 +48,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * None of these names carries a DB unique constraint, so a lookup can match
  * SEVERAL entities. The first one (lowest id) is used and a WARNING reports the
  * match count — an ambiguous LINK is recoverable, unlike an ambiguous product
- * identity, which fails the row (see ProductIdentityResolver). Because the
+ * identity, which fails the row (see the Finder\ProductFinder). Because the
  * resolutions are cached, the warning is emitted once per run, not once per row.
  */
 class ProductAssociationResolver

@@ -49,7 +49,7 @@ services:
 
   # Product importer and its internals (persistence goes through CQRS
   # commands and the existing Adapter repositories)
-  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductIdentityResolver: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder: ~
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowValidator: ~
 
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductAssociationResolver:

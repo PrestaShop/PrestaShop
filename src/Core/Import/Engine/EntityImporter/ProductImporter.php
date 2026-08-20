@@ -11,7 +11,8 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
-use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductIdentityResolver;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\EntityLookupResult;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowValidator;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
@@ -54,7 +55,7 @@ class ProductImporter extends AbstractEntityImporter
         RowMapper $rowMapper,
         protected readonly ProductRowValidator $rowValidator,
         protected readonly ProductRowImporter $rowImporter,
-        protected readonly ProductIdentityResolver $identityResolver,
+        protected readonly ProductFinder $productFinder,
         protected readonly ValueParser $valueParser,
         protected readonly CommandBusInterface $commandBus,
         protected readonly LoggerInterface $logger,
@@ -309,24 +310,24 @@ class ProductImporter extends AbstractEntityImporter
         $messages = [];
 
         $owner = $this->resolveAssociationOwner($row, $context);
-        if (!$owner->isUpdate()) {
+        if (null === $owner->first()) {
             $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('The accessories owner could not be identified (no matching id or reference); the accessories will be dropped.', [], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
-        } elseif ($owner->matchCount > 1) {
-            $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('The reference "%reference%" matches %count% products; the accessories will be attached to the first one.', ['%reference%' => $row['reference'] ?? '', '%count%' => $owner->matchCount], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
+        } elseif ($owner->isAmbiguous()) {
+            $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('The reference "%reference%" matches %count% products; the accessories will be attached to the first one.', ['%reference%' => $row['reference'] ?? '', '%count%' => $owner->count()], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
         }
 
         foreach ($this->valueParser->split($accessories, $context->getMultipleValueSeparator()) as $target) {
-            $resolved = $this->identityResolver->resolveProductTarget($target, $context);
+            $targetMatch = $this->productFinder->findTarget($target, $context);
 
-            if ($resolved['ambiguous']) {
+            if (EntityLookupResult::MATCHED_BY_ID === $targetMatch->firstMatchedBy() && $targetMatch->isAmbiguous()) {
                 $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches both a product id and a product reference; it will be linked by id.', ['%target%' => $target], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
-            } elseif (null === $resolved['resolvedId']) {
+            } elseif (null === $targetMatch->first()) {
                 $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches no product; the link will be dropped.', ['%target%' => $target], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
             } else {
-                if ($resolved['referenceMatchCount'] > 1) {
-                    $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches %count% products; it will be linked to the first one.', ['%target%' => $target, '%count%' => $resolved['referenceMatchCount']], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
+                if ($targetMatch->isAmbiguous()) {
+                    $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches %count% products; it will be linked to the first one.', ['%target%' => $target, '%count%' => $targetMatch->count()], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
                 }
-                if (ProductIdentityResolver::TARGET_MATCHED_BY_REFERENCE === $resolved['matchedBy'] && ctype_digit($target)) {
+                if (EntityLookupResult::MATCHED_BY_REFERENCE === $targetMatch->firstMatchedBy() && ctype_digit($target)) {
                     $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches no product id; it will be linked by reference.', ['%target%' => $target], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
                 }
             }
@@ -351,12 +352,12 @@ class ProductImporter extends AbstractEntityImporter
 
         try {
             $owner = $this->resolveAssociationOwner($row, $context);
-            if (!$owner->isUpdate()) {
+            $ownerId = $owner->first();
+            if (null === $ownerId) {
                 return [$this->accessoryError($rowIndex, $this->translator->trans('The accessories owner could not be identified (no matching id or reference); the accessories were dropped.', [], 'Admin.Advparameters.Notification'))];
             }
-            $ownerId = (int) $owner->entityId;
-            if ($owner->matchCount > 1) {
-                $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('The reference "%reference%" matches %count% products; the accessories were attached to the first one.', ['%reference%' => $row['reference'] ?? '', '%count%' => $owner->matchCount], 'Admin.Advparameters.Notification'));
+            if ($owner->isAmbiguous()) {
+                $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('The reference "%reference%" matches %count% products; the accessories were attached to the first one.', ['%reference%' => $row['reference'] ?? '', '%count%' => $owner->count()], 'Admin.Advparameters.Notification'));
             }
 
             if (EntityImporterInterface::CLEAR_ASSOCIATION_MARKER === $accessories) {
@@ -367,23 +368,23 @@ class ProductImporter extends AbstractEntityImporter
 
             $accessoryIds = [];
             foreach ($this->valueParser->split($accessories, $context->getMultipleValueSeparator()) as $target) {
-                $resolved = $this->identityResolver->resolveProductTarget($target, $context);
+                $targetMatch = $this->productFinder->findTarget($target, $context);
 
-                if ($resolved['ambiguous']) {
+                if (EntityLookupResult::MATCHED_BY_ID === $targetMatch->firstMatchedBy() && $targetMatch->isAmbiguous()) {
                     $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches both a product id and a product reference; it was linked by id.', ['%target%' => $target], 'Admin.Advparameters.Notification'));
-                } elseif (null === $resolved['resolvedId']) {
+                } elseif (null === $targetMatch->first()) {
                     $messages[] = $this->accessoryError($rowIndex, $this->translator->trans('Accessory "%target%" could not be resolved; the link was dropped.', ['%target%' => $target], 'Admin.Advparameters.Notification'));
                 } else {
-                    if ($resolved['referenceMatchCount'] > 1) {
-                        $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches %count% products; it was linked to the first one.', ['%target%' => $target, '%count%' => $resolved['referenceMatchCount']], 'Admin.Advparameters.Notification'));
+                    if ($targetMatch->isAmbiguous()) {
+                        $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches %count% products; it was linked to the first one.', ['%target%' => $target, '%count%' => $targetMatch->count()], 'Admin.Advparameters.Notification'));
                     }
-                    if (ProductIdentityResolver::TARGET_MATCHED_BY_REFERENCE === $resolved['matchedBy'] && ctype_digit($target)) {
+                    if (EntityLookupResult::MATCHED_BY_REFERENCE === $targetMatch->firstMatchedBy() && ctype_digit($target)) {
                         $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches no product id; it was linked by reference.', ['%target%' => $target], 'Admin.Advparameters.Notification'));
                     }
                 }
 
-                if (null !== $resolved['resolvedId']) {
-                    $accessoryIds[] = $resolved['resolvedId'];
+                if (null !== $targetMatch->first()) {
+                    $accessoryIds[] = $targetMatch->first();
                 }
             }
 
@@ -405,12 +406,12 @@ class ProductImporter extends AbstractEntityImporter
      *
      * @param array<string, string> $row
      */
-    protected function resolveAssociationOwner(array $row, ImportRunContext $context): EntityMatch
+    protected function resolveAssociationOwner(array $row, ImportRunContext $context): EntityLookupResult
     {
         $id = $row['id'] ?? '';
         $usableId = $context->getOptions()->forceIds && ctype_digit($id) ? (int) $id : null;
 
-        return $this->identityResolver->findExistingByReferenceThenId($row['reference'] ?? '', $usableId, $context);
+        return $this->productFinder->findByReferenceThenId($row['reference'] ?? '', $usableId, $context);
     }
 
     protected function accessoryError(int $rowIndex, string $message, string $phaseId = ImportPhaseDefinition::PHASE_ASSOCIATION): ImportMessage
