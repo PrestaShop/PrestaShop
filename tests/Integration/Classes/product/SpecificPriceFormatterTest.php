@@ -105,6 +105,68 @@ class SpecificPriceFormatterTest extends KernelTestCase
         }
     }
 
+    /**
+     * A catalog price rule with a percentage reduction must display the discounted unit price
+     * (base price minus the percentage), not the base price, when the shop is configured to show
+     * the discounted unit price in the volume-discounts table.
+     */
+    public function testPercentageReductionShowsDiscountedUnitPriceWhenDisplayingDiscountPrice(): void
+    {
+        $context = Context::getContext();
+
+        $currency = new Currency();
+        $currency->active = true;
+        $currency->conversion_rate = 1.0;
+        $currency->sign = '€';
+        $currency->iso_code = 'EUR';
+        $context->currency = $currency;
+
+        $language = new Language();
+        $language->iso_code = 'EN';
+        $language->locale = 'en-US';
+        $context->language = $language;
+
+        // 5% reduction from 300 items, no fixed price, reduction expressed tax-excluded.
+        $specificPrice = [
+            'id_specific_price' => '12',
+            'id_specific_price_rule' => '1',
+            'id_cart' => '0',
+            'id_product' => '10',
+            'id_shop' => '1',
+            'id_shop_group' => '0',
+            'id_currency' => '0',
+            'id_country' => '0',
+            'id_group' => '0',
+            'id_customer' => '0',
+            'id_product_attribute' => '0',
+            'price' => '-1.000000',
+            'from_quantity' => '300',
+            'reduction' => 0.05,
+            'reduction_tax' => '0',
+            'reduction_type' => 'percentage',
+            'from' => '0000-00-00 00:00:00',
+            'to' => '0000-00-00 00:00:00',
+            'score' => '48',
+            'quantity' => '300',
+            'reduction_with_tax' => 0,
+            'nextQuantity' => -1,
+        ];
+
+        $specificPriceFormatter = new SpecificPriceFormatter(
+            $specificPrice,
+            false,
+            $context->currency,
+            true
+        );
+        $formattedSpecificPrice = $specificPriceFormatter->formatSpecificPrice(4.25, 20.0, 0);
+
+        $priceFormatter = new PriceFormatter();
+        $this->assertEquals(
+            $priceFormatter->format(4.25 - 4.25 * 0.05),
+            $formattedSpecificPrice['discount']
+        );
+    }
+
     public function dataProviderSpecificPriceFormatter(): array
     {
         $specificPrices = [
