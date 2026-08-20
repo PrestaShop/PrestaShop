@@ -28,14 +28,14 @@ class SupplierFinder
     ) {
     }
 
-    public function find(string $value): EntityLookupResult
+    public function find(string $value): FoundEntity
     {
         if (ctype_digit($value) && $this->existenceChecker->exists('supplier', (int) $value)) {
-            return new EntityLookupResult([['id' => (int) $value, 'matchedBy' => EntityLookupResult::MATCHED_BY_ID]]);
+            return new FoundEntity([['id' => (int) $value, 'matchedBy' => FoundEntity::MATCHED_BY_ID]]);
         }
 
-        return new EntityLookupResult(array_map(
-            static fn (int $supplierId): array => ['id' => $supplierId, 'matchedBy' => EntityLookupResult::MATCHED_BY_NAME],
+        return new FoundEntity(array_map(
+            static fn (int $supplierId): array => ['id' => $supplierId, 'matchedBy' => FoundEntity::MATCHED_BY_NAME],
             $this->supplierRepository->getSupplierIdsByName($value)
         ));
     }

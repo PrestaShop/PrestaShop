@@ -33,18 +33,18 @@ class ShopFinder
     ) {
     }
 
-    public function find(string $entry): EntityLookupResult
+    public function find(string $entry): FoundEntity
     {
         if (ctype_digit($entry)) {
-            return new EntityLookupResult(
+            return new FoundEntity(
                 $this->existenceChecker->exists('shop', (int) $entry)
-                    ? [['id' => (int) $entry, 'matchedBy' => EntityLookupResult::MATCHED_BY_ID]]
+                    ? [['id' => (int) $entry, 'matchedBy' => FoundEntity::MATCHED_BY_ID]]
                     : []
             );
         }
 
-        return new EntityLookupResult(array_map(
-            static fn (int $shopId): array => ['id' => $shopId, 'matchedBy' => EntityLookupResult::MATCHED_BY_NAME],
+        return new FoundEntity(array_map(
+            static fn (int $shopId): array => ['id' => $shopId, 'matchedBy' => FoundEntity::MATCHED_BY_NAME],
             $this->cache[$entry] ??= $this->shopRepository->getShopIdsByName($entry)
         ));
     }

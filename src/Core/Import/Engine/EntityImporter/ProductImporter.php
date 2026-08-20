@@ -11,7 +11,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
-use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\EntityLookupResult;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\FoundEntity;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowValidator;
@@ -319,7 +319,7 @@ class ProductImporter extends AbstractEntityImporter
         foreach ($this->valueParser->split($accessories, $context->getMultipleValueSeparator()) as $target) {
             $targetMatch = $this->productFinder->findTarget($target, $context);
 
-            if (EntityLookupResult::MATCHED_BY_ID === $targetMatch->firstMatchedBy() && $targetMatch->isAmbiguous()) {
+            if (FoundEntity::MATCHED_BY_ID === $targetMatch->firstMatchedBy() && $targetMatch->isAmbiguous()) {
                 $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches both a product id and a product reference; it will be linked by id.', ['%target%' => $target], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
             } elseif (null === $targetMatch->first()) {
                 $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches no product; the link will be dropped.', ['%target%' => $target], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
@@ -327,7 +327,7 @@ class ProductImporter extends AbstractEntityImporter
                 if ($targetMatch->isAmbiguous()) {
                     $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches %count% products; it will be linked to the first one.', ['%target%' => $target, '%count%' => $targetMatch->count()], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
                 }
-                if (EntityLookupResult::MATCHED_BY_REFERENCE === $targetMatch->firstMatchedBy() && ctype_digit($target)) {
+                if (FoundEntity::MATCHED_BY_REFERENCE === $targetMatch->firstMatchedBy() && ctype_digit($target)) {
                     $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches no product id; it will be linked by reference.', ['%target%' => $target], 'Admin.Advparameters.Notification'), self::PHASE_ASSOCIATION_VALIDATION);
                 }
             }
@@ -370,7 +370,7 @@ class ProductImporter extends AbstractEntityImporter
             foreach ($this->valueParser->split($accessories, $context->getMultipleValueSeparator()) as $target) {
                 $targetMatch = $this->productFinder->findTarget($target, $context);
 
-                if (EntityLookupResult::MATCHED_BY_ID === $targetMatch->firstMatchedBy() && $targetMatch->isAmbiguous()) {
+                if (FoundEntity::MATCHED_BY_ID === $targetMatch->firstMatchedBy() && $targetMatch->isAmbiguous()) {
                     $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches both a product id and a product reference; it was linked by id.', ['%target%' => $target], 'Admin.Advparameters.Notification'));
                 } elseif (null === $targetMatch->first()) {
                     $messages[] = $this->accessoryError($rowIndex, $this->translator->trans('Accessory "%target%" could not be resolved; the link was dropped.', ['%target%' => $target], 'Admin.Advparameters.Notification'));
@@ -378,7 +378,7 @@ class ProductImporter extends AbstractEntityImporter
                     if ($targetMatch->isAmbiguous()) {
                         $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches %count% products; it was linked to the first one.', ['%target%' => $target, '%count%' => $targetMatch->count()], 'Admin.Advparameters.Notification'));
                     }
-                    if (EntityLookupResult::MATCHED_BY_REFERENCE === $targetMatch->firstMatchedBy() && ctype_digit($target)) {
+                    if (FoundEntity::MATCHED_BY_REFERENCE === $targetMatch->firstMatchedBy() && ctype_digit($target)) {
                         $messages[] = $this->accessoryWarning($rowIndex, $this->translator->trans('Accessory "%target%" matches no product id; it was linked by reference.', ['%target%' => $target], 'Admin.Advparameters.Notification'));
                     }
                 }
@@ -406,7 +406,7 @@ class ProductImporter extends AbstractEntityImporter
      *
      * @param array<string, string> $row
      */
-    protected function resolveAssociationOwner(array $row, ImportRunContext $context): EntityLookupResult
+    protected function resolveAssociationOwner(array $row, ImportRunContext $context): FoundEntity
     {
         $id = $row['id'] ?? '';
         $usableId = $context->getOptions()->forceIds && ctype_digit($id) ? (int) $id : null;

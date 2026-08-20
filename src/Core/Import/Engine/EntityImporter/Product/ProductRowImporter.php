@@ -56,7 +56,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
-use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\EntityLookupResult;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\FoundEntity;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ShopFinder;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\SupplierFinder;
@@ -213,7 +213,7 @@ class ProductRowImporter
     /**
      * @param array<string, string> $row
      */
-    protected function resolveTargetProduct(array $row, EntityLookupResult $match, ImportRunContext $context): int
+    protected function resolveTargetProduct(array $row, FoundEntity $match, ImportRunContext $context): int
     {
         if (null !== $match->first()) {
             return $match->first();
@@ -243,7 +243,7 @@ class ProductRowImporter
      *
      * @param array<string, string> $row
      */
-    protected function updateProductType(array $row, EntityLookupResult $match, int $productId, ImportRunContext $context): void
+    protected function updateProductType(array $row, FoundEntity $match, int $productId, ImportRunContext $context): void
     {
         if (null === $match->first()) {
             return;

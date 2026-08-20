@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Import\Engine;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\EntityLookupResult;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\FoundEntity;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\ResolvedEntity;
 
 /**
@@ -18,9 +18,9 @@ use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\ResolvedEnt
  */
 class LookupResultTest extends TestCase
 {
-    public function testEntityLookupResultDerivesFirstCountAndAmbiguity(): void
+    public function testFoundEntityDerivesFirstCountAndAmbiguity(): void
     {
-        $miss = new EntityLookupResult([]);
+        $miss = new FoundEntity([]);
         $this->assertNull($miss->first());
         $this->assertNull($miss->firstMatchedBy());
         $this->assertSame(0, $miss->count());
@@ -28,14 +28,14 @@ class LookupResultTest extends TestCase
         $this->assertNull($miss->forcedId);
         $this->assertFalse($miss->foundOutsideShopScope);
 
-        $single = new EntityLookupResult([['id' => 7, 'matchedBy' => EntityLookupResult::MATCHED_BY_ID]]);
+        $single = new FoundEntity([['id' => 7, 'matchedBy' => FoundEntity::MATCHED_BY_ID]]);
         $this->assertSame(7, $single->first());
-        $this->assertSame(EntityLookupResult::MATCHED_BY_ID, $single->firstMatchedBy());
+        $this->assertSame(FoundEntity::MATCHED_BY_ID, $single->firstMatchedBy());
         $this->assertFalse($single->isAmbiguous());
 
-        $ambiguous = new EntityLookupResult([
-            ['id' => 3, 'matchedBy' => EntityLookupResult::MATCHED_BY_NAME],
-            ['id' => 9, 'matchedBy' => EntityLookupResult::MATCHED_BY_NAME],
+        $ambiguous = new FoundEntity([
+            ['id' => 3, 'matchedBy' => FoundEntity::MATCHED_BY_NAME],
+            ['id' => 9, 'matchedBy' => FoundEntity::MATCHED_BY_NAME],
         ]);
         $this->assertSame(3, $ambiguous->first(), 'The lowest id must come first');
         $this->assertSame(2, $ambiguous->count());
@@ -50,13 +50,13 @@ class LookupResultTest extends TestCase
      */
     public function testMixedStrategiesEncodeTheIdReferenceCollision(): void
     {
-        $collision = new EntityLookupResult([
-            ['id' => 9001, 'matchedBy' => EntityLookupResult::MATCHED_BY_ID],
-            ['id' => 9001, 'matchedBy' => EntityLookupResult::MATCHED_BY_REFERENCE],
+        $collision = new FoundEntity([
+            ['id' => 9001, 'matchedBy' => FoundEntity::MATCHED_BY_ID],
+            ['id' => 9001, 'matchedBy' => FoundEntity::MATCHED_BY_REFERENCE],
         ]);
 
         $this->assertSame(9001, $collision->first(), 'The id match must win');
-        $this->assertSame(EntityLookupResult::MATCHED_BY_ID, $collision->firstMatchedBy());
+        $this->assertSame(FoundEntity::MATCHED_BY_ID, $collision->firstMatchedBy());
         $this->assertTrue($collision->isAmbiguous());
     }
 

@@ -52,7 +52,7 @@ class ProductFinder
      *
      * @param array<string, string> $row mapped row values
      */
-    public function findRowMatch(array $row, ImportRunContext $context): EntityLookupResult
+    public function findRowMatch(array $row, ImportRunContext $context): FoundEntity
     {
         $options = $context->getOptions();
 
@@ -60,23 +60,23 @@ class ProductFinder
         if ($options->matchRef && '' !== $reference) {
             $productIds = $this->productRepository->getProductIdsByReference($reference, $context->getShopConstraint());
             if ([] !== $productIds) {
-                return new EntityLookupResult($this->toMatches($productIds, EntityLookupResult::MATCHED_BY_REFERENCE));
+                return new FoundEntity($this->toMatches($productIds, FoundEntity::MATCHED_BY_REFERENCE));
             }
             if ($this->referenceExistsOutsideScope($reference, $context)) {
-                return new EntityLookupResult([], null, true);
+                return new FoundEntity([], null, true);
             }
         }
 
         $id = $row['id'] ?? '';
         if ($options->forceIds && ctype_digit($id) && (int) $id > 0) {
             if ($this->existenceChecker->exists('product', (int) $id)) {
-                return new EntityLookupResult([['id' => (int) $id, 'matchedBy' => EntityLookupResult::MATCHED_BY_ID]]);
+                return new FoundEntity([['id' => (int) $id, 'matchedBy' => FoundEntity::MATCHED_BY_ID]]);
             }
 
-            return new EntityLookupResult([], (int) $id);
+            return new FoundEntity([], (int) $id);
         }
 
-        return new EntityLookupResult([]);
+        return new FoundEntity([]);
     }
 
     /**
@@ -89,20 +89,20 @@ class ProductFinder
      * affects the link, so callers warn instead of failing (contrast
      * findRowMatch(), where ambiguity forbids choosing a target).
      */
-    public function findByReferenceThenId(string $reference, ?int $productId, ImportRunContext $context): EntityLookupResult
+    public function findByReferenceThenId(string $reference, ?int $productId, ImportRunContext $context): FoundEntity
     {
         if ('' !== $reference) {
             $existingIds = $this->productRepository->getProductIdsByReference($reference, $context->getShopConstraint());
             if ([] !== $existingIds) {
-                return new EntityLookupResult($this->toMatches($existingIds, EntityLookupResult::MATCHED_BY_REFERENCE));
+                return new FoundEntity($this->toMatches($existingIds, FoundEntity::MATCHED_BY_REFERENCE));
             }
         }
 
         if (null !== $productId && $this->existenceChecker->exists('product', $productId)) {
-            return new EntityLookupResult([['id' => $productId, 'matchedBy' => EntityLookupResult::MATCHED_BY_ID]]);
+            return new FoundEntity([['id' => $productId, 'matchedBy' => FoundEntity::MATCHED_BY_ID]]);
         }
 
-        return new EntityLookupResult([]);
+        return new FoundEntity([]);
     }
 
     /**
@@ -118,21 +118,21 @@ class ProductFinder
      * with isAmbiguous() is a plain multi-product reference. Callers only
      * choose message wording and severity.
      */
-    public function findTarget(string $target, ImportRunContext $context): EntityLookupResult
+    public function findTarget(string $target, ImportRunContext $context): FoundEntity
     {
         $referenceMatches = $this->toMatches(
             $this->productRepository->getProductIdsByReference($target, $context->getShopConstraint()),
-            EntityLookupResult::MATCHED_BY_REFERENCE
+            FoundEntity::MATCHED_BY_REFERENCE
         );
 
         if (ctype_digit($target) && $this->existenceChecker->exists('product', (int) $target)) {
-            return new EntityLookupResult([
-                ['id' => (int) $target, 'matchedBy' => EntityLookupResult::MATCHED_BY_ID],
+            return new FoundEntity([
+                ['id' => (int) $target, 'matchedBy' => FoundEntity::MATCHED_BY_ID],
                 ...$referenceMatches,
             ]);
         }
 
-        return new EntityLookupResult($referenceMatches);
+        return new FoundEntity($referenceMatches);
     }
 
     /**

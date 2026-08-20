@@ -22,7 +22,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder;
  * an arbitrary one of several matches is destructive (pinned by the
  * duplicate-reference integration test).
  */
-class EntityLookupResult
+class FoundEntity
 {
     public const MATCHED_BY_ID = 'id';
     public const MATCHED_BY_NAME = 'name';
@@ -38,8 +38,8 @@ class EntityLookupResult
      *                           the legacy import consults forceIDs for every entity type);
      *                           only ever set on a miss
      * @param bool $foundOutsideShopScope the term matches only OUTSIDE the run's shop
-     *                                      scope (match_ref today) — creating would duplicate
-     *                                      it, so callers fail the row
+     *                                    scope (match_ref today) — creating would duplicate
+     *                                    it, so callers fail the row
      */
     public function __construct(
         public readonly array $matches,
