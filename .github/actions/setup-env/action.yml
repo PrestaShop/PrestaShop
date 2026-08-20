@@ -94,7 +94,22 @@ runs:
         cd ${{ inputs.PRESTASHOP_DIR }}
         if [[ "${{ inputs.DOCKER_DAEMON }}" = "true" ]]; then
           USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose -f ${{ (inputs.DB_SERVER == 'mysql') && 'docker-compose.yml' || 'docker-compose.mariadb.yml' }} up -d prestashop-git --build
-          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }})" != "200" ]]; do sleep 5; done'
+          # Bounded, so a shop that never answers fails with its reason attached. Left unbounded the
+          # loop spins until the runner kills the step, and the job reports only "The action has
+          # timed out." with the log ending mid-build - nothing a contributor can act on.
+          ready=0
+          for _ in $(seq 1 120); do
+            if [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }} || true)" = "200" ]]; then
+              ready=1
+              break
+            fi
+            sleep 5
+          done
+          if [[ "$ready" != "1" ]]; then
+            echo "::error::the shop did not answer 200 at ${{ env.URL_FO }}${{ env.URL_PING }} within 600s"
+            docker compose -f ${{ (inputs.DB_SERVER == 'mysql') && 'docker-compose.yml' || 'docker-compose.mariadb.yml' }} logs --no-color --tail=300 prestashop-git || true
+            exit 1
+          fi
         else
           USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose -f ${{ (inputs.DB_SERVER == 'mysql') && 'docker-compose.yml' || 'docker-compose.mariadb.yml' }} up prestashop-git --build
         fi
