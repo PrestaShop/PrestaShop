@@ -17,6 +17,11 @@ class ConnectionsSourceCore extends ObjectModel
     public static $uri_max_size = 255;
 
     /**
+     * Upper bound on the traffic sources loaded for a single order view.
+     */
+    public const ORDER_SOURCES_LIMIT = 100;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -95,6 +100,8 @@ class ConnectionsSourceCore extends ObjectModel
      */
     public static function getOrderSources($idOrder)
     {
+        // Anonymous visitors are stored in `guest` with id_customer = 0, so an order left with
+        // id_customer = 0 joins the entire guest table and every connection behind it.
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT cos.`http_referer`, cos.`request_uri`, cos.`keywords`, cos.`date_add`
 		FROM `' . _DB_PREFIX_ . 'orders` o
@@ -102,6 +109,8 @@ class ConnectionsSourceCore extends ObjectModel
 		INNER JOIN `' . _DB_PREFIX_ . 'connections` co  ON co.`id_guest` = g.`id_guest`
 		INNER JOIN `' . _DB_PREFIX_ . 'connections_source` cos ON cos.`id_connections` = co.`id_connections`
 		WHERE `id_order` = ' . (int) $idOrder . '
-		ORDER BY cos.`date_add` DESC');
+			AND o.`id_customer` > 0
+		ORDER BY cos.`date_add` DESC
+		LIMIT ' . self::ORDER_SOURCES_LIMIT);
     }
 }
