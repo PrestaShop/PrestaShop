@@ -10,7 +10,8 @@
 # Apache 2.4
 <IfModule mod_authz_core.c>
     Require all denied
-    <Files ~ "(?i)^.*\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)$">
+    # Grant on the URL path (not the resolved file) so a missing image returns 404 instead of 403.
+    <If "%{REQUEST_URI} =~ /(?i)\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)$/">
         Require all granted
-    </Files>
+    </If>
 </IfModule>
