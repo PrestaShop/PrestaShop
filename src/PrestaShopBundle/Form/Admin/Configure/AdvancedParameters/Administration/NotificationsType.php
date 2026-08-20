@@ -6,8 +6,10 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,12 +23,15 @@ class NotificationsType extends TranslatorAwareType
         $builder
             ->add('show_notifs_new_orders', SwitchType::class, [
                 'label' => $this->trans('Show notifications for new orders', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_SHOW_NEW_ORDERS',
             ])
             ->add('show_notifs_new_customers', SwitchType::class, [
                 'label' => $this->trans('Show notifications for new customers', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_SHOW_NEW_CUSTOMERS',
             ])
             ->add('show_notifs_new_messages', SwitchType::class, [
                 'label' => $this->trans('Show notifications for new messages', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_SHOW_NEW_MESSAGES',
             ]);
     }
 
@@ -46,5 +51,15 @@ class NotificationsType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'administration_notification_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
