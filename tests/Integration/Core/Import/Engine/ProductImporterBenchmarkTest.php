@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunOptions;
 use SplFileInfo;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Tests\Resources\DatabaseDump;
 use Tests\Resources\Resetter\ProductResetter;
@@ -108,7 +109,7 @@ class ProductImporterBenchmarkTest extends AbstractProductImportEngineTestCase
         fclose($handle);
 
         $workingFilePath = $this->createTemporaryFilePath('bench_work_', '.csv');
-        $normalizedFile = (new CsvImportFileNormalizer())->normalize(new SplFileInfo($fixturePath), $workingFilePath, ';', 1);
+        $normalizedFile = (new CsvImportFileNormalizer(new Filesystem()))->normalize(new SplFileInfo($fixturePath), $workingFilePath, ';', 1);
 
         return new ImportRunContext(
             'product',

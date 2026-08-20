@@ -16,7 +16,7 @@ use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\ResolvedEnt
  * The finder/resolver DTOs are pure data carriers; these tests pin the few
  * derived behaviors the callers rely on for their severity decisions.
  */
-class LookupResultTest extends TestCase
+class LookupContractsTest extends TestCase
 {
     public function testFoundEntityDerivesFirstCountAndAmbiguity(): void
     {

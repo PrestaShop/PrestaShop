@@ -70,6 +70,27 @@ class ProductImporterImagesTest extends AbstractProductImportEngineTestCase
         $this->assertSame('Second only', (string) $this->fetchOne('SELECT legend FROM {p}image_lang WHERE id_image = :id AND id_lang = 1', ['id' => $images[1]['id_image']]));
     }
 
+    /**
+     * The mirror case: a hole in the IMAGE column. Both cells are positional,
+     * so image 3 must keep alt 3 — dropping the empty image entry while
+     * preserving the empty alt entry would shift alt 2 onto it.
+     */
+    public function testImageUrlHoleKeepsTheAltsAligned(): void
+    {
+        [, $messages] = $this->runImport('product_images_url_hole.csv', self::IMAGE_FIELDS);
+        $this->assertNoErrors($messages);
+
+        $productId = $this->getProductIdByReference('IMG-URL-HOLE-1');
+        $this->assertNotNull($productId);
+
+        // two images for three positions: the middle entry was empty
+        $images = $this->fetchAll('SELECT id_image FROM {p}image WHERE id_product = :id ORDER BY position', ['id' => $productId]);
+        $this->assertCount(2, $images);
+
+        $this->assertSame('First alt', (string) $this->fetchOne('SELECT legend FROM {p}image_lang WHERE id_image = :id AND id_lang = 1', ['id' => $images[0]['id_image']]));
+        $this->assertSame('Third alt', (string) $this->fetchOne('SELECT legend FROM {p}image_lang WHERE id_image = :id AND id_lang = 1', ['id' => $images[1]['id_image']]), 'The third image must keep the THIRD alt, not the second');
+    }
+
     public function testDeleteExistingImagesReplacesThePreviousOnes(): void
     {
         // fresh catalog: re-running the creation fixture on top of the first

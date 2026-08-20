@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ImportEngineException;
 
 /**
  * Generic entity existence probe shared by every importer and phase: one
@@ -51,11 +52,20 @@ class ImportEntityExistenceChecker
      * The primary key is derived from the table name (id_<table>, the
      * PrestaShop convention). Tables whose existence semantics are richer
      * than "a row exists" are special-cased in probe() — see SOFT_DELETE_TABLES.
+     *
+     * @throws ImportEngineException when the table name is not a plain identifier
      */
     public function exists(string $table, int $id): bool
     {
         if ($id <= 0) {
             return false;
+        }
+
+        // the table name and its derived primary key are interpolated into the
+        // query, so this generic entry point validates its own shape rather
+        // than trusting every present and future importer to pass a literal
+        if (1 !== preg_match('/^[a-z][a-z0-9_]*$/', $table)) {
+            throw new ImportEngineException(sprintf('Invalid table name "%s" passed to the import existence checker', $table));
         }
 
         $cacheKey = $table . ':' . $id;

@@ -9,13 +9,17 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Gtin;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\FoundEntity;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
@@ -34,6 +38,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ProductRowValidator
 {
+    use ProductIdentityMessagesTrait;
+
     protected const DECIMAL_FIELDS = ['price_tex', 'price_tin', 'wholesale_price', 'unit_price', 'ecotax', 'additional_shipping_cost', 'reduction_price', 'reduction_percent'];
     protected const DIMENSION_FIELDS = ['width', 'height', 'depth', 'weight'];
     protected const DATE_FIELDS = ['available_date', 'date_add', 'reduction_from', 'reduction_to', 'date_expiration'];
@@ -47,6 +53,7 @@ class ProductRowValidator
     public function __construct(
         protected readonly ValueParser $valueParser,
         protected readonly ProductFinder $productFinder,
+        protected readonly ProductRepository $productRepository,
         protected readonly ImportEntityExistenceChecker $existenceChecker,
         protected readonly TranslatorInterface $translator,
     ) {
@@ -70,10 +77,10 @@ class ProductRowValidator
         // association LINK only warns — see the row importer)
         $reference = $row['reference'] ?? '';
         if ($match->foundOutsideShopScope) {
-            return [$this->error($rowIndex, 'reference', $this->translator->trans('The reference "%value%" matches a product outside the run\'s shop scope; the row was skipped to avoid creating a duplicate product.', ['%value%' => $reference], 'Admin.Advparameters.Notification'))];
+            return [$this->referenceOutsideShopScopeMessage($reference, $rowIndex, ImportPhaseDefinition::PHASE_VALIDATION)];
         }
         if ($match->isAmbiguous()) {
-            return [$this->error($rowIndex, 'reference', $this->translator->trans('The reference "%value%" matches %count% products; the row was skipped to avoid updating the wrong one.', ['%value%' => $reference, '%count%' => $match->count()], 'Admin.Advparameters.Notification'))];
+            return [$this->ambiguousReferenceMessage($reference, $match->count(), $rowIndex, ImportPhaseDefinition::PHASE_VALIDATION)];
         }
 
         if (null === $match->first() && '' === ($row['name'] ?? '')) {
@@ -86,8 +93,55 @@ class ProductRowValidator
         $this->validateDatesAndBooleans($row, $rowIndex, $messages);
         $this->validateCategories($row, $rowIndex, $context, $messages);
         $this->validateTaxRulesGroup($row, $rowIndex, $messages);
+        $this->validateProductTypeChange($row, $rowIndex, $match, $messages);
 
         return $messages;
+    }
+
+    /**
+     * Converting an existing product to a virtual product is DESTRUCTIVE for
+     * some source types: ProductTypeUpdater::updateType() deletes every
+     * combination and resets the stock, or empties the pack contents. The row
+     * still goes through — the conversion is what the file asked for — but the
+     * validation phase is pausing, so warning here is what lets the merchant
+     * cancel the run before anything is written.
+     *
+     * The impact sentences are the ones the back office already shows in its
+     * type-switch modal (HeaderType), reused verbatim.
+     *
+     * @param array<string, string> $row
+     * @param list<ImportMessage> $messages
+     */
+    protected function validateProductTypeChange(array $row, int $rowIndex, FoundEntity $match, array &$messages): void
+    {
+        $productId = $match->first();
+        if (null === $productId || true !== $this->valueParser->parseBoolean($row['is_virtual'] ?? '')) {
+            return;
+        }
+
+        $impacts = match ($this->productRepository->getProductType(new ProductId($productId))->getValue()) {
+            ProductType::TYPE_COMBINATIONS => [
+                $this->translator->trans('This will delete all combinations.', [], 'Admin.Catalog.Notification'),
+                $this->translator->trans('This will reset the stock of this product.', [], 'Admin.Catalog.Notification'),
+            ],
+            ProductType::TYPE_PACK => [
+                $this->translator->trans('This will delete the list of products in this pack.', [], 'Admin.Catalog.Notification'),
+            ],
+            default => [],
+        };
+
+        if ([] === $impacts) {
+            return;
+        }
+
+        $messages[] = $this->warning(
+            $rowIndex,
+            'is_virtual',
+            implode(' ', [
+                $this->translator->trans('is_virtual will convert this product to a virtual product.', [], 'Admin.Advparameters.Notification'),
+                ...$impacts,
+            ])
+        );
     }
 
     /**
@@ -166,10 +220,14 @@ class ProductRowValidator
      */
     protected function validateNumbers(array $row, int $rowIndex, array &$messages): void
     {
+        // an unparseable number drops the FIELD, not the row: the rest of the
+        // row is still worth importing, and the database phase ignores the cell
+        // the same way (parseDecimal() returning null simply skips the setter).
+        // "1,234.56" lands here — the thousands separator is not supported
         foreach (self::DECIMAL_FIELDS as $field) {
             $value = $row[$field] ?? '';
             if ('' !== $value && null === $this->valueParser->parseDecimal($value)) {
-                $messages[] = $this->error($rowIndex, $field, $this->translator->trans('Invalid number "%value%".', ['%value%' => $value], 'Admin.Advparameters.Notification'));
+                $messages[] = $this->warning($rowIndex, $field, $this->translator->trans('Invalid number "%value%", the field will be ignored.', ['%value%' => $value], 'Admin.Advparameters.Notification'));
             }
         }
 
@@ -194,7 +252,10 @@ class ProductRowValidator
             }
             $decimal = $this->valueParser->parseDecimal($value);
             if (null === $decimal) {
-                $messages[] = $this->error($rowIndex, $field, $this->translator->trans('Invalid number "%value%".', ['%value%' => $value], 'Admin.Advparameters.Notification'));
+                // unparseable: the database phase skips the setter, so only the
+                // field is lost. A NEGATIVE value below is different — it IS
+                // passed to the command, which rejects it and fails the row
+                $messages[] = $this->warning($rowIndex, $field, $this->translator->trans('Invalid number "%value%", the field will be ignored.', ['%value%' => $value], 'Admin.Advparameters.Notification'));
             } elseif ($decimal->isNegative()) {
                 $messages[] = $this->error($rowIndex, $field, $this->translator->trans('"%field%" cannot be negative.', ['%field%' => $field], 'Admin.Advparameters.Notification'));
             }

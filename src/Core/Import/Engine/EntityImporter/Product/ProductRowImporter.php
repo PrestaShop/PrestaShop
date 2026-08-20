@@ -12,6 +12,7 @@ use DateTime;
 use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
@@ -76,6 +77,7 @@ use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
@@ -93,6 +95,12 @@ use Throwable;
 class ProductRowImporter
 {
     use LocalizedValueTrait;
+    use ProductIdentityMessagesTrait;
+
+    /**
+     * @var array<int, DecimalNumber> memoized (1 + rate/100) per tax rules group
+     */
+    protected array $taxDivisors = [];
 
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
@@ -104,6 +112,7 @@ class ProductRowImporter
         protected readonly CategoryResolver $categoryResolver,
         protected readonly FeatureResolver $featureResolver,
         protected readonly ProductRepository $productRepository,
+        protected readonly ProductSupplierRepository $productSupplierRepository,
         protected readonly SpecificPriceRepository $specificPriceRepository,
         protected readonly StockAvailableRepository $stockAvailableRepository,
         protected readonly VirtualProductFileRepository $virtualProductFileRepository,
@@ -111,6 +120,7 @@ class ProductRowImporter
         protected readonly TaxComputer $taxComputer,
         protected readonly LanguageRepositoryInterface $languageRepository,
         protected readonly Tools $tools,
+        protected readonly Filesystem $filesystem,
         protected readonly FileDownloader $fileDownloader,
         protected readonly ShopConfigurationInterface $configuration,
         protected readonly TranslatorInterface $translator,
@@ -137,24 +147,12 @@ class ProductRowImporter
             // caller's policy, with the same wording as the validator
             $reference = $row['reference'] ?? '';
             if ($match->foundOutsideShopScope) {
-                $messages[] = new ImportMessage(
-                    ImportMessage::SEVERITY_ERROR,
-                    ImportPhaseDefinition::PHASE_DATABASE,
-                    $this->translator->trans('The reference "%value%" matches a product outside the run\'s shop scope; the row was skipped to avoid creating a duplicate product.', ['%value%' => $reference], 'Admin.Advparameters.Notification'),
-                    $rowIndex,
-                    'reference'
-                );
+                $messages[] = $this->referenceOutsideShopScopeMessage($reference, $rowIndex, ImportPhaseDefinition::PHASE_DATABASE);
 
                 return $messages;
             }
             if ($match->isAmbiguous()) {
-                $messages[] = new ImportMessage(
-                    ImportMessage::SEVERITY_ERROR,
-                    ImportPhaseDefinition::PHASE_DATABASE,
-                    $this->translator->trans('The reference "%value%" matches %count% products; the row was skipped to avoid updating the wrong one.', ['%value%' => $reference, '%count%' => $match->count()], 'Admin.Advparameters.Notification'),
-                    $rowIndex,
-                    'reference'
-                );
+                $messages[] = $this->ambiguousReferenceMessage($reference, $match->count(), $rowIndex, ImportPhaseDefinition::PHASE_DATABASE);
 
                 return $messages;
             }
@@ -241,6 +239,12 @@ class ProductRowImporter
      * existing virtual file association (fixes a legacy bug where
      * ProductDownload was deleted on every product row).
      *
+     * The command is dispatched ONLY when the type actually changes: converting
+     * a product to the type it already has is a no-op the updater would still
+     * pay for with an all-shops partial update, and the conversion itself is
+     * destructive (see ProductTypeUpdater::updateType() — combinations and pack
+     * contents are deleted, stock reset), which the validator warns about.
+     *
      * @param array<string, string> $row
      */
     protected function updateProductType(array $row, FoundEntity $match, int $productId, ImportRunContext $context): void
@@ -249,9 +253,15 @@ class ProductRowImporter
             return;
         }
 
-        if ($this->hasValue($row, 'is_virtual') && $this->isVirtual($row)) {
-            $this->commandBus->handle(new UpdateProductTypeCommand($productId, ProductType::TYPE_VIRTUAL));
+        if (!$this->hasValue($row, 'is_virtual') || !$this->isVirtual($row)) {
+            return;
         }
+
+        if (ProductType::TYPE_VIRTUAL === $this->productRepository->getProductType(new ProductId($productId))->getValue()) {
+            return;
+        }
+
+        $this->commandBus->handle(new UpdateProductTypeCommand($productId, ProductType::TYPE_VIRTUAL));
     }
 
     /**
@@ -513,15 +523,28 @@ class ProductRowImporter
 
         $taxRulesGroupId = $row['id_tax_rules_group'] ?? '';
         if ('' !== $taxRulesGroupId && ctype_digit($taxRulesGroupId) && $this->existenceChecker->exists('tax_rules_group', (int) $taxRulesGroupId)) {
-            $rate = $this->taxComputer->getTaxRate(
-                new TaxRulesGroupId((int) $taxRulesGroupId),
-                new CountryId($this->getShopCountryId($context))
-            );
-            $divisor = $rate->dividedBy(new DecimalNumber('100'), 6)->plus(new DecimalNumber('1'));
-            $price = $price->dividedBy($divisor, 6);
+            $price = $price->dividedBy($this->getTaxDivisor((int) $taxRulesGroupId, $context), 6);
         }
 
         return $price;
+    }
+
+    /**
+     * (1 + rate/100) for one tax rules group, memoized: the rate is invariant
+     * for the whole run (the country is fixed by getShopCountryId()), so a file
+     * with one id_tax_rules_group resolves it once instead of once per row.
+     */
+    protected function getTaxDivisor(int $taxRulesGroupId, ImportRunContext $context): DecimalNumber
+    {
+        if (!isset($this->taxDivisors[$taxRulesGroupId])) {
+            $rate = $this->taxComputer->getTaxRate(
+                new TaxRulesGroupId($taxRulesGroupId),
+                new CountryId($this->getShopCountryId($context))
+            );
+            $this->taxDivisors[$taxRulesGroupId] = $rate->dividedBy(new DecimalNumber('100'), 6)->plus(new DecimalNumber('1'));
+        }
+
+        return $this->taxDivisors[$taxRulesGroupId];
     }
 
     /**
@@ -651,7 +674,7 @@ class ProductRowImporter
             return;
         }
 
-        $lookup = $this->supplierFinder->find($supplier);
+        $lookup = $this->supplierFinder->find($supplier, $context);
         $supplierId = $lookup->first();
         if (null === $supplierId) {
             // suppliers are never auto-created: a supplier requires an address,
@@ -676,19 +699,52 @@ class ProductRowImporter
             );
         }
 
-        $this->commandBus->handle(new SetSuppliersCommand($productId, [$supplierId]));
+        // the file expresses ONE supplier, but SetSuppliersCommand replaces the
+        // whole list (associateSuppliers() bulk-deletes what is missing), so the
+        // row's supplier is UNIONED with the existing ones: re-importing a
+        // product must never drop the suppliers the file says nothing about
+        $currentAssociations = $this->getCurrentProductSuppliers($productId);
+        $supplierIds = array_keys($currentAssociations);
+        if (!in_array($supplierId, $supplierIds, true)) {
+            $supplierIds[] = $supplierId;
+        }
+        $this->commandBus->handle(new SetSuppliersCommand($productId, array_values($supplierIds)));
 
-        $supplierReference = $row['supplier_reference'] ?? '';
-        $wholesalePrice = $this->valueParser->parseDecimal($row['wholesale_price'] ?? '') ?? new DecimalNumber('0');
+        // same reasoning per FIELD: UpdateProductSuppliersCommand replaces the
+        // association, so an unmapped/empty cell must re-send the CURRENT value
+        // instead of blanking it (legacy read them off the loaded product, whose
+        // fillInfo() skipped empty cells)
+        $existing = $currentAssociations[$supplierId] ?? null;
         $this->commandBus->handle(new UpdateProductSuppliersCommand($productId, [
             [
                 'supplier_id' => $supplierId,
                 'currency_id' => (int) $this->configuration->get('PS_CURRENCY_DEFAULT', null, $context->getShopConstraint()),
-                'reference' => $supplierReference,
-                'price_tax_excluded' => (string) $wholesalePrice,
+                'reference' => $this->hasValue($row, 'supplier_reference')
+                    ? $row['supplier_reference']
+                    : (string) ($existing['product_supplier_reference'] ?? ''),
+                'price_tax_excluded' => $this->hasValue($row, 'wholesale_price')
+                    ? (string) ($this->valueParser->parseDecimal($row['wholesale_price']) ?? new DecimalNumber('0'))
+                    : (string) ($existing['product_supplier_price_te'] ?? '0'),
             ],
         ]));
         $this->commandBus->handle(new SetProductDefaultSupplierCommand($productId, $supplierId));
+    }
+
+    /**
+     * The product's current product-level supplier associations (no combination),
+     * keyed by supplier id. Plain rows, never the legacy ObjectModel: importers
+     * live in Core (getByAssociation() would hand back a ProductSupplier).
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function getCurrentProductSuppliers(int $productId): array
+    {
+        $associations = [];
+        foreach ($this->productSupplierRepository->getProductSuppliersInfo(new ProductId($productId), new NoCombinationId()) as $association) {
+            $associations[(int) $association['id_supplier']] = $association;
+        }
+
+        return $associations;
     }
 
     /**
@@ -810,12 +866,19 @@ class ProductRowImporter
             return;
         }
 
-        $imageUrls = $this->valueParser->split($imagesCell, $context->getMultipleValueSeparator());
-        // alts are POSITIONAL (alt N belongs to image N): empty entries must
-        // be kept so a hole doesn't shift the following alts onto the wrong image
+        // BOTH cells are split positionally (alt N belongs to image N): empty
+        // entries must be kept on either side, otherwise a hole shifts the
+        // following alts onto the wrong image
+        $imageUrls = $this->valueParser->splitPreservingEmpty($imagesCell, $context->getMultipleValueSeparator());
         $imageAlts = $this->valueParser->splitPreservingEmpty($row['image_alt'] ?? '', $context->getMultipleValueSeparator());
 
         foreach ($imageUrls as $index => $imageUrl) {
+            if ('' === $imageUrl) {
+                // a hole in the image cell: nothing to fetch, but the index
+                // still belongs to this position so the alts stay aligned
+                continue;
+            }
+
             try {
                 $temporaryFile = $this->fileDownloader->download($imageUrl);
             } catch (FileDownloadException $e) {
@@ -841,7 +904,7 @@ class ProductRowImporter
                     $this->commandBus->handle($legendCommand);
                 }
             } finally {
-                @unlink($temporaryFile);
+                $this->filesystem->remove($temporaryFile);
             }
         }
     }
@@ -905,7 +968,7 @@ class ProductRowImporter
                 $expirationDate
             ));
         } finally {
-            @unlink($temporaryFile);
+            $this->filesystem->remove($temporaryFile);
         }
     }
 
@@ -1086,7 +1149,7 @@ class ProductRowImporter
 
         $shopIds = [];
         foreach ($this->valueParser->split($shopCell, $context->getMultipleValueSeparator()) as $entry) {
-            $lookup = $this->shopFinder->find($entry);
+            $lookup = $this->shopFinder->find($entry, $context);
             $shopId = $lookup->first();
             if (null === $shopId) {
                 $messages[] = new ImportMessage(

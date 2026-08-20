@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver;
 
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
-use PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait;
@@ -24,48 +24,32 @@ use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
  * Numeric ids are whole-entry values, a MATCH-ONLY concern the caller probes
  * through ImportEntityExistenceChecker.
  *
- * Resolutions are cached for the service lifetime (one batch request) in
- * their QUIET form: creation/ambiguity information is returned once, on first
- * resolution, so callers emit each warning once per run, not once per row.
+ * Caching and once-per-batch reporting come from QuietResolutionTrait.
  */
 class CategoryResolver
 {
     use LocalizedValueTrait;
-
-    /**
-     * @var array<string, ResolvedEntity> quiet resolutions, keyed '<parent id>:<name>'
-     */
-    protected array $cache = [];
+    use QuietResolutionTrait;
 
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
         protected readonly CategoryRepository $categoryRepository,
-        protected readonly ImportDataFormatter $dataFormatter,
+        protected readonly Tools $tools,
         protected readonly LanguageRepositoryInterface $languageRepository,
     ) {
     }
 
     public function resolveChild(int $parentCategoryId, string $name, int $languageId, ImportRunContext $context): ResolvedEntity
     {
-        $cacheKey = $parentCategoryId . ':' . $name;
-        if (isset($this->cache[$cacheKey])) {
-            return $this->cache[$cacheKey];
-        }
-
-        $categoryIds = $this->categoryRepository->getChildCategoryIdsByName($parentCategoryId, $name, $languageId, $context->getShopConstraint());
-        if ([] === $categoryIds) {
-            $categoryId = $this->commandBus->handle(new AddCategoryCommand(
+        return $this->resolveThroughCache(
+            $parentCategoryId . ':' . $name,
+            fn (): array => $this->categoryRepository->getChildCategoryIdsByName($parentCategoryId, $name, $languageId, $context->getShopConstraint()),
+            fn (): int => $this->commandBus->handle(new AddCategoryCommand(
                 $this->localizeForCreation($name),
-                $this->localizeForCreation($this->dataFormatter->createFriendlyUrl($name)),
+                $this->localizeForCreation((string) $this->tools->linkRewrite($name)),
                 true,
                 $parentCategoryId
-            ))->getValue();
-            $resolved = new ResolvedEntity($categoryId, true);
-        } else {
-            $resolved = new ResolvedEntity($categoryIds[0], false, count($categoryIds));
-        }
-        $this->cache[$cacheKey] = new ResolvedEntity($resolved->id);
-
-        return $resolved;
+            ))->getValue()
+        );
     }
 }

@@ -11,6 +11,7 @@ namespace Tests\Integration\Core\Import\Engine;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
 use PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader;
+use Symfony\Component\Filesystem\Filesystem;
 use Tests\Resources\DummyFileUploader;
 
 class FileDownloaderTest extends TestCase
@@ -20,7 +21,7 @@ class FileDownloaderTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->downloader = new FileDownloader();
+        $this->downloader = new FileDownloader(new Filesystem());
     }
 
     public function testLocalPathIsCopiedToATemporaryFile(): void
@@ -84,7 +85,7 @@ class FileDownloaderTest extends TestCase
         file_put_contents($sourcePath, str_repeat('a', 10));
 
         // the cap is a protected const precisely so it can be overridden
-        $downloader = new class() extends FileDownloader {
+        $downloader = new class(new Filesystem()) extends FileDownloader {
             protected const MAX_FILE_SIZE_BYTES = 5;
         };
 

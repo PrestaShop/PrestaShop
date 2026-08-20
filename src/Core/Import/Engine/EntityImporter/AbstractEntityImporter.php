@@ -120,28 +120,6 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
     }
 
     /**
-     * Whether this batch just consumed the last unit of the phase (the total
-     * was computed once at phase entry and carried by the context).
-     */
-    protected function batchCompletesPhase(ImportRunContext $context, PhaseBatchResult $result): bool
-    {
-        return $context->getCurrentOffset() + $result->processedUnitCount >= $context->getCurrentPhaseTotalUnits();
-    }
-
-    /**
-     * For end-of-phase sub-steps needing the rows THIS batch skipped: clone +
-     * apply, since the caller only applies the result after processPhaseBatch()
-     * returns.
-     */
-    protected function contextWithBatchApplied(ImportRunContext $context, PhaseBatchResult $result): ImportRunContext
-    {
-        $clonedContext = clone $context;
-        $clonedContext->applyBatchResult($result);
-
-        return $clonedContext;
-    }
-
-    /**
      * "Empty" from the import's point of view: no mapped column carries a
      * value (blank source lines always qualify).
      *

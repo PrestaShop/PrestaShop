@@ -114,4 +114,25 @@ class ProductImporterUpdateTest extends AbstractProductImportEngineTestCase
         $this->assertSame('7.500000', (string) $specificPrices[0]['reduction']);
         $this->assertSame('amount', (string) $specificPrices[0]['reduction_type']);
     }
+
+    /**
+     * A maintenance file that only re-prices existing products has no reason to
+     * carry a name column. Required-ness is decided PER ROW — a name is
+     * mandatory only when the row CREATES a product — not per mapped column, so
+     * this must import cleanly instead of being rejected up front.
+     *
+     * Kept last on purpose: the force-IDs tests above share state, so inserting
+     * a resetting test between them breaks them.
+     */
+    public function testUpdateOnlyFileWithoutANameColumnImportsCleanly(): void
+    {
+        ProductResetter::resetProducts();
+
+        [, $messages] = $this->runImport('product_price_only_update.csv', ['reference', 'price_tex'], ['matchRef' => true]);
+        $this->assertNoErrors($messages);
+
+        $productId = $this->getProductIdByReference('demo_1');
+        $this->assertNotNull($productId);
+        $this->assertSame('77.250000', (string) $this->fetchOne('SELECT price FROM {p}product_shop WHERE id_product = :id AND id_shop = 1', ['id' => $productId]));
+    }
 }

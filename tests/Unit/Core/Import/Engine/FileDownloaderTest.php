@@ -11,6 +11,7 @@ namespace Tests\Unit\Core\Import\Engine;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
 use PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader;
+use Symfony\Component\Filesystem\Filesystem;
 
 class FileDownloaderTest extends TestCase
 {
@@ -37,7 +38,7 @@ class FileDownloaderTest extends TestCase
         $sourcePath = $this->contentRoot . '/file.txt';
         file_put_contents($sourcePath, 'content');
 
-        $temporaryPath = (new FileDownloader([$this->contentRoot]))->download($sourcePath);
+        $temporaryPath = (new FileDownloader(new Filesystem(), [$this->contentRoot]))->download($sourcePath);
 
         $this->assertFileExists($temporaryPath);
         $this->assertSame('content', file_get_contents($temporaryPath));
@@ -57,7 +58,7 @@ class FileDownloaderTest extends TestCase
 
         $this->expectException(FileDownloadException::class);
         $this->expectExceptionMessage('outside the allowed import locations');
-        (new FileDownloader([$this->contentRoot]))->download($configurationFile);
+        (new FileDownloader(new Filesystem(), [$this->contentRoot]))->download($configurationFile);
     }
 
     /**
@@ -71,7 +72,7 @@ class FileDownloaderTest extends TestCase
         file_put_contents($sourcePath, 'content');
 
         try {
-            $temporaryPath = (new FileDownloader())->download($sourcePath);
+            $temporaryPath = (new FileDownloader(new Filesystem()))->download($sourcePath);
 
             $this->assertFileExists($temporaryPath);
             $this->assertSame('content', file_get_contents($temporaryPath));
@@ -95,6 +96,6 @@ class FileDownloaderTest extends TestCase
 
         $this->expectException(FileDownloadException::class);
         $this->expectExceptionMessage('outside the allowed import locations');
-        (new FileDownloader([$allowedRoot]))->download($sourcePath);
+        (new FileDownloader(new Filesystem(), [$allowedRoot]))->download($sourcePath);
     }
 }

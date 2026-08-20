@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunOptions;
 use SplFileInfo;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Filesystem\Filesystem;
 use Tests\Integration\Utility\ContextMockerTrait;
 
 /**
@@ -81,14 +82,10 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
 
     protected function tearDown(): void
     {
-        foreach ($this->temporaryFiles as $temporaryFile) {
-            @unlink($temporaryFile);
-        }
+        // Filesystem::remove() takes an iterable, is recursive and never
+        // complains about what is already gone
+        (new Filesystem())->remove([...$this->temporaryFiles, ...$this->temporaryDirectories]);
         $this->temporaryFiles = [];
-
-        foreach ($this->temporaryDirectories as $temporaryDirectory) {
-            $this->removeDirectory($temporaryDirectory);
-        }
         $this->temporaryDirectories = [];
 
         parent::tearDown();
@@ -115,7 +112,7 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
         // the working file contains data records only, and the record count
         // is measured by the same pass
         $workingFilePath = $this->createTemporaryFilePath('work_', '.csv');
-        $normalizer = new CsvImportFileNormalizer();
+        $normalizer = new CsvImportFileNormalizer(new Filesystem());
         $normalizedFile = $normalizer->normalize(new SplFileInfo($fixturePath), $workingFilePath, $sourceCsvSeparator, $skipRows);
 
         return new ImportRunContext(
@@ -175,13 +172,15 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
         $fixturePath = $this->getFixtureDir() . '/import/' . $fixtureName;
         static::assertFileExists($fixturePath);
 
+        $filesystem = new Filesystem();
+        // Filesystem has no reader before Symfony 7.1
         $content = (string) file_get_contents($fixturePath);
         if (!str_contains($content, '{FIXTURE_DIR}')) {
             return $fixturePath;
         }
 
         $substitutedPath = $this->createTemporaryFilePath('fixture_', '.csv');
-        file_put_contents($substitutedPath, str_replace('{FIXTURE_DIR}', $this->stageReferencedAssets($content), $content));
+        $filesystem->dumpFile($substitutedPath, str_replace('{FIXTURE_DIR}', $this->stageReferencedAssets($content), $content));
 
         return $substitutedPath;
     }
@@ -195,10 +194,10 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
      */
     private function stageReferencedAssets(string $content): string
     {
+        $filesystem = new Filesystem();
         $stagingDirectory = sys_get_temp_dir() . '/' . uniqid('ps_import_assets_', true);
-        if (!mkdir($stagingDirectory, 0777, true) && !is_dir($stagingDirectory)) {
-            static::fail(sprintf('Could not create the fixture staging directory "%s".', $stagingDirectory));
-        }
+        // mkdir() is recursive and idempotent, and throws on real failures
+        $filesystem->mkdir($stagingDirectory);
         $this->temporaryDirectories[] = $stagingDirectory;
 
         preg_match_all('#\{FIXTURE_DIR\}(/[^;,\r\n"]+)#', $content, $matches);
@@ -209,35 +208,12 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
             }
 
             // flattening is not an option (two assets could share a basename),
-            // so mirror the sub-directories inside the staging dir
-            $target = $stagingDirectory . $relativePath;
-            $targetDirectory = dirname($target);
-            if (!is_dir($targetDirectory) && !mkdir($targetDirectory, 0777, true) && !is_dir($targetDirectory)) {
-                static::fail(sprintf('Could not create the fixture staging directory "%s".', $targetDirectory));
-            }
-            copy($source, $target);
+            // so mirror the sub-directories inside the staging dir; copy()
+            // creates the parent directory itself
+            $filesystem->copy($source, $stagingDirectory . $relativePath, true);
         }
 
         return $stagingDirectory;
-    }
-
-    /**
-     * The staging directory mirrors the fixture sub-directories, so cleanup has
-     * to walk depth-first rather than glob a single level.
-     */
-    private function removeDirectory(string $directory): void
-    {
-        foreach ((array) glob($directory . '/*') as $entry) {
-            $entry = (string) $entry;
-            if (is_dir($entry)) {
-                $this->removeDirectory($entry);
-
-                continue;
-            }
-            @unlink($entry);
-        }
-
-        @rmdir($directory);
     }
 
     protected function getFixtureDir(): string

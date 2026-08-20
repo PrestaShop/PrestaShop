@@ -27,24 +27,13 @@ use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
  * into all languages on creation, only the file's language on update (the
  * other languages are re-sent as-is — see resolveCustomValues()).
  *
- * Resolutions are cached for the service lifetime (one batch request) in
- * their QUIET form: the creation/ambiguity information is returned once, on
- * first resolution, so callers emit each warning once per run, not once per
- * row.
+ * Caching and once-per-batch reporting come from QuietResolutionTrait; the two
+ * lookups share its cache under the 'feature:' and 'value:' key prefixes.
  */
 class FeatureResolver
 {
     use LocalizedValueTrait;
-
-    /**
-     * @var array<string, ResolvedEntity> quiet feature resolutions, keyed by name
-     */
-    protected array $featureCache = [];
-
-    /**
-     * @var array<string, ResolvedEntity> quiet value resolutions, keyed by '<featureId>:<value>'
-     */
-    protected array $featureValueCache = [];
+    use QuietResolutionTrait;
 
     /**
      * @var array<int, true> feature ids whose shop association was already ensured this run
@@ -62,44 +51,36 @@ class FeatureResolver
 
     public function resolveFeature(string $name, int $languageId, ImportRunContext $context): ResolvedEntity
     {
-        if (isset($this->featureCache[$name])) {
-            return $this->featureCache[$name];
-        }
+        $resolved = $this->resolveThroughCache(
+            'feature:' . $name,
+            fn (): array => $this->featureRepository->getFeatureIdsByName($name, $languageId),
+            function () use ($name, $context): int {
+                $featureId = $this->commandBus->handle(
+                    new AddFeatureCommand($this->localizeForCreation($name), $this->runShopIdsProvider->getRunShopIds($context))
+                )->getValue();
+                // created WITH the run's shops, so there is nothing to ensure
+                $this->featureShopEnsured[$featureId] = true;
 
-        $featureIds = $this->featureRepository->getFeatureIdsByName($name, $languageId);
-        if ([] === $featureIds) {
-            $featureId = $this->commandBus->handle(
-                new AddFeatureCommand($this->localizeForCreation($name), $this->runShopIdsProvider->getRunShopIds($context))
-            )->getValue();
-            $resolved = new ResolvedEntity($featureId, true);
-        } else {
-            $resolved = new ResolvedEntity($featureIds[0], false, count($featureIds));
+                return $featureId;
+            }
+        );
+
+        if (!isset($this->featureShopEnsured[$resolved->id])) {
             $this->ensureFeatureShopAssociation($resolved->id, $context);
         }
-        $this->featureCache[$name] = new ResolvedEntity($resolved->id);
 
         return $resolved;
     }
 
     public function resolveFeatureValue(int $featureId, string $value, int $languageId): ResolvedEntity
     {
-        $cacheKey = $featureId . ':' . $value;
-        if (isset($this->featureValueCache[$cacheKey])) {
-            return $this->featureValueCache[$cacheKey];
-        }
-
-        $featureValueIds = $this->featureValueRepository->getFeatureValueIdsByValue($featureId, $value, $languageId);
-        if ([] === $featureValueIds) {
-            $featureValueId = $this->commandBus->handle(
+        return $this->resolveThroughCache(
+            'value:' . $featureId . ':' . $value,
+            fn (): array => $this->featureValueRepository->getFeatureValueIdsByValue($featureId, $value, $languageId),
+            fn (): int => $this->commandBus->handle(
                 new AddFeatureValueCommand($featureId, $this->localizeForCreation($value))
-            )->getValue();
-            $resolved = new ResolvedEntity($featureValueId, true);
-        } else {
-            $resolved = new ResolvedEntity($featureValueIds[0], false, count($featureValueIds));
-        }
-        $this->featureValueCache[$cacheKey] = new ResolvedEntity($resolved->id);
-
-        return $resolved;
+            )->getValue()
+        );
     }
 
     /**

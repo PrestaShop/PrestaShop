@@ -1,0 +1,2 @@
+name;reference;image;image_alt
+Image Hole Product;IMG-URL-HOLE-1;{FIXTURE_DIR}/dummyFile/logo.jpg,,{FIXTURE_DIR}/dummyFile/some_image.jpg;First alt,Skipped alt,Third alt

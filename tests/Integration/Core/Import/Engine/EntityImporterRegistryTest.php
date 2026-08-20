@@ -54,7 +54,10 @@ class EntityImporterRegistryTest extends KernelTestCase
 
         $fields = $importer->getFields();
         $this->assertCount(67, iterator_to_array($fields));
-        $this->assertSame(['name'], $fields->getRequiredFields());
+        // no required COLUMN: a product name is only mandatory when the row
+        // creates a product, which the row validator decides per row, so an
+        // update-only file (match_ref + reference + price) stays importable
+        $this->assertSame([], $fields->getRequiredFields());
 
         $phases = $importer->getPhases();
         $this->assertSame(['validation', 'database', 'association_validation', 'association'], array_map(static fn ($phase) => $phase->id, $phases));

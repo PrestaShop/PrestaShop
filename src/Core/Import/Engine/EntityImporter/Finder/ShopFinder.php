@@ -10,22 +10,25 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\PositiveLookupCacheTrait;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 
 /**
  * MATCH-ONLY: resolves one shop cell entry (numeric id or name) to shop ids;
  * shops are obviously never created by an import. Soft-deleted shops count as
  * absent on both branches (the probe and the name lookup both filter them).
  *
- * Name lookups are cached for the service lifetime (one batch request) — the
- * cache skips the query only, so the caller re-reads the full result (and may
- * re-warn) on every row, as before.
+ * BOTH branches are memoized, by different caches, because they run different
+ * queries: the id branch through ImportEntityExistenceChecker (which keeps its
+ * own '<table>:<id>' memo, shared with every other importer), the name branch
+ * through PositiveLookupCacheTrait. Wrapping the id branch in remember() too
+ * would just stack a second cache on top of the first. Both cache POSITIVE
+ * results only, and both skip the QUERY only — the caller still re-reads the
+ * full result, and may re-warn, on every row.
  */
-class ShopFinder
+class ShopFinder implements EntityFinderInterface
 {
-    /**
-     * @var array<string, list<int>> shop name => every matching shop id
-     */
-    protected array $cache = [];
+    use PositiveLookupCacheTrait;
 
     public function __construct(
         protected readonly ShopRepository $shopRepository,
@@ -33,19 +36,23 @@ class ShopFinder
     ) {
     }
 
-    public function find(string $entry): FoundEntity
+    /**
+     * Shop names are deliberately looked up GLOBALLY, so the run's scope plays
+     * no part here — $context is only present to satisfy the shared contract.
+     */
+    public function find(string $value, ImportRunContext $context): FoundEntity
     {
-        if (ctype_digit($entry)) {
+        if (ctype_digit($value)) {
             return new FoundEntity(
-                $this->existenceChecker->exists('shop', (int) $entry)
-                    ? [['id' => (int) $entry, 'matchedBy' => FoundEntity::MATCHED_BY_ID]]
+                $this->existenceChecker->exists('shop', (int) $value)
+                    ? [['id' => (int) $value, 'matchedBy' => FoundEntity::MATCHED_BY_ID]]
                     : []
             );
         }
 
         return new FoundEntity(array_map(
             static fn (int $shopId): array => ['id' => $shopId, 'matchedBy' => FoundEntity::MATCHED_BY_NAME],
-            $this->cache[$entry] ??= $this->shopRepository->getShopIdsByName($entry)
+            $this->remember($value, fn (): array => $this->shopRepository->getShopIdsByName($value))
         ));
     }
 }

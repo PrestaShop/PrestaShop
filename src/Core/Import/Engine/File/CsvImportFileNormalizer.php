@@ -13,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Csv as CsvWriter;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\MalformedImportFileException;
 use PrestaShop\PrestaShop\Core\Import\Exception\UnreadableFileException;
 use SplFileInfo;
+use Symfony\Component\Filesystem\Filesystem;
 use Throwable;
 
 /**
@@ -48,6 +49,11 @@ class CsvImportFileNormalizer
 
     protected const UTF8_BOM = "\xEF\xBB\xBF";
     protected const UTF16_BOMS = ["\xFE\xFF", "\xFF\xFE"];
+
+    public function __construct(
+        protected readonly Filesystem $filesystem,
+    ) {
+    }
 
     /**
      * @param SplFileInfo $sourceFile the uploaded file (CSV or spreadsheet)
@@ -159,7 +165,7 @@ class CsvImportFileNormalizer
         try {
             return $this->normalizeCsv(new SplFileInfo($conversionTarget), $targetPath, self::CSV_DELIMITER, $skipRows);
         } finally {
-            @unlink($conversionTarget);
+            $this->filesystem->remove($conversionTarget);
         }
     }
 

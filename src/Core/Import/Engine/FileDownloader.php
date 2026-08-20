@@ -9,6 +9,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Import\Engine;
 
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Fetches a file referenced by import data (http/https URL or local path)
@@ -39,6 +42,7 @@ class FileDownloader
      *                                        allowed on top (it is also where the fetched copies land).
      */
     public function __construct(
+        protected readonly Filesystem $filesystem,
         protected readonly array $allowedLocalRoots = [],
     ) {
     }
@@ -80,29 +84,30 @@ class FileDownloader
 
         $source = @fopen($sanitizedUrl, 'rb', false, $context);
         if (false === $source) {
-            @unlink($targetPath);
+            $this->filesystem->remove($targetPath);
             throw new FileDownloadException(sprintf('Could not download "%s"', $url));
         }
 
         $target = fopen($targetPath, 'wb');
         if (false === $target) {
             fclose($source);
-            @unlink($targetPath);
+            $this->filesystem->remove($targetPath);
             throw new FileDownloadException(sprintf('Could not open temporary file "%s"', $targetPath));
         }
 
         // copy at most one byte over the cap: landing exactly at cap+1 is the
-        // cheapest way to tell "too big" from "exactly max size"
+        // cheapest way to tell "too big" from "exactly max size". Deliberately
+        // a raw stream copy: Filesystem::copy() cannot express a byte limit.
         $copiedBytes = stream_copy_to_stream($source, $target, static::MAX_FILE_SIZE_BYTES + 1);
         fclose($source);
         fclose($target);
 
         if (false === $copiedBytes || 0 === $copiedBytes) {
-            @unlink($targetPath);
+            $this->filesystem->remove($targetPath);
             throw new FileDownloadException(sprintf('Downloaded file from "%s" is empty', $url));
         }
         if ($copiedBytes > static::MAX_FILE_SIZE_BYTES) {
-            @unlink($targetPath);
+            $this->filesystem->remove($targetPath);
             throw new FileDownloadException(sprintf('File from "%s" exceeds the maximum import file size (%d bytes)', $url, static::MAX_FILE_SIZE_BYTES));
         }
 
@@ -122,9 +127,11 @@ class FileDownloader
         }
 
         $targetPath = $this->createTemporaryFile();
-        if (!copy($path, $targetPath)) {
-            @unlink($targetPath);
-            throw new FileDownloadException(sprintf('Could not copy local file "%s"', $path));
+        try {
+            $this->filesystem->copy($path, $targetPath, true);
+        } catch (IOException $e) {
+            $this->filesystem->remove($targetPath);
+            throw new FileDownloadException(sprintf('Could not copy local file "%s"', $path), 0, $e);
         }
 
         return $targetPath;
@@ -138,8 +145,12 @@ class FileDownloader
      *
      * Import is admin-only, but the fetched file becomes DOWNLOADABLE content
      * (a virtual product file): without this check a file_url cell pointing at
-     * e.g. app/config/parameters.php would expose it to customers. realpath()
-     * also resolves symlinks and ../ traversal before the comparison.
+     * e.g. app/config/parameters.php would expose it to customers.
+     *
+     * The realpath() calls are load-bearing and must stay: Path::isBasePath()
+     * canonicalizes '..' LEXICALLY and does not resolve symlinks, so comparing
+     * un-resolved paths would let a symlink inside an allowed directory point
+     * anywhere on the filesystem.
      */
     protected function assertAllowedLocalPath(string $path): void
     {
@@ -150,7 +161,7 @@ class FileDownloader
 
         foreach ($this->getAllowedLocalRoots() as $allowedRoot) {
             $realRoot = realpath($allowedRoot);
-            if (false !== $realRoot && str_starts_with($realPath, rtrim($realRoot, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR)) {
+            if (false !== $realRoot && Path::isBasePath($realRoot, $realPath)) {
                 return;
             }
         }
@@ -176,12 +187,11 @@ class FileDownloader
         // of one command dispatch and are deleted by the caller
         $temporaryDirectory = sys_get_temp_dir();
 
-        $targetPath = tempnam($temporaryDirectory, 'ps_import');
-        if (false === $targetPath) {
-            throw new FileDownloadException(sprintf('Could not create a temporary file in "%s"', $temporaryDirectory));
+        try {
+            return $this->filesystem->tempnam($temporaryDirectory, 'ps_import');
+        } catch (IOException $e) {
+            throw new FileDownloadException(sprintf('Could not create a temporary file in "%s"', $temporaryDirectory), 0, $e);
         }
-
-        return $targetPath;
     }
 
     /**

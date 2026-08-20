@@ -28,6 +28,10 @@ interface EntityFieldCollectionInterface extends ArrayAccess, Countable, Iterato
      * Get required fields from the collection.
      *
      * @return array
+     *
+     * @deprecated since 9.3, will be removed in the next major version - see
+     *             EntityFieldInterface::isRequired(): required values are validated per
+     *             row by each importer's row validator, not per mapped column
      */
     public function getRequiredFields();
 

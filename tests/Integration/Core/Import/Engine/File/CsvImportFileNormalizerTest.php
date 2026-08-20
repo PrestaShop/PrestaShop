@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\MalformedImportFileException;
 use PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer;
 use SplFileInfo;
+use Symfony\Component\Filesystem\Filesystem;
 
 class CsvImportFileNormalizerTest extends TestCase
 {
@@ -27,14 +28,12 @@ class CsvImportFileNormalizerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->normalizer = new CsvImportFileNormalizer();
+        $this->normalizer = new CsvImportFileNormalizer(new Filesystem());
     }
 
     protected function tearDown(): void
     {
-        foreach ($this->temporaryFiles as $temporaryFile) {
-            @unlink($temporaryFile);
-        }
+        (new Filesystem())->remove($this->temporaryFiles);
         $this->temporaryFiles = [];
         parent::tearDown();
     }

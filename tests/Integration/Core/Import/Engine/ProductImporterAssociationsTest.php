@@ -86,6 +86,38 @@ class ProductImporterAssociationsTest extends AbstractProductImportEngineTestCas
         $this->assertSame([], $this->getAccessoryIds($idA), 'The @clear@ marker must empty the accessories');
     }
 
+    /**
+     * The pausing pre-check exists to PREDICT what the association phase will
+     * do, so it has to resolve the owner even for a @clear@ cell: clearing also
+     * needs an owner, and the write phase turns a missing one into an error.
+     * Without the shared classifier the pre-check stayed silent here and the
+     * error only surfaced after the pause, which is the surprise the phase was
+     * added to remove.
+     */
+    public function testClearMarkerWithAnUnidentifiableOwnerIsReportedByThePreCheck(): void
+    {
+        ProductResetter::resetProducts();
+
+        // no id column and match_ref off: the row is created, but the
+        // association phases cannot re-derive its owner from the file
+        [, $messages] = $this->runImport(
+            'product_accessories_clear_unknown_owner.csv',
+            ['name', 'reference', 'accessories'],
+            [],
+            [ProductImporter::PHASE_ASSOCIATION_VALIDATION]
+        );
+
+        $ownerWarnings = array_filter(
+            $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_WARNING),
+            static fn (ImportMessage $message): bool => str_contains($message->message, 'accessories owner could not be identified')
+        );
+        $this->assertNotEmpty($ownerWarnings, 'The pre-check must warn about the unidentifiable owner of a @clear@ row');
+        $this->assertSame(
+            ProductImporter::PHASE_ASSOCIATION_VALIDATION,
+            reset($ownerWarnings)->phase
+        );
+    }
+
     public function testNumericAccessoryTargetsIdWinsWithReferenceFallback(): void
     {
         ProductResetter::resetProducts();

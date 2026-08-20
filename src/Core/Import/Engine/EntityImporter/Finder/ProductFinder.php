@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\PositiveLookupCacheTrait;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 
 /**
@@ -28,6 +29,8 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
  */
 class ProductFinder
 {
+    use PositiveLookupCacheTrait;
+
     public function __construct(
         protected readonly ProductRepository $productRepository,
         protected readonly ImportEntityExistenceChecker $existenceChecker,
@@ -58,11 +61,16 @@ class ProductFinder
 
         $reference = $row['reference'] ?? '';
         if ($options->matchRef && '' !== $reference) {
-            $productIds = $this->productRepository->getProductIdsByReference($reference, $context->getShopConstraint());
+            $shopConstraint = $context->getShopConstraint();
+            $productIds = $this->productRepository->getProductIdsByReference($reference, $shopConstraint);
             if ([] !== $productIds) {
                 return new FoundEntity($this->toMatches($productIds, FoundEntity::MATCHED_BY_REFERENCE));
             }
-            if ($this->referenceExistsOutsideScope($reference, $context)) {
+            // the in-scope lookup above already missed, so only the catalog-wide
+            // one is left to run: a hit means creating would duplicate a
+            // reference that lives on another shop
+            if (!$shopConstraint->forAllShops()
+                && [] !== $this->productRepository->getProductIdsByReference($reference, ShopConstraint::allShops())) {
                 return new FoundEntity([], null, true);
             }
         }
@@ -120,8 +128,11 @@ class ProductFinder
      */
     public function findTarget(string $target, ImportRunContext $context): FoundEntity
     {
+        // both accessory phases resolve every target of every row, and files
+        // commonly repeat the same cross-sell set, so the reference lookup is
+        // memoized (positives only — the database phase creates products)
         $referenceMatches = $this->toMatches(
-            $this->productRepository->getProductIdsByReference($target, $context->getShopConstraint()),
+            $this->remember($target, fn (): array => $this->productRepository->getProductIdsByReference($target, $context->getShopConstraint())),
             FoundEntity::MATCHED_BY_REFERENCE
         );
 
@@ -143,21 +154,5 @@ class ProductFinder
     protected function toMatches(array $ids, string $matchedBy): array
     {
         return array_map(static fn (int $id): array => ['id' => $id, 'matchedBy' => $matchedBy], $ids);
-    }
-
-    /**
-     * Whether the reference misses within the run's shop scope but hits in the
-     * whole catalog — the case where a match_ref creation would duplicate the
-     * reference on another shop.
-     */
-    protected function referenceExistsOutsideScope(string $reference, ImportRunContext $context): bool
-    {
-        $shopConstraint = $context->getShopConstraint();
-        if ('' === $reference || $shopConstraint->forAllShops()) {
-            return false;
-        }
-
-        return [] === $this->productRepository->getProductIdsByReference($reference, $shopConstraint)
-            && [] !== $this->productRepository->getProductIdsByReference($reference, ShopConstraint::allShops());
     }
 }

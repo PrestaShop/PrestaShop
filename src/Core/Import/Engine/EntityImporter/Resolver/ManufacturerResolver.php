@@ -20,16 +20,11 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
  * ImportEntityExistenceChecker (creating a brand named "123" from an unknown id
  * would be nonsense).
  *
- * Resolutions are cached for the service lifetime (one batch request) in their
- * QUIET form: the creation/ambiguity information is returned once, on first
- * resolution, so callers emit each warning once per run, not once per row.
+ * Caching and once-per-batch reporting come from QuietResolutionTrait.
  */
-class ManufacturerResolver
+class ManufacturerResolver implements EntityResolverInterface
 {
-    /**
-     * @var array<string, ResolvedEntity> quiet resolutions, keyed by name
-     */
-    protected array $cache = [];
+    use QuietResolutionTrait;
 
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
@@ -38,23 +33,14 @@ class ManufacturerResolver
     ) {
     }
 
-    public function resolve(string $name, ImportRunContext $context): ResolvedEntity
+    public function resolve(string $value, ImportRunContext $context): ResolvedEntity
     {
-        if (isset($this->cache[$name])) {
-            return $this->cache[$name];
-        }
-
-        $manufacturerIds = $this->manufacturerRepository->getManufacturerIdsByName($name);
-        if ([] === $manufacturerIds) {
-            $manufacturerId = $this->commandBus->handle(
-                new AddManufacturerCommand($name, true, [], [], [], [], $this->runShopIdsProvider->getRunShopIds($context))
-            )->getValue();
-            $resolved = new ResolvedEntity($manufacturerId, true);
-        } else {
-            $resolved = new ResolvedEntity($manufacturerIds[0], false, count($manufacturerIds));
-        }
-        $this->cache[$name] = new ResolvedEntity($resolved->id);
-
-        return $resolved;
+        return $this->resolveThroughCache(
+            $value,
+            fn (): array => $this->manufacturerRepository->getManufacturerIdsByName($value),
+            fn (): int => $this->commandBus->handle(
+                new AddManufacturerCommand($value, true, [], [], [], [], $this->runShopIdsProvider->getRunShopIds($context))
+            )->getValue()
+        );
     }
 }
