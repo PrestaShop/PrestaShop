@@ -86,13 +86,13 @@ Common slips unrelated to the feature itself — check before pushing:
 
 ## Domain contexts
 
-All 58 domains under `src/Core/Domain/` have a context file at `Domain/{DomainName}/CONTEXT.md`. Read the relevant one before working in a domain.
+The 58 domains listed below have a context file at `Domain/{DomainName}/CONTEXT.md`. Read the relevant one before working in a domain. `src/Core/Domain/` also holds folders of shared classes (`Exception`, `QueryResult`, `ValueObject`, `TaxRule`) and three domains that do not have one yet: `ExtraProperty`, `QuickAccess`, `BusinessEntity`.
 
 Domains: Address, Alias, ApiClient, Attachment, AttributeGroup, Carrier, Cart, CartRule, CatalogPriceRule, Category, CmsPage, CmsPageCategory, Combination (code lives under `src/Core/Domain/Product/Combination/`), Configuration, Contact, Country, CreditSlip, Currency, Customer, CustomerMessage, CustomerService, Discount, Employee, Feature, Hook, ImageSettings, Language, MailTemplate, Manufacturer, Meta, Module, Notification, Order, OrderMessage, OrderReturn, OrderReturnState, OrderState, Position, Product, Profile, Search, SearchEngine, Security, Shipment, Shop, ShowcaseCard, SqlManagement, State, Store, Supplier, Tab, Tag, Tax, TaxRulesGroup, Theme, Title, Webservice, Zone
 
 ## Component contexts
 
-All 28 shared infrastructure components have a context file at `Component/{ComponentName}/CONTEXT.md`.
+All 29 shared infrastructure components have a context file at `Component/{ComponentName}/CONTEXT.md`.
 
 Components: AdminAPI, BackOfficeHelp, Behat, Configuration, Console, Context, ContextStateManager, Controller, Cookie, CQRS, Database, Export, ExtraProperty, FacetedSearch, Forms, Grid, Hook, Import, Javascript, Link, Locale, MailTemplate, Migration, Playwright, PositionUpdater, Router, Smarty, TinyMCE, Twig
 
