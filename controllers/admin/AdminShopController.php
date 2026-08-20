@@ -639,15 +639,7 @@ class AdminShopControllerCore extends AdminController
             ];
         }
 
-        if (!$obj->theme_name) {
-            $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                ->buildRepository()
-                ->getList();
-            $theme = array_pop($themes);
-            $theme_name = $theme->getName();
-        } else {
-            $theme_name = $obj->theme_name;
-        }
+        $theme_name = $obj->theme_name ?: $this->context->shop->theme_name;
 
         $this->fields_value = [
             'id_shop_group' => (
