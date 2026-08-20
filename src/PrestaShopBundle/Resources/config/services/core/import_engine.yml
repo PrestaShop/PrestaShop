@@ -47,14 +47,23 @@ services:
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
 
-  # Product importer and its internals (persistence goes through CQRS
-  # commands and the existing Adapter repositories)
+  # Finders (match-only: never create, never build messages, never throw)
+  # and resolvers (resolve-or-create) shared by the entity importers —
+  # callers own severity and wording
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder: ~
-  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowValidator: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ShopFinder: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\SupplierFinder: ~
 
-  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductAssociationResolver:
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\RunShopIdsProvider: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\ManufacturerResolver: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\FeatureResolver: ~
+
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\CategoryResolver:
     arguments:
       $dataFormatter: '@prestashop.adapter.import.data_formatter'
 
+  # Product importer and its internals (persistence goes through CQRS
+  # commands and the existing Adapter repositories)
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowValidator: ~
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter: ~
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ProductImporter: ~

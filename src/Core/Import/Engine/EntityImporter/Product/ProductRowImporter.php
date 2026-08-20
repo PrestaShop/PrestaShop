@@ -58,8 +58,13 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\EntityLookupResult;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ShopFinder;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\SupplierFinder;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\CategoryResolver;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\FeatureResolver;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\ManufacturerResolver;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ImportEngineException;
 use PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader;
@@ -93,7 +98,11 @@ class ProductRowImporter
         protected readonly CommandBusInterface $commandBus,
         protected readonly ValueParser $valueParser,
         protected readonly ProductFinder $productFinder,
-        protected readonly ProductAssociationResolver $associationResolver,
+        protected readonly SupplierFinder $supplierFinder,
+        protected readonly ShopFinder $shopFinder,
+        protected readonly ManufacturerResolver $manufacturerResolver,
+        protected readonly CategoryResolver $categoryResolver,
+        protected readonly FeatureResolver $featureResolver,
         protected readonly ProductRepository $productRepository,
         protected readonly SpecificPriceRepository $specificPriceRepository,
         protected readonly StockAvailableRepository $stockAvailableRepository,
@@ -256,8 +265,34 @@ class ProductRowImporter
             return null;
         }
 
-        $resolved = $this->associationResolver->resolveManufacturer($manufacturer, $context, $rowIndex);
-        $messages = array_merge($messages, $resolved->messages);
+        // a NUMERIC value is an id, never a name: creating a brand named
+        // "123" from an unknown id would be nonsense, warn and drop instead
+        if (ctype_digit($manufacturer)) {
+            if ($this->existenceChecker->exists('manufacturer', (int) $manufacturer)) {
+                return (int) $manufacturer;
+            }
+
+            $messages[] = new ImportMessage(
+                ImportMessage::SEVERITY_WARNING,
+                ImportPhaseDefinition::PHASE_DATABASE,
+                $this->translator->trans('Brand with id %id% does not exist; the field will be ignored.', ['%id%' => $manufacturer], 'Admin.Advparameters.Notification'),
+                $rowIndex,
+                'manufacturer'
+            );
+
+            return null;
+        }
+
+        $resolved = $this->manufacturerResolver->resolve($manufacturer, $context);
+        if ($resolved->isAmbiguous()) {
+            $messages[] = new ImportMessage(
+                ImportMessage::SEVERITY_WARNING,
+                ImportPhaseDefinition::PHASE_DATABASE,
+                $this->translator->trans('Brand "%name%" matches %count% brands; the first one (id %id%) was used.', ['%name%' => $manufacturer, '%count%' => $resolved->matchCount, '%id%' => $resolved->id], 'Admin.Advparameters.Notification'),
+                $rowIndex,
+                'manufacturer'
+            );
+        }
 
         return $resolved->id;
     }
@@ -547,18 +582,60 @@ class ProductRowImporter
             return;
         }
 
-        $entries = $this->valueParser->split($categories, $context->getMultipleValueSeparator());
-        $resolved = $this->associationResolver->resolveCategories($entries, $context, $rowIndex);
-        $messages = array_merge($messages, $resolved['messages']);
+        $ids = [];
+        $languageId = $this->getLanguageId($context);
+        foreach ($this->valueParser->split($categories, $context->getMultipleValueSeparator()) as $entry) {
+            if (ctype_digit($entry)) {
+                if ($this->existenceChecker->exists('category', (int) $entry)) {
+                    $ids[] = (int) $entry;
+                } else {
+                    // validation already reported this as a row ERROR; reaching
+                    // it here (post-write) only drops the entry, never the row
+                    $messages[] = new ImportMessage(
+                        ImportMessage::SEVERITY_WARNING,
+                        ImportPhaseDefinition::PHASE_DATABASE,
+                        $this->translator->trans('Category with id %id% does not exist; the entry will be ignored.', ['%id%' => $entry], 'Admin.Advparameters.Notification'),
+                        $rowIndex,
+                        'category'
+                    );
+                }
+                continue;
+            }
 
-        if ([] === $resolved['ids']) {
+            // walk the '/'-separated path from Home, one resolve-or-create
+            // per segment: the id of the category the current segment was
+            // found (or created) under; after the loop it holds the deepest
+            // segment's own id — the one the product is associated with
+            $currentCategoryId = (int) $this->configuration->get('PS_HOME_CATEGORY', null, $context->getShopConstraint());
+            foreach (array_map('trim', explode('/', $entry)) as $categoryName) {
+                if ('' === $categoryName) {
+                    continue;
+                }
+
+                $resolvedCategory = $this->categoryResolver->resolveChild($currentCategoryId, $categoryName, $languageId, $context);
+                if ($resolvedCategory->isAmbiguous()) {
+                    $messages[] = new ImportMessage(
+                        ImportMessage::SEVERITY_WARNING,
+                        ImportPhaseDefinition::PHASE_DATABASE,
+                        $this->translator->trans('Category "%name%" matches %count% sibling categories; the first one (id %id%) was used.', ['%name%' => $categoryName, '%count%' => $resolvedCategory->matchCount, '%id%' => $resolvedCategory->id], 'Admin.Advparameters.Notification'),
+                        $rowIndex,
+                        'category'
+                    );
+                }
+                $currentCategoryId = $resolvedCategory->id;
+            }
+            $ids[] = $currentCategoryId;
+        }
+
+        $ids = array_values(array_unique($ids));
+        if ([] === $ids) {
             return;
         }
 
         $this->commandBus->handle(new SetAssociatedProductCategoriesCommand(
             $productId,
-            $resolved['ids'][0], // legacy rule: the first entry is the default category
-            $resolved['ids'],
+            $ids[0], // legacy rule: the first entry is the default category
+            $ids,
             $context->getShopConstraint()
         ));
     }
@@ -574,25 +651,44 @@ class ProductRowImporter
             return;
         }
 
-        $resolved = $this->associationResolver->resolveSupplier($supplier, $rowIndex);
-        $messages = array_merge($messages, $resolved->messages);
-        if (null === $resolved->id) {
+        $lookup = $this->supplierFinder->find($supplier);
+        $supplierId = $lookup->first();
+        if (null === $supplierId) {
+            // suppliers are never auto-created: a supplier requires an address,
+            // which the import file cannot provide -> warn and drop
+            $messages[] = new ImportMessage(
+                ImportMessage::SEVERITY_WARNING,
+                ImportPhaseDefinition::PHASE_DATABASE,
+                $this->translator->trans('Supplier "%name%" does not exist and suppliers are not auto-created by the import; the field will be ignored.', ['%name%' => $supplier], 'Admin.Advparameters.Notification'),
+                $rowIndex,
+                'supplier'
+            );
+
             return;
         }
+        if ($lookup->isAmbiguous()) {
+            $messages[] = new ImportMessage(
+                ImportMessage::SEVERITY_WARNING,
+                ImportPhaseDefinition::PHASE_DATABASE,
+                $this->translator->trans('Supplier "%name%" matches %count% suppliers; the first one (id %id%) was used.', ['%name%' => $supplier, '%count%' => $lookup->count(), '%id%' => $supplierId], 'Admin.Advparameters.Notification'),
+                $rowIndex,
+                'supplier'
+            );
+        }
 
-        $this->commandBus->handle(new SetSuppliersCommand($productId, [$resolved->id]));
+        $this->commandBus->handle(new SetSuppliersCommand($productId, [$supplierId]));
 
         $supplierReference = $row['supplier_reference'] ?? '';
         $wholesalePrice = $this->valueParser->parseDecimal($row['wholesale_price'] ?? '') ?? new DecimalNumber('0');
         $this->commandBus->handle(new UpdateProductSuppliersCommand($productId, [
             [
-                'supplier_id' => $resolved->id,
+                'supplier_id' => $supplierId,
                 'currency_id' => (int) $this->configuration->get('PS_CURRENCY_DEFAULT', null, $context->getShopConstraint()),
                 'reference' => $supplierReference,
                 'price_tax_excluded' => (string) $wholesalePrice,
             ],
         ]));
-        $this->commandBus->handle(new SetProductDefaultSupplierCommand($productId, $resolved->id));
+        $this->commandBus->handle(new SetProductDefaultSupplierCommand($productId, $supplierId));
     }
 
     /**
@@ -633,12 +729,65 @@ class ProductRowImporter
             return;
         }
 
-        $entries = $this->valueParser->split($featuresCell, $context->getMultipleValueSeparator());
-        $resolved = $this->associationResolver->resolveFeatures($entries, $context, $rowIndex, $isCreation, $isCreation ? null : $productId);
-        $messages = array_merge($messages, $resolved['messages']);
+        $featureValues = [];
+        $languageId = $this->getLanguageId($context);
+        foreach ($this->valueParser->split($featuresCell, $context->getMultipleValueSeparator()) as $entry) {
+            // 'Name:Value:Position[:Custom]' — position is ignored (the
+            // commands manage positions); this format is the import file's,
+            // so parsing it belongs here, not in the resolver
+            $parts = array_map('trim', explode(':', $entry));
+            $featureName = $parts[0] ?? '';
+            $featureValue = $parts[1] ?? '';
+            $isCustom = !empty($parts[3]);
 
-        if ([] !== $resolved['featureValues']) {
-            $this->commandBus->handle(new SetProductFeatureValuesCommand($productId, $resolved['featureValues']));
+            if ('' === $featureName || '' === $featureValue) {
+                $messages[] = new ImportMessage(
+                    ImportMessage::SEVERITY_WARNING,
+                    ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('Invalid feature entry "%entry%" (expected Name:Value:Position[:Custom]); the entry will be ignored.', ['%entry%' => $entry], 'Admin.Advparameters.Notification'),
+                    $rowIndex,
+                    'features'
+                );
+                continue;
+            }
+
+            $feature = $this->featureResolver->resolveFeature($featureName, $languageId, $context);
+            if ($feature->isAmbiguous()) {
+                $messages[] = new ImportMessage(
+                    ImportMessage::SEVERITY_WARNING,
+                    ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('Feature "%name%" matches %count% features; the first one (id %id%) was used.', ['%name%' => $featureName, '%count%' => $feature->matchCount, '%id%' => $feature->id], 'Admin.Advparameters.Notification'),
+                    $rowIndex,
+                    'features'
+                );
+            }
+
+            if ($isCustom) {
+                $featureValues[] = [
+                    'feature_id' => $feature->id,
+                    'custom_values' => $this->featureResolver->resolveCustomValues($feature->id, $featureValue, $isCreation, $isCreation ? null : $productId, $languageId),
+                ];
+                continue;
+            }
+
+            $value = $this->featureResolver->resolveFeatureValue($feature->id, $featureValue, $languageId);
+            if ($value->isAmbiguous()) {
+                $messages[] = new ImportMessage(
+                    ImportMessage::SEVERITY_WARNING,
+                    ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('Feature value "%value%" matches %count% values of the same feature; the first one (id %id%) was used.', ['%value%' => $featureValue, '%count%' => $value->matchCount, '%id%' => $value->id], 'Admin.Advparameters.Notification'),
+                    $rowIndex,
+                    'features'
+                );
+            }
+            $featureValues[] = [
+                'feature_id' => $feature->id,
+                'feature_value_id' => $value->id,
+            ];
+        }
+
+        if ([] !== $featureValues) {
+            $this->commandBus->handle(new SetProductFeatureValuesCommand($productId, $featureValues));
         }
     }
 
@@ -935,10 +1084,36 @@ class ProductRowImporter
             return;
         }
 
-        $resolved = $this->associationResolver->resolveShops($shopCell, $context, $rowIndex);
-        $messages = array_merge($messages, $resolved['messages']);
+        $shopIds = [];
+        foreach ($this->valueParser->split($shopCell, $context->getMultipleValueSeparator()) as $entry) {
+            $lookup = $this->shopFinder->find($entry);
+            $shopId = $lookup->first();
+            if (null === $shopId) {
+                $messages[] = new ImportMessage(
+                    ImportMessage::SEVERITY_WARNING,
+                    ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('Shop "%name%" does not exist; the entry will be ignored.', ['%name%' => $entry], 'Admin.Advparameters.Notification'),
+                    $rowIndex,
+                    'shop'
+                );
+                continue;
+            }
+            if ($lookup->isAmbiguous()) {
+                $messages[] = new ImportMessage(
+                    ImportMessage::SEVERITY_WARNING,
+                    ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('Shop "%name%" matches %count% shops; the first one (id %id%) was used.', ['%name%' => $entry, '%count%' => $lookup->count(), '%id%' => $shopId], 'Admin.Advparameters.Notification'),
+                    $rowIndex,
+                    'shop'
+                );
+            }
+            $shopIds[] = $shopId;
+        }
 
-        $shopIds = $resolved['shopIds'];
+        $shopIds = array_values(array_unique($shopIds));
+        if ([] === $shopIds) {
+            $shopIds[] = $context->getShopId();
+        }
         // the source shop must be part of the association (command constraint);
         // the run's shop holds the data that was just written
         if (!in_array($context->getShopId(), $shopIds, true)) {
