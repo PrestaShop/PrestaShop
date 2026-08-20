@@ -327,7 +327,8 @@
 												{if isset($input.multiple) && $input.multiple} multiple="multiple"{/if}
 												{if isset($input.size)} size="{$input.size|escape:'html':'utf-8'}"{/if}
 												{if isset($input.onchange)} onchange="{$input.onchange|escape:'html':'utf-8'}"{/if}
-												{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}>
+												{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
+												{if isset($input.placeholder) && $input.placeholder} data-placeholder="{$input.placeholder|escape:'html':'utf-8'}"{/if}>
 											{if isset($input.options.default)}
 												<option value="{$input.options.default.value|escape:'html':'utf-8'}">{$input.options.default.label|escape:'html':'utf-8'}</option>
 											{/if}
