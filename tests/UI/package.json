@@ -112,7 +112,7 @@
   "homepage": "https://github.com/PrestaShop/PrestaShop/tree/develop/tests/UI#readme",
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
-    "@prestashop-core/ui-testing": "https://github.com/PrestaShop/ui-testing-library#main",
+    "@prestashop-core/ui-testing": "github:jolelievre/ui-testing-library#add-carrier-billing-selection-getter",
     "chai": "^6.2.2",
     "chai-string": "^2.0.0",
     "dotenv": "^17.4.1",
