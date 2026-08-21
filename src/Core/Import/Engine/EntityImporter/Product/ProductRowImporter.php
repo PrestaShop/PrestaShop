@@ -740,7 +740,14 @@ class ProductRowImporter
         $this->commandBus->handle(new UpdateProductSuppliersCommand($productId, [
             [
                 'supplier_id' => $supplierId,
-                'currency_id' => (int) $this->configuration->get('PS_CURRENCY_DEFAULT', null, $context->getShopConstraint()),
+                // the import file has no currency column, so an EXISTING
+                // association keeps the currency it was recorded with: resetting
+                // it to the shop default would reinterpret the price without
+                // changing the number (100 USD silently read as 100 EUR).
+                // Legacy did reset it, so this is a deliberate divergence
+                'currency_id' => null !== $existing
+                    ? (int) $existing['id_currency']
+                    : (int) $this->configuration->get('PS_CURRENCY_DEFAULT', null, $context->getShopConstraint()),
                 'reference' => $this->hasValue($row, 'supplier_reference')
                     ? $row['supplier_reference']
                     : (string) ($existing['product_supplier_reference'] ?? ''),

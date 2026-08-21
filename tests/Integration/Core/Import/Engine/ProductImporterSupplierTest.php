@@ -46,7 +46,10 @@ class ProductImporterSupplierTest extends AbstractProductImportEngineTestCase
 
     public static function tearDownAfterClass(): void
     {
-        DatabaseDump::restoreTables(['supplier', 'supplier_shop', 'supplier_lang', 'product_supplier']);
+        DatabaseDump::restoreTables([
+            'supplier', 'supplier_shop', 'supplier_lang', 'product_supplier',
+            'currency', 'currency_lang', 'currency_shop',
+        ]);
         parent::tearDownAfterClass();
     }
 
@@ -83,6 +86,43 @@ class ProductImporterSupplierTest extends AbstractProductImportEngineTestCase
             'SELECT product_supplier_price_te FROM {p}product_supplier WHERE id_product = :id AND id_supplier = :supplier',
             ['id' => $productId, 'supplier' => self::$firstSupplierId]
         ), 'An unmapped wholesale_price column must not reset the supplier price to 0');
+    }
+
+    /**
+     * The file has no currency column at all, so a supplier price recorded in a
+     * non-default currency must keep it. Resetting it to the shop default would
+     * leave the NUMBER untouched while changing its meaning — 100 USD silently
+     * read as 100 EUR. Legacy reset it on every save; this is a deliberate
+     * divergence, for the same reason as the price and reference above.
+     */
+    public function testReimportingKeepsTheCurrencyTheSupplierPriceWasRecordedIn(): void
+    {
+        ProductResetter::resetProducts();
+
+        [, $messages] = $this->runImport('product_supplier_full.csv', self::CREATE_FIELDS);
+        $this->assertNoErrors($messages);
+        $productId = $this->getProductIdByReference('SUP-MERGE-1');
+        $this->assertNotNull($productId);
+
+        // a REAL second currency: the updater rejects one that does not exist,
+        // so the association cannot be pinned to a synthetic id
+        $otherCurrencyId = $this->createSecondCurrency();
+        $this->connection->executeStatement(
+            str_replace('{p}', $this->dbPrefix, 'UPDATE {p}product_supplier SET id_currency = :currency WHERE id_product = :id AND id_supplier = :supplier'),
+            ['currency' => $otherCurrencyId, 'id' => $productId, 'supplier' => self::$firstSupplierId]
+        );
+
+        [, $messages] = $this->runImport('product_supplier_reimport.csv', self::REIMPORT_FIELDS, ['matchRef' => true]);
+        $this->assertNoErrors($messages);
+
+        $this->assertSame(
+            $otherCurrencyId,
+            (int) $this->fetchOne(
+                'SELECT id_currency FROM {p}product_supplier WHERE id_product = :id AND id_supplier = :supplier',
+                ['id' => $productId, 'supplier' => self::$firstSupplierId]
+            ),
+            'Re-importing must not silently move the supplier price to the shop default currency'
+        );
     }
 
     /**
@@ -125,6 +165,31 @@ class ProductImporterSupplierTest extends AbstractProductImportEngineTestCase
             'SELECT product_supplier_reference FROM {p}product_supplier WHERE id_product = :id AND id_supplier = :supplier',
             ['id' => $productId, 'supplier' => self::$secondSupplierId]
         ));
+    }
+
+    /**
+     * The default catalog ships a single currency, so the non-default one this
+     * test needs has to be created — and it must really exist, because the
+     * supplier updater validates the currency id.
+     */
+    private function createSecondCurrency(): int
+    {
+        $db = Db::getInstance();
+        $db->insert('currency', [
+            'name' => 'Import Test Dollar', 'iso_code' => 'USD', 'numeric_iso_code' => '840',
+            'precision' => 2, 'conversion_rate' => '1.100000', 'deleted' => 0,
+            'active' => 1, 'unofficial' => 0, 'modified' => 0,
+        ]);
+        $currencyId = (int) $db->Insert_ID();
+        $db->insert('currency_lang', [
+            'id_currency' => $currencyId, 'id_lang' => 1,
+            'name' => 'Import Test Dollar', 'symbol' => '$', 'pattern' => '¤#,##0.00',
+        ]);
+        $db->insert('currency_shop', [
+            'id_currency' => $currencyId, 'id_shop' => self::DEFAULT_SHOP_ID, 'conversion_rate' => '1.100000',
+        ]);
+
+        return $currencyId;
     }
 
     private static function insertSupplier(Db $db, string $name): int
