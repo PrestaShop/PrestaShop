@@ -60,7 +60,7 @@ class ProductShopsQueryBuilder extends ProductQueryBuilder
      */
     protected function addShopCondition(string $sql, string $tableAlias, ?int $shopId, ?int $filteredShopGroupId): string
     {
-        return $sql . ' AND ' . $tableAlias . '.`id_shop` = ps.`id_shop`';
+        return $sql . ' AND ' . $tableAlias . '.id_shop = ps.id_shop';
     }
 
     /**
@@ -74,6 +74,6 @@ class ProductShopsQueryBuilder extends ProductQueryBuilder
      */
     protected function getStockOnCondition(?int $sharedStockGroupId, ?int $shopId, ?int $filteredShopGroupId): string
     {
-        return 'sa.`id_product` = p.`id_product` AND sa.`id_product_attribute` = 0 AND (sa.`id_shop` = ps.`id_shop` OR sa.`id_shop_group` = s.`id_shop_group`)';
+        return 'sa.id_product = p.id_product AND sa.id_product_attribute = 0 AND (sa.id_shop = ps.id_shop OR sa.id_shop_group = s.id_shop_group)';
     }
 }

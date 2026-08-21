@@ -347,9 +347,9 @@ class CategoryCore extends ObjectModel
         }
 
         $sql = new DbQuery();
-        $sql->select('`id_category`');
+        $sql->select('id_category');
         $sql->from('category');
-        $sql->where('`id_parent` = ' . (int) $idCategory);
+        $sql->where('id_parent = ' . (int) $idCategory);
 
         $result = Db::getInstance()->executeS($sql);
         foreach ($result as $row) {
@@ -503,10 +503,10 @@ class CategoryCore extends ObjectModel
         $id = Context::getContext()->shop->id;
         $idShop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
         $sql = new DbQuery();
-        $sql->select('c.`id_category`, c.`id_parent`');
+        $sql->select('c.id_category, c.id_parent');
         $sql->from('category', 'c');
-        $sql->leftJoin('category_shop', 'cs', 'c.`id_category` = cs.`id_category` AND cs.`id_shop` = ' . (int) $idShop);
-        $sql->orderBy('c.`id_parent`, cs.`position` ASC');
+        $sql->leftJoin('category_shop', 'cs', 'c.id_category = cs.id_category AND cs.id_shop = ' . (int) $idShop);
+        $sql->orderBy('c.id_parent, cs.position ASC');
         $categories = Db::getInstance()->executeS($sql);
         $categoriesArray = [];
         foreach ($categories as $category) {
@@ -517,13 +517,29 @@ class CategoryCore extends ObjectModel
         if (isset($categoriesArray[0]['subcategories'][0])) {
             $queries = Category::computeNTreeInfos($categoriesArray, $categoriesArray[0]['subcategories'][0], $n);
 
+            // Every id_category here was just read from the category table above, so the
+            // ON CONFLICT/ON DUPLICATE KEY branch always fires in practice. PostgreSQL still
+            // validates NOT NULL columns on the proposed (never actually inserted) row before
+            // checking for a conflict, so id_parent/date_add/date_upd must be supplied even
+            // though DO UPDATE only ever touches nleft/nright.
+            $now = date('Y-m-d H:i:s');
+
             // update by batch of 5000 categories
             $chunks = array_chunk($queries, 5000);
             foreach ($chunks as $chunk) {
-                $sqlChunk = array_map(function ($value) { return '(' . rtrim(implode(',', $value)) . ')'; }, $chunk);
-                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'category` (id_category, nleft, nright)
+                $sqlChunk = array_map(function ($value) use ($now) {
+                    return '(' . rtrim(implode(',', $value)) . ',\'' . $now . '\',\'' . $now . '\')';
+                }, $chunk);
+                // The conflict target is the primary key of the category table: a genuine conflict
+                // can only happen when re-computing the nested tree for an existing id_category, so
+                // the row is simply refreshed with the freshly computed bounds.
+                /* @phpstan-ignore-next-line */
+                $onConflict = _DB_TYPE_ == 'pgsql'
+                    ? 'ON CONFLICT (' . Db::quoteIdentifier('id_category') . ') DO UPDATE SET nleft = EXCLUDED.nleft, nright = EXCLUDED.nright'
+                    : 'ON DUPLICATE KEY UPDATE nleft=VALUES(nleft), nright=VALUES(nright)';
+                Db::getInstance()->execute('INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' (id_category, id_parent, nleft, nright, date_add, date_upd)
                 VALUES ' . rtrim(implode(',', $sqlChunk), ',') . '
-                ON DUPLICATE KEY UPDATE nleft=VALUES(nleft), nright=VALUES(nright)');
+                ' . $onConflict);
             }
         }
     }
@@ -532,21 +548,22 @@ class CategoryCore extends ObjectModel
      * @param array $categories
      * @param int $idCategory
      * @param int $n
+     * @param int $idParent Parent of $idCategory, known by the caller since $categories is keyed by parent
      *
      * @return array ntree infos
      */
-    protected static function computeNTreeInfos(&$categories, $idCategory, &$n)
+    protected static function computeNTreeInfos(&$categories, $idCategory, &$n, $idParent = 0)
     {
         $queries = [];
         $left = $n++;
         if (isset($categories[(int) $idCategory]['subcategories'])) {
             foreach ($categories[(int) $idCategory]['subcategories'] as $idSubcategory) {
-                $queries = array_merge($queries, Category::computeNTreeInfos($categories, (int) $idSubcategory, $n));
+                $queries = array_merge($queries, Category::computeNTreeInfos($categories, (int) $idSubcategory, $n, (int) $idCategory));
             }
         }
         $right = (int) $n++;
 
-        $queries[] = [$idCategory, $left, $right];
+        $queries[] = [$idCategory, $idParent, $left, $right];
 
         return $queries;
     }
@@ -576,7 +593,7 @@ class CategoryCore extends ObjectModel
                 'nleft' => (int) $left,
                 'nright' => (int) $right,
             ],
-            '`id_category` = ' . (int) $idCategory,
+            'id_category = ' . (int) $idCategory,
             1
         );
     }
@@ -595,15 +612,15 @@ class CategoryCore extends ObjectModel
         }
         /* Gets all children */
         $sql = new DbQuery();
-        $sql->select('c.`id_category`, c.`id_parent`, c.`level_depth`');
+        $sql->select('c.id_category, c.id_parent, c.level_depth');
         $sql->from('category', 'c');
-        $sql->where('c.`id_parent` = ' . (int) $idParentCategory);
+        $sql->where('c.id_parent = ' . (int) $idParentCategory);
         $categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
         /* Gets level_depth */
         $sql = new DbQuery();
-        $sql->select('c.`level_depth`');
+        $sql->select('c.level_depth');
         $sql->from('category', 'c');
-        $sql->where('c.`id_category` = ' . (int) $idParentCategory);
+        $sql->where('c.id_category = ' . (int) $idParentCategory);
         $level = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
         /* Updates level_depth for all children */
         foreach ($categories as $subCategory) {
@@ -612,7 +629,7 @@ class CategoryCore extends ObjectModel
                 [
                     'level_depth' => (int) ($level['level_depth'] + 1),
                 ],
-                '`id_category` = ' . (int) $subCategory['id_category']
+                'id_category = ' . (int) $subCategory['id_category']
             );
             /* Recursive call */
             $this->recalculateLevelDepth($subCategory['id_category']);
@@ -637,13 +654,13 @@ class CategoryCore extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
 			SELECT *
-			FROM `' . _DB_PREFIX_ . 'category` c
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
 			' . Shop::addSqlAssociation('category', 'c') . '
-			LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . '
-			WHERE 1 ' . $sqlFilter . ' ' . ($idLang ? 'AND `id_lang` = ' . (int) $idLang : '') . '
-			' . ($active ? 'AND `active` = 1' : '') . '
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON c.id_category = cl.id_category' . Shop::addSqlRestrictionOnLang('cl') . '
+			WHERE 1 = 1 ' . $sqlFilter . ' ' . ($idLang ? 'AND id_lang = ' . (int) $idLang : '') . '
+			' . ($active ? 'AND active = 1' : '') . '
 			' . (!$idLang ? 'GROUP BY c.id_category' : '') . '
-			' . ($orderBy != '' ? $orderBy : 'ORDER BY c.`level_depth` ASC, category_shop.`position` ASC') . '
+			' . ($orderBy != '' ? $orderBy : 'ORDER BY c.level_depth ASC, category_shop.position ASC') . '
 			' . ($limit != '' ? $limit : '')
         );
 
@@ -723,18 +740,18 @@ class CategoryCore extends ObjectModel
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance()->executeS(
                 '
-				SELECT c.`id_category`, cl.`name`
-				FROM `' . _DB_PREFIX_ . 'category` c
+				SELECT c.id_category, cl.name
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
 				' . ($useShopRestriction ? Shop::addSqlAssociation('category', 'c') : '') . '
-				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . '
-				' . (isset($groups) && Group::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_group` cg ON c.`id_category` = cg.`id_category`' : '') . '
-				' . (isset($idRootCategory) ? 'RIGHT JOIN `' . _DB_PREFIX_ . 'category` c2 ON c2.`id_category` = ' . (int) $idRootCategory . ' AND c.`nleft` >= c2.`nleft` AND c.`nright` <= c2.`nright`' : '') . '
-				WHERE 1 ' . $sqlFilter . ' ' . ($idLang ? 'AND `id_lang` = ' . (int) $idLang : '') . '
-				' . ($active ? ' AND c.`active` = 1' : '') . '
-				' . (isset($groups) && Group::isFeatureActive() ? ' AND cg.`id_group` IN (' . implode(',', array_map('intval', $groups)) . ')' : '') . '
-				' . (!$idLang || (isset($groups) && Group::isFeatureActive()) ? ' GROUP BY c.`id_category`' : '') . '
-				' . ($orderBy != '' ? $orderBy : ' ORDER BY c.`level_depth` ASC') . '
-				' . ($orderBy == '' && $useShopRestriction ? ', category_shop.`position` ASC' : '') . '
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON c.id_category = cl.id_category' . Shop::addSqlRestrictionOnLang('cl') . '
+				' . (isset($groups) && Group::isFeatureActive() ? 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cg ON c.id_category = cg.id_category' : '') . '
+				' . (isset($idRootCategory) ? 'RIGHT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c2 ON c2.id_category = ' . (int) $idRootCategory . ' AND c.nleft >= c2.nleft AND c.nright <= c2.nright' : '') . '
+				WHERE 1 = 1 ' . $sqlFilter . ' ' . ($idLang ? 'AND id_lang = ' . (int) $idLang : '') . '
+				' . ($active ? ' AND c.active = 1' : '') . '
+				' . (isset($groups) && Group::isFeatureActive() ? ' AND cg.id_group IN (' . implode(',', array_map('intval', $groups)) . ')' : '') . '
+				' . (!$idLang || (isset($groups) && Group::isFeatureActive()) ? ' GROUP BY c.id_category' : '') . '
+				' . ($orderBy != '' ? $orderBy : ' ORDER BY c.level_depth ASC') . '
+				' . ($orderBy == '' && $useShopRestriction ? ', category_shop.position ASC' : '') . '
 				' . ($limit != '' ? $limit : '')
             );
 
@@ -795,17 +812,17 @@ class CategoryCore extends ObjectModel
             $result = Db::getInstance()->executeS(
                 '
 				SELECT c.*, cl.*
-				FROM `' . _DB_PREFIX_ . 'category` c
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
 				' . ($useShopRestriction ? Shop::addSqlAssociation('category', 'c') : '') . '
-				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . '
-				' . (isset($groups) && Group::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_group` cg ON c.`id_category` = cg.`id_category`' : '') . '
-				' . (isset($idRootCategory) ? 'RIGHT JOIN `' . _DB_PREFIX_ . 'category` c2 ON c2.`id_category` = ' . (int) $idRootCategory . ' AND c.`nleft` >= c2.`nleft` AND c.`nright` <= c2.`nright`' : '') . '
-				WHERE 1 ' . $sqlFilter . ' ' . ($idLang ? 'AND `id_lang` = ' . (int) $idLang : '') . '
-				' . ($active ? ' AND c.`active` = 1' : '') . '
-				' . (isset($groups) && Group::isFeatureActive() ? ' AND cg.`id_group` IN (' . implode(',', array_map('intval', $groups)) . ')' : '') . '
-				' . (!$idLang || (isset($groups) && Group::isFeatureActive()) ? ' GROUP BY c.`id_category`' : '') . '
-				' . ($orderBy != '' ? $orderBy : ' ORDER BY c.`level_depth` ASC') . '
-				' . ($orderBy == '' && $useShopRestriction ? ', category_shop.`position` ASC' : '') . '
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON c.id_category = cl.id_category' . Shop::addSqlRestrictionOnLang('cl') . '
+				' . (isset($groups) && Group::isFeatureActive() ? 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cg ON c.id_category = cg.id_category' : '') . '
+				' . (isset($idRootCategory) ? 'RIGHT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c2 ON c2.id_category = ' . (int) $idRootCategory . ' AND c.nleft >= c2.nleft AND c.nright <= c2.nright' : '') . '
+				WHERE 1 = 1 ' . $sqlFilter . ' ' . ($idLang ? 'AND id_lang = ' . (int) $idLang : '') . '
+				' . ($active ? ' AND c.active = 1' : '') . '
+				' . (isset($groups) && Group::isFeatureActive() ? ' AND cg.id_group IN (' . implode(',', array_map('intval', $groups)) . ')' : '') . '
+				' . (!$idLang || (isset($groups) && Group::isFeatureActive()) ? ' GROUP BY c.id_category' : '') . '
+				' . ($orderBy != '' ? $orderBy : ' ORDER BY c.level_depth ASC') . '
+				' . ($orderBy == '' && $useShopRestriction ? ', category_shop.position ASC' : '') . '
 				' . ($limit != '' ? $limit : '')
             );
 
@@ -845,14 +862,14 @@ class CategoryCore extends ObjectModel
     public static function getSimpleCategories($idLang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.`id_category`, cl.`name`
-		FROM `' . _DB_PREFIX_ . 'category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . ')
+		SELECT c.id_category, cl.name
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON (c.id_category = cl.id_category' . Shop::addSqlRestrictionOnLang('cl') . ')
 		' . Shop::addSqlAssociation('category', 'c') . '
-		WHERE cl.`id_lang` = ' . (int) $idLang . '
-		AND c.`id_category` != ' . Configuration::get('PS_ROOT_CATEGORY') . '
+		WHERE cl.id_lang = ' . (int) $idLang . '
+		AND c.id_category != ' . Configuration::get('PS_ROOT_CATEGORY') . '
 		GROUP BY c.id_category
-		ORDER BY c.`id_category`, category_shop.`position`', true, false);
+		ORDER BY c.id_category, category_shop.position', true, false);
     }
 
     /**
@@ -877,24 +894,24 @@ class CategoryCore extends ObjectModel
         }
 
         $rootTreeInfo = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-            'SELECT c.`nleft`, c.`nright` FROM `' . _DB_PREFIX_ . 'category` c ' .
-            'WHERE c.`id_category` = ' . (int) $idCategoryRoot
+            'SELECT c.nleft, c.nright FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c ' .
+            'WHERE c.id_category = ' . (int) $idCategoryRoot
         );
         if (empty($rootTreeInfo)) {
             return [];
         }
 
-        $sql = 'SELECT c.`id_category`, cl.`name`, c.id_parent
-		FROM `%scategory` c
-		LEFT JOIN `%scategory_lang` cl ON (c.`id_category` = cl.`id_category`%s) %s
-		WHERE cl.`id_lang` = %d AND c.`nleft` >= %d AND c.`nright` <= %d
+        $sql = 'SELECT c.id_category, cl.name, c.id_parent
+		FROM %s c
+		LEFT JOIN %s cl ON (c.id_category = cl.id_category%s) %s
+		WHERE cl.id_lang = %d AND c.nleft >= %d AND c.nright <= %d
 		GROUP BY c.id_category
-		ORDER BY c.`id_category`, category_shop.`position`';
+		ORDER BY c.id_category, category_shop.position';
 
         $sql = sprintf(
             $sql,
-            _DB_PREFIX_,
-            _DB_PREFIX_,
+            Db::quoteIdentifier(_DB_PREFIX_ . 'category'),
+            Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang'),
             Shop::addSqlRestrictionOnLang('cl'),
             Shop::addSqlAssociation('category', 'c'),
             (int) $idLang,
@@ -918,22 +935,22 @@ class CategoryCore extends ObjectModel
         $sqlGroupsWhere = '';
         $sqlGroupsJoin = '';
         if (Group::isFeatureActive()) {
-            $sqlGroupsJoin = 'LEFT JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cg.`id_category` = c.`id_category`)';
+            $sqlGroupsJoin = 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cg ON (cg.id_category = c.id_category)';
             $groups = FrontController::getCurrentCustomerGroups();
-            $sqlGroupsWhere = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP'));
+            $sqlGroupsWhere = 'AND cg.id_group ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP'));
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.*, cl.`id_lang`, cl.`name`, cl.`description`, cl.`additional_description`, cl.`link_rewrite`, cl.`meta_title`, cl.`meta_description`
-		FROM `' . _DB_PREFIX_ . 'category` c
+		SELECT c.*, cl.id_lang, cl.name, cl.description, cl.additional_description, cl.link_rewrite, cl.meta_title, cl.meta_description
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
 		' . Shop::addSqlAssociation('category', 'c') . '
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = ' . (int) $idLang . ' ' . Shop::addSqlRestrictionOnLang('cl') . ')
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON (c.id_category = cl.id_category AND id_lang = ' . (int) $idLang . ' ' . Shop::addSqlRestrictionOnLang('cl') . ')
 		' . $sqlGroupsJoin . '
-		WHERE `id_parent` = ' . (int) $this->id . '
-		' . ($active ? 'AND `active` = 1' : '') . '
+		WHERE id_parent = ' . (int) $this->id . '
+		' . ($active ? 'AND active = 1' : '') . '
 		' . $sqlGroupsWhere . '
-		GROUP BY c.`id_category`
-		ORDER BY `level_depth` ASC, category_shop.`position` ASC');
+		GROUP BY c.id_category
+		ORDER BY level_depth ASC, category_shop.position ASC');
 
         foreach ($result as &$row) {
             $row['id_image'] = Tools::file_exists_cache($this->image_dir . $row['id_category'] . '.jpg') ? (int) $row['id_category'] : Language::getIsoById($idLang) . '-default';
@@ -989,13 +1006,13 @@ class CategoryCore extends ObjectModel
 
         /* Return only the number of products */
         if ($getTotal) {
-            $sql = 'SELECT COUNT(cp.`id_product`) AS total
-					FROM `' . _DB_PREFIX_ . 'product` p
+            $sql = 'SELECT COUNT(cp.id_product) AS total
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
 					' . Shop::addSqlAssociation('product', 'p') . '
-					LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON p.`id_product` = cp.`id_product`
-					WHERE cp.`id_category` = ' . (int) $this->id .
-                ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') .
-                ($active ? ' AND product_shop.`active` = 1' : '') .
+					LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp ON p.id_product = cp.id_product
+					WHERE cp.id_category = ' . (int) $this->id .
+                ($front ? " AND product_shop.visibility IN ('both', 'catalog')" : '') .
+                ($active ? ' AND product_shop.active = 1' : '') .
                 ($idSupplier ? ' AND p.id_supplier = ' . (int) $idSupplier : '');
 
             return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
@@ -1030,45 +1047,54 @@ class CategoryCore extends ObjectModel
             $nbDaysNewProduct = 20;
         }
 
-        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) AS quantity' . (Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute, 0) AS id_product_attribute,
-					product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity' : '') . ', pl.`description`, pl.`description_short`, pl.`available_now`,
-					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_title`, pl.`name`, image_shop.`id_image` id_image,
-					il.`legend` as legend, m.`name` AS manufacturer_name, cl.`name` AS category_default,
-					DATEDIFF(product_shop.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
-					INTERVAL ' . (int) $nbDaysNewProduct . ' DAY)) > 0 AS new, product_shop.price AS orderprice, psales.`quantity` as sales
-				FROM `' . _DB_PREFIX_ . 'category_product` cp
-				LEFT JOIN `' . _DB_PREFIX_ . 'product` p
-					ON p.`id_product` = cp.`id_product`
+        $now = date('Y-m-d') . ' 00:00:00';
+        // "date_add > (now - N days)" instead of "DATEDIFF(now, date_add) < N":
+        // DATE_SUB() has no PostgreSQL equivalent, and TIMESTAMP-literal-minus-INTERVAL has no MySQL equivalent.
+        /* @phpstan-ignore-next-line */
+        $newProductThreshold = _DB_TYPE_ == 'pgsql'
+            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nbDaysNewProduct . " DAY')"
+            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nbDaysNewProduct . ' DAY)';
+
+        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, COALESCE(stock.quantity, 0) AS quantity' . (Combination::isFeatureActive() ? ', COALESCE(product_attribute_shop.id_product_attribute, 0) AS id_product_attribute,
+					product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity' : '') . ', pl.description, pl.description_short, pl.available_now,
+					pl.available_later, pl.link_rewrite, pl.meta_description, pl.meta_title, pl.name, image_shop.id_image id_image,
+					il.legend as legend, m.name AS manufacturer_name, cl.name AS category_default,
+					(product_shop.date_add > ' . $newProductThreshold . ') AS new, product_shop.price AS orderprice, psales.quantity as sales
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
+					ON p.id_product = cp.id_product
 				' . Shop::addSqlAssociation('product', 'p') .
-                (Combination::isFeatureActive() ? ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
+                (Combination::isFeatureActive() ? ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_shop') . ' product_attribute_shop
+				ON (p.id_product = product_attribute_shop.id_product AND product_attribute_shop.default_on = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
 				' . Product::sqlStock('p', 0) . '
-				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
-					ON (product_shop.`id_category_default` = cl.`id_category`
-					AND cl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl') . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
-					ON (p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
-					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il
-					ON (image_shop.`id_image` = il.`id_image`
-					AND il.`id_lang` = ' . (int) $idLang . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m
-					ON m.`id_manufacturer` = p.`id_manufacturer`
-                LEFT JOIN `' . _DB_PREFIX_ . 'product_sale` psales
-					ON psales.`id_product` = p.`id_product`
-				WHERE product_shop.`id_shop` = ' . (int) $context->shop->id . '
-					AND cp.`id_category` = ' . (int) $this->id
-                    . ($active ? ' AND product_shop.`active` = 1' : '')
-                    . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl
+					ON (product_shop.id_category_default = cl.id_category
+					AND cl.id_lang = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl') . ')
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl
+					ON (p.id_product = pl.id_product
+					AND pl.id_lang = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . ')
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_shop') . ' image_shop
+					ON (image_shop.id_product = p.id_product AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_lang') . ' il
+					ON (image_shop.id_image = il.id_image
+					AND il.id_lang = ' . (int) $idLang . ')
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'manufacturer') . ' m
+					ON m.id_manufacturer = p.id_manufacturer
+                LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . ' psales
+					ON psales.id_product = p.id_product
+				WHERE product_shop.id_shop = ' . (int) $context->shop->id . '
+					AND cp.id_category = ' . (int) $this->id
+                    . ($active ? ' AND product_shop.active = 1' : '')
+                    . ($front ? " AND product_shop.visibility IN ('both', 'catalog')" : '')
                     . ($idSupplier ? ' AND p.id_supplier = ' . (int) $idSupplier : '');
 
         if ($random === true) {
-            $sql .= ' ORDER BY RAND() LIMIT ' . (int) $randomNumberProducts;
+            /* @phpstan-ignore-next-line */
+            $randomFunction = _DB_TYPE_ == 'pgsql' ? 'RANDOM()' : 'RAND()';
+            $sql .= ' ORDER BY ' . $randomFunction . ' LIMIT ' . (int) $randomNumberProducts;
         } elseif ($orderBy !== 'orderprice') {
-            $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
-			LIMIT ' . (((int) $pageNumber - 1) * (int) $productPerPage) . ',' . (int) $productPerPage;
+            $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . Db::quoteIdentifier($orderBy) . ' ' . pSQL($orderWay) . '
+			LIMIT ' . (int) $productPerPage . ' OFFSET ' . (((int) $pageNumber - 1) * (int) $productPerPage);
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
@@ -1146,15 +1172,15 @@ class CategoryCore extends ObjectModel
     {
         $cacheId = 'Category::getChildren_' . (int) $idParent . '-' . (int) $idLang . '-' . (bool) $active . '-' . (int) $idShop;
         if (!Cache::isStored($cacheId)) {
-            $query = 'SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, category_shop.`id_shop`
-			FROM `' . _DB_PREFIX_ . 'category` c
-			LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . ')
+            $query = 'SELECT c.id_category, cl.name, cl.link_rewrite, category_shop.id_shop
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON (c.id_category = cl.id_category' . Shop::addSqlRestrictionOnLang('cl') . ')
 			' . Shop::addSqlAssociation('category', 'c') . '
-			WHERE `id_lang` = ' . (int) $idLang . '
-			AND c.`id_parent` = ' . (int) $idParent . '
-			' . ($active ? 'AND `active` = 1' : '') . '
-			GROUP BY c.`id_category`
-			ORDER BY category_shop.`position` ASC';
+			WHERE id_lang = ' . (int) $idLang . '
+			AND c.id_parent = ' . (int) $idParent . '
+			' . ($active ? 'AND active = 1' : '') . '
+			GROUP BY c.id_category
+			ORDER BY category_shop.position ASC';
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
             Cache::store($cacheId, $result);
 
@@ -1178,13 +1204,13 @@ class CategoryCore extends ObjectModel
     {
         $cacheId = 'Category::hasChildren_' . (int) $idParent . '-' . (int) $idLang . '-' . (bool) $active . '-' . (int) $idShop;
         if (!Cache::isStored($cacheId)) {
-            $query = 'SELECT c.id_category, "" as name
-			FROM `' . _DB_PREFIX_ . 'category` c
-			LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . ')
+            $query = "SELECT c.id_category, '' as name
+			FROM " . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON (c.id_category = cl.id_category' . Shop::addSqlRestrictionOnLang('cl') . ')
 			' . Shop::addSqlAssociation('category', 'c') . '
-			WHERE `id_lang` = ' . (int) $idLang . '
-			AND c.`id_parent` = ' . (int) $idParent . '
-			' . ($active ? 'AND `active` = 1' : '') . ' LIMIT 1';
+			WHERE id_lang = ' . (int) $idLang . '
+			AND c.id_parent = ' . (int) $idParent . '
+			' . ($active ? 'AND active = 1' : '') . ' LIMIT 1';
             $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
             Cache::store($cacheId, $result);
 
@@ -1257,29 +1283,29 @@ class CategoryCore extends ObjectModel
         $idShop = $shop->id ?: Configuration::get('PS_SHOP_DEFAULT');
         $selectedCategory = explode(',', str_replace(' ', '', $selectedCategory));
         $sql = '
-		SELECT c.`id_category`, c.`level_depth`, cl.`name`,
-		IF((
+		SELECT c.id_category, c.level_depth, cl.name,
+		CASE WHEN (
 			SELECT COUNT(*)
-			FROM `' . _DB_PREFIX_ . 'category` c2
-			WHERE c2.`id_parent` = c.`id_category`
-		) > 0, 1, 0) AS has_children,
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c2
+			WHERE c2.id_parent = c.id_category
+		) > 0 THEN 1 ELSE 0 END AS has_children,
 		(
-			SELECT count(c3.`id_category`)
-			FROM `' . _DB_PREFIX_ . 'category` c3
-			WHERE c3.`nleft` > c.`nleft`
-			AND c3.`nright` < c.`nright`
-			AND c3.`id_category`  IN (' . implode(',', array_map('intval', $selectedCategory)) . ')
+			SELECT count(c3.id_category)
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c3
+			WHERE c3.nleft > c.nleft
+			AND c3.nright < c.nright
+			AND c3.id_category  IN (' . implode(',', array_map('intval', $selectedCategory)) . ')
 		) AS nbSelectedSubCat
-		FROM `' . _DB_PREFIX_ . 'category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category` ' . Shop::addSqlRestrictionOnLang('cl', (int) $idShop) . ')
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = ' . (int) $idShop . ')
-		WHERE `id_lang` = ' . (int) $idLang . '
-		AND c.`id_parent` = ' . (int) $idParent;
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON (c.id_category = cl.id_category ' . Shop::addSqlRestrictionOnLang('cl', (int) $idShop) . ')
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . ' cs ON (c.id_category = cs.id_category AND cs.id_shop = ' . (int) $idShop . ')
+		WHERE id_lang = ' . (int) $idLang . '
+		AND c.id_parent = ' . (int) $idParent;
         if (Shop::getContext() === Shop::CONTEXT_SHOP && $useShopContext) {
-            $sql .= ' AND cs.`id_shop` = ' . (int) $shop->id;
+            $sql .= ' AND cs.id_shop = ' . (int) $shop->id;
         }
         if (!Shop::isFeatureActive() || Shop::getContext() === Shop::CONTEXT_SHOP && $useShopContext) {
-            $sql .= ' ORDER BY cs.`position` ASC';
+            $sql .= ' ORDER BY cs.position ASC';
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -1295,26 +1321,33 @@ class CategoryCore extends ObjectModel
      */
     public static function duplicateProductCategories($idOld, $idNew)
     {
-        $sql = 'SELECT `id_category`
-				FROM `' . _DB_PREFIX_ . 'category_product`
-				WHERE `id_product` = ' . (int) $idOld;
+        $sql = 'SELECT id_category
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . '
+				WHERE id_product = ' . (int) $idOld;
         $result = Db::getInstance()->executeS($sql);
 
         $row = [];
         if ($result) {
             foreach ($result as $i) {
                 $row[] = '(' . implode(', ', [(int) $idNew, $i['id_category'], '(SELECT tmp.max + 1 FROM (
-					SELECT MAX(cp.`position`) AS max
-					FROM `' . _DB_PREFIX_ . 'category_product` cp
-					WHERE cp.`id_category`=' . (int) $i['id_category'] . ') AS tmp)',
+					SELECT MAX(cp.position) AS max
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp
+					WHERE cp.id_category=' . (int) $i['id_category'] . ') AS tmp)',
                 ]) . ')';
             }
         }
 
+        // PostgreSQL has no INSERT IGNORE: ON CONFLICT DO NOTHING is the equivalent (no conflict
+        // target needed, it applies to any constraint violation on the row being inserted).
+        /* @phpstan-ignore-next-line */
+        $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT INTO' : 'INSERT IGNORE INTO';
+        /* @phpstan-ignore-next-line */
+        $onConflictClause = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT DO NOTHING' : '';
+
         $flag = Db::getInstance()->execute(
             '
-			INSERT IGNORE INTO `' . _DB_PREFIX_ . 'category_product` (`id_product`, `id_category`, `position`)
-			VALUES ' . implode(',', $row)
+			' . $insertKeyword . ' ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' (id_product, id_category, position)
+			VALUES ' . implode(',', $row) . $onConflictClause
         );
 
         if ($flag) {
@@ -1344,7 +1377,7 @@ class CategoryCore extends ObjectModel
         $i = (int) $idParent;
 
         while (42) {
-            $result = Db::getInstance()->getRow('SELECT `id_parent` FROM `' . _DB_PREFIX_ . 'category` WHERE `id_category` = ' . (int) $i);
+            $result = Db::getInstance()->getRow('SELECT id_parent FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' WHERE id_category = ' . (int) $i);
             if (!isset($result['id_parent'])) {
                 return false;
             }
@@ -1374,11 +1407,11 @@ class CategoryCore extends ObjectModel
 
         if (!isset(self::$_links[$idCategory . '-' . $idLang])) {
             self::$_links[$idCategory . '-' . $idLang] = Db::getInstance()->getValue('
-			SELECT cl.`link_rewrite`
-			FROM `' . _DB_PREFIX_ . 'category_lang` cl
-			WHERE `id_lang` = ' . (int) $idLang . '
+			SELECT cl.link_rewrite
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl
+			WHERE id_lang = ' . (int) $idLang . '
 			' . Shop::addSqlRestrictionOnLang('cl') . '
-			AND cl.`id_category` = ' . (int) $idCategory);
+			AND cl.id_category = ' . (int) $idCategory);
         }
 
         return self::$_links[$idCategory . '-' . $idLang];
@@ -1458,8 +1491,8 @@ class CategoryCore extends ObjectModel
                 $sql = new DbQuery();
                 $sql->select('c.*, cl.*');
                 $sql->from('category', 'c');
-                $sql->leftJoin('category_lang', 'cl', 'c.`id_category` = cl.`id_category` ' . Shop::addSqlRestrictionOnLang('cl'));
-                $sql->where('`name` = \'' . pSQL($query) . '\'');
+                $sql->leftJoin('category_lang', 'cl', 'c.id_category = cl.id_category ' . Shop::addSqlRestrictionOnLang('cl'));
+                $sql->where('name = \'' . pSQL($query) . '\'');
                 $categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
                 if (!$skipCache) {
                     Cache::store($key, $categories);
@@ -1473,9 +1506,9 @@ class CategoryCore extends ObjectModel
             $sql = new DbQuery();
             $sql->select('c.*, cl.*');
             $sql->from('category', 'c');
-            $sql->leftJoin('category_lang', 'cl', 'c.`id_category` = cl.`id_category` AND `id_lang` = ' . (int) $idLang . ' ' . Shop::addSqlRestrictionOnLang('cl'));
-            $sql->where('`name` LIKE \'%' . pSQL($query) . '%\'');
-            $sql->where('c.`id_category` != ' . (int) Configuration::get('PS_HOME_CATEGORY'));
+            $sql->leftJoin('category_lang', 'cl', 'c.id_category = cl.id_category AND id_lang = ' . (int) $idLang . ' ' . Shop::addSqlRestrictionOnLang('cl'));
+            $sql->where('name LIKE \'%' . pSQL($query) . '%\'');
+            $sql->where('c.id_category != ' . (int) Configuration::get('PS_HOME_CATEGORY'));
 
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
         }
@@ -1494,13 +1527,13 @@ class CategoryCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT c.*, cl.*
-		FROM `' . _DB_PREFIX_ . 'category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
-			ON (c.`id_category` = cl.`id_category`
-			AND `id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl') . ')
-		WHERE `name` = \'' . pSQL($categoryName) . '\'
-			AND c.`id_category` != ' . (int) Configuration::get('PS_HOME_CATEGORY') . '
-			AND c.`id_parent` = ' . (int) $idParentCategory);
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl
+			ON (c.id_category = cl.id_category
+			AND id_lang = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl') . ')
+		WHERE name = \'' . pSQL($categoryName) . '\'
+			AND c.id_category != ' . (int) Configuration::get('PS_HOME_CATEGORY') . '
+			AND c.id_parent = ' . (int) $idParentCategory);
     }
 
     /**
@@ -1563,44 +1596,44 @@ class CategoryCore extends ObjectModel
         }
         $idShop = $context->shop->id;
 
-        $sqlAppend = 'FROM `' . _DB_PREFIX_ . 'category` c
-			LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
-				ON (c.`id_category` = cl.`id_category`
-                    AND `id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl') . ')';
+        $sqlAppend = 'FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl
+				ON (c.id_category = cl.id_category
+                    AND id_lang = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl') . ')';
         if (Shop::isFeatureActive() && Shop::getContext() === Shop::CONTEXT_SHOP) {
-            $sqlAppend .= ' LEFT JOIN `' . _DB_PREFIX_ . 'category_shop` cs ' .
-                'ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = ' . (int) $idShop . ')';
+            $sqlAppend .= ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . ' cs ' .
+                'ON (c.id_category = cs.id_category AND cs.id_shop = ' . (int) $idShop . ')';
         }
         if (Shop::isFeatureActive() && Shop::getContext() === Shop::CONTEXT_SHOP) {
-            $sqlAppend .= ' AND cs.`id_shop` = ' . (int) $context->shop->id;
+            $sqlAppend .= ' AND cs.id_shop = ' . (int) $context->shop->id;
         }
         $rootCategory = Category::getRootCategory();
         if (Shop::isFeatureActive() && Shop::getContext() === Shop::CONTEXT_SHOP
             && (!Tools::isSubmit('id_category')
                 || (int) Tools::getValue('id_category') == (int) $rootCategory->id
                 || (int) $rootCategory->id == (int) $context->shop->id_category)) {
-            $sqlAppend .= ' AND c.`id_parent` != 0';
+            $sqlAppend .= ' AND c.id_parent != 0';
         }
 
         $categories = [];
 
         $treeInfo = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-            'SELECT c.`nleft`, c.`nright`  ' . $sqlAppend . ' WHERE c.`id_category` = ' . (int) $idCurrent
+            'SELECT c.nleft, c.nright  ' . $sqlAppend . ' WHERE c.id_category = ' . (int) $idCurrent
         );
 
         if (!empty($treeInfo)) {
             $rootTreeInfo = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-                'SELECT c.`nleft`, c.`nright` FROM `' . _DB_PREFIX_ . 'category` c
-            WHERE c.`id_category` = ' . (int) $context->shop->id_category
+                'SELECT c.nleft, c.nright FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+            WHERE c.id_category = ' . (int) $context->shop->id_category
             );
 
             $categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 'SELECT c.*, cl.*  ' . $sqlAppend .
-                ' WHERE c.`nleft` <= ' . (int) $treeInfo['nleft'] .
-                ' AND c.`nright` >= ' . (int) $treeInfo['nright'] .
-                ' AND c.`nleft` >= ' . (int) $rootTreeInfo['nleft'] .
-                ' AND c.`nright` <= ' . (int) $rootTreeInfo['nright'] .
-                ' ORDER BY `nleft` DESC'
+                ' WHERE c.nleft <= ' . (int) $treeInfo['nleft'] .
+                ' AND c.nright >= ' . (int) $treeInfo['nright'] .
+                ' AND c.nleft >= ' . (int) $rootTreeInfo['nleft'] .
+                ' AND c.nright <= ' . (int) $rootTreeInfo['nright'] .
+                ' ORDER BY nleft DESC'
             );
         }
 
@@ -1617,9 +1650,9 @@ class CategoryCore extends ObjectModel
     public static function categoryExists($idCategory)
     {
         $row = Db::getInstance()->getRow('
-		SELECT `id_category`
+		SELECT id_category
 		FROM ' . _DB_PREFIX_ . 'category c
-		WHERE c.`id_category` = ' . (int) $idCategory, false);
+		WHERE c.id_category = ' . (int) $idCategory, false);
 
         return isset($row['id_category']);
     }
@@ -1701,9 +1734,9 @@ class CategoryCore extends ObjectModel
         $cacheId = $this->getGroupsCacheId();
         if (!Cache::isStored($cacheId)) {
             $sql = new DbQuery();
-            $sql->select('cg.`id_group`');
+            $sql->select('cg.id_group');
             $sql->from('category_group', 'cg');
-            $sql->where('cg.`id_category` = ' . (int) $this->id);
+            $sql->where('cg.id_category = ' . (int) $this->id);
             $result = Db::getInstance()->executeS($sql);
             $groups = [];
             foreach ($result as $group) {
@@ -1752,15 +1785,15 @@ class CategoryCore extends ObjectModel
         if (!Cache::isStored($cacheId)) {
             if (!$idCustomer) {
                 $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT ctg.`id_group`
+				SELECT ctg.id_group
 				FROM ' . _DB_PREFIX_ . 'category_group ctg
-				WHERE ctg.`id_category` = ' . (int) $this->id . ' AND ctg.`id_group` = ' . (int) Group::getCurrent()->id);
+				WHERE ctg.id_category = ' . (int) $this->id . ' AND ctg.id_group = ' . (int) Group::getCurrent()->id);
             } else {
                 $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT ctg.`id_group`
+				SELECT ctg.id_group
 				FROM ' . _DB_PREFIX_ . 'category_group ctg
-				INNER JOIN ' . _DB_PREFIX_ . 'customer_group cg on (cg.`id_group` = ctg.`id_group` AND cg.`id_customer` = ' . (int) $idCustomer . ')
-				WHERE ctg.`id_category` = ' . (int) $this->id);
+				INNER JOIN ' . _DB_PREFIX_ . 'customer_group cg on (cg.id_group = ctg.id_group AND cg.id_customer = ' . (int) $idCustomer . ')
+				WHERE ctg.id_category = ' . (int) $this->id);
             }
             Cache::store($cacheId, $result);
 
@@ -1804,7 +1837,7 @@ class CategoryCore extends ObjectModel
         }
 
         return Db::getInstance()->execute('
-		INSERT INTO `' . _DB_PREFIX_ . 'category_group` (`id_category`, `id_group`)
+		INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' (id_category, id_group)
 		VALUES (' . (int) Context::getContext()->shop->getCategory() . ', ' . (int) $idGroup . ')');
     }
 
@@ -1819,11 +1852,11 @@ class CategoryCore extends ObjectModel
     public function updatePosition($way, $position)
     {
         if (!$res = Db::getInstance()->executeS('
-            SELECT cp.`id_category`, category_shop.`position`, cp.`id_parent`
-            FROM `' . _DB_PREFIX_ . 'category` cp
+            SELECT cp.id_category, category_shop.position, cp.id_parent
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' cp
             ' . Shop::addSqlAssociation('category', 'cp') . '
-            WHERE cp.`id_parent` = ' . (int) $this->id_parent . '
-            ORDER BY category_shop.`position` ASC')
+            WHERE cp.id_parent = ' . (int) $this->id_parent . '
+            ORDER BY category_shop.position ASC')
         ) {
             return false;
         }
@@ -1841,25 +1874,57 @@ class CategoryCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         $increment = ($way ? '- 1' : '+ 1');
-        $result = (Db::getInstance()->execute(
-            'UPDATE `' . _DB_PREFIX_ . 'category` c ' . Shop::addSqlAssociation('category', 'c') . ' ' .
-            'SET c.`position`= ' .
-            'IF(cast(c.`position` as signed) ' . $increment . ' > 0, c.`position` ' . $increment . ', 0), ' .
-            'category_shop.`position` = ' .
-            'IF(cast(category_shop.`position` as signed) ' . $increment . ' > 0, category_shop.`position` ' . $increment . ', 0), ' .
-            'c.`date_upd` = "' . date('Y-m-d H:i:s') . '" ' .
-            'WHERE category_shop.`position`' .
-            ($way
-                ? '> ' . (int) $movedCategory['position'] . ' AND category_shop.`position` <= ' . (int) $position
-                : '< ' . (int) $movedCategory['position'] . ' AND category_shop.`position` >= ' . (int) $position) . ' ' .
-            'AND c.`id_parent`=' . (int) $movedCategory['id_parent'])
-        && Db::getInstance()->execute('
-            UPDATE `' . _DB_PREFIX_ . 'category` c ' . Shop::addSqlAssociation('category', 'c') . '
-            SET c.`position` = ' . (int) $position . ',
-            category_shop.`position` = ' . (int) $position . ',
-            c.`date_upd` = "' . date('Y-m-d H:i:s') . '"
-            WHERE c.`id_parent` = ' . (int) $movedCategory['id_parent'] . '
-            AND c.`id_category`=' . (int) $movedCategory['id_category']));
+        // PostgreSQL has no unsigned integer type (int columns are already signed) and no
+        // CAST(... AS SIGNED); MySQL needs the explicit signed cast so the intermediate
+        // arithmetic below is allowed to go negative before being floored back to 0.
+        /* @phpstan-ignore-next-line */
+        $castType = _DB_TYPE_ == 'pgsql' ? 'INTEGER' : 'SIGNED';
+
+        // MySQL's single multi-table UPDATE (category JOIN category_shop, SET on both) has no
+        // PostgreSQL equivalent, so the set of affected rows is resolved here in PHP from $res
+        // (fetched before any write) and reused for two independent single-table UPDATEs below.
+        // This also sidesteps a real ordering hazard: had each UPDATE re-filtered on the live
+        // category_shop.position, the second statement would see values already shifted by the
+        // first one and silently touch the wrong rows.
+        $affectedIds = [];
+        foreach ($res as $category) {
+            $matches = $way
+                ? ((int) $category['position'] > (int) $movedCategory['position'] && (int) $category['position'] <= (int) $position)
+                : ((int) $category['position'] < (int) $movedCategory['position'] && (int) $category['position'] >= (int) $position);
+            if ($matches) {
+                $affectedIds[] = (int) $category['id_category'];
+            }
+        }
+
+        $result = true;
+        if ($affectedIds) {
+            $idsStringified = implode(',', $affectedIds);
+            $result = Db::getInstance()->execute(
+                'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . '
+                SET position = CASE WHEN CAST(position AS ' . $castType . ') ' . $increment . ' > 0 THEN position ' . $increment . ' ELSE 0 END
+                WHERE id_category IN (' . $idsStringified . ')'
+            ) && Db::getInstance()->execute(
+                'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . '
+                SET position = CASE WHEN CAST(position AS ' . $castType . ') ' . $increment . ' > 0 THEN position ' . $increment . ' ELSE 0 END,
+                    date_upd = \'' . date('Y-m-d H:i:s') . '\'
+                WHERE id_category IN (' . $idsStringified . ')'
+            );
+        }
+
+        $result = $result
+            && Db::getInstance()->execute(
+                'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . '
+                SET position = ' . (int) $position . ',
+                    date_upd = \'' . date('Y-m-d H:i:s') . '\'
+                WHERE id_parent = ' . (int) $movedCategory['id_parent'] . '
+                AND id_category = ' . (int) $movedCategory['id_category']
+            )
+            && Db::getInstance()->execute(
+                'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . '
+                SET position = ' . (int) $position . '
+                WHERE id_category = ' . (int) $movedCategory['id_category']
+                . Shop::addSqlRestriction()
+            );
         Hook::exec('actionCategoryUpdate', ['category' => new Category($movedCategory['id_category'])]);
 
         return $result;
@@ -1882,20 +1947,25 @@ class CategoryCore extends ObjectModel
 
         $return = true;
         $result = Db::getInstance()->executeS('
-        SELECT c.`id_category`
-        FROM `' . _DB_PREFIX_ . 'category` c
+        SELECT c.id_category
+        FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
         ' . Shop::addSqlAssociation('category', 'c') . '
-        WHERE c.`id_parent` = ' . (int) $idCategoryParent . '
-        ORDER BY category_shop.`position`');
+        WHERE c.id_parent = ' . (int) $idCategoryParent . '
+        ORDER BY category_shop.position');
         $count = count($result);
         for ($i = 0; $i < $count; ++$i) {
             $return = $return
                 && Db::getInstance()->execute(
-                    'UPDATE `' . _DB_PREFIX_ . 'category` c ' . Shop::addSqlAssociation('category', 'c') . '
-                    SET c.`position` = ' . (int) $i . ',
-                    category_shop.`position` = ' . (int) $i . ',
-                    c.`date_upd` = "' . date('Y-m-d H:i:s') . '"
-                    WHERE c.`id_parent` = ' . (int) $idCategoryParent . ' AND c.`id_category` = ' . (int) $result[$i]['id_category']
+                    'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . '
+                    SET position = ' . (int) $i . ',
+                        date_upd = \'' . date('Y-m-d H:i:s') . '\'
+                    WHERE id_parent = ' . (int) $idCategoryParent . ' AND id_category = ' . (int) $result[$i]['id_category']
+                )
+                && Db::getInstance()->execute(
+                    'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . '
+                    SET position = ' . (int) $i . '
+                    WHERE id_category = ' . (int) $result[$i]['id_category']
+                    . Shop::addSqlRestriction()
                 );
         }
 
@@ -1923,20 +1993,20 @@ class CategoryCore extends ObjectModel
     {
         $childrenCount = Db::getInstance()->executeS('
 				SELECT 1
-				FROM `' . _DB_PREFIX_ . 'category` c
-				 JOIN `' . _DB_PREFIX_ . 'category_shop` cs
-				ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = ' . (int) $idShop . ')
-				WHERE c.`id_parent` = ' . (int) $idCategoryParent . ' LIMIT 2');
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+				 JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . ' cs
+				ON (c.id_category = cs.id_category AND cs.id_shop = ' . (int) $idShop . ')
+				WHERE c.id_parent = ' . (int) $idCategoryParent . ' LIMIT 2');
 
         if (count($childrenCount) === 1) {
             return 0;
         } else {
             $maxPosition = (int) Db::getInstance()->getValue('
-				SELECT MAX(cs.`position`)
-				FROM `' . _DB_PREFIX_ . 'category` c
-				LEFT JOIN `' . _DB_PREFIX_ . 'category_shop` cs
-				ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = ' . (int) $idShop . ')
-				WHERE c.`id_parent` = ' . (int) $idCategoryParent);
+				SELECT MAX(cs.position)
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . ' cs
+				ON (c.id_category = cs.id_category AND cs.id_shop = ' . (int) $idShop . ')
+				WHERE c.id_parent = ' . (int) $idCategoryParent);
 
             return 1 + $maxPosition;
         }
@@ -1954,9 +2024,9 @@ class CategoryCore extends ObjectModel
         $cacheId = 'Category::getInterval_' . (int) $id;
         if (!Cache::isStored($cacheId)) {
             $sql = new DbQuery();
-            $sql->select('c.`nleft`, c.`nright`, c.`level_depth`');
+            $sql->select('c.nleft, c.nright, c.level_depth');
             $sql->from('category', 'c');
-            $sql->where('c.`id_category` = ' . (int) $id);
+            $sql->where('c.id_category = ' . (int) $id);
             $result = Db::getInstance()->getRow($sql);
             Cache::store($cacheId, $result);
 
@@ -2007,9 +2077,9 @@ class CategoryCore extends ObjectModel
         }
 
         $sql = new DbQuery();
-        $sql->select('c.`nleft`, c.`nright`');
+        $sql->select('c.nleft, c.nright');
         $sql->from('category', 'c');
-        $sql->where('c.`id_category` = ' . (int) $idCategory);
+        $sql->where('c.id_category = ' . (int) $idCategory);
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
         // If it doesn't exist, we can end up right here
@@ -2028,12 +2098,12 @@ class CategoryCore extends ObjectModel
     public function getChildrenWs()
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.`id_category` as id
-		FROM `' . _DB_PREFIX_ . 'category` c
+		SELECT c.id_category as id
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
 		' . Shop::addSqlAssociation('category', 'c') . '
-		WHERE c.`id_parent` = ' . (int) $this->id . '
-		AND c.`active` = 1
-		ORDER BY category_shop.`position` ASC');
+		WHERE c.id_parent = ' . (int) $this->id . '
+		AND c.active = 1
+		ORDER BY category_shop.position ASC');
     }
 
     /**
@@ -2044,10 +2114,10 @@ class CategoryCore extends ObjectModel
     public function getProductsWs()
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT cp.`id_product` as id
-		FROM `' . _DB_PREFIX_ . 'category_product` cp
-		WHERE cp.`id_category` = ' . (int) $this->id . '
-		ORDER BY `position` ASC');
+		SELECT cp.id_product as id
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp
+		WHERE cp.id_category = ' . (int) $this->id . '
+		ORDER BY position ASC');
     }
 
     /*
@@ -2074,12 +2144,12 @@ class CategoryCore extends ObjectModel
     public function getDuplicatePosition()
     {
         return (int) Db::getInstance()->getValue(
-            'SELECT c.`id_category`
-            FROM `' . _DB_PREFIX_ . 'category` c
+            'SELECT c.id_category
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
             ' . Shop::addSqlAssociation('category', 'c') . '
-            WHERE c.`id_parent` = ' . (int) $this->id_parent . '
-            AND category_shop.`position` = ' . (int) $this->position . '
-            AND c.`id_category` != ' . (int) $this->id
+            WHERE c.id_parent = ' . (int) $this->id_parent . '
+            AND category_shop.position = ' . (int) $this->position . '
+            AND c.id_category != ' . (int) $this->id
         );
     }
 
@@ -2092,13 +2162,13 @@ class CategoryCore extends ObjectModel
     {
         $nbProductRecursive = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(distinct(id_product))
-			FROM  `' . _DB_PREFIX_ . 'category_product`
+			FROM  ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . '
 			WHERE id_category = ' . (int) $this->id . ' OR
 			EXISTS (
 				SELECT 1
-				FROM `' . _DB_PREFIX_ . 'category` c2
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c2
 				' . Shop::addSqlAssociation('category', 'c2') . '
-				WHERE `' . _DB_PREFIX_ . 'category_product`.id_category = c2.id_category
+				WHERE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . '.id_category = c2.id_category
 					AND c2.nleft > ' . (int) $this->nleft . '
 					AND c2.nright < ' . (int) $this->nright . '
 					AND c2.active = 1
@@ -2132,12 +2202,12 @@ class CategoryCore extends ObjectModel
 
         $categories = [];
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, cl.`id_lang`
-		FROM `' . _DB_PREFIX_ . 'category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . ')
+		SELECT c.id_category, cl.name, cl.link_rewrite, cl.id_lang
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON (c.id_category = cl.id_category' . Shop::addSqlRestrictionOnLang('cl') . ')
 		' . Shop::addSqlAssociation('category', 'c') . '
-		WHERE cl.`id_lang` = ' . (int) $idLang . '
-		AND c.`id_category` IN (' . implode(',', array_map('intval', $idsCategory)) . ')');
+		WHERE cl.id_lang = ' . (int) $idLang . '
+		AND c.id_category IN (' . implode(',', array_map('intval', $idsCategory)) . ')');
 
         foreach ($results as $category) {
             $categories[$category['id_category']] = $category;
@@ -2157,11 +2227,11 @@ class CategoryCore extends ObjectModel
         $idShop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
 
         return (bool) Db::getInstance()->getValue('
-		SELECT c.`id_category`
-		FROM `' . _DB_PREFIX_ . 'category` c
+		SELECT c.id_category
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
 		' . Shop::addSqlAssociation('category', 'c') . '
-		WHERE category_shop.`id_shop` = ' . (int) $idShop . '
-		AND c.`id_parent` = ' . (int) $this->id_parent);
+		WHERE category_shop.id_shop = ' . (int) $idShop . '
+		AND c.id_parent = ' . (int) $this->id_parent);
     }
 
     /**
@@ -2208,11 +2278,11 @@ class CategoryCore extends ObjectModel
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT DISTINCT(c.`id_category`), cl.`name`
-		FROM `' . _DB_PREFIX_ . 'category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (cl.`id_category` = c.`id_category` AND cl.`id_lang`=' . (int) $idLang . ')
-		WHERE `is_root_category` = 1
-		' . ($active ? 'AND `active` = 1' : ''));
+		SELECT DISTINCT(c.id_category), cl.name
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON (cl.id_category = c.id_category AND cl.id_lang=' . (int) $idLang . ')
+		WHERE is_root_category = 1
+		' . ($active ? 'AND active = 1' : ''));
     }
 
     /**
@@ -2226,9 +2296,9 @@ class CategoryCore extends ObjectModel
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT DISTINCT c.*
-			FROM `' . _DB_PREFIX_ . 'category` c
-			LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = ' . (int) Context::getContext()->language->id . ')
-			WHERE `level_depth` = 1');
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON (c.id_category = cl.id_category AND cl.id_lang = ' . (int) Context::getContext()->language->id . ')
+			WHERE level_depth = 1');
             Cache::store($cacheId, $result);
 
             return $result;
@@ -2245,9 +2315,9 @@ class CategoryCore extends ObjectModel
     public function isRootCategoryForAShop()
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `id_shop`
-		FROM `' . _DB_PREFIX_ . 'shop`
-		WHERE `id_category` = ' . (int) $this->id);
+		SELECT id_shop
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop') . '
+		WHERE id_category = ' . (int) $this->id);
     }
 
     /**
@@ -2265,9 +2335,9 @@ class CategoryCore extends ObjectModel
         $cacheId = 'Category::getTopCategory_' . (int) $idLang;
         if (!Cache::isStored($cacheId)) {
             $idCategory = (int) Db::getInstance()->getValue('
-			SELECT `id_category`
-			FROM `' . _DB_PREFIX_ . 'category`
-			WHERE `id_parent` = 0');
+			SELECT id_category
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . '
+			WHERE id_parent = 0');
             $category = new Category($idCategory, $idLang);
             Cache::store($cacheId, $category);
 
@@ -2301,13 +2371,21 @@ class CategoryCore extends ObjectModel
             }
         }
 
+        // The conflict target IS the column being updated: on a genuine primary key conflict, the
+        // position would be overwritten with the new value regardless. ON CONFLICT DO UPDATE is
+        // the PostgreSQL equivalent.
+        /* @phpstan-ignore-next-line */
+        $onConflict = _DB_TYPE_ == 'pgsql'
+            ? 'ON CONFLICT (' . Db::quoteIdentifier('id_category') . ', ' . Db::quoteIdentifier('id_shop') . ') DO UPDATE SET position = %d'
+            : 'ON DUPLICATE KEY UPDATE position = %d';
+
         foreach ($shopIds as $idShop) {
             $return &= Db::getInstance()->execute(
                 sprintf(
-                    'INSERT INTO `' . _DB_PREFIX_ . 'category_shop` ' .
-                    '(`id_category`, `id_shop`, `position`) VALUES ' .
+                    'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . ' ' .
+                    '(id_category, id_shop, position) VALUES ' .
                     '(%d, %d, %d) ' .
-                    'ON DUPLICATE KEY UPDATE `position` = %d',
+                    $onConflict,
                     (int) $this->id,
                     (int) $idShop,
                     $position,
@@ -2318,8 +2396,8 @@ class CategoryCore extends ObjectModel
 
         $return = $return && Db::getInstance()->execute(
             sprintf(
-                'UPDATE `%scategory` c SET c.`position`= %d WHERE c.id_category = %d',
-                _DB_PREFIX_,
+                'UPDATE %s SET position = %d WHERE id_category = %d',
+                Db::quoteIdentifier(_DB_PREFIX_ . 'category'),
                 $position,
                 (int) $this->id
             )
@@ -2338,9 +2416,9 @@ class CategoryCore extends ObjectModel
     public static function getShopsByCategory($idCategory)
     {
         return Db::getInstance()->executeS('
-		SELECT `id_shop`
-		FROM `' . _DB_PREFIX_ . 'category_shop`
-		WHERE `id_category` = ' . (int) $idCategory);
+		SELECT id_shop
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . '
+		WHERE id_category = ' . (int) $idCategory);
     }
 
     /**
@@ -2376,8 +2454,8 @@ class CategoryCore extends ObjectModel
     public function deleteFromShop($idShop)
     {
         return Db::getInstance()->execute('
-		DELETE FROM `' . _DB_PREFIX_ . 'category_shop`
-		WHERE `id_shop` = ' . (int) $idShop . '
+		DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . '
+		WHERE id_shop = ' . (int) $idShop . '
 		AND id_category = ' . (int) $this->id);
     }
 
@@ -2403,11 +2481,11 @@ class CategoryCore extends ObjectModel
         if (!is_array($categories)) {
             return false;
         }
-        $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'category_shop` (`id_category`, `id_shop`) VALUES';
+        $sql = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . ' (id_category, id_shop) VALUES';
         $tabCategories = [];
         foreach ($categories as $idCategory) {
             $tabCategories[] = new Category($idCategory);
-            $sql .= '("' . (int) $idCategory . '", "' . (int) $idShop . '"),';
+            $sql .= '(' . (int) $idCategory . ', ' . (int) $idShop . '),';
         }
         // removing last comma to avoid SQL error
         $sql = substr($sql, 0, strlen($sql) - 1);
@@ -2432,10 +2510,10 @@ class CategoryCore extends ObjectModel
     public function existsInShop($idShop)
     {
         return (bool) Db::getInstance()->getValue('
-		SELECT `id_category`
-		FROM `' . _DB_PREFIX_ . 'category_shop`
-		WHERE `id_category` = ' . (int) $this->id . '
-		AND `id_shop` = ' . (int) $idShop, false);
+		SELECT id_category
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . '
+		WHERE id_category = ' . (int) $this->id . '
+		AND id_shop = ' . (int) $idShop, false);
     }
 
     /**

@@ -189,7 +189,7 @@ class UpdateEUTaxruleGroupsCommand extends Command
         $insertBefore = $taxRulesGroups[0] ?? false;
 
         if (!$insertBefore) {
-            $this->output->writeln("<error>Could not find any `taxRulesGroup`, don't know where to append the tax.</error>");
+            $this->output->writeln("<error>Could not find any taxRulesGroup, don't know where to append the tax.</error>");
 
             return null;
         }

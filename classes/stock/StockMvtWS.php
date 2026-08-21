@@ -236,23 +236,23 @@ class StockMvtWSCore extends ObjectModelCore
         $old_filter = $filter;
         if ($filter) {
             foreach ($this->tables_assoc as $key => $value) {
-                $filter = str_replace('main.`' . $key . '`', $value['table'] . '.`' . $key . '`', $filter);
+                $filter = str_replace('main.' . Db::quoteIdentifier($key), $value['table'] . '.' . Db::quoteIdentifier($key), $filter);
             }
         }
 
-        $query .= 'FROM ' . _DB_PREFIX_ . $this->def['table'] . ' as main ';
+        $query .= 'FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->def['table']) . ' as main ';
 
         if ($filter !== $old_filter || $full) {
-            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'stock s ON (s.id_stock = main.id_stock) ';
-            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'warehouse w ON (w.id_warehouse = s.id_warehouse) ';
-            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'currency c ON (c.id_currency = w.id_currency) ';
+            $query .= 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'stock') . ' s ON (s.id_stock = main.id_stock) ';
+            $query .= 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'warehouse') . ' w ON (w.id_warehouse = s.id_warehouse) ';
+            $query .= 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'currency') . ' c ON (c.id_currency = w.id_currency) ';
         }
 
         if ($join) {
             $query .= $join;
         }
 
-        $query .= 'WHERE 1 ';
+        $query .= 'WHERE 1=1 ';
 
         if ($filter) {
             $query .= $filter . ' ';

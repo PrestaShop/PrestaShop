@@ -98,7 +98,7 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(DISTINCT a.`id_attribute`)');
+        $qb->select('COUNT(DISTINCT a.id_attribute)');
 
         return $qb;
     }
@@ -183,7 +183,7 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
                 }
             }
 
-            $qb->andWhere('a.`' . $filterName . '` = :' . $filterName)
+            $qb->andWhere('a.' . $this->connection->quoteIdentifier($filterName) . ' = :' . $filterName)
                 ->setParameter($filterName, $value);
         }
     }

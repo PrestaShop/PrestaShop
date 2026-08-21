@@ -63,8 +63,8 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         foreach ([$searchQb, $countQb] as $qb) {
             $sql = $qb->getSQL();
             $this->assertStringContainsString('extra_lang.`id_product` = pl.`id_product`', $sql);
-            $this->assertStringContainsString('extra_lang.`id_lang` = pl.`id_lang`', $sql);
-            $this->assertStringContainsString('extra_lang.`id_shop` = pl.`id_shop`', $sql);
+            $this->assertStringContainsString('extra_lang.id_lang = pl.id_lang', $sql);
+            $this->assertStringContainsString('extra_lang.id_shop = pl.id_shop', $sql);
         }
     }
 
@@ -80,10 +80,10 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
 
         foreach ([$searchQb, $countQb] as $qb) {
             $sql = $qb->getSQL();
-            $this->assertStringContainsString('extra_lang.`id_lang` = pl.`id_lang`', $sql);
+            $this->assertStringContainsString('extra_lang.id_lang = pl.id_lang', $sql);
             // The PK of {e}_extra_lang includes id_shop: it must be pinned even when the
             // base lang join carries no shop clause, or multistore data duplicates rows.
-            $this->assertStringContainsString('extra_lang.`id_shop` = :extraLangShopId', $sql);
+            $this->assertStringContainsString('extra_lang.id_shop = :extraLangShopId', $sql);
             $this->assertSame(self::CONTEXT_SHOP_ID, $qb->getParameters()['extraLangShopId']);
         }
     }
@@ -98,8 +98,8 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         foreach ([$searchQb, $countQb] as $qb) {
             $sql = $qb->getSQL();
             $this->assertStringContainsString('extra_lang.`id_product` = p.`id_product`', $sql);
-            $this->assertStringContainsString('extra_lang.`id_lang` = :extraLangId', $sql);
-            $this->assertStringContainsString('extra_lang.`id_shop` = :extraLangShopId', $sql);
+            $this->assertStringContainsString('extra_lang.id_lang = :extraLangId', $sql);
+            $this->assertStringContainsString('extra_lang.id_shop = :extraLangShopId', $sql);
             $this->assertSame(self::CONTEXT_LANG_ID, $qb->getParameters()['extraLangId']);
             $this->assertSame(self::CONTEXT_SHOP_ID, $qb->getParameters()['extraLangShopId']);
         }
@@ -115,12 +115,12 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         $modifier->apply($searchQb, $countQb, $this->criteria(['extra_mymodule_promo' => 'sale']), 'product');
 
         // Search reuses its base lang join aliases.
-        $this->assertStringContainsString('extra_lang.`id_lang` = pl.`id_lang`', $searchQb->getSQL());
+        $this->assertStringContainsString('extra_lang.id_lang = pl.id_lang', $searchQb->getSQL());
         // Count has no `pl` alias: it must get a param-based join from its own main alias —
         // getSQL() also proves every referenced alias exists in the count query.
         $countSql = $countQb->getSQL();
         $this->assertStringContainsString('LEFT JOIN ps_product_extra_lang extra_lang ON extra_lang.`id_product` = p.`id_product`', $countSql);
-        $this->assertStringContainsString('extra_lang.`id_lang` = :extraLangId', $countSql);
+        $this->assertStringContainsString('extra_lang.id_lang = :extraLangId', $countSql);
         // The filter applies to both builders so the count matches the page.
         $this->assertStringContainsString('extra_lang.`mymodule_promo` LIKE', $searchQb->getSQL());
         $this->assertStringContainsString('extra_lang.`mymodule_promo` LIKE', $countSql);
@@ -139,7 +139,7 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         foreach ([$searchQb, $countQb] as $qb) {
             $sql = $qb->getSQL();
             $this->assertStringContainsString('extra_shop.`id_product` = psh.`id_product`', $sql);
-            $this->assertStringContainsString('extra_shop.`id_shop` = psh.`id_shop`', $sql);
+            $this->assertStringContainsString('extra_shop.id_shop = psh.id_shop', $sql);
         }
     }
 
@@ -151,7 +151,7 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
 
         $modifier->apply($searchQb, $countQb, $this->criteria(), 'product');
 
-        $this->assertStringContainsString('extra_shop.`id_shop` = :extraShopId', $searchQb->getSQL());
+        $this->assertStringContainsString('extra_shop.id_shop = :extraShopId', $searchQb->getSQL());
         // Search builder pins on its own :shopId value; the count builder has no such
         // param and falls back to the context shop — each builder is self-contained.
         $this->assertSame(7, $searchQb->getParameters()['extraShopId']);
@@ -228,8 +228,12 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
 
     private function createQueryBuilder(): QueryBuilder
     {
+        $platform = new MySQLPlatform();
         $connection = $this->createMock(Connection::class);
-        $connection->method('getDatabasePlatform')->willReturn(new MySQLPlatform());
+        $connection->method('getDatabasePlatform')->willReturn($platform);
+        $connection->method('quoteIdentifier')->willReturnCallback(
+            fn (string $identifier): string => $platform->quoteIdentifier($identifier)
+        );
 
         return new QueryBuilder($connection);
     }

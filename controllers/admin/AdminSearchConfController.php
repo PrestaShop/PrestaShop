@@ -39,7 +39,7 @@ class AdminSearchConfControllerCore extends AdminController
             $params
         );
 
-        list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM ' . _DB_PREFIX_ . 'product p ' . Shop::addSqlAssociation('product', 'p') . ' WHERE product_shop.`visibility` IN ("both", "search") AND product_shop.`active` = 1');
+        list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ' . Shop::addSqlAssociation('product', 'p') . ' WHERE product_shop.' . Db::quoteIdentifier('visibility') . ' IN (\'both\', \'search\') AND product_shop.' . Db::quoteIdentifier('active') . ' = 1');
 
         $this->fields_options = [
             'indexation' => [

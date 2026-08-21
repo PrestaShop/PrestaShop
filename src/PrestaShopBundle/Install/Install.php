@@ -141,6 +141,7 @@ class Install extends AbstractInstall
      * Generate the settings file.
      */
     public function generateSettingsFile(
+        $database_type,
         $database_host,
         $database_user,
         $database_password,
@@ -194,6 +195,7 @@ class Install extends AbstractInstall
 
         $parameters = [
             'parameters' => [
+                'database_driver' => $database_type == 'pgsql' ? 'pdo_pgsql' : 'pdo_mysql',
                 'database_host' => $database_host,
                 'database_port' => $database_port,
                 'database_user' => $database_user,
@@ -201,6 +203,8 @@ class Install extends AbstractInstall
                 'database_name' => $database_name,
                 'database_prefix' => $database_prefix,
                 'database_engine' => $database_engine,
+                'database_type' => $database_type,
+                'database_charset' => $database_type == 'pgsql' ? 'UTF8' : 'utf8mb4',
                 'cookie_key' => $cookie_key,
                 'cookie_iv' => $cookie_iv,
                 'new_cookie_key' => $key,
@@ -294,17 +298,23 @@ class Install extends AbstractInstall
         }
 
         $allowed_collation = ['utf8mb4_general_ci', 'utf8mb4_unicode_ci'];
-        $collation_database = Db::getInstance()->getValue('SELECT @@collation_database');
+        $collation_database = '';
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'mysql') {
+            $collation_database = Db::getInstance()->getValue('SELECT @@collation_database');
+        }
         // Install database structure
         $sql_loader = new SqlLoader();
         $sql_loader->setMetaData([
             'PREFIX_' => _DB_PREFIX_,
             'ENGINE_TYPE' => _MYSQL_ENGINE_,
+            /* @phpstan-ignore-next-line */
             'COLLATION' => (empty($collation_database) || !in_array($collation_database, $allowed_collation)) ? '' : 'COLLATE ' . $collation_database,
         ]);
 
         try {
-            $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_ . 'db_structure.sql');
+            /* @phpstan-ignore-next-line */
+            $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_ . (_DB_TYPE_ == 'mysql' ? 'db_structure.sql' : 'db_structure.pgsql.sql'));
         } catch (PrestashopInstallerException) {
             $this->setError($this->translator->trans('Database structure file not found', [], 'Install'));
 
@@ -332,15 +342,26 @@ class Install extends AbstractInstall
         $this->getLogger()->logInfo($truncate ? 'Truncating database' : 'Dropping database tables');
 
         $instance = Db::getInstance();
-        $instance->execute('SET FOREIGN_KEY_CHECKS=0');
-        foreach ($instance->executeS('SHOW TABLES') as $row) {
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'mysql') {
+            $instance->execute('SET FOREIGN_KEY_CHECKS=0');
+        }
+        foreach ($instance->executeS(
+            /* @phpstan-ignore-next-line */
+            _DB_TYPE_ == 'mysql'
+            ? 'SHOW TABLES'
+            : 'SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname=\'public\';'
+        ) as $row) {
             $table = current($row);
             if (empty(_DB_PREFIX_) || preg_match('#^' . _DB_PREFIX_ . '#i', $table)) {
-                $instance->execute(($truncate ? 'TRUNCATE TABLE ' : 'DROP TABLE ') . '`' . $table . '`');
+                $instance->execute(($truncate ? 'TRUNCATE TABLE ' : 'DROP TABLE ') . Db::quoteIdentifier($table));
             }
         }
 
-        $instance->execute('SET FOREIGN_KEY_CHECKS=1');
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'mysql') {
+            $instance->execute('SET FOREIGN_KEY_CHECKS=1');
+        }
     }
 
     /**
@@ -508,14 +529,16 @@ class Install extends AbstractInstall
             unset($xml_loader);
 
             // Install custom SQL data (db_data.sql file)
-            if (file_exists(_PS_INSTALL_DATA_PATH_ . 'db_data.sql')) {
+            /* @phpstan-ignore-next-line */
+            $db_data_file = _DB_TYPE_ == 'mysql' ? 'db_data.sql' : 'db_data.pgsql.sql';
+            if (file_exists(_PS_INSTALL_DATA_PATH_ . $db_data_file)) {
                 $sql_loader = new SqlLoader();
                 $sql_loader->setMetaData([
                     'PREFIX_' => _DB_PREFIX_,
                     'ENGINE_TYPE' => _MYSQL_ENGINE_,
                 ]);
 
-                $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_ . 'db_data.sql', false);
+                $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_ . $db_data_file, false);
                 if ($errors = $sql_loader->getErrors()) {
                     $this->setError($errors);
 
@@ -528,7 +551,57 @@ class Install extends AbstractInstall
             return false;
         }
 
+        // Unlike MySQL's AUTO_INCREMENT, PostgreSQL sequences don't automatically track
+        // explicit-value inserts (XmlLoader assigns primary keys itself while bulk-loading
+        // XML/db_data.sql content). Left alone, the next auto-generated insert into any of
+        // these tables would collide with an already-used id. Resync every serial sequence
+        // to its table's current MAX(id) now that the bulk load is done.
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            $this->resyncPgsqlSequences();
+        }
+
         return true;
+    }
+
+    /**
+     * Resets every PostgreSQL serial/identity sequence to match its table's current MAX(id),
+     * after rows have been bulk-inserted with explicit primary key values.
+     */
+    private function resyncPgsqlSequences(): void
+    {
+        Db::getInstance()->execute("
+            DO \$\$
+            DECLARE
+                r RECORD;
+            BEGIN
+                FOR r IN
+                    SELECT
+                        c.relname AS table_name,
+                        a.attname AS column_name,
+                        pg_get_serial_sequence(c.relname, a.attname) AS seq_name
+                    FROM pg_class c
+                    JOIN pg_attribute a ON a.attrelid = c.oid AND a.attnum > 0 AND NOT a.attisdropped
+                    WHERE c.relkind = 'r'
+                        AND c.relnamespace = 'public'::regnamespace
+                        AND pg_get_serial_sequence(c.relname, a.attname) IS NOT NULL
+                LOOP
+                    -- GREATEST(...,1)/is_called=false handles empty tables and tables whose
+                    -- only rows use a sentinel id of 0 (e.g. ps_risk), since setval() rejects 0.
+                    -- The per-table exception handler keeps one unexpected table from aborting
+                    -- (and, since a DO block is a single atomic statement, rolling back) every
+                    -- other resync already performed in this loop.
+                    BEGIN
+                        EXECUTE format(
+                            'SELECT setval(%L, GREATEST(COALESCE((SELECT MAX(%I) FROM %I), 0), 1), COALESCE((SELECT MAX(%I) FROM %I), 0) > 0)',
+                            r.seq_name, r.column_name, r.table_name, r.column_name, r.table_name
+                        );
+                    EXCEPTION WHEN OTHERS THEN
+                        RAISE NOTICE 'Could not resync sequence % for %.%: %', r.seq_name, r.table_name, r.column_name, SQLERRM;
+                    END;
+                END LOOP;
+            END \$\$;
+        ");
     }
 
     public function createShop($shop_name)
@@ -802,7 +875,7 @@ class Install extends AbstractInstall
         Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', $data['rewrite_engine']);
 
         $groups = Group::getGroups((int) Configuration::get('PS_LANG_DEFAULT'));
-        $groups_default = Db::getInstance()->executeS('SELECT `name` FROM ' . _DB_PREFIX_ . 'configuration WHERE `name` LIKE "PS_%_GROUP" ORDER BY `id_configuration`');
+        $groups_default = Db::getInstance()->executeS('SELECT name FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'configuration') . ' WHERE name LIKE \'PS_%_GROUP\' ORDER BY id_configuration');
         foreach ($groups_default as &$group_default) {
             if (is_array($group_default) && isset($group_default['name'])) {
                 $group_default = $group_default['name'];
@@ -818,8 +891,18 @@ class Install extends AbstractInstall
             }
         }
 
-        $states = Db::getInstance()->executeS('SELECT `id_order_state` FROM ' . _DB_PREFIX_ . 'order_state ORDER by `id_order_state`');
-        $states_default = Db::getInstance()->executeS('SELECT MIN(`id_configuration`), `name` FROM ' . _DB_PREFIX_ . 'configuration WHERE `name` LIKE "PS_OS_%" GROUP BY `value` ORDER BY`id_configuration`');
+        $states = Db::getInstance()->executeS('SELECT id_order_state FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_state') . ' ORDER by id_order_state');
+        $states_default = Db::getInstance()->executeS(
+            'SELECT c.id_configuration, c.name
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'configuration') . ' c
+            INNER JOIN (
+                SELECT MIN(id_configuration) AS id_configuration
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'configuration') . '
+                WHERE name LIKE \'PS_OS_%\'
+                GROUP BY value
+            ) grouped ON c.id_configuration = grouped.id_configuration
+            ORDER BY c.id_configuration'
+        );
 
         foreach ($states_default as &$state_default) {
             if (is_array($state_default) && isset($state_default['name'])) {
@@ -1291,6 +1374,15 @@ class Install extends AbstractInstall
      */
     public function callWithUnityAutoincrement(callable $callback, ...$args)
     {
+        // PostgreSQL sequences always increment by 1 by default and have no session-level
+        // auto_increment_increment/auto_increment_offset equivalent, so there is nothing to
+        // normalize for that engine.
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            return $callback(...$args);
+        }
+
+        /* @phpstan-ignore-next-line */
         $db = Db::getInstance();
 
         $backupAiIncrement = $db->executeS('SELECT @@SESSION.auto_increment_increment AS v;', true, false)[0]['v'];

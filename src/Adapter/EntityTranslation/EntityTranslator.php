@@ -87,11 +87,11 @@ class EntityTranslator implements EntityTranslatorInterface
 
         $tableNameSql = bqSQL($this->tableName);
         $shopWhere = ($this->shopFieldExists($tableNameSql))
-            ? sprintf(' AND `id_shop` = %d', $shopId)
+            ? sprintf(' AND id_shop = %d', $shopId)
             : '';
 
         // get table data
-        $sql = "SELECT * FROM `$tableNameSql` WHERE `id_lang` = $languageId"
+        $sql = 'SELECT * FROM ' . Db::quoteIdentifier($tableNameSql) . " WHERE id_lang = $languageId"
             . $shopWhere;
 
         $tableData = $this->db->executeS($sql, true, false);
@@ -109,7 +109,7 @@ class EntityTranslator implements EntityTranslatorInterface
 
             // Construct update where
             foreach ($keys as $key) {
-                $updateWhere[] = '`' . bqSQL($key) . '` = "' . pSQL($data[$key]) . '"';
+                $updateWhere[] = Db::quoteIdentifier($key) . ' = \'' . pSQL($data[$key]) . '\'';
             }
 
             // Construct update field
@@ -121,7 +121,7 @@ class EntityTranslator implements EntityTranslatorInterface
                 $translatedField = $this->doTranslate($data, $fieldName);
 
                 if (!empty($translatedField) && $translatedField != $data[$fieldName]) {
-                    $updateFields[] = '`' . bqSQL($fieldName) . '` = "' . pSQL($translatedField) . '"';
+                    $updateFields[] = Db::quoteIdentifier($fieldName) . ' = \'' . pSQL($translatedField) . '\'';
                 }
             }
 
@@ -130,11 +130,13 @@ class EntityTranslator implements EntityTranslatorInterface
                 $updateWhere = implode(' AND ', $updateWhere);
                 $updateFields = implode(', ', $updateFields);
 
-                $sql = "UPDATE `$tableNameSql`
+                /* @phpstan-ignore-next-line */
+                $limitClause = _DB_TYPE_ == 'pgsql' ? '' : ' LIMIT 1';
+                $sql = 'UPDATE ' . Db::quoteIdentifier($tableNameSql) . "
                     SET $updateFields
-                    WHERE $updateWhere AND `id_lang` = $languageId"
+                    WHERE $updateWhere AND id_lang = $languageId"
                     . $shopWhere
-                    . ' LIMIT 1';
+                    . $limitClause;
 
                 $this->db->execute($sql);
             }
@@ -152,9 +154,16 @@ class EntityTranslator implements EntityTranslatorInterface
      */
     protected function shopFieldExists(string $tableNameSql): bool
     {
-        $columns = $this->db->executeS(
-            sprintf('SHOW COLUMNS FROM `%s`', bqSQL($tableNameSql))
-        );
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            $columns = $this->db->executeS(
+                'SELECT column_name AS "Field" FROM information_schema.columns WHERE table_name = \'' . pSQL($tableNameSql) . '\''
+            );
+        } else {
+            $columns = $this->db->executeS(
+                sprintf('SHOW COLUMNS FROM %s', Db::quoteIdentifier($tableNameSql))
+            );
+        }
 
         foreach ($columns as $column) {
             if ($column['Field'] === 'id_shop') {

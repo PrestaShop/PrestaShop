@@ -78,7 +78,7 @@ class TitleQueryBuilder extends AbstractDoctrineQueryBuilder
         $builder = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'gender', 'g')
             ->innerJoin('g', $this->dbPrefix . 'gender_lang', 'gl', 'g.id_gender = gl.id_gender')
-            ->andWhere('gl.`id_lang`= :language')
+            ->andWhere('gl.id_lang= :language')
             ->setParameter('language', $this->languageId)
         ;
 

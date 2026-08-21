@@ -74,7 +74,7 @@ class DbQueryCore
             if ($table instanceof DbQuery) {
                 $query = '(' . $table->build() . ')';
             } else {
-                $query = '`' . bqSQL(_DB_PREFIX_ . $table) . '`';
+                $query = Db::quoteIdentifier(_DB_PREFIX_ . $table);
             }
 
             $this->query['from'][] = $query . ($alias ? ' ' . $alias : '');
@@ -111,7 +111,7 @@ class DbQueryCore
      */
     public function leftJoin($table, $alias = null, $on = null)
     {
-        return $this->join('LEFT JOIN `' . _DB_PREFIX_ . bqSQL($table) . '`' . ($alias ? ' `' . pSQL($alias) . '`' : '') . ($on ? ' ON ' . $on : ''));
+        return $this->join('LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $table) . ($alias ? ' ' . Db::quoteIdentifier($alias) : '') . ($on ? ' ON ' . $on : ''));
     }
 
     /**
@@ -126,7 +126,7 @@ class DbQueryCore
      */
     public function innerJoin($table, $alias = null, $on = null)
     {
-        return $this->join('INNER JOIN `' . _DB_PREFIX_ . bqSQL($table) . '`' . ($alias ? ' `' . pSQL($alias) . '`' : '') . ($on ? ' ON ' . $on : ''));
+        return $this->join('INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $table) . ($alias ? ' ' . Db::quoteIdentifier($alias) : '') . ($on ? ' ON ' . $on : ''));
     }
 
     /**
@@ -140,7 +140,7 @@ class DbQueryCore
      */
     public function leftOuterJoin($table, $alias = null, $on = null)
     {
-        return $this->join('LEFT OUTER JOIN `' . _DB_PREFIX_ . bqSQL($table) . '`' . ($alias ? ' `' . pSQL($alias) . '`' : '') . ($on ? ' ON ' . $on : ''));
+        return $this->join('LEFT OUTER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $table) . ($alias ? ' ' . Db::quoteIdentifier($alias) : '') . ($on ? ' ON ' . $on : ''));
     }
 
     /**
@@ -153,7 +153,7 @@ class DbQueryCore
      */
     public function naturalJoin($table, $alias = null)
     {
-        return $this->join('NATURAL JOIN `' . _DB_PREFIX_ . bqSQL($table) . '`' . ($alias ? ' `' . pSQL($alias) . '`' : ''));
+        return $this->join('NATURAL JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $table) . ($alias ? ' ' . Db::quoteIdentifier($alias) : ''));
     }
 
     /**
@@ -167,7 +167,7 @@ class DbQueryCore
      */
     public function rightJoin($table, $alias = null, $on = null)
     {
-        return $this->join('RIGHT JOIN `' . _DB_PREFIX_ . bqSQL($table) . '`' . ($alias ? ' `' . pSQL($alias) . '`' : '') . ($on ? ' ON ' . $on : ''));
+        return $this->join('RIGHT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $table) . ($alias ? ' ' . Db::quoteIdentifier($alias) : '') . ($on ? ' ON ' . $on : ''));
     }
 
     /**
@@ -300,7 +300,9 @@ class DbQueryCore
 
         if ($this->query['limit']['limit']) {
             $limit = $this->query['limit'];
-            $sql .= 'LIMIT ' . ($limit['offset'] ? $limit['offset'] . ', ' : '') . $limit['limit'];
+            // The "LIMIT count OFFSET offset" form is understood by both MySQL and PostgreSQL,
+            // unlike MySQL's "LIMIT offset, count" shorthand which PostgreSQL doesn't support.
+            $sql .= 'LIMIT ' . $limit['limit'] . ($limit['offset'] ? ' OFFSET ' . $limit['offset'] : '');
         }
 
         return $sql;

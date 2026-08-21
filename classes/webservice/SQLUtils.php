@@ -18,21 +18,21 @@ class SQLUtils
     public static function getSQLRetrieveFilter($sqlId, $filterValue, $tableAlias = 'main.')
     {
         if (!empty($tableAlias)) {
-            $tableAlias = '`' . bqSQL(str_replace('.', '', $tableAlias)) . '`.';
+            $tableAlias = Db::quoteIdentifier(str_replace('.', '', $tableAlias)) . '.';
         }
 
         $ret = '';
         preg_match('/^(.*)\[(.*)\](.*)$/', $filterValue, $matches);
         if (count($matches) > 1) {
             if ($matches[1] == '%' || $matches[3] == '%') {
-                $ret .= ' AND ' . $tableAlias . '`' . bqSQL($sqlId) . '` LIKE "' . pSQL($matches[1] . $matches[2] . $matches[3]) . "\"\n";
+                $ret .= ' AND ' . $tableAlias . Db::quoteIdentifier($sqlId) . ' LIKE \'' . pSQL($matches[1] . $matches[2] . $matches[3]) . "'\n";
             } elseif ($matches[1] == '' && $matches[3] == '') {
                 if (strpos($matches[2], '|') > 0) {
                     $values = explode('|', $matches[2]);
                     $ret .= ' AND (';
                     $temp = '';
                     foreach ($values as $value) {
-                        $temp .= $tableAlias . '`' . bqSQL($sqlId) . '` = "' . bqSQL($value) . '" OR ';
+                        $temp .= $tableAlias . Db::quoteIdentifier($sqlId) . ' = \'' . pSQL($value) . '\' OR ';
                     }
                     $ret .= rtrim($temp, 'OR ') . ')' . "\n";
                 } elseif (preg_match('/^([\d\.:\-\s]+),([\d\.:\-\s]+)$/', $matches[2], $matches3)) {
@@ -40,23 +40,23 @@ class SQLUtils
                     if (count($matches3) > 0) {
                         sort($matches3);
                         [$first, $last] = array_values($matches3); // reset-keys
-                        $ret .= ' AND ' . $tableAlias . '`' . bqSQL($sqlId) . '` BETWEEN "' . pSQL($first) . '" AND "' . pSQL($last) . "\"\n";
+                        $ret .= ' AND ' . $tableAlias . Db::quoteIdentifier($sqlId) . ' BETWEEN \'' . pSQL($first) . '\' AND \'' . pSQL($last) . "'\n";
                     }
                 } else {
-                    $ret .= ' AND ' . $tableAlias . '`' . bqSQL($sqlId) . '`="' . pSQL($matches[2]) . '"' . "\n";
+                    $ret .= ' AND ' . $tableAlias . Db::quoteIdentifier($sqlId) . '=\'' . pSQL($matches[2]) . '\'' . "\n";
                 }
             } elseif ($matches[1] == '>') {
-                $ret .= ' AND ' . $tableAlias . '`' . bqSQL($sqlId) . '` > "' . pSQL($matches[2]) . "\"\n";
+                $ret .= ' AND ' . $tableAlias . Db::quoteIdentifier($sqlId) . ' > \'' . pSQL($matches[2]) . "'\n";
             } elseif ($matches[1] == '<') {
-                $ret .= ' AND ' . $tableAlias . '`' . bqSQL($sqlId) . '` < "' . pSQL($matches[2]) . "\"\n";
+                $ret .= ' AND ' . $tableAlias . Db::quoteIdentifier($sqlId) . ' < \'' . pSQL($matches[2]) . "'\n";
             } elseif ($matches[1] == '!') {
                 $multiple_values = explode('|', $matches[2]);
                 foreach ($multiple_values as $value) {
-                    $ret .= ' AND ' . $tableAlias . '`' . bqSQL($sqlId) . '` != "' . pSQL($value) . "\"\n";
+                    $ret .= ' AND ' . $tableAlias . Db::quoteIdentifier($sqlId) . ' != \'' . pSQL($value) . "'\n";
                 }
             }
         } else {
-            $ret .= ' AND ' . $tableAlias . '`' . bqSQL($sqlId) . '` = "' . pSQL($filterValue) . "\"\n";
+            $ret .= ' AND ' . $tableAlias . Db::quoteIdentifier($sqlId) . ' = \'' . pSQL($filterValue) . "'\n";
         }
 
         return $ret;

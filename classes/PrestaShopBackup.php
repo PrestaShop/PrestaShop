@@ -204,6 +204,18 @@ class PrestaShopBackupCore
      */
     public function add()
     {
+        // This tool dumps the schema via MySQL's "SHOW CREATE TABLE", which has no
+        // PostgreSQL equivalent; a PostgreSQL-native dump would need pg_catalog-based
+        // DDL generation (see tools/build/GeneratePgsqlSchema.php), which is out of
+        // scope for this method. Fail clearly rather than emit a broken/partial dump.
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            $this->error = Context::getContext()->getTranslator()->trans('Database backup is not yet supported for PostgreSQL. Please use pg_dump directly.', [], 'Admin.Advparameters.Notification');
+            echo $this->error;
+
+            return false;
+        }
+
         if (!$this->psBackupAll) {
             $ignoreInsertTable = [_DB_PREFIX_ . 'connections', _DB_PREFIX_ . 'connections_page', _DB_PREFIX_
                 . 'connections_source', _DB_PREFIX_ . 'guest', _DB_PREFIX_ . 'statssearch',

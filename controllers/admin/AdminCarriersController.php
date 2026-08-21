@@ -148,14 +148,14 @@ class AdminCarriersControllerCore extends AdminController
     public function renderList()
     {
         $this->_select = 'b.*';
-        $this->_join = 'INNER JOIN `' . _DB_PREFIX_ . 'carrier_lang` b ON a.id_carrier = b.id_carrier' . Shop::addSqlRestrictionOnLang('b') . ' AND b.id_lang = ' . (int) $this->context->language->id . ' LEFT JOIN `' . _DB_PREFIX_ . 'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop=' . (int) $this->context->shop->id . ')';
+        $this->_join = 'INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'carrier_lang') . ' b ON a.id_carrier = b.id_carrier' . Shop::addSqlRestrictionOnLang('b') . ' AND b.id_lang = ' . (int) $this->context->language->id . ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'carrier_tax_rules_group_shop') . ' ctrgs ON (a.id_carrier = ctrgs.id_carrier AND ctrgs.id_shop=' . (int) $this->context->shop->id . ')';
         $this->_use_found_rows = false;
 
         // test if need to show header alert.
 
         $this->context->smarty->assign([
             'showHeaderAlert' => (Db::getInstance()->executeS(
-                'SELECT COUNT(1) FROM `' . _DB_PREFIX_ . 'carrier` WHERE deleted = 0 AND id_reference > 2',
+                'SELECT COUNT(1) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'carrier') . ' WHERE deleted = 0 AND id_reference > 2',
                 false
             )->fetchColumn(0) == 0),
         ]);
@@ -591,7 +591,7 @@ class AdminCarriersControllerCore extends AdminController
         if ($delete) {
             Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'carrier_group WHERE id_carrier = ' . (int) $id_carrier);
         }
-        $groups = Db::getInstance()->executeS('SELECT id_group FROM `' . _DB_PREFIX_ . 'group`');
+        $groups = Db::getInstance()->executeS('SELECT id_group FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group'));
         foreach ($groups as $group) {
             if (Tools::getIsset('groupBox') && in_array($group['id_group'], Tools::getValue('groupBox'))) {
                 Db::getInstance()->execute('

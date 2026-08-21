@@ -167,11 +167,11 @@ class ProductDownloadCore extends ObjectModel
         }
 
         self::$_productIds[$idProduct] = (int) Db::getInstance()->getValue('
-		SELECT `id_product_download`
-		FROM `' . _DB_PREFIX_ . 'product_download`
-		WHERE `id_product` = ' . (int) $idProduct . '
-		' . ($active ? ' AND `active` = 1' : '') . '
-		ORDER BY `id_product_download` DESC');
+		SELECT id_product_download
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_download') . '
+		WHERE id_product = ' . (int) $idProduct . '
+		' . ($active ? ' AND active = 1' : '') . '
+		ORDER BY id_product_download DESC');
 
         return self::$_productIds[$idProduct];
     }
@@ -186,9 +186,9 @@ class ProductDownloadCore extends ObjectModel
     public static function getIdFromFilename($filename)
     {
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT `id_product_download`
-            FROM `' . _DB_PREFIX_ . 'product_download`
-            WHERE `filename` = \'' . pSQL($filename) . '\''
+            'SELECT id_product_download
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_download') . '
+            WHERE filename = \'' . pSQL($filename) . '\''
         );
     }
 
@@ -202,10 +202,10 @@ class ProductDownloadCore extends ObjectModel
     public static function getFilenameFromIdProduct($idProduct)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `filename`
-			FROM `' . _DB_PREFIX_ . 'product_download`
-			WHERE `id_product` = ' . (int) $idProduct . '
-				AND `active` = 1
+			SELECT filename
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_download') . '
+			WHERE id_product = ' . (int) $idProduct . '
+				AND active = 1
 		');
     }
 
@@ -219,9 +219,9 @@ class ProductDownloadCore extends ObjectModel
     public static function getFilenameFromFilename($filename)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `display_filename`
-		FROM `' . _DB_PREFIX_ . 'product_download`
-		WHERE `filename` = \'' . pSQL($filename) . '\'');
+		SELECT display_filename
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_download') . '
+		WHERE filename = \'' . pSQL($filename) . '\'');
     }
 
     /**

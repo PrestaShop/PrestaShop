@@ -98,16 +98,16 @@ class AdminStoresControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
-        $this->_select = 'cl.`name` country, st.`name` state, sl.*';
+        $this->_select = 'cl.name country, st.name state, sl.*';
         $this->_join = '
-            LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl
-                ON (cl.`id_country` = a.`id_country`
-                AND cl.`id_lang` = ' . (int) $this->context->language->id . ')
-            LEFT JOIN `' . _DB_PREFIX_ . 'state` st
-                ON (st.`id_state` = a.`id_state`)
-            LEFT JOIN `' . _DB_PREFIX_ . 'store_lang` sl
-                ON (sl.`id_store` = a.`id_store`
-                AND sl.`id_lang` = ' . (int) $this->context->language->id . ') ';
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'country_lang') . ' cl
+                ON (cl.id_country = a.id_country
+                AND cl.id_lang = ' . (int) $this->context->language->id . ')
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'state') . ' st
+                ON (st.id_state = a.id_state)
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'store_lang') . ' sl
+                ON (sl.id_store = a.id_store
+                AND sl.id_lang = ' . (int) $this->context->language->id . ') ';
 
         return parent::renderList();
     }
@@ -561,9 +561,9 @@ class AdminStoresControllerCore extends AdminController
     public function beforeUpdateOptions()
     {
         if (isset($_POST['PS_SHOP_STATE_ID']) && $_POST['PS_SHOP_STATE_ID'] != '0') {
-            $sql = 'SELECT `active` FROM `' . _DB_PREFIX_ . 'state`
-					WHERE `id_country` = ' . (int) Tools::getValue('PS_SHOP_COUNTRY_ID') . '
-						AND `id_state` = ' . (int) Tools::getValue('PS_SHOP_STATE_ID');
+            $sql = 'SELECT active FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'state') . '
+					WHERE id_country = ' . (int) Tools::getValue('PS_SHOP_COUNTRY_ID') . '
+						AND id_state = ' . (int) Tools::getValue('PS_SHOP_STATE_ID');
             $isStateOk = Db::getInstance()->getValue($sql);
             if ($isStateOk != 1) {
                 $this->errors[] = $this->trans('The specified state is not located in this country.', [], 'Admin.Shopparameters.Notification');

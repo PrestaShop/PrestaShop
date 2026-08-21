@@ -366,30 +366,30 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
     public function getAssociatedShopIdsByShopConstraint(ImageId $imageId, ShopConstraint $shopConstraint): array
     {
         $qb = $this->connection->createQueryBuilder()
-            ->select('is.id_shop')
-            ->from($this->dbPrefix . 'image_shop', '`is`')
-            ->where('is.id_image = :imageId')
+            ->select('ish.id_shop')
+            ->from($this->dbPrefix . 'image_shop', 'ish')
+            ->where('ish.id_image = :imageId')
             ->setParameter('imageId', $imageId->getValue())
         ;
 
         if ($shopConstraint->getShopGroupId()) {
             $qb
                 ->innerJoin(
-                    '`is`',
+                    'ish',
                     $this->dbPrefix . 'shop',
                     's',
-                    's.id_shop = is.id_shop AND s.id_shop_group = :shopGroupId'
+                    's.id_shop = ish.id_shop AND s.id_shop_group = :shopGroupId'
                 )
                 ->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue())
             ;
         } elseif ($shopConstraint->getShopId()) {
             $qb
-                ->andWhere('is.id_shop = :shopId')
+                ->andWhere('ish.id_shop = :shopId')
                 ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
             ;
         } elseif ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
             $qb
-                ->andWhere('is.id_shop IN (:shopIds)')
+                ->andWhere('ish.id_shop IN (:shopIds)')
                 ->setParameter(
                     'shopIds',
                     array_map(fn (ShopId $shopId) => $shopId->getValue(), $shopConstraint->getShopIds()),
@@ -612,15 +612,15 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
     public function updateMissingCovers(ProductId $productId): void
     {
         $results = $this->connection->createQueryBuilder()
-            ->select('is.id_image', 'is.id_shop', 'is.cover')
-            ->from($this->dbPrefix . 'image_shop', '`is`')
+            ->select('ish.id_image', 'ish.id_shop', 'ish.cover')
+            ->from($this->dbPrefix . 'image_shop', 'ish')
             ->leftJoin(
-                '`is`',
+                'ish',
                 $this->dbPrefix . 'image',
                 'i',
-                'i.id_image = is.id_image'
+                'i.id_image = ish.id_image'
             )
-            ->andWhere('is.id_product = :productId')
+            ->andWhere('ish.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
             ->addOrderBy('i.position', 'ASC')
             ->executeQuery()

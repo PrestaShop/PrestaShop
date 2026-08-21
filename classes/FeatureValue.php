@@ -60,8 +60,8 @@ class FeatureValueCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
 			SELECT *
-			FROM `' . _DB_PREFIX_ . 'feature_value`
-			WHERE `id_feature` = ' . (int) $idFeature
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . '
+			WHERE id_feature = ' . (int) $idFeature
         );
     }
 
@@ -77,12 +77,12 @@ class FeatureValueCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT *
-			FROM `' . _DB_PREFIX_ . 'feature_value` v
-			LEFT JOIN `' . _DB_PREFIX_ . 'feature_value_lang` vl
-				ON (v.`id_feature_value` = vl.`id_feature_value` AND vl.`id_lang` = ' . (int) $idLang . ')
-			WHERE v.`id_feature` = ' . (int) $idFeature . '
-				' . (!$custom ? 'AND (v.`custom` IS NULL OR v.`custom` = 0)' : '') . '
-			ORDER BY vl.`value` ASC
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . ' v
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value_lang') . ' vl
+				ON (v.id_feature_value = vl.id_feature_value AND vl.id_lang = ' . (int) $idLang . ')
+			WHERE v.id_feature = ' . (int) $idFeature . '
+				' . (!$custom ? 'AND (v.custom IS NULL OR v.custom = 0)' : '') . '
+			ORDER BY vl.value ASC
 		');
     }
 
@@ -97,9 +97,9 @@ class FeatureValueCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT *
-			FROM `' . _DB_PREFIX_ . 'feature_value_lang`
-			WHERE `id_feature_value` = ' . (int) $idFeatureValue . '
-			ORDER BY `id_lang`
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value_lang') . '
+			WHERE id_feature_value = ' . (int) $idFeatureValue . '
+			ORDER BY id_lang
 		');
     }
 
@@ -138,32 +138,32 @@ class FeatureValueCore extends ObjectModel
         $idFeatureValue = false;
         if (null !== $idProduct && $idProduct) {
             $idFeatureValue = Db::getInstance()->getValue('
-				SELECT fp.`id_feature_value`
-				FROM ' . _DB_PREFIX_ . 'feature_product fp
-				INNER JOIN ' . _DB_PREFIX_ . 'feature_value fv USING (`id_feature_value`)
-				WHERE fp.`id_feature` = ' . (int) $idFeature . '
-				AND fv.`custom` = ' . (int) $custom . '
-				AND fp.`id_product` = ' . (int) $idProduct);
+				SELECT fp.id_feature_value
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_product') . ' fp
+				INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . ' fv USING (id_feature_value)
+				WHERE fp.id_feature = ' . (int) $idFeature . '
+				AND fv.custom = ' . (int) $custom . '
+				AND fp.id_product = ' . (int) $idProduct);
 
             if ($custom && $idFeatureValue && null !== $idLang && $idLang) {
                 Db::getInstance()->execute('
-				UPDATE ' . _DB_PREFIX_ . 'feature_value_lang
-				SET `value` = \'' . pSQL($value) . '\'
-				WHERE `id_feature_value` = ' . (int) $idFeatureValue . '
-				AND `value` != \'' . pSQL($value) . '\'
-				AND `id_lang` = ' . (int) $idLang);
+				UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value_lang') . '
+				SET value = \'' . pSQL($value) . '\'
+				WHERE id_feature_value = ' . (int) $idFeatureValue . '
+				AND value != \'' . pSQL($value) . '\'
+				AND id_lang = ' . (int) $idLang);
             }
         }
 
         if (!$custom) {
             $idFeatureValue = Db::getInstance()->getValue('
-				SELECT fv.`id_feature_value`
-				FROM ' . _DB_PREFIX_ . 'feature_value fv
-				LEFT JOIN ' . _DB_PREFIX_ . 'feature_value_lang fvl ON (fvl.`id_feature_value` = fv.`id_feature_value` AND fvl.`id_lang` = ' . (int) $idLang . ')
-				WHERE `value` = \'' . pSQL($value) . '\'
-				AND fv.`id_feature` = ' . (int) $idFeature . '
-				AND fv.`custom` = 0
-				GROUP BY fv.`id_feature_value`');
+				SELECT fv.id_feature_value
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . ' fv
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value_lang') . ' fvl ON (fvl.id_feature_value = fv.id_feature_value AND fvl.id_lang = ' . (int) $idLang . ')
+				WHERE value = \'' . pSQL($value) . '\'
+				AND fv.id_feature = ' . (int) $idFeature . '
+				AND fv.custom = 0
+				GROUP BY fv.id_feature_value');
         }
 
         if ($idFeatureValue) {
@@ -237,8 +237,8 @@ class FeatureValueCore extends ObjectModel
         /* Also delete related products */
         Db::getInstance()->execute(
             '
-			DELETE FROM `' . _DB_PREFIX_ . 'feature_product`
-			WHERE `id_feature_value` = ' . (int) $this->id
+			DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_product') . '
+			WHERE id_feature_value = ' . (int) $this->id
         );
 
         /* Reinitializing position */
@@ -262,9 +262,9 @@ class FeatureValueCore extends ObjectModel
      */
     public static function getHighestPosition($idFeature)
     {
-        $sql = 'SELECT MAX(`position`)
-                FROM `' . _DB_PREFIX_ . 'feature_value`
-                WHERE `id_feature` = ' . (int) $idFeature;
+        $sql = 'SELECT MAX(position)
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . '
+                WHERE id_feature = ' . (int) $idFeature;
 
         $position = Db::getInstance()->getValue($sql);
 
@@ -282,14 +282,29 @@ class FeatureValueCore extends ObjectModel
      */
     public function cleanPositions($idFeature, $includeCurrentFeatureValue = false)
     {
-        Db::getInstance()->execute('SET @i = -1', false);
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'feature_value` SET `position` = @i:=@i+1 WHERE';
-
+        $whereConditions = ['id_feature = ' . (int) $idFeature];
         if (!$includeCurrentFeatureValue) {
-            $sql .= ' `id_feature_value` != ' . (int) $this->id . ' AND';
+            $whereConditions[] = 'id_feature_value != ' . (int) $this->id;
+        }
+        $where = implode(' AND ', $whereConditions);
+
+        // PostgreSQL has no session variables (MySQL's @i trick); renumber via a window
+        // function instead, joined back on the primary key.
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            return (bool) Db::getInstance()->execute('
+                UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . ' AS target
+                SET position = renumbered.new_position
+                FROM (
+                    SELECT id_feature_value, ROW_NUMBER() OVER (ORDER BY position ASC) - 1 AS new_position
+                    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . '
+                    WHERE ' . $where . '
+                ) AS renumbered
+                WHERE target.id_feature_value = renumbered.id_feature_value');
         }
 
-        $sql .= ' `id_feature` = ' . (int) $idFeature . ' ORDER BY `position` ASC';
+        Db::getInstance()->execute('SET @i = -1', false);
+        $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . ' SET position = @i:=@i+1 WHERE ' . $where . ' ORDER BY position ASC';
 
         return Db::getInstance()->execute($sql);
     }

@@ -47,14 +47,14 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria);
 
         $qb
-            ->select('c.`id_cart`')
-            ->addSelect('c.`date_add`')
-            ->addSelect('ca.`name` AS carrier_name')
-            ->addSelect('o.`id_order` AS id_order')
+            ->select('c.id_cart')
+            ->addSelect('c.date_add')
+            ->addSelect('ca.name AS carrier_name')
+            ->addSelect('o.id_order AS id_order')
             ->addSelect('CONCAT(LEFT(cu.firstname, 1), ". ", cu.lastname) AS customer_name')
-            ->addSelect('co.`id_guest` AS customer_online')
-            ->addSelect('s.`name` AS shop_name')
-            ->addSelect('o.`total_products` AS cart_total')
+            ->addSelect('co.id_guest AS customer_online')
+            ->addSelect('s.name AS shop_name')
+            ->addSelect('o.total_products AS cart_total')
             ->addSelect($this->getCartStatusQuery() . ' AS status')
             ->setParameter('current_date', date('Y-m-d H:i:00', time()))
             ->setParameter('cart_expiration_time', CartStatus::ABANDONED_CART_EXPIRATION_TIME)
@@ -75,7 +75,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         return $this->getQueryBuilder($searchCriteria)
-            ->select('COUNT(DISTINCT c.`id_cart`)');
+            ->select('COUNT(DISTINCT c.id_cart)');
     }
 
     /**
@@ -113,9 +113,9 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qbOnline = $this->connection
             ->createQueryBuilder()
-            ->select('DISTINCT co.`id_guest`')
+            ->select('DISTINCT co.id_guest')
             ->from($this->dbPrefix . 'connections', 'co')
-            ->where('TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', `date_add`)) < ' . self::CUSTOMER_ONLINE_TIME);
+            ->where('TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', date_add)) < ' . self::CUSTOMER_ONLINE_TIME);
 
         $qb = $this->connection
             ->createQueryBuilder()
@@ -125,43 +125,43 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             'c',
             $this->dbPrefix . 'carrier',
             'ca',
-            'c.`id_carrier` = ca.`id_carrier`'
+            'c.id_carrier = ca.id_carrier'
         );
 
         $qb->leftJoin(
             'c',
             $this->dbPrefix . 'orders',
             'o',
-            'c.`id_cart` = o.`id_cart`'
+            'c.id_cart = o.id_cart'
         );
 
         $qb->leftJoin(
             'c',
             $this->dbPrefix . 'customer',
             'cu',
-            'c.`id_customer` = cu.`id_customer`'
+            'c.id_customer = cu.id_customer'
         );
 
         $qb->leftJoin(
             'c',
             '(' . $qbOnline->getSQL() . ')',
             'co',
-            'co.`id_guest` = c.`id_guest`'
+            'co.id_guest = c.id_guest'
         );
 
         $qb->leftJoin(
             'c',
             $this->dbPrefix . 'shop',
             's',
-            'c.`id_shop` = s.`id_shop`'
+            'c.id_shop = s.id_shop'
         );
 
         $shopConstraint = $searchCriteria->getShopConstraint();
         if ($this->multistoreContextChecker->isSingleShopContext()) {
-            $qb->andWhere('s.`id_shop` = :shopId');
+            $qb->andWhere('s.id_shop = :shopId');
             $qb->setParameter('shopId', $shopConstraint->getShopId()->getValue());
         } elseif ($this->multistoreContextChecker->isGroupShopContext()) {
-            $qb->andWhere('s.`id_shop_group` = :shopGroupId');
+            $qb->andWhere('s.id_shop_group = :shopGroupId');
             $qb->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue());
         }
 

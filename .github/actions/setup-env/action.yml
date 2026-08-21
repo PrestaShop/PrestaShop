@@ -12,7 +12,7 @@ inputs:
     default: 20.19.5
   DB_SERVER:
     required: false
-    description: Database Server for PrestaShop (mysql/mariadb)
+    description: Database Server for PrestaShop (mysql/mariadb/postgresql)
     default: mysql
   ENABLE_SSL:
     required: false
@@ -92,9 +92,10 @@ runs:
         TIMEZONE: 'Europe/Paris'
       run: |
         cd ${{ inputs.PRESTASHOP_DIR }}
+        export dockercomposefile=$(if [ "${{ inputs.DB_SERVER }}" == "mysql" ]; then echo "docker-compose.yml"; elif [ "${{ inputs.DB_SERVER }}" == "mariadb" ]; then echo "docker-compose.mariadb.yml"; elif [ "${{ inputs.DB_SERVER }}" == "postgresql" ]; then echo "docker-compose.postgresql.yml"; else echo ""; fi)
         if [[ "${{ inputs.DOCKER_DAEMON }}" = "true" ]]; then
-          USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose -f ${{ (inputs.DB_SERVER == 'mysql') && 'docker-compose.yml' || 'docker-compose.mariadb.yml' }} up -d prestashop-git --build
+          USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose -f $dockercomposefile up -d prestashop-git --build
           bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} ${{ env.URL_FO }}${{ env.URL_PING }})" != "200" ]]; do sleep 5; done'
         else
-          USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose -f ${{ (inputs.DB_SERVER == 'mysql') && 'docker-compose.yml' || 'docker-compose.mariadb.yml' }} up prestashop-git --build
+          USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose -f $dockercomposefile up prestashop-git --build
         fi

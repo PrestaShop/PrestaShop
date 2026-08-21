@@ -75,13 +75,13 @@ class TagQueryBuilder extends AbstractDoctrineQueryBuilder
         $productCountQb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'product_tag', 'pt')
-            ->select('pt.`id_tag`, COUNT(*) as num_products')
+            ->select('pt.id_tag, COUNT(*) as num_products')
             ->groupBy('id_tag');
 
         $builder->leftJoin('t',
             '(' . $productCountQb->getSQL() . ')',
             'vpt',
-            't.`id_tag` = vpt.`id_tag`');
+            't.id_tag = vpt.id_tag');
 
         $this->applyFilters($builder, $searchCriteria);
 

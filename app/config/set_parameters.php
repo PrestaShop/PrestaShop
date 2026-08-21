@@ -12,6 +12,9 @@ if (file_exists($parametersFilepath)) {
         'parameters' => [
             'secret' => 'secret',
             'locale' => 'en',
+            'database_type' => 'mysql',
+            'database_driver' => 'pdo_mysql',
+            'database_charset' => 'utf8mb4',
             'database_host' => '',
             'database_port' => null,
             'database_name' => '',

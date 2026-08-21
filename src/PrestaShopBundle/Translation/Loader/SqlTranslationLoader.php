@@ -22,6 +22,19 @@ class SqlTranslationLoader implements LoaderInterface
     protected $theme;
 
     /**
+     * Quotes an identifier for the current database engine without going through the legacy Db class.
+     */
+    private static function quoteIdentifier(string $identifier): string
+    {
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            return '"' . str_replace('"', '""', $identifier) . '"';
+        }
+
+        return '`' . bqSQL($identifier) . '`';
+    }
+
+    /**
      * @param Theme $theme the theme
      *
      * @return $this
@@ -45,9 +58,9 @@ class SqlTranslationLoader implements LoaderInterface
                 $locale = Db::getInstance()->escape($locale, false, true);
 
                 $localeResults[$locale] = Db::getInstance()->getRow(
-                    'SELECT `id_lang`
-                FROM `' . _DB_PREFIX_ . 'lang`
-                WHERE `locale` = "' . $locale . '"'
+                    'SELECT id_lang
+                FROM ' . self::quoteIdentifier(_DB_PREFIX_ . 'lang') . '
+                WHERE locale = \'' . $locale . '\''
                 );
             } catch (PrestaShopException) {
                 // When no DB is created there is nothing to fetch, so we return an empty catalog to avoid breaking process for
@@ -61,9 +74,9 @@ class SqlTranslationLoader implements LoaderInterface
         }
 
         $selectTranslationsQuery = '
-            SELECT `key`, `translation`, `domain`
-            FROM `' . _DB_PREFIX_ . 'translation`
-            WHERE `id_lang` = ' . $localeResults[$locale]['id_lang'] . '
+            SELECT ' . self::quoteIdentifier('key') . ', translation, domain
+            FROM ' . self::quoteIdentifier(_DB_PREFIX_ . 'translation') . '
+            WHERE id_lang = ' . $localeResults[$locale]['id_lang'] . '
             AND ' . $this->buildThemeCondition() . '
             ORDER BY theme IS NOT NULL';
 
@@ -96,7 +109,7 @@ class SqlTranslationLoader implements LoaderInterface
      */
     protected function buildThemeCondition(): string
     {
-        return '(theme IS NULL OR theme IN (SELECT `theme_name` FROM `' . _DB_PREFIX_ . 'shop` WHERE `active` = 1))';
+        return '(theme IS NULL OR theme IN (SELECT theme_name FROM ' . self::quoteIdentifier(_DB_PREFIX_ . 'shop') . ' WHERE active = 1))';
     }
 
     /**

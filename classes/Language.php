@@ -475,7 +475,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public function loadUpdateSQL()
     {
-        $tables = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
+        $tables = self::showLangTables();
         $langTables = [];
         foreach ($tables as $table) {
             foreach ($table as $t) {
@@ -512,10 +512,72 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @throws PrestaShopDatabaseException
      */
+    /**
+     * MySQL's "SHOW TABLES FROM db" has no PostgreSQL equivalent; querying pg_catalog instead.
+     * The result is reshaped to expose the exact same "Tables_in_<dbname>" key MySQL returns,
+     * so every caller can stay dialect-agnostic.
+     *
+     * @return array<int, array<string, string>>
+     */
+    private static function showTables()
+    {
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            return Db::getInstance()->executeS(
+                'SELECT tablename AS ' . Db::quoteIdentifier('Tables_in_' . _DB_NAME_) . ' FROM pg_catalog.pg_tables WHERE schemaname = \'public\''
+            );
+        }
+
+        return Db::getInstance()->executeS('SHOW TABLES FROM ' . Db::quoteIdentifier(_DB_NAME_));
+    }
+
+    /**
+     * MySQL's "SHOW COLUMNS FROM table" has no PostgreSQL equivalent; querying
+     * information_schema instead. The result is reshaped to expose the same "Field" key
+     * MySQL returns, so every caller can stay dialect-agnostic.
+     *
+     * @param string $tableName
+     *
+     * @return array<int, array<string, string>>
+     */
+    private static function showColumns($tableName)
+    {
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            return Db::getInstance()->executeS(
+                'SELECT column_name AS "Field" FROM information_schema.columns
+                WHERE table_schema = current_schema() AND table_name = \'' . pSQL($tableName) . '\'
+                ORDER BY ordinal_position'
+            );
+        }
+
+        return Db::getInstance()->executeS('SHOW COLUMNS FROM ' . Db::quoteIdentifier($tableName));
+    }
+
+    /**
+     * MySQL's "SHOW TABLES LIKE '...'" has no PostgreSQL equivalent; querying pg_catalog
+     * instead. Returns every "*_lang" table for this installation.
+     *
+     * @return array<int, array<string, string>>
+     */
+    private static function showLangTables()
+    {
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            return Db::getInstance()->executeS(
+                'SELECT tablename AS ' . Db::quoteIdentifier('Tables_in_' . _DB_NAME_) . '
+                FROM pg_catalog.pg_tables
+                WHERE schemaname = \'public\' AND tablename LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ESCAPE \'\\\''
+            );
+        }
+
+        return Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
+    }
+
     private function duplicateRowsFromDefaultShopLang($tableName, $shopDefaultLangId, $shopId)
     {
         // We load all columns from the table
-        $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . $tableName . '`');
+        $columns = self::showColumns($tableName);
 
         // We check if the table contains a column "id_shop".
         // If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language.
@@ -547,7 +609,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         // Format insert fields, they are just normal column names without any prefix.
         $insertFields = [];
         foreach ($columnNames as $columnName) {
-            $insertFields[] = '`' . $columnName . '`';
+            $insertFields[] = Db::quoteIdentifier($columnName);
         }
 
         /*
@@ -559,21 +621,28 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $selectFields = [];
         foreach ($columnNames as $columnName) {
             if ($columnName == 'id_lang') {
-                $selectFields[] = 'l.`id_lang`';
+                $selectFields[] = 'l.id_lang';
             } else {
-                $selectFields[] = 'tl.`' . $columnName . '`';
+                $selectFields[] = 'tl.' . Db::quoteIdentifier($columnName);
             }
         }
 
         // Format the SQL query and run it
         // Entries which already exist are ignored, only new ones are added.
+        // PostgreSQL has no INSERT IGNORE; ON CONFLICT DO NOTHING (no explicit target needed)
+        // achieves the same "skip silently on conflict" behavior.
+        /* @phpstan-ignore-next-line */
+        $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'INSERT IGNORE';
+        /* @phpstan-ignore-next-line */
+        $onConflict = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT DO NOTHING' : '';
         $sql = '
-        INSERT IGNORE INTO `' . $tableName . '` (' . implode(', ', $insertFields) . ')
+        ' . $insertKeyword . ' INTO ' . Db::quoteIdentifier($tableName) . ' (' . implode(', ', $insertFields) . ')
         SELECT ' . implode(', ', $selectFields) . '
-        FROM `' . $tableName . '` tl
-        CROSS JOIN `' . _DB_PREFIX_ . 'lang` l
+        FROM ' . Db::quoteIdentifier($tableName) . ' tl
+        CROSS JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . ' l
         WHERE tl.id_lang = ' . (int) $shopDefaultLangId .
-        ($idShopColumnExists ? ' AND tl.`id_shop` = ' . (int) $shopId : '');
+        ($idShopColumnExists ? ' AND tl.id_shop = ' . (int) $shopId : '') .
+        $onConflict;
 
         return Db::getInstance()->execute($sql);
     }
@@ -589,7 +658,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             }
 
             // Now let's delete all entries in _lang tables for given languages
-            $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '`');
+            $result = self::showTables();
 
             // A key we will be searching for, database returns it in this weird format
             $tableNameKey = 'Tables_in_' . _DB_NAME_;
@@ -601,7 +670,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 }
 
                 // We check if this table contains id_lang column
-                $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . $row[$tableNameKey] . '`');
+                $columns = self::showColumns($row[$tableNameKey]);
                 $idLangColumnExists = false;
                 foreach ($columns as $column) {
                     if ($column['Field'] == 'id_lang') {
@@ -615,7 +684,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 }
 
                 // Delete all entries for this language ID
-                Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . (int) $this->id);
+                Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier($row[$tableNameKey]) . ' WHERE id_lang = ' . (int) $this->id);
             }
 
             // Delete tags
@@ -772,7 +841,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getLocaleById(int $langId): ?string
     {
         $locale = Db::getInstance()->getValue('
-            SELECT `locale` FROM `' . _DB_PREFIX_ . 'lang` WHERE `id_lang` = ' . $langId
+            SELECT locale FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . ' WHERE id_lang = ' . $langId
         );
 
         if (!$locale) {
@@ -821,7 +890,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         $key = 'Language::getIdByIso_' . $iso_code;
         if ($no_cache || !Cache::isStored($key)) {
-            $id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
+            $id_lang = Db::getInstance()->getValue('SELECT id_lang FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . ' WHERE iso_code = \'' . pSQL(strtolower($iso_code)) . '\'');
             if (empty($id_lang)) {
                 return null;
             }
@@ -848,9 +917,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if ($noCache || !Cache::isStored($key)) {
             $idLang = Db::getInstance()
                 ->getValue(
-                    'SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang`
-                    WHERE `locale` = \'' . pSQL(strtolower($locale)) . '\'
-                    OR `language_code` = \'' . pSQL(strtolower($locale)) . '\''
+                    'SELECT id_lang FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . '
+                    WHERE locale = \'' . pSQL(strtolower($locale)) . '\'
+                    OR language_code = \'' . pSQL(strtolower($locale)) . '\''
                 );
 
             Cache::store($key, $idLang);
@@ -938,7 +1007,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             throw new PrestaShopException(sprintf('Invalid language ISO code: %s', $iso_code));
         }
 
-        return Db::getInstance()->getValue('SELECT `language_code` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
+        return Db::getInstance()->getValue('SELECT language_code FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . ' WHERE iso_code = \'' . pSQL(strtolower($iso_code)) . '\'');
     }
 
     /**
@@ -969,9 +1038,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         // That way using only one query we get either the exact wanted language
         // or a close match.
         $id_lang = Db::getInstance()->getValue(
-            'SELECT `id_lang`, IF(language_code = \'' . pSQL($code) . '\', 0, LENGTH(language_code)) as found
-			FROM `' . _DB_PREFIX_ . 'lang`
-			WHERE LEFT(`language_code`,2) = \'' . pSQL($lang) . '\'
+            'SELECT id_lang, CASE WHEN language_code = \'' . pSQL($code) . '\' THEN 0 ELSE LENGTH(language_code) END as found
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . '
+			WHERE LEFT(language_code,2) = \'' . pSQL($lang) . '\'
 			ORDER BY found ASC'
         );
 
@@ -994,7 +1063,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)
             ->executeS(
-                'SELECT `id_lang`, `iso_code` FROM `' . _DB_PREFIX_ . 'lang` ' . ($active ? 'WHERE active = 1' : '')
+                'SELECT id_lang, iso_code FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . ' ' . ($active ? 'WHERE active = 1' : '')
             );
     }
 
@@ -1010,15 +1079,15 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function copyLanguageData($from, $to)
     {
-        $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '`');
+        $result = self::showTables();
         foreach ($result as $row) {
             if (preg_match('/_lang/', $row['Tables_in_' . _DB_NAME_]) && $row['Tables_in_' . _DB_NAME_] != _DB_PREFIX_ . 'lang') {
-                $result2 = Db::getInstance()->executeS('SELECT * FROM `' . $row['Tables_in_' . _DB_NAME_] . '` WHERE `id_lang` = ' . (int) $from);
+                $result2 = Db::getInstance()->executeS('SELECT * FROM ' . Db::quoteIdentifier($row['Tables_in_' . _DB_NAME_]) . ' WHERE id_lang = ' . (int) $from);
                 if (!count($result2)) {
                     continue;
                 }
-                Db::getInstance()->execute('DELETE FROM `' . $row['Tables_in_' . _DB_NAME_] . '` WHERE `id_lang` = ' . (int) $to);
-                $query = 'INSERT INTO `' . $row['Tables_in_' . _DB_NAME_] . '` VALUES ';
+                Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier($row['Tables_in_' . _DB_NAME_]) . ' WHERE id_lang = ' . (int) $to);
+                $query = 'INSERT INTO ' . Db::quoteIdentifier($row['Tables_in_' . _DB_NAME_]) . ' VALUES ';
                 /** @var array<string, int|string|null> $row2 */
                 foreach ($result2 as $row2) {
                     $query .= '(';
@@ -1043,9 +1112,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         static::$_LANGUAGES = [];
 
-        $sql = 'SELECT l.*, ls.`id_shop`
-				FROM `' . _DB_PREFIX_ . 'lang` l
-				LEFT JOIN `' . _DB_PREFIX_ . 'lang_shop` ls ON (l.id_lang = ls.id_lang)';
+        $sql = 'SELECT l.*, ls.id_shop
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . ' l
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang_shop') . ' ls ON (l.id_lang = ls.id_lang)';
 
         $result = Db::getInstance()->executeS($sql);
         if (!is_array($result)) {
@@ -1067,7 +1136,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         static::$_LANGUAGES = [];
 
-        $result = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'lang`');
+        $result = Db::getInstance()->executeS('SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . '');
 
         foreach ($result as $row) {
             $idLang = (int) $row['id_lang'];
@@ -1152,7 +1221,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         if (static::$_cache_language_installation === null) {
             static::$_cache_language_installation = [];
-            $result = Db::getInstance()->executeS('SELECT `id_lang`, `iso_code` FROM `' . _DB_PREFIX_ . 'lang`');
+            $result = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . '');
             foreach ($result as $row) {
                 static::$_cache_language_installation[$row['iso_code']] = $row['id_lang'];
             }
@@ -1165,7 +1234,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         if (static::$_cache_language_installation_by_locale === null) {
             static::$_cache_language_installation_by_locale = [];
-            $result = Db::getInstance()->executeS('SELECT `id_lang`, `locale` FROM `' . _DB_PREFIX_ . 'lang`');
+            $result = Db::getInstance()->executeS('SELECT id_lang, locale FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . '');
             foreach ($result as $row) {
                 static::$_cache_language_installation_by_locale[$row['locale']] = $row['id_lang'];
             }
@@ -1182,9 +1251,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         if (!isset(static::$countActiveLanguages[$id_shop])) {
             static::$countActiveLanguages[$id_shop] = Db::getInstance()->getValue('
-				SELECT COUNT(DISTINCT l.id_lang) FROM `' . _DB_PREFIX_ . 'lang` l
+				SELECT COUNT(DISTINCT l.id_lang) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . ' l
 				JOIN ' . _DB_PREFIX_ . 'lang_shop lang_shop ON (lang_shop.id_lang = l.id_lang AND lang_shop.id_shop = ' . (int) $id_shop . ')
-				WHERE l.`active` = 1
+				WHERE l.active = 1
 			');
         }
 
@@ -1515,7 +1584,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if (!empty($langId)) {
             $lang = new static($langId);
             /** @var Language $lang */
-            $rows = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
+            $rows = self::showLangTables();
             if (!empty($rows)) {
                 // get all values
                 $tableNames = [];
@@ -1563,9 +1632,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function updateMultilangFromCldr($lang)
     {
         // Fetch all countries from DB in specified locale
-        $sql = 'SELECT c.`iso_code`, cl.* FROM `' . _DB_PREFIX_ . 'country` c
-                INNER JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON c.`id_country` = cl.`id_country`
-                WHERE cl.`id_lang` = "' . (int) $lang->id . '" ';
+        $sql = 'SELECT c.iso_code, cl.* FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'country') . ' c
+                INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'country_lang') . ' cl ON c.id_country = cl.id_country
+                WHERE cl.id_lang = ' . (int) $lang->id . ' ';
         $translatableCountries = Db::getInstance()->executeS($sql, true, false);
 
         if (empty($translatableCountries)) {
@@ -1580,10 +1649,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 continue;
             }
             // Translate the country name
-            $sql = 'UPDATE `' . _DB_PREFIX_ . 'country_lang`
-                    SET `name` = "' . pSQL($langCountries[$isoCode]) . '"
-                    WHERE `id_country` = "' . (int) $country['id_country'] . '"
-                    AND `id_lang` = "' . (int) $lang->id . '" LIMIT 1;';
+            $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'country_lang') . '
+                    SET name = \'' . pSQL($langCountries[$isoCode]) . '\'
+                    WHERE id_country = ' . (int) $country['id_country'] . '
+                    AND id_lang = ' . (int) $lang->id . ';';
             Db::getInstance()->execute($sql);
         }
     }

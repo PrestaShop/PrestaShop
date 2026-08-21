@@ -279,14 +279,14 @@ class AdminCartRulesControllerCore extends AdminController
         // All the associations are deleted for an update, then recreated when we call the "afterAdd" method
         $id_cart_rule = Tools::getValue('id_cart_rule');
         foreach (['country', 'carrier', 'group', 'product_rule_group', 'shop'] as $type) {
-            Db::getInstance()->delete('cart_rule_' . $type, '`id_cart_rule` = ' . (int) $id_cart_rule);
+            Db::getInstance()->delete('cart_rule_' . $type, Db::quoteIdentifier('id_cart_rule') . ' = ' . (int) $id_cart_rule);
         }
 
-        Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule_product_rule_group`
-			WHERE `' . _DB_PREFIX_ . 'cart_rule_product_rule`.`id_product_rule_group` = `' . _DB_PREFIX_ . 'cart_rule_product_rule_group`.`id_product_rule_group`)');
-        Db::getInstance()->delete('cart_rule_product_rule_value', 'NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule_product_rule`
-			WHERE `' . _DB_PREFIX_ . 'cart_rule_product_rule_value`.`id_product_rule` = `' . _DB_PREFIX_ . 'cart_rule_product_rule`.`id_product_rule`)');
-        Db::getInstance()->delete('cart_rule_combination', '`id_cart_rule_1` = ' . (int) $id_cart_rule . ' OR `id_cart_rule_2` = ' . (int) $id_cart_rule);
+        Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_product_rule_group') . '
+			WHERE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_product_rule') . '.' . Db::quoteIdentifier('id_product_rule_group') . ' = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_product_rule_group') . '.' . Db::quoteIdentifier('id_product_rule_group') . ')');
+        Db::getInstance()->delete('cart_rule_product_rule_value', 'NOT EXISTS (SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_product_rule') . '
+			WHERE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_product_rule_value') . '.' . Db::quoteIdentifier('id_product_rule') . ' = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_product_rule') . '.' . Db::quoteIdentifier('id_product_rule') . ')');
+        Db::getInstance()->delete('cart_rule_combination', Db::quoteIdentifier('id_cart_rule_1') . ' = ' . (int) $id_cart_rule . ' OR ' . Db::quoteIdentifier('id_cart_rule_2') . ' = ' . (int) $id_cart_rule);
 
         $this->afterAdd($current_object);
     }
@@ -331,7 +331,7 @@ class AdminCartRulesControllerCore extends AdminController
             foreach ($employee_shops as $id) {
                 $values[] = '(' . (int) $currentObject->id . ',' . (int) $id . ')';
             }
-            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_shop` (`id_cart_rule`, `id_shop`) VALUES ' . implode(',', $values));
+            Db::getInstance()->execute('INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_shop') . ' (' . Db::quoteIdentifier('id_cart_rule') . ', ' . Db::quoteIdentifier('id_shop') . ') VALUES ' . implode(',', $values));
         }
         // Add restrictions for generic entities like country, carrier and group
         foreach (['country', 'carrier', 'group', 'shop'] as $type) {
@@ -340,15 +340,15 @@ class AdminCartRulesControllerCore extends AdminController
                 foreach ($array as $id) {
                     $values[] = '(' . (int) $currentObject->id . ',' . (int) $id . ')';
                 }
-                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_' . $type . '` (`id_cart_rule`, `id_' . $type . '`) VALUES ' . implode(',', $values));
+                Db::getInstance()->execute('INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_' . $type) . ' (' . Db::quoteIdentifier('id_cart_rule') . ', ' . Db::quoteIdentifier('id_' . $type) . ') VALUES ' . implode(',', $values));
             }
         }
 
         // Add cart rule restrictions
         if (Tools::getValue('cart_rule_unselected') && is_array($unselectedIds = Tools::getValue('cart_rule_unselected')) && count($unselectedIds)) {
             $allCartRuleIds = Db::getInstance()->executeS('
-                SELECT id_cart_rule 
-                FROM `' . _DB_PREFIX_ . 'cart_rule`
+                SELECT id_cart_rule
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule') . '
                 WHERE id_cart_rule != ' . (int) $currentObject->id
             );
 
@@ -365,21 +365,21 @@ class AdminCartRulesControllerCore extends AdminController
                     $values[] = '(' . (int) $currentObject->id . ',' . (int) $id . ')';
                 }
 
-                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) VALUES ' . implode(',', $values));
+                Db::getInstance()->execute('INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_combination') . ' (' . Db::quoteIdentifier('id_cart_rule_1') . ', ' . Db::quoteIdentifier('id_cart_rule_2') . ') VALUES ' . implode(',', $values));
             }
         }
 
         // Add product rule restrictions
         if (Tools::getValue('product_restriction') && is_array($ruleGroupArray = Tools::getValue('product_rule_group')) && count($ruleGroupArray)) {
             foreach ($ruleGroupArray as $ruleGroupId) {
-                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`)
+                Db::getInstance()->execute('INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_product_rule_group') . ' (' . Db::quoteIdentifier('id_cart_rule') . ', ' . Db::quoteIdentifier('quantity') . ')
 				VALUES (' . (int) $currentObject->id . ', ' . (int) Tools::getValue('product_rule_group_' . $ruleGroupId . '_quantity') . ')');
                 $id_product_rule_group = Db::getInstance()->Insert_ID();
 
                 if (is_array($ruleArray = Tools::getValue('product_rule_' . $ruleGroupId)) && count($ruleArray)) {
                     foreach ($ruleArray as $ruleId) {
-                        Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule` (`id_product_rule_group`, `type`)
-						VALUES (' . (int) $id_product_rule_group . ', "' . pSQL(Tools::getValue('product_rule_' . $ruleGroupId . '_' . $ruleId . '_type')) . '")');
+                        Db::getInstance()->execute('INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_product_rule') . ' (' . Db::quoteIdentifier('id_product_rule_group') . ', ' . Db::quoteIdentifier('type') . ')
+						VALUES (' . (int) $id_product_rule_group . ', \'' . pSQL(Tools::getValue('product_rule_' . $ruleGroupId . '_' . $ruleId . '_type')) . '\')');
                         $id_product_rule = Db::getInstance()->Insert_ID();
 
                         $values = [];
@@ -388,7 +388,7 @@ class AdminCartRulesControllerCore extends AdminController
                         }
                         $values = array_unique($values);
                         if (count($values)) {
-                            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) VALUES ' . implode(',', $values));
+                            Db::getInstance()->execute('INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_product_rule_value') . ' (' . Db::quoteIdentifier('id_product_rule') . ', ' . Db::quoteIdentifier('id_item') . ') VALUES ' . implode(',', $values));
                         }
                     }
                 }
@@ -398,36 +398,44 @@ class AdminCartRulesControllerCore extends AdminController
         // If the new rule has no cart rule restriction, then it must be added to the white list of the other cart rules that have restrictions
         if (!Tools::getValue('cart_rule_restriction')) {
             Db::getInstance()->execute('
-			INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
-				SELECT id_cart_rule, ' . (int) $currentObject->id . ' FROM `' . _DB_PREFIX_ . 'cart_rule` WHERE cart_rule_restriction = 1
+			INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_combination') . ' (' . Db::quoteIdentifier('id_cart_rule_1') . ', ' . Db::quoteIdentifier('id_cart_rule_2') . ') (
+				SELECT id_cart_rule, ' . (int) $currentObject->id . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule') . ' WHERE cart_rule_restriction = 1
 			)');
         } else {
             // And if the new cart rule has restrictions, previously unrestricted cart rules may now be restricted (a mug of coffee is strongly advised to understand this sentence)
             $ruleCombinations = Db::getInstance()->executeS('
 			SELECT cr.id_cart_rule
-			FROM ' . _DB_PREFIX_ . 'cart_rule cr
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule') . ' cr
 			WHERE cr.id_cart_rule != ' . (int) $currentObject->id . '
 			AND cr.cart_rule_restriction = 0
 			AND NOT EXISTS (
 				SELECT 1
-				FROM ' . _DB_PREFIX_ . 'cart_rule_combination
-				WHERE cr.id_cart_rule = ' . _DB_PREFIX_ . 'cart_rule_combination.id_cart_rule_2 AND ' . (int) $currentObject->id . ' = id_cart_rule_1
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_combination') . '
+				WHERE cr.id_cart_rule = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_combination') . '.id_cart_rule_2 AND ' . (int) $currentObject->id . ' = id_cart_rule_1
 			)
 			AND NOT EXISTS (
 				SELECT 1
-				FROM ' . _DB_PREFIX_ . 'cart_rule_combination
-				WHERE cr.id_cart_rule = ' . _DB_PREFIX_ . 'cart_rule_combination.id_cart_rule_1 AND ' . (int) $currentObject->id . ' = id_cart_rule_2
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_combination') . '
+				WHERE cr.id_cart_rule = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_combination') . '.id_cart_rule_1 AND ' . (int) $currentObject->id . ' = id_cart_rule_2
 			)
 			');
+            /* @phpstan-ignore-next-line */
+            if (_DB_TYPE_ == 'pgsql') {
+                $insertKeyword = 'INSERT INTO';
+                $onConflict = ' ON CONFLICT (id_cart_rule_1, id_cart_rule_2) DO NOTHING';
+            } else {
+                $insertKeyword = 'INSERT IGNORE INTO';
+                $onConflict = '';
+            }
             foreach ($ruleCombinations as $incompatibleRule) {
-                Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'cart_rule` SET cart_rule_restriction = 1 WHERE id_cart_rule = ' . (int) $incompatibleRule['id_cart_rule'] . ' LIMIT 1');
+                Db::getInstance()->execute('UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule') . ' SET cart_rule_restriction = 1 WHERE id_cart_rule = ' . (int) $incompatibleRule['id_cart_rule']);
                 Db::getInstance()->execute('
-				INSERT IGNORE INTO `' . _DB_PREFIX_ . 'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
-					SELECT id_cart_rule, ' . (int) $incompatibleRule['id_cart_rule'] . ' FROM `' . _DB_PREFIX_ . 'cart_rule`
+				' . $insertKeyword . ' ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_combination') . ' (' . Db::quoteIdentifier('id_cart_rule_1') . ', ' . Db::quoteIdentifier('id_cart_rule_2') . ') (
+					SELECT id_cart_rule, ' . (int) $incompatibleRule['id_cart_rule'] . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule') . '
 					WHERE active = 1
 					AND id_cart_rule != ' . (int) $currentObject->id . '
 					AND id_cart_rule != ' . (int) $incompatibleRule['id_cart_rule'] . '
-				)');
+				)' . $onConflict);
             }
         }
     }
@@ -522,10 +530,10 @@ class AdminCartRulesControllerCore extends AdminController
                 $products = ['selected' => [], 'unselected' => []];
                 $results = Db::getInstance()->executeS('
 				SELECT DISTINCT name, p.id_product as id
-				FROM ' . _DB_PREFIX_ . 'product p
-				LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
-					ON (p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = ' . (int) Context::getContext()->language->id . Shop::addSqlRestrictionOnLang('pl') . ')
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl
+					ON (p.' . Db::quoteIdentifier('id_product') . ' = pl.' . Db::quoteIdentifier('id_product') . '
+					AND pl.' . Db::quoteIdentifier('id_lang') . ' = ' . (int) Context::getContext()->language->id . Shop::addSqlRestrictionOnLang('pl') . ')
 				' . Shop::addSqlAssociation('product', 'p') . '
 				WHERE id_lang = ' . (int) Context::getContext()->language->id . '
 				ORDER BY name');
@@ -619,19 +627,19 @@ class AdminCartRulesControllerCore extends AdminController
             $display_shop_name = Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP;
             $search_query = trim(Tools::getValue('q'));
             $customers = Db::getInstance()->executeS('
-			SELECT c.`id_customer`, c.`email`, CONCAT(c.`firstname`, \' \', c.`lastname`) as cname' .
+			SELECT c.' . Db::quoteIdentifier('id_customer') . ', c.' . Db::quoteIdentifier('email') . ', CONCAT(c.firstname, \' \', c.lastname) as cname' .
                 ($display_shop_name ? ', s.name as shop_name' : '') . '
-			FROM `' . _DB_PREFIX_ . 'customer` c ' .
-                ($display_shop_name ? ' INNER JOIN `' . _DB_PREFIX_ . 'shop` s ON s.id_shop = c.id_shop' : '') . '
-			WHERE c.`deleted` = 0 AND c.is_guest = 0 AND c.active = 1
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c ' .
+                ($display_shop_name ? ' INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop') . ' s ON s.id_shop = c.id_shop' : '') . '
+			WHERE c.' . Db::quoteIdentifier('deleted') . ' = 0 AND c.is_guest = 0 AND c.active = 1
 			AND (
-				c.`id_customer` = ' . (int) $search_query . '
-				OR c.`email` LIKE "%' . pSQL($search_query) . '%"
-				OR c.`firstname` LIKE "%' . pSQL($search_query) . '%"
-				OR c.`lastname` LIKE "%' . pSQL($search_query) . '%"
+				c.' . Db::quoteIdentifier('id_customer') . ' = ' . (int) $search_query . '
+				OR c.' . Db::quoteIdentifier('email') . ' LIKE \'%' . pSQL($search_query) . '%\'
+				OR c.firstname LIKE \'%' . pSQL($search_query) . '%\'
+				OR c.lastname LIKE \'%' . pSQL($search_query) . '%\'
 			)
 			' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c') . '
-			ORDER BY c.`firstname`, c.`lastname`
+			ORDER BY c.firstname, c.lastname
 			LIMIT 50');
             die(json_encode($customers));
         }

@@ -134,8 +134,8 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
             $fieldName = 'carrier' === $restrictionType ? 'reference' : $restrictionType;
 
             $this->connection->executeUpdate('
-                INSERT INTO `' . $this->getTableNameForRestriction($restrictionType) . '`
-                (`id_module`, `id_shop`, `id_' . $fieldName . '`)
+                INSERT INTO ' . $this->connection->quoteIdentifier($this->getTableNameForRestriction($restrictionType)) . '
+                (id_module, id_shop, ' . $this->connection->quoteIdentifier('id_' . $fieldName) . ')
                 VALUES ' . implode(',', $newConfiguration));
         }
     }

@@ -224,27 +224,30 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $this->addRowAction('view');
         $this->addRowAction('delete');
 
+        /* @phpstan-ignore-next-line */
+        $groupConcatMessages = _DB_TYPE_ == 'pgsql' ? 'STRING_AGG(cm.message, \',\')' : 'GROUP_CONCAT(cm.message)';
+
         $this->_select = '
-			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(cm.`message`) as messages, cm.private,
+			CONCAT(c.firstname, \' \', c.lastname) as customer, cl.name as contact, l.name as language, ' . $groupConcatMessages . ' as messages, cm.private,
 			(
-				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
-				FROM `' . _DB_PREFIX_ . 'customer_message` cm2
-				INNER JOIN ' . _DB_PREFIX_ . 'employee e
-					ON e.`id_employee` = cm2.`id_employee`
+				SELECT COALESCE(CONCAT(LEFT(e.firstname, 1), \'. \', e.lastname), \'--\')
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' cm2
+				INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . ' e
+					ON e.id_employee = cm2.id_employee
 				WHERE cm2.id_employee > 0
-					AND cm2.`id_customer_thread` = a.`id_customer_thread`
-				ORDER BY cm2.`date_add` DESC LIMIT 1
+					AND cm2.id_customer_thread = a.id_customer_thread
+				ORDER BY cm2.date_add DESC LIMIT 1
 			) as employee';
 
         $this->_join = '
-			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
-				ON c.`id_customer` = a.`id_customer`
-			LEFT JOIN `' . _DB_PREFIX_ . 'customer_message` cm
-				ON cm.`id_customer_thread` = a.`id_customer_thread`
-			LEFT JOIN `' . _DB_PREFIX_ . 'lang` l
-				ON l.`id_lang` = a.`id_lang`
-			LEFT JOIN `' . _DB_PREFIX_ . 'contact_lang` cl
-				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = ' . (int) $this->context->language->id . ')';
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c
+				ON c.id_customer = a.id_customer
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' cm
+				ON cm.id_customer_thread = a.id_customer_thread
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . ' l
+				ON l.id_lang = a.id_lang
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'contact_lang') . ' cl
+				ON (cl.id_contact = a.id_contact AND cl.id_lang = ' . (int) $this->context->language->id . ')';
 
         if ($id_order = Tools::getValue('id_order')) {
             $this->_where .= ' AND id_order = ' . (int) $id_order;
@@ -260,10 +263,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         $params = [
             $this->trans('Total threads', [], 'Admin.Catalog.Feature') => $all = CustomerThread::getTotalCustomerThreads(),
-            $this->trans('Threads pending', [], 'Admin.Catalog.Feature') => $pending = CustomerThread::getTotalCustomerThreads('status LIKE "%pending%"'),
+            $this->trans('Threads pending', [], 'Admin.Catalog.Feature') => $pending = CustomerThread::getTotalCustomerThreads("status LIKE '%pending%'"),
             $this->trans('Total number of customer messages', [], 'Admin.Catalog.Feature') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
             $this->trans('Total number of employee messages', [], 'Admin.Catalog.Feature') => CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
-            $this->trans('Unread threads', [], 'Admin.Catalog.Feature') => $unread = CustomerThread::getTotalCustomerThreads('status = "open"'),
+            $this->trans('Unread threads', [], 'Admin.Catalog.Feature') => $unread = CustomerThread::getTotalCustomerThreads("status = 'open'"),
             $this->trans('Closed threads', [], 'Admin.Catalog.Feature') => $all - ($unread + $pending),
         ];
 
@@ -926,7 +929,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $id_thread = Tools::getValue('id_thread');
         $messages = CustomerThread::getMessageCustomerThreads($id_thread);
         if (count($messages)) {
-            Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customer_message` set `read` = 1 WHERE `id_employee` = ' . (int) $this->context->employee->id . ' AND `id_customer_thread` = ' . (int) $id_thread);
+            Db::getInstance()->execute('UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' set ' . Db::quoteIdentifier('read') . ' = 1 WHERE id_employee = ' . (int) $this->context->employee->id . ' AND id_customer_thread = ' . (int) $id_thread);
         }
     }
 
@@ -1063,9 +1066,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
             // Creating an md5 to check if message has been allready processed
             $md5 = md5($overview->date . $overview->from . $subject . $overview->msgno);
             $exist = Db::getInstance()->getValue(
-                'SELECT `md5_header`
-						 FROM `' . _DB_PREFIX_ . 'customer_message_sync_imap`
-						 WHERE `md5_header` = \'' . pSQL($md5) . '\''
+                'SELECT ' . Db::quoteIdentifier('md5_header') . '
+						 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message_sync_imap') . '
+						 WHERE ' . Db::quoteIdentifier('md5_header') . ' = \'' . pSQL($md5) . '\''
             );
             if ($exist) {
                 if (Configuration::get('PS_SAV_IMAP_DELETE_MSG')) {
@@ -1179,7 +1182,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         }
                     }
                 }
-                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_message_sync_imap` (`md5_header`) VALUES (\'' . pSQL($md5) . '\')');
+                Db::getInstance()->execute('INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message_sync_imap') . ' (' . Db::quoteIdentifier('md5_header') . ') VALUES (\'' . pSQL($md5) . '\')');
             }
         }
         imap_expunge($mbox);

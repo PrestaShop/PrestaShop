@@ -69,7 +69,7 @@ final class CreditSlipQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT slip.`id_order_slip`)')
+            ->select('COUNT(DISTINCT slip.id_order_slip)')
         ;
 
         return $qb;

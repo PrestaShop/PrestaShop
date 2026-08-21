@@ -367,10 +367,10 @@ final class ProductImportHandler extends AbstractImportHandler
 
             if ($productReference) {
                 $statement = $this->connection->query(
-                    'SELECT p.`id_product`
-                    FROM `' . $this->productTable . '` p
+                    'SELECT p.id_product
+                    FROM ' . $this->connection->quoteIdentifier($this->productTable) . ' p
                     ' . Shop::addSqlAssociation('product', 'p') . '
-                    WHERE p.`reference` = "' . pSQL($productReference) . '"'
+                    WHERE p.reference = \'' . pSQL($productReference) . '\''
                 );
                 $row = $statement->fetch();
 
@@ -796,15 +796,15 @@ final class ProductImportHandler extends AbstractImportHandler
         $result = true;
 
         if ($productExistsById || $productExistsByReference) {
-            $sqlPart = 'SELECT product_shop.`date_add`, p.`id_product`
-                FROM `' . _DB_PREFIX_ . 'product` p
+            $sqlPart = 'SELECT product_shop.date_add, p.id_product
+                FROM ' . $this->connection->quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
                 ' . Shop::addSqlAssociation('product', 'p') . '
                 WHERE ';
 
             if ($productExistsByReference) {
-                $sqlPart .= 'p.`reference` = "' . pSQL($product->reference) . '"';
+                $sqlPart .= 'p.reference = \'' . pSQL($product->reference) . '\'';
             } else {
-                $sqlPart .= 'p.`id_product` = ' . (int) $product->id;
+                $sqlPart .= 'p.id_product = ' . (int) $product->id;
             }
 
             $statement = $this->connection->query($sqlPart);

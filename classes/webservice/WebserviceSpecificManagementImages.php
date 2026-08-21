@@ -642,10 +642,10 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     {
         $customizations = [];
         if (!$results = Db::getInstance()->executeS('
-			SELECT DISTINCT c.`id_customization`
-			FROM `' . _DB_PREFIX_ . 'customization` c
-			NATURAL JOIN `' . _DB_PREFIX_ . 'customization_field` cf
-			WHERE c.`id_cart` = ' . (int) $this->wsObject->urlSegment[2] . '
+			SELECT DISTINCT c.id_customization
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization') . ' c
+			NATURAL JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . ' cf
+			WHERE c.id_cart = ' . (int) $this->wsObject->urlSegment[2] . '
 			AND type = 0')) {
             return [];
         }
@@ -660,7 +660,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     {
         $normal_image_sizes = ImageType::getImagesTypes();
         if (empty($this->wsObject->urlSegment[2])) {
-            $results = Db::getInstance()->executeS('SELECT DISTINCT `id_cart` FROM `' . _DB_PREFIX_ . 'customization`');
+            $results = Db::getInstance()->executeS('SELECT DISTINCT id_cart FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization'));
             $ids = [];
             foreach ($results as $result) {
                 $ids[] = $result['id_cart'];
@@ -686,7 +686,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             if ($this->wsObject->method == 'GET') {
                 $results = Db::getInstance()->executeS(
                     'SELECT *
-					FROM `' . _DB_PREFIX_ . 'customized_data`
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customized_data') . '
 					WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . ' AND type = 0'
                 );
 
@@ -702,9 +702,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             if ($this->wsObject->method == 'GET') {
                 $results = Db::getInstance()->executeS(
                     'SELECT *
-					FROM `' . _DB_PREFIX_ . 'customized_data`
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customized_data') . '
 					WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . '
-					AND `index` = ' . (int) $this->wsObject->urlSegment[4]
+					AND ' . Db::quoteIdentifier('index') . ' = ' . (int) $this->wsObject->urlSegment[4]
                 );
                 if (empty($results[0]) || empty($results[0]['value'])) {
                     throw new WebserviceException('This image does not exist on disk', [61, 500]);
@@ -720,7 +720,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 }
                 $results = Db::getInstance()->executeS(
                     'SELECT id_customization_field
-					FROM `' . _DB_PREFIX_ . 'customization_field`
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . '
 					WHERE id_customization_field = ' . (int) $this->wsObject->urlSegment[4] . '
 					AND type = 0'
                 );
@@ -729,9 +729,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 }
                 $results = Db::getInstance()->executeS(
                     'SELECT *
-					FROM `' . _DB_PREFIX_ . 'customized_data`
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customized_data') . '
 					WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . '
-					AND `index` = ' . (int) $this->wsObject->urlSegment[4] . '
+					AND ' . Db::quoteIdentifier('index') . ' = ' . (int) $this->wsObject->urlSegment[4] . '
 					AND type = 0'
                 );
                 if (!empty($results)) { // customization field exists and has no value
@@ -742,9 +742,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             }
             $results = Db::getInstance()->executeS(
                 'SELECT *
-				FROM `' . _DB_PREFIX_ . 'customized_data`
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customized_data') . '
 				WHERE id_customization = ' . (int) $this->wsObject->urlSegment[3] . '
-				AND `index` = ' . (int) $this->wsObject->urlSegment[4]
+				AND ' . Db::quoteIdentifier('index') . ' = ' . (int) $this->wsObject->urlSegment[4]
             );
             if (empty($results[0]) || empty($results[0]['value'])) {
                 throw new WebserviceException('This image does not exist on disk', [61, 500]);
@@ -1222,7 +1222,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         }
                         @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);
 
-                        $query = 'INSERT INTO `' . _DB_PREFIX_ . 'customized_data` (`id_customization`, `type`, `index`, `value`)
+                        $query = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customized_data') . ' (id_customization, type, ' . Db::quoteIdentifier('index') . ', value)
 							VALUES (' . (int) $this->wsObject->urlSegment[3] . ', 0, ' . (int) $this->wsObject->urlSegment[4] . ', \'' . $filename . '\')';
 
                         if (!Db::getInstance()->execute($query)) {

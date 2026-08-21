@@ -56,7 +56,7 @@ abstract class AbstractObjectModelHandler
 
         Db::getInstance()->delete(
             $tableName . '_shop',
-            '`' . $primaryKeyName . '` = ' . $primaryKeyValue . $excludeShopsCondtion
+            Db::quoteIdentifier($primaryKeyName) . ' = ' . $primaryKeyValue . $excludeShopsCondtion
         );
 
         $insert = [];

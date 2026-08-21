@@ -135,7 +135,7 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             'c',
             $this->dbPrefix . 'category_product',
             'cp',
-            'c.`id_category` = cp.id_category'
+            'c.id_category = cp.id_category'
         );
 
         $subSelect = $this->connection->createQueryBuilder()

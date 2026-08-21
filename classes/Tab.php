@@ -135,12 +135,12 @@ class TabCore extends ObjectModel
              */
             $actionSlug = pSQL($slug . '_' . $action);
             $authorizationRole = Db::getInstance()->getRow(
-                'SELECT slug FROM `' . _DB_PREFIX_ . 'authorization_role` ' .
-                'WHERE `slug` = "' . $actionSlug . '"'
+                'SELECT slug FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'authorization_role') . ' ' .
+                'WHERE slug = \'' . $actionSlug . '\''
             );
             if (empty($authorizationRole)) {
                 Db::getInstance()->execute(
-                    'INSERT INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`) VALUES ("' . $actionSlug . '")'
+                    'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'authorization_role') . ' (slug) VALUES (\'' . $actionSlug . '\')'
                 );
             }
         }
@@ -163,7 +163,7 @@ class TabCore extends ObjectModel
             $slug = Permission::PREFIX_TAB . strtoupper($this->class_name);
 
             foreach (['CREATE', 'READ', 'UPDATE', 'DELETE'] as $action) {
-                Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $slug . '_' . $action . '"');
+                Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'authorization_role') . ' WHERE slug = \'' . $slug . '_' . $action . '\'');
             }
 
             if (is_array(self::$_getIdFromClassName) && isset(self::$_getIdFromClassName[strtolower($this->class_name)])) {
@@ -215,8 +215,8 @@ class TabCore extends ObjectModel
         $cacheId = 'getCurrentParentId_' . Tools::strtolower(Tools::getValue('controller'));
         if (!Cache::isStored($cacheId)) {
             $value = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `id_parent`
-			FROM `' . _DB_PREFIX_ . 'tab`
+			SELECT id_parent
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . '
 			WHERE LOWER(class_name) = \'' . pSQL(Tools::strtolower(Tools::getValue('controller'))) . '\'');
             if (!$value) {
                 $value = -1;
@@ -241,9 +241,9 @@ class TabCore extends ObjectModel
             /* Tabs selection */
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
                 'SELECT *
-				FROM `' . _DB_PREFIX_ . 'tab` t
-				LEFT JOIN `' . _DB_PREFIX_ . 'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = ' . (int) $idLang . ')
-				WHERE t.`id_tab` = ' . (int) $idTab
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . ' t
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab_lang') . ' tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $idLang . ')
+				WHERE t.id_tab = ' . (int) $idTab
             );
             Cache::store($cacheId, $result);
 
@@ -263,9 +263,9 @@ class TabCore extends ObjectModel
         $list = [];
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT t.`class_name`, t.`module`
-			FROM `' . _DB_PREFIX_ . 'tab` t
-			WHERE t.`module` IS NOT NULL AND t.`module` != ""');
+			SELECT t.class_name, t.module
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . ' t
+			WHERE t.module IS NOT NULL AND t.module != \'\'');
 
         if (is_array($result)) {
             foreach ($result as $detail) {
@@ -291,9 +291,9 @@ class TabCore extends ObjectModel
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
 				SELECT t.*, tl.name
-				FROM `' . _DB_PREFIX_ . 'tab` t
-				LEFT JOIN `' . _DB_PREFIX_ . 'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = ' . (int) $idLang . ')
-				ORDER BY t.`position` ASC'
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . ' t
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab_lang') . ' tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $idLang . ')
+				ORDER BY t.position ASC'
             );
 
             if (is_array($result)) {
@@ -331,7 +331,7 @@ class TabCore extends ObjectModel
         $className = strtolower($className);
         if (empty(self::$_getIdFromClassName)) {
             self::$_getIdFromClassName = [];
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `' . _DB_PREFIX_ . 'tab`', true, false);
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . '', true, false);
 
             if (is_array($result)) {
                 foreach ($result as $row) {
@@ -431,8 +431,8 @@ class TabCore extends ObjectModel
         return (int) Db::getInstance()->getValue(
             '
 			SELECT COUNT(*)
-			FROM `' . _DB_PREFIX_ . 'tab` t
-			' . (null !== $idParent ? 'WHERE t.`id_parent` = ' . (int) $idParent : '')
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . ' t
+			' . (null !== $idParent ? 'WHERE t.id_parent = ' . (int) $idParent : '')
         );
     }
 
@@ -446,9 +446,9 @@ class TabCore extends ObjectModel
     public static function getNewLastPosition($idParent)
     {
         return (int) Db::getInstance()->getValue(
-            'SELECT IFNULL(MAX(position), 0) + 1
-			FROM `' . _DB_PREFIX_ . 'tab`
-			WHERE `id_parent` = ' . (int) $idParent
+            'SELECT COALESCE(MAX(position), 0) + 1
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . '
+			WHERE id_parent = ' . (int) $idParent
         );
     }
 
@@ -471,7 +471,7 @@ class TabCore extends ObjectModel
         $newPosition = ($direction == 'l') ? $this->position - 1 : $this->position + 1;
         Db::getInstance()->execute(
             '
-			UPDATE `' . _DB_PREFIX_ . 'tab` t
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . ' t
 			SET position = ' . (int) $this->position . '
 			WHERE id_parent = ' . (int) $this->id_parent . '
 				AND position = ' . (int) $newPosition
@@ -491,18 +491,18 @@ class TabCore extends ObjectModel
     public function cleanPositions($idParent)
     {
         $result = Db::getInstance()->executeS('
-			SELECT `id_tab`
-			FROM `' . _DB_PREFIX_ . 'tab`
-			WHERE `id_parent` = ' . (int) $idParent . '
-			ORDER BY `position`
+			SELECT id_tab
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . '
+			WHERE id_parent = ' . (int) $idParent . '
+			ORDER BY position
 		');
         $sizeof = count($result);
         for ($i = 0; $i < $sizeof; ++$i) {
             Db::getInstance()->execute(
                 '
-				UPDATE `' . _DB_PREFIX_ . 'tab`
-				SET `position` = ' . ($i + 1) . '
-				WHERE `id_tab` = ' . (int) $result[$i]['id_tab']
+				UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . '
+				SET position = ' . ($i + 1) . '
+				WHERE id_tab = ' . (int) $result[$i]['id_tab']
             );
         }
 
@@ -521,10 +521,10 @@ class TabCore extends ObjectModel
     {
         if (!$res = Db::getInstance()->executeS(
             '
-			SELECT t.`id_tab`, t.`position`, t.`id_parent`
-			FROM `' . _DB_PREFIX_ . 'tab` t
-			WHERE t.`id_parent` = ' . (int) $this->id_parent . '
-			ORDER BY t.`position` ASC'
+			SELECT t.id_tab, t.position, t.id_parent
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . ' t
+			WHERE t.id_parent = ' . (int) $this->id_parent . '
+			ORDER BY t.position ASC'
         )) {
             return false;
         }
@@ -541,18 +541,18 @@ class TabCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         $result = (Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'tab`
-			SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
-			WHERE `position`
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . '
+			SET position= position ' . ($way ? '- 1' : '+ 1') . '
+			WHERE position
 			' . ($way
-                ? '> ' . (int) $movedTab['position'] . ' AND `position` <= ' . (int) $position
-                : '< ' . (int) $movedTab['position'] . ' AND `position` >= ' . (int) $position) . '
-			AND `id_parent`=' . (int) $movedTab['id_parent'])
+                ? '> ' . (int) $movedTab['position'] . ' AND position <= ' . (int) $position
+                : '< ' . (int) $movedTab['position'] . ' AND position >= ' . (int) $position) . '
+			AND id_parent=' . (int) $movedTab['id_parent'])
         && Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'tab`
-			SET `position` = ' . (int) $position . '
-			WHERE `id_parent` = ' . (int) $movedTab['id_parent'] . '
-			AND `id_tab`=' . (int) $movedTab['id_tab']));
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tab') . '
+			SET position = ' . (int) $position . '
+			WHERE id_parent = ' . (int) $movedTab['id_parent'] . '
+			AND id_tab=' . (int) $movedTab['id_tab']));
 
         return $result;
     }

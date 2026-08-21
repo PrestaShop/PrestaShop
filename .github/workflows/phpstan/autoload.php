@@ -59,6 +59,7 @@ $constantsToDefine = [
     '_LEGACY_DB_PASSWD_' => 'string',
     '_LEGACY_DB_NAME_' => 'string',
     '_LEGACY_MYSQL_ENGINE_' => 'string',
+    '_DB_TYPE_' => 'string',
     '_DB_SERVER_' => 'string',
     '_DB_NAME_' => 'string',
     '_DB_USER_' => 'string',

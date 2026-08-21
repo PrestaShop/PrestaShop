@@ -69,7 +69,7 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('DISTINCT ag.id_attribute_group, agl.name, ag.position, acount.values');
+            ->select('DISTINCT ag.id_attribute_group, agl.name, ag.position, acount.' . $this->connection->quoteIdentifier('values'));
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -103,7 +103,7 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getQueryBuilder(array $filters)
     {
         $subQuery = $this->connection->createQueryBuilder()
-            ->select('COUNT(DISTINCT a.id_attribute) AS `values`, a.id_attribute_group')
+            ->select('COUNT(DISTINCT a.id_attribute) AS ' . $this->connection->quoteIdentifier('values') . ', a.id_attribute_group')
             ->from($this->dbPrefix . 'attribute', 'a')
             ->groupBy('a.id_attribute_group');
 

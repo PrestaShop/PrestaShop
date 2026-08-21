@@ -48,9 +48,11 @@ final class DataMatchSaver
         return (bool) $this->connection->insert(
             $this->dbPrefix . 'import_match',
             [
-                '`name`' => pSQL($name),
-                '`match`' => pSQL(implode('|', $value)),
-                '`skip`' => (int) $skipRows,
+                'name' => pSQL($name),
+                // Connection::insert() uses array keys verbatim as column names (no quoting of
+                // its own), and "match" is a reserved word in both MySQL and PostgreSQL.
+                $this->connection->quoteIdentifier('match') => pSQL(implode('|', $value)),
+                'skip' => (int) $skipRows,
             ]
         );
     }

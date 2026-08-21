@@ -20,8 +20,23 @@ class Database extends AbstractInstall
     }
 
     /**
+     * The Db layer (classes/db/Db.php, classes/db/DbPDO.php) relies on the global
+     * _DB_TYPE_ constant, which is normally defined by config/bootstrap.php from
+     * app/config/parameters.php. During a fresh install that file doesn't exist yet,
+     * so the wizard must define the constant itself from the type the user just
+     * picked, before making any Db::* call.
+     */
+    private function ensureDbTypeIsDefined(string $dbType): void
+    {
+        if (!defined('_DB_TYPE_')) {
+            define('_DB_TYPE_', $dbType);
+        }
+    }
+
+    /**
      * Check database configuration and try a connection.
      *
+     * @param string $dbType
      * @param string $server
      * @param string $database
      * @param string $login
@@ -31,8 +46,9 @@ class Database extends AbstractInstall
      *
      * @return array List of errors
      */
-    public function testDatabaseSettings($server, $database, $login, $password, $prefix, $clear = false)
+    public function testDatabaseSettings($dbType, $server, $database, $login, $password, $prefix, $clear = false)
     {
+        $this->ensureDbTypeIsDefined($dbType);
         $this->getLogger()->log('Testing database settings');
         $errors = [];
 
@@ -107,16 +123,18 @@ class Database extends AbstractInstall
         return $errors;
     }
 
-    public function createDatabase($server, $database, $login, $password, $dropit = false)
+    public function createDatabase($dbType, $server, $database, $login, $password, $dropit = false)
     {
+        $this->ensureDbTypeIsDefined($dbType);
         $this->getLogger()->log(sprintf('Creating database %s', $database));
         $class = '\\' . Db::getClass();
 
         return call_user_func([$class, 'createDatabase'], $server, $login, $password, $database, $dropit);
     }
 
-    public function getBestEngine($server, $database, $login, $password)
+    public function getBestEngine($dbType, $server, $database, $login, $password)
     {
+        $this->ensureDbTypeIsDefined($dbType);
         $class = '\\' . Db::getClass();
         $instance = new $class($server, $login, $password, $database, true);
         $engine = $instance->getBestEngine();

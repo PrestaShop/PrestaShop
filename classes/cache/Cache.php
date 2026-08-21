@@ -511,9 +511,9 @@ abstract class CacheCore
      */
     public function getTables($string)
     {
-        if (preg_match_all('/(?:from|join|update|into)\s+`?(' . _DB_PREFIX_ .
-            '[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?(' . _DB_PREFIX_ .
-            '[0-9a-z_-]+)`?)?(?:`|\s+|\Z)(?!\s*,)/Umsi', $string, $res)) {
+        if (preg_match_all('/(?:from|join|update|into)\s+[`"]?(' . _DB_PREFIX_ .
+            '[0-9a-z_-]+)(?:[`"]?\s{0,},\s{0,}[`"]?(' . _DB_PREFIX_ .
+            '[0-9a-z_-]+)[`"]?)?(?:[`"]|\s+|\Z)(?!\s*,)/Umsi', $string, $res)) {
             foreach ($res[2] as $table) {
                 if ($table != '') {
                     $res[1][] = $table;

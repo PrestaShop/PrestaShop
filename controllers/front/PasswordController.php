@@ -108,7 +108,7 @@ class PasswordControllerCore extends FrontController
         $id_customer = (int) Tools::getValue('id_customer');
         $reset_token = Tools::getValue('reset_token');
         $email = Db::getInstance()->getValue(
-            'SELECT `email` FROM ' . _DB_PREFIX_ . 'customer c WHERE c.`secure_key` = \'' . pSQL($token) . '\' AND c.id_customer = ' . $id_customer
+            'SELECT email FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c WHERE c.secure_key = \'' . pSQL($token) . '\' AND c.id_customer = ' . $id_customer
         );
         if ($email) {
             $customer = new Customer();

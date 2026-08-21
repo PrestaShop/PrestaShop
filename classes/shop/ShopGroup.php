@@ -71,7 +71,7 @@ class ShopGroupCore extends ObjectModel
     public function getTotalShops()
     {
         $sql = 'SELECT COUNT(*)
-                FROM ' . _DB_PREFIX_ . 'shop s
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop') . ' s
                 WHERE id_shop_group=' . (int) $this->id;
 
         return (int) Db::getInstance()->getValue($sql);
@@ -79,8 +79,8 @@ class ShopGroupCore extends ObjectModel
 
     public static function getShopsFromGroup($id_group)
     {
-        $sql = 'SELECT s.`id_shop`
-                FROM ' . _DB_PREFIX_ . 'shop s
+        $sql = 'SELECT s.id_shop
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop') . ' s
                 WHERE id_shop_group=' . (int) $id_group;
 
         return Db::getInstance()->executeS($sql);
@@ -96,7 +96,7 @@ class ShopGroupCore extends ObjectModel
     public static function getIdByName($name)
     {
         $sql = 'SELECT id_shop_group
-                FROM ' . _DB_PREFIX_ . 'shop_group
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop_group') . '
                 WHERE name = \'' . pSQL($name) . '\'';
 
         return (int) Db::getInstance()->getValue($sql);
@@ -120,8 +120,8 @@ class ShopGroupCore extends ObjectModel
         if ($check == 'all' || $check == 'customer') {
             $total_customer = (int) Db::getInstance()->getValue(
                 'SELECT count(*)
-                FROM `' . _DB_PREFIX_ . 'customer`
-                WHERE `id_shop` IN (' . implode(', ', $list_shops) . ')'
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . '
+                WHERE id_shop IN (' . implode(', ', $list_shops) . ')'
             );
             if ($total_customer) {
                 return true;
@@ -131,8 +131,8 @@ class ShopGroupCore extends ObjectModel
         if ($check == 'all' || $check == 'order') {
             $total_order = (int) Db::getInstance()->getValue(
                 'SELECT count(*)
-                FROM `' . _DB_PREFIX_ . 'orders`
-                WHERE `id_shop` IN (' . implode(', ', $list_shops) . ')'
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . '
+                WHERE id_shop IN (' . implode(', ', $list_shops) . ')'
             );
             if ($total_order) {
                 return true;
@@ -146,8 +146,8 @@ class ShopGroupCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             'SELECT id_shop
-            FROM ' . _DB_PREFIX_ . 'shop
-            WHERE name = "' . pSQL($name) . '"
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop') . '
+            WHERE name = \'' . pSQL($name) . '\'
             AND id_shop_group = ' . (int) $this->id . '
             ' . ($id_shop ? 'AND id_shop != ' . (int) $id_shop : ''),
             false

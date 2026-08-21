@@ -76,19 +76,19 @@ class CustomerDataProvider
      */
     public function getCustomerMessages(int $customerId, ?int $orderId = null, ?int $limit = null)
     {
-        $mainSql = 'SELECT cm.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname,
-            e.`firstname` AS efirstname, e.`lastname` AS elastname
-            FROM ' . _DB_PREFIX_ . 'customer_thread ct
-			LEFT JOIN ' . _DB_PREFIX_ . 'customer_message cm
+        $mainSql = 'SELECT cm.*, c.firstname AS cfirstname, c.lastname AS clastname,
+            e.firstname AS efirstname, e.lastname AS elastname
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . ' ct
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' cm
 				ON ct.id_customer_thread = cm.id_customer_thread
-            LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
-                ON ct.`id_customer` = c.`id_customer`
-            LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e
-                ON e.`id_employee` = cm.`id_employee`
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c
+                ON ct.id_customer = c.id_customer
+            LEFT OUTER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . ' e
+                ON e.id_employee = cm.id_employee
 			WHERE ct.id_customer = ' . $customerId;
 
         if ($orderId) {
-            $mainSql .= ' AND ct.`id_order` = ' . $orderId;
+            $mainSql .= ' AND ct.id_order = ' . $orderId;
         }
 
         $mainSql .= ' GROUP BY cm.id_customer_message

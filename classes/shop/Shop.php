@@ -259,8 +259,8 @@ class ShopCore extends ObjectModel
                 $table_name .= '_' . $row['type'];
             }
             $res &= Db::getInstance()->execute(
-                'DELETE FROM `' . bqSQL(_DB_PREFIX_ . $table_name) . '`
-                WHERE `' . bqSQL($id) . '`=' . (int) $this->id
+                'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $table_name) . '
+                WHERE ' . Db::quoteIdentifier($id) . '=' . (int) $this->id
             );
         }
 
@@ -299,16 +299,16 @@ class ShopCore extends ObjectModel
         $has_dependency = false;
         $nbr_customer = (int) Db::getInstance()->getValue(
             'SELECT count(*)
-            FROM `' . _DB_PREFIX_ . 'customer`
-            WHERE `id_shop`=' . (int) $id_shop
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . '
+            WHERE id_shop=' . (int) $id_shop
         );
         if ($nbr_customer) {
             $has_dependency = true;
         } else {
             $nbr_order = (int) Db::getInstance()->getValue(
                 'SELECT count(*)
-                FROM `' . _DB_PREFIX_ . 'orders`
-                WHERE `id_shop`=' . (int) $id_shop
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . '
+                WHERE id_shop=' . (int) $id_shop
             );
             if ($nbr_order) {
                 $has_dependency = true;
@@ -965,9 +965,9 @@ class ShopCore extends ObjectModel
     public static function getShopById($id, $identifier, $table)
     {
         return Db::getInstance()->executeS(
-            'SELECT `id_shop`, `' . bqSQL($identifier) . '`
-            FROM `' . _DB_PREFIX_ . bqSQL($table) . '_shop`
-            WHERE `' . bqSQL($identifier) . '` = ' . (int) $id
+            'SELECT id_shop, ' . Db::quoteIdentifier($identifier) . '
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $table . '_shop') . '
+            WHERE ' . Db::quoteIdentifier($identifier) . ' = ' . (int) $id
         );
     }
 
@@ -1188,8 +1188,8 @@ class ShopCore extends ObjectModel
     public static function isFeatureActive()
     {
         if (static::$feature_active === null) {
-            static::$feature_active = (bool) Db::getInstance()->getValue('SELECT value FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
-                && (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'shop') > 1);
+            static::$feature_active = (bool) Db::getInstance()->getValue('SELECT value FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'configuration') . ' WHERE name = \'PS_MULTISHOP_FEATURE_ACTIVE\'')
+                && (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop')) > 1);
         }
 
         return static::$feature_active;
@@ -1262,25 +1262,32 @@ class ShopCore extends ObjectModel
             }
 
             if (!$deleted) {
-                $res = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . $table_name . '` WHERE `' . $id . '` = ' . (int) $old_id);
+                $res = Db::getInstance()->getRow('SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $table_name) . ' WHERE ' . Db::quoteIdentifier($id) . ' = ' . (int) $old_id);
                 if ($res) {
                     unset($res[$id]);
                     if (isset($row['primary'])) {
                         unset($res[$row['primary']]);
                     }
 
+                    // PostgreSQL has no INSERT IGNORE keyword; ON CONFLICT DO NOTHING achieves the same
+                    // "skip silently on conflict" behavior without needing to know the conflicting key.
+                    /* @phpstan-ignore-next-line */
+                    $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'INSERT IGNORE';
+                    /* @phpstan-ignore-next-line */
+                    $onConflict = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT DO NOTHING' : '';
+
                     $categories = Tools::getValue('categoryBox');
                     if ($table_name == 'product_shop' && count($categories) == 1) {
                         unset($res['id_category_default']);
-                        $keys = implode('`, `', array_keys($res));
-                        $sql = 'INSERT IGNORE INTO `' . _DB_PREFIX_ . $table_name . '` (`' . $keys . '`, `id_category_default`, ' . $id . ')
-                                (SELECT `' . $keys . '`, ' . (int) $categories[0] . ', ' . (int) $this->id . ' FROM ' . _DB_PREFIX_ . $table_name . '
-                                WHERE `' . $id . '` = ' . (int) $old_id . ')';
+                        $keys = implode(', ', array_map([Db::class, 'quoteIdentifier'], array_keys($res)));
+                        $sql = $insertKeyword . ' INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . $table_name) . ' (' . $keys . ', ' . Db::quoteIdentifier('id_category_default') . ', ' . $id . ')
+                                (SELECT ' . $keys . ', ' . (int) $categories[0] . ', ' . (int) $this->id . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $table_name) . '
+                                WHERE ' . Db::quoteIdentifier($id) . ' = ' . (int) $old_id . ')' . $onConflict;
                     } else {
-                        $keys = implode('`, `', array_keys($res));
-                        $sql = 'INSERT IGNORE INTO `' . _DB_PREFIX_ . $table_name . '` (`' . $keys . '`, ' . $id . ')
-                                (SELECT `' . $keys . '`, ' . (int) $this->id . ' FROM ' . _DB_PREFIX_ . $table_name . '
-                                WHERE `' . $id . '` = ' . (int) $old_id . ')';
+                        $keys = implode(', ', array_map([Db::class, 'quoteIdentifier'], array_keys($res)));
+                        $sql = $insertKeyword . ' INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . $table_name) . ' (' . $keys . ', ' . $id . ')
+                                (SELECT ' . $keys . ', ' . (int) $this->id . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $table_name) . '
+                                WHERE ' . Db::quoteIdentifier($id) . ' = ' . (int) $old_id . ')' . $onConflict;
                     }
                     Db::getInstance()->execute($sql);
                 }
@@ -1312,13 +1319,13 @@ class ShopCore extends ObjectModel
         // build query
         $query = new DbQuery();
         if ($only_id) {
-            $query->select('cs.`id_category`');
+            $query->select('cs.id_category');
         } else {
-            $query->select('DISTINCT cs.`id_category`, cl.`name`, cl.`link_rewrite`');
+            $query->select('DISTINCT cs.id_category, cl.name, cl.link_rewrite');
         }
         $query->from('category_shop', 'cs');
-        $query->leftJoin('category_lang', 'cl', 'cl.`id_category` = cs.`id_category` AND cl.`id_lang` = ' . (int) Context::getContext()->language->id);
-        $query->where('cs.`id_shop` = ' . (int) $id);
+        $query->leftJoin('category_lang', 'cl', 'cl.id_category = cs.id_category AND cl.id_lang = ' . (int) Context::getContext()->language->id);
+        $query->where('cs.id_shop = ' . (int) $id);
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
         if ($only_id) {
@@ -1346,13 +1353,15 @@ class ShopCore extends ObjectModel
             return false;
         }
 
+        $idColumn = Db::quoteIdentifier('id_' . $entity);
+
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT entity.`id_' . bqSQL($entity) . '`
-            FROM `' . _DB_PREFIX_ . bqSQL($entity) . '_shop`es
-            LEFT JOIN ' . _DB_PREFIX_ . bqSQL($entity) . ' entity
-                ON (entity.`id_' . bqSQL($entity) . '` = es.`id_' . bqSQL($entity) . '`)
-            WHERE es.`id_shop` = ' . (int) $id_shop .
-            ($active ? ' AND entity.`active` = 1' : '') .
+            'SELECT entity.' . $idColumn . '
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $entity . '_shop') . ' es
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $entity) . ' entity
+                ON (entity.' . $idColumn . ' = es.' . $idColumn . ')
+            WHERE es.id_shop = ' . (int) $id_shop .
+            ($active ? ' AND entity.active = 1' : '') .
             ($delete ? ' AND entity.deleted = 0' : '')
         );
     }

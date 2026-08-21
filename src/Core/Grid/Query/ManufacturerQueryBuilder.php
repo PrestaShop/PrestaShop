@@ -48,20 +48,20 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $addressesQb = $this->connection->createQueryBuilder();
-        $addressesQb->select('COUNT(a.`id_manufacturer`) AS `addresses_count`')
+        $addressesQb->select('COUNT(a.id_manufacturer) AS addresses_count')
             ->from($this->dbPrefix . 'address', 'a')
-            ->where('a.`id_manufacturer` != 0')
-            ->andWhere('m.`id_manufacturer` = a.`id_manufacturer`')
-            ->andWhere('a.`deleted` = 0')
-            ->groupBy('a.`id_manufacturer`')
+            ->where('a.id_manufacturer != 0')
+            ->andWhere('m.id_manufacturer = a.id_manufacturer')
+            ->andWhere('a.deleted = 0')
+            ->groupBy('a.id_manufacturer')
         ;
 
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
-            ->select('m.`id_manufacturer`, m.`name`, m.`active`')
-            ->addSelect('COUNT(p.`id_product`) AS `products_count`')
+            ->select('m.id_manufacturer, m.name, m.active')
+            ->addSelect('COUNT(p.id_product) AS products_count')
             ->addSelect('(' . $addressesQb->getSQL() . ') AS addresses_count')
-            ->groupBy('m.`id_manufacturer`')
+            ->groupBy('m.id_manufacturer')
         ;
 
         $this->searchCriteriaApplicator
@@ -79,7 +79,7 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(DISTINCT m.`id_manufacturer`)');
+        $qb->select('COUNT(DISTINCT m.id_manufacturer)');
 
         return $qb;
     }
@@ -102,13 +102,13 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
                 'm',
                 $this->dbPrefix . 'manufacturer_shop',
                 'ms',
-                'ms.`id_manufacturer` = m.`id_manufacturer`'
+                'ms.id_manufacturer = m.id_manufacturer'
             )
             ->leftJoin(
                 'm',
                 $this->dbPrefix . 'product',
                 'p',
-                'm.`id_manufacturer` = p.`id_manufacturer`'
+                'm.id_manufacturer = p.id_manufacturer'
             )
         ;
 
@@ -118,15 +118,15 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('name' === $filterName) {
-                $qb->andWhere('m.`name` LIKE :' . $filterName)
+                $qb->andWhere('m.name LIKE :' . $filterName)
                     ->setParameter($filterName, '%' . $value . '%');
                 continue;
             }
-            $qb->andWhere('m.`' . $filterName . '` = :' . $filterName)
+            $qb->andWhere('m.' . $this->connection->quoteIdentifier($filterName) . ' = :' . $filterName)
                 ->setParameter($filterName, $value);
         }
 
-        $qb->andWhere('ms.`id_shop` IN (:contextShopIds)');
+        $qb->andWhere('ms.id_shop IN (:contextShopIds)');
 
         $qb->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
 

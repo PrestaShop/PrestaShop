@@ -54,6 +54,14 @@ class ExtraPropertiesGridQueryBuilderModifier
     ) {
     }
 
+    /**
+     * Quotes an identifier for the current database engine using the query builder's connection.
+     */
+    private function qi(QueryBuilder $qb, string $identifier): string
+    {
+        return $qb->getConnection()->quoteIdentifier($identifier);
+    }
+
     public function apply(
         QueryBuilder $searchQueryBuilder,
         QueryBuilder $countQueryBuilder,
@@ -143,11 +151,11 @@ class ExtraPropertiesGridQueryBuilderModifier
         foreach ($builders as [$qb, $mainAlias]) {
             // PK-complete: {e}_extra PK is (id_e) — at most one row per grid row.
             $this->ensureLeftJoin($qb, $mainAlias, $extraTable, self::EXTRA_ENTITY_ALIAS, sprintf(
-                '%s.`%s` = %s.`%s`',
+                '%s.%s = %s.%s',
                 self::EXTRA_ENTITY_ALIAS,
-                $primaryKey,
+                $this->qi($qb, $primaryKey),
                 $mainAlias,
-                $primaryKey
+                $this->qi($qb, $primaryKey)
             ));
         }
 
@@ -181,22 +189,22 @@ class ExtraPropertiesGridQueryBuilderModifier
             if (null !== $langAlias) {
                 $fromAlias = $langAlias;
                 $joinParts = [
-                    sprintf('%s.`%s` = %s.`%s`', self::EXTRA_LANG_ALIAS, $primaryKey, $langAlias, $primaryKey),
-                    sprintf('%s.`id_lang` = %s.`id_lang`', self::EXTRA_LANG_ALIAS, $langAlias),
+                    sprintf('%s.%s = %s.%s', self::EXTRA_LANG_ALIAS, $this->qi($qb, $primaryKey), $langAlias, $this->qi($qb, $primaryKey)),
+                    sprintf('%s.id_lang = %s.id_lang', self::EXTRA_LANG_ALIAS, $langAlias),
                 ];
                 if (null !== $langJoinCondition && $this->joinConditionMentionsShopId($langAlias, $langJoinCondition)) {
-                    $joinParts[] = sprintf('%s.`id_shop` = %s.`id_shop`', self::EXTRA_LANG_ALIAS, $langAlias);
+                    $joinParts[] = sprintf('%s.id_shop = %s.id_shop', self::EXTRA_LANG_ALIAS, $langAlias);
                 } else {
-                    $joinParts[] = sprintf('%s.`id_shop` = :extraLangShopId', self::EXTRA_LANG_ALIAS);
+                    $joinParts[] = sprintf('%s.id_shop = :extraLangShopId', self::EXTRA_LANG_ALIAS);
                     $parameters['extraLangShopId'] = $this->resolveShopId($qb);
                 }
             } else {
                 // Fallback when no base lang join exists in this builder: context language.
                 $fromAlias = $mainAlias;
                 $joinParts = [
-                    sprintf('%s.`%s` = %s.`%s`', self::EXTRA_LANG_ALIAS, $primaryKey, $mainAlias, $primaryKey),
-                    sprintf('%s.`id_lang` = :extraLangId', self::EXTRA_LANG_ALIAS),
-                    sprintf('%s.`id_shop` = :extraLangShopId', self::EXTRA_LANG_ALIAS),
+                    sprintf('%s.%s = %s.%s', self::EXTRA_LANG_ALIAS, $this->qi($qb, $primaryKey), $mainAlias, $this->qi($qb, $primaryKey)),
+                    sprintf('%s.id_lang = :extraLangId', self::EXTRA_LANG_ALIAS),
+                    sprintf('%s.id_shop = :extraLangShopId', self::EXTRA_LANG_ALIAS),
                 ];
                 $parameters['extraLangId'] = $this->languageContext->getId();
                 $parameters['extraLangShopId'] = $this->resolveShopId($qb);
@@ -233,11 +241,11 @@ class ExtraPropertiesGridQueryBuilderModifier
             // (entity, shop) pair of this builder.
             if (null !== $shopAlias) {
                 $this->ensureLeftJoin($qb, $shopAlias, $extraTable, self::EXTRA_SHOP_ALIAS, sprintf(
-                    '%s.`%s` = %s.`%s` AND %s.`id_shop` = %s.`id_shop`',
+                    '%s.%s = %s.%s AND %s.id_shop = %s.id_shop',
                     self::EXTRA_SHOP_ALIAS,
-                    $primaryKey,
+                    $this->qi($qb, $primaryKey),
                     $shopAlias,
-                    $primaryKey,
+                    $this->qi($qb, $primaryKey),
                     self::EXTRA_SHOP_ALIAS,
                     $shopAlias
                 ));
@@ -245,11 +253,11 @@ class ExtraPropertiesGridQueryBuilderModifier
                 // Fallback when no base shop join exists in this builder: pin on the
                 // builder's :shopId param or the context shop.
                 $this->ensureLeftJoin($qb, $mainAlias, $extraTable, self::EXTRA_SHOP_ALIAS, sprintf(
-                    '%s.`%s` = %s.`%s` AND %s.`id_shop` = :extraShopId',
+                    '%s.%s = %s.%s AND %s.id_shop = :extraShopId',
                     self::EXTRA_SHOP_ALIAS,
-                    $primaryKey,
+                    $this->qi($qb, $primaryKey),
                     $mainAlias,
-                    $primaryKey,
+                    $this->qi($qb, $primaryKey),
                     self::EXTRA_SHOP_ALIAS
                 ), ['extraShopId' => $this->resolveShopId($qb)]);
             }
@@ -298,7 +306,7 @@ class ExtraPropertiesGridQueryBuilderModifier
             $storageColumn = $definition->getStorageColumnName();
 
             $selectAlias = $definition->getFieldName();
-            $searchQb->addSelect(sprintf('%s.`%s` AS `%s`', $joinAlias, $storageColumn, $selectAlias));
+            $searchQb->addSelect(sprintf('%s.%s AS %s', $joinAlias, $this->qi($searchQb, $storageColumn), $this->qi($searchQb, $selectAlias)));
 
             if (!array_key_exists($selectAlias, $filters)) {
                 continue;
@@ -329,7 +337,7 @@ class ExtraPropertiesGridQueryBuilderModifier
         string $paramName,
         mixed $value,
     ): void {
-        $qb->andWhere(sprintf('%s.`%s` = :%s', $alias, $column, $paramName))
+        $qb->andWhere(sprintf('%s.%s = :%s', $alias, $this->qi($qb, $column), $paramName))
             ->setParameter($paramName, $value);
     }
 
@@ -340,7 +348,7 @@ class ExtraPropertiesGridQueryBuilderModifier
         string $paramName,
         mixed $value,
     ): void {
-        $qb->andWhere(sprintf('%s.`%s` LIKE :%s', $alias, $column, $paramName))
+        $qb->andWhere(sprintf('%s.%s LIKE :%s', $alias, $this->qi($qb, $column), $paramName))
             ->setParameter($paramName, '%' . (string) $value . '%');
     }
 
@@ -434,7 +442,7 @@ class ExtraPropertiesGridQueryBuilderModifier
 
     protected function joinConditionMentionsShopId(string $langAlias, string $joinCondition): bool
     {
-        // Detect patterns like "pl.`id_shop`" or "pl.id_shop"
-        return (bool) preg_match('/\b' . preg_quote($langAlias, '/') . '\.(?:`)?id_shop(?:`)?\b/', $joinCondition);
+        // Detect patterns like "pl.`id_shop`", "pl.\"id_shop\"" or "pl.id_shop"
+        return (bool) preg_match('/\b' . preg_quote($langAlias, '/') . '\.(?:[`"])?id_shop(?:[`"])?\b/', $joinCondition);
     }
 }

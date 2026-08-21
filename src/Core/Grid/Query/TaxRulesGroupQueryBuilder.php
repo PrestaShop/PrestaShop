@@ -51,7 +51,7 @@ class TaxRulesGroupQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('trg.`id_tax_rules_group`, trg.`name`, trg.`active`')
+            ->select('trg.id_tax_rules_group, trg.name, trg.active')
         ;
 
         $this->searchCriteriaApplicator
@@ -69,7 +69,7 @@ class TaxRulesGroupQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         return $this
             ->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT trg.`id_tax_rules_group`)');
+            ->select('COUNT(DISTINCT trg.id_tax_rules_group)');
     }
 
     /**
@@ -88,11 +88,11 @@ class TaxRulesGroupQueryBuilder extends AbstractDoctrineQueryBuilder
                 'trg',
                 $this->dbPrefix . 'tax_rules_group_shop',
                 'trgs',
-                'trg.`id_tax_rules_group` = trgs.`id_tax_rules_group`'
+                'trg.id_tax_rules_group = trgs.id_tax_rules_group'
             );
 
-        $qb->andWhere('trgs.`id_shop` IN (:contextShopIds)')
-            ->andWhere('trg.`deleted` = 0')
+        $qb->andWhere('trgs.id_shop IN (:contextShopIds)')
+            ->andWhere('trg.deleted = 0')
             ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
 
         $this->applyFilters($qb, $filters);

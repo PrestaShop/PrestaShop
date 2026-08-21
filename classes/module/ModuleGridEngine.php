@@ -24,11 +24,11 @@ abstract class ModuleGridEngineCore extends Module
     public static function getGridEngines()
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-            SELECT m.`name`
-            FROM `' . _DB_PREFIX_ . 'module` m
-            LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_module` = m.`id_module`
-            LEFT JOIN `' . _DB_PREFIX_ . 'hook` h ON hm.`id_hook` = h.`id_hook`
-            WHERE h.`name` = \'displayAdminStatsGridEngine\'
+            SELECT m.name
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' m
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_module') . ' hm ON hm.id_module = m.id_module
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook') . ' h ON hm.id_hook = h.id_hook
+            WHERE h.name = \'displayAdminStatsGridEngine\'
         ');
 
         $array_engines = [];

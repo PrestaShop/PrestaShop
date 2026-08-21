@@ -20,6 +20,11 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     /**
      * @var string
      */
+    public $database_type;
+
+    /**
+     * @var string
+     */
     public $database_server;
 
     /**
@@ -82,6 +87,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     public function processNextStep(): void
     {
         // Save database config
+        $this->session->database_type = Tools::getValue('dbType', 'mysql');
         $this->session->database_server = trim(Tools::getValue('dbServer'));
         $this->session->database_name = trim(Tools::getValue('dbName'));
         $this->session->database_login = trim(Tools::getValue('dbLogin'));
@@ -97,6 +103,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     public function validate(): bool
     {
         $this->errors = $this->model_database->testDatabaseSettings(
+            $this->session->database_type,
             $this->session->database_server,
             $this->session->database_name,
             $this->session->database_login,
@@ -110,7 +117,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
         }
 
         if (!isset($this->session->database_engine)) {
-            $this->session->database_engine = $this->model_database->getBestEngine($this->session->database_server, $this->session->database_name, $this->session->database_login, $this->session->database_password);
+            $this->session->database_engine = $this->model_database->getBestEngine($this->session->database_type, $this->session->database_server, $this->session->database_name, $this->session->database_login, $this->session->database_password);
         }
 
         return true;
@@ -133,6 +140,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
      */
     public function processCheckDb(): void
     {
+        $dbType = Tools::getValue('dbType', 'mysql');
         $server = Tools::getValue('dbServer');
         $database = Tools::getValue('dbName');
         $login = Tools::getValue('dbLogin');
@@ -140,7 +148,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
         $prefix = Tools::getValue('db_prefix');
         $clear = Tools::getValue('clear');
 
-        $errors = $this->model_database->testDatabaseSettings($server, $database, $login, $password, $prefix, $clear);
+        $errors = $this->model_database->testDatabaseSettings($dbType, $server, $database, $login, $password, $prefix, $clear);
 
         $this->ajaxJsonAnswer(
             (count($errors)) ? false : true,
@@ -153,12 +161,13 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
      */
     public function processCreateDb(): void
     {
+        $dbType = Tools::getValue('dbType', 'mysql');
         $server = Tools::getValue('dbServer');
         $database = Tools::getValue('dbName');
         $login = Tools::getValue('dbLogin');
         $password = Tools::getValue('dbPassword');
 
-        $success = $this->model_database->createDatabase($server, $database, $login, $password);
+        $success = $this->model_database->createDatabase($dbType, $server, $database, $login, $password);
 
         $this->ajaxJsonAnswer(
             $success,
@@ -178,6 +187,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
                 $parameters = Yaml::parse(file_get_contents(_PS_ROOT_DIR_ . '/app/config/parameters.yml.dist'));
             }
 
+            $this->database_type = $parameters['parameters']['database_type'] ?? 'mysql';
             $this->database_server = $parameters['parameters']['database_host'];
             if (!empty($parameters['parameters']['database_port'])) {
                 $this->database_server .= ':' . $parameters['parameters']['database_port'];
@@ -193,6 +203,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
             $this->smtp_encryption = 'off';
             $this->smtp_port = 25;
         } else {
+            $this->database_type = $this->session->database_type ?: 'mysql';
             $this->database_server = $this->session->database_server;
             $this->database_name = $this->session->database_name;
             $this->database_login = $this->session->database_login;

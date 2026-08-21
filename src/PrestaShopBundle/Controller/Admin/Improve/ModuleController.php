@@ -487,10 +487,23 @@ class ModuleController extends ModuleAbstractController
         }
 
         return !empty(Db::getInstance()->executeS(
-            'SELECT 1 FROM `' . _DB_PREFIX_ . 'hook_module` hm
-            INNER JOIN `' . _DB_PREFIX_ . 'hook` h ON h.id_hook = hm.id_hook
+            'SELECT 1 FROM ' . self::quoteIdentifier(_DB_PREFIX_ . 'hook_module') . ' hm
+            INNER JOIN ' . self::quoteIdentifier(_DB_PREFIX_ . 'hook') . ' h ON h.id_hook = hm.id_hook
             WHERE hm.id_module = ' . (int) $instance->id . ' AND h.name = \'actionListModules\' LIMIT 1'
         ));
+    }
+
+    /**
+     * Quotes an identifier for the current database engine without going through the legacy Db class.
+     */
+    private static function quoteIdentifier(string $identifier): string
+    {
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            return '"' . str_replace('"', '""', $identifier) . '"';
+        }
+
+        return '`' . bqSQL($identifier) . '`';
     }
 
     /**

@@ -36,28 +36,28 @@ class EntityMapper
         if (!$should_cache_objects || !Cache::isStored($cache_id)) {
             $sql = new DbQuery();
             $sql->from($entity_defs['table'], 'a');
-            $sql->where('a.`' . bqSQL($entity_defs['primary']) . '` = ' . (int) $id);
+            $sql->where('a.' . Db::quoteIdentifier($entity_defs['primary']) . ' = ' . (int) $id);
 
             // Get lang informations
             if ($id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
-                $sql->leftJoin($entity_defs['table'] . '_lang', 'b', 'a.`' . bqSQL($entity_defs['primary']) . '` = b.`' . bqSQL($entity_defs['primary']) . '` AND b.`id_lang` = ' . (int) $id_lang);
+                $sql->leftJoin($entity_defs['table'] . '_lang', 'b', 'a.' . Db::quoteIdentifier($entity_defs['primary']) . ' = b.' . Db::quoteIdentifier($entity_defs['primary']) . ' AND b.id_lang = ' . (int) $id_lang);
                 if ($id_shop && !empty($entity_defs['multilang_shop'])) {
-                    $sql->where('b.`id_shop` = ' . (int) $id_shop);
+                    $sql->where('b.id_shop = ' . (int) $id_shop);
                 }
             }
 
             // Get shop informations
             if (Shop::isTableAssociated($entity_defs['table'])) {
-                $sql->leftJoin($entity_defs['table'] . '_shop', 'c', 'a.`' . bqSQL($entity_defs['primary']) . '` = c.`' . bqSQL($entity_defs['primary']) . '` AND c.`id_shop` = ' . (int) $id_shop);
+                $sql->leftJoin($entity_defs['table'] . '_shop', 'c', 'a.' . Db::quoteIdentifier($entity_defs['primary']) . ' = c.' . Db::quoteIdentifier($entity_defs['primary']) . ' AND c.id_shop = ' . (int) $id_shop);
             }
 
             if ($object_datas = Db::getInstance()->getRow($sql)) {
                 $objectVars = get_object_vars($entity);
                 if (!$id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
                     $sql = 'SELECT *
-							FROM `' . bqSQL(_DB_PREFIX_ . $entity_defs['table']) . '_lang`
-							WHERE `' . bqSQL($entity_defs['primary']) . '` = ' . (int) $id
-                            . (($id_shop && $entity->isLangMultishop()) ? ' AND `id_shop` = ' . (int) $id_shop : '');
+							FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $entity_defs['table'] . '_lang') . '
+							WHERE ' . Db::quoteIdentifier($entity_defs['primary']) . ' = ' . (int) $id
+                            . (($id_shop && $entity->isLangMultishop()) ? ' AND id_shop = ' . (int) $id_shop : '');
 
                     if ($object_datas_lang = Db::getInstance()->executeS($sql)) {
                         foreach ($object_datas_lang as $row) {

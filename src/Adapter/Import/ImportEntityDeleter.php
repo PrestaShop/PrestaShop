@@ -247,7 +247,7 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
 
         $this->truncateTables($truncateTables);
         $this->connection->executeQuery(
-            "DELETE FROM `{$this->dbPrefix}stock_available` WHERE id_product_attribute != 0"
+            'DELETE FROM ' . $this->connection->quoteIdentifier($this->dbPrefix . 'stock_available') . ' WHERE id_product_attribute != 0'
         );
     }
 
@@ -261,7 +261,7 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
     private function truncateTables(array $tables)
     {
         foreach ($tables as $table) {
-            $this->connection->executeQuery("TRUNCATE TABLE `{$this->dbPrefix}{$table}`");
+            $this->connection->executeQuery('TRUNCATE TABLE ' . $this->connection->quoteIdentifier($this->dbPrefix . $table));
         }
     }
 
@@ -282,7 +282,7 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
             );
 
             if ($tableExists) {
-                $this->connection->executeQuery("TRUNCATE TABLE `{$this->dbPrefix}{$table}`");
+                $this->connection->executeQuery('TRUNCATE TABLE ' . $this->connection->quoteIdentifier($this->dbPrefix . $table));
             }
         }
     }

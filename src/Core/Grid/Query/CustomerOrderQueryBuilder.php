@@ -60,19 +60,19 @@ final class CustomerOrderQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb->select(
-            'o.`id_order`,
-                o.`date_add`,
-                o.`payment`,
-                o.`total_paid_tax_incl`,
-                "TODO" AS products,
+            'o.id_order,
+                o.date_add,
+                o.payment,
+                o.total_paid_tax_incl,
+                \'TODO\' AS products,
                 o.valid AS valid,
                 osl.name AS status'
         );
 
         $qb->addSelect('
-            (SELECT SUM(od.`product_quantity`) 
-            FROM `' . $this->dbPrefix . 'order_detail` od 
-            WHERE od.`id_order` = o.`id_order`) nb_products');
+            (SELECT SUM(od.product_quantity)
+            FROM ' . $this->connection->quoteIdentifier($this->dbPrefix . 'order_detail') . ' od
+            WHERE od.id_order = o.id_order) nb_products');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -88,7 +88,7 @@ final class CustomerOrderQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         return $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT o.`id_order`)');
+            ->select('COUNT(DISTINCT o.id_order)');
     }
 
     /**
@@ -103,7 +103,7 @@ final class CustomerOrderQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'orders', 'o')
-            ->where('o.`id_customer` != 0')
+            ->where('o.id_customer != 0')
             ->leftJoin('o', $this->dbPrefix . 'order_state', 'os', 'o.current_state = os.id_order_state')
             ->leftJoin(
                 'os',
@@ -139,7 +139,7 @@ final class CustomerOrderQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_customer' === $filterName) {
-                $qb->andWhere('o.`id_customer` = :' . $filterName);
+                $qb->andWhere('o.id_customer = :' . $filterName);
                 $qb->setParameter($filterName, $value);
             }
         }

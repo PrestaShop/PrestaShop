@@ -24,6 +24,7 @@ jobs:
     strategy:
       matrix:
         php: ${{ fromJSON(needs.workflow_matrix_generator.outputs.dynamic_matrix) }}
+        database: [ 'mysql', 'postgresql' ]
       fail-fast: false
     steps:
       - name: Setup PHP
@@ -35,9 +36,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup MySQL
         uses: shogo82148/actions-setup-mysql@v1
+        if: matrix.database == 'mysql'
         with:
           mysql-version: "8.0"
           root-password: 'password'
+      - name: Setup PostgreSQL
+        uses: harmon758/postgresql-action@v1
+        if: matrix.database == 'postgresql'
+        with:
+          postgresql version: '15'
+          postgresql db: 'prestashop'
+          postgresql user: 'root'
+          postgresql password: 'password'
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -45,10 +55,17 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: PrestaShop Configuration
+      - name: PrestaShop Configuration (MySQL)
+        if: matrix.database == 'mysql'
         run: |
           cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
           cp .github/workflows/phpunit/parameters.php app/config/parameters.php
+
+      - name: PrestaShop Configuration (PostgreSQL)
+        if: matrix.database == 'postgresql'
+        run: |
+          cp .github/workflows/phpunit/parameters.postgresql.yml app/config/parameters.yml
+          cp .github/workflows/phpunit/parameters.postgresql.php app/config/parameters.php
 
       - name: Get Composer Cache Directory
         id: composer-cache

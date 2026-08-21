@@ -430,7 +430,22 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                 return (float) str_replace(',', '.', $value ?? '');
 
             case self::TYPE_DATE:
+                // MySQL's zero-date sentinel ('0000-00-00'[ 00:00:00]) has no PostgreSQL
+                // equivalent (not a valid date in any calendar). Covers both an empty/unset
+                // value and an explicit zero-date assignment (e.g. Product::available_date).
+                /* @phpstan-ignore-next-line */
+                if ((!$value || str_starts_with((string) $value, '0000-00-00')) && _DB_TYPE_ == 'pgsql') {
+                    // Nullable columns get real NULL; NOT NULL columns (no PHP-side
+                    // allow_null flag) get the Unix epoch as a storable "unset" placeholder,
+                    // valid for both DATE and TIMESTAMP columns.
+                    if ($allow_null) {
+                        return ['type' => 'sql', 'value' => 'NULL'];
+                    }
+
+                    return $with_quotes ? '\'1970-01-01\'' : '1970-01-01';
+                }
                 if (!$value) {
+                    /* @phpstan-ignore-next-line */
                     $value = '0000-00-00';
                 }
 
@@ -630,8 +645,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         $res = Db::getInstance()->getRow(
             '
 					SELECT *
-					FROM `' . _DB_PREFIX_ . bqSQL($definition['table']) . '`
-					WHERE `' . bqSQL($definition['primary']) . '` = ' . (int) $this->id
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $definition['table']) . '
+					WHERE ' . Db::quoteIdentifier($definition['primary']) . ' = ' . (int) $this->id
         );
         if (!$res) {
             return false;
@@ -659,8 +674,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         if (isset($definition['multilang']) && $definition['multilang']) {
             $result = Db::getInstance()->executeS('
 			SELECT *
-			FROM `' . _DB_PREFIX_ . bqSQL($definition['table']) . '_lang`
-			WHERE `' . bqSQL($definition['primary']) . '` = ' . (int) $this->id);
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $definition['table'] . '_lang') . '
+			WHERE ' . Db::quoteIdentifier($definition['primary']) . ' = ' . (int) $this->id);
             if (!$result) {
                 return false;
             }
@@ -756,7 +771,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         // Validate extra properties before any update to avoid partial writes.
         $this->validateExtraProperties();
 
-        if (!$result = Db::getInstance()->update($this->def['table'], $fieldsToUpdate, '`' . pSQL($this->def['primary']) . '` = ' . (int) $this->id, 0, $null_values)) {
+        if (!$result = Db::getInstance()->update($this->def['table'], $fieldsToUpdate, Db::quoteIdentifier($this->def['primary']) . ' = ' . (int) $this->id, 0, $null_values)) {
             return false;
         }
 
@@ -872,12 +887,12 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         $shopIdsList = array_map('intval', $shopIdsList);
 
         if (Shop::isTableAssociated($this->def['table'])) {
-            $result &= Db::getInstance()->delete($this->def['table'] . '_shop', '`' . $this->def['primary'] . '`=' .
+            $result &= Db::getInstance()->delete($this->def['table'] . '_shop', Db::quoteIdentifier($this->def['primary']) . ' = ' .
                 (int) $this->id . ' AND id_shop IN (' . implode(', ', $shopIdsList) . ')');
         }
 
         if ($this->isLangMultishop()) {
-            $result &= Db::getInstance()->delete($this->def['table'] . '_lang', '`' . $this->def['primary'] . '`=' .
+            $result &= Db::getInstance()->delete($this->def['table'] . '_lang', Db::quoteIdentifier($this->def['primary']) . ' = ' .
                 (int) $this->id . ' AND id_shop IN (' . implode(', ', $shopIdsList) . ')');
         }
 
@@ -886,11 +901,11 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
 
         // Database deletion for multilingual fields related to the object
         if (!empty($this->def['multilang']) && !$has_multishop_entries) {
-            $result &= Db::getInstance()->delete($this->def['table'] . '_lang', '`' . bqSQL($this->def['primary']) . '` = ' . (int) $this->id);
+            $result &= Db::getInstance()->delete($this->def['table'] . '_lang', Db::quoteIdentifier($this->def['primary']) . ' = ' . (int) $this->id);
         }
 
         if ($result && !$has_multishop_entries) {
-            $result &= Db::getInstance()->delete($this->def['table'], '`' . bqSQL($this->def['primary']) . '` = ' . (int) $this->id);
+            $result &= Db::getInstance()->delete($this->def['table'], Db::quoteIdentifier($this->def['primary']) . ' = ' . (int) $this->id);
         }
 
         if (!$result) {
@@ -1483,10 +1498,11 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         $vars = get_class_vars($class_name);
         if ($assoc !== false) {
             if ($assoc['type'] !== 'fk_shop') {
-                $multi_shop_join = ' LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->def['table']) . '_' . bqSQL($assoc['type']) . '`
-										AS `multi_shop_' . bqSQL($this->def['table']) . '`
-										ON (main.`' . bqSQL($this->def['primary']) . '` = `multi_shop_' . bqSQL($this->def['table']) . '`.`' . bqSQL($this->def['primary']) . '`)';
-                $sql_filter = 'AND `multi_shop_' . bqSQL($this->def['table']) . '`.id_shop = ' . Context::getContext()->shop->id . ' ' . $sql_filter;
+                $multi_shop_alias = Db::quoteIdentifier('multi_shop_' . $this->def['table']);
+                $multi_shop_join = ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->def['table'] . '_' . $assoc['type']) . '
+										AS ' . $multi_shop_alias . '
+										ON (main.' . Db::quoteIdentifier($this->def['primary']) . ' = ' . $multi_shop_alias . '.' . Db::quoteIdentifier($this->def['primary']) . ')';
+                $sql_filter = 'AND ' . $multi_shop_alias . '.id_shop = ' . Context::getContext()->shop->id . ' ' . $sql_filter;
                 $sql_join = $multi_shop_join . ' ' . $sql_join;
             } else {
                 $vars = get_class_vars($class_name);
@@ -1503,9 +1519,9 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             }
         }
         $query = '
-		SELECT DISTINCT main.`' . bqSQL($this->def['primary']) . '` FROM `' . _DB_PREFIX_ . bqSQL($this->def['table']) . '` AS main
+		SELECT DISTINCT main.' . Db::quoteIdentifier($this->def['primary']) . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->def['table']) . ' AS main
 		' . $sql_join . '
-		WHERE 1 ' . $sql_filter . '
+		WHERE 1 = 1 ' . $sql_filter . '
 		' . ($sql_sort != '' ? $sql_sort : '') . '
 		' . ($sql_limit != '' ? $sql_limit : '');
 
@@ -1559,7 +1575,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     {
         return Db::getInstance()->executeS('
 		SELECT id_required_field, object_name, field_name
-		FROM ' . _DB_PREFIX_ . 'required_field
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'required_field') . '
 		' . (!$all ? 'WHERE object_name = \'' . pSQL($this->getObjectName()) . '\'' : ''));
     }
 
@@ -1578,8 +1594,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         } else {
             return (bool) Db::getInstance()->getValue('
             SELECT id_required_field
-            FROM ' . _DB_PREFIX_ . 'required_field
-            WHERE field_name = "' . Db::getInstance()->escape($field_name) . '"
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'required_field') . '
+            WHERE field_name = \'' . Db::getInstance()->escape($field_name) . '\'
             ' . (!$all ? ' AND object_name = \'' . pSQL($this->getObjectName()) . '\'' : ''));
         }
     }
@@ -1642,7 +1658,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
 
         $objectName = $this->getObjectName();
         if (!Db::getInstance()->execute(
-            'DELETE FROM ' . _DB_PREFIX_ . 'required_field'
+            'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'required_field')
             . " WHERE object_name = '" . Db::getInstance()->escape($objectName) . "'"
         )
         ) {
@@ -1693,8 +1709,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             $associated = (bool) Db::getInstance()->getValue(
                 '
 				SELECT id_shop
-				FROM `' . pSQL(_DB_PREFIX_ . $this->def['table']) . '_shop`
-				WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id . '
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->def['table'] . '_shop') . '
+				WHERE ' . Db::quoteIdentifier($this->def['primary']) . ' = ' . (int) $this->id . '
 				AND id_shop = ' . (int) $id_shop
             );
 
@@ -1760,7 +1776,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         }
 
         $list = [];
-        $sql = 'SELECT id_shop FROM `' . _DB_PREFIX_ . $this->def['table'] . '_shop` WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id;
+        $sql = 'SELECT id_shop FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->def['table'] . '_shop') . ' WHERE ' . Db::quoteIdentifier($this->def['primary']) . ' = ' . (int) $this->id;
         foreach (Db::getInstance()->executeS($sql) as $row) {
             $list[] = (int) $row['id_shop'];
         }
@@ -1809,7 +1825,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             return false;
         }
 
-        return (bool) Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . $this->def['table'] . '_shop` WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id);
+        return (bool) Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->def['table'] . '_shop') . ' WHERE ' . Db::quoteIdentifier($this->def['primary']) . ' = ' . (int) $this->id);
     }
 
     /**
@@ -1887,35 +1903,53 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     public static function updateMultishopTable($classname, $data, $where = '')
     {
         $def = ObjectModel::getDefinition($classname);
-        $update_data = [];
+        // Bare column names: PostgreSQL forbids alias-qualifying SET target columns, and
+        // PostgreSQL/MySQL UPDATE can only target one table per statement, so the combined
+        // "a JOIN {table}_shop" multi-table update is split into up to two single-table ones
+        // below, sharing $where (always expressed in terms of the "a" alias by every caller).
+        $main_update_data = [];
+        $shop_update_data = [];
         foreach ($data as $field => $value) {
             if (!isset($def['fields'][$field])) {
                 continue;
             }
 
+            $isNull = $value === null && !empty($def['fields'][$field]['allow_null']);
+            $main_update_data[] = $isNull ? "$field = NULL" : "$field = '$value'";
             if (!empty($def['fields'][$field]['shop'])) {
-                if ($value === null && !empty($def['fields'][$field]['allow_null'])) {
-                    $update_data[] = "a.$field = NULL";
-                    $update_data[] = "{$def['table']}_shop.$field = NULL";
-                } else {
-                    $update_data[] = "a.$field = '$value'";
-                    $update_data[] = "{$def['table']}_shop.$field = '$value'";
-                }
-            } else {
-                if ($value === null && !empty($def['fields'][$field]['allow_null'])) {
-                    $update_data[] = "a.$field = NULL";
-                } else {
-                    $update_data[] = "a.$field = '$value'";
-                }
+                $shop_update_data[] = $isNull ? "$field = NULL" : "$field = '$value'";
             }
         }
 
-        $sql = 'UPDATE ' . _DB_PREFIX_ . $def['table'] . ' a
-				' . Shop::addSqlAssociation($def['table'], 'a', true, null, true) . '
-				SET ' . implode(', ', $update_data) .
-                (!empty($where) ? ' WHERE ' . $where : '');
+        $table = _DB_PREFIX_ . $def['table'];
+        $result = true;
+        if ($main_update_data) {
+            $result = Db::getInstance()->execute(
+                'UPDATE ' . $table . ' a
+				SET ' . implode(', ', $main_update_data) .
+                (!empty($where) ? ' WHERE ' . $where : '')
+            );
+        }
 
-        return Db::getInstance()->execute($sql);
+        if ($shop_update_data) {
+            $result = $result && Db::getInstance()->execute(
+                'UPDATE ' . $table . '_shop
+				SET ' . implode(', ', $shop_update_data) . '
+				WHERE (id_' . $def['table'] . ', id_shop) IN (
+					-- MySQL forbids selecting from the table being updated directly in a
+					-- subquery (Error 1093, target table for update in FROM clause);
+					-- wrapping it in an extra derived table works around that.
+					SELECT * FROM (
+						SELECT ' . $def['table'] . '_shop.id_' . $def['table'] . ', ' . $def['table'] . '_shop.id_shop
+						FROM ' . $table . ' a
+						' . Shop::addSqlAssociation($def['table'], 'a', true, null, true) .
+                        (!empty($where) ? ' WHERE ' . $where : '') . '
+					) AS multishop_tmp
+				)'
+            );
+        }
+
+        return $result;
     }
 
     /**
@@ -2011,9 +2045,9 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
 
         $row = Db::getInstance()->getRow(
             (new DbQuery())
-                ->select('e.`' . $primary . '` as id')
+                ->select('e.' . Db::quoteIdentifier($primary) . ' as id')
                 ->from($table, 'e')
-                ->where('e.`' . $primary . '` = ' . (int) $id_entity),
+                ->where('e.' . Db::quoteIdentifier($primary) . ' = ' . (int) $id_entity),
             false
         );
 
@@ -2035,10 +2069,10 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         }
 
         $query = new DbQuery();
-        $query->select('`id_' . bqSQL($table) . '`');
+        $query->select(Db::quoteIdentifier('id_' . $table));
         $query->from($table);
         if ($has_active_column) {
-            $query->where('`active` = 1');
+            $query->where(Db::quoteIdentifier('active') . ' = 1');
         }
 
         return (bool) Db::getInstance()->getValue($query);

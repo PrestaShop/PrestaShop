@@ -75,8 +75,8 @@ class ModuleDataProvider
     {
         $result = Db::getInstance()->getRow(
             sprintf(
-                'SELECT `id_module` as `id`, `active`, `version` FROM `%smodule` WHERE `name` = "%s"',
-                _DB_PREFIX_,
+                'SELECT id_module as id, active, version FROM %s WHERE name = \'%s\'',
+                Db::quoteIdentifier(_DB_PREFIX_ . 'module'),
                 pSQL($name)
             )
         );
@@ -120,13 +120,13 @@ class ModuleDataProvider
      */
     public function getInstalled(): array
     {
-        $select = 'SELECT m.`id_module` as id, m.`name`, m.`version`, 1 as installed';
-        $from = ' FROM `' . _DB_PREFIX_ . 'module` m';
+        $select = 'SELECT m.id_module as id, m.name, m.version, 1 as installed';
+        $from = ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' m';
 
         $id_shops = (new Context())->getContextListShopID();
         if (count($id_shops) > 0) {
-            $from .= ' LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON ms.`id_module` = m.`id_module`';
-            $from .= ' AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')';
+            $from .= ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_shop') . ' ms ON ms.id_module = m.id_module';
+            $from .= ' AND ms.id_shop IN (' . implode(',', array_map('intval', $id_shops)) . ')';
         }
 
         $results = Db::getInstance()->executeS($select . $from);
@@ -185,11 +185,11 @@ class ModuleDataProvider
         $id_shops = (new Context())->getContextListShopID();
         // ToDo: Load list of all installed modules ?
 
-        $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
-        FROM `' . _DB_PREFIX_ . 'module` m
-        LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
-        WHERE `name` = "' . pSQL($name) . '"
-        AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')');
+        $result = Db::getInstance()->getRow('SELECT m.id_module as active, ms.id_module as shop_active
+        FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' m
+        LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_shop') . ' ms ON m.id_module = ms.id_module
+        WHERE name = \'' . pSQL($name) . '\'
+        AND ms.id_shop IN (' . implode(',', array_map('intval', $id_shops)) . ')');
         if ($result) {
             return (bool) ($result['active'] && $result['shop_active']);
         } else {
@@ -223,9 +223,9 @@ class ModuleDataProvider
      */
     public function getModuleIdByName($name, bool $activeModulesOnly = false)
     {
-        $sqlQuery = 'SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"';
+        $sqlQuery = 'SELECT id_module FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' WHERE name = \'' . pSQL($name) . '\'';
         if ($activeModulesOnly) {
-            $sqlQuery .= ' AND `active` = 1';
+            $sqlQuery .= ' AND active = 1';
         }
 
         return (int) Db::getInstance()->getValue(
@@ -325,11 +325,11 @@ class ModuleDataProvider
      */
     private function isModuleActive(int $id, array $id_shops): bool
     {
-        $result = Db::getInstance()->getRow('SELECT m.`active`, ms.`id_module` as `shop_active`
-            FROM `' . _DB_PREFIX_ . 'module` m
-            LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
-            WHERE m.`id_module` = ' . $id . '
-            AND ms.`id_shop` IN (' . implode(',', $id_shops) . ')');
+        $result = Db::getInstance()->getRow('SELECT m.active, ms.id_module as shop_active
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' m
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_shop') . ' ms ON m.id_module = ms.id_module
+            WHERE m.id_module = ' . $id . '
+            AND ms.id_shop IN (' . implode(',', $id_shops) . ')');
 
         return !empty($result);
     }

@@ -181,12 +181,15 @@ class ConnectionCore extends ObjectModel
         }
 
         // A new connection is created if the guest made no actions during 30 minutes
-        $sql = 'SELECT SQL_NO_CACHE `id_guest`
-				FROM `' . _DB_PREFIX_ . 'connections`
-				WHERE `id_guest` = ' . (int) $cookie->id_guest . '
-					AND `date_add` > \'' . pSQL(date('Y-m-d H:i:00', time() - 1800)) . '\'
+        // "SQL_NO_CACHE" is a MySQL-only optimizer hint dropped for PostgreSQL.
+        /* @phpstan-ignore-next-line */
+        $noCacheHint = _DB_TYPE_ == 'pgsql' ? '' : 'SQL_NO_CACHE ';
+        $sql = 'SELECT ' . $noCacheHint . 'id_guest
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'connections') . '
+				WHERE id_guest = ' . (int) $cookie->id_guest . '
+					AND date_add > \'' . pSQL(date('Y-m-d H:i:00', time() - 1800)) . '\'
 					' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
-				ORDER BY `date_add` DESC';
+				ORDER BY date_add DESC';
         $result = Db::getInstance()->getRow($sql, false);
         if (empty($result['id_guest']) && (int) $cookie->id_guest) {
             // The old connections details are removed from the database in order to spare some memory
@@ -234,12 +237,18 @@ class ConnectionCore extends ObjectModel
         if ($time > 300000) {
             $time = 300000;
         }
+        // PostgreSQL requires the INTERVAL literal quantity to be a quoted string, unlike MySQL's bare "INTERVAL n SECOND".
+        /* @phpstan-ignore-next-line */
+        $timeEndExpr = _DB_TYPE_ == 'pgsql'
+            ? 'time_start + INTERVAL \'' . (int) ($time / 1000) . ' seconds\''
+            : 'time_start + INTERVAL ' . (int) ($time / 1000) . ' SECOND';
+
         Db::getInstance()->execute('
-		UPDATE `' . _DB_PREFIX_ . 'connections_page`
-		SET `time_end` = `time_start` + INTERVAL ' . (int) ($time / 1000) . ' SECOND
-		WHERE `id_connections` = ' . (int) $idConnections . '
-		AND `id_page` = ' . (int) $idPage . '
-		AND `time_start` = \'' . pSQL($timeStart) . '\'');
+		UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'connections_page') . '
+		SET time_end = ' . $timeEndExpr . '
+		WHERE id_connections = ' . (int) $idConnections . '
+		AND id_page = ' . (int) $idPage . '
+		AND time_start = \'' . pSQL($timeStart) . '\'');
     }
 
     /**
@@ -248,6 +257,22 @@ class ConnectionCore extends ObjectModel
     public static function cleanConnectionsPages()
     {
         $period = Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN');
+
+        // MySQL's LAST_DAY(DATE_SUB(...)) has no PostgreSQL equivalent; the last day of the
+        // month is computed portably as (first day of next month - 1 day).
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            $pgIntervals = ['week' => '1 week', 'month' => '1 month', 'year' => '1 year'];
+            if (!isset($pgIntervals[$period])) {
+                return;
+            }
+
+            Db::getInstance()->execute('
+			DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'connections_page') . '
+			WHERE time_start < (date_trunc(\'month\', NOW() - INTERVAL \'' . $pgIntervals[$period] . '\') + INTERVAL \'1 month\' - INTERVAL \'1 day\')');
+
+            return;
+        }
 
         if ($period === 'week') {
             $interval = '1 WEEK';
@@ -262,7 +287,7 @@ class ConnectionCore extends ObjectModel
         if ($interval != null) {
             // Records of connections details older than the beginning of the  specified interval are deleted
             Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'connections_page`
+			DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'connections_page') . '
 			WHERE time_start < LAST_DAY(DATE_SUB(NOW(), INTERVAL ' . $interval . '))');
         }
     }

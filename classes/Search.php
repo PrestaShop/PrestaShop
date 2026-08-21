@@ -211,10 +211,15 @@ class SearchCore
              * Our string looks something like "prestashop test a-1000".
              * Aliases must be searched for in a raw form, with no special characters.
              */
+            // NOTE: the REGEXP-based alias matching below (including the ICU-support probe against
+            // MySQL's fake "DUAL" table) is MySQL-specific regex-engine detection with no PostgreSQL
+            // equivalent (Postgres always uses its own POSIX regex engine, with different boundary
+            // syntax: `\y` instead of `\b`, no `[[:<:]]`/`[[:>:]]`, and no FROM DUAL). This is a known,
+            // larger architectural gap left untouched here — flagged for a dedicated follow-up task.
             $query = '
 				SELECT a.alias, a.search
-				FROM `' . _DB_PREFIX_ . 'alias` a
-				WHERE \'TERM\' %s AND `active` = 1
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'alias') . ' a
+				WHERE \'TERM\' %s AND active = 1
             ';
 
             // Check if we can we use '\b' (faster)
@@ -378,11 +383,11 @@ class SearchCore
                 $sql = 'SELECT DISTINCT si.id_product ' .
                     'FROM ' . _DB_PREFIX_ . 'search_word sw ' .
                     'LEFT JOIN ' . _DB_PREFIX_ . 'search_index si ON sw.id_word = si.id_word ' .
-                    'LEFT JOIN ' . _DB_PREFIX_ . 'product_shop product_shop ON (product_shop.`id_product` = si.`id_product`) ' .
+                    'LEFT JOIN ' . _DB_PREFIX_ . 'product_shop product_shop ON (product_shop.id_product = si.id_product) ' .
                     'WHERE sw.id_lang = ' . (int) $id_lang . ' ' .
                     'AND sw.id_shop = ' . $context->shop->id . ' ' .
-                    'AND product_shop.`active` = 1 ' .
-                    'AND product_shop.`visibility` IN ("both", "search") ' .
+                    'AND product_shop.active = 1 ' .
+                    'AND product_shop.visibility IN (\'both\', \'search\') ' .
                     'AND product_shop.indexed = 1 ' .
                     'AND sw.word LIKE ';
 
@@ -474,20 +479,20 @@ class SearchCore
         $sqlGroups = '';
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
-            $sqlGroups = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
+            $sqlGroups = 'AND cg.id_group ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
         }
 
         // Select products from the list of IDs that should be displayed and can be returned.
         $results = $db->executeS(
-            'SELECT DISTINCT cp.`id_product` ' .
-            'FROM `' . _DB_PREFIX_ . 'category_product` cp ' .
-            (Group::isFeatureActive() ? 'INNER JOIN `' . _DB_PREFIX_ . 'category_group` cg ON cp.`id_category` = cg.`id_category`' : '') . ' ' .
-            'INNER JOIN `' . _DB_PREFIX_ . 'category` c ON cp.`id_category` = c.`id_category` ' .
-            'INNER JOIN `' . _DB_PREFIX_ . 'product` p ON cp.`id_product` = p.`id_product` ' .
+            'SELECT DISTINCT cp.id_product ' .
+            'FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp ' .
+            (Group::isFeatureActive() ? 'INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cg ON cp.id_category = cg.id_category' : '') . ' ' .
+            'INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c ON cp.id_category = c.id_category ' .
+            'INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON cp.id_product = p.id_product ' .
             Shop::addSqlAssociation('product', 'p', false) . ' ' .
-            'WHERE c.`active` = 1 ' .
-            'AND product_shop.`active` = 1 ' .
-            'AND product_shop.`visibility` IN ("both", "search") ' .
+            'WHERE c.active = 1 ' .
+            'AND product_shop.active = 1 ' .
+            'AND product_shop.visibility IN (\'both\', \'search\') ' .
             'AND product_shop.indexed = 1 ' .
             'AND cp.id_product IN (' . implode(',', $foundProductIds) . ')' . $sqlGroups,
             true,
@@ -516,16 +521,16 @@ class SearchCore
             $sql = 'SELECT DISTINCT p.id_product, pl.name pname, cl.name cname,
 						cl.link_rewrite crewrite, pl.link_rewrite prewrite ' . $sqlScore . '
 					FROM ' . _DB_PREFIX_ . 'product p
-					INNER JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
-						p.`id_product` = pl.`id_product`
-						AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
+					INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl ON (
+						p.id_product = pl.id_product
+						AND pl.id_lang = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
 					)
 					' . Shop::addSqlAssociation('product', 'p') . '
-					INNER JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (
-						product_shop.`id_category_default` = cl.`id_category`
-						AND cl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('cl') . '
+					INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON (
+						product_shop.id_category_default = cl.id_category
+						AND cl.id_lang = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('cl') . '
 					)
-					WHERE p.`id_product` ' . $product_pool . '
+					WHERE p.id_product ' . $product_pool . '
 					ORDER BY position DESC LIMIT 10';
 
             return $db->executeS($sql, true, false);
@@ -533,7 +538,7 @@ class SearchCore
 
         if (strpos($order_by, '.') > 0) {
             $order_by = explode('.', $order_by);
-            $order_by = pSQL($order_by[0]) . '.`' . pSQL($order_by[1]) . '`';
+            $order_by = pSQL($order_by[0]) . '.' . Db::quoteIdentifier($order_by[1]);
         }
         $alias = '';
         if ($order_by == 'price') {
@@ -541,36 +546,53 @@ class SearchCore
         } elseif (in_array($order_by, ['date_upd', 'date_add'])) {
             $alias = 'p.';
         }
-        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
-				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
-			 image_shop.`id_image` id_image, il.`legend`, m.`name` manufacturer_name ' . $sqlScore . ',
-				DATEDIFF(
-					p.`date_add`,
-					DATE_SUB(
-						"' . date('Y-m-d') . ' 00:00:00",
-						INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-					)
-				) > 0 new' . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.`id_product_attribute`,0) id_product_attribute' : '') . '
+        $nbDaysNewProduct = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
+        $now = date('Y-m-d') . ' 00:00:00';
+        // "p.date_add > (now - N days)" instead of "DATEDIFF(p.date_add, DATE_SUB(now, INTERVAL N DAY)) > 0":
+        // DATE_SUB() has no PostgreSQL equivalent, and TIMESTAMP-literal-minus-INTERVAL has no MySQL equivalent.
+        /* @phpstan-ignore-next-line */
+        $newProductThreshold = _DB_TYPE_ == 'pgsql'
+            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nbDaysNewProduct . " DAY')"
+            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nbDaysNewProduct . ' DAY)';
+
+        // MySQL tolerates non-aggregated joined-table columns (p.*, pl.*, image_shop.*, il.*, m.*) alongside
+        // "GROUP BY product_shop.id_product"; PostgreSQL only allows this via DISTINCT ON.
+        /* @phpstan-ignore-next-line */
+        $dedupeClause = _DB_TYPE_ == 'pgsql' ? 'DISTINCT ON (product_shop.id_product) ' : '';
+        /* @phpstan-ignore-next-line */
+        $groupByClause = _DB_TYPE_ == 'pgsql' ? '' : 'GROUP BY product_shop.id_product';
+        // FORCE INDEX is a pure MySQL optimizer hint with no PostgreSQL equivalent (no query hint syntax); safe to drop.
+        /* @phpstan-ignore-next-line */
+        $forceIndexIdProduct = _DB_TYPE_ == 'pgsql' ? '' : ' FORCE INDEX (id_product)';
+        /* @phpstan-ignore-next-line */
+        $forceIndexPrimary = _DB_TYPE_ == 'pgsql' ? '' : ' FORCE INDEX (PRIMARY)';
+
+        $sql = 'SELECT ' . $dedupeClause . 'p.*, product_shop.*, stock.out_of_stock, COALESCE(stock.quantity, 0) as quantity,
+				pl.description_short, pl.available_now, pl.available_later, pl.link_rewrite, pl.name,
+			 image_shop.id_image id_image, il.legend, m.name manufacturer_name ' . $sqlScore . ',
+				p.date_add > ' . $newProductThreshold . ' new' . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, COALESCE(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
 				FROM ' . _DB_PREFIX_ . 'product p
 				' . Shop::addSqlAssociation('product', 'p') . '
-				INNER JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
-					p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
+				INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl ON (
+					p.id_product = pl.id_product
+					AND pl.id_lang = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
 				)
-				' . (Combination::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop FORCE INDEX (id_product)
-				    ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
+				' . (Combination::isFeatureActive() ? 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_shop') . ' product_attribute_shop' . $forceIndexIdProduct . '
+				    ON (p.id_product = product_attribute_shop.id_product AND product_attribute_shop.default_on = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
 				' . Product::sqlStock('p', 0) . '
-				LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m FORCE INDEX (PRIMARY)
-				    ON m.`id_manufacturer` = p.`id_manufacturer`
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop FORCE INDEX (id_product)
-					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang . ')
-				WHERE p.`id_product` ' . $product_pool . '
-				GROUP BY product_shop.id_product';
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'manufacturer') . ' m' . $forceIndexPrimary . '
+				    ON m.id_manufacturer = p.id_manufacturer
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_shop') . ' image_shop' . $forceIndexIdProduct . '
+					ON (image_shop.id_product = p.id_product AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_lang') . ' il ON (image_shop.id_image = il.id_image AND il.id_lang = ' . (int) $id_lang . ')
+				WHERE p.id_product ' . $product_pool . '
+				' . $groupByClause;
 
         if ($order_by !== 'price') {
-            $sql .= ($order_by ? ' ORDER BY  ' . $alias . $order_by : '') . ($order_way ? ' ' . $order_way : '') . '
-				LIMIT ' . (int) (($page_number - 1) * $page_size) . ',' . (int) $page_size;
+            /* @phpstan-ignore-next-line */
+            $orderByIdPrefix = (_DB_TYPE_ == 'pgsql' && $order_by) ? 'product_shop.id_product, ' : '';
+            $sql .= ($order_by ? ' ORDER BY  ' . $orderByIdPrefix . $alias . $order_by : '') . ($order_way ? ' ' . $order_way : '') . '
+				LIMIT ' . (int) $page_size . ' OFFSET ' . (int) (($page_number - 1) * $page_size);
         }
 
         $result = $db->executeS($sql, true, false);
@@ -583,12 +605,12 @@ class SearchCore
         $sql = 'SELECT COUNT(*)
 				FROM ' . _DB_PREFIX_ . 'product p
 				' . Shop::addSqlAssociation('product', 'p') . '
-				INNER JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
-					p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
+				INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl ON (
+					p.id_product = pl.id_product
+					AND pl.id_lang = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
 				)
-				LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-				WHERE p.`id_product` ' . $product_pool;
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'manufacturer') . ' m ON m.id_manufacturer = p.id_manufacturer
+				WHERE p.id_product ' . $product_pool;
         $total = $db->getValue($sql, false);
 
         return ['total' => $total, 'result' => $result];
@@ -718,10 +740,10 @@ class SearchCore
             // Limit products for each step but be sure that each attribute is taken into account
             $sql = 'SELECT p.id_product FROM ' . _DB_PREFIX_ . 'product p
 				' . Shop::addSqlAssociation('product', 'p', true, null, true) . '
-				WHERE product_shop.`indexed` = 0
-				AND product_shop.`visibility` IN ("both", "search")
-				AND product_shop.`active` = 1
-				ORDER BY product_shop.`id_product` ASC
+				WHERE product_shop.indexed = 0
+				AND product_shop.visibility IN (\'both\', \'search\')
+				AND product_shop.active = 1
+				ORDER BY product_shop.id_product ASC
 				LIMIT ' . (int) $limit;
 
             $res = Db::getInstance()->executeS($sql, false);
@@ -797,11 +819,11 @@ class SearchCore
 			LEFT JOIN ' . _DB_PREFIX_ . 'lang l
 				ON l.id_lang = pl.id_lang
 			WHERE product_shop.indexed = 0
-			AND product_shop.visibility IN ("both", "search")
+			AND product_shop.visibility IN (\'both\', \'search\')
 			' . ($id_product ? 'AND p.id_product = ' . (int) $id_product : '') . '
 			' . ($ids ? 'AND p.id_product IN (' . implode(',', array_map('intval', $ids)) . ')' : '') . '
-			AND product_shop.`active` = 1
-			AND pl.`id_shop` = product_shop.`id_shop`';
+			AND product_shop.active = 1
+			AND pl.id_shop = product_shop.id_shop';
 
         return Db::getInstance()->executeS($sql, true, false);
     }
@@ -852,37 +874,89 @@ class SearchCore
             $full = false;
         }
 
+        // Matches the shop-scoping Shop::addSqlAssociation() would otherwise apply via a join;
+        // needed here because product_shop is the UPDATE target itself, with no room for a join.
+        $contextIdShop = (int) Shop::getContextShopID();
+        $productShopScoping = $contextIdShop
+            ? 'product_shop.id_shop = ' . $contextIdShop
+            : 'product_shop.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')';
+
+        // MySQL's multi-table extension syntax ("DELETE t1, t2 FROM t1 JOIN t2 ..." and
+        // "UPDATE t1 JOIN t2 ... SET t1.col=.., t2.col=..") has no single-statement PostgreSQL
+        // equivalent (Postgres DELETE/UPDATE can only target one table per statement). Rewritten
+        // as portable EXISTS/IN-subquery statements that work identically on both dialects.
+        // search_word must be deleted before search_index, since its condition matches against
+        // still-existing search_index rows.
         if ($full && Context::getContext()->shop->getContext() == Shop::CONTEXT_SHOP) {
-            $db->execute('DELETE si, sw FROM `' . _DB_PREFIX_ . 'search_index` si
-				INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (p.id_product = si.id_product)
-				' . Shop::addSqlAssociation('product', 'p') . '
-				INNER JOIN `' . _DB_PREFIX_ . 'search_word` sw ON (sw.id_word = si.id_word AND product_shop.id_shop = sw.id_shop)
-				WHERE product_shop.`visibility` IN ("both", "search")
-				AND product_shop.`active` = 1');
-            $db->execute('UPDATE `' . _DB_PREFIX_ . 'product` p
-				' . Shop::addSqlAssociation('product', 'p') . '
-				SET p.`indexed` = 0, product_shop.`indexed` = 0
-				WHERE product_shop.`visibility` IN ("both", "search")
-				AND product_shop.`active` = 1
-				');
+            $db->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_word') . ' sw
+				WHERE EXISTS (
+					SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . ' si
+					INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON (p.id_product = si.id_product)
+					' . Shop::addSqlAssociation('product', 'p') . '
+					WHERE sw.id_word = si.id_word AND product_shop.id_shop = sw.id_shop
+					AND product_shop.visibility IN (\'both\', \'search\')
+					AND product_shop.active = 1
+				)');
+            $db->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . ' si
+				WHERE EXISTS (
+					SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
+					' . Shop::addSqlAssociation('product', 'p') . '
+					WHERE p.id_product = si.id_product
+					AND product_shop.visibility IN (\'both\', \'search\')
+					AND product_shop.active = 1
+				)');
+            $db->execute('UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_shop') . ' product_shop
+				SET indexed = 0
+				WHERE EXISTS (
+					SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
+					WHERE p.id_product = product_shop.id_product
+				)
+				AND product_shop.visibility IN (\'both\', \'search\')
+				AND product_shop.active = 1
+				AND ' . $productShopScoping);
+            $db->execute('UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
+				SET indexed = 0
+				WHERE EXISTS (
+					SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_shop') . ' product_shop
+					WHERE product_shop.id_product = p.id_product
+					AND product_shop.visibility IN (\'both\', \'search\')
+					AND product_shop.active = 1
+				)');
         } elseif ($full) {
             $db->execute('TRUNCATE ' . _DB_PREFIX_ . 'search_index');
             $db->execute('TRUNCATE ' . _DB_PREFIX_ . 'search_word');
             ObjectModel::updateMultishopTable('Product', ['indexed' => 0]);
         } else {
-            $db->execute('DELETE si FROM `' . _DB_PREFIX_ . 'search_index` si
-				INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (p.id_product = si.id_product)
-				' . Shop::addSqlAssociation('product', 'p') . '
-				WHERE product_shop.`visibility` IN ("both", "search")
-				AND product_shop.`active` = 1
-				AND ' . ($id_product ? 'p.`id_product` = ' . (int) $id_product : 'product_shop.`indexed` = 0'));
+            $db->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . ' si
+				WHERE EXISTS (
+					SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
+					' . Shop::addSqlAssociation('product', 'p') . '
+					WHERE p.id_product = si.id_product
+					AND product_shop.visibility IN (\'both\', \'search\')
+					AND product_shop.active = 1
+					AND ' . ($id_product ? 'p.id_product = ' . (int) $id_product : 'product_shop.indexed = 0') . '
+				)');
 
-            $db->execute('UPDATE `' . _DB_PREFIX_ . 'product` p
-				' . Shop::addSqlAssociation('product', 'p') . '
-				SET p.`indexed` = 0, product_shop.`indexed` = 0
-				WHERE product_shop.`visibility` IN ("both", "search")
-				AND product_shop.`active` = 1
-				AND ' . ($id_product ? 'p.`id_product` = ' . (int) $id_product : 'product_shop.`indexed` = 0'));
+            $db->execute('UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_shop') . ' product_shop
+				SET indexed = 0
+				WHERE EXISTS (
+					SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
+					WHERE p.id_product = product_shop.id_product
+				)
+				AND product_shop.visibility IN (\'both\', \'search\')
+				AND product_shop.active = 1
+				AND ' . $productShopScoping . '
+				AND ' . ($id_product ? 'product_shop.id_product = ' . (int) $id_product : 'product_shop.indexed = 0'));
+
+            $db->execute('UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
+				SET indexed = 0
+				WHERE EXISTS (
+					SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_shop') . ' product_shop
+					WHERE product_shop.id_product = p.id_product
+					AND product_shop.visibility IN (\'both\', \'search\')
+					AND product_shop.active = 1
+					AND ' . ($id_product ? 'product_shop.id_product = ' . (int) $id_product : 'product_shop.indexed = 0') . '
+				)');
         }
 
         // Every fields are weighted according to the configuration in the backend
@@ -963,10 +1037,17 @@ class SearchCore
                     }
 
                     if (is_array($query_array) && !empty($query_array)) {
+                        // PostgreSQL has no INSERT IGNORE: ON CONFLICT DO NOTHING is the equivalent
+                        // (no conflict target needed, it applies to any constraint violation on the row).
+                        /* @phpstan-ignore-next-line */
+                        $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT INTO' : 'INSERT IGNORE INTO';
+                        /* @phpstan-ignore-next-line */
+                        $onConflictClause = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT DO NOTHING' : '';
+
                         // The words are inserted...
                         $db->execute('
-						INSERT IGNORE INTO ' . _DB_PREFIX_ . 'search_word (id_lang, id_shop, word)
-						VALUES ' . implode(',', $query_array), false);
+						' . $insertKeyword . ' ' . _DB_PREFIX_ . 'search_word (id_lang, id_shop, word)
+						VALUES ' . implode(',', $query_array) . $onConflictClause, false);
                     }
                     $word_ids_by_word = [];
                     if (is_array($query_array2) && !empty($query_array2)) {
@@ -1033,9 +1114,16 @@ class SearchCore
     protected static function saveIndex(&$queryArray3)
     {
         if (is_array($queryArray3) && !empty($queryArray3)) {
-            $query = 'INSERT INTO ' . _DB_PREFIX_ . 'search_index (id_product, id_word, weight)
+            // search_index's PRIMARY KEY is (id_word, id_product); ON CONFLICT needs that pair as the
+            // conflict target, and EXCLUDED holds the row that would have been inserted.
+            /* @phpstan-ignore-next-line */
+            $onConflict = _DB_TYPE_ == 'pgsql'
+                ? 'ON CONFLICT (id_word, id_product) DO UPDATE SET weight = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . '.weight + EXCLUDED.weight'
+                : 'ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)';
+
+            $query = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . ' (id_product, id_word, weight)
 				VALUES ' . implode(',', $queryArray3) . '
-				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)';
+				' . $onConflict;
 
             Db::getInstance()->execute($query, false);
         }
@@ -1083,64 +1171,85 @@ class SearchCore
         $sqlGroups = '';
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
-            $sqlGroups = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
+            $sqlGroups = 'AND cg.id_group ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
         }
+
+        // STRAIGHT_JOIN is a pure MySQL join-order optimizer hint with no PostgreSQL equivalent; use a
+        // plain INNER JOIN for pgsql (same result set, just without the forced join order).
+        /* @phpstan-ignore-next-line */
+        $tagStraightJoin = _DB_TYPE_ == 'pgsql' ? 'INNER JOIN' : 'STRAIGHT_JOIN';
 
         if ($count) {
             return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-                'SELECT COUNT(DISTINCT pt.`id_product`) nb ' .
+                'SELECT COUNT(DISTINCT pt.id_product) nb ' .
                 'FROM ' .
-                '`' . _DB_PREFIX_ . 'tag` t ' .
-                'STRAIGHT_JOIN `' . _DB_PREFIX_ . 'product_tag` pt ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = ' . (int) $id_lang . ') ' .
-                'STRAIGHT_JOIN `' . _DB_PREFIX_ . 'product` p ON (p.`id_product` = pt.`id_product`) ' .
+                Db::quoteIdentifier(_DB_PREFIX_ . 'tag') . ' t ' .
+                $tagStraightJoin . ' ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag') . ' pt ON (pt.id_tag = t.id_tag AND t.id_lang = ' . (int) $id_lang . ') ' .
+                $tagStraightJoin . ' ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON (p.id_product = pt.id_product) ' .
                 Shop::addSqlAssociation('product', 'p') . ' ' .
-                'LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON (cp.`id_product` = p.`id_product`) ' .
-                'LEFT JOIN `' . _DB_PREFIX_ . 'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = ' . (int) $id_shop . ') ' .
-                (Group::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '') . ' ' .
-                'WHERE product_shop.`active` = 1 ' .
-                'AND product_shop.`visibility` IN (\'both\', \'search\') ' .
-                'AND cs.`id_shop` = ' . (int) Context::getContext()->shop->id . ' ' .
+                'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp ON (cp.id_product = p.id_product) ' .
+                'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . ' cs ON (cp.id_category = cs.id_category AND cs.id_shop = ' . (int) $id_shop . ') ' .
+                (Group::isFeatureActive() ? 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cg ON (cg.id_category = cp.id_category)' : '') . ' ' .
+                'WHERE product_shop.active = 1 ' .
+                'AND product_shop.visibility IN (\'both\', \'search\') ' .
+                'AND cs.id_shop = ' . (int) Context::getContext()->shop->id . ' ' .
                 $sqlGroups . ' ' .
-                'AND t.`name` LIKE \'%' . pSQL($tag) . '%\''
+                'AND t.name LIKE \'%' . pSQL($tag) . '%\''
             );
         }
 
-        $sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`, pl.`available_now`, pl.`available_later`,
-					MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` manufacturer_name, 1 position,
-					DATEDIFF(
-						p.`date_add`,
-						DATE_SUB(
-							"' . date('Y-m-d') . ' 00:00:00",
-							INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-						)
-					) > 0 new
+        $nbDaysNewProduct = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
+        $now = date('Y-m-d') . ' 00:00:00';
+        // "p.date_add > (now - N days)" instead of "DATEDIFF(p.date_add, DATE_SUB(now, INTERVAL N DAY)) > 0":
+        // DATE_SUB() has no PostgreSQL equivalent, and TIMESTAMP-literal-minus-INTERVAL has no MySQL equivalent.
+        /* @phpstan-ignore-next-line */
+        $newProductThreshold = _DB_TYPE_ == 'pgsql'
+            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nbDaysNewProduct . " DAY')"
+            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nbDaysNewProduct . ' DAY)';
+
+        // MySQL tolerates SELECT DISTINCT + non-aggregated joined-table columns (p.*, pl.*, il.*, m.*)
+        // alongside "GROUP BY product_shop.id_product"; PostgreSQL only allows this via DISTINCT ON,
+        // which also means MAX(image_shop.id_image) (used only to pick a single deterministic value
+        // per group) can be selected as a plain column instead.
+        /* @phpstan-ignore-next-line */
+        $dedupeClause = _DB_TYPE_ == 'pgsql' ? 'DISTINCT ON (product_shop.id_product) ' : 'DISTINCT ';
+        /* @phpstan-ignore-next-line */
+        $imageIdExpr = _DB_TYPE_ == 'pgsql' ? 'image_shop.id_image' : 'MAX(image_shop.id_image)';
+        /* @phpstan-ignore-next-line */
+        $groupByClause = _DB_TYPE_ == 'pgsql' ? '' : 'GROUP BY product_shop.id_product';
+        /* @phpstan-ignore-next-line */
+        $orderByIdPrefix = _DB_TYPE_ == 'pgsql' ? 'product_shop.id_product, ' : '';
+
+        $sql = 'SELECT ' . $dedupeClause . 'p.*, product_shop.*, stock.out_of_stock, COALESCE(stock.quantity, 0) as quantity, pl.description_short, pl.link_rewrite, pl.name, pl.available_now, pl.available_later,
+					' . $imageIdExpr . ' id_image, il.legend, m.name manufacturer_name, 1 position,
+					p.date_add > ' . $newProductThreshold . ' new
 				FROM
-				`' . _DB_PREFIX_ . 'tag` t
-				STRAIGHT_JOIN `' . _DB_PREFIX_ . 'product_tag` pt ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = ' . (int) $id_lang . ')
-				STRAIGHT_JOIN `' . _DB_PREFIX_ . 'product` p ON (p.`id_product` = pt.`id_product`)
-				INNER JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
-					p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
+				' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag') . ' t
+				' . $tagStraightJoin . ' ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag') . ' pt ON (pt.id_tag = t.id_tag AND t.id_lang = ' . (int) $id_lang . ')
+				' . $tagStraightJoin . ' ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON (p.id_product = pt.id_product)
+				INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl ON (
+					p.id_product = pl.id_product
+					AND pl.id_lang = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
 				)
 				' . Shop::addSqlAssociation('product', 'p', false) . '
-				LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
-					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-				LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON (cp.`id_product` = p.`id_product`)
-				' . (Group::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '') . '
-				LEFT JOIN `' . _DB_PREFIX_ . 'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = ' . (int) $id_shop . ')
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_shop') . ' product_attribute_shop
+				ON (p.id_product = product_attribute_shop.id_product AND product_attribute_shop.default_on = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_shop') . ' image_shop
+					ON (image_shop.id_product = p.id_product AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_lang') . ' il ON (image_shop.id_image = il.id_image AND il.id_lang = ' . (int) $id_lang . ')
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'manufacturer') . ' m ON (m.id_manufacturer = p.id_manufacturer)
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp ON (cp.id_product = p.id_product)
+				' . (Group::isFeatureActive() ? 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cg ON (cg.id_category = cp.id_category)' : '') . '
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . ' cs ON (cp.id_category = cs.id_category AND cs.id_shop = ' . (int) $id_shop . ')
 				' . Product::sqlStock('p', 0) . '
-				WHERE product_shop.`active` = 1
-                    AND product_shop.`visibility` IN (\'both\', \'search\')
-					AND cs.`id_shop` = ' . (int) Context::getContext()->shop->id . '
+				WHERE product_shop.active = 1
+                    AND product_shop.visibility IN (\'both\', \'search\')
+					AND cs.id_shop = ' . (int) Context::getContext()->shop->id . '
 					' . $sqlGroups . '
-					AND t.`name` LIKE \'%' . pSQL($tag) . '%\'
-					GROUP BY product_shop.id_product
-				ORDER BY position DESC' . ($orderBy ? ', ' . $orderBy : '') . ($orderWay ? ' ' . $orderWay : '') . '
-				LIMIT ' . (int) (($pageNumber - 1) * $pageSize) . ',' . (int) $pageSize;
+					AND t.name LIKE \'%' . pSQL($tag) . '%\'
+					' . $groupByClause . '
+				ORDER BY ' . $orderByIdPrefix . 'position DESC' . ($orderBy ? ', ' . $orderBy : '') . ($orderWay ? ' ' . $orderWay : '') . '
+				LIMIT ' . (int) $pageSize . ' OFFSET ' . (int) (($pageNumber - 1) * $pageSize);
         if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false)) {
             return false;
         }
@@ -1184,7 +1293,7 @@ class SearchCore
         $levenshteinMaxWordDifference = (int) Configuration::get('PS_SEARCH_FUZZY_MAX_DIFFERENCE');
 
         if (!self::$totalWordInSearchWordTable) {
-            $sql = 'SELECT count(*) FROM `' . _DB_PREFIX_ . 'search_word`;';
+            $sql = 'SELECT count(*) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_word') . ';';
             self::$totalWordInSearchWordTable = (int) Db::getInstance()->getValue($sql);
         }
 
@@ -1241,18 +1350,18 @@ class SearchCore
             }
         }
 
-        $sql = 'SELECT null as levenshtein, -SUM(weight) as weight, sw.`word` ' .
-             'FROM `' . _DB_PREFIX_ . 'search_word` sw ' .
-             'LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.`id_word` = si.`id_word`) ' .
-             'LEFT JOIN `' . _DB_PREFIX_ . 'product_shop` product_shop ON (product_shop.`id_product` = si.`id_product`) ' .
-             'WHERE sw.`id_lang` = ' . (int) $context->language->id . ' ' .
-             'AND sw.`id_shop` = ' . (int) $context->shop->id . ' ' .
-             'AND LENGTH(sw.`word`) >= ' . self::$targetLengthMin . ' ' .
-             'AND LENGTH(sw.`word`) <= ' . self::$targetLengthMax . ' ' .
-             'AND product_shop.`active` = 1 ' .
-             'AND product_shop.`visibility` IN ("both", "search") ' .
+        $sql = 'SELECT null as levenshtein, -SUM(weight) as weight, sw.word ' .
+             'FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_word') . ' sw ' .
+             'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . ' si ON (sw.id_word = si.id_word) ' .
+             'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_shop') . ' product_shop ON (product_shop.id_product = si.id_product) ' .
+             'WHERE sw.id_lang = ' . (int) $context->language->id . ' ' .
+             'AND sw.id_shop = ' . (int) $context->shop->id . ' ' .
+             'AND LENGTH(sw.word) >= ' . self::$targetLengthMin . ' ' .
+             'AND LENGTH(sw.word) <= ' . self::$targetLengthMax . ' ' .
+             'AND product_shop.active = 1 ' .
+             'AND product_shop.visibility IN (\'both\', \'search\') ' .
              'AND product_shop.indexed = 1 ' .
-             'GROUP BY sw.`word`;';
+             'GROUP BY sw.word;';
 
         $selectedWords = Db::getInstance()->executeS($sql);
 

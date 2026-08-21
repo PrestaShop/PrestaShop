@@ -42,6 +42,14 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function quoteIdentifier(string $identifier): string
+    {
+        return Db::quoteIdentifier($identifier);
+    }
+
+    /**
      * Returns a value from the first row, first column of a SELECT query.
      *
      * @param string|DbQuery $sql

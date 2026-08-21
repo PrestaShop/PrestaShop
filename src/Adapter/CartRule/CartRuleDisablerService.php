@@ -76,12 +76,12 @@ class CartRuleDisablerService
         $db = Db::getInstance();
 
         $cartRuleIds = $db->executeS(
-            'SELECT crg.`id_cart_rule`
-            FROM `' . $prefix . 'cart_rule_group` crg
-            INNER JOIN `' . $prefix . 'cart_rule` cr ON cr.`id_cart_rule` = crg.`id_cart_rule` AND cr.`group_restriction` = 1
-            WHERE crg.`id_group` = ' . (int) $groupId . '
-            AND crg.`id_cart_rule` IN (
-                SELECT `id_cart_rule` FROM `' . $prefix . 'cart_rule_group` GROUP BY `id_cart_rule` HAVING COUNT(*) = 1
+            'SELECT crg.id_cart_rule
+            FROM ' . Db::quoteIdentifier($prefix . 'cart_rule_group') . ' crg
+            INNER JOIN ' . Db::quoteIdentifier($prefix . 'cart_rule') . ' cr ON cr.id_cart_rule = crg.id_cart_rule AND cr.group_restriction = 1
+            WHERE crg.id_group = ' . (int) $groupId . '
+            AND crg.id_cart_rule IN (
+                SELECT id_cart_rule FROM ' . Db::quoteIdentifier($prefix . 'cart_rule_group') . ' GROUP BY id_cart_rule HAVING COUNT(*) = 1
             )'
         );
 

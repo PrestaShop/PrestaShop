@@ -66,7 +66,7 @@ class RequestSqlCore extends ObjectModel
      */
     public static function getRequestSql()
     {
-        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'request_sql` ORDER BY `id_request_sql`')) {
+        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'request_sql') . ' ORDER BY id_request_sql')) {
             return false;
         }
 
@@ -87,7 +87,7 @@ class RequestSqlCore extends ObjectModel
      */
     public static function getRequestSqlById($id)
     {
-        return Db::getInstance()->executeS('SELECT `sql` FROM `' . _DB_PREFIX_ . 'request_sql` WHERE `id_request_sql` = ' . (int) $id);
+        return Db::getInstance()->executeS('SELECT ' . Db::quoteIdentifier('sql') . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'request_sql') . ' WHERE id_request_sql = ' . (int) $id);
     }
 
     /**
@@ -185,7 +185,13 @@ class RequestSqlCore extends ObjectModel
      */
     public function getTables()
     {
-        $results = Db::getInstance()->executeS('SHOW TABLES');
+        // MySQL's "SHOW TABLES" has no PostgreSQL equivalent; querying pg_catalog instead.
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            $results = Db::getInstance()->executeS('SELECT tablename AS "Tables" FROM pg_catalog.pg_tables WHERE schemaname = \'public\'');
+        } else {
+            $results = Db::getInstance()->executeS('SHOW TABLES');
+        }
         $tables = [];
         foreach ($results as $result) {
             $key = array_keys($result);
@@ -204,6 +210,17 @@ class RequestSqlCore extends ObjectModel
      */
     public function getAttributesByTable($table)
     {
+        // MySQL's "DESCRIBE table" has no PostgreSQL equivalent; querying information_schema
+        // instead, reshaped to expose the same "Field" key MySQL returns.
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            return Db::getInstance()->executeS(
+                'SELECT column_name AS "Field" FROM information_schema.columns
+                WHERE table_schema = current_schema() AND table_name = \'' . pSQL($table) . '\'
+                ORDER BY ordinal_position'
+            );
+        }
+
         return Db::getInstance()->executeS('DESCRIBE ' . pSQL($table));
     }
 

@@ -120,14 +120,14 @@ class CMSCore extends ObjectModel
         }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.id_cms, cl.link_rewrite, cl.meta_title
-		FROM ' . _DB_PREFIX_ . 'cms c
-		LEFT JOIN ' . _DB_PREFIX_ . 'cms_lang cl ON (c.id_cms = cl.id_cms AND cl.id_lang = ' . (int) $idLang . ' AND cl.id_shop = ' . (int) Context::getContext()->shop->id . ')
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms') . ' c
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_lang') . ' cl ON (c.id_cms = cl.id_cms AND cl.id_lang = ' . (int) $idLang . ' AND cl.id_shop = ' . (int) Context::getContext()->shop->id . ')
 		' . Shop::addSqlAssociation('cms', 'c') . '
-		WHERE 1
+		WHERE 1 = 1
 		' . (($selection !== null) ? ' AND c.id_cms IN (' . implode(',', array_map('intval', $selection)) . ')' : '') .
-        ($active ? ' AND c.`active` = 1 ' : '') .
+        ($active ? ' AND c.active = 1 ' : '') .
         'GROUP BY c.id_cms
-		ORDER BY c.`position`');
+		ORDER BY c.position');
 
         $links = [];
         if ($result) {
@@ -155,13 +155,13 @@ class CMSCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.id_cms, l.meta_title
-		FROM  ' . _DB_PREFIX_ . 'cms c
-		JOIN ' . _DB_PREFIX_ . 'cms_lang l ON (c.id_cms = l.id_cms)
+		FROM  ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms') . ' c
+		JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_lang') . ' l ON (c.id_cms = l.id_cms)
 		' . Shop::addSqlAssociation('cms', 'c') . '
-		' . (($idBlock) ? 'JOIN ' . _DB_PREFIX_ . 'block_cms b ON (c.id_cms = b.id_cms)' : '') . '
-		WHERE l.id_lang = ' . (int) $idLang . (($idBlock) ? ' AND b.id_block = ' . (int) $idBlock : '') . ($active ? ' AND c.`active` = 1 ' : '') . '
+		' . (($idBlock) ? 'JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'block_cms') . ' b ON (c.id_cms = b.id_cms)' : '') . '
+		WHERE l.id_lang = ' . (int) $idLang . (($idBlock) ? ' AND b.id_block = ' . (int) $idBlock : '') . ($active ? ' AND c.active = 1 ' : '') . '
 		GROUP BY c.id_cms
-		ORDER BY c.`position`');
+		ORDER BY c.position');
     }
 
     /**
@@ -174,10 +174,10 @@ class CMSCore extends ObjectModel
     {
         if (!$res = Db::getInstance()->executeS(
             '
-			SELECT cp.`id_cms`, cp.`position`, cp.`id_cms_category`
-			FROM `' . _DB_PREFIX_ . 'cms` cp
-			WHERE cp.`id_cms_category` = ' . (int) $this->id_cms_category . '
-			ORDER BY cp.`position` ASC'
+			SELECT cp.id_cms, cp.position, cp.id_cms_category
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms') . ' cp
+			WHERE cp.id_cms_category = ' . (int) $this->id_cms_category . '
+			ORDER BY cp.position ASC'
         )) {
             return false;
         }
@@ -195,18 +195,18 @@ class CMSCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         return Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'cms`
-			SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
-			WHERE `position`
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms') . '
+			SET position= position ' . ($way ? '- 1' : '+ 1') . '
+			WHERE position
 			' . ($way
-                ? '> ' . (int) $movedCms['position'] . ' AND `position` <= ' . (int) $position
-                : '< ' . (int) $movedCms['position'] . ' AND `position` >= ' . (int) $position) . '
-			AND `id_cms_category`=' . (int) $movedCms['id_cms_category'])
+                ? '> ' . (int) $movedCms['position'] . ' AND position <= ' . (int) $position
+                : '< ' . (int) $movedCms['position'] . ' AND position >= ' . (int) $position) . '
+			AND id_cms_category=' . (int) $movedCms['id_cms_category'])
         && Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'cms`
-			SET `position` = ' . (int) $position . '
-			WHERE `id_cms` = ' . (int) $movedCms['id_cms'] . '
-			AND `id_cms_category`=' . (int) $movedCms['id_cms_category']);
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms') . '
+			SET position = ' . (int) $position . '
+			WHERE id_cms = ' . (int) $movedCms['id_cms'] . '
+			AND id_cms_category=' . (int) $movedCms['id_cms_category']);
     }
 
     /**
@@ -217,18 +217,18 @@ class CMSCore extends ObjectModel
     public static function cleanPositions($idCategory)
     {
         $sql = '
-		SELECT `id_cms`
-		FROM `' . _DB_PREFIX_ . 'cms`
-		WHERE `id_cms_category` = ' . (int) $idCategory . '
-		ORDER BY `position`';
+		SELECT id_cms
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms') . '
+		WHERE id_cms_category = ' . (int) $idCategory . '
+		ORDER BY position';
 
         $result = Db::getInstance()->executeS($sql);
 
         for ($i = 0, $total = count($result); $i < $total; ++$i) {
-            $sql = 'UPDATE `' . _DB_PREFIX_ . 'cms`
-					SET `position` = ' . (int) $i . '
-					WHERE `id_cms_category` = ' . (int) $idCategory . '
-						AND `id_cms` = ' . (int) $result[$i]['id_cms'];
+            $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms') . '
+					SET position = ' . (int) $i . '
+					WHERE id_cms_category = ' . (int) $idCategory . '
+						AND id_cms = ' . (int) $result[$i]['id_cms'];
             Db::getInstance()->execute($sql);
         }
 
@@ -248,8 +248,8 @@ class CMSCore extends ObjectModel
     public static function getLastPosition($idCmsCategory)
     {
         return (int) Db::getInstance()->getValue('SELECT MAX(position) + 1
-            FROM `' . _DB_PREFIX_ . 'cms`
-            WHERE `id_cms_category` = ' . (int) $idCmsCategory);
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms') . '
+            WHERE id_cms_category = ' . (int) $idCmsCategory);
     }
 
     /**
@@ -308,9 +308,9 @@ class CMSCore extends ObjectModel
         }
 
         $sql = '
-			SELECT `content`
-			FROM `' . _DB_PREFIX_ . 'cms_lang`
-			WHERE `id_cms` = ' . (int) $idCms . ' AND `id_lang` = ' . (int) $idLang . ' AND `id_shop` = ' . (int) $idShop;
+			SELECT content
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_lang') . '
+			WHERE id_cms = ' . (int) $idCms . ' AND id_lang = ' . (int) $idLang . ' AND id_shop = ' . (int) $idShop;
 
         return Db::getInstance()->getRow($sql);
     }

@@ -251,10 +251,10 @@ class ImageThumbnailsRegenerator
     public function regenerateWatermark(string $dir, ?array $formats = null): bool|string
     {
         $result = Db::getInstance()->executeS('
-		SELECT m.`name` FROM `' . _DB_PREFIX_ . 'module` m
-		LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_module` = m.`id_module`
-		LEFT JOIN `' . _DB_PREFIX_ . 'hook` h ON hm.`id_hook` = h.`id_hook`
-		WHERE h.`name` = \'actionWatermark\' AND m.`active` = 1');
+		SELECT m.name FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' m
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_module') . ' hm ON hm.id_module = m.id_module
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook') . ' h ON hm.id_hook = h.id_hook
+		WHERE h.name = \'actionWatermark\' AND m.active = 1');
 
         if ($result && count($result)) {
             $productsImages = $this->productImageRepository->iterateImagesForThumbnailGeneration();

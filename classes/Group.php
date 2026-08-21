@@ -88,11 +88,11 @@ class GroupCore extends ObjectModel
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT DISTINCT g.`id_group`, g.`reduction`, g.`price_display_method`, g.`show_prices`, gl.`name`
-		FROM `' . _DB_PREFIX_ . 'group` g
-		LEFT JOIN `' . _DB_PREFIX_ . 'group_lang` AS gl ON (g.`id_group` = gl.`id_group` AND gl.`id_lang` = ' . (int) $id_lang . ')
+		SELECT DISTINCT g.id_group, g.reduction, g.price_display_method, g.show_prices, gl.name
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group') . ' g
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group_lang') . ' AS gl ON (g.id_group = gl.id_group AND gl.id_lang = ' . (int) $id_lang . ')
 		' . $shop_criteria . '
-		ORDER BY g.`id_group` ASC');
+		ORDER BY g.id_group ASC');
     }
 
     public function getCustomers($count = false, $start = 0, $limit = 0, $shop_filtering = false)
@@ -100,21 +100,21 @@ class GroupCore extends ObjectModel
         if ($count) {
             return Db::getInstance()->getValue('
 			SELECT COUNT(*)
-			FROM `' . _DB_PREFIX_ . 'customer_group` cg
-			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (cg.`id_customer` = c.`id_customer`)
-			WHERE cg.`id_group` = ' . (int) $this->id . '
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_group') . ' cg
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c ON (cg.id_customer = c.id_customer)
+			WHERE cg.id_group = ' . (int) $this->id . '
 			' . ($shop_filtering ? Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) : '') . '
-			AND c.`deleted` != 1');
+			AND c.deleted != 1');
         }
 
         return Db::getInstance()->executeS('
-		SELECT cg.`id_customer`, c.*
-		FROM `' . _DB_PREFIX_ . 'customer_group` cg
-		LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (cg.`id_customer` = c.`id_customer`)
-		WHERE cg.`id_group` = ' . (int) $this->id . '
-		AND c.`deleted` != 1
+		SELECT cg.id_customer, c.*
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_group') . ' cg
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c ON (cg.id_customer = c.id_customer)
+		WHERE cg.id_group = ' . (int) $this->id . '
+		AND c.deleted != 1
 		' . ($shop_filtering ? Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) : '') . '
-		ORDER BY cg.`id_customer` ASC
+		ORDER BY cg.id_customer ASC
 		' . ($limit > 0 ? 'LIMIT ' . (int) $start . ', ' . (int) $limit : ''));
     }
 
@@ -132,9 +132,9 @@ class GroupCore extends ObjectModel
     {
         if (!isset(self::$cache_reduction['group'][$id_group])) {
             self::$cache_reduction['group'][$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `reduction`
-			FROM `' . _DB_PREFIX_ . 'group`
-			WHERE `id_group` = ' . (int) $id_group);
+			SELECT reduction
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group') . '
+			WHERE id_group = ' . (int) $id_group);
         }
 
         return self::$cache_reduction['group'][$id_group];
@@ -152,9 +152,9 @@ class GroupCore extends ObjectModel
         if (!isset(Group::$group_price_display_method[$id_group])) {
             self::$group_price_display_method[$id_group] = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
-                SELECT `price_display_method`
-                FROM `' . _DB_PREFIX_ . 'group`
-                WHERE `id_group` = ' . (int) $id_group
+                SELECT price_display_method
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group') . '
+                WHERE id_group = ' . (int) $id_group
             );
         }
 
@@ -222,11 +222,11 @@ class GroupCore extends ObjectModel
                     ->disableCartRulesThatHadOnlyGroup((int) $this->id);
             }
 
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'cart_rule_group` WHERE `id_group` = ' . (int) $this->id);
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customer_group` WHERE `id_group` = ' . (int) $this->id);
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'category_group` WHERE `id_group` = ' . (int) $this->id);
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'group_reduction` WHERE `id_group` = ' . (int) $this->id);
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache` WHERE `id_group` = ' . (int) $this->id);
+            Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_group') . ' WHERE id_group = ' . (int) $this->id);
+            Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_group') . ' WHERE id_group = ' . (int) $this->id);
+            Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' WHERE id_group = ' . (int) $this->id);
+            Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group_reduction') . ' WHERE id_group = ' . (int) $this->id);
+            Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_group_reduction_cache') . ' WHERE id_group = ' . (int) $this->id);
 
             $this->truncateModulesRestrictions($this->id);
 
@@ -240,21 +240,21 @@ class GroupCore extends ObjectModel
             }
 
             // Add default group (id 3) to customers without groups
-            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_group` (
-				SELECT c.id_customer, ' . (int) Configuration::get('PS_CUSTOMER_GROUP') . ' FROM `' . _DB_PREFIX_ . 'customer` c
-				LEFT JOIN `' . _DB_PREFIX_ . 'customer_group` cg
+            Db::getInstance()->execute('INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_group') . ' (
+				SELECT c.id_customer, ' . (int) Configuration::get('PS_CUSTOMER_GROUP') . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_group') . ' cg
 				ON cg.id_customer = c.id_customer
 				WHERE cg.id_customer IS NULL)');
 
             // Set to the customer the default group
             // Select the minimal id from customer_group
-            Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customer` cg
+            Db::getInstance()->execute('UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' cg
 				SET id_default_group =
-					IFNULL((
-						SELECT min(id_group) FROM `' . _DB_PREFIX_ . 'customer_group`
+					COALESCE((
+						SELECT min(id_group) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_group') . '
 						WHERE id_customer = cg.id_customer),
 						' . (int) Configuration::get('PS_CUSTOMER_GROUP') . ')
-				WHERE `id_default_group` = ' . (int) $this->id);
+				WHERE id_default_group = ' . (int) $this->id);
 
             // Remove group restrictions
             $res = Db::getInstance()->delete('module_group', 'id_group = ' . (int) $this->id);
@@ -289,7 +289,7 @@ class GroupCore extends ObjectModel
      */
     public static function isCurrentlyUsed($table = null, $has_active_column = false)
     {
-        return (bool) (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'group`') > 3);
+        return (bool) (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group') . '') > 3);
     }
 
     /**
@@ -302,8 +302,8 @@ class GroupCore extends ObjectModel
     public static function truncateModulesRestrictions($id_group)
     {
         return Db::getInstance()->execute('
-		DELETE FROM `' . _DB_PREFIX_ . 'module_group`
-		WHERE `id_group` = ' . (int) $id_group);
+		DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_group') . '
+		WHERE id_group = ' . (int) $id_group);
     }
 
     /**
@@ -316,8 +316,8 @@ class GroupCore extends ObjectModel
     public static function truncateRestrictionsByModule($id_module)
     {
         return Db::getInstance()->execute('
-		DELETE FROM `' . _DB_PREFIX_ . 'module_group`
-		WHERE `id_module` = ' . (int) $id_module);
+		DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_group') . '
+		WHERE id_module = ' . (int) $id_module);
     }
 
     /**
@@ -337,14 +337,14 @@ class GroupCore extends ObjectModel
 
         // Delete all record for this group
         Db::getInstance()->execute(
-            'DELETE FROM `' . _DB_PREFIX_ . 'module_group`
-            WHERE `id_group` = ' . (int) $id_group . '
-            AND `id_shop` IN ('
+            'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_group') . '
+            WHERE id_group = ' . (int) $id_group . '
+            AND id_shop IN ('
               . implode(',', array_map('intval', $shops))
             . ')'
         );
 
-        $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
+        $sql = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_group') . ' (id_module, id_shop, id_group) VALUES ';
         foreach ($modules as $module) {
             foreach ($shops as $shop) {
                 $sql .= '("' . (int) $module . '", "' . (int) $shop . '", "' . (int) $id_group . '"),';
@@ -373,8 +373,8 @@ class GroupCore extends ObjectModel
         $res = true;
         foreach ($shops as $shop) {
             $res = $res && Db::getInstance()->execute('
-			INSERT INTO `' . _DB_PREFIX_ . 'module_group` (`id_module`, `id_shop`, `id_group`)
-			(SELECT ' . (int) $id_module . ', ' . (int) $shop . ', id_group FROM `' . _DB_PREFIX_ . 'group`)');
+			INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_group') . ' (id_module, id_shop, id_group)
+			(SELECT ' . (int) $id_module . ', ' . (int) $shop . ', id_group FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group') . ')');
         }
 
         return $res;
@@ -421,9 +421,9 @@ class GroupCore extends ObjectModel
     {
         $query = new DbQuery();
         $query
-            ->select('g.`id_group`')
+            ->select('g.id_group')
             ->from('group', 'g')
-            ->orderby('g.`id_group` ASC')
+            ->orderby('g.id_group ASC')
         ;
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
@@ -441,10 +441,10 @@ class GroupCore extends ObjectModel
     {
         return Db::getInstance()->getRow('
 			SELECT g.*, gl.*
-			FROM `' . _DB_PREFIX_ . 'group` g
-			LEFT JOIN `' . _DB_PREFIX_ . 'group_lang` gl
-				ON (g.`id_group` = gl.`id_group`)
-			WHERE `name` = \'' . pSQL($query) . '\'
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group') . ' g
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group_lang') . ' gl
+				ON (g.id_group = gl.id_group)
+			WHERE name = \'' . pSQL($query) . '\'
 		');
     }
 
@@ -474,8 +474,8 @@ class GroupCore extends ObjectModel
         }
 
         $result_price_rule = Db::getInstance()->delete('specific_price_rule', 'id_group = ' . (int) $this->id);
-        $result_price_rule_condition_group = Db::getInstance()->delete('specific_price_rule_condition_group', 'id_specific_price_rule NOT IN (SELECT id_specific_price_rule FROM `' . _DB_PREFIX_ . 'specific_price_rule`)');
-        $result_price_rule_condition = Db::getInstance()->delete('specific_price_rule_condition', 'id_specific_price_rule_condition_group NOT IN (SELECT id_specific_price_rule_condition_group FROM `' . _DB_PREFIX_ . 'specific_price_rule_condition_group`)');
+        $result_price_rule_condition_group = Db::getInstance()->delete('specific_price_rule_condition_group', 'id_specific_price_rule NOT IN (SELECT id_specific_price_rule FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price_rule') . ')');
+        $result_price_rule_condition = Db::getInstance()->delete('specific_price_rule_condition', 'id_specific_price_rule_condition_group NOT IN (SELECT id_specific_price_rule_condition_group FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price_rule_condition_group') . ')');
 
         return $result_price_rule && $result_price_rule_condition_group && $result_price_rule_condition;
     }

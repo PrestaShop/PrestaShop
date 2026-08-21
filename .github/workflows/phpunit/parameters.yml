@@ -1,5 +1,6 @@
 # This file is used by GitHub Actions.
 parameters:
+  database_driver: pdo_mysql
   database_host: localhost
   database_port: ~
   database_name: prestashop
@@ -7,6 +8,7 @@ parameters:
   database_password: password
   database_prefix: ps_
   database_engine: InnoDB
+  database_charset: utf8mb4
   # You should uncomment this if you want use pdo_sqlite
   # database_path: "%kernel.project_dir%/data.db3"
 

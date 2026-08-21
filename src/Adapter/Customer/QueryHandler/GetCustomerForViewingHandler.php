@@ -212,10 +212,10 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
 
         // Get fast order information
         $sql = '
-        SELECT o.id_order, o.valid, o.total_paid_tax_incl, o.conversion_rate FROM `' . _DB_PREFIX_ . 'orders` o
-        WHERE o.`id_customer` = ' . (int) $customer->id .
+        SELECT o.id_order, o.valid, o.total_paid_tax_incl, o.conversion_rate FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . ' o
+        WHERE o.id_customer = ' . (int) $customer->id .
         Shop::addSqlRestriction(Shop::SHARE_ORDER) . '
-        GROUP BY o.`id_order`';
+        GROUP BY o.id_order';
         $orders = Db::getInstance()->executeS($sql);
 
         foreach ($orders as $order) {
