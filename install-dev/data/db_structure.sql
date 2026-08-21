@@ -3242,6 +3242,14 @@ CREATE TABLE `PREFIX_b2b_role`
 ) ENGINE = ENGINE_TYPE
   DEFAULT CHARSET = utf8mb4 COLLATION;
 
+CREATE TABLE `PREFIX_b2b_role_lang`
+(
+    `id_role`   INT UNSIGNED NOT NULL,
+    `id_lang`   INT NOT NULL,
+    `name`      VARCHAR(128) NOT NULL,
+    PRIMARY KEY (`id_role`, `id_lang`)
+) ENGINE = ENGINE_TYPE DEFAULT CHARSET = utf8mb4 COLLATION;
+
 CREATE TABLE `PREFIX_b2b_role_authorization_role`
 (
   `id_role`               INT UNSIGNED NOT NULL,

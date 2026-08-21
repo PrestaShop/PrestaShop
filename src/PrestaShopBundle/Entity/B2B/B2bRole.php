@@ -9,6 +9,7 @@ namespace PrestaShopBundle\Entity\B2B;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\Domain\B2bRole\Exception\B2bRoleException;
 
 /**
  * B2bRole.
@@ -45,10 +46,18 @@ class B2bRole
      */
     private Collection $b2bRoleAuthorizationRoles;
 
+    /**
+     * @var Collection<int, B2bRoleLang>
+     *
+     * @ORM\OneToMany(targetEntity=B2bRoleLang::class, mappedBy="role", cascade={"persist", "remove"}, orphanRemoval=true, indexBy="id_lang")
+     */
+    private Collection $translations;
+
     public function __construct()
     {
         $this->businessEntityCustomerB2bs = new ArrayCollection();
         $this->b2bRoleAuthorizationRoles = new ArrayCollection();
+        $this->translations = new ArrayCollection();
     }
 
     public function getIdRole(): int
@@ -108,6 +117,37 @@ class B2bRole
     public function removeB2bRoleAuthorizationRole(B2bRoleAuthorizationRole $b2bRoleAuthorizationRole): self
     {
         $this->b2bRoleAuthorizationRoles->removeElement($b2bRoleAuthorizationRole);
+
+        return $this;
+    }
+
+    /**
+     * @return array<int, B2bRoleLang>
+     */
+    public function getTranslations(): array
+    {
+        return $this->translations->toArray();
+    }
+
+    public function translate(int $languageId): ?B2bRoleLang
+    {
+        return $this->translations->get($languageId);
+    }
+
+    public function addTranslation(B2bRoleLang $translation): static
+    {
+        $role = $translation->getRole();
+        if (null !== $role && $this !== $role) {
+            throw new B2bRoleException('The translation belongs to another role.');
+        }
+
+        $languageId = $translation->getLanguage()->getId();
+        if ($this->translations->containsKey($languageId)) {
+            throw new B2bRoleException(\sprintf('The "%s" role is already translated in language "%s".', $this->role, $translation->getLanguage()->getIsoCode()));
+        }
+
+        $translation->setRole($this);
+        $this->translations->set($languageId, $translation);
 
         return $this;
     }
