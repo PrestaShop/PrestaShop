@@ -285,11 +285,7 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/orders/{orderId}/products/{productId}/available-shipments: GET',
     // @todo: add tests
-    '/orders/{orderId}/shipments/{shipmentId}/products: POST',
-    // @todo: add tests
     '/orders/{orderId}/shipments/{shipmentId}: GET',
-    // @todo: add tests
-    '/orders/{orderId}/shipments: POST',
     // @todo: add tests
     '/products/combinations/{combinationId}: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/product/01_deleteProductImageId.ts
@@ -358,10 +354,6 @@ describe('API : Check endpoints', async () => {
     '/search-engines: GET',
     // @todo: add tests
     '/search-engines: POST',
-    // @todo: add tests
-    '/shipments/{shipmentId}/carriers: PATCH',
-    // @todo: add tests
-    '/shipments/{shipmentId}/fulfill: PATCH',
     // @todo: add tests
     '/showcase-cards/{showcaseCardName}/{employeeId}/close: PUT',
     // @todo: add tests
