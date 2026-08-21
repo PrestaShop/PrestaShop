@@ -817,3 +817,53 @@ Feature: Carrier management
     When I edit carrier "carrier1" with specified properties:
       | zones     |     |
     Then carrier should throw an error with error code "INVALID_ZONE_MISSING"
+
+  Scenario: Carrier based on the shop configuration keeps its shipping method
+    When I create carrier "carrierDefault1" with specified properties:
+      | name           | Carrier Default 1 |
+      | group_access   | visitor, guest    |
+      | delay[en-US]   | Shipping delay    |
+      | isFree         | false             |
+      | shippingMethod | default           |
+      | zones          | zone1             |
+      | rangeBehavior  | disabled          |
+    Then carrier "carrierDefault1" should have the following properties:
+      | name           | Carrier Default 1 |
+      | shippingMethod | default           |
+    When I edit carrier "carrierDefault1" with specified properties I get a similar carrier called "carrierDefault2":
+      | name | Carrier Default 1 renamed |
+    Then carrier "carrierDefault1" should have the following properties:
+      | name           | Carrier Default 1 renamed |
+      | shippingMethod | default                   |
+
+  Scenario: Carrier based on the shop configuration keeps its shipping method when a new version is created
+    Given email sending is disabled
+    Given the current currency is "USD"
+    And country "US" is enabled
+    And the module "dummy_payment" is installed
+    And I am logged in as "test@prestashop.com" employee
+    And there is customer "testCustomer" with email "pub@prestashop.com"
+    And customer "testCustomer" has address in "US" country
+    And I create an empty cart "dummy_cart" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    When I create carrier "carrierDefault1" with specified properties:
+      | name             | Carrier Default 1 |
+      | group_access     | visitor, guest    |
+      | delay[en-US]     | Shipping delay    |
+      | shippingHandling | false             |
+      | isFree           | true              |
+      | shippingMethod   | default           |
+      | zones            | zone2             |
+      | rangeBehavior    | disabled          |
+    When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "carrierDefault1"
+    When I edit carrier "carrierDefault1" with specified properties I get a new carrier referenced as "carrierDefault2":
+      | name | Carrier Default 1 new |
+    Then carrier "carrierDefault2" should have the following properties:
+      | name           | Carrier Default 1 new |
+      | shippingMethod | default               |

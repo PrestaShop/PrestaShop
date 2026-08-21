@@ -102,14 +102,21 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                     $this->trans("Based on the order's total price", 'Admin.Shipping.Feature') => ShippingMethod::BY_PRICE,
                     $shippingWeightTraduction => ShippingMethod::BY_WEIGHT,
                 ],
-                'default_empty_data' => ShippingMethod::BY_PRICE,
+                // No default_empty_data here: its transformer relies on empty(), which would swallow a submitted
+                // ShippingMethod::DEFAULT ("0" is empty) and replace it with the fallback on every save. The creation
+                // form preselects a method instead (see CarrierFormDataProvider::getDefaultData()), so the submitted
+                // value is never empty
                 'expanded' => true,
                 'multiple' => false,
                 'attr' => [
+                    // JSON_FORCE_OBJECT keeps an object once the 0/1/2 keys form a contiguous list
                     'data-units' => json_encode([
+                        ShippingMethod::DEFAULT => $this->configuration->get('PS_SHIPPING_METHOD')
+                            ? $this->configuration->get('PS_WEIGHT_UNIT')
+                            : $this->currencyDataProvider->getDefaultCurrencySymbol(),
                         ShippingMethod::BY_PRICE => $this->currencyDataProvider->getDefaultCurrencySymbol(),
                         ShippingMethod::BY_WEIGHT => $this->configuration->get('PS_WEIGHT_UNIT'),
-                    ]),
+                    ], JSON_FORCE_OBJECT),
                 ],
             ])
             ->add('range_behavior', ChoiceType::class, [

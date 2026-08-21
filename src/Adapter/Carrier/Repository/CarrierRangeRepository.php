@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierRangesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -31,6 +32,7 @@ class CarrierRangeRepository
         protected readonly Connection $connection,
         protected readonly string $dbPrefix,
         protected readonly CarrierRepository $carrierRepository,
+        protected readonly ShopConfigurationInterface $configuration,
     ) {
     }
 
@@ -171,6 +173,12 @@ class CarrierRangeRepository
     private function getRangeMethodTable(int $calculatingMethod): string
     {
         switch ($calculatingMethod) {
+            case ShippingMethod::DEFAULT:
+                // The global value is coherent here: the ranges are only handled for all shops, while the legacy
+                // Carrier::getShippingMethod() resolves the configuration of the current shop context
+                return (int) $this->configuration->get('PS_SHIPPING_METHOD', null, ShopConstraint::allShops())
+                    ? 'range_weight'
+                    : 'range_price';
             case ShippingMethod::BY_WEIGHT:
                 return 'range_weight';
             case ShippingMethod::BY_PRICE:

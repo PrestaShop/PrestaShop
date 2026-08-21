@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierRanges;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CarrierFormDataProvider;
 
 class CarrierFormDataProviderTest extends TestCase
@@ -160,6 +161,92 @@ class CarrierFormDataProviderTest extends TestCase
         ], $formData);
     }
 
+    public function testGetDataWithShippingMethodBasedOnShopConfiguration(): void
+    {
+        $queryBus = $this->createMock(CommandBusInterface::class);
+        $invokedCount = $this->exactly(2);
+        $queryBus->expects($invokedCount)
+            ->method('handle')
+            ->willReturnCallback(function ($query) use ($invokedCount) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertInstanceOf(GetCarrierForEditing::class, $query);
+
+                    return new EditableCarrier(
+                        42,
+                        'Carrier name',
+                        5,
+                        'http://track.to',
+                        1,
+                        true,
+                        [
+                            1 => 'English delay',
+                            2 => 'French delay',
+                        ],
+                        1234,
+                        1123,
+                        3421,
+                        1657,
+                        [1, 2, 3],
+                        false,
+                        true,
+                        ShippingMethod::DEFAULT,
+                        1,
+                        OutOfRangeBehavior::USE_HIGHEST_RANGE,
+                        [1, 3],
+                        [1],
+                        '/img/c/45.jkg',
+                    );
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertInstanceOf(GetCarrierRanges::class, $query);
+
+                    return new CarrierRangesCollection([
+                        ['id_zone' => 1, 'range_from' => 0, 'range_to' => 10, 'range_price' => '10.00'],
+                    ]);
+                }
+
+                return null;
+            });
+
+        $currencyDataProvider = $this->createMock(CurrencyDataProviderInterface::class);
+        $currencyDataProvider
+            ->method('getDefaultCurrencySymbol')
+            ->willReturn('€');
+
+        // PS_SHIPPING_METHOD is falsy: the shop configuration resolves to a billing by price, so the currency symbol
+        $configuration = $this->createMock(ConfigurationInterface::class);
+        $configuration
+            ->method('get')
+            ->willReturnCallback(fn (string $key) => [
+                'PS_SHIPPING_METHOD' => 0,
+                'PS_WEIGHT_UNIT' => 'kg',
+            ][$key] ?? null);
+
+        $zonesChoiceProvider = $this->createMock(ZoneByIdChoiceProvider::class);
+        $zonesChoiceProvider
+            ->method('getChoices')
+            ->willReturn([
+                'Zone A' => 1,
+            ]);
+
+        $formDataProvider = new CarrierFormDataProvider(
+            $queryBus,
+            $this->createMock(ShopContext::class),
+            $currencyDataProvider,
+            $configuration,
+            $zonesChoiceProvider,
+            $this->createMock(GroupDataProvider::class)
+        );
+        $formData = $formDataProvider->getData(42);
+        $this->assertEquals(ShippingMethod::DEFAULT, $formData['shipping_settings']['shipping_method']);
+        $this->assertEquals([
+            ['zoneId' => 1, 'zoneName' => 'Zone A', 'ranges' => [
+                ['range' => '0€ - 10€', 'from' => '0', 'to' => '10', 'price' => '10'],
+            ]],
+        ], $formData['shipping_settings']['ranges_costs']);
+    }
+
     public function testGetDefaultData(): void
     {
         $shopContext = $this->createMock(ShopContext::class);
@@ -182,6 +269,9 @@ class CarrierFormDataProviderTest extends TestCase
                 'grade' => 0,
                 'associated_shops' => [2, 4],
                 'group_access' => [1, 2, 3],
+            ],
+            'shipping_settings' => [
+                'shipping_method' => ShippingMethod::DEFAULT,
             ],
         ], $formDataProvider->getDefaultData());
     }
