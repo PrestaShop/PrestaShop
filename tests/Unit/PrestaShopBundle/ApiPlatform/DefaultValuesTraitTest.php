@@ -63,7 +63,7 @@ class DefaultValuesTraitTest extends TestCase
 
     private function applyDefaultValues(mixed $input, ?Operation $operation): mixed
     {
-        $applier = new class {
+        $applier = new class() {
             use DefaultValuesTrait;
 
             public function apply(mixed $input, ?Operation $operation): mixed
