@@ -65,7 +65,7 @@ class CarrierRangeRepository
             ->setParameter('carrierId', $carrierId->getValue());
 
         // Apply shipping method (weight or price) and shop constraint, then execute the query
-        $this->applyRangeTypeForQuery($qb, $carrier);
+        $this->applyRangeTypeForQuery($qb, $carrier, $shopConstraint);
         $this->applyShopConstraint($qb);
 
         return $qb->executeQuery()->fetchAllAssociative();
@@ -83,7 +83,7 @@ class CarrierRangeRepository
 
         // Get carrier
         $carrier = $this->carrierRepository->get($carrierId);
-        $rangeTable = $this->getRangeMethodTable((int) $carrier->shipping_method);
+        $rangeTable = $this->getRangeMethodTable((int) $carrier->shipping_method, $shopConstraint);
 
         // Use transaction to ensure data consistency
         $this->connection->beginTransaction();
@@ -170,13 +170,12 @@ class CarrierRangeRepository
         }
     }
 
-    private function getRangeMethodTable(int $calculatingMethod): string
+    private function getRangeMethodTable(int $calculatingMethod, ShopConstraint $shopConstraint): string
     {
         switch ($calculatingMethod) {
             case ShippingMethod::DEFAULT:
-                // The global value is coherent here: the ranges are only handled for all shops, while the legacy
-                // Carrier::getShippingMethod() resolves the configuration of the current shop context
-                return (int) $this->configuration->get('PS_SHIPPING_METHOD', null, ShopConstraint::allShops())
+                // The configuration is resolved for the same shop constraint as the handled ranges
+                return (int) $this->configuration->get('PS_SHIPPING_METHOD', null, $shopConstraint)
                     ? 'range_weight'
                     : 'range_price';
             case ShippingMethod::BY_WEIGHT:
@@ -188,10 +187,10 @@ class CarrierRangeRepository
         }
     }
 
-    private function applyRangeTypeForQuery(QueryBuilder $queryBuilder, Carrier $carrier): QueryBuilder
+    private function applyRangeTypeForQuery(QueryBuilder $queryBuilder, Carrier $carrier, ShopConstraint $shopConstraint): QueryBuilder
     {
         // Define which table to join based on carrier shipping method
-        $tableRange = $this->getRangeMethodTable((int) $carrier->shipping_method);
+        $tableRange = $this->getRangeMethodTable((int) $carrier->shipping_method, $shopConstraint);
 
         // Join the range table and order by range
         $queryBuilder->innerJoin(
