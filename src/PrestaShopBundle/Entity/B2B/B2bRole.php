@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use PrestaShop\PrestaShop\Core\Domain\B2bRole\Exception\B2bRoleException;
+use PrestaShopBundle\Entity\Repository\B2bRoleRepository;
 
 /**
  * B2bRole.
@@ -18,7 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\B2bRole\Exception\B2bRoleException;
  *     indexes={@ORM\Index(name="uniq_b2b_role", columns={"role"})}
  * )
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass=B2bRoleRepository::class)
  */
 class B2bRole
 {
