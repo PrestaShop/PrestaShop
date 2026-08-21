@@ -8,19 +8,35 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Cookie;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Manages the configuration data about general options.
  */
-class GeneralConfiguration implements DataConfigurationInterface
+class GeneralConfiguration extends AbstractMultistoreConfiguration
 {
+    /**
+     * @var array<int, string>
+     */
+    private const CONFIGURATION_FIELDS = [
+        'check_ip_address',
+        'front_cookie_lifetime',
+        'back_cookie_lifetime',
+        'cookie_samesite',
+    ];
+
     public function __construct(
-        private readonly Configuration $configuration,
+        Configuration $configuration,
+        Context $shopContext,
+        FeatureInterface $multistoreFeature,
         private readonly Cookie $cookie,
         private readonly SymfonyCacheClearer $symfonyCacheClearer,
     ) {
+        parent::__construct($configuration, $shopContext, $multistoreFeature);
     }
 
     /**
@@ -28,11 +44,13 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'check_ip_address' => $this->configuration->getBoolean('PS_COOKIE_CHECKIP'),
-            'front_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_FO'),
-            'back_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_BO'),
-            'cookie_samesite' => $this->configuration->get('PS_COOKIE_SAMESITE'),
+            'check_ip_address' => (bool) $this->configuration->get('PS_COOKIE_CHECKIP', false, $shopConstraint),
+            'front_cookie_lifetime' => (int) $this->configuration->get('PS_COOKIE_LIFETIME_FO', 0, $shopConstraint),
+            'back_cookie_lifetime' => (int) $this->configuration->get('PS_COOKIE_LIFETIME_BO', 0, $shopConstraint),
+            'cookie_samesite' => (string) $this->configuration->get('PS_COOKIE_SAMESITE', CookieOptions::SAMESITE_LAX, $shopConstraint),
         ];
     }
 
@@ -44,6 +62,8 @@ class GeneralConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
+            $shopConstraint = $this->getShopConstraint();
+
             if (!$this->validateSameSite($configuration['cookie_samesite'])) {
                 $errors[] = [
                     'key' => 'The SameSite=None attribute is only available in secure mode.',
@@ -51,10 +71,10 @@ class GeneralConfiguration implements DataConfigurationInterface
                     'parameters' => [],
                 ];
             } else {
-                $this->configuration->set('PS_COOKIE_CHECKIP', (bool) $configuration['check_ip_address']);
-                $this->configuration->set('PS_COOKIE_LIFETIME_FO', (int) $configuration['front_cookie_lifetime']);
-                $this->configuration->set('PS_COOKIE_LIFETIME_BO', (int) $configuration['back_cookie_lifetime']);
-                $this->configuration->set('PS_COOKIE_SAMESITE', $configuration['cookie_samesite']);
+                $this->updateConfigurationValue('PS_COOKIE_CHECKIP', 'check_ip_address', $configuration, $shopConstraint);
+                $this->updateConfigurationValue('PS_COOKIE_LIFETIME_FO', 'front_cookie_lifetime', $configuration, $shopConstraint);
+                $this->updateConfigurationValue('PS_COOKIE_LIFETIME_BO', 'back_cookie_lifetime', $configuration, $shopConstraint);
+                $this->updateConfigurationValue('PS_COOKIE_SAMESITE', 'cookie_samesite', $configuration, $shopConstraint);
                 // Clear checksum to force the refresh
                 $this->cookie->checksum = '';
                 $this->cookie->write();
@@ -70,18 +90,15 @@ class GeneralConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        $isValid = isset(
-            $configuration['check_ip_address'],
-            $configuration['front_cookie_lifetime'],
-            $configuration['back_cookie_lifetime']
-        ) && in_array(
-            $configuration['cookie_samesite'],
-            CookieOptions::SAMESITE_AVAILABLE_VALUES
-        );
-
-        return (bool) $isValid;
+        return (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('check_ip_address', 'bool')
+            ->setAllowedTypes('front_cookie_lifetime', 'int')
+            ->setAllowedTypes('back_cookie_lifetime', 'int')
+            ->setAllowedTypes('cookie_samesite', 'string')
+            ->setAllowedValues('cookie_samesite', CookieOptions::SAMESITE_AVAILABLE_VALUES);
     }
 
     /**

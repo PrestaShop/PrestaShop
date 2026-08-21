@@ -775,7 +775,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         }
                     }
                     $id_attributes = Db::getInstance()->executeS('SELECT pac2.`id_attribute` FROM `' . _DB_PREFIX_ . 'product_attribute_combination` pac2' .
-                        ((!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && 0 == Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) ?
+                        ((!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && false === (bool) Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) ?
                         ' INNER JOIN `' . _DB_PREFIX_ . 'stock_available` pa ON pa.id_product_attribute = pac2.id_product_attribute
                         WHERE pa.quantity > 0 AND ' :
                         ' WHERE ') .
@@ -812,7 +812,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
 
             // wash attributes list (if some attributes are unavailables and if allowed to wash it)
-            if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0) {
+            if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && false === (bool) Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
                 foreach ($groups as &$group) {
                     foreach ($group['attributes_quantity'] as $key => $quantity) {
                         if ($quantity <= 0) {
