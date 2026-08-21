@@ -42,6 +42,7 @@ module.exports = {
   entry: {
     address: './js/pages/address',
     alias_form: './js/pages/alias/form',
+    administration: './js/pages/administration',
     api_client: './js/pages/api-client',
     api_client_form: './js/pages/api-client/form',
     attachment: './js/pages/attachment',

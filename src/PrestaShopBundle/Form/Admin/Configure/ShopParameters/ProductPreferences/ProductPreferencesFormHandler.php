@@ -25,17 +25,17 @@ class ProductPreferencesFormHandler extends Handler
      */
     public function save(array $data)
     {
-        $errors = $this->formDataProvider->setData($data);
+        if (isset($data['stock_management']) && !$data['stock_management']) {
+            $data['allow_ordering_oos'] = true;
+        }
+
+        $errors = parent::save($data);
 
         if (empty($errors)) {
             $this->cacheClearer->clear();
-
-            if (isset($data['stock_management']) && !$data['stock_management']) {
-                $data['allow_ordering_oos'] = 1;
-            }
         }
 
-        return parent::save($data);
+        return $errors;
     }
 
     /**

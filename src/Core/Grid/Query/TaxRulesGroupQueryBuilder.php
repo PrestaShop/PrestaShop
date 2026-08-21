@@ -52,6 +52,7 @@ class TaxRulesGroupQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb
             ->select('trg.`id_tax_rules_group`, trg.`name`, trg.`active`')
+            ->groupBy('trg.`id_tax_rules_group`')
         ;
 
         $this->searchCriteriaApplicator

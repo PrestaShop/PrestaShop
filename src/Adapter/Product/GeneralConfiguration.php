@@ -8,20 +8,31 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This class loads and saves general configuration for product.
  */
-class GeneralConfiguration implements DataConfigurationInterface
+class GeneralConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
+    private const CONFIGURATION_FIELDS = [
+        'catalog_mode',
+        'catalog_mode_with_prices',
+        'new_days_number',
+        'short_description_limit',
+        'quantity_discount',
+        'force_friendly_url',
+        'product_breadcrumb_category',
+        'default_status',
+        'specific_price_priorities',
+        'disabled_products_behavior',
+    ];
 
     /**
      * @var SpecificPricePriorityUpdater
@@ -34,9 +45,11 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function __construct(
         Configuration $configuration,
+        Context $shopContext,
+        FeatureInterface $multistoreFeature,
         SpecificPricePriorityUpdater $specificPricePriorityUpdater
     ) {
-        $this->configuration = $configuration;
+        parent::__construct($configuration, $shopContext, $multistoreFeature);
         $this->specificPricePriorityUpdater = $specificPricePriorityUpdater;
     }
 
@@ -45,17 +58,19 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'catalog_mode' => $this->configuration->getBoolean('PS_CATALOG_MODE'),
-            'catalog_mode_with_prices' => $this->configuration->getBoolean('PS_CATALOG_MODE_WITH_PRICES'),
-            'new_days_number' => $this->configuration->get('PS_NB_DAYS_NEW_PRODUCT'),
-            'short_description_limit' => $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT'),
-            'quantity_discount' => $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'),
-            'force_friendly_url' => $this->configuration->getBoolean('PS_FORCE_FRIENDLY_PRODUCT'),
-            'product_breadcrumb_category' => $this->configuration->get('PS_PRODUCT_BREADCRUMB_CATEGORY'),
-            'default_status' => $this->configuration->getBoolean('PS_PRODUCT_ACTIVATION_DEFAULT'),
+            'catalog_mode' => (bool) $this->configuration->get('PS_CATALOG_MODE', false, $shopConstraint),
+            'catalog_mode_with_prices' => (bool) $this->configuration->get('PS_CATALOG_MODE_WITH_PRICES', false, $shopConstraint),
+            'new_days_number' => (int) $this->configuration->get('PS_NB_DAYS_NEW_PRODUCT', 0, $shopConstraint),
+            'short_description_limit' => (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT', 0, $shopConstraint),
+            'quantity_discount' => (int) $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION', 0, $shopConstraint),
+            'force_friendly_url' => (bool) $this->configuration->get('PS_FORCE_FRIENDLY_PRODUCT', false, $shopConstraint),
+            'product_breadcrumb_category' => (string) $this->configuration->get('PS_PRODUCT_BREADCRUMB_CATEGORY', 'default', $shopConstraint),
+            'default_status' => (bool) $this->configuration->get('PS_PRODUCT_ACTIVATION_DEFAULT', false, $shopConstraint),
             'specific_price_priorities' => $this->getPrioritiesData(),
-            'disabled_products_behavior' => $this->configuration->get('PS_PRODUCT_REDIRECTION_DEFAULT'),
+            'disabled_products_behavior' => (string) $this->configuration->get('PS_PRODUCT_REDIRECTION_DEFAULT', RedirectType::TYPE_NOT_FOUND, $shopConstraint),
         ];
     }
 
@@ -67,16 +82,19 @@ class GeneralConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $catalogMode = (int) $config['catalog_mode'];
-            $this->configuration->set('PS_CATALOG_MODE', $catalogMode);
-            $this->configuration->set('PS_CATALOG_MODE_WITH_PRICES', $catalogMode ? (int) $config['catalog_mode_with_prices'] : 0);
-            $this->configuration->set('PS_NB_DAYS_NEW_PRODUCT', (int) $config['new_days_number']);
-            $this->configuration->set('PS_PRODUCT_SHORT_DESC_LIMIT', (int) $config['short_description_limit']);
-            $this->configuration->set('PS_QTY_DISCOUNT_ON_COMBINATION', (int) $config['quantity_discount']);
-            $this->configuration->set('PS_FORCE_FRIENDLY_PRODUCT', (int) $config['force_friendly_url']);
-            $this->configuration->set('PS_PRODUCT_BREADCRUMB_CATEGORY', (string) $config['product_breadcrumb_category']);
-            $this->configuration->set('PS_PRODUCT_ACTIVATION_DEFAULT', (int) $config['default_status']);
-            $this->configuration->set('PS_PRODUCT_REDIRECTION_DEFAULT', (string) $config['disabled_products_behavior']);
+            $shopConstraint = $this->getShopConstraint();
+            $configWithCatalogModePrice = $config;
+            $configWithCatalogModePrice['catalog_mode_with_prices'] = $config['catalog_mode'] ? $config['catalog_mode_with_prices'] : false;
+
+            $this->updateConfigurationValue('PS_CATALOG_MODE', 'catalog_mode', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_CATALOG_MODE_WITH_PRICES', 'catalog_mode_with_prices', $configWithCatalogModePrice, $shopConstraint);
+            $this->updateConfigurationValue('PS_NB_DAYS_NEW_PRODUCT', 'new_days_number', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PRODUCT_SHORT_DESC_LIMIT', 'short_description_limit', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_QTY_DISCOUNT_ON_COMBINATION', 'quantity_discount', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_FORCE_FRIENDLY_PRODUCT', 'force_friendly_url', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PRODUCT_BREADCRUMB_CATEGORY', 'product_breadcrumb_category', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PRODUCT_ACTIVATION_DEFAULT', 'default_status', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PRODUCT_REDIRECTION_DEFAULT', 'disabled_products_behavior', $config, $shopConstraint);
             try {
                 $this->specificPricePriorityUpdater->updateDefaultPriorities(new PriorityList($config['specific_price_priorities']));
             } catch (SpecificPriceConstraintException $e) {
@@ -98,25 +116,20 @@ class GeneralConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired([
-            'catalog_mode',
-            'catalog_mode_with_prices',
-            'new_days_number',
-            'short_description_limit',
-            'quantity_discount',
-            'force_friendly_url',
-            'product_breadcrumb_category',
-            'default_status',
-            'specific_price_priorities',
-            'disabled_products_behavior',
-        ]);
-
-        $resolver->resolve($configuration);
-
-        return true;
+        return (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('catalog_mode', 'bool')
+            ->setAllowedTypes('catalog_mode_with_prices', 'bool')
+            ->setAllowedTypes('new_days_number', 'int')
+            ->setAllowedTypes('short_description_limit', 'int')
+            ->setAllowedTypes('quantity_discount', 'int')
+            ->setAllowedTypes('force_friendly_url', 'bool')
+            ->setAllowedTypes('product_breadcrumb_category', 'string')
+            ->setAllowedTypes('default_status', 'bool')
+            ->setAllowedTypes('specific_price_priorities', 'array')
+            ->setAllowedTypes('disabled_products_behavior', 'string');
     }
 
     /**
