@@ -8,29 +8,19 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Carrier\ShippingCost\Calculator;
 
-use Currency;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Calculator\FreeShippingCalculator;
-use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Provider\FreeShippingCriteria;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Provider\FreeShippingCriteriaProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\ShippingCostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\ShippingCostPriceInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingCalculationRequest;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 class FreeShippingCalculatorTest extends TestCase
 {
     /** @var FreeShippingCriteriaProviderInterface|\PHPUnit\Framework\MockObject\MockObject */
     private $criteriaProvider;
-
-    /** @var Tools|\PHPUnit\Framework\MockObject\MockObject */
-    private $tools;
-
-    /** @var CurrencyRepository|\PHPUnit\Framework\MockObject\MockObject */
-    private $currencyRepository;
 
     /** @var FreeShippingCalculator */
     private $calculator;
@@ -38,12 +28,8 @@ class FreeShippingCalculatorTest extends TestCase
     protected function setUp(): void
     {
         $this->criteriaProvider = $this->createMock(FreeShippingCriteriaProviderInterface::class);
-        $this->tools = $this->createMock(Tools::class);
-        $this->currencyRepository = $this->createMock(CurrencyRepository::class);
         $this->calculator = new FreeShippingCalculator(
-            $this->criteriaProvider,
-            $this->tools,
-            $this->currencyRepository
+            $this->criteriaProvider
         );
     }
 
@@ -71,15 +57,28 @@ class FreeShippingCalculatorTest extends TestCase
     {
         $context = $this->createContext(1, new DecimalNumber('50'));
         $criteria = new FreeShippingCriteria(new DecimalNumber('40'), null);
-        $this->criteriaProvider->method('getCriteria')->willReturn($criteria);
-
-        $currency = $this->createMock(Currency::class);
-        $this->currencyRepository->method('get')->with(new CurrencyId(1))->willReturn($currency);
-        $this->tools->method('convertPrice')->willReturn(40.0);
+        $this->criteriaProvider->expects($this->once())
+            ->method('getCriteria')
+            ->with($context)
+            ->willReturn($criteria);
 
         $this->calculator->compute($context);
 
         $this->assertTrue($context->isFreeShipping());
+    }
+
+    public function testItDoesNotSetFreeShippingIfPriceThresholdIsNotMet(): void
+    {
+        $context = $this->createContext(1, new DecimalNumber('30'));
+        $criteria = new FreeShippingCriteria(new DecimalNumber('40'), null);
+        $this->criteriaProvider->expects($this->once())
+            ->method('getCriteria')
+            ->with($context)
+            ->willReturn($criteria);
+
+        $this->calculator->compute($context);
+
+        $this->assertFalse($context->isFreeShipping());
     }
 
     public function testItSetsFreeShippingIfWeightThresholdIsMet(): void
@@ -87,7 +86,10 @@ class FreeShippingCalculatorTest extends TestCase
         $context = $this->createContext(1, new DecimalNumber('10'));
         $context->setTotalWeight(new DecimalNumber('10'));
         $criteria = new FreeShippingCriteria(null, new DecimalNumber('5'));
-        $this->criteriaProvider->method('getCriteria')->willReturn($criteria);
+        $this->criteriaProvider->expects($this->once())
+            ->method('getCriteria')
+            ->with($context)
+            ->willReturn($criteria);
 
         $this->calculator->compute($context);
 
