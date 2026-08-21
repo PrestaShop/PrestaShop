@@ -476,6 +476,32 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I search available carriers for address :address with the following raw product quantities:
+     */
+    public function searchAvailableCarriersWithRawProductQuantities(string $address, TableNode $table): void
+    {
+        $productQuantities = [];
+        foreach ($table->getColumnsHash() as $row) {
+            $productQuantity = [];
+            if (isset($row['product']) && $row['product'] !== '') {
+                $productQuantity['productId'] = $this->referenceToId($row['product']);
+            }
+            if (isset($row['quantity']) && $row['quantity'] !== '') {
+                $productQuantity['quantity'] = (int) $row['quantity'];
+            }
+            $productQuantities[] = $productQuantity;
+        }
+
+        try {
+            $this->getQueryBus()->handle(
+                new GetAvailableCarriers($productQuantities, $this->referenceToId($address))
+            );
+        } catch (CarrierConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
      * @Then the product :productReference should have the following carriers assigned:
      */
     public function assertCarriersForProduct(string $productReference, TableNode $table): void
