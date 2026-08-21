@@ -20,9 +20,9 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 class RunShopIdsProvider
 {
     /**
-     * @var list<int>|null
+     * @var array<string, list<int>> shop ids, keyed by the constraint they were resolved for
      */
-    protected ?array $runShopIds = null;
+    protected array $runShopIds = [];
 
     public function __construct(
         protected readonly ShopRepository $shopRepository,
@@ -34,6 +34,21 @@ class RunShopIdsProvider
      */
     public function getRunShopIds(ImportRunContext $context): array
     {
-        return $this->runShopIds ??= $this->shopRepository->getAssociatedShopIds($context->getShopConstraint());
+        $shopConstraint = $context->getShopConstraint();
+
+        // keyed by constraint rather than memoized once: a single instance only
+        // ever serves one run today (one per batch request, and the constraint is
+        // frozen), but the signature promises to answer for the context it is
+        // handed, and handing run B the shop ids of run A would silently
+        // associate auto-created brands and features with the wrong shops.
+        // ShopConstraint has no __toString, hence the explicit key
+        $cacheKey = sprintf(
+            '%d:%d:%d',
+            $shopConstraint->getShopId()?->getValue() ?? 0,
+            $shopConstraint->getShopGroupId()?->getValue() ?? 0,
+            (int) $shopConstraint->isStrict()
+        );
+
+        return $this->runShopIds[$cacheKey] ??= $this->shopRepository->getAssociatedShopIds($shopConstraint);
     }
 }

@@ -197,6 +197,49 @@ class ProductImporterAssociationsTest extends AbstractProductImportEngineTestCas
     /**
      * @return list<int>
      */
+    /**
+     * A row that identified its product by FORCED ID must keep its accessories,
+     * even when another product already carries the reference the row also
+     * writes. The owner is re-derived reference-first (match_ref may have chosen
+     * by reference), so the shop-scoped lookup returns both products, lowest id
+     * first — and without promoting the caller's id the links would land on the
+     * unrelated homonym instead of the product the row actually touched.
+     */
+    public function testForcedIdOwnerKeepsItsAccessoriesDespiteAReferenceHomonym(): void
+    {
+        ProductResetter::resetProducts();
+
+        // an existing product carrying the reference, with a LOWER id than the
+        // forced one the next file uses, plus the accessory target
+        [, $messages] = $this->runImport('product_owner_homonym_setup.csv', ['name', 'reference']);
+        $this->assertNoErrors($messages);
+        $homonymId = $this->getProductIdByReference('OWNER-DUP');
+        $targetId = $this->getProductIdByReference('OWNER-TARGET');
+        $this->assertNotNull($homonymId);
+        $this->assertNotNull($targetId);
+        $this->assertLessThan(9401, $homonymId, 'The homonym must have the lower id for this test to mean anything');
+
+        // match_ref OFF, so the row is identified by its forced id alone - and it
+        // writes OWNER-DUP too, so two in-scope products then carry it
+        [, $messages] = $this->runImport(
+            'product_owner_forced_id.csv',
+            ['id', 'name', 'reference', 'accessories'],
+            ['forceIds' => true]
+        );
+        $this->assertNoErrors($messages);
+        $this->assertSame([$homonymId, 9401], $this->getProductIdsByReference('OWNER-DUP'));
+
+        $this->assertSame([$targetId], $this->getAccessoryIds(9401), 'The accessories belong to the product the row identified');
+        $this->assertSame([], $this->getAccessoryIds($homonymId), 'The unrelated homonym must not receive them');
+
+        // the ambiguity is still reported: the fix reorders the matches, it does
+        // not hide that a second product carries the reference
+        $this->assertNotEmpty(
+            $this->warningsContaining($messages, 'matches 2 products'),
+            'The reference ambiguity must still be warned about'
+        );
+    }
+
     private function getAccessoryIds(?int $productId): array
     {
         $rows = $this->fetchAll('SELECT id_product_2 FROM {p}accessory WHERE id_product_1 = :id ORDER BY id_product_2', ['id' => $productId]);

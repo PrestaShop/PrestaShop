@@ -17,6 +17,11 @@ class FileDownloaderTest extends TestCase
 {
     private string $contentRoot;
 
+    /**
+     * @var list<string>
+     */
+    private array $outsideDirectories = [];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,10 +31,8 @@ class FileDownloaderTest extends TestCase
 
     protected function tearDown(): void
     {
-        foreach ((array) glob($this->contentRoot . '/*') as $file) {
-            @unlink((string) $file);
-        }
-        @rmdir($this->contentRoot);
+        (new Filesystem())->remove([$this->contentRoot, ...$this->outsideDirectories]);
+        $this->outsideDirectories = [];
         parent::tearDown();
     }
 
@@ -53,12 +56,11 @@ class FileDownloaderTest extends TestCase
      */
     public function testAReadableFileOutsideTheInjectedRootsIsRejected(): void
     {
-        $configurationFile = __DIR__ . '/../../../bootstrap.php';
-        $this->assertFileExists($configurationFile);
+        $outsideFile = $this->createFileOutsideTheAllowedRoots();
 
         $this->expectException(FileDownloadException::class);
         $this->expectExceptionMessage('outside the allowed import locations');
-        (new FileDownloader(new Filesystem(), [$this->contentRoot]))->download($configurationFile);
+        $this->confinedToInjectedRootsOnly([$this->contentRoot])->download($outsideFile);
     }
 
     /**
@@ -84,18 +86,57 @@ class FileDownloaderTest extends TestCase
 
     /**
      * realpath() resolves ../ BEFORE the prefix comparison: a path that starts
-     * inside an allowed root but traverses out of it must be rejected. The
-     * escape target is a repo file, because escaping toward the system temp dir
-     * would land in an always-allowed root and prove nothing.
+     * inside an allowed root but traverses out of it must be rejected.
      */
     public function testTraversalOutOfAnInjectedRootIsRejected(): void
     {
-        $allowedRoot = __DIR__;
-        $sourcePath = $allowedRoot . '/../../../bootstrap.php';
-        $this->assertFileExists($sourcePath);
+        $outsideFile = $this->createFileOutsideTheAllowedRoots();
+        $allowedRoot = $this->contentRoot;
+        // starts inside the allowed root, climbs back out to the escape target
+        $traversingPath = $allowedRoot . '/../' . basename(dirname($outsideFile)) . '/' . basename($outsideFile);
+        $this->assertFileExists($traversingPath);
 
         $this->expectException(FileDownloadException::class);
         $this->expectExceptionMessage('outside the allowed import locations');
-        (new FileDownloader(new Filesystem(), [$allowedRoot]))->download($sourcePath);
+        $this->confinedToInjectedRootsOnly([$allowedRoot])->download($traversingPath);
+    }
+
+    /**
+     * A downloader whose ONLY allowed roots are the injected ones.
+     *
+     * The production class always allows the system temp dir on top (it is
+     * where its own fetched copies land), which makes every temp path an
+     * unusable escape target — and using a repo file instead made these two
+     * tests fail for anyone whose checkout lives under /tmp or $TMPDIR, since
+     * the repo was then inside an always-allowed root. Narrowing the roots is
+     * what the protected method is for, and it keeps the assertions independent
+     * of where the checkout happens to sit.
+     *
+     * @param list<string> $allowedLocalRoots
+     */
+    private function confinedToInjectedRootsOnly(array $allowedLocalRoots): FileDownloader
+    {
+        return new class(new Filesystem(), $allowedLocalRoots) extends FileDownloader {
+            protected function getAllowedLocalRoots(): array
+            {
+                return $this->allowedLocalRoots;
+            }
+        };
+    }
+
+    /**
+     * A readable file that is outside contentRoot, in its own sibling directory
+     * so a '../' traversal can reach it.
+     */
+    private function createFileOutsideTheAllowedRoots(): string
+    {
+        $outsideDirectory = dirname($this->contentRoot) . '/' . uniqid('ps_import_outside_', true);
+        mkdir($outsideDirectory);
+        $this->outsideDirectories[] = $outsideDirectory;
+
+        $outsideFile = $outsideDirectory . '/secret.txt';
+        file_put_contents($outsideFile, 'must never be reachable');
+
+        return $outsideFile;
     }
 }

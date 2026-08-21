@@ -303,8 +303,27 @@ class ProductRowImporter
                 'manufacturer'
             );
         }
+        if ($resolved->wasCreated) {
+            $messages[] = $this->autoCreationNotice($rowIndex, 'manufacturer', $this->translator->trans('Brand "%name%" did not exist and was created.', ['%name%' => $manufacturer], 'Admin.Advparameters.Notification'));
+        }
 
         return $resolved->id;
+    }
+
+    /**
+     * The import creates catalog entities the file only NAMES — brands,
+     * categories, features and their values (legacy behavior, kept). That is
+     * expected rather than wrong, so it is a NOTICE and not a warning: it
+     * records what the run added beyond the products themselves.
+     *
+     * A pausing phase could not help here — by the time wasCreated is true the
+     * entity exists, and the database phase never pauses. The resolvers' quiet
+     * caches report wasCreated on the FIRST resolution only, so each created
+     * entity is announced once per batch rather than once per row.
+     */
+    protected function autoCreationNotice(int $rowIndex, string $field, string $message): ImportMessage
+    {
+        return new ImportMessage(ImportMessage::SEVERITY_NOTICE, ImportPhaseDefinition::PHASE_DATABASE, $message, $rowIndex, $field);
     }
 
     /**
@@ -645,6 +664,9 @@ class ProductRowImporter
                         'category'
                     );
                 }
+                if ($resolvedCategory->wasCreated) {
+                    $messages[] = $this->autoCreationNotice($rowIndex, 'category', $this->translator->trans('Category "%name%" did not exist and was created.', ['%name%' => $categoryName], 'Admin.Advparameters.Notification'));
+                }
                 $currentCategoryId = $resolvedCategory->id;
             }
             $ids[] = $currentCategoryId;
@@ -817,6 +839,9 @@ class ProductRowImporter
                     'features'
                 );
             }
+            if ($feature->wasCreated) {
+                $messages[] = $this->autoCreationNotice($rowIndex, 'features', $this->translator->trans('Feature "%name%" did not exist and was created.', ['%name%' => $featureName], 'Admin.Advparameters.Notification'));
+            }
 
             if ($isCustom) {
                 $featureValues[] = [
@@ -835,6 +860,9 @@ class ProductRowImporter
                     $rowIndex,
                     'features'
                 );
+            }
+            if ($value->wasCreated) {
+                $messages[] = $this->autoCreationNotice($rowIndex, 'features', $this->translator->trans('Feature value "%value%" did not exist and was created.', ['%value%' => $featureValue], 'Admin.Advparameters.Notification'));
             }
             $featureValues[] = [
                 'feature_id' => $feature->id,
@@ -1174,11 +1202,10 @@ class ProductRowImporter
         }
 
         $shopIds = array_values(array_unique($shopIds));
-        if ([] === $shopIds) {
-            $shopIds[] = $context->getShopId();
-        }
         // the source shop must be part of the association (command constraint);
-        // the run's shop holds the data that was just written
+        // the run's shop holds the data that was just written. This also covers
+        // the "every entry was dropped" case: the list becomes exactly the run's
+        // shop, which the early return below then treats as nothing to do
         if (!in_array($context->getShopId(), $shopIds, true)) {
             $shopIds[] = $context->getShopId();
         }

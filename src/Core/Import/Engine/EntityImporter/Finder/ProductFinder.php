@@ -91,6 +91,19 @@ class ProductFinder
      * Option-independent existing-product lookup: reference first (shop-scoped),
      * then the id when one is provided; an empty result when neither matches.
      *
+     * Reference FIRST is deliberate and must stay: with match_ref on, a
+     * reference matching product 7 while the id cell says 42 means the database
+     * phase updated 7 (documented precedence: match_ref, then id), so an
+     * unconditional id-first rule would re-derive the wrong product.
+     *
+     * But when the CALLER's id is itself one of the reference matches, it takes
+     * the first slot — and keeps its real strategy, since FoundEntity stores
+     * matchedBy per match. That id identifies the row's OWN product, while a
+     * lower id carrying the same reference is an unrelated homonym: without
+     * this, a row importing `id=42, reference=ABC` while product 7 already
+     * carried ABC would attach its accessories to 7. The match SET is unchanged,
+     * so the ambiguity is still reported with the same count.
+     *
      * Several products may carry the reference; ids are then every match
      * (lowest first) so the caller can warn. This is the association path,
      * where the row is already written — an ambiguous owner or target only
@@ -102,6 +115,13 @@ class ProductFinder
         if ('' !== $reference) {
             $existingIds = $this->productRepository->getProductIdsByReference($reference, $context->getShopConstraint());
             if ([] !== $existingIds) {
+                if (null !== $productId && in_array($productId, $existingIds, true)) {
+                    return new FoundEntity([
+                        ['id' => $productId, 'matchedBy' => FoundEntity::MATCHED_BY_ID],
+                        ...$this->toMatches(array_values(array_diff($existingIds, [$productId])), FoundEntity::MATCHED_BY_REFERENCE),
+                    ]);
+                }
+
                 return new FoundEntity($this->toMatches($existingIds, FoundEntity::MATCHED_BY_REFERENCE));
             }
         }
