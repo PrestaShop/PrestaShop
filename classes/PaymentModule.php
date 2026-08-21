@@ -251,7 +251,7 @@ abstract class PaymentModuleCore extends Module
             throw new PrestaShopException($error);
         }
 
-        if ($secure_key !== false && $secure_key != $this->context->cart->secure_key) {
+        if ($secure_key !== false && !hash_equals((string) $this->context->cart->secure_key, (string) $secure_key)) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Secure key does not match', 3, null, 'Cart', (int) $id_cart, true);
             throw new PrestaShopException('Error processing order. Secure key does not match.');
         }

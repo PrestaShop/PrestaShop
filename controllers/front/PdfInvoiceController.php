@@ -48,7 +48,7 @@ class PdfInvoiceControllerCore extends FrontController
 
         // Check if the user is not trying to download an invoice of an order of different customer
         // Either the ID of the customer in context must match the customer in order OR a secure_key matching the one on the order must be provided
-        if (Tools::isSubmit('secure_key') && $order->secure_key != Tools::getValue('secure_key')) {
+        if (Tools::isSubmit('secure_key') && !hash_equals((string) $order->secure_key, (string) Tools::getValue('secure_key'))) {
             die($this->trans('The invoice was not found.', [], 'Shop.Notifications.Error'));
         }
 

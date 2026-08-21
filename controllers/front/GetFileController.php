@@ -181,7 +181,7 @@ class GetFileControllerCore extends FrontController
                     if (!Validate::isLoadedObject($order)) {
                         $this->displayCustomError('Invalid key.');
                     }
-                    if ($order->secure_key != Tools::getValue('secure_key')) {
+                    if (!hash_equals((string) $order->secure_key, (string) Tools::getValue('secure_key'))) {
                         $this->displayCustomError('Invalid key.');
                     }
                 } else {
