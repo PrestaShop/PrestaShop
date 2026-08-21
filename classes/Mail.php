@@ -352,7 +352,8 @@ class MailCore extends ObjectModel
             // Connect with the appropriate configuration, either SMTP or sendmail
             if ($configuration['PS_MAIL_METHOD'] == self::METHOD_SMTP) {
                 // Setup TLS configuration
-                $implicitTls = self::resolveImplicitTls($configuration['PS_MAIL_SMTP_ENCRYPTION'] ?? 'off');
+                $useImplicitTls = self::useImplicitTls($configuration['PS_MAIL_SMTP_ENCRYPTION'] ?? 'off');
+                $esmtpTransportParameter = $useImplicitTls ? null : false;
 
                 // Setup port configration
                 if (!isset($configuration['PS_MAIL_SMTP_PORT'])) {
@@ -369,7 +370,7 @@ class MailCore extends ObjectModel
                 $transport = (new EsmtpTransport(
                     $configuration['PS_MAIL_SERVER'],
                     $configuration['PS_MAIL_SMTP_PORT'],
-                    $implicitTls
+                    $esmtpTransportParameter
                 ))
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD'])
@@ -782,11 +783,12 @@ class MailCore extends ObjectModel
 
         try {
             if ($smtpChecked) {
-                $implicitTls = self::resolveImplicitTls($smtpEncryption);
+                $useImplicitTls = self::useImplicitTls($smtpEncryption);
+                $esmtpTransportParameter = $useImplicitTls ? null : false;
                 $transport = (new EsmtpTransport(
                     $smtpServer,
                     $smtpPort,
-                    $implicitTls
+                    $esmtpTransportParameter
                 ))
                     ->setUsername($smtpLogin)
                     ->setPassword($smtpPassword)
@@ -1031,28 +1033,27 @@ class MailCore extends ObjectModel
     }
 
     /**
-     * Value for the third argument of EsmtpTransport, which is not "does this connection use TLS"
-     * but the narrower "open the socket in implicit TLS (SMTPS)". Its three states are:
+     * Whether the merchant asked for an encrypted SMTP connection.
      *
-     *  - true  force implicit TLS whatever the port is
-     *  - false never implicit TLS, so an encrypted connection is reached by STARTTLS
-     *  - null  let the transport choose by port: implicit TLS on 465, STARTTLS anywhere else
+     * The caller turns this into the third argument of EsmtpTransport, which is not "does this
+     * connection use TLS" but the narrower "open the socket in implicit TLS (SMTPS)":
      *
-     * Only false and null are produced here. true is deliberately never returned: forcing it for
-     * the "tls" setting is what made port 587 unusable, since implicit TLS only answers on 465
-     * while 587 expects a plain connection upgraded with STARTTLS. Leaving the choice to the
-     * transport covers both ports without asking the merchant to know the difference.
+     *     $esmtpTransportParameter = self::useImplicitTls($smtpEncryption) ? null : false;
      *
-     * @param bool|string $smtpEncryption "off", "" or false disables encryption
+     * true maps to null and not to true on purpose. true forces implicit TLS whatever the port
+     * is, and that is what made port 587 unusable: implicit TLS only answers on 465, while 587
+     * expects a plain connection upgraded with STARTTLS. null leaves the choice to the transport,
+     * which picks implicit TLS on 465 and STARTTLS anywhere else, so both ports work without the
+     * merchant having to know the difference.
      *
-     * @return bool|null false to refuse implicit TLS, null to let the port decide
+     * @param bool|string|null $smtpEncryption "off", "" or false disables encryption
      */
-    public static function resolveImplicitTls($smtpEncryption): ?bool
+    protected static function useImplicitTls($smtpEncryption): bool
     {
         if (false === $smtpEncryption || '' === $smtpEncryption || null === $smtpEncryption) {
             return false;
         }
 
-        return Tools::strtolower((string) $smtpEncryption) === 'off' ? false : null;
+        return Tools::strtolower((string) $smtpEncryption) !== 'off';
     }
 }
