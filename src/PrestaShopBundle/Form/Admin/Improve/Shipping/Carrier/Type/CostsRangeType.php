@@ -22,7 +22,7 @@ class CostsRangeType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-       private readonly string $defaultCurrencyIsoCode,
+        private readonly string $defaultCurrencyIsoCode,
     ) {
         parent::__construct($translator, $locales);
     }
