@@ -5216,12 +5216,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "444209168c9d773c14c0f1a9d97afb4c67cd20ec"
+                "reference": "75038405e93a81f16bd41a718db20b0d1b7d1c2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/444209168c9d773c14c0f1a9d97afb4c67cd20ec",
-                "reference": "444209168c9d773c14c0f1a9d97afb4c67cd20ec",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/75038405e93a81f16bd41a718db20b0d1b7d1c2c",
+                "reference": "75038405e93a81f16bd41a718db20b0d1b7d1c2c",
                 "shasum": ""
             },
             "require": {
@@ -5308,7 +5308,7 @@
                 "source": "https://github.com/PrestaShop/ps_apiresources/tree/41972-carrier-endpoints",
                 "issues": "https://github.com/PrestaShop/ps_apiresources/issues"
             },
-            "time": "2026-08-18T17:25:40+00:00"
+            "time": "2026-08-21T08:57:19+00:00"
         },
         {
             "name": "prestashop/ps_banner",
