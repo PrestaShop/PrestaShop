@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\PositiveOrZero;
-use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -23,7 +22,7 @@ class CostsRangeType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        private readonly CurrencyDataProviderInterface $currencyDataProvider
+       private readonly string $defaultCurrencyIsoCode,
     ) {
         parent::__construct($translator, $locales);
     }
@@ -54,7 +53,7 @@ class CostsRangeType extends TranslatorAwareType
             ->add('price', MoneyWithSuffixType::class, [
                 'label' => $this->trans('Price (VAT excl.)', 'Admin.Shipping.Feature'),
                 'empty_data' => '0.0', // string instead number needed for DecimalNumber.php validation
-                'currency' => $this->currencyDataProvider->getDefaultCurrencyIsoCode(),
+                'currency' => $this->defaultCurrencyIsoCode,
             ]);
     }
 
