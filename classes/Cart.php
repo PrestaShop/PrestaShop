@@ -3705,7 +3705,7 @@ class CartCore extends ObjectModel
         $order_total = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list, $id_carrier, false, $keepOrderPrices);
 
         // When the improved_shipment feature is enabled and this call is scoped to a specific shipment,
-        // $order_total above is actually the shipment's own total: keep it as $shipment_total and recompute
+        // $order_total above is actually the value of the shipment contents: keep it as $shipment_total and recompute
         // $order_total so it always reflects the whole order, as expected by the actionDeliveryPriceByPrice hook.
         $shipment_total = null;
         if (null !== $product_list) {
