@@ -9,7 +9,7 @@
  */
 class DbPDOCore extends Db
 {
-    /** @var PDO */
+    /** @var PDO|null */
     protected $link;
 
     /** @var PDOStatement */
@@ -170,11 +170,16 @@ class DbPDOCore extends Db
     /**
      * Destroys the database connection link.
      *
+     * Sets $link to null rather than unsetting the property: unset() removes it from the object
+     * entirely, and every subsequent read of an untyped, removed property (setPDO()'s
+     * `$this->link === $pdo`, hasUncommittedTransaction()'s `instanceof`, this class's own
+     * `!$this->link`) then raises an "Undefined property" warning until it's reassigned.
+     *
      * @see DbCore::disconnect()
      */
     public function disconnect()
     {
-        unset($this->link);
+        $this->link = null;
     }
 
     /**

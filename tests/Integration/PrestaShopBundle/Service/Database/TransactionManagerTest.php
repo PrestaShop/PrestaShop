@@ -10,6 +10,7 @@ namespace Tests\Integration\PrestaShopBundle\Service\Database;
 
 use Db;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface;
 use PrestaShopException;
@@ -28,6 +29,7 @@ class TransactionManagerTest extends KernelTestCase
 
     private TransactionManagerInterface $transactionManager;
     private Connection $connection;
+    private EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {
@@ -35,6 +37,7 @@ class TransactionManagerTest extends KernelTestCase
         $container = self::getContainer();
         $this->transactionManager = $container->get(TransactionManagerInterface::class);
         $this->connection = $container->get('doctrine.dbal.default_connection');
+        $this->entityManager = $container->get('doctrine.orm.entity_manager');
     }
 
     protected function tearDown(): void
@@ -43,6 +46,13 @@ class TransactionManagerTest extends KernelTestCase
             'DELETE FROM ' . _DB_PREFIX_ . 'tag WHERE name LIKE :name',
             ['name' => self::TAG_NAME_PREFIX . '%']
         );
+
+        // The legacy Db singleton is static and outlives the kernel, so a DbDoctrine left behind here would
+        // be reused by the next test while pointing at the previous boot's (now discarded) Doctrine
+        // connection. Dropping it keeps each test starting from a plain, legacy-only Db instance.
+        Db::deleteTestingInstance();
+
+        parent::tearDown();
     }
 
     public function testLegacyAndDoctrineWritesAreCommittedTogether(): void
@@ -78,6 +88,10 @@ class TransactionManagerTest extends KernelTestCase
 
     public function testSharingTheConnectionFailsIfTheLegacyConnectionHasAPendingTransaction(): void
     {
+        // Start from a plain, legacy-only Db instance so switchConnection() has to take its rebuild path:
+        // reusing an already-shared DbDoctrine is a deliberate no-op (that is what makes a transactional
+        // handler dispatching another transactional command work), so it would not throw here.
+        Db::deleteTestingInstance();
         $legacyDb = Db::getInstance();
         $legacyDb->execute('START TRANSACTION');
 
@@ -89,6 +103,50 @@ class TransactionManagerTest extends KernelTestCase
         } finally {
             $legacyDb->execute('ROLLBACK');
         }
+    }
+
+    /**
+     * PrestaShop command handlers throw domain exceptions as ordinary control flow, and BO controllers catch
+     * them and re-render the page. EntityManager::wrapInTransaction() closes the manager on any failure, which
+     * would make every later Doctrine call in that request fail with "The EntityManager is closed" - so the
+     * rollback must not take the manager down with it.
+     */
+    public function testTheEntityManagerStaysUsableAfterARolledBackTransaction(): void
+    {
+        $id = $this->uniqueTagId();
+
+        try {
+            $this->transactionManager->executeInTransaction(function () use ($id) {
+                $this->addTagViaObjectModel($id . '-l');
+
+                throw new Exception('Domain-style failure the caller handles itself');
+            });
+            $this->fail('Expected exception was not thrown');
+        } catch (Exception $e) {
+            $this->assertSame('Domain-style failure the caller handles itself', $e->getMessage());
+        }
+
+        $this->assertTrue($this->entityManager->isOpen());
+        // flush() throws EntityManagerClosed on a closed manager, so this proves it is still usable.
+        $this->entityManager->flush();
+        $this->assertSame(0, $this->countTagsMatching($id . '%'));
+    }
+
+    public function testANestedTransactionalCallIsNotRejectedAsAConflictingTransaction(): void
+    {
+        $id = $this->uniqueTagId();
+
+        $this->transactionManager->executeInTransaction(function () use ($id) {
+            $this->addTagViaObjectModel($id . '-outer');
+
+            // Re-entering while the shared connection already has an open transaction must reuse it,
+            // not trip the "connection has an uncommitted transaction" guard.
+            $this->transactionManager->executeInTransaction(function () use ($id) {
+                $this->addTagViaDoctrine($id . '-inner');
+            });
+        });
+
+        $this->assertSame(2, $this->countTagsMatching($id . '%'));
     }
 
     private function uniqueTagId(): string

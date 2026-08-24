@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
 use DbDoctrine;
+use DbDoctrineCore;
 use DbPDOCore;
 use Doctrine\DBAL\Connection;
 use PrestaShopException;
@@ -20,23 +21,23 @@ use PrestaShopException;
  */
 class ConnectionSwitcher
 {
-    /**
-     * The connection is optional: this class is also built by PrestaShop\PrestaShop\Core\Foundation\IoC\Container
-     * (see Core\ContainerBuilder), a reflection-based container with no notion of Symfony services, which cannot
-     * supply one. Without it, switchConnection() just skips sharing the connection with Doctrine.
-     */
     public function __construct(
-        private readonly ?Connection $connection = null,
+        private readonly Connection $connection,
     ) {
     }
 
     /**
-     * Returns the legacy Db instance. When a Doctrine connection was injected and the legacy Db is
-     * PDO-based, this instance is guaranteed to be a DbDoctrine sharing the same underlying PDO
-     * connection as Doctrine, so that both layers participate in a single physical database
-     * transaction. Without a Doctrine connection, or when the legacy Db isn't PDO-based (e.g. the
-     * mysqli fallback, see Db::getClass()), this just returns the legacy Db instance untouched, since
-     * there is then no PDO connection to share.
+     * Returns the legacy Db instance. When the legacy Db is PDO-based, this instance is guaranteed to
+     * be a DbDoctrine sharing the same underlying PDO connection as Doctrine, so that both layers
+     * participate in a single physical database transaction. When the legacy Db isn't PDO-based (e.g.
+     * the mysqli fallback, see Db::getClass()), this just returns the legacy Db instance untouched,
+     * since there is then no PDO connection to share.
+     *
+     * Safe to call re-entrantly (e.g. a transactional handler dispatching another transactional
+     * command): reusing an already-shared DbDoctrine is checked for first and is a no-op, so a nested
+     * call never trips the uncommitted-transaction guard below over the transaction it is itself
+     * already part of. That guard only ever fires on the path that would actually replace the legacy
+     * Db instance with a new one.
      *
      * @throws PrestaShopException if replacing the current legacy Db instance would silently discard an
      *                             uncommitted transaction, or if the configured Doctrine DBAL driver isn't
@@ -46,21 +47,22 @@ class ConnectionSwitcher
     {
         $db = Db::getInstance();
 
-        if (null === $this->connection || !$db instanceof DbPDOCore) {
+        if (!$db instanceof DbPDOCore) {
             return $db;
         }
 
-        // Checked unconditionally, before deciding whether to reuse or rebuild below: a pending
-        // transaction is just as unsafe to replace when $db is already a DbDoctrine (e.g. one left
-        // over from a previous, no-longer-current Doctrine connection) as when it's a plain DbPDO.
-        if ($db->hasUncommittedTransaction()) {
-            throw new PrestaShopException('Cannot share the Doctrine connection: the legacy Db connection it would replace has an uncommitted transaction.');
-        }
-
-        if ($db instanceof DbDoctrine && $db->isSharing($this->connection)) {
+        // Tested against DbDoctrineCore, not DbDoctrine: the legacy class loader generates
+        // `class DbDoctrine extends DbDoctrineCore {}`, so the Core class is the base and the
+        // leaf is the subclass. Checking the leaf would miss any other DbDoctrineCore subclass
+        // (an override, a test double) and silently drop it into the rebuild path below.
+        if ($db instanceof DbDoctrineCore && $db->isSharing($this->connection)) {
             $db->connect();
 
             return $db;
+        }
+
+        if ($db->hasUncommittedTransaction()) {
+            throw new PrestaShopException('Cannot share the Doctrine connection: the legacy Db connection it would replace has an uncommitted transaction.');
         }
 
         /** @var DbPDOCore $doctrineDb */

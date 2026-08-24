@@ -19,6 +19,13 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ConnectionSwitcher;
 use PrestaShopException;
 
+/**
+ * Mocks its collaborators and boots no kernel, but still belongs to the Integration suite: the Unit suite's
+ * bootstrap loads tests/Unit/Classes/Db/MockDb.php, which pre-declares `abstract class Db` with getInstance()
+ * hardcoded to `return new MockDb()`. That bypasses Db::$instance entirely, so setInstanceForTesting() has no
+ * effect there - and reading/replacing Db::$instance[0] is exactly what ConnectionSwitcher does. This needs the
+ * real legacy Db class, which only the Integration bootstrap provides.
+ */
 class ConnectionSwitcherTest extends TestCase
 {
     protected function tearDown(): void
@@ -109,8 +116,28 @@ class ConnectionSwitcherTest extends TestCase
         $this->assertSame($currentPdo, $db->connect());
     }
 
-    public function testSwitchConnectionThrowsEvenWhenAlreadySharingADoctrineConnectionWithAPendingTransaction(): void
+    public function testSwitchConnectionThrowsWhenRebuildingWouldReplaceAConnectionWithAPendingTransaction(): void
     {
+        // The pending transaction is on a *stale* connection (e.g. left over from a previous
+        // kernel boot) distinct from the current one, so switchConnection() must rebuild rather
+        // than reuse — and the rebuild path is exactly where this must be caught.
+        $staleLink = $this->getMockPDO();
+        $staleLink->method('inTransaction')->willReturn(true);
+
+        $staleDb = new DbDoctrineCore($this->getConnectionMock($staleLink));
+        $staleDb->connect();
+        Db::setInstanceForTesting($staleDb);
+
+        $this->expectException(PrestaShopException::class);
+
+        (new ConnectionSwitcher($this->getConnectionMock($this->getMockPDO())))->switchConnection();
+    }
+
+    public function testSwitchConnectionDoesNotThrowOnAReentrantCallSharingTheSameConnection(): void
+    {
+        // A transactional handler dispatching another transactional command re-enters
+        // switchConnection() while its own transaction is active on the shared link
+        // (PDO::inTransaction() is true) — this must be a no-op reuse, not an error.
         $sharedPdo = $this->getMockPDO();
         $sharedPdo->method('inTransaction')->willReturn(true);
 
@@ -119,8 +146,8 @@ class ConnectionSwitcherTest extends TestCase
         $existingDb->connect();
         Db::setInstanceForTesting($existingDb);
 
-        $this->expectException(PrestaShopException::class);
+        $db = (new ConnectionSwitcher($connection))->switchConnection();
 
-        (new ConnectionSwitcher($connection))->switchConnection();
+        $this->assertSame($existingDb, $db);
     }
 }

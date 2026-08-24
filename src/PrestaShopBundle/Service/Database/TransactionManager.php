@@ -11,6 +11,7 @@ namespace PrestaShopBundle\Service\Database;
 use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\ConnectionSwitcher;
 use PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface;
+use Throwable;
 
 class TransactionManager implements TransactionManagerInterface
 {
@@ -59,12 +60,40 @@ class TransactionManager implements TransactionManagerInterface
      * instead of two independent ones. This avoids the deadlocks and lock wait timeouts that a dual-connection,
      * dual-transaction approach would be exposed to.
      *
+     * Transaction control is deliberately kept at the DBAL connection level instead of delegating to
+     * EntityManager::wrapInTransaction(): that helper calls EntityManager::close() on any failure, and PrestaShop
+     * command handlers throw domain exceptions as ordinary control flow (a BO controller catches them and re-renders
+     * the page). Closing the manager would make every later Doctrine call in the same request fail with "The
+     * EntityManager is closed" after what is, for the caller, a plain validation error. The connection is also the
+     * layer that actually matters here, since that is what the legacy Db instance shares - and it keeps this method
+     * consistent with the beginTransaction()/commit()/rollback() trio above, which delegates to the same primitives.
+     *
+     * Note that flush() covers the whole unit of work, not only what $func touched: that is inherent to Doctrine's
+     * UoW, and is the behaviour wrapInTransaction() already had.
+     *
      * {@inheritdoc}
      */
     public function executeInTransaction(callable $func): mixed
     {
         $this->connectionSwitcher->switchConnection();
 
-        return $this->entityManager->wrapInTransaction($func);
+        $connection = $this->entityManager->getConnection();
+        $connection->beginTransaction();
+
+        try {
+            $result = $func($this->entityManager);
+            $this->entityManager->flush();
+            $connection->commit();
+
+            return $result;
+        } catch (Throwable $throwable) {
+            // Guarded like wrapInTransaction() does: a DDL statement inside $func implicitly commits on
+            // MySQL, so the transaction may already be gone by the time we get here.
+            if ($connection->isTransactionActive()) {
+                $connection->rollBack();
+            }
+
+            throw $throwable;
+        }
     }
 }

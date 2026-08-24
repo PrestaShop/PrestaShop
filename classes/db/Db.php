@@ -364,10 +364,7 @@ abstract class DbCore
         if (!$this->result && $this->getNumberError() == 2006) {
             // disconnect() first: DbPDOCore::connect() now skips reconnecting if $this->link is
             // still set (needed to avoid overwriting a connection shared with Doctrine), so without
-            // this the dead link here would never actually get replaced. DbDoctrineCore overrides
-            // connect() to always re-pull the native connection from Doctrine instead, so a
-            // Doctrine-shared instance re-attempts sharing here rather than degrading to a
-            // legacy-only connection.
+            // this the dead link here would never actually get replaced.
             $this->disconnect();
             $this->connect();
             $this->result = $this->_query($sql);

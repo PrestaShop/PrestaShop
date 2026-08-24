@@ -7,6 +7,7 @@ use PrestaShop\PrestaShop\Adapter\AddressFactory;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheAdapter;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
+use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShop\PrestaShop\Adapter\Discount\Application\DiscountApplicationService;
 use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
@@ -2379,7 +2380,7 @@ class CartCore extends ObjectModel
                 new CustomerDataProvider(),
                 new CacheAdapter(),
                 new GroupDataProvider(),
-                $container->get('prestashop.adapter.database'),
+                new Database(),
                 $useEcotax,
                 $precision,
                 $roundType,

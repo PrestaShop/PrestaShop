@@ -73,11 +73,14 @@ class DbDoctrineTest extends TestCase
         $db->connect();
     }
 
-    public function testDisconnectAlsoClosesTheDoctrineConnection(): void
+    public function testIsSharingDistinguishesTheInjectedConnectionFromAnotherOne(): void
     {
         $connection = $this->getConnectionMock($this->getMockPDO());
-        $connection->expects($this->once())->method('close');
+        $otherConnection = $this->getConnectionMock($this->getMockPDO());
 
-        (new DbDoctrineCore($connection))->disconnect();
+        $db = new DbDoctrineCore($connection);
+
+        $this->assertTrue($db->isSharing($connection));
+        $this->assertFalse($db->isSharing($otherConnection));
     }
 }
