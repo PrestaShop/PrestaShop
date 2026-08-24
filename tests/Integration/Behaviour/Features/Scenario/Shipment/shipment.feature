@@ -89,8 +89,7 @@ Feature: Retrieving shipment for orders
     Given the order "bo_order1" should have the following shipments:
       | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
       | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
-    When I list the available shipments of order "bo_order1" for the ordered product "Mug The best is yet to come"
-    Then the listed available shipments should contain the shipment "shipment1"
+    Then the available shipments of order "bo_order1" for the ordered product "Mug The best is yet to come" should contain the shipment "shipment1"
 
   Scenario: List the available shipments of a product that is not in the order
     Given the order "bo_order1" should have the following shipments:

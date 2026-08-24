@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\ListAvailableShipmentsForPr
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForOrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentsForProduct;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -209,10 +210,13 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I list the available shipments of order :orderReference for the ordered product :productName
+     * @Then the available shipments of order :orderReference for the ordered product :productName should contain the shipment :shipmentReference
      */
-    public function listAvailableShipmentsForOrderedProduct(string $orderReference, string $productName): void
-    {
+    public function assertAvailableShipmentsForOrderedProduct(
+        string $orderReference,
+        string $productName,
+        string $shipmentReference
+    ): void {
         $orderId = $this->referenceToId($orderReference);
 
         $productId = 0;
@@ -229,7 +233,16 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
             sprintf('Product "%s" was not found in order "%s"', $productName, $orderReference)
         );
 
-        $this->listAvailableShipments($orderId, $productId);
+        /** @var ShipmentsForProduct[] $shipments */
+        $shipments = $this->getQueryBus()->handle(
+            new ListAvailableShipmentsForProduct($orderId, $productId)
+        );
+
+        Assert::assertContains(
+            SharedStorage::getStorage()->get($shipmentReference),
+            array_map(static fn (ShipmentsForProduct $shipment) => $shipment->getId(), $shipments),
+            sprintf('Shipment "%s" was not listed as available for product "%s"', $shipmentReference, $productName)
+        );
     }
 
     /**
@@ -237,34 +250,14 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
      */
     public function listAvailableShipmentsForProduct(string $orderReference, string $productReference): void
     {
-        $this->listAvailableShipments($this->referenceToId($orderReference), $this->referenceToId($productReference));
-    }
-
-    private function listAvailableShipments(int $orderId, int $productId): void
-    {
         try {
-            $shipments = $this->getQueryBus()->handle(new ListAvailableShipmentsForProduct($orderId, $productId));
-            SharedStorage::getStorage()->set('available_shipments_for_product', $shipments);
+            $this->getQueryBus()->handle(new ListAvailableShipmentsForProduct(
+                $this->referenceToId($orderReference),
+                $this->referenceToId($productReference)
+            ));
         } catch (Exception $e) {
             $this->setLastException($e);
         }
-    }
-
-    /**
-     * @Then the listed available shipments should contain the shipment :shipmentReference
-     */
-    public function assertAvailableShipmentsContain(string $shipmentReference): void
-    {
-        $expectedShipmentId = SharedStorage::getStorage()->get($shipmentReference);
-        $shipments = SharedStorage::getStorage()->get('available_shipments_for_product');
-
-        $shipmentIds = array_map(static fn ($shipment) => $shipment->getId(), $shipments);
-
-        Assert::assertContains(
-            $expectedShipmentId,
-            $shipmentIds,
-            sprintf('Shipment "%s" was not listed as available for the product', $shipmentReference)
-        );
     }
 
     /**
