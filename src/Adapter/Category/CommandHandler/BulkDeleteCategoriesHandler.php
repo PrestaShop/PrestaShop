@@ -52,6 +52,8 @@ final class BulkDeleteCategoriesHandler extends AbstractDeleteCategoryHandler im
             return;
         }
 
+        $this->categoryDisplayNameCacheInvalidator->invalidate();
+
         $this->updateProductCategories($deletedCategoryIdsByParent, $command->getDeleteMode());
     }
 }

@@ -9,6 +9,7 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 use Db;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameCacheInvalidator;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
@@ -22,33 +23,17 @@ use Shop;
 abstract class AbstractDeleteCategoryHandler
 {
     /**
-     * @var int
-     */
-    protected $homeCategoryId;
-
-    /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
-     * @var CategoryRepository
-     */
-    private $categoryRepository;
-
-    /**
      * @param int $homeCategoryId
      * @param ProductRepository $productRepository
      * @param CategoryRepository $categoryRepository
+     * @param CategoryDisplayNameCacheInvalidator $categoryDisplayNameCacheInvalidator
      */
     public function __construct(
-        int $homeCategoryId,
-        ProductRepository $productRepository,
-        CategoryRepository $categoryRepository
+        protected readonly int $homeCategoryId,
+        private readonly ProductRepository $productRepository,
+        private readonly CategoryRepository $categoryRepository,
+        protected readonly CategoryDisplayNameCacheInvalidator $categoryDisplayNameCacheInvalidator,
     ) {
-        $this->homeCategoryId = $homeCategoryId;
-        $this->productRepository = $productRepository;
-        $this->categoryRepository = $categoryRepository;
     }
 
     /**
