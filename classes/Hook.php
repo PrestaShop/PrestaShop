@@ -1011,15 +1011,17 @@ class HookCore extends ObjectModel
                 );
 
                 // We throw an error - aliases are deprecated.
-                trigger_error(
-                    sprintf(
-                        'The hook "%s" is deprecated, please use "%s" instead in module "%s".',
-                        $registeredHookName,
-                        $hook_name,
-                        $hookRegistration['module']
-                    ),
-                    E_USER_DEPRECATED
-                );
+                if (_PS_MODE_DEV_) {
+                    trigger_error(
+                        sprintf(
+                            'The hook "%s" is deprecated, please use "%s" instead in module "%s".',
+                            $registeredHookName,
+                            $hook_name,
+                            $hookRegistration['module']
+                        ),
+                        E_USER_DEPRECATED
+                    );
+                }
             }
 
             // Check conditions to execute the module
