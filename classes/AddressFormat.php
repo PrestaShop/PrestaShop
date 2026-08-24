@@ -15,9 +15,6 @@ class AddressFormatCore extends ObjectModel
     /** @var int Address format */
     public $id_address_format;
 
-    /** @var int Country ID */
-    public $id_country;
-
     /** @var string Format */
     public $format;
 
@@ -31,7 +28,6 @@ class AddressFormatCore extends ObjectModel
         'primary' => 'id_country',
         'fields' => [
             'format' => ['type' => self::TYPE_HTML, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
-            'id_country' => ['type' => self::TYPE_INT],
         ],
     ];
 
@@ -589,8 +585,8 @@ class AddressFormatCore extends ObjectModel
         $idCountry = (int) $idCountry;
 
         $tmpObj = new AddressFormat();
-        $tmpObj->id_country = $idCountry;
-        $out = $tmpObj->getFormat($tmpObj->id_country);
+        $tmpObj->id = $idCountry;
+        $out = $tmpObj->getFormat($idCountry);
         unset($tmpObj);
 
         return $out;

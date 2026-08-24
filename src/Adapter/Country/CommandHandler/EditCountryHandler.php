@@ -110,12 +110,17 @@ class EditCountryHandler implements EditCountryHandlerInterface
     private function saveAddressFormat(int $countryId, string $format): void
     {
         $addressFormatModel = new AddressFormat($countryId);
-        if (null === $addressFormatModel->id_country || 0 === (int) $addressFormatModel->id_country) {
-            $addressFormatModel->id_country = $countryId;
-        }
         $addressFormatModel->format = $format;
 
-        if (!$addressFormatModel->save()) {
+        if (null === $addressFormatModel->id || 0 === (int) $addressFormatModel->id) {
+            $addressFormatModel->force_id = true;
+            $addressFormatModel->id = $countryId;
+            $result = $addressFormatModel->add();
+        } else {
+            $result = $addressFormatModel->update();
+        }
+
+        if (!$result) {
             throw new CannotEditCountryException(sprintf('Failed to save address format for country %d', $countryId));
         }
 

@@ -85,10 +85,11 @@ class AddCountryHandler implements AddCountryHandlerInterface
     private function saveAddressFormat(int $countryId, string $format): void
     {
         $addressFormatModel = new AddressFormat();
-        $addressFormatModel->id_country = $countryId;
+        $addressFormatModel->force_id = true;
+        $addressFormatModel->id = $countryId;
         $addressFormatModel->format = $format;
 
-        if (!$addressFormatModel->save()) {
+        if (!$addressFormatModel->add()) {
             throw new CannotAddCountryException(sprintf('Failed to save address format for country %d', $countryId));
         }
 
