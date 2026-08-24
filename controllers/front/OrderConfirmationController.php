@@ -85,7 +85,7 @@ class OrderConfirmationControllerCore extends FrontController
          * in database, we redirect to "page not found".
          */
         $this->secure_key = Tools::getValue('key', false);
-        if (empty($this->secure_key) || $this->secure_key != $this->order->secure_key) {
+        if (empty($this->secure_key) || !hash_equals((string) $this->order->secure_key, (string) $this->secure_key)) {
             Tools::redirect('pagenotfound');
         }
 
