@@ -78,5 +78,7 @@ services:
 
   prestashop.adapter.database:
     class: 'PrestaShop\PrestaShop\Adapter\Database'
+
+  PrestaShop\PrestaShop\Adapter\ConnectionSwitcher:
     arguments:
       $connection: '@doctrine.dbal.default_connection'

@@ -16,24 +16,35 @@ class DbPDOCore extends Db
     protected $result;
 
     /**
-     * Shares an externally-managed PDO connection (typically Doctrine's) with this legacy Db instance,
-     * so that both sides run in the same physical connection/transaction.
+     * Shares an externally-managed PDO connection (typically Doctrine's, via DbDoctrineCore::connect())
+     * with this legacy Db instance, so that both sides run in the same physical connection/transaction.
      *
-     * Note: if this shared connection is later lost, query()'s reconnect-on-error-2006 logic replaces
-     * $this->link with a brand new, legacy-only PDO (see Db::query()). The two layers then run on separate
-     * connections again until setPDO() is called anew (i.e. the next transactional command).
+     * A no-op when $pdo is already the current link, so callers (DbDoctrineCore::connect()) can call this
+     * on every transaction without paying for a redundant applySessionSettings() round-trip each time.
      *
      * @throws PrestaShopException if this instance's current connection has an uncommitted transaction,
      *                             since replacing it would silently discard that work instead of erroring
      */
     public function setPDO(PDO $pdo)
     {
-        if ($this->link instanceof PDO && $this->link !== $pdo && $this->link->inTransaction()) {
+        if ($this->link === $pdo) {
+            return;
+        }
+
+        if ($this->hasUncommittedTransaction()) {
             throw new PrestaShopException('Cannot share the Doctrine connection: the legacy Db connection it would replace has an uncommitted transaction.');
         }
 
         $this->link = $pdo;
         $this->applySessionSettings();
+    }
+
+    /**
+     * @return bool Whether the current connection has an uncommitted transaction
+     */
+    public function hasUncommittedTransaction(): bool
+    {
+        return $this->link instanceof PDO && $this->link->inTransaction();
     }
 
     /**

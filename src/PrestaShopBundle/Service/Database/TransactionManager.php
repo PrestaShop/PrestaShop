@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Service\Database;
 
 use Doctrine\ORM\EntityManager;
-use PrestaShop\PrestaShop\Adapter\Database;
+use PrestaShop\PrestaShop\Adapter\ConnectionSwitcher;
 use PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface;
 
 class TransactionManager implements TransactionManagerInterface
@@ -17,7 +17,7 @@ class TransactionManager implements TransactionManagerInterface
     /**
      * @param EntityManager $entityManager
      */
-    public function __construct(private readonly EntityManager $entityManager, private readonly Database $database)
+    public function __construct(private readonly EntityManager $entityManager, private readonly ConnectionSwitcher $connectionSwitcher)
     {
     }
 
@@ -46,7 +46,7 @@ class TransactionManager implements TransactionManagerInterface
      */
     public function beginTransaction(): void
     {
-        $this->database->getInstance();
+        $this->connectionSwitcher->switchConnection();
         $this->entityManager->beginTransaction();
     }
 
@@ -54,7 +54,7 @@ class TransactionManager implements TransactionManagerInterface
      * Executes a callable within a single database transaction covering both legacy Db and Doctrine EntityManager
      * operations.
      *
-     * The legacy Db connection is synchronized beforehand (see Database::getInstance()) to share the same
+     * The legacy Db connection is synchronized beforehand (see ConnectionSwitcher::switchConnection()) to share the same
      * underlying PDO connection as Doctrine, so both layers participate in the very same physical transaction
      * instead of two independent ones. This avoids the deadlocks and lock wait timeouts that a dual-connection,
      * dual-transaction approach would be exposed to.
@@ -63,7 +63,7 @@ class TransactionManager implements TransactionManagerInterface
      */
     public function executeInTransaction(callable $func): mixed
     {
-        $this->database->getInstance();
+        $this->connectionSwitcher->switchConnection();
 
         return $this->entityManager->wrapInTransaction($func);
     }

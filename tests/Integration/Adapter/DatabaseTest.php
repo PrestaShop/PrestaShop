@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Adapter;
 
-use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Database;
 
@@ -29,7 +28,7 @@ class DatabaseTest extends TestCase
      */
     public function testValuesAreEscaped($expected, $actual): void
     {
-        $db = new Database($this->createMock(Connection::class));
+        $db = new Database();
         $this->assertEquals($expected, $db->escape($actual));
     }
 }

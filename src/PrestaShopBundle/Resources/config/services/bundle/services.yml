@@ -130,6 +130,6 @@ services:
     autowire: true
     arguments:
       - '@doctrine.orm.entity_manager'
-      - '@prestashop.adapter.database'
+      - '@PrestaShop\PrestaShop\Adapter\ConnectionSwitcher'
 
   PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface: '@PrestaShopBundle\Service\Database\TransactionManager'
