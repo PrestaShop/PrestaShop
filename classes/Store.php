@@ -38,10 +38,10 @@ class StoreCore extends ObjectModel
     /** @var string City */
     public $city;
 
-    /** @var float|null Latitude */
+    /** @var string|null Latitude */
     public $latitude;
 
-    /** @var float|null Longitude */
+    /** @var string|null Longitude */
     public $longitude;
 
     /** @var string|array Store hours (PHP serialized) */
