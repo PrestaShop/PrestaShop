@@ -1,0 +1,104 @@
+# Weekly pre-qualification of issues and pull requests for the sheriff.
+#
+# Reads the past week, asks Claude for a severity / attention proposal on each
+# item, and publishes the ranked result as a job summary and a Slack message.
+#
+# This workflow is read-only on GitHub by design: the permissions block below
+# grants no write scope anywhere, so it cannot label an issue or move a board
+# card even if the code tried to. Every output is a proposal for the sheriff.
+name: Weekly triage agent
+
+on:
+  schedule:
+    # Mondays at 07:00 UTC, before the week's triage starts.
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: "Render everything but do not post to Slack"
+        required: false
+        default: true
+        type: boolean
+      since:
+        description: "Window start: '7d', or an explicit YYYY-MM-DD (UTC)"
+        required: false
+        default: "7d"
+        type: string
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: weekly-triage-agent
+  cancel-in-progress: false
+
+jobs:
+  triage:
+    name: Pre-qualify the week
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .github/triage-agent
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Collect the week
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python collect.py --since "${{ github.event.inputs.since || '7d' }}"
+
+      - name: Classify
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::ANTHROPIC_API_KEY is not configured for this repository."
+            exit 1
+          fi
+          python classify.py
+
+      - name: Render
+        run: |
+          python render.py \
+            --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
+      - name: Publish the summary
+        run: cat out/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the run
+        uses: actions/upload-artifact@v7
+        with:
+          name: weekly-triage-${{ github.run_id }}
+          path: |
+            .github/triage-agent/out/week.json
+            .github/triage-agent/out/classified.json
+            .github/triage-agent/out/summary.md
+            .github/triage-agent/out/slack.json
+            .github/triage-agent/out/board.json
+          retention-days: 90
+
+      # Posting is opt-in twice over: the dispatch input has to say so, and the
+      # webhook has to be configured. A scheduled run posts; a manual run does
+      # not unless asked.
+      - name: Post to Slack
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.dry-run == 'false' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "::warning::SLACK_WEBHOOK_URL is not configured - skipping the Slack post."
+            exit 0
+          fi
+          python publish.py --publish

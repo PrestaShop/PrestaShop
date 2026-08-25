@@ -1,0 +1,179 @@
+{
+  "issue": {
+    "type": "json_schema",
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "severity",
+        "confidence",
+        "rationale",
+        "category",
+        "component",
+        "suggested_status",
+        "security_suspicion",
+        "duplicate_candidates",
+        "needs_human_now"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "bug_report",
+            "feature_request",
+            "support_request",
+            "maintainer_task",
+            "not_actionable"
+          ],
+          "description": "What this issue actually is. Severity only carries meaning for bug_report."
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "Critical",
+            "Major",
+            "Minor",
+            "Trivial"
+          ],
+          "description": "Proposed severity, per the official classification in the system prompt."
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ],
+          "description": "How sure you are. 'low' routes the item to the sheriff's attention list."
+        },
+        "rationale": {
+          "type": "string",
+          "description": "One sentence naming the criterion that decided the severity."
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "BO",
+            "FO",
+            "CO",
+            "IN",
+            "WS",
+            "LO"
+          ],
+          "description": "Top-level area, matching the repository's category labels."
+        },
+        "component": {
+          "type": "string",
+          "enum": [
+            "Dashboard",
+            "Order",
+            "Catalog",
+            "Customer",
+            "Customer service",
+            "Stats",
+            "Modules",
+            "Design",
+            "Shipping",
+            "Payment",
+            "International",
+            "Shop parameters",
+            "Advanced parameters",
+            "none"
+          ],
+          "description": "Back-office section concerned, or 'none' when it does not apply."
+        },
+        "suggested_status": {
+          "type": "string",
+          "enum": [
+            "ready",
+            "TBR",
+            "NMI",
+            "Needs Specs"
+          ],
+          "description": "What the sheriff should do next with this issue."
+        },
+        "security_suspicion": {
+          "type": "boolean",
+          "description": "True whenever a security reading is plausible, even if severity is lower."
+        },
+        "duplicate_candidates": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "integer"
+          },
+          "description": "Issue numbers taken ONLY from the candidate list supplied in the user message."
+        },
+        "needs_human_now": {
+          "type": "boolean",
+          "description": "True when the sheriff should look this week rather than in the normal queue."
+        }
+      }
+    }
+  },
+  "pull_request": {
+    "type": "json_schema",
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attention",
+        "confidence",
+        "rationale",
+        "waiting_on",
+        "target_branch_looks_wrong",
+        "is_community_pr_unanswered",
+        "metadata_incomplete"
+      ],
+      "properties": {
+        "attention": {
+          "type": "string",
+          "enum": [
+            "blocking",
+            "soon",
+            "routine"
+          ],
+          "description": "How urgently the sheriff needs to touch this PR."
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ],
+          "description": "How sure you are, given the timeline is readable."
+        },
+        "rationale": {
+          "type": "string",
+          "description": "One sentence naming the concrete fact that decided the attention level."
+        },
+        "waiting_on": {
+          "type": "string",
+          "enum": [
+            "author",
+            "reviewer",
+            "QA",
+            "PM",
+            "UX",
+            "nobody"
+          ],
+          "description": "Who the ball is actually with, read from the timeline rather than the labels."
+        },
+        "target_branch_looks_wrong": {
+          "type": "boolean",
+          "description": "True when the stated type contradicts the base branch under the upward-merge rules."
+        },
+        "is_community_pr_unanswered": {
+          "type": "boolean",
+          "description": "True when a non-maintainer opened it and no maintainer has responded."
+        },
+        "metadata_incomplete": {
+          "type": "boolean",
+          "description": "True when a substantive template row is missing or left as a placeholder."
+        }
+      }
+    }
+  }
+}

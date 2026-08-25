@@ -1,0 +1,3 @@
+# Pipeline output: regenerated on every run, never reviewed as source.
+out/
+__pycache__/
