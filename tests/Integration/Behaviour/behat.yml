@@ -687,7 +687,6 @@ default:
       contexts:
         - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-        - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Configuration\EmailConfigurationFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext

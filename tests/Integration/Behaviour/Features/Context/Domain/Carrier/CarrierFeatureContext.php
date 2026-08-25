@@ -654,8 +654,6 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     protected function convertShippingMethodToInt(string $shippingMethod): int
     {
         $intValues = [
-            // Falls back to the shipping method of the shop configuration
-            'default' => ShippingMethod::DEFAULT,
             'weight' => ShippingMethod::BY_WEIGHT,
             'price' => ShippingMethod::BY_PRICE,
             'invalid' => 42, // This random number is hardcoded intentionally to reflect invalid shipping method

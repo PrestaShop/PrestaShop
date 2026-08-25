@@ -56,25 +56,8 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
             Carrier::class,
             CarrierNotFoundException::class
         );
-        $this->restoreRawShippingMethod($carrier);
 
         return $carrier;
-    }
-
-    /**
-     * The legacy constructor resolves ShippingMethod::DEFAULT into the method configured by PS_SHIPPING_METHOD, so a
-     * stored 0 would never be returned to the callers, and would even be replaced in the database by the next full
-     * update of the object model. The raw stored value is restored so it round-trips through the commands and queries.
-     */
-    private function restoreRawShippingMethod(Carrier $carrier): void
-    {
-        $carrier->shipping_method = (int) $this->connection->createQueryBuilder()
-            ->select('c.shipping_method')
-            ->from($this->prefix . 'carrier', 'c')
-            ->where('c.id_carrier = :carrierId')
-            ->setParameter('carrierId', (int) $carrier->id)
-            ->executeQuery()
-            ->fetchOne();
     }
 
     public function assertCarrierExists(CarrierId $carrierId): void
@@ -186,10 +169,6 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         $carrier = $this->get($carrierId);
         /** @var Carrier $newCarrier */
         $newCarrier = $carrier->duplicateObject();
-        // duplicateObject() copies the raw row (a stored ShippingMethod::DEFAULT included) but returns a freshly
-        // constructed object, whose legacy constructor resolved the shipping method: restore the raw value so the
-        // full update below doesn't overwrite it
-        $newCarrier->shipping_method = $carrier->shipping_method;
         $carrier->deleted = true;
         $this->partiallyUpdateObjectModel($carrier, ['deleted'], CannotUpdateCarrierException::class);
 

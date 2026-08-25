@@ -172,28 +172,3 @@ Feature: Carrier ranges
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0         | -100      | 10          |
     Then carrier should throw an error with error code "INVALID_RANGE_NEGATIVE"
-
-  Scenario: Adding ranges in carrier based on the shop configuration
-    Given shop configuration for "PS_SHIPPING_METHOD" is set to 1
-    When I create carrier "carrierDefault1" with specified properties:
-      | name           | Carrier Default 1 |
-      | shippingMethod | default           |
-      | zones          | zone1             |
-    Then I set ranges for carrier "carrierDefault1" with specified properties for all shops:
-      | id_zone | range_from | range_to | range_price |
-      | zone1   | 0          | 100      | 10          |
-    Then carrier "carrierDefault1" should have the following ranges for all shops:
-      | id_zone | range_from | range_to | range_price |
-      | zone1   | 0          | 100      | 10          |
-    Given shop configuration for "PS_SHIPPING_METHOD" is set to 0
-    When I create carrier "carrierDefault2" with specified properties:
-      | name           | Carrier Default 2 |
-      | shippingMethod | default           |
-      | zones          | zone1             |
-    Then I set ranges for carrier "carrierDefault2" with specified properties for all shops:
-      | id_zone | range_from | range_to | range_price |
-      | zone1   | 0          | 100      | 10          |
-    Then carrier "carrierDefault2" should have the following ranges for all shops:
-      | id_zone | range_from | range_to | range_price |
-      | zone1   | 0          | 100      | 10          |
-    Given shop configuration for "PS_SHIPPING_METHOD" is set to 1

@@ -75,11 +75,6 @@ class CarrierFormDataProvider implements FormDataProviderInterface
                 'associated_shops' => $this->shopContext->getAssociatedShopIds(),
                 'group_access' => $this->groupDataProvider->getAllGroupIds(),
             ],
-            'shipping_settings' => [
-                // Preselect a shipping method so the submitted value is never empty, since the shipping_method choice
-                // cannot rely on default_empty_data (its transformer would swallow a submitted ShippingMethod::DEFAULT)
-                'shipping_method' => ShippingMethod::DEFAULT,
-            ],
         ];
     }
 
@@ -131,11 +126,6 @@ class CarrierFormDataProvider implements FormDataProviderInterface
         switch ($carrier->getShippingMethod()) {
             default:
                 $rangeSymbol = '';
-                break;
-            case ShippingMethod::DEFAULT:
-                $rangeSymbol = $this->configuration->get('PS_SHIPPING_METHOD')
-                    ? $this->configuration->get('PS_WEIGHT_UNIT')
-                    : $this->currencyDataProvider->getDefaultCurrencySymbol();
                 break;
             case ShippingMethod::BY_PRICE:
                 $rangeSymbol = $this->currencyDataProvider->getDefaultCurrencySymbol();

@@ -16,11 +16,6 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 class ShippingMethod
 {
     /**
-     * Use the shipping method defined by the shop configuration
-     */
-    public const DEFAULT = 0;
-
-    /**
      * Use weight to calculate shipping cost
      */
     public const BY_WEIGHT = 1;
@@ -34,7 +29,6 @@ class ShippingMethod
      * A list of available values
      */
     public const AVAILABLE_VALUES = [
-        self::DEFAULT,
         self::BY_WEIGHT,
         self::BY_PRICE,
     ];

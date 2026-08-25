@@ -18,7 +18,6 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierRangesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -32,7 +31,6 @@ class CarrierRangeRepository
         protected readonly Connection $connection,
         protected readonly string $dbPrefix,
         protected readonly CarrierRepository $carrierRepository,
-        protected readonly ShopConfigurationInterface $configuration,
     ) {
     }
 
@@ -65,7 +63,7 @@ class CarrierRangeRepository
             ->setParameter('carrierId', $carrierId->getValue());
 
         // Apply shipping method (weight or price) and shop constraint, then execute the query
-        $this->applyRangeTypeForQuery($qb, $carrier, $shopConstraint);
+        $this->applyRangeTypeForQuery($qb, $carrier);
         $this->applyShopConstraint($qb);
 
         return $qb->executeQuery()->fetchAllAssociative();
@@ -83,7 +81,7 @@ class CarrierRangeRepository
 
         // Get carrier
         $carrier = $this->carrierRepository->get($carrierId);
-        $rangeTable = $this->getRangeMethodTable((int) $carrier->shipping_method, $shopConstraint);
+        $rangeTable = $this->getRangeMethodTable((int) $carrier->shipping_method);
 
         // Use transaction to ensure data consistency
         $this->connection->beginTransaction();
@@ -170,14 +168,9 @@ class CarrierRangeRepository
         }
     }
 
-    private function getRangeMethodTable(int $calculatingMethod, ShopConstraint $shopConstraint): string
+    private function getRangeMethodTable(int $calculatingMethod): string
     {
         switch ($calculatingMethod) {
-            case ShippingMethod::DEFAULT:
-                // The configuration is resolved for the same shop constraint as the handled ranges
-                return (int) $this->configuration->get('PS_SHIPPING_METHOD', null, $shopConstraint)
-                    ? 'range_weight'
-                    : 'range_price';
             case ShippingMethod::BY_WEIGHT:
                 return 'range_weight';
             case ShippingMethod::BY_PRICE:
@@ -187,10 +180,10 @@ class CarrierRangeRepository
         }
     }
 
-    private function applyRangeTypeForQuery(QueryBuilder $queryBuilder, Carrier $carrier, ShopConstraint $shopConstraint): QueryBuilder
+    private function applyRangeTypeForQuery(QueryBuilder $queryBuilder, Carrier $carrier): QueryBuilder
     {
         // Define which table to join based on carrier shipping method
-        $tableRange = $this->getRangeMethodTable((int) $carrier->shipping_method, $shopConstraint);
+        $tableRange = $this->getRangeMethodTable((int) $carrier->shipping_method);
 
         // Join the range table and order by range
         $queryBuilder->innerJoin(
