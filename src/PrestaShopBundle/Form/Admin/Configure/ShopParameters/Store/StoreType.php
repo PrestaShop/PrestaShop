@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\Store;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressZipCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Store\Configuration\StoreConstraint;
@@ -66,20 +67,13 @@ class StoreType extends TranslatorAwareType
                 'label' => $this->trans('Address (2)', 'Admin.Global'),
                 'required' => false,
             ])
-            ->add('postcode', TextType::class, [
-                'label' => $this->trans('Zip/Postal code', 'Admin.Global'),
-                'required' => false,
-                'constraints' => [
-                    new Length([
-                        'max' => StoreConstraint::MAX_POSTCODE_LENGTH,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters',
-                            'Admin.Notifications.Error',
-                            ['%limit%' => StoreConstraint::MAX_POSTCODE_LENGTH]
-                        ),
-                    ]),
-                ],
-            ])
+        ;
+
+        // Added here so it keeps its position between "Address (2)" and "City"; the
+        // country-dependent constraints are (re)applied by rebuildPostcodeField().
+        $this->rebuildPostcodeField($builder, $countryId);
+
+        $builder
             ->add('city', TextType::class, [
                 'label' => $this->trans('City', 'Admin.Global'),
                 'constraints' => [
@@ -212,12 +206,52 @@ class StoreType extends TranslatorAwareType
 
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
             $data = $event->getData() ?? [];
-            $this->rebuildStateField($event->getForm(), (int) ($data['id_country'] ?? 0));
+            $this->rebuildCountryDependentFields($event->getForm(), (int) ($data['id_country'] ?? 0));
         });
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
-            $this->rebuildStateField($event->getForm(), (int) ($event->getData()['id_country'] ?? 0));
+            $this->rebuildCountryDependentFields($event->getForm(), (int) ($event->getData()['id_country'] ?? 0));
         });
+    }
+
+    /**
+     * Postcode and state both depend on the selected country, so they are (re)built whenever
+     * the country is known: at build time, when data is set, and again with the submitted
+     * country so the zip code is validated against the country the user actually chose.
+     *
+     * @param FormFormInterface|FormBuilderInterface $form
+     */
+    private function rebuildCountryDependentFields($form, int $countryId): void
+    {
+        $this->rebuildPostcodeField($form, $countryId);
+        $this->rebuildStateField($form, $countryId);
+    }
+
+    /**
+     * @param FormFormInterface|FormBuilderInterface $form
+     */
+    private function rebuildPostcodeField($form, int $countryId): void
+    {
+        $form->add('postcode', TextType::class, [
+            'label' => $this->trans('Zip/Postal code', 'Admin.Global'),
+            'required' => false,
+            'empty_data' => '',
+            'constraints' => [
+                new TypedRegex(['type' => TypedRegex::TYPE_POST_CODE]),
+                new Length([
+                    'max' => StoreConstraint::MAX_POSTCODE_LENGTH,
+                    'maxMessage' => $this->trans(
+                        'This field cannot be longer than %limit% characters',
+                        'Admin.Notifications.Error',
+                        ['%limit%' => StoreConstraint::MAX_POSTCODE_LENGTH]
+                    ),
+                ]),
+                new AddressZipCode([
+                    'id_country' => $countryId,
+                    'required' => false,
+                ]),
+            ],
+        ]);
     }
 
     /**
