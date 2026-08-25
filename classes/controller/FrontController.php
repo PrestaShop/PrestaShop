@@ -1742,13 +1742,17 @@ class FrontControllerCore extends Controller
             return [];
         }
 
-        list($logoWidth, $logoHeight) = getimagesize($logoFileDir);
-
-        return [
+        $logoSize = getimagesize($logoFileDir);
+        $logo = [
             'src' => ($this->getTemplateVarUrls()['img_ps_url'] ?? _PS_IMG_) . $logoFileName,
-            'width' => $logoWidth,
-            'height' => $logoHeight,
         ];
+
+        if ($logoSize !== false && $logoSize[0] > 0 && $logoSize[1] > 0) {
+            $logo['width'] = (int) $logoSize[0];
+            $logo['height'] = (int) $logoSize[1];
+        }
+
+        return $logo;
     }
 
     public function getCoreJsPublicPath()
