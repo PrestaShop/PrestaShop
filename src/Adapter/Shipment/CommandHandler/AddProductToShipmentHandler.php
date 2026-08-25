@@ -37,7 +37,12 @@ class AddProductToShipmentHandler implements AddProductToShipmentHandlerInterfac
             throw new ShipmentNotFoundException(sprintf('No shipment with id %s found', $shipment));
         }
 
-        $orderDetail = $this->orderDetailRepository->findByOrderIdAndProductId($command->getOrderId(), $command->getProductId(), $command->getCombinationId());
+        $orderDetail = $this->orderDetailRepository->findByOrderIdAndProductId(
+            $command->getOrderId(),
+            $command->getProductId(),
+            $command->getCombinationId(),
+            $command->getCustomizationId()
+        );
 
         if ($orderDetail === null) {
             throw new OrderDetailNotFoundException(null, sprintf('No order detail for order id %s and product id %s found', $command->getOrderId()->getValue(), $command->getProductId()->getValue()));

@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
+use PrestaShop\PrestaShop\Adapter\Order\OrderDetailMatcher;
 use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShippingTotalUpdater;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
@@ -33,6 +34,7 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
         private readonly ShippingCostCalculatorInterface $shippingCostCalculator,
         private readonly AdapterConfiguration $configuration,
         private readonly OrderShippingTotalUpdater $orderShippingTotalUpdater,
+        private readonly OrderDetailMatcher $orderDetailMatcher,
     ) {
     }
 
@@ -42,16 +44,24 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
             $order = $this->orderRepository->get($command->getOrderId());
             $carrierId = $command->getCarrierId()->getValue();
             $productId = $command->getProductId()->getValue();
+            $combinationId = null !== $command->getProductCombinationId() ? $command->getProductCombinationId()->getValue() : 0;
+            $customizationId = null !== $command->getProductCustomizationId() ? $command->getProductCustomizationId()->getValue() : 0;
             $addressId = (int) $order->id_address_delivery;
 
             $shippingCostTaxExcluded = 0.00;
             $shippingCostTaxIncluded = 0.00;
 
             if ($this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING')) {
-                $product = $this->findOrderProduct($order->getProductsDetail(), $productId);
+                $product = $this->orderDetailMatcher->match($order->getProductsDetail(), $productId, $combinationId, $customizationId);
                 if ($product === null) {
                     throw new CannotFindProductInOrderException(
-                        sprintf('Product with id %d not found in order %d', $productId, (int) $order->id)
+                        sprintf(
+                            'Product with id %d, combination %d and customization %d not found in order %d',
+                            $productId,
+                            $combinationId,
+                            $customizationId,
+                            (int) $order->id
+                        )
                     );
                 }
 
@@ -59,7 +69,7 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
                     products: [
                         [
                             'id_product' => $productId,
-                            'id_product_attribute' => (int) ($product['product_attribute_id'] ?? 0),
+                            'id_product_attribute' => $combinationId,
                             'quantity' => $command->getQuantity(),
                             'weight' => (float) ($product['product_weight'] ?? 0),
                             'weight_attribute' => null,
@@ -109,21 +119,5 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
             }
             throw new ShipmentException('Failed to create shipment', $e->getCode(), $e);
         }
-    }
-
-    /**
-     * @param array<array<string, mixed>> $products
-     *
-     * @return array<string, mixed>|null
-     */
-    private function findOrderProduct(array $products, int $productId): ?array
-    {
-        foreach ($products as $product) {
-            if ((int) $product['product_id'] === $productId) {
-                return $product;
-            }
-        }
-
-        return null;
     }
 }

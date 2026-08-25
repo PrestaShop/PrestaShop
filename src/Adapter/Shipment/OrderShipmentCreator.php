@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Shipment;
 use Order;
 use OrderCarrier;
 use OrderDetail;
+use PrestaShop\PrestaShop\Adapter\Order\OrderDetailMatcher;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use PrestaShopBundle\Entity\Shipment;
 use PrestaShopBundle\Entity\ShipmentProduct;
@@ -22,13 +23,22 @@ class OrderShipmentCreator
      */
     private $shipmentRepository;
 
-    public function __construct(ShipmentRepository $shipmentRepository)
+    /**
+     * @var OrderDetailMatcher
+     */
+    private $orderDetailMatcher;
+
+    public function __construct(ShipmentRepository $shipmentRepository, OrderDetailMatcher $orderDetailMatcher)
     {
         $this->shipmentRepository = $shipmentRepository;
+        $this->orderDetailMatcher = $orderDetailMatcher;
     }
 
     public function addShipmentOrder(Order $order, array $productsHandledByCarrier): void
     {
+        // Order details are the same for every carrier group, fetch them once
+        $orderDetailProducts = OrderDetail::getList($order->id);
+
         foreach ($productsHandledByCarrier as $carrierId => $products) {
             $shipment = new Shipment();
             $shipment->setOrderId((int) $order->id);
@@ -54,53 +64,21 @@ class OrderShipmentCreator
             $orderCarrier->shipping_cost_tax_incl = 0;
             $orderCarrier->add();
             // match products with order details to get quantities & orderDetailId
-            foreach (OrderDetail::getList($order->id) as $orderDetailProduct) {
-                foreach ($products['product_list'] as $product) {
-                    if (!$this->needShipmentProductCreation($product, $orderDetailProduct)) {
-                        continue;
-                    }
-
-                    $quantity = $orderDetailProduct['product_quantity'];
-                    $orderDetailId = $orderDetailProduct['id_order_detail'];
-
-                    $shipmentProduct = (new ShipmentProduct())
-                        ->setShipment($shipment)
-                        ->setOrderDetailId($orderDetailId)
-                        ->setQuantity($quantity);
-
-                    $shipment->addShipmentProduct($shipmentProduct);
+            foreach ($products['product_list'] as $product) {
+                $orderDetailProduct = $this->orderDetailMatcher->matchCartProduct($orderDetailProducts, $product);
+                if ($orderDetailProduct === null) {
+                    continue;
                 }
+
+                $shipmentProduct = (new ShipmentProduct())
+                    ->setShipment($shipment)
+                    ->setOrderDetailId((int) $orderDetailProduct['id_order_detail'])
+                    ->setQuantity((int) $orderDetailProduct['product_quantity']);
+
+                $shipment->addShipmentProduct($shipmentProduct);
             }
 
             $this->shipmentRepository->save($shipment);
         }
-    }
-
-    /**
-     * @param array{
-     *     id_customization: int,
-     *     id_product_attribute: int,
-     *     id_product: int
-     * } $product
-     * @param array{
-     *     id_customization: int,
-     *     id_order_detail: int,
-     *     product_id: int,
-     *     product_attribute_id: int,
-     *     product_quantity: int
-     * } $orderDetailProduct
-     *
-     * @return bool
-     */
-    private function needShipmentProductCreation(array $product, array $orderDetailProduct): bool
-    {
-        if (!empty($product['id_customization'])) {
-            return $product['id_customization'] === $orderDetailProduct['id_customization'];
-        }
-        if (!empty($product['id_product_attribute'])) {
-            return $product['id_product_attribute'] === $orderDetailProduct['product_attribute_id'];
-        }
-
-        return $product['id_product'] === $orderDetailProduct['product_id'];
     }
 }
