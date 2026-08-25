@@ -21,6 +21,12 @@ class CarrierCore extends ObjectModel
     public const ALL_CARRIERS = 5;
 
     // Shipping methods
+    /**
+     * @deprecated Since 9.2.0, will be removed in the next major. This value only remains to resolve carriers created
+     *             before the 1.6 carrier wizard: every carrier must define an explicit shipping method. Remove the
+     *             PS_SHIPPING_METHOD configuration with it: its seed in install-dev/data/xml/configuration.xml, its
+     *             load in Cart::getPackageShippingCostValue(), and both resolutions in this class.
+     */
     public const SHIPPING_METHOD_DEFAULT = 0;
     public const SHIPPING_METHOD_WEIGHT = 1;
     public const SHIPPING_METHOD_PRICE = 2;
@@ -195,6 +201,10 @@ class CarrierCore extends ObjectModel
          * keep retrocompatibility SHIPPING_METHOD_DEFAULT
          */
         if ($this->shipping_method == Carrier::SHIPPING_METHOD_DEFAULT) {
+            @trigger_error(
+                'The SHIPPING_METHOD_DEFAULT value and the PS_SHIPPING_METHOD configuration are deprecated since 9.2.0 and will be removed in the next major, set an explicit shipping method on the carrier.',
+                E_USER_DEPRECATED
+            );
             $this->shipping_method = ((int) Configuration::get('PS_SHIPPING_METHOD') ? Carrier::SHIPPING_METHOD_WEIGHT : Carrier::SHIPPING_METHOD_PRICE);
         }
     }
@@ -1167,6 +1177,10 @@ class CarrierCore extends ObjectModel
 
         if ($this->shipping_method == Carrier::SHIPPING_METHOD_DEFAULT) {
             // backward compatibility
+            @trigger_error(
+                'The SHIPPING_METHOD_DEFAULT value and the PS_SHIPPING_METHOD configuration are deprecated since 9.2.0 and will be removed in the next major, set an explicit shipping method on the carrier.',
+                E_USER_DEPRECATED
+            );
             if ((int) Configuration::get('PS_SHIPPING_METHOD')) {
                 $method = Carrier::SHIPPING_METHOD_WEIGHT;
             } else {
