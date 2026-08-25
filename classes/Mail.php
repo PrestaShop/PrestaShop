@@ -352,11 +352,8 @@ class MailCore extends ObjectModel
             // Connect with the appropriate configuration, either SMTP or sendmail
             if ($configuration['PS_MAIL_METHOD'] == self::METHOD_SMTP) {
                 // Setup TLS configuration
-                if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION']) || Tools::strtolower($configuration['PS_MAIL_SMTP_ENCRYPTION']) === 'off') {
-                    $isTls = false;
-                } else {
-                    $isTls = true;
-                }
+                $useImplicitTls = self::useImplicitTls($configuration['PS_MAIL_SMTP_ENCRYPTION'] ?? 'off');
+                $esmtpTransportParameter = $useImplicitTls ? null : false;
 
                 // Setup port configration
                 if (!isset($configuration['PS_MAIL_SMTP_PORT'])) {
@@ -373,7 +370,7 @@ class MailCore extends ObjectModel
                 $transport = (new EsmtpTransport(
                     $configuration['PS_MAIL_SERVER'],
                     $configuration['PS_MAIL_SMTP_PORT'],
-                    $isTls
+                    $esmtpTransportParameter
                 ))
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD'])
@@ -786,15 +783,12 @@ class MailCore extends ObjectModel
 
         try {
             if ($smtpChecked) {
-                if (Tools::strtolower($smtpEncryption) === 'off') {
-                    $isTls = false;
-                } else {
-                    $isTls = true;
-                }
+                $useImplicitTls = self::useImplicitTls($smtpEncryption);
+                $esmtpTransportParameter = $useImplicitTls ? null : false;
                 $transport = (new EsmtpTransport(
                     $smtpServer,
                     $smtpPort,
-                    $isTls
+                    $esmtpTransportParameter
                 ))
                     ->setUsername($smtpLogin)
                     ->setPassword($smtpPassword)
@@ -1036,5 +1030,30 @@ class MailCore extends ObjectModel
         }
 
         return $recipientsTo;
+    }
+
+    /**
+     * Whether the merchant asked for an encrypted SMTP connection.
+     *
+     * The caller turns this into the third argument of EsmtpTransport, which is not "does this
+     * connection use TLS" but the narrower "open the socket in implicit TLS (SMTPS)":
+     *
+     *     $esmtpTransportParameter = self::useImplicitTls($smtpEncryption) ? null : false;
+     *
+     * true maps to null and not to true on purpose. true forces implicit TLS whatever the port
+     * is, and that is what made port 587 unusable: implicit TLS only answers on 465, while 587
+     * expects a plain connection upgraded with STARTTLS. null leaves the choice to the transport,
+     * which picks implicit TLS on 465 and STARTTLS anywhere else, so both ports work without the
+     * merchant having to know the difference.
+     *
+     * @param bool|string|null $smtpEncryption "off", "" or false disables encryption
+     */
+    protected static function useImplicitTls($smtpEncryption): bool
+    {
+        if (false === $smtpEncryption || '' === $smtpEncryption || null === $smtpEncryption) {
+            return false;
+        }
+
+        return Tools::strtolower((string) $smtpEncryption) !== 'off';
     }
 }
