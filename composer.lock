@@ -5215,12 +5215,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "a750e96966b39ac84330097c8289b06c6a67324f"
+                "reference": "154eea539e5949fa7b652f7eee6ea8daa3f2b524"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/a750e96966b39ac84330097c8289b06c6a67324f",
-                "reference": "a750e96966b39ac84330097c8289b06c6a67324f",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/154eea539e5949fa7b652f7eee6ea8daa3f2b524",
+                "reference": "154eea539e5949fa7b652f7eee6ea8daa3f2b524",
                 "shasum": ""
             },
             "require": {
@@ -5303,7 +5303,7 @@
                 "source": "https://github.com/PrestaShop/ps_apiresources/tree/add-shipment-endpoint",
                 "issues": "https://github.com/PrestaShop/ps_apiresources/issues"
             },
-            "time": "2026-08-21T16:46:10+00:00"
+            "time": "2026-08-25T10:01:24+00:00"
         },
         {
             "name": "prestashop/ps_banner",
