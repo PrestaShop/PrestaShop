@@ -95,7 +95,7 @@ class CarrierCore extends ObjectModel
     public $is_free = false;
 
     /** @var int Shipping cost calculation method: by weight or by price or free */
-    public $shipping_method = 0;
+    public $shipping_method = self::SHIPPING_METHOD_PRICE;
 
     /**
      * @var bool If true, an external module, if defined, will be asked to provide the shipping cost,
@@ -198,9 +198,10 @@ class CarrierCore extends ObjectModel
         parent::__construct($id, $id_lang);
         $this->image_dir = _PS_SHIP_IMG_DIR_;
         /*
-         * keep retrocompatibility SHIPPING_METHOD_DEFAULT
+         * keep retrocompatibility SHIPPING_METHOD_DEFAULT: only a row loaded from the database can carry the legacy
+         * value, a freshly built carrier holds the declared default
          */
-        if ($this->shipping_method == Carrier::SHIPPING_METHOD_DEFAULT) {
+        if ($this->id && $this->shipping_method == Carrier::SHIPPING_METHOD_DEFAULT) {
             @trigger_error(
                 'The SHIPPING_METHOD_DEFAULT value and the PS_SHIPPING_METHOD configuration are deprecated since 9.2.0 and will be removed in the next major, set an explicit shipping method on the carrier.',
                 E_USER_DEPRECATED
