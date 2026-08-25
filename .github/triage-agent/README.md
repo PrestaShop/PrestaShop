@@ -115,6 +115,14 @@ item pays for it and the rest read it back at a tenth of the price.
 `render.py` prints the real figure from the run's own `usage` at the bottom of
 every summary. Trust that over this paragraph.
 
+## Sample output
+
+[`samples/2026-08-18-summary.md`](samples/2026-08-18-summary.md) is a real
+week rendered by this pipeline. Read
+[`samples/README.md`](samples/README.md) first — the verdicts in it were
+hand-applied from the rubrics rather than produced by a model run, so it
+shows the shape of the output and not the quality of the classification.
+
 ## Known limits
 
 - **The weekly window cannot surface a long-stalled PR.** Selecting on
