@@ -12,6 +12,17 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
  * Class ImportDataFormatter is an adapter with data formatting methods for import.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - every method has an
+ *             import-engine equivalent, and its remaining callers are the deprecated
+ *             \PrestaShop\PrestaShop\Adapter\Import\Handler\* classes:
+ *             - getBoolean() -> \PrestaShop\PrestaShop\Core\Import\Engine\ValueParser::parseBoolean()
+ *               (which also stops treating "false" and "no" as true)
+ *             - getPrice() -> ValueParser::parseDecimal()
+ *             - split() -> ValueParser::split() / ValueParser::splitPreservingEmpty()
+ *             - createMultiLangField() -> \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait::localizeForCreation()
+ *             - createFriendlyUrl() -> \PrestaShop\PrestaShop\Adapter\Tools::linkRewrite(), which is
+ *               all this method ever delegated to
  */
 final class ImportDataFormatter
 {

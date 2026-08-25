@@ -29,6 +29,8 @@ use Shop;
  */
 class AbstractMultiShopObjectModelRepository extends AbstractObjectModelRepository
 {
+    use ShopConstraintTrait;
+
     /**
      * @param int $id
      * @param string $objectModelClass

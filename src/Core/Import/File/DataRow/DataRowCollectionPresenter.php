@@ -10,6 +10,9 @@ use PrestaShop\PrestaShop\Core\Import\File\DataCell\EmptyDataCell;
 
 /**
  * Class DataRowCollectionPresenter presents a data row collection.
+ *
+ * @deprecated since 9.3, part of the legacy DataRow reading layer — the import
+ * engine reads records as plain string arrays
  */
 final class DataRowCollectionPresenter implements DataRowCollectionPresenterInterface
 {

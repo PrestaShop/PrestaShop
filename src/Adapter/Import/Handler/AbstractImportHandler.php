@@ -25,6 +25,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class AbstractImportHandler is an abstract handler for import.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by the import engine importers, see \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ProductImporter
  */
 abstract class AbstractImportHandler implements ImportHandlerInterface
 {

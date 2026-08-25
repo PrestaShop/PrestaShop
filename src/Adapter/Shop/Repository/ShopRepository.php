@@ -128,4 +128,30 @@ class ShopRepository extends AbstractObjectModelRepository
 
         return array_map(fn (array $shopRow) => (int) $shopRow['id_shop'], $result);
     }
+
+    /**
+     * Exact-name lookup (legacy Shop::getIdByName parity). Soft-deleted shops are
+     * excluded: assigning one would resurrect it on the imported entity.
+     *
+     * shop.name carries no unique constraint, so EVERY match is returned, ordered
+     * by id ASC: callers use the first one and report the count when there is more
+     * than one, rather than silently picking the oldest homonym.
+     *
+     * @return list<int>
+     */
+    public function getShopIdsByName(string $name): array
+    {
+        $shopIds = $this->connection->createQueryBuilder()
+            ->select('s.id_shop')
+            ->from($this->dbPrefix . 'shop', 's')
+            ->where('s.name = :name')
+            ->andWhere('s.deleted = 0')
+            ->orderBy('s.id_shop', 'ASC')
+            ->setParameter('name', $name)
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+
+        return array_map('intval', $shopIds);
+    }
 }

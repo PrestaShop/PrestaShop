@@ -15,6 +15,8 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Class ImageCopier copies images during import process.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by \PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader for the download; image association and thumbnail generation are handled by the CQRS image commands
  */
 final class ImageCopier
 {

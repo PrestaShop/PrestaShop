@@ -1,0 +1,2 @@
+name;reference;image;image_alt;delete_existing_images
+Image Product;IMG-P1;{FIXTURE_DIR}/dummyFile/app_icon.png;Only view;1

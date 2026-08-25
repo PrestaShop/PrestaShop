@@ -37,14 +37,11 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
-use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
 use PrestaShopException;
 use StockAvailable;
 
 class CombinationRepository extends AbstractMultiShopObjectModelRepository
 {
-    use ShopConstraintTrait;
-
     /**
      * @var Connection
      */

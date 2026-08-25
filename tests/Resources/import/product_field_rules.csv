@@ -1,0 +1,5 @@
+name;reference;gtin;ean13;uploadable_files;text_fields;customizable;reduction_price;reduction_percent;price_tex
+Gtin Wins;FLD-GTIN-1;1111111111116;2222222222222;;;;;;10
+Ean Only;FLD-EAN-1;;3333333333338;;;;;;10
+Custom Fields;FLD-CUST-1;;;2;1;;;;10
+Both Reductions;FLD-RED-1;;;;;;5;10;20

@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Interface ImportConfigFactoryInterface defines an import configuration factory.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by \PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext
  */
 interface ImportConfigFactoryInterface
 {

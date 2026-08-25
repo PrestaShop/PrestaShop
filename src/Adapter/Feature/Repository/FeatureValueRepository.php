@@ -402,4 +402,70 @@ class FeatureValueRepository extends AbstractObjectModelRepository
 
         return $qb;
     }
+
+    /**
+     * Localized texts of the product's current CUSTOM value for one feature,
+     * [] when the product carries none. Import uses it to update a custom
+     * value without losing the other languages: SetProductFeatureValuesCommand
+     * REPLACES the custom value row, so keeping a translation means re-sending
+     * it.
+     *
+     * @return array<int, string> language id => value
+     */
+    public function getProductCustomFeatureValueTexts(int $featureId, int $productId): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('fvl.id_lang, fvl.value')
+            ->from($this->dbPrefix . 'feature_product', 'fp')
+            ->innerJoin('fp', $this->dbPrefix . 'feature_value', 'fv', 'fv.id_feature_value = fp.id_feature_value')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value')
+            ->where('fp.id_product = :productId')
+            ->andWhere('fp.id_feature = :featureId')
+            ->andWhere('fv.custom = 1')
+            ->orderBy('fv.id_feature_value', 'ASC')
+            ->setParameter('productId', $productId)
+            ->setParameter('featureId', $featureId)
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $texts = [];
+        foreach ($rows as $row) {
+            $texts[(int) $row['id_lang']] = (string) $row['value'];
+        }
+
+        return $texts;
+    }
+
+    /**
+     * Exact pre-defined (non custom) value lookup within a feature, resolving ids
+     * directly (unlike the listing-oriented getFeatureValuesByLang() which loads
+     * every value).
+     *
+     * feature_value_lang.value carries no unique constraint per feature, so EVERY
+     * match is returned, ordered by id ASC: callers use the first one and report
+     * the count when there is more than one, rather than silently picking the
+     * oldest duplicate.
+     *
+     * @return list<int>
+     */
+    public function getFeatureValueIdsByValue(int $featureId, string $value, int $languageId): array
+    {
+        $featureValueIds = $this->connection->createQueryBuilder()
+            ->select('fv.id_feature_value')
+            ->from($this->dbPrefix . 'feature_value', 'fv')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value AND fvl.id_lang = :languageId')
+            ->where('fv.id_feature = :featureId')
+            ->andWhere('fv.custom = 0')
+            ->andWhere('fvl.value = :value')
+            ->orderBy('fv.id_feature_value', 'ASC')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('featureId', $featureId)
+            ->setParameter('value', $value)
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+
+        return array_map('intval', $featureValueIds);
+    }
 }

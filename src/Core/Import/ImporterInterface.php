@@ -12,6 +12,8 @@ use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
 
 /**
  * Interface ImporterInterface describes an import processing unit.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by the import engine, see \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface
  */
 interface ImporterInterface
 {

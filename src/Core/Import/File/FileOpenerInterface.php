@@ -10,6 +10,9 @@ use SplFileInfo;
 
 /**
  * Interface FileOpenerInterface describes an import file opener.
+ *
+ * @deprecated since 9.3, the import engine normalizes uploads once via
+ * CsvImportFileNormalizer and opens working files directly
  */
 interface FileOpenerInterface
 {

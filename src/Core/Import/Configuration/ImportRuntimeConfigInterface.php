@@ -10,6 +10,8 @@ namespace PrestaShop\PrestaShop\Core\Import\Configuration;
  * Interface ImportRuntimeConfigInterface describes import runtime configuration.
  * Since import is a multi-process operation, this configuration can change
  * during each import process.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by \PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext
  */
 interface ImportRuntimeConfigInterface
 {

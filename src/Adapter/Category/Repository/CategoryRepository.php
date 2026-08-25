@@ -22,12 +22,15 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
 
 /**
  * Provides access to Category data source
  */
 class CategoryRepository extends AbstractObjectModelRepository
 {
+    use ShopConstraintTrait;
+
     /**
      * @var Connection
      */
@@ -489,5 +492,44 @@ class CategoryRepository extends AbstractObjectModelRepository
         }
 
         return $names;
+    }
+
+    /**
+     * Direct child of $parentCategoryId whose name matches in the given
+     * language (legacy Category::searchByNameAndParentCategoryId parity).
+     *
+     * category_lang rows are per shop, so the name resolution is scoped to
+     * the constraint's shops (legacy scoped it to ONE shop via
+     * Shop::addSqlRestrictionOnLang): a name translated only on another shop
+     * deliberately misses. Relies on the ShopConstraintTrait convention — the
+     * unqualified id_shop resolves to category_lang, and since that table
+     * carries no id_shop_group column a shop-group constraint is not
+     * supported here (single shop, shop list or all shops).
+     *
+     * Sibling categories may share a name, so EVERY match is returned, ordered by
+     * id ASC: callers use the first one and report the count when there is more
+     * than one, rather than silently picking the oldest homonym. The GROUP BY
+     * collapses the per-shop category_lang rows of the SAME category, so each
+     * returned id is a distinct category.
+     *
+     * @return list<int>
+     */
+    public function getChildCategoryIdsByName(int $parentCategoryId, string $name, int $languageId, ShopConstraint $shopConstraint): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('c.id_category')
+            ->from($this->dbPrefix . 'category', 'c')
+            ->innerJoin('c', $this->dbPrefix . 'category_lang', 'cl', 'cl.id_category = c.id_category AND cl.id_lang = :languageId')
+            ->where('cl.name = :name')
+            ->andWhere('c.id_parent = :parentCategoryId')
+            ->groupBy('c.id_category')
+            ->orderBy('c.id_category', 'ASC')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('name', $name)
+            ->setParameter('parentCategoryId', $parentCategoryId)
+        ;
+        $this->applyShopConstraint($qb, $shopConstraint);
+
+        return array_map('intval', $qb->executeQuery()->fetchFirstColumn());
     }
 }

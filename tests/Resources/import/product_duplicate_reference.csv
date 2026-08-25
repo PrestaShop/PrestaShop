@@ -1,0 +1,4 @@
+id;name;reference;accessories
+9301;Duplicate Reference One;DUP-REF;
+9302;Duplicate Reference Two;DUP-REF;
+9303;Duplicate Reference Owner;DUP-OWNER;DUP-REF
