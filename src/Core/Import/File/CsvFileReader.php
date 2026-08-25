@@ -103,6 +103,9 @@ final class CsvFileReader implements FileReaderInterface, ResumableFileReaderInt
      * method is meant for working files produced by CsvImportFileNormalizer:
      * it always reads the canonical CSV dialect and performs no encoding
      * detection (normalized files are UTF-8 without BOM by construction).
+     *
+     * @throws UnreadableFileException
+     * @throws InvalidResumeCursorException
      */
     public function readFrom(SplFileInfo $file, ?string $cursor = null): Generator
     {
@@ -131,6 +134,8 @@ final class CsvFileReader implements FileReaderInterface, ResumableFileReaderInt
 
     /**
      * @return resource
+     *
+     * @throws UnreadableFileException
      */
     private function openForEngineRead(SplFileInfo $file)
     {

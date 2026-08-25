@@ -69,6 +69,9 @@ class FileDownloader
         return $this->copyLocalFile($urlOrPath);
     }
 
+    /**
+     * @throws FileDownloadException
+     */
     protected function downloadUrl(string $url): string
     {
         $sanitizedUrl = $this->sanitizeUrl($url);
@@ -114,6 +117,9 @@ class FileDownloader
         return $targetPath;
     }
 
+    /**
+     * @throws FileDownloadException
+     */
     protected function copyLocalFile(string $path): string
     {
         if (!is_file($path) || !is_readable($path)) {
@@ -151,6 +157,8 @@ class FileDownloader
      * canonicalizes '..' LEXICALLY and does not resolve symlinks, so comparing
      * un-resolved paths would let a symlink inside an allowed directory point
      * anywhere on the filesystem.
+     *
+     * @throws FileDownloadException
      */
     protected function assertAllowedLocalPath(string $path): void
     {
@@ -181,6 +189,9 @@ class FileDownloader
         return array_merge([sys_get_temp_dir()], $this->allowedLocalRoots);
     }
 
+    /**
+     * @throws FileDownloadException
+     */
     protected function createTemporaryFile(): string
     {
         // always the system temp dir: these files live only for the duration
@@ -198,6 +209,8 @@ class FileDownloader
      * Raw-urlencodes the path segments of the URL so spaces and non-ASCII
      * characters survive the request (legacy ImageCopier parity, without the
      * http_build_url dependency).
+     *
+     * @throws FileDownloadException
      */
     protected function sanitizeUrl(string $url): string
     {

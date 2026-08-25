@@ -81,6 +81,9 @@ class CsvImportFileNormalizer
 
     /**
      * @return int number of data records written to the working file
+     *
+     * @throws UnreadableFileException
+     * @throws MalformedImportFileException
      */
     protected function normalizeCsv(SplFileInfo $sourceFile, string $targetPath, string $sourceCsvDelimiter, int $skipRows): int
     {
@@ -139,6 +142,8 @@ class CsvImportFileNormalizer
 
     /**
      * @return int number of data records written to the working file
+     *
+     * @throws MalformedImportFileException
      */
     protected function convertSpreadsheet(SplFileInfo $sourceFile, string $targetPath, int $skipRows): int
     {
@@ -171,6 +176,8 @@ class CsvImportFileNormalizer
 
     /**
      * @param resource $handle
+     *
+     * @throws MalformedImportFileException
      */
     protected function skipByteOrderMark($handle, string $pathname): void
     {

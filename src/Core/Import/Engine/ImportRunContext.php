@@ -193,6 +193,9 @@ class ImportRunContext
         return $this->resumeCursor;
     }
 
+    /**
+     * @throws LogicException when no phase was entered first
+     */
     public function applyBatchResult(PhaseBatchResult $result): void
     {
         if (null === $this->currentPhaseId) {

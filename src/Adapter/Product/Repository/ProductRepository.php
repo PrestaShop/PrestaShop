@@ -323,6 +323,8 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
      * The shop restriction relies on the ShopConstraintTrait convention:
      * product_shop carries no id_shop_group column, so a shop-group
      * constraint is not supported here (single shop, shop list or all shops).
+     *
+     * @throws CannotUpdateProductException
      */
     public function setDateAdd(int $productId, DateTimeImmutable $dateAdd, ShopConstraint $shopConstraint): void
     {

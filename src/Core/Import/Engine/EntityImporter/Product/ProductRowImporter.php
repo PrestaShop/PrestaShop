@@ -888,7 +888,9 @@ class ProductRowImporter
      */
     protected function dispatchImages(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context, array &$messages): void
     {
-        if ($this->hasValue($row, 'delete_existing_images') && true === $this->valueParser->parseBoolean($row['delete_existing_images'])) {
+        // parseBoolean('') is false, so an unmapped or empty cell falls through
+        // without needing a hasValue() guard (same shape as isVirtual())
+        if (true === $this->valueParser->parseBoolean($row['delete_existing_images'] ?? '')) {
             /** @var array<int, \PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage> $existingImages */
             $existingImages = $this->commandBus->handle(new GetProductImages($productId, $context->getShopConstraint()));
             foreach ($existingImages as $existingImage) {
