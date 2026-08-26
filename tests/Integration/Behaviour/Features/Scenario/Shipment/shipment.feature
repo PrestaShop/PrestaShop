@@ -101,6 +101,13 @@ Feature: Retrieving shipment for orders
     When I list the available shipments of order "bo_order1" for product "product_not_ordered"
     Then I should get an error that the product was not found in the order
 
+  Scenario: Edit a shipment with a carrier that does not exist
+    Given the order "bo_order1" should have the following shipments:
+      | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
+    When I try to edit the shipment "shipment1" with a carrier that does not exist
+    Then I should get an error that the carrier was not found
+
   Scenario: Switch shipment carrier to a carrier that does not exist
     Given the order "bo_order1" should have the following shipments:
       | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |

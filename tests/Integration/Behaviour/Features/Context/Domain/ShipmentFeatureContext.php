@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\CreateShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\DeleteProductFromShipment;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\EditShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\FulfillShipmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\MergeProductsToShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\SplitShipment;
@@ -196,6 +197,20 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
 
         try {
             $this->getCommandBus()->handle(new SwitchShipmentCarrierCommand($shipmentId, 999999));
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I try to edit the shipment :shipmentReference with a carrier that does not exist
+     */
+    public function editShipmentWithUnknownCarrier(string $shipmentReference): void
+    {
+        $shipmentId = SharedStorage::getStorage()->get($shipmentReference);
+
+        try {
+            $this->getCommandBus()->handle(new EditShipment($shipmentId, 999999));
         } catch (Exception $e) {
             $this->setLastException($e);
         }
