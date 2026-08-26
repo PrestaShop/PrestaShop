@@ -10,7 +10,6 @@ namespace PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
-use PrestaShop\PrestaShop\Adapter\Order\OrderDetailMatcher;
 use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShippingTotalUpdater;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
@@ -34,7 +33,6 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
         private readonly ShippingCostCalculatorInterface $shippingCostCalculator,
         private readonly AdapterConfiguration $configuration,
         private readonly OrderShippingTotalUpdater $orderShippingTotalUpdater,
-        private readonly OrderDetailMatcher $orderDetailMatcher,
     ) {
     }
 
@@ -52,7 +50,7 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
             $shippingCostTaxIncluded = 0.00;
 
             if ($this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING')) {
-                $product = $this->orderDetailMatcher->match($order->getProductsDetail(), $productId, $combinationId, $customizationId);
+                $product = $this->findOrderProduct($order->getProductsDetail(), $productId, $combinationId, $customizationId);
                 if ($product === null) {
                     throw new CannotFindProductInOrderException(
                         sprintf(
@@ -119,5 +117,28 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
             }
             throw new ShipmentException('Failed to create shipment', $e->getCode(), $e);
         }
+    }
+
+    /**
+     * An order can hold several order details for the same product and combination, they are then only
+     * distinguished by their customization, so all three identifiers are part of the criteria.
+     *
+     * @param array<array<string, mixed>> $products
+     *
+     * @return array<string, mixed>|null
+     */
+    private function findOrderProduct(array $products, int $productId, int $combinationId, int $customizationId): ?array
+    {
+        foreach ($products as $product) {
+            if (
+                (int) $product['product_id'] === $productId
+                && (int) ($product['product_attribute_id'] ?? 0) === $combinationId
+                && (int) ($product['id_customization'] ?? 0) === $customizationId
+            ) {
+                return $product;
+            }
+        }
+
+        return null;
     }
 }

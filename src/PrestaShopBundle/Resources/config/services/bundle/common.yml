@@ -57,4 +57,3 @@ services:
       - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
       - '@PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository'
       - '@PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Order\OrderDetailMatcher'

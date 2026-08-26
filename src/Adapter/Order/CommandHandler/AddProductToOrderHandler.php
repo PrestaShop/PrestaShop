@@ -208,7 +208,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $orderDetail = $this->orderDetailRepository->findByOrderIdAndProductId(
                     $command->getOrderId(),
                     $command->getProductId(),
-                    $command->getCombinationId()
+                    null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0
                 );
 
                 if ($orderDetail === null) {

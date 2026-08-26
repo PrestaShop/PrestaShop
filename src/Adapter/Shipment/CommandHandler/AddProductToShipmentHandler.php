@@ -40,8 +40,8 @@ class AddProductToShipmentHandler implements AddProductToShipmentHandlerInterfac
         $orderDetail = $this->orderDetailRepository->findByOrderIdAndProductId(
             $command->getOrderId(),
             $command->getProductId(),
-            $command->getCombinationId(),
-            $command->getCustomizationId()
+            null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0,
+            null !== $command->getCustomizationId() ? $command->getCustomizationId()->getValue() : 0
         );
 
         if ($orderDetail === null) {

@@ -11,7 +11,6 @@ namespace PrestaShop\PrestaShop\Adapter\Shipment;
 use Order;
 use OrderCarrier;
 use OrderDetail;
-use PrestaShop\PrestaShop\Adapter\Order\OrderDetailMatcher;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use PrestaShopBundle\Entity\Shipment;
 use PrestaShopBundle\Entity\ShipmentProduct;
@@ -23,15 +22,9 @@ class OrderShipmentCreator
      */
     private $shipmentRepository;
 
-    /**
-     * @var OrderDetailMatcher
-     */
-    private $orderDetailMatcher;
-
-    public function __construct(ShipmentRepository $shipmentRepository, OrderDetailMatcher $orderDetailMatcher)
+    public function __construct(ShipmentRepository $shipmentRepository)
     {
         $this->shipmentRepository = $shipmentRepository;
-        $this->orderDetailMatcher = $orderDetailMatcher;
     }
 
     public function addShipmentOrder(Order $order, array $productsHandledByCarrier): void
@@ -65,7 +58,7 @@ class OrderShipmentCreator
             $orderCarrier->add();
             // match products with order details to get quantities & orderDetailId
             foreach ($products['product_list'] as $product) {
-                $orderDetailProduct = $this->orderDetailMatcher->matchCartProduct($orderDetailProducts, $product);
+                $orderDetailProduct = $this->findMatchingOrderDetail($product, $orderDetailProducts);
                 if ($orderDetailProduct === null) {
                     continue;
                 }
@@ -80,5 +73,42 @@ class OrderShipmentCreator
 
             $this->shipmentRepository->save($shipment);
         }
+    }
+
+    /**
+     * Returns the single order detail matching a cart product line, or null when none does.
+     *
+     * A product line is only fully identified by its product, combination AND customization: the very same
+     * product and combination can be ordered several times with different customizations, each one having its
+     * own order detail.
+     *
+     * @param array{
+     *     id_customization: int|string|null,
+     *     id_product_attribute: int|string|null,
+     *     id_product: int|string
+     * } $product
+     * @param array<array{
+     *     id_customization: int|string,
+     *     id_order_detail: int|string,
+     *     product_id: int|string,
+     *     product_attribute_id: int|string|null,
+     *     product_quantity: int|string
+     * }> $orderDetailProducts
+     *
+     * @return array<string, mixed>|null
+     */
+    private function findMatchingOrderDetail(array $product, array $orderDetailProducts): ?array
+    {
+        foreach ($orderDetailProducts as $orderDetailProduct) {
+            if (
+                (int) $product['id_product'] === (int) $orderDetailProduct['product_id']
+                && (int) ($product['id_product_attribute'] ?? 0) === (int) ($orderDetailProduct['product_attribute_id'] ?? 0)
+                && (int) ($product['id_customization'] ?? 0) === (int) ($orderDetailProduct['id_customization'] ?? 0)
+            ) {
+                return $orderDetailProduct;
+            }
+        }
+
+        return null;
     }
 }

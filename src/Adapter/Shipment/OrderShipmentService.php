@@ -10,7 +10,6 @@ namespace PrestaShop\PrestaShop\Adapter\Shipment;
 
 use Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
-use PrestaShop\PrestaShop\Adapter\Order\OrderDetailMatcher;
 use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
@@ -33,21 +32,14 @@ class OrderShipmentService
      */
     private $carrierRepository;
 
-    /**
-     * @var OrderDetailMatcher
-     */
-    private $orderDetailMatcher;
-
     public function __construct(
         ShipmentRepository $shipmentRepository,
         OrderRepository $orderRepository,
-        CarrierRepository $carrierRepository,
-        OrderDetailMatcher $orderDetailMatcher
+        CarrierRepository $carrierRepository
     ) {
         $this->orderRepository = $orderRepository;
         $this->shipmentRepository = $shipmentRepository;
         $this->carrierRepository = $carrierRepository;
-        $this->orderDetailMatcher = $orderDetailMatcher;
     }
 
     /**
@@ -61,12 +53,7 @@ class OrderShipmentService
     {
         $order = $this->orderRepository->get(new OrderId($orderId));
 
-        $orderDetail = $this->orderDetailMatcher->match(
-            $order->getOrderDetailList(),
-            $productId,
-            $combinationId,
-            $customizationId
-        );
+        $orderDetail = $this->findOrderDetail($order->getOrderDetailList(), $productId, $combinationId, $customizationId);
 
         if ($orderDetail === null) {
             return null;
@@ -109,7 +96,12 @@ class OrderShipmentService
         $carriers = [];
         $loadedCarriers = [];
         foreach ($productLines as $key => $productLine) {
-            $orderDetail = $this->orderDetailMatcher->matchCartProduct($orderDetails, $productLine);
+            $orderDetail = $this->findOrderDetail(
+                $orderDetails,
+                (int) $productLine['id_product'],
+                (int) ($productLine['id_product_attribute'] ?? 0),
+                (int) ($productLine['id_customization'] ?? 0)
+            );
             if ($orderDetail === null) {
                 continue;
             }
@@ -126,6 +118,29 @@ class OrderShipmentService
         }
 
         return $carriers;
+    }
+
+    /**
+     * An order can hold several order details for the same product and combination, they are then only
+     * distinguished by their customization, so all three identifiers are part of the criteria.
+     *
+     * @param array<array<string, mixed>> $orderDetails
+     *
+     * @return array<string, mixed>|null
+     */
+    private function findOrderDetail(array $orderDetails, int $productId, int $combinationId, int $customizationId): ?array
+    {
+        foreach ($orderDetails as $orderDetail) {
+            if (
+                (int) $orderDetail['product_id'] === $productId
+                && (int) ($orderDetail['product_attribute_id'] ?? 0) === $combinationId
+                && (int) ($orderDetail['id_customization'] ?? 0) === $customizationId
+            ) {
+                return $orderDetail;
+            }
+        }
+
+        return null;
     }
 
     /**

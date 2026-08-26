@@ -21,12 +21,9 @@ services:
       - "%mail_themes_uri%"
       - '@PrestaShop\PrestaShop\Adapter\Tools'
 
-  PrestaShop\PrestaShop\Adapter\Order\OrderDetailMatcher:
-
   PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentCreator:
     arguments:
       - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Order\OrderDetailMatcher'
 
   PrestaShop\PrestaShop\Adapter\Shipment\ShipmentTotalsCalculatorInterface:
     class: PrestaShop\PrestaShop\Adapter\Shipment\ShipmentTotalsCalculator

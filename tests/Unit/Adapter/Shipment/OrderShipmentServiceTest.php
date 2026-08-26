@@ -13,7 +13,6 @@ use Order;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
-use PrestaShop\PrestaShop\Adapter\Order\OrderDetailMatcher;
 use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
@@ -115,8 +114,7 @@ class OrderShipmentServiceTest extends TestCase
         $service = new OrderShipmentService(
             $this->mockShipmentRepository(),
             $this->mockOrderRepository(),
-            $carrierRepository,
-            new OrderDetailMatcher()
+            $carrierRepository
         );
 
         $service->getCarriersForProductLines(self::ORDER_ID, [
@@ -134,8 +132,7 @@ class OrderShipmentServiceTest extends TestCase
         $service = new OrderShipmentService(
             $shipmentRepository,
             $this->mockOrderRepository(),
-            $this->mockCarrierRepository(),
-            new OrderDetailMatcher()
+            $this->mockCarrierRepository()
         );
 
         $lines = [['id_product' => 14, 'id_product_attribute' => null, 'id_customization' => 0]];
@@ -148,8 +145,7 @@ class OrderShipmentServiceTest extends TestCase
         return new OrderShipmentService(
             $this->mockShipmentRepository(),
             $this->mockOrderRepository(),
-            $this->mockCarrierRepository(),
-            new OrderDetailMatcher()
+            $this->mockCarrierRepository()
         );
     }
 
