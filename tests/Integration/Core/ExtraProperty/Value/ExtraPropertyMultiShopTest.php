@@ -10,7 +10,6 @@ namespace Tests\Integration\Core\ExtraProperty\Value;
 
 use Configuration;
 use Contact;
-use Context;
 use Db;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -22,7 +21,6 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreConfig;
-use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use Shop;
 use ShopGroup;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -33,9 +31,12 @@ use Tests\Resources\Resetter\ShopResetter;
  * 3-shop installation: the default shop (1) plus a second shop in the default group,
  * and a third shop alone in a second group.
  *
- * Covers the ShopConstraint contract end to end: fan-out writes (group / all shops /
- * collection), representative-shop reads, toggle uniformization, the non-multishop lang
- * table shape (contact), and the per-shop cleanup on partial ObjectModel deletion.
+ * Covers the ShopConstraint contract of the value services end to end: fan-out writes
+ * (group / all shops / collection), representative-shop reads, toggle uniformization,
+ * the non-multishop lang table shape (contact), and the per-shop cleanup on partial
+ * ObjectModel deletion. The shop list resolver itself is covered by
+ * Tests\Integration\Core\Shop\ShopListResolverTest, and the legacy context constraint
+ * mapping by Tests\Integration\Classes\ContextTest.
  */
 class ExtraPropertyMultiShopTest extends KernelTestCase
 {
@@ -52,7 +53,6 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
     private static ExtraPropertyWriterInterface $writer;
     private static ExtraPropertyRegistryInterface $registry;
     private static ExtraPropertyDefinitionRepositoryInterface $definitionRepository;
-    private static ShopListResolverInterface $shopListResolver;
 
     public static function setUpBeforeClass(): void
     {
@@ -96,7 +96,6 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
         self::$writer = $container->get(ExtraPropertyWriterInterface::class);
         self::$registry = $container->get(ExtraPropertyRegistryInterface::class);
         self::$definitionRepository = $container->get(ExtraPropertyDefinitionRepositoryInterface::class);
-        self::$shopListResolver = $container->get(ShopListResolverInterface::class);
 
         foreach (self::definitions() as $definition) {
             self::$registry->register($definition);
@@ -127,22 +126,6 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
         foreach (['product_extra_lang', 'product_extra_shop', 'contact_extra_lang', 'contact_extra_shop'] as $table) {
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . $table . '`');
         }
-    }
-
-    public function testResolverMapsConstraintsToShopScopes(): void
-    {
-        $this->assertSame([self::DEFAULT_SHOP_ID, self::$secondShopId], self::$shopListResolver->resolveShopIds(ShopConstraint::shopGroup(self::$defaultGroupId)));
-        $this->assertSame([self::$thirdShopId], self::$shopListResolver->resolveShopIds(ShopConstraint::shopGroup(self::$secondGroupId)));
-        $this->assertSame(
-            [self::DEFAULT_SHOP_ID, self::$secondShopId, self::$thirdShopId],
-            self::$shopListResolver->resolveShopIds(ShopConstraint::allShops())
-        );
-        $this->assertSame([self::$secondShopId], self::$shopListResolver->resolveShopIds(ShopCollection::shops([self::$secondShopId])));
-
-        // Representative: the default shop when it belongs to the scope, else the lowest shop id.
-        $this->assertSame(self::DEFAULT_SHOP_ID, self::$shopListResolver->resolveRepresentativeShopId(ShopConstraint::allShops()));
-        $this->assertSame(self::DEFAULT_SHOP_ID, self::$shopListResolver->resolveRepresentativeShopId(ShopConstraint::shopGroup(self::$defaultGroupId)));
-        $this->assertSame(self::$thirdShopId, self::$shopListResolver->resolveRepresentativeShopId(ShopConstraint::shopGroup(self::$secondGroupId)));
     }
 
     public function testGroupConstraintFansOutToTheGroupShopsOnly(): void
@@ -249,23 +232,6 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
         $contact->id_shop_list = [self::DEFAULT_SHOP_ID];
         $this->assertTrue((bool) $contact->delete());
         $this->assertSame(0, $this->countRows('contact_extra_shop', 'id_contact', $contactId));
-    }
-
-    public function testLegacyContextExposesTheMultistoreSelectionAsConstraint(): void
-    {
-        $previousContext = Shop::getContext();
-        $previousGroupId = Shop::getContextShopGroupID();
-
-        try {
-            Shop::setContext(Shop::CONTEXT_ALL);
-            $this->assertTrue(Context::getContext()->getShopConstraint()->forAllShops());
-
-            Shop::setContext(Shop::CONTEXT_GROUP, self::$secondGroupId);
-            $constraint = Context::getContext()->getShopConstraint();
-            $this->assertSame(self::$secondGroupId, $constraint->getShopGroupId()->getValue());
-        } finally {
-            Shop::setContext($previousContext ?? Shop::CONTEXT_ALL, $previousGroupId ?: null);
-        }
     }
 
     /**
