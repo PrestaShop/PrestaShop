@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\CountryContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
@@ -18,6 +19,7 @@ final class StoreFormDataProvider implements FormDataProviderInterface
     public function __construct(
         private readonly CommandBusInterface $queryBus,
         private readonly ShopContext $shopContext,
+        private readonly CountryContext $countryContext,
     ) {
     }
 
@@ -51,6 +53,7 @@ final class StoreFormDataProvider implements FormDataProviderInterface
     {
         return [
             'active' => true,
+            'id_country' => $this->countryContext->getId(),
             'shop_association' => $this->shopContext->getAssociatedShopIds(),
             'hours' => [],
         ];
