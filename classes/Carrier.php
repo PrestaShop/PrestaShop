@@ -386,18 +386,19 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * Get delivery price for a given order by total order price MINUS shipping costs.
+     * Get delivery price for a given order by total MINUS shipping costs.
      *
      * @param float $order_total Order total to pay
      * @param int $id_zone Zone id (for customer delivery address)
      * @param int|null $id_currency Currency ID
+     * @param float|null $shipmentTotal Total of the current shipment, sent to the actionDeliveryPriceByPrice hook when the improved_shipment feature is enabled, null otherwise (including for legacy orders predating this feature)
      *
      * @return float Maximum delivery price
      */
-    public function getDeliveryPriceByPrice($order_total, $id_zone, $id_currency = null)
+    public function getDeliveryPriceByPrice($order_total, $id_zone, $id_currency = null, $shipmentTotal = null)
     {
         $id_carrier = (int) $this->id;
-        $cache_key = $this->id . '_' . $order_total . '_' . $id_zone . '_' . $id_currency;
+        $cache_key = $this->id . '_' . $order_total . '_' . $id_zone . '_' . $id_currency . '_' . $shipmentTotal;
         if (!isset(self::$price_by_price[$cache_key])) {
             if (!empty($id_currency)) {
                 $order_total = Tools::convertPrice($order_total, $id_currency, false);
@@ -420,7 +421,12 @@ class CarrierCore extends ObjectModel
             }
         }
 
-        $price_by_price = Hook::exec('actionDeliveryPriceByPrice', ['id_carrier' => $id_carrier, 'order_total' => $order_total, 'id_zone' => $id_zone]);
+        $price_by_price = Hook::exec('actionDeliveryPriceByPrice', [
+            'id_carrier' => $id_carrier,
+            'order_total' => $order_total,
+            'shipment_total' => $shipmentTotal,
+            'id_zone' => $id_zone,
+        ]);
         if (is_numeric($price_by_price)) {
             self::$price_by_price[$cache_key] = $price_by_price;
         }
@@ -435,13 +441,14 @@ class CarrierCore extends ObjectModel
      * @param float $order_total Order total to pay
      * @param int $id_zone Zone id (for customer delivery address)
      * @param int|null $id_currency Currency ID
+     * @param float|null $shipmentTotal Total of the current shipment, sent to the actionDeliveryPriceByPrice hook when the improved_shipment feature is enabled, null otherwise (including for legacy orders predating this feature)
      *
      * @return bool true if carrier is available
      */
-    public static function checkDeliveryPriceByPrice($id_carrier, $order_total, $id_zone, $id_currency = null)
+    public static function checkDeliveryPriceByPrice($id_carrier, $order_total, $id_zone, $id_currency = null, $shipmentTotal = null)
     {
         $id_carrier = (int) $id_carrier;
-        $cache_key = $id_carrier . '_' . $order_total . '_' . $id_zone . '_' . $id_currency;
+        $cache_key = $id_carrier . '_' . $order_total . '_' . $id_zone . '_' . $id_currency . '_' . $shipmentTotal;
         if (!isset(self::$price_by_price2[$cache_key])) {
             if (!empty($id_currency)) {
                 $order_total = Tools::convertPrice($order_total, $id_currency, false);
@@ -460,7 +467,12 @@ class CarrierCore extends ObjectModel
             self::$price_by_price2[$cache_key] = (isset($result['price']));
         }
 
-        $price_by_price = Hook::exec('actionDeliveryPriceByPrice', ['id_carrier' => $id_carrier, 'order_total' => $order_total, 'id_zone' => $id_zone]);
+        $price_by_price = Hook::exec('actionDeliveryPriceByPrice', [
+            'id_carrier' => $id_carrier,
+            'order_total' => $order_total,
+            'shipment_total' => $shipmentTotal,
+            'id_zone' => $id_zone,
+        ]);
         if (is_numeric($price_by_price)) {
             self::$price_by_price2[$cache_key] = true;
         }
