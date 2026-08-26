@@ -480,11 +480,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         }
 
         $invoice->id_order = $order->id;
-        if ($invoice->number) {
-            Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $order->id_shop);
-        } else {
-            $invoice->number = Order::getLastInvoiceNumber() + 1;
-        }
+        // Number is assigned after insert by Order::setLastInvoiceNumber() (locked read),
+        // not computed here, to avoid a duplicate-number race.
+        $invoice->number = 0;
 
         $invoice_address = new Address(
             (int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
@@ -509,6 +507,10 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $invoice->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $newProducts));
         $invoice->shipping_tax_computation_method = (int) $taxCalculator->computation_method;
         $invoice->add();
+
+        // Assign the number on the inserted row, then reload it into the stale object.
+        Order::setLastInvoiceNumber($invoice->id, $order->id_shop);
+        $invoice->number = (int) $order->getInvoiceNumber($invoice->id);
 
         $invoice->saveCarrierTaxCalculator($taxCalculator->getTaxesAmount($invoice->total_shipping_tax_excl));
 

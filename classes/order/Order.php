@@ -1264,28 +1264,44 @@ class OrderCore extends ObjectModel
             return false;
         }
 
-        $number = Configuration::get('PS_INVOICE_START_NUMBER', null, null, $id_shop);
-        // If invoice start number has been set, you clean the value of this configuration
-        if ($number) {
-            Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $id_shop);
+        $db = Db::getInstance();
+
+        // Transaction + standalone SELECT ... FOR UPDATE so concurrent order validations
+        // cannot read the same MAX(number) and assign duplicate invoice numbers.
+        try {
+            $db->execute('START TRANSACTION', false);
+
+            $number = Configuration::get('PS_INVOICE_START_NUMBER', null, null, $id_shop);
+            if ($number) {
+                Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $id_shop);
+                $newInvoiceNumber = (int) $number;
+            } else {
+                $whereYear = Configuration::get('PS_INVOICE_RESET')
+                    ? ' WHERE DATE_FORMAT(`date_add`, "%Y") = ' . (int) date('Y')
+                    : '';
+                // executeS(), not getValue()/getRow(): the latter append "LIMIT 1", which is
+                // invalid after FOR UPDATE.
+                $rows = $db->executeS(
+                    'SELECT MAX(`number`) AS max_number FROM `' . _DB_PREFIX_ . 'order_invoice`' . $whereYear . ' FOR UPDATE',
+                    true,
+                    false
+                );
+                $newInvoiceNumber = (int) ($rows[0]['max_number'] ?? 0) + 1;
+            }
+
+            $result = $db->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'order_invoice` SET number = ' . $newInvoiceNumber
+                . ' WHERE `id_order_invoice` = ' . (int) $order_invoice_id
+            );
+
+            $db->execute('COMMIT', false);
+
+            return $result;
+        } catch (Exception $e) {
+            $db->execute('ROLLBACK', false);
+
+            throw $e;
         }
-
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'order_invoice` SET number =';
-
-        if ($number) {
-            $sql .= (int) $number;
-        } else {
-            $getNumberSql = '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
-                FROM `' . _DB_PREFIX_ . 'order_invoice`' . (Configuration::get('PS_INVOICE_RESET') ?
-                ' WHERE DATE_FORMAT(`date_add`, "%Y") = ' . (int) date('Y') : '') . ') AS result)';
-            $getNumberSqlRow = Db::getInstance()->getRow($getNumberSql);
-            $newInvoiceNumber = $getNumberSqlRow['new_number'];
-            $sql .= $newInvoiceNumber;
-        }
-
-        $sql .= ' WHERE `id_order_invoice` = ' . (int) $order_invoice_id;
-
-        return Db::getInstance()->execute($sql);
     }
 
     public function getInvoiceNumber($order_invoice_id)
