@@ -44,6 +44,19 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
     private const DEFAULT_SHOP_ID = 1;
     private const DEFAULT_LANG_ID = 1;
 
+    /**
+     * Arbitrary entity ids used as extra-property storage keys, one per test so their rows
+     * never overlap. Deliberately far above the ids of the installed fixtures to avoid any
+     * collision (no actual product/contact row is needed: the value tables only reference
+     * the id).
+     */
+    private const GROUP_WRITE_PRODUCT_ID = 201;
+    private const ALL_SHOPS_WRITE_PRODUCT_ID = 202;
+    private const COLLECTION_WRITE_PRODUCT_ID = 203;
+    private const DIVERGENT_VALUES_PRODUCT_ID = 204;
+    private const TOGGLE_PRODUCT_ID = 205;
+    private const SHARED_LANG_CONTACT_ID = 301;
+
     private static int $secondShopId;
     private static int $thirdShopId;
     private static int $defaultGroupId;
@@ -130,43 +143,43 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
 
     public function testGroupConstraintFansOutToTheGroupShopsOnly(): void
     {
-        self::$writer->writeAll('product', 'id_product', 201, [self::MODULE => [
+        self::$writer->writeAll('product', 'id_product', self::GROUP_WRITE_PRODUCT_ID, [self::MODULE => [
             'ms_shop' => 'group-1-value',
             'ms_lang' => [self::DEFAULT_LANG_ID => 'group-1-lang'],
         ]], ShopConstraint::shopGroup(self::$defaultGroupId));
 
-        $this->assertSame('group-1-value', $this->readShopValue(201, ShopConstraint::shop(self::DEFAULT_SHOP_ID)));
-        $this->assertSame('group-1-value', $this->readShopValue(201, ShopConstraint::shop(self::$secondShopId)));
+        $this->assertSame('group-1-value', $this->readShopValue(self::GROUP_WRITE_PRODUCT_ID, ShopConstraint::shop(self::DEFAULT_SHOP_ID)));
+        $this->assertSame('group-1-value', $this->readShopValue(self::GROUP_WRITE_PRODUCT_ID, ShopConstraint::shop(self::$secondShopId)));
         // The third shop is outside the group: nothing was written for it.
-        $this->assertNull($this->readShopValue(201, ShopConstraint::shop(self::$thirdShopId)));
+        $this->assertNull($this->readShopValue(self::GROUP_WRITE_PRODUCT_ID, ShopConstraint::shop(self::$thirdShopId)));
 
         // product_extra_lang is shop-aware (product is multilang-multishop): one row per group shop.
-        $this->assertSame('group-1-lang', $this->readLangValue(201, ShopConstraint::shop(self::$secondShopId)));
-        $this->assertSame(2, $this->countRows('product_extra_lang', 'id_product', 201));
-        $this->assertSame(2, $this->countRows('product_extra_shop', 'id_product', 201));
+        $this->assertSame('group-1-lang', $this->readLangValue(self::GROUP_WRITE_PRODUCT_ID, ShopConstraint::shop(self::$secondShopId)));
+        $this->assertSame(2, $this->countRows('product_extra_lang', 'id_product', self::GROUP_WRITE_PRODUCT_ID));
+        $this->assertSame(2, $this->countRows('product_extra_shop', 'id_product', self::GROUP_WRITE_PRODUCT_ID));
     }
 
     public function testAllShopsAndCollectionConstraintsWriteTheirScopes(): void
     {
-        self::$writer->writeAll('product', 'id_product', 202, [self::MODULE => ['ms_shop' => 'everywhere']], ShopConstraint::allShops());
-        $this->assertSame(3, $this->countRows('product_extra_shop', 'id_product', 202));
+        self::$writer->writeAll('product', 'id_product', self::ALL_SHOPS_WRITE_PRODUCT_ID, [self::MODULE => ['ms_shop' => 'everywhere']], ShopConstraint::allShops());
+        $this->assertSame(3, $this->countRows('product_extra_shop', 'id_product', self::ALL_SHOPS_WRITE_PRODUCT_ID));
 
-        self::$writer->writeAll('product', 'id_product', 203, [self::MODULE => ['ms_shop' => 'third-only']], ShopCollection::shops([self::$thirdShopId]));
-        $this->assertSame(1, $this->countRows('product_extra_shop', 'id_product', 203));
-        $this->assertSame('third-only', $this->readShopValue(203, ShopConstraint::shop(self::$thirdShopId)));
+        self::$writer->writeAll('product', 'id_product', self::COLLECTION_WRITE_PRODUCT_ID, [self::MODULE => ['ms_shop' => 'third-only']], ShopCollection::shops([self::$thirdShopId]));
+        $this->assertSame(1, $this->countRows('product_extra_shop', 'id_product', self::COLLECTION_WRITE_PRODUCT_ID));
+        $this->assertSame('third-only', $this->readShopValue(self::COLLECTION_WRITE_PRODUCT_ID, ShopConstraint::shop(self::$thirdShopId)));
     }
 
     public function testNonSingleConstraintReadsTheRepresentativeShopValue(): void
     {
-        self::$writer->writeAll('product', 'id_product', 204, [self::MODULE => ['ms_shop' => 'shop-1']], ShopConstraint::shop(self::DEFAULT_SHOP_ID));
-        self::$writer->writeAll('product', 'id_product', 204, [self::MODULE => ['ms_shop' => 'shop-2']], ShopConstraint::shop(self::$secondShopId));
-        self::$writer->writeAll('product', 'id_product', 204, [self::MODULE => ['ms_shop' => 'shop-3']], ShopConstraint::shop(self::$thirdShopId));
+        self::$writer->writeAll('product', 'id_product', self::DIVERGENT_VALUES_PRODUCT_ID, [self::MODULE => ['ms_shop' => 'shop-1']], ShopConstraint::shop(self::DEFAULT_SHOP_ID));
+        self::$writer->writeAll('product', 'id_product', self::DIVERGENT_VALUES_PRODUCT_ID, [self::MODULE => ['ms_shop' => 'shop-2']], ShopConstraint::shop(self::$secondShopId));
+        self::$writer->writeAll('product', 'id_product', self::DIVERGENT_VALUES_PRODUCT_ID, [self::MODULE => ['ms_shop' => 'shop-3']], ShopConstraint::shop(self::$thirdShopId));
 
         // Default shop belongs to the default group and to all-shops: its value represents both.
-        $this->assertSame('shop-1', $this->readShopValue(204, ShopConstraint::shopGroup(self::$defaultGroupId)));
-        $this->assertSame('shop-1', $this->readShopValue(204, ShopConstraint::allShops()));
+        $this->assertSame('shop-1', $this->readShopValue(self::DIVERGENT_VALUES_PRODUCT_ID, ShopConstraint::shopGroup(self::$defaultGroupId)));
+        $this->assertSame('shop-1', $this->readShopValue(self::DIVERGENT_VALUES_PRODUCT_ID, ShopConstraint::allShops()));
         // The second group does not contain the default shop: its lowest shop represents it.
-        $this->assertSame('shop-3', $this->readShopValue(204, ShopConstraint::shopGroup(self::$secondGroupId)));
+        $this->assertSame('shop-3', $this->readShopValue(self::DIVERGENT_VALUES_PRODUCT_ID, ShopConstraint::shopGroup(self::$secondGroupId)));
     }
 
     public function testToggleUniformizesTheConstraintScope(): void
@@ -175,18 +188,18 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
         $this->assertNotNull($flagDefinition);
 
         // First toggle in group context: no row anywhere → target is enabled, for both group shops.
-        self::$writer->toggleExtraProperty($flagDefinition, 205, ShopConstraint::shopGroup(self::$defaultGroupId));
-        $this->assertSame(true, $this->readValue('ms_flag', 205, ShopConstraint::shop(self::DEFAULT_SHOP_ID)));
-        $this->assertSame(true, $this->readValue('ms_flag', 205, ShopConstraint::shop(self::$secondShopId)));
+        self::$writer->toggleExtraProperty($flagDefinition, self::TOGGLE_PRODUCT_ID, ShopConstraint::shopGroup(self::$defaultGroupId));
+        $this->assertSame(true, $this->readValue('ms_flag', self::TOGGLE_PRODUCT_ID, ShopConstraint::shop(self::DEFAULT_SHOP_ID)));
+        $this->assertSame(true, $this->readValue('ms_flag', self::TOGGLE_PRODUCT_ID, ShopConstraint::shop(self::$secondShopId)));
 
         // Diverge the second shop, then toggle in group context again: the representative
         // (default) shop's value decides the target and the scope is re-aligned.
-        self::$writer->toggleExtraProperty($flagDefinition, 205, ShopConstraint::shop(self::$secondShopId));
-        $this->assertSame(false, $this->readValue('ms_flag', 205, ShopConstraint::shop(self::$secondShopId)));
+        self::$writer->toggleExtraProperty($flagDefinition, self::TOGGLE_PRODUCT_ID, ShopConstraint::shop(self::$secondShopId));
+        $this->assertSame(false, $this->readValue('ms_flag', self::TOGGLE_PRODUCT_ID, ShopConstraint::shop(self::$secondShopId)));
 
-        self::$writer->toggleExtraProperty($flagDefinition, 205, ShopConstraint::shopGroup(self::$defaultGroupId));
-        $this->assertSame(false, $this->readValue('ms_flag', 205, ShopConstraint::shop(self::DEFAULT_SHOP_ID)));
-        $this->assertSame(false, $this->readValue('ms_flag', 205, ShopConstraint::shop(self::$secondShopId)));
+        self::$writer->toggleExtraProperty($flagDefinition, self::TOGGLE_PRODUCT_ID, ShopConstraint::shopGroup(self::$defaultGroupId));
+        $this->assertSame(false, $this->readValue('ms_flag', self::TOGGLE_PRODUCT_ID, ShopConstraint::shop(self::DEFAULT_SHOP_ID)));
+        $this->assertSame(false, $this->readValue('ms_flag', self::TOGGLE_PRODUCT_ID, ShopConstraint::shop(self::$secondShopId)));
     }
 
     public function testContactLangValuesAreSharedAcrossShops(): void
@@ -196,13 +209,13 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
         $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'contact_extra_lang`');
         $this->assertNotContains('id_shop', array_column($columns, 'Field'));
 
-        self::$writer->writeAll('contact', 'id_contact', 301, [self::MODULE => [
+        self::$writer->writeAll('contact', 'id_contact', self::SHARED_LANG_CONTACT_ID, [self::MODULE => [
             'ms_contact_lang' => [self::DEFAULT_LANG_ID => 'Shared title'],
         ]], ShopConstraint::allShops());
 
-        $this->assertSame(1, $this->countRows('contact_extra_lang', 'id_contact', 301));
+        $this->assertSame(1, $this->countRows('contact_extra_lang', 'id_contact', self::SHARED_LANG_CONTACT_ID));
 
-        $values = self::$reader->getExtraProperties('contact', 'id_contact', 301, self::DEFAULT_LANG_ID, ShopConstraint::shop(self::$thirdShopId));
+        $values = self::$reader->getExtraProperties('contact', 'id_contact', self::SHARED_LANG_CONTACT_ID, self::DEFAULT_LANG_ID, ShopConstraint::shop(self::$thirdShopId));
         $this->assertSame('Shared title', $values[self::MODULE]['ms_contact_lang']);
     }
 
