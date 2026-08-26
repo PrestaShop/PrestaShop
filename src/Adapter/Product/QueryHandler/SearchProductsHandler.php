@@ -239,6 +239,7 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
         $combinations = $product->getAttributeCombinations();
 
         if (false !== $combinations) {
+            $positions = $this->getCombinationPositions($combinations);
             foreach ($combinations as $combination) {
                 $productAttributeId = (int) $combination['id_product_attribute'];
                 $attribute = $combination['attribute_name'];
@@ -259,14 +260,45 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
                     $priceTaxExcluded,
                     $priceTaxIncluded,
                     $combination['location'],
-                    $combination['reference']
+                    $combination['reference'],
+                    $positions[$productAttributeId] ?? 0
                 );
 
                 $productCombinations[$productCombination->getAttributeCombinationId()] = $productCombination;
             }
+
+            uasort($productCombinations, static function (ProductCombination $a, ProductCombination $b): int {
+                return $a->getPosition() <=> $b->getPosition();
+            });
         }
 
         return $productCombinations;
+    }
+
+    /**
+     * Combinations are listed in the order configured in Catalog > Attributes & Features, like the front
+     * office does, instead of the combination creation order.
+     *
+     * Rows returned by Product::getAttributeCombinations() are ordered by attribute group position then
+     * attribute position, so the attribute positions collected for a combination are already comparable
+     * group by group.
+     *
+     * @param array<int, array<string, mixed>> $combinations
+     *
+     * @return array<int, int> Position indexed by combination id
+     */
+    private function getCombinationPositions(array $combinations): array
+    {
+        $attributePositions = [];
+        foreach ($combinations as $combination) {
+            $attributePositions[(int) $combination['id_product_attribute']][] = (int) $combination['attribute_position'];
+        }
+
+        uasort($attributePositions, static function (array $a, array $b): int {
+            return $a <=> $b;
+        });
+
+        return array_flip(array_keys($attributePositions));
     }
 
     /**
