@@ -90,6 +90,7 @@ final class ExtraPropertyDefinition
      * @param string|null $labelDomain translation domain for label wording
      * @param string|null $descriptionWording translation wording key shown as BO help text
      * @param string|null $descriptionDomain translation domain for description wording
+     * @param bool|null $multiShop Whether values are stored per shop (the storage table carries an id_shop column). Not persisted — the live storage table schema is the source of truth (see ExtraPropertyDefinitionRepository::enrichRowsWithColumnMetadata()). Null = not introspected yet; isMultiShop() then falls back to the scope's structural default (SHOP → true, COMMON/LANG → false).
      *
      * @throws InvalidExtraPropertyDefinitionException when entityName or propertyName is empty or not a valid SQL identifier, when associatedForms/associatedGrids have invalid format or duplicates, when labelWording is missing despite being required, or when the computed storage column name exceeds 64 characters
      */
@@ -116,6 +117,7 @@ final class ExtraPropertyDefinition
         protected readonly ?string $labelDomain = null,
         protected readonly ?string $descriptionWording = null,
         protected readonly ?string $descriptionDomain = null,
+        protected readonly ?bool $multiShop = null,
     ) {
         // Entity names are SQL identifier fragments (tables + primary key column):
         // normalize to lower snake_case before validating and storing — tableize()
@@ -283,6 +285,7 @@ final class ExtraPropertyDefinition
             labelDomain: isset($row['label_domain']) && '' !== $row['label_domain'] ? (string) $row['label_domain'] : null,
             descriptionWording: isset($row['description_wording']) && '' !== $row['description_wording'] ? (string) $row['description_wording'] : null,
             descriptionDomain: isset($row['description_domain']) && '' !== $row['description_domain'] ? (string) $row['description_domain'] : null,
+            multiShop: array_key_exists('multi_shop', $row) ? (bool) $row['multi_shop'] : null,
         );
     }
 
@@ -364,6 +367,7 @@ final class ExtraPropertyDefinition
             labelDomain: $this->labelDomain,
             descriptionWording: $this->descriptionWording,
             descriptionDomain: $this->descriptionDomain,
+            multiShop: $this->multiShop,
         );
     }
 
@@ -402,6 +406,7 @@ final class ExtraPropertyDefinition
             labelDomain: array_key_exists('labelDomain', $overrides) ? $overrides['labelDomain'] : $this->labelDomain,
             descriptionWording: array_key_exists('descriptionWording', $overrides) ? $overrides['descriptionWording'] : $this->descriptionWording,
             descriptionDomain: array_key_exists('descriptionDomain', $overrides) ? $overrides['descriptionDomain'] : $this->descriptionDomain,
+            multiShop: array_key_exists('multiShop', $overrides) ? $overrides['multiShop'] : $this->multiShop,
         );
     }
 
@@ -521,6 +526,21 @@ final class ExtraPropertyDefinition
     public function isNullable(): bool
     {
         return $this->nullable;
+    }
+
+    /**
+     * Whether values of this property are stored per shop, i.e. the storage table carries
+     * an id_shop column. SHOP scope is per-shop by construction ({entity}_extra_shop mirrors
+     * the {entity}_shop PK); LANG scope depends on the base {entity}_lang table shape — only
+     * multilang-multishop entities (product, category, …) have id_shop there, so consumers
+     * (reader, writer, grid joins) must NOT reference id_shop when this returns false.
+     *
+     * Deduced from the live storage table schema by the repository (synthetic 'multi_shop'
+     * row key); when not introspected yet, falls back to the scope's structural default.
+     */
+    public function isMultiShop(): bool
+    {
+        return $this->multiShop ?? (ExtraPropertyScope::SHOP === $this->scope);
     }
 
     /**

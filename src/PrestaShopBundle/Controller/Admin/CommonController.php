@@ -133,7 +133,15 @@ class CommonController extends PrestaShopAdminController
         $writer = $this->container->get(ExtraPropertyWriterInterface::class);
 
         try {
-            $writer->toggleExtraProperty($matched, $entityId, $this->getShopContext()->getShopConstraint());
+            // Shop scope comes from the ShopContext (single shop, group or all shops — the
+            // writer fans out accordingly); LANG-scoped toggles target the grid's display
+            // language, i.e. the employee's context language.
+            $writer->toggleExtraProperty(
+                $matched,
+                $entityId,
+                $this->getShopContext()->getShopConstraint(),
+                $this->getLanguageContext()->getId()
+            );
         } catch (Throwable) {
             return new JsonResponse([
                 'status' => false,
