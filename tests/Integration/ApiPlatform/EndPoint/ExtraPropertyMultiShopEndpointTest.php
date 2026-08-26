@@ -43,6 +43,8 @@ final class ExtraPropertyMultiShopEndpointTest extends ApiTestCase
 
     private static int $secondShopId;
     private static int $defaultGroupId;
+    private static int $secondGroupId;
+    private static int $thirdShopId;
 
     public static function setUpBeforeClass(): void
     {
@@ -57,9 +59,14 @@ final class ExtraPropertyMultiShopEndpointTest extends ApiTestCase
         self::$defaultGroupId = (int) Shop::getGroupFromShop(self::DEFAULT_SHOP_ID, true);
         self::$secondShopId = self::addShop('Extra Property API Shop 2', self::$defaultGroupId);
 
-        // Associate the tested product to both shops so per-shop reads/writes are valid on each.
+        // A second group WITHOUT the default shop: group-scoped edits must leave it
+        // untouched, and its representative shop is its lowest shop id (not the default).
+        self::$secondGroupId = self::addShopGroup('Extra Property API Group 2');
+        self::$thirdShopId = self::addShop('Extra Property API Shop 3', self::$secondGroupId);
+
+        // Associate the tested product to every shop so per-shop reads/writes are valid on each.
         $product = new Product(self::PRODUCT_ID);
-        $product->id_shop_list = [self::DEFAULT_SHOP_ID, self::$secondShopId];
+        $product->id_shop_list = [self::DEFAULT_SHOP_ID, self::$secondShopId, self::$thirdShopId];
         $product->save();
 
         // Install the module registering the COMMON + LANG product properties.
@@ -121,28 +128,42 @@ final class ExtraPropertyMultiShopEndpointTest extends ApiTestCase
         $this->assertNull($defaultShopProduct['extraProperties']['_core']['api_shop_note']);
     }
 
-    public function testGroupAndAllShopsWritesFanOutToEveryShopInScope(): void
+    public function testGroupWritesStayInsideTheGroup(): void
     {
-        // Shop group scope: the LANG value (product is multilang-multishop) lands on every group shop.
+        // Shop group scope: the LANG value (product is multilang-multishop) lands on every
+        // shop of the TARGETED group only.
         $this->partialUpdateItem(
             '/products/' . self::PRODUCT_ID . '?shopGroupId=' . self::$defaultGroupId,
             ['extraProperties' => [self::MODULE_NAME => ['api_note' => ['en-US' => 'group note']]]],
+            [self::PRODUCT_WRITE]
+        );
+        $this->partialUpdateItem(
+            '/products/' . self::PRODUCT_ID . '?shopGroupId=' . self::$defaultGroupId,
+            ['extraProperties' => ['_core' => ['api_shop_note' => 'group 1 only']]],
             [self::PRODUCT_WRITE]
         );
 
         foreach ([self::DEFAULT_SHOP_ID, self::$secondShopId] as $shopId) {
             $product = $this->getItem('/products/' . self::PRODUCT_ID . '?shopId=' . $shopId, [self::PRODUCT_READ]);
             $this->assertSame('group note', $product['extraProperties'][self::MODULE_NAME]['api_note']['en-US']);
+            $this->assertSame('group 1 only', $product['extraProperties']['_core']['api_shop_note']);
         }
 
-        // All-shops scope: the SHOP value lands on every shop.
+        // The other group's shop was outside the constraint: nothing was written for it.
+        $thirdShopProduct = $this->getItem('/products/' . self::PRODUCT_ID . '?shopId=' . self::$thirdShopId, [self::PRODUCT_READ]);
+        $this->assertNull($thirdShopProduct['extraProperties'][self::MODULE_NAME]['api_note']['en-US'] ?? null);
+        $this->assertNull($thirdShopProduct['extraProperties']['_core']['api_shop_note']);
+    }
+
+    public function testAllShopsWritesReachEveryShopAcrossGroups(): void
+    {
         $this->partialUpdateItem(
             '/products/' . self::PRODUCT_ID . '?allShops',
             ['extraProperties' => ['_core' => ['api_shop_note' => 'everywhere']]],
             [self::PRODUCT_WRITE]
         );
 
-        foreach ([self::DEFAULT_SHOP_ID, self::$secondShopId] as $shopId) {
+        foreach ([self::DEFAULT_SHOP_ID, self::$secondShopId, self::$thirdShopId] as $shopId) {
             $product = $this->getItem('/products/' . self::PRODUCT_ID . '?shopId=' . $shopId, [self::PRODUCT_READ]);
             $this->assertSame('everywhere', $product['extraProperties']['_core']['api_shop_note']);
         }
@@ -178,11 +199,22 @@ final class ExtraPropertyMultiShopEndpointTest extends ApiTestCase
             [self::PRODUCT_WRITE]
         );
 
+        $this->partialUpdateItem(
+            '/products/' . self::PRODUCT_ID . '?shopId=' . self::$thirdShopId,
+            ['extraProperties' => ['_core' => ['api_shop_note' => 'third-shop-value']]],
+            [self::PRODUCT_WRITE]
+        );
+
         $groupRead = $this->getItem('/products/' . self::PRODUCT_ID . '?shopGroupId=' . self::$defaultGroupId, [self::PRODUCT_READ]);
         $this->assertSame('default-shop-value', $groupRead['extraProperties']['_core']['api_shop_note']);
 
         $allShopsRead = $this->getItem('/products/' . self::PRODUCT_ID . '?allShops', [self::PRODUCT_READ]);
         $this->assertSame('default-shop-value', $allShopsRead['extraProperties']['_core']['api_shop_note']);
+
+        // The second group does not contain the default shop: its representative is its
+        // lowest shop id — the alternative branch of the resolve rule.
+        $otherGroupRead = $this->getItem('/products/' . self::PRODUCT_ID . '?shopGroupId=' . self::$secondGroupId, [self::PRODUCT_READ]);
+        $this->assertSame('third-shop-value', $otherGroupRead['extraProperties']['_core']['api_shop_note']);
     }
 
     private static function shopScopedDefinition(): ExtraPropertyDefinition
