@@ -659,7 +659,7 @@ class AdminTranslationsControllerCore extends AdminController
                 }
 
                 // $_TABS is redefined by the file just included. We must check the type before proceeding.
-                // @phpstan-ignore function.alreadyNarrowedType 
+                // @phpstan-ignore function.alreadyNarrowedType
                 if (is_array($_TABS) && count($_TABS)) {
                     foreach ($_TABS as $class_name => $translations) {
                         // Get instance of this tab by class name

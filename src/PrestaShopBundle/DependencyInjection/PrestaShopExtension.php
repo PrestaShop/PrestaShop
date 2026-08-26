@@ -7,7 +7,6 @@
 namespace PrestaShopBundle\DependencyInjection;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\ProductRowStepInterface;

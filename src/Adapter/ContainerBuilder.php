@@ -10,7 +10,6 @@ use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\ORM\Tools\Setup;
 use Exception;
 use LegacyCompilerPass;
-use PrestaShop\PrestaShop\Adapter\Container\ContainerBuilderExtensionInterface;
 use PrestaShop\PrestaShop\Adapter\Container\ContainerParametersExtension;
 use PrestaShop\PrestaShop\Adapter\Container\DoctrineBuilderExtension;
 use PrestaShop\PrestaShop\Adapter\Container\LegacyContainer;

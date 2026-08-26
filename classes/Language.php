@@ -1515,6 +1515,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if (!empty($langId)) {
             /**
              * @var Language $lang
+             *
              * @phpstan-ignore varTag.nativeType
              */
             $lang = new static($langId);

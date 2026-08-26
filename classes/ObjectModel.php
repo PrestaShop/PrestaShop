@@ -2135,6 +2135,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      * Returns object definition.
      *
      * @template T of ObjectModelCore
+     *
      * @param class-string<T>|T $class Name of object
      * @param string|null $field Name of field if we want the definition of one field only
      *

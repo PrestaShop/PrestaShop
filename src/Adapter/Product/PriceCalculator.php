@@ -34,7 +34,7 @@ class PriceCalculator
      * @param int|null $idAddress Customer address ID. Required for price (tax included)
      *                            calculation regarding the guest localization
      * @param array|null $specificPriceOutput If a specific price applies regarding the previous parameters,
-     *                                  this variable is filled with the corresponding SpecificPrice object
+     *                                        this variable is filled with the corresponding SpecificPrice object
      * @param bool $withEcotax insert ecotax in price output
      * @param bool $useGroupReduction
      * @param Context|null $context
@@ -103,7 +103,7 @@ class PriceCalculator
      * @param bool $useReduc Set if the returned amount will include reduction
      * @param bool $withEcotax insert ecotax in price output
      * @param array|null $specificPrice If a specific price applies regarding the previous parameters,
-     *                            this variable is filled with the corresponding SpecificPrice object
+     *                                  this variable is filled with the corresponding SpecificPrice object
      * @param bool $useGroupReduction
      * @param int $idCustomer
      * @param bool $useCustomerPrice

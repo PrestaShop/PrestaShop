@@ -6,7 +6,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Employee;
 
-use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Employee\EmployeeDataProviderInterface;

@@ -12,7 +12,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
-use PrestaShop\PrestaShop\Core\Grid\Exception\InvalidDataException;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 
 /**

@@ -6,8 +6,9 @@
 
 /**
  * Create a collection of ObjectModel objects.
- * 
+ *
  * @template T
+ *
  * @implements Iterator<int, T>
  * @implements ArrayAccess<int, T>
  */

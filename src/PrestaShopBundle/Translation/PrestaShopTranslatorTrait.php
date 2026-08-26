@@ -160,7 +160,7 @@ trait PrestaShopTranslatorTrait
                  * @see https://github.com/phpstan/phpstan-src/pull/5309
                  * I can't ignore the error on PHPStan, hence the commented line.
                  */
-                //!method_exists($this, 'getCatalogue') ||
+                // !method_exists($this, 'getCatalogue') ||
                 !$this->getCatalogue($locale)->has($message, $this->normalizeDomain($domain))
             )
         ;

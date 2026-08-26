@@ -197,11 +197,11 @@ class ModuleTabRegisterTest extends TestCase
      */
     public function testNonWorkingTabsThrowException(string $moduleName, array $tabs): void
     {
-        $filteredTabs = array_filter($tabs, function ($tab) {return array_key_exists('exception', $tab);});
+        $filteredTabs = array_filter($tabs, function ($tab) {return array_key_exists('exception', $tab); });
         if (empty($filteredTabs)) {
             $this->expectNotToPerformAssertions();
         }
-        
+
         foreach ($filteredTabs as $tab) {
             $data = new ParameterBag($tab);
 

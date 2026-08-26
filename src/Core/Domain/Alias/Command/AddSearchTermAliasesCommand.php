@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Alias\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasConstraintException;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Adds new search term with given aliases

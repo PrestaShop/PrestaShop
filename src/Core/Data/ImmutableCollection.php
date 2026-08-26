@@ -37,7 +37,7 @@ abstract class ImmutableCollection implements IteratorAggregate, Countable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getIterator(): Traversable
     {
