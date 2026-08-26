@@ -131,6 +131,8 @@ week rendered by this pipeline. Read
 [`samples/README.md`](samples/README.md) first — the verdicts in it were
 hand-applied from the rubrics rather than produced by a model run, so it
 shows the shape of the output and not the quality of the classification.
+Its producer is committed next to it, and `collect.py --until` makes the
+window reproducible.
 
 ## Known limits
 

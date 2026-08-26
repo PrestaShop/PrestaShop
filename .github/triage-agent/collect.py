@@ -229,9 +229,10 @@ def find_duplicate_candidates(issue: dict, exclude: int) -> list[dict]:
     return candidates[:10]
 
 
-def collect(since: str, want_duplicates: bool) -> dict:
+def collect(since: str, until: str | None, want_duplicates: bool) -> dict:
     now = datetime.now(timezone.utc)
-    query = f"repo:{REPO_OWNER}/{REPO_NAME} updated:>={since} sort:updated-desc"
+    window = f"{since}..{until}" if until else f">={since}"
+    query = f"repo:{REPO_OWNER}/{REPO_NAME} updated:{window} sort:updated-desc"
 
     print(f"Searching: {query}", file=sys.stderr)
     nodes = graphql_search(query)
@@ -331,6 +332,7 @@ def collect(since: str, want_duplicates: bool) -> dict:
         "repository": f"{REPO_OWNER}/{REPO_NAME}",
         "collected_at": now.isoformat(),
         "since": since,
+        "until": until,
         "counts": {
             "issues": len(issues),
             "pull_requests": len(pull_requests),
@@ -359,6 +361,12 @@ def main() -> int:
         help="Window start: '7d' for the past week, or an explicit YYYY-MM-DD (UTC).",
     )
     parser.add_argument(
+        "--until", default=None,
+        help="Window end as YYYY-MM-DD (UTC). Omit for 'up to now'. Pass it to "
+             "reproduce a past week exactly - without it, a re-run months later "
+             "collects a different set.",
+    )
+    parser.add_argument(
         "--out", type=Path, default=Path("out/week.json"),
         help="Where to write the collected week.",
     )
@@ -369,7 +377,8 @@ def main() -> int:
     args = parser.parse_args()
 
     since = resolve_since(args.since)
-    data = collect(since, want_duplicates=not args.no_duplicates)
+    until = resolve_since(args.until) if args.until else None
+    data = collect(since, until, want_duplicates=not args.no_duplicates)
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(data, indent=2, ensure_ascii=False))
@@ -378,7 +387,7 @@ def main() -> int:
     print(
         f"\nWrote {args.out}: {counts['issues']} issues, "
         f"{counts['pull_requests']} PRs, {counts['skipped']} skipped "
-        f"(since {since})",
+        f"(window {since}..{until or 'now'})",
         file=sys.stderr,
     )
     return 0

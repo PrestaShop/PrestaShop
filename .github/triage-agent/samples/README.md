@@ -1,35 +1,46 @@
 # Sample output
 
-`2026-08-18-summary.md` is `render.py` run over the real week of 18–25 August
+`2026-08-18-summary.md` is this pipeline run over the real week of 18–25 August
 2026 on `PrestaShop/PrestaShop`, kept as evidence for the spike in
 [#42138](https://github.com/PrestaShop/PrestaShop/issues/42138).
 
-**Read the provenance before reading the verdicts.** Stage 1 (`collect.py`) and
-stage 3 (`render.py`) are the real scripts against the real repository — the
-item list, the skip list and the layout are exactly what a scheduled run
-produces.
+## Read the provenance before reading the verdicts
 
-Stage 2 was **not** run: no `ANTHROPIC_API_KEY` was available in the
-environment where this branch was built. The severity and attention verdicts
-were instead produced by applying `prompts/severity_system.md` and
-`prompts/pr_triage_system.md` by hand:
+Stage 1 (`collect.py`) and stage 3 (`render.py`) are the real scripts against
+the real repository — the item list, the skip list and the layout are exactly
+what a scheduled run produces.
+
+Stage 2 was **not** run: no `ANTHROPIC_API_KEY` was available in the environment
+where this branch was built. The verdicts come from `hand_verdicts.py` instead,
+which applies `prompts/severity_system.md` and `prompts/pr_triage_system.md` by
+hand:
 
 - the 22 issue verdicts are individual judgements, one per issue
-- the 82 PR verdicts come from applying the PR rubric mechanically to the
-  collected metadata (labels, review decision, author association, idle days)
+- the 72 PR verdicts apply the PR rubric mechanically to the collected metadata
+  (labels, review decision, author association, idle days)
 
-So this file demonstrates the shape and the usefulness of the output, and it
-exercised the rubric enough to find two real problems — see the spike report on
-the issue. It is **not** a measurement of how well the model classifies. That
-needs `classify.py` and `calibrate.py eval` against a real key.
+So this file demonstrates the shape and the usefulness of the output, and
+exercising the rubric on real reports is what surfaced the `kind` field, the
+narrowed attention list and the branch-check section. It is **not** a
+measurement of how well the model classifies — that needs `classify.py` and
+`calibrate.py eval` against a real key.
 
-This file was rendered before `looks_like_regression` was added to the schema,
-so it carries no regression markers. The layout is otherwise current.
+`hand_verdicts.py` is committed so those judgements can be audited rather than
+asserted in prose. Once a key exists, delete it and regenerate with the real
+`classify.py`.
 
-Regenerate with:
+## Regenerating
 
 ```bash
-python collect.py --since 2026-08-18
-python classify.py
+python collect.py --since 2026-08-18 --until 2026-08-25 --no-duplicates
+python samples/hand_verdicts.py     # or: python classify.py, with a key
 python render.py
+cp out/summary.md samples/2026-08-18-summary.md
 ```
+
+`--until` matters. Without it the window runs to today and collects a different
+set, so the file would no longer be the week it claims to be.
+
+One caveat on exactness: the original collection used a relative `7d` window and
+caught 10 pull requests updated late on 25 August that an explicit
+`2026-08-18..2026-08-25` range excludes. The 22 issues are identical either way.

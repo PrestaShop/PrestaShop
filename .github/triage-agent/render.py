@@ -153,8 +153,15 @@ def low_confidence(data: dict) -> list[dict]:
     ]
 
 
+def window_end(data: dict) -> datetime:
+    """End of the collected window: the explicit --until, else collection time."""
+    if data.get("until"):
+        return datetime.strptime(data["until"], "%Y-%m-%d")
+    return datetime.fromisoformat(data["collected_at"])
+
+
 def render_markdown(data: dict) -> str:
-    week_end = datetime.fromisoformat(data["collected_at"]).strftime("%Y-%m-%d")
+    week_end = window_end(data).strftime("%Y-%m-%d")
     issues = data["issues"]
     prs = data["pull_requests"]
     out: list[str] = []
@@ -326,7 +333,7 @@ def render_markdown(data: dict) -> str:
 
 
 def slack_payload(data: dict, run_url: str | None) -> dict:
-    week_end = datetime.fromisoformat(data["collected_at"]).strftime("%b %d")
+    week_end = window_end(data).strftime("%b %d")
     week_start = datetime.strptime(data["since"], "%Y-%m-%d").strftime("%b %d")
     issues = data["issues"]
     prs = data["pull_requests"]
