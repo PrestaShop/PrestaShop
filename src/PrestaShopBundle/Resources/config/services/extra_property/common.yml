@@ -48,20 +48,6 @@ services:
     alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator'
     public: true
 
-  # ─── Shop list resolution ────────────────────────────────────────────────────
-
-  # Generic constraint → shop ids resolution (fan-out writes, representative shop for reads).
-  # Declared here (not in a shop-specific file) so the FO legacy container — which only
-  # imports the extra_property/common.yml subset — gets it wired for the reader/writer.
-  PrestaShop\PrestaShop\Core\Shop\ShopListResolver:
-    arguments:
-      $connection: '@doctrine.dbal.default_connection'
-      $prefix: '%database_prefix%'
-
-  PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface:
-    alias: 'PrestaShop\PrestaShop\Core\Shop\ShopListResolver'
-    public: true
-
   # ─── Reader ──────────────────────────────────────────────────────────────────
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReader:

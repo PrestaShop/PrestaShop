@@ -1,0 +1,18 @@
+# Common multishop services, needed on BOTH the back-office side AND the front-office side.
+# Imported by core/common.yml, which the FO legacy container loads explicitly (see the
+# imports of config/services/common.yml) — the Symfony kernels load the full services tree.
+services:
+  _defaults:
+    autowire: true
+    public: false
+
+  # Generic ShopConstraint → shop ids resolution: the shops covered by a constraint
+  # (fan-out writes) and its deterministic representative shop (reads, context shop id).
+  PrestaShop\PrestaShop\Core\Shop\ShopListResolver:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $prefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface:
+    alias: 'PrestaShop\PrestaShop\Core\Shop\ShopListResolver'
+    public: true
