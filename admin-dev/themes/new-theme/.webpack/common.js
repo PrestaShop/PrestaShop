@@ -155,6 +155,7 @@ module.exports = {
     search: './js/pages/search',
     search_engine: './js/pages/search-engine',
     security: './js/pages/security',
+    shipment: './js/pages/shipment',
     shipping_preferences: './js/pages/shipping-preferences',
     specific_price_form: './js/pages/product/specific-price/form',
     sql_manager: './js/pages/sql-manager',
