@@ -483,7 +483,8 @@ class SpecificPriceCore extends ObjectModel
      * @param int $id_customer
      * @param int $id_cart
      * @param int $real_quantity
-     *
+     * @param bool $cache_all_variants set to false if you only want to cache a single combination with provided $id_product_attribute
+     * 
      * @return array
      */
     public static function getSpecificPrice(
@@ -496,7 +497,8 @@ class SpecificPriceCore extends ObjectModel
         $id_product_attribute = null,
         $id_customer = 0,
         $id_cart = 0,
-        $real_quantity = 0
+        $real_quantity = 0,
+		$cache_all_variants = false
     ) {
         if (!SpecificPrice::isFeatureActive()) {
             return [];
@@ -555,14 +557,90 @@ class SpecificPriceCore extends ObjectModel
                 `id_shop` ' . self::formatIntInQuery(0, $id_shop) . ' AND
                 `id_currency` ' . self::formatIntInQuery(0, $id_currency) . ' AND
                 `id_country` ' . self::formatIntInQuery(0, $id_country) . ' AND
-                `id_group` ' . self::formatIntInQuery(0, $id_group) . ' ' . $query_extra . '
-				AND IF(`from_quantity` > 1, `from_quantity`, 0) <= ';
+                `id_group` ' . self::formatIntInQuery(0, $id_group) . ' ';
+            // additional conditions for query
+            $conditions = 'AND IF(`from_quantity` > 1, `from_quantity`, 0) <= ';
+            $conditions .= (static::$psQtyDiscountOnCombination || !$id_cart || !$real_quantity) ? (int) $quantity : max(1, (int) $real_quantity);
+            $conditions .= ' ORDER BY `id_product_attribute` DESC, `id_cart` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
 
-            $query .= (static::$psQtyDiscountOnCombination || !$id_cart || !$real_quantity) ? (int) $quantity : max(1, (int) $real_quantity);
-            $query .= ' ORDER BY `id_product_attribute` DESC, `id_cart` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
-            self::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+            $queryAll = $query;
+            // keep the old query as a fallback
+            $query .= $query_extra;
+            $query .= $conditions;
+            if ($id_product_attribute && $cache_all_variants) {
+                // we want to get specific prices for all product variants
+                $query_extraAll = self::computeExtraConditions($id_product, null, $id_customer, $id_cart);
+                $queryAll .= $query_extraAll;
+                $queryAll .= $conditions;
+                // cache all product variants to limit calls for the same product
+                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($queryAll);
+
+                foreach (array_column(Product::getProductAttributesIds($id_product, true), 'id_product_attribute') as $variantId) {
+                    switch (true) {
+                        // product variant matching specific price
+                        case in_array($variantId, array_column($result, 'id_product_attribute')):
+                            $k = array_search($variantId, array_column($result, 'id_product_attribute'));
+                            $key = self::computeKey(
+                                $id_product,
+                                $id_shop,
+                                $id_currency,
+                                $id_country,
+                                $id_group,
+                                $quantity,
+                                (int) $variantId,
+                                $id_customer,
+                                $id_cart,
+                                $real_quantity
+                            );
+                            if (!array_key_exists($key, self::$_specificPriceCache)) {
+                                self::$_specificPriceCache[$key] = $result[$k];
+                            }
+                            break;
+                            // specific price rules case where rule applies to all variants
+                        case in_array(0, array_column($result, 'id_product_attribute')):
+                            $k = array_search(0, array_column($result, 'id_product_attribute'));
+                            $key = self::computeKey(
+                                $id_product,
+                                $id_shop,
+                                $id_currency,
+                                $id_country,
+                                $id_group,
+                                $quantity,
+                                (int) $variantId,
+                                $id_customer,
+                                $id_cart,
+                                $real_quantity
+                            );
+                            if (!array_key_exists($key, self::$_specificPriceCache)) {
+                                self::$_specificPriceCache[$key] = $result[$k];
+                            }
+                            break;
+                            // if product variant doesnt have any matching specific price we have to return false
+                        default:
+                            $key = self::computeKey(
+                                $id_product,
+                                $id_shop,
+                                $id_currency,
+                                $id_country,
+                                $id_group,
+                                $quantity,
+                                (int) $variantId,
+                                $id_customer,
+                                $id_cart,
+                                $real_quantity
+                            );
+                            if (!array_key_exists($key, self::$_specificPriceCache)) {
+                                self::$_specificPriceCache[$key] = false;
+                            }
+                    }
+                }
+            }
+            if (!array_key_exists($key, self::$_specificPriceCache)) {
+                // keep the old query as a fallback
+                self::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+            }
         }
-
+ 
         return self::$_specificPriceCache[$key];
     }
 

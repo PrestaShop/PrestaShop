@@ -3635,7 +3635,8 @@ class ProductCore extends ObjectModel
             $id_product_attribute,
             $id_customer,
             $id_cart,
-            $real_quantity
+            $real_quantity,
+            true
         );
 
         if (isset(self::$_prices[$cache_id])) {
