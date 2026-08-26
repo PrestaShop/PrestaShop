@@ -1209,15 +1209,15 @@ class LinkCore
      * Build an image link for a Link entity (Supplier, Manufacturer, Store, Category),
      * firing the two hook stages consistently:
      *
-     *  - overrideXImageLink : chainable short-circuit; first non-empty return wins and
+     *  - overrideXImageLink: chainable short-circuit; first non-empty return wins and
      *    is used as the final URL (nothing else is called). Modules can hijack the URL
      *    entirely — useful for CDN routing, image proxies, dedicated hosts.
-     *  - adaptXImageLink    : called after the default URL is computed; modules can
+     *  - adaptXImageLink: called after the default URL is computed; modules can
      *    mutate the URL by reference (e.g. append a signed query string, swap the
      *    scheme). Non-blocking, all listeners fire.
      *
-     * @param string   $entity     'Supplier'|'Manufacturer'|'Store'|'Category' — completes the hook name
-     * @param array    $params     Hook payload (ids, name, type, extension, …)
+     * @param string $entity Supplier'|'Manufacturer'|'Store'|'Category' — completes the hook name
+     * @param array $params Hook payload (ids, name, type, extension, …)
      * @param callable $urlBuilder Called when no override was returned; must return the URI path
      *                             to feed into getMediaLink() (i.e. the internal path before
      *                             media server + protocol rewriting).
