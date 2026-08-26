@@ -1179,6 +1179,7 @@ class ToolsTest extends TestCase
     public function testEveryAllowedSchemeHasADefaultPort(): void
     {
         foreach (Tools::UNTRUSTED_URL_ALLOWED_SCHEMES as $scheme => $port) {
+            // @phpstan-ignore method.alreadyNarrowedType
             $this->assertIsInt($port, "scheme $scheme must map to an int port");
             $this->assertGreaterThan(0, $port, "scheme $scheme must map to a valid port");
         }

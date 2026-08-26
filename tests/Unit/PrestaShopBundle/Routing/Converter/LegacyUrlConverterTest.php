@@ -167,7 +167,7 @@ class LegacyUrlConverterTest extends TestCase
             } catch (RouteNotFoundException $e) {
                 $caughtException = $e;
             }
-            $this->assertNotNull($caughtException);
+            $this->assertNotNull($caughtException, 'Expected RouteNotFoundException for parameters: ' . json_encode($parameters));
         }
 
         $urls = [
@@ -183,7 +183,7 @@ class LegacyUrlConverterTest extends TestCase
             } catch (RouteNotFoundException $e) {
                 $caughtException = $e;
             }
-            $this->assertNotNull($caughtException);
+            $this->assertNotNull($caughtException, 'Expected RouteNotFoundException for URL: ' . $url);
         }
     }
 
