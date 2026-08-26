@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +28,7 @@ class ShopContextListener
         private readonly ShopContextBuilder $shopContextBuilder,
         private readonly MultistoreFeature $multistoreFeature,
         private readonly ShopConfigurationInterface $configuration,
+        private readonly ShopListResolverInterface $shopListResolver,
     ) {
     }
 
@@ -52,13 +54,14 @@ class ShopContextListener
             }
 
             $this->shopContextBuilder->setShopConstraint($shopConstraint);
-            if ($shopConstraint->getShopId()) {
-                $this->shopContextBuilder->setShopId($shopConstraint->getShopId()->getValue());
-            } elseif ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
-                $this->shopContextBuilder->setShopId($shopConstraint->getShopIds()[0]->getValue());
-            } else {
-                $this->shopContextBuilder->setShopId($this->getConfiguredDefaultShopId());
-            }
+            // The context single shop id must belong to the constraint's scope: the default
+            // shop is only used when it is part of that scope (a shop group may not contain
+            // it), otherwise the scope's lowest shop id is used. Every ShopContext::getId()
+            // consumer (grids, forms, extra properties…) then reads an in-scope shop.
+            $representativeShopId = $this->shopListResolver->resolveRepresentativeShopId($shopConstraint);
+            $this->shopContextBuilder->setShopId(
+                $representativeShopId > 0 ? $representativeShopId : $this->getConfiguredDefaultShopId()
+            );
         }
 
         // Set shop constraint easily accessible via request attribute
