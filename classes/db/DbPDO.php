@@ -157,13 +157,13 @@ class DbPDOCore extends Db
     }
 
     /**
-     * Applies the session settings legacy code relies on (permissive sql_mode, configured timezone).
+     * Applies the session settings legacy code relies on (sql_mode, configured timezone).
      * Must run both after a fresh connect() and after setPDO(), since an externally-provided PDO
      * (e.g. Doctrine's) was not opened through connect() and never got these applied otherwise.
      */
     private function applySessionSettings(): void
     {
-        $this->link->exec('SET SESSION sql_mode = \'\'');
+        $this->setSqlMode();
         $this->setTimeZone();
     }
 

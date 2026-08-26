@@ -40,15 +40,37 @@ class DbDoctrineTest extends TestCase
         return $connection;
     }
 
-    public function testConnectSharesTheNativePdoConnection(): void
+    /**
+     * Records every statement the given link is asked to run.
+     *
+     * @param MockObject|PDO $pdo
+     *
+     * @return string[] filled in as statements are executed
+     */
+    private function &recordStatements($pdo): array
+    {
+        $statements = [];
+        $pdo->method('query')->willReturnCallback(function (string $sql) use (&$statements) {
+            $statements[] = $sql;
+
+            return false;
+        });
+
+        return $statements;
+    }
+
+    public function testConnectSharesTheNativePdoConnectionAndAlignsItsSessionSettings(): void
     {
         $pdo = $this->getMockPDO();
-        $pdo->expects($this->once())->method('exec')->with('SET SESSION sql_mode = \'\'');
-        $pdo->expects($this->once())->method('query');
+        $statements = &$this->recordStatements($pdo);
 
         $db = new DbDoctrineCore($this->getConnectionMock($pdo));
 
         $this->assertSame($pdo, $db->connect());
+        // The shared connection was not opened by connect(), so it only gets the sql_mode and time
+        // zone the legacy layer expects if they are applied explicitly here.
+        $this->assertContains("SET SESSION sql_mode = ''", $statements);
+        $this->assertNotEmpty(preg_grep("/^SET SESSION time_zone = '[+-]\d{2}:\d{2}'$/", $statements));
     }
 
     public function testConnectThrowsWhenNativeConnectionIsNotPdo(): void
@@ -64,13 +86,15 @@ class DbDoctrineTest extends TestCase
     public function testConnectingTwiceWithTheSameLinkDoesNotReapplySessionSettings(): void
     {
         $pdo = $this->getMockPDO();
-        // Session settings (exec + query) must only run once, on the first connect().
-        $pdo->expects($this->once())->method('exec');
-        $pdo->expects($this->once())->method('query');
+        $statements = &$this->recordStatements($pdo);
 
         $db = new DbDoctrineCore($this->getConnectionMock($pdo));
         $db->connect();
+        $countAfterFirstConnect = count($statements);
         $db->connect();
+
+        $this->assertGreaterThan(0, $countAfterFirstConnect);
+        $this->assertCount($countAfterFirstConnect, $statements);
     }
 
     public function testIsSharingDistinguishesTheInjectedConnectionFromAnotherOne(): void

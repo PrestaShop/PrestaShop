@@ -894,6 +894,25 @@ abstract class DbCore
      * purpose: it needs no MySQL time zone tables and is recomputed on each
      * call, so DST is always correct at connection time.
      */
+    /**
+     * Aligns the MySQL session sql_mode with _PS_MYSQL_SESSION_SQL_MODE_.
+     *
+     * The Doctrine DBAL connection applies the very same value on connect (see
+     * app/config/doctrine.yml), so that legacy and Doctrine writes to the same
+     * tables are validated by the same rules - all the more so since they can
+     * share a single physical connection.
+     */
+    public function setSqlMode(): void
+    {
+        $sqlMode = defined('_PS_MYSQL_SESSION_SQL_MODE_') ? _PS_MYSQL_SESSION_SQL_MODE_ : '';
+        // Defensive: a sql_mode is a comma-separated list of flags, nothing else.
+        if (!preg_match('/^[A-Za-z_,]*$/', $sqlMode)) {
+            return;
+        }
+
+        $this->_query("SET SESSION sql_mode = '" . $sqlMode . "'");
+    }
+
     public function setTimeZone(): void
     {
         $offset = (new DateTime())->format('P');

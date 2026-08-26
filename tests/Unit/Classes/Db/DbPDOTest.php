@@ -68,14 +68,20 @@ class DbPDOTest extends TestCase
         $db->setPDO($this->getMockPDO());
         $db->disconnect();
 
+        $statements = [];
         $newLink = $this->getMockPDO();
-        // Re-applied on the new link, since disconnect() dropped the previous one.
-        $newLink->expects($this->once())->method('exec')->with('SET SESSION sql_mode = \'\'');
+        $newLink->method('query')->willReturnCallback(function (string $sql) use (&$statements) {
+            $statements[] = $sql;
+
+            return false;
+        });
 
         $this->failOnPhpWarnings(static function () use ($db, $newLink) {
             $db->setPDO($newLink);
         });
 
+        // Session settings are re-applied on the new link, since disconnect() dropped the previous one.
+        $this->assertContains("SET SESSION sql_mode = ''", $statements);
         $this->assertFalse($db->hasUncommittedTransaction());
     }
 }

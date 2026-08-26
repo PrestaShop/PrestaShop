@@ -67,15 +67,22 @@ class ConnectionSwitcherTest extends TestCase
     {
         Db::setInstanceForTesting(new DbPDOCore('', '', '', '', false));
 
+        $statements = [];
         $pdo = $this->getMockPDO();
-        $pdo->expects($this->once())->method('exec');
-        $pdo->expects($this->once())->method('query');
+        $pdo->method('query')->willReturnCallback(function (string $sql) use (&$statements) {
+            $statements[] = $sql;
+
+            return false;
+        });
 
         $connectionSwitcher = new ConnectionSwitcher($this->getConnectionMock($pdo));
         $first = $connectionSwitcher->switchConnection();
+        $countAfterFirstCall = count($statements);
         $second = $connectionSwitcher->switchConnection();
 
         $this->assertSame($first, $second);
+        $this->assertGreaterThan(0, $countAfterFirstCall);
+        $this->assertCount($countAfterFirstCall, $statements);
     }
 
     public function testSwitchConnectionReturnsTheLegacyInstanceUntouchedWhenItIsNotPdoBased(): void
