@@ -238,7 +238,14 @@ class CatalogPriceRuleController extends PrestaShopAdminController
         if ($result->isSubmitted() && $result->isValid()) {
             $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_catalog_price_rules_index');
+            $productId = $request->query->getInt('id_product');
+            if ($productId > 0) {
+                return $this->redirectToRoute('admin_products_edit', [
+                    'productId' => $productId,
+                ]);
+            } else {
+                return $this->redirectToRoute('admin_catalog_price_rules_index');
+            }
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/CatalogPriceRule/edit.html.twig', [

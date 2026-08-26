@@ -89,6 +89,7 @@ class EditProductFormType extends TranslatorAwareType
             ->add('shipping', ShippingType::class)
             ->add('pricing', PricingType::class, [
                 'tax_rules_group_id' => $options['tax_rules_group_id'],
+                'product_id' => $options['product_id'],
             ])
             ->add('seo', SEOType::class, [
                 'product_id' => $productId,
