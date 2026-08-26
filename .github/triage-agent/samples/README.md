@@ -23,6 +23,9 @@ exercised the rubric enough to find two real problems — see the spike report o
 the issue. It is **not** a measurement of how well the model classifies. That
 needs `classify.py` and `calibrate.py eval` against a real key.
 
+This file was rendered before `looks_like_regression` was added to the schema,
+so it carries no regression markers. The layout is otherwise current.
+
 Regenerate with:
 
 ```bash

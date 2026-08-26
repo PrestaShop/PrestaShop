@@ -13,6 +13,7 @@
         "component",
         "suggested_status",
         "security_suspicion",
+        "looks_like_regression",
         "duplicate_candidates",
         "needs_human_now"
       ],
@@ -96,6 +97,10 @@
         "security_suspicion": {
           "type": "boolean",
           "description": "True whenever a security reading is plausible, even if severity is lower."
+        },
+        "looks_like_regression": {
+          "type": "boolean",
+          "description": "True when the report says the behaviour worked in an earlier version and broke in a later one."
         },
         "duplicate_candidates": {
           "type": "array",

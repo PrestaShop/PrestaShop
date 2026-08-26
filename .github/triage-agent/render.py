@@ -113,6 +113,13 @@ def needs_attention(data: dict) -> list[dict]:
         is_bug = verdict.get("kind", "bug_report") == "bug_report"
         if is_bug and verdict.get("severity") == "Critical":
             reasons.append("proposed Critical")
+        # A regression outranks an older bug of the same severity when the
+        # Dev/PM/QA meeting sets priority, so it is worth the sheriff's week
+        # even at Major.
+        if is_bug and verdict.get("looks_like_regression") and verdict.get(
+            "severity"
+        ) in ("Critical", "Major"):
+            reasons.append("looks like a regression")
         if reasons:
             flagged.append({"item": issue, "reasons": reasons})
 
@@ -189,8 +196,14 @@ def render_markdown(data: dict) -> str:
         out += ["| Issue | Confidence | Next step | Why |", "|---|---|---|---|"]
         for issue in bucket:
             verdict = issue["verdict"]
+            flags = []
+            if verdict.get("looks_like_regression"):
+                flags.append("regression")
+            if verdict.get("security_suspicion"):
+                flags.append("security?")
+            marker = f" `{'` `'.join(flags)}`" if flags else ""
             out.append(
-                f"| [#{issue['number']}]({issue['url']}) {issue['title']} "
+                f"| [#{issue['number']}]({issue['url']}) {issue['title']}{marker} "
                 f"| {verdict['confidence']} "
                 f"| {verdict['suggested_status']} "
                 f"| {one_sentence(verdict['rationale'])} |"
@@ -439,6 +452,7 @@ def board_payload(data: dict) -> dict:
                 "ai_confidence": item["verdict"]["confidence"],
                 "ai_rationale": one_sentence(item["verdict"]["rationale"]),
                 "ai_suggested_status": item["verdict"].get("suggested_status"),
+                "ai_looks_like_regression": item["verdict"].get("looks_like_regression"),
             }
             for item in data["issues"] + data["pull_requests"]
         ],

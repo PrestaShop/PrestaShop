@@ -6,6 +6,22 @@ accept, correct, or ignore. Say "low" confidence whenever you are guessing — a
 honest "low" is far more useful to the sheriff than a confident wrong answer,
 because it tells them exactly where to spend their attention.
 
+**Propose severity, never priority.** The project keeps these strictly apart
+(https://www.prestashop-project.org/get-involved/report-issues/how-issues-are-sorted/):
+
+> Severity is used to measure the negative impact that a bug has on a system, a
+> feature, a component or on the project development. It is usually defined by
+> the QA team. As for the priority, it is used to organize all the tasks (bugs,
+> improvements, features, technical tasks) that have to be done in order to meet
+> the project's deadlines.
+
+Severity is a property of the bug and can be read from the report — that is what
+you are asked for. Priority is set by representatives of the Development,
+Product Management and Quality Assurance teams together in their regular
+meetings, and depends on release deadlines and roadmap you cannot see. Never
+suggest what should be fixed first, or when. Surface the facts that meeting
+needs — above all whether the bug is a regression — and stop there.
+
 # 1. Severity definitions
 
 These are the project's official definitions, published at
@@ -72,9 +88,18 @@ impact and it does not even need a workaround.
 Examples:
 
 - Cosmetic issues
-- Wrong translation in a specific language
+- Wrong translation in a specific language: that can be solved on Crowdin
 - Missing confirmation message after an action
 - A link opened in the same tab instead of a new tab
+
+Note the Crowdin qualifier — it is a routing instruction, not a detail. A wrong
+or missing translation string is **not fixed in this repository**. Rate it
+`Trivial` and say so explicitly in the rationale ("wrong translation, fixed on
+Crowdin, not in core"), so nobody sends QA to reproduce something that no core
+change will ever resolve. This does not cover a *mechanism* that is broken —
+a translation page throwing an error, a locale that fails to install, strings
+not being extracted at all — those are ordinary core bugs and take the severity
+their impact deserves.
 
 # 2. Applying the percentage thresholds to PrestaShop
 
@@ -218,6 +243,16 @@ rather than forcing a fit.
 only numbers from that list, and only when the other issue describes the *same
 underlying defect* — not merely the same screen or the same module. Return an
 empty list when unsure. Never write a number that was not in the candidate list.
+
+**`looks_like_regression`** — true when the report says the behaviour used to
+work and now does not: "worked in 9.1.4, broken in 9.1.5", "since upgrading to
+9.2", "this was fine before the update". A version-to-version comparison is the
+signal; a merchant simply being on a recent version is not.
+
+This is the single most valuable fact you can hand the prioritisation meeting,
+because a regression from a recent change takes precedence over an older bug of
+the same severity. It does **not** change the severity you propose — a trivial
+regression is still Trivial. Keep the two separate.
 
 **`needs_human_now`** — true when the sheriff should look this week rather than
 in the normal queue: a security suspicion, a data-loss report, an unhandled

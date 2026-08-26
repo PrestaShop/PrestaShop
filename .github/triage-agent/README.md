@@ -48,6 +48,15 @@ Two rubrics, in `prompts/`:
   "percentage of users" thresholds, the clauses that override them (security,
   data loss, broken E2E, law compliance, money), and how to judge a workaround.
   This file is the substance of the spike.
+
+  It also encodes the boundary the QA team draws in [how issues are
+  sorted](https://www.prestashop-project.org/get-involved/report-issues/how-issues-are-sorted/):
+  **severity is proposed, priority never is.** Severity is a property of the bug
+  and readable from the report; priority is set by Development, Product
+  Management and QA together against deadlines the agent cannot see. What the
+  agent can usefully hand that meeting is whether the bug is a *regression*,
+  which is why `looks_like_regression` is a field of its own and is kept
+  independent of severity — a trivial regression is still Trivial.
 - [`pr_triage_system.md`](prompts/pr_triage_system.md) — severity does not apply
   to a PR, so this one ranks *sheriff attention needed* and, above all, who the
   PR is actually waiting on.
