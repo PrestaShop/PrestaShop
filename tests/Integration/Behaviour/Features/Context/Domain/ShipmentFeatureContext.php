@@ -153,29 +153,16 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertShipmentForEditing(string $shipmentReference, string $orderReference, TableNode $table): void
     {
-        $orderId = $this->referenceToId($orderReference);
-        $shipmentId = SharedStorage::getStorage()->get($shipmentReference);
-
         /** @var ShipmentForEditing $shipment */
         $shipment = $this->getQueryBus()->handle(
-            new GetShipmentForEditing($orderId, $shipmentId)
+            new GetShipmentForEditing($this->referenceToId($orderReference), $this->referenceToId($shipmentReference))
         );
 
         $selectedQuantities = $shipment->getProductsIds();
 
-        $productNames = [];
-        foreach ((new Order($orderId))->getOrderDetailList() as $orderDetail) {
-            $productNames[(int) $orderDetail['product_id']] = $orderDetail['product_name'];
-        }
-
         $expectedQuantities = [];
         foreach ($table->getColumnsHash() as $row) {
-            $productId = array_search($row['product_name'], $productNames, true);
-            Assert::assertNotFalse(
-                $productId,
-                sprintf('Product "%s" was not found in order "%s"', $row['product_name'], $orderReference)
-            );
-            $expectedQuantities[$productId] = (int) $row['quantity'];
+            $expectedQuantities[$this->referenceToId($row['product'])] = (int) $row['quantity'];
         }
 
         ksort($expectedQuantities);
@@ -193,10 +180,10 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
      */
     public function switchShipmentCarrierToUnknownCarrier(string $shipmentReference): void
     {
-        $shipmentId = SharedStorage::getStorage()->get($shipmentReference);
-
         try {
-            $this->getCommandBus()->handle(new SwitchShipmentCarrierCommand($shipmentId, 999999));
+            $this->getCommandBus()->handle(
+                new SwitchShipmentCarrierCommand($this->referenceToId($shipmentReference), 999999)
+            );
         } catch (Exception $e) {
             $this->setLastException($e);
         }
@@ -207,10 +194,10 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
      */
     public function editShipmentWithUnknownCarrier(string $shipmentReference): void
     {
-        $shipmentId = SharedStorage::getStorage()->get($shipmentReference);
-
         try {
-            $this->getCommandBus()->handle(new EditShipment($shipmentId, 999999));
+            $this->getCommandBus()->handle(
+                new EditShipment($this->referenceToId($shipmentReference), 999999)
+            );
         } catch (Exception $e) {
             $this->setLastException($e);
         }
@@ -225,38 +212,19 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then the available shipments of order :orderReference for the ordered product :productName should contain the shipment :shipmentReference
+     * @Then the available shipments of order :orderReference for product :productReference should contain the shipment :shipmentReference
      */
-    public function assertAvailableShipmentsForOrderedProduct(
+    public function assertAvailableShipmentsForProduct(
         string $orderReference,
-        string $productName,
+        string $productReference,
         string $shipmentReference
     ): void {
-        $orderId = $this->referenceToId($orderReference);
-
-        $productId = 0;
-        foreach ((new Order($orderId))->getOrderDetailList() as $orderDetail) {
-            if ($orderDetail['product_name'] === $productName) {
-                $productId = (int) $orderDetail['product_id'];
-                break;
-            }
-        }
-
-        Assert::assertNotSame(
-            0,
-            $productId,
-            sprintf('Product "%s" was not found in order "%s"', $productName, $orderReference)
-        );
-
-        /** @var ShipmentsForProduct[] $shipments */
-        $shipments = $this->getQueryBus()->handle(
-            new ListAvailableShipmentsForProduct($orderId, $productId)
-        );
+        $shipments = $this->getAvailableShipmentsForProduct($orderReference, $productReference);
 
         Assert::assertContains(
-            SharedStorage::getStorage()->get($shipmentReference),
+            $this->referenceToId($shipmentReference),
             array_map(static fn (ShipmentsForProduct $shipment) => $shipment->getId(), $shipments),
-            sprintf('Shipment "%s" was not listed as available for product "%s"', $shipmentReference, $productName)
+            sprintf('Shipment "%s" was not listed as available for product "%s"', $shipmentReference, $productReference)
         );
     }
 
@@ -266,13 +234,21 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
     public function listAvailableShipmentsForProduct(string $orderReference, string $productReference): void
     {
         try {
-            $this->getQueryBus()->handle(new ListAvailableShipmentsForProduct(
-                $this->referenceToId($orderReference),
-                $this->referenceToId($productReference)
-            ));
+            $this->getAvailableShipmentsForProduct($orderReference, $productReference);
         } catch (Exception $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @return ShipmentsForProduct[]
+     */
+    private function getAvailableShipmentsForProduct(string $orderReference, string $productReference): array
+    {
+        return $this->getQueryBus()->handle(new ListAvailableShipmentsForProduct(
+            $this->referenceToId($orderReference),
+            $this->referenceToId($productReference)
+        ));
     }
 
     /**
