@@ -22,12 +22,10 @@ use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\SwitchShipmentCarrierComm
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\InvalidShipmentTrackingNumberException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetOrderShipments;
-use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentProducts;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentsForOrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\ListAvailableShipments;
-use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForOrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForViewing;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
@@ -137,50 +135,6 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
             Assert::assertEquals($shipmentProducts[$i]->getQuantity(), (int) $data[$i]['quantity']);
             Assert::assertEquals($shipmentProducts[$i]->getProductName(), $data[$i]['product_name']);
         }
-    }
-
-    /**
-     * @Then the shipment :shipmentReference of order :orderReference should be editable with the following products:
-     *
-     * @param string $shipmentReference
-     * @param string $orderReference
-     * @param TableNode $table
-     */
-    public function assertShipmentForEditing(string $shipmentReference, string $orderReference, TableNode $table): void
-    {
-        $orderId = $this->referenceToId($orderReference);
-        $shipmentId = SharedStorage::getStorage()->get($shipmentReference);
-
-        /** @var ShipmentForEditing $shipment */
-        $shipment = $this->getQueryBus()->handle(
-            new GetShipmentForEditing($orderId, $shipmentId)
-        );
-
-        $selectedQuantities = $shipment->getProductsIds();
-
-        $productNames = [];
-        foreach ((new Order($orderId))->getOrderDetailList() as $orderDetail) {
-            $productNames[(int) $orderDetail['product_id']] = $orderDetail['product_name'];
-        }
-
-        $expectedQuantities = [];
-        foreach ($table->getColumnsHash() as $row) {
-            $productId = array_search($row['product_name'], $productNames, true);
-            Assert::assertNotFalse(
-                $productId,
-                sprintf('Product "%s" was not found in order "%s"', $row['product_name'], $orderReference)
-            );
-            $expectedQuantities[$productId] = (int) $row['quantity'];
-        }
-
-        ksort($expectedQuantities);
-        ksort($selectedQuantities);
-
-        Assert::assertSame(
-            $expectedQuantities,
-            $selectedQuantities,
-            sprintf('Wrong selected products reported by the edit view of shipment "%s"', $shipmentReference)
-        );
     }
 
     /**

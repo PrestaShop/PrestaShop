@@ -45,7 +45,7 @@ class GetShipmentForEditingHandler implements GetShipmentForEditingHandlerInterf
             foreach ($shipmentProducts as $shipmentProduct) {
                 $shipmentDetails['selectedProducts'][
                     (new OrderDetail($shipmentProduct->getOrderDetailId()))->product_id
-                ] = $shipmentProduct->getQuantity();
+                ] = 0;
             }
         } catch (Throwable $e) {
             throw new ShipmentNotFoundException(
@@ -62,7 +62,7 @@ class GetShipmentForEditingHandler implements GetShipmentForEditingHandlerInterf
         return new ShipmentForEditing(
             $shipmentDetails['carrier'],
             $shipmentDetails['tracking_number'] ?? '',
-            $shipmentDetails['selectedProducts'] ?? []
+            $shipmentDetails['selectedProducts']
         );
     }
 }
