@@ -46,6 +46,22 @@ class ImportMessageTest extends TestCase
         }
     }
 
+    /**
+     * The coalesce key concatenates free-form strings, so its glue must not be
+     * a character that can occur inside them: with a printable glue like "-",
+     * these two DIFFERENT messages would share the key "…-a-b-c" and wrongly
+     * merge into one report line.
+     */
+    public function testKeyGlueCannotCollideWithFreeFormText(): void
+    {
+        $coalesced = ImportMessage::coalesce([
+            $this->warning('c', [1], 'a-b'),
+            $this->warning('b-c', [2], 'a'),
+        ]);
+
+        $this->assertCount(2, $coalesced);
+    }
+
     public function testFirstOccurrenceOrderIsPreservedAndRowsAreDeduplicated(): void
     {
         $coalesced = ImportMessage::coalesce([

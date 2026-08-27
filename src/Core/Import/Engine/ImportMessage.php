@@ -46,14 +46,21 @@ class ImportMessage
      */
     public function coalesceKey(): string
     {
+        // The glue is the ASCII unit separator because the key concatenates
+        // free-form strings (translated message text, open field/phase ids):
+        // any printable glue could occur inside them and make two DIFFERENT
+        // messages collide on one key, silently fusing distinct report lines.
         return implode("\x1f", [$this->severity, $this->phase, $this->field ?? '', $this->message]);
     }
 
     /**
      * Merges messages sharing a coalesceKey() into one message whose rows are
      * the deduplicated, ascending union of the merged rows. Order of first
-     * occurrence is preserved. Caps are not this method's concern (the
-     * persistence layer owns them).
+     * occurrence is preserved; a message whose key never collides is returned
+     * as-is. Rows are accumulated per key first and the merged instances are
+     * built in a second pass, so no intermediate instance is created per
+     * matching row. Caps are not this method's concern (the persistence layer
+     * owns them).
      *
      * @param list<ImportMessage> $messages
      *
@@ -61,21 +68,30 @@ class ImportMessage
      */
     public static function coalesce(array $messages): array
     {
-        /** @var array<string, ImportMessage> $coalesced */
-        $coalesced = [];
+        /** @var array<string, ImportMessage> $firstByKey */
+        $firstByKey = [];
+        /** @var array<string, list<int>> $rowsByKey rows of the keys that collided, first message's rows included */
+        $rowsByKey = [];
         foreach ($messages as $message) {
             $key = $message->coalesceKey();
-            if (!isset($coalesced[$key])) {
-                $coalesced[$key] = $message;
+            if (!isset($firstByKey[$key])) {
+                $firstByKey[$key] = $message;
                 continue;
             }
-
-            $known = $coalesced[$key];
-            $rows = array_unique(array_merge($known->rows, $message->rows));
-            sort($rows);
-            $coalesced[$key] = new self($known->severity, $known->phase, $known->message, $rows, $known->field);
+            $rowsByKey[$key] = array_merge($rowsByKey[$key] ?? $firstByKey[$key]->rows, $message->rows);
         }
 
-        return array_values($coalesced);
+        $coalesced = [];
+        foreach ($firstByKey as $key => $first) {
+            if (!isset($rowsByKey[$key])) {
+                $coalesced[] = $first;
+                continue;
+            }
+            $rows = array_unique($rowsByKey[$key]);
+            sort($rows);
+            $coalesced[] = new self($first->severity, $first->phase, $first->message, $rows, $first->field);
+        }
+
+        return $coalesced;
     }
 }
