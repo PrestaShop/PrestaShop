@@ -55,6 +55,29 @@ class RenderedHookTest extends TestCase
     }
 
     /**
+     * A legacy module may return an array instead of a string from a rendering hook.
+     * Such a value reaches RenderedHook as a (possibly nested) array and must be
+     * concatenated to a string without triggering an "Array to string conversion" warning.
+     *
+     * @see https://github.com/PrestaShop/PrestaShop/issues/41609
+     */
+    public function testOutputContentFlattensArrayContent()
+    {
+        $renderedHook = new RenderedHook($this->hookStub, [
+            'module_1' => '<h1>Hello World</h1>',
+            'module_2' => ['<p>How are you?</p>'], // single-element array (subscriber wrap)
+            'module_3' => ['<span>a</span>', '<span>b</span>'], // multi-element array
+            'module_4' => [], // empty array
+        ]);
+
+        $this->assertIsString($renderedHook->outputContent());
+        $this->assertSame(
+            '<h1>Hello World</h1><p>How are you?</p><span>a</span><span>b</span>',
+            $renderedHook->outputContent()
+        );
+    }
+
+    /**
      * This will return the expected content for the rendered Hook.
      *
      * @return array
