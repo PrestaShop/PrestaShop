@@ -242,7 +242,7 @@ class ProductImporter extends AbstractEntityImporter
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_VALIDATION,
                     $this->translator->trans('Importing accessories requires an id column (with the force IDs option) or a reference column to identify the owning product; the accessories will be dropped.', [], 'Admin.Advparameters.Notification'),
-                    null,
+                    [],
                     'accessories'
                 );
             }
@@ -255,7 +255,7 @@ class ProductImporter extends AbstractEntityImporter
                         ImportMessage::SEVERITY_NOTICE,
                         ImportPhaseDefinition::PHASE_VALIDATION,
                         $this->translator->trans('The row is empty and was skipped.', [], 'Admin.Advparameters.Notification'),
-                        $rowIndex
+                        [$rowIndex]
                     )],
                     'skipped' => true,
                 ];
@@ -496,11 +496,11 @@ class ProductImporter extends AbstractEntityImporter
 
     protected function accessoryError(int $rowIndex, string $message, string $phaseId = ImportPhaseDefinition::PHASE_ASSOCIATION): ImportMessage
     {
-        return new ImportMessage(ImportMessage::SEVERITY_ERROR, $phaseId, $message, $rowIndex, 'accessories');
+        return new ImportMessage(ImportMessage::SEVERITY_ERROR, $phaseId, $message, [$rowIndex], 'accessories');
     }
 
     protected function accessoryWarning(int $rowIndex, string $message, string $phaseId = ImportPhaseDefinition::PHASE_ASSOCIATION): ImportMessage
     {
-        return new ImportMessage(ImportMessage::SEVERITY_WARNING, $phaseId, $message, $rowIndex, 'accessories');
+        return new ImportMessage(ImportMessage::SEVERITY_WARNING, $phaseId, $message, [$rowIndex], 'accessories');
     }
 }

@@ -185,7 +185,7 @@ class ProductRowImporter
                 ImportMessage::SEVERITY_ERROR,
                 ImportPhaseDefinition::PHASE_DATABASE,
                 $this->buildRowFailureMessage($e),
-                $rowIndex
+                [$rowIndex]
             );
         }
 
@@ -286,7 +286,7 @@ class ProductRowImporter
                 ImportMessage::SEVERITY_WARNING,
                 ImportPhaseDefinition::PHASE_DATABASE,
                 $this->translator->trans('Brand with id %id% does not exist; the field will be ignored.', ['%id%' => $manufacturer], 'Admin.Advparameters.Notification'),
-                $rowIndex,
+                [$rowIndex],
                 'manufacturer'
             );
 
@@ -299,7 +299,7 @@ class ProductRowImporter
                 ImportMessage::SEVERITY_WARNING,
                 ImportPhaseDefinition::PHASE_DATABASE,
                 $this->translator->trans('Brand "%name%" matches %count% brands; the first one (id %id%) was used.', ['%name%' => $manufacturer, '%count%' => $resolved->matchCount, '%id%' => $resolved->id], 'Admin.Advparameters.Notification'),
-                $rowIndex,
+                [$rowIndex],
                 'manufacturer'
             );
         }
@@ -323,7 +323,7 @@ class ProductRowImporter
      */
     protected function autoCreationNotice(int $rowIndex, string $field, string $message): ImportMessage
     {
-        return new ImportMessage(ImportMessage::SEVERITY_NOTICE, ImportPhaseDefinition::PHASE_DATABASE, $message, $rowIndex, $field);
+        return new ImportMessage(ImportMessage::SEVERITY_NOTICE, ImportPhaseDefinition::PHASE_DATABASE, $message, [$rowIndex], $field);
     }
 
     /**
@@ -484,7 +484,7 @@ class ProductRowImporter
                         ImportMessage::SEVERITY_WARNING,
                         ImportPhaseDefinition::PHASE_DATABASE,
                         $this->translator->trans('The low stock alert follows the low stock level (enabled when the level is not 0); the low_stock_alert value was ignored.', [], 'Admin.Advparameters.Notification'),
-                        $rowIndex,
+                        [$rowIndex],
                         'low_stock_alert'
                     );
                 }
@@ -494,7 +494,7 @@ class ProductRowImporter
                 ImportMessage::SEVERITY_WARNING,
                 ImportPhaseDefinition::PHASE_DATABASE,
                 $this->translator->trans('low_stock_alert requires a valid low_stock_threshold value; the field was ignored.', [], 'Admin.Advparameters.Notification'),
-                $rowIndex,
+                [$rowIndex],
                 'low_stock_alert'
             );
         }
@@ -637,7 +637,7 @@ class ProductRowImporter
                         ImportMessage::SEVERITY_WARNING,
                         ImportPhaseDefinition::PHASE_DATABASE,
                         $this->translator->trans('Category with id %id% does not exist; the entry will be ignored.', ['%id%' => $entry], 'Admin.Advparameters.Notification'),
-                        $rowIndex,
+                        [$rowIndex],
                         'category'
                     );
                 }
@@ -660,7 +660,7 @@ class ProductRowImporter
                         ImportMessage::SEVERITY_WARNING,
                         ImportPhaseDefinition::PHASE_DATABASE,
                         $this->translator->trans('Category "%name%" matches %count% sibling categories; the first one (id %id%) was used.', ['%name%' => $categoryName, '%count%' => $resolvedCategory->matchCount, '%id%' => $resolvedCategory->id], 'Admin.Advparameters.Notification'),
-                        $rowIndex,
+                        [$rowIndex],
                         'category'
                     );
                 }
@@ -705,7 +705,7 @@ class ProductRowImporter
                 ImportMessage::SEVERITY_WARNING,
                 ImportPhaseDefinition::PHASE_DATABASE,
                 $this->translator->trans('Supplier "%name%" does not exist and suppliers are not auto-created by the import; the field will be ignored.', ['%name%' => $supplier], 'Admin.Advparameters.Notification'),
-                $rowIndex,
+                [$rowIndex],
                 'supplier'
             );
 
@@ -716,7 +716,7 @@ class ProductRowImporter
                 ImportMessage::SEVERITY_WARNING,
                 ImportPhaseDefinition::PHASE_DATABASE,
                 $this->translator->trans('Supplier "%name%" matches %count% suppliers; the first one (id %id%) was used.', ['%name%' => $supplier, '%count%' => $lookup->count(), '%id%' => $supplierId], 'Admin.Advparameters.Notification'),
-                $rowIndex,
+                [$rowIndex],
                 'supplier'
             );
         }
@@ -830,7 +830,7 @@ class ProductRowImporter
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_DATABASE,
                     $this->translator->trans('Invalid feature entry "%entry%" (expected Name:Value:Position[:Custom]); the entry will be ignored.', ['%entry%' => $entry], 'Admin.Advparameters.Notification'),
-                    $rowIndex,
+                    [$rowIndex],
                     'features'
                 );
                 continue;
@@ -842,7 +842,7 @@ class ProductRowImporter
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_DATABASE,
                     $this->translator->trans('Feature "%name%" matches %count% features; the first one (id %id%) was used.', ['%name%' => $featureName, '%count%' => $feature->matchCount, '%id%' => $feature->id], 'Admin.Advparameters.Notification'),
-                    $rowIndex,
+                    [$rowIndex],
                     'features'
                 );
             }
@@ -864,7 +864,7 @@ class ProductRowImporter
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_DATABASE,
                     $this->translator->trans('Feature value "%value%" matches %count% values of the same feature; the first one (id %id%) was used.', ['%value%' => $featureValue, '%count%' => $value->matchCount, '%id%' => $value->id], 'Admin.Advparameters.Notification'),
-                    $rowIndex,
+                    [$rowIndex],
                     'features'
                 );
             }
@@ -923,7 +923,7 @@ class ProductRowImporter
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_DATABASE,
                     $this->translator->trans('Image "%url%" could not be fetched and was skipped: %error%', ['%url%' => $imageUrl, '%error%' => $e->getMessage()], 'Admin.Advparameters.Notification'),
-                    $rowIndex,
+                    [$rowIndex],
                     'image'
                 );
                 continue;
@@ -970,7 +970,7 @@ class ProductRowImporter
                 ImportMessage::SEVERITY_WARNING,
                 ImportPhaseDefinition::PHASE_DATABASE,
                 $this->translator->trans('Virtual product file "%url%" could not be fetched and was skipped: %error%', ['%url%' => $fileUrl, '%error%' => $e->getMessage()], 'Admin.Advparameters.Notification'),
-                $rowIndex,
+                [$rowIndex],
                 'file_url'
             );
 
@@ -1051,7 +1051,7 @@ class ProductRowImporter
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_DATABASE,
                     $this->translator->trans('"customizable" requires a number of uploadable_files/text_fields; no customization field was created.', [], 'Admin.Advparameters.Notification'),
-                    $rowIndex,
+                    [$rowIndex],
                     'customizable'
                 );
             }
@@ -1193,7 +1193,7 @@ class ProductRowImporter
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_DATABASE,
                     $this->translator->trans('Shop "%name%" does not exist; the entry will be ignored.', ['%name%' => $entry], 'Admin.Advparameters.Notification'),
-                    $rowIndex,
+                    [$rowIndex],
                     'shop'
                 );
                 continue;
@@ -1203,7 +1203,7 @@ class ProductRowImporter
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_DATABASE,
                     $this->translator->trans('Shop "%name%" matches %count% shops; the first one (id %id%) was used.', ['%name%' => $entry, '%count%' => $lookup->count(), '%id%' => $shopId], 'Admin.Advparameters.Notification'),
-                    $rowIndex,
+                    [$rowIndex],
                     'shop'
                 );
             }

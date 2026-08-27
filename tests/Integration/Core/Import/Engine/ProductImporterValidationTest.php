@@ -44,13 +44,13 @@ class ProductImporterValidationTest extends AbstractProductImportEngineTestCase
     {
         [$context, $messages] = $this->runImport('product_invalid_rows.csv', self::FIELDS);
 
-        // structured messages carry severity/phase/row/field
+        // structured messages carry severity/phase/rows/field
         $errors = $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_ERROR);
         $errorsByField = [];
         foreach ($errors as $error) {
             $this->assertSame(ImportPhaseDefinition::PHASE_VALIDATION, $error->phase);
-            $this->assertNotNull($error->row);
-            $errorsByField[$error->field][] = $error->row;
+            $this->assertNotEmpty($error->rows);
+            $errorsByField[$error->field] = array_merge($errorsByField[$error->field] ?? [], $error->rows);
         }
         // row indexes are 0-based DATA-record indexes (the header was already
         // stripped at normalization); presenters add the skip count back
@@ -74,7 +74,7 @@ class ProductImporterValidationTest extends AbstractProductImportEngineTestCase
         // blank line = notice + skip, not an abort
         $notices = $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_NOTICE);
         $this->assertNotEmpty($notices);
-        $this->assertSame(4, $notices[0]->row);
+        $this->assertSame([4], $notices[0]->rows);
 
         // unparseable boolean = warning, row still goes through
         $booleanWarnings = array_values(array_filter(
@@ -82,7 +82,7 @@ class ProductImporterValidationTest extends AbstractProductImportEngineTestCase
             static fn (ImportMessage $message): bool => 'active' === $message->field
         ));
         $this->assertCount(1, $booleanWarnings);
-        $this->assertSame(6, $booleanWarnings[0]->row);
+        $this->assertSame([6], $booleanWarnings[0]->rows);
         $this->assertStringContainsString('Unrecognized boolean', $booleanWarnings[0]->message);
         $this->assertStringContainsString('"false" will be used', $booleanWarnings[0]->message);
 

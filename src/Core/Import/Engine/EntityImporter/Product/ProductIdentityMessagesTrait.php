@@ -34,7 +34,7 @@ trait ProductIdentityMessagesTrait
             ImportMessage::SEVERITY_ERROR,
             $phaseId,
             $this->translator->trans('The reference "%value%" matches a product outside the run\'s shop scope; the row was skipped to avoid creating a duplicate product.', ['%value%' => $reference], 'Admin.Advparameters.Notification'),
-            $rowIndex,
+            [$rowIndex],
             'reference'
         );
     }
@@ -50,7 +50,7 @@ trait ProductIdentityMessagesTrait
             ImportMessage::SEVERITY_ERROR,
             $phaseId,
             $this->translator->trans('The reference "%value%" matches %count% products; the row was skipped to avoid updating the wrong one.', ['%value%' => $reference, '%count%' => $matchCount], 'Admin.Advparameters.Notification'),
-            $rowIndex,
+            [$rowIndex],
             'reference'
         );
     }
