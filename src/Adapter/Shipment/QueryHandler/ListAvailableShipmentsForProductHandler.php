@@ -6,9 +6,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shipment\QueryHandler;
 
+use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderDetailRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\ListAvailableShipmentsForProduct;
@@ -27,15 +29,26 @@ class ListAvailableShipmentsForProductHandler implements ListAvailableShipmentsF
         private readonly TranslatorInterface $translator,
         private readonly ShopContext $shopContext,
         private readonly ProductRepository $productRepository,
+        private readonly OrderDetailRepository $orderDetailRepository,
     ) {
     }
 
     /**
      * @return ShipmentsForProduct[]
+     *
+     * @throws CannotFindProductInOrderException
      */
     public function handle(ListAvailableShipmentsForProduct $query)
     {
         $orderId = $query->getOrderId()->getValue();
+
+        // Without this check every shipment of the order is returned for a product it does not contain
+        if ($this->orderDetailRepository->findByOrderIdAndProductId($query->getOrderId(), $query->getProductId(), null) === null) {
+            throw new CannotFindProductInOrderException(
+                sprintf('Product with id %d was not found in order %d', $query->getProductId()->getValue(), $orderId)
+            );
+        }
+
         $productInstance = $this->productRepository->get(new ProductId($query->getProductId()->getValue()), new ShopId($this->shopContext->getContextShopID()));
         $availableShipmentsForProductSelected = [];
 
