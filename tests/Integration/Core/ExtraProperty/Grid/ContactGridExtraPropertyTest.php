@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Integration\Utility\ContextMockerTrait;
 
 /**
  * Regression test for the contact grid with a LANG-scoped extra property
@@ -30,6 +31,8 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class ContactGridExtraPropertyTest extends KernelTestCase
 {
+    use ContextMockerTrait;
+
     private const MODULE = 'extrapropertycontactgridtest';
     private const DEFAULT_LANG_ID = 1;
 
@@ -41,6 +44,14 @@ class ContactGridExtraPropertyTest extends KernelTestCase
         self::bootKernel();
         global $kernel;
         $kernel = self::$kernel;
+
+        // The contact grid query builder resolves its language id and shop list from the
+        // legacy static Context at service instantiation: mock it to a clean state (default
+        // shop and language, reset static caches) so the test does not depend on what
+        // earlier suite tests left behind — a stale language or a removed single-shop
+        // context would filter every contact out. The mocked context is restored in
+        // tearDownAfterClass, so this class does not leak its own state either.
+        static::mockContext();
 
         $container = self::getContainer();
 
@@ -57,6 +68,7 @@ class ContactGridExtraPropertyTest extends KernelTestCase
     public static function tearDownAfterClass(): void
     {
         self::$registry->unregister(self::langDefinition(), true);
+        static::resetContext();
 
         parent::tearDownAfterClass();
     }
