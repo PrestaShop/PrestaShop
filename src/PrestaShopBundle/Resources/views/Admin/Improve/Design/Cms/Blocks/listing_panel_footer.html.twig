@@ -3,8 +3,13 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
+{% set params = {} %}
+{% if cmsPageView.parent_category_id != cmsPageView.root_category_id %}
+  {% set params = {id_cms_category: cmsPageView.parent_category_id} %}
+{% endif %}
+
 <div class="card-footer">
-  <a href="{{ path('admin_cms_pages_index') }}" class="btn btn-outline-secondary back-to-list-link">
+  <a href="{{ path('admin_cms_pages_index', params) }}" class="btn btn-outline-secondary back-to-list-link">
     <i class="material-icons rtl-flip">arrow_back</i>
     {{ 'Back to list'|trans({}, 'Admin.Actions') }}
   </a>
