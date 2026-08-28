@@ -41,6 +41,11 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
     private $modulesDirectory;
 
     /**
+     * @var string the "override/modules" directory path
+     */
+    private $overrideModulesDirectory;
+
+    /**
      * @var array
      */
     private $catalogueExtractExcludedDirectories;
@@ -51,19 +56,22 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
      * @param TwigExtractor $twigExtractor
      * @param string $modulesDirectory
      * @param array $catalogueExtractExcludedDirectories
+     * @param string $overrideModulesDirectory
      */
     public function __construct(
         PhpExtractor $phpExtractor,
         SmartyExtractor $smartyExtractor,
         TwigExtractor $twigExtractor,
         string $modulesDirectory,
-        array $catalogueExtractExcludedDirectories
+        array $catalogueExtractExcludedDirectories,
+        string $overrideModulesDirectory
     ) {
         $this->phpExtractor = $phpExtractor;
         $this->smartyExtractor = $smartyExtractor;
         $this->twigExtractor = $twigExtractor;
         $this->modulesDirectory = $modulesDirectory;
         $this->catalogueExtractExcludedDirectories = $catalogueExtractExcludedDirectories;
+        $this->overrideModulesDirectory = $overrideModulesDirectory;
     }
 
     /**
@@ -74,18 +82,28 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
     public function extract(string $moduleName, string $locale): MessageCatalogue
     {
         $extractedCatalogue = new MessageCatalogue($locale);
+        $directories = [$this->modulesDirectory . '/' . $moduleName];
 
-        $this->phpExtractor
-            ->setExcludedDirectories($this->catalogueExtractExcludedDirectories)
-            ->extract($this->modulesDirectory . '/' . $moduleName, $extractedCatalogue);
+        $overridePath = $this->overrideModulesDirectory . '/' . $moduleName;
+        if (is_dir($overridePath)) {
+            $directories[] = $overridePath;
+        }
+
+        foreach ($directories as $directory) {
+            $this->phpExtractor
+                ->setExcludedDirectories($this->catalogueExtractExcludedDirectories)
+                ->extract($directory, $extractedCatalogue);
+        }
         $extractedCatalogue = $this->postprocessPhpCatalogue($extractedCatalogue, $moduleName);
 
-        $this->smartyExtractor
-            ->setExcludedDirectories($this->catalogueExtractExcludedDirectories)
-            ->extract($this->modulesDirectory . '/' . $moduleName, $extractedCatalogue);
-        $this->twigExtractor
-            ->setExcludedDirectories($this->catalogueExtractExcludedDirectories)
-            ->extract($this->modulesDirectory . '/' . $moduleName, $extractedCatalogue);
+        foreach ($directories as $directory) {
+            $this->smartyExtractor
+                ->setExcludedDirectories($this->catalogueExtractExcludedDirectories)
+                ->extract($directory, $extractedCatalogue);
+            $this->twigExtractor
+                ->setExcludedDirectories($this->catalogueExtractExcludedDirectories)
+                ->extract($directory, $extractedCatalogue);
+        }
 
         return $extractedCatalogue;
     }
