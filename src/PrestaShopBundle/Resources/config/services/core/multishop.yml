@@ -8,10 +8,13 @@ services:
 
   # Generic ShopConstraint → shop ids resolution: the shops covered by a constraint
   # (fan-out writes) and its deterministic representative shop (reads, context shop id).
+  # The constraint → ids query itself lives in ShopRepository; this service memoizes
+  # over it and adds the representative rule.
   PrestaShop\PrestaShop\Core\Shop\ShopListResolver:
     arguments:
       $connection: '@doctrine.dbal.default_connection'
       $prefix: '%database_prefix%'
+      $shopRepository: '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
 
   PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface:
     alias: 'PrestaShop\PrestaShop\Core\Shop\ShopListResolver'

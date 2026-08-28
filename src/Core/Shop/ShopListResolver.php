@@ -10,16 +10,20 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Shop;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
- * DBAL implementation, usable in every container (the three Symfony kernels and the
- * hand-built FO legacy container): it only needs the DBAL connection, no other service.
+ * Orchestration layer over ShopRepository, which owns the single constraint → shop ids
+ * query (usable shops only for group/all scopes): this service adds the per-request
+ * memoization and the representative-shop rule. Usable in every container the repository
+ * is wired in (the three Symfony kernels and the hand-built FO legacy container).
  *
- * Group and all-shops lookups are memoized per request; the memo key includes the
- * constraint shape so distinct constraints never share an entry.
+ * Group and all-shops lookups are memoized per request — a request that creates or
+ * deletes a shop and resolves the same scope again reads the memoized list, which is
+ * acceptable for the fan-out/read use cases this serves.
  */
 class ShopListResolver implements ShopListResolverInterface
 {
@@ -33,6 +37,7 @@ class ShopListResolver implements ShopListResolverInterface
     public function __construct(
         protected readonly Connection $connection,
         protected readonly string $prefix,
+        protected readonly ShopRepository $shopRepository,
     ) {
     }
 
@@ -41,6 +46,7 @@ class ShopListResolver implements ShopListResolverInterface
      */
     public function resolveShopIds(ShopConstraint $shopConstraint): array
     {
+        // Explicit ids need no query and no memoization.
         if (null !== $shopConstraint->getShopId()) {
             return [$shopConstraint->getShopId()->getValue()];
         }
@@ -52,18 +58,7 @@ class ShopListResolver implements ShopListResolverInterface
         $groupId = $shopConstraint->getShopGroupId()?->getValue();
         $cacheKey = null === $groupId ? 'all' : 'group_' . $groupId;
         if (!array_key_exists($cacheKey, $this->shopIdsCache)) {
-            $sql = 'SELECT id_shop FROM ' . $this->connection->quoteIdentifier($this->prefix . 'shop');
-            $params = [];
-            if (null !== $groupId) {
-                $sql .= ' WHERE id_shop_group = ?';
-                $params[] = $groupId;
-            }
-            $sql .= ' ORDER BY id_shop ASC';
-
-            $this->shopIdsCache[$cacheKey] = array_map(
-                static fn (array $row): int => (int) $row['id_shop'],
-                $this->connection->fetchAllAssociative($sql, $params)
-            );
+            $this->shopIdsCache[$cacheKey] = $this->shopRepository->getAssociatedShopIds($shopConstraint);
         }
 
         return $this->shopIdsCache[$cacheKey];
@@ -92,17 +87,23 @@ class ShopListResolver implements ShopListResolverInterface
     }
 
     /**
-     * PS_SHOP_DEFAULT is a global-only configuration value, read with plain SQL so this
-     * service has no dependency on a configuration service (which is not available in
-     * every container). Global rows use NULL shop/group columns (0 on legacy installs).
+     * PS_SHOP_DEFAULT is a global-only configuration value, read with a direct query so
+     * this service has no dependency on a configuration service (which is not available
+     * in every container). Global rows use NULL shop/group columns (0 on legacy installs).
      */
     protected function getDefaultShopId(): int
     {
         if (null === $this->defaultShopId) {
-            $sql = 'SELECT value FROM ' . $this->connection->quoteIdentifier($this->prefix . 'configuration')
-                . ' WHERE name = ? AND (id_shop IS NULL OR id_shop = 0) AND (id_shop_group IS NULL OR id_shop_group = 0)';
+            $qb = $this->connection->createQueryBuilder()
+                ->select('c.value')
+                ->from($this->prefix . 'configuration', 'c')
+                ->andWhere('c.name = :name')
+                ->andWhere('c.id_shop IS NULL OR c.id_shop = 0')
+                ->andWhere('c.id_shop_group IS NULL OR c.id_shop_group = 0')
+                ->setParameter('name', 'PS_SHOP_DEFAULT')
+                ->setMaxResults(1);
 
-            $this->defaultShopId = (int) $this->connection->fetchOne($sql, ['PS_SHOP_DEFAULT']);
+            $this->defaultShopId = (int) $this->connection->fetchOne($qb->getSQL(), $qb->getParameters());
         }
 
         return $this->defaultShopId;

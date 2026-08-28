@@ -9,6 +9,7 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\Repository;
 
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -90,10 +91,27 @@ class ShopRepository extends AbstractObjectModelRepository
         );
     }
 
+    /**
+     * Returns every shop id covered by the constraint: single shop → [id]; ShopCollection
+     * → its ids; shop group → the group's shops; all shops → every shop. Group and
+     * all-shops scopes only contain usable shops — soft-deleted (`deleted = 1`) and
+     * inactive (`active = 0`) shops are excluded, matching the native
+     * Shop::getContextListShopID() fan-out — and are returned ordered by shop id.
+     * Explicit ids (single shop, ShopCollection) are returned as given, without existence
+     * or state checks: naming a shop is the caller's responsibility.
+     *
+     * This is the single query implementation; ShopListResolver memoizes over it.
+     *
+     * @return int[]
+     */
     public function getAssociatedShopIds(ShopConstraint $shopConstraint): array
     {
         if ($shopConstraint->getShopId()) {
             return [$shopConstraint->getShopId()->getValue()];
+        }
+
+        if ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+            return array_map(static fn (ShopId $shopId): int => $shopId->getValue(), $shopConstraint->getShopIds());
         }
 
         $qb = $this
@@ -101,6 +119,9 @@ class ShopRepository extends AbstractObjectModelRepository
             ->createQueryBuilder()
             ->select('s.id_shop')
             ->from($this->dbPrefix . 'shop', 's')
+            ->andWhere('s.deleted = 0')
+            ->andWhere('s.active = 1')
+            ->orderBy('s.id_shop', 'ASC')
         ;
 
         if ($shopConstraint->getShopGroupId()) {

@@ -10,53 +10,58 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Shop;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolver;
 
 /**
- * Covers the constraint → shop-ids mapping and the deterministic representative-shop rule
- * against a stubbed installation: shops 1 and 2 in group 1, shops 3 and 4 in group 2,
- * PS_SHOP_DEFAULT = 1.
+ * Covers the resolver's own responsibilities — explicit-id pass-through, memoization over
+ * ShopRepository (which owns the actual query, covered by the integration test) and the
+ * deterministic representative-shop rule — against a stubbed installation: shops 1 and 2
+ * in group 1, shops 3 and 4 in group 2, PS_SHOP_DEFAULT = 1.
  */
 class ShopListResolverTest extends TestCase
 {
     private const SHOPS_BY_GROUP = [1 => [1, 2], 2 => [3, 4]];
     private const DEFAULT_SHOP_ID = 1;
 
-    private int $shopQueryCount = 0;
+    private int $repositoryCallCount = 0;
 
-    public function testSingleShopConstraintNeedsNoQuery(): void
+    public function testExplicitIdsPassThroughWithoutTouchingTheRepository(): void
     {
         $resolver = $this->buildResolver();
 
         $this->assertSame([3], $resolver->resolveShopIds(ShopConstraint::shop(3)));
-        $this->assertSame(3, $resolver->resolveRepresentativeShopId(ShopConstraint::shop(3)));
-        $this->assertSame(0, $this->shopQueryCount);
-    }
-
-    public function testShopCollectionReturnsItsOwnIds(): void
-    {
-        $resolver = $this->buildResolver();
-
         $this->assertSame([4, 2], $resolver->resolveShopIds(ShopCollection::shops([4, 2])));
-        $this->assertSame(0, $this->shopQueryCount);
+        $this->assertSame(3, $resolver->resolveRepresentativeShopId(ShopConstraint::shop(3)));
+        $this->assertSame(0, $this->repositoryCallCount);
     }
 
-    public function testShopGroupResolvesTheGroupShops(): void
+    public function testGroupAndAllShopsScopesDelegateToTheRepository(): void
     {
         $resolver = $this->buildResolver();
 
         $this->assertSame([1, 2], $resolver->resolveShopIds(ShopConstraint::shopGroup(1)));
         $this->assertSame([3, 4], $resolver->resolveShopIds(ShopConstraint::shopGroup(2)));
+        $this->assertSame([1, 2, 3, 4], $resolver->resolveShopIds(ShopConstraint::allShops()));
     }
 
-    public function testAllShopsResolvesEveryShop(): void
+    public function testGroupAndAllShopsLookupsAreMemoizedPerScope(): void
     {
         $resolver = $this->buildResolver();
 
-        $this->assertSame([1, 2, 3, 4], $resolver->resolveShopIds(ShopConstraint::allShops()));
+        $resolver->resolveShopIds(ShopConstraint::shopGroup(1));
+        $resolver->resolveShopIds(ShopConstraint::shopGroup(1));
+        $resolver->resolveShopIds(ShopConstraint::allShops());
+        $resolver->resolveShopIds(ShopConstraint::allShops());
+        // Distinct scopes never share a memo entry.
+        $resolver->resolveShopIds(ShopConstraint::shopGroup(2));
+
+        $this->assertSame(3, $this->repositoryCallCount);
     }
 
     public function testRepresentativeShopIsTheDefaultShopWhenInScope(): void
@@ -68,7 +73,7 @@ class ShopListResolverTest extends TestCase
         $this->assertSame(self::DEFAULT_SHOP_ID, $resolver->resolveRepresentativeShopId(ShopCollection::shops([2, 1])));
     }
 
-    public function testRepresentativeShopFallsBackToLowestShopIdOfTheScope(): void
+    public function testRepresentativeShopFallsBackToTheLowestShopIdOfTheScope(): void
     {
         $resolver = $this->buildResolver();
 
@@ -85,38 +90,29 @@ class ShopListResolverTest extends TestCase
         $this->assertSame(0, $resolver->resolveRepresentativeShopId(ShopConstraint::shopGroup(99)));
     }
 
-    public function testGroupAndAllShopsLookupsAreMemoized(): void
-    {
-        $resolver = $this->buildResolver();
-
-        $resolver->resolveShopIds(ShopConstraint::shopGroup(1));
-        $resolver->resolveShopIds(ShopConstraint::shopGroup(1));
-        $resolver->resolveShopIds(ShopConstraint::allShops());
-        $resolver->resolveShopIds(ShopConstraint::allShops());
-
-        $this->assertSame(2, $this->shopQueryCount);
-    }
-
     private function buildResolver(): ShopListResolver
     {
-        $this->shopQueryCount = 0;
+        $this->repositoryCallCount = 0;
 
         $connection = $this->createMock(Connection::class);
-        $connection->method('quoteIdentifier')->willReturnCallback(
-            static fn (string $identifier): string => '`' . $identifier . '`'
-        );
-        $connection->method('fetchAllAssociative')->willReturnCallback(
-            function (string $sql, array $params = []): array {
-                ++$this->shopQueryCount;
-                $shopIds = [] !== $params
-                    ? (self::SHOPS_BY_GROUP[(int) $params[0]] ?? [])
-                    : array_merge(...array_values(self::SHOPS_BY_GROUP));
-
-                return array_map(static fn (int $id): array => ['id_shop' => (string) $id], $shopIds);
-            }
+        $connection->method('getDatabasePlatform')->willReturn(new MySQLPlatform());
+        $connection->method('createQueryBuilder')->willReturnCallback(
+            fn (): QueryBuilder => new QueryBuilder($connection)
         );
         $connection->method('fetchOne')->willReturn((string) self::DEFAULT_SHOP_ID);
 
-        return new ShopListResolver($connection, 'ps_');
+        $shopRepository = $this->createMock(ShopRepository::class);
+        $shopRepository->method('getAssociatedShopIds')->willReturnCallback(
+            function (ShopConstraint $shopConstraint): array {
+                ++$this->repositoryCallCount;
+                $groupId = $shopConstraint->getShopGroupId()?->getValue();
+
+                return null !== $groupId
+                    ? (self::SHOPS_BY_GROUP[$groupId] ?? [])
+                    : array_merge(...array_values(self::SHOPS_BY_GROUP));
+            }
+        );
+
+        return new ShopListResolver($connection, 'ps_', $shopRepository);
     }
 }

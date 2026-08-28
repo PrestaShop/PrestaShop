@@ -25,6 +25,12 @@ interface ShopListResolverInterface
      * Returns every shop id covered by the constraint:
      * single shop → [id]; ShopCollection → its ids; shop group → the group's shops; all shops → every shop.
      *
+     * Group and all-shops scopes only contain usable shops — soft-deleted (`deleted = 1`)
+     * and inactive (`active = 0`) shops are excluded, matching the native
+     * Shop::getContextListShopID() fan-out — and may be memoized for the request.
+     * Explicit ids (single shop, ShopCollection) are returned as given, without existence
+     * or state checks: naming a shop is the caller's responsibility.
+     *
      * @return list<int>
      */
     public function resolveShopIds(ShopConstraint $shopConstraint): array;
@@ -32,8 +38,10 @@ interface ShopListResolverInterface
     /**
      * Returns the single deterministic shop representing the constraint's scope:
      * the configured default shop (PS_SHOP_DEFAULT) when it belongs to the scope,
-     * the lowest shop id of the scope otherwise. Returns 0 when the scope is empty
-     * (e.g. a group without shops).
+     * the lowest shop id of the scope otherwise. The scope follows the same
+     * usable-shops rule as resolveShopIds(), so the representative is never a
+     * soft-deleted or inactive shop for group/all-shops constraints. Returns 0 when
+     * the scope is empty (e.g. a group without usable shops).
      */
     public function resolveRepresentativeShopId(ShopConstraint $shopConstraint): int;
 }
