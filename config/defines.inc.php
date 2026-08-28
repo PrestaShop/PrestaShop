@@ -77,6 +77,22 @@ if (defined('_PS_ADMIN_DIR_')) {
     define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
 }
 
+// Define .env file path
+if (!defined('_PS_ENV_FILE_PATH_')) {
+    define(
+        '_PS_ENV_FILE_PATH_',
+        getenv('PS_ENV_FILE_PATH', true)
+            ?: getenv('PS_ENV_FILE_PATH')
+            ?: ($_SERVER['APP_RUNTIME_OPTIONS']['dotenv_path'] ?? null)
+            ?: _PS_ROOT_DIR_.'/.env',
+    );
+}
+
+if (_PS_ENV_FILE_PATH_ !== _PS_ROOT_DIR_.'/.env') {
+    // SYMFONY_DOTENV_PATH only introduced in Sf 7.1 but needed for console debug:dotenv
+    $_SERVER['SYMFONY_DOTENV_PATH'] = $_SERVER['APP_RUNTIME_OPTIONS']['dotenv_path'] = _PS_ENV_FILE_PATH_;
+}
+
 // Find if we are running under a Symfony command
 $cliEnvValue = null;
 if (isset($argv) && is_array($argv)) {

@@ -22,7 +22,11 @@ require_once _PS_FRONT_DIR_ . '/vendor/autoload.php';
 define('_PS_APP_ID_', FrontKernel::APP_ID);
 
 // Load .env file from the root of project if present
-(new Dotenv(false))->loadEnv(_PS_FRONT_DIR_ . '/.env');
+(new Dotenv())
+    // DO NOT use putEnv
+    ->usePutenv(false)
+    ->loadEnv(_PS_ENV_FILE_PATH_)
+;
 
 // If we want to use new container access in front (Warning: Experimental feature from now!)
 if (isset($_ENV['PS_FF_FRONT_CONTAINER_V2']) && filter_var($_ENV['PS_FF_FRONT_CONTAINER_V2'], \FILTER_VALIDATE_BOOL)) {
