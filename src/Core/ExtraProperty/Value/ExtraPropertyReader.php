@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionC
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 /**
@@ -32,6 +33,8 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
         protected readonly Connection $connection,
         protected readonly string $prefix,
         protected readonly ShopListResolverInterface $shopListResolver,
+        // Optional: the hand-built FO legacy container has no logger service.
+        protected readonly ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -196,7 +199,12 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
         } catch (Throwable $e) {
             // Reads must never break the page that displays them (FO especially), but a
             // failing query is a schema/definition bug: trace it instead of hiding it.
-            error_log(sprintf('Extra property read failed on table %s: %s', $extraTableName, $e->getMessage()));
+            $message = sprintf('Extra property read failed on table %s: %s', $extraTableName, $e->getMessage());
+            if (null !== $this->logger) {
+                $this->logger->error($message, ['exception' => $e]);
+            } else {
+                error_log($message);
+            }
 
             return $result;
         }

@@ -283,11 +283,18 @@ class ContextCore
      */
     public function getShopConstraint(): ShopConstraint
     {
-        return match (Shop::getContext()) {
-            Shop::CONTEXT_ALL => ShopConstraint::allShops(),
-            Shop::CONTEXT_GROUP => ShopConstraint::shopGroup((int) Shop::getContextShopGroupID()),
-            default => ShopConstraint::shop((int) $this->shop->id),
-        };
+        if (Shop::getContext() === Shop::CONTEXT_ALL) {
+            return ShopConstraint::allShops();
+        }
+
+        // Shop::setContext(CONTEXT_GROUP, null) is legal and leaves the context group id
+        // at 0, which ShopGroupId rejects: only build a group constraint from a real id
+        // so this getter never throws.
+        if (Shop::getContext() === Shop::CONTEXT_GROUP && (int) Shop::getContextShopGroupID() > 0) {
+            return ShopConstraint::shopGroup((int) Shop::getContextShopGroupID());
+        }
+
+        return ShopConstraint::shop((int) $this->shop->id);
     }
 
     /**

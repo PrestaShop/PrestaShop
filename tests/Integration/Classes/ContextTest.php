@@ -38,6 +38,14 @@ class ContextTest extends TestCase
             Shop::setContext(Shop::CONTEXT_SHOP, 1);
             $constraint = Context::getContext()->getShopConstraint();
             $this->assertSame((int) Context::getContext()->shop->id, $constraint->getShopId()->getValue());
+
+            // Shop::setContext(CONTEXT_GROUP, null) is legal and leaves the group id at 0:
+            // the getter must stay total and fall back to the single-shop constraint
+            // instead of throwing (ShopGroupId rejects 0).
+            Shop::setContext(Shop::CONTEXT_GROUP, null);
+            $constraint = Context::getContext()->getShopConstraint();
+            $this->assertNull($constraint->getShopGroupId());
+            $this->assertSame((int) Context::getContext()->shop->id, $constraint->getShopId()->getValue());
         } finally {
             Shop::setContext($previousContext ?? Shop::CONTEXT_ALL, $previousGroupId ?: null);
         }
