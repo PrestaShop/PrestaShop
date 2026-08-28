@@ -13,9 +13,7 @@
       <div class="business-entity-view-summary__text">
         <div class="business-entity-view-summary__value">{{ linkedCustomers }}</div>
         <div class="business-entity-view-summary__label">
-          {{ (linkedCustomers != 1
-            ? 'linked customers'|trans({}, 'Admin.Orderscustomers.Feature')
-            : 'linked customer'|trans({}, 'Admin.Orderscustomers.Feature')) }}
+          {{ 'linked customer(s)'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </div>
       </div>
     </div>
@@ -25,9 +23,7 @@
       <div class="business-entity-view-summary__text">
         <div class="business-entity-view-summary__value">{{ addressesCount }}</div>
         <div class="business-entity-view-summary__label">
-          {{ (addressesCount != 1
-            ? 'addresses'|trans({}, 'Admin.Orderscustomers.Feature')
-            : 'address'|trans({}, 'Admin.Orderscustomers.Feature')) }}
+          {{ 'address(es)'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </div>
       </div>
     </div>

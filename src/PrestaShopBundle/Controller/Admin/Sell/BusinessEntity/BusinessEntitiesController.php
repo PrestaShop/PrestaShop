@@ -20,6 +20,7 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\BusinessEntityF
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BusinessEntityGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\BusinessEntityFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
@@ -28,6 +29,7 @@ use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityAddressType;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -68,6 +70,23 @@ class BusinessEntitiesController extends PrestaShopAdminController
                 'pendingUrl' => $pendingUrl,
                 'isPendingFilter' => $isPendingFilter,
             ]
+        );
+    }
+
+    /**
+     * Applies the filters submitted from the listing and redirects back to it.
+     */
+    #[AdminSecurity("is_granted('read', 'AdminBusinessEntities')")]
+    public function searchAction(
+        Request $request,
+        #[Autowire(service: BusinessEntityGridDefinitionFactory::class)]
+        GridDefinitionFactoryInterface $businessEntityGridDefinitionFactory,
+    ): RedirectResponse {
+        return $this->buildSearchResponse(
+            $businessEntityGridDefinitionFactory,
+            $request,
+            BusinessEntityGridDefinitionFactory::GRID_ID,
+            'admin_business_entities_list'
         );
     }
 

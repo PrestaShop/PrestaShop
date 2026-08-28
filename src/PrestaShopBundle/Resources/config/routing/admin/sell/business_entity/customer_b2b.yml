@@ -3,4 +3,3 @@ admin_customer_b2b_list:
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerB2b\CustomerB2bController::listAction
-    _legacy_controller: AdminCustomersB2B

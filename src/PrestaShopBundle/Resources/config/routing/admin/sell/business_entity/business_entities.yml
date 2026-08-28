@@ -3,23 +3,19 @@ admin_business_entities_list:
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::listAction
-    _legacy_controller: AdminBusinessEntities
 
 admin_business_entities_search:
   path: /
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
-    _legacy_controller: AdminBusinessEntities
-    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BusinessEntityGridDefinitionFactory
-    redirectRoute: admin_business_entities_list
+    _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::searchAction
 
 admin_business_entities_view:
   path: /{businessEntityId}/view
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::viewAction
-    _legacy_controller: AdminBusinessEntities
+    _parent: admin_business_entities_list
   requirements:
     businessEntityId: \d+
 
@@ -28,4 +24,4 @@ admin_business_entities_create:
   methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::createAction
-    _legacy_controller: AdminBusinessEntities
+    _parent: admin_business_entities_list
