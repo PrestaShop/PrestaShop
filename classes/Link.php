@@ -1031,17 +1031,23 @@ class LinkCore
     {
         $idSupplier = (int) $idSupplier;
 
-        if (file_exists(_PS_SUPP_IMG_DIR_ . $idSupplier . (empty($type) ? '.' . $extension : '-' . $type . '.' . $extension))) {
-            $uriPath = _THEME_SUP_DIR_ . $idSupplier . (empty($type) ? '.' . $extension : '-' . $type . '.' . $extension);
-        } elseif (!empty($type) && file_exists(_PS_SUPP_IMG_DIR_ . $idSupplier . '.' . $extension)) { // !empty($type) because if is empty, is already tested
-            $uriPath = _THEME_SUP_DIR_ . $idSupplier . '.' . $extension;
-        } elseif (file_exists(_PS_SUPP_IMG_DIR_ . Context::getContext()->language->iso_code . (empty($type) ? '.' . $extension : '-default-' . $type . '.' . $extension))) {
-            $uriPath = _THEME_SUP_DIR_ . Context::getContext()->language->iso_code . (empty($type) ? '.' . $extension : '-default-' . $type . '.' . $extension);
-        } else {
-            $uriPath = _THEME_SUP_DIR_ . Context::getContext()->language->iso_code . '.' . $extension;
-        }
+        return $this->buildEntityImageLink(
+            'Supplier',
+            ['ids' => $idSupplier, 'type' => $type, 'extension' => $extension],
+            function () use ($idSupplier, $type, $extension) {
+                if (file_exists(_PS_SUPP_IMG_DIR_ . $idSupplier . (empty($type) ? '.' . $extension : '-' . $type . '.' . $extension))) {
+                    $uriPath = _THEME_SUP_DIR_ . $idSupplier . (empty($type) ? '.' . $extension : '-' . $type . '.' . $extension);
+                } elseif (!empty($type) && file_exists(_PS_SUPP_IMG_DIR_ . $idSupplier . '.' . $extension)) { // !empty($type) because if is empty, is already tested
+                    $uriPath = _THEME_SUP_DIR_ . $idSupplier . '.' . $extension;
+                } elseif (file_exists(_PS_SUPP_IMG_DIR_ . Context::getContext()->language->iso_code . (empty($type) ? '.' . $extension : '-default-' . $type . '.' . $extension))) {
+                    $uriPath = _THEME_SUP_DIR_ . Context::getContext()->language->iso_code . (empty($type) ? '.' . $extension : '-default-' . $type . '.' . $extension);
+                } else {
+                    $uriPath = _THEME_SUP_DIR_ . Context::getContext()->language->iso_code . '.' . $extension;
+                }
 
-        return $this->getMediaLink($uriPath);
+                return $uriPath;
+            }
+        );
     }
 
     /**
@@ -1057,17 +1063,23 @@ class LinkCore
     {
         $idManufacturer = (int) $idManufacturer;
 
-        if (file_exists(_PS_MANU_IMG_DIR_ . $idManufacturer . (empty($type) ? '.' . $extension : '-' . $type . '.' . $extension))) {
-            $uriPath = _THEME_MANU_DIR_ . $idManufacturer . (empty($type) ? '.' . $extension : '-' . $type . '.' . $extension);
-        } elseif (!empty($type) && file_exists(_PS_MANU_IMG_DIR_ . $idManufacturer . '.' . $extension)) { // !empty($type) because if is empty, is already tested
-            $uriPath = _THEME_MANU_DIR_ . $idManufacturer . '.' . $extension;
-        } elseif (file_exists(_PS_MANU_IMG_DIR_ . Context::getContext()->language->iso_code . (empty($type) ? '.' . $extension : '-default-' . $type . '.' . $extension))) {
-            $uriPath = _THEME_MANU_DIR_ . Context::getContext()->language->iso_code . (empty($type) ? '.' . $extension : '-default-' . $type . '.' . $extension);
-        } else {
-            $uriPath = _THEME_MANU_DIR_ . Context::getContext()->language->iso_code . '.' . $extension;
-        }
+        return $this->buildEntityImageLink(
+            'Manufacturer',
+            ['ids' => $idManufacturer, 'type' => $type, 'extension' => $extension],
+            function () use ($idManufacturer, $type, $extension) {
+                if (file_exists(_PS_MANU_IMG_DIR_ . $idManufacturer . (empty($type) ? '.' . $extension : '-' . $type . '.' . $extension))) {
+                    $uriPath = _THEME_MANU_DIR_ . $idManufacturer . (empty($type) ? '.' . $extension : '-' . $type . '.' . $extension);
+                } elseif (!empty($type) && file_exists(_PS_MANU_IMG_DIR_ . $idManufacturer . '.' . $extension)) { // !empty($type) because if is empty, is already tested
+                    $uriPath = _THEME_MANU_DIR_ . $idManufacturer . '.' . $extension;
+                } elseif (file_exists(_PS_MANU_IMG_DIR_ . Context::getContext()->language->iso_code . (empty($type) ? '.' . $extension : '-default-' . $type . '.' . $extension))) {
+                    $uriPath = _THEME_MANU_DIR_ . Context::getContext()->language->iso_code . (empty($type) ? '.' . $extension : '-default-' . $type . '.' . $extension);
+                } else {
+                    $uriPath = _THEME_MANU_DIR_ . Context::getContext()->language->iso_code . '.' . $extension;
+                }
 
-        return $this->getMediaLink($uriPath);
+                return $uriPath;
+            }
+        );
     }
 
     /**
@@ -1084,17 +1096,23 @@ class LinkCore
     {
         $idStore = (int) $idStore;
 
-        if (file_exists(_PS_STORE_IMG_DIR_ . $idStore . (empty($type) ? '.' . $extension : '-' . $type . '.' . $extension))) {
-            $uriPath = _THEME_STORE_DIR_ . $idStore . (empty($type) ? '.' . $extension : '-' . $type . '.' . $extension);
-        } elseif (!empty($type) && file_exists(_PS_STORE_IMG_DIR_ . $idStore . '.' . $extension)) { // !empty($type) because if is empty, is already tested
-            $uriPath = _THEME_STORE_DIR_ . $idStore . '.' . $extension;
-        } elseif (file_exists(_PS_STORE_IMG_DIR_ . Context::getContext()->language->iso_code . (empty($type) ? '.' . $extension : $type . '.' . $extension))) {
-            $uriPath = _THEME_STORE_DIR_ . Context::getContext()->language->iso_code . (empty($type) ? '.' . $extension : $type . '.' . $extension);
-        } else {
-            $uriPath = _THEME_STORE_DIR_ . Context::getContext()->language->iso_code . '.' . $extension;
-        }
+        return $this->buildEntityImageLink(
+            'Store',
+            ['ids' => $idStore, 'name' => $name, 'type' => $type, 'extension' => $extension],
+            function () use ($idStore, $type, $extension) {
+                if (file_exists(_PS_STORE_IMG_DIR_ . $idStore . (empty($type) ? '.' . $extension : '-' . $type . '.' . $extension))) {
+                    $uriPath = _THEME_STORE_DIR_ . $idStore . (empty($type) ? '.' . $extension : '-' . $type . '.' . $extension);
+                } elseif (!empty($type) && file_exists(_PS_STORE_IMG_DIR_ . $idStore . '.' . $extension)) { // !empty($type) because if is empty, is already tested
+                    $uriPath = _THEME_STORE_DIR_ . $idStore . '.' . $extension;
+                } elseif (file_exists(_PS_STORE_IMG_DIR_ . Context::getContext()->language->iso_code . (empty($type) ? '.' . $extension : $type . '.' . $extension))) {
+                    $uriPath = _THEME_STORE_DIR_ . Context::getContext()->language->iso_code . (empty($type) ? '.' . $extension : $type . '.' . $extension);
+                } else {
+                    $uriPath = _THEME_STORE_DIR_ . Context::getContext()->language->iso_code . '.' . $extension;
+                }
 
-        return $this->getMediaLink($uriPath);
+                return $uriPath;
+            }
+        );
     }
 
     /**
@@ -1174,13 +1192,62 @@ class LinkCore
      */
     public function getCatImageLink($name, $idCategory, $type = null, string $extension = 'jpg')
     {
-        if ($this->allow && $type) {
-            $uriPath = __PS_BASE_URI__ . 'c/' . $idCategory . '-' . $type . '/' . $name . '.' . $extension;
-        } else {
-            $uriPath = _THEME_CAT_DIR_ . $idCategory . ($type ? '-' . $type : '') . '.' . $extension;
+        return $this->buildEntityImageLink(
+            'Category',
+            ['ids' => (int) $idCategory, 'name' => $name, 'type' => $type, 'extension' => $extension],
+            function () use ($idCategory, $name, $type, $extension) {
+                if ($this->allow && $type) {
+                    return __PS_BASE_URI__ . 'c/' . $idCategory . '-' . $type . '/' . $name . '.' . $extension;
+                }
+
+                return _THEME_CAT_DIR_ . $idCategory . ($type ? '-' . $type : '') . '.' . $extension;
+            }
+        );
+    }
+
+    /**
+     * Build an image link for a Link entity (Supplier, Manufacturer, Store, Category),
+     * firing the two hook stages consistently:
+     *
+     *  - overrideXImageLink: chainable short-circuit; first non-empty return wins and
+     *    is used as the final URL (nothing else is called). Modules can hijack the URL
+     *    entirely — useful for CDN routing, image proxies, dedicated hosts.
+     *  - adaptXImageLink: called after the default URL is computed; modules can
+     *    mutate the URL by reference (e.g. append a signed query string, swap the
+     *    scheme). Non-blocking, all listeners fire.
+     *
+     * @param string $entity Supplier'|'Manufacturer'|'Store'|'Category' — completes the hook name
+     * @param array $params Hook payload (ids, name, type, extension, …)
+     * @param callable $urlBuilder Called when no override was returned; must return the URI path
+     *                             to feed into getMediaLink() (i.e. the internal path before
+     *                             media server + protocol rewriting).
+     */
+    private function buildEntityImageLink(string $entity, array $params, callable $urlBuilder): string
+    {
+        // Hook::exec with $array_return=true returns [moduleName => value].
+        // The first non-empty scalar wins so a single module can short-circuit the URL.
+        $override = Hook::exec("override{$entity}ImageLink", $params, null, true);
+        if (is_array($override)) {
+            foreach ($override as $candidate) {
+                if (is_string($candidate) && $candidate !== '') {
+                    return $candidate;
+                }
+            }
+        } elseif (is_string($override) && $override !== '') {
+            return $override;
         }
 
-        return $this->getMediaLink($uriPath);
+        $uriPath = $urlBuilder();
+        $url = $this->getMediaLink($uriPath);
+
+        $adaptParams = $params + [
+            'protocol_content' => $this->protocol_content,
+            'uri_path' => $uriPath,
+            'url' => &$url,
+        ];
+        Hook::exec("adapt{$entity}ImageLink", $adaptParams);
+
+        return $url;
     }
 
     /**
