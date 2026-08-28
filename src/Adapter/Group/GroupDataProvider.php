@@ -38,8 +38,8 @@ class GroupDataProvider
         return Group::getCurrent();
     }
 
-    public function getAllGroupIds(): array
+    public function getAllGroupIds($filterByShop = false): array
     {
-        return Group::getAllGroupIds();
+        return Group::getAllGroupIds($filterByShop);
     }
 }
