@@ -7831,7 +7831,13 @@ class ProductCore extends ObjectModel
      */
     public static function getIdTaxRulesGroupMostUsed()
     {
-        return Db::getInstance()->getValue(
+        static $idTaxRulesGroupMostUsed = null;
+
+        if ($idTaxRulesGroupMostUsed !== null) {
+            return $idTaxRulesGroupMostUsed;
+        }
+
+        $idTaxRulesGroupMostUsed = Db::getInstance()->getValue(
             'SELECT product_shop.id_tax_rules_group
             FROM ' . _DB_PREFIX_ . 'product_shop product_shop
             INNER JOIN ' . _DB_PREFIX_ . 'tax_rules_group trg ON product_shop.id_tax_rules_group = trg.id_tax_rules_group
@@ -7839,6 +7845,8 @@ class ProductCore extends ObjectModel
             GROUP BY product_shop.id_tax_rules_group
             ORDER BY COUNT(*) DESC'
         );
+
+        return $idTaxRulesGroupMostUsed;
     }
 
     public static function getIdByEan13($ean13)
