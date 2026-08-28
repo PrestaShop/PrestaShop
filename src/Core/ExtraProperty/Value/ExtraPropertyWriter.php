@@ -12,6 +12,7 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Value;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
@@ -35,6 +36,10 @@ use Throwable;
  * ShopConstraint the same way native ObjectModel fields follow the legacy shop context:
  * a non-single constraint (shop group, all shops, collection) fans out to one row per shop
  * in its scope, so a broad edit updates every covered shop instead of being dropped.
+ * SHOP-scope rows additionally follow the native association rule — broad scopes only
+ * refresh shops the entity is associated with, explicitly named shops always get their
+ * row — while LANG rows cover the full scope like native lang-multishop writes do.
+ * Fan-out writes are batched into one multi-row UPSERT per table.
  */
 class ExtraPropertyWriter implements ExtraPropertyWriterInterface
 {
@@ -126,20 +131,28 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
             $this->writeCommon($entityTableName, $primaryKeyName, $entityId, $entityValues);
         }
 
+        // LANG rows deliberately cover the FULL scope, associations ignored — native parity:
+        // ObjectModel::update() writes one {entity}_lang row per context shop the same way.
         if (!empty($langValuesByIdLang) && null !== $langTableName) {
-            if ($langIsMultiShop) {
-                foreach ($shopIds as $shopId) {
-                    $this->writeLang($langTableName, $primaryKeyName, $entityId, $shopId, $langValuesByIdLang);
-                }
-            } else {
-                // The entity's lang table has no id_shop column: one row per language, shared by all shops.
-                $this->writeLang($langTableName, $primaryKeyName, $entityId, null, $langValuesByIdLang);
-            }
+            $this->writeLang(
+                $langTableName,
+                $primaryKeyName,
+                $entityId,
+                // The entity's lang table may have no id_shop column: then one row per
+                // language, shared by all shops.
+                $langIsMultiShop ? $shopIds : null,
+                $langValuesByIdLang
+            );
         }
 
         if (!empty($shopValues) && null !== $shopTableName) {
-            foreach ($shopIds as $shopId) {
-                $this->writeShop($shopTableName, $primaryKeyName, $entityId, $shopId, $shopValues);
+            // SHOP rows follow native {entity}_shop semantics: broad scopes (group, all
+            // shops) only refresh the shops the entity is associated with, while an
+            // explicitly named shop (single-shop constraint, ShopCollection) always gets
+            // its row, like native CONTEXT_SHOP / $id_shop_list inserts.
+            $shopScopeIds = $this->filterShopScopeByAssociations($entityName, $primaryKeyName, $entityId, $shopConstraint, $shopIds);
+            if (!empty($shopScopeIds)) {
+                $this->writeShop($shopTableName, $primaryKeyName, $entityId, $shopScopeIds, $shopValues);
             }
         }
     }
@@ -173,31 +186,53 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
         $primaryKeyName = $definition->getPrimaryKeyName();
         $columnName = $definition->getStorageColumnName();
 
-        // The representative shop's current value decides the target for the whole scope,
-        // so a toggle in a group / all-shops context uniformizes shops that diverged.
+        $shopIds = [];
+        $readShopId = null;
+        if ($isMultiShop) {
+            $shopIds = $this->shopListResolver->resolveShopIds($shopConstraint);
+            if (ExtraPropertyScope::SHOP === $scope) {
+                // Same association rule as writeAll(): broad scopes only touch associated shops.
+                $shopIds = $this->filterShopScopeByAssociations($definition->getEntityName(), $primaryKeyName, $entityId, $shopConstraint, $shopIds);
+            }
+            if ([] === $shopIds) {
+                return;
+            }
+            // The representative shop's current value decides the target for the whole
+            // scope, so a toggle in a group / all-shops context uniformizes shops that
+            // diverged. When the association filter removed the representative, the lowest
+            // remaining shop anchors the read instead.
+            $readShopId = $this->shopListResolver->resolveRepresentativeShopId($shopConstraint);
+            if (!in_array($readShopId, $shopIds, true)) {
+                $readShopId = $shopIds[0];
+            }
+        }
+
         // A missing row or a NULL value toggles to enabled, like the previous
         // "1 - IFNULL(col, 0)" upsert did.
         $keyColumns = [];
-        if ($isMultiShop) {
-            $keyColumns['id_shop'] = $this->shopListResolver->resolveRepresentativeShopId($shopConstraint);
+        if (null !== $readShopId) {
+            $keyColumns['id_shop'] = $readShopId;
         }
         if (ExtraPropertyScope::LANG === $scope) {
             $keyColumns['id_lang'] = $langId;
         }
         $targetValue = $this->fetchCurrentBoolValue($fullTableName, $primaryKeyName, $entityId, $keyColumns, $columnName) ? 0 : 1;
 
-        $sql = $this->buildUpsertSql($fullTableName, $primaryKeyName, array_keys($keyColumns), [$columnName => $targetValue]);
-        foreach ($isMultiShop ? $this->shopListResolver->resolveShopIds($shopConstraint) : [null] as $shopId) {
-            $params = [$entityId];
+        $rows = [];
+        foreach ($isMultiShop ? $shopIds : [null] as $shopId) {
+            $row = [$entityId];
             if (null !== $shopId) {
-                $params[] = $shopId;
+                $row[] = $shopId;
             }
             if (ExtraPropertyScope::LANG === $scope) {
-                $params[] = $langId;
+                $row[] = $langId;
             }
-            $params[] = $targetValue;
-            $this->connection->executeStatement($sql, $params);
+            $row[] = $targetValue;
+            $rows[] = $row;
         }
+
+        $sql = $this->buildUpsertSql($fullTableName, $primaryKeyName, array_keys($keyColumns), [$columnName], count($rows));
+        $this->connection->executeStatement($sql, array_merge(...$rows));
     }
 
     /**
@@ -208,21 +243,56 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
      */
     protected function fetchCurrentBoolValue(string $fullTableName, string $primaryKeyName, int $entityId, array $keyColumns, string $columnName): bool
     {
-        $conditions = [$this->connection->quoteIdentifier($primaryKeyName) . ' = ?'];
-        $params = [$entityId];
+        $qb = $this->connection->createQueryBuilder()
+            ->select($this->connection->quoteIdentifier($columnName))
+            ->from($this->connection->quoteIdentifier($fullTableName))
+            ->andWhere($this->connection->quoteIdentifier($primaryKeyName) . ' = :entityId')
+            ->setParameter('entityId', $entityId);
         foreach ($keyColumns as $keyColumn => $keyValue) {
-            $conditions[] = $this->connection->quoteIdentifier($keyColumn) . ' = ?';
-            $params[] = $keyValue;
+            $qb->andWhere($this->connection->quoteIdentifier($keyColumn) . ' = :' . $keyColumn)
+                ->setParameter($keyColumn, $keyValue);
         }
 
-        $sql = sprintf(
-            'SELECT %s FROM %s WHERE %s',
-            $this->connection->quoteIdentifier($columnName),
-            $this->connection->quoteIdentifier($fullTableName),
-            implode(' AND ', $conditions)
-        );
+        return (bool) $this->connection->fetchOne($qb->getSQL(), $qb->getParameters());
+    }
 
-        return (bool) $this->connection->fetchOne($sql, $params);
+    /**
+     * Native-parity association filter for SHOP-scope rows: a broad constraint (shop group,
+     * all shops) only refreshes the shops the entity is associated with in {entity}_shop —
+     * like ObjectModel::update(), which never creates {entity}_shop rows in those contexts —
+     * while explicitly named shops (single-shop constraint, ShopCollection) are always
+     * written, like native CONTEXT_SHOP / $id_shop_list inserts. Entities without a
+     * {entity}_shop association table keep the full scope.
+     *
+     * @param int[] $shopIds The constraint's resolved scope
+     *
+     * @return int[]
+     */
+    protected function filterShopScopeByAssociations(string $entityName, string $primaryKeyName, int $entityId, ShopConstraint $shopConstraint, array $shopIds): array
+    {
+        if (null !== $shopConstraint->getShopId()
+            || ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds())
+        ) {
+            return $shopIds;
+        }
+
+        $qb = $this->connection->createQueryBuilder()
+            ->select('a.id_shop')
+            ->from($this->prefix . $entityName . '_shop', 'a')
+            ->andWhere('a.' . $this->connection->quoteIdentifier($primaryKeyName) . ' = :entityId')
+            ->setParameter('entityId', $entityId);
+
+        try {
+            $associatedShopIds = array_map(
+                static fn (array $row): int => (int) $row['id_shop'],
+                $this->connection->fetchAllAssociative($qb->getSQL(), $qb->getParameters())
+            );
+        } catch (Throwable) {
+            // No {entity}_shop association table for this entity: the full scope applies.
+            return $shopIds;
+        }
+
+        return array_values(array_intersect($shopIds, $associatedShopIds));
     }
 
     /**
@@ -304,56 +374,90 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
      */
     protected function writeCommon(string $extraTableName, string $primaryKeyName, int $entityId, array $columnValues): void
     {
-        $sql = $this->buildUpsertSql($this->prefix . $extraTableName, $primaryKeyName, [], $columnValues);
+        $sql = $this->buildUpsertSql($this->prefix . $extraTableName, $primaryKeyName, [], array_keys($columnValues));
         $this->connection->executeStatement($sql, [$entityId, ...array_values($columnValues)]);
     }
 
     /**
-     * Writes lang-scope values for one entity instance, one row per language.
+     * Writes lang-scope values for one entity instance: one row per language, times one
+     * per shop when the lang table is shop-aware — batched into a single multi-row UPSERT
+     * per distinct column set (an all-shops save is one statement, not shops × languages
+     * round trips). Languages carrying different column sets (a value provided for some
+     * languages only) get their own statement so absent columns are never overwritten.
      *
      * @param string $extraTableName Extra table name without DB prefix (from ExtraPropertyDefinition::getExtraTableName())
-     * @param int|null $shopId Shop the rows belong to; null when the entity's lang table has no id_shop column
+     * @param int[]|null $shopIds Shops the rows belong to; null when the entity's lang table has no id_shop column
      * @param array<int, array<string, mixed>> $langValuesByIdLang [idLang => ['column' => value]]
      */
-    protected function writeLang(string $extraTableName, string $primaryKeyName, int $entityId, ?int $shopId, array $langValuesByIdLang): void
+    protected function writeLang(string $extraTableName, string $primaryKeyName, int $entityId, ?array $shopIds, array $langValuesByIdLang): void
     {
-        $fullTableName = $this->prefix . $extraTableName;
-        $systemColumns = null !== $shopId ? ['id_shop', 'id_lang'] : ['id_lang'];
+        if (null !== $shopIds && [] === $shopIds) {
+            return;
+        }
 
+        $fullTableName = $this->prefix . $extraTableName;
+        $systemColumns = null !== $shopIds ? ['id_shop', 'id_lang'] : ['id_lang'];
+
+        // Group languages sharing the same column set into one multi-row statement.
+        $langIdsByColumnSet = [];
         foreach ($langValuesByIdLang as $idLang => $columnValues) {
             if (empty($columnValues)) {
                 continue;
             }
-            $sql = $this->buildUpsertSql($fullTableName, $primaryKeyName, $systemColumns, $columnValues);
-            $params = null !== $shopId
-                ? [$entityId, $shopId, (int) $idLang, ...array_values($columnValues)]
-                : [$entityId, (int) $idLang, ...array_values($columnValues)];
-            $this->connection->executeStatement($sql, $params);
+            $langIdsByColumnSet[implode(',', array_keys($columnValues))][] = (int) $idLang;
+        }
+
+        foreach ($langIdsByColumnSet as $langIds) {
+            $dataColumns = array_keys($langValuesByIdLang[$langIds[0]]);
+            $rows = [];
+            foreach ($shopIds ?? [null] as $shopId) {
+                foreach ($langIds as $idLang) {
+                    $row = [$entityId];
+                    if (null !== $shopId) {
+                        $row[] = $shopId;
+                    }
+                    $row[] = $idLang;
+                    array_push($row, ...array_values($langValuesByIdLang[$idLang]));
+                    $rows[] = $row;
+                }
+            }
+
+            $sql = $this->buildUpsertSql($fullTableName, $primaryKeyName, $systemColumns, $dataColumns, count($rows));
+            $this->connection->executeStatement($sql, array_merge(...$rows));
         }
     }
 
     /**
-     * Writes shop-scope values for one entity instance.
+     * Writes shop-scope values for one entity instance: one row per shop, batched into a
+     * single multi-row UPSERT.
      *
      * @param string $extraTableName Extra table name without DB prefix (from ExtraPropertyDefinition::getExtraTableName())
+     * @param int[] $shopIds
      * @param array<string, mixed> $columnValues
      */
-    protected function writeShop(string $extraTableName, string $primaryKeyName, int $entityId, int $shopId, array $columnValues): void
+    protected function writeShop(string $extraTableName, string $primaryKeyName, int $entityId, array $shopIds, array $columnValues): void
     {
-        $sql = $this->buildUpsertSql($this->prefix . $extraTableName, $primaryKeyName, ['id_shop'], $columnValues);
-        $this->connection->executeStatement($sql, [$entityId, $shopId, ...array_values($columnValues)]);
+        $rows = [];
+        foreach ($shopIds as $shopId) {
+            $rows[] = [$entityId, $shopId, ...array_values($columnValues)];
+        }
+
+        $sql = $this->buildUpsertSql($this->prefix . $extraTableName, $primaryKeyName, ['id_shop'], array_keys($columnValues), count($rows));
+        $this->connection->executeStatement($sql, array_merge(...$rows));
     }
 
     /**
-     * Builds an INSERT … ON DUPLICATE KEY UPDATE statement.
+     * Builds a (multi-row) INSERT … ON DUPLICATE KEY UPDATE statement.
      *
      * $systemColumns are fixed keys inserted before the data columns (e.g. id_shop, id_lang).
-     * Callers must pass parameters in order: entityId, systemColumn values, then data values.
+     * Callers must pass parameters row by row, each row in order: entityId, systemColumn
+     * values, then data values.
      *
      * @param string[] $systemColumns Fixed system key column names (order matters for bindings)
-     * @param array<string, mixed> $columnValues Data column name → value map
+     * @param string[] $dataColumns Data column names (order matters for bindings)
+     * @param int $rowCount Number of value rows the statement covers
      */
-    protected function buildUpsertSql(string $fullTableName, string $primaryKeyName, array $systemColumns, array $columnValues): string
+    protected function buildUpsertSql(string $fullTableName, string $primaryKeyName, array $systemColumns, array $dataColumns, int $rowCount = 1): string
     {
         $quotedPk = $this->connection->quoteIdentifier($primaryKeyName);
         $quotedSystemCols = array_map(
@@ -362,21 +466,21 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
         );
         $quotedDataCols = array_map(
             fn (string $col): string => $this->connection->quoteIdentifier($col),
-            array_keys($columnValues)
+            $dataColumns
         );
 
         $allColsList = implode(', ', [$quotedPk, ...($quotedSystemCols ?: []), ...$quotedDataCols]);
-        $allPlaceholders = implode(', ', array_fill(0, 1 + count($systemColumns) + count($columnValues), '?'));
+        $rowPlaceholders = '(' . implode(', ', array_fill(0, 1 + count($systemColumns) + count($dataColumns), '?')) . ')';
         $updateParts = implode(', ', array_map(
             fn (string $quotedCol): string => $quotedCol . ' = VALUES(' . $quotedCol . ')',
             $quotedDataCols
         ));
 
         return sprintf(
-            'INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s',
+            'INSERT INTO %s (%s) VALUES %s ON DUPLICATE KEY UPDATE %s',
             $this->connection->quoteIdentifier($fullTableName),
             $allColsList,
-            $allPlaceholders,
+            implode(', ', array_fill(0, $rowCount, $rowPlaceholders)),
             $updateParts
         );
     }

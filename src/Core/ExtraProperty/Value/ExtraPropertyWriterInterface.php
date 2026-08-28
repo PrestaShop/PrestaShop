@@ -42,10 +42,15 @@ interface ExtraPropertyWriterInterface
      * Per-shop values (SHOP scope, and LANG scope on multilang-multishop entities) follow
      * the ShopConstraint like native ObjectModel fields follow the legacy shop context:
      * a single-shop constraint writes that shop's row; a shop group, all-shops or
-     * collection constraint fans out to one row per shop in its scope. Whether the lang
-     * table is shop-aware is detected internally from the storage schema. The constraint's
-     * strict flag is ignored — extra property storage has no group/global rows, so there
-     * is no fallback level to target.
+     * collection constraint fans out to one row per shop in its scope. SHOP-scope rows
+     * follow the native {entity}_shop association rule: broad scopes (group, all shops)
+     * only refresh shops the entity is associated with — a shop associated later reads
+     * the definition default until the next save — while explicitly named shops (single
+     * shop, ShopCollection) always get their row, like native CONTEXT_SHOP inserts.
+     * LANG rows cover the full scope regardless of associations, like native
+     * lang-multishop writes. Whether the lang table is shop-aware is detected internally
+     * from the storage schema. The constraint's strict flag is ignored — extra property
+     * storage has no group/global rows, so there is no fallback level to target.
      *
      * @param string $entityName Entity table name (e.g. "product")
      * @param string $primaryKeyName PK column name (e.g. "id_product")

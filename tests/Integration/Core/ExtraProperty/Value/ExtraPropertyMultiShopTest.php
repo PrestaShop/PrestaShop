@@ -55,6 +55,7 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
     private const COLLECTION_WRITE_PRODUCT_ID = 203;
     private const DIVERGENT_VALUES_PRODUCT_ID = 204;
     private const TOGGLE_PRODUCT_ID = 205;
+    private const PARTIAL_ASSOCIATION_PRODUCT_ID = 206;
     private const SHARED_LANG_CONTACT_ID = 301;
 
     private static int $secondShopId;
@@ -85,6 +86,7 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
         $secondShop->name = 'Extra Property Shop 2';
         $secondShop->id_shop_group = self::$defaultGroupId;
         $secondShop->id_category = 2;
+        $secondShop->active = true;
         $secondShop->save();
         self::$secondShopId = (int) $secondShop->id;
 
@@ -97,6 +99,7 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
         $thirdShop->name = 'Extra Property Shop 3';
         $thirdShop->id_shop_group = self::$secondGroupId;
         $thirdShop->id_category = 2;
+        $thirdShop->active = true;
         $thirdShop->save();
         self::$thirdShopId = (int) $thirdShop->id;
 
@@ -113,6 +116,26 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
         foreach (self::definitions() as $definition) {
             self::$registry->register($definition);
         }
+
+        // Broad (group / all shops) SHOP-scope writes only touch shops the entity is
+        // associated with: associate the write-test entity ids with every shop, and the
+        // partial-association one with the default shop only.
+        foreach ([self::GROUP_WRITE_PRODUCT_ID, self::ALL_SHOPS_WRITE_PRODUCT_ID, self::TOGGLE_PRODUCT_ID] as $productId) {
+            foreach ([self::DEFAULT_SHOP_ID, self::$secondShopId, self::$thirdShopId] as $shopId) {
+                self::associateProductToShop($productId, $shopId);
+            }
+        }
+        self::associateProductToShop(self::PARTIAL_ASSOCIATION_PRODUCT_ID, self::DEFAULT_SHOP_ID);
+    }
+
+    private static function associateProductToShop(int $productId, int $shopId): void
+    {
+        Db::getInstance()->execute(sprintf(
+            'INSERT IGNORE INTO `%sproduct_shop` (`id_product`, `id_shop`, `id_tax_rules_group`, `date_add`, `date_upd`) VALUES (%d, %d, 0, NOW(), NOW())',
+            _DB_PREFIX_,
+            $productId,
+            $shopId
+        ));
     }
 
     public static function tearDownAfterClass(): void
@@ -167,6 +190,29 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
         self::$writer->writeAll('product', 'id_product', self::COLLECTION_WRITE_PRODUCT_ID, [self::MODULE => ['ms_shop' => 'third-only']], ShopCollection::shops([self::$thirdShopId]));
         $this->assertSame(1, $this->countRows('product_extra_shop', 'id_product', self::COLLECTION_WRITE_PRODUCT_ID));
         $this->assertSame('third-only', $this->readShopValue(self::COLLECTION_WRITE_PRODUCT_ID, ShopConstraint::shop(self::$thirdShopId)));
+    }
+
+    public function testBroadShopScopeWritesOnlyTheAssociatedShops(): void
+    {
+        // Associated with the default shop only: a broad write must not create rows for
+        // the other shops (native {entity}_shop parity)…
+        self::$writer->writeAll('product', 'id_product', self::PARTIAL_ASSOCIATION_PRODUCT_ID, [self::MODULE => [
+            'ms_shop' => 'associated-only',
+            'ms_lang' => [self::DEFAULT_LANG_ID => 'lang-everywhere'],
+        ]], ShopConstraint::allShops());
+
+        $this->assertSame(1, $this->countRows('product_extra_shop', 'id_product', self::PARTIAL_ASSOCIATION_PRODUCT_ID));
+        $this->assertSame('associated-only', $this->readShopValue(self::PARTIAL_ASSOCIATION_PRODUCT_ID, ShopConstraint::shop(self::DEFAULT_SHOP_ID)));
+        $this->assertNull($this->readShopValue(self::PARTIAL_ASSOCIATION_PRODUCT_ID, ShopConstraint::shop(self::$secondShopId)));
+
+        // …while LANG rows cover the full scope, like native lang-multishop writes…
+        $this->assertSame(3, $this->countRows('product_extra_lang', 'id_product', self::PARTIAL_ASSOCIATION_PRODUCT_ID));
+
+        // …and an explicitly named shop always gets its row, associated or not.
+        self::$writer->writeAll('product', 'id_product', self::PARTIAL_ASSOCIATION_PRODUCT_ID, [self::MODULE => [
+            'ms_shop' => 'explicitly-named',
+        ]], ShopCollection::shops([self::$secondShopId]));
+        $this->assertSame('explicitly-named', $this->readShopValue(self::PARTIAL_ASSOCIATION_PRODUCT_ID, ShopConstraint::shop(self::$secondShopId)));
     }
 
     public function testNonSingleConstraintReadsTheRepresentativeShopValue(): void
