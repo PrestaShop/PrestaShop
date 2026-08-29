@@ -19,6 +19,8 @@ class OrderQueryBuilderTest extends KernelTestCase
     private const CONTEXT_LANG_ID = 1;
     private const CONTEXT_SHOP_ID = 1;
     private const DEMO_CUSTOMER_ID = 1;
+    private const FILTERED_ORDER_STATE_ID = 2;
+    private const OTHER_ORDER_STATE_ID = 3;
 
     private Connection $connection;
     private string $dbPrefix;
@@ -71,6 +73,43 @@ class OrderQueryBuilderTest extends KernelTestCase
         } finally {
             $this->deleteOrders($createdOrderIds);
             $this->deleteAddresses([$addressInCountryA, $addressInCountryB]);
+        }
+    }
+
+    /**
+     * The grid is also filtered by order status, which is reached through a LEFT JOIN on
+     * order_state rather than the country filter's INNER JOIN chain. Same regression, different
+     * join type: once the newest orders carry another status, resolving the page of ids before
+     * applying the filter returns nothing for the status actually asked for.
+     */
+    public function testOrderStatusFilterIsNotTruncatedByPagination(): void
+    {
+        $address = $this->insertAddress(1);
+
+        // Two orders in the filtered status, then three NEWER ones (higher id_order) in another.
+        $olderMatch = $this->insertOrder($address, self::FILTERED_ORDER_STATE_ID);
+        $newerMatch = $this->insertOrder($address, self::FILTERED_ORDER_STATE_ID);
+        $newestOthers = [
+            $this->insertOrder($address, self::OTHER_ORDER_STATE_ID),
+            $this->insertOrder($address, self::OTHER_ORDER_STATE_ID),
+            $this->insertOrder($address, self::OTHER_ORDER_STATE_ID),
+        ];
+        $createdOrderIds = array_merge([$olderMatch, $newerMatch], $newestOthers);
+
+        try {
+            $criteria = $this->createSearchCriteria(
+                ['osname' => self::FILTERED_ORDER_STATE_ID],
+                'id_order',
+                'DESC',
+                2,
+                0
+            );
+            $ids = $this->fetchOrderIds($criteria);
+
+            $this->assertSame([$newerMatch, $olderMatch], $ids);
+        } finally {
+            $this->deleteOrders($createdOrderIds);
+            $this->deleteAddresses([$address]);
         }
     }
 
@@ -131,7 +170,7 @@ class OrderQueryBuilderTest extends KernelTestCase
         return (int) $this->connection->lastInsertId();
     }
 
-    private function insertOrder(int $addressId): int
+    private function insertOrder(int $addressId, int $orderStateId = 1): int
     {
         $this->connection->executeStatement(
             'INSERT INTO ' . $this->dbPrefix . 'orders
@@ -139,10 +178,11 @@ class OrderQueryBuilderTest extends KernelTestCase
                  id_carrier, current_state, payment, reference, id_shop, id_shop_group,
                  date_add, date_upd, delivery_date, invoice_date, valid)
              VALUES (:address, :address, 0, :currency, :lang, :customer,
-                 0, 1, :payment, :reference, :shop, :shopGroup,
+                 0, :orderState, :payment, :reference, :shop, :shopGroup,
                  NOW(), NOW(), NOW(), NOW(), 1)',
             [
                 'address' => $addressId,
+                'orderState' => $orderStateId,
                 'currency' => 1,
                 'lang' => self::CONTEXT_LANG_ID,
                 'customer' => self::DEMO_CUSTOMER_ID,
