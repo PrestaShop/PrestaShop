@@ -30,7 +30,7 @@
                 column: column,
                 attributes: {class: class|trim, tooltip_name: true},
                 record: record,
-                action: inlineAction
+                action: inlineAction,
               }) }}
           {% endfor %}
         </div>
@@ -54,7 +54,7 @@
                 column: column,
                 attributes: {class: class|trim, tooltip_name: true},
                 record: record,
-                action: action
+                action: action,
               }) }}
 
               {% set isFirstRendered = true %}
@@ -77,7 +77,7 @@
                   column: column,
                   attributes: {class: 'dropdown-item', tooltip_name: false},
                   record: record,
-                  action: action
+                  action: action,
                 }) }}
               {% endfor %}
             </div>

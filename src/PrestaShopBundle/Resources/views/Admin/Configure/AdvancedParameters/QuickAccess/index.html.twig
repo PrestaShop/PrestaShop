@@ -1,0 +1,26 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% set layoutHeaderToolbarBtn = {
+  add: {
+    href: path('admin_quick_accesses_create'),
+    desc: 'Add new quick access'|trans({}, 'Admin.Advparameters.Feature'),
+    icon: 'add_circle_outline',
+  },
+} %}
+
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+{% block content %}
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: quickAccessGrid}) }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/quick_access.bundle.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+{% endblock %}

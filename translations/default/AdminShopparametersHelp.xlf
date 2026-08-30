@@ -63,7 +63,7 @@
       <trans-unit id="cffcb6b76faff5fd9cb6a310aab445d2">
         <source>Allows the use of iframes in rich text fields such as product descriptions. It is recommended to keep this option disabled unless you specifically need iframes for video embeds or other external content.</source>
         <target>Allows the use of iframes in rich text fields such as product descriptions. It is recommended to keep this option disabled unless you specifically need iframes for video embeds or other external content.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 110]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 142]</note>
       </trans-unit>
       <trans-unit id="a5fa9ffd3ddf89fe263675358032e7fb">
         <source>Automatically apply this value as a discount on all products for members of this customer group.</source>
@@ -118,6 +118,11 @@
         <target>Choose the page which contains your store's terms and conditions of use.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php [Line: 113]</note>
       </trans-unit>
+      <trans-unit id="b5dc879d20aba70ab5a7b8c269b427eb">
+        <source>Choose which features are enabled in your shop: B2C only, B2B only, or both.</source>
+        <target>Choose which features are enabled in your shop: B2C only, B2B only, or both.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 125]</note>
+      </trans-unit>
       <trans-unit id="7ba34b929c8241268ab5eac35a772ab1">
         <source>Clean the HTML content on text fields. We recommend that you leave this option enabled.</source>
         <target>Clean the HTML content on text fields. We recommend that you leave this option enabled.</target>
@@ -125,7 +130,7 @@
       <trans-unit id="5b6d89f93deda9c02c553196a5d73cb7">
         <source>Cleans the HTML content in rich text fields before saving. It is recommended to keep this option enabled to ensure safe and valid content is saved into the database.</source>
         <target>Cleans the HTML content in rich text fields before saving. It is recommended to keep this option enabled to ensure safe and valid content is saved into the database.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 120]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 152]</note>
       </trans-unit>
       <trans-unit id="9cd9efd3eb168071eb0a199972c54aab">
         <source>Contact name (e.g. Customer Support).</source>
@@ -222,7 +227,7 @@
       <trans-unit id="a1202480ddcd8665114515ca380c0e5b">
         <source>Enable or disable token in the Front Office to improve PrestaShop's security.</source>
         <target>Enable or disable token in the Front Office to improve PrestaShop's security.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 100]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 113]</note>
       </trans-unit>
       <trans-unit id="9110055bdc92744713baa237b26f8ac7">
         <source>Enable search within a whole word, rather than from its beginning only.</source>
@@ -266,22 +271,22 @@
       <trans-unit id="feb02e79a9b6bca4bb9559914d218455">
         <source>Enables or disables SSL encryption (https://) for your shop. This is a security standard and you should always keep this option enabled, unless there is a specific technical issue.</source>
         <target>Enables or disables SSL encryption (https://) for your shop. This is a security standard and you should always keep this option enabled, unless there is a specific technical issue.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 86]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 99]</note>
       </trans-unit>
       <trans-unit id="3745e6d203a2be11a15c749586ba592f">
         <source>Enables or disables the best sellers page in your shop. When disabled, the page and related links are also removed from the sitemap and other sections.</source>
         <target>Enables or disables the best sellers page in your shop. When disabled, the page and related links are also removed from the sitemap and other sections.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 174]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 206]</note>
       </trans-unit>
       <trans-unit id="f44ccb9feb9694644d7ddb842809af7c">
         <source>Enables or disables the brands listing in your shop. When disabled, brands are also removed from the sitemap and other related sections.</source>
         <target>Enables or disables the brands listing in your shop. When disabled, brands are also removed from the sitemap and other related sections.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 166]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 198]</note>
       </trans-unit>
       <trans-unit id="9955808073b701a1d996e190b0fa2b6b">
         <source>Enables or disables the suppliers listing in your shop. When disabled, suppliers are also removed from the sitemap and other related sections.</source>
         <target>Enables or disables the suppliers listing in your shop. When disabled, suppliers are also removed from the sitemap and other related sections.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 158]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 190]</note>
       </trans-unit>
       <trans-unit id="786471035f60ea5955fd93f6998e8637">
         <source>Enter each alias separated by a comma (e.g. 'prestshop,preztashop,prestasohp').</source>
@@ -580,7 +585,7 @@
       <trans-unit id="00b963b1cb1aad2142ae67ce65329944">
         <source>Status will be highlighted in this color. HTML colors only.</source>
         <target>Status will be highlighted in this color. HTML colors only.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderReturnStates/OrderReturnStateType.php [Line: 66]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderReturnStates/OrderReturnStateType.php [Line: 67]</note>
       </trans-unit>
       <trans-unit id="b950eb0054205bc67aa88899eadded22">
         <source>Storefront picture.</source>
@@ -615,7 +620,7 @@
       <trans-unit id="3d1ffb24b2e1b1381ca7da9a9b5dd97a">
         <source>The multistore feature allows you to manage several front offices from a single back office. If this feature is enabled, a Multistore page is available in the Advanced Parameters menu.</source>
         <target>The multistore feature allows you to manage several front offices from a single back office. If this feature is enabled, a Multistore page is available in the Advanced Parameters menu.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 183]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 215]</note>
       </trans-unit>
       <trans-unit id="c18179baaeadd4a2fc27fafd3d6f40b1">
         <source>The order in which products are displayed in the product list.</source>
@@ -743,12 +748,12 @@
       <trans-unit id="71958504714b867b7f6f00f43b9c9bd0">
         <source>You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.</source>
         <target>You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 137]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 169]</note>
       </trans-unit>
       <trans-unit id="2b116a3c74c816d853b7d86abf838ebb">
         <source>You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).</source>
         <target>You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 150]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 182]</note>
       </trans-unit>
       <trans-unit id="f53c8ac6acc0017629736d6d0ccd935c">
         <source>You can specify the default behavior for all disabled products. The product page can display a "Discontinued" message or an error page. You can also specify which HTTP response is sent to users. This can be set specifically for each product.</source>

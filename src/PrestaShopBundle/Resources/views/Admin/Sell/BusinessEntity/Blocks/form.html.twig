@@ -1,0 +1,144 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% form_theme businessEntityForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+
+{% macro customAddressPrototype(prototype, prototype_name) %}
+  {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
+    index: prototype_name,
+    position: prototype_name,
+    address: prototype,
+  }) }}
+{% endmacro %}
+
+{% block business_entity_form %}
+  {{ form_start(businessEntityForm, {attr: {novalidate: 'novalidate'}}) }}
+  {{ form_errors(businessEntityForm) }}
+  <div class="card">
+    <h3 class="card-header">
+      {{ 'General information'|trans({}, 'Admin.Global') }}
+    </h3>
+    <div class="card-body">
+      <div class="form-wrapper">
+        <div class="row">
+          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.name) }}</div>
+          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.legal_name) }}</div>
+        </div>
+
+        <hr>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-control-label">{{ 'VAT number'|trans({}, 'Admin.Global') }}</label>
+              <input type="text" class="form-control" placeholder="FR12345678901" disabled>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-control-label">{{ 'SIREN / SIRET'|trans({}, 'Admin.Global') }}</label>
+              <input type="text" class="form-control" placeholder="123 456 789 00012" disabled>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-control-label">{{ 'DUNS number'|trans({}, 'Admin.Global') }}</label>
+              <input type="text" class="form-control" placeholder="12-345-6789" disabled>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+        <div class="row">
+          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.external_ref) }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.status) }}</div>
+          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.customer_group_id) }}</div>
+        </div>
+        {{ form_row(businessEntityForm.general_information.delivery_authorized) }}
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-header d-flex justify-content-between">
+      <span>
+        <i class="material-icons">place</i>
+        {{ 'Billing address'|trans({}, 'Admin.Global') }}
+      </span>
+
+      <button type="button" id="add_business_entity_billing_address" class="btn btn-outline-secondary"
+              data-collection-holder-class="billing_addresses"><i
+          class="material-icons">add</i>{{ 'Add address'|trans({}, 'Admin.Global') }}
+      </button>
+    </h3>
+    <div class="card-body">
+      <div class="form-wrapper">
+        <ul class="billing_addresses list-unstyled"
+            {% set billingAddressIndex = businessEntityForm.billing_address|length > 0 ? businessEntityForm.billing_address|last.vars.name + 1 : 1 %}
+            data-index="{{ billingAddressIndex }}"
+            data-address-label-template="{{ 'Address #%position%'|trans({}, 'Admin.Global') }}"
+            data-prototype="{{ _self.customAddressPrototype(businessEntityForm.billing_address.vars.prototype, businessEntityForm.billing_address.vars.prototype.vars.name)|e('html_attr') }}"
+        >
+          {% for address in businessEntityForm.billing_address %}
+            <li>
+              {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
+                index: address.vars.name,
+                position: loop.index,
+                address: address,
+              }) }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    {% set shippingHiddenClass = businessEntityForm.billing_address_as_shipping_address.vars.data ? ' d-none' : '' %}
+    <h3 class="card-header d-flex justify-content-between">
+      <span>
+        <i class="material-icons">place</i>
+        {{ 'Shipping address'|trans({}, 'Admin.Global') }}
+      </span>
+
+      <button type="button" id="add_business_entity_shipping_address"
+              class="btn btn-outline-secondary js-business-entity-shipping-form{{ shippingHiddenClass }}"
+              data-collection-holder-class="shipping_addresses"><i
+          class="material-icons">add</i>{{ 'Add address'|trans({}, 'Admin.Global') }}
+      </button>
+    </h3>
+    <div class="card-body">
+      <div class="form-wrapper">
+        {{ form_row(businessEntityForm.billing_address_as_shipping_address) }}
+        <ul class="shipping_addresses list-unstyled js-business-entity-shipping-form{{ shippingHiddenClass }}"
+            {% set shippingAddressIndex = businessEntityForm.shipping_address|length > 0 ? businessEntityForm.shipping_address|last.vars.name + 1 : 1 %}
+            data-index="{{ shippingAddressIndex }}"
+            data-address-label-template="{{ 'Address #%position%'|trans({}, 'Admin.Global') }}"
+            data-prototype="{{ _self.customAddressPrototype(businessEntityForm.shipping_address.vars.prototype, businessEntityForm.shipping_address.vars.prototype.vars.name)|e('html_attr') }}"
+        >
+          {% for address in businessEntityForm.shipping_address %}
+            <li>
+              {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
+                index: address.vars.name,
+                position: loop.index,
+                address: address,
+              }) }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-end">
+    <a href="{{ path('admin_business_entities_list') }}" class="btn btn-outline-secondary mr-3">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</a>
+    <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+  </div>
+  {{ form_widget(businessEntityForm._token) }}
+  {{ form_widget(businessEntityForm.default_billing_address) }}
+  {{ form_widget(businessEntityForm.default_shipping_address) }}
+  {{ form_widget(businessEntityForm.shop_id) }}
+  {{ form_end(businessEntityForm, {render_rest: false}) }}
+{% endblock %}

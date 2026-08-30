@@ -142,7 +142,7 @@ describe('BO - Cart rules - Actions : Apply a discount None', async () => {
       expect(subTotal).to.eq('Free');
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
-      expect(priceATI).to.eq(dataProducts.demo_6.combinations[0].price);
+      expect(priceATI).to.eq(dataProducts.demo_6.combinations[0].priceTI);
     });
 
     it('should proceed to checkout', async function () {

@@ -34,20 +34,7 @@ $(function(){
 		var panel_selection_single_selection = panel_selection.find("#modules-position-single-selection");
 		var panel_selection_multiple_selection = panel_selection.find("#modules-position-multiple-selection");
 
-		var panel_selection_original_y = panel_selection.offset().top;
-		var panel_selection_original_y_top_margin = 111;
-
-		panel_selection.css("position", "relative").hide();
-
-		$(window).on("scroll", function (event) {
-			var scroll_top = $(window).scrollTop();
-			panel_selection.css(
-				"top",
-				scroll_top < panel_selection_original_y_top_margin
-					? 0
-					: scroll_top - panel_selection_original_y + panel_selection_original_y_top_margin
-			);
-		});
+		panel_selection.hide();
 
 		var modules_list = $(".modules-position-checkbox");
 

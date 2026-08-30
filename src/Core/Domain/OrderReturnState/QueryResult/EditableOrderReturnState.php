@@ -15,26 +15,20 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnSt
 class EditableOrderReturnState
 {
     /**
-     * @var OrderReturnStateId
-     */
-    private $orderReturnStateId;
-    /**
-     * @var array
+     * @var array<string, string>
      */
     private $localizedNames;
-    /**
-     * @var string
-     */
-    private $color;
+
+    private OrderReturnStateId $orderReturnStateId;
 
     public function __construct(
         OrderReturnStateId $orderStateId,
         array $name,
-        string $color
+        private string $color,
+        private bool $isCancellingReturn,
     ) {
         $this->orderReturnStateId = $orderStateId;
         $this->localizedNames = $name;
-        $this->color = $color;
     }
 
     /**
@@ -59,5 +53,10 @@ class EditableOrderReturnState
     public function getColor()
     {
         return $this->color;
+    }
+
+    public function isCancellingReturn(): bool
+    {
+        return $this->isCancellingReturn;
     }
 }

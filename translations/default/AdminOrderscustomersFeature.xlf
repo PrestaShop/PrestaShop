@@ -100,17 +100,17 @@
       <trans-unit id="d9c66f411da5faef9c46d5b679214ae1">
         <source>Add a discount</source>
         <target>Add a discount</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 138]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 155]</note>
       </trans-unit>
       <trans-unit id="c68f674c6a04b2f75537e41318706b5c">
         <source>Add a note on this customer. It will only be visible to you.</source>
         <target>Add a note on this customer. It will only be visible to you.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/PrivateNoteType.php [Line: 44]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/PrivateNoteType.php [Line: 45]</note>
       </trans-unit>
       <trans-unit id="536f22a9d3cc691b4893dc895050c26e">
         <source>Add a note on this order. It will only be visible to you.</source>
         <target>Add a note on this order. It will only be visible to you.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/InternalNoteType.php [Line: 46]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/InternalNoteType.php [Line: 47]</note>
       </trans-unit>
       <trans-unit id="a7136d956fbff49c3912e44722dbf000">
         <source>Add a private note</source>
@@ -120,7 +120,7 @@
       <trans-unit id="4b6c6cda10a23d1bdc920f2e47e5f46f">
         <source>Add a product</source>
         <target>Add a product</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 133]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 145]</note>
       </trans-unit>
       <trans-unit id="ffd9d577464b4a615096c6d0c9c490ae">
         <source>Add current year to invoice number</source>
@@ -140,7 +140,7 @@
       <trans-unit id="e5d61db40a917c78a9d8e821dd0dd8de">
         <source>Add new order</source>
         <target>Add new order</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 192]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 186]</note>
       </trans-unit>
       <trans-unit id="80c05dda6b88c30a777e8777e23be8d7">
         <source>Add new order message</source>
@@ -185,7 +185,7 @@
       <trans-unit id="6e55ad8db6699476d8901b3d439963cb">
         <source>Allowed outstanding amount</source>
         <target>Allowed outstanding amount</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 320]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 325]</note>
       </trans-unit>
       <trans-unit id="064591b2672fd61bdbdb4043ba5303a6">
         <source>Amount spent:</source>
@@ -250,7 +250,7 @@
       <trans-unit id="4b8def9be8f45a8d6baea36b26868965">
         <source>Cancel products</source>
         <target>Cancel products</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig [Line: 93]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig [Line: 125]</note>
       </trans-unit>
       <trans-unit id="0e22fe7d45f8e5632a4abf369b24e29c">
         <source>Canceled</source>
@@ -302,6 +302,16 @@
         <target>Change currency</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/payments.html.twig [Line: 114]</note>
       </trans-unit>
+      <trans-unit id="498a02362447c2b31f2e5c38dfee6fb1">
+        <source>Choose a carrier</source>
+        <target>Choose a carrier</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddProductRowType.php [Line: 76]</note>
+      </trans-unit>
+      <trans-unit id="95b7b866af201ea47389737cc7fd6f30">
+        <source>Choose a shipment</source>
+        <target>Choose a shipment</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddProductRowType.php [Line: 68]</note>
+      </trans-unit>
       <trans-unit id="448e9885f58aad30823ddde9996114d6">
         <source>Choose an order status</source>
         <target>Choose an order status</target>
@@ -335,7 +345,12 @@
       <trans-unit id="200e62e510bab9b03c912e10a5363a7a">
         <source>Create a new invoice</source>
         <target>Create a new invoice</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig [Line: 44]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig [Line: 46]</note>
+      </trans-unit>
+      <trans-unit id="26734e083587368cf976b8082c25907c">
+        <source>Create a shipment</source>
+        <target>Create a shipment</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 958]</note>
       </trans-unit>
       <trans-unit id="1c590347506b8083685d0aa753598513">
         <source>Create an order from this cart</source>
@@ -390,7 +405,7 @@
       <trans-unit id="f504da64aae2dcfd85ce565121248f93">
         <source>Customer explanation</source>
         <target>Customer explanation</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/MerchandiseReturn/OrderReturnType.php [Line: 70]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/OrderReturn/OrderReturnType.php [Line: 71]</note>
       </trans-unit>
       <trans-unit id="1d949d2235747b894bbaae35fbf44f1d">
         <source>Customer information</source>
@@ -430,12 +445,12 @@
       <trans-unit id="446faa7da2d42ba4ffeda73cb119dd91">
         <source>Date issued</source>
         <target>Date issued</target>
-        <note>File: src/Core/Grid/Definition/Factory/MerchandiseReturnGridDefinitionFactory.php [Line: 75]</note>
+        <note>File: src/Core/Grid/Definition/Factory/OrderReturnGridDefinitionFactory.php [Line: 92]</note>
       </trans-unit>
       <trans-unit id="a3858e268ef19d7ec44b4e849a189a69">
         <source>Default customer group</source>
         <target>Default customer group</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 283]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 288]</note>
       </trans-unit>
       <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
         <source>Delay</source>
@@ -497,15 +512,30 @@
         <target>Download credit slip</target>
         <note>File: src/Core/Grid/Data/Factory/CreditSlipGridDataFactory.php [Line: 68]</note>
       </trans-unit>
+      <trans-unit id="7a1ca95f6acacf166e34024f939aa2f7">
+        <source>Download delivery slip</source>
+        <target>Download delivery slip</target>
+        <note>File: src/Core/Grid/Definition/Factory/ShipmentGridDefinitionFactory.php [Line: 150]</note>
+      </trans-unit>
+      <trans-unit id="60a842e40426612cc03e95bcc7b9e787">
+        <source>Download delivery slips</source>
+        <target>Download delivery slips</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig [Line: 103]</note>
+      </trans-unit>
       <trans-unit id="90bf4568676d012fc21b3556fbd0303b">
         <source>Duplicate this order</source>
         <target>Duplicate this order</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/customer.html.twig [Line: 193]</note>
       </trans-unit>
+      <trans-unit id="6f329b1a160420e52803dd5875267faf">
+        <source>Edit a product</source>
+        <target>Edit a product</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/edit_product_modal.html.twig [Line: 17]</note>
+      </trans-unit>
       <trans-unit id="6184e421976bbb88c6f0a3390e203145">
         <source>Edit customer</source>
         <target>Edit customer</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 1067]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 1071]</note>
       </trans-unit>
       <trans-unit id="71e2851d86b252a44c658b896c486921">
         <source>Edit note</source>
@@ -525,7 +555,7 @@
       <trans-unit id="419fca4bebf663adb696fce24499ce0d">
         <source>Edit the price</source>
         <target>Edit the price</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig [Line: 31]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig [Line: 33]</note>
       </trans-unit>
       <trans-unit id="916e303456985cc95e3f551665b0314f">
         <source>Enable invoices</source>
@@ -540,7 +570,7 @@
       <trans-unit id="f374280fc7cab62785714cfca79b85a1">
         <source>Enable returns</source>
         <target>Enable returns</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/MerchandiseReturn/MerchandiseReturnOptionsType.php [Line: 35]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/OrderReturn/OrderReturnOptionsType.php [Line: 35]</note>
       </trans-unit>
       <trans-unit id="ae3a4016de0f41b2fd7a39494fb5a05a">
         <source>Enable tax breakdown</source>
@@ -605,7 +635,7 @@
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddProductRowType.php [Line: 113]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddProductRowType.php [Line: 138]</note>
       </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
@@ -616,6 +646,11 @@
         <source>From %date1% to %date2% per unique visitors</source>
         <target>From %date1% to %date2% per unique visitors</target>
         <note>File: src/Adapter/Kpi/AbandonedCartKpi.php [Line: 44]</note>
+      </trans-unit>
+      <trans-unit id="738f7d282de4e93c94ba64377f40ad0f">
+        <source>Fulfill the shipment</source>
+        <target>Fulfill the shipment</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/fulfill_shipment_modal.html.twig [Line: 10]</note>
       </trans-unit>
       <trans-unit id="91ee5169ce4265b5ace262d703edbb5c">
         <source>Generate PDF</source>
@@ -670,7 +705,7 @@
       <trans-unit id="920bd1fb6d54c93fca528ce941464225">
         <source>Group access</source>
         <target>Group access</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 273]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 278]</note>
       </trans-unit>
       <trans-unit id="a37ede293936e29279ed543129451ec3">
         <source>Groups</source>
@@ -705,6 +740,11 @@ Best regards,</target>
         <source>High</source>
         <target>High</target>
         <note>File: classes/lang/KeysReference/RiskLang.php [Line: 10]</note>
+      </trans-unit>
+      <trans-unit id="0cec4c577a7e76284c0eeb89baf38939">
+        <source>I confirm the creation of a new invoice</source>
+        <target>I confirm the creation of a new invoice</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddProductRowType.php [Line: 83]</note>
       </trans-unit>
       <trans-unit id="5b8c99dad1893a85076709b2d3c2d2d0">
         <source>IP Address</source>
@@ -784,7 +824,7 @@ Best regards,</target>
       <trans-unit id="5e5914912e8d2f2765525840acf98bea">
         <source>Last visit</source>
         <target>Last visit</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 805]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 809]</note>
       </trans-unit>
       <trans-unit id="a39ee61626da77cb9644fa972a8ac5b5">
         <source>Latest Update</source>
@@ -824,7 +864,7 @@ Best regards,</target>
       <trans-unit id="a7f50f36de1e47026a07b40670b50e1a">
         <source>Maximum number of payment days</source>
         <target>Maximum number of payment days</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 333]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 338]</note>
       </trans-unit>
       <trans-unit id="95923cff2ad4637372adcdf25e4581f8">
         <source>Meaning of status</source>
@@ -839,7 +879,7 @@ Best regards,</target>
       <trans-unit id="9442975514755961788cc54bf8b43ddf">
         <source>Merchandise return (RMA) options</source>
         <target>Merchandise return (RMA) options</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/CustomerService/MerchandiseReturn/Blocks/options.html.twig [Line: 14]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/CustomerService/OrderReturn/Blocks/options.html.twig [Line: 14]</note>
       </trans-unit>
       <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
         <source>Merchandise returns</source>
@@ -874,12 +914,12 @@ Best regards,</target>
       <trans-unit id="94003250a2187a9f51b227b490e5ab6b">
         <source>New client</source>
         <target>New client</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 380]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 443]</note>
       </trans-unit>
       <trans-unit id="4800d00deaa0a28a18151d76feb858cb">
         <source>New invoice information</source>
         <target>New invoice information</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig [Line: 66]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig [Line: 68]</note>
       </trans-unit>
       <trans-unit id="b55a2d6e1009d3881156a3495dd26de5">
         <source>New message</source>
@@ -894,7 +934,7 @@ Best regards,</target>
       <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
         <source>Newsletter</source>
         <target>Newsletter</target>
-        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 1431]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 264]</note>
       </trans-unit>
       <trans-unit id="d7eb752a5f38ab96a8dcf110aeb9f8b3">
         <source>Newsletter Registrations</source>
@@ -961,6 +1001,11 @@ Best regards,</target>
         <target>On backorder (paid)</target>
         <note>File: classes/lang/KeysReference/OrderStateLang.php [Line: 15]</note>
       </trans-unit>
+      <trans-unit id="cb812fdc32434c9c11b651ba32118114">
+        <source>Only %fulfilled% on %total% shipments have been fulfilled</source>
+        <target>Only %fulfilled% on %total% shipments have been fulfilled</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig [Line: 92]</note>
+      </trans-unit>
       <trans-unit id="c3bf447eabe632720a3aa1a7ce401274">
         <source>Open</source>
         <target>Open</target>
@@ -994,7 +1039,7 @@ Best regards,</target>
       <trans-unit id="0f005bd8209a61e4fc96a69736eb9798">
         <source>Order %reference% from %firstname% %lastname%</source>
         <target>Order %reference% from %firstname% %lastname%</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 555]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 615]</note>
       </trans-unit>
       <trans-unit id="d79cf3f429596f77db95c65074663a54">
         <source>Order ID</source>
@@ -1034,7 +1079,7 @@ Best regards,</target>
       <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
         <source>Orders</source>
         <target>Orders</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 552]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 612]</note>
       </trans-unit>
       <trans-unit id="04427d6ba3fb03f0951b27ddd7c05af5">
         <source>Orders and messages timeline</source>
@@ -1069,7 +1114,7 @@ Best regards,</target>
       <trans-unit id="77fd2b4393b379bedd30efcd5df02090">
         <source>Partial refund</source>
         <target>Partial refund</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 79]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 84]</note>
       </trans-unit>
       <trans-unit id="36358a9d4d77cc110761aec78f98c945">
         <source>Partner offers</source>
@@ -1189,7 +1234,7 @@ Best regards,</target>
       <trans-unit id="cc61945cbbf46721a053467c395c666f">
         <source>Refunded</source>
         <target>Refunded</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 59]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 64]</note>
       </trans-unit>
       <trans-unit id="59f0981d0f1e01bcc689ee92d54a5833">
         <source>Registered customer</source>
@@ -1199,7 +1244,7 @@ Best regards,</target>
       <trans-unit id="0f98b7f230f3c91292f0de4c99e263f2">
         <source>Registration</source>
         <target>Registration</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 804]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 808]</note>
       </trans-unit>
       <trans-unit id="97ce2ccb5de5849fd94203a375054378">
         <source>Registration Date</source>
@@ -1259,17 +1304,17 @@ Best regards,</target>
       <trans-unit id="fc27a9928f7964baef466650acacbe10">
         <source>Return prefix</source>
         <target>Return prefix</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/MerchandiseReturn/MerchandiseReturnOptionsType.php [Line: 58]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/OrderReturn/OrderReturnOptionsType.php [Line: 58]</note>
       </trans-unit>
       <trans-unit id="6a5efd211a422296eab4adc476c98f0e">
         <source>Return products</source>
         <target>Return products</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig [Line: 84]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig [Line: 116]</note>
       </trans-unit>
       <trans-unit id="53f2da10b8b14a1db85d28656a4cc489">
         <source>Return window</source>
         <target>Return window</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/MerchandiseReturn/MerchandiseReturnOptionsType.php [Line: 43]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/OrderReturn/OrderReturnOptionsType.php [Line: 43]</note>
       </trans-unit>
       <trans-unit id="6d72e074fdface4ae892543d39434175">
         <source>Returns form</source>
@@ -1289,7 +1334,7 @@ Best regards,</target>
       <trans-unit id="b5228365ac1cae42b64aa5aecee6cf25">
         <source>Risk rating</source>
         <target>Risk rating</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 359]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 364]</note>
       </trans-unit>
       <trans-unit id="a19330a6fc36ebae6683cc023e295687">
         <source>Run sync</source>
@@ -1329,7 +1374,17 @@ Best regards,</target>
       <trans-unit id="a58f0a5c8ca56309af25346c508d66de">
         <source>Select a carrier</source>
         <target>Select a carrier</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/Shipment/SplitShipmentType.php [Line: 52]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/Shipment/SplitShipmentType.php [Line: 49]</note>
+      </trans-unit>
+      <trans-unit id="75f478da7d0bbf671a357dcbca99f59b">
+        <source>Select a carrier for the new shipment</source>
+        <target>Select a carrier for the new shipment</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddProductRowType.php [Line: 74]</note>
+      </trans-unit>
+      <trans-unit id="ce0eee0088e2b4573bf734e8ba4bb58b">
+        <source>Select a shipment</source>
+        <target>Select a shipment</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddProductRowType.php [Line: 66]</note>
       </trans-unit>
       <trans-unit id="c951548d41c81605c9471081a0ba7c92">
         <source>Select items to merge</source>
@@ -1344,7 +1399,7 @@ Best regards,</target>
       <trans-unit id="6b80a29697977886b2d1ddfd12f79eeb">
         <source>Select shipment</source>
         <target>Select shipment</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/Shipment/MergeShipmentType.php [Line: 65]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/Shipment/MergeShipmentType.php [Line: 67]</note>
       </trans-unit>
       <trans-unit id="8097f715f52f4acfe52fac2c59c3a657">
         <source>Select shipment to merge to</source>
@@ -1399,7 +1454,7 @@ Best regards,</target>
       <trans-unit id="5683c1ddfa1148c2f5c1986656804a06">
         <source>Shipment %shipment_id% - carrier %carrier_name%</source>
         <target>Shipment %shipment_id% - carrier %carrier_name%</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/Shipment/MergeShipmentType.php [Line: 49]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/Shipment/MergeShipmentType.php [Line: 51]</note>
       </trans-unit>
       <trans-unit id="8d4ccea46ae307dd39e42153dff2d92e">
         <source>Shipment number: %shipment_id%</source>
@@ -1449,7 +1504,7 @@ Best regards,</target>
       <trans-unit id="4ad439b4f7069964e258259e049fa90c">
         <source>Standard refund</source>
         <target>Standard refund</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig [Line: 89]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig [Line: 121]</note>
       </trans-unit>
       <trans-unit id="c33e404a441c6ba9648f88af3c68a1ca">
         <source>Statistics</source>
@@ -1509,7 +1564,7 @@ Best regards,</target>
       <trans-unit id="d68a1671669f7e55d73dd78c22d52dfa">
         <source>This order has been partially paid by voucher. Choose the amount you want to refund:</source>
         <target>This order has been partially paid by voucher. Choose the amount you want to refund:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 248]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 265]</note>
       </trans-unit>
       <trans-unit id="d97477d6d8a838ead9348185bb5b6742">
         <source>Thread</source>
@@ -1719,12 +1774,12 @@ Best regards,</target>
       <trans-unit id="15bbb9d0bbf25e8d2978de1168c749dc">
         <source>Website</source>
         <target>Website</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 316]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 321]</note>
       </trans-unit>
       <trans-unit id="ba794350deb07c0c96fe73bd12239059">
         <source>Wrapping</source>
         <target>Wrapping</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 172]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 189]</note>
       </trans-unit>
       <trans-unit id="c4d634173cf078f7b8ac440267ebddea">
         <source>Write an email</source>
@@ -1734,7 +1789,7 @@ Best regards,</target>
       <trans-unit id="0fb69d35aaa499b0a2cb9417de976168">
         <source>You can use this feature in a single-store context only. Switch contexts to enable it.</source>
         <target>You can use this feature in a single-store context only. Switch contexts to enable it.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 199]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 193]</note>
       </trans-unit>
       <trans-unit id="76a6d3995bf5a66e8c92d84401d6435e">
         <source>Your answer to</source>
@@ -1764,12 +1819,12 @@ Best regards,</target>
       <trans-unit id="c12a553ab6ad810580afa3f07aa9f51f">
         <source>not paid</source>
         <target>not paid</target>
-        <note>File: src/Adapter/Order/QueryHandler/GetOrderForViewingHandler.php [Line: 435]</note>
+        <note>File: src/Adapter/Order/QueryHandler/GetOrderForViewingHandler.php [Line: 453]</note>
       </trans-unit>
       <trans-unit id="8d4ac0e8c6f5900930ddfccd45d10abf">
         <source>overpaid</source>
         <target>overpaid</target>
-        <note>File: src/Adapter/Order/QueryHandler/GetOrderForViewingHandler.php [Line: 441]</note>
+        <note>File: src/Adapter/Order/QueryHandler/GetOrderForViewingHandler.php [Line: 459]</note>
       </trans-unit>
     </body>
   </file>

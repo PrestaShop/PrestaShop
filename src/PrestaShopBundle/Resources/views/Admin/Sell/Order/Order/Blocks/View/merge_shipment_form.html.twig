@@ -6,7 +6,7 @@
 {{ form_start(mergeShipmentForm, {
   action: path('admin_orders_merge_shipment', {
     orderId: orderId,
-    shipmentId: shipmentId
+    shipmentId: shipmentId,
   }),
   attr: {
     id: 'merge_shipment',
@@ -93,7 +93,7 @@
     attr: {
       class: 'form-control',
       id: 'merge_shipment_merge_to_shipment',
-    }
+    },
   }) }}
 </div>
 

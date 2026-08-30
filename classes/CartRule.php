@@ -8,6 +8,8 @@ use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Discount\Application\DiscountApplicationService;
 use PrestaShop\PrestaShop\Core\Domain\Discount\DiscountSettings;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
@@ -458,18 +460,22 @@ class CartRuleCore extends ObjectModel
          * Remove cart rule that does not match the customer groups.
          * Even if empty $id_customer was provided, we will still get
          * a visitor group.
+         * When the groups feature is inactive the restriction is ignored dynamically
+         * (handled in checkValidity), so we keep all rules here.
          */
-        $customerGroups = Customer::getGroupsStatic($id_customer);
+        if (Group::isFeatureActive()) {
+            $customerGroups = Customer::getGroupsStatic($id_customer);
 
-        foreach ($result as $key => $cart_rule) {
-            if ($cart_rule['group_restriction']) {
-                $cartRuleGroups = Db::getInstance()->executeS('SELECT id_group FROM ' . _DB_PREFIX_ . 'cart_rule_group WHERE id_cart_rule = ' . (int) $cart_rule['id_cart_rule']);
-                foreach ($cartRuleGroups as $cartRuleGroup) {
-                    if (in_array($cartRuleGroup['id_group'], $customerGroups)) {
-                        continue 2;
+            foreach ($result as $key => $cart_rule) {
+                if ($cart_rule['group_restriction']) {
+                    $cartRuleGroups = Db::getInstance()->executeS('SELECT id_group FROM ' . _DB_PREFIX_ . 'cart_rule_group WHERE id_cart_rule = ' . (int) $cart_rule['id_cart_rule']);
+                    foreach ($cartRuleGroups as $cartRuleGroup) {
+                        if (in_array($cartRuleGroup['id_group'], $customerGroups)) {
+                            continue 2;
+                        }
                     }
+                    unset($result[$key]);
                 }
-                unset($result[$key]);
             }
         }
 
@@ -834,6 +840,9 @@ class CartRuleCore extends ObjectModel
 
         // Get an intersection of the customer groups and the cart rule groups (if the customer is not logged in, the default group is Visitors)
         if ($this->group_restriction) {
+            if (!Group::isFeatureActive()) {
+                return (!$display_error) ? false : $this->trans('You cannot use this voucher', [], 'Shop.Notifications.Error');
+            }
             $id_cart_rule = (int) Db::getInstance()->getValue('
 			SELECT crg.id_cart_rule
 			FROM ' . _DB_PREFIX_ . 'cart_rule_group crg
@@ -909,6 +918,41 @@ class CartRuleCore extends ObjectModel
                 return $r;
             } elseif (!$r && !$display_error) {
                 return false;
+            }
+        }
+
+        // Check if the free gift product is still available.
+        // Skip for finalized orders (useOrderPrices = true) to avoid removing already-placed cart rules
+        // if the gift product later becomes unavailable.
+        if (self::isDiscountFeatureFlagEnabled() && (int) $this->gift_product && !$useOrderPrices) {
+            $giftProduct = new Product((int) $this->gift_product);
+
+            if (!Validate::isLoadedObject($giftProduct)) {
+                return (!$display_error) ? false : $this->trans('The gift product does not exist.', [], 'Shop.Notifications.Error');
+            }
+
+            if (!(int) $giftProduct->available_for_order) {
+                return (!$display_error) ? false : $this->trans('The gift product is not available for order.', [], 'Shop.Notifications.Error');
+            }
+
+            if ((int) $giftProduct->minimal_quantity > 1) {
+                return (!$display_error) ? false : $this->trans('The gift product does not meet the minimum quantity.', [], 'Shop.Notifications.Error');
+            }
+
+            if ((int) $giftProduct->customizable === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION) {
+                return (!$display_error) ? false : $this->trans('You cannot have a customizable gift.', [], 'Shop.Notifications.Error');
+            }
+
+            $giftStock = Product::getQuantity(
+                (int) $this->gift_product,
+                (int) $this->gift_product_attribute ?: null
+            );
+            $outOfStockBehavior = (int) StockAvailable::outOfStock((int) $this->gift_product);
+            if ($outOfStockBehavior === OutOfStockType::OUT_OF_STOCK_DEFAULT) {
+                $outOfStockBehavior = (int) Configuration::get('PS_ORDER_OUT_OF_STOCK');
+            }
+            if ($giftStock <= 0 && $outOfStockBehavior === OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE) {
+                return (!$display_error) ? false : $this->trans('The gift product is out of stock.', [], 'Shop.Notifications.Error');
             }
         }
 
@@ -1940,6 +1984,7 @@ class CartRuleCore extends ObjectModel
 			' . ($active_only ? 'AND t.active = 1' : '') . '
 			' . (in_array($type, ['carrier', 'shop']) ? ' AND t.deleted = 0' : '') . '
 			' . ($type == 'cart_rule' ? 'AND t.id_cart_rule != ' . (int) $this->id : '') .
+            ($type == 'cart_rule' && $i18n && $search_cart_rule_name ? ' AND tl.name LIKE "%' . pSQL($search_cart_rule_name) . '%"' : '') .
                 $shop_list .
                 (in_array($type, ['carrier', 'shop']) ? ' ORDER BY t.name ASC ' : '') .
                 (in_array($type, ['country', 'group', 'cart_rule']) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
@@ -2012,7 +2057,7 @@ class CartRuleCore extends ObjectModel
 		)
 		AND (
 			cr.`group_restriction` = 0
-			' . (Validate::isLoadedObject($context->customer) ? 'OR EXISTS (
+			' . (Group::isFeatureActive() && Validate::isLoadedObject($context->customer) ? 'OR EXISTS (
 				SELECT 1
 				FROM `' . _DB_PREFIX_ . 'customer_group` cg
 				INNER JOIN `' . _DB_PREFIX_ . 'cart_rule_group` crg ON cg.id_group = crg.id_group

@@ -56,6 +56,20 @@ class EmployeeFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given the current employee context has no id
+     */
+    public function useEmployeeContextWithoutId()
+    {
+        // Simulates the state where the context holds an Employee object whose id is null,
+        // e.g. when a stock movement is triggered from the Admin API where the authenticated
+        // principal is an API client rather than a back-office employee.
+        Context::getContext()->employee = new LegacyEmployee();
+        /** @var EmployeeContextDecorator $employeeContext */
+        $employeeContext = CommonFeatureContext::getContainer()->get(EmployeeContextDecorator::class);
+        $employeeContext->setOverriddenEmployee(null);
+    }
+
+    /**
      * @AfterFeature
      */
     public static function resetEmployeeContext(): void

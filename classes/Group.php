@@ -3,6 +3,9 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleDisablerService;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+
 class GroupCore extends ObjectModel
 {
     public $id;
@@ -209,6 +212,16 @@ class GroupCore extends ObjectModel
         }
 
         if (parent::delete()) {
+            // Delegate to the disabler service so the legacy AdminGroupsController delete flow
+            // gets the same behavior as the CQRS DeleteCustomerGroupHandler. Must run before
+            // the cart_rule_group cleanup below, since the service uses those rows to find
+            // single-group cart rules.
+            $container = SymfonyContainer::getInstance();
+            if (null !== $container) {
+                $container->get(CartRuleDisablerService::class)
+                    ->disableCartRulesThatHadOnlyGroup((int) $this->id);
+            }
+
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'cart_rule_group` WHERE `id_group` = ' . (int) $this->id);
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customer_group` WHERE `id_group` = ' . (int) $this->id);
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'category_group` WHERE `id_group` = ' . (int) $this->id);
@@ -216,6 +229,15 @@ class GroupCore extends ObjectModel
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache` WHERE `id_group` = ' . (int) $this->id);
 
             $this->truncateModulesRestrictions($this->id);
+
+            // Delete specific prices associated to this group
+            if (!$this->truncateSpecificPrices()) {
+                return false;
+            }
+            // Delete specific price rules associated to this group
+            if (!$this->truncateSpecificPriceRules()) {
+                return false;
+            }
 
             // Add default group (id 3) to customers without groups
             Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_group` (
@@ -424,5 +446,37 @@ class GroupCore extends ObjectModel
 				ON (g.`id_group` = gl.`id_group`)
 			WHERE `name` = \'' . pSQL($query) . '\'
 		');
+    }
+
+    /**
+     * Delete all specific prices associated to this group.
+     *
+     * @return bool
+     */
+    public function truncateSpecificPrices(): bool
+    {
+        if (empty($this->id)) {
+            return false;
+        }
+
+        return Db::getInstance()->delete('specific_price', 'id_group = ' . (int) $this->id);
+    }
+
+    /**
+     * Delete all specific price rules associated to this group.
+     *
+     * @return bool
+     */
+    public function truncateSpecificPriceRules(): bool
+    {
+        if (empty($this->id)) {
+            return false;
+        }
+
+        $result_price_rule = Db::getInstance()->delete('specific_price_rule', 'id_group = ' . (int) $this->id);
+        $result_price_rule_condition_group = Db::getInstance()->delete('specific_price_rule_condition_group', 'id_specific_price_rule NOT IN (SELECT id_specific_price_rule FROM `' . _DB_PREFIX_ . 'specific_price_rule`)');
+        $result_price_rule_condition = Db::getInstance()->delete('specific_price_rule_condition', 'id_specific_price_rule_condition_group NOT IN (SELECT id_specific_price_rule_condition_group FROM `' . _DB_PREFIX_ . 'specific_price_rule_condition_group`)');
+
+        return $result_price_rule && $result_price_rule_condition_group && $result_price_rule_condition;
     }
 }

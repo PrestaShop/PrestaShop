@@ -157,18 +157,23 @@ class ProductFeatureValueUpdater
     }
 
     /**
-     * Remove custom feature values that are no longer associated to a product
+     * Remove custom feature values that are no longer associated to a product nor a combination.
+     * A custom value can be referenced either by feature_product or feature_product_attribute,
+     * so both tables must be checked before deleting (otherwise saving a product would delete
+     * custom values that are only used at combination level).
      */
     private function cleanOrphanCustomFeatureValues(): void
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'feature_value', 'fv')
-            ->select('fv.*, fp.id_product')
+            ->select('fv.id_feature_value')
             ->leftJoin('fv', $this->dbPrefix . 'feature_product', 'fp', 'fp.id_feature_value = fv.id_feature_value')
+            ->leftJoin('fv', $this->dbPrefix . 'feature_product_attribute', 'fpa', 'fpa.id_feature_value = fv.id_feature_value')
             ->where($qb->expr()->andX(
-                $qb->expr()->isNull('fp.id_product')),
+                $qb->expr()->isNull('fp.id_product'),
+                $qb->expr()->isNull('fpa.id_product_attribute'),
                 $qb->expr()->neq('fv.custom', 0)
-            )
+            ))
         ;
 
         $orphanCustomFeatureValues = $qb->executeQuery()->fetchAllAssociative();

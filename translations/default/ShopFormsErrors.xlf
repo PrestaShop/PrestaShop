@@ -20,12 +20,17 @@
       <trans-unit id="2845ecdc5099c86c8375b45aae5178b6">
         <source>Invalid postcode - should look like "%zipcode%"</source>
         <target>Invalid postcode - should look like "%zipcode%"</target>
-        <note>File: classes/form/CustomerAddressForm.php [Line: 107]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFormValidationTrait.php [Line: 63]</note>
       </trans-unit>
       <trans-unit id="19f823c6453c2b1ffd09cb715214813d">
         <source>Required field</source>
         <target>Required field</target>
         <note>File: classes/ValidateConstraintTranslator.php [Line: 58]</note>
+      </trans-unit>
+      <trans-unit id="afaabda6216740e4b9805c7755792b13">
+        <source>This state is not valid for the selected country.</source>
+        <target>This state is not valid for the selected country.</target>
+        <note>File: classes/form/CustomerAddressForm.php [Line: 119]</note>
       </trans-unit>
     </body>
   </file>

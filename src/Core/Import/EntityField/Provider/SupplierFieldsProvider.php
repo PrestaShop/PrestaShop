@@ -12,6 +12,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class SupplierFieldsProvider defines a supplier fields provider.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - importers embed their field list, see \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface::getFields()
  */
 final class SupplierFieldsProvider implements EntityFieldsProviderInterface
 {

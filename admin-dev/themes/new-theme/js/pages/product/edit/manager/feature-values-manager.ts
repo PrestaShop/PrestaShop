@@ -17,10 +17,62 @@ interface FeatureValue {
   value: string,
 }
 
+/**
+ * Set of CSS selectors used by the widget. Both the product (`ProductMap.featureValues`) and the
+ * combination (`ProductMap.combinationFeatureValues`) maps implement this shape, which is what
+ * allows the very same manager to drive both widgets.
+ */
+export interface FeatureValuesMap {
+  controlsContainer: string,
+  collectionContainer: string,
+  collectionRowsContainer: string,
+  featureSelect: string,
+  featureValueSelect: string,
+  newCustomValuesContainers: string,
+  newCustomValueInputs: string,
+  featureRow: string,
+  featureRowByFeatureId: (featureId: string) => string,
+  featureValueRow: string,
+  featureIdInput: string,
+  featureNameInput: string,
+  featureNameCell: string,
+  featureValueRowByFeatureId: (featureId: string) => string,
+  featureValueIdInput: string,
+  featureValueNameInput: string,
+  featureValueNamePreview: string,
+  isCustomInput: string,
+  customValuesContainer: string,
+  customValueByLangId: (langId: number) => string,
+  deleteFeatureValue: string,
+  addFeatureValue: string,
+  featureValueLoader: string,
+}
+
+export interface FeatureValuesManagerOptions {
+  // Selector map to use, defaults to the product one
+  map?: FeatureValuesMap,
+  // Root container the widget is scoped to. When null (default) selectors are resolved globally
+  // (product page); when provided the widget is scoped to it (combination form in a modal).
+  container?: JQuery | null,
+  // Id of the deletion confirmation modal, must be unique per widget instance on the page
+  deleteModalId?: string,
+  // Optional hook called whenever a value is added or removed, used by the combination form to flag
+  // itself as updated (its hidden inputs/DOM rows do not trigger the modal's input listeners).
+  onChange?: (() => void) | null,
+}
+
 export default class FeatureValuesManager {
   router: Router;
 
   eventEmitter: typeof EventEmitter;
+
+  map: FeatureValuesMap;
+
+  $container: JQuery | null;
+
+  deleteModalId: string;
+
+  onChange: (() => void) | null;
 
   $controlsContainer: JQuery;
 
@@ -44,22 +96,33 @@ export default class FeatureValuesManager {
 
   /**
    * @param eventEmitter {EventEmitter}
+   * @param options {FeatureValuesManagerOptions}
    */
-  constructor(eventEmitter: typeof EventEmitter) {
+  constructor(eventEmitter: typeof EventEmitter, options: FeatureValuesManagerOptions = {}) {
     this.router = new Router();
     this.eventEmitter = eventEmitter;
-    this.$controlsContainer = $(ProductMap.featureValues.controlsContainer);
-    this.$featureSelector = $(ProductMap.featureValues.featureSelect, this.$controlsContainer);
-    this.$featureSelector.select2();
-    this.$featureValueSelector = $(ProductMap.featureValues.featureValueSelect, this.$controlsContainer);
-    this.$featureValueSelector.select2();
-    this.$newCustomValuesContainers = $(ProductMap.featureValues.newCustomValuesContainers, this.$controlsContainer);
-    this.$newCustomValueInputs = $(ProductMap.featureValues.newCustomValueInputs, this.$newCustomValuesContainers);
-    this.$addFeatureValueButton = $(ProductMap.featureValues.addFeatureValue, this.$controlsContainer);
-    this.$featureValueLoader = $(ProductMap.featureValues.featureValueLoader, this.$controlsContainer);
+    this.map = options.map ?? ProductMap.featureValues;
+    this.$container = options.container ?? null;
+    this.deleteModalId = options.deleteModalId ?? 'modal-confirm-delete-feature-value';
+    this.onChange = options.onChange ?? null;
 
-    this.$collectionContainer = $(ProductMap.featureValues.collectionContainer);
-    this.$collectionRowsContainer = $(ProductMap.featureValues.collectionRowsContainer);
+    this.$controlsContainer = this.find(this.map.controlsContainer);
+    this.$featureSelector = $(this.map.featureSelect, this.$controlsContainer);
+    this.$featureValueSelector = $(this.map.featureValueSelect, this.$controlsContainer);
+    this.$newCustomValuesContainers = $(this.map.newCustomValuesContainers, this.$controlsContainer);
+    this.$newCustomValueInputs = $(this.map.newCustomValueInputs, this.$newCustomValuesContainers);
+    this.$addFeatureValueButton = $(this.map.addFeatureValue, this.$controlsContainer);
+    this.$featureValueLoader = $(this.map.featureValueLoader, this.$controlsContainer);
+    this.$collectionContainer = this.find(this.map.collectionContainer);
+    this.$collectionRowsContainer = this.find(this.map.collectionRowsContainer);
+
+    // Nothing to manage if the features widget is not present (e.g. feature disabled)
+    if (!this.$controlsContainer.length) {
+      return;
+    }
+
+    this.$featureSelector.select2();
+    this.$featureValueSelector.select2();
 
     this.watchFeatureSelectors();
     this.watchDeleteButtons();
@@ -67,6 +130,13 @@ export default class FeatureValuesManager {
 
     // Init select2
     $('select[data-toggle="select2"]', this.$collectionRowsContainer).select2();
+  }
+
+  /**
+   * Resolve a selector, scoped to the container when one was provided.
+   */
+  private find(selector: string): JQuery {
+    return this.$container ? $(selector, this.$container) : $(selector);
   }
 
   private watchAddButton(): void {
@@ -95,7 +165,7 @@ export default class FeatureValuesManager {
       const featureName = <string> $selectedFeature.text();
 
       // Check if feature collection is already present for the selected feature
-      const $featureRow = $(ProductMap.featureValues.featureRowByFeatureId(featureId), this.$collectionRowsContainer);
+      const $featureRow = $(this.map.featureRowByFeatureId(featureId), this.$collectionRowsContainer);
 
       // Feature collection not present we must add it
       if (!$featureRow.length) {
@@ -108,8 +178,8 @@ export default class FeatureValuesManager {
         const $newFeatureRow = $(featurePrototype.replace(new RegExp(featurePrototypeName, 'g'), rowIndex)).first();
         $newFeatureRow.attr('feature-id', featureId);
         this.$collectionRowsContainer.append($newFeatureRow);
-        $(ProductMap.featureValues.featureIdInput, $newFeatureRow).val(featureId);
-        $(ProductMap.featureValues.featureNameInput, $newFeatureRow).val(featureName);
+        $(this.map.featureIdInput, $newFeatureRow).val(featureId);
+        $(this.map.featureNameInput, $newFeatureRow).val(featureName);
         this.addFeatureValueRow($newFeatureRow, featureId, featureName, featureValueId);
       } else {
         this.addFeatureValueRow($featureRow, featureId, featureName, featureValueId);
@@ -118,7 +188,17 @@ export default class FeatureValuesManager {
       // Display list that can't be empty anymore
       this.$collectionContainer.removeClass('d-none');
       this.resetControls();
+      this.notifyChange();
     });
+  }
+
+  /**
+   * Notify the host form that the feature values changed.
+   */
+  private notifyChange(): void {
+    if (this.onChange) {
+      this.onChange();
+    }
   }
 
   private getNewCustomValues(): string[] {
@@ -141,7 +221,7 @@ export default class FeatureValuesManager {
     // The feature row keeps track of the next index to use for its values, we increment it right away
     const rowIndex = $featureRow.data('rowIndex');
     $featureRow.data('rowIndex', rowIndex + 1);
-    const $featureValueRows = $(ProductMap.featureValues.featureValueRowByFeatureId(featureId), this.$collectionRowsContainer);
+    const $featureValueRows = $(this.map.featureValueRowByFeatureId(featureId), this.$collectionRowsContainer);
     const $newFeatureValueRow = $(rowValuePrototype.replace(new RegExp(rowValuePrototypeName, 'g'), rowIndex));
     $newFeatureValueRow.attr('feature-id', featureId);
 
@@ -157,26 +237,26 @@ export default class FeatureValuesManager {
     const featureValueName = <string> $selectedFeatureValue.text();
 
     if (featureValueId !== '-1') {
-      $(ProductMap.featureValues.featureValueIdInput, $newFeatureValueRow).val(featureValueId);
-      $(ProductMap.featureValues.featureValueNameInput, $newFeatureValueRow).val(featureValueName);
-      $(ProductMap.featureValues.featureValueNamePreview, $newFeatureValueRow).text(featureValueName);
-      $(ProductMap.featureValues.isCustomInput, $newFeatureValueRow).val(0);
-      $(ProductMap.featureValues.customValuesContainer, $newFeatureValueRow).hide();
+      $(this.map.featureValueIdInput, $newFeatureValueRow).val(featureValueId);
+      $(this.map.featureValueNameInput, $newFeatureValueRow).val(featureValueName);
+      $(this.map.featureValueNamePreview, $newFeatureValueRow).text(featureValueName);
+      $(this.map.isCustomInput, $newFeatureValueRow).val(0);
+      $(this.map.customValuesContainer, $newFeatureValueRow).hide();
     } else {
-      $(ProductMap.featureValues.featureValueIdInput, $newFeatureValueRow).val('');
-      $(ProductMap.featureValues.featureValueNameInput, $newFeatureValueRow).val('');
-      $(ProductMap.featureValues.featureValueNamePreview, $newFeatureValueRow).text('');
-      $(ProductMap.featureValues.isCustomInput, $newFeatureValueRow).val(1);
-      $(ProductMap.featureValues.customValuesContainer, $newFeatureValueRow).show();
+      $(this.map.featureValueIdInput, $newFeatureValueRow).val('');
+      $(this.map.featureValueNameInput, $newFeatureValueRow).val('');
+      $(this.map.featureValueNamePreview, $newFeatureValueRow).text('');
+      $(this.map.isCustomInput, $newFeatureValueRow).val(1);
+      $(this.map.customValuesContainer, $newFeatureValueRow).show();
 
       const newCustomValues = this.getNewCustomValues();
       newCustomValues.forEach((customValue: string, langId: number) => {
-        const customValueInputSelector = ProductMap.featureValues.customValueByLangId(langId);
+        const customValueInputSelector = this.map.customValueByLangId(langId);
         const $customValueInput = $(customValueInputSelector, $newFeatureValueRow);
         $customValueInput.val(customValue);
       });
     }
-    $(ProductMap.featureValues.featureNameCell, $newFeatureValueRow).text(featureName);
+    $(this.map.featureNameCell, $newFeatureValueRow).text(featureName);
   }
 
   private resetControls(): void {
@@ -188,12 +268,12 @@ export default class FeatureValuesManager {
   }
 
   private watchDeleteButtons(): void {
-    $(this.$collectionRowsContainer).on('click', ProductMap.featureValues.deleteFeatureValue, (event) => {
+    $(this.$collectionRowsContainer).on('click', this.map.deleteFeatureValue, (event) => {
       const $deleteButton = $(event.currentTarget);
-      const $collectionRow = $deleteButton.closest(ProductMap.featureValues.featureValueRow);
+      const $collectionRow = $deleteButton.closest(this.map.featureValueRow);
       const modal = new (ConfirmModal as any)(
         {
-          id: 'modal-confirm-delete-feature-value',
+          id: this.deleteModalId,
           confirmTitle: $deleteButton.data('modal-title'),
           confirmMessage: $deleteButton.data('modal-message'),
           confirmButtonLabel: $deleteButton.data('modal-apply'),
@@ -206,14 +286,15 @@ export default class FeatureValuesManager {
           $collectionRow.remove();
 
           // Check if the collection has some values left
-          const $valueRows = $(ProductMap.featureValues.featureValueRowByFeatureId(featureId), this.$collectionRowsContainer);
+          const $valueRows = $(this.map.featureValueRowByFeatureId(featureId), this.$collectionRowsContainer);
 
           if ($valueRows.length === 0) {
-            const $featureRow = $(ProductMap.featureValues.featureRowByFeatureId(featureId), this.$collectionRowsContainer);
+            const $featureRow = $(this.map.featureRowByFeatureId(featureId), this.$collectionRowsContainer);
             $featureRow.remove();
           }
           this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
           this.$collectionContainer.toggleClass('d-none', this.$collectionRowsContainer.children().length === 0);
+          this.notifyChange();
         },
       );
       modal.show();
@@ -278,28 +359,27 @@ export default class FeatureValuesManager {
 
   private doRenderFeatureValueChoices(featureValuesData: FeatureValue[]): void {
     this.$featureValueSelector.empty();
-    if (featureValuesData.length) {
-      const selectedFeatureValues = this.getFeatureValueIds();
-      // First add placeholder and custom value options
-      this.addFeatureValue(this.$featureValueSelector.data('placeholderLabel'), 0);
-      this.addFeatureValue(this.$featureValueSelector.data('customValueLabel'), -1);
 
-      // Then loop through the pre-defined feature values
-      $.each(featureValuesData, (index, featureValue) => {
-        if (featureValue.id !== 0 && !selectedFeatureValues.includes(featureValue.id)) {
-          this.addFeatureValue(featureValue.value, featureValue.id);
-        }
-      });
-    }
+    const selectedFeatureValues = this.getFeatureValueIds();
+    // Always add placeholder and custom value options, even when no predefined values exist.
+    this.addFeatureValue(this.$featureValueSelector.data('placeholderLabel'), 0);
+    this.addFeatureValue(this.$featureValueSelector.data('customValueLabel'), -1);
 
-    this.$featureValueSelector.prop('disabled', featureValuesData.length === 0);
+    // Then add the available predefined feature values.
+    $.each(featureValuesData, (index, featureValue) => {
+      if (featureValue.id !== 0 && !selectedFeatureValues.includes(featureValue.id)) {
+        this.addFeatureValue(featureValue.value, featureValue.id);
+      }
+    });
+
+    this.$featureValueSelector.prop('disabled', false);
     this.$featureValueSelector.val(0).trigger('change');
     this.$featureValueSelector.select2();
   }
 
   private getFeatureValueIds(): number[] {
     const featureValueIds: number[] = [];
-    $(ProductMap.featureValues.featureValueIdInput, this.$collectionRowsContainer).each((index, featureValueInput) => {
+    $(this.map.featureValueIdInput, this.$collectionRowsContainer).each((index, featureValueInput) => {
       if (featureValueInput instanceof HTMLInputElement) {
         featureValueIds.push(parseInt(<string> featureValueInput.value, 10));
       }

@@ -136,7 +136,7 @@ class Datas
         'admin_password' => [
             'name' => 'password',
             'validate' => 'isAcceptablePasswordLength',
-            'default' => 'Correct Horse Battery Staple',
+            'default' => 'Pr3st4Sh0P',
         ],
         'admin_email' => [
             'name' => 'email',

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\DBAL\Exception as ExceptionAlias;
@@ -265,6 +266,125 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
         );
 
         return $product;
+    }
+
+    /**
+     * Import-engine fallback: creates a minimal product shell with a
+     * caller-chosen id, mirroring create() with ObjectModel::$force_id
+     * enabled (same pattern as combination creation).
+     *
+     * WARNING: forcing ids is deliberately not expressible through the CQRS
+     * product commands — this method exists only for the import "force IDs"
+     * option. Do NOT use it outside the import engine.
+     *
+     * @param array<int, string> $localizedNames indexed by language id
+     * @param array<int, string> $localizedLinkRewrites indexed by language id
+     */
+    public function createWithForcedId(
+        int $forcedProductId,
+        array $localizedNames,
+        array $localizedLinkRewrites,
+        string $productType,
+        int $shopId
+    ): Product {
+        $shopIdVo = new ShopId($shopId);
+        $defaultCategoryId = $this->categoryRepository->getShopDefaultCategory($shopIdVo);
+
+        $product = new Product(null, false, null, $shopId);
+        $product->id = $forcedProductId;
+        $product->force_id = true;
+        $product->active = false;
+        $product->id_category_default = $defaultCategoryId->getValue();
+        $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
+        $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
+        $product->product_type = $productType;
+        $product->id_shop_default = $shopId;
+        $product->name = $localizedNames;
+        $product->link_rewrite = $localizedLinkRewrites;
+        $product->id_tax_rules_group = $this->taxRulesGroupRepository->getIdTaxRulesGroupMostUsed();
+
+        $this->productValidator->validateCreation($product);
+        $this->addObjectModelToShops($product, [$shopIdVo], CannotAddProductException::class);
+        $this->categoryRepository->addProductAssociations(
+            new ProductId((int) $product->id),
+            [$defaultCategoryId]
+        );
+
+        return $product;
+    }
+
+    /**
+     * Import-engine fallback: sets date_add on an existing product.
+     *
+     * WARNING: the CQRS product commands deliberately force date_upd/date_add
+     * to now — this direct write exists only for the import date_add column.
+     * Do NOT use it outside the import engine.
+     *
+     * The shop restriction relies on the ShopConstraintTrait convention:
+     * product_shop carries no id_shop_group column, so a shop-group
+     * constraint is not supported here (single shop, shop list or all shops).
+     *
+     * @throws CannotUpdateProductException
+     */
+    public function setDateAdd(int $productId, DateTimeImmutable $dateAdd, ShopConstraint $shopConstraint): void
+    {
+        $formattedDate = $dateAdd->format('Y-m-d H:i:s');
+
+        try {
+            // the product table row is shared by every shop: always updated
+            $this->connection->createQueryBuilder()
+                ->update($this->dbPrefix . 'product')
+                ->set('date_add', ':dateAdd')
+                ->where('id_product = :productId')
+                ->setParameter('dateAdd', $formattedDate)
+                ->setParameter('productId', $productId)
+                ->executeStatement();
+
+            $shopQb = $this->connection->createQueryBuilder()
+                ->update($this->dbPrefix . 'product_shop')
+                ->set('date_add', ':dateAdd')
+                ->where('id_product = :productId')
+                ->setParameter('dateAdd', $formattedDate)
+                ->setParameter('productId', $productId);
+            $this->applyShopConstraint($shopQb, $shopConstraint);
+            $shopQb->executeStatement();
+        } catch (ExceptionAlias $e) {
+            throw new CannotUpdateProductException(sprintf('Could not set date_add on product %d', $productId), 0, $e);
+        }
+    }
+
+    /**
+     * Shop-scoped reference lookup, as used by the import match_ref option
+     * (the legacy import had two divergent reference lookups; this is the
+     * unified one). The constraint restricts the product_shop association:
+     * pass ShopConstraint::allShops() for a catalog-wide lookup.
+     *
+     * The shop restriction relies on the ShopConstraintTrait convention: the
+     * unqualified id_shop resolves to product_shop (the product table has no
+     * such column), and since product_shop carries no id_shop_group column a
+     * shop-group constraint is not supported here.
+     *
+     * product.reference carries a plain (non unique) index, so EVERY match is
+     * returned, ordered by id ASC. Callers MUST handle more than one: legacy
+     * resolved this with Db::getValue() and no ORDER BY, i.e. it updated whichever
+     * homonym MySQL happened to return first. The GROUP BY collapses the
+     * product_shop fan-out, so each returned id is a distinct product.
+     *
+     * @return list<int>
+     */
+    public function getProductIdsByReference(string $reference, ShopConstraint $shopConstraint): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('p.id_product')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->innerJoin('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product')
+            ->where('p.reference = :reference')
+            ->setParameter('reference', $reference)
+            ->groupBy('p.id_product')
+            ->orderBy('p.id_product', 'ASC');
+        $this->applyShopConstraint($qb, $shopConstraint);
+
+        return array_map('intval', $qb->executeQuery()->fetchFirstColumn());
     }
 
     /**
@@ -822,6 +942,46 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             ->addOrderBy('pl.name', 'ASC')
             ->addOrderBy('p.id_product', 'ASC')
             ->addOrderBy('pa.id_product_attribute', 'ASC')
+        ;
+
+        return $qb->executeQuery()->fetchAllAssociative();
+    }
+
+    public function hasAnyProduct(): bool
+    {
+        return (bool) $this->connection->createQueryBuilder()
+            ->select('1')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchOne();
+    }
+
+    /**
+     * @param string $searchPhrase
+     * @param LanguageId $languageId
+     * @param ShopId $shopId
+     * @param int|null $limit
+     *
+     * @return array<int, array<string, int|string>>
+     */
+    public function searchProductsForFreeGift(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
+    {
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            [],
+            $limit
+        );
+        $qb
+            ->addSelect('p.id_product, pl.name, p.reference, i.id_image, p.product_type')
+            ->addSelect('ps.available_for_order, ps.minimal_quantity, ps.customizable')
+            ->addSelect('sa.quantity as stock_quantity, sa.out_of_stock')
+            ->leftJoin('p', $this->dbPrefix . 'stock_available', 'sa', 'sa.id_product = p.id_product AND sa.id_shop = :shopId AND sa.id_product_attribute = 0')
+            ->addGroupBy('p.id_product')
+            ->addOrderBy('pl.name', 'ASC')
+            ->addOrderBy('p.id_product', 'ASC')
         ;
 
         return $qb->executeQuery()->fetchAllAssociative();

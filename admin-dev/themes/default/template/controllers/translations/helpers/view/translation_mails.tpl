@@ -99,6 +99,7 @@
 							rte_mail_config['editor_selector'] = 'rte-mail-' + rte_mail_selector;
 							rte_mail_config['height'] = '500px';
 							rte_mail_config['plugins'] = 'colorpicker link image paste pagebreak table contextmenu filemanager table code media autoresize textcolor anchor fullpage';
+							rte_mail_config['protect'] = [/(?<=<\/(?:tr|thead|tbody|tfoot)>\s*(?:\{[a-zA-Z_]\w*\}\s*)*)\{[a-zA-Z_]\w*\}/g];
 							// move controls to active panel
 							$('#translation_mails-control-actions').appendTo($(this).find('.panel-collapse.in'));
 							// when user first open email

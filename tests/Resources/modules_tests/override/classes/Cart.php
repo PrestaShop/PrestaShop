@@ -190,4 +190,22 @@ class Cart extends CartCore
     * version: 1
     */
     private string $testTypedProperty;
+    /*
+    * module: testmultilinepropertyoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    public array $testMultilineProperty = [
+        'key1' => 'value1',
+        'key2' => 'value2',
+    ];
+    /*
+    * module: testmultilinepropertyoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    public const TEST_MULTILINE_CONSTANT = [
+        'const_key1' => 'const_value1',
+        'const_key2' => 'const_value2',
+    ];
 }

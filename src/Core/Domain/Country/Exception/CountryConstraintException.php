@@ -14,4 +14,8 @@ class CountryConstraintException extends CountryException
     public const INVALID_ID = 10;
 
     public const INVALID_ZIP_CODE = 20;
+
+    public const INVALID_ADDRESS_FORMAT = 30;
+
+    public const INVALID_CALL_PREFIX = 40;
 }

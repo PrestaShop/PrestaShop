@@ -28,6 +28,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CategoryImportHandler holds legacy logic of category import.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by the import engine
+ *             importers implementing \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface
+ *             (the category importer itself lands with the remaining entities;
+ *             \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ProductImporter is the reference
+ *             implementation to follow)
  */
 final class CategoryImportHandler extends AbstractImportHandler
 {

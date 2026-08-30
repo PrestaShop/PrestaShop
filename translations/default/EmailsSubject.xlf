@@ -10,7 +10,7 @@
       <trans-unit id="732f1aa49f17856ff55a5aa0a88374d9">
         <source>Email verification</source>
         <target>Email verification</target>
-        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 869]</note>
+        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 880]</note>
       </trans-unit>
       <trans-unit id="4f55e8d67e33d354a5273eb87c903980">
         <source>Fwd: Customer message</source>
@@ -20,7 +20,7 @@
       <trans-unit id="a218495ad30949e8ea1f64a261e37463">
         <source>Import complete</source>
         <target>Import complete</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 4184]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 4179]</note>
       </trans-unit>
       <trans-unit id="caedcb9e2005bf6e522cf4536a1885bd">
         <source>Log: You have a new alert from your shop</source>
@@ -30,7 +30,7 @@
       <trans-unit id="381fc38b470ed543424afbd43f224453">
         <source>Message from a customer</source>
         <target>Message from a customer</target>
-        <note>File: controllers/front/OrderDetailController.php [Line: 98]</note>
+        <note>File: controllers/front/OrderDetailController.php [Line: 136]</note>
       </trans-unit>
       <trans-unit id="9e03c4150db1c72add84ba520ee589aa">
         <source>Message from contact form</source>
@@ -65,22 +65,22 @@
       <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
         <source>New voucher for your order %s</source>
         <target>New voucher for your order %s</target>
-        <note>File: classes/PaymentModule.php [Line: 1285]</note>
+        <note>File: classes/PaymentModule.php [Line: 1298]</note>
       </trans-unit>
       <trans-unit id="efabbb0eb84d3c8e487a72e879953673">
         <source>Newsletter confirmation</source>
         <target>Newsletter confirmation</target>
-        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 830]</note>
+        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 841]</note>
       </trans-unit>
       <trans-unit id="a95bc59685fb4546de3884a5fbe474ea">
         <source>Newsletter voucher</source>
         <target>Newsletter voucher</target>
-        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 795]</note>
+        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 806]</note>
       </trans-unit>
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>File: classes/PaymentModule.php [Line: 744]</note>
+        <note>File: classes/PaymentModule.php [Line: 768]</note>
       </trans-unit>
       <trans-unit id="87405e011a2c4166bb685336827fbe81">
         <source>Package in transit</source>
@@ -150,7 +150,7 @@
       <trans-unit id="f2328a3f139e31d53016f94ea9477124">
         <source>Your order return status has changed</source>
         <target>Your order return status has changed</target>
-        <note>File: controllers/admin/AdminReturnController.php [Line: 255]</note>
+        <note>File: src/Adapter/OrderReturn/CommandHandler/UpdateOrderReturnStateHandler.php [Line: 106]</note>
       </trans-unit>
     </body>
   </file>

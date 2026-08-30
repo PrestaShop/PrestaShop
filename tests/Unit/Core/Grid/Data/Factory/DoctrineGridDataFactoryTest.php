@@ -11,6 +11,7 @@ namespace Tests\Unit\Core\Grid\Data\Factory;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridQueryBuilderModifier;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
@@ -27,11 +28,17 @@ class DoctrineGridDataFactoryTest extends TestCase
 
         $queryParser = $this->createQueryParserMock();
 
+        // castExtraProperties() returns the records untouched, like the real implementation
+        // does when no extra property is registered for the grid.
+        $extraPropertiesModifier = $this->createMock(ExtraPropertiesGridQueryBuilderModifier::class);
+        $extraPropertiesModifier->method('castExtraProperties')->willReturnArgument(0);
+
         $doctrineGridDataFactory = new DoctrineGridDataFactory(
             $this->createDoctrineQueryBuilderMock(),
             $hookDispatcher,
             $queryParser,
-            'test_grid_id'
+            'test_grid_id',
+            $extraPropertiesModifier
         );
 
         $criteria = $this->createMock(SearchCriteriaInterface::class);

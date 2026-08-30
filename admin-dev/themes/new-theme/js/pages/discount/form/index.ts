@@ -121,6 +121,14 @@ $(() => {
     toggleType: ToggleType.visibility,
   });
 
+  new FormFieldToggler({
+    disablingInputSelector: DiscountMap.periodNeverExpiresCheckbox,
+    matchingValue: '1',
+    disableOnMatch: true,
+    targetSelector: DiscountMap.periodExpiryDateFormGroup,
+    toggleType: ToggleType.availability,
+  });
+
   $(DiscountMap.countriesSelect).select2({
     templateResult: formatOption,
     templateSelection: formatOption,

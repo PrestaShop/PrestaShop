@@ -16,7 +16,11 @@ export default class CustomerSearchInput extends EntitySearchInput {
     shopIdCallback: () => number|null,
     disablingSwitchEvent?: string|undefined,
   ) {
-    super($(customerSearchContainer), {
+    const $container = $(customerSearchContainer);
+    const disabledBadgeLabel: string = $container.data('disabledBadgeLabel') as string;
+    const guestBadgeLabel: string = $container.data('guestBadgeLabel') as string;
+
+    super($container, {
       extraQueryParams: () => ({
         shopId: shopIdCallback(),
       }),
@@ -27,7 +31,16 @@ export default class CustomerSearchInput extends EntitySearchInput {
 
         return Object.values(response.customers);
       },
+      suggestionTemplate: (entity: any) => {
+        const guestBadge = String(entity.is_guest) === '1'
+          ? `<span class="customer-suggestion-guest-badge badge badge-pill badge-secondary">${guestBadgeLabel}</span> `
+          : '';
+        const disabledBadge = String(entity.active) === '0'
+          ? ` <span class="customer-suggestion-disabled-badge badge badge-pill badge-secondary">${disabledBadgeLabel}</span>`
+          : '';
 
+        return `<div class="search-suggestion">${guestBadge}${entity.fullname_and_email}${disabledBadge}</div>`;
+      },
     });
     this.disablingSwitchEvent = disablingSwitchEvent;
     this.customerItemSelector = customerItemSelector;

@@ -483,7 +483,7 @@ describe('BO - Catalog - Discounts : Trigger based on the total quantity of prod
       const discount = parseFloat(thirdEditDiscountData.discountValue.toString());
 
       const totalBeforeDiscount = dataProducts.demo_3.finalPrice + dataProducts.demo_5.finalPrice + dataProducts.demo_1.finalPrice
-        + dataProducts.demo_6.combinations[0].price;
+        + dataProducts.demo_6.combinations[0].priceTI;
 
       const totalAfterDiscount = await foHummingbirdCartPage.getATIPrice(page);
       expect(totalAfterDiscount.toString()).to.equal((totalBeforeDiscount - discount).toFixed(2));

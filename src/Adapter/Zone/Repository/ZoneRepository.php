@@ -17,12 +17,20 @@ use Zone;
 /**
  * Provides methods to access data storage of Zone
  */
-class ZoneRepository extends AbstractObjectModelRepository
+final class ZoneRepository extends AbstractObjectModelRepository
 {
     public function __construct(
         private readonly Connection $connection,
         private readonly string $prefix,
     ) {
+    }
+
+    /**
+     * @throws ZoneNotFoundException
+     */
+    public function assertZoneExists(ZoneId $zoneId): void
+    {
+        $this->assertObjectModelExists($zoneId->getValue(), 'zone', ZoneNotFoundException::class);
     }
 
     /**

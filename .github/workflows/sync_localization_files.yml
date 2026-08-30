@@ -1,0 +1,189 @@
+name: Sync localization files from LocalizationFiles
+
+# Keeps the bundled localization packs (localization/*.xml) in sync with the
+# canonical PrestaShop/LocalizationFiles repository, which is the source of
+# truth served to shops via the "download localization pack" API.
+#
+# Run manually from the Actions tab (Run workflow). It copies every country
+# pack from the chosen LocalizationFiles branch into localization/ and, if
+# anything changed, opens a Pull Request against the selected core branch(es).
+# The target accepts any branch name (e.g. a build branch during the release
+# process); "all" targets the active version branches.
+#
+# Notes:
+#  - Files present in core but absent from LocalizationFiles are
+#    preserved: the sync copies over, it never deletes. Removals must be done
+#    by hand after review.
+#  - CLDR/, .htaccess and other non-pack assets are untouched (only top-level
+#    *.xml files are copied).
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Core branch to open a sync PR for — "all" = develop + 9.2.x + 9.1.x, or any branch name (e.g. build-920)'
+        type: string
+        default: all
+      lf_branch:
+        description: 'LocalizationFiles branch to sync from'
+        type: string
+        default: master
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  # Build the branch matrix from the "target" input (matrix can't be filtered
+  # from a job-level `if`, so we compute it here).
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.pick.outputs.matrix }}
+    steps:
+      - id: pick
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          if [ "$TARGET" = "all" ]; then
+            echo 'matrix=["develop","9.2.x","9.1.x"]' >> "$GITHUB_OUTPUT"
+          else
+            echo "matrix=$(jq -cn --arg b "$TARGET" '[$b]')" >> "$GITHUB_OUTPUT"
+          fi
+
+  sync-localization-files:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH: ${{ fromJSON(needs.setup.outputs.matrix) }}
+    env:
+      GH_BRANCH: ${{ matrix.BRANCH }}
+      # Branch of PrestaShop/LocalizationFiles to sync from.
+      LF_BRANCH: ${{ inputs.lf_branch || 'master' }}
+
+    steps:
+      - name: Checkout core (${{ matrix.BRANCH }})
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ env.GH_BRANCH }}
+          token: ${{ secrets.JARVIS_TOKEN }}
+
+      - name: Checkout LocalizationFiles
+        uses: actions/checkout@v4
+        with:
+          repository: PrestaShop/LocalizationFiles
+          ref: ${{ env.LF_BRANCH }}
+          path: .localization-files-src
+
+      - name: Copy localization packs into core
+        run: |
+          set -e
+          # Copy every top-level country pack. Copy-only (no --delete) so that
+          # core-only packs are preserved.
+          find .localization-files-src -maxdepth 1 -name '*.xml' -exec cp {} localization/ \;
+
+      - name: Detect changes and build PR body
+        id: diff
+        run: |
+          set -e
+
+          # Packs present in core but absent from LocalizationFiles. The sync is
+          # copy-only so these are never touched here — but they signal data that
+          # should be contributed back upstream, so we always surface them.
+          core_only=$(comm -23 \
+            <(cd localization && ls *.xml 2>/dev/null | sort) \
+            <(cd .localization-files-src && ls *.xml 2>/dev/null | sort) || true)
+
+          if [ -n "$core_only" ]; then
+            core_only_md=$(printf '%s\n' "$core_only" | sed 's#^#- `#; s#$#`#')
+            {
+              echo "### :warning: Packs only in core (missing from LocalizationFiles)"
+              echo ""
+              echo "These exist in \`localization/\` but not in LocalizationFiles \`${LF_BRANCH}\`."
+              echo "The sync never deletes them; consider contributing them upstream."
+              echo ""
+              printf '%s\n' "$core_only_md"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          if git diff --quiet -- localization/; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "No incoming changes from LocalizationFiles." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+
+          # Bullet list of changed packs for the PR body.
+          changed=$(git diff --name-only -- localization/ \
+            | sed 's#^localization/#- `#; s#$#`#')
+
+          {
+            echo "### Incoming changes from LocalizationFiles \`${LF_BRANCH}\`"
+            echo ""
+            printf '%s\n' "$changed"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          body=$(cat <<'EOF'
+          | Questions                      | Answers |
+          | ------------------------------ | ------------------------------------------------------- |
+          | Branch?                        | GH_BRANCH |
+          | Description?                   | Automated sync of the bundled localization packs with the canonical PrestaShop/LocalizationFiles repository (source of truth for downloadable packs). Changed files listed below. |
+          | Type?                          | improvement |
+          | Category?                      | LO |
+          | BC breaks?                     | no |
+          | Deprecations?                  | no |
+          | Fixed ticket?                  | N/A |
+          | How to test?                   | Install a shop selecting one of the changed countries and check its taxes, states, currencies and languages match the updated pack. |
+          | UI Tests?                      | N/A |
+          | Fixed issue or discussion?     | N/A |
+          | Related PRs                    | N/A |
+          EOF
+          )
+          body="${body//GH_BRANCH/$GH_BRANCH}"
+
+          details_header=$(cat <<'EOF'
+
+          ## Changed localization packs
+          EOF
+          )
+
+          body="$body$details_header"$'\n'"$changed"
+
+          # Append the core-only warning to the PR body too, when present.
+          if [ -n "$core_only" ]; then
+            warn_header=$(cat <<'EOF'
+
+          ## :warning: Packs only in core (not in LocalizationFiles)
+
+          Consider contributing these back to PrestaShop/LocalizationFiles:
+          EOF
+            )
+            body="$body$warn_header"$'\n'"$core_only_md"
+          fi
+
+          {
+            echo "body<<PR_BODY_EOF"
+            printf '%s\n' "$body"
+            echo "PR_BODY_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Stop if nothing changed
+        if: steps.diff.outputs.has_changes != 'true'
+        run: echo "Localization packs already in sync, exiting."
+
+      - name: Create Pull Request
+        if: steps.diff.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "Sync localization packs from LocalizationFiles"
+          title: "Sync localization packs from LocalizationFiles"
+          body: ${{ steps.diff.outputs.body }}
+          branch: chore/sync-localization-files-${{ env.GH_BRANCH }}
+          base: ${{ env.GH_BRANCH }}
+          delete-branch: true
+          add-paths: localization/
+          token: ${{ secrets.JARVIS_TOKEN }}

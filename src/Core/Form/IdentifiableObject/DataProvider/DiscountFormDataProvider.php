@@ -68,6 +68,9 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         $endDate = (clone $now)->modify('+1 month')->setTime(23, 59);
 
         return [
+            'information' => [
+                'highlight_in_cart' => false,
+            ],
             'period' => [
                 'valid_date_range' => [
                     'from' => $startDate->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
@@ -122,7 +125,6 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         /** @var DiscountForEditing $discountForEditing */
         $discountForEditing = $this->queryBus->handle(new GetDiscountForEditing($id));
         $isAmountDiscount = $discountForEditing->getReductionAmount() !== null;
-        $details = $this->getGiftDetails($discountForEditing);
         $specificProducts = $this->getSpecificProducts($discountForEditing);
         $productSegment = $this->getProductSegmentDetails($discountForEditing);
         $productSegmentDefined =
@@ -162,6 +164,8 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         return [
             'id' => $id,
             'information' => [
+                'active' => $discountForEditing->isActive(),
+                'highlight_in_cart' => $discountForEditing->isHighlightInCart(),
                 'discount_type' => $discountForEditing->getType()->getValue(),
                 'names' => $discountForEditing->getLocalizedNames(),
                 'description' => $discountForEditing->getDescription(),
@@ -179,12 +183,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                 ],
             ],
             'free_gift' => [
-                [
-                    'product_id' => $discountForEditing->getGiftProductId(),
-                    'combination_id' => $discountForEditing->getGiftCombinationId(),
-                    'name' => $details['name'],
-                    'image' => $details['imageUrl'],
-                ],
+                'product' => $this->getGiftDetails($discountForEditing),
             ],
             'conditions' => [
                 DiscountConditionsType::PRODUCT_CONDITIONS => [
@@ -308,10 +307,18 @@ class DiscountFormDataProvider implements FormDataProviderInterface
      */
     private function getGiftDetails(DiscountForEditing $discountForEditing): array
     {
+        $id = $discountForEditing->getGiftProductId();
+        $combinationId = $discountForEditing->getGiftCombinationId();
         $name = '';
         $imageUrl = '';
         if (!empty($discountForEditing->getGiftProductId())) {
-            $product = $this->productRepository->getProductByDefaultShop(new ProductId($discountForEditing->getGiftProductId()));
+            try {
+                $product = $this->productRepository->getProductByDefaultShop(new ProductId($discountForEditing->getGiftProductId()));
+            } catch (ProductNotFoundException $e) {
+                $this->displayWarning('The free gift product no longer exists. It has been removed from the form data and will be erased if you submit this form.');
+
+                return [];
+            }
             $name = $product->name[$this->languageContext->getId()];
 
             if (!empty($discountForEditing->getGiftCombinationId())) {
@@ -336,9 +343,16 @@ class DiscountFormDataProvider implements FormDataProviderInterface
             }
         }
 
+        if (empty($id)) {
+            return [];
+        }
+
         return [
-            'name' => $name,
-            'imageUrl' => $imageUrl,
+            [
+                'id' => $id,
+                'name' => $name,
+                'image' => $imageUrl,
+            ],
         ];
     }
 
@@ -460,6 +474,8 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     [
                         'id_customer' => $customerId,
                         'fullname_and_email' => $fullnameAndEmail,
+                        'active' => (int) $customer->active,
+                        'is_guest' => (int) $customer->is_guest,
                     ],
                 ];
             } catch (CustomerNotFoundException $e) {

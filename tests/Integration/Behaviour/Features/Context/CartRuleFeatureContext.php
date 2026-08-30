@@ -19,6 +19,7 @@ use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository;
+use PrestaShop\PrestaShop\Adapter\Discount\Update\DiscountConditionsUpdater;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\DiscountSettings;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountId;
@@ -160,6 +161,13 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
                 $countryIds = $this->referencesToIds($data['countries']);
                 $this->setCartRuleCountries($cartRule, $countryIds);
             }
+            if (isset($data['customer'])) {
+                $cartRule->id_customer = $this->referenceToId($data['customer']);
+                $cartRule->save();
+            }
+            if (isset($data['groups'])) {
+                $this->setCartRuleGroups($cartRule, $this->referencesToIds($data['groups']));
+            }
         } else {
             Assert::assertEquals($cartRule->name, $data['name'], 'Unexpected cart rule name');
             Assert::assertEquals($cartRule->description, $data['description'] ?? '', 'Unexpected cart rule description');
@@ -219,7 +227,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         unset($data['priority'], $data['total_quantity'], $data['quantity_per_user'], $data['code'], $data['free_shipping'], $data['allow_partial_use'], $data['active']);
         unset($data['valid_from'], $data['valid_to'], $data['apply_to_discounted_products'], $data['gift_product']);
         unset($data['minimum_amount'], $data['minimum_amount_currency'], $data['minimum_amount_tax_included'], $data['minimum_amount_shipping_included'], $data['discount_product']);
-        unset($data['quantity'], $data['cheapest_product'], $data['carriers'], $data['countries']);
+        unset($data['quantity'], $data['cheapest_product'], $data['carriers'], $data['countries'], $data['customer'], $data['groups']);
         if (!empty($data)) {
             throw new RuntimeException(sprintf('There are fields that were not handled in cart rule creation: %s', implode(',', array_keys($data))));
         }
@@ -292,6 +300,14 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         }
         $cartRule->country_restriction = !empty($countryIds);
         $cartRule->save();
+    }
+
+    protected function setCartRuleGroups(CartRule $cartRule, array $groupIds): void
+    {
+        $cartRule->group_restriction = true;
+        $cartRule->save();
+        $updater = CommonFeatureContext::getContainer()->get(DiscountConditionsUpdater::class);
+        $updater->update(new DiscountId((int) $cartRule->id), null, null, null, $groupIds);
     }
 
     /**

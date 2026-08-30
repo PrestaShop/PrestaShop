@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
+use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleDisablerService;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\DeleteCustomerHandlerInterface;
@@ -19,6 +20,11 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\DeleteCustomerHand
 #[AsCommandHandler]
 final class DeleteCustomerHandler extends AbstractCustomerHandler implements DeleteCustomerHandlerInterface
 {
+    public function __construct(
+        private readonly CartRuleDisablerService $cartRuleDisablerService,
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -28,6 +34,11 @@ final class DeleteCustomerHandler extends AbstractCustomerHandler implements Del
         $customer = new Customer($customerId->getValue());
 
         $this->assertCustomerWasFound($customerId, $customer);
+
+        // When the discount feature flag is enabled, disable cart rules restricted to this customer
+        // instead of deleting them, so the merchant can review and re-enable them manually.
+        // This runs before both the hard-delete and soft-delete paths.
+        $this->cartRuleDisablerService->disableCartRulesThatHadCustomer($customerId->getValue());
 
         if ($command->getDeleteMethod()->isAllowedToRegisterAfterDelete()) {
             $customer->delete();

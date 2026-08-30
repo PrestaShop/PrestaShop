@@ -21,7 +21,7 @@
 			<div class="col-lg-8">
 				<select id="id_category" name="id_category">
 					{foreach from=$categories item='category'}
-					<option value="{$category.id_category|intval}">({$category.id_category|intval}) {$category.name}</option>
+					<option value="{$category.id_category|intval}">({$category.id_category|intval}) {$category.name|escape:'html':'UTF-8'}</option>
 					{/foreach}
 				</select>
 			</div>
@@ -38,7 +38,7 @@
 			<div class="col-lg-8">
 				<select id="id_manufacturer" name="id_manufacturer">
 					{foreach from=$manufacturers item='manufacturer'}
-						<option value="{$manufacturer.id_manufacturer}">{$manufacturer.name}</option>
+						<option value="{$manufacturer.id_manufacturer}">{$manufacturer.name|escape:'html':'UTF-8'}</option>
 					{/foreach}
 				</select>
 			</div>
@@ -55,7 +55,7 @@
 			<div class="col-lg-8">
 				<select id="id_supplier" name="id_supplier">
 					{foreach from=$suppliers item='supplier'}
-						<option value="{$supplier.id_supplier}">{$supplier.name}</option>
+						<option value="{$supplier.id_supplier}">{$supplier.name|escape:'html':'UTF-8'}</option>
 					{/foreach}
 				</select>
 			</div>
@@ -72,7 +72,7 @@
 			<div class="col-lg-4">
 				<select id="id_attribute_group">
 					{foreach from=$attributes_group item='attribute_group'}
-						<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name}</option>
+						<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name|escape:'html':'UTF-8'}</option>
 					{/foreach}
 				</select>
 			</div>
@@ -80,7 +80,7 @@
 				{foreach from=$attributes_group item='attribute_group'}
 					<select class="id_attribute" style="display:none;" id="id_attribute_{$attribute_group.id_attribute_group}">
 						{foreach from=$attribute_group.attributes item='attribute'}
-							<option value="{$attribute.id_attribute}">{$attribute.name}</option>
+							<option value="{$attribute.id_attribute}">{$attribute.name|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				{/foreach}
@@ -98,7 +98,7 @@
 			<div class="col-lg-4">
 				<select id="id_feature">
 					{foreach from=$features item='feature'}
-						<option value="{$feature.id_feature}">{$feature.name}</option>
+						<option value="{$feature.id_feature}">{$feature.name|escape:'html':'UTF-8'}</option>
 					{/foreach}
 				</select>
 			</div>
@@ -106,7 +106,7 @@
 				{foreach from=$features item='feature'}
 					<select class="id_feature_value" style="display:none;" id="id_feature_{$feature.id_feature}">
 						{foreach from=$feature.values item='value'}
-							<option value="{$value.id_feature_value}">{$value.value}</option>
+							<option value="{$value.id_feature_value}">{$value.value|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				{/foreach}

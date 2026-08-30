@@ -6,8 +6,11 @@
 
 namespace PrestaShopBundle\Translation;
 
+use Doctrine\DBAL\Exception as DBALException;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ExtraPropertyTranslationExtractor;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Normalizer\DomainNormalizer;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use Symfony\Component\Finder\Finder;
@@ -29,6 +32,7 @@ class TranslatorLanguageLoader
 
     public function __construct(
         private readonly ModuleRepository $moduleRepository,
+        private readonly ?ExtraPropertyTranslationExtractor $extraPropertyTranslationExtractor = null,
     ) {
         $this->xliffFileLoader = new XliffFileLoader();
     }
@@ -105,6 +109,58 @@ class TranslatorLanguageLoader
         $activeModulesPaths = $this->moduleRepository->getPresentModulesPaths();
         foreach ($activeModulesPaths as $activeModuleName => $activeModulePath) {
             $this->loadModuleTranslations($translator, $activeModuleName, $activeModulePath, $locale, $withDB);
+        }
+
+        // The label/description wordings declared in the extra property registry (by the core or by
+        // modules) live in the database, not in XLF files or trans() calls, so they are only available
+        // when DB access is enabled. Inject them here so their domains exist in the runtime catalogue
+        // for every locale (this is what makes Module::isUsingNewTranslationSystem() detect a module
+        // whose only new-system wordings come from extra properties).
+        if ($withDB && null !== $this->extraPropertyTranslationExtractor) {
+            $this->loadExtraPropertyTranslations($translator, $locale);
+        }
+    }
+
+    /**
+     * Adds the extra property registry wordings to the catalogue, normalizing their dot-separated
+     * domains to the catalogue convention (e.g. "Modules.Foo.Admin" -> "ModulesFooAdmin") and
+     * registering a database resource per domain so admin-provided translations of those wordings
+     * are loaded too.
+     */
+    private function loadExtraPropertyTranslations(TranslatorInterface $translator, string $locale): void
+    {
+        try {
+            $extraPropertyCatalogue = $this->extraPropertyTranslationExtractor->extract($locale);
+        } catch (DBALException) {
+            // The catalogue may be warmed by CLI commands that run without a reachable database;
+            // a connection failure must contribute no wordings rather than break loading.
+            return;
+        }
+        $normalizer = new DomainNormalizer();
+
+        $messagesByDomain = [];
+        foreach ($extraPropertyCatalogue->getDomains() as $domain) {
+            $normalizedDomain = $normalizer->normalize($domain);
+            // Two distinct raw domains can normalize to the same catalogue domain (e.g. a malformed
+            // "Modules.FooAdmin" alongside "Modules.Foo.Admin"). Merge instead of overwrite so no
+            // wordings are silently dropped when that happens.
+            $messagesByDomain[$normalizedDomain] = array_merge(
+                $messagesByDomain[$normalizedDomain] ?? [],
+                $extraPropertyCatalogue->all($domain)
+            );
+        }
+
+        if (method_exists($translator, 'addResource')) {
+            foreach (array_keys($messagesByDomain) as $domain) {
+                $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+            }
+        }
+
+        if ($translator instanceof TranslatorBagInterface) {
+            $catalogue = $translator->getCatalogue($locale);
+            foreach ($messagesByDomain as $domain => $messages) {
+                $catalogue->add($messages, $domain);
+            }
         }
     }
 

@@ -24,22 +24,40 @@
       <li class="divider"></li>
       {% if this.activeQuickAccess %}
       <li>
-        <a id="quick-remove-link" href="javascript:void(0);" class="ajax-quick-link" data-method="remove"
-           data-quicklink-id="{{ this.activeQuickAccess.id_quick_access }}">
+        <a id="quick-remove-link"
+           href="#"
+           class="ajax-quick-link js-quick-link"
+           data-method="remove"
+           data-quicklink-id="{{ this.activeQuickAccess.id_quick_access }}"
+           data-rand="{{ random(1, 200) }}"
+           data-url="{{ this.activeQuickAccess.link }}"
+           data-post-link="{{ this.ajaxDeleteUrl }}"
+           data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header') }}"
+           data-link="{{ this.activeQuickAccess.name }}"
+        >
           <i class="material-icons">remove_circle</i>
           {{ 'Remove from Quick Access'|trans({}, 'Admin.Navigation.Header') }}
         </a>
       </li>
       {% else %}
       <li>
-        <a id="quick-add-link" href="javascript:void(0);" class="ajax-quick-link" data-method="add">
+        <a id="quick-add-link"
+           href="#"
+           class="ajax-quick-link js-quick-link"
+           data-method="add"
+           data-rand="{{ random(1, 200) }}"
+           data-icon="{{ this.currentPageIcon }}"
+           data-url="{{ this.currentPageQuickAccessLink }}"
+           data-post-link="{{ this.ajaxAddUrl }}"
+           data-link="{{ this.currentPageTitle }}"
+        >
           <i class="material-icons">add_circle</i>
           {{ 'Add current page to Quick Access'|trans({}, 'Admin.Actions') }}
         </a>
       </li>
       {% endif %}
       <li>
-        <a id="quick-manage-link" href="{{ legacy_path('AdminQuickAccesses') }}">
+        <a id="quick-manage-link" href="{{ this.manageUrl }}">
         <i class="material-icons">settings</i>
           {{ 'Manage your quick accesses'|trans({}, 'Admin.Navigation.Header') }}
         </a>
@@ -48,52 +66,4 @@
   </div>
 </div>
 
-<script>
-  $(function() {
-    $('.ajax-quick-link').on('click', function(e){
-      e.preventDefault();
-
-      var method = $(this).data('method');
-
-      if(method == 'add')
-        var name = prompt('{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header') }}', '{{ this.currentPageTitle }}');
-
-      if(method == 'add' && name || method == 'remove')
-      {
-        $.ajax({
-          type: 'POST',
-          headers: { "cache-control": "no-cache" },
-          async: false,
-          url: "{{ legacy_path('AdminQuickAccesses', {action: 'GetUrl', rand: random(1, 200), ajax: 1}) }}" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
-          data: {
-            "url": "{{ this.currentPageQuickAccessLink|raw }}",
-            "name": name,
-            "icon": "{{ this.currentPageIcon }}"
-          },
-          dataType: "json",
-          success: function(data) {
-            var quicklink_list ='';
-            $.each(data, function(index,value){
-              if (typeof data[index]['name'] !== 'undefined')
-                quicklink_list += '<li><a href="' + data[index]['link'] + '">' + data[index]['name'] + '</a></li>';
-            });
-
-            if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
-              $.each(data, function(index, value)
-              {
-                if (typeof data[index] == 'string')
-                  $.growl.error({ title: "", message: data[index]});
-              });
-            else if (quicklink_list)
-            {
-              $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
-              $('#header_quick ul.dropdown-menu').prepend(quicklink_list);
-              $(e.target).remove();
-              showSuccessMessage(update_success_msg);
-            }
-          }
-        });
-      }
-    });
-  });
-</script>
+{{ include('@PrestaShop/Admin/Component/quick_access_add_modal.html.twig', {legacyLayout: true}) }}

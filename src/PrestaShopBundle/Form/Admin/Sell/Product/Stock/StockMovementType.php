@@ -32,6 +32,10 @@ class StockMovementType extends TranslatorAwareType
                 'label' => $this->trans('Employee', 'Admin.Global'),
                 'preview_class' => 'employee_preview',
             ])
+            ->add('api_client_name', TextPreviewType::class, [
+                'label' => $this->trans('API Client', 'Admin.Global'),
+                'preview_class' => 'api_client_preview',
+            ])
             ->add('type', HiddenType::class)
             // Quantity field depends on the data, then it's added via form event
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {

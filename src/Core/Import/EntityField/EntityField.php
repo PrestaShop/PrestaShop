@@ -75,6 +75,9 @@ final class EntityField implements EntityFieldInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated since 9.3, will be removed in the next major version - see
+     *             EntityFieldInterface::isRequired()
      */
     public function isRequired()
     {

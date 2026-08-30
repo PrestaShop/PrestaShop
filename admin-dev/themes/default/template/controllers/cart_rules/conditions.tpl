@@ -69,7 +69,7 @@
 						selected="selected"
 					{/if}
 					>
-						{$currency.iso_code}
+						{$currency.iso_code|escape:'html':'UTF-8'}
 					</option>
 				{/foreach}
 				</select>
@@ -238,7 +238,7 @@
 						<td>
 							<p>{l s='Uncombinable cart rules' d='Admin.Catalog.Feature'}</p>
 							<input id="cart_rule_select_1_filter" autocomplete="off" class="form-control uncombinable_search_filter" type="text" name="uncombinable_filter" placeholder="{l s='Search' d='Admin.Actions'}" value="">
-							<select id="cart_rule_select_1" class="jscroll" multiple="">
+							<select id="cart_rule_select_1" class="jscroll" multiple="" name="cart_rule_unselected[]">
 							</select>
 							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next' d='Admin.Global'}</a>
 							<a id="cart_rule_select_add" class="btn btn-default btn-block clearfix">{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>

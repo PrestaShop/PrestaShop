@@ -7,6 +7,7 @@
 namespace Tests\Unit\Adapter\Presenter;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertiesBag;
 
 class LazyArrayTest extends TestCase
 {
@@ -29,6 +30,32 @@ class LazyArrayTest extends TestCase
 
         $this->assertEquals(2, $test->count());
         $this->assertEquals(1, $test['a']);
+    }
+
+    public function testExtraPropertiesIndexAbsentWithoutBagInitialization()
+    {
+        $test = new LazyArrayImplementation();
+
+        $this->assertFalse(isset($test['extra_properties']));
+        foreach ($test as $key => $value) {
+            $this->assertNotSame('extra_properties', $key);
+        }
+    }
+
+    public function testExtraPropertiesIndexExposedWhenBagIsInitialized()
+    {
+        $test = new class() extends LazyArrayImplementation {
+            public function __construct()
+            {
+                // Mimics the presenter pattern: bag set before parent::__construct().
+                $this->extraPropertiesBag = new ExtraPropertiesBag(static fn (): array => []);
+                parent::__construct();
+            }
+        };
+
+        $this->assertTrue(isset($test['extra_properties']));
+        $this->assertInstanceOf(ExtraPropertiesBag::class, $test['extra_properties']);
+        $this->assertEquals(2, $test->count());
     }
 
     public function testBasicAppendClosureArray()

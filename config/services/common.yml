@@ -8,6 +8,8 @@ imports:
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/adapter/common.yml }
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/core/common.yml }
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/bundle/common.yml }
+    - { resource: ../../src/PrestaShopBundle/Resources/config/services/extra_property/common.yml }
+    - { resource: ../../src/PrestaShopBundle/Resources/config/services/core/shipping_cost.yml }
 
 services:
     _defaults:

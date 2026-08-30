@@ -48,7 +48,7 @@
             </a>
           {% elseif document.type == 'delivery_slip' %}
             <a target="_blank" rel="noopener noreferrer nofollow"
-               href="{{ path('admin_orders_generate_delivery_slip_pdf', {orderId: orderForViewing.id}) }}"
+               href="{{ orderHasShipment ? path('admin_orders_generate_shipment_delivery_slip_pdf', {shipmentId: document.id}) : path('admin_orders_generate_delivery_slip_pdf', {orderId: orderForViewing.id}) }}"
             >
               {{ document.referenceNumber }}
             </a>
@@ -95,7 +95,7 @@
           <td colspan="5">
             <form action="{{ path('admin_orders_update_invoice_note', {
               orderId: orderForViewing.id,
-              orderInvoiceId: document.id
+              orderInvoiceId: document.id,
             }) }}" method="post">
               <div class="input-group">
                 <input type="text" class="form-control invoice-note" name="invoice_note" value="{{ document.note }}">

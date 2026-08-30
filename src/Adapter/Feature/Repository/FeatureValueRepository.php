@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotUpdateFeatureValue
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureValueIdException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -152,6 +153,42 @@ class FeatureValueRepository extends AbstractObjectModelRepository
         ;
 
         $result = $qb->execute()->fetchAllAssociative();
+        $featureValues = [];
+        foreach ($result as $featureValue) {
+            $featureValueId = (int) $featureValue['id_feature_value'];
+            if (!isset($featureValues[$featureValueId])) {
+                $featureValues[$featureValueId] = [
+                    'id_feature_value' => $featureValueId,
+                    'id_feature' => (int) $featureValue['id_feature'],
+                    'custom' => (int) $featureValue['custom'],
+                ];
+            }
+            $featureValues[$featureValueId]['localized_values'][(int) $featureValue['id_lang']] = $featureValue['value'];
+        }
+
+        return array_values($featureValues);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param ShopId $shopId
+     *
+     * @return array
+     */
+    public function getAllCombinationFeatureValues(CombinationId $combinationId, ShopId $shopId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->from($this->dbPrefix . 'feature_value', 'fv')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_product_attribute', 'fpa', 'fpa.id_feature_value = fv.id_feature_value AND fpa.id_product_attribute = :combinationId')
+            ->innerJoin('fpa', $this->dbPrefix . 'feature_shop', 'fs', 'fpa.id_feature = fs.id_feature AND fs.id_shop = :shopId')
+            ->leftJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value')
+            ->select('fv.*, fvl.*')
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+
+        $result = $qb->executeQuery()->fetchAllAssociative();
         $featureValues = [];
         foreach ($result as $featureValue) {
             $featureValueId = (int) $featureValue['id_feature_value'];
@@ -364,5 +401,71 @@ class FeatureValueRepository extends AbstractObjectModelRepository
         }
 
         return $qb;
+    }
+
+    /**
+     * Localized texts of the product's current CUSTOM value for one feature,
+     * [] when the product carries none. Import uses it to update a custom
+     * value without losing the other languages: SetProductFeatureValuesCommand
+     * REPLACES the custom value row, so keeping a translation means re-sending
+     * it.
+     *
+     * @return array<int, string> language id => value
+     */
+    public function getProductCustomFeatureValueTexts(int $featureId, int $productId): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('fvl.id_lang, fvl.value')
+            ->from($this->dbPrefix . 'feature_product', 'fp')
+            ->innerJoin('fp', $this->dbPrefix . 'feature_value', 'fv', 'fv.id_feature_value = fp.id_feature_value')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value')
+            ->where('fp.id_product = :productId')
+            ->andWhere('fp.id_feature = :featureId')
+            ->andWhere('fv.custom = 1')
+            ->orderBy('fv.id_feature_value', 'ASC')
+            ->setParameter('productId', $productId)
+            ->setParameter('featureId', $featureId)
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $texts = [];
+        foreach ($rows as $row) {
+            $texts[(int) $row['id_lang']] = (string) $row['value'];
+        }
+
+        return $texts;
+    }
+
+    /**
+     * Exact pre-defined (non custom) value lookup within a feature, resolving ids
+     * directly (unlike the listing-oriented getFeatureValuesByLang() which loads
+     * every value).
+     *
+     * feature_value_lang.value carries no unique constraint per feature, so EVERY
+     * match is returned, ordered by id ASC: callers use the first one and report
+     * the count when there is more than one, rather than silently picking the
+     * oldest duplicate.
+     *
+     * @return list<int>
+     */
+    public function getFeatureValueIdsByValue(int $featureId, string $value, int $languageId): array
+    {
+        $featureValueIds = $this->connection->createQueryBuilder()
+            ->select('fv.id_feature_value')
+            ->from($this->dbPrefix . 'feature_value', 'fv')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value AND fvl.id_lang = :languageId')
+            ->where('fv.id_feature = :featureId')
+            ->andWhere('fv.custom = 0')
+            ->andWhere('fvl.value = :value')
+            ->orderBy('fv.id_feature_value', 'ASC')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('featureId', $featureId)
+            ->setParameter('value', $value)
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+
+        return array_map('intval', $featureValueIds);
     }
 }

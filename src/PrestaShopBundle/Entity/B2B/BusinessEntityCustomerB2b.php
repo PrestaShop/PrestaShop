@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  *         @ORM\Index(name="business_entity_customer_b2b_be_idx", columns={"id_business_entity"}),
  *         @ORM\Index(name="business_entity_customer_b2b_customer_idx", columns={"id_customer_b2b"}),
- *         @ORM\Index(name="business_entity_customer_b2b_role_idx", columns={"id_role_b2b"})
+ *         @ORM\Index(name="business_entity_customer_b2b_role_idx", columns={"id_role"})
  *     },
  *     uniqueConstraints={
  *
@@ -57,7 +57,7 @@ class BusinessEntityCustomerB2b
     /**
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\B2B\B2bRole", inversedBy="businessEntityCustomerB2bs")
      *
-     * @ORM\JoinColumn(name="id_role_b2b", referencedColumnName="id_role", nullable=false)
+     * @ORM\JoinColumn(name="id_role", referencedColumnName="id_role", nullable=false)
      */
     private B2bRole $b2bRole;
 
@@ -70,6 +70,11 @@ class BusinessEntityCustomerB2b
      * @ORM\Column(name="created_at", type="datetime")
      */
     private DateTime $createdAt;
+
+    /**
+     * @ORM\Column(name="updated_at", type="datetime")
+     */
+    private DateTime $updatedAt;
 
     public function getId(): ?int
     {
@@ -136,11 +141,27 @@ class BusinessEntityCustomerB2b
         return $this;
     }
 
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
     /**
      * @ORM\PrePersist
+     *
+     * @ORM\PreUpdate
      */
-    public function setTimestampsOnCreate(): void
+    public function updateTimestamps(): void
     {
+        $this->updatedAt = new DateTime();
+
         if (!isset($this->createdAt)) {
             $this->createdAt = new DateTime();
         }

@@ -48,7 +48,7 @@
 				<div id="selectDivImportMatchs" class="col-lg-7">
 					<select id="valueImportMatchs">
 						{foreach $import_matchs as $match}
-							<option id="{$match.id_import_match}" value="{$match.match}">{$match.name}</option>
+							<option id="{$match.id_import_match|escape:'html':'UTF-8'}" value="{$match.match|escape:'html':'UTF-8'}">{$match.name|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				</div>

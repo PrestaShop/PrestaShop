@@ -78,6 +78,7 @@
     {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/split_shipment_modal.html.twig') }}
     {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/edit_shipping_modal.html.twig') }}
     {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/merge_shipment_modal.html.twig') }}
+    {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/fulfill_shipment_modal.html.twig') }}
     {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
       {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_customer_address_modal.html.twig') }}
     {% endif %}

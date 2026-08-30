@@ -1,0 +1,28 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+ {{ form_start(fulfillShipmentForm, {
+  action: path('admin_orders_fulfill_shipment', {
+    orderId: orderId,
+    shipmentId: shipmentId,
+  }),
+  attr: {
+    id: 'fulfill_shipment',
+    class: 'shipment-form',
+  },
+}) }}
+  <div class="form-group">
+    <label class="form-control-label" for="{{ fulfillShipmentForm.tracking_number.vars.id }}">
+      {{ 'Tracking number'|trans({}, 'Admin.Shipping.Feature') }}
+    </label>
+
+    {{ form_widget(fulfillShipmentForm.tracking_number) }}
+  </div>
+
+  <div class="d-none">
+    {{ form_rest(fulfillShipmentForm) }}
+  </div>
+
+{{ form_end(fulfillShipmentForm) }}

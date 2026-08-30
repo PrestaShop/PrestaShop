@@ -1590,6 +1590,11 @@ class ProductController extends PrestaShopAdminController
                     [],
                     'Admin.Catalog.Notification'
                 ),
+                ProductConstraintException::INVALID_DESCRIPTION_CONTAINS_EMBEDDED_HTML => $this->trans(
+                    'Product description contains embedded HTML elements (iframe, frame, form, input, embed, object) which are not allowed. To allow them, enable "Allow iframes on HTML fields" in Shop Parameters > General settings.',
+                    [],
+                    'Admin.Catalog.Notification'
+                ),
                 ProductConstraintException::INVALID_DESCRIPTION => $this->trans(
                     'Product description is invalid.',
                     [],

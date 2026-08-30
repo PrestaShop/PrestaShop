@@ -42,6 +42,7 @@ $(() => {
     SpecificPriceMap.includeTaxInputContainer,
     SpecificPriceMap.currencyId,
     SpecificPriceMap.reductionTypeAmountSymbol,
+    SpecificPriceMap.reductionValueInput,
   );
 
   new CustomerSelector();

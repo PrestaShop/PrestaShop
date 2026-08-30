@@ -6,6 +6,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
@@ -47,6 +48,11 @@ class GeneralSettings extends TranslatorAwareType
                     $this->trans('The carrier\'s name will be displayed during checkout.', 'Admin.Shipping.Help') . '<br/>' .
                     $this->trans('For in-store pickup, enter 0 to replace the carrier name with your shop name.', 'Admin.Shipping.Help'),
                 'required' => true,
+                'constraints' => [
+                    new CleanHtml([
+                        'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                    ]),
+                ],
             ])
             ->add('localized_delay', TranslatableType::class, [
                 'required' => true,
@@ -55,6 +61,13 @@ class GeneralSettings extends TranslatorAwareType
                 'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new CleanHtml([
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
                 ],
             ])
             ->add('active', SwitchType::class, [

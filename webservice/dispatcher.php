@@ -5,6 +5,7 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+use Symfony\Component\Dotenv\Dotenv;
 
 ob_start();
 
@@ -13,6 +14,12 @@ if (!defined('_PS_API_IN_USE_')) {
 }
 
 require_once dirname(__FILE__) . '/../config/config.inc.php';
+
+(new Dotenv())
+    // DO NOT use putEnv
+    ->usePutenv(false)
+    ->loadEnv(_PS_ENV_FILE_PATH_)
+;
 
 // Cart is needed for some requests
 Context::getContext()->cart = new Cart();

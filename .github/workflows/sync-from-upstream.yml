@@ -1,0 +1,251 @@
+# Sync from upstream
+#
+# Keeps a fork of PrestaShop/PrestaShop in sync with the official repository:
+# the working branches and all tags are aligned with upstream in a single run,
+# whereas GitHub's built-in "Sync fork" button only handles one branch at a
+# time and never syncs tags.
+#
+# What this manually dispatched, prestashop-sa-gated workflow does:
+#   1. bare-clones the official repository (public, anonymous fetch),
+#   2. force-pushes a hard-coded list of working branches (see BRANCHES) into
+#      the repository the workflow runs on, so they exactly match upstream —
+#      any local divergence is overwritten and surfaced as a warning in the
+#      run summary,
+#   3. force-pushes ALL tags the same way.
+#
+# It NEVER deletes anything in the target repository: no --prune, no --mirror,
+# only explicit positive refspecs. Do not "simplify" this to `git push
+# --mirror` — the target may contain extra branches that must not be touched.
+#
+# The target is always the repository the workflow runs on: dispatched on
+# PrestaShop/PrestaShop it is a harmless no-op (everything is already
+# up-to-date); dispatched on a fork it aligns that fork with upstream.
+#
+# It requires the JARVIS_TOKEN secret (repo + workflow + read:org): the
+# workflow scope is mandatory because the synced branches contain
+# .github/workflows/ files, which the default GITHUB_TOKEN is not allowed
+# to push.
+name: Sync from upstream
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Preview only — if unchecked, branches and tags are force-pushed to match upstream'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-from-upstream
+  cancel-in-progress: false
+
+jobs:
+  # 1) Gate: only members of the prestashop-sa team may run this.
+  #    The org is hardcoded because this workflow also runs on mirrors/forks,
+  #    where the repository owner is not the PrestaShop organization.
+  check-membership:
+    name: Check team membership
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify actor belongs to prestashop-sa
+        uses: PrestaShop/.github/.github/actions/team-guard@master
+        with:
+          team_slug: prestashop-sa
+          org: PrestaShop
+          token: ${{ secrets.JARVIS_TOKEN }}
+
+  # 2) Sync: bare-clone upstream, then force-push the working branches and
+  #    all tags into the repository this workflow runs on. Never deletes
+  #    any ref in the target.
+  sync:
+    name: Sync branches and tags from upstream
+    runs-on: ubuntu-latest
+    needs: check-membership
+    env:
+      SOURCE_REPO: PrestaShop/PrestaShop
+      TARGET_REPO: ${{ github.repository }}
+      # Closed list on purpose: edit it (via PR upstream) when a version
+      # branch opens or reaches end of life.
+      BRANCHES: "develop 9.2.x 9.1.x 8.2.x"
+    steps:
+      - name: Clone official repository (bare)
+        run: |
+          set -euo pipefail
+          git clone --bare --quiet "https://github.com/${SOURCE_REPO}.git" "${RUNNER_TEMP}/source.git"
+          cd "${RUNNER_TEMP}/source.git"
+          echo "Cloned ${SOURCE_REPO}: $(git for-each-ref refs/heads | wc -l | tr -d ' ') branches, $(git for-each-ref refs/tags | wc -l | tr -d ' ') tags."
+
+      - name: Configure target authentication and remote
+        id: auth
+        working-directory: ${{ runner.temp }}/source.git
+        env:
+          TOKEN: ${{ secrets.JARVIS_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "$TOKEN" ]; then
+            echo "::error::JARVIS_TOKEN secret is empty. This repository needs this secret (repo + workflow + read:org scopes)."
+            exit 1
+          fi
+          # Same mechanism actions/checkout uses: the token never appears in a
+          # URL, in `git remote -v` or in error output. GitHub only auto-masks
+          # the raw secret, so mask its base64 form explicitly.
+          B64=$(printf 'x-access-token:%s' "$TOKEN" | base64 | tr -d '\n')
+          echo "::add-mask::$B64"
+          git config http."https://github.com/".extraheader "AUTHORIZATION: basic ${B64}"
+          git remote add target "https://github.com/${TARGET_REPO}.git"
+
+          # Preflight: fails when the token cannot read the target, but
+          # accepts an empty repository (no refs yet).
+          if ! git ls-remote target > /dev/null; then
+            echo "::error::Cannot reach ${TARGET_REPO} with JARVIS_TOKEN — check the token has access to this repository."
+            exit 1
+          fi
+
+          # One snapshot of the target's refs, used for divergence detection
+          # and for the run summary.
+          git ls-remote --heads target > "${RUNNER_TEMP}/target-heads.txt"
+          git ls-remote --tags target > "${RUNNER_TEMP}/target-tags.txt"
+
+      - name: Push working branches
+        id: branches
+        working-directory: ${{ runner.temp }}/source.git
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          # No `set -e`: failures are aggregated so one branch never hides
+          # the status of the others; the step still fails at the end.
+          set -uo pipefail
+          PUSH_OPTS=(--force)
+          if [ "$DRY_RUN" = "true" ]; then PUSH_OPTS+=(--dry-run); fi
+
+          RESULTS="${RUNNER_TEMP}/branch-results.tsv"
+          : > "$RESULTS"
+          FAILED=0
+          for b in $BRANCHES; do
+            local_sha=$(git rev-parse -q --verify "refs/heads/${b}" || true)
+            target_sha=$(awk -v r="refs/heads/${b}" '$2 == r { print $1 }' "${RUNNER_TEMP}/target-heads.txt")
+            target_disp="${target_sha:0:9}"
+            if [ -z "$target_disp" ]; then target_disp="—"; fi
+
+            if [ -z "$local_sha" ]; then
+              echo "::error::Branch '${b}' not found on ${SOURCE_REPO} — update the hard-coded BRANCHES list in this workflow."
+              printf '%s\t%s\t%s\t%s\t%s\n' "$b" "—" "$target_disp" "missing upstream" "❌ error" >> "$RESULTS"
+              FAILED=1
+              continue
+            fi
+
+            # Classification is informational (the push below is forced either
+            # way); DIVERGED covers target-only commits, including SHAs unknown
+            # to the upstream clone.
+            if [ -z "$target_sha" ]; then
+              state="new branch"
+            elif [ "$target_sha" = "$local_sha" ]; then
+              state="up-to-date"
+            elif git cat-file -e "${target_sha}^{commit}" 2> /dev/null \
+                && git merge-base --is-ancestor "$target_sha" "$local_sha"; then
+              state="fast-forward (+$(git rev-list --count "${target_sha}..${local_sha}"))"
+            else
+              state="⚠️ DIVERGED"
+              if [ "$DRY_RUN" = "true" ]; then
+                echo "::warning::Branch '${b}' has diverged from ${SOURCE_REPO}; its local-only commits WOULD be overwritten (force sync)."
+              else
+                echo "::warning::Branch '${b}' had diverged from ${SOURCE_REPO}; its local-only commits were overwritten (force sync)."
+              fi
+            fi
+
+            if git push "${PUSH_OPTS[@]}" target "refs/heads/${b}:refs/heads/${b}"; then
+              result="✅ ok"
+            else
+              result="❌ push failed"
+              echo "::error::Push of '${b}' to ${TARGET_REPO} failed (state: ${state})."
+              FAILED=1
+            fi
+            printf '%s\t%s\t%s\t%s\t%s\n' "$b" "${local_sha:0:9}" "$target_disp" "$state" "$result" >> "$RESULTS"
+          done
+          exit $FAILED
+
+      - name: Push tags
+        id: tags
+        # A failed branch push must not prevent the tags from syncing.
+        if: ${{ always() && steps.auth.conclusion == 'success' }}
+        working-directory: ${{ runner.temp }}/source.git
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -uo pipefail
+          PUSH_OPTS=(--force)
+          if [ "$DRY_RUN" = "true" ]; then PUSH_OPTS+=(--dry-run); fi
+
+          git for-each-ref --format='%(objectname) %(refname)' refs/tags > "${RUNNER_TEMP}/local-tags.txt"
+          local_count=$(wc -l < "${RUNNER_TEMP}/local-tags.txt" | tr -d ' ')
+          target_count=$(awk '$2 !~ /\^\{\}$/ { c++ } END { print c + 0 }' "${RUNNER_TEMP}/target-tags.txt")
+
+          # Tags present on both sides with a different SHA = a tag moved
+          # upstream; it is force-updated but surfaced loudly.
+          awk 'NR == FNR { if ($2 !~ /\^\{\}$/) v[$2] = $1; next } ($2 in v) && v[$2] != $1 { print $2 }' \
+            "${RUNNER_TEMP}/target-tags.txt" "${RUNNER_TEMP}/local-tags.txt" > "${RUNNER_TEMP}/moved-tags.txt"
+          while read -r t; do
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "::warning::Tag '${t#refs/tags/}' moved upstream; the local tag WOULD be force-updated."
+            else
+              echo "::warning::Tag '${t#refs/tags/}' moved upstream; the local tag was force-updated."
+            fi
+          done < "${RUNNER_TEMP}/moved-tags.txt"
+
+          if git push "${PUSH_OPTS[@]}" target --tags; then
+            tag_result="✅ ok"
+            rc=0
+          else
+            tag_result="❌ push failed"
+            echo "::error::Tag push to ${TARGET_REPO} failed."
+            rc=1
+          fi
+          {
+            echo "local_count=${local_count}"
+            echo "target_count=${target_count}"
+            echo "moved_count=$(wc -l < "${RUNNER_TEMP}/moved-tags.txt" | tr -d ' ')"
+            echo "tag_result=${tag_result}"
+          } >> "$GITHUB_OUTPUT"
+          exit $rc
+
+      - name: Report
+        if: ${{ always() }}
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+          LOCAL_TAGS: ${{ steps.tags.outputs.local_count }}
+          TARGET_TAGS: ${{ steps.tags.outputs.target_count }}
+          MOVED_TAGS: ${{ steps.tags.outputs.moved_count }}
+          TAG_RESULT: ${{ steps.tags.outputs.tag_result }}
+        run: |
+          set -euo pipefail
+          {
+            echo "## Sync from upstream — \`${SOURCE_REPO}\` → \`${TARGET_REPO}\`"
+            echo ""
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "🧪 **Dry run** — negotiation only, no ref was updated."
+              echo ""
+            fi
+            echo "| Ref | Upstream | Target (before) | State | Result |"
+            echo "| --- | --- | --- | --- | --- |"
+            if [ -f "${RUNNER_TEMP}/branch-results.tsv" ]; then
+              while IFS=$'\t' read -r b l v s r; do
+                echo "| \`${b}\` | \`${l}\` | \`${v}\` | ${s} | ${r} |"
+              done < "${RUNNER_TEMP}/branch-results.tsv"
+            else
+              echo "| — | — | — | clone/auth failed before any push | ❌ |"
+            fi
+            if [ -n "${TAG_RESULT}" ]; then
+              if [ "${MOVED_TAGS:-0}" != "0" ]; then
+                tag_state="⚠️ ${MOVED_TAGS} moved (see warnings)"
+              else
+                tag_state="—"
+              fi
+              echo "| all tags | ${LOCAL_TAGS} tags | ${TARGET_TAGS} tags | ${tag_state} | ${TAG_RESULT} |"
+            else
+              echo "| all tags | — | — | — | ⏭ not reached |"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

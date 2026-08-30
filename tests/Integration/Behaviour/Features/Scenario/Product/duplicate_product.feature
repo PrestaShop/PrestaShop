@@ -609,6 +609,46 @@ Feature: Duplicate product from Back Office (BO).
       | element |               | darknessCopy      | en-US:Darkness;fr-FR:Ténèbres |
     And darkness and darknessCopy have different values
 
+  Scenario: I duplicate a product its combination feature values are copied
+    Given I create product feature "combiElement" with specified properties:
+      | name[en-US]      | Combi Element |
+      | associated shops | shop1         |
+    And I create feature value "water" for feature "combiElement" with following properties:
+      | value[en-US]     | Water |
+      | value[fr-FR]     | Eau   |
+      | associated shops | shop1 |
+    And I add product "magicShirt" with following information:
+      | name[en-US] | Magic shirt  |
+      | type        | combinations |
+    And I generate combinations for product magicShirt using following attributes:
+      | Color | [Red,Blue] |
+    And product "magicShirt" should have following combinations:
+      | id reference   | combination name | reference | attributes   | impact on price | quantity | is default |
+      | magicShirtRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | magicShirtBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
+    # Associate a predefined and a custom feature value to one combination only
+    When I set to combination "magicShirtRed" the following feature values:
+      | feature      | feature_value | custom_values           | custom_reference |
+      | combiElement | water         |                         |                  |
+      | combiElement |               | en-US:Magma;fr-FR:Magma | magma            |
+    Then combination "magicShirtRed" should have following feature values:
+      | feature      | feature_value | custom_values           |
+      | combiElement | water         |                         |
+      | combiElement | magma         | en-US:Magma;fr-FR:Magma |
+    When I duplicate product magicShirt to a magicShirtCopy
+    Then product "magicShirtCopy" should have following combinations:
+      | id reference       | combination name | reference | attributes   | impact on price | quantity | is default |
+      | magicShirtCopyRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | magicShirtCopyBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
+    # The predefined value is shared, the custom one is duplicated into a brand new value
+    And combination "magicShirtCopyRed" should have following feature values:
+      | feature      | feature_value | new_feature_value | custom_values           |
+      | combiElement | water         |                   |                         |
+      | combiElement |               | magmaCopy         | en-US:Magma;fr-FR:Magma |
+    And magma and magmaCopy have different values
+    # The combination without feature values stays empty
+    And combination "magicShirtCopyBlue" should have no feature values
+
   Scenario: I duplicate a product with images they are correctly duplicated and associated
     When I add product "productWithCombinationAndImages" with following information:
       | name[en-US] | Jar of sand  |

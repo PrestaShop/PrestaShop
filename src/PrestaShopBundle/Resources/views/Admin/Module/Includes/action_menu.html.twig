@@ -12,7 +12,7 @@
         url: module.attributes.urls[module.attributes.url_active],
         action: module.attributes.url_active,
         label: module.attributes.urls_labels[module.attributes.url_active],
-        upload_url: module.attributes.upload_url|default(null)}
+        upload_url: module.attributes.upload_url|default(null)},
     ) }}
     {% if (module.attributes.urls|length > 1) %}
         <input type="hidden" class="btn" />
@@ -30,7 +30,7 @@
                         url: module_url,
                         action: module_action,
                         label: module.attributes.urls_labels[module_action],
-                        upload_url: module.attributes.upload_url|default(null)}
+                        upload_url: module.attributes.upload_url|default(null)},
                     ) }}
                 </li>
             {% endif %}

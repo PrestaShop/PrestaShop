@@ -50,6 +50,7 @@ use PrestashopInstallerException;
 use PrestaShopLoggerInterface;
 use Psr\Log\LogLevel;
 use PSRLoggerAdapter;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 use Throwable;
@@ -698,11 +699,26 @@ class Install extends AbstractInstall
                         $dst_path . $iso . '-default-' . $type['name'] . '.jpg'
                     );
                 } else {
+                    $error = 0;
+                    $targetWidth = null;
+                    $targetHeight = null;
+                    $sourceWidth = null;
+                    $sourceHeight = null;
+
                     ImageManager::resize(
                         $img_path . $iso . '.jpg',
                         $dst_path . $iso . '-default-' . $type['name'] . '.jpg',
                         $type['width'],
-                        $type['height']
+                        $type['height'],
+                        'jpg',
+                        false,
+                        $error,
+                        $targetWidth,
+                        $targetHeight,
+                        5,
+                        $sourceWidth,
+                        $sourceHeight,
+                        $type['image_fitment']
                     );
                 }
             }
@@ -1233,11 +1249,40 @@ class Install extends AbstractInstall
         // And then, we build url and log this information!
         Context::getContext()->shop = new Shop(1);
         Context::getContext()->link = new Link();
-        $adminUrl = rtrim(Context::getContext()->link->getAdminBaseLink(), '/') . '/' . $adminFolder;
+        $adminUrl = rtrim(Context::getContext()->link->getAdminBaseLink(), '/') . '/' . $adminFolder . '/';
 
         $this->getLogger()->logInfo(sprintf('You can now access your backoffice at %s.', $adminUrl));
 
+        $this->removeInstallFolder();
+
         return true;
+    }
+
+    /**
+     * Remove the install/ folder after a successful installation.
+     *
+     * In dev environments the folder is named "install-dev" and must be kept; only
+     * the "install" folder shipped in release packages is targeted here. Failure to
+     * remove the folder is non-fatal: a warning is logged so the merchant can remove
+     * it manually.
+     */
+    private function removeInstallFolder(): void
+    {
+        $installFolder = _PS_ROOT_DIR_ . '/install';
+
+        if (!is_dir($installFolder)) {
+            return;
+        }
+
+        try {
+            (new Filesystem())->remove($installFolder);
+            $this->getLogger()->logInfo('The install/ folder was removed.');
+        } catch (Throwable $e) {
+            $this->getLogger()->logWarning(sprintf(
+                'The install/ folder could not be removed automatically (%s). Please delete it manually for security reasons.',
+                $e->getMessage()
+            ));
+        }
     }
 
     /**

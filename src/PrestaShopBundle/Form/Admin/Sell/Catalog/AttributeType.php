@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
@@ -59,6 +60,9 @@ class AttributeType extends TranslatorAwareType
                 'label' => $this->trans('Name', 'Admin.Global'),
                 'options' => [
                     'constraints' => [
+                        new CleanHtml([
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
                         new TypedRegex([
                             'type' => TypedRegex::TYPE_CATALOG_NAME,
                         ]),

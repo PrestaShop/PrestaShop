@@ -12,6 +12,7 @@ use Db;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
@@ -36,13 +37,11 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
-use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
 use PrestaShopException;
+use StockAvailable;
 
 class CombinationRepository extends AbstractMultiShopObjectModelRepository
 {
-    use ShopConstraintTrait;
-
     /**
      * @var Connection
      */
@@ -672,7 +671,27 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('productId', $productId->getValue())
         ;
 
-        $this->applyShopConstraint($qb, $shopConstraint)->executeStatement();
+        if ($shopConstraint->getShopId() !== null) {
+            // Use StockAvailable::addSqlShopParams to correctly handle shop groups that share stock.
+            // When a shop group shares stock, rows in stock_available have id_shop=0 and id_shop_group=X,
+            // so filtering by id_shop alone would produce no matches.
+            $shopParams = [];
+            try {
+                StockAvailable::addSqlShopParams($shopParams, $shopConstraint->getShopId()->getValue());
+            } catch (PrestaShopException $e) {
+                throw new CoreException('Error occurred when trying to add StockAvailable shop condition', 0, $e);
+            }
+            foreach ($shopParams as $key => $value) {
+                if (in_array($key, ['id_shop', 'id_shop_group'], true)) {
+                    $qb->andWhere(sprintf('ps.%s = :%s', $key, $key))
+                        ->setParameter($key, (int) $value, ParameterType::INTEGER);
+                }
+            }
+        } else {
+            $this->applyShopConstraint($qb, $shopConstraint);
+        }
+
+        $qb->executeStatement();
     }
 
     /**

@@ -60,17 +60,22 @@
       <trans-unit id="482836cce404046ca7dc34fb0a6fc526">
         <source>Apply the cost of the highest defined range</source>
         <target>Apply the cost of the highest defined range</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 108]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 117]</note>
       </trans-unit>
       <trans-unit id="f4669bd40b65315b54caa4d61e4df2ed">
         <source>Based on the order's total price</source>
         <target>Based on the order's total price</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 92]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 101]</note>
       </trans-unit>
       <trans-unit id="d2716866a1d558fd4d707f592c9c90b8">
         <source>Based on the order's total weight</source>
         <target>Based on the order's total weight</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 93]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 47]</note>
+      </trans-unit>
+      <trans-unit id="ffe3d324b1c7a7e964bcb4c3c0be3fc5">
+        <source>Based on the shipment's total weight</source>
+        <target>Based on the shipment's total weight</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 45]</note>
       </trans-unit>
       <trans-unit id="780c462e85ba4399a5d42e88f69a15ca">
         <source>Billing</source>
@@ -90,7 +95,7 @@
       <trans-unit id="c91e596246bbf8fdff9dae7b349d71d9">
         <source>Carrier name</source>
         <target>Carrier name</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 45]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 46]</note>
       </trans-unit>
       <trans-unit id="ba44d024ba9eec02cc432a36dcffb9d9">
         <source>Carrier name:</source>
@@ -110,7 +115,7 @@
       <trans-unit id="b6507ffa2e172923aeed7e87e29bd611">
         <source>Carriers ([1]%carriers_count%[/1])</source>
         <target>Carriers ([1]%carriers_count%[/1])</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 576]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 636]</note>
       </trans-unit>
       <trans-unit id="47727de83838bb7df93877b04b5efdf7">
         <source>Create carriers to let your customers choose their best shipping option in terms of delivery dates or fees. Start with editing/deleting the default "My carrier", and add as many options as you need.</source>
@@ -145,7 +150,7 @@
       <trans-unit id="4f890cf6a72112cad95093baecf39831">
         <source>Disable carrier</source>
         <target>Disable carrier</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 109]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 118]</note>
       </trans-unit>
       <trans-unit id="272175e18b4f5f142e1afc94698df9e3">
         <source>Finally, this carrier will be proposed in those shops:</source>
@@ -160,7 +165,7 @@
       <trans-unit id="b00b85425e74ed2c85dc3119b78ff2c3">
         <source>Free Shipping</source>
         <target>Free Shipping</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 61]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 70]</note>
       </trans-unit>
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
@@ -180,7 +185,7 @@
       <trans-unit id="920bd1fb6d54c93fca528ce941464225">
         <source>Group access</source>
         <target>Group access</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 111]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 124]</note>
       </trans-unit>
       <trans-unit id="2605fbb693837be42d0cd0e701cb5aa3">
         <source>Handling</source>
@@ -195,7 +200,7 @@
       <trans-unit id="04fc88e3eb09f1440cdf0b9b60dc1e58">
         <source>Handling costs</source>
         <target>Handling costs</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 77]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 86]</note>
       </trans-unit>
       <trans-unit id="2a28ff68d6e69bd4d2ee2d8c11a78823">
         <source>If the order is out of range, the behavior is to %3$s.</source>
@@ -290,12 +295,12 @@
       <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
         <source>Name:</source>
         <target>Name:</target>
-        <note>File: controllers/admin/AdminCartRulesController.php [Line: 846]</note>
+        <note>File: controllers/admin/AdminCartRulesController.php [Line: 869]</note>
       </trans-unit>
       <trans-unit id="11fbcc6cf7c92c543857f1431f72ddb6">
         <source>Out of range behavior</source>
         <target>Out of range behavior</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 106]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 115]</note>
       </trans-unit>
       <trans-unit id="082ebbb29b5ba59c293a00a55581679b">
         <source>Out-of-range behavior</source>
@@ -310,7 +315,7 @@
       <trans-unit id="8e6c64a901e609a97351f999949d90d3">
         <source>Please upload a valid jpeg file</source>
         <target>Please upload a valid jpeg file</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 94]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 107]</note>
       </trans-unit>
       <trans-unit id="2ae7cf0472e9c76dee8c098e635b4c87">
         <source>Price (VAT excl.)</source>
@@ -330,12 +335,12 @@
       <trans-unit id="7e172d83d9c63ed2e7692f73bd91c175">
         <source>Set ranges and prices</source>
         <target>Set ranges and prices</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 115]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 124]</note>
       </trans-unit>
       <trans-unit id="5ebb0b7b0f6589c76c134c303df2ffaf">
         <source>Shipments ([1]%shipment_count%[/1])</source>
         <target>Shipments ([1]%shipment_count%[/1])</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 566]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 626]</note>
       </trans-unit>
       <trans-unit id="7589dfa9a5a899e9701335164c9ab520">
         <source>Shipping and handling</source>
@@ -350,7 +355,7 @@
       <trans-unit id="9f06b28a40790c4c4df5739bce3c1eb0">
         <source>Shipping costs</source>
         <target>Shipping costs</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 90]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 99]</note>
       </trans-unit>
       <trans-unit id="756eb8cebeb953f5ae47235ff2e183b5">
         <source>Shipping locations and costs</source>
@@ -375,17 +380,17 @@
       <trans-unit id="c8b462f779749d2e27abed2e9501b2bd">
         <source>Speed grade</source>
         <target>Speed grade</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 65]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 78]</note>
       </trans-unit>
       <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
         <source>Tax</source>
         <target>Tax</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 65]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 74]</note>
       </trans-unit>
       <trans-unit id="f39b85edce7f4e450d01829da2b70c44">
         <source>The file is too large. Allowed maximum size is 8MB.</source>
         <target>The file is too large. Allowed maximum size is 8MB.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 95]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 108]</note>
       </trans-unit>
       <trans-unit id="97ebdb829cbe654346e6218c60990c03">
         <source>The lighter the cheaper!</source>
@@ -415,7 +420,7 @@
       <trans-unit id="0979779c4569141b98591d326d343ec2">
         <source>Tracking URL</source>
         <target>Tracking URL</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 101]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 114]</note>
       </trans-unit>
       <trans-unit id="5068c162a60b5859f973f701333f45c5">
         <source>Tracking number</source>
@@ -425,7 +430,7 @@
       <trans-unit id="dde695268ea519ababd83f0ca3d274fc">
         <source>Transit time</source>
         <target>Transit time</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 53]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 59]</note>
       </trans-unit>
       <trans-unit id="07018153f387118b1dacafee609f13b1">
         <source>Will be applied when the price is</source>
@@ -445,7 +450,7 @@
       <trans-unit id="dad1f8d794ee0dd7753fe75e73b78f31">
         <source>Zones</source>
         <target>Zones</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 56]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 65]</note>
       </trans-unit>
       <trans-unit id="5d33afb3d9e6ed27733f96f8188068cd">
         <source><![CDATA[[1]A new, improved version of this page is ready.[/1] You can enable it with a single click in the [2]New & Experimental Features[/2] section.]]></source>
@@ -455,17 +460,17 @@
       <trans-unit id="b62c378b7439b8fac0cbbb678d8bf7d0">
         <source>[1]Manage handling costs[/1]</source>
         <target>[1]Manage handling costs[/1]</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 81]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 90]</note>
       </trans-unit>
       <trans-unit id="c41d3aae9e95b460f33a4890422e9e30">
         <source>[1]Manage locations[/1]</source>
         <target>[1]Manage locations[/1]</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 48]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 57]</note>
       </trans-unit>
       <trans-unit id="144240922dde7ebda925e78532ab654b">
         <source>[1]Manage taxes[/1]</source>
         <target>[1]Manage taxes[/1]</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 67]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 76]</note>
       </trans-unit>
       <trans-unit id="0ea5b002f2959687c7ff926ca01a47a3">
         <source>according to the price</source>

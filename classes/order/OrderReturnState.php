@@ -14,6 +14,9 @@ class OrderReturnStateCore extends ObjectModel
     /** @var string Display state in the specified color */
     public $color;
 
+    /** Cancel return products */
+    public bool $is_cancelling_return = false;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -23,6 +26,7 @@ class OrderReturnStateCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32],
+            'is_cancelling_return' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
 
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => OrderReturnStateSettings::NAME_MAX_LENGTH],

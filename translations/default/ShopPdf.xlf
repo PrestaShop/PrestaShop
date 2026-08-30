@@ -5,12 +5,12 @@
       <trans-unit id="1ac6ee29e9e68fb71bad91c1d34348cc">
         <source>%s:</source>
         <target>%s:</target>
-        <note>File: pdf/invoice.product-tab.tpl [Line: 105]</note>
+        <note>File: pdf/shipment-delivery-slip.product-tab.tpl [Line: 66]</note>
       </trans-unit>
       <trans-unit id="a271cee71f5c411446db4f90676dbc96">
         <source>%taxrate%%space%%</source>
         <target>%taxrate%%space%%</target>
-        <note>File: classes/pdf/HTMLTemplateInvoice.php [Line: 180]</note>
+        <note>File: classes/pdf/HTMLTemplateInvoice.php [Line: 190]</note>
       </trans-unit>
       <trans-unit id="99d48dba6b2b30a09c4a84a2912a5e5d">
         <source>(After discount)</source>
@@ -35,12 +35,12 @@
       <trans-unit id="9fec2102dd0b5b29d6cdf9d5614fabf7">
         <source>(Tax excl.)</source>
         <target>(Tax excl.)</target>
-        <note>File: pdf/invoice.product-tab.tpl [Line: 29]</note>
+        <note>File: pdf/invoice.product-tab.tpl [Line: 30]</note>
       </trans-unit>
       <trans-unit id="e265492707dd0595fd1f399bb8a2690e">
         <source>: </source>
         <target>:</target>
-        <note>File: classes/Cart.php [Line: 1315]</note>
+        <note>File: classes/Cart.php [Line: 1316]</note>
       </trans-unit>
       <trans-unit id="a61109b693023aed557445989c517982">
         <source>After discount</source>
@@ -85,7 +85,7 @@
       <trans-unit id="914419aa32f04011357d3b604a86d7eb">
         <source>Carrier</source>
         <target>Carrier</target>
-        <note>File: pdf/invoice.shipping-tab.tpl [Line: 8]</note>
+        <note>File: pdf/shipment-delivery-slip.summary-tab.tpl [Line: 10]</note>
       </trans-unit>
       <trans-unit id="cf3bae95c5f6023d5a10fe415b205a45">
         <source>Credit slip</source>
@@ -100,7 +100,7 @@
       <trans-unit id="065ab3a28ca4f16f55f103adc7d0226f">
         <source>Delivery</source>
         <target>Delivery</target>
-        <note>File: classes/pdf/HTMLTemplateDeliverySlip.php [Line: 61]</note>
+        <note>File: classes/pdf/HTMLTemplateShipmentDeliverySlip.php [Line: 88]</note>
       </trans-unit>
       <trans-unit id="af0f5bdc5be121b9307687aeeae38c17">
         <source>Delivery address</source>
@@ -120,7 +120,7 @@
       <trans-unit id="9d5bf15117441a1b52eb1f0808e4aad3">
         <source>Discounts</source>
         <target>Discounts</target>
-        <note>File: pdf/invoice.product-tab.tpl [Line: 141]</note>
+        <note>File: pdf/invoice.product-tab.tpl [Line: 142]</note>
       </trans-unit>
       <trans-unit id="e92cfa244b5eb9025d07522080468445">
         <source>Ecotax</source>
@@ -155,7 +155,7 @@
       <trans-unit id="466eadd40b3c10580e3ab4e8061161ce">
         <source>Invoice</source>
         <target>Invoice</target>
-        <note>File: classes/pdf/HTMLTemplateInvoice.php [Line: 68]</note>
+        <note>File: classes/pdf/HTMLTemplateInvoice.php [Line: 78]</note>
       </trans-unit>
       <trans-unit id="440ac606343b8a66acad0d2978786d2a">
         <source>Invoice Date</source>
@@ -190,7 +190,7 @@
       <trans-unit id="3b0649c72650c313a357338dcdfb64ec">
         <source>Note</source>
         <target>Note</target>
-        <note>File: pdf/invoice.note-tab.tpl [Line: 14]</note>
+        <note>File: pdf/invoice.note-tab.tpl [Line: 15]</note>
       </trans-unit>
       <trans-unit id="6b9e9f2472786ed1e76005bfc37bc8af">
         <source>Order Discount</source>
@@ -200,12 +200,12 @@
       <trans-unit id="1e860e56970a81a1ba3e1fcb7fccc846">
         <source>Order Reference</source>
         <target>Order Reference</target>
-        <note>File: pdf/order-slip.summary-tab.tpl [Line: 7]</note>
+        <note>File: pdf/shipment-delivery-slip.summary-tab.tpl [Line: 7]</note>
       </trans-unit>
       <trans-unit id="559e7ca805230fc80e3644f87bb3994d">
         <source>Order date</source>
         <target>Order date</target>
-        <note>File: pdf/order-slip.summary-tab.tpl [Line: 8]</note>
+        <note>File: pdf/shipment-delivery-slip.summary-tab.tpl [Line: 8]</note>
       </trans-unit>
       <trans-unit id="cc894fffb019b528d12951b74d6d2b6e">
         <source>Order return</source>
@@ -240,7 +240,7 @@
       <trans-unit id="deb10517653c255364175796ace3553f">
         <source>Product</source>
         <target>Product</target>
-        <note>File: pdf/invoice.product-tab.tpl [Line: 14]</note>
+        <note>File: pdf/shipment-delivery-slip.product-tab.tpl [Line: 10]</note>
       </trans-unit>
       <trans-unit id="1a22913fb1b16ada25c2637af9d44013">
         <source>Product / Reference</source>
@@ -417,10 +417,15 @@
         <target>Total to pay</target>
         <note>File: pdf/supply-order.total-tab.tpl [Line: 40]</note>
       </trans-unit>
+      <trans-unit id="5068c162a60b5859f973f701333f45c5">
+        <source>Tracking number</source>
+        <target>Tracking number</target>
+        <note>File: pdf/shipment-delivery-slip.summary-tab.tpl [Line: 13]</note>
+      </trans-unit>
       <trans-unit id="197101c4a1b1fc503dcd6ebee127aa10">
         <source>Unit Price</source>
         <target>Unit Price</target>
-        <note>File: pdf/invoice.product-tab.tpl [Line: 25]</note>
+        <note>File: pdf/invoice.product-tab.tpl [Line: 26]</note>
       </trans-unit>
       <trans-unit id="c8ba77264f6e923f5ee35abf3108ae7c">
         <source>Unit Price TE</source>
@@ -470,7 +475,7 @@
       <trans-unit id="49005859f978fcb0dfddcf676e841245">
         <source>ecotax: %s</source>
         <target>ecotax: %s</target>
-        <note>File: pdf/invoice.product-tab.tpl [Line: 84]</note>
+        <note>File: pdf/invoice.product-tab.tpl [Line: 85]</note>
       </trans-unit>
       <trans-unit id="1d744a9ad1dac20645cfc4a36b77323b">
         <source>image(s)</source>
@@ -480,7 +485,7 @@
       <trans-unit id="1be15dd275084ad2cae8f2aaa604c110">
         <source>image(s):</source>
         <target>image(s):</target>
-        <note>File: pdf/invoice.product-tab.tpl [Line: 114]</note>
+        <note>File: pdf/shipment-delivery-slip.product-tab.tpl [Line: 77]</note>
       </trans-unit>
     </body>
   </file>

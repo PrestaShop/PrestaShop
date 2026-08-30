@@ -9,6 +9,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\SqlFormatter\NullHighlighter;
 use Doctrine\SqlFormatter\SqlFormatter;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridQueryBuilderModifier;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
@@ -27,12 +28,14 @@ class DoctrineGridDataFactory implements GridDataFactoryInterface
      * @param HookDispatcherInterface $hookDispatcher
      * @param QueryParserInterface $queryParser
      * @param string $gridId
+     * @param ExtraPropertiesGridQueryBuilderModifier|null $extraPropertiesGridQueryBuilderModifier
      */
     public function __construct(
         protected DoctrineQueryBuilderInterface $gridQueryBuilder,
         protected HookDispatcherInterface $hookDispatcher,
         protected QueryParserInterface $queryParser,
-        protected string $gridId
+        protected string $gridId,
+        protected ?ExtraPropertiesGridQueryBuilderModifier $extraPropertiesGridQueryBuilderModifier = null,
     ) {
     }
 
@@ -44,6 +47,15 @@ class DoctrineGridDataFactory implements GridDataFactoryInterface
         $searchQueryBuilder = $this->gridQueryBuilder->getSearchQueryBuilder($searchCriteria);
         $countQueryBuilder = $this->gridQueryBuilder->getCountQueryBuilder($searchCriteria);
 
+        if ($this->extraPropertiesGridQueryBuilderModifier) {
+            $this->extraPropertiesGridQueryBuilderModifier->apply(
+                $searchQueryBuilder,
+                $countQueryBuilder,
+                $searchCriteria,
+                $this->gridId
+            );
+        }
+
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($this->gridId) . 'GridQueryBuilderModifier', [
             'search_query_builder' => $searchQueryBuilder,
             'count_query_builder' => $countQueryBuilder,
@@ -52,6 +64,10 @@ class DoctrineGridDataFactory implements GridDataFactoryInterface
 
         $records = $searchQueryBuilder->executeQuery()->fetchAllAssociative();
         $recordsTotal = (int) $countQueryBuilder->executeQuery()->fetchOne();
+
+        if ($this->extraPropertiesGridQueryBuilderModifier) {
+            $records = $this->extraPropertiesGridQueryBuilderModifier->castExtraProperties($records, $this->gridId);
+        }
 
         $records = new RecordCollection($records);
 

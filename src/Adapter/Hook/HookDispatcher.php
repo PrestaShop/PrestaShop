@@ -89,24 +89,10 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
         if ($listeners = $this->getListeners(strtolower($eventName ?? ''))) {
             $this->doDispatch($listeners, $eventName, $event);
         } elseif ($this->isDebug && null !== $this->hookRegistry) {
-            // When a hook has no listeners it means it's not even in the database or no modules were attached, in the current case
-            // Hook::exec will never be called meaning no stats will be registered for this hook So we handle the registry data collection
-            // here so that we can still get some info in the Debug toolbar
-            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5);
-
-            // Try to find the initial backtrace that was not called from the dispatcher services
-            $initialBackTrace = [];
-            for ($i = 0; $i < count($backtrace); ++$i) {
-                $initialBackTrace = $backtrace[$i];
-                $isCodeFromDispatcher = (bool) strpos($initialBackTrace['file'], 'HookDispatcher');
-                if (!$isCodeFromDispatcher) {
-                    break;
-                }
-            }
-
-            $this->hookRegistry->selectHook($eventName, $event->getHookParameters(), $initialBackTrace['file'] ?? 'unknown file', $initialBackTrace['line'] ?? 'unknown line');
-            $this->hookRegistry->hookWasNotRegistered();
-            $this->hookRegistry->collect();
+            // When a hook has no listeners it means it's not even in the database or no modules were attached.
+            // Hook::exec will never be called, so we record the dispatch directly here for the toolbar.
+            $this->hookRegistry->hookDispatched($eventName ?? '', $event->getHookParameters());
+            $this->hookRegistry->hookWasNotRegistered($eventName ?? '');
         }
 
         return $event;

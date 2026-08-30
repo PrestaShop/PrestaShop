@@ -43,11 +43,10 @@ if (_PS_MODE_DEV_) {
 require_once __DIR__ . '/../autoload.php';
 
 // Loads .env file from the root of project
-$dotEnvFile = dirname(__FILE__, 2) . '/.env';
 (new Dotenv())
     // DO NOT use putEnv
     ->usePutenv(false)
-    ->loadEnv($dotEnvFile)
+    ->loadEnv(_PS_ENV_FILE_PATH_)
 ;
 
 // Block the process until the cache clear is in progress, this must be done before the kernel is created so it doesn't

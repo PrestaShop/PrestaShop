@@ -139,7 +139,7 @@ describe('API : GET /products', async () => {
         const productQuantity = await boProductsPage.getTextColumn(page, 'quantity', 1);
         expect(productQuantity).to.equal(jsonResponse.items[idxItem].quantity);
 
-        const productPrice = await boProductsPage.getTextColumn(page, 'price', 1);
+        const productPrice = await boProductsPage.getTextColumn(page, 'priceTaxIncluded', 1);
         expect(productPrice).to.equal(parseFloat(jsonResponse.items[idxItem].priceTaxExcluded));
 
         const productCategory = await boProductsPage.getTextColumn(page, 'category', 1);

@@ -6,6 +6,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
@@ -34,6 +35,9 @@ class FeatureType extends TranslatorAwareType
                 ],
                 'options' => [
                     'constraints' => [
+                        new CleanHtml([
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
                         new TypedRegex([
                             'type' => 'generic_name',
                         ]),

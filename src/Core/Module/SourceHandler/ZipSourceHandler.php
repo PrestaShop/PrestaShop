@@ -16,10 +16,6 @@ class ZipSourceHandler implements SourceHandlerInterface
 {
     private const AUTHORIZED_MIME = [
         'application/zip',
-        'application/x-gzip',
-        'application/gzip',
-        'application/x-gtar',
-        'application/x-tgz',
     ];
 
     private const MODULE_REGEX = '/^(.*)\/\1\.php$/i'; // module_name/module_name.php

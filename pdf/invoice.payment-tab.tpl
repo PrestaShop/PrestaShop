@@ -6,6 +6,7 @@
 	<tr>
 		<td class="payment center small grey bold" width="44%">{l s='Payment Method' d='Shop.Pdf' pdf='true'}</td>
 		<td class="payment left white" width="56%">
+			{if $order->hasPayments()}
 			<table width="100%" border="0">
 				{foreach from=$order_invoice->getOrderPaymentCollection() item=payment}
 					<tr>
@@ -14,6 +15,9 @@
 					</tr>
 				{/foreach}
 			</table>
+			{else}
+				{$order->payment}
+			{/if}
 		</td>
 	</tr>
 </table>

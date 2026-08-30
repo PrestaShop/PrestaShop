@@ -151,4 +151,42 @@ class ThemeTest extends TestCase
                 'js' => [],
             ], $theme->getPageSpecificAssets('a'));
     }
+
+    public function testIsCompatibleWithFramework(): void
+    {
+        // Test with compatible framework version
+        $theme = new Theme(
+            [
+                'name' => 'foo',
+                'directory' => 'a/',
+                'meta' => [
+                    'compatibility' => [
+                        'framework' => 'bootstrap-5.3.0',
+                    ],
+                ],
+            ],
+            '',
+            ''
+        );
+
+        $this->assertTrue($theme->isCompatibleWithFramework('bootstrap', '^5.0'));
+        $this->assertTrue($theme->isCompatibleWithFramework('bootstrap', '~5.3'));
+        $this->assertFalse($theme->isCompatibleWithFramework('bootstrap', '^6.0'));
+        $this->assertFalse($theme->isCompatibleWithFramework('bootstrap', '^4.0'));
+
+        // Test with framework not set
+        $themeWithoutFramework = new Theme(
+            [
+                'name' => 'bar',
+                'directory' => 'b/',
+            ],
+            '',
+            ''
+        );
+
+        $this->assertFalse($themeWithoutFramework->isCompatibleWithFramework('bootstrap', '^5.0'));
+
+        // Test with framework name mismatch
+        $this->assertFalse($theme->isCompatibleWithFramework('foundation', '^6.0'));
+    }
 }

@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\OrderReturnStateSettings;
 use PrestaShopBundle\Form\Admin\Type\ColorPickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -65,6 +66,13 @@ class OrderReturnStateType extends TranslatorAwareType
                 'label' => $this->trans('Color', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Status will be highlighted in this color. HTML colors only.', 'Admin.Shopparameters.Help'),
                 'required' => false,
+            ])
+            ->add('is_cancelling_return', CheckboxType::class, [
+                'required' => false,
+                'label' => $this->trans('Cancelling order returns.', 'Admin.Shopparameters.Feature'),
+                'attr' => [
+                    'material_design' => true,
+                ],
             ])
         ;
     }

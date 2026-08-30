@@ -4,8 +4,8 @@ name: Mark stale issues
 
 on:
   schedule:
-    # Every 10 minutes from 00:00 to 05:59
-    - cron: "*/10 0-5 * * *"
+    # Every 20 minutes from 00:00 to 05:59
+    - cron: "*/20 0-5 * * *"
   workflow_dispatch:
     inputs:
       debug-only:
@@ -24,7 +24,8 @@ on:
         default: "30"
         type: string
       operations-per-run:
-        description: "Maximum GitHub API operations per run (optional; default 100 if omitted)"
+        description: "Maximum GitHub API operations per run (optional; default 1000 if
+          omitted)"
         required: false
         type: string
 
@@ -44,6 +45,9 @@ jobs:
         with:
           days-before-stale: ${{ github.event.inputs.days-before-stale || '547' }}
           days-before-close: ${{ github.event.inputs.days-before-close || '30' }}
-          operations-per-run: ${{ github.event.inputs.operations-per-run || '100' }}
-          exempt-issue-labels: "Critical, Security, Major, Good first issue, EPIC, Topwatchers, Blocked, Must-have, Waiting for dev, Waiting for QA, Waiting for QA by Community, Waiting for PM, Waiting for UX, Waiting for rebase, Waiting for wording, Release, Detected by TE, 9.1.x"
+          operations-per-run: ${{ github.event.inputs.operations-per-run || '1000' }}
+          exempt-issue-labels: "Critical, Security, Major, Good first issue, EPIC,
+            Topwatchers, Blocked, Must-have, Waiting for dev, Waiting for QA,
+            Waiting for QA by Community, Waiting for PM, Waiting for UX, Waiting
+            for rebase, Waiting for wording, Release, Detected by TE, 9.1.x"
           debug-only: ${{ github.event.inputs.debug-only || 'false' }}

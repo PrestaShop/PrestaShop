@@ -12,6 +12,16 @@
         <target>-- Choose --</target>
         <note>File: admin-dev/themes/default/template/controllers/customer_threads/helpers/view/modal.tpl [Line: 18]</note>
       </trans-unit>
+      <trans-unit id="7c39ada89dffc08df5ee542d9d43f885">
+        <source>-- Scope --</source>
+        <target>-- Scope --</target>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 252]</note>
+      </trans-unit>
+      <trans-unit id="c34a665d1c86fc3739550aaa13f11675">
+        <source>-- Type --</source>
+        <target>-- Type --</target>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 243]</note>
+      </trans-unit>
       <trans-unit id="7bbd046ab824701b2e019e5d07d6ab99">
         <source>Activate selection</source>
         <target>Activate selection</target>
@@ -50,7 +60,7 @@
       <trans-unit id="bb894197f55eaed8b4ee4ec2bf9ca1d3">
         <source>Add current page to Quick Access</source>
         <target>Add current page to Quick Access</target>
-        <note>File: admin-dev/themes/new-theme/template/components/layout/quick_access.tpl [Line: 50]</note>
+        <note>File: admin-dev/themes/new-theme/template/components/layout/quick_access.tpl [Line: 49]</note>
       </trans-unit>
       <trans-unit id="c770d8e0d1d1943ce239c64dbd6acc20">
         <source>Add my IP</source>
@@ -230,7 +240,7 @@
       <trans-unit id="70d9be9b139893aa6c69b5e77e614311">
         <source>Confirm</source>
         <target>Confirm</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Actions/Bulk/submit.html.twig [Line: 16]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/fulfill_shipment_modal.html.twig [Line: 24]</note>
       </trans-unit>
       <trans-unit id="4eac69549b8424b6cf5852421f327838">
         <source>Confirm this action</source>
@@ -250,7 +260,7 @@
       <trans-unit id="686e697538050e4664636337cc3b834f">
         <source>Create</source>
         <target>Create</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig [Line: 45]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig [Line: 47]</note>
       </trans-unit>
       <trans-unit id="d37c2bf1bd3143847fca087b354f920e">
         <source>Customer ID</source>
@@ -292,6 +302,21 @@
         <target>Delete</target>
         <note>File: modules/ps_imageslider/views/templates/hook/list.tpl [Line: 61]</note>
       </trans-unit>
+      <trans-unit id="32827ba5c3031967433ad3804a88b760">
+        <source>Delete + drop</source>
+        <target>Delete + drop</target>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 313]</note>
+      </trans-unit>
+      <trans-unit id="f2b7b29551069fb6dba414498d3fc8b0">
+        <source>Delete + drop column</source>
+        <target>Delete + drop column</target>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 192]</note>
+      </trans-unit>
+      <trans-unit id="d80ebb8a3f0acc3bc5b3c29b6336f0ce">
+        <source>Delete + drop columns</source>
+        <target>Delete + drop columns</target>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 312]</note>
+      </trans-unit>
       <trans-unit id="87d16f7a55371d01fcbafeafe1cfcf4e">
         <source>Delete from all stores</source>
         <target>Delete from all stores</target>
@@ -306,6 +331,11 @@
         <source>Delete from store</source>
         <target>Delete from store</target>
         <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 323]</note>
+      </trans-unit>
+      <trans-unit id="248d5fa7bf2ccfbc846dd9d0bbb6bbdf">
+        <source>Delete product</source>
+        <target>Delete product</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/CustomerService/OrderReturn/Blocks/form.html.twig [Line: 107]</note>
       </trans-unit>
       <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
         <source>Delete selected</source>
@@ -392,6 +422,11 @@
         <target>Download</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Backup/download_view.html.twig [Line: 13]</note>
       </trans-unit>
+      <trans-unit id="2607298669ace2fc910321afeb9f8a84">
+        <source>Download PDF</source>
+        <target>Download PDF</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/CustomerService/OrderReturn/Blocks/form.html.twig [Line: 86]</note>
+      </trans-unit>
       <trans-unit id="07176ccdd3cd24acb62ab4323fc68a51">
         <source>Download error log</source>
         <target>Download error log</target>
@@ -420,7 +455,7 @@
       <trans-unit id="b94e76919b866513cebaeddd9eb165f8">
         <source>Duplicate discount</source>
         <target>Duplicate discount</target>
-        <note>File: src/Core/Grid/Definition/Factory/DiscountGridDefinitionFactory.php [Line: 159]</note>
+        <note>File: src/Core/Grid/Definition/Factory/DiscountGridDefinitionFactory.php [Line: 173]</note>
       </trans-unit>
       <trans-unit id="8fd2671b48c70424d8a77bb26515c8af">
         <source>Duplicate for current store</source>
@@ -480,7 +515,7 @@
       <trans-unit id="f7931413dee107ddf5289c8886baf7ec">
         <source>Edit: %s</source>
         <target>Edit: %s</target>
-        <note>File: classes/controller/AdminController.php [Line: 1633]</note>
+        <note>File: classes/controller/AdminController.php [Line: 1635]</note>
       </trans-unit>
       <trans-unit id="4472046c137171c7adf7c4fe5a72b6b9">
         <source>Edit: %value%</source>
@@ -535,7 +570,7 @@
       <trans-unit id="dbb392a2dc9b38722e69f6032faea73e">
         <source>Export .CSV file</source>
         <target>Export .CSV file</target>
-        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 1197]</note>
+        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 1225]</note>
       </trans-unit>
       <trans-unit id="351b6d570b6ba15fe66e85c1eaf9ec64">
         <source>Export to SQL Manager</source>
@@ -566,6 +601,11 @@
         <source>Finish</source>
         <target>Finish</target>
         <note>File: controllers/admin/AdminCarrierWizardController.php [Line: 137]</note>
+      </trans-unit>
+      <trans-unit id="f7ff0d881ccd8e84fb940cabf1a7572d">
+        <source>Fulfill</source>
+        <target>Fulfill</target>
+        <note>File: src/Core/Grid/Definition/Factory/ShipmentGridDefinitionFactory.php [Line: 163]</note>
       </trans-unit>
       <trans-unit id="32b919d18cfaca89383f6000dcc9c031">
         <source>Generate</source>
@@ -605,7 +645,7 @@
       <trans-unit id="349838fb1d851d3e2014b9fe39203275">
         <source>Install</source>
         <target>Install</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 469]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 474]</note>
       </trans-unit>
       <trans-unit id="d59048f21fd887ad520398ce677be586">
         <source>Learn more</source>
@@ -635,7 +675,7 @@
       <trans-unit id="68be4837f6c739877233e527a996dd00">
         <source>Merge</source>
         <target>Merge</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Actions/Row/additional_shipment_row_action.html.twig [Line: 56]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ShipmentGridDefinitionFactory.php [Line: 182]</note>
       </trans-unit>
       <trans-unit id="2f1812d7e666f007a4faca95781a5453">
         <source>Merge shipment</source>
@@ -650,7 +690,6 @@
       <trans-unit id="d3da97e2d9aee5c8fbe03156ad051c99">
         <source>More</source>
         <target>More</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Actions/Row/additional_shipment_row_action.html.twig [Line: 31]</note>
       </trans-unit>
       <trans-unit id="faeb44014d2b370971666cf03fc3d31a">
         <source>Next (arrow right)</source>
@@ -777,6 +816,11 @@
         <target>Search Name</target>
         <note>File: src/Core/Grid/Definition/Factory/ImageTypeGridDefinitionFactory.php [Line: 196]</note>
       </trans-unit>
+      <trans-unit id="48bd2540ea949b0f0957fc6d998dbe3d">
+        <source>Search URL</source>
+        <target>Search URL</target>
+        <note>File: src/Core/Grid/Definition/Factory/QuickAccessGridDefinitionFactory.php [Line: 126]</note>
+      </trans-unit>
       <trans-unit id="1d85b1967f24e16f6517f005918c5f2c">
         <source>Search Width</source>
         <target>Search Width</target>
@@ -790,7 +834,7 @@
       <trans-unit id="98b69092244c5a326046925eae941962">
         <source>Search call prefix</source>
         <target>Search call prefix</target>
-        <note>File: src/Core/Grid/Definition/Factory/CountryGridDefinitionFactory.php [Line: 159]</note>
+        <note>File: src/Core/Grid/Definition/Factory/CountryGridDefinitionFactory.php [Line: 165]</note>
       </trans-unit>
       <trans-unit id="da6b6493b1cc2156ad63965bd59ca491">
         <source>Search city</source>
@@ -810,7 +854,7 @@
       <trans-unit id="288d3474d9261b2b11526a99b3bf98c2">
         <source>Search country</source>
         <target>Search country</target>
-        <note>File: src/Core/Grid/Definition/Factory/StoreGridDefinitionFactory.php [Line: 256]</note>
+        <note>File: src/Core/Grid/Definition/Factory/TaxRuleGridDefinitionFactory.php [Line: 142]</note>
       </trans-unit>
       <trans-unit id="6861d21ea3a14378d5fab68eb542c76f">
         <source>Search customer</source>
@@ -831,6 +875,11 @@
         <source>Search employee</source>
         <target>Search employee</target>
         <note>File: src/Core/Grid/Definition/Factory/CustomerThreadGridDefinitionFactory.php [Line: 260]</note>
+      </trans-unit>
+      <trans-unit id="8a21b4776fe4b1ff7472a8dec4b1e1eb">
+        <source>Search entity</source>
+        <target>Search entity</target>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 218]</note>
       </trans-unit>
       <trans-unit id="5b581336e173d03edc4f1d43ca053316">
         <source>Search fax</source>
@@ -877,6 +926,11 @@
         <target>Search message</target>
         <note>File: src/Core/Grid/Definition/Factory/OrderMessageGridDefinitionFactory.php [Line: 132]</note>
       </trans-unit>
+      <trans-unit id="b6144ccaa378795a45c12c1be37c26dd">
+        <source>Search module</source>
+        <target>Search module</target>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 226]</note>
+      </trans-unit>
       <trans-unit id="542f59279cd5d73dfbdb069ce0833b0a">
         <source>Search name</source>
         <target>Search name</target>
@@ -885,7 +939,7 @@
       <trans-unit id="f4f9c70d6e447b42a202d6ed9aadc74d">
         <source>Search order ID</source>
         <target>Search order ID</target>
-        <note>File: src/Core/Grid/Definition/Factory/MerchandiseReturnGridDefinitionFactory.php [Line: 121]</note>
+        <note>File: src/Core/Grid/Definition/Factory/OrderReturnGridDefinitionFactory.php [Line: 153]</note>
       </trans-unit>
       <trans-unit id="015762a0ffcfd7d3ad995dffb5c67e42">
         <source>Search payment</source>
@@ -907,6 +961,16 @@
         <target>Search post code</target>
         <note>File: src/Core/Grid/Definition/Factory/ManufacturerAddressGridDefinitionFactory.php [Line: 178]</note>
       </trans-unit>
+      <trans-unit id="adc370a334cbbad28f32ba6e63eb03e2">
+        <source>Search property</source>
+        <target>Search property</target>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 234]</note>
+      </trans-unit>
+      <trans-unit id="7087cbed62cddb06bd7506c46269f0b5">
+        <source>Search rate</source>
+        <target>Search rate</target>
+        <note>File: src/Core/Grid/Definition/Factory/TaxRuleGridDefinitionFactory.php [Line: 185]</note>
+      </trans-unit>
       <trans-unit id="d56b081f1e66fdf5130276c68d528780">
         <source>Search reference</source>
         <target>Search reference</target>
@@ -915,12 +979,17 @@
       <trans-unit id="9c8f9561babc16bf5fb27f09cbb405ab">
         <source>Search state</source>
         <target>Search state</target>
-        <note>File: src/Core/Grid/Definition/Factory/StoreGridDefinitionFactory.php [Line: 247]</note>
+        <note>File: src/Core/Grid/Definition/Factory/TaxRuleGridDefinitionFactory.php [Line: 152]</note>
       </trans-unit>
       <trans-unit id="8ac95de64bc03d0ada69a8118aa97a4a">
         <source>Search template</source>
         <target>Search template</target>
         <note>File: src/Core/Grid/Definition/Factory/OrderStatesGridDefinitionFactory.php [Line: 210]</note>
+      </trans-unit>
+      <trans-unit id="2c684099c19cc088bfedc141b0d1c803">
+        <source>Search template name</source>
+        <target>Search template name</target>
+        <note>File: src/Core/Grid/Definition/Factory/EmailBodyTemplateDefinitionFactory.php [Line: 109]</note>
       </trans-unit>
       <trans-unit id="8b82a7ba57cf0f052ea074b9d89abaa7">
         <source>Search total</source>
@@ -931,6 +1000,11 @@
         <source>Search value</source>
         <target>Search value</target>
         <note>File: src/Core/Grid/Definition/Factory/FeatureValueGridDefinitionFactory.php [Line: 168]</note>
+      </trans-unit>
+      <trans-unit id="a268fbd823d6b03f5de8d1599de8741a">
+        <source>Search zip code</source>
+        <target>Search zip code</target>
+        <note>File: src/Core/Grid/Definition/Factory/TaxRuleGridDefinitionFactory.php [Line: 162]</note>
       </trans-unit>
       <trans-unit id="adea94c9c6d88be2cfb58020f683ee2a">
         <source>Search zip/postal code</source>
@@ -945,7 +1019,7 @@
       <trans-unit id="a7e441ce13abaecceee27f5420ecdcd5">
         <source>Search zones</source>
         <target>Search zones</target>
-        <note>File: src/Core/Grid/Definition/Factory/CountryGridDefinitionFactory.php [Line: 169]</note>
+        <note>File: src/Core/Grid/Definition/Factory/CountryGridDefinitionFactory.php [Line: 175]</note>
       </trans-unit>
       <trans-unit id="891ad007e2e9f2d55be6669cd9abc7a0">
         <source>See more</source>
@@ -1035,7 +1109,7 @@
       <trans-unit id="8a9e64d86ed12ad40de129bc7f4683b2">
         <source>Split</source>
         <target>Split</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Actions/Row/additional_shipment_row_action.html.twig [Line: 45]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ShipmentGridDefinitionFactory.php [Line: 172]</note>
       </trans-unit>
       <trans-unit id="2e60dcf2bc7ec6003ffd1560fb5f3ef0">
         <source>Split shipment</source>
@@ -1090,7 +1164,7 @@
       <trans-unit id="06933067aafd48425d67bcb01bba5cb6">
         <source>Update</source>
         <target>Update</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig [Line: 49]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig [Line: 51]</note>
       </trans-unit>
       <trans-unit id="8c7c3a241c7dccd3c0b78122aea2fb32">
         <source>Update anyway</source>
@@ -1125,7 +1199,7 @@
       <trans-unit id="21c411dbe2b2a636f05d20fd4bfa8129">
         <source>View customer details</source>
         <target>View customer details</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/MerchandiseReturn/OrderReturnType.php [Line: 54]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/OrderReturn/OrderReturnType.php [Line: 55]</note>
       </trans-unit>
       <trans-unit id="6e9783376d951cfd780e9fdb67a0f02c">
         <source>View details</source>
@@ -1135,12 +1209,12 @@
       <trans-unit id="f6ec431761aa6aa9f924c1797350ef45">
         <source>View order details</source>
         <target>View order details</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/MerchandiseReturn/OrderReturnType.php [Line: 63]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CustomerService/OrderReturn/OrderReturnType.php [Line: 64]</note>
       </trans-unit>
       <trans-unit id="1dda0a32a88a31cac7f6b103ff13e2ac">
         <source>View pack content</source>
         <target>View pack content</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig [Line: 169]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig [Line: 174]</note>
       </trans-unit>
       <trans-unit id="7347b01499b2a4023b8806e12212de6a">
         <source>Zoom in/out</source>

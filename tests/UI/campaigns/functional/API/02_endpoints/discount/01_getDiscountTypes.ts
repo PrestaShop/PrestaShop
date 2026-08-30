@@ -11,6 +11,7 @@ import {
   boFeatureFlagPage,
   boLoginPage,
   type BrowserContext,
+  dataLanguages,
   type Page,
   utilsAPI,
   utilsPlaywright,
@@ -18,12 +19,13 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_discount_getDiscountTypes';
 
-describe('API : GET /admin-api/discount-types', async () => {
+describe('API : GET /admin-api/discounts/types', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
   let accessToken: string;
   let jsonResponse: any;
+  const clientScope: string = 'discount_read';
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -36,21 +38,22 @@ describe('API : GET /admin-api/discount-types', async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
-  // Pre-condition: Enable discount
+  // Pre-condition: Enable discount + experimental endpoints
   setFeatureFlag(boFeatureFlagPage.featureFlagDiscount, true, `${baseContext}_preTest`);
+  setFeatureFlag(boFeatureFlagPage.featureFlagExperimentalEndpoints, true, `${baseContext}_preTest2`);
 
   describe('API : Fetch the access token', async () => {
     it('should request the endpoint /access_token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
-      accessToken = await requestAccessToken('discount_read');
+      accessToken = await requestAccessToken(clientScope);
     });
   });
 
   describe('API : Fetch Data', async () => {
-    it('should request the endpoint /discount-types', async function () {
+    it('should request the endpoint /discounts/types', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get('discount-types', {
+      const apiResponse = await apiContext.get('discounts/types', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -104,12 +107,33 @@ describe('API : GET /admin-api/discount-types', async () => {
       expect(pageTitle).to.contains(boDiscountsPage.pageTitle);
     });
 
-    //@todo : https://github.com/PrestaShop/PrestaShop/issues/41110
-    it.skip('should check the JSON Response', async function () {
+    it('should check the JSON Response', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponse', baseContext);
+
+      await boDiscountsPage.clickOnCreateDiscountButton(page);
+      expect(jsonResponse.length).to.be.greaterThan(0);
+
+      for (let idxItem: number = 0; idxItem < jsonResponse.length; idxItem++) {
+        if (jsonResponse[idxItem].type === 'order_level') {
+          // @todo : https://github.com/PrestaShop/PrestaShop/issues/42209
+          this.skip();
+        }
+
+        const hasDiscountType = await boDiscountsPage.hasDiscountType(page, jsonResponse[idxItem].type);
+        expect(hasDiscountType).to.equals(true);
+
+        const discountType = await boDiscountsPage.getDiscountType(page, jsonResponse[idxItem].type);
+        expect(discountType.core).to.equals(jsonResponse[idxItem].core);
+        // descriptions
+        // discountTypeId
+        expect(discountType.enabled).to.equals(jsonResponse[idxItem].enabled);
+        expect(discountType.name).to.contains(jsonResponse[idxItem].names[dataLanguages.english.locale]);
+        expect(discountType.type).to.equals(jsonResponse[idxItem].type);
+      }
     });
   });
 
-  // Post-condition: Disable discount
-  setFeatureFlag(boFeatureFlagPage.featureFlagDiscount, false, `${baseContext}_postTest`);
+  // Post-condition: Disable discount + experimental endpoints
+  setFeatureFlag(boFeatureFlagPage.featureFlagExperimentalEndpoints, false, `${baseContext}_postTest`);
+  setFeatureFlag(boFeatureFlagPage.featureFlagDiscount, false, `${baseContext}_postTest2`);
 });

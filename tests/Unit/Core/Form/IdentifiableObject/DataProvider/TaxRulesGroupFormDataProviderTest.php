@@ -21,7 +21,9 @@ class TaxRulesGroupFormDataProviderTest extends TestCase
     {
         $formDataProvider = new TaxRulesGroupFormDataProvider($this->mockQueryBus());
 
-        $this->assertEquals([], $formDataProvider->getDefaultData());
+        $this->assertEquals([
+            'is_enabled' => false,
+        ], $formDataProvider->getDefaultData());
     }
 
     public function testGetData(): void

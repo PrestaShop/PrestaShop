@@ -58,7 +58,8 @@ final class OrderReturnStateFormDataHandler implements FormDataHandlerInterface
     {
         $command = new AddOrderReturnStateCommand(
             $data['name'],
-            $data['color']
+            $data['color'],
+            $data['is_cancelling_return']
         );
 
         return $command;
@@ -74,6 +75,7 @@ final class OrderReturnStateFormDataHandler implements FormDataHandlerInterface
         $command = (new EditOrderReturnStateCommand($orderReturnStateId))
             ->setName($data['name'])
             ->setColor($data['color'])
+            ->setCancellingReturn($data['is_cancelling_return'])
         ;
 
         return $command;

@@ -31,7 +31,8 @@ class DefaultLanguage extends Constraint
     public function __construct(mixed $options = null, ?array $groups = null, mixed $payload = null, ?string $fieldName = null, ?bool $allowNull = null)
     {
         parent::__construct($options, $groups, $payload);
-        $this->fieldName = $fieldName ?? '';
+        // Keep whatever the parent set from the default option ($options) when no explicit $fieldName is passed.
+        $this->fieldName = $fieldName ?? $this->fieldName;
         $this->allowNull = $allowNull ?? $this->allowNull;
     }
 
@@ -41,5 +42,13 @@ class DefaultLanguage extends Constraint
     public function validatedBy()
     {
         return DefaultLanguageValidator::class;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDefaultOption()
+    {
+        return 'fieldName';
     }
 }

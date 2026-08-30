@@ -15,6 +15,7 @@ use Gender;
 use Group;
 use Order;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
@@ -32,24 +33,11 @@ use Validate;
 #[AsQueryHandler]
 final class GetCartForViewingHandler implements GetCartForViewingHandlerInterface
 {
-    /**
-     * @var ImageManager
-     */
-    private $imageManager;
-
-    /**
-     * @var Locale
-     */
-    private $locale;
-
-    /**
-     * @param ImageManager $imageManager
-     * @param Locale $locale
-     */
-    public function __construct(ImageManager $imageManager, Locale $locale)
-    {
-        $this->imageManager = $imageManager;
-        $this->locale = $locale;
+    public function __construct(
+        private ImageManager $imageManager,
+        private Locale $locale,
+        private ModuleHtmlAuthorizationChecker $moduleHtmlAuthorizationChecker
+    ) {
     }
 
     /**
@@ -204,11 +192,10 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         $formattedProducts = [];
 
         foreach ($products as $product) {
-            if ($product['id_product_attribute']) {
-                $image = Product::getCombinationImageById($product['id_product_attribute'], $languageId);
-            } else {
-                $image = Product::getCover($product['id_product']);
-            }
+            $image = $product['id_product_attribute']
+                ? Product::getCombinationImageById($product['id_product_attribute'], $languageId)
+                : false;
+            $image = $image ?: Product::getCover($product['id_product']);
 
             $formattedProduct = [
                 'id' => $product['id_product'],
@@ -257,6 +244,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                                     $productCustomization['fields'][] = [
                                         'name' => $item['name'],
                                         'value' => $item['value'],
+                                        'allow_html' => $this->moduleHtmlAuthorizationChecker->isModuleHtmlAllowed((int) ($item['id_module'] ?? 0)),
                                         'type' => 'customizable_text_field',
                                     ];
                                 }

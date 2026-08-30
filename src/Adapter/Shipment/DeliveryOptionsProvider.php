@@ -1,4 +1,5 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -139,9 +140,11 @@ class DeliveryOptionsProvider extends DeliveryOptionsFinderCore
             $names[] = $carrier['instance']->name;
             $delays[] = $carrier['instance']->delay[$this->context->language->id];
 
-            // if more than on carrier are in the same delivery options then concatenate
-            // all extracontent
-            $extraContent .= Hook::exec('displayCarrierExtraContent', ['carrier' => $carrier['instance']], Module::getModuleIdByName($carrier['instance']->id));
+            if ($carrier['instance']->is_module) {
+                if ($moduleId = Module::getModuleIdByName($carrier['instance']->external_module_name)) {
+                    $extraContent .= Hook::exec('displayCarrierExtraContent', ['carrier' => (array) $carrier['instance']], $moduleId);
+                }
+            }
         }
 
         return [

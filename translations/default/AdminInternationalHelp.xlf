@@ -174,7 +174,7 @@
       <trans-unit id="98ae2fd635525d30d2b0e8b643f9a23c">
         <source>Indicate the format of the postal code: use L for a letter, N for a number, and C for the country's ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.</source>
         <target>Indicate the format of the postal code: use L for a letter, N for a number, and C for the country's ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/CountryType.php [Line: 118]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/CountryType.php [Line: 123]</note>
       </trans-unit>
       <trans-unit id="cd2f7b9409e0f1527766ad35aa8bd3c5">
         <source>International call prefix, (e.g. 1 for United States).</source>
@@ -204,7 +204,7 @@
       <trans-unit id="abb056fd74a8bdf858dbe3e68c5ea97c">
         <source>Restrict country selections in front office to those covered by active carriers</source>
         <target>Restrict country selections in front office to those covered by active carriers</target>
-        <note>File: controllers/admin/AdminCountriesController.php [Line: 42]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/CountryOptionsType.php [Line: 33]</note>
       </trans-unit>
       <trans-unit id="56b533c60a6c6d0b172c4ba5ec971eeb">
         <source>Search ISO code</source>
@@ -396,6 +396,11 @@
         <target>You can add or update a language directly from the PrestaShop website here.</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/International/Translations/Blocks/add_update_language.html.twig [Line: 21]</note>
       </trans-unit>
+      <trans-unit id="2404878c22945389a3c3a85c939f2a89">
+        <source>You can define a range of Zip/Postal codes (e.g., 44000-44100) or simply use one Zip/Postal code.</source>
+        <target>You can define a range of Zip/Postal codes (e.g., 44000-44100) or simply use one Zip/Postal code.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Tax/TaxRuleType.php [Line: 65]</note>
+      </trans-unit>
       <trans-unit id="e14eeddb992a1fa103cb2669178369cf">
         <source>You can define a range of Zip/Postal codes (e.g., 75000-75015) or simply use one Zip/Postal code.</source>
         <target>You can define a range of Zip/Postal codes (e.g., 75000-75015) or simply use one Zip/Postal code.</target>
@@ -425,6 +430,11 @@
         <source>Zone name (e.g. Africa, West Coast, Neighboring Countries).</source>
         <target>Zone name (e.g. Africa, West Coast, Neighboring Countries).</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/ZoneType.php [Line: 53]</note>
+      </trans-unit>
+      <trans-unit id="3ffc81ba2611fbed2400d92d41d6a921">
+        <source>e.g. 44000 or 44000-44100</source>
+        <target>e.g. 44000 or 44000-44100</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Tax/TaxRuleType.php [Line: 67]</note>
       </trans-unit>
     </body>
   </file>

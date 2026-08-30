@@ -10,7 +10,6 @@ use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\AvailableCarriersForShipme
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -36,9 +35,6 @@ class EditShipmentType extends AbstractType
                 'placeholder' => $this->translator->trans('Select a carrier', [], 'Admin.Orderscustomers.Feature'),
                 'required' => true,
             ])
-            ->add('current_order_carrier_id', HiddenType::class)
-            ->add('tracking_number', TextType::class, [
-                'required' => false,
-            ]);
+            ->add('current_order_carrier_id', HiddenType::class);
     }
 }

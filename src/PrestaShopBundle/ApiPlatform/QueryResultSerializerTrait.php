@@ -25,9 +25,14 @@ trait QueryResultSerializerTrait
      */
     protected function denormalizeQueryResult($CQRSQueryResult, Operation $operation, array $extraParameters = [])
     {
-        // If the result is a scalar value, then we need to wrap it behind "_queryResult" key and add extra parameters
-        // (this could be used in CQRSQueryMapping property to build the DTO)
-        if (is_scalar($CQRSQueryResult)) {
+        // If the result is a scalar value, or a plain list of scalars returned by a non-collection operation, then we
+        // need to wrap it behind the "_queryResult" key and add extra parameters (this can be used in the
+        // CQRSQueryMapping property to build the DTO). Lists of arrays/objects are left as-is: their elements are
+        // mapped individually through the "[@index]" notation, and associative arrays already map their keys to the
+        // DTO properties.
+        if (is_scalar($CQRSQueryResult)
+            || (!$operation instanceof CollectionOperationInterface && is_array($CQRSQueryResult) && $this->isListOfScalars($CQRSQueryResult))
+        ) {
             $CQRSQueryResult = array_merge(
                 $extraParameters,
                 ['_queryResult' => $CQRSQueryResult]
@@ -77,5 +82,27 @@ trait QueryResultSerializerTrait
     protected function getCQRSQueryClass(Operation $operation): ?string
     {
         return $operation->getExtraProperties()['CQRSQuery'] ?? null;
+    }
+
+    /**
+     * A non-empty list whose every element is a scalar, e.g. a string[] or int[]. Such a result must be wrapped under
+     * "_queryResult" to be mapped onto a single resource property; a list of arrays/objects must not (its elements are
+     * mapped individually), and an empty list is left to the resource property default.
+     *
+     * @param array $result
+     */
+    private function isListOfScalars(array $result): bool
+    {
+        if ([] === $result || !array_is_list($result)) {
+            return false;
+        }
+
+        foreach ($result as $value) {
+            if (!is_scalar($value)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

@@ -1,0 +1,4 @@
+name;reference;accessories
+Accessory Prod A;ACC-A;ACC-B
+Accessory Prod B;ACC-B;ACC-A
+Accessory Prod C;ACC-C;UNKNOWN-TARGET-REF

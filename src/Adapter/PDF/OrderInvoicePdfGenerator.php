@@ -11,6 +11,7 @@ use Hook;
 use Order;
 use PDF;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\PDF\GeneratedPdf;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use RuntimeException;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -39,6 +40,21 @@ final class OrderInvoicePdfGenerator implements PDFGeneratorInterface
      */
     public function generatePDF(array $orderId): string
     {
+        return $this->createPdf($orderId)->render(true);
+    }
+
+    public function generatePDFForResponse(array $orderId): GeneratedPdf
+    {
+        $pdf = $this->createPdf($orderId);
+
+        return new GeneratedPdf(
+            $pdf->render(false),
+            $pdf->getFilename()
+        );
+    }
+
+    private function createPdf(array $orderId): PDF
+    {
         if (count($orderId) !== 1) {
             throw new CoreException(sprintf('"%s" supports generating invoice for single order only.', self::class));
         }
@@ -53,8 +69,6 @@ final class OrderInvoicePdfGenerator implements PDFGeneratorInterface
 
         Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
 
-        $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, Context::getContext()->smarty);
-
-        return $pdf->render(true);
+        return new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, Context::getContext()->smarty);
     }
 }

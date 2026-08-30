@@ -195,6 +195,14 @@
       <taxRule iso_code_country="sk" id_tax="31"/>
     </taxRulesGroup>
   </taxes>
+  <states>
+    <state name="Ammochostos (Mağusa)" iso_code="04" country="CY" zone="Europe" />
+    <state name="Keryneia (Girne)" iso_code="06" country="CY" zone="Europe" />
+    <state name="Larnaka (Larnaka)" iso_code="03" country="CY" zone="Europe" />
+    <state name="Lefkosia (Lefkoşa)" iso_code="01" country="CY" zone="Europe" />
+    <state name="Lemesos (Leymasun)" iso_code="02" country="CY" zone="Europe" />
+    <state name="Pafos (Baf)" iso_code="05" country="CY" zone="Europe" />
+  </states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>

@@ -39,7 +39,7 @@
         <div class="form-group row">
           {{ ps.label_with_help(
             ('Select the theme you want to overwrite'|trans({}, 'Admin.Design.Feature')),
-            ('PrestaShop\'s email templates are stored in the "mails" folder, but they can be overridden by your current theme\'s own "mails" folder. Using this option enables to overwrite emails from your current theme.'|trans({}, 'Admin.Design.Help'))
+            ('PrestaShop\'s email templates are stored in the "mails" folder, but they can be overridden by your current theme\'s own "mails" folder. Using this option enables to overwrite emails from your current theme.'|trans({}, 'Admin.Design.Help')),
           ) }}
           <div class="col-sm">
             {{ form_errors(generateMailsForm.theme) }}
@@ -53,7 +53,7 @@
         <div class="form-group row">
           {{ ps.label_with_help(
             ('Overwrite templates'|trans({}, 'Admin.Design.Feature')),
-            ('By default, existing email template files are not modified to avoid deleting any modification you may have done. Enable this option to force the overwrite.'|trans({}, 'Admin.Design.Help'))
+            ('By default, existing email template files are not modified to avoid deleting any modification you may have done. Enable this option to force the overwrite.'|trans({}, 'Admin.Design.Help')),
           ) }}
           <div class="col-sm">
             {{ form_errors(generateMailsForm.overwrite) }}

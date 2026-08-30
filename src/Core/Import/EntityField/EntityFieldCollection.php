@@ -32,6 +32,9 @@ final class EntityFieldCollection implements EntityFieldCollectionInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated since 9.3, will be removed in the next major version - see
+     *             EntityFieldInterface::isRequired()
      */
     public function getRequiredFields()
     {

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -43,6 +44,11 @@ class ImageType
      * @ORM\Column(name="height", type="integer", options={"unsigned": true})
      */
     private int $height;
+
+    /**
+     * @ORM\Column(name="image_fitment", type="string", length=16, options={"default": ImageFitment::FIT})
+     */
+    private string $imageFitment = ImageFitment::FIT;
 
     /**
      * @ORM\Column(name="products", type="boolean", options={"default": 1})
@@ -106,6 +112,28 @@ class ImageType
     public function setHeight(int $height): static
     {
         $this->height = $height;
+
+        return $this;
+    }
+
+    /**
+     * Gets the image fitment used when generating this image type.
+     *
+     * @return value-of<ImageFitment::AVAILABLE_VALUES>
+     */
+    public function getImageFitment(): string
+    {
+        return $this->imageFitment;
+    }
+
+    /**
+     * Sets the image fitment used when generating this image type.
+     *
+     * @param value-of<ImageFitment::AVAILABLE_VALUES> $imageFitment
+     */
+    public function setImageFitment(string $imageFitment): static
+    {
+        $this->imageFitment = $imageFitment;
 
         return $this;
     }

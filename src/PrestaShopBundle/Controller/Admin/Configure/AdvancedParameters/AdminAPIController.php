@@ -40,7 +40,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AdminAPIController extends PrestaShopAdminController
 {
-    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")]
+    #[AdminSecurity("is_granted('create', 'AdminAdminAPI') || is_granted('update', 'AdminAdminAPI') || is_granted('delete', 'AdminAdminAPI') || is_granted('read', 'AdminAdminAPI')")]
     public function indexAction(
         ApiClientFilters $apiClientFilters,
         #[Autowire(service: 'prestashop.adapter.admin_api.form_handler')]
@@ -51,7 +51,7 @@ class AdminAPIController extends PrestaShopAdminController
         return $this->renderIndex($apiClientFilters, $formHandler->getForm(), $gridFactory);
     }
 
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[AdminSecurity("is_granted('update', 'AdminAdminAPI')")]
     public function processConfigurationAction(
         ApiClientFilters $apiClientFilters,
         Request $request,
@@ -79,7 +79,7 @@ class AdminAPIController extends PrestaShopAdminController
         return $this->renderIndex($apiClientFilters, $configurationForm, $gridFactory);
     }
 
-    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_api_index')]
+    #[AdminSecurity("is_granted('create', 'AdminAdminAPI')", redirectRoute: 'admin_api_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.api_client_form_builder')]
@@ -119,7 +119,7 @@ class AdminAPIController extends PrestaShopAdminController
         );
     }
 
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_index')]
+    #[AdminSecurity("is_granted('update', 'AdminAdminAPI')", redirectRoute: 'admin_api_index')]
     public function editAction(
         Request $request,
         int $apiClientId,
@@ -156,7 +156,7 @@ class AdminAPIController extends PrestaShopAdminController
         ]);
     }
 
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_clients_edit')]
+    #[AdminSecurity("is_granted('update', 'AdminAdminAPI')", redirectRoute: 'admin_api_clients_edit')]
     public function regenerateSecretAction(int $apiClientId): RedirectResponse
     {
         try {
@@ -172,7 +172,7 @@ class AdminAPIController extends PrestaShopAdminController
         return $this->redirectToRoute('admin_api_clients_edit', ['apiClientId' => $apiClientId]);
     }
 
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_api_index')]
+    #[AdminSecurity("is_granted('update', 'AdminAdminAPI')", redirectRoute: 'admin_api_index')]
     public function toggleStatusAction(int $apiClientId): JsonResponse
     {
         /** @var EditableApiClient $editableApiClient */
@@ -195,7 +195,7 @@ class AdminAPIController extends PrestaShopAdminController
         ]);
     }
 
-    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_api_index')]
+    #[AdminSecurity("is_granted('delete', 'AdminAdminAPI')", message: 'You do not have permission to delete this.', redirectRoute: 'admin_api_index')]
     public function deleteAction(int $apiClientId): RedirectResponse
     {
         try {

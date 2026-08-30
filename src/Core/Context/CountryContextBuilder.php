@@ -10,7 +10,7 @@ namespace PrestaShop\PrestaShop\Core\Context;
 
 use Country as LegacyCountry;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
-use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
@@ -23,7 +23,7 @@ class CountryContextBuilder implements LegacyContextBuilderInterface
     private ?LegacyCountry $legacyCountry = null;
 
     public function __construct(
-        private readonly CountryRepository $countryRepository,
+        private readonly CountryRepositoryInterface $countryRepository,
         private readonly ContextStateManager $contextStateManager,
         private readonly LanguageContext $languageContext,
     ) {

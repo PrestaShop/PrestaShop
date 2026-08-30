@@ -8,8 +8,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\Query\GetCombinationFeatureValues;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\QueryResult\CombinationFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
@@ -19,6 +23,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppli
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 
@@ -33,20 +39,49 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @var Context
+     * @var ShopContext
      */
     private $shopContext;
 
     /**
+     * @var LanguageContext
+     */
+    private $languageContext;
+
+    /**
+     * @var FeaturesChoiceProvider
+     */
+    private $featuresChoiceProvider;
+
+    /**
+     * @var FeatureFlagStateCheckerInterface
+     */
+    private $featureFlagStateChecker;
+
+    /**
+     * @var array<int, string>|null
+     */
+    private $featureNames = null;
+
+    /**
      * @param CommandBusInterface $queryBus
-     * @param Context $shopContext
+     * @param ShopContext $shopContext
+     * @param LanguageContext $languageContext
+     * @param FeaturesChoiceProvider $featuresChoiceProvider
+     * @param FeatureFlagStateCheckerInterface $featureFlagStateChecker
      */
     public function __construct(
         CommandBusInterface $queryBus,
-        Context $shopContext
+        ShopContext $shopContext,
+        LanguageContext $languageContext,
+        FeaturesChoiceProvider $featuresChoiceProvider,
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker
     ) {
         $this->queryBus = $queryBus;
         $this->shopContext = $shopContext;
+        $this->languageContext = $languageContext;
+        $this->featuresChoiceProvider = $featuresChoiceProvider;
+        $this->featureFlagStateChecker = $featureFlagStateChecker;
     }
 
     /**
@@ -64,7 +99,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
 
         $suppliersData = $this->extractSuppliersData($combinationForEditing);
 
-        return array_merge([
+        $data = array_merge([
             'id' => $combinationId,
             'product_id' => $combinationForEditing->getProductId(),
             'cover_thumbnail_url' => $combinationForEditing->getCoverThumbnailUrl(),
@@ -76,6 +111,73 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'references' => $this->extractReferencesData($combinationForEditing),
         ], $suppliersData, ['images' => $combinationForEditing->getImageIds()]);
+
+        // The feature values section only exists when the feature flag is enabled (so does the matching
+        // form type), hence the data is only populated in that case to avoid feeding an absent field.
+        if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES)) {
+            $data['features'] = $this->extractFeatureValues($combinationId, $shopConstraint);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param int $combinationId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return array
+     */
+    private function extractFeatureValues(int $combinationId, ShopConstraint $shopConstraint): array
+    {
+        /** @var CombinationFeatureValue[] $featureValues */
+        $featureValues = $this->queryBus->handle(new GetCombinationFeatureValues($combinationId, $shopConstraint->getShopId()->getValue()));
+        if (empty($featureValues)) {
+            return [];
+        }
+
+        $featureNames = $this->getFeatureNames();
+        $combinationFeatureCollection = [];
+        foreach ($featureValues as $featureValue) {
+            if (!isset($combinationFeatureCollection[$featureValue->getFeatureId()])) {
+                $combinationFeatureCollection[$featureValue->getFeatureId()] = [
+                    'feature_id' => $featureValue->getFeatureId(),
+                    'feature_name' => $featureNames[$featureValue->getFeatureId()] ?? '',
+                    'feature_values' => [],
+                ];
+            }
+
+            $combinationFeatureValue = [
+                'feature_value_id' => $featureValue->getFeatureValueId(),
+                'feature_value_name' => $featureValue->getLocalizedValues()[$this->languageContext->getId()] ?? '',
+                'is_custom' => $featureValue->isCustom(),
+            ];
+            if ($featureValue->isCustom()) {
+                $combinationFeatureValue['custom_value'] = $featureValue->getLocalizedValues();
+            }
+
+            $combinationFeatureCollection[$featureValue->getFeatureId()]['feature_values'][] = $combinationFeatureValue;
+        }
+
+        return [
+            // Return 0-indexed array, not mapped by feature ID
+            'feature_collection' => array_values($combinationFeatureCollection),
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function getFeatureNames(): array
+    {
+        if (null === $this->featureNames) {
+            $this->featureNames = [];
+            $featureChoices = $this->featuresChoiceProvider->getChoices();
+            foreach ($featureChoices as $featureName => $featureId) {
+                $this->featureNames[$featureId] = $featureName;
+            }
+        }
+
+        return $this->featureNames;
     }
 
     /**
@@ -131,6 +233,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
                     'type' => $stockMovement->getType(),
                     'date' => $date,
                     'employee_name' => $stockMovement->getEmployeeName(),
+                    'api_client_name' => implode(', ', $stockMovement->getApiClientNames()) ?: null,
                     'delta_quantity' => $stockMovement->getDeltaQuantity(),
                 ];
             },

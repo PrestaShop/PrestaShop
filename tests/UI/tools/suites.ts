@@ -38,6 +38,7 @@ const campaignsNightly: string[] = [
   'functional:BO:advanced-parameters:07-10',
   'functional:BO:advanced-parameters:11-12',
   'functional:BO:header',
+  'functional:BO:community',
   'functional:FO:classic:01-03',
   'functional:FO:classic:04-07',
   'functional:FO:classic:08-12',

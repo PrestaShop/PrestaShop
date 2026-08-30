@@ -81,7 +81,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
 
     await boFeaturesPage.filterTable(page, 'name', dataFeatures.composition.name);
 
-    const textColumn = await boFeaturesPage.getTextColumn(page, 1, 'name', 'id_feature');
+    const textColumn = await boFeaturesPage.getTextColumn(page, 1, 'name');
     expect(textColumn).to.contains('Composition');
   });
 

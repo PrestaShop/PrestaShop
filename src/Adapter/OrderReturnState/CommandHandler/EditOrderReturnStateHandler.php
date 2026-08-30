@@ -53,5 +53,9 @@ final class EditOrderReturnStateHandler extends AbstractOrderReturnStateHandler 
         if (null !== $command->getColor()) {
             $orderReturnState->color = $command->getColor();
         }
+
+        if (null !== $command->isCancellingReturn()) {
+            $orderReturnState->is_cancelling_return = $command->isCancellingReturn();
+        }
     }
 }

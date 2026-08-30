@@ -25,12 +25,12 @@
       <trans-unit id="6ca3b11e4d89a7649d10c2d70d98612f">
         <source>%s addition</source>
         <target>%s addition</target>
-        <note>File: classes/controller/AdminController.php [Line: 1203]</note>
+        <note>File: classes/controller/AdminController.php [Line: 1205]</note>
       </trans-unit>
       <trans-unit id="a333339eb21abf3d5a04f5ede8f73ae9">
         <source>%s deletion</source>
         <target>%s deletion</target>
-        <note>File: classes/controller/AdminController.php [Line: 3951]</note>
+        <note>File: classes/controller/AdminController.php [Line: 3977]</note>
       </trans-unit>
       <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
         <source>%s group</source>
@@ -40,12 +40,12 @@
       <trans-unit id="0919680b340ae0ac8d1a804c4c69b0ba">
         <source>%s modification</source>
         <target>%s modification</target>
-        <note>File: classes/controller/AdminController.php [Line: 1312]</note>
+        <note>File: classes/controller/AdminController.php [Line: 1314]</note>
       </trans-unit>
       <trans-unit id="7d341c08fd102f0b86285b5ff2e26ea7">
         <source>%s: %s</source>
         <target>%s: %s</target>
-        <note>File: classes/controller/AdminController.php [Line: 744]</note>
+        <note>File: classes/controller/AdminController.php [Line: 746]</note>
       </trans-unit>
       <trans-unit id="24fc6fbf93a9d551ea7da4cd69f3da3e">
         <source>(%s selected)</source>
@@ -469,7 +469,7 @@ According to the Rec.30;Art.7(1)(c)</target>
       <trans-unit id="92a8f0b9d28a89b480bd1d29f46f0484">
         <source>Generator</source>
         <target>Generator</target>
-        <note>File: classes/controller/AdminController.php [Line: 646]</note>
+        <note>File: classes/controller/AdminController.php [Line: 647]</note>
       </trans-unit>
       <trans-unit id="585c732d00a27a32cd9585fe481964cf">
         <source>Go to the dashboard</source>
@@ -553,6 +553,11 @@ Before deleting any data, we recommend you to download all the invoices of the i
         <target>Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.</target>
         <note>File: admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl [Line: 97]</note>
       </trans-unit>
+      <trans-unit id="8105c92efe355b3f57c3b5a71559259f">
+        <source>Invalid shipment data provided to HTMLTemplateShipmentDeliverySlip</source>
+        <target>Invalid shipment data provided to HTMLTemplateShipmentDeliverySlip</target>
+        <note>File: classes/pdf/HTMLTemplateShipmentDeliverySlip.php [Line: 40]</note>
+      </trans-unit>
       <trans-unit id="e68564f23e0e939acea76dc3d2bc01bf">
         <source>Jan</source>
         <target>Jan</target>
@@ -601,7 +606,7 @@ Before deleting any data, we recommend you to download all the invoices of the i
       <trans-unit id="4ee29ca12c7d126654bd0e5275de6135">
         <source>List</source>
         <target>List</target>
-        <note>File: classes/controller/AdminController.php [Line: 630]</note>
+        <note>File: classes/controller/AdminController.php [Line: 631]</note>
       </trans-unit>
       <trans-unit id="f19dbf2edb3a0bd74b0524d960ff21eb">
         <source>Load</source>
@@ -800,7 +805,7 @@ They can, however, contact you anytime via your contact form, in this case, you 
       <trans-unit id="dae8ace18bdcbcc6ae5aece263e14fe8">
         <source>Options</source>
         <target>Options</target>
-        <note>File: classes/controller/AdminController.php [Line: 641]</note>
+        <note>File: classes/controller/AdminController.php [Line: 642]</note>
       </trans-unit>
       <trans-unit id="d1228f5476d15142b1358ae4b5fa2454">
         <source>Order #</source>
@@ -1112,10 +1117,20 @@ They can, however, contact you anytime via your contact form, in this case, you 
         <target>Sync success</target>
         <note>File: admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl [Line: 55]</note>
       </trans-unit>
+      <trans-unit id="522721217fac163af577828e0e21f02b">
+        <source>Syntax error with this pattern: %pattern%.</source>
+        <target>Syntax error with this pattern: %pattern%.</target>
+        <note>File: src/Core/Domain/Country/AddressFormat/AddressFormatChecker.php [Line: 106]</note>
+      </trans-unit>
       <trans-unit id="eeeb9a8eb45dd351d9ec0eb4acce66ce">
         <source>Th</source>
         <target>Th</target>
         <note>File: admin-dev/themes/default/template/helpers/calendar/calendar.tpl [Line: 93]</note>
+      </trans-unit>
+      <trans-unit id="a1c56ffabdf03103bf49e9454ccf9162">
+        <source>The %field% field is required.</source>
+        <target>The %field% field is required.</target>
+        <note>File: src/Core/Domain/Country/AddressFormat/AddressFormatChecker.php [Line: 75]</note>
       </trans-unit>
       <trans-unit id="efc54df619cd3792c98805fba1ee5ff7">
         <source>The controller %s is missing or invalid.</source>
@@ -1126,6 +1141,11 @@ They can, however, contact you anytime via your contact form, in this case, you 
         <source>The customer will send a message from the contact form for any rectification and erasure requests, justifying his request.</source>
         <target>The customer will send a message from the contact form for any rectification and erasure requests, justifying his request.</target>
         <note>File: modules/psgdpr/psgdpr.php [Line: 348]</note>
+      </trans-unit>
+      <trans-unit id="b5388eb23c293781575df6bd6f426a0f">
+        <source>The field %field% does not exist on %class%.</source>
+        <target>The field %field% does not exist on %class%.</target>
+        <note>File: src/Core/Domain/Country/AddressFormat/AddressFormatChecker.php [Line: 127]</note>
       </trans-unit>
       <trans-unit id="c5536e008327e8873c8daf321a088873">
         <source>The product(s) are matching one of these:</source>
@@ -1162,6 +1182,11 @@ They can, however, contact you anytime via your contact form, in this case, you 
         <target>This column must be set:</target>
         <note>File: admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl [Line: 74]</note>
       </trans-unit>
+      <trans-unit id="3c4546dc2e252f635d1b31511f21446a">
+        <source>This field is not a valid address property: %name%.</source>
+        <target>This field is not a valid address property: %name%.</target>
+        <note>File: src/Core/Domain/Country/AddressFormat/AddressFormatChecker.php [Line: 142]</note>
+      </trans-unit>
       <trans-unit id="954a21d373e3f1bd2446606700a37217">
         <source>This is a top-10 common password</source>
         <target>This is a top-10 common password</target>
@@ -1181,6 +1206,16 @@ They can, however, contact you anytime via your contact form, in this case, you 
         <source>This is similar to a commonly used password</source>
         <target>This is similar to a commonly used password</target>
         <note>File: install-dev/controllers/http/configure.php [Line: 230]</note>
+      </trans-unit>
+      <trans-unit id="b9ee0826daa3d3917020a381efd453ce">
+        <source>This key has already been used: %key%.</source>
+        <target>This key has already been used: %key%.</target>
+        <note>File: src/Core/Domain/Country/AddressFormat/AddressFormatChecker.php [Line: 58]</note>
+      </trans-unit>
+      <trans-unit id="b6eaff21a8b9a039f6bd0ef42770d04e">
+        <source>This object is not allowed: %name%.</source>
+        <target>This object is not allowed: %name%.</target>
+        <note>File: src/Core/Domain/Country/AddressFormat/AddressFormatChecker.php [Line: 118]</note>
       </trans-unit>
       <trans-unit id="ed5e8353dfc585f4c6b3a55d1a9fc01d">
         <source>Thu</source>
@@ -1280,7 +1315,7 @@ They can, however, contact you anytime via your contact form, in this case, you 
       <trans-unit id="6e9783376d951cfd780e9fdb67a0f02c">
         <source>View details</source>
         <target>View details</target>
-        <note>File: classes/controller/AdminController.php [Line: 636]</note>
+        <note>File: classes/controller/AdminController.php [Line: 637]</note>
       </trans-unit>
       <trans-unit id="485c47a81eb6e3998ec05aca48eda184">
         <source>We</source>
@@ -1365,7 +1400,7 @@ They can, however, contact you anytime via your contact form, in this case, you 
       <trans-unit id="921d54865f8169b84c90d4335c256494">
         <source>filter by %s</source>
         <target>filter by %s</target>
-        <note>File: classes/controller/AdminController.php [Line: 751]</note>
+        <note>File: classes/controller/AdminController.php [Line: 753]</note>
       </trans-unit>
       <trans-unit id="dd8921b41e0279a02c6a26a509241700">
         <source>result(s)</source>
@@ -1376,6 +1411,11 @@ They can, however, contact you anytime via your contact form, in this case, you 
         <source>search...</source>
         <target>search...</target>
         <note>File: admin-dev/themes/default/template/helpers/tree/tree_toolbar_search.tpl [Line: 12]</note>
+      </trans-unit>
+      <trans-unit id="d98df2134cdb0fcfffd2dc98e3b829dc">
+        <source><![CDATA[tmlspecialchars((string)$_smarty_tpl->tpl_vars['v']->value, ENT_QUOTES, 'UTF-8', true]]></source>
+        <target><![CDATA[tmlspecialchars((string)$_smarty_tpl->tpl_vars['v']->value, ENT_QUOTES, 'UTF-8', true]]></target>
+        <note>File: admin-dev/themes/default/template/helpers/form/form.tpl [Line: 537]</note>
       </trans-unit>
       <trans-unit id="01b6e20344b68835c5ed1ddedf20d531">
         <source>to</source>

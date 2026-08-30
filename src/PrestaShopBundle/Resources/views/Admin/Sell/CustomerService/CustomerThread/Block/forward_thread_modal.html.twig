@@ -12,9 +12,9 @@
   <div class="modal-dialog" role="document">
     {{ form_start(forwardCustomerThreadForm, {
       action: path('admin_customer_threads_forward', {
-        customerThreadId: customerThreadView.customerThreadId.value
+        customerThreadId: customerThreadView.customerThreadId.value,
       }),
-      attr: {class: 'form-horizontal'}
+      attr: {class: 'form-horizontal'},
     }) }}
       <div class="modal-content">
         <div class="modal-header">
@@ -54,7 +54,7 @@
             </label>
             <div class="col-sm">
               {{ form_widget(forwardCustomerThreadForm.comment, {
-                attr: {placeholder: 'You can add a comment here.'|trans({}, 'Admin.Orderscustomers.Help')}
+                attr: {placeholder: 'You can add a comment here.'|trans({}, 'Admin.Orderscustomers.Help')},
               }) }}
             </div>
           </div>

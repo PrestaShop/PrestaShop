@@ -5,7 +5,7 @@
       <trans-unit id="b06766963f3b27f47f5e6ddf68d8f07e">
         <source>"%email%" is not a valid email address.</source>
         <target>"%email%" is not a valid email address.</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3022]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3021]</note>
       </trans-unit>
       <trans-unit id="8ff8844bb02822975904934598298987">
         <source>"%key%" is an unauthorized keyword.</source>
@@ -30,17 +30,22 @@
       <trans-unit id="597cf702e07f3b35431d2a499b00cefd">
         <source>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved</source>
         <target>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3046]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3045]</note>
       </trans-unit>
       <trans-unit id="14118fbc7d8c233f0ac36ffb31716605">
         <source>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated</source>
         <target>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3036]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3035]</note>
       </trans-unit>
       <trans-unit id="1123af3eab25b7475419fcaecc6c3beb">
         <source>%category_name% (ID: %id%) cannot be saved</source>
         <target>%category_name% (ID: %id%) cannot be saved</target>
         <note>File: src/Adapter/Import/Handler/CategoryImportHandler.php [Line: 285]</note>
+      </trans-unit>
+      <trans-unit id="341fc30b0b77b9031b3af5e792fa033f">
+        <source>%count% module-owned definition(s) were skipped and cannot be deleted from the back office.</source>
+        <target>%count% module-owned definition(s) were skipped and cannot be deleted from the back office.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 360]</note>
       </trans-unit>
       <trans-unit id="994e8f1b72a9fe7a9e8949343be6bde7">
         <source>%data% cannot be saved</source>
@@ -97,6 +102,16 @@
         <target>A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).</target>
         <note>File: src/Adapter/Import/Handler/CategoryImportHandler.php [Line: 402]</note>
       </trans-unit>
+      <trans-unit id="01e9a0109babd8b4eceda818ec2cac56">
+        <source>A label wording is required when the property is displayed in forms or grids.</source>
+        <target>A label wording is required when the property is displayed in forms or grids.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionType.php [Line: 110]</note>
+      </trans-unit>
+      <trans-unit id="7b99c298039291770453f97afb242859">
+        <source>A quick access link to this URL already exists.</source>
+        <target>A quick access link to this URL already exists.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/QuickAccessController.php [Line: 284]</note>
+      </trans-unit>
       <trans-unit id="b8388ec68dcac2402d944fbb3382b0f1">
         <source>Abort import</source>
         <target>Abort import</target>
@@ -115,7 +130,7 @@
       <trans-unit id="3cc21b7970c348679cb6a1323a2dc173">
         <source>Alias is invalid</source>
         <target>Alias is invalid</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3476]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3472]</note>
       </trans-unit>
       <trans-unit id="fd4adc19ae7e0f0391f617451f3729cf">
         <source>All caches cleared successfully</source>
@@ -200,12 +215,12 @@
       <trans-unit id="fae40e95d9558caac76c035cd93da2a2">
         <source>Cannot disable SSL configuration due to the Cookie SameSite=None.</source>
         <target>Cannot disable SSL configuration due to the Cookie SameSite=None.</target>
-        <note>File: src/Adapter/Preferences/PreferencesConfiguration.php [Line: 65]</note>
+        <note>File: src/Adapter/Preferences/PreferencesConfiguration.php [Line: 70]</note>
       </trans-unit>
       <trans-unit id="243c959202a4f6ce7f1ccba6bc19ff08">
         <source>Cannot read the .CSV file</source>
         <target>Cannot read the .CSV file</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3720]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3715]</note>
       </trans-unit>
       <trans-unit id="c49d6d58d1c98f34a15bbd169f82961a">
         <source>Changed/missing files have been detected.</source>
@@ -246,6 +261,16 @@
         <source>Do you really want to remove the server %serverIp%:%serverPort% ?</source>
         <target>Do you really want to remove the server %serverIp%:%serverPort% ?</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig [Line: 49]</note>
+      </trans-unit>
+      <trans-unit id="329e8c024c62a8fcf12fc05d3e6d221c">
+        <source>Duplicate form "%id%" — each form may only be referenced once.</source>
+        <target>Duplicate form "%id%" — each form may only be referenced once.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionAdvancedType.php [Line: 85]</note>
+      </trans-unit>
+      <trans-unit id="ecd8b1f09c6d4e89a3c44b9eafeda8d3">
+        <source>Duplicate grid "%id%" — each grid may only be referenced once.</source>
+        <target>Duplicate grid "%id%" — each grid may only be referenced once.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionAdvancedType.php [Line: 89]</note>
       </trans-unit>
       <trans-unit id="e8b6f82eaf10566aa372329388e13e39">
         <source>EAN-13 "%ean13%" has incorrect value for product with ID %id%.</source>
@@ -407,6 +432,16 @@
         <target>Invalid ID</target>
         <note>File: classes/PrestaShopBackup.php [Line: 173]</note>
       </trans-unit>
+      <trans-unit id="896a806b97a0a3c930492e9a596a54e6">
+        <source>Invalid JSON: %error%</source>
+        <target>Invalid JSON: %error%</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 132]</note>
+      </trans-unit>
+      <trans-unit id="c722fa2e2fb02dcebc2283646cb71a20">
+        <source>Invalid placement position.</source>
+        <target>Invalid placement position.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyGridPlacementRowType.php [Line: 57]</note>
+      </trans-unit>
       <trans-unit id="f36c9a20c2ce51f491c944e41fde5ace">
         <source>It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.</source>
         <target>It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.</target>
@@ -420,12 +455,17 @@
       <trans-unit id="931bbbb741d025e3ff25ee3c2e72f414">
         <source>Linking Accessories...</source>
         <target>Linking Accessories...</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3996]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3991]</note>
       </trans-unit>
       <trans-unit id="f438c83e3ff4dd40a3fc1bf4bb3e79f5">
         <source>Linking accessories...</source>
         <target>Linking accessories...</target>
         <note>File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl [Line: 61]</note>
+      </trans-unit>
+      <trans-unit id="8aab8e1b701bde5084c43f76ffbb1a8f">
+        <source>Loading fields…</source>
+        <target>Loading fields…</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 184]</note>
       </trans-unit>
       <trans-unit id="118f9dbc8442c6be19dfc0b70d965929">
         <source>Look at your listings to make sure it's all there as you wished.</source>
@@ -462,6 +502,21 @@
         <target>New features are available. Feel free to try them out!</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/FeatureFlag/index.html.twig [Line: 23]</note>
       </trans-unit>
+      <trans-unit id="ffb8cd47a38a247c8e843fddc0c40be7">
+        <source>No Admin API operation with URI template "%path%" was detected — the property will not be exposed until such an endpoint exists.</source>
+        <target>No Admin API operation with URI template "%path%" was detected — the property will not be exposed until such an endpoint exists.</target>
+        <note>File: src/Core/ExtraProperty/Catalog/AssociationExistenceChecker.php [Line: 138]</note>
+      </trans-unit>
+      <trans-unit id="38686ce8ef9c3dd9300de73ee85008da">
+        <source>No back-office form with id "%formId%" was detected — the placement will be ignored until such a form exists.</source>
+        <target>No back-office form with id "%formId%" was detected — the placement will be ignored until such a form exists.</target>
+        <note>File: src/Core/ExtraProperty/Catalog/AssociationExistenceChecker.php [Line: 69]</note>
+      </trans-unit>
+      <trans-unit id="a08f259941cb5e859e241c0212092fd5">
+        <source>No back-office grid with id "%gridId%" was detected — the placement will be ignored until such a grid exists.</source>
+        <target>No back-office grid with id "%gridId%" was detected — the placement will be ignored until such a grid exists.</target>
+        <note>File: src/Core/ExtraProperty/Catalog/AssociationExistenceChecker.php [Line: 95]</note>
+      </trans-unit>
       <trans-unit id="4757718002cbae6feee5c372b66b6a29">
         <source>No change has been detected in your files.</source>
         <target>No change has been detected in your files.</target>
@@ -481,6 +536,11 @@
         <source>No valid tables were found to backup.</source>
         <target>No valid tables were found to backup.</target>
         <note>File: classes/PrestaShopBackup.php [Line: 315]</note>
+      </trans-unit>
+      <trans-unit id="16c0ffb063c880778dbeddcd7143c227">
+        <source>Not in catalog</source>
+        <target>Not in catalog</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 364]</note>
       </trans-unit>
       <trans-unit id="418dde4b22e22a725e75b2819c0373b2">
         <source>Note that the Category import does not support having two categories with the same name.</source>
@@ -536,6 +596,11 @@
         <source>Product with reference %1$s (ID: %2$s) could not be saved because the product name is missing.</source>
         <target>Product with reference %1$s (ID: %2$s) could not be saved because the product name is missing.</target>
         <note>File: controllers/admin/AdminImportController.php [Line: 1526]</note>
+      </trans-unit>
+      <trans-unit id="1ab2368d1bd33a9b66abd347d1c9b530">
+        <source>Registered by the module "%module%" — definitions owned by modules are read-only.</source>
+        <target>Registered by the module "%module%" — definitions owned by modules are read-only.</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 22]</note>
       </trans-unit>
       <trans-unit id="4798b868d51d8e259321deff0452c0f9">
         <source>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</source>
@@ -635,12 +700,12 @@
       <trans-unit id="52629716aa86c04b8d81bc7e9522463f">
         <source>Store is invalid</source>
         <target>Store is invalid</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3652]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3647]</note>
       </trans-unit>
       <trans-unit id="964e5a863ba051181f8f537626f5c953">
         <source>Supplier is invalid</source>
         <target>Supplier is invalid</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3397]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3394]</note>
       </trans-unit>
       <trans-unit id="664d4132fc8dc3a158be4692b4246528">
         <source>Tags list is invalid</source>
@@ -702,6 +767,11 @@
         <target>The SameSite=None attribute is only available in secure mode.</target>
         <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php [Line: 193]</note>
       </trans-unit>
+      <trans-unit id="b5e7329ccd32fd63175163357c4d2632">
+        <source>The URL must point to a back office page (must start with "index.php").</source>
+        <target>The URL must point to a back office page (must start with "index.php").</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/QuickAccess/QuickAccessType.php [Line: 69]</note>
+      </trans-unit>
       <trans-unit id="fe7ff4ed0a66abe86361ba0f8d6e919a">
         <source>The backup file does not exist</source>
         <target>The backup file does not exist</target>
@@ -720,27 +790,67 @@
       <trans-unit id="32de857e46ef2b55ce3582004fef7a95">
         <source>The confirmation email couldn't be sent, but the import is successful. Yay!</source>
         <target>The confirmation email couldn't be sent, but the import is successful. Yay!</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 4204]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 4199]</note>
+      </trans-unit>
+      <trans-unit id="b0df7a86aa1ae776ccf35e2cd0445f8f">
+        <source>The constraint name is required.</source>
+        <target>The constraint name is required.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyConstraintRowType.php [Line: 69]</note>
       </trans-unit>
       <trans-unit id="608ec99cc3ef74d962769c1958a1fa62">
         <source>The customer ID #%d does not exist in the database, and therefore cannot be saved.</source>
         <target>The customer ID #%d does not exist in the database, and therefore cannot be saved.</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3067]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3066]</note>
       </trans-unit>
       <trans-unit id="4a69d9da990728e003654d32a0b283a4">
         <source>The customer ID #%d does not exist in the database, and therefore cannot be validated.</source>
         <target>The customer ID #%d does not exist in the database, and therefore cannot be validated.</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3059]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3058]</note>
       </trans-unit>
       <trans-unit id="cfe45dd92c1b71a640ea19767578f38c">
         <source>The employee must be associated with at least one shop.</source>
         <target>The employee must be associated with at least one shop.</target>
         <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmployeeController.php [Line: 436]</note>
       </trans-unit>
+      <trans-unit id="61756a6d6d90e8eb32468a9e2dc80a95">
+        <source>The endpoint path is required.</source>
+        <target>The endpoint path is required.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyApiPlacementRowType.php [Line: 60]</note>
+      </trans-unit>
       <trans-unit id="519a3cfe5400ef0f781671c700aaed05">
         <source>The extension of your file should be ".csv".</source>
         <target>The extension of your file should be ".csv".</target>
         <note>File: src/Core/Import/File/FileUploader.php [Line: 114]</note>
+      </trans-unit>
+      <trans-unit id="9c24ee12582d563f5a24444e4c3f82b4">
+        <source>The extra property definition was not found.</source>
+        <target>The extra property definition was not found.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 403]</note>
+      </trans-unit>
+      <trans-unit id="ffccf8f3737fd905f76b2f7c7283169e">
+        <source>The form identifier is required.</source>
+        <target>The form identifier is required.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyFormPlacementRowType.php [Line: 75]</note>
+      </trans-unit>
+      <trans-unit id="e97331b344525b2f2292dcb052bff95c">
+        <source>The form options are not compatible with the form field type: the field could not be built. Fix the "Advanced form integration" card and try again.</source>
+        <target>The form options are not compatible with the form field type: the field could not be built. Fix the "Advanced form integration" card and try again.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 413]</note>
+      </trans-unit>
+      <trans-unit id="269935d0b4839194b169775568d2dc5e">
+        <source>The form options must be a valid JSON object.</source>
+        <target>The form options must be a valid JSON object.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionType.php [Line: 146]</note>
+      </trans-unit>
+      <trans-unit id="1858270d6067e7250d67ab6a61b36bfe">
+        <source>The grid "%gridId%" has no column with id "%columnId%" — the extra column will be appended at the default position instead.</source>
+        <target>The grid "%gridId%" has no column with id "%columnId%" — the extra column will be appended at the default position instead.</target>
+        <note>File: src/Core/ExtraProperty/Catalog/AssociationExistenceChecker.php [Line: 105]</note>
+      </trans-unit>
+      <trans-unit id="b91c6da7f28d12aa1602c2d376b502f0">
+        <source>The grid identifier is required.</source>
+        <target>The grid identifier is required.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyGridPlacementRowType.php [Line: 72]</note>
       </trans-unit>
       <trans-unit id="af395851b27882221a6df82c727bca3e">
         <source>The import directory doesn't exist. Please check your file path.</source>
@@ -787,6 +897,11 @@
         <target>The settings file cannot be overwritten.</target>
         <note>File: src/Adapter/Cache/CachingConfiguration.php [Line: 126]</note>
       </trans-unit>
+      <trans-unit id="895cd25ab668fac19d9bb499192ba4a0">
+        <source>The submitted extra property definition is invalid. Check the form values and try again.</source>
+        <target>The submitted extra property definition is invalid. Check the form values and try again.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 408]</note>
+      </trans-unit>
       <trans-unit id="0bedafc96db94da3f85caa7101944eb5">
         <source>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</source>
         <target>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</target>
@@ -816,6 +931,11 @@
         <source>This SQL query has no result.</source>
         <target>This SQL query has no result.</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig [Line: 44]</note>
+      </trans-unit>
+      <trans-unit id="76974e84d16b3ee889478bf760deb0b6">
+        <source>This extra property is managed by a module and cannot be modified from the back office.</source>
+        <target>This extra property is managed by a module and cannot be modified from the back office.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 418]</note>
       </trans-unit>
       <trans-unit id="4d247cbe2dbd06ce20b9affd635e7982">
         <source>This function only backs up your database, not your files.</source>
@@ -876,6 +996,11 @@
         <source>Updated files</source>
         <target>Updated files</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 241]</note>
+      </trans-unit>
+      <trans-unit id="cc4bf3e36714c7ce1b5c2d64c51d4c9b">
+        <source>Valid JSON</source>
+        <target>Valid JSON</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 131]</note>
       </trans-unit>
       <trans-unit id="6e17621d481059924339f91ed431a116">
         <source>Validating data...</source>

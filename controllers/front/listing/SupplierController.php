@@ -15,7 +15,6 @@ class SupplierControllerCore extends ProductListingFrontController
 
     /** @var Supplier|null */
     protected $supplier;
-    protected $label;
 
     /** @var SupplierPresenter */
     protected $supplierPresenter;
@@ -79,24 +78,12 @@ class SupplierControllerCore extends ProductListingFrontController
 
             if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
                 $this->assignSupplier();
-                $this->label = $this->trans(
-                    'List of products by supplier %supplier_name%',
-                    [
-                        '%supplier_name%' => $this->supplier->name,
-                    ],
-                    'Shop.Theme.Catalog'
-                );
                 $this->doProductSearch(
                     'catalog/listing/supplier',
                     ['entity' => 'supplier', 'id' => $this->supplier->id]
                 );
             } else {
                 $this->assignAll();
-                $this->label = $this->trans(
-                    'List of all suppliers',
-                    [],
-                    'Shop.Theme.Catalog'
-                );
                 $this->setTemplate('catalog/suppliers', ['entity' => 'suppliers']);
             }
         } else {
@@ -212,7 +199,11 @@ class SupplierControllerCore extends ProductListingFrontController
 
     public function getListingLabel(): string
     {
-        return $this->label;
+        if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
+            return $this->trans('List of products by supplier %supplier_name%', ['%supplier_name%' => $this->supplier->name], 'Shop.Theme.Catalog');
+        } else {
+            return $this->trans('List of all suppliers', [], 'Shop.Theme.Catalog');
+        }
     }
 
     public function getBreadcrumbLinks(): array
@@ -231,6 +222,22 @@ class SupplierControllerCore extends ProductListingFrontController
         }
 
         return $breadcrumb;
+    }
+
+    /**
+     * Generates structured data this page, depending on if we are displaying a supplier or a list of suppliers.
+     *
+     * @return array
+     */
+    public function getStructuredData(): array
+    {
+        // If we are displaying a supplier, we will use the product listing structured data
+        if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
+            return parent::getStructuredData();
+        }
+
+        // Otherwise, we will display the basic data, the same as in FrontController
+        return FrontController::getStructuredData();
     }
 
     /**

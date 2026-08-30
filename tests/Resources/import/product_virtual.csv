@@ -1,0 +1,2 @@
+name;reference;is_virtual;file_url;nb_downloadable;nb_days_accessible;date_expiration
+Virtual Product;VIRT-1;1;{FIXTURE_DIR}/dummyFile/test_text_file.txt;5;30;2027-01-01

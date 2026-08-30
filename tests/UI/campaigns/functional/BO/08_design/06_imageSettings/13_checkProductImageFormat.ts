@@ -22,7 +22,7 @@ import {
 
 const baseContext: string = 'functional_BO_design_imageSettings_checkProductImageFormat';
 
-describe('BO - Design - Image Settings - Check product image format', async () => {
+describe('BO - Design - Image Settings : Check product image format', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let idProduct: number = 0;

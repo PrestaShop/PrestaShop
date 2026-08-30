@@ -1,0 +1,17 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+
+{% block tax_rules_widget %}
+  <div id="tax-rules-container">
+    {{ form_widget(form) }}
+    {{ block('tax_rules_list') }}
+  </div>
+{% endblock %}
+
+{% block tax_rules_list %}
+  {% set taxRulesGroupId = form.vars.tax_rules_group_id %}
+  {{ include('@PrestaShop/Admin/Improve/International/TaxRulesGroup/Blocks/tax_rules_list.html.twig', {taxRulesGroupId: taxRulesGroupId}) }}
+{% endblock %}

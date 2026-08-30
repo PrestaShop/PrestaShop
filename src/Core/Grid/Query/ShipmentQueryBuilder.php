@@ -42,9 +42,12 @@ final class ShipmentQueryBuilder extends AbstractDoctrineQueryBuilder
                 's.id_order AS order_id',
                 'c.name AS carrier',
                 's.tracking_number',
+                's.packed_at',
+                's.shipped_at',
                 'SUM(sp.quantity) AS items',
                 's.shipping_cost_tax_incl AS shipping_cost',
                 'SUM(od.product_weight * sp.quantity) AS weight',
+                'os.paid AS is_paid',
             ])
             ->groupBy('s.id_shipment');
 
@@ -68,6 +71,8 @@ final class ShipmentQueryBuilder extends AbstractDoctrineQueryBuilder
             ->leftJoin('s', $this->dbPrefix . 'carrier', 'c', 's.id_carrier = c.id_carrier')
             ->leftJoin('s', $this->dbPrefix . 'shipment_product', 'sp', 's.id_shipment = sp.id_shipment')
             ->leftJoin('sp', $this->dbPrefix . 'order_detail', 'od', 'sp.id_order_detail = od.id_order_detail')
+            ->leftJoin('s', $this->dbPrefix . 'orders', 'o', 's.id_order = o.id_order')
+            ->leftJoin('o', $this->dbPrefix . 'order_state', 'os', 'o.current_state = os.id_order_state')
             ->andWhere('s.deleted = false');
 
         $this->applyFilters($qb, $searchCriteria->getFilters());

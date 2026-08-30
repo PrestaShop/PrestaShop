@@ -1,0 +1,24 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{# We redefine the form type row block, because since the parent is HiddentType, it doesn't display labels and errors by default #}
+{% block address_format_builder_row %}
+  {{- block('form_row') -}}
+{% endblock %}
+
+{% block address_format_builder_widget %}
+  {% set options = address_format_options %}
+  <div class="js-address-format-wrapper address-format-wrapper">
+    {{- block('hidden_widget') -}}
+    <div class="js-address-format-builder"
+         data-value="{{ value|default('') }}"
+         data-objects="{{ options.available_objects|json_encode }}"
+         data-required-fields="{{ options.required_fields|json_encode }}"
+         data-default-format="{{ options.default_format }}"
+         data-sample-data="{{ options.sample_data|json_encode }}"
+         data-required-fields-url="{{ options.required_fields_url }}"
+         data-translations="{{ options.translations|json_encode }}"></div>
+  </div>
+{% endblock %}

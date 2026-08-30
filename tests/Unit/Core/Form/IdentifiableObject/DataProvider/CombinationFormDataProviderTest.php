@@ -13,8 +13,12 @@ use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\Query\GetCombinationFeatureValues;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\QueryResult\CombinationFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
@@ -28,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSup
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\NoSupplierId;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
 use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 use RuntimeException;
@@ -66,6 +71,59 @@ class CombinationFormDataProviderTest extends TestCase
         $formData = $formDataProvider->getData(self::COMBINATION_ID);
         // assertSame is very important here We can't assume null and 0 are the same thing
         $this->assertSame($expectedData, $formData);
+    }
+
+    public function testFeatureValuesAreAddedWhenFlagIsEnabled(): void
+    {
+        $langId = 1;
+        $combinationData = [
+            'feature_values' => [
+                ['feature_id' => 7, 'feature_value_id' => 70, 'localized_values' => [$langId => 'Red'], 'custom' => false],
+                ['feature_id' => 7, 'feature_value_id' => 71, 'localized_values' => [$langId => 'My color'], 'custom' => true],
+            ],
+        ];
+
+        $languageContext = $this->createMock(LanguageContext::class);
+        $languageContext->method('getId')->willReturn($langId);
+
+        $featuresChoiceProvider = $this->createMock(FeaturesChoiceProvider::class);
+        $featuresChoiceProvider->method('getChoices')->willReturn(['Color' => 7]);
+
+        $featureFlagStateChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
+        $featureFlagStateChecker->method('isEnabled')->willReturn(true);
+
+        $provider = new CombinationFormDataProvider(
+            $this->createQueryBusMock($combinationData),
+            $this->mockShopContext(),
+            $languageContext,
+            $featuresChoiceProvider,
+            $featureFlagStateChecker
+        );
+
+        $formData = $provider->getData(self::COMBINATION_ID);
+
+        $this->assertArrayHasKey('features', $formData);
+        $this->assertSame([
+            'feature_collection' => [
+                [
+                    'feature_id' => 7,
+                    'feature_name' => 'Color',
+                    'feature_values' => [
+                        [
+                            'feature_value_id' => 70,
+                            'feature_value_name' => 'Red',
+                            'is_custom' => false,
+                        ],
+                        [
+                            'feature_value_id' => 71,
+                            'feature_value_name' => 'My color',
+                            'is_custom' => true,
+                            'custom_value' => [$langId => 'My color'],
+                        ],
+                    ],
+                ],
+            ],
+        ], $formData['features']);
     }
 
     public function getExpectedData(): Generator
@@ -180,30 +238,35 @@ class CombinationFormDataProviderTest extends TestCase
                 'type' => 'orders',
                 'date' => null,
                 'employee_name' => null,
+                'api_client_name' => null,
                 'delta_quantity' => -19,
             ],
             [
                 'type' => 'edition',
                 'date' => '2021-05-24 15:24:32',
                 'employee_name' => 'Paul Atreide',
+                'api_client_name' => null,
                 'delta_quantity' => +20,
             ],
             [
                 'type' => 'orders',
                 'date' => null,
                 'employee_name' => null,
+                'api_client_name' => null,
                 'delta_quantity' => -23,
             ],
             [
                 'type' => 'edition',
                 'date' => '2021-05-22 16:35:48',
                 'employee_name' => 'Frodo Baggins',
+                'api_client_name' => null,
                 'delta_quantity' => +20,
             ],
             [
                 'type' => 'orders',
                 'date' => null,
                 'employee_name' => null,
+                'api_client_name' => null,
                 'delta_quantity' => -17,
             ],
         ];
@@ -429,7 +492,8 @@ class CombinationFormDataProviderTest extends TestCase
                 $this->isInstanceOf(GetCombinationForEditing::class),
                 $this->isInstanceOf(GetAssociatedSuppliers::class),
                 $this->isInstanceOf(GetCombinationSuppliers::class),
-                $this->isInstanceOf(GetCombinationStockMovements::class)
+                $this->isInstanceOf(GetCombinationStockMovements::class),
+                $this->isInstanceOf(GetCombinationFeatureValues::class)
             ))
             ->willReturnCallback(function ($query) use ($combinationData) {
                 return $this->createResultBasedOnQuery($query, $combinationData);
@@ -443,7 +507,7 @@ class CombinationFormDataProviderTest extends TestCase
      * @param GetCombinationForEditing $query
      * @param array $combinationData
      *
-     * @return CombinationForEditing|AssociatedSuppliers|ProductSupplierForEditing[]|StockMovement[]
+     * @return CombinationForEditing|AssociatedSuppliers|ProductSupplierForEditing[]|StockMovement[]|CombinationFeatureValue[]
      */
     private function createResultBasedOnQuery($query, array $combinationData)
     {
@@ -456,6 +520,8 @@ class CombinationFormDataProviderTest extends TestCase
                 return $this->createCombinationSupplierInfos($combinationData);
             case GetCombinationStockMovements::class:
                 return $this->createStockMovementHistories($combinationData);
+            case GetCombinationFeatureValues::class:
+                return $this->createCombinationFeatureValues($combinationData);
         }
 
         throw new RuntimeException(sprintf('Query "%s" was not expected in query bus mock', $queryClass));
@@ -619,6 +685,30 @@ class CombinationFormDataProviderTest extends TestCase
     }
 
     /**
+     * @param array $combinationData
+     *
+     * @return CombinationFeatureValue[]
+     */
+    private function createCombinationFeatureValues(array $combinationData): array
+    {
+        if (empty($combinationData['feature_values'])) {
+            return [];
+        }
+
+        return array_map(
+            static function (array $featureValue): CombinationFeatureValue {
+                return new CombinationFeatureValue(
+                    $featureValue['feature_id'],
+                    $featureValue['feature_value_id'],
+                    $featureValue['localized_values'],
+                    $featureValue['custom']
+                );
+            },
+            $combinationData['feature_values']
+        );
+    }
+
+    /**
      * @return array
      */
     private function getDefaultOutputData(): array
@@ -680,16 +770,35 @@ class CombinationFormDataProviderTest extends TestCase
     ): CombinationFormDataProvider {
         return new CombinationFormDataProvider(
             $queryBusMock,
-            $this->mockShopContext()
+            $this->mockShopContext(),
+            $this->createMock(LanguageContext::class),
+            $this->createMock(FeaturesChoiceProvider::class),
+            $this->mockFeatureFlagStateChecker()
         );
     }
 
     /**
-     * @return Context
+     * @return FeatureFlagStateCheckerInterface
      */
-    private function mockShopContext(): Context
+    private function mockFeatureFlagStateChecker(): FeatureFlagStateCheckerInterface
     {
-        $shopContext = $this->getMockBuilder(Context::class)
+        $featureFlagStateChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
+        // Feature flag disabled by default, combination feature values are not loaded
+        $featureFlagStateChecker
+            ->method('isEnabled')
+            ->willReturn(false)
+        ;
+
+        return $featureFlagStateChecker;
+    }
+
+    /**
+     * @return ShopContext
+     */
+    private function mockShopContext(): ShopContext
+    {
+        $shopContext = $this->getMockBuilder(ShopContext::class)
+            ->disableOriginalConstructor()
             ->onlyMethods(['getShopConstraint'])
             ->getMock()
         ;

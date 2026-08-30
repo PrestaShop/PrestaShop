@@ -26,7 +26,10 @@
   <label class="form-check-label enriched-choice-radio-label">
     {{- widget|raw -}}
     <div class="enriched-choice-label">
-      {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+      {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw_purified : label|raw_purified) -}}
+      {% if form.vars.attr['badge-label'] is defined and form.vars.attr['badge-label'] is not empty %}
+        <span class="badge badge-secondary enriched-choice-badge-label">{{ form.vars.attr['badge-label'] }}</span>
+      {% endif %}
       {% if form.vars.attr.help is defined and form.vars.attr.help is not empty %}
         <small class="form-text enriched-choice-help">{{ form.vars.attr.help }}</small>
       {% endif %}

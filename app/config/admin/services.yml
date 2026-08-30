@@ -58,7 +58,13 @@ services:
   # Context listeners, these are event subscribers, so they define their priority themselves
   PrestaShopBundle\EventListener\Admin\Context\EmployeeContextSubscriber: ~
   PrestaShopBundle\EventListener\Admin\Context\LanguageContextSubscriber: ~
-  PrestaShopBundle\EventListener\Admin\Context\ShopContextSubscriber: ~
+
+  PrestaShopBundle\EventListener\Admin\Context\ShopContextSubscriber:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      $router: '@router'
+
   PrestaShopBundle\EventListener\Admin\Context\CurrencyContextSubscriber: ~
   PrestaShopBundle\EventListener\Admin\Context\CountryContextSubscriber: ~
   PrestaShopBundle\EventListener\Admin\Context\LegacyControllerContextSubscriber: ~
@@ -74,3 +80,24 @@ services:
     autowire: true
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  # ─── Extra property definition form (Admin API endpoint catalog consumers) ────
+  # The endpoint catalog reads the OpenApi document, and API Platform only registers its OpenApi
+  # services where enable_swagger is on — this kernel. Defining the catalog and its consumers here
+  # (instead of the shared services/extra_property/catalog.yml) keeps the other kernels compiling;
+  # using them elsewhere will fail loudly, hinting that swagger must be enabled there first.
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ApiEndpointCatalog:
+    arguments:
+      $openApiFactory: '@api_platform.openapi.factory'
+      $logger: '@logger'
+      $cache: '@prestashop.extra_property.catalog.filesystem_cache'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\AssociationExistenceChecker:
+    arguments:
+      $translator: '@translator'
+
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyDefinitionAdvancedType:
+    arguments:
+      # Same $locales expression as the form types bind in services/bundle/form/form_type.yml.
+      $locales: "@=service('prestashop.adapter.legacy.context').getLanguages(false)"

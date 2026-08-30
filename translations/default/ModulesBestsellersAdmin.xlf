@@ -5,12 +5,12 @@
       <trans-unit id="2b21378492166b0e5a855e2da611659c">
         <source>Determine the number of product to display in this block</source>
         <target>Determine the number of product to display in this block</target>
-        <note>File: modules/ps_bestsellers/ps_bestsellers.php [Line: 143]</note>
+        <note>File: modules/ps_bestsellers/ps_bestsellers.php [Line: 109]</note>
       </trans-unit>
       <trans-unit id="26986c3388870d4148b1b5375368a83d">
         <source>Products to display</source>
         <target>Products to display</target>
-        <note>File: modules/ps_bestsellers/ps_bestsellers.php [Line: 141]</note>
+        <note>File: modules/ps_bestsellers/ps_bestsellers.php [Line: 107]</note>
       </trans-unit>
       <trans-unit id="d097706618745d1d4e3d1fa48837d9ec">
         <source>Show your visitors what are your top-selling products directly on your homepage.</source>

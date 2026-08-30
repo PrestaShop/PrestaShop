@@ -107,7 +107,7 @@ class CustomizationCore extends ObjectModel
         if (($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT ore.`id_order_return`, ord.`id_order_detail`, ord.`id_customization`, ord.`product_quantity`
 			FROM `' . _DB_PREFIX_ . 'order_return` ore
-			INNER JOIN `' . _DB_PREFIX_ . 'order_return_detail` ord ON (ord.`id_order_return` = ore.`id_order_return`)
+			INNER JOIN `' . _DB_PREFIX_ . 'order_return_detail` ord ON (ord.`id_order_return` = ore.`id_order_return` AND ord.`cancelled` = 0)
 			WHERE ore.`id_order` = ' . (int) $idOrder . ' AND ord.`id_customization` != 0')) === false) {
             return false;
         }

@@ -112,7 +112,8 @@ class ThemeCatalogueLayersProviderTestCase extends AbstractCatalogueLayersProvid
             $databaseTranslationLoader,
             $this->translationsDir,
             $coreFrontProviderDefinition->getFilenameFilters(),
-            $coreFrontProviderDefinition->getTranslationDomains()
+            $coreFrontProviderDefinition->getTranslationDomains(),
+            $this->createEmptyExtraPropertyTranslationExtractor()
         );
 
         $provider = new ThemeCatalogueLayersProvider(
@@ -252,7 +253,8 @@ class ThemeCatalogueLayersProviderTestCase extends AbstractCatalogueLayersProvid
             $databaseTranslationLoader,
             $this->translationsDir,
             $coreFrontProviderDefinition->getFilenameFilters(),
-            $coreFrontProviderDefinition->getTranslationDomains()
+            $coreFrontProviderDefinition->getTranslationDomains(),
+            $this->createEmptyExtraPropertyTranslationExtractor()
         );
 
         return new ThemeCatalogueLayersProvider(

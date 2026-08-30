@@ -910,13 +910,7 @@ class HookCore extends ObjectModel
         $isRegistryEnabled = null !== $hookRegistry;
 
         if ($isRegistryEnabled) {
-            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-            $hookRegistry->selectHook(
-                $hook_name,
-                $hook_args,
-                $backtrace[0]['file'],
-                $backtrace[0]['line']
-            );
+            $hookRegistry->hookDispatched($hook_name, $hook_args);
         }
 
         // $chain & $array_return are incompatible so if chained is set to true, we disable the array_return option
@@ -943,19 +937,11 @@ class HookCore extends ObjectModel
         // We retrieve a list of modules to be executed for the given hook.
         // If no modules associated to hook_name or recompatible hook name, we stop the function.
         if (!($module_list = Hook::getHookModuleExecList($hook_name))) {
-            if ($isRegistryEnabled) {
-                $hookRegistry->collect();
-            }
-
             return $array_return ? [] : '';
         }
 
         // Check if hook exists
         if (!($id_hook = Hook::getIdByName($hook_name, false))) {
-            if ($isRegistryEnabled) {
-                $hookRegistry->collect();
-            }
-
             return $array_return ? [] : null;
         }
 
@@ -1109,10 +1095,6 @@ class HookCore extends ObjectModel
                 continue;
             }
 
-            if ($isRegistryEnabled) {
-                $hookRegistry->hookedByModule($moduleInstance);
-            }
-
             if (Hook::isHookCallableOn($moduleInstance, $registeredHookName)) {
                 $hook_args['altern'] = ++$altern;
 
@@ -1157,7 +1139,8 @@ class HookCore extends ObjectModel
                 if ($isRegistryEnabled) {
                     $hookRegistry->hookedByCallback(
                         $moduleInstance,
-                        $hook_args
+                        $hook_args,
+                        $hook_name
                     );
                 }
             } elseif (Hook::isDisplayHookName($registeredHookName)) {
@@ -1202,7 +1185,7 @@ class HookCore extends ObjectModel
                 }
 
                 if ($isRegistryEnabled) {
-                    $hookRegistry->hookedByWidget($moduleInstance, $hook_args);
+                    $hookRegistry->hookedByWidget($moduleInstance, $hook_args, $hook_name);
                 }
             }
         }
@@ -1219,11 +1202,6 @@ class HookCore extends ObjectModel
             if (isset($output['cart'])) {
                 unset($output['cart']);
             }
-        }
-
-        if ($isRegistryEnabled) {
-            $hookRegistry->hookWasCalled();
-            $hookRegistry->collect();
         }
 
         return $output;
@@ -1276,12 +1254,16 @@ class HookCore extends ObjectModel
      *
      * @throws PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException
      * @throws ServiceNotFoundException
-     * @throws PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException
      */
     private static function getHookModuleFilter(): HookModuleFilter
     {
         $serviceContainer = SymfonyContainer::getInstance();
 
+        // The fallback below only triggers when NO Symfony kernel container is booted yet — which happens during
+        // container compilation (LegacyHookSubscriber::getSubscribedEvents() is read by RegisterListenersPass before
+        // any kernel container exists), in BO, FO and CLI alike. In a normal request the kernel container is present,
+        // so the FO container is never used here. The hand-built front container is the only source of
+        // HookModuleFilter available at that bootstrap moment.
         if (is_null($serviceContainer)) {
             $serviceContainer = ContainerBuilder::getContainer(
                 'front',

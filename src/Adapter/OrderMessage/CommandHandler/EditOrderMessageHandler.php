@@ -28,7 +28,11 @@ final class EditOrderMessageHandler extends AbstractOrderMessageHandler implemen
      */
     public function handle(EditOrderMessageCommand $command): void
     {
-        $this->assertNameIsNotAlreadyUsed($command);
+        // The name uniqueness check only makes sense when a name is being set: a partial edit may
+        // change the message only, leaving the localized name null (which would break the foreach).
+        if (null !== $command->getLocalizedName()) {
+            $this->assertNameIsNotAlreadyUsed($command);
+        }
 
         $orderMessage = $this->getOrderMessage($command->getOrderMessageId());
 

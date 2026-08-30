@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridDefinitionModifier;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -33,6 +34,11 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     protected $hookDispatcher;
 
     /**
+     * @var ExtraPropertiesGridDefinitionModifier|null
+     */
+    protected $extraPropertiesGridDefinitionModifier;
+
+    /**
      * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(HookDispatcherInterface $hookDispatcher)
@@ -55,11 +61,20 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getViewOptions()
         );
 
+        if (null !== $this->extraPropertiesGridDefinitionModifier) {
+            $this->extraPropertiesGridDefinitionModifier->apply($definition, $definition->getId());
+        }
+
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDefinitionModifier', [
             'definition' => $definition,
         ]);
 
         return $definition;
+    }
+
+    public function setExtraPropertiesGridDefinitionModifier(?ExtraPropertiesGridDefinitionModifier $modifier): void
+    {
+        $this->extraPropertiesGridDefinitionModifier = $modifier;
     }
 
     /**

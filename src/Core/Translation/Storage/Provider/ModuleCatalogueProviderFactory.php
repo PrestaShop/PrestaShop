@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider;
 
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ExtraPropertyTranslationExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\LegacyModuleExtractorInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
@@ -39,18 +40,25 @@ class ModuleCatalogueProviderFactory
      */
     private $translationsDirectory;
 
+    /**
+     * @var ExtraPropertyTranslationExtractor
+     */
+    private $extraPropertyTranslationExtractor;
+
     public function __construct(
         DatabaseTranslationLoader $databaseTranslationLoader,
         LegacyModuleExtractorInterface $legacyModuleExtractor,
         LoaderInterface $legacyFileLoader,
         string $modulesDirectory,
-        string $translationsDirectory
+        string $translationsDirectory,
+        ExtraPropertyTranslationExtractor $extraPropertyTranslationExtractor
     ) {
         $this->databaseTranslationLoader = $databaseTranslationLoader;
         $this->legacyModuleExtractor = $legacyModuleExtractor;
         $this->legacyFileLoader = $legacyFileLoader;
         $this->modulesDirectory = $modulesDirectory;
         $this->translationsDirectory = $translationsDirectory;
+        $this->extraPropertyTranslationExtractor = $extraPropertyTranslationExtractor;
     }
 
     public function getModuleCatalogueProvider(ModuleProviderDefinition $providerDefinition): CatalogueLayersProviderInterface
@@ -63,7 +71,8 @@ class ModuleCatalogueProviderFactory
             $this->translationsDirectory,
             $providerDefinition->getModuleName(),
             $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $providerDefinition->getTranslationDomains(),
+            $this->extraPropertyTranslationExtractor
         );
     }
 }

@@ -180,10 +180,13 @@ class LinkCore
             $product = $this->getProductObject($product, $idLang, $idShop);
         }
         $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite') : $alias;
-        if (!$ean13) {
-            $product = $this->getProductObject($product, $idLang, $idShop);
+
+        if ($dispatcher->hasKeyword('product_rule', $idLang, 'ean13', $idShop)) {
+            if (!$ean13) {
+                $product = $this->getProductObject($product, $idLang, $idShop);
+            }
+            $params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
         }
-        $params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'meta_title', $idShop)) {
             $product = $this->getProductObject($product, $idLang, $idShop);
             $params['meta_title'] = Tools::str2url($product->getFieldByLang('meta_title'));
@@ -515,7 +518,10 @@ class LinkCore
         $params = [];
         $params['id'] = $cmsCategory->id;
         $params['rewrite'] = (!$alias) ? $cmsCategory->link_rewrite : $alias;
-        $params['meta_title'] = Tools::str2url($cmsCategory->meta_title);
+
+        if ($dispatcher->hasKeyword('cms_category_rule', $idLang, 'meta_title', $idShop)) {
+            $params['meta_title'] = Tools::str2url($cmsCategory->meta_title);
+        }
 
         return $url . $dispatcher->createUrl('cms_category_rule', $idLang, $params, $this->allow, '', $idShop);
     }
@@ -559,8 +565,7 @@ class LinkCore
         $params['id'] = $cms->id;
         $params['rewrite'] = (!$alias) ? (is_array($cms->link_rewrite) ? $cms->link_rewrite[(int) $idLang] : $cms->link_rewrite) : $alias;
 
-        $params['meta_title'] = '';
-        if (isset($cms->meta_title) && !empty($cms->meta_title)) {
+        if ($dispatcher->hasKeyword('cms_rule', $idLang, 'meta_title', $idShop)) {
             $params['meta_title'] = is_array($cms->meta_title) ? Tools::str2url($cms->meta_title[(int) $idLang]) : Tools::str2url($cms->meta_title);
         }
 
@@ -612,7 +617,10 @@ class LinkCore
         $params = [];
         $params['id'] = $supplier->id;
         $params['rewrite'] = (!$alias) ? $supplier->link_rewrite : $alias;
-        $params['meta_title'] = Tools::str2url($supplier->meta_title);
+
+        if ($dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_title', $idShop)) {
+            $params['meta_title'] = Tools::str2url($supplier->meta_title);
+        }
 
         return $url . $dispatcher->createUrl('supplier_rule', $idLang, $params, $this->allow, '', $idShop);
     }
@@ -653,7 +661,10 @@ class LinkCore
         $params = [];
         $params['id'] = $manufacturer->id;
         $params['rewrite'] = (!$alias) ? $manufacturer->link_rewrite : $alias;
-        $params['meta_title'] = Tools::str2url($manufacturer->meta_title);
+
+        if ($dispatcher->hasKeyword('manufacturer_rule', $idLang, 'meta_title', $idShop)) {
+            $params['meta_title'] = Tools::str2url($manufacturer->meta_title);
+        }
 
         return $url . $dispatcher->createUrl('manufacturer_rule', $idLang, $params, $this->allow, '', $idShop);
     }
@@ -1478,6 +1489,7 @@ class LinkCore
         }
 
         $url = preg_replace($patterns, '', $url);
+        $url = (string) preg_replace('/&{2,}/', '&', $url);
         $url = trim($url, '?&/');
 
         return 'index.php' . (!empty($legacyEnvironment) ? '?' : '/') . $url;

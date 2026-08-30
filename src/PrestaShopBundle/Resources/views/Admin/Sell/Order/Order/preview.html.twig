@@ -143,7 +143,7 @@
                 <a href="#" class="js-preview-more-products-btn text-dark">
                   <i class="material-icons">more_horiz</i>
                   {{ '(%count% more)'|trans({
-                    '%count%': orderPreview.productDetails|length - productsPreviewLimit
+                    '%count%': orderPreview.productDetails|length - productsPreviewLimit,
                   }, 'Admin.Global') }}
                 </a>
               </td>

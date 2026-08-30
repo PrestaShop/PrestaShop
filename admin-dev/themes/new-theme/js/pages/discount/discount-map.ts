@@ -11,7 +11,7 @@ export default {
   reductionIncludeTaxRow: '#discount_value_reduction_include_tax',
   reductionPercentSpan: '.currency-money-percent',
   discountContainer,
-  freeGiftProductSearchContainer: '#discount_free_gift',
+  freeGiftProductSearchContainer: '#discount_free_gift_product',
   discountTypeRadios: '#discount_type_selector_discount_type_selector input[type="radio"]',
   discountTypeSubmit: '#discountTypeSubmit',
   specificProductsSearchContainer: '#discount_conditions_product_specific_products',

@@ -6,7 +6,7 @@
 {{ renderhook('displayAdminGridTableBefore', {
     grid: grid,
     legacy_controller: app.request.attributes.get('_legacy_controller'),
-    controller: app.request.attributes.get('_controller')
+    controller: app.request.attributes.get('_controller'),
   })
 }}
 
@@ -67,6 +67,6 @@
 {{ renderhook('displayAdminGridTableAfter', {
       grid: grid,
       legacy_controller: app.request.attributes.get('_legacy_controller'),
-      controller: app.request.attributes.get('_controller')
+      controller: app.request.attributes.get('_controller'),
     })
 }}

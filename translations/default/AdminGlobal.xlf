@@ -225,7 +225,7 @@
       <trans-unit id="dc69fe17b788b1acf7bd938e5f0ae4d5">
         <source>Are you sure you want to delete the selected item(s)?</source>
         <target>Are you sure you want to delete the selected item(s)?</target>
-        <note>File: src/Core/Grid/Definition/Factory/DeleteActionTrait.php [Line: 34]</note>
+        <note>File: src/Core/Grid/Definition/Factory/DeleteActionTrait.php [Line: 36]</note>
       </trans-unit>
       <trans-unit id="795c0d79615605a019e7c8f4d2853f8f">
         <source>Are you sure you want to delete this specific price?</source>
@@ -255,7 +255,7 @@
       <trans-unit id="78945de8de090e90045d299651a68a9b">
         <source>Available</source>
         <target>Available</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 62]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 67]</note>
       </trans-unit>
       <trans-unit id="7bd5825a187064017975513b95d7f7de">
         <source>Available quantity for sale</source>
@@ -290,7 +290,7 @@
       <trans-unit id="b39a035a995fc6597c8eb942210d1527">
         <source>Behavior</source>
         <target>Behavior</target>
-        <note>File: src/Core/Grid/Definition/Factory/TaxRuleGridDefinitionFactory.php [Line: 81]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Tax/TaxRuleType.php [Line: 71]</note>
       </trans-unit>
       <trans-unit id="e59dd8d25c0b6bb6697eac0617ccd412">
         <source>Below</source>
@@ -395,12 +395,12 @@
       <trans-unit id="cb5feb1b7314637725a2e73bdc9f7295">
         <source>Color</source>
         <target>Color</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 72]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 76]</note>
       </trans-unit>
       <trans-unit id="47ac923d219501859fb68fed8c8db77b">
         <source>Combination</source>
         <target>Combination</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/add_product_modal.html.twig [Line: 29]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/cart.html.twig [Line: 47]</note>
       </trans-unit>
       <trans-unit id="b9208b03bcc9eb4a336258dcdcb66207">
         <source>Combinations</source>
@@ -410,7 +410,7 @@
       <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
         <source>Company</source>
         <target>Company</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 304]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 309]</note>
       </trans-unit>
       <trans-unit id="254f642527b45bc260048e30704edb39">
         <source>Configuration</source>
@@ -430,7 +430,7 @@
       <trans-unit id="790d59ef178acbc75d233bf4211763c6">
         <source>Countries</source>
         <target>Countries</target>
-        <note>File: src/Core/Grid/Definition/Factory/CountryGridDefinitionFactory.php [Line: 50]</note>
+        <note>File: src/Core/Grid/Definition/Factory/CountryGridDefinitionFactory.php [Line: 53]</note>
       </trans-unit>
       <trans-unit id="59716c97497eb9694541f7c3d37b1a4d">
         <source>Country</source>
@@ -590,17 +590,21 @@
       <trans-unit id="2295fa1ce03369f498809b8af73f71dd">
         <source>Discount Name</source>
         <target>Discount Name</target>
-        <note>File: src/Core/Grid/Definition/Factory/DiscountGridDefinitionFactory.php [Line: 89]</note>
       </trans-unit>
       <trans-unit id="c9fafb5b63a6509fd3a3b3f0904ca7ce">
         <source>Discount description</source>
         <target>Discount description</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountInformationType.php [Line: 58]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountInformationType.php [Line: 84]</note>
+      </trans-unit>
+      <trans-unit id="f14b582c1b0eab88ed5904fb781568c0">
+        <source>Discount name</source>
+        <target>Discount name</target>
+        <note>File: src/Core/Grid/Definition/Factory/DiscountGridDefinitionFactory.php [Line: 93]</note>
       </trans-unit>
       <trans-unit id="9d5bf15117441a1b52eb1f0808e4aad3">
         <source>Discounts</source>
         <target>Discounts</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 164]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 181]</note>
       </trans-unit>
       <trans-unit id="1ee0172bcf0f3fdebbf14665a52e92e4">
         <source>Display error page with 404 response</source>
@@ -640,7 +644,7 @@
       <trans-unit id="5204077231fc7164e2269e96b584dd95">
         <source>Drop-down list</source>
         <target>Drop-down list</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 83]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 90]</note>
       </trans-unit>
       <trans-unit id="e02d2ae03de9d493df2b6b2d2813d302">
         <source>Duration</source>
@@ -710,7 +714,12 @@
       <trans-unit id="aa52110dbfce51cc1ec8a163264151e2">
         <source>Existing</source>
         <target>Existing</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddProductRowType.php [Line: 104]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddProductRowType.php [Line: 129]</note>
+      </trans-unit>
+      <trans-unit id="9f6dd9da2c428bf8c07a3f0974d2f89e">
+        <source>Extra fields</source>
+        <target>Extra fields</target>
+        <note>File: src/Core/ExtraProperty/Form/ExtraPropertiesFormBuilderModifier.php [Line: 241]</note>
       </trans-unit>
       <trans-unit id="9810aa2b9f44401be4bf73188ef2b67d">
         <source>Fax</source>
@@ -915,7 +924,7 @@
       <trans-unit id="466eadd40b3c10580e3ab4e8061161ce">
         <source>Invoice</source>
         <target>Invoice</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 70]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 75]</note>
       </trans-unit>
       <trans-unit id="fce9a6a1bd2a2050eb86d33103f46fd3">
         <source>Invoices</source>
@@ -1050,7 +1059,7 @@
       <trans-unit id="41de6d6cfb8953c021bbe4ba0701c8a1">
         <source>Messages</source>
         <target>Messages</target>
-        <note>File: admin-dev/themes/default/template/header.tpl [Line: 304]</note>
+        <note>File: admin-dev/themes/default/template/header.tpl [Line: 318]</note>
       </trans-unit>
       <trans-unit id="3f64b2beede1082fd32ddb0bf11a641f">
         <source>Meta description</source>
@@ -1135,7 +1144,7 @@
       <trans-unit id="03c2e7e41ffc181a4e84080b4710e81e">
         <source>New</source>
         <target>New</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddProductRowType.php [Line: 105]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/AddProductRowType.php [Line: 130]</note>
       </trans-unit>
       <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
         <source>Newsletter</source>
@@ -1207,6 +1216,11 @@
         <target>Online</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/HeaderType.php [Line: 121]</note>
       </trans-unit>
+      <trans-unit id="ebb061953c0454b2c8ee7b0ac615ebcd">
+        <source>Optional</source>
+        <target>Optional</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 136]</note>
+      </trans-unit>
       <trans-unit id="dae8ace18bdcbcc6ae5aece263e14fe8">
         <source>Options</source>
         <target>Options</target>
@@ -1269,7 +1283,7 @@
       <trans-unit id="dc647eb65e6711e155375218212b3964">
         <source>Password</source>
         <target>Password</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1627]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1631]</note>
       </trans-unit>
       <trans-unit id="c453a4b8e8d98e82f35b67f433e3b4da">
         <source>Payment</source>
@@ -1284,7 +1298,7 @@
       <trans-unit id="37be07209f53a5d636d5c904ca9ae64c">
         <source>Percentage</source>
         <target>Percentage</target>
-        <note>File: src/Core/Grid/Definition/Factory/CatalogPriceRuleGridDefinitionFactory.php [Line: 243]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountAmountType.php [Line: 30]</note>
       </trans-unit>
       <trans-unit id="9446a98ad14416153cc4d45ab8b531bf">
         <source>Performance</source>
@@ -1311,6 +1325,16 @@
         <target>Price</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/cart.html.twig [Line: 91]</note>
       </trans-unit>
+      <trans-unit id="e192956d901dff59c35fd2c477ed28d6">
+        <source>Price (tax excl.)</source>
+        <target>Price (tax excl.)</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/edit_product_form.html.twig [Line: 29]</note>
+      </trans-unit>
+      <trans-unit id="77eb276f5dcdf4fbca854e908216f7b2">
+        <source>Price (tax incl.)</source>
+        <target>Price (tax incl.)</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/edit_product_form.html.twig [Line: 37]</note>
+      </trans-unit>
       <trans-unit id="502996d9790340c5fd7b86a5b93b1c9f">
         <source>Priority</source>
         <target>Priority</target>
@@ -1334,7 +1358,7 @@
       <trans-unit id="df644ae155e79abf54175bd15d75f363">
         <source>Product name</source>
         <target>Product name</target>
-        <note>File: src/PrestaShopBundle/Translation/Api/StockApi.php [Line: 61]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/CustomerService/OrderReturn/Blocks/form.html.twig [Line: 31]</note>
       </trans-unit>
       <trans-unit id="068f80c7519d0528fb08e82137a72131">
         <source>Products</source>
@@ -1369,7 +1393,12 @@
       <trans-unit id="8bd90a6d76a77fe0b160e8abd85c8590">
         <source>Radio buttons</source>
         <target>Radio buttons</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 84]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 91]</note>
+      </trans-unit>
+      <trans-unit id="dcb66ff6e4a2517ade22183779939c9d">
+        <source>Rate</source>
+        <target>Rate</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/International/TaxRulesGroup/Blocks/tax_rules_list.html.twig [Line: 23]</note>
       </trans-unit>
       <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
         <source>Reference</source>
@@ -1466,6 +1495,11 @@
         <target>Select items</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Type/GroupedItemCollectionType.php [Line: 96]</note>
       </trans-unit>
+      <trans-unit id="6b80a29697977886b2d1ddfd12f79eeb">
+        <source>Select shipment</source>
+        <target>Select shipment</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/add_product_form.html.twig [Line: 62]</note>
+      </trans-unit>
       <trans-unit id="91b442d385b54e1418d81adc34871053">
         <source>Selected</source>
         <target>Selected</target>
@@ -1491,20 +1525,25 @@
         <target>Settings updated.</target>
         <note>File: modules/ps_brandlist/ps_brandlist.php [Line: 115]</note>
       </trans-unit>
+      <trans-unit id="6bb311efd788bb4b3123896667e767a7">
+        <source>Shipment</source>
+        <target>Shipment</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/edit_product_form.html.twig [Line: 86]</note>
+      </trans-unit>
       <trans-unit id="6f7647143e97fc8ae08ffb382bf5877e">
         <source>Shipment number</source>
         <target>Shipment number</target>
-        <note>File: src/Core/Grid/Definition/Factory/ShipmentGridDefinitionFactory.php [Line: 65]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ShipmentGridDefinitionFactory.php [Line: 69]</note>
       </trans-unit>
       <trans-unit id="31b833e6a4e38eed6057da83774ee5de">
         <source>Shipments</source>
         <target>Shipments</target>
-        <note>File: src/Core/Grid/Definition/Factory/ShipmentGridDefinitionFactory.php [Line: 44]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ShipmentGridDefinitionFactory.php [Line: 48]</note>
       </trans-unit>
       <trans-unit id="552a0d8c17d95d5dbdc0c28217024f5a">
         <source>Shipping cost</source>
         <target>Shipping cost</target>
-        <note>File: src/Core/Grid/Definition/Factory/ShipmentGridDefinitionFactory.php [Line: 94]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ShipmentGridDefinitionFactory.php [Line: 98]</note>
       </trans-unit>
       <trans-unit id="89bea8045e50a337d8ce9849a4e1633c">
         <source>Shipping excluded</source>
@@ -1524,7 +1563,7 @@
       <trans-unit id="9d55fc80bbb875322aa67fd22fc98469">
         <source>Shop association</source>
         <target>Shop association</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 90]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 94]</note>
       </trans-unit>
       <trans-unit id="9bbf46e755597079e0dddc00952516fe">
         <source>Shop context</source>
@@ -1549,7 +1588,7 @@
       <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
         <source>Social title</source>
         <target>Social title</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 794]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 798]</note>
       </trans-unit>
       <trans-unit id="876f0b745f68db560183928665a225ad">
         <source>Specific price deletion</source>
@@ -1644,7 +1683,7 @@
       <trans-unit id="719fec04166d6fa75f89cd29ad61fa8c">
         <source>Taxes</source>
         <target>Taxes</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 200]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig [Line: 217]</note>
       </trans-unit>
       <trans-unit id="278c491bdd8a53618c149c4ac790da34">
         <source>Template</source>
@@ -1659,7 +1698,7 @@
       <trans-unit id="a3e8ae43188ae76d38f414b2bdb0077b">
         <source>Texture</source>
         <target>Texture</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 79]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 83]</note>
       </trans-unit>
       <trans-unit id="b78a3223503896721cca1303f776159b">
         <source>Title</source>
@@ -1691,6 +1730,11 @@
         <target>Total (Tax incl.)</target>
         <note>File: src/Core/Grid/Definition/Factory/CustomerOrderGridDefinitionFactory.php [Line: 102]</note>
       </trans-unit>
+      <trans-unit id="adc852563bca51fb6b10c7905010406d">
+        <source>Total (tax incl.)</source>
+        <target>Total (tax incl.)</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/edit_product_form.html.twig [Line: 45]</note>
+      </trans-unit>
       <trans-unit id="0eede552438475bdfe820c13f24c9399">
         <source>Total price</source>
         <target>Total price</target>
@@ -1704,7 +1748,7 @@
       <trans-unit id="5068c162a60b5859f973f701333f45c5">
         <source>Tracking number</source>
         <target>Tracking number</target>
-        <note>File: src/Core/Grid/Definition/Factory/ShipmentGridDefinitionFactory.php [Line: 112]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ShipmentGridDefinitionFactory.php [Line: 116]</note>
       </trans-unit>
       <trans-unit id="a1fa27779242b4902f7ae3bdd5c6d508">
         <source>Type</source>
@@ -1741,6 +1785,11 @@
         <target>Use prefix for default language</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 92]</note>
       </trans-unit>
+      <trans-unit id="13148717f8faa9037f37d28971dfc219">
+        <source>Validation</source>
+        <target>Validation</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionValidationType.php [Line: 82]</note>
+      </trans-unit>
       <trans-unit id="689202409e48743b914713f96d93947c">
         <source>Value</source>
         <target>Value</target>
@@ -1760,6 +1809,11 @@
         <source>View</source>
         <target>View</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/RequestSql/index.html.twig [Line: 15]</note>
+      </trans-unit>
+      <trans-unit id="1729a56cfc89021478498fe0c89a843a">
+        <source>Visibility</source>
+        <target>Visibility</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 47]</note>
       </trans-unit>
       <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
         <source>Visits</source>
@@ -1844,7 +1898,7 @@
       <trans-unit id="4757fe07fd492a8be0ea6a760d683d6e">
         <source>position</source>
         <target>position</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 200]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 199]</note>
       </trans-unit>
       <trans-unit id="dd8921b41e0279a02c6a26a509241700">
         <source>result(s)</source>
@@ -1859,12 +1913,12 @@
       <trans-unit id="e2e79605fc9450ec17957cf0e910f5c6">
         <source>tax incl.</source>
         <target>tax incl.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/EditProductRowType.php [Line: 77]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/EditProductRowType.php [Line: 74]</note>
       </trans-unit>
       <trans-unit id="f09cc7ee3a9a93273f4b80601cafb00c">
         <source>values</source>
         <target>values</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 199]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 198]</note>
       </trans-unit>
     </body>
   </file>

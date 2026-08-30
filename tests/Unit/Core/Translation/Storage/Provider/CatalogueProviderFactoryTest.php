@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ExtraPropertyTranslationExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\LegacyModuleExtractorInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ThemeExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader;
@@ -44,6 +45,7 @@ class CatalogueProviderFactoryTest extends TestCase
         $themeExtractor = $this->createMock(ThemeExtractor::class);
         $themeRepository = $this->createMock(ThemeRepository::class);
         $filesystem = $this->createMock(Filesystem::class);
+        $extraPropertyTranslationExtractor = $this->createMock(ExtraPropertyTranslationExtractor::class);
 
         $themeRepository
             ->method('getInstanceByName')
@@ -61,7 +63,8 @@ class CatalogueProviderFactoryTest extends TestCase
             $filesystem,
             'themesDirectory',
             'modulesDirectory',
-            'translationsDirectory'
+            'translationsDirectory',
+            $extraPropertyTranslationExtractor
         );
     }
 

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
+use AddressFormat;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
@@ -38,13 +39,12 @@ class GetCountryForEditingHandler implements GetCountryForEditingHandlerInterfac
         $countryId = $command->getCountryId();
         $country = $this->countryRepository->get($countryId);
 
-        /*
-         * todo: need to refacttor format when its part is merged,
-         * to add: a dedicated service to fetch the country address format, it should implement a dedicated interface
-         * for now the string format is enough, but maybe we should introduce some kind of DTO or maybe even a smarter Domain object that stores this address format
-         * https://github.com/PrestaShop/PrestaShop/pull/29591#discussion_r976471671
-         */
-        //        $format = AddressFormat::getAddressCountryFormat($countryId->getValue());
+        // Read the raw stored format directly via the ObjectModel so the merchant
+        // edits exactly what's persisted. AddressFormat::getAddressCountryFormat
+        // would auto-append \ndni for countries that need DNI — that's a display-time
+        // decoration that should not leak into the edit form.
+        $addressFormatModel = new AddressFormat($countryId->getValue());
+        $storedFormat = (string) $addressFormatModel->format;
 
         return new CountryForEditing(
             $command->getCountryId(),
@@ -55,7 +55,7 @@ class GetCountryForEditingHandler implements GetCountryForEditingHandlerInterfac
             (int) $country->id_zone,
             (bool) $country->need_zip_code,
             (string) $country->zip_code_format,
-            '', // todo: add when address format will be added
+            $storedFormat,
             (bool) $country->active,
             (bool) $country->contains_states,
             (bool) $country->need_identification_number,

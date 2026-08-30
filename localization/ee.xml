@@ -193,6 +193,24 @@
       <taxRule iso_code_country="sk" id_tax="30"/>
     </taxRulesGroup>
   </taxes>
+  <states>
+    <state name="Harjumaa" iso_code="37" country="EE" zone="Europe" />
+    <state name="Hiiumaa" iso_code="39" country="EE" zone="Europe" />
+    <state name="Ida-Virumaa" iso_code="45" country="EE" zone="Europe" />
+    <state name="Ida-Viru" iso_code="44" country="EE" zone="Europe" />
+    <state name="Järvamaa" iso_code="52" country="EE" zone="Europe" />
+    <state name="Jõgevamaa" iso_code="50" country="EE" zone="Europe" />
+    <state name="Läänemaa" iso_code="56" country="EE" zone="Europe" />
+    <state name="Lääne-Virumaa" iso_code="60" country="EE" zone="Europe" />
+    <state name="Pärnumaa" iso_code="68" country="EE" zone="Europe" />
+    <state name="Põlvamaa" iso_code="64" country="EE" zone="Europe" />
+    <state name="Raplamaa" iso_code="71" country="EE" zone="Europe" />
+    <state name="Saaremaa" iso_code="74" country="EE" zone="Europe" />
+    <state name="Tartumaa" iso_code="79" country="EE" zone="Europe" />
+    <state name="Valgamaa" iso_code="81" country="EE" zone="Europe" />
+    <state name="Viljandimaa" iso_code="84" country="EE" zone="Europe" />
+    <state name="Võrumaa" iso_code="87" country="EE" zone="Europe" />
+  </states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>

@@ -76,7 +76,7 @@ jobs:
 
       - name: Install maildev
         run: |
-          docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
+          docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev:2.2.1
           bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} http://localhost:1080)" != "200" ]]; do echo "Wait for maildev"; sleep 5; done'
 
       - name: Run integration-behaviour-tests
@@ -85,7 +85,7 @@ jobs:
           SYMFONY_DEPRECATIONS_HELPER: disabled
 
       - name: Upload logs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: behaviour-${{ matrix.php }}

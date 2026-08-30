@@ -4,6 +4,7 @@
  */
 
 import ZipCodeManager from '@pages/country/components/zip-code-manager';
+import {initAllAddressFormatBuilders} from '@pages/country/components/initAddressFormatBuilder';
 import FormSubmitButton from '@components/form-submit-button';
 
 const {$} = window;
@@ -17,4 +18,5 @@ $(() => {
 
   new FormSubmitButton();
   new ZipCodeManager();
+  initAllAddressFormatBuilders();
 });

@@ -71,6 +71,10 @@ services:
     arguments:
       $validatorMetadataFactory: '@validator.mapping.class_metadata_factory'
 
+  # Consumers (CQRSApiNormalizer) depend on the interface so the Admin API kernel can decorate it (extra properties).
+  PrestaShopBundle\ApiPlatform\Validator\CQRSApiValidatorInterface:
+    alias: PrestaShopBundle\ApiPlatform\Validator\CQRSApiValidator
+
 
   # Decorator of api_platform.state_provider.deserialize DeserializeProvider
   PrestaShopBundle\ApiPlatform\Provider\EmptyBodyDeserializerProvider:
@@ -111,6 +115,13 @@ services:
     arguments:
       $decorated: '@.inner'
       $isDebug: '%kernel.debug%'
+
+  # This decorator filters out operations whose minVersion/maxVersion extra properties don't match the running core version
+  PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\CoreVersionCompatibilityMetadataCollectionFactoryDecorator:
+    decorates: api_platform.metadata.resource.metadata_collection_factory
+    autowire: true
+    arguments:
+      $decorated: '@.inner'
 
   # This decorator allows filtering the available ApiPlatform resources when they are base on non existing CQRS classes
   PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\CQRSNotFoundMetadataCollectionFactoryDecorator:

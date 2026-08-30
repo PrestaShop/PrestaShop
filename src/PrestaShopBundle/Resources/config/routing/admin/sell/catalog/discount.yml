@@ -32,7 +32,7 @@ admin_discounts_create:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::createAction'
     _legacy_controller: AdminCartRules
-    _legacy_link: AdminCartRules:addcartrule
+    _legacy_link: AdminCartRules:addcart_rule
     _legacy_feature_flag: discount
     discountType: null
 
@@ -42,8 +42,12 @@ admin_discount_edit:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::editAction'
     _legacy_controller: AdminCartRules
-    _legacy_link: AdminCartRules:updatecartrule
+    _legacy_link: AdminCartRules:updatecart_rule
     _legacy_feature_flag: discount
+    _legacy_parameters:
+      id_cart_rule: discountId
+  requirements:
+    discountId: \d+
 
 admin_discount_toggle_status:
   path: /{discountId}/toggle-status
@@ -97,6 +101,14 @@ admin_discounts_duplicate:
       id_cart_rule: discountId
   requirements:
     discountId: \d+
+
+admin_discounts_search_gift_products:
+  path: /search-gift-products
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::searchGiftProductsAction'
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
 
 admin_discounts_delete:
   path: /{discountId}/delete

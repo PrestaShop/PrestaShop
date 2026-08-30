@@ -12,6 +12,9 @@ use SplFileInfo;
 
 /**
  * Interface FileReaderInterface describes a file reader.
+ *
+ * @deprecated since 9.3, only used by the legacy import preview path — the import
+ * engine reads working files through ResumableFileReaderInterface
  */
 interface FileReaderInterface
 {

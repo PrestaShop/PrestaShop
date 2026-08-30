@@ -16,16 +16,16 @@
       baseUrl: '{{ app.request.getBasePath() }}',
       locale: '{{ app.request.query.get('locale') }}',
       type: '{{ app.request.query.get('type') }}',
-      currentTheme: {{ theme.name|json_encode|raw }},
+      currentTheme: {{ theme.name|json_encode|raw_purified }},
       selected: '{{ app.request.query.get('selected') }}',
       domainsTreeUrl: '{{ url('api_translation_domains_tree', {
         lang: app.request.query.get('lang'),
         type: app.request.query.get('type'),
-        selected: app.request.query.get('selected')
+        selected: app.request.query.get('selected'),
       }) }}',
       translationUrl: '{{ url('api_i18n_translations_list', {page: 'international'}) }}',
-      internationalUrl: '{{ getAdminLink('AdminLocalization')|raw }}',
-      translationsUrl: '{{ getAdminLink('AdminTranslations')|raw }}'
+      internationalUrl: '{{ getAdminLink('AdminLocalization')|raw_purified }}',
+      translationsUrl: '{{ getAdminLink('AdminTranslations')|raw_purified }}'
     }
   </script>
 

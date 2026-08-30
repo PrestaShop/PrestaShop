@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use AbstractAssetManager;
+use Composer\Semver\Semver;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Util\ArrayFinder;
@@ -311,5 +312,30 @@ class Theme implements AddonInterface
     public function requiresCoreScripts(): bool
     {
         return $this->attributes->get('theme_settings.core_scripts', true);
+    }
+
+    /**
+     * Checks if the theme is compatible with a given framework and version.
+     *
+     * @param string $name Framework name (e.g., 'bootstrap')
+     * @param string $version Version constraint (e.g., '^5.0')
+     *
+     * @return bool
+     */
+    public function isCompatibleWithFramework(string $name, string $version): bool
+    {
+        $framework = $this->attributes->get('meta.compatibility.framework', null);
+
+        if (empty($framework) || !is_string($framework)) {
+            return false;
+        }
+
+        $themeVersion = explode($name . '-', $framework)[1] ?? null;
+
+        if (null === $themeVersion) {
+            return false;
+        }
+
+        return Semver::satisfies($themeVersion, $version);
     }
 }

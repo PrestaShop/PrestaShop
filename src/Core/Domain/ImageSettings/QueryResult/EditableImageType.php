@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\ImageSettings\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageTypeId;
 
 /**
@@ -14,6 +15,18 @@ use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageTypeId;
  */
 class EditableImageType
 {
+    /**
+     * @param ImageTypeId $imageTypeId ID of the image type
+     * @param string $name Name of the image type
+     * @param int $width Width of the image
+     * @param int $height Height of the image
+     * @param bool $products Whether the image type is used for products
+     * @param bool $categories Whether the image type is used for categories
+     * @param bool $manufacturers Whether the image type is used for manufacturers
+     * @param bool $suppliers Whether the image type is used for suppliers
+     * @param bool $stores Whether the image type is used for stores
+     * @param value-of<ImageFitment::AVAILABLE_VALUES> $imageFitment
+     */
     public function __construct(
         private readonly ImageTypeId $imageTypeId,
         private readonly string $name,
@@ -24,6 +37,7 @@ class EditableImageType
         private readonly bool $manufacturers,
         private readonly bool $suppliers,
         private readonly bool $stores,
+        private readonly string $imageFitment = ImageFitment::FIT,
     ) {
     }
 
@@ -45,6 +59,16 @@ class EditableImageType
     public function getHeight(): int
     {
         return $this->height;
+    }
+
+    /**
+     * Gets the image fitment used when generating thumbnails.
+     *
+     * @return value-of<ImageFitment::AVAILABLE_VALUES>
+     */
+    public function getImageFitment(): string
+    {
+        return $this->imageFitment;
     }
 
     public function isProducts(): bool

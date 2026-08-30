@@ -366,14 +366,20 @@ class ImageCore extends ObjectModel
      * Get product cover.
      *
      * @param int $idProduct Product ID
+     * @param int|null $idShop Shop ID (defaults to the current context shop)
      *
      * @return mixed result
      */
-    public static function getCover($idProduct)
+    public static function getCover($idProduct, ?int $idShop = null)
     {
+        if (null === $idShop) {
+            $idShop = Context::getContext()->shop->id;
+        }
+
         return Db::getInstance()->getRow('
 			SELECT * FROM `' . _DB_PREFIX_ . 'image_shop` image_shop
 			WHERE image_shop.`id_product` = ' . (int) $idProduct . '
+			AND image_shop.`id_shop` = ' . (int) $idShop . '
 			AND image_shop.`cover`= 1');
     }
 

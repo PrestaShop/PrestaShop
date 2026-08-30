@@ -5,7 +5,7 @@
       <trans-unit id="b8760dae14ad4963c909f83424de3e7f">
         <source>(E.g.: %date_format%)</source>
         <target>(E.g.: %date_format%)</target>
-        <note>File: classes/form/CustomerFormatter.php [Line: 197]</note>
+        <note>File: classes/form/CustomerFormatter.php [Line: 200]</note>
       </trans-unit>
       <trans-unit id="0da3c8b31e3e2d9d769a86cd3f31949c">
         <source>.png .jpg .gif</source>
@@ -45,7 +45,7 @@
       <trans-unit id="8307fac59310d028334df0306c7b29ad">
         <source>How can we help?</source>
         <target>How can we help?</target>
-        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 87]</note>
+        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 92]</note>
       </trans-unit>
       <trans-unit id="ad05f78187c942f9dd521605fa81f1ba">
         <source>MM</source>
@@ -60,7 +60,7 @@
       <trans-unit id="ae12c6cc3c51c7dfc05571539d8980d9">
         <source>Only letters and the dot (.) character, followed by a space, are allowed.</source>
         <target>Only letters and the dot (.) character, followed by a space, are allowed.</target>
-        <note>File: classes/form/CustomerFormatter.php [Line: 119]</note>
+        <note>File: classes/form/CustomerFormatter.php [Line: 121]</note>
       </trans-unit>
       <trans-unit id="ebb061953c0454b2c8ee7b0ac615ebcd">
         <source>Optional</source>
@@ -75,7 +75,7 @@
       <trans-unit id="863cf84b34def228394c03c156bff42c">
         <source>Select reference</source>
         <target>Select reference</target>
-        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 55]</note>
+        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 60]</note>
       </trans-unit>
       <trans-unit id="8df34bb962577b90d574a51ed2ca757f">
         <source>YYYY</source>
@@ -95,12 +95,12 @@
       <trans-unit id="d57c24f3fe52d16e7169b912dd647f0d">
         <source>optional</source>
         <target>optional</target>
-        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 75]</note>
+        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 80]</note>
       </trans-unit>
       <trans-unit id="67135a14d3ac4f1369633dd006d6efec">
         <source>your@email.com</source>
         <target>your@email.com</target>
-        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 43]</note>
+        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 48]</note>
       </trans-unit>
     </body>
   </file>

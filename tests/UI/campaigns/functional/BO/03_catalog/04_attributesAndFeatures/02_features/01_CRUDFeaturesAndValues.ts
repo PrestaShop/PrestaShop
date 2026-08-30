@@ -48,7 +48,6 @@ describe('BO - Catalog - Attributes & Features : CRUD features and values', asyn
     value: 'Feature value smooth',
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);

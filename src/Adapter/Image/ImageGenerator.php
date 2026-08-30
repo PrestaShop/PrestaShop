@@ -79,12 +79,26 @@ class ImageGenerator
         $result = true;
 
         foreach ($configuredImageFormats as $imageFormat) {
+            $error = 0;
+            $targetWidth = null;
+            $targetHeight = null;
+            $sourceWidth = null;
+            $sourceHeight = null;
+
             if (!ImageManager::resize(
                 $filePath,
                 sprintf('%s-%s.%s', dirname($filePath) . DIRECTORY_SEPARATOR . $imageId, stripslashes($imageType->name), $imageFormat),
                 $imageType->width,
                 $imageType->height,
-                $imageFormat
+                $imageFormat,
+                false,
+                $error,
+                $targetWidth,
+                $targetHeight,
+                5,
+                $sourceWidth,
+                $sourceHeight,
+                $imageType->image_fitment
             )) {
                 $result = false;
             }

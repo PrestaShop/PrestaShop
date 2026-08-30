@@ -14,10 +14,12 @@ use Hook;
 use Order;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductQuantityUpdater;
+use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
@@ -42,8 +44,10 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
         private OrderProductQuantityUpdater $orderProductQuantityUpdater,
         private OrderDetailUpdater $orderDetailUpdater,
         private ContextStateManager $contextStateManager,
-        private ?ShipmentProductQuantityUpdater $shipmentProductQuantityUpdater = null,
-        private ?FeatureFlagStateCheckerInterface $featureflagStateCheckerInterface = null,
+        private ShipmentProductQuantityUpdater $shipmentProductQuantityUpdater,
+        private FeatureFlagStateCheckerInterface $featureflagStateCheckerInterface,
+        private ShipmentShippingCostUpdater $shipmentShippingCostUpdater,
+        private AdapterConfiguration $configuration,
     ) {
     }
 
@@ -85,14 +89,20 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
                 (int) $orderDetail->id_customization
             );
 
-            if ($this->featureflagStateCheckerInterface !== null && $this->featureflagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT) && !empty($command->getShipmentsQuantities())) {
+            if ($this->featureflagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT) && !empty($command->getShipmentsQuantities())) {
                 $totalProductQuantity = array_sum(array_column($command->getShipmentsQuantities(), 'quantity'));
 
                 // Update invoice, quantity and amounts
                 $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $totalProductQuantity, $orderInvoice);
 
                 $this->shipmentProductQuantityUpdater->updateShipmentQuantity($command->getOrderDetailId(), $command->getShipmentsQuantities());
-            } else {
+
+                if ($this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING')) {
+                    $this->shipmentShippingCostUpdater->recalculateForOrder((int) $order->id);
+                }
+            }
+
+            if (!$this->featureflagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)) {
                 // Update invoice, quantity and amounts
                 $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $command->getQuantity(), $orderInvoice);
             }

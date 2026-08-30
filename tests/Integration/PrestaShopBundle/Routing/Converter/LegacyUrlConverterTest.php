@@ -11,8 +11,11 @@ namespace Tests\Integration\PrestaShopBundle\Routing\Converter;
 use Dispatcher;
 use Exception;
 use Link;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Routing\Converter\Exception\AlreadyConvertedException;
+use PrestaShopBundle\Routing\Converter\LegacyRouteFactory;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
+use PrestaShopBundle\Routing\Converter\RouterProvider;
 use PrestaShopException;
 use ReflectionException;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,6 +65,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 
             'admin_modules_positions' => ['/improve/design/modules/positions/', 'AdminModulesPositions'],
             'admin_modules_positions_unhook' => ['/improve/design/modules/positions/unhook', 'AdminModulesPositions', 'unhook'],
+            'admin_modules_positions_hook_module' => ['/improve/design/modules/positions/hook-module', 'AdminModulesPositions', 'addToHook'],
 
             'admin_customer_preferences' => ['/configure/shop/customer-preferences/', 'AdminCustomerPreferences'],
             'admin_customer_preferences_process' => ['/configure/shop/customer-preferences/', 'AdminCustomerPreferences', 'update'],
@@ -241,7 +245,6 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     {
         return [
             ['/admin-dev/index.php?controller=AdminDashboard', 'AdminDashboard'],
-            ['/admin-dev/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
             ['/admin-dev/index.php?controller=AdminModules', 'AdminModules'],
         ];
     }
@@ -301,6 +304,46 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 
         $convertedUrl = $converter->convertByParameters(['controller' => 'AdminCustomers', 'VIEWCUSTOMER' => '1', 'id_customer' => 42]);
         $this->assertSameUrl('/sell/customers/42/view', $convertedUrl);
+    }
+
+    /**
+     * The discount routes are gated behind the "discount" feature flag: when it is enabled
+     * the AdminCartRules add/update legacy actions must be converted to the new discount
+     * routes. This is what makes the "Add new voucher" button of the order creation page
+     * open the new discount form instead of the legacy cart rule one.
+     */
+    public function testFeatureFlagGatedDiscountRoutes(): void
+    {
+        putenv('PS_FF_DISCOUNT=1');
+
+        try {
+            $router = self::getContainer()->get('router');
+            // A dedicated converter is built here because the shared service caches the legacy
+            // routes without the ones gated behind the (disabled by default) feature flag
+            $routerProvider = new RouterProvider(
+                $router,
+                new LegacyRouteFactory(self::getContainer()->get(FeatureFlagStateCheckerInterface::class))
+            );
+            $converter = new LegacyUrlConverter($router, $routerProvider);
+
+            // Link used by the "Add new voucher" button on the order creation page
+            $convertedUrl = $converter->convertByParameters([
+                'controller' => 'AdminCartRules',
+                'liteDisplaying' => 1,
+                'submitFormAjax' => 1,
+                'addcart_rule' => 1,
+            ]);
+            $this->assertSameUrl('/sell/catalog/discounts/new?liteDisplaying=1&submitFormAjax=1', $convertedUrl);
+
+            $convertedUrl = $converter->convertByParameters([
+                'controller' => 'AdminCartRules',
+                'updatecart_rule' => 1,
+                'id_cart_rule' => 42,
+            ]);
+            $this->assertSameUrl('/sell/catalog/discounts/42/edit', $convertedUrl);
+        } finally {
+            putenv('PS_FF_DISCOUNT');
+        }
     }
 
     public function testIdEqualToOne(): void

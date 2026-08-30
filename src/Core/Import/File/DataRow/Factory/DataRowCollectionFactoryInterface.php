@@ -11,6 +11,9 @@ use SplFileInfo;
 
 /**
  * Interface DataRowCollectionFactoryInterface describes a data row collection factory.
+ *
+ * @deprecated since 9.3, part of the legacy DataRow reading layer — the import
+ * engine reads records as plain string arrays
  */
 interface DataRowCollectionFactoryInterface
 {

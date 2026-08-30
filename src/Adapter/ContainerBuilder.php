@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Adapter\Container\ContainerParametersExtension;
 use PrestaShop\PrestaShop\Adapter\Container\DoctrineBuilderExtension;
 use PrestaShop\PrestaShop\Adapter\Container\LegacyContainer;
 use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerBuilder;
+use PrestaShop\PrestaShop\Adapter\Container\ValidatorBuilderExtension;
 use PrestaShop\PrestaShop\Adapter\Doctrine\FrontDoctrineProxyWarmer;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\CachedModuleRepository;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
@@ -171,6 +172,8 @@ class ContainerBuilder
         $builderExtensions = [
             new ContainerParametersExtension($this->environment),
             new DoctrineBuilderExtension($this->environment),
+            // The FO legacy container has no FrameworkBundle, so the Symfony `validator` is wired manually here.
+            new ValidatorBuilderExtension(),
         ];
         /** @var ContainerBuilderExtensionInterface $builderExtension */
         foreach ($builderExtensions as $builderExtension) {

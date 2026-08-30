@@ -86,12 +86,12 @@ describe('BO - International - Countries : Restrict country selections in front 
   it(`should search for the country '${dataCountries.afghanistan.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToEnable', baseContext);
 
-    await boCountriesPage.filterTable(page, 'input', 'b!name', dataCountries.afghanistan.name);
+    await boCountriesPage.filterTable(page, 'input', 'name', dataCountries.afghanistan.name);
 
     const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
     expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-    const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+    const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
     expect(textColumn).to.equal(dataCountries.afghanistan.name);
   });
 
@@ -105,13 +105,13 @@ describe('BO - International - Countries : Restrict country selections in front 
   });
 
   [
-    {args: {status: 'enable', enable: true, isCountryVisible: false}},
-    {args: {status: 'disable', enable: false, isCountryVisible: true}},
+    {status: 'enable', enable: true, isCountryVisible: false},
+    {status: 'disable', enable: false, isCountryVisible: true},
   ].forEach((status, index: number) => {
-    it(`should ${status.args.status} restrict country selections`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}RestrictCountry`, baseContext);
+    it(`should ${status.status} restrict country selections`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `${status.status}RestrictCountry`, baseContext);
 
-      const currentStatus = await boCountriesPage.setCountriesRestrictions(page, status.args.enable);
+      const currentStatus = await boCountriesPage.setCountriesRestrictions(page, status.enable);
       expect(currentStatus).to.contains(boCountriesPage.settingsUpdateMessage);
     });
 
@@ -157,7 +157,7 @@ describe('BO - International - Countries : Restrict country selections in front 
       await foHummingbirdMyAddressesPage.openNewAddressForm(page);
 
       const countryExist = await foHummingbirdMyAddressesCreatePage.countryExist(page, dataCountries.afghanistan.name);
-      expect(countryExist).to.equal(status.args.isCountryVisible);
+      expect(countryExist).to.equal(status.isCountryVisible);
     });
 
     it('should sign out from FO', async function () {
@@ -182,12 +182,12 @@ describe('BO - International - Countries : Restrict country selections in front 
   it(`should search for the country '${dataCountries.afghanistan.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToDisable', baseContext);
 
-    await boCountriesPage.filterTable(page, 'input', 'b!name', dataCountries.afghanistan.name);
+    await boCountriesPage.filterTable(page, 'input', 'name', dataCountries.afghanistan.name);
 
     const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
     expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-    const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+    const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
     expect(textColumn).to.equal(dataCountries.afghanistan.name);
   });
 

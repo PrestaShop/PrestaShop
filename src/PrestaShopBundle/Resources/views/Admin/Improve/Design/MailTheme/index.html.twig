@@ -7,25 +7,25 @@
 {% block content %}
   {{
     include('@PrestaShop/Admin/Improve/Design/MailTheme/Blocks/configuration_form.html.twig', {
-      mailThemeConfigurationForm: mailThemeConfigurationForm
+      mailThemeConfigurationForm: mailThemeConfigurationForm,
     })
   }}
 
   {{
     include('@PrestaShop/Admin/Improve/Design/MailTheme/Blocks/generate_mails_form.html.twig', {
-      generateMailsForm: generateMailsForm
+      generateMailsForm: generateMailsForm,
     })
   }}
 
   {{
     include('@PrestaShop/Admin/Improve/Design/MailTheme/Blocks/translate_mails_body_form.html.twig', {
-      generateMailsForm: generateMailsForm
+      generateMailsForm: generateMailsForm,
     })
   }}
 
   {{
     include('@PrestaShop/Admin/Improve/Design/MailTheme/Blocks/list_mail_themes.html.twig', {
-      mailThemes: mailThemes
+      mailThemes: mailThemes,
     })
   }}
 {% endblock %}

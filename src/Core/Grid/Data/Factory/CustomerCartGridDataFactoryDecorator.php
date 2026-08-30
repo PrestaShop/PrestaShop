@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartTotalForViewing;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
@@ -85,9 +85,9 @@ final class CustomerCartGridDataFactoryDecorator implements GridDataFactoryInter
         $modifiedRecord = [];
 
         foreach ($records as $r) {
-            $cartForViewing = $this->queryBus->handle(new GetCartForViewing((int) $r['id_cart']));
+            $cartTotal = $this->queryBus->handle(new GetCartTotalForViewing((int) $r['id_cart']));
             $r['total'] = $this->locale->formatPrice(
-                $cartForViewing->getCartSummary()['total'],
+                $cartTotal->getTotal(),
                 $this->contextCurrencyIsoCode
             );
             $modifiedRecord[] = $r;

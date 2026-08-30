@@ -162,13 +162,13 @@ describe('BO - Cart Rules : Quantity consumption', async () => {
       expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
 
       const subTotalProducts = await foHummingbirdCartPage.getSubtotalProductsValue(page);
-      expect(subTotalProducts).to.eq(dataProducts.demo_6.combinations[0].price);
+      expect(subTotalProducts).to.eq(dataProducts.demo_6.combinations[0].priceTI);
 
       const hasSubtotalDiscount = await foHummingbirdCartPage.hasSubtotalDiscount(page);
       expect(hasSubtotalDiscount).to.eq(false);
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
-      expect(priceATI.toFixed(2)).to.eq(dataProducts.demo_6.combinations[0].price.toFixed(2));
+      expect(priceATI.toFixed(2)).to.eq(dataProducts.demo_6.combinations[0].priceTI.toFixed(2));
     });
 
     it('should check that discount is applied to the cart', async function () {
@@ -177,7 +177,7 @@ describe('BO - Cart Rules : Quantity consumption', async () => {
       await foHummingbirdCartPage.addPromoCode(page, cartRuleData.code);
 
       const subTotalProducts = await foHummingbirdCartPage.getSubtotalProductsValue(page);
-      expect(subTotalProducts).to.eq(dataProducts.demo_6.combinations[0].price);
+      expect(subTotalProducts).to.eq(dataProducts.demo_6.combinations[0].priceTI);
 
       const subTotalDiscount = await foHummingbirdCartPage.getSubtotalDiscountValue(page);
       expect(subTotalDiscount.toFixed(2)).to.eq(`-${parseFloat(cartRuleData.discountAmount!.value.toString()).toFixed(2)}`);
@@ -188,7 +188,7 @@ describe('BO - Cart Rules : Quantity consumption', async () => {
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
       expect(priceATI.toFixed(2)).to.eq(
         (
-          dataProducts.demo_6.combinations[0].price - parseFloat(cartRuleData.discountAmount!.value.toString())
+          dataProducts.demo_6.combinations[0].priceTI - parseFloat(cartRuleData.discountAmount!.value.toString())
         ).toFixed(2),
       );
 
@@ -232,7 +232,7 @@ describe('BO - Cart Rules : Quantity consumption', async () => {
     it('should check the total (tax incl.)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderTotalTaxInc', baseContext);
 
-      const totalProducts = dataProducts.demo_6.combinations[0].price;
+      const totalProducts = dataProducts.demo_6.combinations[0].priceTI;
 
       const totalDiscounts = parseFloat(cartRuleData.discountAmount!.value.toString());
 

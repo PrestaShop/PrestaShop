@@ -16,9 +16,9 @@ import {
 const baseContext: string = 'functional_BO_international_taxes_taxRules_quickEditAndBulkActions';
 
 /*
-Create 2 tax rules
-Enable/Disable by quick edit
-Enable/Disable/Delete by bulk actions
+ * Create 2 tax rules
+ * Enable/Disable by quick edit
+ * Enable/Disable/Delete by bulk actions
  */
 describe('BO - International - Tax rules : Bulk actions', async () => {
   let browserContext: BrowserContext;
@@ -28,7 +28,6 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
   const firstTaxRuleData: FakerTaxRulesGroup = new FakerTaxRulesGroup({name: 'toDelete1'});
   const secondTaxRuleData: FakerTaxRulesGroup = new FakerTaxRulesGroup({name: 'toDelete2', enabled: false});
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -80,9 +79,9 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
   // 1 : Create 2 tax rules with data from faker
   describe('Create 2 Tax rules in BO', async () => {
     [
-      {args: {taxRuleToCreate: firstTaxRuleData}},
-      {args: {taxRuleToCreate: secondTaxRuleData}},
-    ].forEach((test, index: number) => {
+      firstTaxRuleData,
+      secondTaxRuleData,
+    ].forEach((test: FakerTaxRulesGroup, index: number) => {
       it('should go to add new tax rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewTaxRulePage${index + 1}`, baseContext);
 
@@ -95,7 +94,7 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
       it('should create tax rule and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `CreateTax${index + 1}`, baseContext);
 
-        const textResult = await boTaxRulesCreatePage.createEditTaxRulesGroup(page, test.args.taxRuleToCreate);
+        const textResult = await boTaxRulesCreatePage.createEditTaxRulesGroup(page, test);
         expect(textResult).to.contains(boTaxRulesCreatePage.successfulCreationMessage);
       });
 
@@ -125,21 +124,21 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
     });
 
     [
-      {args: {action: 'disable', enabledValue: false}},
-      {args: {action: 'enable', enabledValue: true}},
+      {action: 'disable', enabledValue: false},
+      {action: 'enable', enabledValue: true},
     ].forEach((test) => {
-      it(`should ${test.args.action} tax rule`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Category`, baseContext);
+      it(`should ${test.action} tax rule`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.action}Category`, baseContext);
 
-        const isActionPerformed = await boTaxRulesPage.setStatus(page, 1, test.args.enabledValue);
+        const isActionPerformed = await boTaxRulesPage.setStatus(page, 1, test.enabledValue);
 
         if (isActionPerformed) {
-          const resultMessage = await boTaxRulesPage.getAlertSuccessBlockContent(page);
+          const resultMessage = await boTaxRulesPage.getAlertSuccessBlockParagraphContent(page);
           expect(resultMessage).to.contains(boTaxRulesPage.successfulUpdateStatusMessage);
         }
 
         const status = await boTaxRulesPage.getStatus(page, 1);
-        expect(status).to.be.equal(test.args.enabledValue);
+        expect(status).to.be.equal(test.enabledValue);
       });
     });
 
@@ -154,8 +153,8 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
   // 3 : Enable/Disable by bulk actions
   describe('Enable and Disable Tax rules by Bulk Actions', async () => {
     [
-      {args: {taxRule: firstTaxRuleData.name, action: 'disable', enabledValue: false}},
-      {args: {taxRule: secondTaxRuleData.name, action: 'enable', enabledValue: true}},
+      {taxRule: firstTaxRuleData.name, action: 'disable', enabledValue: false},
+      {taxRule: secondTaxRuleData.name, action: 'enable', enabledValue: true},
     ].forEach((test, index: number) => {
       it('should filter list by name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterTaxesToChangeStatus${index}`, baseContext);
@@ -164,24 +163,24 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
           page,
           'input',
           'name',
-          test.args.taxRule,
+          test.taxRule,
         );
 
         const textResult = await boTaxRulesPage.getTextColumnFromTable(page, 1, 'name');
-        expect(textResult).to.contains(test.args.taxRule);
+        expect(textResult).to.contains(test.taxRule);
       });
 
-      it(`should ${test.args.action} tax rules with bulk actions and check Result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}`, baseContext);
+      it(`should ${test.action} tax rules with bulk actions and check Result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `bulk${test.action}`, baseContext);
 
-        const textResult = await boTaxRulesPage.bulkSetStatus(page, test.args.enabledValue);
+        const textResult = await boTaxRulesPage.bulkSetStatus(page, test.enabledValue);
         expect(textResult).to.contains(boTaxRulesPage.successfulUpdateStatusMessage);
 
         const numberOfElementInGrid = await boTaxRulesPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfElementInGrid; i++) {
           const textColumn = await boTaxRulesPage.getStatus(page, i);
-          expect(textColumn).to.equal(test.args.enabledValue);
+          expect(textColumn).to.equal(test.enabledValue);
         }
       });
     });

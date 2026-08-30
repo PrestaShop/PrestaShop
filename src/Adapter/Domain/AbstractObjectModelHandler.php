@@ -44,8 +44,9 @@ abstract class AbstractObjectModelHandler
 
         // Get list of shop id we want to exclude from asso deletion
         $excludeIds = $shopAssociation;
+        $employee = Context::getContext()->employee;
         foreach (Db::getInstance()->executeS('SELECT id_shop FROM ' . _DB_PREFIX_ . 'shop') as $row) {
-            if (!Context::getContext()->employee->hasAuthOnShop($row['id_shop'])) {
+            if ($employee !== null && !$employee->hasAuthOnShop($row['id_shop'])) {
                 $excludeIds[] = $row['id_shop'];
             }
         }
@@ -61,7 +62,8 @@ abstract class AbstractObjectModelHandler
         $insert = [];
         foreach ($shopAssociation as $shopId) {
             // Check if context employee has access to the shop before inserting shop association.
-            if (Context::getContext()->employee->hasAuthOnShop($shopId)) {
+            // When employee is null (e.g. Admin API context), all requested shops are allowed.
+            if ($employee === null || $employee->hasAuthOnShop($shopId)) {
                 $insert[] = [
                     $primaryKeyName => $primaryKeyValue,
                     'id_shop' => (int) $shopId,

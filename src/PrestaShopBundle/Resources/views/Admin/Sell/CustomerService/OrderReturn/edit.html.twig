@@ -1,0 +1,30 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {{ include('@PrestaShop/Admin/Sell/CustomerService/OrderReturn/Blocks/form.html.twig') }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/order_return_form.bundle.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <style>
+    .order-return-row-staged-for-deletion td {
+      text-decoration: line-through;
+      opacity: 0.55;
+    }
+  </style>
+{% endblock %}

@@ -771,6 +771,36 @@
       <title>Dashboard Top</title>
       <description>Displays the content in the dashboard's top area</description>
     </hook>
+    <hook id="displayAdminDashboardZoneOne">
+      <name>displayAdminDashboardZoneOne</name>
+      <title>Symfony Dashboard - Zone one</title>
+      <description>Displays module content in the first column of the migrated (Symfony) dashboard page. Modern counterpart of the legacy dashboardZoneOne hook.</description>
+    </hook>
+    <hook id="displayAdminDashboardZoneTwo">
+      <name>displayAdminDashboardZoneTwo</name>
+      <title>Symfony Dashboard - Zone two</title>
+      <description>Displays module content in the second column of the migrated (Symfony) dashboard page. Modern counterpart of the legacy dashboardZoneTwo hook.</description>
+    </hook>
+    <hook id="displayAdminDashboardZoneThree">
+      <name>displayAdminDashboardZoneThree</name>
+      <title>Symfony Dashboard - Zone three</title>
+      <description>Displays module content in the third column of the migrated (Symfony) dashboard page. Modern counterpart of the legacy dashboardZoneThree hook.</description>
+    </hook>
+    <hook id="displayAdminDashboardTop">
+      <name>displayAdminDashboardTop</name>
+      <title>Symfony Dashboard - Top</title>
+      <description>Displays module content in the top area of the migrated (Symfony) dashboard page. Modern counterpart of the legacy displayDashboardTop hook.</description>
+    </hook>
+    <hook id="displayAdminDashboardBottom">
+      <name>displayAdminDashboardBottom</name>
+      <title>Symfony Dashboard - Bottom</title>
+      <description>Displays module content in a full-width area at the bottom of the migrated (Symfony) dashboard page.</description>
+    </hook>
+    <hook id="displayAdminDashboardToolbar">
+      <name>displayAdminDashboardToolbar</name>
+      <title>Symfony Dashboard - Toolbar</title>
+      <description>Displays module content in the toolbar area of the migrated (Symfony) dashboard page. Modern counterpart of the legacy displayDashboardToolbarTopMenu hook.</description>
+    </hook>
     <hook id="actionUpdateLangAfter">
       <name>actionUpdateLangAfter</name>
       <title>Update "lang" tables</title>
@@ -2872,6 +2902,11 @@
       <name>actionCheckoutRender</name>
       <title>Modify checkout process</title>
       <description>This hook is called when constructing the checkout process</description>
+    </hook>
+    <hook id="actionCheckoutBuildProcess">
+      <name>actionCheckoutBuildProcess</name>
+      <title>Build checkout process</title>
+      <description>This hook is triggered before the checkout is rendered. Modules may return a checkout process provider. The provider is used only when exactly one enabled and valid provider is available.</description>
     </hook>
     <hook id="actionCheckoutStepRenderTemplate">
       <name>actionCheckoutStepRenderTemplate</name>
@@ -5667,6 +5702,241 @@
       <name>actionOverrideShippingFreeWeight</name>
       <title>Override weight that determines free shipping</title>
       <description>Allows modules to override the free shipping weight and return their custom value, for example to specify it by zone or other criteria.</description>
+    </hook>
+    <hook id="displayModalContent">
+      <name>displayModalContent</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="actionPresentCartProduct">
+      <name>actionPresentCartProduct</name>
+      <title/>
+      <description/>
+    </hook>
+    <hook id="displaySubcategories">
+      <name>displaySubcategories</name>
+      <title>Display content in subcategory list</title>
+      <description>This hooks allows you to display additional items in a list of subcategories in front office. Related blog posts, links to other categories, landing pages etc.</description>
+    </hook>
+    <hook id="displayCartBelowSummary">
+      <name>displayCartBelowSummary</name>
+      <title>Display content below summary on cart page</title>
+      <description>Allows you to display content on front office cart page, below the totals summary.</description>
+    </hook>
+    <hook id="actionExtraPropertyDefinitionFormBuilderModifier">
+      <name>actionExtraPropertyDefinitionFormBuilderModifier</name>
+      <title>Modify extra property definition identifiable object form</title>
+      <description>This hook allows to modify extra property definition identifiable object forms content by modifying form builder data or FormBuilder itself</description>
+    </hook>
+    <hook id="actionTaxRuleFormBuilderModifier">
+      <name>actionTaxRuleFormBuilderModifier</name>
+      <title>Modify tax rule identifiable object form</title>
+      <description>This hook allows to modify tax rule identifiable object forms content by modifying form builder data or FormBuilder itself</description>
+    </hook>
+    <hook id="actionFulfillShipmentFormBuilderModifier">
+      <name>actionFulfillShipmentFormBuilderModifier</name>
+      <title>Modify fulfill shipment identifiable object form</title>
+      <description>This hook allows to modify fulfill shipment identifiable object forms content by modifying form builder data or FormBuilder itself</description>
+    </hook>
+    <hook id="actionQuickAccessFormBuilderModifier">
+      <name>actionQuickAccessFormBuilderModifier</name>
+      <title>Modify quick access identifiable object form</title>
+      <description>This hook allows to modify quick access identifiable object forms content by modifying form builder data or FormBuilder itself</description>
+    </hook>
+    <hook id="actionExtraPropertyDefinitionFormDataProviderData">
+      <name>actionExtraPropertyDefinitionFormDataProviderData</name>
+      <title>Provide extra property definition identifiable object form data for update</title>
+      <description>This hook allows to provide extra property definition identifiable object form data which will prefill the form in update/edition page</description>
+    </hook>
+    <hook id="actionTaxRuleFormDataProviderData">
+      <name>actionTaxRuleFormDataProviderData</name>
+      <title>Provide tax rule identifiable object form data for update</title>
+      <description>This hook allows to provide tax rule identifiable object form data which will prefill the form in update/edition page</description>
+    </hook>
+    <hook id="actionFulfillShipmentFormDataProviderData">
+      <name>actionFulfillShipmentFormDataProviderData</name>
+      <title>Provide fulfill shipment identifiable object form data for update</title>
+      <description>This hook allows to provide fulfill shipment identifiable object form data which will prefill the form in update/edition page</description>
+    </hook>
+    <hook id="actionQuickAccessFormDataProviderData">
+      <name>actionQuickAccessFormDataProviderData</name>
+      <title>Provide quick access identifiable object form data for update</title>
+      <description>This hook allows to provide quick access identifiable object form data which will prefill the form in update/edition page</description>
+    </hook>
+    <hook id="actionExtraPropertyDefinitionFormDataProviderDefaultData">
+      <name>actionExtraPropertyDefinitionFormDataProviderDefaultData</name>
+      <title>Provide extra property definition identifiable object default form data for creation</title>
+      <description>This hook allows to provide extra property definition identifiable object form data which will prefill the form in creation page</description>
+    </hook>
+    <hook id="actionTaxRuleFormDataProviderDefaultData">
+      <name>actionTaxRuleFormDataProviderDefaultData</name>
+      <title>Provide tax rule identifiable object default form data for creation</title>
+      <description>This hook allows to provide tax rule identifiable object form data which will prefill the form in creation page</description>
+    </hook>
+    <hook id="actionFulfillShipmentFormDataProviderDefaultData">
+      <name>actionFulfillShipmentFormDataProviderDefaultData</name>
+      <title>Provide fulfill shipment identifiable object default form data for creation</title>
+      <description>This hook allows to provide fulfill shipment identifiable object form data which will prefill the form in creation page</description>
+    </hook>
+    <hook id="actionQuickAccessFormDataProviderDefaultData">
+      <name>actionQuickAccessFormDataProviderDefaultData</name>
+      <title>Provide quick access identifiable object default form data for creation</title>
+      <description>This hook allows to provide quick access identifiable object form data which will prefill the form in creation page</description>
+    </hook>
+    <hook id="actionBeforeUpdateExtraPropertyDefinitionFormHandler">
+      <name>actionBeforeUpdateExtraPropertyDefinitionFormHandler</name>
+      <title>Modify extra property definition identifiable object data before updating it</title>
+      <description>This hook allows to modify extra property definition identifiable object forms data before it was updated</description>
+    </hook>
+    <hook id="actionBeforeUpdateTaxRuleFormHandler">
+      <name>actionBeforeUpdateTaxRuleFormHandler</name>
+      <title>Modify tax rule identifiable object data before updating it</title>
+      <description>This hook allows to modify tax rule identifiable object forms data before it was updated</description>
+    </hook>
+    <hook id="actionBeforeUpdateFulfillShipmentFormHandler">
+      <name>actionBeforeUpdateFulfillShipmentFormHandler</name>
+      <title>Modify fulfill shipment identifiable object data before updating it</title>
+      <description>This hook allows to modify fulfill shipment identifiable object forms data before it was updated</description>
+    </hook>
+    <hook id="actionBeforeUpdateQuickAccessFormHandler">
+      <name>actionBeforeUpdateQuickAccessFormHandler</name>
+      <title>Modify quick access identifiable object data before updating it</title>
+      <description>This hook allows to modify quick access identifiable object forms data before it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateExtraPropertyDefinitionFormHandler">
+      <name>actionAfterUpdateExtraPropertyDefinitionFormHandler</name>
+      <title>Modify extra property definition identifiable object data after updating it</title>
+      <description>This hook allows to modify extra property definition identifiable object forms data after it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateTaxRuleFormHandler">
+      <name>actionAfterUpdateTaxRuleFormHandler</name>
+      <title>Modify tax rule identifiable object data after updating it</title>
+      <description>This hook allows to modify tax rule identifiable object forms data after it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateFulfillShipmentFormHandler">
+      <name>actionAfterUpdateFulfillShipmentFormHandler</name>
+      <title>Modify fulfill shipment identifiable object data after updating it</title>
+      <description>This hook allows to modify fulfill shipment identifiable object forms data after it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateQuickAccessFormHandler">
+      <name>actionAfterUpdateQuickAccessFormHandler</name>
+      <title>Modify quick access identifiable object data after updating it</title>
+      <description>This hook allows to modify quick access identifiable object forms data after it was updated</description>
+    </hook>
+    <hook id="actionBeforeCreateExtraPropertyDefinitionFormHandler">
+      <name>actionBeforeCreateExtraPropertyDefinitionFormHandler</name>
+      <title>Modify extra property definition identifiable object data before creating it</title>
+      <description>This hook allows to modify extra property definition identifiable object forms data before it was created</description>
+    </hook>
+    <hook id="actionBeforeCreateTaxRuleFormHandler">
+      <name>actionBeforeCreateTaxRuleFormHandler</name>
+      <title>Modify tax rule identifiable object data before creating it</title>
+      <description>This hook allows to modify tax rule identifiable object forms data before it was created</description>
+    </hook>
+    <hook id="actionBeforeCreateFulfillShipmentFormHandler">
+      <name>actionBeforeCreateFulfillShipmentFormHandler</name>
+      <title>Modify fulfill shipment identifiable object data before creating it</title>
+      <description>This hook allows to modify fulfill shipment identifiable object forms data before it was created</description>
+    </hook>
+    <hook id="actionBeforeCreateQuickAccessFormHandler">
+      <name>actionBeforeCreateQuickAccessFormHandler</name>
+      <title>Modify quick access identifiable object data before creating it</title>
+      <description>This hook allows to modify quick access identifiable object forms data before it was created</description>
+    </hook>
+    <hook id="actionAfterCreateExtraPropertyDefinitionFormHandler">
+      <name>actionAfterCreateExtraPropertyDefinitionFormHandler</name>
+      <title>Modify extra property definition identifiable object data after creating it</title>
+      <description>This hook allows to modify extra property definition identifiable object forms data after it was created</description>
+    </hook>
+    <hook id="actionAfterCreateTaxRuleFormHandler">
+      <name>actionAfterCreateTaxRuleFormHandler</name>
+      <title>Modify tax rule identifiable object data after creating it</title>
+      <description>This hook allows to modify tax rule identifiable object forms data after it was created</description>
+    </hook>
+    <hook id="actionAfterCreateFulfillShipmentFormHandler">
+      <name>actionAfterCreateFulfillShipmentFormHandler</name>
+      <title>Modify fulfill shipment identifiable object data after creating it</title>
+      <description>This hook allows to modify fulfill shipment identifiable object forms data after it was created</description>
+    </hook>
+    <hook id="actionAfterCreateQuickAccessFormHandler">
+      <name>actionAfterCreateQuickAccessFormHandler</name>
+      <title>Modify quick access identifiable object data after creating it</title>
+      <description>This hook allows to modify quick access identifiable object forms data after it was created</description>
+    </hook>
+    <hook id="actionCountriesPageOptionsForm">
+      <name>actionCountriesPageOptionsForm</name>
+      <title>Modify countries page options options form content</title>
+      <description>This hook allows to modify countries page options options form FormBuilder</description>
+    </hook>
+    <hook id="actionOrderReturnForm">
+      <name>actionOrderReturnForm</name>
+      <title>Modify order return options form content</title>
+      <description>This hook allows to modify order return options form FormBuilder</description>
+    </hook>
+    <hook id="actionCountriesPageOptionsSave">
+      <name>actionCountriesPageOptionsSave</name>
+      <title>Modify countries page options options form saved data</title>
+      <description>This hook allows to modify data of countries page options options form after it was saved</description>
+    </hook>
+    <hook id="actionOrderReturnSave">
+      <name>actionOrderReturnSave</name>
+      <title>Modify order return options form saved data</title>
+      <description>This hook allows to modify data of order return options form after it was saved</description>
+    </hook>
+    <hook id="actionEmailBodyTemplateGridDefinitionModifier">
+      <name>actionEmailBodyTemplateGridDefinitionModifier</name>
+      <title>Modify email body template grid definition</title>
+      <description>This hook allows to alter email body template grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionExtraPropertyDefinitionGridDefinitionModifier">
+      <name>actionExtraPropertyDefinitionGridDefinitionModifier</name>
+      <title>Modify extra property definition grid definition</title>
+      <description>This hook allows to alter extra property definition grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionEmailBodyTemplateGridQueryBuilderModifier">
+      <name>actionEmailBodyTemplateGridQueryBuilderModifier</name>
+      <title>Modify email body template grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for email body template grid</description>
+    </hook>
+    <hook id="actionExtraPropertyDefinitionGridQueryBuilderModifier">
+      <name>actionExtraPropertyDefinitionGridQueryBuilderModifier</name>
+      <title>Modify extra property definition grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for extra property definition grid</description>
+    </hook>
+    <hook id="actionEmailBodyTemplateGridDataModifier">
+      <name>actionEmailBodyTemplateGridDataModifier</name>
+      <title>Modify email body template grid data</title>
+      <description>This hook allows to modify email body template grid data</description>
+    </hook>
+    <hook id="actionExtraPropertyDefinitionGridDataModifier">
+      <name>actionExtraPropertyDefinitionGridDataModifier</name>
+      <title>Modify extra property definition grid data</title>
+      <description>This hook allows to modify extra property definition grid data</description>
+    </hook>
+    <hook id="actionEmailBodyTemplateGridFilterFormModifier">
+      <name>actionEmailBodyTemplateGridFilterFormModifier</name>
+      <title>Modify email body template grid filters</title>
+      <description>This hook allows to modify filters for email body template grid</description>
+    </hook>
+    <hook id="actionExtraPropertyDefinitionGridFilterFormModifier">
+      <name>actionExtraPropertyDefinitionGridFilterFormModifier</name>
+      <title>Modify extra property definition grid filters</title>
+      <description>This hook allows to modify filters for extra property definition grid</description>
+    </hook>
+    <hook id="actionEmailBodyTemplateGridPresenterModifier">
+      <name>actionEmailBodyTemplateGridPresenterModifier</name>
+      <title>Modify email body template grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for email body template grid</description>
+    </hook>
+    <hook id="actionExtraPropertyDefinitionGridPresenterModifier">
+      <name>actionExtraPropertyDefinitionGridPresenterModifier</name>
+      <title>Modify extra property definition grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for extra property definition grid</description>
+    </hook>
+    <hook id="actionNotFound">
+      <name>actionNotFound</name>
+      <title>Action when a page is not found</title>
+      <description>Allows modules to react when a page is not found - log it, redirect or perform other actions.</description>
     </hook>
   </entities>
 </entity_hook>

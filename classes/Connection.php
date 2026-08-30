@@ -113,12 +113,54 @@ class ConnectionCore extends ObjectModel
     /**
      * Check if the current visitor is a bot
      *
+     * @param string|null $userAgent User-Agent string to check; defaults to $_SERVER['HTTP_USER_AGENT']
+     *
      * @return bool
      */
-    public static function isBot()
+    public static function isBot($userAgent = null)
     {
-        if (isset($_SERVER['HTTP_USER_AGENT'])
-            && preg_match('/SeznamBot|BotLink|ahoy|AlkalineBOT|anthill|appie|arale|araneo|AraybOt|ariadne|arks|ATN_Worldwide|Atomz|bbot|Bjaaland|Ukonline|borg\-bot\/0\.9|boxseabot|bspider|calif|christcrawler|CMC\/0\.01|combine|confuzzledbot|CoolBot|cosmos|Internet Cruiser Robot|cusco|cyberspyder|cydralspider|desertrealm, desert realm|digger|DIIbot|grabber|downloadexpress|DragonBot|dwcp|ecollector|ebiness|elfinbot|esculapio|esther|fastcrawler|FDSE|FELIX IDE|ESI|fido|H�m�h�kki|KIT\-Fireball|fouineur|Freecrawl|gammaSpider|gazz|gcreep|golem|googlebot|griffon|Gromit|gulliver|gulper|hambot|havIndex|hotwired|htdig|iajabot|INGRID\/0\.1|Informant|InfoSpiders|inspectorwww|irobot|Iron33|JBot|jcrawler|Teoma|Jeeves|jobo|image\.kapsi\.net|KDD\-Explorer|ko_yappo_robot|label\-grabber|larbin|legs|Linkidator|linkwalker|Lockon|logo_gif_crawler|marvin|mattie|mediafox|MerzScope|NEC\-MeshExplorer|MindCrawler|udmsearch|moget|Motor|msnbot|muncher|muninn|MuscatFerret|MwdSearch|sharp\-info\-agent|WebMechanic|NetScoop|newscan\-online|ObjectsSearch|Occam|Orbsearch\/1\.0|packrat|pageboy|ParaSite|patric|pegasus|perlcrawler|phpdig|piltdownman|Pimptrain|pjspider|PlumtreeWebAccessor|PortalBSpider|psbot|Getterrobo\-Plus|Raven|RHCS|RixBot|roadrunner|Robbie|robi|RoboCrawl|robofox|Scooter|Search\-AU|searchprocess|Senrigan|Shagseeker|sift|SimBot|Site Valet|skymob|SLCrawler\/2\.0|slurp|ESI|snooper|solbot|speedy|spider_monkey|SpiderBot\/1\.0|spiderline|nil|suke|http:\/\/www\.sygol\.com|tach_bw|TechBOT|templeton|titin|topiclink|UdmSearch|urlck|Valkyrie libwww\-perl|verticrawl|Victoria|void\-bot|Voyager|VWbot_K|crawlpaper|wapspider|WebBandit\/1\.0|webcatcher|T\-H\-U\-N\-D\-E\-R\-S\-T\-O\-N\-E|WebMoose|webquest|webreaper|webs|webspider|WebWalker|wget|winona|whowhere|wlm|WOLP|WWWC|none|XGET|Nederland\.zoek|AISearchBot|woriobot|NetSeer|Nutch|YandexBot/i', $_SERVER['HTTP_USER_AGENT'])) {
+        // Last updated : 2026-04
+        $userAgent = $userAgent ?? ($_SERVER['HTTP_USER_AGENT'] ?? null);
+        if ($userAgent !== null
+            && preg_match(
+                '/BotLink|ahoy|AlkalineBOT|anthill|appie|arale|araneo|AraybOt|ariadne|arks|ATN_Worldwide|Atomz|bbot|Bjaaland|Ukonline|borg\-bot\/0\.9|boxseabot|bspider|calif|christcrawler|CMC\/0\.01|combine|confuzzledbot|CoolBot|cosmos|Internet Cruiser Robot|cusco|cyberspyder|cydralspider|desertrealm, desert realm|digger|DIIbot|grabber|downloadexpress|DragonBot|dwcp|ecollector|ebiness|elfinbot|esculapio|esther|fastcrawler|FDSE|FELIX IDE|ESI|fido|H\xc3\xa4m\xc3\xa4h\xc3\xa4kki|KIT\-Fireball|fouineur|Freecrawl|gammaSpider|gazz|gcreep|golem|griffon|Gromit|gulliver|gulper|hambot|havIndex|hotwired|htdig|iajabot|INGRID\/0\.1|Informant|InfoSpiders|inspectorwww|irobot|Iron33|JBot|jcrawler|Teoma|Jeeves|jobo|image\.kapsi\.net|KDD\-Explorer|ko_yappo_robot|label\-grabber|larbin|legs|Linkidator|linkwalker|Lockon|logo_gif_crawler|marvin|mattie|mediafox|MerzScope|NEC\-MeshExplorer|MindCrawler|udmsearch|moget|Motor|msnbot|muncher|muninn|MuscatFerret|MwdSearch|sharp\-info\-agent|WebMechanic|NetScoop|newscan\-online|ObjectsSearch|Occam|Orbsearch\/1\.0|packrat|pageboy|ParaSite|patric|pegasus|perlcrawler|phpdig|piltdownman|Pimptrain|pjspider|PlumtreeWebAccessor|PortalBSpider|psbot|Getterrobo\-Plus|Raven|RHCS|RixBot|roadrunner|Robbie|robi|RoboCrawl|robofox|Scooter|Search\-AU|searchprocess|Senrigan|Shagseeker|sift|SimBot|Site Valet|skymob|SLCrawler\/2\.0|slurp|ESI|snooper|solbot|speedy|spider_monkey|SpiderBot\/1\.0|spiderline|nil|suke|http:\/\/www\.sygol\.com|tach_bw|TechBOT|templeton|titin|topiclink|UdmSearch|urlck|Valkyrie libwww\-perl|verticrawl|Victoria|void\-bot|Voyager|VWbot_K|crawlpaper|wapspider|WebBandit\/1\.0|webcatcher|T\-H\-U\-N\-D\-E\-R\-S\-T\-O\-N\-E|WebMoose|webquest|webreaper|webs|webspider|WebWalker|wget|winona|whowhere|wlm|WOLP|WWWC|none|XGET|Nederland\.zoek|AISearchBot|woriobot|NetSeer|Nutch|YandexBot'
+                // Search engine crawlers
+                . '|bingbot'       // Microsoft Bing: https://www.bing.com/webmasters/help/which-crawlers-does-bing-use-8c184ec0
+                . '|Baiduspider'   // Baidu: https://help.baidu.com/question?prod_id=99&class=476&id=2996
+                . '|Applebot'      // Apple: https://support.apple.com/en-us/111900
+                . '|Amazonbot'     // Amazon: https://developer.amazon.com/amazonbot
+                . '|SeznamBot'     // Seznam.cz: https://o-seznam.cz/napoveda/vyhledavani/en/seznambot-crawler/
+                . '|Googlebot' // Google: https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers
+                . '|AdsBot-Google' // Google: https://developers.google.com/crawling/docs/crawlers-fetchers/google-special-case-crawlers
+                // SEO tools crawlers
+                . '|AhrefsBot'     // Ahrefs: https://ahrefs.com/robot
+                . '|SemrushBot'    // Semrush: https://www.semrush.com/bot/
+                . '|DotBot'        // Moz
+                . '|MJ12bot'       // Majestic
+                . '|PetalBot'      // Huawei Petal Search
+                . '|DataForSeoBot' // DataForSEO: https://dataforseo.com/dataforseo-bot
+                // AI crawlers
+                . '|GPTBot'        // OpenAI: https://platform.openai.com/docs/gptbot
+                . '|ClaudeBot'     // Anthropic: https://support.anthropic.com/en/articles/8896518
+                . '|CCBot'         // Common Crawl: https://commoncrawl.org/ccbot
+                . '|Bytespider'    // ByteDance/TikTok
+                . '|PerplexityBot' // Perplexity AI: https://docs.perplexity.ai/docs/resources/perplexity-crawlers
+                // Other major crawlers
+                . '|DuckDuckBot'   // DuckDuckGo: https://duckduckgo.com/duckduckbot
+                . '|ia_archiver'   // Internet Archive Wayback Machine
+                // Social media crawlers
+                . '|facebookexternalhit' // Meta: https://developers.facebook.com/docs/sharing/webmasters/crawler/
+                . '|Twitterbot'    // X/Twitter
+                . '|LinkedInBot'   // LinkedIn
+                . '|Slackbot'      // Slack: https://api.slack.com/robots
+                . '|Discordbot'    // Discord
+                . '|TelegramBot'   // Telegram
+                // Performance & audit tools
+                . '|lighthouse'    // Google Lighthouse
+                . '|PageSpeed'     // Google PageSpeed Insights
+                . '/i',
+                $userAgent
+            )) {
             return true;
         }
 

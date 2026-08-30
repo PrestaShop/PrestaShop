@@ -107,19 +107,17 @@ final class HookDataCollector extends DataCollector
      */
     private function stringifyHookArguments(array &$hooksList)
     {
-        foreach ($hooksList as &$hookList) {
-            foreach ($hookList as &$hook) {
-                $hook['args'] = $this->cloneVar($hook['args']);
+        foreach ($hooksList as &$hook) {
+            $hook['args'] = $this->cloneVar($hook['args']);
 
-                foreach ($hook['modules'] as &$modulesByType) {
-                    foreach ($modulesByType as $type => &$module) {
-                        if (empty($module)) {
-                            unset($modulesByType[$type]);
-                        }
+            foreach ($hook['modules'] as &$modulesByType) {
+                foreach ($modulesByType as $type => &$module) {
+                    if (empty($module)) {
+                        unset($modulesByType[$type]);
+                    }
 
-                        if (array_key_exists('args', $module)) {
-                            $module['args'] = $this->cloneVar($module['args']);
-                        }
+                    if (array_key_exists('args', $module)) {
+                        $module['args'] = $this->cloneVar($module['args']);
                     }
                 }
             }

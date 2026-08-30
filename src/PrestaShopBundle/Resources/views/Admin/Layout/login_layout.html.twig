@@ -40,13 +40,13 @@
                   {% if flashbagContent|length > 1 %}
                     <ul class="alert-text">
                       {% for flashMessage in flashbagContent %}
-                        <li>{{ flashMessage|raw }}</li>
+                        <li>{{ flashMessage|raw_purified }}</li>
                       {% endfor %}
                     </ul>
                   {% else %}
                     <div class="alert-text">
                       {% for flashMessage in flashbagContent %}
-                        <p>{{ flashMessage|raw }}</p>
+                        <p>{{ flashMessage|raw_purified }}</p>
                       {% endfor %}
                     </div>
                   {% endif %}

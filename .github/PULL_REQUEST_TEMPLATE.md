@@ -1,4 +1,15 @@
 <!-----------------------------------------------------------------------------
+⚠️ SECURITY WARNING — READ BEFORE OPENING THIS PULL REQUEST ⚠️
+
+If this pull request fixes or relates to a SECURITY vulnerability, DO NOT open
+it here. Public pull requests disclose the vulnerability to everyone, including
+attackers, before a fix is released.
+
+Please report security issues privately by contacting
+security-core@prestashop.com instead.
+------------------------------------------------------------------------------>
+
+<!-----------------------------------------------------------------------------
 Thank you for contributing to the PrestaShop project!
 
 Please take the time to edit the "Answers" rows below with the necessary information.
@@ -12,7 +23,7 @@ https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/pull
 
 | Questions         | Answers
 | ----------------- | -------------------------------------------------------
-| Branch?           | develop / 9.1.x
+| Branch?           | develop / 9.2.x / 9.1.x
 | Description?      | Please be specific when describing the PR. <br> Every detail helps: versions, browser/server configuration, specific module/theme, etc. Feel free to add more information below this table.
 | Type?             | bug fix / improvement / new feature / refacto
 | Category?         | FO / BO / CO / IN / WS / TE / LO / ME / PM / see explanations at https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/pull-requests/#type--category

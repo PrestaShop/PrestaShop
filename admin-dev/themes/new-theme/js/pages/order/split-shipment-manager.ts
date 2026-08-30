@@ -125,7 +125,7 @@ export default class SplitShipmentManager {
   }
 
   private get modal(): HTMLDivElement {
-    const modal = document.querySelector(OrderViewPageMap.splitShipmentModal) as HTMLDivElement;
+    const modal = document.querySelector<HTMLDivElement>(OrderViewPageMap.splitShipmentModal);
 
     if (!modal) {
       throw new Error('Split shipment modal not found');
@@ -134,7 +134,7 @@ export default class SplitShipmentManager {
   }
 
   private get form(): HTMLFormElement {
-    const form = document.forms.namedItem(OrderViewPageMap.splitShipmentFormName) as HTMLFormElement;
+    const form = document.forms.namedItem(OrderViewPageMap.splitShipmentFormName);
 
     if (!form) {
       throw new Error('Split shipment form not found');
@@ -143,9 +143,7 @@ export default class SplitShipmentManager {
   }
 
   private get submitButton(): HTMLButtonElement {
-    const btn = document.querySelector<HTMLButtonElement>(
-      OrderViewPageMap.splitShipmentFormSubmitButton,
-    );
+    const btn = document.querySelector<HTMLButtonElement>(OrderViewPageMap.splitShipmentFormSubmitButton);
 
     if (!btn) {
       throw new Error('Submit button not found');
@@ -159,9 +157,7 @@ export default class SplitShipmentManager {
     this.form.removeEventListener('change', this.handleFormChange);
     this.form.addEventListener('change', this.handleFormChange);
 
-    const carrierSelect = this.form.querySelector(
-      OrderViewPageMap.splitShipmentCarrierSelector,
-    ) as HTMLSelectElement;
+    const carrierSelect = this.form.querySelector<HTMLSelectElement>(OrderViewPageMap.splitShipmentCarrierSelector);
     const formIsValid = this.form.dataset.isValid;
 
     this.toggleSubmitButton(!!carrierSelect?.value && !!formIsValid);

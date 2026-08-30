@@ -8,9 +8,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessGenerator;
+use PrestaShopBundle\Security\Admin\UserTokenManager;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/quick_access.html.twig')]
@@ -45,6 +50,10 @@ class QuickAccess
         protected readonly RequestStack $requestStack,
         protected readonly MenuBuilder $menuBuilder,
         protected readonly QuickAccessGenerator $quickAccessGenerator,
+        protected readonly RouterInterface $router,
+        protected readonly UserTokenManager $userTokenManager,
+        protected readonly LegacyContext $legacyContext,
+        protected readonly FeatureFlagStateCheckerInterface $featureFlagChecker,
     ) {
     }
 
@@ -118,6 +127,49 @@ class QuickAccess
         }
 
         return $this->currentPageIcon;
+    }
+
+    public function getManageUrl(): string
+    {
+        if ($this->featureFlagChecker->isEnabled('quick_access')) {
+            return $this->router->generate(
+                'admin_quick_accesses_index',
+                [],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
+
+        return $this->legacyContext->getContext()->link->getAdminLink('AdminQuickAccesses');
+    }
+
+    public function getAjaxAddUrl(): string
+    {
+        if ($this->featureFlagChecker->isEnabled('quick_access')) {
+            return $this->router->generate(
+                'admin_quick_accesses_ajax_add',
+                ['_token' => $this->userTokenManager->getSymfonyToken()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
+
+        return $this->legacyContext->getContext()->link->getAdminLink(
+            'AdminQuickAccesses', true, [], ['action' => 'GetUrl', 'ajax' => 1]
+        );
+    }
+
+    public function getAjaxDeleteUrl(): string
+    {
+        if ($this->featureFlagChecker->isEnabled('quick_access')) {
+            return $this->router->generate(
+                'admin_quick_accesses_ajax_delete',
+                ['_token' => $this->userTokenManager->getSymfonyToken()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
+
+        return $this->legacyContext->getContext()->link->getAdminLink(
+            'AdminQuickAccesses', true, [], ['action' => 'GetUrl', 'ajax' => 1]
+        );
     }
 
     protected function fillCurrentUrlFields(): void

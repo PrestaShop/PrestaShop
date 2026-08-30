@@ -1,4 +1,5 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -106,6 +107,37 @@ class ReleaseCreator
         'admin/themes/new\-theme/scss$',
         'themes/_core$',
         'themes/classic/_dev',
+        'themes/hummingbird/\.storybook$',
+        'themes/hummingbird/docker$',
+        'themes/hummingbird/docs$',
+        'themes/hummingbird/src$',
+        'themes/hummingbird/stories$',
+        'themes/hummingbird/types$',
+        'themes/hummingbird/vendor$',
+        'themes/hummingbird/webpack$',
+        'themes/hummingbird/\.aider\.conf\.yml$',
+        'themes/hummingbird/\.antigravityrules$',
+        'themes/hummingbird/\.cursorrules$',
+        'themes/hummingbird/\.editorconfig$',
+        'themes/hummingbird/\.eslintignore$',
+        'themes/hummingbird/\.eslintrc\.js$',
+        'themes/hummingbird/\.nvmrc$',
+        'themes/hummingbird/\.gitignore$',
+        'themes/hummingbird/\.opencoderules$',
+        'themes/hummingbird/\.prettierrc\.js$',
+        'themes/hummingbird/\.stylelintignore$',
+        'themes/hummingbird/\.stylelintrc$',
+        'themes/hummingbird/\.windsurfrules$',
+        'themes/hummingbird/babel\.config\.js$',
+        'themes/hummingbird/CLAUDE\.md$',
+        'themes/hummingbird/composer\.lock$',
+        'themes/hummingbird/CONTEXT\.md$',
+        'themes/hummingbird/jest\.config\.js$',
+        'themes/hummingbird/package\-lock\.json$',
+        'themes/hummingbird/package\.json$',
+        'themes/hummingbird/postcss\.config\.js$',
+        'themes/hummingbird/tsconfig\.json$',
+        'themes/hummingbird/webpack\.config\.js$',
         'themes/webpack\.config\.js$',
         'themes/package\.json$',
         'vendor\/[a-zA-Z0-0_-]+\/[a-zA-Z0-0_-]+\/[Tt]ests?$',
@@ -121,7 +153,14 @@ class ReleaseCreator
         'tools/assets$',
         '\.webpack$',
         'rector\.php',
-        'phpstan(.*)?',
+        '^(?!.*vendor).*phpstan.*\.neon',
+        '\.header-stamp.*',
+        // Filter AI tools (MD files are alredy filtered via a generic rule above)
+        '\.ai.*',
+        '\.claude.*',
+        '\.cursor.*',
+        '\.windsurf.*',
+        '\.github/copilot-instructions\.md$',
     ];
 
     /**
@@ -369,7 +408,7 @@ class ReleaseCreator
      */
     protected function getCurrentVersion()
     {
-        require_once $this->projectPath.'/src/Core/Version.php';
+        require_once $this->projectPath . '/src/Core/Version.php';
         return \PrestaShop\PrestaShop\Core\Version::VERSION;
     }
 
@@ -381,33 +420,33 @@ class ReleaseCreator
      */
     protected function setupShopVersion()
     {
-        $kernelFile = $this->tempProjectPath.'/app/AppKernel.php';
+        $kernelFile = $this->tempProjectPath . '/app/AppKernel.php';
         $version = new Version($this->version);
 
         $kernelFileContent = file_get_contents($kernelFile);
         $kernelFileContent = preg_replace(
             '~const VERSION = \'(.*)\';~',
-            "const VERSION = '".$version->getVersion()."';",
+            "const VERSION = '" . $version->getVersion() . "';",
             $kernelFileContent
         );
         $kernelFileContent = preg_replace(
             '~const MAJOR_VERSION_STRING = \'(.*)\';~',
-            "const MAJOR_VERSION_STRING = '".$version->getMajorVersionString()."';",
+            "const MAJOR_VERSION_STRING = '" . $version->getMajorVersionString() . "';",
             $kernelFileContent
         );
         $kernelFileContent = preg_replace(
             '~const MAJOR_VERSION = (.*);~',
-            "const MAJOR_VERSION = ".$version->getMajorVersion().";",
+            "const MAJOR_VERSION = " . $version->getMajorVersion() . ";",
             $kernelFileContent
         );
         $kernelFileContent = preg_replace(
             '~const MINOR_VERSION = (.*);~',
-            "const MINOR_VERSION = ".$version->getMinorVersion().";",
+            "const MINOR_VERSION = " . $version->getMinorVersion() . ";",
             $kernelFileContent
         );
         $kernelFileContent = preg_replace(
             '~const RELEASE_VERSION = (.*);~',
-            "const RELEASE_VERSION = ".$version->getReleaseVersion().";",
+            "const RELEASE_VERSION = " . $version->getReleaseVersion() . ";",
             $kernelFileContent
         );
 
@@ -426,7 +465,7 @@ class ReleaseCreator
      */
     protected function setInstallDevConfigurationConstants()
     {
-        $configPath = $this->tempProjectPath.'/install-dev/data/xml/configuration.xml';
+        $configPath = $this->tempProjectPath . '/install-dev/data/xml/configuration.xml';
 
         if (file_exists($configPath)) {
             $configPathContent = file_get_contents($configPath);
@@ -475,7 +514,7 @@ class ReleaseCreator
         $iterator = new \RecursiveIteratorIterator($directory);
         $regex = new \RegexIterator($iterator, '/^.*\/.*license(\.txt)?$/i', \RecursiveRegexIterator::GET_MATCH);
 
-        foreach($regex as $file => $value) {
+        foreach ($regex as $file => $value) {
             $content .= file_get_contents($file) . "\r\n\r\n";
         }
 
@@ -747,7 +786,7 @@ class ReleaseCreator
 
                 // Remove files.
                 foreach ($filesRemoveList as $file_to_remove) {
-                    if ($folder.'/'.$file_to_remove == $value) {
+                    if ($folder . '/' . $file_to_remove == $value) {
                         unset($filesList[$key]);
                         exec("rm -f {$argValue}");
 
@@ -757,7 +796,7 @@ class ReleaseCreator
 
                 // Remove folders.
                 foreach ($foldersRemoveList as $folder_to_remove) {
-                    if ($folder.'/'.$folder_to_remove == $value) {
+                    if ($folder . '/' . $folder_to_remove == $value) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argValue}");
 
@@ -767,7 +806,7 @@ class ReleaseCreator
 
                 // Pattern to remove.
                 foreach ($patternsRemoveList as $pattern_to_remove) {
-                    if (preg_match('#'.$pattern_to_remove.'#', $value) == 1) {
+                    if (preg_match('#' . $pattern_to_remove . '#', $value) == 1) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argValue}");
 
@@ -779,7 +818,7 @@ class ReleaseCreator
 
                 // Remove folders.
                 foreach ($foldersRemoveList as $folder_to_remove) {
-                    if ($folder.'/'.$folder_to_remove == $key) {
+                    if ($folder . '/' . $folder_to_remove == $key) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argKey}");
 
@@ -789,7 +828,7 @@ class ReleaseCreator
 
                 // Pattern to remove.
                 foreach ($patternsRemoveList as $pattern_to_remove) {
-                    if (preg_match('#'.$pattern_to_remove.'#', $key) == 1) {
+                    if (preg_match('#' . $pattern_to_remove . '#', $key) == 1) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argKey}");
 

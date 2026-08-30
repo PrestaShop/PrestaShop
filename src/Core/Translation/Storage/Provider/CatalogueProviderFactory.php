@@ -9,6 +9,7 @@ namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ExtraPropertyTranslationExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\LegacyModuleExtractorInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ThemeExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader;
@@ -58,6 +59,11 @@ class CatalogueProviderFactory
     private $translationsDirectory;
 
     /**
+     * @var ExtraPropertyTranslationExtractor
+     */
+    private $extraPropertyTranslationExtractor;
+
+    /**
      * @var ThemeExtractor
      */
     private $themeExtractor;
@@ -92,6 +98,7 @@ class CatalogueProviderFactory
      * @param string $themesDirectory
      * @param string $modulesDirectory
      * @param string $translationsDirectory
+     * @param ExtraPropertyTranslationExtractor $extraPropertyTranslationExtractor
      */
     public function __construct(
         DatabaseTranslationLoader $databaseTranslationLoader,
@@ -102,7 +109,8 @@ class CatalogueProviderFactory
         Filesystem $filesystem,
         string $themesDirectory,
         string $modulesDirectory,
-        string $translationsDirectory
+        string $translationsDirectory,
+        ExtraPropertyTranslationExtractor $extraPropertyTranslationExtractor
     ) {
         $this->databaseTranslationLoader = $databaseTranslationLoader;
         $this->legacyModuleExtractor = $legacyModuleExtractor;
@@ -113,12 +121,14 @@ class CatalogueProviderFactory
         $this->themeRepository = $themeRepository;
         $this->filesystem = $filesystem;
         $this->themesDirectory = $themesDirectory;
+        $this->extraPropertyTranslationExtractor = $extraPropertyTranslationExtractor;
         $this->moduleCatalogueProviderFactory = new ModuleCatalogueProviderFactory(
             $this->databaseTranslationLoader,
             $this->legacyModuleExtractor,
             $this->legacyFileLoader,
             $this->modulesDirectory,
-            $this->translationsDirectory
+            $this->translationsDirectory,
+            $this->extraPropertyTranslationExtractor
         );
     }
 
@@ -160,7 +170,8 @@ class CatalogueProviderFactory
                 $this->databaseTranslationLoader,
                 $this->translationsDirectory,
                 $providerDefinition->getFilenameFilters(),
-                $providerDefinition->getTranslationDomains()
+                $providerDefinition->getTranslationDomains(),
+                $this->extraPropertyTranslationExtractor
             );
         }
 
@@ -187,7 +198,8 @@ class CatalogueProviderFactory
                 array_merge(
                     $coreFrontProviderDefinition->getTranslationDomains(),
                     $modulesProviderDefinition->getTranslationDomains()
-                )
+                ),
+                $this->extraPropertyTranslationExtractor
             );
 
             $this->providers[$providerDefinition->getType()] = new ThemeCatalogueLayersProvider(

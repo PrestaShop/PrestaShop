@@ -122,7 +122,7 @@ Feature: Add discount with single customer eligibility
       | minimum_product_quantity | 0                      |
     Then discount "free_shipping_for_jane" should have the following properties:
       | name[en-US] | Free Shipping for Jane |
-      | name[fr-FR] |                        |
+      | name[fr-FR] | Free Shipping for Jane |
       | type        | free_shipping          |
       | customer    | jane_smith             |
 

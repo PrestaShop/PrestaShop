@@ -5,7 +5,7 @@
 {strip}
 <a href="javascript:void(0)" class="multistore-toggle dropdown-toggle" data-toggle="dropdown">
     <i class="material-icons">visibility</i>
-    <span>{$current_shop_name}</span>
+    <span>{$current_shop_name|escape:'html':'UTF-8'}</span>
 </a>
 <ul class="dropdown-menu dropdown-menu-right list-dropdown-menu">
     <li class="{if !isset($current_shop_value) || $current_shop_value == ''} active {/if} all-stores">
@@ -27,7 +27,7 @@
                 {if ($shop_data['active'])}
                     <li class="shop{if $current_shop_value == 's-'|cat:$shop_id} active{/if}{if $shop_data['uri'] == NULL} disabled{/if}">
                         <a href="{if $shop_data['uri'] == NULL}#{else}{$url|escape:'html':'UTF-8'}s-{$shop_id}{/if}">
-                            {$shop_data['name']}
+                            {$shop_data['name']|escape:'html':'UTF-8'}
                         </a>
 
                         {if $shop_data['uri'] == NULL}

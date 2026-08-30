@@ -8,6 +8,9 @@ namespace PrestaShop\PrestaShop\Core\Import\File\DataCell;
 
 /**
  * Class EmptyDataCell defines an empty data cell.
+ *
+ * @deprecated since 9.3, part of the legacy DataRow reading layer — the import
+ * engine reads records as plain string arrays
  */
 final class EmptyDataCell implements DataCellInterface
 {

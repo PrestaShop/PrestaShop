@@ -56,3 +56,13 @@ admin_common_secured_file_image_reader:
   methods: [ GET ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\SecuredFileReaderController::readUploadDocument'
+
+admin_common_extra_properties_toggle:
+  # No {shopId} parameter: the shop context of shop-scoped toggles is resolved
+  # server-side from ShopContext, never from the client.
+  path: /extra-properties/toggle/{entityName}/{entityId}/{moduleName}/{propertyName}
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::toggleExtraPropertyAction'
+  options:
+    expose: true

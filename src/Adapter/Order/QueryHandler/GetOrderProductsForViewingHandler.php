@@ -16,6 +16,7 @@ use OrderReturn;
 use OrderSlip;
 use Pack;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
@@ -43,7 +44,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         private readonly ImageTagSourceParserInterface $imageTagSourceParser,
         private readonly int $contextLanguageId,
         private readonly Locale $locale,
-        private readonly ShipmentRepository $shipmentRepository
+        private readonly ShipmentRepository $shipmentRepository,
+        private readonly ModuleHtmlAuthorizationChecker $moduleHtmlAuthorizationChecker
     ) {
     }
 
@@ -82,7 +84,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                                 $customizations[] = new OrderProductCustomizationForViewing(
                                     (int) $data['type'],
                                     (string) $data['name'],
-                                    $data['value']
+                                    (string) $data['value'],
+                                    $this->moduleHtmlAuthorizationChecker->isModuleHtmlAllowed((int) ($data['id_module'] ?? 0))
                                 );
                             }
                         }
@@ -236,7 +239,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $product['location'],
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
                 !empty($product['id_order_invoice'])
-                    ? $orderInvoice->getInvoiceNumberFormatted((int) $order->getAssociatedLanguage()->getId())
+                    ? $orderInvoice->getInvoiceNumberFormatted($this->contextLanguageId)
                     : '',
                 $productType,
                 (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product['product_id'])),

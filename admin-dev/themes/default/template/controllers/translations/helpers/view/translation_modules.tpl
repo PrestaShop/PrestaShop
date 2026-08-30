@@ -178,7 +178,7 @@
             <select name="module" id="installed_module">
               <option value="">{l s='Module' d='Admin.Global'}</option>
               {foreach from=$installed_modules key=key item=module}
-                <option value="{$module}">{$module}</option>
+                <option value="{$module|escape:'html':'UTF-8'}">{$module|escape:'html':'UTF-8'}</option>
               {/foreach}
             </select>
           </div>

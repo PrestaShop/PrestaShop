@@ -87,7 +87,7 @@ class ProductSpecificPricePriorityType extends TranslatorAwareType
         return $this->trans(
             'Use default order: [1]{priority_list}[/1]',
             'Admin.Catalog.Feature',
-            ['[1]' => '<strong>&nbsp', '[/1]' => '</strong>', '{priority_list}' => $defaultPriorities]
+            ['[1]' => '<strong>&nbsp;', '[/1]' => '</strong>', '{priority_list}' => $defaultPriorities]
         );
     }
 

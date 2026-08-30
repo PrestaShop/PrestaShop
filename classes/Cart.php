@@ -1428,6 +1428,15 @@ class CartCore extends ObjectModel
             }
         }
 
+        // If the cart rule offers a gift product, verify it exists before inserting into cart_cart_rule
+        $giftProduct = null;
+        if ((int) $cartRule->gift_product) {
+            $giftProduct = new Product((int) $cartRule->gift_product);
+            if (!Validate::isLoadedObject($giftProduct)) {
+                return false;
+            }
+        }
+
         // Add the cart rule to the cart
         if (!Db::getInstance()->insert('cart_cart_rule', [
             'id_cart_rule' => (int) $id_cart_rule,
@@ -1447,7 +1456,8 @@ class CartCore extends ObjectModel
         Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT . '-ids');
         Cache::clean('getContextualValue_*');
 
-        if ((int) $cartRule->gift_product) {
+        // Add the gift product to the cart
+        if ($giftProduct !== null) {
             $this->updateQty(
                 1,
                 $cartRule->gift_product,
@@ -1680,6 +1690,18 @@ class CartCore extends ObjectModel
         }
 
         if (!Validate::isLoadedObject($product)) {
+            // Product may have been deleted from catalog but still exist in a cart/order; deleteProduct only needs IDs.
+            if ($operator === 'down') {
+                PrestaShopLogger::addLog(
+                    sprintf('Cart::updateQty - Product with ID "%s" could not be loaded, removing it from cart.', $id_product),
+                    PrestaShopLogger::LOG_SEVERITY_LEVEL_WARNING,
+                    null,
+                    'Cart',
+                    (int) $this->id
+                );
+
+                return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization, 0, $preserveGiftRemoval, $useOrderPrices);
+            }
             throw new PrestaShopException(sprintf('Product with ID "%s" could not be loaded.', $id_product));
         }
 
@@ -2310,13 +2332,13 @@ class CartCore extends ObjectModel
      *
      * @param array $products list of products to calculate on
      * @param array $cartRules list of cart rules to apply
-     * @param int $id_carrier carrier id (fees calculation)
+     * @param int|null $id_carrier carrier id (fees calculation)
      * @param int|null $computePrecision
      * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return Calculator
      */
-    public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null, bool $keepOrderPrices = false)
+    public function newCalculator($products, $cartRules, $id_carrier = null, $computePrecision = null, bool $keepOrderPrices = false)
     {
         $orderId = null;
         if ($keepOrderPrices) {
@@ -3682,6 +3704,19 @@ class CartCore extends ObjectModel
         // Order total in default currency without fees
         $order_total = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list, $id_carrier, false, $keepOrderPrices);
 
+        // When the improved_shipment feature is enabled and this call is scoped to a specific shipment,
+        // $order_total above is actually the value of the shipment contents: keep it as $shipment_total and recompute
+        // $order_total so it always reflects the whole order, as expected by the actionDeliveryPriceByPrice hook.
+        $shipment_total = null;
+        if (null !== $product_list) {
+            $containerFinder = new ContainerFinder(Context::getContext());
+            $featureFlagManager = $containerFinder->getContainer()->get(FeatureFlagStateCheckerInterface::class);
+            if ($featureFlagManager !== null && $featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)) {
+                $shipment_total = $order_total;
+                $order_total = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, $id_carrier, false, $keepOrderPrices);
+            }
+        }
+
         // Start with shipping cost at 0
         $shipping_cost = 0;
 
@@ -3773,7 +3808,7 @@ class CartCore extends ObjectModel
 
                     // If the carrier has price based shipping, remove the carrier if it does not have a compatible range
                     if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
-                        && Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $order_total, (int) $id_zone, (int) $this->id_currency) === false) {
+                        && Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $order_total, (int) $id_zone, (int) $this->id_currency, $shipment_total) === false) {
                         continue;
                     }
                 }
@@ -3782,7 +3817,7 @@ class CartCore extends ObjectModel
                 if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT) {
                     $shipping = $carrier->getDeliveryPriceByWeight($this->getTotalWeight($product_list), (int) $id_zone);
                 } else {
-                    $shipping = $carrier->getDeliveryPriceByPrice($order_total, (int) $id_zone, (int) $this->id_currency);
+                    $shipping = $carrier->getDeliveryPriceByPrice($order_total, (int) $id_zone, (int) $this->id_currency, $shipment_total);
                 }
 
                 // And if it's the first carrier we check OR it's cheaper, we use the ID
@@ -3935,21 +3970,21 @@ class CartCore extends ObjectModel
         if ($carrier->range_behavior == OutOfRangeBehavior::DISABLED) {
             if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int) $id_zone) === false)
                 || (
-                    $shipping_method == Carrier::SHIPPING_METHOD_PRICE && Carrier::checkDeliveryPriceByPrice($carrier->id, $order_total, $id_zone, (int) $this->id_currency) === false
+                    $shipping_method == Carrier::SHIPPING_METHOD_PRICE && Carrier::checkDeliveryPriceByPrice($carrier->id, $order_total, $id_zone, (int) $this->id_currency, $shipment_total) === false
                 )) {
                 $shipping_cost += 0;
             } else {
                 if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT) {
                     $shipping_cost += $carrier->getDeliveryPriceByWeight($this->getTotalWeight($product_list), $id_zone);
                 } else { // by price
-                    $shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int) $this->id_currency);
+                    $shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int) $this->id_currency, $shipment_total);
                 }
             }
         } else {
             if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT) {
                 $shipping_cost += $carrier->getDeliveryPriceByWeight($this->getTotalWeight($product_list), $id_zone);
             } else {
-                $shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int) $this->id_currency);
+                $shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int) $this->id_currency, $shipment_total);
             }
         }
 

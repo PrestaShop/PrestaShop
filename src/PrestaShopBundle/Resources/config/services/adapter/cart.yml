@@ -72,6 +72,11 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\ImageManager'
       - "@prestashop.core.localization.locale.context_locale"
+      - '@PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker'
+
+  prestashop.adapter.cart.query_handler.get_cart_total_for_viewing_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetCartTotalForViewingHandler'
+    autoconfigure: true
 
   prestashop.adapter.cart.query_handler.get_last_empty_customer_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetLastEmptyCustomerCartHandler'

@@ -22,6 +22,45 @@
   }
 }
 
+.entity-search-widget {
+  .customer-disabled-badge,
+  .customer-guest-badge {
+    display: none;
+    color: $gray-800;
+  }
+
+  .customer-disabled-badge {
+    margin-right: 0.25rem;
+    margin-left: auto;
+  }
+
+  .customer-guest-badge {
+    margin-right: 0.5rem;
+  }
+
+  [data-customer-active="0"] .customer-disabled-badge {
+    display: inline-block;
+  }
+
+  [data-customer-guest="1"] .customer-guest-badge {
+    display: inline-block;
+  }
+
+  .customer-suggestion-disabled-badge,
+  .customer-suggestion-guest-badge {
+    display: none;
+    margin-left: 0.35rem;
+    color: $gray-800;
+  }
+
+  .tt-suggestion {
+    .customer-suggestion-disabled-badge,
+    .customer-suggestion-guest-badge {
+      display: inline-block;
+    }
+  }
+}
+
 .specific-product-item {
   .form-group {
     margin-bottom: 0;

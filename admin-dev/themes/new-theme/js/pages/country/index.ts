@@ -16,4 +16,5 @@ $(() => {
   countryGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
   countryGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
   countryGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  countryGrid.addExtension(new window.prestashop.component.GridExtensions.ModalFormSubmitExtension());
 });

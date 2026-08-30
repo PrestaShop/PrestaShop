@@ -9,9 +9,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Command\AddTagCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Command\EditTagCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tag\ValueObject\TagId;
 
 class TagFormDataHandler implements FormDataHandlerInterface
 {
@@ -22,14 +22,14 @@ class TagFormDataHandler implements FormDataHandlerInterface
 
     public function create(array $data)
     {
-        /** @var CreatedApiClient $createdApiClient */
-        $createdApiClient = $this->commandBus->handle(new AddTagCommand(
+        /** @var TagId $tagId */
+        $tagId = $this->commandBus->handle(new AddTagCommand(
             $data['name'],
             (int) $data['language'],
             $this->getProductIds($data['products']),
         ));
 
-        return $createdApiClient;
+        return $tagId->getValue();
     }
 
     public function update($id, array $data)

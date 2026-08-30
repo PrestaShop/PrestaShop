@@ -1581,7 +1581,8 @@ $product-page-padding-bottom: 80px !default;
     border: none;
   }
 
-  .employee_preview {
+  .employee_preview,
+  .api_client_preview {
     display: inline-block;
     max-width: 300px;
     overflow: hidden;
@@ -2082,6 +2083,62 @@ $product-page-padding-bottom: 80px !default;
   .accordion-form-button.has-error {
     color: var(--#{$cdk}red-300);
     border-top: var(--#{$cdk}size-3) solid var(--#{$cdk}red-300);
+  }
+
+  .combination-product-features-controls {
+    display: flex;
+    flex-direction: row;
+    // The combination form lives in a modal narrower than the page, wrap instead of
+    // switching to a full column layout so the controls stay side by side when possible.
+    flex-wrap: wrap;
+    gap: var(--#{$cdk}size-36);
+
+    .select2 {
+      min-width: 250px;
+    }
+
+    .combination-feature-value-spinner {
+      position: relative;
+      min-width: 250px;
+      line-height: var(--#{$cdk}size-36);
+
+      .spinner {
+        position: relative;
+        top: var(--#{$cdk}size-4);
+        width: var(--#{$cdk}size-18);
+        height: var(--#{$cdk}size-18);
+      }
+    }
+
+    .combination-new-custom-values {
+      &.d-none {
+        // stylelint-disable-next-line
+        display: none !important;
+      }
+
+      max-width: 350px;
+    }
+
+    .combination-feature-value-add-button {
+      padding: var(--#{$cdk}size-6) var(--#{$cdk}size-16);
+    }
+  }
+
+  .combination-feature-values-table-collection {
+    max-width: 860px;
+
+    .form-group {
+      margin-bottom: 0;
+      text-align: left;
+
+      .locale-input-group {
+        max-width: var(--#{$cdk}size-320);
+      }
+    }
+
+    .combination-product-feature-collection {
+      display: none;
+    }
   }
 }
 

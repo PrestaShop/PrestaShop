@@ -29,6 +29,8 @@ use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderDetailRepository;
+use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductAssigner;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
@@ -36,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
@@ -88,19 +92,15 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     private $orderDetailUpdater;
 
-    /**
-     * @param TranslatorInterface $translator
-     * @param ContextStateManager $contextStateManager
-     * @param OrderAmountUpdater $orderAmountUpdater
-     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
-     * @param OrderDetailUpdater $orderDetailUpdater
-     */
     public function __construct(
         TranslatorInterface $translator,
         ContextStateManager $contextStateManager,
         OrderAmountUpdater $orderAmountUpdater,
         OrderProductQuantityUpdater $orderProductQuantityUpdater,
-        OrderDetailUpdater $orderDetailUpdater
+        OrderDetailUpdater $orderDetailUpdater,
+        private OrderDetailRepository $orderDetailRepository,
+        private FeatureFlagStateCheckerInterface $featureFlagStateCheckerInterface,
+        private ShipmentProductAssigner $shipmentProductAssigner,
     ) {
         $this->context = Context::getContext();
         $this->translator = $translator;
@@ -200,8 +200,31 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $updateModifications
             );
 
-            // Update totals amount of order
-            $this->orderAmountUpdater->update($order, $cart, null !== $invoice ? (int) $invoice->id : null);
+            if (
+                $this->featureFlagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)
+                && $command->isVirtual() !== null && $command->isVirtual() === false
+            ) {
+                $orderDetail = $this->orderDetailRepository->findByOrderIdAndProductId(
+                    $command->getOrderId(),
+                    $command->getProductId(),
+                    $command->getCombinationId()
+                );
+
+                $this->shipmentProductAssigner->assign(
+                    $command->getShipmentId(),
+                    $order,
+                    $orderDetail,
+                    $command->getCarrierId()
+                );
+            }
+
+            if (
+                !$this->featureFlagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)
+            ) {
+                // Update totals amount of order
+                $this->orderAmountUpdater->update($order, $cart, null !== $invoice ? (int) $invoice->id : null);
+            }
+
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } finally {
             $this->contextStateManager->restorePreviousContext();

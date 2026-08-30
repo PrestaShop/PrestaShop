@@ -135,7 +135,7 @@ class ProductAttributeCore extends ObjectModel
     public function add($autoDate = true, $nullValues = false)
     {
         if ($this->position <= 0) {
-            $this->position = static::getHigherPosition($this->id_attribute_group) + 1;
+            $this->position = static::getHighestPosition($this->id_attribute_group) + 1;
         }
 
         $return = parent::add($autoDate, $nullValues);
@@ -376,24 +376,39 @@ class ProductAttributeCore extends ObjectModel
     }
 
     /**
-     * get highest position.
-     *
      * Get the highest attribute position from a group attribute
      *
      * @param int $idAttributeGroup AttributeGroup ID
      *
      * @return int $position Position
      *
-     * @todo: Shouldn't this be called getHighestPosition instead?
+     * @deprecated Since 9.2, use ProductAttribute::getHighestPosition() instead.
      */
     public static function getHigherPosition($idAttributeGroup)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.2. Use %s instead.',
+                __METHOD__,
+                self::class . '::getHighestPosition()'
+            ),
+            E_USER_DEPRECATED
+        );
+
+        return self::getHighestPosition((int) $idAttributeGroup);
+    }
+
+    /**
+     * Get the highest attribute position from a group attribute
+     */
+    public static function getHighestPosition(int $idAttributeGroup): int
+    {
         $sql = 'SELECT MAX(`position`)
-				FROM `' . _DB_PREFIX_ . 'attribute`
-				WHERE id_attribute_group = ' . (int) $idAttributeGroup;
+                FROM `' . _DB_PREFIX_ . 'attribute`
+                WHERE id_attribute_group = ' . (int) $idAttributeGroup;
 
         $position = Db::getInstance()->getValue($sql);
 
-        return (is_numeric($position)) ? $position : -1;
+        return (is_numeric($position)) ? (int) $position : -1;
     }
 }

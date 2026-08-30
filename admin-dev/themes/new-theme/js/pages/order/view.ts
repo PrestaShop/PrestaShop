@@ -13,6 +13,7 @@ import SplitShipmentManager from '@pages/order/split-shipment-manager';
 import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
 import MergeShipmentManager from './merge-shipment-manager';
 import EditShipmentManager from './edit-shipment-manager';
+import FulfillShipmentManager from './fulfill-shipment-manager';
 
 const {$} = window;
 
@@ -27,6 +28,7 @@ $(() => {
   new MergeShipmentManager();
   new EditShipmentManager();
   new OrderShippingManager();
+  new FulfillShipmentManager();
 
   window.prestashop.component.initComponents([
     'TextWithLengthCounter',

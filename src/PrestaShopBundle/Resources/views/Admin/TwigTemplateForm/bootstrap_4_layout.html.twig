@@ -462,13 +462,13 @@
           <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
           {{- widget|raw -}}
           <i class="md-checkbox-control"></i>
-          {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+          {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw_purified : label|raw_purified) -}}
           </label>
         </div>
       {% else %}
       <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}{% if attrname is same as('class') %} form-check-label{% endif %}"{% endfor %}{% if label_attr|length <= 0 %} class="form-check-label"{% endif %}>
         {{- widget|raw -}}
-        {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+        {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw_purified : label|raw_purified) -}}
       </label>
       {% endif %}
     {% endif %}
@@ -713,12 +713,12 @@
     {% set attr = attr|merge({
       class: (attr.class|default('') ~ ' custom-file-input')|trim,
       'data-multiple-files-text': '%count% file(s)'|trans({}, 'Admin.Global'),
-      'data-locale': get_context_iso_code()
+      'data-locale': get_context_iso_code(),
     }) -%}
 
     {% if attr.disabled is defined and attr.disabled %}
       {% set attr = attr|merge({
-        class: attr.class ~ ' disabled'
+        class: attr.class ~ ' disabled',
       }) %}
     {% endif %}
 
@@ -766,7 +766,7 @@
 {% block text_with_recommended_length_widget %}
   {% set attr = attr|merge({
     'data-recommended-length-counter': '#' ~ id ~ '_recommended_length_counter',
-    class: 'js-recommended-length-input'
+    class: 'js-recommended-length-input',
   }) -%}
 
   {% if input_type == 'textarea' %}
@@ -784,7 +784,7 @@
         '[/1]': '</span>',
         '[2]': '<span>' ~ recommended_length,
         '[/2]': '</span>',
-      })|raw }}
+      })|raw_purified }}
     </em>
   </small>
 {% endblock text_with_recommended_length_widget %}
@@ -808,7 +808,7 @@
 {% block form_hint %}
   {% if hint %}
     <div class="hint-box">
-      <div class="alert alert-info">{{ hint|raw }}</div>
+      <div class="alert alert-info">{{ hint|raw_purified }}</div>
     </div>
   {% endif %}
 {% endblock form_hint %}

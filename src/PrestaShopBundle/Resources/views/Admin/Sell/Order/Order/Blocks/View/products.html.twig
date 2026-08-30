@@ -32,8 +32,8 @@
             'data-is-delivered': orderForViewing.isDelivered,
             'data-is-tax-included': orderForViewing.isTaxIncluded,
             'data-discounts-amount': orderForViewing.prices.discountsAmountRaw,
-            'data-price-specification': priceSpecification|json_encode
-          }
+            'data-price-specification': priceSpecification|json_encode,
+          },
         } %}
     {{ form_start(cancelProductForm, formOptions) }}
 
@@ -161,7 +161,7 @@
     {# DISCOUNT LIST #}
     {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig', {
         discounts: orderForViewing.discounts.discounts,
-        orderId: orderForViewing.id
+        orderId: orderForViewing.id,
     }) }}
 
     {# ORDER TOTALS #}
@@ -235,8 +235,8 @@
         {{ 'For this customer group, prices are displayed as: [1]%tax_method%[/1]'|trans({
           '%tax_method%': orderForViewing.taxMethod,
           '[1]': '<strong>',
-          '[/1]': '</strong>'
-        }, 'Admin.Orderscustomers.Notification')|raw }}.
+          '[/1]': '</strong>',
+        }, 'Admin.Orderscustomers.Notification')|raw_purified }}.
 
         {% if not configuration('PS_ORDER_RETURN') %}
           <strong>{{ 'Merchandise returns are disabled'|trans({}, 'Admin.Orderscustomers.Notification') }}</strong>

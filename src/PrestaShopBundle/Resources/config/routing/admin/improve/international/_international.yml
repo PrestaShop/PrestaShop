@@ -2,6 +2,10 @@ _translations:
   resource: "translations.yml"
   prefix: /translations/
 
+_email_body_translation:
+  resource: "email_body_translation.yml"
+  prefix: /translations/email-body
+
 _localization:
   resource: "localization.yml"
   prefix: /localization/

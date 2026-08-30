@@ -11,6 +11,7 @@ use Exception;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\PDF\DeliverySlipPdfGenerator;
 use PrestaShop\PrestaShop\Adapter\PDF\OrderInvoicePdfGenerator;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
@@ -65,9 +66,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductSearchEmptyPhraseException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
-use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\AddProductToShipment;
-use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\CreateShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\EditShipment;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\FulfillShipmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\MergeProductsToShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\SplitShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\CannotEditShipmentShippedException;
@@ -114,6 +114,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -307,8 +308,18 @@ class OrderController extends PrestaShopAdminController
     public function generateInvoicePdfAction(
         int $orderId,
         #[Autowire(service: 'prestashop.adapter.pdf.order_invoice_pdf_generator')] OrderInvoicePdfGenerator $invoicePdfGenerator,
-    ): BinaryFileResponse {
-        return new BinaryFileResponse($invoicePdfGenerator->generatePDF([$orderId]));
+    ): Response {
+        $generatedPdf = $invoicePdfGenerator->generatePDFForResponse([$orderId]);
+
+        $response = new Response($generatedPdf->getContent());
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $generatedPdf->getFileName()
+        );
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
     }
 
     /**
@@ -319,9 +330,68 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function generateDeliverySlipPdfAction(
         int $orderId,
-        #[Autowire(service: 'prestashop.adapter.pdf.delivery_slip_pdf_generator')] PDFGeneratorInterface $deliverySlipPdfGenerator,
+        #[Autowire(service: 'prestashop.adapter.pdf.delivery_slip_pdf_generator')] DeliverySlipPdfGenerator $deliverySlipPdfGenerator,
+    ): Response {
+        $generatedPdf = $deliverySlipPdfGenerator->generatePDFForResponse([$orderId]);
+
+        $response = new Response($generatedPdf->getContent());
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $generatedPdf->getFileName()
+        );
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
+    }
+
+    /**
+     * Generate delivery slip PDF for a specific shipment
+     */
+    #[AdminSecurity("is_granted('read', 'AdminOrders')", message: 'You do not have permission to view this.', redirectRoute: 'admin_orders_index')]
+    public function generateShipmentDeliverySlipPdfAction(
+        int $shipmentId,
+        #[Autowire(service: 'prestashop.adapter.pdf.shipment_delivery_slip_pdf_generator')] PDFGeneratorInterface $shipmentDeliverySlipPdfGenerator,
     ): BinaryFileResponse {
-        return new BinaryFileResponse($deliverySlipPdfGenerator->generatePDF([$orderId]));
+        return new BinaryFileResponse($shipmentDeliverySlipPdfGenerator->generatePDF([$shipmentId]));
+    }
+
+    /**
+     * Generate delivery slip PDF for multiple shipments or all shipments of an order
+     *
+     * @return BinaryFileResponse|RedirectResponse
+     */
+    #[AdminSecurity("is_granted('read', 'AdminOrders')", message: 'You do not have permission to view this.', redirectRoute: 'admin_orders_index')]
+    public function generateShipmentsDeliverySlipPdfAction(
+        Request $request,
+        int $orderId,
+        #[Autowire(service: 'prestashop.adapter.pdf.shipment_delivery_slip_pdf_generator')] PDFGeneratorInterface $shipmentDeliverySlipPdfGenerator,
+    ) {
+        $shipmentIds = $request->isMethod('POST')
+            ? $request->request->all('shipmentIds')
+            : $request->query->all('shipmentIds');
+
+        if (empty($shipmentIds)) {
+            /** @var OrderShipment[] $orderShipments */
+            $orderShipments = $this->dispatchQuery(new GetOrderShipments($orderId));
+
+            $shipmentIds = [];
+            foreach ($orderShipments as $shipment) {
+                if ($shipment->getTrackingNumber() !== null && $shipment->getPackedAt() !== null) {
+                    $shipmentIds[] = $shipment->getId();
+                }
+            }
+        }
+
+        $shipmentIds = array_map('intval', (array) $shipmentIds);
+
+        if (empty($shipmentIds)) {
+            $this->addFlash('error', $this->trans('There is no fulfilled shipment to download', [], 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_orders_view');
+        }
+
+        return new BinaryFileResponse($shipmentDeliverySlipPdfGenerator->generatePDF($shipmentIds));
     }
 
     /**
@@ -445,13 +515,15 @@ class OrderController extends PrestaShopAdminController
 
         $updateOrderStatusForm = $this->formFactory->createNamed(
             'update_order_status',
-            UpdateOrderStatusType::class, [
+            UpdateOrderStatusType::class,
+            [
                 'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
             ]
         );
         $updateOrderStatusActionBarForm = $this->formFactory->createNamed(
             'update_order_status_action_bar',
-            UpdateOrderStatusType::class, [
+            UpdateOrderStatusType::class,
+            [
                 'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
             ]
         );
@@ -608,9 +680,8 @@ class OrderController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
-    public function getMergeShipmentForm(int $orderId, Request $request, #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.merge_shipment_form_builder')] FormBuilderInterface $formBuilder): Response
+    public function getMergeShipmentForm(int $orderId, int $shipmentId, Request $request, #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.merge_shipment_form_builder')] FormBuilderInterface $formBuilder): Response
     {
-        $shipmentId = (int) $request->query->get('shipmentId');
         $form = $formBuilder->getFormFor($orderId);
         $data = $form->getData();
 
@@ -687,7 +758,7 @@ class OrderController extends PrestaShopAdminController
     public function mergeShipmentAction(int $orderId, Request $request, #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.merge_shipment_form_builder')] FormBuilderInterface $formBuilder): RedirectResponse
     {
         try {
-            $shipmentId = (int) $request->query->get('shipmentId');
+            $shipmentId = (int) $request->attributes->get('shipmentId');
             $form = $formBuilder->getFormFor($orderId);
             $form->handleRequest($request);
 
@@ -756,18 +827,64 @@ class OrderController extends PrestaShopAdminController
         $submittedData = $request->request->all('edit_shipment');
 
         if (!$form->isSubmitted() || !$form->isValid()) {
-            $this->addFlash('error', 'An error occurend while editing shipment');
+            $this->addFlash('error', 'An error occurred while editing shipment');
 
             return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
         }
 
         $command = new EditShipment(
             $shipmentId,
-            $submittedData['tracking_number'],
             $submittedData['carrier']
         );
 
         $this->dispatchCommand($command);
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function getFulfillShipmentForm(
+        int $orderId,
+        int $shipmentId,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.fulfill_shipment_form_builder')] FormBuilderInterface $formBuilder,
+    ): Response {
+        $form = $formBuilder->getFormFor($orderId);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/fulfill_shipment_form.html.twig', [
+            'fulfillShipmentForm' => $form->createView(),
+            'shipmentInformation' => $form->getData(),
+            'orderId' => $orderId,
+            'shipmentId' => $shipmentId,
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function fulfillShipmentAction(int $orderId, int $shipmentId, Request $request, #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.fulfill_shipment_form_builder')] FormBuilderInterface $formBuilder): RedirectResponse
+    {
+        $form = $formBuilder->getFormFor($orderId);
+        $form->handleRequest($request);
+        $submittedData = $request->request->all('fulfill_shipment');
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            $this->addFlash('error', $this->trans('An error occured while fulfilling shipment', [], 'Admin.Orderscustomers.Notification'));
+
+            return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
+        }
+
+        $command = new FulfillShipmentCommand(
+            $shipmentId,
+            $submittedData['tracking_number'],
+        );
+
+        $this->dispatchCommand($command);
+
+        $this->addFlash('success', $this->trans('The shipment was successfully fulfilled.', [], 'Admin.Orderscustomers.Notification'));
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
@@ -815,6 +932,7 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', 'AdminOrders')", message: 'You do not have permission to show this.')]
     public function getSplitShipmentForm(
         int $orderId,
+        int $shipmentId,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.split_shipment_form_builder')] FormBuilderInterface $formBuilder,
     ): Response {
         $form = $formBuilder->getFormFor($orderId);
@@ -823,7 +941,7 @@ class OrderController extends PrestaShopAdminController
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/split_shipment_form.html.twig', [
             'splitShipmentForm' => $form->createView(),
             'orderId' => $orderId,
-            'shipmentId' => $data['shipment_id'],
+            'shipmentId' => $shipmentId,
             'formIsValid' => $data['form_is_valid'],
             'isShipped' => $data['is_shipped'],
         ]);
@@ -1011,6 +1129,9 @@ class OrderController extends PrestaShopAdminController
         $invoiceId = (int) $request->get('invoice_id');
         $productId = (int) $request->get('product_id');
         $combinationId = (int) $request->get('combination_id');
+        $shipmentId = (int) $request->get('shipment_id', null);
+        $carrierId = (int) $request->get('carrier_id', null);
+        $isVirtual = (bool) $request->get('virtual', false);
 
         try {
             if ($invoiceId > 0) {
@@ -1021,7 +1142,10 @@ class OrderController extends PrestaShopAdminController
                     $combinationId,
                     $request->get('price_tax_incl'),
                     $request->get('price_tax_excl'),
-                    (int) $request->get('quantity')
+                    (int) $request->get('quantity'),
+                    $shipmentId,
+                    $carrierId,
+                    $isVirtual
                 );
             } else {
                 $hasFreeShipping = null;
@@ -1035,23 +1159,14 @@ class OrderController extends PrestaShopAdminController
                     $request->get('price_tax_incl'),
                     $request->get('price_tax_excl'),
                     (int) $request->get('quantity'),
-                    $hasFreeShipping
+                    $hasFreeShipping,
+                    $shipmentId,
+                    $carrierId,
+                    $isVirtual
                 );
             }
 
             $this->dispatchCommand($addProductCommand);
-            if ($featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT) && $this->orderHasShipment($orderForViewing->getId()) === true) {
-                $shipmentId = (int) $request->get('shipment_id');
-                $isVirtual = (bool) $request->get('virtual');
-
-                if ($shipmentId === 0 && !$isVirtual) {
-                    $carrierId = (int) $request->get('carrier_id');
-                    $shipmentId = $this->dispatchCommand(new CreateShipment($orderId, $carrierId, $productId, (int) $request->get('quantity'), $combinationId));
-                }
-                if (!$isVirtual) {
-                    $this->dispatchCommand(new AddProductToShipment($shipmentId, $productId, $orderId, $combinationId));
-                }
-            }
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
@@ -1308,7 +1423,8 @@ class OrderController extends PrestaShopAdminController
         int $orderDetailId,
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
-        CurrencyDataProvider $currencyDataProvider
+        CurrencyDataProvider $currencyDataProvider,
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker,
     ): Response {
         try {
             $data = json_decode($request->getContent(), true);
@@ -1357,6 +1473,7 @@ class OrderController extends PrestaShopAdminController
             'orderForViewing' => $orderForViewing,
             'product' => $product,
             'orderHasShipment' => $this->orderHasShipment($orderId),
+            'isImprovedShipmentFeatureFlagEnabled' => $featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT),
         ]);
     }
 
@@ -1630,7 +1747,8 @@ class OrderController extends PrestaShopAdminController
 
         $routesCollection = $router->getRouteCollection();
 
-        if (!$orderMessageForm->isValid()
+        if (
+            !$orderMessageForm->isValid()
             && $viewRoute = $routesCollection->get('admin_orders_view')
         ) {
             $attributes = $viewRoute->getDefaults();
@@ -1857,7 +1975,7 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
         CurrencyDataProvider $currencyDataProvider,
-        FeatureFlagStateCheckerInterface $featureFlagStateChecker
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker,
     ): Response {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId, QuerySorting::DESC));
@@ -2057,7 +2175,7 @@ class OrderController extends PrestaShopAdminController
         $internalNoteForm = $this->createForm(InternalNoteType::class);
         $internalNoteForm->handleRequest($request);
 
-        if ($internalNoteForm->isSubmitted()) {
+        if ($internalNoteForm->isSubmitted() && $internalNoteForm->isValid()) {
             $data = $internalNoteForm->getData();
 
             try {
@@ -2079,6 +2197,10 @@ class OrderController extends PrestaShopAdminController
                     'error',
                     $this->getErrorMessageForException($e, $this->getErrorMessages($e))
                 );
+            }
+        } else {
+            foreach ($internalNoteForm->getErrors(true) as $error) {
+                $this->addFlash('error', htmlentities($error->getMessage()));
             }
         }
 
@@ -2226,6 +2348,11 @@ class OrderController extends PrestaShopAdminController
                 ),
                 InvalidCartRuleDiscountValueException::INVALID_FREE_SHIPPING => $this->trans(
                     'Shipping discount value cannot exceed the total price of this order.',
+                    [],
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::DUPLICATE_FREE_SHIPPING => $this->trans(
+                    'This order already has a free shipping discount.',
                     [],
                     'Admin.Orderscustomers.Notification'
                 ),

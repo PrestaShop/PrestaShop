@@ -19,6 +19,8 @@ final class CleanHtml extends Constraint
 {
     public $message = '%s is invalid.';
 
+    public $embeddableHtmlMessage = '%s contains embedded HTML elements (iframe, frame, form, input, embed, object) which are not allowed. To allow them, enable "Allow iframes on HTML fields" in Shop Parameters > General settings.';
+
     /**
      * {@inheritdoc}
      */

@@ -225,6 +225,16 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             return;
         }
 
+        // Free shipping cannot be cumulated: reject the discount if the order already has a free shipping one
+        foreach ($order->getCartRules() as $orderCartRule) {
+            if (!empty($orderCartRule['free_shipping'])) {
+                throw new InvalidCartRuleDiscountValueException(
+                    'Order already has a free shipping discount',
+                    InvalidCartRuleDiscountValueException::DUPLICATE_FREE_SHIPPING
+                );
+            }
+        }
+
         if (null !== $orderInvoice) {
             $orderInvoices = [$orderInvoice];
         } elseif ($order->hasInvoice()) {

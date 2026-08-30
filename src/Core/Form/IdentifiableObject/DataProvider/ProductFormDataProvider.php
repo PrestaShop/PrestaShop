@@ -428,6 +428,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                     'type' => $stockMovement->getType(),
                     'date' => $date,
                     'employee_name' => $stockMovement->getEmployeeName(),
+                    'api_client_name' => implode(', ', $stockMovement->getApiClientNames()) ?: null,
                     'delta_quantity' => $stockMovement->getDeltaQuantity(),
                 ];
             },

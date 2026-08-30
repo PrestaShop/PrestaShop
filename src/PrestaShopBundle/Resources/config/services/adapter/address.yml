@@ -60,8 +60,3 @@ services:
 
   prestashop.adapter.address.formatter:
     class: 'PrestaShop\PrestaShop\Adapter\Address\AddressFormatter'
-
-  PrestaShop\PrestaShop\Adapter\Address\Repository\AddressRepository:
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'

@@ -11,7 +11,7 @@ namespace Tests\Unit\Core\Context;
 use Country;
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
-use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
 use Tests\Unit\Core\Configuration\MockConfigurationTrait;
 
@@ -91,9 +91,9 @@ class CountryContextBuilderTest extends ContextBuilderTestCase
         return $country;
     }
 
-    private function mockCountryRepository(Country|MockObject $country): CountryRepository|MockObject
+    private function mockCountryRepository(Country|MockObject $country): CountryRepositoryInterface|MockObject
     {
-        $repository = $this->createMock(CountryRepository::class);
+        $repository = $this->createMock(CountryRepositoryInterface::class);
         $repository
             ->method('get')
             ->willReturn($country)

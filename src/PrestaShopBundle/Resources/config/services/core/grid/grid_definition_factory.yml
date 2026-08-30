@@ -15,6 +15,7 @@ services:
       - '@prestashop.core.hook.dispatcher'
     calls:
       - [ setTranslator, [ '@translator' ] ]
+      - [ setExtraPropertiesGridDefinitionModifier, [ '@PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridDefinitionModifier' ] ]
 
   prestashop.core.grid.definition.factory.logs:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
@@ -43,6 +44,17 @@ services:
   prestashop.core.grid.definition.factory.webservice_key:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceKeyDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    public: true
+
+  prestashop.core.grid.definition.factory.email_body_template:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailBodyTemplateDefinitionFactory'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    public: true
+
+  prestashop.core.grid.definition.factory.extra_property_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ExtraPropertyDefinitionGridDefinitionFactory'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    autowire: true
     public: true
 
   prestashop.core.grid.definition.factory.meta:
@@ -294,8 +306,8 @@ services:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
-  prestashop.core.grid.definition.factory.merchandise_return:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MerchandiseReturnGridDefinitionFactory'
+  prestashop.core.grid.definition.factory.order_return:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnGridDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
 
@@ -493,6 +505,11 @@ services:
     public: true
     arguments:
       - '@prestashop.core.form.choice_provider.language_by_id'
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\QuickAccessGridDefinitionFactory:
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    autowire: true
+    public: true
 
   # deprecated services
   # Alias for this abstract definition causes tests in vendor fail for some reason, so we stick to full definition instead

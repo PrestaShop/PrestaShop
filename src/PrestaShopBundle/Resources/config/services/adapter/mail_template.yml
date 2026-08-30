@@ -42,3 +42,21 @@ services:
     deprecated:
       package: PrestaShop\PrestaShop
       version: 9.0
+
+  prestashop.adapter.mail_template.query_handler.get_email_body_templates_for_listing:
+    class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\QueryHandler\GetEmailBodyTemplatesForListingHandler'
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\MailTemplate\EmailBodyTemplateRepository'
+
+  prestashop.adapter.mail_template.query_handler.get_email_body_template_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\QueryHandler\GetEmailBodyTemplateForEditingHandler'
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\MailTemplate\EmailBodyTemplateRepository'
+
+  prestashop.adapter.mail_template.command_handler.edit_email_body_template:
+    class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\CommandHandler\EditEmailBodyTemplateHandler'
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\MailTemplate\EmailBodyTemplateRepository'

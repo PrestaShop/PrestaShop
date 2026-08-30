@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Context;
 use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use PrestaShopException;
 use Tools as LegacyTools;
@@ -107,6 +108,11 @@ class Tools
         return LegacyTools::ps_round($value, $precision, $round_mode);
     }
 
+    public function convertPrice($price, $currency = null, $toCurrency = true, ?Context $context = null)
+    {
+        return LegacyTools::convertPrice($price, $currency, $toCurrency, $context);
+    }
+
     /**
      * Return domain name according to configuration and depending on ssl activation.
      *
@@ -142,6 +148,20 @@ class Tools
     public function copy($source, $destination, $streamContext = null)
     {
         return LegacyTools::copy($source, $destination, $streamContext);
+    }
+
+    /**
+     * Copy content from a source that can be influenced by user input, blocking requests
+     * to private/reserved hosts and non-HTTP(S)/FTP(S) stream wrappers.
+     *
+     * @param string $source
+     * @param string $destination
+     *
+     * @return bool
+     */
+    public function copyFromUntrustedSource($source, $destination)
+    {
+        return LegacyTools::copyFromUntrustedSource($source, $destination);
     }
 
     /**

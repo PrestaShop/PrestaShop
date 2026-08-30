@@ -18,6 +18,8 @@ use Pack;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Mutation\MutationTracker;
+use PrestaShopBundle\Entity\MutationAction;
 use PrestaShopBundle\Entity\StockMvt;
 use PrestaShopException;
 use Product;
@@ -28,6 +30,15 @@ use StockAvailable;
  */
 class StockManager
 {
+    /**
+     * The tracker is optional because this class is still instantiated without the
+     * container in some legacy paths (e.g. OrderHistory); no mutation is recorded there.
+     */
+    public function __construct(
+        private readonly ?MutationTracker $mutationTracker = null,
+    ) {
+    }
+
     /**
      * This will update a Pack quantity and will decrease the quantity of containing Products if needed.
      *
@@ -347,8 +358,15 @@ class StockManager
         }
 
         $stockMvtRepository = $sfContainer->get('prestashop.core.api.stock_movement.repository');
+        $stockMovementId = $stockMvtRepository->saveStockMvt($stockMvt);
 
-        return $stockMvtRepository->saveStockMvt($stockMvt);
+        if ($stockMovementId) {
+            // Records which API client created the movement (no-op when the request is not
+            // authenticated with an API client), since StockMvt has no api client relation
+            $this->mutationTracker?->addMutationForApiClient('stock_mvt', (int) $stockMovementId, MutationAction::CREATE);
+        }
+
+        return $stockMovementId;
     }
 
     /**
@@ -366,6 +384,12 @@ class StockManager
         $product = new Product($productId);
 
         if ($product->id) {
+            $combinationAdapter = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Combination');
+
+            if ($productAttributeId > 0 && !$combinationAdapter->existsInDatabase((int) $productAttributeId)) {
+                return false;
+            }
+
             $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
             $stockAvailable = $stockManager->getStockAvailableByProduct($product, $productAttributeId, $params['id_shop'] ?? null);
 
@@ -388,8 +412,10 @@ class StockManager
                 $stockMvt->setDateAdd(new DateTime());
 
                 $employee = (new ContextAdapter())->getContext()->employee;
-                if (!empty($employee)) {
-                    $stockMvt->setIdEmployee($employee->id);
+                // The context may hold an employee without an id (e.g. when the stock movement is
+                // triggered outside the back office, like from the Admin API), keep the default 0.
+                if (!empty($employee) && !empty($employee->id)) {
+                    $stockMvt->setIdEmployee((int) $employee->id);
                     $stockMvt->setEmployeeFirstname($employee->firstname);
                     $stockMvt->setEmployeeLastname($employee->lastname);
                 }

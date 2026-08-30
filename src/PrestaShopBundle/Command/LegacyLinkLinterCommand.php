@@ -61,6 +61,10 @@ class LegacyLinkLinterCommand extends Command
         'admin_currencies_update_live_exchange_rates',
         'admin_customer_threads_filter',
         'admin_discounts_reset_grid',
+        'admin_discounts_search_gift_products',
+        'admin_email_body_translation_index',
+        'admin_email_body_translation_search',
+        'admin_email_body_translation_edit',
         'admin_employees_get_tabs',
         'admin_feature_get_feature_values',
         'admin_import_data_configuration_index',
@@ -148,6 +152,8 @@ class LegacyLinkLinterCommand extends Command
         'admin_products_specific_prices_edit',
         'admin_products_specific_prices_list',
         'admin_products_toggle_status_for_shop',
+        'admin_quick_accesses_ajax_add',
+        'admin_quick_accesses_ajax_delete',
         'admin_security_sessions_customer_search',
         'admin_security_sessions_employee_search',
         'admin_servers',
@@ -161,6 +167,7 @@ class LegacyLinkLinterCommand extends Command
      */
     private const CONTROLLER_WHITE_LIST = [
         'AdminAdminAPI',
+        'AdminExtraPropertyDefinitions',
     ];
 
     public function __construct(LegacyLinkLinter $legacyLinkLinter, AdminRouteProvider $adminRouteProvider)

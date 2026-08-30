@@ -182,3 +182,8 @@ services:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\AttributeGroup
+
+  PrestaShopBundle\Entity\Repository\BusinessEntityRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\B2B\BusinessEntity

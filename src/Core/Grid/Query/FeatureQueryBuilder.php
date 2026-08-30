@@ -63,7 +63,7 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
                 'f',
                 $this->dbPrefix . 'feature_value',
                 'fv',
-                'f.id_feature = fv.id_feature'
+                'f.id_feature = fv.id_feature AND (fv.custom IS NULL OR fv.custom = 0)'
             )
             ->groupBy('f.id_feature')
         ;

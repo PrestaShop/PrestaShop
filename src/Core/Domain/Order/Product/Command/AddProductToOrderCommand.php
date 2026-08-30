@@ -60,6 +60,12 @@ class AddProductToOrderCommand
      */
     private $hasFreeShipping;
 
+    private ?int $shipmentId = null;
+
+    private ?int $carrierId = null;
+
+    private ?bool $isVirtual = null;
+
     /**
      * Add product to an order with new invoice. It applies to orders that were already paid and waiting for payment.
      *
@@ -70,6 +76,9 @@ class AddProductToOrderCommand
      * @param string $productPriceTaxExcluded
      * @param int $productQuantity
      * @param bool|null $hasFreeShipping
+     * @param int|null $shipmentId
+     * @param int|null $carrierId
+     * @param bool|null $isVirtual
      *
      * @return self
      *
@@ -84,7 +93,10 @@ class AddProductToOrderCommand
         string $productPriceTaxIncluded,
         string $productPriceTaxExcluded,
         int $productQuantity,
-        ?bool $hasFreeShipping = null
+        ?bool $hasFreeShipping = null,
+        ?int $shipmentId = null,
+        ?int $carrierId = null,
+        ?bool $isVirtual = null
     ) {
         $command = new self(
             $orderId,
@@ -96,6 +108,9 @@ class AddProductToOrderCommand
         );
 
         $command->hasFreeShipping = $hasFreeShipping;
+        $command->shipmentId = $shipmentId;
+        $command->carrierId = $carrierId;
+        $command->isVirtual = $isVirtual;
 
         return $command;
     }
@@ -110,6 +125,9 @@ class AddProductToOrderCommand
      * @param string $productPriceTaxIncluded
      * @param string $productPriceTaxExcluded
      * @param int $productQuantity
+     * @param int|null $shipmentId
+     * @param int|null $carrierId
+     * @param bool|null $isVirtual
      *
      * @return self
      *
@@ -124,7 +142,10 @@ class AddProductToOrderCommand
         int $combinationId,
         string $productPriceTaxIncluded,
         string $productPriceTaxExcluded,
-        int $productQuantity
+        int $productQuantity,
+        ?int $shipmentId = null,
+        ?int $carrierId = null,
+        ?bool $isVirtual = null
     ) {
         $command = new self(
             $orderId,
@@ -136,6 +157,9 @@ class AddProductToOrderCommand
         );
 
         $command->orderInvoiceId = $orderInvoiceId;
+        $command->shipmentId = $shipmentId;
+        $command->carrierId = $carrierId;
+        $command->isVirtual = $isVirtual;
 
         return $command;
     }
@@ -234,6 +258,21 @@ class AddProductToOrderCommand
     public function hasFreeShipping(): ?bool
     {
         return $this->hasFreeShipping;
+    }
+
+    public function getShipmentId(): ?int
+    {
+        return $this->shipmentId;
+    }
+
+    public function getCarrierId(): ?int
+    {
+        return $this->carrierId;
+    }
+
+    public function isVirtual(): ?bool
+    {
+        return $this->isVirtual;
     }
 
     /**

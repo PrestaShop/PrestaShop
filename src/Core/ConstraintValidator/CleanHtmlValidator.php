@@ -49,14 +49,20 @@ final class CleanHtmlValidator extends ConstraintValidator
         $containsScriptTags = preg_match('/<[\s]*script/ims', $value) || preg_match('/.*script\:/ims', $value);
         $containsJavascriptEvents = preg_match('/(' . $this->getJavascriptEvents() . ')[\s]*=/ims', $value);
 
-        $iframe = !$this->allowEmbeddableHtml && preg_match(self::EMBEDDABLE_HTML_PATTERN, $value);
+        $containsEmbeddableHtml = !$this->allowEmbeddableHtml && preg_match(self::EMBEDDABLE_HTML_PATTERN, $value);
 
         // any html attribute starting with "on" (event attributes), as a second layer protection
         $eventAttributeRegex = '/<\s*\w+[^>]*\s(on\w+)=["\'][^"\']*["\']/ims';
         // RLO characters detection
         $rloCharacters = "\xE2\x80\xAE";
 
-        if ($containsScriptTags || $containsJavascriptEvents || $iframe || preg_match($eventAttributeRegex, $value) || str_contains($value, $rloCharacters)) {
+        if ($containsEmbeddableHtml) {
+            $this->context->buildViolation($constraint->embeddableHtmlMessage)
+                ->setTranslationDomain('Admin.Notifications.Error')
+                ->setParameter('%s', $this->formatValue($value))
+                ->addViolation()
+            ;
+        } elseif ($containsScriptTags || $containsJavascriptEvents || preg_match($eventAttributeRegex, $value) || str_contains($value, $rloCharacters)) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
                 ->setParameter('%s', $this->formatValue($value))

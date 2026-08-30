@@ -10,7 +10,7 @@
       <trans-unit id="f0e75ca843971e784658a3a9764d5d9f">
         <source>A customer will only be able to use this discount "X" time(s).</source>
         <target>A customer will only be able to use this discount "X" time(s).</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 65]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 60]</note>
       </trans-unit>
       <trans-unit id="1ffce2188d1a60720990e3f6ca9e8b0c">
         <source>Add new specific price</source>
@@ -204,7 +204,7 @@
       <trans-unit id="0d42fdc56a0571e75383a990bde2ce67">
         <source>Lower numbers indicate higher priority. When multiple discounts are applied, lower priority numbers are processed first.</source>
         <target>Lower numbers indicate higher priority. When multiple discounts are applied, lower priority numbers are processed first.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 101]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 96]</note>
       </trans-unit>
       <trans-unit id="c268a2747d5680c617c361cd505c4576">
         <source>MPN is used internationally to identify the Manufacturer Part Number.</source>
@@ -315,6 +315,11 @@
         <target>Search reference</target>
         <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 548]</note>
       </trans-unit>
+      <trans-unit id="163cc0d45ff1784e185a8dd29a86d990">
+        <source>Select a product from your catalog to offer it for free when this discount is applied.</source>
+        <target>Select a product from your catalog to offer it for free when this discount is applied.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountType.php [Line: 59]</note>
+      </trans-unit>
       <trans-unit id="dbf7ca6ce67648b790f71e6ae2f5c8dd">
         <source>Select the customer groups which will have access to this category.</source>
         <target>Select the customer groups which will have access to this category.</target>
@@ -323,7 +328,7 @@
       <trans-unit id="9576640520abce2594645f2a4436b7fd">
         <source>Select which discount types this discount is compatible with.</source>
         <target>Select which discount types this discount is compatible with.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 91]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 86]</note>
       </trans-unit>
       <trans-unit id="a132c5ad0de6c917b5422b923608c87b">
         <source>Separate each tag with a comma or press the Enter key.</source>
@@ -334,6 +339,11 @@
         <source>Set specific prices for customers meeting certain conditions.</source>
         <target>Set specific prices for customers meeting certain conditions.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 85]</note>
+      </trans-unit>
+      <trans-unit id="6de3adb7510122ff9b8bd6b9b64e5721">
+        <source>Shipping fees are excluded.</source>
+        <target>Shipping fees are excluded.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountValueType.php [Line: 21]</note>
       </trans-unit>
       <trans-unit id="a05ce821cab187eec53725269340bb28">
         <source>Short description of the product. We recommend two to three sentences or a few clear phrases that describe the item. It's displayed near the product name, used in the meta description, and shown in several other places. Avoid duplicating this text across different products.</source>
@@ -393,17 +403,17 @@
       <trans-unit id="b5e6921c2d093fbcb0088c9466ee9983">
         <source>The public name for this attribute, displayed to the customers.</source>
         <target>The public name for this attribute, displayed to the customers.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 75]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 82]</note>
       </trans-unit>
       <trans-unit id="580de47d3bc3e99a0b6aba55066a983a">
         <source>The way the attribute's values will be presented to the customers in the product's page.</source>
         <target>The way the attribute's values will be presented to the customers in the product's page.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 52]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 53]</note>
       </trans-unit>
       <trans-unit id="41c6d984f6151b014a8fe191263803c6">
         <source>This discount can be used "X" time(s) in total.</source>
         <target>This discount can be used "X" time(s) in total.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 43]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 35]</note>
       </trans-unit>
       <trans-unit id="762d425093de542e7ab628b44ff68515">
         <source>This interface allows you to specify the suppliers of the current combination.</source>
@@ -562,7 +572,6 @@
       <trans-unit id="86b310a95aa85957a00acb1415e40772">
         <source>You can choose a free gift.</source>
         <target>You can choose a free gift.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountType.php [Line: 64]</note>
       </trans-unit>
       <trans-unit id="5b41d7dc2da5ea15baf3e2d62d820ac2">
         <source>You can choose a minimum amount for the cart either with or without the taxes and shipping.</source>
@@ -572,7 +581,7 @@
       <trans-unit id="190a25c3f15e1544ed2bd6efbafb1a97">
         <source>You can choose a minimum amount for the cart either with or without the taxes.</source>
         <target>You can choose a minimum amount for the cart either with or without the taxes.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountValueType.php [Line: 22]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountValueType.php [Line: 20]</note>
       </trans-unit>
       <trans-unit id="738971709fcd7de4b5f8a87eb1e663a1">
         <source>You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.</source>
@@ -587,7 +596,7 @@
       <trans-unit id="f2d1c5443636295e9720caac90ea8d93">
         <source>Your internal name for this attribute.</source>
         <target>Your internal name for this attribute.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 67]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 71]</note>
       </trans-unit>
       <trans-unit id="d24ec28b066e46d9d9ec3c1f39aa89ee">
         <source>[1]Invalid token[/1]: direct access to this link may lead to a potential security breach.</source>

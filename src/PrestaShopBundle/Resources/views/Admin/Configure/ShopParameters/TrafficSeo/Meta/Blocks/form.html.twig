@@ -18,11 +18,11 @@
           attr: {
             class: 'js-meta-page-name',
             'data-toggle': 'select2',
-            'data-minimumResultsForSearch': '7'
-          }
+            'data-minimumResultsForSearch': '7',
+          },
         }, {
           label: 'Page name'|trans({}, 'Admin.Shopparameters.Feature'),
-          help: 'Name of the related page.'|trans({}, 'Admin.Shopparameters.Help')
+          help: 'Name of the related page.'|trans({}, 'Admin.Shopparameters.Help'),
         }) }}
 
         {% set pageTitleHelpLabel %}
@@ -32,7 +32,7 @@
 
         {{ ps.form_group_row(metaForm.page_title, {}, {
           label: 'Page title'|trans({}, 'Admin.Shopparameters.Feature'),
-          help: pageTitleHelpLabel
+          help: pageTitleHelpLabel,
         }) }}
 
         {% set metaDescriptionHelpLabel %}
@@ -42,7 +42,7 @@
 
         {{ ps.form_group_row(metaForm.meta_description, {}, {
           label: 'Meta description'|trans({}, 'Admin.Global'),
-          help: metaDescriptionHelpLabel
+          help: metaDescriptionHelpLabel,
         }) }}
 
         {% set rewriteUrlHelpLabel %}
@@ -52,7 +52,7 @@
 
         {{ ps.form_group_row(metaForm.url_rewrite, {attr: {class: 'js-url-rewrite'}}, {
           label: 'Rewritten URL'|trans({}, 'Admin.Shopparameters.Feature'),
-          help: rewriteUrlHelpLabel
+          help: rewriteUrlHelpLabel,
         }) }}
 
         {% block meta_form_rest %}

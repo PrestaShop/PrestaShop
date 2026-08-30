@@ -24,15 +24,36 @@ final class EditShipmentRowAction extends AbstractRowAction
     /**
      * {@inheritdoc}
      */
+    public function isApplicable(array $record): bool
+    {
+        if ($this->shipmentIsPacked($record)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function shipmentIsPacked(array $record): bool
+    {
+        return !empty($record['tracking_number']) && !empty($record['packed_at']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
         $resolver
             ->setRequired([
+                'shipment_id_field',
+                'order_id_field',
                 'tracking_number',
                 'carrier',
             ])
+            ->setAllowedTypes('shipment_id_field', 'string')
+            ->setAllowedTypes('order_id_field', 'string')
             ->setAllowedTypes('tracking_number', 'string')
             ->setAllowedTypes('carrier', 'string');
     }

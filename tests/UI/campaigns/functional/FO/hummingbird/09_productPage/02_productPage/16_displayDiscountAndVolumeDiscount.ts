@@ -21,7 +21,7 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_displayDiscountAndVolumeDiscount';
 
-describe('FO - Product page - Product page : Display discount', async () => {
+describe('FO - Product page - Product page : Display discount and volume discount', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

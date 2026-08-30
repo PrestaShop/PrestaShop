@@ -193,6 +193,24 @@
       <taxRule iso_code_country="sk" id_tax="30"/>
     </taxRulesGroup>
   </taxes>
+  <states>
+    <state name="Baden-Württemberg" iso_code="BW" country="DE" zone="Europe" />
+    <state name="Bayern" iso_code="BY" country="DE" zone="Europe" />
+    <state name="Berlin" iso_code="BE" country="DE" zone="Europe" />
+    <state name="Brandenburg" iso_code="BB" country="DE" zone="Europe" />
+    <state name="Bremen" iso_code="HB" country="DE" zone="Europe" />
+    <state name="Hamburg" iso_code="HH" country="DE" zone="Europe" />
+    <state name="Hessen" iso_code="HE" country="DE" zone="Europe" />
+    <state name="Mecklenburg-Vorpommern" iso_code="MV" country="DE" zone="Europe" />
+    <state name="Niedersachsen" iso_code="NI" country="DE" zone="Europe" />
+    <state name="Nordrhein-Westfalen" iso_code="NW" country="DE" zone="Europe" />
+    <state name="Rheinland-Pfalz" iso_code="RP" country="DE" zone="Europe" />
+    <state name="Saarland" iso_code="SL" country="DE" zone="Europe" />
+    <state name="Sachsen" iso_code="SN" country="DE" zone="Europe" />
+    <state name="Sachsen-Anhalt" iso_code="ST" country="DE" zone="Europe" />
+    <state name="Schleswig-Holstein" iso_code="SH" country="DE" zone="Europe" />
+    <state name="Thüringen" iso_code="TH" country="DE" zone="Europe" />
+  </states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>

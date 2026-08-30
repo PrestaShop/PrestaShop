@@ -92,11 +92,11 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
     it('should sort by \'position\' \'asc\' And check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sortByPosition', baseContext);
 
-      const nonSortedTable = await boFeaturesPage.getAllRowsColumnContent(page, 'position', 'id_feature');
+      const nonSortedTable = await boFeaturesPage.getAllRowsColumnContent(page, 'position');
 
       await boFeaturesPage.sortTable(page, 'position', 'asc');
 
-      const sortedTable = await boFeaturesPage.getAllRowsColumnContent(page, 'position', 'position');
+      const sortedTable = await boFeaturesPage.getAllRowsColumnContent(page, 'position');
 
       const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
       const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
@@ -110,14 +110,14 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
       await testContext.addContextItem(this, 'testIdentifier', 'changeFeaturePosition', baseContext);
 
       // Get first row feature name
-      const firstRowFeatureName = await boFeaturesPage.getTextColumn(page, 1, 'name', 'position');
+      const firstRowFeatureName = await boFeaturesPage.getTextColumn(page, 1, 'name');
 
       // Change position and check successful message
       const textResult = await boFeaturesPage.changePosition(page, 1, 2);
       expect(textResult, 'Unable to change position').to.contains(boFeaturesPage.successfulUpdateMessage);
 
       // Get second row feature name and check if is equal the first row feature name before changing position
-      const secondRowFeatureName = await boFeaturesPage.getTextColumn(page, 2, 'name', 'position');
+      const secondRowFeatureName = await boFeaturesPage.getTextColumn(page, 2, 'name');
       expect(secondRowFeatureName, 'Changing position was done wrongly').to.equal(firstRowFeatureName);
     });
 
@@ -125,25 +125,25 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
       await testContext.addContextItem(this, 'testIdentifier', 'resetFeaturePosition', baseContext);
 
       // Get third row feature name
-      const secondRowFeatureName = await boFeaturesPage.getTextColumn(page, 2, 'name', 'position');
+      const secondRowFeatureName = await boFeaturesPage.getTextColumn(page, 2, 'name');
 
       // Change position and check successful message
       const textResult = await boFeaturesPage.changePosition(page, 2, 3);
       expect(textResult, 'Unable to change position').to.contains(boFeaturesPage.successfulUpdateMessage);
 
       // Get first row feature name and check if is equal the first row feature name before changing position
-      const thirdRowFeatureName = await boFeaturesPage.getTextColumn(page, 3, 'name', 'position');
+      const thirdRowFeatureName = await boFeaturesPage.getTextColumn(page, 3, 'name');
       expect(thirdRowFeatureName, 'Changing position was done wrongly').to.equal(secondRowFeatureName);
     });
 
     it('should reset the sort to \'id_feature\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sortByIdFeature', baseContext);
 
-      const nonSortedTable = await boFeaturesPage.getAllRowsColumnContent(page, 'id_feature', 'position');
+      const nonSortedTable = await boFeaturesPage.getAllRowsColumnContent(page, 'id_feature');
 
       await boFeaturesPage.sortTable(page, 'id_feature', 'asc');
 
-      const sortedTable = await boFeaturesPage.getAllRowsColumnContent(page, 'id_feature', 'id_feature');
+      const sortedTable = await boFeaturesPage.getAllRowsColumnContent(page, 'id_feature');
 
       const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
       const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));

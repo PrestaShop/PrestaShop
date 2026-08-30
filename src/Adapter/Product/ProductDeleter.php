@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleDisablerService;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
@@ -31,14 +32,21 @@ class ProductDeleter
      */
     private $combinationRepository;
 
+    /**
+     * @var CartRuleDisablerService
+     */
+    private $cartRuleDisablerService;
+
     public function __construct(
         ProductRepository $productRepository,
         CombinationRepository $combinationRepository,
-        ProductImageRepository $productImageRepository
+        ProductImageRepository $productImageRepository,
+        CartRuleDisablerService $cartRuleDisablerService
     ) {
         $this->productRepository = $productRepository;
         $this->combinationRepository = $combinationRepository;
         $this->productImageRepository = $productImageRepository;
+        $this->cartRuleDisablerService = $cartRuleDisablerService;
     }
 
     /**
@@ -67,6 +75,9 @@ class ProductDeleter
     {
         $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
 
+        // Intentionally keep the gift_product reference pointing to the deleted product ID.
+        // checkValidity() will fail on the invalid ID, preventing re-activation without fixing the discount.
+        $this->cartRuleDisablerService->disableCartRulesThatUsedProductAsGift($productId->getValue());
         $this->removeImages($productId, $shopIds);
         $this->removeCombinations($productId, $shopIds);
         $this->productRepository->deleteFromShops($productId, $shopIds);

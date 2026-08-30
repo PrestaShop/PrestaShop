@@ -877,6 +877,35 @@ CREATE TABLE `PREFIX_employee_shop` (
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
+/* Registry for all declared extra property definitions */
+CREATE TABLE `PREFIX_extra_property_definition` (
+  `id_extra_property_definition` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `entity_name` varchar(64) NOT NULL,
+  `module_name` varchar(64) DEFAULT NULL,
+  `property_name` varchar(64) NOT NULL,
+  `type` ENUM ('int','bool','string','float','date','html','json','choice') NOT NULL DEFAULT 'string',
+  `scope` ENUM ('common','lang','shop') NOT NULL DEFAULT 'common',
+  `sql_index` ENUM ('none','key','unique') NOT NULL DEFAULT 'none',
+  `size` smallint(5) unsigned DEFAULT NULL,
+  `default_value` varchar(255) DEFAULT NULL,
+  `required` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `constraints` longtext DEFAULT NULL,
+  `display_front` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `associated_apis` text DEFAULT NULL,
+  `associated_grids` text DEFAULT NULL,
+  `associated_forms` text DEFAULT NULL,
+  `form_type` varchar(255) DEFAULT NULL,
+  `form_options` text DEFAULT NULL,
+  `label_wording` varchar(191) DEFAULT NULL,
+  `label_domain` varchar(255) DEFAULT NULL,
+  `description_wording` varchar(191) DEFAULT NULL,
+  `description_domain` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_extra_property_definition`),
+  UNIQUE KEY `extra_property_definition_unique` (`entity_name`, `module_name`, `property_name`),
+  KEY `entity_name` (`entity_name`, `scope`),
+  KEY `module_name` (`module_name`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 /* Position of each feature */
 CREATE TABLE `PREFIX_feature` (
   `id_feature` int(10) unsigned NOT NULL auto_increment,
@@ -903,6 +932,18 @@ CREATE TABLE `PREFIX_feature_product` (
   ),
   KEY `id_feature_value` (`id_feature_value`),
   KEY `id_product` (`id_product`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+/* Association between a feature and a product combination (product_attribute) */
+CREATE TABLE `PREFIX_feature_product_attribute` (
+  `id_feature` int(10) unsigned NOT NULL,
+  `id_product_attribute` int(10) unsigned NOT NULL,
+  `id_feature_value` int(10) unsigned NOT NULL,
+  PRIMARY KEY (
+    `id_feature`, `id_product_attribute`, `id_feature_value`
+  ),
+  KEY `id_feature_value` (`id_feature_value`),
+  KEY `id_product_attribute` (`id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* Various choice associated with a feature */
@@ -1460,6 +1501,7 @@ CREATE TABLE `PREFIX_order_return_detail` (
   `id_order_detail` int(10) unsigned NOT NULL,
   `id_customization` int(10) unsigned NOT NULL DEFAULT '0',
   `product_quantity` int(10) unsigned NOT NULL DEFAULT '0',
+  `cancelled` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (
     `id_order_return`, `id_order_detail`,
     `id_customization`
@@ -1470,6 +1512,7 @@ CREATE TABLE `PREFIX_order_return_detail` (
 CREATE TABLE `PREFIX_order_return_state` (
   `id_order_return_state` int(10) unsigned NOT NULL auto_increment,
   `color` varchar(32) DEFAULT NULL,
+  `is_cancelling_return` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_order_return_state`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
@@ -2866,6 +2909,7 @@ CREATE TABLE `PREFIX_image_type` (
   `name`          VARCHAR(64) NOT NULL,
   `width`         INT UNSIGNED NOT NULL,
   `height`        INT UNSIGNED NOT NULL,
+  `image_fitment` ENUM('fit', 'crop', 'bound') NOT NULL DEFAULT 'fit',
   `products`      TINYINT(1) DEFAULT 1 NOT NULL,
   `categories`    TINYINT(1) DEFAULT 1 NOT NULL,
   `manufacturers` TINYINT(1) DEFAULT 1 NOT NULL,
@@ -3094,24 +3138,30 @@ CREATE TABLE `PREFIX_shipment_product` (
 
 CREATE TABLE `PREFIX_business_entity`
 (
-  `id_business_entity`       INT UNSIGNED AUTO_INCREMENT                     NOT NULL,
-  `external_ref`             VARCHAR(255) DEFAULT NULL,
-  `name`                     VARCHAR(255) NOT NULL,
-  `legal_name`               VARCHAR(255) DEFAULT NULL,
-  `flag_delivery_authorized` TINYINT(1)                                      NOT NULL DEFAULT 0,
-  `status`                   ENUM ('pending','active','inactive','rejected') NOT NULL DEFAULT 'pending',
-  `created_at`               DATETIME     NOT NULL,
-  `updated_at`               DATETIME     NOT NULL,
-  INDEX                      `business_entity_external_ref_idx` (`external_ref`),
+  `id_business_entity`  INT UNSIGNED AUTO_INCREMENT                     NOT NULL,
+  `id_shop`             INT UNSIGNED                                    NOT NULL,
+  `id_customer_group`   INT UNSIGNED                                    NOT NULL,
+  `external_ref`        VARCHAR(255) DEFAULT NULL,
+  `name`                VARCHAR(255)                                    NOT NULL,
+  `legal_name`          VARCHAR(255) DEFAULT NULL,
+  `delivery_authorized` TINYINT(1)                                      NOT NULL DEFAULT 0,
+  `status`              ENUM ('pending','active','inactive','rejected') NOT NULL DEFAULT 'pending',
+  `deleted`             TINYINT(1)                                      NOT NULL DEFAULT 0,
+  `created_at`          DATETIME                                        NOT NULL,
+  `updated_at`          DATETIME                                        NOT NULL,
+  INDEX                 `business_entity_shop_idx` (`id_shop`),
+  INDEX                 `business_entity_customer_group_idx` (`id_customer_group`),
+  INDEX                 `business_entity_external_ref_idx` (`external_ref`),
+  INDEX                 `business_entity_deleted_idx` (`deleted`),
   PRIMARY KEY (`id_business_entity`)
 ) ENGINE = ENGINE_TYPE
   DEFAULT CHARSET = utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_customer_b2b`
 (
-  `id_customer_b2b` INT UNSIGNED AUTO_INCREMENT         NOT NULL,
-  `id_customer`     INT UNSIGNED                        NOT NULL,
-  `status`          ENUM ('pending','active','refused') NOT NULL DEFAULT 'pending',
+  `id_customer_b2b` INT UNSIGNED AUTO_INCREMENT          NOT NULL,
+  `id_customer`     INT UNSIGNED                         NOT NULL,
+  `status`          ENUM ('pending','active','rejected') NOT NULL DEFAULT 'pending',
   `external_ref`    VARCHAR(255) DEFAULT NULL,
   `created_at`      DATETIME NOT NULL,
   `updated_at`      DATETIME NOT NULL,
@@ -3125,27 +3175,30 @@ CREATE TABLE `PREFIX_business_entity_customer_b2b`
   `id_business_entity_customer_b2b` INT UNSIGNED AUTO_INCREMENT NOT NULL,
   `id_business_entity`              INT UNSIGNED                NOT NULL,
   `id_customer_b2b`                 INT UNSIGNED                NOT NULL,
-  `id_role_b2b`                     INT UNSIGNED                NOT NULL,
+  `id_role`                         INT UNSIGNED                NOT NULL,
   `is_default`                      TINYINT(1)                  NOT NULL DEFAULT 0,
-  `created_at`                      DATETIME NOT NULL,
+  `created_at`                      DATETIME                    NOT NULL,
+  `updated_at`                      DATETIME                    NOT NULL,
   UNIQUE INDEX `uniq_be_customer` (`id_business_entity`, `id_customer_b2b`),
   INDEX                             `business_entity_customer_b2b_be_idx` (`id_business_entity`),
   INDEX                             `business_entity_customer_b2b_customer_idx` (`id_customer_b2b`),
-  INDEX                             `business_entity_customer_b2b_role_idx` (`id_role_b2b`),
+  INDEX                             `business_entity_customer_b2b_role_idx` (`id_role`),
   PRIMARY KEY (`id_business_entity_customer_b2b`)
 ) ENGINE = ENGINE_TYPE
   DEFAULT CHARSET = utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_business_entity_identifier`
 (
-  `id_identifier`                  INT UNSIGNED AUTO_INCREMENT    NOT NULL,
-  `id_business_entity`         INT UNSIGNED                       NOT NULL,
-  `id_business_identifier`     INT UNSIGNED                       NOT NULL,
-  `value`              VARCHAR(255) NOT NULL,
+  `id_identifier`          INT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `id_business_entity`     INT UNSIGNED                NOT NULL,
+  `id_business_identifier` INT UNSIGNED                NOT NULL,
+  `value`                  VARCHAR(255)                NOT NULL,
+  `created_at`             DATETIME                    NOT NULL,
+  `updated_at`             DATETIME                    NOT NULL,
   UNIQUE INDEX `uniq_business_entity_identifier` (`id_business_entity`, `id_business_identifier`),
-  INDEX                `business_entity_identifier_id_business_entity_idx` (`id_business_entity`),
-  INDEX                `business_entity_identifier_id_business_identifier_idx` (`id_business_identifier`),
-  INDEX                `business_entity_identifier_value_idx` (`value`),
+  INDEX                    `business_entity_identifier_id_business_entity_idx` (`id_business_entity`),
+  INDEX                    `business_entity_identifier_id_business_identifier_idx` (`id_business_identifier`),
+  INDEX                    `business_entity_identifier_value_idx` (`value`),
   PRIMARY KEY (`id_identifier`)
 ) ENGINE = ENGINE_TYPE
   DEFAULT CHARSET = utf8mb4 COLLATION;
@@ -3155,19 +3208,28 @@ CREATE TABLE `PREFIX_business_identifier`
   `id_business_identifier` INT UNSIGNED AUTO_INCREMENT NOT NULL,
   `label`                  VARCHAR(255)                NOT NULL,
   `unremovable`            TINYINT(1)                  NOT NULL DEFAULT 0,
+  `id_zone`                INT UNSIGNED                DEFAULT NULL,
   `deleted`                TINYINT(1)                  NOT NULL DEFAULT 0,
+  `created_at`             DATETIME                    NOT NULL,
+  `updated_at`             DATETIME                    NOT NULL,
+  INDEX                    `business_identifier_zone_idx` (`id_zone`),
   PRIMARY KEY (`id_business_identifier`)
 ) ENGINE = ENGINE_TYPE
   DEFAULT CHARSET = utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_business_entity_address`
 (
-  `id_business_entity` INT UNSIGNED                       NOT NULL,
-  `id_address`         INT UNSIGNED                       NOT NULL,
-  `address_type`       ENUM ('both','invoice','delivery') NOT NULL DEFAULT 'both',
-  `default`            TINYINT(1)                         NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id_business_entity`, `id_address`),
-  INDEX                `business_entity_address_address_idx` (`id_address`)
+  `id_business_entity_address` INT UNSIGNED AUTO_INCREMENT         NOT NULL,
+  `id_business_entity`         INT UNSIGNED                        NOT NULL,
+  `id_address`                 INT UNSIGNED                        NOT NULL,
+  `address_type`               ENUM ('both','invoice','delivery')  NOT NULL DEFAULT 'both',
+  `is_default`                 TINYINT(1)                          NOT NULL DEFAULT 0,
+  `created_at`                 DATETIME                            NOT NULL,
+  `updated_at`                 DATETIME                            NOT NULL,
+  UNIQUE INDEX `uniq_be_address` (`id_business_entity`, `id_address`, `address_type`),
+  INDEX                        `business_entity_address_be_idx` (`id_business_entity`),
+  INDEX                        `business_entity_address_address_idx` (`id_address`),
+  PRIMARY KEY (`id_business_entity_address`)
 ) ENGINE = ENGINE_TYPE
   DEFAULT CHARSET = utf8mb4 COLLATION;
 

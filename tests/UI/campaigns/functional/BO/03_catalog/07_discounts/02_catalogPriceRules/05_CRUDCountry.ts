@@ -223,7 +223,7 @@ describe('BO - Catalog - Discounts : CRUD country', async () => {
       let finalPrice = await foHummingbirdProductPage.getProductInformation(page);
       expect(finalPrice.price.toFixed(2)).to.equal(
         (
-          dataProducts.demo_6.combinations[0].price - catalogPriceRuleData.reduction
+          dataProducts.demo_6.combinations[0].priceTI - catalogPriceRuleData.reduction
         ).toFixed(2),
       );
 
@@ -238,7 +238,7 @@ describe('BO - Catalog - Discounts : CRUD country', async () => {
       finalPrice = await foHummingbirdProductPage.getProductInformation(page);
       expect(finalPrice.price.toFixed(2)).to.equal(
         (
-          dataProducts.demo_6.combinations[0].price - catalogPriceRuleData.reduction
+          dataProducts.demo_6.combinations[0].priceTI - catalogPriceRuleData.reduction
         ).toFixed(2),
       );
     });
@@ -257,10 +257,10 @@ describe('BO - Catalog - Discounts : CRUD country', async () => {
 
       const productDetail = await foHummingbirdCartPage.getProductDetail(page, 1);
       await Promise.all([
-        expect(productDetail.regularPrice).to.equal(dataProducts.demo_6.combinations[0].price),
+        expect(productDetail.regularPrice).to.equal(dataProducts.demo_6.combinations[0].priceTI),
         expect(productDetail.price.toFixed(2)).to.equal(
           (
-            dataProducts.demo_6.combinations[0].price - catalogPriceRuleData.reduction
+            dataProducts.demo_6.combinations[0].priceTI - catalogPriceRuleData.reduction
           ).toFixed(2),
         ),
         expect(productDetail.discountAmount).to.equal(`-€${catalogPriceRuleData.reduction.toFixed(2)}`),
@@ -306,10 +306,10 @@ describe('BO - Catalog - Discounts : CRUD country', async () => {
 
       const productDetail = await foHummingbirdCartPage.getProductDetail(page, 1);
       await Promise.all([
-        expect(productDetail.regularPrice).to.equal(dataProducts.demo_6.combinations[0].price),
+        expect(productDetail.regularPrice).to.equal(dataProducts.demo_6.combinations[0].priceTI),
         expect(productDetail.price.toFixed(2)).to.equal(
           (
-            dataProducts.demo_6.combinations[0].price
+            dataProducts.demo_6.combinations[0].priceTI
           ).toFixed(2),
         ),
       ]);
@@ -362,16 +362,15 @@ describe('BO - Catalog - Discounts : CRUD country', async () => {
       expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/41241
-    it.skip('should check the discount', async function () {
+    it('should check the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountInTheCart_2', baseContext);
 
       const productDetail = await foHummingbirdCartPage.getProductDetail(page, 1);
       await Promise.all([
-        expect(productDetail.regularPrice).to.equal(dataProducts.demo_6.combinations[0].price),
+        expect(productDetail.regularPrice).to.equal(dataProducts.demo_6.combinations[0].priceTE),
         expect(productDetail.price.toFixed(2)).to.equal(
           (
-            dataProducts.demo_6.combinations[0].price - catalogPriceRuleData.reduction
+            dataProducts.demo_6.combinations[0].priceTE - catalogPriceRuleData.reduction
           ).toFixed(2),
         ),
         expect(productDetail.discountAmount).to.equal(`-€${catalogPriceRuleData.reduction.toFixed(2)}`),
@@ -410,16 +409,15 @@ describe('BO - Catalog - Discounts : CRUD country', async () => {
       expect(pageTitle).to.contains(foHummingbirdCartPage.pageTitle);
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/41241
-    it.skip('should check the discount', async function () {
+    it('should check the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountInTheCart_3', baseContext);
 
       const productDetail = await foHummingbirdCartPage.getProductDetail(page, 1);
       await Promise.all([
-        expect(productDetail.regularPrice).to.equal(dataProducts.demo_6.combinations[0].price),
+        expect(productDetail.regularPrice).to.equal(dataProducts.demo_6.combinations[0].priceTE),
         expect(productDetail.price.toFixed(2)).to.equal(
           (
-            dataProducts.demo_6.combinations[0].price - catalogPriceRuleData.reduction
+            dataProducts.demo_6.combinations[0].priceTE - catalogPriceRuleData.reduction
           ).toFixed(2),
         ),
         expect(productDetail.discountAmount).to.equal(`-€${catalogPriceRuleData.reduction.toFixed(2)}`),
@@ -463,16 +461,15 @@ describe('BO - Catalog - Discounts : CRUD country', async () => {
       expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/41241
-    it.skip('should check the discount', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountInTheCart_3', baseContext);
+    it('should check the discount', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountInTheCart_4', baseContext);
 
       const productDetail = await foHummingbirdCartPage.getProductDetail(page, 1);
       await Promise.all([
-        expect(productDetail.regularPrice).to.equal(dataProducts.demo_6.combinations[0].price),
+        expect(productDetail.regularPrice).to.equal(dataProducts.demo_6.combinations[0].priceTE),
         expect(productDetail.price.toFixed(2)).to.equal(
           (
-            dataProducts.demo_6.combinations[0].price - catalogPriceRuleData.reduction
+            dataProducts.demo_6.combinations[0].priceTE - catalogPriceRuleData.reduction
           ).toFixed(2),
         ),
         expect(productDetail.discountAmount).to.equal(`-€${catalogPriceRuleData.reduction.toFixed(2)}`),

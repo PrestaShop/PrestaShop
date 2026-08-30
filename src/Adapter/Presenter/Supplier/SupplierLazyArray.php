@@ -45,6 +45,11 @@ class SupplierLazyArray extends AbstractLazyArray
         $this->language = $language;
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
+        $this->initExtraPropertiesBag(
+            Supplier::class,
+            (int) ($this->supplier['id_supplier'] ?? $this->supplier['id'] ?? 0),
+            $language->getId()
+        );
 
         parent::__construct();
         $this->appendArray($this->supplier);
@@ -65,6 +70,10 @@ class SupplierLazyArray extends AbstractLazyArray
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getImage()
     {
+        if (!$this->doesSupplierImageExist($this->supplier['id'])) {
+            return null;
+        }
+
         return $this->imageRetriever->getImage(
             new Supplier($this->supplier['id'], $this->language->getId()),
             $this->supplier['id']
@@ -85,5 +94,17 @@ class SupplierLazyArray extends AbstractLazyArray
         }
 
         return $this->supplier['nb_products'];
+    }
+
+    /**
+     * Checks if an image exists for our supplier.
+     *
+     * @param int|string $idImage
+     *
+     * @return bool
+     */
+    private function doesSupplierImageExist(int|string $idImage): bool
+    {
+        return file_exists(_PS_SUPP_IMG_DIR_ . $idImage . '.jpg');
     }
 }

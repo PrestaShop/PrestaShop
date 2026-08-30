@@ -22,9 +22,13 @@
        data-quicklink-id="{{ this.activeQuickAccess.id_quick_access }}"
        data-rand="{{ random(1, 200) }}"
        data-url="{{ this.activeQuickAccess.link }}"
-       data-post-link="{{ legacy_path('AdminQuickAccesses') }}"
+       data-post-link="{{ this.ajaxDeleteUrl }}"
        data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header') }}"
        data-link="{{ this.activeQuickAccess.name }}"
+       data-confirm-title="{{ 'Remove from Quick Access'|trans({}, 'Admin.Navigation.Header') }}"
+       data-confirm-message="{{ 'Are you sure you want to remove "%name%" from Quick Access?'|trans({'%name%': this.activeQuickAccess.name}, 'Admin.Navigation.Header') }}"
+       data-confirm-button-label="{{ 'Remove'|trans({}, 'Admin.Actions') }}"
+       data-close-button-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
     >
       <i class="material-icons">remove_circle_outline</i>
       {{ 'Remove from Quick Access'|trans({}, 'Admin.Navigation.Header') }}
@@ -37,7 +41,7 @@
        data-method="add"
        data-icon="{{ this.currentPageIcon }}"
        data-url="{{ this.currentPageQuickAccessLink }}"
-       data-post-link="{{ legacy_path('AdminQuickAccesses') }}"
+       data-post-link="{{ this.ajaxAddUrl }}"
        data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header') }}"
        data-link="{{ this.currentPageTitle }}"
     >
@@ -45,7 +49,7 @@
       {{ 'Add current page to Quick Access'|trans({}, 'Admin.Actions') }}
     </a>
   {% endif %}
-  <a id="quick-manage-link" class="dropdown-item" href="{{ legacy_path('AdminQuickAccesses') }}">
+  <a id="quick-manage-link" class="dropdown-item" href="{{ this.manageUrl }}">
   <i class="material-icons">settings</i>
     {{ 'Manage your quick accesses'|trans({}, 'Admin.Navigation.Header') }}
   </a>

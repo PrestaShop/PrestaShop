@@ -97,7 +97,7 @@ describe('FO - Home Page : Product quick view', async () => {
       const result = await foClassicModalQuickViewPage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_6.name),
-        expect(result.price).to.equal(dataProducts.demo_6.combinations[0].price),
+        expect(result.price).to.equal(dataProducts.demo_6.combinations[0].priceTI),
         expect(result.taxShippingDeliveryLabel).to.equal('Tax included'),
         expect(result.shortDescription).to.equal(dataProducts.demo_6.summary),
         expect(result.coverImage).to.contains(dataProducts.demo_6.coverImage),
@@ -118,7 +118,7 @@ describe('FO - Home Page : Product quick view', async () => {
       const result = await foClassicModalQuickViewPage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_6.name),
-        expect(result.price).to.equal(dataProducts.demo_6.combinations[1].price),
+        expect(result.price).to.equal(dataProducts.demo_6.combinations[1].priceTI),
         expect(result.shortDescription).to.equal(dataProducts.demo_6.summary),
         expect(result.coverImage).to.contains(dataProducts.demo_6.coverImage),
         expect(result.thumbImage).to.contains(dataProducts.demo_6.thumbImage),

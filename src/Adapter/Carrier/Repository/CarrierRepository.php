@@ -441,7 +441,7 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
                 'pc',
                 $this->prefix . 'carrier',
                 'c',
-                'c.id_reference = pc.id_carrier_reference AND c.deleted = 0'
+                'c.id_reference = pc.id_carrier_reference AND c.deleted = 0 AND c.active = 1'
             )
             ->where($qb->expr()->in('pc.id_product', ':product_ids'))
             ->andWhere('pc.id_shop = :shop_id')

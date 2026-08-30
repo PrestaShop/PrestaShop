@@ -59,7 +59,7 @@ class NavBar
         $currentId = (int) Tab::getCurrentParentId();
 
         if ($currentId === -1) {
-            $currentId = $this->menuBuilder->getCurrentTab()?->getId() ?: -1;
+            $currentId = $this->menuBuilder->getCurrentTab()?->getId() ?: $this->menuBuilder->getParentTab()?->getId() ?: -1;
         }
 
         $controllerName = $this->menuBuilder->getLegacyControllerClassName();

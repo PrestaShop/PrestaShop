@@ -18,17 +18,13 @@ class AddOrderReturnStateCommand
      * @var string[]
      */
     private $localizedNames;
-    /**
-     * @var string
-     */
-    private $color;
 
     public function __construct(
         array $localizedNames,
-        string $color
+        private string $color,
+        private bool $isCancellingReturn = false
     ) {
         $this->setLocalizedNames($localizedNames);
-        $this->color = $color;
     }
 
     /**
@@ -63,5 +59,17 @@ class AddOrderReturnStateCommand
     public function getColor()
     {
         return $this->color;
+    }
+
+    public function setCancellingReturn(bool $isCancellingReturn): self
+    {
+        $this->isCancellingReturn = $isCancellingReturn;
+
+        return $this;
+    }
+
+    public function isCancellingReturn(): bool
+    {
+        return $this->isCancellingReturn;
     }
 }

@@ -28,7 +28,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /** @var int|null */
     protected $id_product_attribute;
 
-    /** @var Product */
+    /** @var Product|null */
     protected $product;
 
     /** @var Category|null */
@@ -58,10 +58,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     protected $isPreview = false;
 
+    /**
+     * This variable is used to cache the result of "getTemplateVarProduct", which
+     * is an expensive method that should not be called twice during the same request.
+     */
+    protected $templateVarProductCache = null;
+
     public function canonicalRedirection(string $canonical_url = ''): void
     {
-        // This is there to prevent error, because this function is also called
-        // in parent front controller before we have even loaded our data.
+        /*
+         * This is there to prevent error, because this function is also called
+         * in parent front controller before we have even loaded our data.
+         *
+         * There can also be a scenario where this page is accessed for a non-existing product ID,
+         * in this case, we need to always validate everything, because we can't "die early".
+         */
         if (!Validate::isLoadedObject($this->product)) {
             return;
         }
@@ -92,13 +103,15 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function getCanonicalURL(): string
     {
-        $product = $this->context->smarty->getTemplateVars('product');
-
-        if (!($product instanceof ProductLazyArray)) {
+        /*
+         * There can be a scenario where this page is accessed for a non-existing product ID,
+         * in this case, we need to always validate everything, because we can't "die early".
+         */
+        if (!Validate::isLoadedObject($this->product)) {
             return '';
         }
 
-        return $product->getCanonicalUrl();
+        return $this->getTemplateVarProduct()->getCanonicalUrl();
     }
 
     /**
@@ -134,7 +147,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         // Otherwise immediately show 404
+        // Watch out - the controller goes on, always validate $this->product.
         if (!Validate::isLoadedObject($this->product)) {
+            Hook::exec('actionNotFound');
+            $this->product = null;
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
             $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
@@ -300,6 +316,16 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function initContent(): void
     {
+        /*
+         * There can be a scenario where this page is accessed for a non-existing product ID,
+         * in this case, we need to always validate everything, because we can't "die early".
+         */
+        if (!Validate::isLoadedObject($this->product)) {
+            parent::initContent();
+
+            return;
+        }
+
         // Assign template vars related to the category + execute hooks related to the category
         $this->assignCategory();
 
@@ -423,6 +449,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function displayAjaxQuickview(): void
     {
+        /*
+         * Since this call is made on already a valid product page, we can safely assume that
+         * the product is valid and loaded, so we can use getTemplateVarProduct() without any checks.
+         */
         $productForTemplate = $this->getTemplateVarProduct();
         ob_end_clean();
         header('Content-Type: application/json');
@@ -437,6 +467,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function displayAjaxRefresh(): void
     {
+        /*
+         * Since this call is made on already a valid product page, we can safely assume that
+         * the product is valid and loaded, so we can use getTemplateVarProduct() without any checks.
+         */
         $product = $this->getTemplateVarProduct();
 
         // After refresh, we will show the customer a new quantity he has to use
@@ -741,7 +775,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         }
                     }
                     $id_attributes = Db::getInstance()->executeS('SELECT pac2.`id_attribute` FROM `' . _DB_PREFIX_ . 'product_attribute_combination` pac2' .
-                        ((!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && 0 == Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) ?
+                        ((!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && false === (bool) Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) ?
                         ' INNER JOIN `' . _DB_PREFIX_ . 'stock_available` pa ON pa.id_product_attribute = pac2.id_product_attribute
                         WHERE pa.quantity > 0 AND ' :
                         ' WHERE ') .
@@ -778,7 +812,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
 
             // wash attributes list (if some attributes are unavailables and if allowed to wash it)
-            if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0) {
+            if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && false === (bool) Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
                 foreach ($groups as &$group) {
                     foreach ($group['attributes_quantity'] as $key => $quantity) {
                         if ($quantity <= 0) {
@@ -858,7 +892,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             );
 
             // These two variables are deprecated are kept just for backward compatibility and will be removed in v10
-            $manufacturerImageUrl = $productManufacturer['image']['small']['url'];
+            $manufacturerImageUrl = $productManufacturer['image']['small']['url'] ?? null;
             $productBrandUrl = $productManufacturer['url'];
         }
 
@@ -1011,9 +1045,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * @return Product
+     * @return Product|null
      */
-    public function getProduct(): Product
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
@@ -1182,6 +1216,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function getTemplateVarProduct(): ProductLazyArray
     {
+        // If the product array is already built, we return it
+        if ($this->templateVarProductCache !== null) {
+            return $this->templateVarProductCache;
+        }
+
         // Convert product object into array
         $product = $this->objectPresenter->present($this->product);
 
@@ -1243,11 +1282,16 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['title'] = $this->getProductPageTitle();
 
         // And finally, present it in the modern way
-        return $this->getProductPresenter()->present(
+        $templateVarProduct = $this->getProductPresenter()->present(
             $this->getProductPresentationSettings(),
             $product_full,
             $this->context->language
         );
+
+        // Cache the result in order to avoid multiple calls to this method
+        $this->templateVarProductCache = $templateVarProduct;
+
+        return $templateVarProduct;
     }
 
     /**
@@ -1398,6 +1442,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
+        if (!Validate::isLoadedObject($this->product)) {
+            return $breadcrumb;
+        }
+
         // $productBreadcrumbCategory can have two possible values
         // - current : Category the product was accessed from
         // - default : Product default category
@@ -1427,10 +1475,123 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $breadcrumb['links'][] = [
             'title' => $this->product->name,
-            'url' => $this->context->link->getProductLink($this->product, null, null, null, null, null, (int) $this->getIdProductAttributeByRequest()),
+            'url' => $this->getCanonicalURL(),
         ];
 
         return $breadcrumb;
+    }
+
+    /**
+     * Generates structured data for the current product, extending the default ones.
+     * If you want to enrich or modify this from a module, for example - add reviews, use hook actionFrontControllerSetVariables.
+     *
+     * @return array Enriched structured data for the product page
+     */
+    public function getStructuredData(): array
+    {
+        $structuredData = parent::getStructuredData();
+
+        /*
+         * There can be a scenario where this page is accessed for a non-existing product ID,
+         * in this case, we need to always validate everything, because we can't "die early".
+         */
+        if (!Validate::isLoadedObject($this->product)) {
+            return $structuredData;
+        }
+
+        $product = $this->getTemplateVarProduct();
+
+        // Base structure
+        $structuredData['product'] = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Product',
+            'name' => $product['name'],
+            'url' => $this->getCanonicalURL(),
+            'description' => $product['description_short_text'],
+            'category' => $product['category_name'] ?? '',
+        ];
+
+        // Images, with cover first
+        if (!empty($product['images'])) {
+            $structuredData['product']['image'] = [];
+            if (!empty($product['cover']['large']['url'])) {
+                $structuredData['product']['image'][] = $product['cover']['large']['url'];
+            }
+            foreach ($product['images'] as $image) {
+                if (!empty($image['large']['url']) && (!empty($product['cover']['large']['url']) && $image['large']['url'] !== $product['cover']['large']['url'])) {
+                    $structuredData['product']['image'][] = $image['large']['url'];
+                }
+            }
+        }
+
+        // Identifiers, if set
+        if (!empty($product['reference'])) {
+            $structuredData['product']['sku'] = $product['reference'];
+        }
+        if (!empty($product['mpn'])) {
+            $structuredData['product']['mpn'] = $product['mpn'];
+        }
+        if (!empty($product['ean13'])) {
+            $structuredData['product']['gtin13'] = $product['ean13'];
+        }
+        if (!empty($product['upc'])) {
+            $structuredData['product']['gtin12'] = $product['upc'];
+        }
+
+        // Add brand data
+        if (!empty($product['id_manufacturer']) && !empty($product['manufacturer_name'])) {
+            $structuredData['product']['brand'] = [
+                '@type' => 'Brand',
+                'name' => $product['manufacturer_name'],
+            ];
+        } elseif (!empty($this->context->shop->name)) {
+            $structuredData['product']['brand'] = [
+                '@type' => 'Organization',
+                'name' => $this->context->shop->name,
+            ];
+        }
+
+        // Add weight if filled in
+        if (!empty((float) $product['weight'])) {
+            $structuredData['product']['weight'] = [
+                '@type' => 'QuantitativeValue',
+                'value' => number_format($product['weight'], $this->context->getComputingPrecision(), '.', ''),
+                'unitCode' => $product['weight_unit'],
+            ];
+        }
+
+        // Add offer data if price is shown
+        if ($product['show_price']) {
+            $structuredData['product']['offers'] = [
+                '@type' => 'Offer',
+                'priceCurrency' => $this->context->currency->iso_code,
+                // We are using number format to avoid float encoding issues in the final JSON
+                'price' => number_format($product['price_amount'], $this->context->getComputingPrecision(), '.', ''),
+                'name' => $product['name'],
+                'url' => $this->getCanonicalURL(),
+                'priceValidUntil' => date('Y-m-d', strtotime('+15 day')),
+                'availability' => $product['seo_availability'],
+                'seller' => [
+                    '@type' => 'Organization',
+                    'name' => $this->context->shop->name,
+                ],
+            ];
+
+            // Add item condition if available
+            if (!empty($product['show_condition']) && !empty($product['condition']['schema_url'])) {
+                $structuredData['product']['offers']['itemCondition'] = $product['condition']['schema_url'];
+            }
+
+            // Add codes if available
+            if (!empty($product['reference'])) {
+                $structuredData['product']['offers']['sku'] = $product['reference'];
+            }
+            if (!empty($product['mpn'])) {
+                $structuredData['product']['offers']['mpn'] = $product['mpn'];
+            }
+        }
+
+        return $structuredData;
     }
 
     protected function addProductCustomizationData(array $product_full)

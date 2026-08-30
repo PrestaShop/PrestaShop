@@ -174,7 +174,7 @@ class PackCore extends Product
             $p->pack_quantity = $row['quantity'];
             $p->id_pack_product_attribute = (isset($row['id_product_attribute_item']) && $row['id_product_attribute_item'] ? $row['id_product_attribute_item'] : 0);
             if (isset($row['id_product_attribute_item']) && $row['id_product_attribute_item']) {
-                $sql = 'SELECT agl.`name` AS group_name, al.`name` AS attribute_name, pa.`reference` AS attribute_reference
+                $sql = 'SELECT agl.`public_name` AS group_name, al.`name` AS attribute_name, pa.`reference` AS attribute_reference
 					FROM `' . _DB_PREFIX_ . 'product_attribute` pa
 					' . Shop::addSqlAssociation('product_attribute', 'pa') . '
 					LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
@@ -184,7 +184,7 @@ class PackCore extends Product
 					LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) Context::getContext()->language->id . ')
 					WHERE pa.`id_product_attribute` = ' . $row['id_product_attribute_item'] . '
 					GROUP BY pa.`id_product_attribute`, ag.`id_attribute_group`
-					ORDER BY pa.`id_product_attribute`';
+					ORDER BY ag.`position`, a.`position`';
 
                 $combinations = Db::getInstance()->executeS($sql);
                 foreach ($combinations as $k => $combination) {
@@ -371,7 +371,7 @@ class PackCore extends Product
             if (Combination::isFeatureActive() && isset($line['id_product_attribute_item']) && $line['id_product_attribute_item']) {
                 $line['cache_default_attribute'] = $line['id_product_attribute'] = $line['id_product_attribute_item'];
 
-                $sql = 'SELECT pa.`reference` AS attribute_reference, agl.`name` AS group_name, al.`name` AS attribute_name,  pai.`id_image` AS id_product_attribute_image
+                $sql = 'SELECT pa.`reference` AS attribute_reference, agl.`public_name` AS group_name, al.`name` AS attribute_name,  pai.`id_image` AS id_product_attribute_image
 				FROM `' . _DB_PREFIX_ . 'product_attribute` pa
 				' . Shop::addSqlAssociation('product_attribute', 'pa') . '
 				LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON pac.`id_product_attribute` = ' . $line['id_product_attribute_item'] . '
@@ -382,7 +382,7 @@ class PackCore extends Product
 				LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_image` pai ON (' . $line['id_product_attribute_item'] . ' = pai.`id_product_attribute`)
 				WHERE pa.`id_product` = ' . (int) $line['id_product'] . ' AND pa.`id_product_attribute` = ' . $line['id_product_attribute_item'] . '
 				GROUP BY pa.`id_product_attribute`, ag.`id_attribute_group`
-				ORDER BY pa.`id_product_attribute`';
+				ORDER BY ag.`position`, a.`position`';
 
                 $attr_name = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 

@@ -265,4 +265,10 @@ class ProductConstraintException extends ProductException
      * The product doesn't have the minimum data to be online.
      */
     public const INVALID_ONLINE_DATA = 500;
+
+    /**
+     * When product description contains embedded HTML (iframe, form, input, embed, object)
+     * while the "Allow iframes on HTML fields" option is disabled.
+     */
+    public const INVALID_DESCRIPTION_CONTAINS_EMBEDDED_HTML = 510;
 }

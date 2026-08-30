@@ -15,6 +15,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -91,5 +92,22 @@ class TaxRulesGroupType extends TranslatorAwareType
                 ],
             ]);
         }
+
+        if ($options['show_tax_rules_list']) {
+            $builder->add('tax_rules', TaxRulesType::class, [
+                'mapped' => false,
+                'tax_rules_group_id' => $options['tax_rules_group_id'],
+            ]);
+        }
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'show_tax_rules_list' => false,
+            'tax_rules_group_id' => null,
+        ]);
+        $resolver->setAllowedTypes('show_tax_rules_list', 'bool');
+        $resolver->setAllowedTypes('tax_rules_group_id', ['null', 'int']);
     }
 }

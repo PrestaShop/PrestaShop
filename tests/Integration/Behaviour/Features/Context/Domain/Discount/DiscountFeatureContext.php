@@ -59,6 +59,14 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get an error that the gift product has a minimum quantity greater than 1
+     */
+    public function assertGiftProductMinimumQuantity(): void
+    {
+        $this->assertLastErrorIs(DiscountConstraintException::class, DiscountConstraintException::INVALID_GIFT_PRODUCT_MINIMUM_QUANTITY);
+    }
+
+    /**
      * @Then I should get an error that the discount code is already used
      */
     public function assertDiscountCodeAlreadyUsed(): void
@@ -745,6 +753,58 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then discount :discountReference applies to all customers and is disabled
+     */
+    public function assertDiscountAppliesToAllCustomersAndIsDisabled(string $discountReference): void
+    {
+        $discount = $this->getDiscountForEditing($discountReference);
+        Assert::assertNull(
+            $discount->getCustomerId(),
+            sprintf('Discount "%s" should apply to all customers (no customer restriction)', $discountReference)
+        );
+        Assert::assertFalse(
+            $discount->isActive(),
+            sprintf('Discount "%s" should be disabled', $discountReference)
+        );
+    }
+
+    /**
+     * @Then discount :discountReference is enabled and still applies to customer :customerReference
+     */
+    public function assertDiscountIsEnabledAndStillAppliesToCustomer(string $discountReference, string $customerReference): void
+    {
+        $discount = $this->getDiscountForEditing($discountReference);
+        Assert::assertTrue(
+            $discount->isActive(),
+            sprintf('Discount "%s" should still be enabled', $discountReference)
+        );
+        $expectedCustomerId = $this->referenceToId($customerReference);
+        Assert::assertEquals(
+            $expectedCustomerId,
+            $discount->getCustomerId(),
+            sprintf('Discount "%s" should still apply to customer "%s"', $discountReference, $customerReference)
+        );
+    }
+
+    /**
+     * @Then discount :discountReference is enabled and applies only to group :groupReference
+     */
+    public function assertDiscountIsEnabledAndAppliesOnlyToGroup(string $discountReference, string $groupReference): void
+    {
+        $discount = $this->getDiscountForEditing($discountReference);
+        Assert::assertTrue(
+            $discount->isActive(),
+            sprintf('Discount "%s" should be enabled', $discountReference)
+        );
+        $expectedGroupId = $this->referenceToId($groupReference);
+        Assert::assertEquals(
+            [$expectedGroupId],
+            $discount->getCustomerGroupIds(),
+            sprintf('Discount "%s" should apply only to group "%s"', $discountReference, $groupReference)
+        );
+    }
+
+    /**
      * @Then cart :cartReference should have :count cart rules applied
      *
      * @param string $cartReference
@@ -785,9 +845,41 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
      */
     public function bulkUpdateDiscountsStatus(bool $enable, string $discountReferences)
     {
-        $this->getCommandBus()->handle(
-            new BulkUpdateDiscountsStatusCommand($this->referencesToIds($discountReferences), $enable)
-        );
+        try {
+            $this->getCommandBus()->handle(
+                new BulkUpdateDiscountsStatusCommand($this->referencesToIds($discountReferences), $enable)
+            );
+        } catch (DiscountException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When /^I enable discount "(.+)"$/
+     */
+    public function enableDiscount(string $discountReference): void
+    {
+        try {
+            $command = new UpdateDiscountCommand($this->referenceToId($discountReference));
+            $command->setActive(true);
+            $this->getCommandBus()->handle($command);
+        } catch (DiscountException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When /^I disable discount "(.+)"$/
+     */
+    public function disableDiscount(string $discountReference): void
+    {
+        try {
+            $command = new UpdateDiscountCommand($this->referenceToId($discountReference));
+            $command->setActive(false);
+            $this->getCommandBus()->handle($command);
+        } catch (DiscountException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**

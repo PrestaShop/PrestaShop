@@ -90,6 +90,30 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
     }
 
     /**
+     * @Given product :productReference requires customization
+     *
+     * @param string $productReference
+     */
+    public function setProductRequiresCustomization(string $productReference): void
+    {
+        $defaultLangId = (int) Language::getIdByIso('en');
+        $this->updateProductCustomizationFields(
+            $productReference,
+            ['required_customization_field'],
+            [
+                [
+                    'id' => null,
+                    'type' => CustomizationFieldType::TYPE_TEXT,
+                    'localized_names' => [$defaultLangId => 'Required customization'],
+                    'is_required' => true,
+                    'added_by_module' => false,
+                ],
+            ],
+            ShopConstraint::shop($this->getDefaultShopId())
+        );
+    }
+
+    /**
      * @When I remove all customization fields from product :productReference
      *
      * @param string $productReference

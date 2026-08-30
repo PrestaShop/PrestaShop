@@ -118,6 +118,7 @@ class DbPDOCore extends Db
         }
 
         $this->link->exec('SET SESSION sql_mode = \'\'');
+        $this->setTimeZone();
 
         return $this->link;
     }

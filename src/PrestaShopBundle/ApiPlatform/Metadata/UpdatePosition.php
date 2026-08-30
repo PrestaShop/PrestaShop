@@ -117,6 +117,8 @@ class UpdatePosition extends AbstractScopedOperation
         ?bool $experimentalOperation = null,
         ?string $positionDefinition = null,
         ?string $parentIdField = null,
+        ?string $minVersion = null,
+        ?string $maxVersion = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_PATCH;

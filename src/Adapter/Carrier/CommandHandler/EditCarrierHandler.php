@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\EditCarrierHandlerI
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotUpdateCarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Edit Carrier
@@ -30,6 +31,7 @@ class EditCarrierHandler implements EditCarrierHandlerInterface
         private readonly CarrierLogoFileUploader $carrierLogoFileUploader,
         private readonly CarrierValidator $carrierValidator,
         private readonly ShopRepository $shopRepository,
+        private readonly HookDispatcherInterface $hookDispatcher
     ) {
     }
 
@@ -142,6 +144,14 @@ class EditCarrierHandler implements EditCarrierHandlerInterface
         if (null !== $command->getZones()) {
             $this->carrierRepository->updateAssociatedZones($newCarrierId, $command->getZones());
         }
+
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionCarrierUpdate',
+            [
+                'id_carrier' => (int) $command->getCarrierId()->getValue(),
+                'carrier' => $newCarrier,
+            ]
+        );
 
         return $newCarrierId;
     }

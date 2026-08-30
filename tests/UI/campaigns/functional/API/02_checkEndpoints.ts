@@ -4,38 +4,41 @@ import {expect} from 'chai';
 import {
   boApiClientsPage,
   boDashboardPage,
+  boFeatureFlagPage,
   boLoginPage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'functional_API_checkEndpoints';
 
-// @todo : https://github.com/PrestaShop/PrestaShop/issues/41109
+// Dear developers, the CI is broken when you update the module ps_apiresources on the Core.
+// It's normal : it's time to add them UI Tests.
 describe('API : Check endpoints', async () => {
   const subsetEndpoints: string[] = [
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/address/02_bulkDeleteAddress.ts
     '/addresses/bulk-delete: DELETE',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/address/03_patchCartAddress.ts
     '/addresses/carts/{cartId}: PATCH',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/address/05_getCustomerAddress.ts
     '/addresses/customers/{addressId}: GET',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/address/06_patchCustomerAddress.ts
     '/addresses/customers/{addressId}: PATCH',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/address/04_postCustomerAddress.ts
     '/addresses/customers: POST',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/address/08_getManufacturerAddress.ts
     '/addresses/manufacturers/{addressId}: GET',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/address/09_patchManufacturerAddress.ts
     '/addresses/manufacturers/{addressId}: PATCH',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/address/07_postManufacturerAddress.ts
     '/addresses/manufacturers: POST',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/address/10_patchOrderAddress.ts
     '/addresses/orders/{orderId}: PATCH',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/address/11_deleteAddress.ts
     '/addresses/{addressId}: DELETE',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/address/01_getAddressList.ts
     '/addresses: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/apiClient/01_getApiClientInfos.ts
     '/api-clients/infos: GET',
@@ -49,6 +52,12 @@ describe('API : Check endpoints', async () => {
     '/api-clients: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/apiClient/05_postApiClient.ts
     '/api-clients: POST',
+    // @todo: add tests
+    '/attachments/search: GET',
+    // @todo: add tests
+    '/attachments/{attachmentId}/files: GET',
+    // @todo: add tests
+    '/attachments/{attachmentId}/information: GET',
     // @todo: add tests
     '/attributes/attributes/bulk-delete: DELETE',
     // tests/UI/campaigns/functional/API/02_endpoints/attribute/01_deleteAttributesAttributeId.ts
@@ -78,6 +87,10 @@ describe('API : Check endpoints', async () => {
     // tests/UI/campaigns/functional/API/02_endpoints/attribute/10_postAttributesGroup.ts
     '/attributes/groups: POST',
     // @todo: add tests
+    '/cart-rules/search: GET',
+    // @todo: add tests
+    '/carts/{cartId}/emails: PUT',
+    // @todo: add tests
     '/categories/bulk-delete/{deleteMode}: DELETE',
     // @todo: add tests
     '/categories/bulk-update-status: PUT',
@@ -101,10 +114,20 @@ describe('API : Check endpoints', async () => {
     '/contacts/{contactId}: GET',
     // @todo: add tests
     '/contacts/{contactId}: PATCH',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/contacts/03_getContacts.ts
     '/contacts: GET',
     // @todo: add tests
     '/contacts: POST',
+    // @todo: add tests
+    '/countries/{countryId}: DELETE',
+    // @todo: add tests
+    '/countries/{countryId}: GET',
+    // @todo: add tests
+    '/countries/{countryId}: PATCH',
+    // @todo: add tests
+    '/countries: GET',
+    // @todo: add tests
+    '/countries: POST',
     // @todo: add tests
     '/customers/bulk-delete: DELETE',
     // @todo: add tests
@@ -117,10 +140,12 @@ describe('API : Check endpoints', async () => {
     '/customers/groups/{customerGroupId}: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/03_putCustomerGroupsId.ts
     '/customers/groups/{customerGroupId}: PUT',
-    // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/05_getCustomersGroups.ts
+    // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/04_getCustomersGroups.ts
     '/customers/groups: GET',
-    // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/04_postCustomersGroup.ts
+    // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/05_postCustomersGroup.ts
     '/customers/groups: POST',
+    // @todo: add tests
+    '/customers/required-fields: PUT',
     // @todo: add tests
     '/customers/search: GET',
     // @todo: add tests
@@ -133,24 +158,23 @@ describe('API : Check endpoints', async () => {
     '/customers/{customerId}: PATCH',
     // @todo: add tests
     '/customers: POST',
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/40285
-    // tests/UI/campaigns/functional/API/02_endpoints/discount/01_getDiscountTypes.ts
-    '/discount-types: GET',
     // @todo: add tests
     '/discounts/bulk-delete: DELETE',
     // @todo: add tests
     '/discounts/bulk-update-status: PATCH',
+    // tests/UI/campaigns/functional/API/02_endpoints/discount/01_getDiscountTypes.ts
+    '/discounts/types: GET',
     // @todo: add tests
     '/discounts/{discountId}/duplicate: POST',
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
+    // tests/UI/campaigns/functional/API/02_endpoints/discount/02_deleteDiscountsDiscountsId.ts
     '/discounts/{discountId}: DELETE',
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/38647
     '/discounts/{discountId}: GET',
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/39682
     '/discounts/{discountId}: PATCH',
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
+    // tests/UI/campaigns/functional/API/02_endpoints/discount/03_getDiscounts.ts
     '/discounts: GET',
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
+    // tests/UI/campaigns/functional/API/02_endpoints/discount/03_postDiscounts.ts
     '/discounts: POST',
     // @todo: add tests
     '/features/bulk-delete: DELETE',
@@ -172,7 +196,7 @@ describe('API : Check endpoints', async () => {
     '/features/{featureId}: GET',
     // @todo: add tests
     '/features/{featureId}: PATCH',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/features/11_getFeatures.ts
     '/features: GET',
     // @todo: add tests
     '/features: POST',
@@ -186,6 +210,18 @@ describe('API : Check endpoints', async () => {
     '/hooks: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/language/01_getLanguages.ts
     '/languages: GET',
+    // @todo: add tests
+    '/manufacturers/bulk-delete: PUT',
+    // @todo: add tests
+    '/manufacturers/{manufacturerId}: DELETE',
+    // @todo: add tests
+    '/manufacturers/{manufacturerId}: GET',
+    // @todo: add tests
+    '/manufacturers/{manufacturerId}: PATCH',
+    // @todo: add tests
+    '/manufacturers: GET',
+    // @todo: add tests
+    '/manufacturers: POST',
     // tests/UI/campaigns/functional/API/02_endpoints/module/10_putModulesBulkUninstall.ts
     '/modules/bulk-uninstall: PUT',
     // tests/UI/campaigns/functional/API/02_endpoints/module/09_putModulesBulkUpdateStatus.ts
@@ -209,6 +245,34 @@ describe('API : Check endpoints', async () => {
     // tests/UI/campaigns/functional/API/02_endpoints/module/11_getModules.ts
     '/modules: GET',
     // @todo: add tests
+    '/order-messages/bulk-delete: DELETE',
+    // @todo: add tests
+    '/order-messages/{orderMessageId}: DELETE',
+    // @todo: add tests
+    '/order-messages/{orderMessageId}: GET',
+    // @todo: add tests
+    '/order-messages/{orderMessageId}: PATCH',
+    // @todo: add tests
+    '/order-messages: GET',
+    // @todo: add tests
+    '/order-messages: POST',
+    // @todo: add tests
+    '/order-return-states/bulk-delete: DELETE',
+    // @todo: add tests
+    '/order-return-states/{orderReturnStateId}: DELETE',
+    // @todo: add tests
+    '/order-return-states/{orderReturnStateId}: GET',
+    // @todo: add tests
+    '/order-return-states/{orderReturnStateId}: PATCH',
+    // @todo: add tests
+    '/order-return-states: GET',
+    // @todo: add tests
+    '/order-return-states: POST',
+    // @todo: add tests
+    '/order-returns/{orderReturnId}: GET',
+    // @todo: add tests
+    '/order-returns/{orderReturnId}: PATCH',
+    // @todo: add tests
     '/products/combinations/{combinationId}: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/product/01_deleteProductImageId.ts
     '/products/images/{imageId}: DELETE',
@@ -218,6 +282,12 @@ describe('API : Check endpoints', async () => {
     '/products/images/{imageId}: POST',
     // tests/UI/campaigns/functional/API/02_endpoints/product/11_getProductsSearch.ts
     '/products/search: GET',
+    // @todo: add tests
+    '/products/{productId}/assign-to-categories: POST',
+    // @todo: add tests
+    '/products/{productId}/categories: DELETE',
+    // @todo: add tests
+    '/products/{productId}/categories: POST',
     // @todo: add tests
     '/products/{productId}/combination-ids: GET',
     // @todo: add tests
@@ -240,6 +310,36 @@ describe('API : Check endpoints', async () => {
     '/products: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/product/10_postProduct.ts
     '/products: POST',
+    // @todo: add tests
+    '/profiles/{profileId}: DELETE',
+    // @todo: add tests
+    '/profiles/{profileId}: GET',
+    // @todo: add tests
+    '/profiles: POST',
+    // @todo: add tests
+    '/search-aliases/bulk-delete: DELETE',
+    // @todo: add tests
+    '/search-aliases/{searchTerm}: GET',
+    // @todo: add tests
+    '/search-aliases/{searchTerm}: PUT',
+    // @todo: add tests
+    '/search-aliases: GET',
+    // @todo: add tests
+    '/search-aliases: POST',
+    // tests/UI/campaigns/functional/API/02_endpoints/searchAlias/01_deleteSearch.ts
+    // '/search-aliases: DELETE',
+    // @todo: add tests
+    '/search-engines/bulk-delete: DELETE',
+    // @todo: add tests
+    '/search-engines/{searchEngineId}: DELETE',
+    // @todo: add tests
+    '/search-engines/{searchEngineId}: GET',
+    // @todo: add tests
+    '/search-engines/{searchEngineId}: PATCH',
+    // tests/UI/campaigns/functional/API/02_endpoints/searchEngine/05_getSearchEngines.ts
+    '/search-engines: GET',
+    // @todo: add tests
+    '/search-engines: POST',
     // @todo: add tests
     '/showcase-cards/{showcaseCardName}/{employeeId}/close: PUT',
     // @todo: add tests
@@ -281,6 +381,8 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/tax-rules-groups/bulk-update-status: PUT',
     // @todo: add tests
+    '/tax-rules-groups/{taxRulesGroupId}/set-status: PATCH',
+    // @todo: add tests
     '/tax-rules-groups/{taxRulesGroupId}: DELETE',
     // @todo: add tests
     '/tax-rules-groups/{taxRulesGroupId}: GET',
@@ -290,6 +392,12 @@ describe('API : Check endpoints', async () => {
     '/tax-rules-groups: GET',
     // @todo: add tests
     '/tax-rules-groups: POST',
+    // @todo: add tests
+    '/tax-rules/{taxRuleId}: DELETE',
+    // @todo: add tests
+    '/tax-rules: GET',
+    // @todo: add tests
+    '/tax-rules: POST',
     // @todo: add tests
     '/taxes/bulk-delete: PUT',
     // @todo: add tests
@@ -354,6 +462,8 @@ describe('API : Check endpoints', async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
+  setFeatureFlag(boFeatureFlagPage.featureFlagExperimentalEndpoints, true, `${baseContext}_preTest_0`);
+
   describe('Check endpoints', async () => {
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
@@ -410,15 +520,21 @@ describe('API : Check endpoints', async () => {
       }
       endpoints = endpoints.sort();
 
+      // Let this debug : it is always hardcore to debug endpoints
+      //console.log(endpoints);
+
+      // @todo : Check regulary
+      expect(endpoints).to.deep.equals(subsetEndpoints);
+
       expect(endpoints.length).to.be.greaterThan(0);
       subsetEndpoints.forEach((endpoint: string) => {
         const idxEndpoint = endpoints.indexOf(endpoint);
-        expect(idxEndpoint).to.be.greaterThan(lastIdxEndpoint);
+        expect(idxEndpoint).not.to.equals(-1, `Cound not find expected endpoint ${endpoint}`);
+        expect(idxEndpoint).to.be.greaterThan(lastIdxEndpoint, `Endpoint "${endpoint}" : ${idxEndpoint} <= ${lastIdxEndpoint}`);
         lastIdxEndpoint = idxEndpoint;
       });
-
-      // @todo : Check regulary
-      // expect(endpoints).to.deep.equals(subsetEndpoints);
     });
   });
+
+  setFeatureFlag(boFeatureFlagPage.featureFlagExperimentalEndpoints, false, `${baseContext}_postTest_0`);
 });

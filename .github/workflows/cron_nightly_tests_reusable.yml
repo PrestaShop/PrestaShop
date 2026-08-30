@@ -125,6 +125,13 @@ jobs:
             CAMPAIGN: 'functional:productV2'
           - BRANCH: 9.1.x
             CAMPAIGN: 'modules'
+          ## 9.2.x
+          - BRANCH: 9.2.x
+            CAMPAIGN: 'sanity:productV2'
+          - BRANCH: 9.2.x
+            CAMPAIGN: 'functional:productV2'
+          - BRANCH: 9.2.x
+            CAMPAIGN: 'modules'
           ## develop
           - BRANCH: develop
             CAMPAIGN: 'sanity:productV2'
@@ -232,7 +239,7 @@ jobs:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         name: Download reports
         with:
           path: ${{ env.REPORTS_DIR }}

@@ -12,10 +12,10 @@ namespace PrestaShop\PrestaShop\Core;
  */
 final class Version
 {
-    public const VERSION = '9.2.0';
+    public const VERSION = '9.3.0';
     public const MAJOR_VERSION_STRING = '9';
     public const MAJOR_VERSION = 9;
-    public const MINOR_VERSION = 2;
+    public const MINOR_VERSION = 3;
     public const RELEASE_VERSION = 0;
 
     // This class should not be instanciated

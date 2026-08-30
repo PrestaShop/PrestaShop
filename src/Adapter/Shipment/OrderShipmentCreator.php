@@ -35,8 +35,8 @@ class OrderShipmentCreator
             $shipment->setCarrierId((int) $carrierId);
             $shipment->setAddressId((int) $order->id_address_delivery);
             $shipment->setTrackingNumber(null);
-            $shipment->setShippingCostTaxExcluded((float) $products['total_shipping_tax_excl']);
-            $shipment->setShippingCostTaxIncluded((float) $products['total_shipping_tax_incl']);
+            $shipment->setShippingCostTaxExcluded(0);
+            $shipment->setShippingCostTaxIncluded(0);
             $shipment->setDeliveredAt(null);
             $shipment->setShippedAt(null);
             $shipment->setCancelledAt(null);
@@ -50,8 +50,8 @@ class OrderShipmentCreator
             $orderCarrier->id_order = (int) $order->id;
             $orderCarrier->id_carrier = $carrierId;
             $orderCarrier->weight = (float) $productWeight[0];
-            $orderCarrier->shipping_cost_tax_excl = (float) $products['total_shipping_tax_excl'];
-            $orderCarrier->shipping_cost_tax_incl = (float) $products['total_shipping_tax_incl'];
+            $orderCarrier->shipping_cost_tax_excl = 0;
+            $orderCarrier->shipping_cost_tax_incl = 0;
             $orderCarrier->add();
             // match products with order details to get quantities & orderDetailId
             foreach (OrderDetail::getList($order->id) as $orderDetailProduct) {

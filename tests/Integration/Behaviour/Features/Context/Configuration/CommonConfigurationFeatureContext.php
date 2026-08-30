@@ -8,6 +8,9 @@ namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
 use Configuration;
 use Country;
+use Group;
+use PrestaShop\PrestaShop\Adapter\Feature\GroupFeature;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tools;
@@ -50,6 +53,27 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     public function activateGroupFeature()
     {
         Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', '1');
+        Group::clearCachedValues();
+    }
+
+    /**
+     * @Given /^groups feature is deactivated$/
+     */
+    public function deactivateGroupFeature(): void
+    {
+        /** @var GroupFeature $groupFeature */
+        $groupFeature = CommonFeatureContext::getContainer()->get('prestashop.adapter.feature.group_feature');
+        $groupFeature->disable();
+        Group::clearCachedValues();
+    }
+
+    /**
+     * @Given the default shop is referenced as :reference
+     */
+    public function defaultShopReferencedAs(string $reference): void
+    {
+        $shopId = (int) Configuration::get('PS_SHOP_DEFAULT') ?: 1;
+        SharedStorage::getStorage()->set($reference, $shopId);
     }
 
     /**

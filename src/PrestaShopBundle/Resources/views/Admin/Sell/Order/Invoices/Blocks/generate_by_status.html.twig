@@ -45,7 +45,7 @@
         {% set badgeType = orders_count > 0 ? 'success' : 'danger' %}
         <span class="badge badge-{{ badgeType }}">{{ orders_count }}</span>
         <span class="status-name">
-          {{- label is not same as(false) ? label|raw -}}
+          {{- label is not same as(false) ? label|raw_purified -}}
         </span>
       </label>
     </div>

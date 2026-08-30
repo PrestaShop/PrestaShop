@@ -9,7 +9,7 @@
 <div class="alert alert-warning" role="alert">
   <p>
     {{ 'This feature has been disabled. You can activate it here: %url%.'|trans({
-      '%url%': "<a href=\"#{href}\">#{linkText}</a>"
-    }, 'Admin.Catalog.Notification')|raw }}
+      '%url%': "<a href=\"#{href}\">#{linkText}</a>",
+    }, 'Admin.Catalog.Notification')|raw_purified }}
   </p>
 </div>

@@ -6,56 +6,67 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Discount;
 
+use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
 use PrestaShopBundle\Form\Admin\Type\EnrichedChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DiscountTypeSelectorType extends TranslatorAwareType
 {
+    private const ICON_MAP = [
+        DiscountType::CART_LEVEL => ['icon' => 'shopping_cart', 'help' => 'Apply on total cart'],
+        DiscountType::PRODUCT_LEVEL => ['icon' => 'shoppingmode', 'help' => 'Apply on catalog products'],
+        DiscountType::FREE_GIFT => ['icon' => 'card_giftcard', 'help' => 'Apply on free gift'],
+        DiscountType::FREE_SHIPPING => ['icon' => 'local_shipping', 'help' => 'Apply on shipping fees'],
+        DiscountType::ORDER_LEVEL => ['icon' => 'article', 'help' => 'Apply on cart and shipping fees'],
+    ];
+
+    public function __construct(
+        private readonly DiscountTypeRepository $discountTypeRepository,
+        private readonly LanguageContext $languageContext,
+        TranslatorInterface $translator,
+        array $locales,
+    ) {
+        parent::__construct($translator, $locales);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-        $builder
-            ->add('discount_type_selector', EnrichedChoiceType::class, [
-                'label' => $this->trans('This type cannot be modified after being saved.', 'Admin.Catalog.Feature'),
-                'required' => false,
-                'placeholder' => null,
-                'choices' => [
-                    $this->trans('On cart amount', 'Admin.Catalog.Feature') => DiscountType::CART_LEVEL,
-                    $this->trans('On catalog products', 'Admin.Catalog.Feature') => DiscountType::PRODUCT_LEVEL,
-                    $this->trans('Free gift', 'Admin.Catalog.Feature') => DiscountType::FREE_GIFT,
-                    $this->trans('On free shipping', 'Admin.Catalog.Feature') => DiscountType::FREE_SHIPPING,
-                    // $this->trans('On total order', 'Admin.Catalog.Feature') => DiscountType::ORDER_LEVEL,
-                    // (Disabled temporarily, because of infinite loop issue with this kind of discount. See issue #39419)
-                ],
-                'choice_attr' => [
-                    $this->trans('On cart amount', 'Admin.Catalog.Feature') => [
-                        'icon' => 'shopping_cart',
-                        'help' => $this->trans('Apply on total cart', 'Admin.Catalog.Feature'),
-                    ],
-                    $this->trans('On catalog products', 'Admin.Catalog.Feature') => [
-                        'icon' => 'shoppingmode',
-                        'help' => $this->trans('Apply on catalog products', 'Admin.Catalog.Feature'),
-                    ],
-                    $this->trans('Free gift', 'Admin.Catalog.Feature') => [
-                        'icon' => 'card_giftcard',
-                        'help' => $this->trans('Apply on free gift', 'Admin.Catalog.Feature'),
-                    ],
-                    $this->trans('On free shipping', 'Admin.Catalog.Feature') => [
-                        'icon' => 'local_shipping',
-                        'help' => $this->trans('Apply on shipping fees', 'Admin.Catalog.Feature'),
-                    ],
-                    /*
-                    $this->trans('On total order', 'Admin.Catalog.Feature') => [
-                        'icon' => 'article',
-                        'help' => $this->trans('Apply on cart and shipping fees', 'Admin.Catalog.Feature'),
-                    ],
-                    */
-                ],
-            ])
-        ;
+
+        $currentLangId = $this->languageContext->getId();
+        $choices = [];
+        $choiceAttr = [];
+
+        foreach ($this->discountTypeRepository->getAllTypes() as $type) {
+            // Disabled temporarily, because of infinite loop issue with this kind of discount. See issue #39419
+            // Linked to https://github.com/PrestaShop/PrestaShop/issues/42209
+            if (!$type['enabled'] || $type['discount_type'] === DiscountType::ORDER_LEVEL) {
+                continue;
+            }
+            $discountTypeValue = $type['discount_type'];
+            $name = $type['names'][$currentLangId] ?? (reset($type['names']) ?: $discountTypeValue);
+            $iconData = self::ICON_MAP[$discountTypeValue] ?? [];
+
+            $choices[$name] = $discountTypeValue;
+            $choiceAttr[$name] = [
+                'icon' => $iconData['icon'] ?? '',
+                'help' => isset($iconData['help']) ? $this->trans($iconData['help'], 'Admin.Catalog.Feature') : '',
+                'badge-label' => $type['is_core'] ? $this->trans('Core', 'Admin.Catalog.Feature') : null,
+            ];
+        }
+
+        $builder->add('discount_type_selector', EnrichedChoiceType::class, [
+            'label' => $this->trans('This type cannot be modified after being saved.', 'Admin.Catalog.Feature'),
+            'required' => false,
+            'placeholder' => null,
+            'choices' => $choices,
+            'choice_attr' => $choiceAttr,
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

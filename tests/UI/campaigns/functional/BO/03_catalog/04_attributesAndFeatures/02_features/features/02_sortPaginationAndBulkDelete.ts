@@ -31,7 +31,6 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfFeatures: number = 0;
-  let sortColumnName: string = 'id_feature';
 
   // PRE-condition : Create 19 features
   const creationTests: number[] = new Array(19).fill(0, 0, 19);
@@ -40,7 +39,6 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     createFeatureTest(createFeatureData, `${baseContext}_preTest${index}`);
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -156,11 +154,11 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await boFeaturesPage.getAllRowsColumnContent(page, test.args.sortBy, sortColumnName);
+        const nonSortedTable = await boFeaturesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         await boFeaturesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await boFeaturesPage.getAllRowsColumnContent(page, test.args.sortBy, test.args.sortBy);
+        const sortedTable = await boFeaturesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -182,9 +180,6 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
-
-        // Previous Sort Column
-        sortColumnName = test.args.sortBy;
       });
     });
   });

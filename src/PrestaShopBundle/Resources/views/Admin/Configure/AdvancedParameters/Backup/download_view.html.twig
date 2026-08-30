@@ -20,7 +20,7 @@
       </div>
       <p>
         {{ 'Backup files should automatically start downloading.'|trans({}, 'Admin.Advparameters.Notification') }}
-        {{ 'If not,[1][2] please click here[/1]!'|trans({'[1]': ' <a href="' ~ downloadFile.url ~ '" class="btn btn-outline-primary btn-sm">', '[/1]': '</a> ', '[2]': '<i class="icon-download"></i>'}, 'Admin.Advparameters.Notification')|raw }}
+        {{ 'If not,[1][2] please click here[/1]!'|trans({'[1]': ' <a href="' ~ downloadFile.url ~ '" class="btn btn-outline-primary btn-sm">', '[/1]': '</a> ', '[2]': '<i class="icon-download"></i>'}, 'Admin.Advparameters.Notification')|raw_purified }}
       </p>
       <p class="mb-0">
         <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_backups_index') }}">

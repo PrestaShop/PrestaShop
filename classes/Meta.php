@@ -4,6 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 
 /**
  * Class MetaCore.
@@ -317,17 +318,29 @@ class MetaCore extends ObjectModel
      */
     public static function getProductMetas($idProduct, $idLang, $pageName)
     {
-        $product = new Product($idProduct, false, $idLang);
-        if (Validate::isLoadedObject($product) && $product->active) {
-            $row = Meta::getPresentedObject($product);
-            if (empty($row['meta_description'])) {
-                $row['meta_description'] = strip_tags($row['description_short']);
-            }
+        // Get cache key and check if the result is already cached.
+        $cacheId = 'Meta::getProductMetas' . (int) $idProduct . '-' . (int) $idLang;
+        if (!Cache::isStored($cacheId)) {
+            // Check if the product exists and is active, if yes, process the meta, if not, load home metas as a fallback.
+            $product = new Product($idProduct, false, $idLang);
+            if (Validate::isLoadedObject($product) && $product->active) {
+                $row = Meta::getPresentedObject($product);
 
-            return Meta::completeMetaTags($row, $row['name']);
+                // Use the short description as meta description fallback.
+                if (empty($row['meta_description'])) {
+                    $row['meta_description'] = Meta::getMetaDescriptionFallback($row['description_short']);
+                }
+
+                $result = Meta::completeMetaTags($row, $row['name']);
+            } else {
+                $result = Meta::getHomeMetas($idLang, $pageName);
+            }
+            Cache::store($cacheId, $result);
+
+            return $result;
         }
 
-        return Meta::getHomeMetas($idLang, $pageName);
+        return Cache::retrieve($cacheId);
     }
 
     /**
@@ -336,21 +349,26 @@ class MetaCore extends ObjectModel
      * @param int $idCategory
      * @param int $idLang
      * @param string $pageName
+     * @param string $title
      *
      * @return array
      */
     public static function getCategoryMetas($idCategory, $idLang, $pageName, $title = '')
     {
-        $category = new Category($idCategory, $idLang);
-
-        $cacheId = 'Meta::getCategoryMetas' . (int) $idCategory . '-' . (int) $idLang;
+        // Get cache key and check if the result is already cached.
+        $cacheId = 'Meta::getCategoryMetas' . (int) $idCategory . '-' . (int) $idLang . '-' . md5((string) $title);
         if (!Cache::isStored($cacheId)) {
+            // Check if the category exists and is loaded, if yes, process the meta, if not, load home metas as a fallback.
+            $category = new Category($idCategory, $idLang);
             if (Validate::isLoadedObject($category)) {
                 $row = Meta::getPresentedObject($category);
+
+                // Use the category description as meta description fallback.
                 if (empty($row['meta_description'])) {
-                    $row['meta_description'] = strip_tags($row['description']);
+                    $row['meta_description'] = Meta::getMetaDescriptionFallback($row['description']);
                 }
 
+                // Prefer the provided title, otherwise use the category meta title or name.
                 if (is_string($title) && $title !== '') {
                     $row['meta_title'] = $title;
                 } else {
@@ -380,18 +398,29 @@ class MetaCore extends ObjectModel
      */
     public static function getManufacturerMetas($idManufacturer, $idLang, $pageName)
     {
-        $manufacturer = new Manufacturer($idManufacturer, $idLang);
-        if (Validate::isLoadedObject($manufacturer)) {
-            $row = Meta::getPresentedObject($manufacturer);
-            if (!empty($row['meta_description'])) {
-                $row['meta_description'] = strip_tags($row['meta_description']);
-            }
-            $row['meta_title'] = $row['meta_title'] ?: $row['name'];
+        // Get cache key and check if the result is already cached.
+        $cacheId = 'Meta::getManufacturerMetas' . (int) $idManufacturer . '-' . (int) $idLang;
+        if (!Cache::isStored($cacheId)) {
+            // Check if the manufacturer exists and is loaded, if yes, process the meta, if not, load home metas as a fallback.
+            $manufacturer = new Manufacturer($idManufacturer, $idLang);
+            if (Validate::isLoadedObject($manufacturer)) {
+                $row = Meta::getPresentedObject($manufacturer);
 
-            return Meta::completeMetaTags($row, $row['meta_title']);
+                // Use the manufacturer short description as meta description fallback.
+                if (empty($row['meta_description'])) {
+                    $row['meta_description'] = Meta::getMetaDescriptionFallback($row['short_description']);
+                }
+
+                $result = Meta::completeMetaTags($row, $row['name']);
+            } else {
+                $result = Meta::getHomeMetas($idLang, $pageName);
+            }
+            Cache::store($cacheId, $result);
+
+            return $result;
         }
 
-        return Meta::getHomeMetas($idLang, $pageName);
+        return Cache::retrieve($cacheId);
     }
 
     /**
@@ -405,17 +434,29 @@ class MetaCore extends ObjectModel
      */
     public static function getSupplierMetas($idSupplier, $idLang, $pageName)
     {
-        $supplier = new Supplier($idSupplier, $idLang);
-        if (Validate::isLoadedObject($supplier)) {
-            $row = Meta::getPresentedObject($supplier);
-            if (!empty($row['meta_description'])) {
-                $row['meta_description'] = strip_tags($row['meta_description']);
-            }
+        // Get cache key and check if the result is already cached.
+        $cacheId = 'Meta::getSupplierMetas' . (int) $idSupplier . '-' . (int) $idLang;
+        if (!Cache::isStored($cacheId)) {
+            // Check if the supplier exists and is loaded, if yes, process the meta, if not, load home metas as a fallback.
+            $supplier = new Supplier($idSupplier, $idLang);
+            if (Validate::isLoadedObject($supplier)) {
+                $row = Meta::getPresentedObject($supplier);
 
-            return Meta::completeMetaTags($row, $row['name']);
+                // Use the supplier description as meta description fallback.
+                if (empty($row['meta_description'])) {
+                    $row['meta_description'] = Meta::getMetaDescriptionFallback($row['description']);
+                }
+
+                $result = Meta::completeMetaTags($row, $row['name']);
+            } else {
+                $result = Meta::getHomeMetas($idLang, $pageName);
+            }
+            Cache::store($cacheId, $result);
+
+            return $result;
         }
 
-        return Meta::getHomeMetas($idLang, $pageName);
+        return Cache::retrieve($cacheId);
     }
 
     /**
@@ -429,15 +470,30 @@ class MetaCore extends ObjectModel
      */
     public static function getCmsMetas($idCms, $idLang, $pageName)
     {
-        $cms = new CMS($idCms, $idLang);
-        if (Validate::isLoadedObject($cms)) {
-            $row = Meta::getPresentedObject($cms);
-            $row['meta_title'] = !empty($row['head_seo_title']) ? $row['head_seo_title'] : $row['meta_title'];
+        // Get cache key and check if the result is already cached.
+        $cacheId = 'Meta::getCmsMetas' . (int) $idCms . '-' . (int) $idLang;
+        if (!Cache::isStored($cacheId)) {
+            // Check if the CMS page exists and is loaded, if yes, process the meta, if not, load home metas as a fallback.
+            $cms = new CMS($idCms, $idLang);
+            if (Validate::isLoadedObject($cms)) {
+                $row = Meta::getPresentedObject($cms);
+                /*
+                 * The CMS page fields are historically misnamed - somebody made a solid mess.
+                 * Against what you might think, meta_title stores the page name - the visible one.
+                 * While head_seo_title stores the actual meta title used in the page head.
+                 */
+                $row['meta_title'] = !empty($row['head_seo_title']) ? $row['head_seo_title'] : $row['meta_title'];
 
-            return Meta::completeMetaTags($row, $row['meta_title']);
+                $result = Meta::completeMetaTags($row, $row['meta_title']);
+            } else {
+                $result = Meta::getHomeMetas($idLang, $pageName);
+            }
+            Cache::store($cacheId, $result);
+
+            return $result;
         }
 
-        return Meta::getHomeMetas($idLang, $pageName);
+        return Cache::retrieve($cacheId);
     }
 
     /**
@@ -451,15 +507,23 @@ class MetaCore extends ObjectModel
      */
     public static function getCmsCategoryMetas($idCmsCategory, $idLang, $pageName)
     {
-        $cmsCategory = new CMSCategory($idCmsCategory, $idLang);
-        if (Validate::isLoadedObject($cmsCategory)) {
-            $row = Meta::getPresentedObject($cmsCategory);
-            $row['meta_title'] = empty($row['meta_title']) ? $row['name'] : $row['meta_title'];
+        // Get cache key and check if the result is already cached.
+        $cacheId = 'Meta::getCmsCategoryMetas' . (int) $idCmsCategory . '-' . (int) $idLang;
+        if (!Cache::isStored($cacheId)) {
+            // Check if the CMS category exists and is loaded, if yes, process the meta, if not, load home metas as a fallback.
+            $cmsCategory = new CMSCategory($idCmsCategory, $idLang);
+            if (Validate::isLoadedObject($cmsCategory)) {
+                $row = Meta::getPresentedObject($cmsCategory);
+                $result = Meta::completeMetaTags($row, $row['name']);
+            } else {
+                $result = Meta::getHomeMetas($idLang, $pageName);
+            }
+            Cache::store($cacheId, $result);
 
-            return Meta::completeMetaTags($row, $row['meta_title']);
+            return $result;
         }
 
-        return Meta::getHomeMetas($idLang, $pageName);
+        return Cache::retrieve($cacheId);
     }
 
     public static function completeMetaTags($metaTags, $defaultValue, ?Context $context = null)
@@ -508,5 +572,20 @@ class MetaCore extends ObjectModel
         $objectPresenter = new ObjectPresenter();
 
         return $objectPresenter->present($object);
+    }
+
+    /**
+     * Convert HTML content to a plain text meta description fallback and trim it to the SEO field limit.
+     *
+     * @param string $description
+     *
+     * @return string
+     */
+    protected static function getMetaDescriptionFallback(string $description): string
+    {
+        // Convert HTML descriptions to readable text before trimming them for the meta description field.
+        $description = Tools::htmlToText($description);
+
+        return mb_substr($description, 0, SeoSettings::MAX_DESCRIPTION_LENGTH);
     }
 }

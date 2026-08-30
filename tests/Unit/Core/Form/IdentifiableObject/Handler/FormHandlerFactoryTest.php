@@ -7,6 +7,7 @@
 namespace Tests\Unit\Core\Form\IdentifiableObject\Handler;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerFactory;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerFactoryInterface;
@@ -21,7 +22,8 @@ class FormHandlerFactoryTest extends TestCase
         $factory = new FormHandlerFactory(
             $this->createMock(HookDispatcherInterface::class),
             $this->createMock(TranslatorInterface::class),
-            true
+            true,
+            $this->createMock(ExtraPropertiesFormDataPersister::class)
         );
 
         $this->assertInstanceOf(FormHandlerFactoryInterface::class, $factory);

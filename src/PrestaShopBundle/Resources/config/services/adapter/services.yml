@@ -125,6 +125,7 @@ services:
       - '@prestashop.service.translation'
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().link'
       - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
 
   PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider:
     public: false

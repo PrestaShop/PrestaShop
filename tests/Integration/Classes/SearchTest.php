@@ -102,6 +102,23 @@ class SearchTest extends TestCase
                 'langId' => 1,
                 'expected' => ['test1', '-', 'test2'],
             ],
+            // Block-level tags separate words so list items do not merge (#40244 search index pollution).
+            'with html list items' => [
+                'input' => '<ul><li>red</li><li>shirt</li></ul>',
+                'langId' => 1,
+                'expected' => ['red', 'shirt'],
+            ],
+            'with adjacent block paragraphs' => [
+                'input' => '<p>hello</p><p>world</p>',
+                'langId' => 1,
+                'expected' => ['hello', 'world'],
+            ],
+            // Inline tags are stripped without a separator so a word styled mid-way stays whole.
+            'with mixed inline styling inside a word' => [
+                'input' => '<b>bio</b><span>logic</span>',
+                'langId' => 1,
+                'expected' => ['biologic'],
+            ],
         ];
     }
 

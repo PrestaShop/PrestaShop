@@ -25,12 +25,22 @@
       <trans-unit id="383247a8cb198be4042d128986100cea">
         <source>Add current page to QuickAccess</source>
         <target>Add current page to QuickAccess</target>
-        <note>File: admin-dev/themes/default/template/header.tpl [Line: 138]</note>
+        <note>File: admin-dev/themes/default/template/header.tpl [Line: 154]</note>
       </trans-unit>
       <trans-unit id="35c2475e5e8a5a14f8c1d9c1238e4cef">
         <source>Add new quick access</source>
         <target>Add new quick access</target>
-        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 115]</note>
+        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 119]</note>
+      </trans-unit>
+      <trans-unit id="c4702911db9379dcba105647f02768cf">
+        <source>Add to Quick Access</source>
+        <target>Add to Quick Access</target>
+        <note>File: admin-dev/themes/new-theme/template/components/layout/quick_access.tpl [Line: 65]</note>
+      </trans-unit>
+      <trans-unit id="ec18ae82715e375ed0337f2f139e6356">
+        <source>Are you sure you want to remove "%name%" from Quick Access?</source>
+        <target>Are you sure you want to remove "%name%" from Quick Access?</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Component/Layout/quick_access.html.twig [Line: 34]</note>
       </trans-unit>
       <trans-unit id="fc6dfe4f8b07fc04c99e27425f780754">
         <source>Cart ID</source>
@@ -89,7 +99,7 @@
       <trans-unit id="55e4a48ac94061c93174d67635445e69">
         <source>If it's a URL that comes from your back office, you MUST remove the security token.</source>
         <target>If it's a URL that comes from your back office, you MUST remove the security token.</target>
-        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 78]</note>
+        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 82]</note>
       </trans-unit>
       <trans-unit id="f388bc3eaa4b9f72756a75693a12559d">
         <source>Installed modules</source>
@@ -109,7 +119,7 @@
       <trans-unit id="97e7c9a7d06eac006a28bf05467fcc8b">
         <source>Link</source>
         <target>Link</target>
-        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 46]</note>
+        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 50]</note>
       </trans-unit>
       <trans-unit id="38a27c0c7ef7a05e13efa2798ee21533">
         <source>Maintenance mode</source>
@@ -119,12 +129,12 @@
       <trans-unit id="165122309e15dc09c30b78951e53cb5a">
         <source>Manage quick accesses</source>
         <target>Manage quick accesses</target>
-        <note>File: admin-dev/themes/default/template/header.tpl [Line: 145]</note>
+        <note>File: admin-dev/themes/default/template/header.tpl [Line: 161]</note>
       </trans-unit>
       <trans-unit id="6f08b6d95d204a4e08ad0e186c673f4f">
         <source>Manage your quick accesses</source>
         <target>Manage your quick accesses</target>
-        <note>File: admin-dev/themes/new-theme/template/components/layout/quick_access.tpl [Line: 55]</note>
+        <note>File: admin-dev/themes/new-theme/template/components/layout/quick_access.tpl [Line: 54]</note>
       </trans-unit>
       <trans-unit id="07403a8bc81d7865c8e040e718ec7828">
         <source>Module name</source>
@@ -156,6 +166,11 @@
         <target>New product</target>
         <note>File: classes/lang/KeysReference/QuickAccessLang.php [Line: 10]</note>
       </trans-unit>
+      <trans-unit id="c8a19ea6c79e23a1ee5372c8dbf3c6cf">
+        <source>New tab</source>
+        <target>New tab</target>
+        <note>File: src/Core/Grid/Definition/Factory/QuickAccessGridDefinitionFactory.php [Line: 68]</note>
+      </trans-unit>
       <trans-unit id="a0d555e459a8227e786d2bfaf99b9974">
         <source>New voucher</source>
         <target>New voucher</target>
@@ -166,10 +181,15 @@
         <target>New window</target>
         <note>File: modules/ps_mainmenu/ps_mainmenu.php [Line: 1416]</note>
       </trans-unit>
+      <trans-unit id="3a39eb38e879f66d1c57dedd478272da">
+        <source>Open in new tab</source>
+        <target>Open in new tab</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/QuickAccess/QuickAccessType.php [Line: 76]</note>
+      </trans-unit>
       <trans-unit id="2959ce8aed67d6b6e6f5cefd601f1091">
         <source>Open in new window</source>
         <target>Open in new window</target>
-        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 82]</note>
+        <note>File: admin-dev/themes/new-theme/template/components/layout/quick_access.tpl [Line: 89]</note>
       </trans-unit>
       <trans-unit id="d79cf3f429596f77db95c65074663a54">
         <source>Order ID</source>
@@ -184,17 +204,17 @@
       <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
         <source>Orders</source>
         <target>Orders</target>
-        <note>File: admin-dev/themes/default/template/header.tpl [Line: 292]</note>
+        <note>File: admin-dev/themes/default/template/header.tpl [Line: 306]</note>
       </trans-unit>
       <trans-unit id="6f7579a25b7aba443386a5b86a7900b4">
         <source>Please name this shortcut:</source>
         <target>Please name this shortcut:</target>
-        <note>File: admin-dev/themes/new-theme/template/components/layout/quick_access.tpl [Line: 46]</note>
+        <note>File: admin-dev/themes/new-theme/template/components/layout/quick_access.tpl [Line: 31]</note>
       </trans-unit>
       <trans-unit id="10df6a640ea9625829122dfb5842795e">
         <source>PrestaShop logo</source>
         <target>PrestaShop logo</target>
-        <note>File: admin-dev/themes/default/template/header.tpl [Line: 103]</note>
+        <note>File: admin-dev/themes/default/template/header.tpl [Line: 104]</note>
       </trans-unit>
       <trans-unit id="7f704ff8964f7b5f3f9a6444d450b5f7">
         <source>Product name, SKU, reference...</source>
@@ -214,7 +234,7 @@
       <trans-unit id="fe501f6dab88efcbde9b3f062a5ae781">
         <source>Quick Access menu</source>
         <target>Quick Access menu</target>
-        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 59]</note>
+        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 63]</note>
       </trans-unit>
       <trans-unit id="6fab17d3dc1147f9b170fb8e1aac2fa8">
         <source>Read this message</source>
@@ -234,7 +254,6 @@
       <trans-unit id="f5c26758149849ee0f84a2eceaf0acfd">
         <source>Remove from QuickAccess</source>
         <target>Remove from QuickAccess</target>
-        <note>File: admin-dev/themes/default/template/header.tpl [Line: 131]</note>
       </trans-unit>
       <trans-unit id="0f544d682c3a664870f025f48c4b04b5">
         <source>SEARCH</source>
@@ -260,6 +279,16 @@
         <source>Select stores</source>
         <target>Select stores</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Component/Layout/multistore_product_header.html.twig [Line: 9]</note>
+      </trans-unit>
+      <trans-unit id="6224d45d968efece4b9f9624aafc8c2a">
+        <source>Shortcut name</source>
+        <target>Shortcut name</target>
+        <note>File: admin-dev/themes/new-theme/template/components/layout/quick_access.tpl [Line: 78]</note>
+      </trans-unit>
+      <trans-unit id="a98fc7aac06cafef01a8026c13450fb9">
+        <source>Shortcut name is required</source>
+        <target>Shortcut name is required</target>
+        <note>File: admin-dev/themes/new-theme/template/components/layout/quick_access.tpl [Line: 81]</note>
       </trans-unit>
       <trans-unit id="c87aacf5673fada1108c9f809d354311">
         <source>Sign out</source>

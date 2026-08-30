@@ -91,6 +91,7 @@ class CustomerFormatterCore implements FormFormatterInterface
 
         $format['firstname'] = (new FormField())
             ->setName('firstname')
+            ->setAutocompleteAttribute('given-name')
             ->setLabel(
                 $this->translator->trans(
                     'First name',
@@ -106,6 +107,7 @@ class CustomerFormatterCore implements FormFormatterInterface
 
         $format['lastname'] = (new FormField())
             ->setName('lastname')
+            ->setAutocompleteAttribute('family-name')
             ->setLabel(
                 $this->translator->trans(
                     'Last name',
@@ -142,6 +144,7 @@ class CustomerFormatterCore implements FormFormatterInterface
         $format['email'] = (new FormField())
             ->setName('email')
             ->setType('email')
+            ->setAutocompleteAttribute('email')
             ->setLabel(
                 $this->translator->trans(
                     'Email',
@@ -163,7 +166,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                     )
                 )
                 ->setRequired($this->password_is_required)
-                ->setAutocompleteAttribute('new-password');
+                ->setAutocompleteAttribute($this->ask_for_new_password ? 'current-password' : 'new-password');
         }
 
         if ($this->ask_for_new_password) {

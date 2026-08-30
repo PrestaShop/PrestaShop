@@ -9,6 +9,7 @@ import ConfirmModal from '@components/modal';
 // @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
 import {isUndefined} from '@components/typeguard';
+import {escape} from 'lodash';
 
 const EntitySearchInputMap = ComponentsMap.entitySearchInput;
 
@@ -268,6 +269,10 @@ export default class EntitySearchInput {
         suggestion: (entity: any) => this.showSuggestion(entity),
       },
       onSelect: (selectedItem: any) => {
+        // Prevent selection of disabled items (e.g. ineligible products for free gift)
+        if (selectedItem.disabled) {
+          return false;
+        }
         // When limit is one we cannot select additional elements so we replace them instead
         if (this.options.dataLimit === 1) {
           return this.replaceSelectedItem(selectedItem);
@@ -296,7 +301,15 @@ export default class EntitySearchInput {
       entityImage = `<img src="${entity.image}" /> `;
     }
 
-    return `<div class="search-suggestion">${entityImage}${entity[this.options.suggestionField]}</div>`;
+    const disabledClass = entity.disabled ? ' disabled' : '';
+    const escapedReason = entity.disabled_reason ? escape(entity.disabled_reason) : undefined;
+    const title = entity.disabled && escapedReason ? ` title="${escapedReason}"` : '';
+
+    const disabledLabel = entity.disabled && escapedReason ? ` (${escapedReason})` : '';
+
+    const suggestionName = `${entity[this.options.suggestionField]}${disabledLabel}`;
+
+    return `<div class="search-suggestion${disabledClass}"${title}>${entityImage}${suggestionName}</div>`;
   }
 
   /**

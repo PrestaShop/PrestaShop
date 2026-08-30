@@ -12,6 +12,11 @@ use ApiPlatform\OpenApi\Model\SecurityScheme;
 use ApiPlatform\OpenApi\Model\Server;
 use ApiPlatform\OpenApi\OpenApi;
 use ArrayObject;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionWriterInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class CQRSOpenApiFactoryTest extends KernelTestCase
@@ -50,6 +55,37 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         foreach ($expectedScopes as $scope => $scopeDefinition) {
             $this->assertNotEmpty($clientCredentialsFlow->getScopes()[$scope]);
             $this->assertEquals($scopeDefinition, $clientCredentialsFlow->getScopes()[$scope]);
+        }
+    }
+
+    public function testVersionedOperationsAreFiltered(): void
+    {
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        /** @var OpenApi $openApi */
+        $openApi = $openApiFactory->__invoke();
+
+        // The core version compatibility filtering applies in debug mode as well (unless the experimental
+        // endpoints feature flag is enabled), so the versioned test operations incompatible with the core
+        // version are absent from the OpenApi documentation while the compatible ones are present (this
+        // also validates that the minVersion/maxVersion extra properties don't break the OpenApi generation,
+        // the full filtering behaviour is asserted in Tests\Integration\ApiPlatform\VersionedEndpointsTest)
+        $compatiblePaths = [
+            '/test/versioned/min-valid/product/{productId}',
+            '/test/versioned/max-valid/product/{productId}',
+            '/test/versioned/range-valid/product/{productId}',
+        ];
+        foreach ($compatiblePaths as $compatiblePath) {
+            $this->assertNotNull($openApi->getPaths()->getPath($compatiblePath), sprintf('Path %s not found in the OpenApi documentation', $compatiblePath));
+        }
+
+        $incompatiblePaths = [
+            '/test/versioned/min-invalid/product/{productId}',
+            '/test/versioned/max-invalid/product/{productId}',
+            '/test/versioned/range-invalid/product/{productId}',
+        ];
+        foreach ($incompatiblePaths as $incompatiblePath) {
+            $this->assertNull($openApi->getPaths()->getPath($incompatiblePath), sprintf('Path %s should have been filtered from the OpenApi documentation', $incompatiblePath));
         }
     }
 
@@ -800,6 +836,42 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         ];
     }
 
+    public function testMultipartFileUploadRequestBody(): void
+    {
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        /** @var OpenApi $openApi */
+        $openApi = $openApiFactory->__invoke();
+
+        // The multipart operation documents the uploaded file properties declared in the API resource class
+        $multipartOperation = $openApi->getPaths()->getPath('/test/file-upload')->getPost();
+        $content = $multipartOperation->getRequestBody()->getContent();
+        $this->assertTrue($content->offsetExists('multipart/form-data'));
+
+        $schema = $content->offsetGet('multipart/form-data')->getSchema();
+        // The schema is inlined so that file properties are only documented on the multipart operation
+        $this->assertArrayNotHasKey('$ref', (array) $schema);
+        $this->assertArrayHasKey('productId', $schema['properties']);
+        $this->assertEquals(['type' => 'string', 'format' => 'binary'], (array) $schema['properties']['file']);
+        $this->assertEquals(['type' => 'string', 'format' => 'binary'], (array) $schema['properties']['optionalFile']);
+        // Non-nullable file properties are required, nullable ones are optional
+        $this->assertContains('file', $schema['required']);
+        $this->assertNotContains('optionalFile', $schema['required']);
+
+        // The JSON operation based on the same CQRS command keeps its schema reference, and the
+        // shared component schema is not polluted by the file properties
+        $jsonOperation = $openApi->getPaths()->getPath('/test/file-upload-json')->getPost();
+        $jsonContent = $jsonOperation->getRequestBody()->getContent();
+        $this->assertFalse($jsonContent->offsetExists('multipart/form-data'));
+
+        $jsonSchema = $jsonContent->offsetGet('application/json')->getSchema();
+        $this->assertEquals('#/components/schemas/FileUploadResource.AddProductImageCommand', $jsonSchema['$ref']);
+
+        $componentSchema = $openApi->getComponents()->getSchemas()['FileUploadResource.AddProductImageCommand'];
+        $this->assertArrayNotHasKey('file', (array) $componentSchema['properties']);
+        $this->assertArrayNotHasKey('optionalFile', (array) $componentSchema['properties']);
+    }
+
     public function testApiPropertyOpenApiContextApplied(): void
     {
         /** @var OpenApiFactoryInterface $openApiFactory */
@@ -815,5 +887,77 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         $this->assertEquals('array', $shopIdsProperty['type']);
         $this->assertEquals(['type' => 'integer'], $shopIdsProperty['items']);
         $this->assertEquals([1, 3], $shopIdsProperty['example']);
+    }
+
+    /**
+     * Module-declared extra properties are documented in the generated OpenAPI schema: grouped under their module
+     * technical name inside a synthetic "extraProperties" object on every resource whose operations they target,
+     * and a definition flagged required (ExtraPropertyDefinition::isRequired()) is listed in that module object's
+     * OpenAPI "required" array. The definitions are persisted directly (no module install needed) and removed
+     * afterwards so the shared test database stays clean.
+     */
+    public function testExtraPropertiesAreDocumentedInGeneratedSchema(): void
+    {
+        $repository = $this->getContainer()->get(ExtraPropertyDefinitionRepositoryInterface::class);
+        // The shared cache decorator also implements the writer interface (and invalidates the cache on write),
+        // so we can persist definitions directly and have them surface in the very next schema generation.
+        self::assertInstanceOf(ExtraPropertyDefinitionWriterInterface::class, $repository);
+
+        $productApis = ['/products', '/products/{productId}'];
+        $requiredDefinition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'oa_required_url',
+            type: ExtraPropertyType::STRING,
+            scope: ExtraPropertyScope::COMMON,
+            moduleName: 'openapitest',
+            required: true,
+            associatedApis: $productApis,
+        );
+        $optionalDefinition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'oa_optional_flag',
+            type: ExtraPropertyType::BOOL,
+            scope: ExtraPropertyScope::COMMON,
+            moduleName: 'openapitest',
+            required: false,
+            associatedApis: $productApis,
+        );
+
+        $requiredId = $repository->save($requiredDefinition);
+        $optionalId = $repository->save($optionalDefinition);
+        $moduleKey = $requiredDefinition->getNormalizedModuleKey();
+
+        try {
+            /** @var OpenApiFactoryInterface $openApiFactory */
+            $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+            /** @var OpenApi $openApi */
+            $openApi = $openApiFactory->__invoke();
+
+            $schemas = $openApi->getComponents()->getSchemas();
+            $this->assertArrayHasKey('Product', $schemas);
+
+            /** @var ArrayObject $productSchema */
+            $productSchema = $schemas['Product'];
+            $this->assertArrayHasKey('extraProperties', $productSchema['properties']);
+
+            // The synthetic object is an object grouped by module technical name.
+            $extraProperties = $productSchema['properties']['extraProperties'];
+            $this->assertSame('object', $extraProperties['type']);
+            $this->assertArrayHasKey($moduleKey, $extraProperties['properties']);
+
+            $module = $extraProperties['properties'][$moduleKey];
+            // Both fields are documented under the module object …
+            $this->assertArrayHasKey('oa_required_url', $module['properties']);
+            $this->assertArrayHasKey('oa_optional_flag', $module['properties']);
+            // … but only the required one is reported in the module object's OpenAPI "required" list.
+            $this->assertSame(['oa_required_url'], $module['required']);
+        } finally {
+            if (!empty($requiredId)) {
+                $repository->delete((int) $requiredId);
+            }
+            if (!empty($optionalId)) {
+                $repository->delete((int) $optionalId);
+            }
+        }
     }
 }

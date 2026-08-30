@@ -56,7 +56,7 @@ export default class NavBar {
           },
         );
 
-        $(GlobalMap.navBar.menuItemLink).on('click', function onNavBarClick(e) {
+        $(GlobalMap.navBar.menuItemLink).off('click').on('click', function onNavBarClick(e) {
           e.preventDefault();
           e.stopPropagation();
 
@@ -109,7 +109,7 @@ export default class NavBar {
           $submenu.find('ul.submenu').css('top', itemOffsetTop);
         });
 
-        $navBar.on('click', '.menu-collapse', function onNavBarClick() {
+        $navBar.off('click', '.menu-collapse').on('click', '.menu-collapse', function onNavBarClick() {
           $('body').toggleClass('page-sidebar-closed');
 
           NavBarTransitions.toggle();

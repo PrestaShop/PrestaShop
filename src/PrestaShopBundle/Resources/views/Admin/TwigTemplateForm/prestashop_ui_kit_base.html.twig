@@ -163,7 +163,7 @@
     {% if required %}
       <span class="text-danger">*</span>
     {% endif %}
-    {{ translation_domain is same as(false) ? label|raw : label|raw }}
+    {{ translation_domain is same as(false) ? label|raw_purified : label|raw_purified }}
     {% if label_attr['tooltip'] is defined %}
       {% set placement = label_attr['tooltip_placement'] is defined ? label_attr['tooltip_placement'] : 'top' %}
       <i class="icon-question" data-toggle="pstooltip" data-placement="{{ placement }}"
@@ -656,14 +656,14 @@
 
         <i class="form-check-round"></i>
 
-        {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+        {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw_purified : label|raw_purified) -}}
       </label>
     {% else %}
       <div class="md-checkbox md-checkbox-inline">
         <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
         {{- widget|raw -}}
         <i class="md-checkbox-control"></i>
-        {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+        {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw_purified : label|raw_purified) -}}
         </label>
       </div>
     {% endif %}
@@ -975,12 +975,12 @@
     {% set attr = attr|merge({
       class: (attr.class|default('') ~ ' custom-file-input')|trim,
       'data-multiple-files-text': '%count% file(s)'|trans({}, 'Admin.Global'),
-      'data-locale': get_context_iso_code()
+      'data-locale': get_context_iso_code(),
     }) -%}
 
     {% if attr.disabled is defined and attr.disabled %}
       {% set attr = attr|merge({
-        class: attr.class ~ ' disabled'
+        class: attr.class ~ ' disabled',
       }) %}
     {% endif %}
     {{- block('form_widget_simple') -}}
@@ -1038,7 +1038,7 @@
 {% block text_with_recommended_length_widget %}
   {% set attr = attr|merge({
     'data-recommended-length-counter': '#' ~ id ~ '_recommended_length_counter',
-    class: 'js-recommended-length-input'
+    class: 'js-recommended-length-input',
   }) -%}
 
   {% if input_type == 'textarea' %}
@@ -1056,7 +1056,7 @@
         '[/1]': '</span>',
         '[2]': '<span>' ~ recommended_length,
         '[/2]': '</span>',
-      })|raw }}
+      })|raw_purified }}
     </em>
   </small>
 {% endblock %}
@@ -1139,7 +1139,7 @@
 {% block form_help %}
   {% if help is not null %}
     {%- set help_attr = help_attr|merge({class: (help_attr.class|default('') ~ ' form-text')|trim}) -%}
-      <small id="{{ id }}_help"{% with {attr: help_attr} %}{{ block('attributes') }}{% endwith %}>{{ help|raw }}</small>
+      <small id="{{ id }}_help"{% with {attr: help_attr} %}{{ block('attributes') }}{% endwith %}>{{ help|raw_purified }}</small>
   {% endif %}
   {% if warning is defined %}
     {{ warning }}
@@ -1168,9 +1168,9 @@
     <div class="small font-secondary form-external-link{% if external_link.align is same as('right') %} text-right{% endif %}">
       {# If placeholders are included in the text use it as is, else prepend and append them to the text #}
       {% if '[1]' in external_link.text and '[/1]' in external_link.text %}
-        {{ external_link.text|replace({'[1]': openingTag, '[/1]': '</a>'})|raw }}
+        {{ external_link.text|escape|replace({'[1]': openingTag, '[/1]': '</a>'})|raw_purified }}
       {% else %}
-        {{ ('[1]' ~ external_link.text ~ '[/1]')|replace({'[1]': openingTag, '[/1]': '</a>'})|raw }}
+        {{ ('[1]' ~ external_link.text|escape ~ '[/1]')|replace({'[1]': openingTag, '[/1]': '</a>'})|raw_purified }}
       {% endif %}
     </div>
   {% endif %}
@@ -1228,12 +1228,12 @@
     <div class="alert alert-{{ alert_type }}{% if alert_title is defined %} expandable-alert{% endif %}" role="alert">
     {% if alert_title is defined %}
       <p class="alert-text">
-        {{ alert_title|raw }}
+        {{ alert_title|raw_purified }}
       </p>
     {% else %}
       {% for message in alert_message %}
         <p class="alert-text">
-          {{ message|raw }}
+          {{ message|raw_purified }}
         </p>
       {% endfor %}
     {% endif %}
@@ -1243,13 +1243,13 @@
         {% if alert_message|length > 1 %}
           <ul class="p-0">
             {% for message in alert_message %}
-              <li>{{ message|raw }}</li>
+              <li>{{ message|raw_purified }}</li>
             {% endfor %}
           </ul>
         {% else %}
           {% for message in alert_message %}
             <p>
-              {{ message|raw }}
+              {{ message|raw_purified }}
             </p>
           {% endfor %}
         {% endif %}
@@ -1279,7 +1279,7 @@
     {# Allows to insert content as prefix, like an icon #}
     {% if prefix is defined %}
     <span class="text-preview-prefix">
-      {{ prefix|raw }}
+      {{ prefix|raw_purified }}
     </span>
     {% endif %}
 
@@ -1289,14 +1289,14 @@
         {{ value|raw }}
       {% else %}
         {# This just outputs the value #}
-        {{ value|e('html') }}
+        {{ value|raw_purified }}
       {% endif %}
     </span>
 
     {# Allows to insert content as suffix, like an icon #}
     {% if suffix is defined %}
     <span class="text-preview-suffix">
-      {{ suffix|raw }}
+      {{ suffix|raw_purified }}
     </span>
     {% endif %}
   </span>
@@ -1547,7 +1547,7 @@
   {%- set attr = attr|merge({
     class: (attr.class|default('') ~ ' form-group btn-collection btn-toolbar')|trim,
     role: 'group',
-    style: 'justify-content: ' ~ justify_content
+    style: 'justify-content: ' ~ justify_content,
   }) -%}
   <div {{ block('widget_attributes') }}>
     {% for group, buttons in button_groups %}
@@ -1580,7 +1580,7 @@
             {% for button in remainingButtons %}
               {% set action = attribute(form, button) %}
               {{ form_widget(action, {attr: {
-                class: 'dropdown-item ' ~ action.vars.attr.class|default('')|trim
+                class: 'dropdown-item ' ~ action.vars.attr.class|default('')|trim,
               }}) }}
             {% endfor %}
           </div>
@@ -1595,7 +1595,11 @@
     {% set cardSubtitle = label_subtitle %}
   {% endif %}
   <div class="card">
-    {{ form_label(form, null, {label_tag_name: 'h3', label_attr: {class: 'card-header'}, required: false, label_subtitle: null}) }}
+    {% if icon is defined and icon is not empty %}
+      <h3 class="card-header"><i class="material-icons">{{ icon }}</i> {{ form.vars.label }}</h3>
+    {% else %}
+      {{ form_label(form, null, {label_tag_name: 'h3', label_attr: {class: 'card-header'}, required: false, label_subtitle: null}) }}
+    {% endif %}
     <div class="card-body">
       {# Subtitle is rendered insiade the card body to prevent padding offsets #}
       {% if cardSubtitle is defined %}

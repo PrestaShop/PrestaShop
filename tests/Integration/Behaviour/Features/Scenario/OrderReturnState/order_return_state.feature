@@ -4,21 +4,25 @@ Feature: OrderState
   Background:
     Given shop "shop1" with name "test_shop" exists
     And I add a new order return state "order_return_state_1st" with the following details:
-      | name            | The 1st Order Return State |
-      | color           | #123456                    |
+      | name               | The 1st Order Return State |
+      | color              | #123456                  |
+      | is_cancelling_return | 0                          |
     And the order return state "order_return_state_1st" should exist
     And I add a new order return state "order_return_state_2nd" with the following details:
-      | name            | The 2nd Order Return State |
-      | color           | #7890AB                    |
+      | name               | The 2nd Order Return State |
+      | color              | #7890AB                  |
+      | is_cancelling_return | 1                          |
     And the order return state "order_return_state_2nd" should exist
 
   Scenario: Add new order return state
     When I add a new order return state "order_return_state_3rd" with the following details:
-      | name            | The 3rd Order Return State |
-      | color           | #CDEF12                    |
+      | name               | The 3rd Order Return State |
+      | color              | #CDEF12                  |
+      | is_cancelling_return | 0                          |
     And the order return state "order_return_state_3rd" should have the following details:
-      | name            | The 3rd Order Return State |
-      | color           | #CDEF12                    |
+      | name               | The 3rd Order Return State |
+      | color              | #CDEF12                  |
+      | is_cancelling_return | 0                          |
     ## Reset
     When I delete the order return state "order_return_state_3rd"
 
@@ -26,8 +30,15 @@ Feature: OrderState
     When I update the order return state "order_return_state_1st" with the following details:
       | color           | #345678                    |
     And the order return state "order_return_state_1st" should have the following details:
-      | name            | The 1st Order Return State |
-      | color           | #345678                    |
+      | name               | The 1st Order Return State |
+      | color              | #345678                  |
+      | is_cancelling_return | 0                          |
+    When I update the order return state "order_return_state_1st" with the following details:
+      | is_cancelling_return | 1                          |
+    And the order return state "order_return_state_1st" should have the following details:
+      | name               | The 1st Order Return State |
+      | color              | #345678                  |
+      | is_cancelling_return | 1                          |
 
   Scenario: Delete order return state
     When I delete the order return state "order_return_state_1st"

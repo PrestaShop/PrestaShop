@@ -7,6 +7,8 @@
 namespace Tests\Unit\Classes;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
+use ReflectionParameter;
 use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
 use Tools;
 
@@ -1073,5 +1075,197 @@ class ToolsTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    public function providerIsPublicIp(): array
+    {
+        return [
+            // Routable addresses, the only ones that must be accepted.
+            'ipv4 public' => [true, '8.8.8.8'],
+            'ipv4 public 2' => [true, '1.1.1.1'],
+            'ipv6 public' => [true, '2606:4700::1111'],
+            'ipv4-mapped public' => [true, '::ffff:8.8.8.8'],
+            '6to4 wrapping public ipv4' => [true, '2002:0808:0808::'],
+
+            // Plain IPv4 private/reserved ranges.
+            'loopback' => [false, '127.0.0.1'],
+            'rfc1918 10/8' => [false, '10.0.0.1'],
+            'rfc1918 172.16/12' => [false, '172.16.0.1'],
+            'rfc1918 192.168/16' => [false, '192.168.1.1'],
+            'cloud metadata' => [false, '169.254.169.254'],
+            'unspecified' => [false, '0.0.0.0'],
+            'broadcast' => [false, '255.255.255.255'],
+
+            // Plain IPv6 private/reserved ranges.
+            'ipv6 loopback' => [false, '::1'],
+            'ipv6 unique local' => [false, 'fc00::1'],
+            'ipv6 link local' => [false, 'fe80::1'],
+
+            // IPv6 notations that tunnel an IPv4 address: the IPv4 range flags of
+            // filter_var() do not apply to them, so they must be unwrapped first.
+            'ipv4-mapped cloud metadata' => [false, '::ffff:169.254.169.254'],
+            'ipv4-mapped loopback' => [false, '::ffff:127.0.0.1'],
+            'ipv4-mapped rfc1918' => [false, '::ffff:10.0.0.1'],
+            'ipv4-mapped rfc1918 2' => [false, '::ffff:192.168.1.1'],
+            'ipv4-mapped loopback hex' => [false, '0:0:0:0:0:ffff:7f00:1'],
+            'ipv4-compatible loopback' => [false, '::127.0.0.1'],
+            'ipv4-compatible rfc1918' => [false, '::10.0.0.1'],
+            'nat64 loopback' => [false, '64:ff9b::7f00:1'],
+            'nat64 rfc1918' => [false, '64:ff9b::a00:1'],
+            '6to4 loopback' => [false, '2002:7f00:0001::'],
+
+            // Non-routable ranges that filter_var() alone lets through.
+            'shared address space' => [false, '100.64.0.1'],
+            'ietf protocol assignments' => [false, '192.0.0.1'],
+            'test-net-1' => [false, '192.0.2.1'],
+            'benchmarking' => [false, '198.18.0.1'],
+            'test-net-2' => [false, '198.51.100.1'],
+            'test-net-3' => [false, '203.0.113.1'],
+            'ipv4 multicast' => [false, '224.0.0.1'],
+            'ipv4 multicast top' => [false, '239.255.255.255'],
+            'ipv6 multicast' => [false, 'ff02::1'],
+            'ipv6 discard only' => [false, '100::1'],
+            'ipv6 site local' => [false, 'fec0::1'],
+            'teredo' => [false, '2001::1'],
+
+            // Not addresses at all.
+            'hostname' => [false, 'not-an-ip'],
+            'empty' => [false, ''],
+            'out of range octets' => [false, '999.999.999.999'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerIsPublicIp
+     */
+    public function testIsPublicIp(bool $expected, string $ip): void
+    {
+        $this->assertSame($expected, Tools::isPublicIp($ip));
+    }
+
+    /**
+     * Same vectors as providerIsPublicIp, minus the values that are not IP literals:
+     * those would send resolvePublicIps() down the DNS path, which has no place in a
+     * unit test.
+     */
+    public function providerResolvePublicIpsOnLiteral(): array
+    {
+        return array_filter(
+            $this->providerIsPublicIp(),
+            function (array $case) {
+                return (bool) filter_var($case[1], FILTER_VALIDATE_IP);
+            }
+        );
+    }
+
+    /**
+     * An IP literal is validated directly, without any DNS lookup, and is refused
+     * whenever it is not publicly routable.
+     *
+     * @dataProvider providerResolvePublicIpsOnLiteral
+     */
+    public function testResolvePublicIpsOnLiteral(bool $expectedPublic, string $ip): void
+    {
+        $this->assertSame(
+            $expectedPublic ? [$ip] : [],
+            Tools::resolvePublicIps($ip)
+        );
+    }
+
+    /**
+     * Every accepted scheme must map to a usable default port, otherwise building the
+     * CURLOPT_RESOLVE pin for a URL without an explicit port breaks.
+     */
+    public function testEveryAllowedSchemeHasADefaultPort(): void
+    {
+        foreach (Tools::UNTRUSTED_URL_ALLOWED_SCHEMES as $scheme => $port) {
+            $this->assertIsInt($port, "scheme $scheme must map to an int port");
+            $this->assertGreaterThan(0, $port, "scheme $scheme must map to a valid port");
+        }
+    }
+
+    /**
+     * The allow-list must not accept anything the CURLPROTO_* mask does not, otherwise a URL
+     * passes our validation only for curl to refuse it -- or worse, gets fetched with an
+     * unintended protocol on a build where CURLPROTO_HTTP is undefined and no mask applies.
+     * sftp in particular must stay out.
+     */
+    public function testAllowedSchemesAreAllPermittedCurlProtocols(): void
+    {
+        $this->assertSame(
+            [],
+            array_diff(array_keys(Tools::UNTRUSTED_URL_ALLOWED_SCHEMES), ['http', 'https', 'ftp', 'ftps'])
+        );
+    }
+
+    /**
+     * @dataProvider providerUntrustedUrlScheme
+     */
+    public function testIsUntrustedUrlSchemeAllowed(bool $expected, string $scheme): void
+    {
+        $this->assertSame($expected, Tools::isUntrustedUrlSchemeAllowed($scheme));
+    }
+
+    public function providerUntrustedUrlScheme(): array
+    {
+        return [
+            'http' => [true, 'http'],
+            'https' => [true, 'https'],
+            'uppercase is normalised' => [true, 'HTTPS'],
+            'ftp' => [true, 'ftp'],
+            'ftps' => [true, 'ftps'],
+            // curl is not allowed to speak these, so they must not pass validation either.
+            'sftp' => [false, 'sftp'],
+            'scp' => [false, 'scp'],
+            // PHP stream wrappers, the whole point of the allow-list.
+            'file' => [false, 'file'],
+            'phar' => [false, 'phar'],
+            'data' => [false, 'data'],
+            'gopher' => [false, 'gopher'],
+            'zip' => [false, 'zip'],
+            'empty' => [false, ''],
+        ];
+    }
+
+    /**
+     * Tools::copy() is overridden in the wild (override/classes/Tools.php). Adding a
+     * parameter to it makes every such override a fatal "declaration must be compatible"
+     * error, so the SSRF-hardened variant lives in its own method instead. Same reasoning
+     * for file_get_contents(), which is overridden just as often. These tests exist to stop
+     * the parameter from creeping back in.
+     */
+    public function testCopySignatureIsUnchangedForBackwardCompatibility(): void
+    {
+        $copy = new ReflectionMethod(Tools::class, 'copy');
+
+        $this->assertSame(3, $copy->getNumberOfParameters());
+        $this->assertSame(2, $copy->getNumberOfRequiredParameters());
+        $this->assertSame(
+            ['source', 'destination', 'stream_context'],
+            array_map(function (ReflectionParameter $p) {
+                return $p->getName();
+            }, $copy->getParameters())
+        );
+    }
+
+    public function testFileGetContentsSignatureIsUnchangedForBackwardCompatibility(): void
+    {
+        $method = new ReflectionMethod(Tools::class, 'file_get_contents');
+
+        $this->assertSame(5, $method->getNumberOfParameters());
+        $this->assertSame(1, $method->getNumberOfRequiredParameters());
+    }
+
+    /**
+     * The hardened variant must be publicly reachable, since the Symfony adapter
+     * (PrestaShop\PrestaShop\Adapter\Tools) delegates to it.
+     */
+    public function testCopyFromUntrustedSourceIsPublicStatic(): void
+    {
+        $method = new ReflectionMethod(Tools::class, 'copyFromUntrustedSource');
+
+        $this->assertTrue($method->isPublic());
+        $this->assertTrue($method->isStatic());
+        $this->assertSame(2, $method->getNumberOfParameters());
     }
 }

@@ -46,7 +46,7 @@ services:
       PS_ERASE_DB: ${PS_ERASE_DB:-0}
       PS_USE_DOCKER_MAILDEV: ${PS_USE_DOCKER_MAILDEV:-1}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
-      ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battiniciar-sesion?back=https%3A%2F%2Fdeusacasa%2Finiciar-sesion%3Fback%3Dhttps%253A%252F%252Fdeusacasa%252Fery Staple}
+      ADMIN_PASSWD: ${ADMIN_PASSWD:-Pr3st4Sh0P}
       BLACKFIRE_ENABLE: ${BLACKFIRE_ENABLE:-0}
       BLACKFIRE_SERVER_ID: ${BLACKFIRE_SERVER_ID:-0}
       BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN:-0}

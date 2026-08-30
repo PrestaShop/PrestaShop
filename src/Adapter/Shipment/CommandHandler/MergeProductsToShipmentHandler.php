@@ -6,6 +6,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
+use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\MergeProductsToShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\CommandHandler\MergeProductsToShipmentHandlerInterface;
@@ -25,6 +27,8 @@ class MergeProductsToShipmentHandler implements MergeProductsToShipmentHandlerIn
         private ShipmentRepository $repository,
         private ShipmentMergerInterface $merger,
         private TranslatorInterface $translator,
+        private ShipmentShippingCostUpdater $shipmentShippingCostUpdater,
+        private AdapterConfiguration $configuration,
     ) {
     }
 
@@ -91,6 +95,10 @@ class MergeProductsToShipmentHandler implements MergeProductsToShipmentHandlerIn
                 $this->repository->delete($sourceShipment);
             } else {
                 $this->repository->save($sourceShipment);
+            }
+
+            if ($this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING')) {
+                $this->shipmentShippingCostUpdater->recalculateForOrder($targetShipment->getOrderId());
             }
         } catch (Throwable $e) {
             throw new CannotMergeProductToShipmentException(

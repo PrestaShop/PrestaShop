@@ -216,7 +216,7 @@ describe('BO - Catalog - Discounts : Create a discount that applies automaticall
       const discount = parseFloat(discountData.discountValue.toString());
 
       const totalAfterDiscount = await foHummingbirdCartPage.getATIPrice(page);
-      expect(totalAfterDiscount.toFixed(2)).to.equal((dataProducts.demo_6.combinations[0].price - discount).toFixed(2));
+      expect(totalAfterDiscount.toFixed(2)).to.equal((dataProducts.demo_6.combinations[0].priceTI - discount).toFixed(2));
     });
 
     it('should delete the product from the cart', async function () {
@@ -322,7 +322,7 @@ describe('BO - Catalog - Discounts : Create a discount that applies automaticall
       const discount = parseFloat(editDiscountData.discountValue.toString());
 
       const totalAfterDiscount = await foHummingbirdCartPage.getATIPrice(page);
-      expect(totalAfterDiscount.toFixed(2)).to.equal((dataProducts.demo_6.combinations[0].price - discount).toFixed(2));
+      expect(totalAfterDiscount.toFixed(2)).to.equal((dataProducts.demo_6.combinations[0].priceTI - discount).toFixed(2));
     });
 
     it('should delete the product from the cart', async function () {
@@ -440,7 +440,7 @@ describe('BO - Catalog - Discounts : Create a discount that applies automaticall
       const discount = parseFloat(discountRandomPromoCodeData.discountValue.toString());
 
       const totalAfterDiscount = await foHummingbirdCartPage.getATIPrice(page);
-      expect(totalAfterDiscount.toFixed(2)).to.equal((dataProducts.demo_6.combinations[0].price - discount).toFixed(2));
+      expect(totalAfterDiscount.toFixed(2)).to.equal((dataProducts.demo_6.combinations[0].priceTI - discount).toFixed(2));
     });
   });
 

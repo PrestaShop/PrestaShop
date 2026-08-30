@@ -8,8 +8,8 @@
     {% if grid.attributes.is_empty_state %}
       {{ include([
         '@PrestaShop/Admin/Common/Grid/Blocks/EmptyState/' ~ grid.id ~ '.html.twig',
-        '@PrestaShop/Admin/Common/Grid/Blocks/EmptyState/_default.html.twig'
-        ], {grid: grid}
+        '@PrestaShop/Admin/Common/Grid/Blocks/EmptyState/_default.html.twig',
+        ], {grid: grid},
       ) }}
     {% else %}
       {{ include('@PrestaShop/Admin/Common/Grid/Blocks/EmptyState/_default.html.twig', {grid: grid}) }}

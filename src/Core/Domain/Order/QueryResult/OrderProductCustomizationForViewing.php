@@ -33,15 +33,22 @@ class OrderProductCustomizationForViewing
     private $image;
 
     /**
+     * @var bool
+     */
+    private $allowHtml;
+
+    /**
      * @param int $type
      * @param string $name
      * @param string $value
+     * @param bool $allowHtml
      */
-    public function __construct(int $type, string $name, string $value)
+    public function __construct(int $type, string $name, string $value, bool $allowHtml = false)
     {
         $this->type = $type;
         $this->name = $name;
         $this->value = $value;
+        $this->allowHtml = $allowHtml;
         if (Product::CUSTOMIZE_FILE === $this->type) {
             $this->image = _THEME_PROD_PIC_DIR_ . $this->value . '_small';
         }
@@ -77,5 +84,13 @@ class OrderProductCustomizationForViewing
     public function getImage(): ?string
     {
         return $this->image;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHtmlAllowed(): bool
+    {
+        return $this->allowHtml;
     }
 }

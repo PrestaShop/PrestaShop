@@ -10,6 +10,8 @@ use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportEntityExceptio
 
 /**
  * Class EntityFieldsProviderFinder defines an entity fields provider finder.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterRegistry
  */
 final class EntityFieldsProviderFinder implements EntityFieldsProviderFinderInterface
 {

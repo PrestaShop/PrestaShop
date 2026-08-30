@@ -269,6 +269,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->duplicateGroupReduction($oldProductId, $newProductId);
         $this->duplicateRelatedProducts($oldProductId, $newProductId);
         $this->duplicateFeatures($oldProductId, $newProductId);
+        $this->duplicateCombinationFeatures($combinationMatching);
         $this->duplicateSpecificPrices($oldProductId, $newProductId, $combinationMatching);
         $this->duplicatePackedProducts($oldProductId, $newProductId);
         $this->duplicateCustomizationFields($oldProductId, $newProductId);
@@ -615,6 +616,76 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             }
         }
         $this->bulkInsert('feature_product', $newProductFeatures, CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+    }
+
+    /**
+     * Duplicates the feature values associated to the combinations of a product.
+     *
+     * @param array<int, int> $combinationMatching old combination id => new combination id
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateCombinationFeatures(array $combinationMatching): void
+    {
+        if (empty($combinationMatching)) {
+            return;
+        }
+
+        $oldCombinationIds = array_keys($combinationMatching);
+        $oldCombinationFeatures = $this->getRows('feature_product_attribute', ['id_product_attribute' => $oldCombinationIds], CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+        if (empty($oldCombinationFeatures)) {
+            return;
+        }
+
+        // Custom values need to be copied and assigned to new combinations
+        $featureValuesIds = array_map(static function (array $oldCombinationFeature) {
+            return (int) $oldCombinationFeature['id_feature_value'];
+        }, $oldCombinationFeatures);
+        $customFeatureValues = $this->getRows('feature_value', ['id_feature_value' => $featureValuesIds, 'custom' => 1], CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+        $customValuesMapping = [];
+        if (!empty($customFeatureValues)) {
+            $lastFeatureValueId = (int) $this->connection->createQueryBuilder()
+                ->from($this->dbPrefix . 'feature_value')
+                ->select('id_feature_value')
+                ->addOrderBy('id_feature_value', 'DESC')
+                ->executeQuery()
+                ->fetchOne()
+            ;
+
+            $newCustomFeatureValues = [];
+            $newCustomFeatureValuesLang = [];
+            foreach ($customFeatureValues as $customFeatureValue) {
+                $newCustomFeatureValueId = ++$lastFeatureValueId;
+                $oldCustomFeatureValueId = (int) $customFeatureValue['id_feature_value'];
+                $customValuesMapping[$oldCustomFeatureValueId] = $newCustomFeatureValueId;
+                $newCustomFeatureValues[] = array_merge($customFeatureValue, [
+                    'id_feature_value' => $newCustomFeatureValueId,
+                ]);
+
+                $langData = $this->getRows('feature_value_lang', ['id_feature_value' => $oldCustomFeatureValueId], CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+                $langData = $this->replaceInRows($langData, ['id_feature_value' => $newCustomFeatureValueId]);
+                $newCustomFeatureValuesLang = array_merge($newCustomFeatureValuesLang, $langData);
+            }
+            $this->bulkInsert('feature_value', $newCustomFeatureValues, CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+            $this->bulkInsert('feature_value_lang', $newCustomFeatureValuesLang, CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+        }
+
+        // Now we can duplicate relations (and replace custom ones with newly copied feature values)
+        $newCombinationFeatures = [];
+        foreach ($oldCombinationFeatures as $oldCombinationFeature) {
+            $oldCombinationId = (int) $oldCombinationFeature['id_product_attribute'];
+            if (!isset($combinationMatching[$oldCombinationId])) {
+                continue;
+            }
+            $oldFeatureValueId = (int) $oldCombinationFeature['id_feature_value'];
+            $newCombinationFeatures[] = [
+                'id_product_attribute' => $combinationMatching[$oldCombinationId],
+                'id_feature' => $oldCombinationFeature['id_feature'],
+                'id_feature_value' => $customValuesMapping[$oldFeatureValueId] ?? $oldCombinationFeature['id_feature_value'],
+            ];
+        }
+        $this->bulkInsert('feature_product_attribute', $newCombinationFeatures, CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
     }
 
     /**

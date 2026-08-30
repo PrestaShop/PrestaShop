@@ -1,4 +1,6 @@
 # Manual workflow to create a release PR with the changelog (merged PRs) and the updated contributors list.
+# The full generated report (changelog and contributors) is published as workflow artifacts and in the
+# job summary; the PR body only keeps the description table and links to them.
 
 name: Generate Changelog PR
 
@@ -6,13 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       base_branch:
-        description: 'Branch to create the changelog on (e.g. develop)'
+        description: 'Branch to create the changelog on (e.g. develop, 9.1.x, 9.1.2-build)'
         required: true
-        type: choice
-        options:
-          - 'develop'
-          - '9.1.x'
-          - '8.2.x'
+        type: string
         default: 'develop'
       previous_ref:
         description: 'Previous git ref - tag, branch or SHA (e.g. 9.0.2)'
@@ -32,6 +30,11 @@ on:
         required: false
         type: string
         default: ''
+      fallback_repository:
+        description: 'Fallback repository (owner/repo) used to resolve PRs not found in this repository (useful when running on a private mirror). Ignored when it matches the current repository.'
+        required: false
+        type: string
+        default: 'PrestaShop/PrestaShop'
 
 permissions:
   contents: write
@@ -61,6 +64,7 @@ jobs:
           echo target_ref: ${{ inputs.target_ref || inputs.base_branch }}
           echo next_version: ${{ inputs.next_version }}
           echo release_date: ${{ inputs.release_date }}
+          echo fallback_repository: ${{ inputs.fallback_repository }}
 
       - name: Generate changelog
         id: changelog
@@ -68,15 +72,86 @@ jobs:
         with:
           github_token: ${{ github.token }}
           repository: ${{ github.repository }}
+          fallback_repository: ${{ inputs.fallback_repository }}
           previous_ref: ${{ inputs.previous_ref }}
           target_ref: ${{ inputs.target_ref || inputs.base_branch }}
           next_version: ${{ inputs.next_version }}
           release_date: ${{ inputs.release_date }}
 
+      # The generated content can exceed the PR body limit (65536 characters), so it is exported
+      # as files published as artifacts and in the job summary instead of being inlined in the PR.
+      - name: Export report files
+        id: report
+        env:
+          NEXT_VERSION: ${{ inputs.next_version }}
+          CHANGELOG: ${{ steps.changelog.outputs.changelog }}
+          CHANGELOG_FORMATTED: ${{ steps.changelog.outputs.changelog_formatted }}
+          CONTRIBUTORS: ${{ steps.changelog.outputs.contributors }}
+          CONTRIBUTORS_GRID: ${{ steps.changelog.outputs.contributors_grid }}
+          NEW_CONTRIBUTORS: ${{ steps.changelog.outputs.new_contributors }}
+        run: |
+          DIR="$RUNNER_TEMP/changelog-report"
+          mkdir -p "$DIR"
+          printf '%s\n' "$CHANGELOG"           > "$DIR/changelog.txt"
+          printf '%s\n' "$CHANGELOG_FORMATTED" > "$DIR/changelog-with-urls.md"
+          printf '%s\n' "$CONTRIBUTORS"        > "$DIR/contributors.txt"
+          printf '%s\n' "$CONTRIBUTORS_GRID"   > "$DIR/contributors-grid.txt"
+          printf '%s\n' "$NEW_CONTRIBUTORS"    > "$DIR/new-contributors.txt"
+          echo "dir=${DIR}" >> "$GITHUB_OUTPUT"
+          echo "version_slug=$(echo "$NEXT_VERSION" | tr ' ' '-')" >> "$GITHUB_OUTPUT"
+
+      - name: Upload changelog artifact
+        id: changelog_artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog-${{ steps.report.outputs.version_slug }}
+          path: |
+            ${{ steps.report.outputs.dir }}/changelog.txt
+            ${{ steps.report.outputs.dir }}/changelog-with-urls.md
+
+      - name: Upload contributors artifact
+        id: contributors_artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: contributors-${{ steps.report.outputs.version_slug }}
+          path: |
+            ${{ steps.report.outputs.dir }}/contributors.txt
+            ${{ steps.report.outputs.dir }}/contributors-grid.txt
+            ${{ steps.report.outputs.dir }}/new-contributors.txt
+
+      - name: Publish job summary
+        env:
+          REPORT_DIR: ${{ steps.report.outputs.dir }}
+          NEXT_VERSION: ${{ inputs.next_version }}
+        run: |
+          summary_section() {
+            local title="$1" path="$2"
+            {
+              echo "<details>"
+              echo "<summary>${title}</summary>"
+              echo ""
+              echo '```'
+              cat "$path"
+              echo '```'
+              echo ""
+              echo "</details>"
+              echo ""
+            } >> "$GITHUB_STEP_SUMMARY"
+          }
+          {
+            echo "# Changelog ${NEXT_VERSION}"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+          summary_section "Changelog" "$REPORT_DIR/changelog.txt"
+          summary_section "Changelog with urls" "$REPORT_DIR/changelog-with-urls.md"
+          summary_section "Contributors" "$REPORT_DIR/contributors.txt"
+          summary_section "Contributors grid" "$REPORT_DIR/contributors-grid.txt"
+          summary_section "New Contributors" "$REPORT_DIR/new-contributors.txt"
+
       - name: Create branch and push
         id: push
         run: |
-          BRANCH_NAME="release/changelog-$(echo '${{ inputs.next_version }}' | tr ' ' '-')"
+          BRANCH_NAME="release/changelog-${{ steps.report.outputs.version_slug }}"
           echo "branch_name=${BRANCH_NAME}" >> "$GITHUB_OUTPUT"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -114,49 +189,9 @@ jobs:
 
           ## Informations
 
-          <details>
-          <summary>Changelog</summary>
-
-          ```
-          ${{ steps.changelog.outputs.changelog }}
-          ```
-
-          </details>
-
-          <details>
-          <summary>Changelog with urls</summary>
-
-          ```
-          ${{ steps.changelog.outputs.changelog_formatted }}
-          ```
-
-          </details>
-          <details>
-          <summary>Contributors</summary>
-
-          ```
-          ${{ steps.changelog.outputs.contributors }}
-          ```
-
-          </details>
-
-          <details>
-          <summary>Contributors grid</summary>
-
-          ```
-          ${{ steps.changelog.outputs.contributors_grid }}
-          ```
-
-          </details>
-
-          <details>
-          <summary>New Contributors</summary>
-
-          ```
-          ${{ steps.changelog.outputs.new_contributors }}
-          ```
-
-          </details>
+          The full generated report is available on the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) (job summary) and as artifacts:
+          - [Changelog artifact](${{ steps.changelog_artifact.outputs.artifact-url }}): `changelog.txt`, `changelog-with-urls.md`
+          - [Contributors artifact](${{ steps.contributors_artifact.outputs.artifact-url }}): `contributors.txt`, `contributors-grid.txt`, `new-contributors.txt`
           EOF
 
           EXISTING_PR=$(gh pr list --repo "${{ github.repository }}" --head "${BRANCH_NAME}" --base "${{ inputs.base_branch }}" --json number -q '.[0].number' 2>/dev/null || true)
