@@ -24,7 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ImageThumbnailsRegenerator
 {
-    private int $maxExecutionTime = 7200;
+    private int $maxExecutionTime = 86400;
     private int $startTime = 0;
 
     public function __construct(
