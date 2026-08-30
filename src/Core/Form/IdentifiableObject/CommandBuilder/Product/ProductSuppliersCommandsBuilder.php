@@ -28,7 +28,15 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
             return [];
         }
 
-        $associatedSuppliers = $formData['options']['suppliers']['supplier_ids'] ?? [];
+        // The form choice values come from the database as strings, and SetSuppliersCommand builds
+        // SupplierId (an int parameter) under strict_types, so they have to be cast here. The two
+        // other supplier paths below already do it. Blank entries are dropped so that a submission
+        // with nothing selected falls through to RemoveAllAssociatedProductSuppliersCommand rather
+        // than reaching SupplierId with 0.
+        $associatedSuppliers = array_values(array_filter(array_map(
+            'intval',
+            $formData['options']['suppliers']['supplier_ids'] ?? []
+        )));
         if (empty($associatedSuppliers)) {
             return [new RemoveAllAssociatedProductSuppliersCommand($productId->getValue())];
         }
