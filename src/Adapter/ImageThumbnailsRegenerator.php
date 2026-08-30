@@ -24,7 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ImageThumbnailsRegenerator
 {
-    private int $maxExecutionTime = 86400;
+    private int $maxExecutionTime = 7200;
     private int $startTime = 0;
 
     public function __construct(
@@ -38,8 +38,10 @@ class ImageThumbnailsRegenerator
     ) {
         // Save start time to calculate remaining time and to avoid timeout on long running processes
         $this->startTime = time();
-        ini_set('max_execution_time', $this->maxExecutionTime); // ini_set may be disabled, we need the real value
-        $this->maxExecutionTime = (int) ini_get('max_execution_time');
+        if (PHP_SAPI !== 'cli') {
+            ini_set('max_execution_time', $this->maxExecutionTime); // ini_set may be disabled, we need the real value
+            $this->maxExecutionTime = (int) ini_get('max_execution_time');
+        }
     }
 
     /**
@@ -174,7 +176,7 @@ class ImageThumbnailsRegenerator
                         }
 
                         // stop 4 seconds before the timeout, just enough time to process the end of the page on a slow server
-                        if (time() - $this->startTime > $this->maxExecutionTime - 4) {
+                        if (PHP_SAPI !== 'cli' && time() - $this->startTime > $this->maxExecutionTime - 4) {
                             return ['timeout'];
                         }
                     }
@@ -238,7 +240,7 @@ class ImageThumbnailsRegenerator
                         'Admin.Design.Notification'
                     );
                 }
-                if (time() - $this->startTime > $this->maxExecutionTime - 4) { // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
+                if (PHP_SAPI !== 'cli' && time() - $this->startTime > $this->maxExecutionTime - 4) { // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
                     return ['timeout'];
                 }
             }
@@ -273,7 +275,7 @@ class ImageThumbnailsRegenerator
                             );
                         }
 
-                        if (time() - $this->startTime > $this->maxExecutionTime - 4) { // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
+                        if (PHP_SAPI !== 'cli' && time() - $this->startTime > $this->maxExecutionTime - 4) { // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
                             return 'timeout';
                         }
                     }
