@@ -116,6 +116,7 @@ class NotificationCore
 					LEFT JOIN `' . _DB_PREFIX_ . 'customer` as cu ON (cu.`id_customer` = ct.`id_customer`)
 					WHERE c.`id_customer_message` > ' . (int) $idLastElement . '
 						AND c.`id_employee` = 0
+						AND c.`private` = 0
 						AND ct.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
 					ORDER BY c.`id_customer_message` DESC
 					LIMIT 5';
