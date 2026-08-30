@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -16,35 +18,21 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * rollout. The nonce is also stored in the request attributes (as `csp_nonce`) so
  * templates can adopt it incrementally before the header becomes enforcing.
  */
-class CspHeaderSubscriber implements EventSubscriberInterface
+final class CspHeaderSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var string
-     */
-    private $headerName;
-
-    /**
-     * @param string $headerName
-     */
-    public function __construct($headerName = 'Content-Security-Policy-Report-Only')
-    {
-        $this->headerName = $headerName;
+    public function __construct(
+        private readonly string $headerName = 'Content-Security-Policy-Report-Only'
+    ) {
     }
 
-    /**
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::RESPONSE => 'onKernelResponse',
         ];
     }
 
-    /**
-     * @param ResponseEvent $event
-     */
-    public function onKernelResponse(ResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
@@ -55,7 +43,7 @@ class CspHeaderSubscriber implements EventSubscriberInterface
         $event->getResponse()->headers->set(
             $this->headerName,
             sprintf(
-                "default-src 'self'; script-src 'self' 'nonce-%s'; style-src 'self' 'unsafe-inline'",
+                "default-src 'self'; script-src 'self' 'nonce-%s'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:",
                 $nonce
             )
         );
