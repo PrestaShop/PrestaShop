@@ -3,7 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
 {if count($categories) && isset($categories)}
-	<script type="text/javascript">
+	<script type="text/javascript" nonce="{$cspNonce}">
 		var inputName = '{$categories.input_name|@addcslashes:'\''}';
 		var use_radio = {if $categories.use_radio}1{else}0{/if};
 		var selectedCat = {$categories.selected_cat|@implode|intval};
@@ -65,7 +65,7 @@
 		</li>
 	</ul>
 	{if $categories.use_radio}
-	<script type="text/javascript">
+	<script type="text/javascript" nonce="{$cspNonce}">
 		searchCategory();
 	</script>
 	{/if}
