@@ -46,6 +46,13 @@ services:
       $domainNamespaces:
         - 'PrestaShop\PrestaShop\Core\Domain'
 
+  # Puts the status the response carries into the error body, which ApiPlatform hands over under a
+  # key Symfony's ProblemNormalizer does not read
+  PrestaShopBundle\ApiPlatform\Normalizer\ProblemStatusNormalizer:
+    decorates: 'serializer.normalizer.problem'
+    arguments:
+      $decorated: '@.inner'
+
   # This is a custom serializer that handles localized values and normalization mapping
   PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer:
     autowire: true

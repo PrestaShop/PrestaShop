@@ -57,7 +57,7 @@ class CommandProcessor implements ProcessorInterface
             $commandParameters = array_merge($normalizedApiResourceDTO, $uriVariables, $this->contextParametersProvider->getContextParameters());
 
             // Denormalize the command and let the bus handle it
-            $command = $this->domainSerializer->denormalize($commandParameters, $CQRSCommandClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSCommandMapping($operation)]);
+            $command = $this->domainSerializer->denormalize($commandParameters, $CQRSCommandClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSCommandMapping($operation), CQRSApiSerializer::CLIENT_INPUT => true]);
         }
         $commandResult = $this->commandBus->handle($command);
         $allowEmptyBody = $operation->getExtraProperties()['allowEmptyBody'] ?? null;

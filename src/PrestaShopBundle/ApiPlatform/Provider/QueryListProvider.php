@@ -158,7 +158,7 @@ class QueryListProvider implements ProviderInterface
             $getParameters,
             $this->contextParametersProvider->getContextParameters(),
         );
-        $CQRSQuery = $this->domainSerializer->denormalize($queryParameters, $CQRSQueryClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
+        $CQRSQuery = $this->domainSerializer->denormalize($queryParameters, $CQRSQueryClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation), CQRSApiSerializer::CLIENT_INPUT => true]);
         $CQRSQueryResult = $this->queryBus->handle($CQRSQuery);
 
         // Query result must be a structure that contains paginated elements (so a list of items and a count)
