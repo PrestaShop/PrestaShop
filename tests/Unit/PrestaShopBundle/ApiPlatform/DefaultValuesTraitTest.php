@@ -40,6 +40,35 @@ class DefaultValuesTraitTest extends TestCase
         );
     }
 
+    public function testContextDefaultValuesAreResolvedAgainstTheInput(): void
+    {
+        $operation = new CQRSCreate(defaultValues: ['associatedShopIds' => '[_context][shopIds]']);
+
+        // The context parameters are merged into the input before the defaults are applied, so a context
+        // path default is resolved against the input itself
+        $this->assertEquals(
+            ['_context' => ['shopIds' => [1, 3]], 'associatedShopIds' => [1, 3]],
+            $this->applyDefaultValues(['_context' => ['shopIds' => [1, 3]]], $operation)
+        );
+
+        // An explicitly provided value still wins over the context default
+        $this->assertEquals(
+            ['_context' => ['shopIds' => [1, 3]], 'associatedShopIds' => [2]],
+            $this->applyDefaultValues(['_context' => ['shopIds' => [1, 3]], 'associatedShopIds' => [2]], $operation)
+        );
+    }
+
+    public function testUnresolvableContextDefaultValuesAreNotApplied(): void
+    {
+        $operation = new CQRSCreate(defaultValues: ['associatedShopIds' => '[_context][unknownValue]']);
+
+        // The field stays missing, so it is reported like any other missing required field
+        $this->assertEquals(
+            ['_context' => ['shopIds' => [1, 3]]],
+            $this->applyDefaultValues(['_context' => ['shopIds' => [1, 3]]], $operation)
+        );
+    }
+
     public function testNonArrayInputIsReturnedAsIs(): void
     {
         $operation = new CQRSCreate(defaultValues: ['active' => true]);

@@ -10,6 +10,7 @@ namespace PrestaShopBundle\ApiPlatform\OpenApi\Adapter;
 
 use ApiPlatform\Metadata\Operation;
 use ArrayObject;
+use PrestaShopBundle\ApiPlatform\DefaultValuesTrait;
 
 /**
  * Documents the default values of a write operation: the value is exposed as the default of the property, and the
@@ -21,6 +22,8 @@ use ArrayObject;
  */
 class DefaultValuesAdapter implements OpenApiSchemaAdapterInterface
 {
+    use DefaultValuesTrait;
+
     public function adapt(string $class, ArrayObject $definition, ?Operation $operation = null): void
     {
         if (!$operation || empty($operation->getExtraProperties()['defaultValues'])) {
@@ -29,6 +32,12 @@ class DefaultValuesAdapter implements OpenApiSchemaAdapterInterface
 
         $defaultValues = $operation->getExtraProperties()['defaultValues'];
         foreach ($defaultValues as $propertyName => $defaultValue) {
+            // A context default is resolved per request, so the context path would be a misleading literal default:
+            // the property is only removed from the required ones, and its description documents the behavior
+            if (self::isContextDefaultValue($defaultValue)) {
+                continue;
+            }
+
             $this->documentDefaultValue($definition, (string) $propertyName, $defaultValue);
         }
 
