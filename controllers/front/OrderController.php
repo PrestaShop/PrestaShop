@@ -98,6 +98,23 @@ class OrderControllerCore extends FrontController
     }
 
     /**
+     * Without an entry of its own the breadcrumb holds nothing but the home link, and a
+     * one-level breadcrumb is what themes hide as empty. The cart page it is reached from
+     * already carries one, so the checkout was the last step of that path with none.
+     */
+    public function getBreadcrumbLinks(): array
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->getTranslator()->trans('Checkout', [], 'Shop.Theme.Actions'),
+            'url' => $this->context->link->getPageLink('order'),
+        ];
+
+        return $breadcrumb;
+    }
+
+    /**
      * @return CheckoutSession
      */
     public function getCheckoutSession(): CheckoutSession

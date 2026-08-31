@@ -540,26 +540,29 @@ class FrontControllerCore extends Controller
             ]
         );
 
-        $templateVars = [
-            'cart' => $this->cart_presenter->present($cart, true),
-            'currency' => $this->getTemplateVarCurrency(),
-            'customer' => $this->getTemplateVarCustomer(),
-            'country' => $this->objectPresenter->present($this->context->country),
-            'language' => $this->objectPresenter->present($this->context->language),
-            'page' => $this->getTemplateVarPage(),
-            'shop' => $this->getTemplateVarShop(),
-            'core_js_public_path' => $this->getCoreJsPublicPath(),
-            'urls' => $this->getTemplateVarUrls(),
-            'configuration' => $this->getTemplateVarConfiguration(),
-            'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
-            'breadcrumb' => $this->getBreadcrumb(),
-            'structured_data' => $this->getStructuredData(),
-            'link' => $this->context->link,
-            'time' => time(),
-            'static_token' => Tools::getToken(false),
-            'token' => Tools::getToken(),
-            'debug' => _PS_MODE_DEV_,
-        ];
+        $templateVars = array_merge(
+            [
+                'cart' => $this->cart_presenter->present($cart, true),
+                'currency' => $this->getTemplateVarCurrency(),
+                'customer' => $this->getTemplateVarCustomer(),
+                'country' => $this->objectPresenter->present($this->context->country),
+                'language' => $this->objectPresenter->present($this->context->language),
+                'page' => $this->getTemplateVarPage(),
+                'shop' => $this->getTemplateVarShop(),
+                'core_js_public_path' => $this->getCoreJsPublicPath(),
+                'urls' => $this->getTemplateVarUrls(),
+                'configuration' => $this->getTemplateVarConfiguration(),
+                'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
+                'breadcrumb' => $this->getBreadcrumb(),
+                'structured_data' => $this->getStructuredData(),
+                'link' => $this->context->link,
+                'time' => time(),
+                'static_token' => Tools::getToken(false),
+                'token' => Tools::getToken(),
+                'debug' => _PS_MODE_DEV_,
+            ],
+            $templateVars
+        );
 
         // An array [module_name => module_output] will be returned
         $modulesVariables = Hook::exec(
