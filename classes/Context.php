@@ -101,6 +101,12 @@ class ContextCore
     /** @var float */
     public $virtualTotalTaxIncluded = 0;
 
+    /** @var float what virtualTotalTaxExcluded started at, before any cart rule was applied */
+    public $virtualTotalBaseTaxExcluded = 0;
+
+    /** @var float what virtualTotalTaxIncluded started at, before any cart rule was applied */
+    public $virtualTotalBaseTaxIncluded = 0;
+
     /** @var Translator */
     protected $translator = null;
 

@@ -520,6 +520,10 @@ class CartCore extends ObjectModel
         } else {
             $virtual_context->virtualTotalTaxIncluded = $virtual_context->cart->getOrderTotal(true, self::ONLY_PRODUCTS);
         }
+        // Keep what the running total started at: a rule reducing one product line needs to know how
+        // much of the cart earlier rules have already taken, and that is this minus the running total.
+        $virtual_context->virtualTotalBaseTaxExcluded = $virtual_context->virtualTotalTaxExcluded;
+        $virtual_context->virtualTotalBaseTaxIncluded = $virtual_context->virtualTotalTaxIncluded;
 
         foreach ($result as &$row) {
             $row['obj'] = new CartRule($row['id_cart_rule'], (int) $this->id_lang);
