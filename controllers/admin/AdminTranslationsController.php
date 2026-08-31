@@ -1353,9 +1353,24 @@ class AdminTranslationsControllerCore extends AdminController
                 }
             } elseif (Tools::isSubmit('submitTranslationsModules')) {
                 if ($this->access('edit')) {
-                    // Get list of modules
+                    // Asserts the modules directory exists and is writable, and gives the fallback
+                    // list below.
                     if ($modules = $this->getListModules()) {
-                        // Get files of all modules
+                        // The form is edited one module at a time and the request says which one, so
+                        // only its files are rewritten. Writing every installed module on each save
+                        // rewrites files the merchant never edited. Without a module in the request
+                        // the previous behaviour is kept, so nothing that used to be saved is lost.
+                        $selectedModule = Tools::getValue('module');
+                        if ($selectedModule) {
+                            // The name reaches file paths that are read, included and written, so it
+                            // is checked the same way the mail translations above check theirs.
+                            if (!Validate::isModuleName($selectedModule)) {
+                                throw new PrestaShopException($this->trans('Invalid module name "%module%"', ['%module%' => Tools::safeOutput($selectedModule)], 'Admin.International.Notification'));
+                            }
+
+                            $modules = [$selectedModule];
+                        }
+
                         $arr_files = $this->getAllModuleFiles($modules, null, $this->lang_selected->iso_code, true);
 
                         // Find and write all translation modules files
