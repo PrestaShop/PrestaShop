@@ -92,8 +92,8 @@ Feature: Retrieving shipment for orders
       | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
       | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
     Then the available shipments of order "bo_order1" for product "mug_best" should be:
-      | shipment  | name       |
-      | shipment1 | Shipment 1 |
+      | shipment  | name                  |
+      | shipment1 | Shipment {shipmentId} |
 
   Scenario: List the available shipments of a product that is not in the order
     Given the order "bo_order1" should have the following shipments:

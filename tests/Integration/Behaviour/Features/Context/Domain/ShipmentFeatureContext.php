@@ -225,9 +225,12 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
     ): void {
         $expected = [];
         foreach ($table->getColumnsHash() as $row) {
+            $shipmentId = $this->referenceToId($row['shipment']);
             $expected[] = [
-                'id' => $this->referenceToId($row['shipment']),
-                'name' => $row['name'],
+                'id' => $shipmentId,
+                // the shipment id is assigned by the database, so the expected name carries a
+                // placeholder rather than a literal that would only hold for one fixture state
+                'name' => str_replace('{shipmentId}', (string) $shipmentId, $row['name']),
             ];
         }
 
