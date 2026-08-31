@@ -132,7 +132,13 @@ abstract class AbstractFormCore implements FormInterface
     {
         foreach ($this->formFields as $field) {
             if ($field->isRequired()) {
-                if (!$field->getValue()) {
+                $value = $field->getValue();
+                // A value made only of spaces is not an answer, and PHP considers such a string
+                // truthy, so it used to satisfy the requirement. Comparing the trimmed value also
+                // keeps "0" acceptable, which the previous truthiness test rejected.
+                $isEmpty = is_array($value) ? empty($value) : '' === trim((string) $value);
+
+                if ($isEmpty) {
                     $field->addError(
                         $this->constraintTranslator->translate('required')
                     );
