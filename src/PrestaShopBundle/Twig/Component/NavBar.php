@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Twig\Component;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -25,6 +26,7 @@ class NavBar
         protected readonly LoggerInterface $logger,
         protected readonly MenuBuilder $menuBuilder,
         protected readonly string $psVersion,
+        protected readonly ModuleManager $moduleManager,
     ) {
     }
 
@@ -79,7 +81,11 @@ class NavBar
     {
         return Tab::checkTabRights($tab['id_tab'])
             && $tab['enabled']
-            && $tab['class_name'] !== 'AdminCarrierWizard';
+            && $tab['class_name'] !== 'AdminCarrierWizard'
+            // Disabling a module leaves the tab rows it installed untouched, so the menu decides on
+            // the module state instead. isEnabled() resolves through the shop association that
+            // disabling removes, so the entries follow the shops of the current context.
+            && (empty($tab['module']) || $this->moduleManager->isEnabled($tab['module']));
     }
 
     protected function processTab(array $tab, int $currentId, int $level, ?string $controllerName): array
