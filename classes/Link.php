@@ -974,6 +974,7 @@ class LinkCore
         if (strpos($idImage, 'default') !== false) {
             $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . $idImage . $type . '-' . Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
             $uriPath = _THEME_PROD_DIR_ . $idImage . $type . $theme . '.' . $extension;
+            $filePath = _PS_PRODUCT_IMG_DIR_ . $idImage . $type . $theme . '.' . $extension;
 
         // Regular image with numeric ID
         } else {
@@ -998,9 +999,11 @@ class LinkCore
             } else {
                 $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . $type . $theme . '.' . $extension;
             }
+
+            $filePath = _PS_PRODUCT_IMG_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . $type . $theme . '.' . $extension;
         }
 
-        $url = $this->getMediaLink($uriPath);
+        $url = $this->addImageVersion($this->getMediaLink($uriPath), $filePath);
 
         Hook::exec(
             'adaptImageLink',
@@ -1102,6 +1105,25 @@ class LinkCore
      *
      * @return string
      */
+    /**
+     * Stamp an image URL with the moment the file was last written, so a cache in front of the shop
+     * can be told to hold it indefinitely and still pick up a replacement immediately. Without it a
+     * reverse proxy has no way to tell that an image changed, and can only cache for a fixed guess.
+     *
+     * The file is not always reachable from here - a media server or a CDN origin, for instance - and
+     * then the URL is returned untouched rather than stamped with something invented.
+     */
+    protected function addImageVersion(string $url, string $filePath): string
+    {
+        $modifiedAt = @filemtime($filePath);
+
+        if (false === $modifiedAt) {
+            return $url;
+        }
+
+        return $url . (false === strpos($url, '?') ? '?' : '&') . 'v=' . $modifiedAt;
+    }
+
     public function getMediaLink($filepath)
     {
         return $this->protocol_content . Tools::getMediaServer($filepath) . $filepath;
