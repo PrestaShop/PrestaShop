@@ -1177,9 +1177,6 @@ abstract class ModuleCore implements ModuleInterface
         Hook::exec('actionModuleDisable', ['module' => $this]);
 
         $result = true;
-        if (!Configuration::get('PS_DISABLE_MODULE_OVERRIDES') && $this->getOverrides() != null) {
-            $result &= $this->uninstallOverrides();
-        }
 
         // Disable module for all shops or contextual shops
         $whereIdShop = $force_all ? '' : ' AND `id_shop` IN(' . implode(', ', Shop::getContextListShopID()) . ')';
@@ -1188,6 +1185,13 @@ abstract class ModuleCore implements ModuleInterface
         // if module has no more shop associations, set module.active = 0
         if (!$this->hasShopAssociations()) {
             $result &= Db::getInstance()->update('module', ['active' => 0], 'id_module = ' . (int) $this->id);
+
+            // Overrides are files and there is one copy of them for the whole installation, so they can
+            // only go once no shop runs the module any more. Removing them while another shop still has
+            // it enabled takes that shop's behaviour away with it.
+            if (!Configuration::get('PS_DISABLE_MODULE_OVERRIDES') && $this->getOverrides() != null) {
+                $result &= $this->uninstallOverrides();
+            }
         }
 
         return (bool) $result;
