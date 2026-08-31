@@ -151,7 +151,7 @@ class ImageSettingsType extends TranslatorAwareType
             ])
             ->add('picture-max-width', IntegerType::class, [
                 'label' => $this->trans('Product picture width', 'Admin.Design.Feature'),
-                'help' => $this->trans('Width of product customization pictures that customers can upload (in pixels).', 'Admin.Design.Help'),
+                'help' => $this->trans('Width of the box a customization picture is fitted into when its thumbnail is generated (in pixels). The uploaded file itself is stored at its original size.', 'Admin.Design.Help'),
                 'attr' => [
                     'min' => 0,
                 ],
@@ -164,7 +164,7 @@ class ImageSettingsType extends TranslatorAwareType
             ])
             ->add('picture-max-height', IntegerType::class, [
                 'label' => $this->trans('Product picture height', 'Admin.Design.Feature'),
-                'help' => $this->trans('Height of product customization pictures that customers can upload (in pixels).', 'Admin.Design.Help'),
+                'help' => $this->trans('Height of the box a customization picture is fitted into when its thumbnail is generated (in pixels). The uploaded file itself is stored at its original size.', 'Admin.Design.Help'),
                 'attr' => [
                     'min' => 0,
                 ],
