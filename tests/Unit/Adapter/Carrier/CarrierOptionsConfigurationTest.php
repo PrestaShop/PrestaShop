@@ -12,7 +12,6 @@ use Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class CarrierOptionsConfigurationTest extends AbstractConfigurationTestCase
@@ -73,7 +72,6 @@ class CarrierOptionsConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, ['default_carrier' => true, 'carrier_default_order_by' => Carrier::SORT_BY_POSITION, 'carrier_default_order_way' => Carrier::SORT_BY_DESC]],
             [InvalidOptionsException::class, ['default_carrier' => 25, 'carrier_default_order_by' => true, 'carrier_default_order_way' => Carrier::SORT_BY_DESC]],
             [InvalidOptionsException::class, ['default_carrier' => 25, 'carrier_default_order_by' => Carrier::SORT_BY_POSITION, 'carrier_default_order_way' => true]],

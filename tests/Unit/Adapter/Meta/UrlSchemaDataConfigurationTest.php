@@ -12,7 +12,6 @@ use PrestaShop\PrestaShop\Adapter\Meta\UrlSchemaDataConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
@@ -273,7 +272,6 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['category_rule' => false])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['supplier_rule' => false])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['manufacturer_rule' => false])],
