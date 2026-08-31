@@ -22,6 +22,23 @@ class PageNotFoundControllerCore extends FrontController
     }
 
     /**
+     * Without an entry of its own the breadcrumb holds nothing but the home link, and a
+     * one-level breadcrumb is what themes hide as empty. The wording matches the meta title
+     * this page is registered with.
+     */
+    public function getBreadcrumbLinks(): array
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->getTranslator()->trans('404 error', [], 'Shop.Navigation'),
+            'url' => $this->context->link->getPageLink('pagenotfound'),
+        ];
+
+        return $breadcrumb;
+    }
+
+    /**
      * Assign template vars related to page content.
      *
      * @see FrontController::initContent()
