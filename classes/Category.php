@@ -1520,8 +1520,10 @@ class CategoryCore extends ObjectModel
     {
         $categories = explode('/', trim($path));
         $idParentCategory = false;
+        $selfPath = '';
 
         foreach ($categories as $categoryName) {
+            $selfPath = $selfPath ? ($selfPath . '/' . $categoryName) : $categoryName;
             if ($idParentCategory) {
                 $category = Category::searchByNameAndParentCategoryId($idLang, $categoryName, $idParentCategory);
             } else {
@@ -1530,7 +1532,7 @@ class CategoryCore extends ObjectModel
 
             if (!$category && $objectToCreate && $methodToCreate) {
                 call_user_func_array([$objectToCreate, $methodToCreate], [$idLang, $categoryName, $idParentCategory]);
-                $category = Category::searchByPath($idLang, $categoryName);
+                $category = Category::searchByPath($idLang, $selfPath);
             }
             if (isset($category['id_category']) && $category['id_category']) {
                 $idParentCategory = (int) $category['id_category'];
