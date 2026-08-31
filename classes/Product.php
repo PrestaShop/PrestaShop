@@ -45,6 +45,13 @@ class ProductCore extends ObjectModel
     /** @var int default Category identifier */
     public $id_category_default;
 
+    /**
+     * Position asked for through the webservice while the category association did not exist yet.
+     *
+     * @var int|null
+     */
+    protected $ws_position_in_category;
+
     /** @var int default Shop identifier */
     public $id_shop_default;
 
@@ -6801,6 +6808,12 @@ class ProductCore extends ObjectModel
             );
         }
 
+        if ($return && $this->ws_position_in_category !== null) {
+            $position = $this->ws_position_in_category;
+            $this->ws_position_in_category = null;
+            $this->setWsPositionInCategory($position);
+        }
+
         Hook::exec('actionProductUpdate', ['id_product' => (int) $this->id]);
 
         return $return;
@@ -7001,9 +7014,17 @@ class ProductCore extends ObjectModel
             'ORDER BY `position`'
         );
 
-        $sizeResult = count($result);
+        foreach ($result as &$value) {
+            $value = (int) $value['id_product'];
+        }
+        unset($value);
 
-        if ($position > $sizeResult && $sizeResult > 0) {
+        $sizeResult = count($result);
+        $isInCategory = in_array((int) $this->id, $result, true);
+        // A product that is not in the category yet adds a slot to it, so the last free position is one further.
+        $lastPosition = $isInCategory ? $sizeResult : $sizeResult + 1;
+
+        if ($position > $lastPosition && $sizeResult > 0) {
             WebserviceRequest::getInstance()->setError(
                 500,
                 $this->trans(
@@ -7017,19 +7038,30 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        foreach ($result as &$value) {
-            $value = $value['id_product'];
+        if (!$isInCategory) {
+            /*
+             * The webservice runs the field setters before it saves the object and before it applies the
+             * associations, so on a creation the category link this position refers to does not exist yet.
+             * Keep the request and let setWsCategories() apply it once the rows are in place; reordering
+             * the rest of the category here would rewrite other products' positions for nothing.
+             */
+            $this->ws_position_in_category = (int) $position;
+
+            return true;
         }
+
         // result is indexed by recordset order and not position. positions start at index 1 so we need an empty element
         array_unshift($result, null);
 
-        $current_position = $this->getWsPositionInCategory();
-
-        if ($current_position && isset($result[$current_position])) {
-            $save = $result[$current_position];
-            unset($result[$current_position]);
-            array_splice($result, (int) $position, 0, $save);
-        }
+        /*
+         * The product is located by its place in the ordered list rather than by the position stored
+         * against it: dropping a category from a product's associations vacates a position without
+         * renumbering the rest, and after that the stored value no longer indexes the list.
+         */
+        $current_index = array_search((int) $this->id, $result, true);
+        $save = $result[$current_index];
+        unset($result[$current_index]);
+        array_splice($result, (int) $position, 0, $save);
 
         foreach ($result as $position => $id_product) {
             Db::getInstance()->update('category_product', [

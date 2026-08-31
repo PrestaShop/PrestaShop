@@ -12,8 +12,7 @@ function getProductXmlCreate(): string {
     + '    <id_default_image><![CDATA[]]></id_default_image>\n'
     + '    <id_default_combination>0</id_default_combination>\n'
     + '    <id_tax_rules_group>1</id_tax_rules_group>\n'
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/14903
-    //+ '    <position_in_category>1</position_in_category>\n'
+    + '    <position_in_category>3</position_in_category>\n'
     + '    <type><![CDATA[simple]]></type>\n'
     + '    <id_shop_default>1</id_shop_default>\n'
     + '    <reference><![CDATA[REFERENCE007]]></reference>\n'
@@ -130,8 +129,7 @@ function getProductXmlUpdate(idProduct: string): string {
     + '    <id_default_image><![CDATA[]]></id_default_image>\n'
     + '    <id_default_combination>0</id_default_combination>\n'
     + '    <id_tax_rules_group>2</id_tax_rules_group>\n'
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/14903
-    //+ '    <position_in_category>2</position_in_category>\n'
+    + '    <position_in_category>2</position_in_category>\n'
     + '    <type><![CDATA[simple]]></type>\n'
     + '    <id_shop_default>1</id_shop_default>\n'
     + '    <reference><![CDATA[UPDATEREFERENCE007]]></reference>\n'
