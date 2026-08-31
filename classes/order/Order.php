@@ -1346,25 +1346,7 @@ class OrderCore extends ObjectModel
 
             // Update order payment
             if ($use_existing_payment) {
-                $id_order_payments = Db::getInstance()->executeS('
-                    SELECT DISTINCT op.id_order_payment
-                    FROM `' . _DB_PREFIX_ . 'order_payment` op
-                    INNER JOIN `' . _DB_PREFIX_ . 'orders` o ON (o.reference = op.order_reference)
-                    LEFT JOIN `' . _DB_PREFIX_ . 'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)
-                    WHERE (oip.id_order != ' . (int) $order_invoice->id_order . ' OR oip.id_order IS NULL) AND o.id_order = ' . (int) $order_invoice->id_order);
-
-                if (count($id_order_payments)) {
-                    foreach ($id_order_payments as $order_payment) {
-                        Db::getInstance()->execute('
-                            INSERT INTO `' . _DB_PREFIX_ . 'order_invoice_payment`
-                            SET
-                                `id_order_invoice` = ' . (int) $order_invoice->id . ',
-                                `id_order_payment` = ' . (int) $order_payment['id_order_payment'] . ',
-                                `id_order` = ' . (int) $order_invoice->id_order);
-                    }
-                    // Clear cache
-                    Cache::clean('order_invoice_paid_*');
-                }
+                $this->associateExistingPaymentsToInvoice($order_invoice);
             }
 
             // Update order cart rule
@@ -1446,6 +1428,35 @@ class OrderCore extends ObjectModel
     }
 
     /**
+     * Associate the order's existing payments with the given invoice, so an already-paid order is
+     * not seen as unpaid once an invoice is generated for it.
+     *
+     * @param OrderInvoice $order_invoice
+     */
+    protected function associateExistingPaymentsToInvoice($order_invoice)
+    {
+        $id_order_payments = Db::getInstance()->executeS('
+            SELECT DISTINCT op.id_order_payment
+            FROM `' . _DB_PREFIX_ . 'order_payment` op
+            INNER JOIN `' . _DB_PREFIX_ . 'orders` o ON (o.reference = op.order_reference)
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)
+            WHERE (oip.id_order != ' . (int) $order_invoice->id_order . ' OR oip.id_order IS NULL) AND o.id_order = ' . (int) $order_invoice->id_order);
+
+        if (count($id_order_payments)) {
+            foreach ($id_order_payments as $order_payment) {
+                Db::getInstance()->execute('
+                    INSERT INTO `' . _DB_PREFIX_ . 'order_invoice_payment`
+                    SET
+                        `id_order_invoice` = ' . (int) $order_invoice->id . ',
+                        `id_order_payment` = ' . (int) $order_payment['id_order_payment'] . ',
+                        `id_order` = ' . (int) $order_invoice->id_order);
+            }
+            // Clear cache
+            Cache::clean('order_invoice_paid_*');
+        }
+    }
+
+    /**
      * This method allows to generate first delivery slip of the current order.
      */
     public function setDeliverySlip()
@@ -1455,6 +1466,10 @@ class OrderCore extends ObjectModel
             $order_invoice->id_order = $this->id;
             $order_invoice->number = 0;
             $this->setInvoiceDetails($order_invoice);
+            // Associate any existing payment with this invoice, the same way setInvoice() does.
+            // Otherwise a paid-status transition that generates a delivery slip (but no invoice)
+            // sees an unpaid invoice and records a duplicate payment.
+            $this->associateExistingPaymentsToInvoice($order_invoice);
             $this->delivery_date = $order_invoice->date_add;
             $this->delivery_number = $this->getDeliveryNumber($order_invoice->id);
             $this->update();
