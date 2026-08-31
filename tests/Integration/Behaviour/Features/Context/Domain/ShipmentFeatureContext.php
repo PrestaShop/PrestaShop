@@ -212,26 +212,44 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then the available shipments of order :orderReference for product :productReference should contain the shipment :shipmentReference
+     * @Then the available shipments of order :orderReference for product :productReference should be:
+     *
+     * @param string $orderReference
+     * @param string $productReference
+     * @param TableNode $table
      */
     public function assertAvailableShipmentsForProduct(
         string $orderReference,
         string $productReference,
-        string $shipmentReference
+        TableNode $table
     ): void {
-        $shipments = $this->getAvailableShipmentsForProduct($orderReference, $productReference);
+        $expected = [];
+        foreach ($table->getColumnsHash() as $row) {
+            $expected[] = [
+                'id' => $this->referenceToId($row['shipment']),
+                'name' => $row['name'],
+            ];
+        }
 
-        Assert::assertContains(
-            $this->referenceToId($shipmentReference),
-            array_map(static fn (ShipmentsForProduct $shipment) => $shipment->getId(), $shipments),
-            sprintf('Shipment "%s" was not listed as available for product "%s"', $shipmentReference, $productReference)
+        $actual = array_map(
+            static fn (ShipmentsForProduct $shipment) => [
+                'id' => $shipment->getId(),
+                'name' => $shipment->getName(),
+            ],
+            $this->getAvailableShipmentsForProduct($orderReference, $productReference)
+        );
+
+        Assert::assertSame(
+            $expected,
+            $actual,
+            sprintf('Wrong available shipments listed for product "%s" of order "%s"', $productReference, $orderReference)
         );
     }
 
     /**
-     * @When I list the available shipments of order :orderReference for product :productReference
+     * @When I try to list the available shipments of order :orderReference for product :productReference
      */
-    public function listAvailableShipmentsForProduct(string $orderReference, string $productReference): void
+    public function tryToListAvailableShipmentsForProduct(string $orderReference, string $productReference): void
     {
         try {
             $this->getAvailableShipmentsForProduct($orderReference, $productReference);

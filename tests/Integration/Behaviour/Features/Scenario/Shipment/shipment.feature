@@ -91,7 +91,9 @@ Feature: Retrieving shipment for orders
     Given the order "bo_order1" should have the following shipments:
       | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
       | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
-    Then the available shipments of order "bo_order1" for product "mug_best" should contain the shipment "shipment1"
+    Then the available shipments of order "bo_order1" for product "mug_best" should be:
+      | shipment  | name       |
+      | shipment1 | Shipment 1 |
 
   Scenario: List the available shipments of a product that is not in the order
     Given the order "bo_order1" should have the following shipments:
@@ -100,7 +102,7 @@ Feature: Retrieving shipment for orders
     And I add product "product_not_ordered" with following information:
       | name[en-US] | Product not ordered |
       | type        | standard            |
-    When I list the available shipments of order "bo_order1" for product "product_not_ordered"
+    When I try to list the available shipments of order "bo_order1" for product "product_not_ordered"
     Then I should get an error that the product was not found in the order
 
   Scenario: Edit a shipment with a carrier that does not exist
