@@ -104,7 +104,6 @@ final class ExtraPropertiesBag implements ArrayAccess, IteratorAggregate, JsonSe
                 $entityId,
                 $langId,
                 $shopConstraint,
-                ObjectModelCore::isClassLangMultishop($objectModelClassName),
                 $definitions
             );
         });

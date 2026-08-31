@@ -81,8 +81,9 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         foreach ([$searchQb, $countQb] as $qb) {
             $sql = $qb->getSQL();
             $this->assertStringContainsString('extra_lang.`id_lang` = pl.`id_lang`', $sql);
-            // The PK of {e}_extra_lang includes id_shop: it must be pinned even when the
-            // base lang join carries no shop clause, or multistore data duplicates rows.
+            // product_extra_lang's PK includes id_shop (multilang-multishop entity): it must
+            // be pinned even when the base lang join carries no shop clause, or multistore
+            // data duplicates rows.
             $this->assertStringContainsString('extra_lang.`id_shop` = :extraLangShopId', $sql);
             $this->assertSame(self::CONTEXT_SHOP_ID, $qb->getParameters()['extraLangShopId']);
         }
@@ -124,6 +125,45 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         // The filter applies to both builders so the count matches the page.
         $this->assertStringContainsString('extra_lang.`mymodule_promo` LIKE', $searchQb->getSQL());
         $this->assertStringContainsString('extra_lang.`mymodule_promo` LIKE', $countSql);
+    }
+
+    public function testLangJoinOmitsShopColumnWhenLangTableIsNotShopAware(): void
+    {
+        // contact_lang has no id_shop, so ps_contact_extra_lang mirrors a 2-column PK
+        // (id_contact, id_lang): referencing extra_lang.id_shop would be a hard SQL error
+        // ("Unknown column 'extra_lang.id_shop' in 'on clause'") breaking the whole grid.
+        $modifier = $this->buildModifier($this->definition('job_title', ExtraPropertyScope::LANG, 'contact', multiShop: false));
+        [$searchQb, $countQb] = $this->buildContactGridBuilders();
+        foreach ([$searchQb, $countQb] as $qb) {
+            // Same shape as ContactQueryBuilder: base lang join without any shop clause.
+            $qb->innerJoin('c', 'ps_contact_lang', 'cl', 'c.id_contact = cl.id_contact');
+        }
+
+        $modifier->apply($searchQb, $countQb, $this->criteria(), 'contact');
+
+        foreach ([$searchQb, $countQb] as $qb) {
+            $sql = $qb->getSQL();
+            $this->assertStringContainsString('extra_lang.`id_contact` = cl.`id_contact`', $sql);
+            $this->assertStringContainsString('extra_lang.`id_lang` = cl.`id_lang`', $sql);
+            $this->assertStringNotContainsString('extra_lang.`id_shop`', $sql);
+            $this->assertArrayNotHasKey('extraLangShopId', $qb->getParameters());
+        }
+    }
+
+    public function testLangFallbackOmitsShopColumnWhenLangTableIsNotShopAware(): void
+    {
+        $modifier = $this->buildModifier($this->definition('job_title', ExtraPropertyScope::LANG, 'contact', multiShop: false));
+        [$searchQb, $countQb] = $this->buildContactGridBuilders();
+
+        $modifier->apply($searchQb, $countQb, $this->criteria(), 'contact');
+
+        foreach ([$searchQb, $countQb] as $qb) {
+            $sql = $qb->getSQL();
+            $this->assertStringContainsString('extra_lang.`id_contact` = c.`id_contact`', $sql);
+            $this->assertStringContainsString('extra_lang.`id_lang` = :extraLangId', $sql);
+            $this->assertStringNotContainsString('extra_lang.`id_shop`', $sql);
+            $this->assertArrayNotHasKey('extraLangShopId', $qb->getParameters());
+        }
     }
 
     public function testShopJoinReusesBaseShopJoin(): void
@@ -226,6 +266,20 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         return [$searchQb, $countQb];
     }
 
+    /**
+     * @return array{0: QueryBuilder, 1: QueryBuilder} [searchQb, countQb] over ps_contact
+     */
+    private function buildContactGridBuilders(): array
+    {
+        $searchQb = $this->createQueryBuilder();
+        $searchQb->select('c.id_contact')->from('ps_contact', 'c');
+
+        $countQb = $this->createQueryBuilder();
+        $countQb->select('COUNT(*)')->from('ps_contact', 'c');
+
+        return [$searchQb, $countQb];
+    }
+
     private function createQueryBuilder(): QueryBuilder
     {
         $connection = $this->createMock(Connection::class);
@@ -245,15 +299,18 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         return $criteria;
     }
 
-    private function definition(string $propertyName, ExtraPropertyScope $scope): ExtraPropertyDefinition
+    private function definition(string $propertyName, ExtraPropertyScope $scope, string $entityName = 'product', ?bool $multiShop = null): ExtraPropertyDefinition
     {
         return new ExtraPropertyDefinition(
-            entityName: 'product',
+            entityName: $entityName,
             propertyName: $propertyName,
             scope: $scope,
             moduleName: 'mymodule',
-            associatedGrids: ['product'],
+            associatedGrids: [$entityName],
             labelWording: 'Label',
+            // product_lang carries id_shop (multilang-multishop entity) — the schema-derived
+            // flag the repository would inject for a product LANG definition is true.
+            multiShop: $multiShop ?? (ExtraPropertyScope::COMMON !== $scope),
         );
     }
 }

@@ -10,10 +10,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Schema;
 
 use Doctrine\DBAL\Connection;
+use ObjectModelCore;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryException;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -56,6 +59,7 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
         }
 
         if (!$this->tableExists($extraTableName)) {
+            $this->assertLangBaseTableShopCoherence($definition, $baseTableName);
             $this->createExtraTableFromBaseTable($baseTableName, $extraTableName);
             $this->logger->info('Extra table created: {table}', ['table' => $extraTableName]);
         }
@@ -303,6 +307,44 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
         $sql = sprintf('DROP TABLE %s', $this->connection->quoteIdentifier($extraTableName));
         $this->connection->executeStatement($sql);
         $this->logger->info('Extra table dropped (empty): {table}', ['table' => $extraTableName]);
+    }
+
+    /**
+     * Safeguard for multilang-multishop coherence, checked before the extra lang table is
+     * first created. The extra table mirrors the base {entity}_lang primary key, so an
+     * entity whose ObjectModel class declares `multilang_shop` while its physical lang
+     * table's PK carries no id_shop would silently get a NON-shop-aware extra table —
+     * its per-shop lang values would then overwrite each other. Such a mismatch is a
+     * broken entity definition (module-provided external table): fail registration
+     * explicitly instead.
+     *
+     * Entities without a resolvable ObjectModel class are skipped: the physical schema is
+     * then the only source of truth and the mirrored shape is coherent by construction.
+     *
+     * @throws ExtraPropertyRegistryException when the declaration and the schema disagree
+     */
+    protected function assertLangBaseTableShopCoherence(ExtraPropertyDefinition $definition, string $baseTableName): void
+    {
+        if (ExtraPropertyScope::LANG !== $definition->getScope()) {
+            return;
+        }
+
+        $className = Inflector::getInflector()->classify($definition->getEntityName());
+        if (!class_exists('ObjectModelCore') || !class_exists($className) || !ObjectModelCore::isClassLangMultishop($className)) {
+            return;
+        }
+
+        $primaryKey = $this->connection->createSchemaManager()->introspectTable($baseTableName)->getPrimaryKey();
+        if (null !== $primaryKey && !in_array('id_shop', $primaryKey->getColumns(), true)) {
+            throw new ExtraPropertyRegistryException(
+                sprintf(
+                    'The class "%s" declares multilang_shop but the primary key of its lang table "%s" has no id_shop column: the mirrored extra table would not be shop-aware. Fix the base table schema before registering lang-scoped extra properties.',
+                    $className,
+                    $baseTableName
+                ),
+                ExtraPropertyRegistryException::SCHEMA_FAILURE
+            );
+        }
     }
 
     /**
