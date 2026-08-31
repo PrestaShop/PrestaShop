@@ -250,6 +250,10 @@ class CartCore extends ObjectModel
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
         }
+        // WHY: pricing memoises how many units of a product this cart holds, and that count is what
+        // quantity-based specific prices are matched against. It has to be dropped with the rest of the
+        // product-related caches, or a price read after the cart changed still sees the old quantity.
+        Cache::clean('Product::getPriceStatic_*-' . (int) $this->id);
         $this->_products = null;
         $this->_products_with_separated_gifts = null;
     }
@@ -4867,6 +4871,11 @@ class CartCore extends ObjectModel
 
     public function deleteAssociations()
     {
+        // WHY: this drops the cart's rows without going through update(), so it is the one product
+        // write that the reset in update()/updateQty()/deleteProduct() does not already cover.
+        // setWsCartRows() calls it and then inserts the replacements in the same request.
+        $this->resetProductRelatedStaticCache();
+
         return Db::getInstance()->execute('
                 DELETE FROM `' . _DB_PREFIX_ . 'cart_product`
                 WHERE `id_cart` = ' . (int) $this->id) !== false;
