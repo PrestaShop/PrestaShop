@@ -459,8 +459,20 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $this->setQuickViewMode();
 
+        /*
+         * getEmbeddedAttributes() returns the whitelisted properties that have already been resolved on
+         * the lazy array, so resolve them all first. Until now this happened as a side effect of handing
+         * the serialised product to render() below.
+         */
+        $productForTemplate->jsonSerialize();
+
         $this->ajaxRender(json_encode([
-            'quickview_html' => $this->render('catalog/_partials/quickview', $productForTemplate->jsonSerialize()),
+            /*
+             * Only $product is passed. The serialised product used to be spread over the template scope,
+             * where each of its keys shadowed the global of the same name - $link became the product URL
+             * instead of the Link service, and $category a category slug instead of the category.
+             */
+            'quickview_html' => $this->render('catalog/_partials/quickview', ['product' => $productForTemplate]),
             'product' => $productForTemplate->getEmbeddedAttributes(),
         ]));
     }
