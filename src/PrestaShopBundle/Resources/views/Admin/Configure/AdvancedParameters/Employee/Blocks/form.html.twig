@@ -22,12 +22,58 @@
       <a href="{{ path('admin_employees_index') }}" class="btn btn-outline-secondary" id="cancel-link">
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
-      <button class="btn btn-primary float-right" id="save-button">
-        {{ 'Save'|trans({}, 'Admin.Actions') }}
-      </button>
+      <div class="float-right">
+        {% if canManageBackupCodes|default(false) %}
+          {% if hasBackupCodes|default(false) %}
+            <button
+              class="btn btn-outline-primary mr-2"
+              type="button"
+              onclick="window.location.href='{{ path('admin_employees_confirm_regenerate_backup_codes', {employeeId: editableEmployee.employeeId.value}) }}'"
+            >
+              {{ 'Regenerate backup codes'|trans({}, 'Admin.Advparameters.Feature') }}
+            </button>
+          {% else %}
+            <button
+              class="btn btn-outline-primary mr-2"
+              type="submit"
+              formaction="{{ path('admin_employees_generate_backup_codes', {employeeId: editableEmployee.employeeId.value}) }}"
+              formmethod="post"
+              formnovalidate
+            >
+              {{ 'Generate backup codes'|trans({}, 'Admin.Advparameters.Feature') }}
+            </button>
+            <input
+              type="hidden"
+              name="_token_generate_backup_codes"
+              value="{{ csrf_token('generate_backup_codes_' ~ editableEmployee.employeeId.value) }}"
+            >
+          {% endif %}
+        {% endif %}
+        {% if canResetTwoFactor|default(false) %}
+          <button
+            type="submit"
+            form="employee-reset-two-factor-form"
+            class="btn btn-outline-danger mr-2"
+            onclick="return confirm('{{ 'This will disable all 2FA methods for this employee. They will need to set it up again on next login.'|trans({}, 'Admin.Advparameters.Notification')|e('js') }}');"
+          >
+            {{ 'Reset 2FA'|trans({}, 'Admin.Actions') }}
+          </button>
+        {% endif %}
+        <button class="btn btn-primary" id="save-button">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
     </div>
   </div>
   {{ form_end(employeeForm) }}
+
+  {% if canResetTwoFactor|default(false) %}
+    <form
+      id="employee-reset-two-factor-form"
+      method="post"
+      action="{{ path('admin_employees_reset_two_factor', {employeeId: editableEmployeeId}) }}"
+    ></form>
+  {% endif %}
 
   {{ include('@PrestaShop/Admin/Helpers/password_feedback.html.twig') }}
 {% endblock %}

@@ -22,4 +22,9 @@ class TokenAttributes
      * Used to store a ShopConstraint object that represents the current Shop context (All shops, single shop, shop group).
      */
     public const SHOP_CONSTRAINT = '_shop_constraint';
+
+    /**
+     * Used to store back office two-factor authentication state/attributes.
+     */
+    public const BACKOFFICE_2FA = '_backoffice_2fa';
 }

@@ -53,6 +53,7 @@ export default class EmployeeForm {
 
     this.initEvents();
     this.toggleShopTree();
+    this.toggleTwoFactorFields();
   }
 
   /**
@@ -82,6 +83,18 @@ export default class EmployeeForm {
         },
         'json',
       );
+    });
+
+    $(document).on('change', `input[name="${employeeFormMap.twoFactorEnabledName}"]`, () => {
+      this.toggleTwoFactorFields();
+    });
+
+    $(document).on('change', `input[name="${employeeFormMap.twoFactorTotpEnabledName}"]`, () => {
+      this.toggleTwoFactorFields();
+    });
+
+    $(document).on('change', `input[name="${employeeFormMap.twoFactorEmailEnabledName}"]`, () => {
+      this.toggleTwoFactorFields();
     });
   }
 
@@ -168,5 +181,65 @@ export default class EmployeeForm {
    */
   private createOption(name: string, value: string): JQuery {
     return $(`<option value="${value}">${name}</option>`);
+  }
+
+  /**
+   * Returns true if the ps-switch radio "Yes" is selected.
+   */
+  private isPsSwitchEnabledByName(inputName: string): boolean {
+    return $(`input[name="${inputName}"]:checked`).val() === '1';
+  }
+
+  /**
+   * Hide/show the whole .form-group row that contains the given wrapper selector.
+   * Your markup contains <span class="ps-switch" id="employee_two_factor_enabled">...</span>
+   */
+  private toggleSwitchFormGroup(wrapperSelector: string, show: boolean): void {
+    const $wrapper = $(wrapperSelector);
+
+    if ($wrapper.length === 0) {
+      return;
+    }
+
+    $wrapper.closest('.form-group.row').toggleClass('d-none', !show);
+  }
+
+  private toggleInputFormGroup(inputSelector: string, show: boolean): void {
+    const $input = $(inputSelector);
+
+    if ($input.length === 0) {
+      return;
+    }
+
+    $input.closest('.form-group.row').toggleClass('d-none', !show);
+  }
+
+  /**
+   * Toggle 2FA fields according to current selection.
+   * - If 2FA disabled => hide TOTP & Email provider switches
+   * - If 2FA enabled => show provider switches
+   */
+  private toggleTwoFactorFields(): void {
+    if ($(employeeFormMap.twoFactorEnabledWrapper).length === 0) {
+      return;
+    }
+
+    const is2faEnabled = this.isPsSwitchEnabledByName(employeeFormMap.twoFactorEnabledName);
+
+    this.toggleSwitchFormGroup(employeeFormMap.twoFactorTotpEnabledWrapper, is2faEnabled);
+    this.toggleSwitchFormGroup(employeeFormMap.twoFactorEmailEnabledWrapper, is2faEnabled);
+
+    if (!is2faEnabled) {
+      this.toggleInputFormGroup(employeeFormMap.twoFactorProvisioningUriInput, false);
+      this.toggleInputFormGroup(employeeFormMap.twoFactorTotQrCode, false);
+      this.toggleInputFormGroup(employeeFormMap.twoFactorTotCode, false);
+      return;
+    }
+
+    const isTotpEnabled = this.isPsSwitchEnabledByName(employeeFormMap.twoFactorTotpEnabledName);
+
+    this.toggleInputFormGroup(employeeFormMap.twoFactorProvisioningUriInput, isTotpEnabled);
+    this.toggleInputFormGroup(employeeFormMap.twoFactorTotQrCode, isTotpEnabled);
+    this.toggleInputFormGroup(employeeFormMap.twoFactorTotCode, isTotpEnabled);
   }
 }

@@ -63,3 +63,9 @@ services:
     factory: [ '@prestashop.security.password_hasher.factory', 'getPasswordHasher' ]
     arguments:
       - 'common'
+
+  PrestaShopBundle\Security\Admin\TwoFactorEmployeeStorage:
+    autowire: true
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeBackupCodeManager:
+    autowire: true

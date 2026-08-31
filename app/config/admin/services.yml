@@ -13,6 +13,25 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+  PrestaShopBundle\EventListener\Admin\TwoFactorInProgressListener:
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
+
+  PrestaShopBundle\EventListener\Admin\TwoFactorCheckRateLimitListener:
+    autowire: true
+    arguments:
+      $twoFactorCheckLimiter: '@limiter.two_factor_check'
+
+  PrestaShopBundle\Controller\Admin\TwoFactorResendController:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShopBundle\EventListener\Admin\RequiredTwoFactorSetupListener:
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 6 }
+
   PrestaShopBundle\EventListener\Admin\EmployeeSessionSubscriber:
     autowire: true
     autoconfigure: true
@@ -101,3 +120,27 @@ services:
     arguments:
       # Same $locales expression as the form types bind in services/bundle/form/form_type.yml.
       $locales: "@=service('prestashop.adapter.legacy.context').getLanguages(false)"
+
+  PrestaShopBundle\Twig\TwoFactorGlobalsExtension:
+    autowire: true
+    autoconfigure: true
+    public: false
+    tags: [ 'twig.extension' ]
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeTotpSecretSubscriber:
+    autowire: true
+    autoconfigure: true
+    tags: [ 'doctrine.event_subscriber' ]
+
+  PrestaShopBundle\SchebTwoFactor\TotpSecretEncryptor:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShopBundle\SchebTwoFactor\EmailPreparationRecorder:
+    decorates: 'scheb_two_factor.provider_preparation_recorder'
+    arguments:
+      $inner: '@PrestaShopBundle\SchebTwoFactor\EmailPreparationRecorder.inner'
+
+  PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer:
+    autowire: true
+    autoconfigure: true

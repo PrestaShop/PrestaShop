@@ -1,0 +1,32 @@
+scheb_two_factor:
+  security_tokens:
+    - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+
+  totp:
+    enabled: true
+    issuer: 'PrestaShop'
+    template: '@PrestaShop/Admin/TwoFactorAuthentication/2fa_form.html.twig'
+
+  email:
+    enabled: true
+    mailer: 'PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer'
+    template: '@PrestaShop/Admin/TwoFactorAuthentication/2fa_form.html.twig'
+
+  backup_codes:
+    enabled: true
+    manager: 'PrestaShopBundle\SchebTwoFactor\EmployeeBackupCodeManager'
+
+  trusted_device:
+    enabled: true
+    cookie_name: trusted_device
+
+services:
+  PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer:
+    autowire: true
+
+  PrestaShopBundle\SchebTwoFactor\DynamicIssuerTotpAuthenticator:
+    decorates: 'scheb_two_factor.security.totp_authenticator'
+    decoration_on_invalid: ignore
+    arguments:
+      $inner: '@.inner'
+      $configuration: '@PrestaShop\PrestaShop\Adapter\Configuration'
