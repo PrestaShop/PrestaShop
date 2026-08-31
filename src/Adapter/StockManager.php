@@ -149,25 +149,48 @@ class StockManager
             ? 'o.id_shop_group = :stock_shop_group_id'
             : 'o.id_shop = :stock_shop_id';
 
+        /*
+         * The sum used to sit in the SET as a correlated subquery, which MySQL reports as a DEPENDENT
+         * SUBQUERY and runs once per updated row. It is computed once here instead, over the same rows:
+         * the narrowing that bounds which stock lines are updated is repeated inside, so an update for a
+         * single order or product still reads only that order's or product's lines.
+         */
+        $reservedJoin = '';
+        if ($idOrder) {
+            $reservedJoin = '
+                INNER JOIN (
+                    SELECT product_id
+                    FROM {table_prefix}order_detail
+                    WHERE id_order = :order_id
+                ) od3
+                ON od3.product_id = od.product_id';
+        }
+
+        $reservedCondition = $idProduct ? ' AND od.product_id = :product_id' : '';
+
         $updateReservedQuantityQuery .= '
-            SET sa.reserved_quantity = (
-                SELECT SUM(od.product_quantity - od.product_quantity_refunded)
+            LEFT JOIN (
+                SELECT
+                    od.product_id,
+                    od.product_attribute_id,
+                    SUM(od.product_quantity - od.product_quantity_refunded) AS reserved_quantity
                 FROM {table_prefix}orders o
                 INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
-                INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
-                WHERE ' . $orderScopeCondition . ' AND
+                INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state' . $reservedJoin . '
+                WHERE ' . $orderScopeCondition . $reservedCondition . ' AND
                 os.shipped != 1 AND (
                     o.valid = 1 OR (
                         os.id_order_state != :error_state AND
                         os.id_order_state != :cancellation_state
                     )
-                ) AND sa.id_product = od.product_id AND
-                sa.id_product_attribute = od.product_attribute_id
+                )
                 GROUP BY od.product_id, od.product_attribute_id
-            )
+            ) reserved
+            ON reserved.product_id = sa.id_product AND reserved.product_attribute_id = sa.id_product_attribute
+            SET sa.reserved_quantity = COALESCE(reserved.reserved_quantity, 0)
             WHERE
-                sa.id_shop = :stock_shop_id AND 
-                sa.id_shop_group = :stock_shop_group_id 
+                sa.id_shop = :stock_shop_id AND
+                sa.id_shop_group = :stock_shop_group_id
         ';
 
         $strParams = [
