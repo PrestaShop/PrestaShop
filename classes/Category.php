@@ -1748,13 +1748,21 @@ class CategoryCore extends ObjectModel
             return true;
         }
 
-        $cacheId = 'Category::checkAccess_' . (int) $this->id . '-' . $idCustomer . (!$idCustomer ? '-' . (int) Group::getCurrent()->id : '');
+        // When no customer is provided, resolve the groups from the current context customer:
+        // a logged-in customer can belong to several groups, a guest gets the unidentified group.
+        $contextGroups = [];
+        if (!$idCustomer) {
+            $contextCustomer = Context::getContext()->customer;
+            $contextGroups = Customer::getGroupsStatic($contextCustomer && $contextCustomer->id ? (int) $contextCustomer->id : 0);
+        }
+
+        $cacheId = 'Category::checkAccess_' . (int) $this->id . '-' . $idCustomer . (!$idCustomer ? '-' . implode('-', $contextGroups) : '');
         if (!Cache::isStored($cacheId)) {
             if (!$idCustomer) {
                 $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT ctg.`id_group`
 				FROM ' . _DB_PREFIX_ . 'category_group ctg
-				WHERE ctg.`id_category` = ' . (int) $this->id . ' AND ctg.`id_group` = ' . (int) Group::getCurrent()->id);
+				WHERE ctg.`id_category` = ' . (int) $this->id . ' AND ctg.`id_group` IN (' . implode(',', array_map('intval', $contextGroups)) . ')');
             } else {
                 $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT ctg.`id_group`

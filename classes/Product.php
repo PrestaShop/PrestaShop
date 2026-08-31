@@ -6567,14 +6567,22 @@ class ProductCore extends ObjectModel
             return true;
         }
 
-        $cache_id = 'Product::checkAccess_' . (int) $id_product . '-' . (int) $id_customer . (!$id_customer ? '-' . (int) Group::getCurrent()->id : '');
+        // When no customer is provided, resolve the groups from the current context customer:
+        // a logged-in customer can belong to several groups, a guest gets the unidentified group.
+        $contextGroups = [];
+        if (!$id_customer) {
+            $contextCustomer = Context::getContext()->customer;
+            $contextGroups = Customer::getGroupsStatic($contextCustomer && $contextCustomer->id ? (int) $contextCustomer->id : 0);
+        }
+
+        $cache_id = 'Product::checkAccess_' . (int) $id_product . '-' . (int) $id_customer . (!$id_customer ? '-' . implode('-', $contextGroups) : '');
         if (!Cache::isStored($cache_id)) {
             if (!$id_customer) {
                 $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
                 SELECT ctg.`id_group`
                 FROM `' . _DB_PREFIX_ . 'category_product` cp
                 INNER JOIN `' . _DB_PREFIX_ . 'category_group` ctg ON (ctg.`id_category` = cp.`id_category`)
-                WHERE cp.`id_product` = ' . (int) $id_product . ' AND ctg.`id_group` = ' . (int) Group::getCurrent()->id);
+                WHERE cp.`id_product` = ' . (int) $id_product . ' AND ctg.`id_group` IN (' . implode(',', array_map('intval', $contextGroups)) . ')');
             } else {
                 $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
                 SELECT cg.`id_group`
