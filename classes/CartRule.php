@@ -1647,6 +1647,23 @@ class CartRuleCore extends ObjectModel
                             break;
                         }
                     }
+                } elseif ($this->reduction_product == 0 && $this->product_restriction) {
+                    // If the cart rule is restricted to specific products (category, manufacturer,
+                    // attribute, ...), the fixed amount can't exceed the total of the eligible products
+                    // in the cart, otherwise it would spill onto non-eligible products.
+                    // @see https://github.com/PrestaShop/PrestaShop/issues/41853
+                    $eligibleProductKeys = $this->checkProductRestrictionsFromCart($context->cart, true, false);
+                    if (is_array($eligibleProductKeys)) {
+                        $eligibleProductsTotal = 0;
+                        foreach ($all_products as $product) {
+                            $productKey = (int) $product['id_product'] . '-' . (int) $product['id_product_attribute'];
+                            if (in_array($productKey, $eligibleProductKeys, true)) {
+                                $productPrice = $this->reduction_tax ? $product['price_wt'] : $product['price'];
+                                $eligibleProductsTotal += (int) $product['cart_quantity'] * (float) $productPrice;
+                            }
+                        }
+                        $reduction_amount = min($reduction_amount, $eligibleProductsTotal);
+                    }
                 }
 
                 // If we need to convert the voucher value to the cart currency
