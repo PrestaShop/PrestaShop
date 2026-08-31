@@ -719,13 +719,24 @@ class CarrierCore extends ObjectModel
         }
 
         // And get all carriers available in the system
-        $result = Carrier::getCarriers($id_lang, true, false, (int) $id_zone, $groups, self::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+        /*
+         * A carrier module that computes its price externally has no ranges by design, so it was
+         * excluded here and never reached getPackageShippingCost(), which is where
+         * getOrderShippingCostExternal() would have been called. The only group the previous filter
+         * left out was exactly that one - module carriers with need_range = 0.
+         */
+        $result = Carrier::getCarriers($id_lang, true, false, (int) $id_zone, $groups, self::ALL_CARRIERS);
         $results_array = [];
 
         foreach ($result as $k => $row) {
             $carrier = new Carrier((int) $row['id_carrier']);
             $shipping_method = $carrier->getShippingMethod();
-            if ($shipping_method != Carrier::SHIPPING_METHOD_FREE) {
+            // Only a carrier module that computes its price externally escapes the range check: its
+            // price comes from the module, so there are no ranges to judge it by. A core carrier
+            // with need_range = 0 is simply one nobody configured ranges for, and it still has to be
+            // filtered out here.
+            $computesItsOwnPrice = $carrier->is_module && !$carrier->need_range;
+            if ($shipping_method != Carrier::SHIPPING_METHOD_FREE && !$computesItsOwnPrice) {
                 /*
                  * First, we check loosely if the carrier is available for the zone with at least one range.
                  * No weight, no price, just check if the carrier has any ranges for the zone.
