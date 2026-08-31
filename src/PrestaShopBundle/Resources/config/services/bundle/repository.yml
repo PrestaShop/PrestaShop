@@ -137,6 +137,16 @@ services:
     arguments:
       - PrestaShopBundle\Entity\AdminFilter
 
+  PrestaShopBundle\Entity\Repository\AdminGridConfigurationRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\AdminGridConfiguration
+
+  PrestaShopBundle\Entity\Repository\AdminGridViewRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\AdminGridView
+
   prestashop.core.admin.admin_filter.repository:
     alias: PrestaShopBundle\Entity\Repository\AdminFilterRepository
     deprecated:

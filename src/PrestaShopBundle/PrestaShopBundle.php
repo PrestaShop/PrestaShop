@@ -7,11 +7,13 @@
 namespace PrestaShopBundle;
 
 use AppKernel;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\ApiPlatformCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryRegisterPass;
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
 use PrestaShopBundle\DependencyInjection\Compiler\GridDefinitionServiceIdsCollectorPass;
+use PrestaShopBundle\DependencyInjection\Compiler\GridFactoryLocatorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\IdentifiableObjectFormTypesCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\DependencyInjection\Compiler\ModuleControllerRegisterPass;
@@ -72,6 +74,9 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new CommandAndQueryCollectorPass());
         $container->addCompilerPass(new OptionsFormHookNameCollectorPass());
         $container->addCompilerPass(new GridDefinitionServiceIdsCollectorPass());
+        $container->registerForAutoconfiguration(GridFactoryInterface::class)
+            ->addTag(GridFactoryLocatorPass::TAG_NAME);
+        $container->addCompilerPass(new GridFactoryLocatorPass());
         $container->addCompilerPass(new IdentifiableObjectFormTypesCollectorPass());
         $container->addCompilerPass(new TestEnvironmentPass());
         $container->addCompilerPass(new ApiPlatformCompilerPass());
