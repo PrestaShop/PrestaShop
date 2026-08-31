@@ -53,7 +53,7 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
 
         $shipmentId = $this->getCommandBus()->handle(
             new CreateShipment($orderId, $carrierId, $productId, $quantity)
-        );
+        )->getValue();
 
         SharedStorage::getStorage()->set('new_shipment', $shipmentId);
     }

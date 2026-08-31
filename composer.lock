@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5af655fb448c617686550abe39d33d2d",
+    "content-hash": "057db399ac96d211c512f415979053aa",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5212,16 +5212,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-taxrules-list",
+            "version": "dev-add-shipment-endpoint",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "4f2124baf5e6f7dd1a530c98ec9ffae4474411ef"
+                "reference": "154eea539e5949fa7b652f7eee6ea8daa3f2b524"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/4f2124baf5e6f7dd1a530c98ec9ffae4474411ef",
-                "reference": "4f2124baf5e6f7dd1a530c98ec9ffae4474411ef",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/154eea539e5949fa7b652f7eee6ea8daa3f2b524",
+                "reference": "154eea539e5949fa7b652f7eee6ea8daa3f2b524",
                 "shasum": ""
             },
             "require": {
@@ -5301,10 +5301,10 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_apiresources/tree/taxrules-list",
+                "source": "https://github.com/PrestaShop/ps_apiresources/tree/add-shipment-endpoint",
                 "issues": "https://github.com/PrestaShop/ps_apiresources/issues"
             },
-            "time": "2026-07-30T12:05:03+00:00"
+            "time": "2026-08-25T10:01:24+00:00"
         },
         {
             "name": "prestashop/ps_banner",

@@ -9,8 +9,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Shipment\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\CreateShipment;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\ValueObject\ShipmentId;
 
 interface CreateShipmentHandlerInterface
 {
-    public function handle(CreateShipment $command): int;
+    public function handle(CreateShipment $command): ShipmentId;
 }
