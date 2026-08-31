@@ -480,7 +480,7 @@ class CartCore extends ObjectModel
                     ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
                     ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
                     ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
-                    . ' ORDER by cr.priority ASC, cr.gift_product DESC'
+                    . ' ORDER by cr.priority ASC, cr.gift_product DESC, cr.date_add ASC, cr.id_cart_rule ASC'
                 );
 
                 // Sort by the new 3-level priority system (Type → Priority Field → Creation Date)
@@ -498,7 +498,7 @@ class CartCore extends ObjectModel
                     ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
                     ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
                     ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
-                    . ' ORDER by cr.priority ASC, cr.gift_product DESC'
+                    . ' ORDER by cr.priority ASC, cr.gift_product DESC, cr.date_add ASC, cr.id_cart_rule ASC'
                 );
             }
 
@@ -597,7 +597,7 @@ class CartCore extends ObjectModel
                     ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
                     ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
                     ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
-                    . ' ORDER by cr.priority ASC, cr.gift_product DESC'
+                    . ' ORDER by cr.priority ASC, cr.gift_product DESC, cr.date_add ASC, cr.id_cart_rule ASC'
                 );
             }
 
