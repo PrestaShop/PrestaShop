@@ -1348,6 +1348,7 @@ CREATE TABLE `PREFIX_order_invoice` (
   `total_wrapping_tax_excl` decimal(20, 6) NOT NULL DEFAULT '0.00',
   `total_wrapping_tax_incl` decimal(20, 6) NOT NULL DEFAULT '0.00',
   `shop_address` MEDIUMTEXT DEFAULT NULL,
+  `customer_address` MEDIUMTEXT DEFAULT NULL,
   `note` MEDIUMTEXT,
   `date_add` datetime NOT NULL,
   PRIMARY KEY (`id_order_invoice`),
