@@ -49,7 +49,9 @@ class DiscountTypeSelectorType extends TranslatorAwareType
                 continue;
             }
             $discountTypeValue = $type['discount_type'];
-            $name = $type['names'][$currentLangId] ?? (reset($type['names']) ?: $discountTypeValue);
+            $name = isset(DiscountType::CORE_LABELS[$discountTypeValue])
+                ? $this->trans(DiscountType::CORE_LABELS[$discountTypeValue], 'Admin.Catalog.Feature')
+                : ($type['names'][$currentLangId] ?? (reset($type['names']) ?: $discountTypeValue));
             $iconData = self::ICON_MAP[$discountTypeValue] ?? [];
 
             $choices[$name] = $discountTypeValue;

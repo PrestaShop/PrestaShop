@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
+use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
@@ -16,7 +17,8 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Decorates discount grid data to display a fallback when expiration date is null
+ * Decorates discount grid data to display a fallback when expiration date is null,
+ * and to label core discount types from the translation catalogue.
  */
 final class DiscountGridDataFactoryDecorator implements GridDataFactoryInterface
 {
@@ -37,6 +39,17 @@ final class DiscountGridDataFactoryDecorator implements GridDataFactoryInterface
         foreach ($records as &$record) {
             if (DateTimeUtil::isNull($record['date_to'] ?? null)) {
                 $record['date_to'] = $this->translator->trans('No end date', [], 'Admin.Catalog.Feature');
+            }
+            // The query reads the label from cart_rule_type_lang, which holds the default language's
+            // text for every language because installing a language copies those rows and no
+            // per-language seed replaces them. Core types are therefore labelled from the catalogue;
+            // a type provided by a module keeps its stored name, the only source there is for it.
+            if (isset($record['discount_type'], DiscountType::CORE_LABELS[$record['discount_type']])) {
+                $record['discount_type_label'] = $this->translator->trans(
+                    DiscountType::CORE_LABELS[$record['discount_type']],
+                    [],
+                    'Admin.Catalog.Feature'
+                );
             }
         }
 
