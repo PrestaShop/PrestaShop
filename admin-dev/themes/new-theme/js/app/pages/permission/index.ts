@@ -25,19 +25,17 @@ class PermissionApp {
     }
 
     this.vm = createApp(Permission, {
-      data: () => ({
-        profileId,
-        permissionKey,
-        profilePermissions,
-        canEdit: $(target).data('can-edit'),
-        employeePermissions: employeePermissions || {},
-        messages: window.permissionsMessages,
-        permissions: $(target).data('permissions'),
-        types: $(target).data('types'),
-        title: $(target).data('title'),
-        emptyData: $(target).data('empty'),
-        updateUrl: $(target).data('update-url'),
-      }),
+      profileId,
+      permissionKey,
+      profilePermissions,
+      canEdit: $(target).data('can-edit'),
+      employeePermissions: employeePermissions || {},
+      messages: window.permissionsMessages,
+      permissions: $(target).data('permissions'),
+      types: $(target).data('types'),
+      title: $(target).data('title'),
+      emptyData: $(target).data('empty'),
+      updateUrl: $(target).data('update-url'),
     });
 
     this.vm.mount(target);
