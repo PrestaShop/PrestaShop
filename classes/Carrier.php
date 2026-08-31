@@ -171,6 +171,9 @@ class CarrierCore extends ObjectModel
         'fields' => [
             'deleted' => [],
             'is_module' => [],
+            // Internal versioning key, assigned by Carrier::add() and read by getCarrierByReference().
+            // It is not part of the carrier's editable data, so it must not be writable through the API.
+            'id_reference' => ['setter' => false],
             'id_tax_rules_group' => [
                 'getter' => 'getIdTaxRulesGroup',
                 'setter' => 'setTaxRulesGroup',
