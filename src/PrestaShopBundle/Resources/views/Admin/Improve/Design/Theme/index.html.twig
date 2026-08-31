@@ -111,6 +111,11 @@
                         </i>
                       </button>
                     </form>
+                  {% else %}
+                    <button disabled class="btn action-button">
+                      <i class="material-icons icon-current-theme">done</i>
+                      {{ 'Used parent theme'|trans({}, 'Admin.Design.Feature') }}
+                    </button>
                   {% endif %}
                 {% endblock %}
               {% endembed %}
