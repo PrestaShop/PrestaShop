@@ -102,14 +102,16 @@
                       <span>{{ 'Use this theme'|trans({}, 'Admin.Design.Feature') }}</span>
                     </button>
                   </form>
-                  <form action="{{ path('admin_themes_delete', {themeName: theme.name}) }}" method="post" class="d-inline">
-                    <input type="hidden" name="token" value="{{ csrf_token('delete-theme') }}"/>
-                    <button type="button" class="btn delete-button js-display-delete-theme-modal">
-                      <i class="material-icons">
-                        delete
-                      </i>
-                    </button>
-                  </form>
+                  {% if theme.name != currentlyUsedTheme.get('parent') %}
+                    <form action="{{ path('admin_themes_delete', {themeName: theme.name}) }}" method="post" class="d-inline">
+                      <input type="hidden" name="token" value="{{ csrf_token('delete-theme') }}"/>
+                      <button type="button" class="btn delete-button js-display-delete-theme-modal">
+                        <i class="material-icons">
+                          delete
+                        </i>
+                      </button>
+                    </form>
+                  {% endif %}
                 {% endblock %}
               {% endembed %}
             {% endfor %}
