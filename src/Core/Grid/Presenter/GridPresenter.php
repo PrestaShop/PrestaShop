@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
@@ -68,6 +69,9 @@ final class GridPresenter implements GridPresenterInterface
                 'is_empty_state' => $this->isEmptyState($grid),
             ],
             'view_options' => $definition->getViewOptions()->all(),
+            'sql_export_grid_factory_service_id' => $definition instanceof GridDefinition
+                ? $definition->getSqlExportGridFactoryServiceId()
+                : null,
         ];
 
         if ($searchCriteria instanceof Filters) {

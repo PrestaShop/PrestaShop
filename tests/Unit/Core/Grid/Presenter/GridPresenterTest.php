@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
@@ -65,6 +66,52 @@ class GridPresenterTest extends TestCase
                 $this->assertArrayHasKey($innerItemName, $presentedGrid[$itemName]);
             }
         }
+    }
+
+    public function testItExposesTheSqlExportGridFactoryServiceIdForOptedInGrids()
+    {
+        $definition = new GridDefinition(
+            'order',
+            'Orders',
+            new ColumnCollection(),
+            new FilterCollection(),
+            new GridActionCollection(),
+            new BulkActionCollection(),
+            new ViewOptionsCollection()
+        );
+        $definition->setSqlExportGridFactoryServiceId('prestashop.core.grid.factory.order');
+
+        $presentedGrid = $this->gridPresenter->present($this->createGridMockWithDefinition($definition));
+
+        $this->assertSame(
+            'prestashop.core.grid.factory.order',
+            $presentedGrid['sql_export_grid_factory_service_id']
+        );
+    }
+
+    public function testItExposesNoSqlExportServiceIdForGridsThatDidNotOptIn()
+    {
+        $presentedGrid = $this->gridPresenter->present($this->createGridMock());
+
+        $this->assertNull($presentedGrid['sql_export_grid_factory_service_id']);
+    }
+
+    private function createGridMockWithDefinition(GridDefinitionInterface $definition)
+    {
+        $data = $this->createMock(GridDataInterface::class);
+        $data->method('getRecords')->willReturn(new RecordCollection([]));
+        $data->method('getRecordsTotal')->willReturn(0);
+
+        $filterForm = $this->createMock(FormInterface::class);
+        $filterForm->method('createView')->willReturn(new FormView());
+
+        $grid = $this->createMock(GridInterface::class);
+        $grid->method('getData')->willReturn($data);
+        $grid->method('getDefinition')->willReturn($definition);
+        $grid->method('getSearchCriteria')->willReturn($this->createMock(SearchCriteriaInterface::class));
+        $grid->method('getFilterForm')->willReturn($filterForm);
+
+        return $grid;
     }
 
     private function createGridMock()

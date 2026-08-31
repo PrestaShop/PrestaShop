@@ -17,14 +17,19 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryProvider;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SqlExportableGridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryProvider;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionProvider;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenter;
+use PrestaShop\PrestaShop\Core\Search\Builder\FiltersBuilderInterface;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use ReflectionClass;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -428,6 +433,60 @@ class CommonController extends PrestaShopAdminController
      *
      * @return RedirectResponse
      */
+    /**
+     * Regenerate a grid's SQL query server-side for the "Export to SQL Manager" / "Show SQL
+     * query" toolbar actions, so the SQL no longer needs to be embedded in the page HTML.
+     *
+     * Only grids whose definition factory opts in via SqlExportableGridDefinitionFactoryInterface
+     * use this endpoint. Access requires the same permission as SQL Manager itself.
+     *
+     * @return JsonResponse|RedirectResponse
+     */
+    #[AdminSecurity("is_granted('create', 'AdminRequestSql')")]
+    public function exportGridSqlAction(
+        Request $request,
+        GridFactoryProvider $gridFactoryProvider,
+        #[Autowire(service: 'prestashop.core.search.builder')]
+        FiltersBuilderInterface $filtersBuilder,
+    ) {
+        // The grid factory service id is emitted server-side by the grid template for opted-in
+        // grids only, and is resolved through a locator that exposes only tagged grid factories,
+        // so no arbitrary service or class name can be injected from the request.
+        $gridFactoryServiceId = (string) $request->request->get('gridFactoryServiceId');
+        $gridFactory = $gridFactoryProvider->getFactory($gridFactoryServiceId);
+
+        if (!$gridFactory instanceof GridFactory) {
+            return new JsonResponse(['error' => 'This grid does not support SQL export.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $definitionFactory = $gridFactory->getDefinitionFactory();
+        if (!$definitionFactory instanceof SqlExportableGridDefinitionFactoryInterface) {
+            return new JsonResponse(['error' => 'This grid does not support SQL export.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Rebuild the concrete Filters (ShopFilters for shop-scoped grids) so the regenerated
+        // query keeps the same filters, sorting, pagination and shop scope as the displayed grid.
+        $filtersBuilder->setConfig([
+            'filters_class' => $definitionFactory->getFiltersClass(),
+            'request' => $request,
+            'shop_constraint' => $request->attributes->get('shopConstraint'),
+        ]);
+        $searchCriteria = $filtersBuilder->buildFilters();
+
+        $sql = $gridFactory->getGrid($searchCriteria)->getData()->getQuery();
+
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse(['sql' => $sql]);
+        }
+
+        $request->getSession()->set('grid_sql_export', [
+            'sql' => $sql,
+            'name' => (string) $request->request->get('name'),
+        ]);
+
+        return $this->redirectToRoute('admin_sql_requests_create');
+    }
+
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function updatePositionAction(
         Request $request,

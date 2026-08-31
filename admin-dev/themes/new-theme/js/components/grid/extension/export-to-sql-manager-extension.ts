@@ -35,9 +35,18 @@ export default class ExportToSqlManagerExtension {
    */
   onShowSqlQueryClick(grid: Grid): void {
     const $sqlManagerForm = $(GridMap.actions.showModalForm(grid.getId()));
-    this.fillExportForm($sqlManagerForm, grid);
-
     const $modal = $(GridMap.actions.showModalGrid(grid.getId()));
+
+    if (this.isServerSideExport(grid)) {
+      // The SQL is no longer in the page, so fetch it from the authorized endpoint for preview.
+      $.post(<string>$sqlManagerForm.attr('action'), $sqlManagerForm.serialize(), (response: {sql: string}) => {
+        $sqlManagerForm.find('textarea[name="sql"]').val(response.sql);
+        $sqlManagerForm.find('input[name="name"]').val(this.getNameFromBreadcrumb());
+      });
+    } else {
+      this.fillExportForm($sqlManagerForm, grid);
+    }
+
     $modal.modal('show');
 
     $modal.on('click', GridMap.sqlSubmit, () => $sqlManagerForm.submit());
@@ -53,9 +62,33 @@ export default class ExportToSqlManagerExtension {
   private onExportSqlManagerClick(grid: Grid): void {
     const $sqlManagerForm = $(GridMap.actions.showModalForm(grid.getId()));
 
-    this.fillExportForm($sqlManagerForm, grid);
+    if (this.isServerSideExport(grid)) {
+      // The endpoint regenerates the SQL server-side; only the request name is taken from the page.
+      $sqlManagerForm.find('input[name="name"]').val(this.getNameFromBreadcrumb());
+    } else {
+      this.fillExportForm($sqlManagerForm, grid);
+    }
 
     $sqlManagerForm.submit();
+  }
+
+  /**
+   * Whether this grid regenerates its SQL server-side (opted in via
+   * SqlExportableGridDefinitionFactoryInterface) instead of embedding it in the page.
+   *
+   * @param {Grid} grid
+   *
+   * @return {boolean}
+   *
+   * @private
+   */
+  private isServerSideExport(grid: Grid): boolean {
+    return Boolean(
+      grid
+        .getContainer()
+        .find(GridMap.gridTable)
+        .data('sqlExportGridFactory'),
+    );
   }
 
   /**

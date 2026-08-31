@@ -370,6 +370,21 @@ class SqlManagerController extends PrestaShopAdminController
             ];
         }
 
+        // When a grid regenerates its SQL server-side (admin_common_grid_sql), it hands the
+        // query over through a one-shot session value instead of the page HTML.
+        if ($request->hasSession()) {
+            $session = $request->getSession();
+            if ($session->has('grid_sql_export')) {
+                $payload = $session->get('grid_sql_export');
+                $session->remove('grid_sql_export');
+
+                return [
+                    'sql' => $payload['sql'] ?? '',
+                    'name' => $payload['name'] ?? '',
+                ];
+            }
+        }
+
         return [];
     }
 
