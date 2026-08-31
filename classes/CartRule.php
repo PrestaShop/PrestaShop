@@ -2031,6 +2031,14 @@ class CartRuleCore extends ObjectModel
             return;
         }
 
+        /*
+         * The joins below are there to filter on restrictions, not to fetch them, and a rule
+         * restricted to several shops, carriers or countries matches once per combination. Without
+         * grouping, one such rule comes back as many rows, and each of them is hydrated into its own
+         * CartRule and put through checkValidity() - a rule limited to fifty countries was checked
+         * fifty times. The extra rows changed nothing, since addCartRule() ignores a rule already in
+         * the cart; they only cost time, and the cost grew with the number of restrictions.
+         */
         $sql = '
 		SELECT SQL_NO_CACHE cr.*
 		FROM ' . _DB_PREFIX_ . 'cart_rule cr
@@ -2076,7 +2084,8 @@ class CartRuleCore extends ObjectModel
 		)
 		AND NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'cart_cart_rule WHERE cr.id_cart_rule = ' . _DB_PREFIX_ . 'cart_cart_rule.id_cart_rule
 																			AND id_cart = ' . (int) $context->cart->id . ')
-		ORDER BY priority';
+		GROUP BY cr.`id_cart_rule`
+		ORDER BY cr.`priority`';
         $result = Db::getInstance()->executeS($sql, true, false);
         if ($result) {
             $cart_rules = ObjectModel::hydrateCollection('CartRule', $result);
