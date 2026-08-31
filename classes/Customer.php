@@ -221,6 +221,37 @@ class CustomerCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
+    /**
+     * {@inheritdoc}
+     *
+     * Partner offers and the birthdate are each hidden by a setting of their own, while whether they
+     * are required is decided on a different screen, so the two can disagree. When they do, the field
+     * is never rendered and never submitted, and requiring it makes registration impossible: the form
+     * cannot show it and validation refuses the account without it.
+     *
+     * A field the shop does not collect is therefore dropped from the required list.
+     */
+    public function getCachedFieldsRequiredDatabase($all = false)
+    {
+        $requiredFields = parent::getCachedFieldsRequiredDatabase($all);
+
+        if ($all) {
+            return $requiredFields;
+        }
+
+        $notCollected = [];
+
+        if (!Configuration::get('PS_CUSTOMER_OPTIN')) {
+            $notCollected[] = 'optin';
+        }
+
+        if (!Configuration::get('PS_CUSTOMER_BIRTHDATE')) {
+            $notCollected[] = 'birthday';
+        }
+
+        return $notCollected === [] ? $requiredFields : array_diff($requiredFields, $notCollected);
+    }
+
     public function add($autoDate = true, $nullValues = true)
     {
         $this->id_shop = ($this->id_shop) ? $this->id_shop : Context::getContext()->shop->id;
