@@ -49,11 +49,14 @@ class LegacyCompilerPass implements CompilerPassInterface
     private function buildCacheDefinition(string $cacheDriver, ContainerBuilder $container): void
     {
         $container->setDefinition(CacheAdapterFactory::class, new Definition(CacheAdapterFactory::class));
+        $defaultLifetime = $container->hasParameter('cache.default_lifetime')
+            ? (int) $container->getParameter('cache.default_lifetime')
+            : 0;
         $definition = new Definition(AdapterInterface::class);
         $definition
             ->setPublic(true)
             ->setFactory([new Reference(CacheAdapterFactory::class), 'getCacheAdapter'])
-            ->setArguments([$cacheDriver])
+            ->setArguments([$cacheDriver, $defaultLifetime])
         ;
 
         $container->setDefinition($cacheDriver, $definition);
