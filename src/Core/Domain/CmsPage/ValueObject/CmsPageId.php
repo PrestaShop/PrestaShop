@@ -13,26 +13,18 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
  */
 class CmsPageId
 {
-    /**
-     * @var int
-     */
-    private $cmsPageId;
+    private int $cmsPageId;
 
     /**
-     * @param int $cmsPageId
-     *
      * @throws CmsPageException
      */
-    public function __construct($cmsPageId)
+    public function __construct(int $cmsPageId)
     {
         $this->assertIsIntegerGreaterThanZero($cmsPageId);
         $this->cmsPageId = $cmsPageId;
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->cmsPageId;
     }
@@ -40,13 +32,11 @@ class CmsPageId
     /**
      * Validates that the value is integer and is greater than zero.
      *
-     * @param int $cmsPageId
-     *
      * @throws CmsPageException
      */
-    private function assertIsIntegerGreaterThanZero($cmsPageId)
+    private function assertIsIntegerGreaterThanZero(int $cmsPageId): void
     {
-        if (!is_int($cmsPageId) || 0 >= $cmsPageId) {
+        if (0 >= $cmsPageId) {
             throw new CmsPageException(sprintf('Invalid cms page id %s supplied', var_export($cmsPageId, true)));
         }
     }

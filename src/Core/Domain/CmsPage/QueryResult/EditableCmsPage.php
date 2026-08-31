@@ -16,62 +16,45 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
  */
 class EditableCmsPage
 {
-    /**
-     * @var CmsPageId
-     */
-    private $cmsPageId;
+    private CmsPageId $cmsPageId;
 
-    /**
-     * @var CmsPageCategoryId
-     */
-    private $cmsPageCategoryId;
+    private CmsPageCategoryId $cmsPageCategoryId;
 
     /**
      * @var string[]
      */
-    private $localizedTitle;
+    private array $localizedTitle;
 
     /**
      * @var string[]
      */
-    private $localizedMetaTitle;
+    private array $localizedMetaTitle;
 
     /**
      * @var string[]
      */
-    private $localizedMetaDescription;
+    private array $localizedMetaDescription;
 
     /**
      * @var string[]
      */
-    private $localizedFriendlyUrl;
+    private array $localizedFriendlyUrl;
 
     /**
      * @var string[]
      */
-    private $localizedContent;
+    private array $localizedContent;
 
-    /**
-     * @var bool
-     */
-    private $indexedForSearch;
+    private bool $indexedForSearch;
 
-    /**
-     * @var bool
-     */
-    private $displayed;
+    private bool $displayed;
 
-    /**
-     * @var array
-     */
-    private $shopAssociation;
+    private array $shopAssociation;
 
     /**
      * Url for opening FO page on save and preview action
-     *
-     * @var string
      */
-    private $previewUrl;
+    private string $previewUrl;
 
     /**
      * @param int $cmsPageId
@@ -90,17 +73,17 @@ class EditableCmsPage
      * @throws CmsPageException
      */
     public function __construct(
-        $cmsPageId,
-        $cmsPageCategoryId,
+        int $cmsPageId,
+        int $cmsPageCategoryId,
         array $localizedTitle,
         array $localizedMetaTitle,
         array $localizedMetaDescription,
         array $localizedFriendlyUrl,
         array $localizedContent,
-        $indexedForSearch,
-        $displayed,
+        bool $indexedForSearch,
+        bool $displayed,
         array $shopAssociation,
-        $previewUrl
+        string $previewUrl
     ) {
         $this->cmsPageId = new CmsPageId($cmsPageId);
         $this->cmsPageCategoryId = new CmsPageCategoryId($cmsPageCategoryId);
@@ -115,18 +98,12 @@ class EditableCmsPage
         $this->previewUrl = $previewUrl;
     }
 
-    /**
-     * @return CmsPageId
-     */
-    public function getCmsPageId()
+    public function getCmsPageId(): CmsPageId
     {
         return $this->cmsPageId;
     }
 
-    /**
-     * @return CmsPageCategoryId
-     */
-    public function getCmsPageCategoryId()
+    public function getCmsPageCategoryId(): CmsPageCategoryId
     {
         return $this->cmsPageCategoryId;
     }
@@ -134,7 +111,7 @@ class EditableCmsPage
     /**
      * @return string[]
      */
-    public function getLocalizedTitle()
+    public function getLocalizedTitle(): array
     {
         return $this->localizedTitle;
     }
@@ -142,7 +119,7 @@ class EditableCmsPage
     /**
      * @return string[]
      */
-    public function getLocalizedMetaTitle()
+    public function getLocalizedMetaTitle(): array
     {
         return $this->localizedMetaTitle;
     }
@@ -150,7 +127,7 @@ class EditableCmsPage
     /**
      * @return string[]
      */
-    public function getLocalizedMetaDescription()
+    public function getLocalizedMetaDescription(): array
     {
         return $this->localizedMetaDescription;
     }
@@ -158,7 +135,7 @@ class EditableCmsPage
     /**
      * @return string[]
      */
-    public function getLocalizedFriendlyUrl()
+    public function getLocalizedFriendlyUrl(): array
     {
         return $this->localizedFriendlyUrl;
     }
@@ -166,39 +143,27 @@ class EditableCmsPage
     /**
      * @return string[]
      */
-    public function getLocalizedContent()
+    public function getLocalizedContent(): array
     {
         return $this->localizedContent;
     }
 
-    /**
-     * @return bool
-     */
-    public function isIndexedForSearch()
+    public function isIndexedForSearch(): bool
     {
         return $this->indexedForSearch;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDisplayed()
+    public function isDisplayed(): bool
     {
         return $this->displayed;
     }
 
-    /**
-     * @return array
-     */
-    public function getShopAssociation()
+    public function getShopAssociation(): array
     {
         return $this->shopAssociation;
     }
 
-    /**
-     * @return string
-     */
-    public function getPreviewUrl()
+    public function getPreviewUrl(): string
     {
         return $this->previewUrl;
     }
