@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductAssigner;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderDetailNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
@@ -207,8 +208,16 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $orderDetail = $this->orderDetailRepository->findByOrderIdAndProductId(
                     $command->getOrderId(),
                     $command->getProductId(),
-                    $command->getCombinationId()
+                    null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0
                 );
+
+                if ($orderDetail === null) {
+                    throw new OrderDetailNotFoundException(null, sprintf(
+                        'No order detail found for order id %d and product id %d',
+                        $command->getOrderId()->getValue(),
+                        $command->getProductId()->getValue()
+                    ));
+                }
 
                 $this->shipmentProductAssigner->assign(
                     $command->getShipmentId(),

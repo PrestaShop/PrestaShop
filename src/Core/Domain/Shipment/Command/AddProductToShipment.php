@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Shipment\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\ValueObject\ShipmentId;
 
@@ -27,13 +28,19 @@ class AddProductToShipment
     /** @var ?CombinationId */
     private $combinationId;
 
-    public function __construct(int $shipmentId, int $productId, int $orderId, int $combinationId = 0)
+    /** @var ?CustomizationId */
+    private $customizationId;
+
+    public function __construct(int $shipmentId, int $productId, int $orderId, int $combinationId = 0, int $customizationId = 0)
     {
         $this->shipmentId = new ShipmentId($shipmentId);
         $this->productId = new ProductId($productId);
         $this->orderId = new OrderId($orderId);
         if ($combinationId > 0) {
             $this->combinationId = new CombinationId($combinationId);
+        }
+        if ($customizationId > 0) {
+            $this->customizationId = new CustomizationId($customizationId);
         }
     }
 
@@ -55,5 +62,10 @@ class AddProductToShipment
     public function getCombinationId(): ?CombinationId
     {
         return $this->combinationId;
+    }
+
+    public function getCustomizationId(): ?CustomizationId
+    {
+        return $this->customizationId;
     }
 }

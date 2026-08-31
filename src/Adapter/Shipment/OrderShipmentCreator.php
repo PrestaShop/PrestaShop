@@ -29,6 +29,9 @@ class OrderShipmentCreator
 
     public function addShipmentOrder(Order $order, array $productsHandledByCarrier): void
     {
+        // Order details are the same for every carrier group, fetch them once
+        $orderDetailProducts = OrderDetail::getList($order->id);
+
         foreach ($productsHandledByCarrier as $carrierId => $products) {
             $shipment = new Shipment();
             $shipment->setOrderId((int) $order->id);
@@ -54,22 +57,18 @@ class OrderShipmentCreator
             $orderCarrier->shipping_cost_tax_incl = 0;
             $orderCarrier->add();
             // match products with order details to get quantities & orderDetailId
-            foreach (OrderDetail::getList($order->id) as $orderDetailProduct) {
-                foreach ($products['product_list'] as $product) {
-                    if (!$this->needShipmentProductCreation($product, $orderDetailProduct)) {
-                        continue;
-                    }
-
-                    $quantity = $orderDetailProduct['product_quantity'];
-                    $orderDetailId = $orderDetailProduct['id_order_detail'];
-
-                    $shipmentProduct = (new ShipmentProduct())
-                        ->setShipment($shipment)
-                        ->setOrderDetailId($orderDetailId)
-                        ->setQuantity($quantity);
-
-                    $shipment->addShipmentProduct($shipmentProduct);
+            foreach ($products['product_list'] as $product) {
+                $orderDetailProduct = $this->findMatchingOrderDetail($product, $orderDetailProducts);
+                if ($orderDetailProduct === null) {
+                    continue;
                 }
+
+                $shipmentProduct = (new ShipmentProduct())
+                    ->setShipment($shipment)
+                    ->setOrderDetailId((int) $orderDetailProduct['id_order_detail'])
+                    ->setQuantity((int) $orderDetailProduct['product_quantity']);
+
+                $shipment->addShipmentProduct($shipmentProduct);
             }
 
             $this->shipmentRepository->save($shipment);
@@ -77,30 +76,39 @@ class OrderShipmentCreator
     }
 
     /**
-     * @param array{
-     *     id_customization: int,
-     *     id_product_attribute: int,
-     *     id_product: int
-     * } $product
-     * @param array{
-     *     id_customization: int,
-     *     id_order_detail: int,
-     *     product_id: int,
-     *     product_attribute_id: int,
-     *     product_quantity: int
-     * } $orderDetailProduct
+     * Returns the single order detail matching a cart product line, or null when none does.
      *
-     * @return bool
+     * A product line is only fully identified by its product, combination AND customization: the very same
+     * product and combination can be ordered several times with different customizations, each one having its
+     * own order detail.
+     *
+     * @param array{
+     *     id_customization: int|string|null,
+     *     id_product_attribute: int|string|null,
+     *     id_product: int|string
+     * } $product
+     * @param array<array{
+     *     id_customization: int|string,
+     *     id_order_detail: int|string,
+     *     product_id: int|string,
+     *     product_attribute_id: int|string|null,
+     *     product_quantity: int|string
+     * }> $orderDetailProducts
+     *
+     * @return array<string, mixed>|null
      */
-    private function needShipmentProductCreation(array $product, array $orderDetailProduct): bool
+    private function findMatchingOrderDetail(array $product, array $orderDetailProducts): ?array
     {
-        if (!empty($product['id_customization'])) {
-            return $product['id_customization'] === $orderDetailProduct['id_customization'];
-        }
-        if (!empty($product['id_product_attribute'])) {
-            return $product['id_product_attribute'] === $orderDetailProduct['product_attribute_id'];
+        foreach ($orderDetailProducts as $orderDetailProduct) {
+            if (
+                (int) $product['id_product'] === (int) $orderDetailProduct['product_id']
+                && (int) ($product['id_product_attribute'] ?? 0) === (int) ($orderDetailProduct['product_attribute_id'] ?? 0)
+                && (int) ($product['id_customization'] ?? 0) === (int) ($orderDetailProduct['id_customization'] ?? 0)
+            ) {
+                return $orderDetailProduct;
+            }
         }
 
-        return $product['id_product'] === $orderDetailProduct['product_id'];
+        return null;
     }
 }

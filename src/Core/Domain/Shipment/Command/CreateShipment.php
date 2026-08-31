@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Shipment\Command;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class CreateShipment
@@ -27,16 +28,22 @@ class CreateShipment
     /** @var ?CombinationId */
     private $productCombinationId;
 
+    /** @var ?CustomizationId */
+    private $productCustomizationId;
+
     private int $quantity;
 
-    public function __construct(int $orderId, int $carrierId, int $productId, int $quantity, ?int $combinationId = 0)
+    public function __construct(int $orderId, int $carrierId, int $productId, int $quantity, ?int $combinationId = 0, ?int $customizationId = 0)
     {
         $this->orderId = new OrderId($orderId);
         $this->carrierId = new CarrierId($carrierId);
         $this->productId = new ProductId($productId);
         $this->quantity = $quantity;
         if ($combinationId > 0) {
-            $this->productCombinationId = new CombinationId($quantity);
+            $this->productCombinationId = new CombinationId($combinationId);
+        }
+        if ($customizationId > 0) {
+            $this->productCustomizationId = new CustomizationId($customizationId);
         }
     }
 
@@ -63,5 +70,10 @@ class CreateShipment
     public function getProductCombinationId(): ?CombinationId
     {
         return $this->productCombinationId;
+    }
+
+    public function getProductCustomizationId(): ?CustomizationId
+    {
+        return $this->productCustomizationId;
     }
 }

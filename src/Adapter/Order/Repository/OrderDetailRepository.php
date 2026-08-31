@@ -10,7 +10,6 @@ use Doctrine\DBAL\Connection;
 use OrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderDetailNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\ValueObject\OrderDetailId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -46,10 +45,30 @@ class OrderDetailRepository extends AbstractObjectModelRepository
         return $orderDetail;
     }
 
+    /**
+     * An order can hold several order details for the same product and combination, they are then only
+     * distinguished by their customization, so all three identifiers must be part of the criteria, else an
+     * arbitrary row would be returned.
+     *
+     * Multi invoice orders can even hold several order details sharing all three: AddProductToOrderHandler
+     * deliberately allows adding a product already present in the order as long as it goes to another invoice.
+     * The most recent one is then returned, as it is the one such an addition has just created.
+     *
+     * @param OrderId $orderId
+     * @param ProductId $productId
+     * @param int $combinationId 0 when the product has no combination
+     * @param int $customizationId 0 when the product line is not customized
+     *
+     * @return OrderDetail|null
+     *
+     * @throws CoreException
+     * @throws PrestaShopException
+     */
     public function findByOrderIdAndProductId(
         OrderId $orderId,
         ProductId $productId,
-        ?CombinationId $combinationId
+        int $combinationId = 0,
+        int $customizationId = 0
     ): ?OrderDetail {
         if (!$this->connection) {
             trigger_deprecation('prestashop/prestashop', '9.2', 'Connection must be set.');
@@ -58,22 +77,20 @@ class OrderDetailRepository extends AbstractObjectModelRepository
 
         $qb = $this->connection->createQueryBuilder();
 
-        $qb
+        $orderDetailId = $qb
             ->select('id_order_detail')
             ->from($this->dbPrefix . 'order_detail')
             ->where('id_order = :orderId')
             ->andWhere('product_id = :productId')
+            ->andWhere('product_attribute_id = :combinationId')
+            ->andWhere('id_customization = :customizationId')
+            ->orderBy('id_order_detail', 'DESC')
+            ->setMaxResults(1)
             ->setParameter('orderId', $orderId->getValue())
-            ->setParameter('productId', $productId->getValue());
-
-        if ($combinationId !== null) {
-            $qb
-                ->andWhere('product_attribute_id = :combinationId')
-                ->setParameter('combinationId', $combinationId->getValue());
-        }
-
-        $orderDetailId = $qb
-            ->execute()
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('combinationId', $combinationId)
+            ->setParameter('customizationId', $customizationId)
+            ->executeQuery()
             ->fetchOne();
 
         if ($orderDetailId === false) {

@@ -354,19 +354,16 @@ final class MailPreviewVariablesBuilder
         $productList = $package['product_list'];
 
         $productTemplateList = [];
-        foreach ($productList as $product) {
+        // Resolve every product carrier at once: doing it per product would re-read the order,
+        // its details and its shipments on each iteration
+        $productCarriers = $this->orderShipmentService->getCarriersForProductLines((int) $order->id, $productList);
+        foreach ($productList as $productKey => $product) {
             $price = Product::getPriceStatic((int) $product['id_product'], false, $product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null, 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
             $priceWithTax = Product::getPriceStatic((int) $product['id_product'], true, $product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null, 2, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
 
             $productPrice = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $priceWithTax;
 
-            $carrierName = null;
-            if ($this->orderShipmentService->orderHasShipment($order->id)) {
-                $carrier = $this->orderShipmentService->getCarrierForProduct($order->id, (int) $product['id_product']);
-                if ($carrier) {
-                    $carrierName = $carrier->name;
-                }
-            }
+            $carrierName = isset($productCarriers[$productKey]) ? $productCarriers[$productKey]->name : null;
 
             $productTemplate = [
                 'id_product' => $product['id_product'],

@@ -42,16 +42,24 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
             $order = $this->orderRepository->get($command->getOrderId());
             $carrierId = $command->getCarrierId()->getValue();
             $productId = $command->getProductId()->getValue();
+            $combinationId = null !== $command->getProductCombinationId() ? $command->getProductCombinationId()->getValue() : 0;
+            $customizationId = null !== $command->getProductCustomizationId() ? $command->getProductCustomizationId()->getValue() : 0;
             $addressId = (int) $order->id_address_delivery;
 
             $shippingCostTaxExcluded = 0.00;
             $shippingCostTaxIncluded = 0.00;
 
             if ($this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING')) {
-                $product = $this->findOrderProduct($order->getProductsDetail(), $productId);
+                $product = $this->findOrderProduct($order->getProductsDetail(), $productId, $combinationId, $customizationId);
                 if ($product === null) {
                     throw new CannotFindProductInOrderException(
-                        sprintf('Product with id %d not found in order %d', $productId, (int) $order->id)
+                        sprintf(
+                            'Product with id %d, combination %d and customization %d not found in order %d',
+                            $productId,
+                            $combinationId,
+                            $customizationId,
+                            (int) $order->id
+                        )
                     );
                 }
 
@@ -59,7 +67,7 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
                     products: [
                         [
                             'id_product' => $productId,
-                            'id_product_attribute' => (int) ($product['product_attribute_id'] ?? 0),
+                            'id_product_attribute' => $combinationId,
                             'quantity' => $command->getQuantity(),
                             'weight' => (float) ($product['product_weight'] ?? 0),
                             'weight_attribute' => null,
@@ -112,14 +120,21 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
     }
 
     /**
+     * An order can hold several order details for the same product and combination, they are then only
+     * distinguished by their customization, so all three identifiers are part of the criteria.
+     *
      * @param array<array<string, mixed>> $products
      *
      * @return array<string, mixed>|null
      */
-    private function findOrderProduct(array $products, int $productId): ?array
+    private function findOrderProduct(array $products, int $productId, int $combinationId, int $customizationId): ?array
     {
         foreach ($products as $product) {
-            if ((int) $product['product_id'] === $productId) {
+            if (
+                (int) $product['product_id'] === $productId
+                && (int) ($product['product_attribute_id'] ?? 0) === $combinationId
+                && (int) ($product['id_customization'] ?? 0) === $customizationId
+            ) {
                 return $product;
             }
         }
