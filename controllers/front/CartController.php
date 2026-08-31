@@ -431,7 +431,7 @@ class CartControllerCore extends FrontController
             $availableProductQuantity = Product::getQuantity($this->id_product, $this->id_product_attribute);
             $productName = Product::getProductName($this->id_product, $this->id_product_attribute);
 
-            if ($availableProductQuantity > 0) {
+            if ($availableProductQuantity > 0 && $this->isMinimalQuantityReachable($product, $availableProductQuantity)) {
                 $this->errors[] = $this->trans(
                     'You can only buy %quantity% "%product%". Please adjust the quantity in your cart to continue.',
                     [
@@ -452,27 +452,34 @@ class CartControllerCore extends FrontController
         }
 
         // Check minimal_quantity
-        if (!$this->id_product_attribute) {
-            if ($qty_to_check < $product->minimal_quantity) {
+        $minimalQuantity = $this->id_product_attribute
+            ? (int) (new Combination($this->id_product_attribute))->minimal_quantity
+            : (int) $product->minimal_quantity;
+
+        if ($qty_to_check < $minimalQuantity) {
+            /*
+             * Stock can drop below the minimum the product may be bought in, and then no quantity is
+             * accepted at all - a larger one is refused for lack of stock, a smaller one for being
+             * under the minimum, and the customer is bounced between the two messages with no way
+             * out. In that case the product simply cannot be bought, so say that once instead.
+             */
+            if (!$this->isMinimalQuantityReachable($product, Product::getQuantity($this->id_product, $this->id_product_attribute))) {
                 $this->errors[] = $this->trans(
-                    'The minimum purchase order quantity for the product %product% is %quantity%.',
-                    ['%product%' => $product->name, '%quantity%' => $product->minimal_quantity],
+                    'This product (%product%) is no longer available.',
+                    ['%product%' => $product->name],
                     'Shop.Notifications.Error'
                 );
 
                 return;
             }
-        } else {
-            $combination = new Combination($this->id_product_attribute);
-            if ($qty_to_check < $combination->minimal_quantity) {
-                $this->errors[] = $this->trans(
-                    'The minimum purchase order quantity for the product %product% is %quantity%.',
-                    ['%product%' => $product->name, '%quantity%' => $combination->minimal_quantity],
-                    'Shop.Notifications.Error'
-                );
 
-                return;
-            }
+            $this->errors[] = $this->trans(
+                'The minimum purchase order quantity for the product %product% is %quantity%.',
+                ['%product%' => $product->name, '%quantity%' => $minimalQuantity],
+                'Shop.Notifications.Error'
+            );
+
+            return;
         }
 
         // If no errors, process product addition
@@ -609,6 +616,26 @@ class CartControllerCore extends FrontController
      *
      * @return bool
      */
+    /**
+     * Whether the product can still be bought at all, given that it may only be bought from a
+     * certain quantity upwards. Once stock falls below that minimum, no quantity is acceptable, and
+     * telling the customer to buy more or fewer is advice that cannot be followed.
+     *
+     * Ordering out of stock keeps it reachable, since stock is then not the limit.
+     */
+    protected function isMinimalQuantityReachable(Product $product, int $availableQuantity): bool
+    {
+        if (Product::isAvailableWhenOutOfStock($product->out_of_stock)) {
+            return true;
+        }
+
+        $minimalQuantity = $this->id_product_attribute
+            ? (int) (new Combination($this->id_product_attribute))->minimal_quantity
+            : (int) $product->minimal_quantity;
+
+        return $availableQuantity >= $minimalQuantity;
+    }
+
     protected function shouldAvailabilityErrorBeRaised(Product $product, int $qtyToCheck)
     {
         if ($this->id_product_attribute) {
