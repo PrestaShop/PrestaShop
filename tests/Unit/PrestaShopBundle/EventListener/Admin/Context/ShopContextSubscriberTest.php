@@ -132,6 +132,53 @@ class ShopContextSubscriberTest extends ContextEventListenerTestCase
         $this->assertEquals($expectedShopConstraint, $event->getRequest()->attributes->get('shopConstraint'));
     }
 
+    /**
+     * The Admin API docs route (api_doc) maps to an invokable controller with no "Class::method"
+     * form. Resolving the shop context for it must not emit an "Undefined array key 1" warning,
+     * which fataled the API documentation when multistore was enabled. See #39468.
+     */
+    public function testMultiShopWithInvokableControllerRouteDoesNotFail(): void
+    {
+        $expectedShopConstraint = ShopConstraint::shop(1);
+        $event = $this->createRequestEvent(new Request());
+
+        $router = $this->createMock(RequestMatcherInterface::class);
+        $router->method('matchRequest')->willReturn(['_controller' => 'Some\\Invokable\\DocsAction']);
+
+        $shopContextBuilder = new ShopContextBuilder(
+            $this->mockShopRepository(1),
+            $this->mockContextStateManager(),
+            $this->mockMultistoreFeature(true),
+        );
+
+        $listener = new ShopContextSubscriber(
+            $shopContextBuilder,
+            $this->mockEmployeeContext(),
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
+            $this->mockMultistoreFeature(true),
+            $router,
+            $this->mockSecurity($expectedShopConstraint),
+            $this->mockLegacyContext(),
+            $this->createMock(TranslatorInterface::class),
+        );
+
+        $warnings = [];
+        set_error_handler(static function (int $errno, string $errstr) use (&$warnings): bool {
+            $warnings[] = $errstr;
+
+            return true;
+        }, E_WARNING);
+
+        try {
+            $listener->initShopContext($event);
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertSame([], $warnings, 'Resolving the shop context for an invokable controller must not emit a PHP warning.');
+        $this->assertEquals($expectedShopConstraint, $event->getRequest()->attributes->get('shopConstraint'));
+    }
+
     public static function getMultiShopValues(): iterable
     {
         yield 'single shop, employee has all permissions' => [
