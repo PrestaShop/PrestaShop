@@ -355,13 +355,42 @@ class CartRuleCalculator
         return $concernedRows;
     }
 
+    /**
+     * @return array<string, int> given away quantity, keyed by "id_product-id_product_attribute"
+     */
+    protected function getGiftedQuantities(): array
+    {
+        // Read through getCartRules() and not by iterating the collection: CartRuleCollection is a
+        // stateful Iterator with a single cursor, so iterating it here while applyCartRules() is already
+        // iterating it would move that cursor and silently drop the rules that come after the current one.
+        $giftedQuantities = [];
+        foreach ($this->cartRules->getCartRules() as $cartRuleData) {
+            $cartRule = $cartRuleData->getCartRule();
+            if (!(int) $cartRule->gift_product) {
+                continue;
+            }
+            $giftKey = (int) $cartRule->gift_product . '-' . (int) $cartRule->gift_product_attribute;
+            $giftedQuantities[$giftKey] = ($giftedQuantities[$giftKey] ?? 0) + 1;
+        }
+
+        return $giftedQuantities;
+    }
+
     protected function getCheapestCartRow(CartRuleData $cartRuleData): ?CartRow
     {
         /** @var CartRow|null $cartRowCheapest */
         $cartRowCheapest = null;
         $cartRule = $cartRuleData->getCartRule();
+        $giftedQuantities = $this->getGiftedQuantities();
         foreach ($this->cartRows as $cartRow) {
             $product = $cartRow->getRowData();
+            // A row the customer does not pay for cannot be the cheapest one it is offered as a gift by
+            // another rule. Only skip it when every unit is a gift, so a product also bought stays eligible.
+            $giftKey = (int) $product['id_product'] . '-' . (int) $product['id_product_attribute'];
+            if (($giftedQuantities[$giftKey] ?? 0) >= (int) $product['cart_quantity']) {
+                continue;
+            }
+
             if (
                 (
                     ($cartRule->reduction_exclude_special && !$product['reduction_applies'])
