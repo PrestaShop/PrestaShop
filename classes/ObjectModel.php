@@ -5,6 +5,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
+use PrestaShop\PrestaShop\Adapter\ObjectModelComparator;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
@@ -159,6 +160,14 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      * @var bool if true, objects are cached in memory
      */
     protected static $cache_objects = true;
+
+    /**
+     * When enabled, update() skips the whole update process if no change is detected,
+     * to avoid useless database queries and improve performance.
+     *
+     * @var bool
+     */
+    public $skipUpdateIfUnchanged = false;
 
     /**
      * @return null
@@ -710,9 +719,16 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      */
     public function update($null_values = false)
     {
+        $className = $this->getObjectName();
+        $comparator = new ObjectModelComparator(new $className($this->id, $this->id_lang, $this->id_shop), $this);
+
+        if ($this->skipUpdateIfUnchanged && !$comparator->hasChanges()) {
+            return true;
+        }
+
         // @hook actionObject<ObjectClassName>UpdateBefore
-        Hook::exec('actionObjectUpdateBefore', ['object' => $this]);
-        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateBefore', ['object' => $this]);
+        Hook::exec('actionObjectUpdateBefore', ['object' => $this, 'objectComparator' => $comparator]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateBefore', ['object' => $this, 'objectComparator' => $comparator]);
 
         $this->clearCache();
 
@@ -812,8 +828,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                         foreach ($id_shop_list as $id_shop) {
                             $field['id_shop'] = (int) $id_shop;
                             $where = pSQL($this->def['primary']) . ' = ' . (int) $this->id
-                                        . ' AND id_lang = ' . (int) $field['id_lang']
-                                        . ' AND id_shop = ' . (int) $id_shop;
+                                . ' AND id_lang = ' . (int) $field['id_lang']
+                                . ' AND id_shop = ' . (int) $id_shop;
 
                             if (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . pSQL(_DB_PREFIX_ . $this->def['table']) . '_lang WHERE ' . $where)) {
                                 $result &= Db::getInstance()->update($this->def['table'] . '_lang', $field, $where);
@@ -824,7 +840,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                     } else {
                         // If this table is not linked to multishop system ...
                         $where = pSQL($this->def['primary']) . ' = ' . (int) $this->id
-                                    . ' AND id_lang = ' . (int) $field['id_lang'];
+                            . ' AND id_lang = ' . (int) $field['id_lang'];
                         if (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . pSQL(_DB_PREFIX_ . $this->def['table']) . '_lang WHERE ' . $where)) {
                             $result &= Db::getInstance()->update($this->def['table'] . '_lang', $field, $where);
                         } else {
@@ -841,8 +857,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         }
 
         // @hook actionObject<ObjectClassName>UpdateAfter — runs even if extra persistence fails.
-        Hook::exec('actionObjectUpdateAfter', ['object' => $this]);
-        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter', ['object' => $this]);
+        Hook::exec('actionObjectUpdateAfter', ['object' => $this, 'objectComparator' => $comparator]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter', ['object' => $this, 'objectComparator' => $comparator]);
 
         return $result && $extraResult;
     }
