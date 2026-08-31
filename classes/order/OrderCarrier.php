@@ -156,21 +156,47 @@ class OrderCarrierCore extends ObjectModel
 
     public function updateWs()
     {
+        $previousTrackingNumber = (string) Db::getInstance()->getValue(
+            'SELECT `tracking_number`
+            FROM `' . _DB_PREFIX_ . 'order_carrier`
+            WHERE `id_order_carrier` = ' . (int) $this->id
+        );
+
         if (!parent::update()) {
             return false;
         }
 
+        $trackingNumberChanged = $this->tracking_number !== '' && $this->tracking_number != $previousTrackingNumber;
         $sendemail = (bool) Tools::getValue('sendemail', false);
+        $order = null;
 
-        if ($sendemail) {
+        if ($sendemail || $trackingNumberChanged) {
             $order = new Order((int) $this->id_order);
             if (!Validate::isLoadedObject($order)) {
                 throw new PrestaShopException('Can\'t load Order object');
             }
+        }
 
-            if (!$this->sendInTransitEmail($order)) {
-                return false;
-            }
+        if ($sendemail && !$this->sendInTransitEmail($order)) {
+            return false;
+        }
+
+        // The back office notifies modules on the same condition, so a number written through the
+        // webservice must not be the one change they never hear about.
+        if ($trackingNumberChanged) {
+            Hook::exec(
+                'actionAdminOrdersTrackingNumberUpdate',
+                [
+                    'order' => $order,
+                    'customer' => new Customer((int) $order->id_customer),
+                    'carrier' => new Carrier((int) $order->id_carrier, (int) $order->getAssociatedLanguage()->getId()),
+                ],
+                null,
+                false,
+                true,
+                false,
+                (int) $order->id_shop
+            );
         }
 
         return true;
