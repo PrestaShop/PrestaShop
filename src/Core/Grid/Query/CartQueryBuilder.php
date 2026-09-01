@@ -115,7 +115,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             ->createQueryBuilder()
             ->select('DISTINCT co.`id_guest`')
             ->from($this->dbPrefix . 'connections', 'co')
-            ->where('TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', `date_add`)) < ' . self::CUSTOMER_ONLINE_TIME);
+            ->where('`date_add` >= ("' . date('Y-m-d H:i:s') . '" - INTERVAL ' . self::CUSTOMER_ONLINE_TIME . ' SECOND)');
 
         $qb = $this->connection
             ->createQueryBuilder()
