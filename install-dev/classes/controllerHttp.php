@@ -361,7 +361,14 @@ class InstallControllerHttp
     public function ajaxJsonAnswer(bool $success, $message = '', $warning = ''): void
     {
         if (!$success && empty($message)) {
-            $message = print_r(@error_get_last(), true);
+            $message = self::getLastFatalError();
+        }
+        if (!$success && empty($message)) {
+            $message = $this->translator->trans(
+                'The installation step failed without reporting a reason. Check your server error log for details.',
+                [],
+                'Install'
+            );
         }
 
         die(json_encode([
@@ -369,6 +376,27 @@ class InstallControllerHttp
             'message' => $message,
             'warning' => $warning,
         ]));
+    }
+
+    /**
+     * The last PHP error, but only when it is one that can actually have aborted a step.
+     *
+     * error_get_last() also returns notices, warnings and deprecations, and the container build
+     * that every install triggers emits plenty of those, so using it unfiltered reports whichever
+     * deprecation happened to come last instead of the failure.
+     *
+     * @param array|null $error defaults to the last error raised
+     */
+    public static function getLastFatalError(?array $error = null): string
+    {
+        $error ??= @error_get_last();
+        $fatalTypes = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR];
+
+        if (null === $error || !isset($error['type']) || !in_array($error['type'], $fatalTypes, true)) {
+            return '';
+        }
+
+        return print_r($error, true);
     }
 
     /**
