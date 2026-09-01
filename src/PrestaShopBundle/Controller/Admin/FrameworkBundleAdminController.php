@@ -21,7 +21,6 @@ use PrestaShopBundle\Translation\TranslatorInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -188,7 +187,6 @@ class FrameworkBundleAdminController extends AbstractController
         }
 
         foreach ($form->getErrors(true) as $error) {
-            /** @var FormError $error */
             if ($error->getCause() && method_exists($error->getCause(), 'getPropertyPath')) {
                 $formId = str_replace(
                     ['.', 'children[', ']', '_data'],
@@ -583,7 +581,6 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function addFlashFormErrors(FormInterface $form)
     {
-        /** @var FormError $formError */
         foreach ($form->getErrors(true) as $formError) {
             $this->addFlash('error', $formError->getMessage());
         }
