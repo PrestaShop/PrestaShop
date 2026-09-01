@@ -701,6 +701,56 @@ class CarrierCore extends ObjectModel
      *
      * @return array Carriers for the order
      */
+    /**
+     * Returns, per product of the cart, the carrier references it is restricted to. A product missing from
+     * the result carries no restriction and can travel with any carrier.
+     *
+     * @param Cart $cart
+     *
+     * @return array<int, array<int>> id_product => list of id_carrier_reference
+     */
+    protected static function getCartCarrierRestrictions(Cart $cart)
+    {
+        $products = $cart->getProducts(false, false);
+        if (empty($products)) {
+            return [];
+        }
+
+        $restrictions = [];
+        $rows = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT `id_product`, `id_carrier_reference`
+			FROM `' . _DB_PREFIX_ . 'product_carrier`
+			WHERE `id_product` IN (' . implode(', ', array_map('intval', array_column($products, 'id_product'))) . ')
+				AND `id_shop` = ' . (int) $cart->id_shop);
+        foreach ($rows as $row) {
+            $restrictions[(int) $row['id_product']][] = (int) $row['id_carrier_reference'];
+        }
+
+        return $restrictions;
+    }
+
+    /**
+     * Keeps the products the given carrier is allowed to ship, which is the most a single package handed
+     * to it can weigh or cost. A product restricted through ps_product_carrier can only travel with one of
+     * the carriers it names.
+     *
+     * @param array $products cart products
+     * @param array<int, array<int>> $restrictions as returned by getCartCarrierRestrictions()
+     * @param int $idCarrierReference
+     *
+     * @return array
+     */
+    protected static function filterProductsShippableBy(array $products, array $restrictions, $idCarrierReference)
+    {
+        return array_filter($products, function ($product) use ($restrictions, $idCarrierReference) {
+            if (!isset($restrictions[(int) $product['id_product']])) {
+                return true;
+            }
+
+            return in_array((int) $idCarrierReference, $restrictions[(int) $product['id_product']], true);
+        });
+    }
+
     public static function getCarriersForOrder($id_zone, $groups = null, $cart = null, &$error = [])
     {
         // First, initialize the context, language, currency
@@ -722,9 +772,21 @@ class CarrierCore extends ObjectModel
         $result = Carrier::getCarriers($id_lang, true, false, (int) $id_zone, $groups, self::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
         $results_array = [];
 
+        // Resolved once: the same products and the same restrictions apply to every carrier below.
+        $cartProducts = $cart->getProducts(false, false);
+        $carrierRestrictions = self::getCartCarrierRestrictions($cart);
+
         foreach ($result as $k => $row) {
             $carrier = new Carrier((int) $row['id_carrier']);
             $shipping_method = $carrier->getShippingMethod();
+
+            /*
+             * A cart whose products are restricted to different carriers is split into one package per
+             * carrier, and a carrier is only ever handed the products it is allowed to ship. So both the
+             * range checks below and the price calculation must consider that subset, not the whole cart.
+             */
+            $shippableProducts = self::filterProductsShippableBy($cartProducts, $carrierRestrictions, (int) $carrier->id_reference);
+
             if ($shipping_method != Carrier::SHIPPING_METHOD_FREE) {
                 /*
                  * First, we check loosely if the carrier is available for the zone with at least one range.
@@ -758,9 +820,9 @@ class CarrierCore extends ObjectModel
                         $id_zone = (int) Context::getContext()->country->id_zone;
                     }
 
-                    // Get only carriers that have a range compatible with cart
+                    // Get only carriers that have a range compatible with what they would carry
                     if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT
-                        && (Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone) === false)) {
+                        && (Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight($shippableProducts), $id_zone) === false)) {
                         $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
                         unset($result[$k]);
 
@@ -768,7 +830,7 @@ class CarrierCore extends ObjectModel
                     }
 
                     if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
-                        && (Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency ?? null) === false)) {
+                        && (Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $shippableProducts), $id_zone, $id_currency ?? null) === false)) {
                         $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
                         unset($result[$k]);
 
@@ -778,8 +840,8 @@ class CarrierCore extends ObjectModel
             }
 
             // Calculate the price of the carrier
-            $row['price'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], true, null, null, $id_zone));
-            $row['price_tax_exc'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], false, null, null, $id_zone));
+            $row['price'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], true, null, $shippableProducts, $id_zone));
+            $row['price_tax_exc'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], false, null, $shippableProducts, $id_zone));
 
             // If price is false, then the carrier is unavailable (carrier module)
             if ($row['price'] === false) {
