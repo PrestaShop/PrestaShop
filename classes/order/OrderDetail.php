@@ -709,7 +709,10 @@ class OrderDetailCore extends ObjectModel
                 $this->product_quantity_discount = Tools::ps_round($unit_price, Context::getContext()->getComputingPrecision());
             }
 
-            if (isset($this->tax_calculator)) {
+            // A specific price that keeps the catalogue price stores -1 rather than a price, the same
+            // sentinel Product::getPriceStatic() reads as "no price of its own". Running it through
+            // addTaxes() and subtracting it added the taxed sentinel to the recorded discount.
+            if (isset($this->tax_calculator) && $quantity_discount['price'] >= 0) {
                 $this->product_quantity_discount -= $this->tax_calculator->addTaxes($quantity_discount['price']);
             }
         }
