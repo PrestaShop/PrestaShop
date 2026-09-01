@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\BulkDeleteBusinessEntityHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityId;
 
 /**
  * Class BulkDeleteBusinessEntityCommand is used to soft delete a list of business entities at once.
@@ -18,15 +20,27 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\BulkDeleteBu
 class BulkDeleteBusinessEntityCommand
 {
     /**
-     * @param int[] $businessEntityIds
+     * @var BusinessEntityId[]
      */
-    public function __construct(
-        private readonly array $businessEntityIds,
-    ) {
+    private readonly array $businessEntityIds;
+
+    /**
+     * @param int[] $businessEntityIds
+     *
+     * @throws BusinessEntityConstraintException
+     */
+    public function __construct(array $businessEntityIds)
+    {
+        $ids = [];
+        foreach ($businessEntityIds as $businessEntityId) {
+            $ids[] = new BusinessEntityId((int) $businessEntityId);
+        }
+
+        $this->businessEntityIds = $ids;
     }
 
     /**
-     * @return int[]
+     * @return BusinessEntityId[]
      */
     public function getBusinessEntityIds(): array
     {

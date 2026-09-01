@@ -58,6 +58,49 @@ class BusinessEntityRepository extends EntityRepository
     }
 
     /**
+     * @param int[] $businessEntityIds
+     * @param int[]|null $shopIds
+     *
+     * @return array<int, BusinessEntity> keyed by business entity id
+     */
+    public function findByIds(array $businessEntityIds, ?array $shopIds = null): array
+    {
+        if ([] === $businessEntityIds) {
+            return [];
+        }
+
+        $qb = $this->createQueryBuilder('be')
+            ->where('be.id IN (:businessEntityIds)')
+            ->andWhere('be.deleted = false')
+            ->setParameter('businessEntityIds', $businessEntityIds);
+
+        if (null !== $shopIds) {
+            $qb->andWhere('be.idShop IN (:shopIds)')
+                ->setParameter('shopIds', $shopIds);
+        }
+
+        $businessEntities = [];
+        /** @var BusinessEntity $businessEntity */
+        foreach ($qb->getQuery()->getResult() as $businessEntity) {
+            $businessEntities[$businessEntity->getId()] = $businessEntity;
+        }
+
+        return $businessEntities;
+    }
+
+    /**
+     * @param BusinessEntity[] $businessEntities
+     */
+    public function bulkDelete(array $businessEntities): void
+    {
+        foreach ($businessEntities as $businessEntity) {
+            $businessEntity->setDeleted(true);
+        }
+
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * Counts every b2b customer linked to the entity, whatever the customer's own b2b status:
      * a link is a link, and filtering on the customer status is deliberately left out until
      * the link management screens exist.

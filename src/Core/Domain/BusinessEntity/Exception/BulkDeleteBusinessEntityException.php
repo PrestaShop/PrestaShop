@@ -11,10 +11,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 use Throwable;
 
-/**
- * Aggregates the per-item failures caught while processing a BulkDeleteBusinessEntityCommand,
- * so a single failing id does not stop the batch.
- */
 class BulkDeleteBusinessEntityException extends BusinessEntityException implements BulkCommandExceptionInterface
 {
     /**

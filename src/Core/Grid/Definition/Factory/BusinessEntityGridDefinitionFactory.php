@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\BusinessEntityStatusChoiceProvider;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -159,14 +160,9 @@ final class BusinessEntityGridDefinitionFactory extends AbstractGridDefinitionFa
                                     [
                                         'confirm_message_type' => SubmitRowAction::MESSAGE_TYPE_DYNAMIC,
                                         'dynamic_message_field' => 'delete_confirm_message',
-                                        'confirm_message' => $this->trans(
-                                            'Are you sure you want to delete this business entity?',
-                                            [],
-                                            'Admin.Orderscustomers.Feature'
-                                        ),
                                         'modal_options' => [
-                                            'title' => $this->trans('Delete this business entity', [], 'Admin.Actions'),
-                                            'confirm_button_label' => $this->trans('Yes, I want to delete this entity', [], 'Admin.Actions'),
+                                            'title' => $this->trans('Delete this business entity', [], 'Admin.Orderscustomers.Feature'),
+                                            'confirm_button_label' => $this->trans('Yes, I want to delete this entity', [], 'Admin.Orderscustomers.Feature'),
                                         ],
                                     ]
                                 )
@@ -253,11 +249,20 @@ final class BusinessEntityGridDefinitionFactory extends AbstractGridDefinitionFa
     /**
      * {@inheritdoc}
      */
-    protected function getBulkActions()
+    protected function getBulkActions(): BulkActionCollectionInterface
     {
         return (new BulkActionCollection())
             ->add(
-                $this->buildBulkDeleteAction('admin_business_entities_bulk_delete')
+                $this->buildBulkDeleteAction(
+                    'admin_business_entities_bulk_delete',
+                    [
+                        'confirm_message' => $this->trans(
+                            'Are you sure you want to delete the selected item(s)? Linked B2B customers will be kept.',
+                            [],
+                            'Admin.Orderscustomers.Feature'
+                        ),
+                    ]
+                )
             );
     }
 

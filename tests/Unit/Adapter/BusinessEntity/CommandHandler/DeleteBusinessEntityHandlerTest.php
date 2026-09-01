@@ -7,11 +7,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\BusinessEntity\CommandHandler;
 
+use Doctrine\DBAL\Exception as DbalException;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\DeleteBusinessEntityHandler;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\DeleteBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotDeleteBusinessEntityException;
 use PrestaShopBundle\Entity\B2B\BusinessEntity;
 use PrestaShopBundle\Entity\Repository\BusinessEntityRepository;
 use Psr\Log\LoggerInterface;
@@ -72,6 +74,22 @@ class DeleteBusinessEntityHandlerTest extends TestCase
         $handler = new DeleteBusinessEntityHandler($repository, $this->allShopContext(), $this->createMock(LoggerInterface::class));
 
         $this->expectException(BusinessEntityNotFoundException::class);
+
+        $handler->handle(new DeleteBusinessEntityCommand(7));
+    }
+
+    public function testItTranslatesAPersistenceFailureIntoADomainException(): void
+    {
+        $repository = $this->createMock(BusinessEntityRepository::class);
+        $repository->method('findById')->willReturn(new BusinessEntity());
+        $repository->method('delete')->willThrowException(new DbalException('Deadlock found'));
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->never())->method('info');
+
+        $handler = new DeleteBusinessEntityHandler($repository, $this->allShopContext(), $logger);
+
+        $this->expectException(CannotDeleteBusinessEntityException::class);
 
         $handler->handle(new DeleteBusinessEntityCommand(7));
     }

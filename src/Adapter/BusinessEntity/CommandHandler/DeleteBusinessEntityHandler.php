@@ -13,9 +13,11 @@ use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\DeleteBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\DeleteBusinessEntityHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotDeleteBusinessEntityException;
 use PrestaShopBundle\Entity\Repository\BusinessEntityRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Throwable;
 
 #[AsCommandHandler]
 final class DeleteBusinessEntityHandler implements DeleteBusinessEntityHandlerInterface
@@ -30,6 +32,7 @@ final class DeleteBusinessEntityHandler implements DeleteBusinessEntityHandlerIn
 
     /**
      * @throws BusinessEntityNotFoundException
+     * @throws CannotDeleteBusinessEntityException
      */
     public function handle(DeleteBusinessEntityCommand $command): void
     {
@@ -42,7 +45,11 @@ final class DeleteBusinessEntityHandler implements DeleteBusinessEntityHandlerIn
             throw new BusinessEntityNotFoundException(sprintf('Business entity with id %d was not found.', $businessEntityId));
         }
 
-        $this->businessEntityRepository->delete($businessEntity);
+        try {
+            $this->businessEntityRepository->delete($businessEntity);
+        } catch (Throwable $e) {
+            throw new CannotDeleteBusinessEntityException('Could not delete business entity', 0, $e);
+        }
 
         $this->logger->info(
             'Business entity deleted successfully',

@@ -23,6 +23,11 @@ use PrestaShopBundle\Entity\Repository\BusinessEntityRepository;
  */
 class BusinessEntityRepositoryTest extends TestCase
 {
+    /**
+     * @var array<string, mixed>
+     */
+    private array $capturedParameters = [];
+
     public function testFindByIdRestrictsToTheGivenShopsWhenScoped(): void
     {
         $dql = $this->captureDql(static fn (BusinessEntityRepository $repository) => $repository->findById(5, [1, 2]));
@@ -38,6 +43,45 @@ class BusinessEntityRepositoryTest extends TestCase
 
         $this->assertStringNotContainsString('idShop', $dql);
         $this->assertStringContainsString('be.id = :businessEntityId', $dql);
+    }
+
+    public function testFindByIdsRestrictsToTheGivenShopsWhenScoped(): void
+    {
+        $dql = $this->captureDql(static fn (BusinessEntityRepository $repository) => $repository->findByIds([5, 9], [1, 2]));
+
+        $this->assertStringContainsString('be.idShop IN (:shopIds)', $dql);
+        $this->assertStringContainsString('be.id IN (:businessEntityIds)', $dql);
+        $this->assertStringContainsString(
+            'be.deleted = false',
+            $dql,
+            'the scoped branch is the one a single-shop back office takes, and it was the only one left unasserted'
+        );
+        $this->assertStringNotContainsString(
+            ' OR ',
+            $dql,
+            'the three clauses must be conjunctive: one orWhere would make the whole filter dead and expose every row'
+        );
+        $this->assertSame([5, 9], $this->capturedParameters['businessEntityIds'] ?? null);
+        $this->assertSame([1, 2], $this->capturedParameters['shopIds'] ?? null, 'a clause without its bound parameter throws at runtime');
+    }
+
+    public function testFindByIdsDoesNotRestrictShopsInAllShopContext(): void
+    {
+        $dql = $this->captureDql(static fn (BusinessEntityRepository $repository) => $repository->findByIds([5, 9], null));
+
+        $this->assertStringNotContainsString('idShop', $dql);
+        $this->assertStringContainsString('be.id IN (:businessEntityIds)', $dql);
+    }
+
+    public function testFindByIdsNeverReturnsAnAlreadyDeletedEntity(): void
+    {
+        $dql = $this->captureDql(static fn (BusinessEntityRepository $repository) => $repository->findByIds([5, 9], null));
+
+        $this->assertStringContainsString(
+            'be.deleted = false',
+            $dql,
+            'without this guard a bulk delete would mark an already deleted entity again, log it twice, and report a success'
+        );
     }
 
     public function testGetPendingCountRestrictsToTheGivenShopsWhenScoped(): void
@@ -65,13 +109,23 @@ class BusinessEntityRepositoryTest extends TestCase
     private function captureDql(callable $call): string
     {
         $capturedDql = '';
+        $this->capturedParameters = [];
 
         $query = $this->createMock(Query::class);
-        $query->method('setParameters')->willReturnSelf();
+        $query->method('setParameters')->willReturnCallback(
+            function (iterable $parameters) use ($query): Query {
+                foreach ($parameters as $parameter) {
+                    $this->capturedParameters[$parameter->getName()] = $parameter->getValue();
+                }
+
+                return $query;
+            }
+        );
         $query->method('setFirstResult')->willReturnSelf();
         $query->method('setMaxResults')->willReturnSelf();
         $query->method('getOneOrNullResult')->willReturn(null);
         $query->method('getSingleScalarResult')->willReturn(0);
+        $query->method('getResult')->willReturn([]);
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('createQueryBuilder')->willReturnCallback(

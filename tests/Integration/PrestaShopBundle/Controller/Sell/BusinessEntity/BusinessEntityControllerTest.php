@@ -7,12 +7,19 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\BusinessEntity;
 
+use DateTime;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotDeleteBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotUpdateBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShopBundle\Entity\B2B\B2bRole;
+use PrestaShopBundle\Entity\B2B\BusinessEntity;
+use PrestaShopBundle\Entity\B2B\BusinessEntityCustomerB2b;
+use PrestaShopBundle\Entity\B2B\CustomerB2b;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
+use PrestaShopBundle\Entity\Enum\CustomerB2bStatus;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
@@ -413,6 +420,443 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         ];
 
         return sprintf('business_entity[general_information][%s][%s]', $sections[$field], $field);
+    }
+
+    public function testTheListOffersDeleteInTheKebabWithItsConfirmationModal(): void
+    {
+        $crawler = $this->client->request('GET', $this->generateGridUrl());
+        $this->assertResponseIsSuccessful();
+
+        $deleteAction = $crawler->filter(sprintf(
+            '%s .dropdown-menu a[data-url*="/%d/delete"]',
+            $this->getGridSelector(),
+            self::$activeBusinessEntityId
+        ));
+
+        $this->assertCount(1, $deleteAction, 'AC1: Delete must sit inside the kebab menu');
+        $this->assertSame('Delete this business entity', $deleteAction->attr('data-title'));
+        $this->assertSame('Yes, I want to delete this entity', $deleteAction->attr('data-confirm-button-label'));
+        $this->assertSame('btn-danger', $deleteAction->attr('data-confirm-button-class'));
+        $this->assertSame(
+            'Cancel',
+            $deleteAction->attr('data-close-button-label'),
+            'AC2 mandates a Cancel button; its label comes from a shared trait, so pin it against upstream drift'
+        );
+        $confirmMessage = (string) $deleteAction->attr('data-confirm-message');
+
+        $this->assertStringContainsString(
+            self::ACTIVE_COMPANY_NAME,
+            $confirmMessage,
+            'AC2: the confirmation message must name the entity'
+        );
+        $this->assertStringContainsString(
+            '<strong>' . self::ACTIVE_COMPANY_NAME . '</strong>',
+            $confirmMessage,
+            'the emphasis must survive Twig and the DOM as live markup: escaping the whole message would break AC2'
+        );
+        $this->assertStringContainsString('<small class="text-muted">', $confirmMessage);
+    }
+
+    public function testTheBulkDeletionWarnsThatLinkedCustomersAreKept(): void
+    {
+        $crawler = $this->client->request('GET', $this->generateGridUrl());
+        $this->assertResponseIsSuccessful();
+
+        $bulkDelete = $crawler->filter('#business_entity_grid_bulk_action_delete_selection');
+
+        $this->assertCount(1, $bulkDelete, 'the bulk delete action must be rendered');
+        $this->assertSame('Delete selected', trim($bulkDelete->text()));
+        $this->assertStringContainsString(
+            'Linked B2B customers will be kept.',
+            (string) $bulkDelete->attr('data-confirm-message'),
+            'AC6: the bulk path must state the impact on linked customers too'
+        );
+    }
+
+    public function testTheBulkCheckboxCarriesTheKeyTheControllerReads(): void
+    {
+        $crawler = $this->client->request('GET', $this->generateGridUrl());
+        $this->assertResponseIsSuccessful();
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter(sprintf('%s input[name="business_entity_business_entities_bulk[]"]', $this->getGridSelector()))->count(),
+            'The bulk checkbox name must match the key read by BusinessEntitiesController::bulkDeleteAction()'
+        );
+
+        $firstCell = $crawler->filter(sprintf('%s tbody tr td', $this->getGridSelector()))->first();
+        $checkbox = $firstCell->filter('input.js-bulk-action-checkbox');
+
+        $this->assertCount(
+            1,
+            $checkbox,
+            'the bulk column must stay leftmost: a reorder in the definition factory would move the checkboxes'
+        );
+
+        $renderedIds = $crawler
+            ->filter(sprintf('%s input.js-bulk-action-checkbox', $this->getGridSelector()))
+            ->each(static fn (Crawler $input): ?string => $input->attr('value'));
+
+        $this->assertContains(
+            (string) self::$activeBusinessEntityId,
+            $renderedIds,
+            'the checkbox must carry the entity id: a wrong bulk_field renders an empty value and silently breaks every bulk deletion'
+        );
+    }
+
+    public function testDeletingAnEntityRemovesItFromTheList(): void
+    {
+        $this->client->disableReboot();
+
+        $commandBus = $this->client->getContainer()->get('prestashop.core.command_bus');
+        $doomedId = self::createBusinessEntity($commandBus, 'Doomed company', 'Doomed legal name', BusinessEntityStatus::ACTIVE);
+
+        $this->assertCollectionContainsEntity($this->getEntitiesFromGrid(), $doomedId);
+
+        $this->deleteEntityFromPage('admin_business_entities_delete', ['businessEntityId' => $doomedId]);
+
+        $crawler = $this->client->followRedirect();
+        $this->assertResponseIsSuccessful();
+        $this->assertStringContainsString(
+            'Successful deletion.',
+            $crawler->filter('.alert-success .alert-text')->text(),
+            'AC4: a success message must be shown'
+        );
+
+        $remainingIds = [];
+        foreach ($this->getEntitiesFromGrid() as $entity) {
+            $remainingIds[] = $entity->getId();
+        }
+
+        $this->assertNotContains($doomedId, $remainingIds, 'AC4: the deleted entity must be gone from the list');
+        $this->assertContains(
+            self::$activeBusinessEntityId,
+            $remainingIds,
+            'a deletion that emptied the whole grid would otherwise satisfy the assertion above'
+        );
+    }
+
+    public function testTheDeletionWarningOfAnEntityWithLinkedCustomersReachesTheList(): void
+    {
+        $this->client->disableReboot();
+
+        $container = $this->client->getContainer();
+        $entityId = self::createBusinessEntity(
+            $container->get('prestashop.core.command_bus'),
+            'Linked company',
+            'Linked legal name',
+            BusinessEntityStatus::ACTIVE
+        );
+
+        self::linkB2bCustomers($container->get('doctrine.orm.entity_manager'), $entityId, 2);
+
+        $crawler = $this->client->request('GET', $this->generateGridUrl());
+        $this->assertResponseIsSuccessful();
+
+        $deleteAction = $crawler->filter(sprintf(
+            '%s .dropdown-menu a[data-url*="/%d/delete"]',
+            $this->getGridSelector(),
+            $entityId
+        ));
+
+        $this->assertCount(1, $deleteAction);
+        $this->assertStringContainsString(
+            '2 B2B customers are linked to this business entity. They will be kept,',
+            (string) $deleteAction->attr('data-confirm-message'),
+            'AC6: the warning must reach the rendered list, not just the data factory'
+        );
+    }
+
+    public function testTheDeletionWarningIsAbsentWhenNoCustomerIsLinked(): void
+    {
+        $crawler = $this->client->request('GET', $this->generateGridUrl());
+        $this->assertResponseIsSuccessful();
+
+        $deleteAction = $crawler->filter(sprintf(
+            '%s .dropdown-menu a[data-url*="/%d/delete"]',
+            $this->getGridSelector(),
+            self::$pendingBusinessEntityId
+        ));
+
+        $this->assertCount(1, $deleteAction);
+        $this->assertStringNotContainsString(
+            'linked to this business entity',
+            (string) $deleteAction->attr('data-confirm-message'),
+            'an entity without linked customers must carry no AC6 warning'
+        );
+    }
+
+    public function testAPartlyUnknownBulkSelectionFlashesBothTheSuccessAndTheSkippedCount(): void
+    {
+        $this->client->disableReboot();
+
+        $container = $this->client->getContainer();
+        $doomedId = self::createBusinessEntity(
+            $container->get('prestashop.core.command_bus'),
+            'Partly doomed company',
+            'Partly doomed legal name',
+            BusinessEntityStatus::ACTIVE
+        );
+
+        $this->bulkDeleteEntitiesFromPage(
+            'admin_business_entities_bulk_delete',
+            ['business_entity_business_entities_bulk' => [$doomedId, self::UNKNOWN_BUSINESS_ENTITY_ID]]
+        );
+
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
+
+        $this->assertSame(
+            ['The selection has been successfully deleted.'],
+            $messages['success'] ?? [],
+            'exactly one success must be announced, for the one entity that could be deleted'
+        );
+        $this->assertArrayHasKey('warning', $messages);
+        $this->assertContains(
+            'One of the selected business entities could not be deleted.',
+            $messages['warning'],
+            print_r($messages['warning'], true)
+        );
+
+        $remainingIds = [];
+        foreach ($this->getEntitiesFromGrid() as $entity) {
+            $remainingIds[] = $entity->getId();
+        }
+        $this->assertNotContains($doomedId, $remainingIds);
+    }
+
+    public function testAFullyUnknownBulkSelectionFlashesTheSkippedCountAndNoSuccess(): void
+    {
+        $this->client->disableReboot();
+
+        $this->bulkDeleteEntitiesFromPage(
+            'admin_business_entities_bulk_delete',
+            ['business_entity_business_entities_bulk' => [self::UNKNOWN_BUSINESS_ENTITY_ID, self::UNKNOWN_BUSINESS_ENTITY_ID - 1]]
+        );
+
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
+
+        $this->assertArrayNotHasKey('success', $messages, 'nothing was deleted, so nothing may be announced as deleted');
+        $this->assertContains(
+            '2 of the selected business entities could not be deleted.',
+            $messages['warning'] ?? [],
+            print_r($messages, true)
+        );
+    }
+
+    public function testAMerchantNameCarryingMarkupReachesTheModalAsTextNotAsHtml(): void
+    {
+        $this->client->disableReboot();
+
+        $entityId = self::createBusinessEntity(
+            $this->client->getContainer()->get('prestashop.core.command_bus'),
+            'Tom & Jerry <script>alert(1)</script> "Ltd"',
+            'Trapped legal name',
+            BusinessEntityStatus::ACTIVE
+        );
+
+        $crawler = $this->client->request('GET', $this->generateGridUrl());
+        $this->assertResponseIsSuccessful();
+
+        $confirmMessage = (string) $crawler
+            ->filter(sprintf('%s .dropdown-menu a[data-url*="/%d/delete"]', $this->getGridSelector(), $entityId))
+            ->attr('data-confirm-message');
+
+        $this->assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $confirmMessage);
+        $this->assertStringNotContainsString('<script>', $confirmMessage, 'the modal assigns this with innerHTML');
+        $this->assertStringContainsString('Tom &amp; Jerry', $confirmMessage);
+    }
+
+    public function testAFailedDeletionFlashesTheMappedDomainMessage(): void
+    {
+        $this->client->disableReboot();
+
+        $commandBus = $this->createMock(CommandBusInterface::class);
+        $commandBus->method('handle')->willThrowException(
+            new CannotDeleteBusinessEntityException('Could not delete business entity')
+        );
+
+        self::$kernel->getContainer()->set('prestashop.core.command_bus', $commandBus);
+
+        $this->deleteEntityFromPage(
+            'admin_business_entities_delete',
+            ['businessEntityId' => self::$activeBusinessEntityId]
+        );
+
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
+
+        $this->assertContains(
+            'An error occurred while deleting the business entity.',
+            $messages['error'] ?? [],
+            print_r($messages, true)
+        );
+    }
+
+    public function testTheDeletionIsRecordedInTheAdministrationLog(): void
+    {
+        $this->client->disableReboot();
+
+        $container = $this->client->getContainer();
+        $entityId = self::createBusinessEntity(
+            $container->get('prestashop.core.command_bus'),
+            'Logged company',
+            'Logged legal name',
+            BusinessEntityStatus::ACTIVE
+        );
+
+        $this->deleteEntityFromPage('admin_business_entities_delete', ['businessEntityId' => $entityId]);
+
+        $rows = $container->get('doctrine.dbal.default_connection')->fetchAllAssociative(
+            sprintf(
+                'SELECT message, object_type, object_id FROM %slog WHERE object_type = ? AND object_id = ? AND message = ?',
+                _DB_PREFIX_
+            ),
+            ['BusinessEntity', $entityId, 'Business entity deleted successfully']
+        );
+
+        $this->assertCount(1, $rows, 'AC5: the deletion must reach the administration log itself');
+        $this->assertSame((string) $entityId, (string) $rows[0]['object_id']);
+    }
+
+    public function testTheBulkDeletionIsRecordedInTheAdministrationLogToo(): void
+    {
+        $this->client->disableReboot();
+
+        $container = $this->client->getContainer();
+        $commandBus = $container->get('prestashop.core.command_bus');
+        $firstId = self::createBusinessEntity($commandBus, 'Bulk logged one', 'Bulk logged legal one', BusinessEntityStatus::ACTIVE);
+        $secondId = self::createBusinessEntity($commandBus, 'Bulk logged two', 'Bulk logged legal two', BusinessEntityStatus::ACTIVE);
+
+        $this->bulkDeleteEntitiesFromPage(
+            'admin_business_entities_bulk_delete',
+            ['business_entity_business_entities_bulk' => [$firstId, $secondId]]
+        );
+
+        $loggedIds = $container->get('doctrine.dbal.default_connection')->fetchFirstColumn(
+            sprintf(
+                'SELECT object_id FROM %slog WHERE object_type = ? AND message = ? AND object_id IN (?, ?) ORDER BY object_id ASC',
+                _DB_PREFIX_
+            ),
+            ['BusinessEntity', 'Business entity deleted successfully', $firstId, $secondId]
+        );
+
+        $this->assertSame(
+            [$firstId, $secondId],
+            array_map('intval', $loggedIds),
+            'AC5: the bulk path must reach ps_log as well, once per deleted entity'
+        );
+    }
+
+    public function testDeletingAnUnknownEntityRedirectsToTheListingWithAnError(): void
+    {
+        $this->deleteEntityFromPage(
+            'admin_business_entities_delete',
+            ['businessEntityId' => self::UNKNOWN_BUSINESS_ENTITY_ID]
+        );
+
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
+
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
+
+        $this->assertArrayHasKey('error', $messages);
+        $this->assertContains(
+            'The object cannot be loaded (or found).',
+            $messages['error'],
+            print_r($messages['error'], true)
+        );
+    }
+
+    public function testBulkDeletingAnEmptySelectionRaisesNoMessageAtAll(): void
+    {
+        $this->bulkDeleteEntitiesFromPage(
+            'admin_business_entities_bulk_delete',
+            ['business_entity_business_entities_bulk' => []]
+        );
+
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
+
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+
+        $this->assertSame(
+            [],
+            $session->getFlashBag()->all(),
+            'the early return on an empty selection must not flash a success nor an error'
+        );
+    }
+
+    public function testBulkDeletingEntitiesRemovesThemFromTheList(): void
+    {
+        $this->client->disableReboot();
+
+        $commandBus = $this->client->getContainer()->get('prestashop.core.command_bus');
+        $firstId = self::createBusinessEntity($commandBus, 'Bulk doomed one', 'Bulk legal one', BusinessEntityStatus::ACTIVE);
+        $secondId = self::createBusinessEntity($commandBus, 'Bulk doomed two', 'Bulk legal two', BusinessEntityStatus::ACTIVE);
+
+        $this->bulkDeleteEntitiesFromPage(
+            'admin_business_entities_bulk_delete',
+            ['business_entity_business_entities_bulk' => [$firstId, $secondId]]
+        );
+
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
+
+        $this->assertSame(['The selection has been successfully deleted.'], $messages['success'] ?? []);
+        $this->assertArrayNotHasKey('warning', $messages, 'nothing was skipped, so nothing may be reported as skipped');
+
+        $this->client->followRedirect();
+        $this->assertResponseIsSuccessful();
+
+        $remainingIds = [];
+        foreach ($this->getEntitiesFromGrid() as $entity) {
+            $remainingIds[] = $entity->getId();
+        }
+
+        $this->assertNotContains($firstId, $remainingIds);
+        $this->assertNotContains($secondId, $remainingIds);
+        $this->assertContains(
+            self::$activeBusinessEntityId,
+            $remainingIds,
+            'a bulk delete that emptied the whole grid would otherwise satisfy both assertions above'
+        );
+    }
+
+    private static function linkB2bCustomers(object $entityManager, int $businessEntityId, int $count): void
+    {
+        $businessEntity = $entityManager->find(BusinessEntity::class, $businessEntityId);
+
+        $role = new B2bRole();
+        $role->setRole(sprintf('grid-member-%d', $businessEntityId));
+        $entityManager->persist($role);
+
+        for ($i = 1; $i <= $count; ++$i) {
+            // ps_customer_b2b carries a unique index on id_customer, so the ids are offset far
+            // above the fixtures to stay distinct from whatever the other tests created.
+            $customerB2b = new CustomerB2b();
+            $customerB2b->setIdCustomer(900000 + $businessEntityId * 10 + $i);
+            $customerB2b->setStatus(CustomerB2bStatus::ACTIVE);
+            $customerB2b->setCreatedAt(new DateTime());
+            $customerB2b->setUpdatedAt(new DateTime());
+            $entityManager->persist($customerB2b);
+
+            $link = new BusinessEntityCustomerB2b();
+            $link->setBusinessEntity($businessEntity);
+            $link->setCustomerB2b($customerB2b);
+            $link->setB2bRole($role);
+            $link->setCreatedAt(new DateTime());
+            $link->setUpdatedAt(new DateTime());
+            $entityManager->persist($link);
+        }
+
+        $entityManager->flush();
     }
 
     private static function createBusinessEntity(
