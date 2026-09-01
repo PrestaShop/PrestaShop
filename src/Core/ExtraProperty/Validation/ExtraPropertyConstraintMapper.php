@@ -48,6 +48,12 @@ use Throwable;
  */
 class ExtraPropertyConstraintMapper
 {
+    /**
+     * JSON schema version for the structured constraint blob stored in
+     * ps_extra_property_definition.constraints. Bumped when the shape changes.
+     */
+    public const JSON_VERSION = 1;
+
     private const ALLOWED_CONSTRAINTS = [
         // Presence
         'NotBlank' => Assert\NotBlank::class,
@@ -181,6 +187,248 @@ class ExtraPropertyConstraintMapper
         }
 
         return [] !== $lines ? implode("\n", $lines) : null;
+    }
+
+    // -------------------------------------------------------------------------
+    // JSON serialization (replaces PHP serialize/unserialize for DB storage)
+    // -------------------------------------------------------------------------
+
+    /**
+     * Encodes a list of Constraint instances into a JSON string for safe DB storage.
+     *
+     * Replaces PHP serialize() in ExtraPropertyDefinitionRepository::save(). The JSON shape
+     * is versioned and uses only whitelisted constraint names + scalar/array-of-scalar options,
+     * eliminating the PHP Object Injection attack surface (CWE-502) that unserialize() with
+     * allowed_classes => true created on the read path.
+     *
+     * Constraints whose name is not in the whitelist (module-attached custom constraints) are
+     * still encoded by name + short FQCN so the read-only view page can display them, but
+     * fromJson() will skip them on read-back (they cannot be re-instantiated without the module
+     * being loaded). This matches the existing toNames()/fromNames() asymmetry.
+     *
+     * @param list<Constraint>|null $constraints
+     */
+    public static function constraintsToJson(?array $constraints): ?string
+    {
+        if (null === $constraints || [] === $constraints) {
+            return null;
+        }
+
+        $encoded = [];
+        foreach ($constraints as $constraint) {
+            if ($constraint instanceof Constraint) {
+                $encoded[] = self::constraintToArray($constraint);
+            }
+        }
+
+        return [] !== $encoded
+            ? json_encode(['version' => self::JSON_VERSION, 'constraints' => $encoded], JSON_THROW_ON_ERROR)
+            : null;
+    }
+
+    /**
+     * Decodes a JSON string (produced by constraintsToJson()) back into Constraint instances.
+     *
+     * Replaces PHP unserialize() in ExtraPropertyDefinition::decodeConstraints(). Only
+     * whitelisted constraint names are accepted; options must be scalars or arrays of scalars
+     * (no objects, no nested arrays beyond one level) — this is the strict rule that closes
+     * the Object Injection surface. Unknown names and non-scalar options are silently dropped
+     * (the constraint is skipped), mirroring filterConstraints()'s "drop non-Constraint" behavior.
+     *
+     * @return list<Constraint>|null
+     */
+    public static function constraintsFromJson(?string $json): ?array
+    {
+        if (null === $json || '' === trim($json)) {
+            return null;
+        }
+
+        try {
+            $data = json_decode($json, true, 32, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return null;
+        }
+
+        if (!is_array($data) || !isset($data['constraints']) || !is_array($data['constraints'])) {
+            return null;
+        }
+
+        $constraints = [];
+        foreach ($data['constraints'] as $entry) {
+            $constraint = self::arrayToConstraint($entry);
+            if (null !== $constraint) {
+                $constraints[] = $constraint;
+            }
+        }
+
+        return [] !== $constraints ? $constraints : null;
+    }
+
+    /**
+     * Encodes a single Constraint into the JSON array shape.
+     *
+     * Composites (All, AtLeastOneOf, Sequentially) encode their nested constraints under a
+     * "constraints" key; Collection encodes its keyed children under a "fields" key. Non-
+     * composite constraints encode their configured options under an "options" key.
+     *
+     * @return array<string, mixed>
+     */
+    private static function constraintToArray(Constraint $constraint): array
+    {
+        $shortName = (new ReflectionClass($constraint))->getShortName();
+
+        if ($constraint instanceof Composite) {
+            $entry = ['name' => $shortName];
+            $nested = $constraint->getNestedConstraints();
+            if (Assert\Collection::class === $constraint::class) {
+                $fields = [];
+                foreach ($nested as $key => $child) {
+                    if (!is_string($key) || !$child instanceof Constraint) {
+                        continue;
+                    }
+                    // Collection wraps each field's constraint in Required/Optional.
+                    // Unwrap to store the inner constraint; re-wrap on decode.
+                    $inner = self::unwrapCollectionField($child);
+                    if (null !== $inner) {
+                        $fields[$key] = self::constraintToArray($inner);
+                        if ($child instanceof Assert\Optional) {
+                            $fields[$key]['optional'] = true;
+                        }
+                    }
+                }
+                $entry['fields'] = $fields;
+            } else {
+                $children = [];
+                foreach ($nested as $child) {
+                    if ($child instanceof Constraint) {
+                        $children[] = self::constraintToArray($child);
+                    }
+                }
+                $entry['constraints'] = $children;
+            }
+
+            return $entry;
+        }
+
+        $configured = self::configuredOptions($constraint);
+        $entry = ['name' => $shortName];
+        $options = [];
+        foreach ($configured as $option => $value) {
+            if (self::isJsonSafeScalar($value)) {
+                $options[$option] = $value;
+            } elseif (is_array($value) && self::isScalarList($value)) {
+                $options[$option] = $value;
+            }
+            // Non-scalar options (objects like DateTimeImmutable, closures) are dropped —
+            // they cannot be represented in JSON and are not needed for the whitelisted set.
+        }
+        $entry['options'] = $options;
+
+        return $entry;
+    }
+
+    /**
+     * Decodes a single JSON array entry back into a Constraint instance, or null if the entry
+     * is not a whitelisted constraint or carries non-scalar options.
+     *
+     * @param mixed $entry
+     */
+    private static function arrayToConstraint(mixed $entry): ?Constraint
+    {
+        if (!is_array($entry) || !isset($entry['name']) || !is_string($entry['name'])) {
+            return null;
+        }
+
+        $name = $entry['name'];
+
+        // Only whitelisted names can be re-instantiated.
+        if (!isset(self::ALLOWED_CONSTRAINTS[$name])) {
+            return null;
+        }
+
+        $fqcn = self::ALLOWED_CONSTRAINTS[$name];
+
+        try {
+            // Composite shape: "constraints" (list) or "fields" (Collection).
+            if (is_subclass_of($fqcn, Composite::class)) {
+                $children = [];
+                if (Assert\Collection::class === $fqcn && isset($entry['fields']) && is_array($entry['fields'])) {
+                    foreach ($entry['fields'] as $key => $child) {
+                        if (!is_string($key)) {
+                            continue;
+                        }
+                        $childConstraint = self::arrayToConstraint($child);
+                        if (null !== $childConstraint) {
+                            // Re-wrap in Optional or Required (default).
+                            $isOptional = is_array($child) && isset($child['optional']) && true === $child['optional'];
+                            $children[$key] = $isOptional
+                                ? new Assert\Optional($childConstraint)
+                                : new Assert\Required($childConstraint);
+                        }
+                    }
+
+                    return [] !== $children ? self::instantiate($fqcn, $name, ['fields' => $children]) : null;
+                }
+
+                if (isset($entry['constraints']) && is_array($entry['constraints'])) {
+                    foreach ($entry['constraints'] as $child) {
+                        $childConstraint = self::arrayToConstraint($child);
+                        if (null !== $childConstraint) {
+                            $children[] = $childConstraint;
+                        }
+                    }
+                    $defaultOption = self::defaultOptionOf($fqcn) ?? 'constraints';
+
+                    return [] !== $children ? self::instantiate($fqcn, $name, [$defaultOption => $children]) : null;
+                }
+
+                return null;
+            }
+
+            // Non-composite shape: "options" (scalar/array-of-scalar map).
+            $options = [];
+            if (isset($entry['options']) && is_array($entry['options'])) {
+                foreach ($entry['options'] as $option => $value) {
+                    if (!is_string($option)) {
+                        continue;
+                    }
+                    if (self::isJsonSafeScalar($value) || (is_array($value) && self::isScalarList($value))) {
+                        $options[$option] = $value;
+                    }
+                }
+            }
+
+            return [] !== $options ? self::instantiate($fqcn, $name, $options) : self::instantiate($fqcn, $name, null);
+        } catch (InvalidExtraPropertyConstraintException) {
+            // Malformed JSON entry (invalid options for the constraint type) — silently skip,
+            // mirroring filterConstraints()'s "drop non-Constraint" behavior.
+            return null;
+        }
+    }
+
+    /**
+     * A value that is safe to round-trip through JSON: string, int, float, bool, null.
+     */
+    private static function isJsonSafeScalar(mixed $value): bool
+    {
+        return null === $value || is_string($value) || is_int($value) || is_float($value) || is_bool($value);
+    }
+
+    /**
+     * Collection stores each field's constraint wrapped in Required/Optional. This unwraps
+     * the inner constraint for JSON encoding (the wrapper is re-added on decode).
+     */
+    private static function unwrapCollectionField(Constraint $wrapper): ?Constraint
+    {
+        if ($wrapper instanceof Assert\Required || $wrapper instanceof Assert\Optional) {
+            $inner = $wrapper->getNestedConstraints();
+            $first = array_values($inner)[0] ?? null;
+
+            return $first instanceof Constraint ? $first : null;
+        }
+
+        // Already a bare constraint (shouldn't happen with Collection, but handle gracefully).
+        return $wrapper;
     }
 
     /**

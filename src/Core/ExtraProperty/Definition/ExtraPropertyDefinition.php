@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
 
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
@@ -289,11 +290,16 @@ final class ExtraPropertyDefinition
     /**
      * Normalizes the registry "constraints" cell into a list of Constraint objects.
      *
-     * Accepts both shapes so fromRow() works for an in-memory row (constraints already given as
-     * Constraint objects) and a DB row (constraints serialized to a string):
+     * Accepts three shapes so fromRow() works for in-memory rows, new DB rows (JSON), and
+     * legacy DB rows (PHP serialize):
      *  - array  → already-decoded constraints; filtered and returned as-is (no unserialize).
-     *  - string → a serialized blob written by trusted module install code (registerExtraProperty);
-     *             unserialized then filtered.
+     *  - string starting with '{' → JSON blob produced by constraintsToJson(); decoded via
+     *    ExtraPropertyConstraintMapper::constraintsFromJson() (no unserialize, no object
+     *    instantiation — only whitelisted constraint names + scalar options).
+     *  - string (legacy) → a PHP-serialized blob written by an older version; unserialized
+     *    with allowed_classes => true for backward compatibility, then filtered. This path
+     *    is only hit for rows that have not been re-saved since the JSON migration; re-saving
+     *    any definition through the BO form or a module re-register converts it to JSON.
      * Anything that is not a Symfony Constraint is discarded. Returns null when nothing usable
      * remains, mirroring the "no validation" default.
      *
@@ -309,6 +315,16 @@ final class ExtraPropertyDefinition
             return null;
         }
 
+        // JSON path (new writes since the CWE-502 hardening).
+        if ('{' === $raw[0]) {
+            try {
+                return ExtraPropertyConstraintMapper::constraintsFromJson($raw);
+            } catch (\JsonException) {
+                return null;
+            }
+        }
+
+        // Legacy path: PHP-serialized blob from a row that has not been re-saved yet.
         $decoded = @unserialize($raw, ['allowed_classes' => true]);
 
         return is_array($decoded) ? self::filterConstraints($decoded) : null;

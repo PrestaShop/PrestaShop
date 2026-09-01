@@ -14,6 +14,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefinitionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ColumnDefinitionMapper;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 use Throwable;
 
 /**
@@ -143,7 +144,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             'form_type' => $definition->getFormType(),
             'form_options' => null !== $definition->getFormOptions() ? json_encode($definition->getFormOptions()) : null,
             'sql_index' => $definition->getSqlIndex()->value,
-            'constraints' => !empty($definition->getConstraints()) ? serialize($definition->getConstraints()) : null,
+            'constraints' => ExtraPropertyConstraintMapper::constraintsToJson($definition->getConstraints()),
             'associated_forms' => !empty($definition->getAssociatedForms()) ? json_encode(array_values($definition->getAssociatedForms())) : null,
             'associated_grids' => !empty($definition->getAssociatedGrids()) ? json_encode(array_values($definition->getAssociatedGrids())) : null,
             'associated_apis' => !empty($definition->getAssociatedApis()) ? json_encode(array_values($definition->getAssociatedApis())) : null,

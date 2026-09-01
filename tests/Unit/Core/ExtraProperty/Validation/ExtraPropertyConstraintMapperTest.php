@@ -974,4 +974,242 @@ class ExtraPropertyConstraintMapperTest extends TestCase
         $this->assertInstanceOf(Assert\All::class, $parsed[1]);
         $this->assertInstanceOf(Assert\Url::class, array_values($parsed[1]->getNestedConstraints())[0]);
     }
+
+    // -- constraintsToJson / constraintsFromJson: JSON serialization ----------------------
+
+    public function testConstraintsToJsonReturnsNullForNull(): void
+    {
+        $this->assertNull(ExtraPropertyConstraintMapper::constraintsToJson(null));
+    }
+
+    public function testConstraintsToJsonReturnsNullForEmptyArray(): void
+    {
+        $this->assertNull(ExtraPropertyConstraintMapper::constraintsToJson([]));
+    }
+
+    public function testConstraintsFromJsonReturnsNullForNull(): void
+    {
+        $this->assertNull(ExtraPropertyConstraintMapper::constraintsFromJson(null));
+    }
+
+    public function testConstraintsFromJsonReturnsNullForEmptyString(): void
+    {
+        $this->assertNull(ExtraPropertyConstraintMapper::constraintsFromJson(''));
+    }
+
+    public function testJsonRoundTripSimpleConstraints(): void
+    {
+        $constraints = [new Assert\NotBlank(), new Assert\Length(min: 2, max: 64)];
+
+        $json = ExtraPropertyConstraintMapper::constraintsToJson($constraints);
+        $this->assertNotNull($json);
+        $this->assertSame('{', $json[0], 'JSON blob must start with {');
+
+        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
+        $this->assertNotNull($decoded);
+        $this->assertCount(2, $decoded);
+        $this->assertInstanceOf(Assert\NotBlank::class, $decoded[0]);
+        $this->assertInstanceOf(Assert\Length::class, $decoded[1]);
+        $this->assertSame(2, $decoded[1]->min);
+        $this->assertSame(64, $decoded[1]->max);
+    }
+
+    public function testJsonRoundTripCompositeAll(): void
+    {
+        $constraints = [new Assert\All([new Assert\NotBlank(), new Assert\Url()])];
+
+        $json = ExtraPropertyConstraintMapper::constraintsToJson($constraints);
+        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
+
+        $this->assertNotNull($decoded);
+        $this->assertCount(1, $decoded);
+        $this->assertInstanceOf(Assert\All::class, $decoded[0]);
+        $nested = array_values($decoded[0]->getNestedConstraints());
+        $this->assertCount(2, $nested);
+        $this->assertInstanceOf(Assert\NotBlank::class, $nested[0]);
+        $this->assertInstanceOf(Assert\Url::class, $nested[1]);
+    }
+
+    public function testJsonRoundTripCollection(): void
+    {
+        $constraints = [new Assert\Collection([
+            'name' => new Assert\NotBlank(),
+            'code' => new Assert\Length(max: 5),
+        ])];
+
+        $json = ExtraPropertyConstraintMapper::constraintsToJson($constraints);
+        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
+
+        $this->assertNotNull($decoded);
+        $this->assertCount(1, $decoded);
+        $this->assertInstanceOf(Assert\Collection::class, $decoded[0]);
+        $nested = $decoded[0]->getNestedConstraints();
+        $this->assertArrayHasKey('name', $nested);
+        $this->assertArrayHasKey('code', $nested);
+        // Collection wraps fields in Required; unwrap to check the inner constraint.
+        $nameInner = array_values($nested['name']->getNestedConstraints())[0];
+        $codeInner = array_values($nested['code']->getNestedConstraints())[0];
+        $this->assertInstanceOf(Assert\NotBlank::class, $nameInner);
+        $this->assertInstanceOf(Assert\Length::class, $codeInner);
+        $this->assertSame(5, $codeInner->max);
+    }
+
+    public function testJsonRoundTripChoiceWithArrayOption(): void
+    {
+        $constraints = [new Assert\Choice(['a', 'b', 'c'])];
+
+        $json = ExtraPropertyConstraintMapper::constraintsToJson($constraints);
+        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
+
+        $this->assertNotNull($decoded);
+        $this->assertCount(1, $decoded);
+        $this->assertInstanceOf(Assert\Choice::class, $decoded[0]);
+        $this->assertSame(['a', 'b', 'c'], $decoded[0]->choices);
+    }
+
+    public function testJsonFromJsonSkipsUnknownConstraintNames(): void
+    {
+        $json = '{"version":1,"constraints":[{"name":"NonExistentConstraint","options":{}}]}';
+
+        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
+
+        $this->assertNull($decoded, 'Unknown constraint names must be dropped');
+    }
+
+    public function testJsonFromJsonSkipsNonScalarOptions(): void
+    {
+        // An object inside options must be dropped, not cause an error.
+        $json = '{"version":1,"constraints":[{"name":"Length","options":{"min":2,"nested":{"evil":"object"}}}]}';
+
+        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
+
+        $this->assertNotNull($decoded);
+        $this->assertCount(1, $decoded);
+        $this->assertInstanceOf(Assert\Length::class, $decoded[0]);
+        $this->assertSame(2, $decoded[0]->min, 'Scalar option preserved');
+        $this->assertNull($decoded[0]->max, 'Non-scalar option dropped');
+    }
+
+    public function testJsonFromJsonReturnsNullForInvalidJson(): void
+    {
+        $this->assertNull(ExtraPropertyConstraintMapper::constraintsFromJson('{invalid'));
+    }
+
+    public function testJsonFromJsonReturnsNullForMissingConstraintsKey(): void
+    {
+        $this->assertNull(ExtraPropertyConstraintMapper::constraintsFromJson('{"version":1}'));
+    }
+
+    public function testJsonBlobStartsWithBrace(): void
+    {
+        // The decoder uses the first character to distinguish JSON from legacy serialize().
+        $json = ExtraPropertyConstraintMapper::constraintsToJson([new Assert\NotBlank()]);
+
+        $this->assertNotNull($json);
+        $this->assertSame('{', $json[0]);
+    }
+
+    public function testJsonRoundTripSequentially(): void
+    {
+        $constraints = [new Assert\Sequentially([new Assert\NotBlank(), new Assert\Length(min: 3)])];
+
+        $json = ExtraPropertyConstraintMapper::constraintsToJson($constraints);
+        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
+
+        $this->assertNotNull($decoded);
+        $this->assertCount(1, $decoded);
+        $this->assertInstanceOf(Assert\Sequentially::class, $decoded[0]);
+        $nested = array_values($decoded[0]->getNestedConstraints());
+        $this->assertCount(2, $nested);
+        $this->assertInstanceOf(Assert\NotBlank::class, $nested[0]);
+        $this->assertInstanceOf(Assert\Length::class, $nested[1]);
+        $this->assertSame(3, $nested[1]->min);
+    }
+
+    public function testJsonRoundTripAtLeastOneOf(): void
+    {
+        $constraints = [new Assert\AtLeastOneOf([new Assert\Email(), new Assert\Url()])];
+
+        $json = ExtraPropertyConstraintMapper::constraintsToJson($constraints);
+        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
+
+        $this->assertNotNull($decoded);
+        $this->assertCount(1, $decoded);
+        $this->assertInstanceOf(Assert\AtLeastOneOf::class, $decoded[0]);
+        $nested = array_values($decoded[0]->getNestedConstraints());
+        $this->assertCount(2, $nested);
+        $this->assertInstanceOf(Assert\Email::class, $nested[0]);
+        $this->assertInstanceOf(Assert\Url::class, $nested[1]);
+    }
+
+    public function testJsonRoundTripNestedComposite(): void
+    {
+        // All[ NotBlank, Sequentially[ Url, Length(max:10) ] ]
+        $constraints = [new Assert\All([
+            new Assert\NotBlank(),
+            new Assert\Sequentially([new Assert\Url(), new Assert\Length(max: 10)]),
+        ])];
+
+        $json = ExtraPropertyConstraintMapper::constraintsToJson($constraints);
+        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
+
+        $this->assertNotNull($decoded);
+        $this->assertCount(1, $decoded);
+        $this->assertInstanceOf(Assert\All::class, $decoded[0]);
+        $nested = array_values($decoded[0]->getNestedConstraints());
+        $this->assertCount(2, $nested);
+        $this->assertInstanceOf(Assert\NotBlank::class, $nested[0]);
+        $this->assertInstanceOf(Assert\Sequentially::class, $nested[1]);
+        $seqNested = array_values($nested[1]->getNestedConstraints());
+        $this->assertCount(2, $seqNested);
+        $this->assertInstanceOf(Assert\Url::class, $seqNested[0]);
+        $this->assertInstanceOf(Assert\Length::class, $seqNested[1]);
+        $this->assertSame(10, $seqNested[1]->max);
+    }
+
+    public function testJsonRoundTripCollectionWithOptionalField(): void
+    {
+        $constraints = [new Assert\Collection([
+            'required_field' => new Assert\NotBlank(),
+            'optional_field' => new Assert\Optional(new Assert\Url()),
+        ])];
+
+        $json = ExtraPropertyConstraintMapper::constraintsToJson($constraints);
+        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
+
+        $this->assertNotNull($decoded);
+        $this->assertCount(1, $decoded);
+        $this->assertInstanceOf(Assert\Collection::class, $decoded[0]);
+        $nested = $decoded[0]->getNestedConstraints();
+        $this->assertArrayHasKey('required_field', $nested);
+        $this->assertArrayHasKey('optional_field', $nested);
+        $this->assertInstanceOf(Assert\Required::class, $nested['required_field']);
+        $this->assertInstanceOf(Assert\Optional::class, $nested['optional_field']);
+        $requiredInner = array_values($nested['required_field']->getNestedConstraints())[0];
+        $optionalInner = array_values($nested['optional_field']->getNestedConstraints())[0];
+        $this->assertInstanceOf(Assert\NotBlank::class, $requiredInner);
+        $this->assertInstanceOf(Assert\Url::class, $optionalInner);
+    }
+
+    public function testJsonFromJsonSkipsConstraintWithInvalidOptions(): void
+    {
+        // TypedRegex requires a 'type' option; omitting it should cause a construction
+        // failure that is caught and skipped, not a crash.
+        $json = '{"version":1,"constraints":[{"name":"TypedRegex","options":{"wrong":"value"}}]}';
+
+        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
+
+        $this->assertNull($decoded, 'Constraint with invalid options must be silently skipped');
+    }
+
+    public function testJsonFromJsonSkipsEmptyCompositeEntry(): void
+    {
+        // A composite entry with no children in the JSON should be skipped (null),
+        // not crash. We craft the JSON directly since All([]) can't be constructed.
+        $json = '{"version":1,"constraints":[{"name":"All","constraints":[]}]}';
+
+        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
+
+        $this->assertNull($decoded, 'Empty composite entry must be skipped');
+    }
 }

@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ColumnDefinitionMapper;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -64,8 +65,23 @@ class ExtraPropertyDefinitionFromRowTest extends TestCase
         $this->assertNull($invalid->getEnumValues());
     }
 
-    public function testConstraintsRoundTripFromSerializedRow(): void
+    public function testConstraintsRoundTripFromJsonRow(): void
     {
+        $json = ExtraPropertyConstraintMapper::constraintsToJson([new Assert\Url(), new Assert\Length(['max' => 50])]);
+        $row = self::BASE_ROW + ['constraints' => $json];
+
+        $constraints = ExtraPropertyDefinition::fromRow($row)->getConstraints();
+
+        $this->assertIsArray($constraints);
+        $this->assertCount(2, $constraints);
+        $this->assertInstanceOf(Assert\Url::class, $constraints[0]);
+        $this->assertInstanceOf(Assert\Length::class, $constraints[1]);
+    }
+
+    public function testConstraintsRoundTripFromLegacySerializedRow(): void
+    {
+        // Legacy rows written before the JSON migration use PHP serialize().
+        // They must still decode (backward compatibility) until re-saved.
         $row = self::BASE_ROW + ['constraints' => serialize([new Assert\Url(), new Assert\Length(['max' => 50])])];
 
         $constraints = ExtraPropertyDefinition::fromRow($row)->getConstraints();
@@ -82,6 +98,7 @@ class ExtraPropertyDefinitionFromRowTest extends TestCase
         $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => ''])->getConstraints(), 'Empty string → null.');
         $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => 'not-serialized'])->getConstraints(), 'Unserializable garbage → null.');
         $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => serialize(['x', 123])])->getConstraints(), 'Non-Constraint entries are filtered out → null.');
+        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => '{invalid json'])->getConstraints(), 'Invalid JSON → null.');
     }
 
     /**
