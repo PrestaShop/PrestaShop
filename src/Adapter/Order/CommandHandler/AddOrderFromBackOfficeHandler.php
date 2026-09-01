@@ -82,7 +82,7 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
                 (int) $cart->id,
                 $command->getOrderStateId(),
                 $cart->getOrderTotal(),
-                $paymentModule->displayName,
+                $this->getLocalizedPaymentMethodName($paymentModule),
                 '',
                 [],
                 null,
@@ -203,5 +203,32 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
         if ($isInvoiceCountryDisabled) {
             throw new OrderException(sprintf('Invoice country for cart with id "%d" is disabled.', $cart->id));
         }
+    }
+
+    /**
+     * A module translates its displayName once, in its constructor, using the language that was in the
+     * context at the time. Building the order form already asked Module::getInstanceByName() for the
+     * payment modules to fill its dropdown, which is correct for the dropdown but leaves the shared
+     * instance translated for the employee. The name given here is stored on the order and shown to the
+     * customer on the invoice and the confirmation email, so it has to be in the order's language.
+     *
+     * The cart context is applied by this point, so a throwaway instance of the same class picks it up.
+     * Module::getInstanceByName() would return the cached one, and the cache is left alone on purpose,
+     * since the rest of the request still expects the employee's language.
+     *
+     * @param PaymentModule $paymentModule
+     *
+     * @return string
+     */
+    private function getLocalizedPaymentMethodName(PaymentModule $paymentModule): string
+    {
+        $moduleClass = get_class($paymentModule);
+        $localizedModule = new $moduleClass();
+
+        if (empty($localizedModule->displayName)) {
+            return (string) $paymentModule->displayName;
+        }
+
+        return (string) $localizedModule->displayName;
     }
 }
