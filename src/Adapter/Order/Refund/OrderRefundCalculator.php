@@ -68,7 +68,7 @@ class OrderRefundCalculator
         $voucherChosen = false;
         $voucherAmount = $numberZero;
         if ($voucherRefundType === VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND) {
-            $voucherAmount = new DecimalNumber((string) $order->total_discounts);
+            $voucherAmount = $this->getRefundedShareOfOrderDiscount($order, $productRefunds);
             $refundedAmount = $refundedAmount->minus($voucherAmount);
         } elseif ($voucherRefundType === VoucherRefundType::SPECIFIC_AMOUNT_REFUND) {
             $voucherChosen = true;
@@ -200,6 +200,48 @@ class OrderRefundCalculator
         }
 
         return $productRefunds;
+    }
+
+    /**
+     * The order discount applies to the whole cart, so a refund may only take back the share of it
+     * that the refunded quantities carried. Deducting all of it from a partial refund short-changes
+     * the customer: on a 210 order discounted by 42, refunding the 150 product returned 150 - 42 = 108
+     * where that product's own share is 150 - 30 = 120.
+     *
+     * Refunding every product gives a ratio of one, so a full refund still deducts the whole discount.
+     *
+     * Known limitation: a cart rule that also grants free shipping stores the shipping part inside the
+     * same value, so that part is shared across the products here rather than charged to shipping.
+     *
+     * @param Order $order
+     * @param array $productRefunds
+     *
+     * @return DecimalNumber
+     */
+    private function getRefundedShareOfOrderDiscount(Order $order, array $productRefunds): DecimalNumber
+    {
+        $orderDiscount = new DecimalNumber((string) $order->total_discounts);
+        $orderProductsTotal = new DecimalNumber((string) $order->total_products_wt);
+
+        // Nothing to apportion the discount against, keep deducting it whole.
+        if (!$orderProductsTotal->isGreaterThanZero()) {
+            return $orderDiscount;
+        }
+
+        // The amount actually being refunded, not the products' list price: the merchant may refund
+        // less than a line is worth, and that smaller amount carries a correspondingly smaller share.
+        $refundedProductsTotal = new DecimalNumber('0');
+        foreach ($productRefunds as $productRefund) {
+            $refundedProductsTotal = $refundedProductsTotal->plus(
+                new DecimalNumber((string) $productRefund['total_refunded_tax_incl'])
+            );
+        }
+
+        if ($refundedProductsTotal->isGreaterOrEqualThan($orderProductsTotal)) {
+            return $orderDiscount;
+        }
+
+        return $orderDiscount->times($refundedProductsTotal)->dividedBy($orderProductsTotal);
     }
 
     /**
