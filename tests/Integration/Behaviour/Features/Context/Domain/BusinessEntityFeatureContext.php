@@ -18,10 +18,12 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCo
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\EditBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForEditing;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForViewing;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetPendingBusinessEntitiesCount;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\AddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\BusinessEntityForViewing;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\EditableBusinessEntity;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityId;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityShippingAddress;
@@ -35,6 +37,7 @@ use PrestaShopBundle\Entity\Enum\AddressTypeEnum;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Entity\Enum\CustomerB2bStatus;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Validate;
 
 class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
@@ -458,24 +461,40 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I edit the business entity :name with the following details:
      */
-    public function iEditTheBusinessEntity(string $name, TableNode $table)
+    public function iEditTheBusinessEntity(string $name, TableNode $table): void
     {
         $businessEntity = $this->getBusinessEntityByName($name);
         $data = $table->getRowsHash();
 
-        $command = new EditBusinessEntityCommand(
-            $businessEntity->getId(),
-            $data['name'] ?? $businessEntity->getName(),
-            $data['legal_name'] ?? (string) $businessEntity->getLegalName(),
-            $data['external_ref'] ?? $businessEntity->getExternalRef(),
-            isset($data['delivery_authorized']) ? (bool) $data['delivery_authorized'] : $businessEntity->isDeliveryAuthorized(),
-            isset($data['status']) ? BusinessEntityStatus::from($data['status']) : $businessEntity->getStatus(),
-            isset($data['customer_group_id']) ? (int) $data['customer_group_id'] : $businessEntity->getIdCustomerGroup()
-        );
+        $command = new EditBusinessEntityCommand($businessEntity->getId());
+
+        if (isset($data['name'])) {
+            $command->setName($data['name']);
+        }
+
+        if (isset($data['legal_name'])) {
+            $command->setLegalName($data['legal_name']);
+        }
+
+        if (isset($data['external_ref'])) {
+            $command->setExternalRef('' === $data['external_ref'] ? null : $data['external_ref']);
+        }
+
+        if (isset($data['delivery_authorized'])) {
+            $command->setDeliveryAuthorized(PrimitiveUtils::castStringBooleanIntoBoolean($data['delivery_authorized']));
+        }
+
+        if (isset($data['status'])) {
+            $command->setStatus(BusinessEntityStatus::from($data['status']));
+        }
+
+        if (isset($data['customer_group_id'])) {
+            $command->setCustomerGroupId((int) $data['customer_group_id']);
+        }
 
         try {
             $this->getCommandBus()->handle($command);
-        } catch (Exception $e) {
+        } catch (BusinessEntityException $e) {
             $this->setLastException($e);
         }
     }
@@ -483,8 +502,12 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then the business entity :name should have the following details:
      */
-    public function businessEntityShouldHaveDetails(string $name, TableNode $table)
+    public function businessEntityShouldHaveDetails(string $name, TableNode $table): void
     {
+        // Re-read from the database, not from the identity map: without this the assertions would
+        // pass on the in-memory entity even if nothing had been flushed.
+        $this->getContainer()->get('doctrine.orm.entity_manager')->clear();
+
         $businessEntity = $this->getBusinessEntityByName($name);
         $data = $table->getRowsHash();
 
@@ -495,10 +518,11 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
             Assert::assertSame($data['legal_name'], $businessEntity->getLegalName());
         }
         if (isset($data['external_ref'])) {
-            Assert::assertSame($data['external_ref'], $businessEntity->getExternalRef());
+            // Mirrors the input step: an empty cell means "cleared", i.e. NULL, not an empty string.
+            Assert::assertSame('' === $data['external_ref'] ? null : $data['external_ref'], $businessEntity->getExternalRef());
         }
         if (isset($data['delivery_authorized'])) {
-            Assert::assertSame((bool) $data['delivery_authorized'], $businessEntity->isDeliveryAuthorized());
+            Assert::assertSame(PrimitiveUtils::castStringBooleanIntoBoolean($data['delivery_authorized']), $businessEntity->isDeliveryAuthorized());
         }
         if (isset($data['status'])) {
             Assert::assertSame(BusinessEntityStatus::from($data['status']), $businessEntity->getStatus());
@@ -509,25 +533,82 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then editing the business entity with id :businessEntityId should raise a not found error
+     * @When I edit the business entity with id :businessEntityId
      */
-    public function editingBusinessEntityShouldRaiseNotFound(int $businessEntityId)
+    public function iEditTheBusinessEntityWithId(int $businessEntityId): void
     {
         try {
-            $this->getCommandBus()->handle(new EditBusinessEntityCommand(
-                $businessEntityId,
-                'Missing',
-                'Missing Legal',
-                null,
-                false,
-                BusinessEntityStatus::PENDING,
-                3
-            ));
-        } catch (Exception $e) {
+            $this->getCommandBus()->handle(
+                (new EditBusinessEntityCommand($businessEntityId))->setName('Missing')
+            );
+        } catch (BusinessEntityException $e) {
             $this->setLastException($e);
         }
+    }
 
-        $this->assertLastErrorIs(BusinessEntityNotFoundException::class);
+    /**
+     * @Then the business entity :name should be editable with the following details:
+     */
+    public function businessEntityShouldBeEditableWithDetails(string $name, TableNode $table): void
+    {
+        $businessEntityId = $this->getBusinessEntityByName($name)->getId();
+        $data = $table->getRowsHash();
+
+        /** @var EditableBusinessEntity $editableBusinessEntity */
+        $editableBusinessEntity = $this->getQueryBus()->handle(new GetBusinessEntityForEditing($businessEntityId));
+
+        Assert::assertSame($name, $editableBusinessEntity->getName());
+
+        if (isset($data['legal_name'])) {
+            Assert::assertSame($data['legal_name'], $editableBusinessEntity->getLegalName());
+        }
+        if (isset($data['external_ref'])) {
+            Assert::assertSame('' === $data['external_ref'] ? null : $data['external_ref'], $editableBusinessEntity->getExternalRef());
+        }
+        if (isset($data['delivery_authorized'])) {
+            Assert::assertSame(PrimitiveUtils::castStringBooleanIntoBoolean($data['delivery_authorized']), $editableBusinessEntity->isDeliveryAuthorized());
+        }
+        if (isset($data['status'])) {
+            Assert::assertSame(BusinessEntityStatus::from($data['status']), $editableBusinessEntity->getStatus());
+        }
+        if (isset($data['customer_group_id'])) {
+            Assert::assertSame((int) $data['customer_group_id'], $editableBusinessEntity->getCustomerGroupId());
+        }
+    }
+
+    /**
+     * Back-dates updated_at through DQL so the refresh performed by the edit becomes measurable:
+     * the column has second precision, so creating and editing within the same second would make a
+     * comparison against created_at non-deterministic. DQL also bypasses the PreUpdate callback,
+     * which a plain flush would let overwrite the back-dated value.
+     *
+     * @Given the business entity :name was last updated an hour ago
+     */
+    public function businessEntityWasLastUpdatedAnHourAgo(string $name): void
+    {
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+
+        $entityManager
+            ->createQuery(sprintf('UPDATE %s be SET be.updatedAt = :updatedAt WHERE be.id = :id', BusinessEntity::class))
+            ->setParameter('updatedAt', new DateTime('-1 hour'))
+            ->setParameter('id', $this->getBusinessEntityByName($name)->getId())
+            ->execute();
+
+        $entityManager->clear();
+    }
+
+    /**
+     * @Then the business entity :name should have a refreshed updated_at
+     */
+    public function businessEntityShouldHaveRefreshedUpdatedAt(string $name): void
+    {
+        $this->getContainer()->get('doctrine.orm.entity_manager')->clear();
+
+        Assert::assertGreaterThan(
+            new DateTime('-1 minute'),
+            $this->getBusinessEntityByName($name)->getUpdatedAt(),
+            'The updated_at timestamp was not refreshed by the edit.'
+        );
     }
 
     private function getBusinessEntityByName(string $name): BusinessEntity

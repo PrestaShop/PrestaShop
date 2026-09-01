@@ -3,6 +3,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
 declare(strict_types=1);
 
 namespace Tests\Unit\Core\Domain\BusinessEntity\Command;
@@ -14,41 +15,56 @@ use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 
 class EditBusinessEntityCommandTest extends TestCase
 {
-    public function testItExposesAllConstructorParamsViaGetters(): void
+    public function testItExposesEverySetValueViaGetters(): void
     {
-        $command = new EditBusinessEntityCommand(
-            7,
-            'My Business Entity',
-            'Legal Name SAS',
-            'EXT-007',
-            true,
-            BusinessEntityStatus::ACTIVE,
-            5,
-        );
+        $command = (new EditBusinessEntityCommand(7))
+            ->setName('My Business Entity')
+            ->setLegalName('Legal Name SAS')
+            ->setExternalRef('EXT-007')
+            ->setDeliveryAuthorized(true)
+            ->setStatus(BusinessEntityStatus::ACTIVE)
+            ->setCustomerGroupId(5);
 
         $this->assertSame(7, $command->getBusinessEntityId()->getValue());
         $this->assertSame('My Business Entity', $command->getName());
         $this->assertSame('Legal Name SAS', $command->getLegalName());
         $this->assertSame('EXT-007', $command->getExternalRef());
-        $this->assertTrue($command->isDeliveryAuthorized());
+        $this->assertTrue($command->getDeliveryAuthorized());
         $this->assertSame(BusinessEntityStatus::ACTIVE, $command->getStatus());
         $this->assertSame(5, $command->getCustomerGroupId());
     }
 
-    public function testItAcceptsNullExternalRef(): void
+    public function testAFreshCommandChangesNothing(): void
     {
-        $command = new EditBusinessEntityCommand(
-            1,
-            'Name',
-            'Legal',
-            null,
-            false,
-            BusinessEntityStatus::PENDING,
-            3,
-        );
+        $command = new EditBusinessEntityCommand(7);
 
+        $this->assertNull($command->getName());
+        $this->assertNull($command->getLegalName());
         $this->assertNull($command->getExternalRef());
-        $this->assertFalse($command->isDeliveryAuthorized());
+        $this->assertNull($command->getDeliveryAuthorized());
+        $this->assertNull($command->getStatus());
+        $this->assertNull($command->getCustomerGroupId());
+        $this->assertFalse($command->hasExternalRef());
+    }
+
+    public function testSettersAreChainableAndIndependent(): void
+    {
+        $command = (new EditBusinessEntityCommand(7))->setStatus(BusinessEntityStatus::PENDING);
+
+        $this->assertSame(BusinessEntityStatus::PENDING, $command->getStatus());
+        $this->assertNull($command->getName());
+        $this->assertNull($command->getCustomerGroupId());
+    }
+
+    public function testItTellsAClearedExternalRefApartFromAnUntouchedOne(): void
+    {
+        $untouched = new EditBusinessEntityCommand(7);
+        $this->assertNull($untouched->getExternalRef());
+        $this->assertFalse($untouched->hasExternalRef());
+
+        $cleared = (new EditBusinessEntityCommand(7))->setExternalRef(null);
+        $this->assertNull($cleared->getExternalRef());
+        $this->assertTrue($cleared->hasExternalRef());
     }
 
     public function testItRejectsNonPositiveId(): void
@@ -56,6 +72,6 @@ class EditBusinessEntityCommandTest extends TestCase
         $this->expectException(BusinessEntityConstraintException::class);
         $this->expectExceptionCode(BusinessEntityConstraintException::INVALID_ID);
 
-        new EditBusinessEntityCommand(0, 'Name', 'Legal', null, false, BusinessEntityStatus::PENDING, 3);
+        new EditBusinessEntityCommand(0);
     }
 }

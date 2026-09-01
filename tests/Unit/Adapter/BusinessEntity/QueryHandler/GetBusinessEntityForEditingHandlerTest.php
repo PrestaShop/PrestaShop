@@ -3,6 +3,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
 declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\BusinessEntity\QueryHandler;
@@ -36,7 +37,7 @@ class GetBusinessEntityForEditingHandlerTest extends TestCase
 
         $repository = $this->createMock(BusinessEntityRepository::class);
         $repository->expects($this->once())
-            ->method('getBusinessEntityById')
+            ->method('findById')
             ->with(10, [2])
             ->willReturn($entity);
 
@@ -64,7 +65,7 @@ class GetBusinessEntityForEditingHandlerTest extends TestCase
 
         $repository = $this->createMock(BusinessEntityRepository::class);
         $repository->expects($this->once())
-            ->method('getBusinessEntityById')
+            ->method('findById')
             ->with(10, null)
             ->willReturn($entity);
 
@@ -79,7 +80,7 @@ class GetBusinessEntityForEditingHandlerTest extends TestCase
         $shopContext->method('getAssociatedShopIds')->willReturn([1]);
 
         $repository = $this->createMock(BusinessEntityRepository::class);
-        $repository->method('getBusinessEntityById')->willReturn(null);
+        $repository->method('findById')->willReturn(null);
 
         $handler = new GetBusinessEntityForEditingHandler($repository, $shopContext);
 

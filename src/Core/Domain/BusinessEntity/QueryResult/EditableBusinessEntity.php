@@ -13,7 +13,7 @@ use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 /**
  * Transfers the editable general-information fields of a business entity to the edit form.
  */
-final class EditableBusinessEntity
+class EditableBusinessEntity
 {
     public function __construct(
         private readonly int $businessEntityId,

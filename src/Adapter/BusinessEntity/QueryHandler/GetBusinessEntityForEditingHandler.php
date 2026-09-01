@@ -25,12 +25,15 @@ final class GetBusinessEntityForEditingHandler implements GetBusinessEntityForEd
     ) {
     }
 
+    /**
+     * @throws BusinessEntityNotFoundException
+     */
     public function handle(GetBusinessEntityForEditing $query): EditableBusinessEntity
     {
         $businessEntityId = $query->getBusinessEntityId()->getValue();
 
         $shopIds = $this->shopContext->isAllShopContext() ? null : $this->shopContext->getAssociatedShopIds();
-        $businessEntity = $this->businessEntityRepository->getBusinessEntityById($businessEntityId, $shopIds);
+        $businessEntity = $this->businessEntityRepository->findById($businessEntityId, $shopIds);
 
         if (null === $businessEntity) {
             throw new BusinessEntityNotFoundException(sprintf('Business entity with id %d was not found.', $businessEntityId));

@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityBil
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotUpdateBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\UnableToCreateBusinessEntityAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForViewing;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetPendingBusinessEntitiesCount;
@@ -121,6 +122,7 @@ class BusinessEntitiesController extends PrestaShopAdminController
                     ],
                     'Admin.Navigation.Menu'
                 ),
+                'layoutHeaderToolbarBtn' => $this->getBusinessEntityViewToolbarButtons($businessEntityId),
                 'businessEntity' => $businessEntityForViewing,
             ]
         );
@@ -199,20 +201,29 @@ class BusinessEntitiesController extends PrestaShopAdminController
         try {
             $result = $formHandler->handleFor($businessEntityId, $form);
 
-            if ($result->getIdentifiableObjectId()) {
-                $this->addFlash(
-                    'success',
-                    $this->trans('Business entity successfully updated.', [], 'Admin.Notifications.Success')
-                );
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_business_entities_view', ['businessEntityId' => $businessEntityId]);
             }
-        } catch (BusinessEntityException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            // The re-display below queries the entity again; if it is gone there is nothing to
+            // render, so leave the page instead of letting the query throw.
+            if ($e instanceof BusinessEntityNotFoundException) {
+                return $this->redirectToRoute('admin_business_entities_list');
+            }
         }
 
-        /** @var BusinessEntityForViewing $businessEntityForViewing */
-        $businessEntityForViewing = $this->dispatchQuery(new GetBusinessEntityForViewing($businessEntityId));
+        try {
+            /** @var BusinessEntityForViewing $businessEntityForViewing */
+            $businessEntityForViewing = $this->dispatchQuery(new GetBusinessEntityForViewing($businessEntityId));
+        } catch (BusinessEntityException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_business_entities_list');
+        }
 
         return $this->render(
             '@PrestaShop/Admin/Sell/BusinessEntity/edit.html.twig',
@@ -221,6 +232,8 @@ class BusinessEntitiesController extends PrestaShopAdminController
                 'businessEntityForm' => $form->createView(),
                 'businessEntity' => $businessEntityForViewing,
                 'businessEntityId' => $businessEntityId,
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink('AdminBusinessEntities'),
             ]
         );
     }
@@ -233,6 +246,22 @@ class BusinessEntitiesController extends PrestaShopAdminController
             'href' => $this->generateUrl('admin_business_entities_create'),
             'desc' => $this->trans('Add new business entity', [], 'Admin.Navigation.Menu'),
             'icon' => 'add_circle_outline',
+        ];
+
+        return $toolbarButtons;
+    }
+
+    /**
+     * @return array<string, array<string, string>>
+     */
+    private function getBusinessEntityViewToolbarButtons(int $businessEntityId): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['edit'] = [
+            'href' => $this->generateUrl('admin_business_entities_edit', ['businessEntityId' => $businessEntityId]),
+            'desc' => $this->trans('Edit business entity', [], 'Admin.Orderscustomers.Feature'),
+            'icon' => 'mode_edit',
         ];
 
         return $toolbarButtons;
@@ -255,6 +284,11 @@ class BusinessEntitiesController extends PrestaShopAdminController
             ],
             UnableToCreateBusinessEntityAddress::class => $this->trans(
                 'An error occurred while creating the business entity.',
+                [],
+                'Admin.Notifications.Error'
+            ),
+            CannotUpdateBusinessEntityException::class => $this->trans(
+                'An error occurred while updating the business entity.',
                 [],
                 'Admin.Notifications.Error'
             ),
