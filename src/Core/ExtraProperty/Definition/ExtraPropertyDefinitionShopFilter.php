@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -27,10 +28,11 @@ use Symfony\Contracts\Cache\CacheInterface;
  *  - a shop created or duplicated after the cache was warmed simply has no entry yet,
  *    so per-shop keys can never serve stale data for it.
  *
- * The multistore flag and both association lookups are read with direct queries, so the
- * service is constructible in every container the pool and resolver are wired in — the
- * three Symfony kernels and the hand-built FO legacy container (same constraint as
- * ShopListResolver::getDefaultShopId()).
+ * The module association lookups are direct queries because they read entity data
+ * (ps_module_shop / ps_module), not configuration; the multistore flag goes through the
+ * configuration service like everywhere else. Constructible in every container the pool
+ * and resolver are wired in — the three Symfony kernels and the hand-built FO legacy
+ * container.
  */
 class ExtraPropertyDefinitionShopFilter implements ExtraPropertyDefinitionShopFilterInterface
 {
@@ -46,13 +48,12 @@ class ExtraPropertyDefinitionShopFilter implements ExtraPropertyDefinitionShopFi
      */
     protected ?array $associatedModuleNames = null;
 
-    protected ?bool $multiShopActive = null;
-
     public function __construct(
         protected readonly Connection $connection,
         protected readonly string $prefix,
         protected readonly ShopListResolverInterface $shopListResolver,
         protected readonly CacheInterface $definitionCache,
+        protected readonly ShopConfigurationInterface $configuration,
     ) {
     }
 
@@ -206,24 +207,11 @@ class ExtraPropertyDefinitionShopFilter implements ExtraPropertyDefinitionShopFi
     }
 
     /**
-     * PS_MULTISHOP_FEATURE_ACTIVE, read with a direct global-configuration query (no
-     * configuration service — not available in every container) and memoized per request.
+     * PS_MULTISHOP_FEATURE_ACTIVE is a global-only configuration value, hence the explicit
+     * all-shops constraint (same pattern as the shop context listeners).
      */
     protected function isMultiShopActive(): bool
     {
-        if (null === $this->multiShopActive) {
-            $qb = $this->connection->createQueryBuilder()
-                ->select('c.value')
-                ->from($this->prefix . 'configuration', 'c')
-                ->andWhere('c.name = :name')
-                ->andWhere('c.id_shop IS NULL OR c.id_shop = 0')
-                ->andWhere('c.id_shop_group IS NULL OR c.id_shop_group = 0')
-                ->setParameter('name', 'PS_MULTISHOP_FEATURE_ACTIVE')
-                ->setMaxResults(1);
-
-            $this->multiShopActive = (bool) $this->connection->fetchOne($qb->getSQL(), $qb->getParameters());
-        }
-
-        return $this->multiShopActive;
+        return (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE', false, ShopConstraint::allShops());
     }
 }

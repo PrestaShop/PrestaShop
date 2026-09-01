@@ -46,6 +46,9 @@ services:
       # Same pool as the cached repository: module state changes wipe var/cache/{env}
       # entirely (ModuleManagementEvent → SymfonyCacheClearer), which covers its entries.
       $definitionCache: '@prestashop.extra_property.definition.filesystem_cache'
+      # Explicit reference to the concrete adapter: the interface alias
+      # (core/configuration.yml) is not loaded in the FO legacy container.
+      $configuration: '@PrestaShop\PrestaShop\Adapter\Configuration'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface:
     alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilter'

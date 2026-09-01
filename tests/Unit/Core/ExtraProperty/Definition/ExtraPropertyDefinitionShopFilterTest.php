@@ -14,6 +14,7 @@ use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
@@ -218,10 +219,6 @@ class ExtraPropertyDefinitionShopFilterTest extends TestCase
         $connection->method('createQueryBuilder')->willReturnCallback(
             fn (): QueryBuilder => new QueryBuilder($connection)
         );
-        // PS_MULTISHOP_FEATURE_ACTIVE flag lookup.
-        $connection->method('fetchOne')->willReturnCallback(
-            fn (): string|false => $this->multiShopActive ? '1' : false
-        );
         // Module association lookups (QueryBuilder::fetchFirstColumn() executes through here).
         $connection->method('executeQuery')->willReturnCallback(
             function (string $sql, array $params = []): Result {
@@ -251,6 +248,10 @@ class ExtraPropertyDefinitionShopFilterTest extends TestCase
             }
         );
 
-        return new ExtraPropertyDefinitionShopFilter($connection, 'ps_', $shopListResolver, new ArrayAdapter());
+        // PS_MULTISHOP_FEATURE_ACTIVE global read (the only configuration value the filter needs).
+        $configuration = $this->createMock(ShopConfigurationInterface::class);
+        $configuration->method('get')->willReturnCallback(fn (): bool => $this->multiShopActive);
+
+        return new ExtraPropertyDefinitionShopFilter($connection, 'ps_', $shopListResolver, new ArrayAdapter(), $configuration);
     }
 }
