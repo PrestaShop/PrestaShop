@@ -250,7 +250,7 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
         $errors = $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_ERROR);
         static::assertSame(
             [],
-            array_map(static fn (ImportMessage $message): string => sprintf('[row %s][%s] %s', $message->row ?? '-', $message->field ?? '-', $message->message), $errors),
+            array_map(static fn (ImportMessage $message): string => sprintf('[row %s][%s] %s', empty($message->rows) ? '-' : implode(',', $message->rows), $message->field ?? '-', $message->message), $errors),
             'The import produced unexpected errors'
         );
     }

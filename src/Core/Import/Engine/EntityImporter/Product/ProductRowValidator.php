@@ -343,11 +343,11 @@ class ProductRowValidator
 
     protected function error(int $rowIndex, string $field, string $message): ImportMessage
     {
-        return new ImportMessage(ImportMessage::SEVERITY_ERROR, ImportPhaseDefinition::PHASE_VALIDATION, $message, $rowIndex, $field);
+        return new ImportMessage(ImportMessage::SEVERITY_ERROR, ImportPhaseDefinition::PHASE_VALIDATION, $message, [$rowIndex], $field);
     }
 
     protected function warning(int $rowIndex, string $field, string $message): ImportMessage
     {
-        return new ImportMessage(ImportMessage::SEVERITY_WARNING, ImportPhaseDefinition::PHASE_VALIDATION, $message, $rowIndex, $field);
+        return new ImportMessage(ImportMessage::SEVERITY_WARNING, ImportPhaseDefinition::PHASE_VALIDATION, $message, [$rowIndex], $field);
     }
 }

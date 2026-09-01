@@ -16,6 +16,16 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
 class PhaseBatchResult
 {
     /**
+     * Coalesced per batch: messages equal on every field except the rows are
+     * merged into one carrying all the row indexes (ImportMessage::coalesce()).
+     * Enforced here rather than in each importer so module importers cannot
+     * forget — the sequencer always receives a reduced list.
+     *
+     * @var list<ImportMessage>
+     */
+    public readonly array $messages;
+
+    /**
      * @param int $processedUnitCount units consumed by this batch (skipped rows still consume one unit)
      * @param list<ImportMessage> $messages
      * @param list<int> $newlySkippedRows 0-based data-record indexes newly marked as skipped
@@ -30,9 +40,10 @@ class PhaseBatchResult
      */
     public function __construct(
         public readonly int $processedUnitCount,
-        public readonly array $messages,
+        array $messages,
         public readonly array $newlySkippedRows,
         public readonly ?string $resumeCursor,
     ) {
+        $this->messages = ImportMessage::coalesce($messages);
     }
 }
