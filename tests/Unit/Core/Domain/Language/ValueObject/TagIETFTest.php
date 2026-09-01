@@ -32,6 +32,29 @@ class TagIETFTest extends TestCase
         new TagIETF($invalidTagIETFValue);
     }
 
+    /**
+     * A language whose ISO code PrestaShop does not ship has no locale to look up, and the tag is
+     * the only thing left that says which one the merchant meant.
+     *
+     * @dataProvider getTagIETFAndExpectedLocale
+     */
+    public function testItDerivesTheLocaleFromTheTag(string $tagIETF, string $expectedLocale)
+    {
+        $this->assertSame($expectedLocale, (new TagIETF($tagIETF))->toLocale());
+    }
+
+    public function getTagIETFAndExpectedLocale()
+    {
+        // A tag carrying a region simply gets the casing Validate::isLocale() asks for.
+        yield 'the reported case' => ['de-ch', 'de-CH'];
+        yield 'already cased' => ['lt-LT', 'lt-LT'];
+        yield 'upper language' => ['EN-gb', 'en-GB'];
+        // Without a region there is none to take, so the language stands in for it - which is the
+        // shape PrestaShop's own list already stores for such a language (fr is fr-FR).
+        yield 'no region' => ['fr', 'fr-FR'];
+        yield 'no region, upper' => ['DE', 'de-DE'];
+    }
+
     public function getValidTagIETFValues()
     {
         yield ['fr'];
