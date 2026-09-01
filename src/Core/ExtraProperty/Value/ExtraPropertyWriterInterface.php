@@ -39,15 +39,24 @@ interface ExtraPropertyWriterInterface
      * NOT NULL ones (SQL default applies). Modules/properties without a matching
      * definition are ignored.
      *
-     * Lang and shop writes require a specific shop: use ShopConstraint::shop($id).
-     * ShopConstraint::allShops() leaves lang and shop-scope values unwritten (the caller
-     * iterates shops when broad writes are needed).
+     * Per-shop values (SHOP scope, and LANG scope on multilang-multishop entities) follow
+     * the ShopConstraint like native ObjectModel fields follow the legacy shop context:
+     * a single-shop constraint writes that shop's row; a shop group, all-shops or
+     * collection constraint fans out to one row per shop in its scope. SHOP-scope rows
+     * follow the native {entity}_shop association rule: broad scopes (group, all shops)
+     * only refresh shops the entity is associated with — a shop associated later reads
+     * the definition default until the next save — while explicitly named shops (single
+     * shop, ShopCollection) always get their row, like native CONTEXT_SHOP inserts.
+     * LANG rows cover the full scope regardless of associations, like native
+     * lang-multishop writes. Whether the lang table is shop-aware is detected internally
+     * from the storage schema. The constraint's strict flag is ignored — extra property
+     * storage has no group/global rows, so there is no fallback level to target.
      *
      * @param string $entityName Entity table name (e.g. "product")
      * @param string $primaryKeyName PK column name (e.g. "id_product")
      * @param int $entityId
      * @param array<string, array<string, mixed>> $valuesByModule [moduleKey => [propertyName => value]]
-     * @param ShopConstraint $shopConstraint Specific shop for lang/shop scopes; allShops() skips them
+     * @param ShopConstraint $shopConstraint Shops the per-shop values are written for
      * @param int|null $defaultLangId Language used when a lang-scoped value is a scalar; null skips scalar lang values
      */
     public function writeAll(
@@ -62,22 +71,27 @@ interface ExtraPropertyWriterInterface
     /**
      * Toggles a boolean extra property value for one entity instance.
      *
-     * Performs an UPSERT that flips the stored value.
+     * The target value is the inverse of the row identified by the constraint's
+     * representative shop (a missing row or NULL toggles to enabled); per-shop
+     * properties then get that target UPSERTed for every shop in the constraint's
+     * scope, so a group / all-shops toggle uniformizes shops that diverged.
      * The storage primary key column is deduced from the definition's entity name
      * ('id_' + entityName) — callers never carry storage details.
      *
      * @param ExtraPropertyDefinition $definition The boolean property to toggle
      * @param int $entityId
-     * @param ShopConstraint $shopConstraint SHOP-scoped definitions require a single-shop
-     *                                       constraint (identifies the toggled row); ignored otherwise
+     * @param ShopConstraint $shopConstraint Shops the toggled value is written for
+     * @param int|null $langId Language of the toggled row — required for LANG-scoped
+     *                         definitions, ignored otherwise
      *
      * @throws InvalidArgumentException when the definition type is not BOOL, or when a
-     *                                  SHOP-scoped definition is toggled without a single-shop constraint
+     *                                  LANG-scoped definition is toggled without a language id
      */
     public function toggleExtraProperty(
         ExtraPropertyDefinition $definition,
         int $entityId,
         ShopConstraint $shopConstraint,
+        ?int $langId = null,
     ): void;
 
     /**
@@ -91,4 +105,21 @@ interface ExtraPropertyWriterInterface
      * @param int $entityId
      */
     public function deleteAll(string $entityName, string $primaryKeyName, int $entityId): void;
+
+    /**
+     * Deletes the extra property rows belonging to the given shops for one entity
+     * instance — the per-shop counterpart of {@see deleteAll()}, used when an entity is
+     * removed from some shops but survives on others (ObjectModel::delete() in a partial
+     * multishop context).
+     *
+     * Only per-shop storage is touched: the {entity}_extra_shop rows, and the
+     * {entity}_extra_lang rows when the entity's lang table is shop-aware. COMMON values
+     * and non-multishop lang rows are shared with the surviving shops and are kept.
+     *
+     * @param string $entityName Entity table name (e.g. "product")
+     * @param string $primaryKeyName PK column name (e.g. "id_product")
+     * @param int $entityId
+     * @param int[] $shopIds Shops whose rows must be removed (non-positive ids are ignored)
+     */
+    public function deleteForShops(string $entityName, string $primaryKeyName, int $entityId, array $shopIds): void;
 }

@@ -287,3 +287,20 @@ Scenario: Test zone ineligibility by address
   Then the products "s12_zoned_product" should have the following carriers with address "address1":
     | carrier        | state    | products        |
     | Zone 2 Carrier | filtered | Zoned_2 Product |
+
+Scenario: Searching available carriers with invalid product quantities
+  Given I add product "s13_product1" with following information:
+    | name[en-US] | product Q |
+    | type        | standard  |
+  When I search available carriers for address "address1" with the following raw product quantities:
+    | product      | quantity |
+    | s13_product1 |          |
+  Then carrier should throw an error with error code "INVALID_PRODUCT_QUANTITY"
+  When I search available carriers for address "address1" with the following raw product quantities:
+    | product      | quantity |
+    | s13_product1 | 0        |
+  Then carrier should throw an error with error code "INVALID_PRODUCT_QUANTITY"
+  When I search available carriers for address "address1" with the following raw product quantities:
+    | product      | quantity |
+    | s13_product1 | -2       |
+  Then carrier should throw an error with error code "INVALID_PRODUCT_QUANTITY"

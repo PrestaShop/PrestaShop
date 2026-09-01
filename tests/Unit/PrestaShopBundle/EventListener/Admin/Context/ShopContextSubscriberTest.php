@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use PrestaShopBundle\EventListener\Admin\Context\ShopContextSubscriber;
 use PrestaShopBundle\Routing\LegacyControllerConstants;
 use PrestaShopBundle\Security\Admin\TokenAttributes;
@@ -54,6 +55,7 @@ class ShopContextSubscriberTest extends ContextEventListenerTestCase
             $this->mockSecurity(),
             $this->mockLegacyContext(),
             $this->createMock(TranslatorInterface::class),
+            $this->mockShopListResolver(),
         );
         $listener->initShopContext($event);
 
@@ -90,6 +92,7 @@ class ShopContextSubscriberTest extends ContextEventListenerTestCase
             $this->mockSecurity($expectedShopConstraint),
             $this->mockLegacyContext(),
             $this->createMock(TranslatorInterface::class),
+            $this->mockShopListResolver(),
         );
         $listener->initShopContext($event);
 
@@ -119,6 +122,7 @@ class ShopContextSubscriberTest extends ContextEventListenerTestCase
             $this->mockSecurity(),
             $this->mockLegacyContext(),
             $this->createMock(TranslatorInterface::class),
+            $this->mockShopListResolver(),
         );
         $listener->initShopContext($event);
 
@@ -216,6 +220,7 @@ class ShopContextSubscriberTest extends ContextEventListenerTestCase
             $security,
             $legacyContext,
             $this->createMock(TranslatorInterface::class),
+            $this->mockShopListResolver(),
         );
 
         // Check the initial state of the token attribute
@@ -492,6 +497,7 @@ class ShopContextSubscriberTest extends ContextEventListenerTestCase
             $this->mockSecurity(),
             $this->mockLegacyContext(),
             $this->createMock(TranslatorInterface::class),
+            $this->mockShopListResolver(),
         );
 
         $event = new AuthenticationSuccessEvent($token);
@@ -533,6 +539,20 @@ class ShopContextSubscriberTest extends ContextEventListenerTestCase
         ;
 
         return $router;
+    }
+
+    /**
+     * Representative-shop stub: a single-shop constraint resolves to its own shop; any
+     * broader scope resolves to the default shop (assumed in scope in these fixtures).
+     */
+    private function mockShopListResolver(): ShopListResolverInterface|MockObject
+    {
+        $resolver = $this->createMock(ShopListResolverInterface::class);
+        $resolver->method('resolveRepresentativeShopId')->willReturnCallback(
+            static fn (ShopConstraint $shopConstraint): int => $shopConstraint->getShopId()?->getValue() ?? self::DEFAULT_SHOP_ID
+        );
+
+        return $resolver;
     }
 
     private function mockMultistoreFeature(bool $multiShopEnabled): MultistoreFeature|MockObject

@@ -68,6 +68,8 @@ describe('API : Check endpoints', async () => {
     '/attributes/attributes/{attributeId}: PATCH',
     // tests/UI/campaigns/functional/API/02_endpoints/attributes/04_postAttributesAttribute.ts
     '/attributes/attributes: POST',
+    // @todo: add tests
+    '/attributes/groups-with-attributes: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/attribute/11_deleteAttributesGroupsBulkDelete.ts
     '/attributes/groups/bulk-delete: DELETE',
     // @todo: add tests
@@ -86,6 +88,22 @@ describe('API : Check endpoints', async () => {
     '/attributes/groups: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/attribute/10_postAttributesGroup.ts
     '/attributes/groups: POST',
+    // @todo: add tests
+    '/carriers/search-compatible-carriers: GET',
+    // @todo: add tests
+    '/carriers/{carrierId}/ranges: GET',
+    // @todo: add tests
+    '/carriers/{carrierId}/ranges: PATCH',
+    // @todo: add tests
+    '/carriers/{carrierId}/set-tax-rule-group: PATCH',
+    // @todo: add tests
+    '/carriers/{carrierId}: GET',
+    // @todo: add tests
+    '/carriers/{carrierId}: POST',
+    // @todo: add tests
+    '/carriers: GET',
+    // @todo: add tests
+    '/carriers: POST',
     // @todo: add tests
     '/cart-rules/search: GET',
     // @todo: add tests
@@ -145,6 +163,8 @@ describe('API : Check endpoints', async () => {
     // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/05_postCustomersGroup.ts
     '/customers/groups: POST',
     // @todo: add tests
+    '/customers/required-fields: GET',
+    // @todo: add tests
     '/customers/required-fields: PUT',
     // @todo: add tests
     '/customers/search: GET',
@@ -176,6 +196,8 @@ describe('API : Check endpoints', async () => {
     '/discounts: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/discount/03_postDiscounts.ts
     '/discounts: POST',
+    // @todo: add tests
+    '/employees/send-password-reset-email: POST',
     // @todo: add tests
     '/features/bulk-delete: DELETE',
     // @todo: add tests
@@ -284,6 +306,10 @@ describe('API : Check endpoints', async () => {
     '/products/search: GET',
     // @todo: add tests
     '/products/{productId}/assign-to-categories: POST',
+    // @todo: add tests
+    '/products/{productId}/carriers: GET',
+    // @todo: add tests
+    '/products/{productId}/carriers: PUT',
     // @todo: add tests
     '/products/{productId}/categories: DELETE',
     // @todo: add tests

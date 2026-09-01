@@ -285,8 +285,9 @@ class ExtraPropertiesBagTest extends TestCase
         $this->assertSame(7, $captured[2]);
         $this->assertSame(2, $captured[3]);
         $this->assertSame($shopConstraint, $captured[4]);
-        // Fixture declares multilang + multilang_shop.
-        $this->assertTrue($captured[5]);
+        // The pre-filtered definitions are forwarded; lang/shop awareness is no longer a
+        // reader argument — the reader derives it from the definitions themselves.
+        $this->assertInstanceOf(ExtraPropertyDefinitionCollection::class, $captured[5]);
     }
 
     private function buildContainer(
@@ -318,7 +319,7 @@ class ExtraPropertiesBagTest extends TestCase
         $reader = $this->createMock(ExtraPropertyReaderInterface::class);
         $reader->method('getExtraProperties')->willReturnCallback(
             static function (...$args) use (&$capturedDefinitions): array {
-                $capturedDefinitions = $args[6] ?? null;
+                $capturedDefinitions = $args[5] ?? null;
 
                 return [];
             }

@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductQuantity;
 
 /**
@@ -33,12 +35,34 @@ class GetAvailableCarriers
     private $currentCarrierId;
 
     /**
-     * @param ProductQuantity[] $productQuantities
+     * The keys are declared optional because the payloads assembled at runtime (by the Admin API in particular) offer
+     * no guarantee: each entry is validated to hold both keys, with a strictly positive quantity.
+     *
+     * @param array<array{productId?: int, quantity?: int}> $productQuantities
+     *
+     * @throws CarrierConstraintException
      */
-    public function __construct(array $productQuantities, AddressId $addressId, ?int $currentCarrierId = null)
+    public function __construct(array $productQuantities, int $addressId, ?int $currentCarrierId = null)
     {
-        $this->productQuantities = $productQuantities;
-        $this->addressId = $addressId;
+        $this->productQuantities = array_map(
+            function (array $productQuantity): ProductQuantity {
+                if (!isset($productQuantity['productId'], $productQuantity['quantity'])
+                    || (int) $productQuantity['quantity'] <= 0
+                ) {
+                    throw new CarrierConstraintException(
+                        'Each product quantity must provide a "productId" and a strictly positive "quantity"',
+                        CarrierConstraintException::INVALID_PRODUCT_QUANTITY
+                    );
+                }
+
+                return new ProductQuantity(
+                    new ProductId((int) $productQuantity['productId']),
+                    (int) $productQuantity['quantity']
+                );
+            },
+            $productQuantities
+        );
+        $this->addressId = new AddressId($addressId);
         $this->currentCarrierId = $currentCarrierId;
     }
 
@@ -66,9 +90,9 @@ class GetAvailableCarriers
         return $this->addressId;
     }
 
-    public function setAddressId(AddressId $addressId): void
+    public function setAddressId(int $addressId): void
     {
-        $this->addressId = $addressId;
+        $this->addressId = new AddressId($addressId);
     }
 
     public function getCurrentCarrierId(): ?int

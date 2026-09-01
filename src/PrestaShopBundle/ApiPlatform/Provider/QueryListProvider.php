@@ -20,6 +20,7 @@ use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Builder\FiltersBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShopBundle\ApiPlatform\ContextParametersProvider;
+use PrestaShopBundle\ApiPlatform\DefaultValuesTrait;
 use PrestaShopBundle\ApiPlatform\Exception\GridDataFactoryNotFoundException;
 use PrestaShopBundle\ApiPlatform\NormalizationMapper;
 use PrestaShopBundle\ApiPlatform\Pagination\PaginationElements;
@@ -34,6 +35,7 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 class QueryListProvider implements ProviderInterface
 {
+    use DefaultValuesTrait;
     use QueryResultSerializerTrait;
 
     public const DEFAULT_PAGINATED_ITEM_LIMIT = 50;
@@ -158,6 +160,7 @@ class QueryListProvider implements ProviderInterface
             $getParameters,
             $this->contextParametersProvider->getContextParameters(),
         );
+        $queryParameters = $this->applyDefaultValues($queryParameters, $operation);
         $CQRSQuery = $this->domainSerializer->denormalize($queryParameters, $CQRSQueryClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
         $CQRSQueryResult = $this->queryBus->handle($CQRSQuery);
 

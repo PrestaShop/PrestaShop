@@ -112,6 +112,7 @@ class CQRSCommand extends AbstractCQRSOperation
         ?bool $allowEmptyBody = null,
         ?string $minVersion = null,
         ?string $maxVersion = null,
+        ?array $defaultValues = null,
     ) {
         $passedArguments = \get_defined_vars();
 

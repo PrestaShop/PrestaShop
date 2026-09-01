@@ -255,10 +255,11 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
     }
 
     /**
-     * Enriches registry rows with the synthetic 'nullable' and 'enum_values' keys, deduced
-     * from the live DB structure of each definition's storage column. These two attributes
-     * are not persisted in the registry table: the extra table schema is their source of
-     * truth (NULL/NOT NULL clause, ENUM literals for CHOICE columns).
+     * Enriches registry rows with the synthetic 'nullable', 'enum_values' and 'multi_shop'
+     * keys, deduced from the live DB structure of each definition's storage table/column.
+     * These attributes are not persisted in the registry table: the extra table schema is
+     * their source of truth (NULL/NOT NULL clause, ENUM literals for CHOICE columns,
+     * presence of an id_shop column for per-shop storage).
      *
      * One SHOW COLUMNS query per distinct extra table; getAllDefinitions() results are cached
      * by CachedExtraPropertyDefinitionRepository, so the introspection cost is amortized.
@@ -283,6 +284,12 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
 
             if (!array_key_exists($tableName, $columnsByTable)) {
                 $columnsByTable[$tableName] = $this->fetchColumnMetadata($tableName);
+            }
+
+            // Per-shop storage is a property of the table, not of the definition's own column:
+            // inject it whenever the table exists, even if the storage column is missing.
+            if ([] !== $columnsByTable[$tableName]) {
+                $row['multi_shop'] = array_key_exists('id_shop', $columnsByTable[$tableName]);
             }
 
             $columnMetadata = $columnsByTable[$tableName][$columnName] ?? null;

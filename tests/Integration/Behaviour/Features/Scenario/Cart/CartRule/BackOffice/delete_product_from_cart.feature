@@ -12,6 +12,7 @@ Feature: Delete product from cart in Back Office (BO)
 
   Scenario: Delete standard product from cart
     Given I create an empty cart "dummy_cart" for customer "testCustomer"
+    And cart "dummy_cart" should belong to customer "testCustomer"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And product "Mug The best is yet to come" quantity in cart "dummy_cart" should be 2 excluding gift products
     When I delete product "Mug The best is yet to come" from cart "dummy_cart"

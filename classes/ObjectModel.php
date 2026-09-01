@@ -6,6 +6,8 @@
  */
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
@@ -897,13 +899,19 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             return false;
         }
 
-        // Delete extra property rows from *_extra / *_extra_lang / *_extra_shop
-        if (!$has_multishop_entries && !empty($this->def['table']) && (int) $this->id > 0) {
+        // Delete extra property rows: everything (all three scope tables) when the entity is
+        // fully removed; only the removed shops' per-shop rows when it survives on other
+        // shops — mirroring the native *_shop / multishop *_lang deletes above.
+        if (!empty($this->def['table']) && (int) $this->id > 0) {
             /** @var ExtraPropertyWriterInterface|null $writer */
             $writer = static::findService(ExtraPropertyWriterInterface::class);
             if ($writer) {
                 try {
-                    $writer->deleteAll($this->def['table'], $this->def['primary'], (int) $this->id);
+                    if ($has_multishop_entries) {
+                        $writer->deleteForShops($this->def['table'], $this->def['primary'], (int) $this->id, $shopIdsList);
+                    } else {
+                        $writer->deleteAll($this->def['table'], $this->def['primary'], (int) $this->id);
+                    }
                 } catch (Throwable) {
                     $result = false;
                 }
@@ -1851,8 +1859,9 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      * Results are cached by class name to avoid repeated reflection across calls.
      *
      * Use this static helper instead of $this->isLangMultishop() whenever you need to check
-     * multishop-lang behaviour from outside an ObjectModel instance (e.g. in ExtraPropertyReader,
-     * form builder, or API integrations).
+     * multishop-lang behaviour from outside an ObjectModel instance. (The extra property
+     * services no longer rely on it: they derive shop-awareness from the storage schema,
+     * see ExtraPropertyDefinition::isMultiShop().)
      *
      * @param string $className Fully-qualified or short class name of the ObjectModel subclass
      *
@@ -2326,14 +2335,37 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                 $this->def['primary'],
                 (int) $this->id,
                 $bag->getModifiedValues(),
-                Context::getContext()->getShopConstraint(),
+                $this->resolveExtraPropertiesShopConstraint(),
                 $this->resolveCurrentLangId() ?: null
             );
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            error_log(sprintf(
+                'Extra property write failed for %s #%d: %s',
+                $this->def['table'],
+                (int) $this->id,
+                $e->getMessage()
+            ));
+
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Returns the shop constraint extra property writes must follow — the same scope the
+     * native multishop columns are written with: the explicit $id_shop_list when the
+     * caller set one (add()/update() use it for the *_shop rows), the legacy shop context
+     * otherwise (all shops / shop group / single shop, see Context::getShopConstraint()).
+     */
+    protected function resolveExtraPropertiesShopConstraint(): ShopConstraint
+    {
+        $shopIdsList = array_map('intval', $this->id_shop_list);
+        if (!empty($shopIdsList)) {
+            return ShopCollection::shops($shopIdsList);
+        }
+
+        return Context::getContext()->getShopConstraint();
     }
 
     /**

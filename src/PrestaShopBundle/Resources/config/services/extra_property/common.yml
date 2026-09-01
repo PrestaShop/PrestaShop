@@ -55,6 +55,9 @@ services:
       $repository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
       $connection: '@doctrine.dbal.default_connection'
       $prefix: '%database_prefix%'
+      $shopListResolver: '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+      # Optional on purpose: absent from the hand-built FO legacy container.
+      $logger: '@?logger'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface:
     alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReader'
@@ -67,6 +70,7 @@ services:
       $connection: '@doctrine.dbal.default_connection'
       $prefix: '%database_prefix%'
       $definitionRepository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
+      $shopListResolver: '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface:
     alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriter'

@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Routing\LegacyControllerConstants;
@@ -57,6 +58,7 @@ class ShopContextSubscriber implements EventSubscriberInterface
         private readonly Security $security,
         private readonly LegacyContext $legacyContext,
         private readonly TranslatorInterface $translator,
+        private readonly ShopListResolverInterface $shopListResolver,
     ) {
     }
 
@@ -143,9 +145,15 @@ class ShopContextSubscriber implements EventSubscriberInterface
         // Now we are sure the shop constraint is valid and we can initialize the ShopContext
         $this->shopContextBuilder->setShopConstraint($shopConstraint);
 
-        // Always set a shop ID for the context
-        $shopId = $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : $this->getConfiguredDefaultShopId();
-        $this->shopContextBuilder->setShopId($shopId);
+        // Always set a shop ID for the context, and one that belongs to the constraint's
+        // scope: the default shop is only used when it is part of that scope (a shop group
+        // may not contain it), otherwise the scope's lowest shop id is used. Every
+        // ShopContext::getId() consumer (grids, forms, extra properties…) then reads an
+        // in-scope shop.
+        $representativeShopId = $this->shopListResolver->resolveRepresentativeShopId($shopConstraint);
+        $this->shopContextBuilder->setShopId(
+            $representativeShopId > 0 ? $representativeShopId : $this->getConfiguredDefaultShopId()
+        );
 
         // Set shop constraint as request attribute
         $request->attributes->set('shopConstraint', $shopConstraint);
