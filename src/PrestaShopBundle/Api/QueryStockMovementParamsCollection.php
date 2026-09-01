@@ -24,6 +24,10 @@ class QueryStockMovementParamsCollection extends QueryStockParamsCollection
             'date_add',
             'id_employee',
             'id_stock_mvt_reason',
+            // The movements list offers the same status filter as the stock list, and andWhere() already
+            // maps {active} onto p.active. Leaving it out here made excludeUnknownParams() drop it before
+            // it could be used, so the filter had no effect.
+            'active',
         ];
     }
 

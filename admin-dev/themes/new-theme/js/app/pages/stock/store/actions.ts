@@ -82,6 +82,9 @@ export const getMovements = async ({commit}: {commit: Commit}, payload: Record<s
     page_size: payload.page_size,
     page_index: payload.page_index,
     keywords: payload.keywords,
+    // The advanced filters panel is shared with the stock list and offers the status filter on both
+    // tabs, so the movements request has to carry it too.
+    active: payload.active,
     supplier_id: payload.suppliers,
     category_id: payload.categories,
     id_stock_mvt_reason: payload.id_stock_mvt_reason,
