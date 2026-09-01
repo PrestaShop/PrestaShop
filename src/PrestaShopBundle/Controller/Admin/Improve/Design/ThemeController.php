@@ -84,6 +84,7 @@ class ThemeController extends PrestaShopAdminController
             'faviconPath' => $logoProvider->getFaviconPath(),
             'currentlyUsedTheme' => $themeProvider->getCurrentlyUsedTheme(),
             'notUsedThemes' => $themeProvider->getNotUsedThemes(),
+            'notDeletableThemes' => $themeProvider->getNotDeletableThemes(),
             'isDevModeOn' => $this->getConfiguration()->get('_PS_MODE_DEV_'),
             'isSingleShopContext' => $this->getShopContext()->getShopConstraint()->isSingleShopContext(),
             'isMultiShopFeatureUsed' => $this->getShopContext()->isMultiShopUsed(),

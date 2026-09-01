@@ -102,7 +102,7 @@
                       <span>{{ 'Use this theme'|trans({}, 'Admin.Design.Feature') }}</span>
                     </button>
                   </form>
-                  {% if theme.name != currentlyUsedTheme.get('parent') %}
+                  {% if theme.name not in notDeletableThemes %}
                     <form action="{{ path('admin_themes_delete', {themeName: theme.name}) }}" method="post" class="d-inline">
                       <input type="hidden" name="token" value="{{ csrf_token('delete-theme') }}"/>
                       <button type="button" class="btn delete-button js-display-delete-theme-modal">
@@ -112,9 +112,9 @@
                       </button>
                     </form>
                   {% else %}
-                    <button title="{{ 'You can\'t delete the parent of a theme currently used'|trans({}, 'Admin.Design.Feature') }}" disabled class="btn delete-button">
+                    <button title="{{ 'You can\'t delete this theme because it is either currently used or a parent'|trans({}, 'Admin.Design.Feature') }}" disabled class="btn delete-button">
                       <i class="material-icons icon-current-theme">done</i>
-                      {{ 'Used parent theme'|trans({}, 'Admin.Design.Feature') }}
+                      {{ 'Used theme'|trans({}, 'Admin.Design.Feature') }}
                     </button>
                   {% endif %}
                 {% endblock %}

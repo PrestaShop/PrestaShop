@@ -12,12 +12,13 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Shop\ShopThemesNamesProviderInterface;
 use Shop;
 
 /**
  * Provides methods to access data storage for shop
  */
-class ShopRepository extends AbstractObjectModelRepository
+class ShopRepository extends AbstractObjectModelRepository implements ShopThemesNamesProviderInterface
 {
     /**
      * @var Connection
@@ -153,5 +154,20 @@ class ShopRepository extends AbstractObjectModelRepository
         ;
 
         return array_map('intval', $shopIds);
+    }
+
+    /**
+     * Returns all theme names that used by a shop
+     *
+     * @return array<string>
+     */
+    public function getShopThemesNames(): array
+    {
+        return $this->connection->createQueryBuilder()
+            ->select('s.theme_name')
+            ->from($this->dbPrefix . 'shop', 's')
+            ->groupBy('s.theme_name')
+            ->executeQuery()
+            ->fetchFirstColumn();
     }
 }
