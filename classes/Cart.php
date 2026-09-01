@@ -2999,6 +2999,11 @@ class CartCore extends ObjectModel
                         $carriers_instance[$id_carrier] = new Carrier($id_carrier);
                     }
 
+                    /*
+                     * getPackageShippingCost can return false in some cases, which means the carrier is not available. If it did for
+                     * some carriers, they SHOULD be filtered out earlier in the process. Right now, we have a final list of packages
+                     * and their carriers, so we should not have to deal with false here.
+                     */
                     $price_with_tax = $this->getPackageShippingCost((int) $id_carrier, true, $country, $package['product_list']);
                     $price_without_tax = $this->getPackageShippingCost((int) $id_carrier, false, $country, $package['product_list']);
                     if (null === $best_price || $price_with_tax < $best_price) {
@@ -3586,9 +3591,12 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Return package shipping cost.
+     * Returns calculated shipping cost for a given carrier, for given zone and a list of products.
+     * If you do not pass a list of products, the shipping cost will be calculated with all the products of the cart.
+     * The zone will be determined first by the delivery address of the cart, then by the default country passed as
+     * a parameter and finally by the default country of the shop.
      *
-     * @param int $id_carrier Carrier ID (default : current carrier)
+     * @param int $id_carrier Carrier ID
      * @param bool $use_tax
      * @param Country|null $default_country
      * @param array|null $product_list list of product concerned by the shipping.
@@ -3606,6 +3614,10 @@ class CartCore extends ObjectModel
         $id_zone = null,
         bool $keepOrderPrices = false
     ) {
+        if ($id_carrier === null) {
+            throw new PrestaShopException('This method no longer accepts null as a carrier ID. Please provide a valid carrier ID to calculate cost for.');
+        }
+
         $shippingCost = $this->getPackageShippingCostValue(
             $id_carrier,
             $use_tax,
@@ -3635,7 +3647,7 @@ class CartCore extends ObjectModel
     /**
      * Return calculated package shipping cost.
      *
-     * @param int $id_carrier Carrier ID (default : current carrier)
+     * @param int $id_carrier Carrier ID
      * @param bool $use_tax
      * @param Country|null $default_country
      * @param array|null $product_list list of product concerned by the shipping.
@@ -3684,11 +3696,6 @@ class CartCore extends ObjectModel
             $address_id = null;
         }
 
-        // If no carrier ID was passed and we have a carrier on this cart, we use it
-        if (null === $id_carrier && !empty($this->id_carrier)) {
-            $id_carrier = (int) $this->id_carrier;
-        }
-
         // Initialize a unique cache ID for the shipping cost and retrieve it if it exists
         $cache_id = 'getPackageShippingCost_' . (int) $this->id . '_' . (int) $address_id . '_' . (int) $id_carrier . '_' . (int) $use_tax . '_' . (int) $default_country->id . '_' . (int) $id_zone;
         if ($products) {
@@ -3700,9 +3707,6 @@ class CartCore extends ObjectModel
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
-
-        // Order total in default currency without fees
-        $order_total = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list, $id_carrier, false, $keepOrderPrices);
 
         // Start with shipping cost at 0
         $shipping_cost = 0;
@@ -3739,89 +3743,11 @@ class CartCore extends ObjectModel
             }
         }
 
-        // If we have a specific carrier ID, check if it is in range for the given zone, if not, reset it
-        if ($id_carrier && !$this->isCarrierInRange((int) $id_carrier, (int) $id_zone)) {
-            $id_carrier = '';
-        }
+        // If it's not in range for the given zone, we return false and store it in cache
+        if (!$this->isCarrierInRange((int) $id_carrier, (int) $id_zone)) {
+            Cache::store($cache_id, false);
 
-        // If we have no carrier ID, we try to use the default one first, if it's in range for the given zone
-        if (empty($id_carrier) && $this->isCarrierInRange((int) Configuration::get('PS_CARRIER_DEFAULT'), (int) $id_zone)) {
-            $id_carrier = (int) Configuration::get('PS_CARRIER_DEFAULT');
-        }
-
-        // If we still have no carrier ID, we try to find the cheapest one for the given zone
-        if (empty($id_carrier)) {
-            if ((int) $this->id_customer) {
-                $customer = new Customer((int) $this->id_customer);
-                $result = Carrier::getCarriers((int) Configuration::get('PS_LANG_DEFAULT'), true, false, (int) $id_zone, $customer->getGroups());
-                unset($customer);
-            } else {
-                $result = Carrier::getCarriers((int) Configuration::get('PS_LANG_DEFAULT'), true, false, (int) $id_zone);
-            }
-
-            foreach ($result as $k => $row) {
-                if ($row['id_carrier'] == Configuration::get('PS_CARRIER_DEFAULT')) {
-                    continue;
-                }
-
-                if (!isset(self::$_carriers[$row['id_carrier']])) {
-                    self::$_carriers[$row['id_carrier']] = new Carrier((int) $row['id_carrier']);
-                }
-
-                /** @var Carrier $carrier */
-                $carrier = self::$_carriers[$row['id_carrier']];
-
-                /*
-                 * Get shipping method of this carrier, it can either be by weight or by price.
-                 * If the shipping method is not compatible with the current zone, we skip this carrier.
-                 */
-                $shipping_method = $carrier->getShippingMethod();
-                if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight((int) $id_zone) === false)
-                    || ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice((int) $id_zone) === false)) {
-                    unset($result[$k]);
-
-                    continue;
-                }
-
-                // If out-of-range behavior carrier is set to "Deactivate the carrier", we skip this carrier
-                if ($row['range_behavior'] == OutOfRangeBehavior::DISABLED) {
-                    // If the carrier has weight based shipping, remove the carrier if it does not have a compatible range
-                    if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT
-                        && Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $this->getTotalWeight(), (int) $id_zone) === false) {
-                        unset($result[$k]);
-
-                        continue;
-                    }
-
-                    // If the carrier has price based shipping, remove the carrier if it does not have a compatible range
-                    if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
-                        && Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $order_total, (int) $id_zone, (int) $this->id_currency) === false) {
-                        continue;
-                    }
-                }
-
-                // Get the shipping cost for this carrier
-                if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT) {
-                    $shipping = $carrier->getDeliveryPriceByWeight($this->getTotalWeight($product_list), (int) $id_zone);
-                } else {
-                    $shipping = $carrier->getDeliveryPriceByPrice($order_total, (int) $id_zone, (int) $this->id_currency);
-                }
-
-                // And if it's the first carrier we check OR it's cheaper, we use the ID
-                if (!isset($min_shipping_price)) {
-                    $min_shipping_price = $shipping;
-                }
-
-                if ($shipping <= $min_shipping_price) {
-                    $id_carrier = (int) $row['id_carrier'];
-                    $min_shipping_price = $shipping;
-                }
-            }
-        }
-
-        // And again, one more fallback to the default carrier if we still have no carrier ID
-        if (empty($id_carrier)) {
-            $id_carrier = Configuration::get('PS_CARRIER_DEFAULT');
+            return false;
         }
 
         // Initialize the instance of the Carrier object and store it in the cache
@@ -3830,18 +3756,18 @@ class CartCore extends ObjectModel
         }
         $carrier = self::$_carriers[$id_carrier];
 
-        // Validate the carrier object and return 0 if not valid
+        // Validate the carrier object and return false if not valid
         if (!Validate::isLoadedObject($carrier)) {
-            Cache::store($cache_id, $shipping_cost);
+            Cache::store($cache_id, false);
 
-            return $shipping_cost;
+            return false;
         }
 
-        // Check if the carrier is active and return 0 if not valid
+        // Check if the carrier is active and return false if not valid
         if (!$carrier->active) {
-            Cache::store($cache_id, $shipping_cost);
+            Cache::store($cache_id, false);
 
-            return $shipping_cost;
+            return false;
         }
 
         // If the carrier is free, we return 0 and store it in cache
@@ -3951,6 +3877,9 @@ class CartCore extends ObjectModel
 
             return $shipping_cost;
         }
+
+        // Order total in default currency without fees
+        $order_total = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list, $id_carrier, false, $keepOrderPrices);
 
         // Get shipping cost using correct method
         $shipping_method = $carrier->getShippingMethod();

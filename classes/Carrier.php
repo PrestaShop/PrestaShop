@@ -692,7 +692,8 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * Get available Carriers for given order (cart)
+     * Get available Carriers for given order (cart). This does only a basic filtering based on zones,
+     * groups and the order (cart) concerned.
      *
      * @param int $id_zone Zone ID
      * @param array|null $groups Group of the Customer
@@ -703,15 +704,19 @@ class CarrierCore extends ObjectModel
      */
     public static function getCarriersForOrder($id_zone, $groups = null, $cart = null, &$error = [])
     {
-        // First, initialize the context, language, currency
-        $context = Context::getContext();
-        $id_lang = $context->language->id;
+        // Get cart from context if not provided
         if (null === $cart) {
-            $cart = $context->cart;
+            $cart = Context::getContext()->cart;
         }
-        if (isset($context->currency)) {
-            $id_currency = $context->currency->id;
-        }
+
+        /*
+         * Get language from the context. It's probably a better option than using the cart language.
+         * If the cart is viewed in front office, the context language is the same as the cart language,
+         * so it doesn't change anything.
+         * If the cart is viewed in back office, the context language is the employee language, which
+         * is probably better than the one on the cart.
+         */
+        $id_lang = (int) Context::getContext()->language->id;
 
         // Use provided groups or a default group if none provided
         if (!is_array($groups) || empty($groups)) {
@@ -719,7 +724,7 @@ class CarrierCore extends ObjectModel
         }
 
         // And get all carriers available in the system
-        $result = Carrier::getCarriers($id_lang, true, false, (int) $id_zone, $groups, self::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+        $result = Carrier::getCarriers((int) $id_lang, true, false, (int) $id_zone, $groups, self::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
         $results_array = [];
 
         foreach ($result as $k => $row) {
@@ -768,43 +773,26 @@ class CarrierCore extends ObjectModel
                     }
 
                     if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
-                        && (Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency ?? null) === false)) {
+                        && (Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $cart->id_currency) === false)) {
                         $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
                         unset($result[$k]);
 
                         continue;
                     }
                 }
+
+                /*
+                 * Third, remove this carrier if getPackageShippingCost method returns false, which means that the carrier is not available for the current cart.
+                 * This can happen with carrier modules that have their own logic to determine if they are available or not.
+                 */
+                if ($cart->getPackageShippingCost((int) $row['id_carrier'], true, null, null, $id_zone) === false) {
+                    unset($result[$k]);
+
+                    continue;
+                }
             }
-
-            // Calculate the price of the carrier
-            $row['price'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], true, null, null, $id_zone));
-            $row['price_tax_exc'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], false, null, null, $id_zone));
-
-            // If price is false, then the carrier is unavailable (carrier module)
-            if ($row['price'] === false) {
-                unset($result[$k]);
-
-                continue;
-            }
-
-            // Locate an image (original resolution, we should probably move to use a presenter and thumbnails here)
-            $row['img'] = file_exists(_PS_SHIP_IMG_DIR_ . (int) $row['id_carrier'] . '.jpg') ? _THEME_SHIP_DIR_ . (int) $row['id_carrier'] . '.jpg' : '';
 
             $results_array[] = $row;
-        }
-
-        // Sort carriers by price if needed
-        $prices = [];
-        if (Configuration::get('PS_CARRIER_DEFAULT_SORT') == Carrier::SORT_BY_PRICE) {
-            foreach ($results_array as $r) {
-                $prices[] = $r['price'];
-            }
-            if (Configuration::get('PS_CARRIER_DEFAULT_ORDER') == Carrier::SORT_BY_ASC) {
-                array_multisort($prices, SORT_ASC, SORT_NUMERIC, $results_array);
-            } else {
-                array_multisort($prices, SORT_DESC, SORT_NUMERIC, $results_array);
-            }
         }
 
         return $results_array;
@@ -1516,7 +1504,11 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * For a given product, gets the carrier available.
+     * For a given product, gets the carrier available. It takes a basic-filtered list from getCarriersForOrder and applies
+     * some more rules to it. Size and weight restrictions, product-carrier associations, and so on.
+     *
+     * Watch out - this method is a bit weird in a sense that while it calculates some restrictions based on product scope,
+     * the weight is calculated based on the whole cart.
      *
      * @param Product $product The id of the product, or an array with at least the package size and weight
      * @param int|null $id_warehouse Warehouse ID - not used anymore
@@ -1590,9 +1582,8 @@ class CarrierCore extends ObjectModel
         $available_carrier_list = [];
         $cache_id = 'Carrier::getAvailableCarrierList_getCarriersForOrder_' . (int) $id_zone . '-' . (int) $cart->id;
         if (!Cache::isStored($cache_id)) {
-            $customer = new Customer($cart->id_customer);
             $carrier_error = [];
-            $carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart, $carrier_error);
+            $carriers = Carrier::getCarriersForOrder($id_zone, Customer::getGroupsStatic((int) $cart->id_customer), $cart, $carrier_error);
             Cache::store($cache_id, [$carriers, $carrier_error]);
         } else {
             list($carriers, $carrier_error) = Cache::retrieve($cache_id);
@@ -1613,10 +1604,12 @@ class CarrierCore extends ObjectModel
         $cart_quantity = 0;
         $cart_weight = 0;
 
-        foreach ($cart->getProducts(false, false) as $cart_product) {
+        foreach ($cart->getProducts() as $cart_product) {
             if ($cart_product['id_product'] == $product->id) {
                 $cart_quantity += $cart_product['cart_quantity'];
             }
+
+            // The weight property already contains customization weight
             if (isset($cart_product['weight_attribute']) && $cart_product['weight_attribute'] > 0) {
                 $cart_weight += ($cart_product['weight_attribute'] * $cart_product['cart_quantity']);
             } else {
