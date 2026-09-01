@@ -25,6 +25,11 @@ class InstallControllerHttp
     protected static $instances = [];
 
     /**
+     * @var bool whether an AJAX step has already written its JSON answer
+     */
+    private static $answerSent = false;
+
+    /**
      * @var string Current step
      */
     public $step;
@@ -371,11 +376,64 @@ class InstallControllerHttp
             );
         }
 
+        self::$answerSent = true;
+
         die(json_encode([
             'success' => (bool) $success,
             'message' => $message,
             'warning' => $warning,
         ]));
+    }
+
+    /**
+     * A step that dies fatally - the container build running out of memory is the usual one - never
+     * reaches ajaxJsonAnswer(), so the browser receives an empty body with status 200 and reports
+     * "HTTP 200 - parsererror -", which says nothing about what happened. Emit the answer the step
+     * would have emitted, so the reason reaches the screen.
+     */
+    public static function registerFatalErrorHandler(): void
+    {
+        register_shutdown_function(static function (): void {
+            $answer = self::buildFatalErrorAnswer();
+
+            if (null === $answer) {
+                return;
+            }
+
+            if (!headers_sent()) {
+                header('Content-Type: application/json');
+            }
+
+            echo $answer;
+        });
+    }
+
+    /**
+     * @return string|null the JSON body to emit, or null when there is nothing to report
+     */
+    public static function buildFatalErrorAnswer(?array $error = null): ?string
+    {
+        if (self::$answerSent || !self::isXmlHttpRequest()) {
+            return null;
+        }
+
+        $message = self::getLastFatalError($error);
+
+        if ('' === $message) {
+            return null;
+        }
+
+        return json_encode([
+            'success' => false,
+            'message' => $message,
+            'warning' => '',
+        ]);
+    }
+
+    private static function isXmlHttpRequest(): bool
+    {
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
     }
 
     /**

@@ -117,4 +117,61 @@ class InstallControllerHttpTest extends TestCase
     {
         $this->assertSame('', InstallControllerHttp::getLastFatalError([]));
     }
+
+    /**
+     * A step that dies fatally never reaches ajaxJsonAnswer(), so the browser gets an empty body with
+     * status 200 and shows "HTTP 200 - parsererror -", which names nothing. The shutdown handler emits
+     * the answer the step could not.
+     */
+    public function testAFatalDuringAnAjaxStepStillProducesAJsonAnswer(): void
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+
+        $answer = InstallControllerHttp::buildFatalErrorAnswer([
+            'type' => E_ERROR,
+            'message' => 'Allowed memory size of 134217728 bytes exhausted',
+            'file' => '/var/www/html/install-dev/index.php',
+            'line' => 1,
+        ]);
+
+        $this->assertNotNull($answer);
+        $decoded = json_decode((string) $answer, true);
+        $this->assertIsArray($decoded, 'the browser parses this with dataType json, so it must decode');
+        $this->assertFalse($decoded['success']);
+        $this->assertStringContainsString('Allowed memory size', $decoded['message']);
+    }
+
+    public function testADeprecationDuringAnAjaxStepProducesNoAnswer(): void
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+
+        $this->assertNull(InstallControllerHttp::buildFatalErrorAnswer([
+            'type' => E_USER_DEPRECATED,
+            'message' => 'some deprecation',
+            'file' => 'f',
+            'line' => 1,
+        ]));
+    }
+
+    /**
+     * A normal page load renders HTML. Appending a JSON envelope to it would corrupt the page instead
+     * of reporting anything.
+     */
+    public function testAFatalOutsideAnAjaxStepProducesNoAnswer(): void
+    {
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+
+        $this->assertNull(InstallControllerHttp::buildFatalErrorAnswer([
+            'type' => E_ERROR,
+            'message' => 'Allowed memory size of 134217728 bytes exhausted',
+            'file' => 'f',
+            'line' => 1,
+        ]));
+    }
+
+    protected function tearDown(): void
+    {
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+        parent::tearDown();
+    }
 }
