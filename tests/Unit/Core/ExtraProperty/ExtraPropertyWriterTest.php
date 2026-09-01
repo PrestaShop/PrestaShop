@@ -41,7 +41,7 @@ class ExtraPropertyWriterTest extends TestCase
     /** @var array<int, array{sql: string, params: array}> */
     private array $statements = [];
 
-    private bool|string|null $currentToggleValue = false;
+    private string|false $currentToggleValue = false;
 
     /**
      * Rows returned by the {entity}_shop association query (see filterShopScopeByAssociations).
@@ -325,7 +325,7 @@ class ExtraPropertyWriterTest extends TestCase
             }
         );
         $connection->method('fetchOne')->willReturnCallback(
-            fn (): bool|string|null => $this->currentToggleValue
+            fn (): string|false => $this->currentToggleValue
         );
         // The only fetchAllAssociative issued by the writer is the {entity}_shop association lookup.
         $connection->method('fetchAllAssociative')->willReturnCallback(
