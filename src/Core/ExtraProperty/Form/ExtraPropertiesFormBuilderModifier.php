@@ -77,7 +77,6 @@ class ExtraPropertiesFormBuilderModifier
                 $entityId,
                 null,
                 $this->shopContext->getShopConstraint(),
-                true,
                 $formDefinitions
             );
         }

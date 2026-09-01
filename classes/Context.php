@@ -274,13 +274,26 @@ class ContextCore
     }
 
     /**
-     * Returns a ShopConstraint for the current FO shop context.
+     * Returns a ShopConstraint for the current legacy shop context.
      *
-     * In front-office, a context is always associated with one specific shop.
-     * Useful as a typed alternative to passing $this->shop->id as a raw integer.
+     * Mirrors Shop::getContext(): in the back office the multistore header can select a
+     * shop group or all shops, and this constraint reflects that selection. In front
+     * office the context is always one specific shop, so the single-shop constraint is
+     * returned there — a typed alternative to passing $this->shop->id as a raw integer.
      */
     public function getShopConstraint(): ShopConstraint
     {
+        if (Shop::getContext() === Shop::CONTEXT_ALL) {
+            return ShopConstraint::allShops();
+        }
+
+        // Shop::setContext(CONTEXT_GROUP, null) is legal and leaves the context group id
+        // at 0, which ShopGroupId rejects: only build a group constraint from a real id
+        // so this getter never throws.
+        if (Shop::getContext() === Shop::CONTEXT_GROUP && (int) Shop::getContextShopGroupID() > 0) {
+            return ShopConstraint::shopGroup((int) Shop::getContextShopGroupID());
+        }
+
         return ShopConstraint::shop((int) $this->shop->id);
     }
 

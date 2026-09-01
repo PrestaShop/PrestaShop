@@ -21,6 +21,12 @@ class CarrierCore extends ObjectModel
     public const ALL_CARRIERS = 5;
 
     // Shipping methods
+    /**
+     * @deprecated Since 9.2.0, will be removed in the next major. This value only remains to resolve carriers created
+     *             before the 1.6 carrier wizard: every carrier must define an explicit shipping method. Remove the
+     *             PS_SHIPPING_METHOD configuration with it: its seed in install-dev/data/xml/configuration.xml, its
+     *             load in Cart::getPackageShippingCostValue(), and both resolutions in this class.
+     */
     public const SHIPPING_METHOD_DEFAULT = 0;
     public const SHIPPING_METHOD_WEIGHT = 1;
     public const SHIPPING_METHOD_PRICE = 2;
@@ -89,7 +95,7 @@ class CarrierCore extends ObjectModel
     public $is_free = false;
 
     /** @var int Shipping cost calculation method: by weight or by price or free */
-    public $shipping_method = 0;
+    public $shipping_method = self::SHIPPING_METHOD_PRICE;
 
     /**
      * @var bool If true, an external module, if defined, will be asked to provide the shipping cost,
@@ -192,9 +198,14 @@ class CarrierCore extends ObjectModel
         parent::__construct($id, $id_lang);
         $this->image_dir = _PS_SHIP_IMG_DIR_;
         /*
-         * keep retrocompatibility SHIPPING_METHOD_DEFAULT
+         * keep retrocompatibility SHIPPING_METHOD_DEFAULT: only a row loaded from the database can carry the legacy
+         * value, a freshly built carrier holds the declared default
          */
-        if ($this->shipping_method == Carrier::SHIPPING_METHOD_DEFAULT) {
+        if ($this->id && $this->shipping_method == Carrier::SHIPPING_METHOD_DEFAULT) {
+            @trigger_error(
+                'The SHIPPING_METHOD_DEFAULT value and the PS_SHIPPING_METHOD configuration are deprecated since 9.2.0 and will be removed in the next major, set an explicit shipping method on the carrier.',
+                E_USER_DEPRECATED
+            );
             $this->shipping_method = ((int) Configuration::get('PS_SHIPPING_METHOD') ? Carrier::SHIPPING_METHOD_WEIGHT : Carrier::SHIPPING_METHOD_PRICE);
         }
     }
@@ -1179,6 +1190,10 @@ class CarrierCore extends ObjectModel
 
         if ($this->shipping_method == Carrier::SHIPPING_METHOD_DEFAULT) {
             // backward compatibility
+            @trigger_error(
+                'The SHIPPING_METHOD_DEFAULT value and the PS_SHIPPING_METHOD configuration are deprecated since 9.2.0 and will be removed in the next major, set an explicit shipping method on the carrier.',
+                E_USER_DEPRECATED
+            );
             if ((int) Configuration::get('PS_SHIPPING_METHOD')) {
                 $method = Carrier::SHIPPING_METHOD_WEIGHT;
             } else {

@@ -13,7 +13,6 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Property\Factory\PropertyMetadataFactoryInterface;
 use ApiPlatform\Metadata\Property\Factory\PropertyNameCollectionFactoryInterface;
-use ObjectModelCore;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Api\ExtraPropertyApiListRecordCollector;
@@ -22,7 +21,6 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionR
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
-use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\ApiPlatform\Exception\LocaleNotFoundException;
 use PrestaShopBundle\ApiPlatform\LocalizedValueUpdater;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
@@ -145,7 +143,6 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
                         $entityId,
                         null,
                         $this->shopContext->getShopConstraint(),
-                        $this->isLangMultishop($entityName),
                         $definitions,
                     ),
                     $langScopedFields
@@ -210,7 +207,6 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
                 array_values($entityIdByIndex),
                 $this->languageContext->getId(),
                 $this->shopContext->getShopConstraint(),
-                $this->isLangMultishop($entityName),
                 $readerDefinitions,
             );
         }
@@ -268,16 +264,6 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
     {
         return QueryListProvider::class === $operation->getProvider()
             && null !== ($operation->getExtraProperties()['gridDataFactory'] ?? null);
-    }
-
-    /**
-     * Whether the entity stores LANG values per shop (its ObjectModel definition is multilang_shop). The class name
-     * is the StudlyCase of the (tableized) entity name; isClassLangMultishop safely returns false for any unknown
-     * class, so a wrong guess never breaks the read.
-     */
-    protected function isLangMultishop(string $entityName): bool
-    {
-        return ObjectModelCore::isClassLangMultishop(Inflector::getInflector()->classify($entityName));
     }
 
     protected function isJsonEntityResponse(Response $response): bool

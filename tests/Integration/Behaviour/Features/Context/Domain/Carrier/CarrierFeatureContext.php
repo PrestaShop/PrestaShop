@@ -13,7 +13,6 @@ use Carrier;
 use Exception;
 use Group;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\EditCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
@@ -24,9 +23,10 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductQuantity;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\CarrierFilters;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Resources\DummyFileUploader;
@@ -443,13 +443,14 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $productQuantities = [];
 
         foreach ($productNames as $productName) {
-            $productQuantity = new ProductQuantity(new ProductId($this->referenceToId(trim($productName))), 1);
-            $productQuantities[] = $productQuantity;
+            $productQuantities[] = [
+                'productId' => $this->referenceToId(trim($productName)),
+                'quantity' => 1,
+            ];
         }
 
         $carriersResult = $this->getQueryBus()->handle(
-            new GetAvailableCarriers($productQuantities, new AddressId($this->referenceToId($address)), $currentCarrierId
-            )
+            new GetAvailableCarriers($productQuantities, $this->referenceToId($address), $currentCarrierId)
         );
 
         $actualAvailable = array_map(function ($carrierSummary) {
@@ -472,6 +473,32 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
 
         Assert::assertEqualsCanonicalizing($expectedAvailable, $actualAvailable, 'Available carriers do not match expected.');
         Assert::assertEqualsCanonicalizing($expectedFiltered, $actualFiltered, 'Filtered carriers do not match expected.');
+    }
+
+    /**
+     * @When I search available carriers for address :address with the following raw product quantities:
+     */
+    public function searchAvailableCarriersWithRawProductQuantities(string $address, TableNode $table): void
+    {
+        $productQuantities = [];
+        foreach ($table->getColumnsHash() as $row) {
+            $productQuantity = [];
+            if (isset($row['product']) && $row['product'] !== '') {
+                $productQuantity['productId'] = $this->referenceToId($row['product']);
+            }
+            if (isset($row['quantity']) && $row['quantity'] !== '') {
+                $productQuantity['quantity'] = (int) $row['quantity'];
+            }
+            $productQuantities[] = $productQuantity;
+        }
+
+        try {
+            $this->getQueryBus()->handle(
+                new GetAvailableCarriers($productQuantities, $this->referenceToId($address))
+            );
+        } catch (CarrierConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -547,6 +574,76 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         if ('' !== $filename) {
             copy($filename, _PS_SHIP_IMG_DIR_ . $carrierId . '.jpg');
         }
+    }
+
+    /**
+     * @Then the carriers list should be ordered as following:
+     */
+    public function assertCarriersListOrder(TableNode $tableNode): void
+    {
+        $listedPositions = $this->getPositionsFromCarriersList();
+        $previousPosition = null;
+        foreach ($tableNode->getColumnsHash() as $expectedCarrier) {
+            $reference = $expectedCarrier['reference'];
+            $carrierId = $this->getSharedStorage()->get($reference);
+            Assert::assertArrayHasKey($carrierId, $listedPositions, sprintf('Carrier %s is not in the carriers list', $reference));
+
+            if (null !== $previousPosition) {
+                Assert::assertGreaterThan(
+                    $previousPosition,
+                    $listedPositions[$carrierId],
+                    sprintf('Carrier %s is not listed after the previous one', $reference)
+                );
+            }
+            $previousPosition = $listedPositions[$carrierId];
+        }
+    }
+
+    /**
+     * @Then carrier :reference should be at position :position in the carriers list
+     */
+    public function assertCarrierPositionInList(string $reference, int $position): void
+    {
+        $listedPositions = $this->getPositionsFromCarriersList();
+        $carrierId = $this->getSharedStorage()->get($reference);
+        Assert::assertArrayHasKey($carrierId, $listedPositions, sprintf('Carrier %s is not in the carriers list', $reference));
+        Assert::assertSame($position, $listedPositions[$carrierId], sprintf('Unexpected position for carrier %s', $reference));
+    }
+
+    /**
+     * This is the invariant broken by assigning a position without reordering the other carriers.
+     *
+     * @Then no carriers should share the same position
+     */
+    public function assertCarrierPositionsAreUnique(): void
+    {
+        $listedPositions = $this->getPositionsFromCarriersList();
+        Assert::assertSame(
+            array_unique($listedPositions),
+            $listedPositions,
+            'Some carriers of the list share the same position'
+        );
+    }
+
+    /**
+     * No CQRS query returns the positions, so they are read from the data of the carriers list, which is also what the
+     * drag and drop reordering relies on. The grid factory itself is not used because it builds the filter form, which
+     * needs the admin theme templates and is not available from the CLI.
+     *
+     * @return array<int, int> the listed positions, indexed by carrier id
+     */
+    private function getPositionsFromCarriersList(): array
+    {
+        /** @var GridDataFactoryInterface $carrierGridDataFactory */
+        $carrierGridDataFactory = CommonFeatureContext::getContainer()->get('prestashop.core.grid.data.factory.carrier_decorator');
+        $carrierGridData = $carrierGridDataFactory->getData(new CarrierFilters(CarrierFilters::getDefaults()));
+
+        $listedPositions = [];
+        foreach ($carrierGridData->getRecords()->all() as $carrierRecord) {
+            $listedPositions[(int) $carrierRecord['id_carrier']] = (int) $carrierRecord['position'];
+        }
+
+        return $listedPositions;
     }
 
     /**

@@ -8,6 +8,7 @@ namespace PrestaShopBundle\ApiPlatform\Serializer;
 
 use ApiPlatform\Metadata\HttpOperation;
 use PrestaShopBundle\ApiPlatform\ContextParametersProvider;
+use PrestaShopBundle\ApiPlatform\DefaultValuesTrait;
 use PrestaShopBundle\ApiPlatform\LocalizedValueUpdater;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
 use PrestaShopBundle\ApiPlatform\NormalizationMapper;
@@ -29,6 +30,8 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerInterface, ContextAwareDenormalizerInterface, ContextAwareEncoderInterface, ContextAwareDecoderInterface
 {
+    use DefaultValuesTrait;
+
     public const CAST_BOOL = 'cast_bool';
 
     public function __construct(
@@ -77,6 +80,14 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
         $data = array_merge($data, $this->contextParametersProvider->getContextParameters());
         if (!empty($context['uri_variables'])) {
             $data = array_merge($data, $context['uri_variables']);
+        }
+
+        // The default values of the operation are injected first, so they are mapped and validated exactly like the
+        // values that were part of the request. Only a request body is concerned here, which is why an input class is
+        // expected in the context: the queries are built by the providers, and the returned resources must not be
+        // filled with the default values of an input.
+        if (!empty($context['input']['class'])) {
+            $data = $this->applyDefaultValues($data, $context['operation'] ?? null);
         }
 
         // Before anything perform the mapping if specified

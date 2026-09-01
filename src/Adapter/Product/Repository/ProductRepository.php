@@ -411,9 +411,13 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
      * @param ProductId $productId
      * @param CarrierReferenceId[] $carrierReferenceIds
      * @param ShopConstraint $shopConstraint
+     *
+     * @throws ProductNotFoundException
      */
     public function setCarrierReferences(ProductId $productId, array $carrierReferenceIds, ShopConstraint $shopConstraint): void
     {
+        $this->assertProductExists($productId);
+
         $shopIds = array_map(function (ShopId $shopId): int {
             return $shopId->getValue();
         }, $this->getShopIdsByConstraint($productId, $shopConstraint));

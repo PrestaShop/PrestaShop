@@ -73,6 +73,7 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
 
         Assert::assertNotSame($cartForOrderCreation->getCartId(), $duplicatedCartForOrderCreation->getCartId());
 
+        Assert::assertEquals($cartForOrderCreation->getCustomerId(), $duplicatedCartForOrderCreation->getCustomerId());
         Assert::assertEquals($cartForOrderCreation->getCartRules(), $duplicatedCartForOrderCreation->getCartRules());
         Assert::assertEquals($cartForOrderCreation->getAddresses(), $duplicatedCartForOrderCreation->getAddresses());
         Assert::assertEquals($cartForOrderCreation->getCurrencyId(), $duplicatedCartForOrderCreation->getCurrencyId());

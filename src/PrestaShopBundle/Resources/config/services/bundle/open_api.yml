@@ -57,6 +57,25 @@ services:
       - { name: 'prestashop.openapi.schema_adapter.resource', priority: 10 }
       - { name: 'prestashop.openapi.schema_adapter.operation', priority: 40 }
 
+  # Reapplies the openapiContext declared on the resource ApiProperty attributes. Runs after every adapter detecting
+  # a format automatically, so that an explicit context always wins over a guessed one.
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\ApiPropertyOpenApiContextAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: -50 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: -50 }
+
+  # Lists the required properties of the write operations, based on the CQRS command constructor. Runs after the
+  # SchemaSynchronizer so that only documented properties are listed.
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\CommandRequiredPropertiesAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: -60 }
+
+  # Documents the default values declared by an operation. Runs after the required properties are listed, since a
+  # property the API defaults itself is not required in the payload.
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\DefaultValuesAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: -70 }
+
   PrestaShopBundle\ApiPlatform\OpenApi\FileUploadRequestBodyBuilder: ~
 
   # Documents the extraProperties sub-object. Runs LAST (after SchemaSynchronizer, which would otherwise strip

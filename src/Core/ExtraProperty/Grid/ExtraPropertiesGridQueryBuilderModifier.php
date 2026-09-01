@@ -22,10 +22,14 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
  * Adds JOIN/SELECT/FILTER clauses for extra properties in BO Symfony grids.
  *
  * Cardinality invariant: every LEFT JOIN added here covers the FULL primary key of its
- * extra table ({e}_extra: id_e; {e}_extra_lang: id_e + id_lang + id_shop; {e}_extra_shop:
+ * extra table ({e}_extra: id_e; {e}_extra_lang: id_e + id_lang, plus id_shop only on
+ * multilang-multishop entities whose base {e}_lang table carries it; {e}_extra_shop:
  * id_e + id_shop), so each join matches at most one row per existing grid row. Joins
  * enrich rows 1:1 and can never multiply them — pagination and COUNT stay correct without
- * any GROUP BY (which is forbidden in this service).
+ * any GROUP BY (which is forbidden in this service). Whether the extra lang table has an
+ * id_shop column is read from the definition (schema-derived isMultiShop()); referencing
+ * it on an entity like contact, whose lang table has no shop column, would be a hard SQL
+ * error.
  *
  * The shop pin of lang/shop joins is resolved per builder, in order: the base
  * {entity}_lang/{entity}_shop join alias when that builder has one, the builder's own
@@ -171,12 +175,16 @@ class ExtraPropertiesGridQueryBuilderModifier
 
         $extraTable = $this->dbPrefix . $definitions->first()->getExtraTableName();
         $baseLangTable = $this->dbPrefix . $entityName . '_lang';
+        // Schema-derived: {e}_extra_lang mirrors {e}_lang, which carries id_shop only on
+        // multilang-multishop entities. Referencing id_shop when the column does not exist
+        // would make the whole grid query fail.
+        $isMultiShop = $definitions->first()->isMultiShop();
 
         foreach ($builders as [$qb, $mainAlias]) {
             [$langAlias, $langJoinCondition] = $this->findJoinedTableAliasAndCondition($qb, $baseLangTable);
 
-            // PK-complete: {e}_extra_lang PK is (id_e, id_lang, id_shop) — all three are
-            // always pinned so the join can never multiply rows in multistore.
+            // PK-complete: the full {e}_extra_lang PK (id_e, id_lang, and id_shop when the
+            // table has it) is always pinned so the join can never multiply rows in multistore.
             $parameters = [];
             if (null !== $langAlias) {
                 $fromAlias = $langAlias;
@@ -184,11 +192,13 @@ class ExtraPropertiesGridQueryBuilderModifier
                     sprintf('%s.`%s` = %s.`%s`', self::EXTRA_LANG_ALIAS, $primaryKey, $langAlias, $primaryKey),
                     sprintf('%s.`id_lang` = %s.`id_lang`', self::EXTRA_LANG_ALIAS, $langAlias),
                 ];
-                if (null !== $langJoinCondition && $this->joinConditionMentionsShopId($langAlias, $langJoinCondition)) {
-                    $joinParts[] = sprintf('%s.`id_shop` = %s.`id_shop`', self::EXTRA_LANG_ALIAS, $langAlias);
-                } else {
-                    $joinParts[] = sprintf('%s.`id_shop` = :extraLangShopId', self::EXTRA_LANG_ALIAS);
-                    $parameters['extraLangShopId'] = $this->resolveShopId($qb);
+                if ($isMultiShop) {
+                    if (null !== $langJoinCondition && $this->joinConditionMentionsShopId($langAlias, $langJoinCondition)) {
+                        $joinParts[] = sprintf('%s.`id_shop` = %s.`id_shop`', self::EXTRA_LANG_ALIAS, $langAlias);
+                    } else {
+                        $joinParts[] = sprintf('%s.`id_shop` = :extraLangShopId', self::EXTRA_LANG_ALIAS);
+                        $parameters['extraLangShopId'] = $this->resolveShopId($qb);
+                    }
                 }
             } else {
                 // Fallback when no base lang join exists in this builder: context language.
@@ -196,10 +206,12 @@ class ExtraPropertiesGridQueryBuilderModifier
                 $joinParts = [
                     sprintf('%s.`%s` = %s.`%s`', self::EXTRA_LANG_ALIAS, $primaryKey, $mainAlias, $primaryKey),
                     sprintf('%s.`id_lang` = :extraLangId', self::EXTRA_LANG_ALIAS),
-                    sprintf('%s.`id_shop` = :extraLangShopId', self::EXTRA_LANG_ALIAS),
                 ];
                 $parameters['extraLangId'] = $this->languageContext->getId();
-                $parameters['extraLangShopId'] = $this->resolveShopId($qb);
+                if ($isMultiShop) {
+                    $joinParts[] = sprintf('%s.`id_shop` = :extraLangShopId', self::EXTRA_LANG_ALIAS);
+                    $parameters['extraLangShopId'] = $this->resolveShopId($qb);
+                }
             }
 
             $this->ensureLeftJoin($qb, $fromAlias, $extraTable, self::EXTRA_LANG_ALIAS, implode(' AND ', $joinParts), $parameters);

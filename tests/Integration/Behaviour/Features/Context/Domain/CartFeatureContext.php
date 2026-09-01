@@ -913,6 +913,20 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then cart :cartReference should belong to customer :customerReference
+     */
+    public function assertCartBelongsToCustomer(string $cartReference, string $customerReference): void
+    {
+        $cartForOrderCreation = $this->getCartForOrderCreationByReference($cartReference);
+
+        Assert::assertSame(
+            $this->referenceToId($customerReference),
+            $cartForOrderCreation->getCustomerId(),
+            sprintf('Cart "%s" does not belong to customer "%s"', $cartReference, $customerReference)
+        );
+    }
+
+    /**
      * @Given /^I use a voucher "(.+)" which provides a gift product "(.+)" and free shipping on the cart "(.+)"$/
      */
     public function addGiftPlusFreeShippingCartRule(string $voucherCode, string $giftProductName, string $cartReference)

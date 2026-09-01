@@ -126,6 +126,7 @@ Feature: Order from Back Office (BO)
   Scenario: Duplicate order cart
     When I duplicate order "bo_order1" cart "dummy_cart" with reference "duplicated_dummy_cart"
     Then there is duplicated cart "duplicated_dummy_cart" for cart dummy_cart
+    And cart "duplicated_dummy_cart" should belong to customer "testCustomer"
 
   Scenario: Add product to an existing Order without invoice without free shipping and new invoice
     Given there is a product in the catalog named "Test Added Product" with a price of 15.0 and 100 items in stock
