@@ -81,7 +81,6 @@ class CustomerB2b
     {
         $this->businessEntityCustomerB2bs = new ArrayCollection();
         $this->status = CustomerB2bStatus::PENDING;
-        $this->updatedAt = new DateTime();
     }
 
     public function getId(): ?int
