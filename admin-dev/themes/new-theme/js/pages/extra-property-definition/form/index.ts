@@ -68,4 +68,13 @@ $(() => {
   if (developerFields) {
     new DeveloperSettings(developerFields, catalogs);
   }
+
+  // Store association trees (Visibility card + the view page's standalone form): the
+  // generic ChoiceTree component provides the expand/collapse arrows and the group
+  // checkboxes auto-checking their children.
+  document
+    .querySelectorAll<HTMLElement>(ExtraPropertyFormMap.shopAssociationTrees)
+    .forEach((tree) => {
+      new window.prestashop.component.ChoiceTree(`#${tree.id}`).enableAutoCheckChildren();
+    });
 });
