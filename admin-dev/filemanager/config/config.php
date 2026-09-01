@@ -24,7 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-session_start();
+// The session is deliberately not started here. config.inc.php below installs the session handler,
+// which applies the shop's cookie parameters including SameSite, and SessionHandler::init() returns
+// early when a session is already active. Starting one first left the file manager with a session
+// created from PHP's defaults.
 
 if (!defined('_PS_ADMIN_DIR_')) {
     // Properly assign admin directory path, we don't want to use relative traversal here,
