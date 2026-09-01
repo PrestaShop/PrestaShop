@@ -76,7 +76,7 @@ class PositionsController extends PrestaShopAdminController
             $this->selectedModule = (int) $selectedModule;
         }
 
-        $this->manageLegacyFlashes($request->query->get('conf'));
+        $this->manageLegacyFlashes($request->query->getInt('conf'));
 
         $modules = [];
         foreach ($installedModules as $installedModule) {
@@ -434,7 +434,7 @@ class PositionsController extends PrestaShopAdminController
      *
      * @param int $messageId The message id from legacy context
      */
-    private function manageLegacyFlashes($messageId)
+    private function manageLegacyFlashes(int $messageId)
     {
         if (empty($messageId)) {
             return;

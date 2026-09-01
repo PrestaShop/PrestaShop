@@ -372,7 +372,7 @@ class EmployeeController extends PrestaShopAdminController
         TabDataProvider $tabDataProvider,
     ): JsonResponse {
         return $this->json(
-            $tabDataProvider->getViewableTabs($request->query->get('profileId'), $this->getEmployeeContext()->getEmployee()->getLanguageId())
+            $tabDataProvider->getViewableTabs($request->query->getInt('profileId'), $this->getEmployeeContext()->getEmployee()->getLanguageId())
         );
     }
 

@@ -246,26 +246,41 @@ class OrderQueryBuilderTest extends KernelTestCase
             ) {
             }
 
+            /**
+             * @return string Return order by or null to disable ordering
+             */
             public function getOrderBy()
             {
                 return $this->orderBy;
             }
 
+            /**
+             * @return string Return order by or null to disable ordering
+             */
             public function getOrderWay()
             {
                 return $this->orderWay;
             }
 
+            /**
+             * @return int Return offset or null to disable offset
+             */
             public function getOffset()
             {
                 return $this->offset;
             }
 
+            /**
+             * @return int Return limit or null to disable limiting
+             */
             public function getLimit()
             {
                 return $this->limit;
             }
 
+            /**
+             * @return array Return filters
+             */
             public function getFilters()
             {
                 return $this->filters;

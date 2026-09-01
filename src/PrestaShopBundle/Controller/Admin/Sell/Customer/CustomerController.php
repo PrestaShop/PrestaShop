@@ -339,7 +339,7 @@ class CustomerController extends PrestaShopAdminController
         $customerViewedProductGrid = $customerViewedProductGridFactory->getGrid($customerViewedProductFilters);
 
         if ($request->query->has('conf')) {
-            $this->manageLegacyFlashes($request->query->get('conf'));
+            $this->manageLegacyFlashes($request->query->getInt('conf'));
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', [
@@ -1014,7 +1014,7 @@ class CustomerController extends PrestaShopAdminController
      *
      * @param int $messageId The message id from legacy context
      */
-    private function manageLegacyFlashes($messageId): void
+    private function manageLegacyFlashes(int $messageId): void
     {
         $messages = [
             1 => $this->trans('Successful deletion', [], 'Admin.Notifications.Success'),

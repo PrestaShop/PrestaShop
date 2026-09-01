@@ -90,7 +90,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function setModuleName($moduleName)
     {
-        if (null === $this->moduleName || empty($this->moduleName)) {
+        if (empty($moduleName)) {
             throw UnsupportedModuleException::moduleNotProvided(self::getIdentifier());
         }
 

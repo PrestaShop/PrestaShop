@@ -170,25 +170,24 @@ class RequestFiltersBuilderTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $parametersBagMock = new InputBag();
-
         if (!empty($requestScope)) {
             $parameters = [
                 $requestScope => $parameters,
             ];
         }
 
-        $parametersBagMock->replace($parameters);
-
-        $emptyParametersBagMock = new InputBag();
+        /** @var InputBag<string> $queryBag */
+        $queryBag = new InputBag();
+        $requestBag = new InputBag();
 
         if ($postQuery) {
-            $requestMock->request = $parametersBagMock;
-            $requestMock->query = $emptyParametersBagMock;
+            $requestBag->replace($parameters);
         } else {
-            $requestMock->query = $parametersBagMock;
-            $requestMock->request = $emptyParametersBagMock;
+            $queryBag->replace($parameters);
         }
+
+        $requestMock->query = $queryBag;
+        $requestMock->request = $requestBag;
 
         return $requestMock;
     }
