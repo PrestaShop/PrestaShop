@@ -110,6 +110,7 @@ class CQRSPartialUpdate extends CQRSCommand
         ?bool $allowEmptyBody = null,
         ?string $minVersion = null,
         ?string $maxVersion = null,
+        ?array $defaultValues = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_PATCH;

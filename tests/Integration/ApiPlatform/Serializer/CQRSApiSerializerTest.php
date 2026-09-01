@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
 use PrestaShopBundle\ApiPlatform\NormalizationMapper;
 use PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer;
@@ -188,6 +189,53 @@ class CQRSApiSerializerTest extends KernelTestCase
                 'reductionPercent' => 12.87,
             ],
             $editCustomerGroupCommand,
+        ];
+
+        $commandWithDefaultValues = new EditCustomerGroupCommand(42);
+        $commandWithDefaultValues->setReductionPercent(new DecimalNumber('12.87'));
+
+        yield 'denormalize command with default values injected by the operation on its input' => [
+            [
+                'customerGroupId' => 42,
+            ],
+            $commandWithDefaultValues,
+            [],
+            null,
+            [
+                'input' => ['class' => EditCustomerGroupCommand::class],
+                'operation' => new CQRSCreate(defaultValues: ['reductionPercent' => 12.87]),
+            ],
+        ];
+
+        $commandWithoutDefaultValues = new EditCustomerGroupCommand(42);
+
+        yield 'default values of the operation are not injected when no input class is expected' => [
+            [
+                'customerGroupId' => 42,
+            ],
+            $commandWithoutDefaultValues,
+            [],
+            null,
+            [
+                'operation' => new CQRSCreate(defaultValues: ['reductionPercent' => 12.87]),
+            ],
+        ];
+
+        $commandWithProvidedValue = new EditCustomerGroupCommand(42);
+        $commandWithProvidedValue->setReductionPercent(new DecimalNumber('5.5'));
+
+        yield 'default values of the operation never replace a value provided in the input' => [
+            [
+                'customerGroupId' => 42,
+                'reductionPercent' => 5.5,
+            ],
+            $commandWithProvidedValue,
+            [],
+            null,
+            [
+                'input' => ['class' => EditCustomerGroupCommand::class],
+                'operation' => new CQRSCreate(defaultValues: ['reductionPercent' => 12.87]),
+            ],
         ];
 
         $updateProductCommand = new UpdateProductCommand(42, ShopConstraint::shop(1));

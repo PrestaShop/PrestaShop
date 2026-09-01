@@ -102,8 +102,16 @@ abstract class AbstractCQRSOperation extends AbstractScopedOperation
         ?bool $experimentalOperation = null,
         ?string $minVersion = null,
         ?string $maxVersion = null,
+        ?array $defaultValues = null,
     ) {
         $passedArguments = \get_defined_vars();
+
+        if (!empty($defaultValues)) {
+            $this->checkArgumentAndExtraParameterValidity('defaultValues', $defaultValues, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['defaultValues'] = $defaultValues;
+        }
+
+        unset($passedArguments['defaultValues']);
 
         if (!empty($CQRSQuery)) {
             $this->checkArgumentAndExtraParameterValidity('CQRSQuery', $CQRSQuery, $passedArguments['extraProperties']);
@@ -131,6 +139,28 @@ abstract class AbstractCQRSOperation extends AbstractScopedOperation
     {
         $self = clone $this;
         $self->extraProperties['scopes'] = $scopes;
+
+        return $self;
+    }
+
+    /**
+     * Values the API adds to the input of the operation when they are absent from it, so the payload of a command or
+     * the parameters of a query.
+     *
+     * @return array<string, mixed>
+     */
+    public function getDefaultValues(): array
+    {
+        return $this->extraProperties['defaultValues'] ?? [];
+    }
+
+    /**
+     * @param array<string, mixed> $defaultValues
+     */
+    public function withDefaultValues(array $defaultValues): static
+    {
+        $self = clone $this;
+        $self->extraProperties['defaultValues'] = $defaultValues;
 
         return $self;
     }

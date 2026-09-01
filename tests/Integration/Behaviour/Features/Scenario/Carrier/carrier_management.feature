@@ -318,7 +318,7 @@ Feature: Carrier management
       | name             | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 9                                  |
+      | position         | 11                                 |
       | active           | false                              |
       | max_width        | 1454                               |
       | max_height       | 1234                               |
@@ -357,7 +357,7 @@ Feature: Carrier management
       | name             | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 10                                 |
+      | position         | 12                                 |
       | active           | true                               |
       | max_width        | 1454                               |
       | max_height       | 1234                               |
@@ -398,7 +398,7 @@ Feature: Carrier management
       | name             | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 11                                 |
+      | position         | 13                                 |
       | active           | true                               |
       | max_width        | 3333                               |
       | max_height       | 4444                               |
@@ -436,7 +436,7 @@ Feature: Carrier management
       | name             | Carrier 1                          |
       | grade            | 1                                  |
       | trackingUrl      | http://example.com/track.php?num=@ |
-      | position         | 12                                 |
+      | position         | 14                                 |
       | active           | true                               |
       | max_width        | 1454                               |
       | max_height       | 1234                               |

@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShopBundle\ApiPlatform\ContextParametersProvider;
+use PrestaShopBundle\ApiPlatform\DefaultValuesTrait;
 use PrestaShopBundle\ApiPlatform\Exception\CQRSQueryNotFoundException;
 use PrestaShopBundle\ApiPlatform\NormalizationMapper;
 use PrestaShopBundle\ApiPlatform\QueryResultSerializerTrait;
@@ -21,6 +22,7 @@ use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class QueryProvider implements ProviderInterface
 {
+    use DefaultValuesTrait;
     use QueryResultSerializerTrait;
 
     public function __construct(
@@ -50,6 +52,7 @@ class QueryProvider implements ProviderInterface
 
         $filters = $context['filters'] ?? [];
         $queryParameters = array_merge($uriVariables, $filters, $this->contextParametersProvider->getContextParameters());
+        $queryParameters = $this->applyDefaultValues($queryParameters, $operation);
 
         $CQRSQuery = $this->domainSerializer->denormalize($queryParameters, $CQRSQueryClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
         $CQRSQueryResult = $this->queryBus->handle($CQRSQuery);

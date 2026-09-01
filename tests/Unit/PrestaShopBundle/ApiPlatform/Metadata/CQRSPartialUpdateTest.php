@@ -566,4 +566,57 @@ class CQRSPartialUpdateTest extends TestCase
         $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
         $this->assertEquals('Specifying an extra property maxVersion and a maxVersion argument that are different is invalid', $caughtException->getMessage());
     }
+
+    public function testDefaultValues(): void
+    {
+        // Not defined by default
+        $operation = new CQRSPartialUpdate();
+        $this->assertEquals([], $operation->getDefaultValues());
+
+        // Default values parameter in constructor
+        $operation = new CQRSPartialUpdate(
+            defaultValues: ['active' => true, 'grade' => 0],
+        );
+        $this->assertEquals(['defaultValues' => ['active' => true, 'grade' => 0]], $operation->getExtraProperties());
+        $this->assertEquals(['active' => true, 'grade' => 0], $operation->getDefaultValues());
+
+        // Extra properties parameter in constructor
+        $operation = new CQRSPartialUpdate(
+            extraProperties: ['defaultValues' => ['active' => true]],
+        );
+        $this->assertEquals(['defaultValues' => ['active' => true]], $operation->getExtraProperties());
+        $this->assertEquals(['active' => true], $operation->getDefaultValues());
+
+        // Extra properties AND default values parameters in constructor, both values are equals no problem
+        $operation = new CQRSPartialUpdate(
+            extraProperties: ['defaultValues' => ['active' => true]],
+            defaultValues: ['active' => true],
+        );
+        $this->assertEquals(['defaultValues' => ['active' => true]], $operation->getExtraProperties());
+        $this->assertEquals(['active' => true], $operation->getDefaultValues());
+
+        // Use with method, returned object is a clone All values are replaced
+        $operation2 = $operation->withDefaultValues(['grade' => 5]);
+        $this->assertNotEquals($operation2, $operation);
+        $this->assertEquals(['defaultValues' => ['grade' => 5]], $operation2->getExtraProperties());
+        $this->assertEquals(['grade' => 5], $operation2->getDefaultValues());
+        // Initial operation not modified of course
+        $this->assertEquals(['defaultValues' => ['active' => true]], $operation->getExtraProperties());
+        $this->assertEquals(['active' => true], $operation->getDefaultValues());
+
+        // When both values are specified, but they are different trigger an exception
+        $caughtException = null;
+        try {
+            new CQRSPartialUpdate(
+                extraProperties: ['defaultValues' => ['active' => true]],
+                defaultValues: ['active' => false],
+            );
+        } catch (InvalidArgumentException $e) {
+            $caughtException = $e;
+        }
+
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
+        $this->assertEquals('Specifying an extra property defaultValues and a defaultValues argument that are different is invalid', $caughtException->getMessage());
+    }
 }

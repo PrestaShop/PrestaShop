@@ -127,4 +127,9 @@ class CarrierConstraintException extends CarrierException
      * Thrown when carrier range is a negative value
      */
     public const INVALID_RANGE_NEGATIVE = 220;
+
+    /**
+     * Thrown when a product quantity of an availability search is missing or not strictly positive
+     */
+    public const INVALID_PRODUCT_QUANTITY = 230;
 }

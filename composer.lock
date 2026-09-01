@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5af655fb448c617686550abe39d33d2d",
+    "content-hash": "029a55a42b2be1f318a520ebbeb84fcf",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5212,16 +5212,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-taxrules-list",
+            "version": "dev-41972-carrier-endpoints",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "4f2124baf5e6f7dd1a530c98ec9ffae4474411ef"
+                "reference": "2627c4dc5b5bf76e702ea3f32e48a181174206f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/4f2124baf5e6f7dd1a530c98ec9ffae4474411ef",
-                "reference": "4f2124baf5e6f7dd1a530c98ec9ffae4474411ef",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/2627c4dc5b5bf76e702ea3f32e48a181174206f0",
+                "reference": "2627c4dc5b5bf76e702ea3f32e48a181174206f0",
                 "shasum": ""
             },
             "require": {
@@ -5247,7 +5247,11 @@
             "autoload-dev": {
                 "psr-4": {
                     "PsApiResourcesTest\\": "tests/"
-                }
+                },
+                "exclude-from-classmap": [
+                    "tests/Unit/PHPStan/Fixture/",
+                    "tests/Unit/Rector/Fixture/"
+                ]
             },
             "scripts": {
                 "clear-test-cache": [
@@ -5301,10 +5305,10 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_apiresources/tree/taxrules-list",
+                "source": "https://github.com/PrestaShop/ps_apiresources/tree/41972-carrier-endpoints",
                 "issues": "https://github.com/PrestaShop/ps_apiresources/issues"
             },
-            "time": "2026-07-30T12:05:03+00:00"
+            "time": "2026-08-31T17:05:51+00:00"
         },
         {
             "name": "prestashop/ps_banner",

@@ -7,8 +7,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Carrier\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
-use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarriersForProduct;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryHandler\GetCarriersForProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierSummary;
@@ -29,7 +29,7 @@ final class GetCarriersForProductHandler implements GetCarriersForProductHandler
     public function handle(GetCarriersForProduct $query)
     {
         $productId = $query->getProductId()->getValue();
-        $productCarriers = $this->carrierRepository->findCarriersByProductIds([$productId], new ShopId($this->shopContext->getContextShopID()));
+        $productCarriers = $this->carrierRepository->findCarriersByProductIds([$productId], new ShopId($this->shopContext->getId()));
         $carriers = [];
 
         foreach ($productCarriers[$productId] as $productCarrier) {
