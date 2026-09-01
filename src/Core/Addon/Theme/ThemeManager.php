@@ -108,8 +108,16 @@ class ThemeManager implements AddonManagerInterface
             return false;
         }
 
+        global $kernel; // sf kernel
+        $themeProvider = $kernel->getContainer()->get('prestashop.core.addon.theme.theme_provider');
+        $currentlyUsedTheme = $themeProvider->getCurrentlyUsedTheme();
+
         /** @var Theme $theme */
         $theme = $this->themeRepository->getInstanceByName($name);
+        if ($theme->getName() === $currentlyUsedTheme->get('parent')) {
+            return false;
+        }
+
         $theme->onUninstall();
 
         $this->filesystem->remove($theme->getDirectory());
