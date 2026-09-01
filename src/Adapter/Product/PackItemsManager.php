@@ -40,7 +40,7 @@ class PackItemsManager
      * @param int $item_attribute_id
      * @param bool|int $id_lang Optional
      *
-     * @return Product[] The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
+     * @return Pack[] The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
      */
     public function getPacksContainingItem($item, $item_attribute_id, $id_lang = false)
     {
