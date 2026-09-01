@@ -4,7 +4,7 @@ name: Nightly tests (Report)
 
 on:
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '0 7 * * *'
   workflow_dispatch:
 
 jobs:
@@ -20,10 +20,6 @@ jobs:
         include:
           - branch: 8.2.x
             database: mysql
-          - branch: 9.1.x
-            database: mysql
-          - branch: 9.1.x
-            database: mariadb
           - branch: 9.2.x
             database: mysql
           - branch: 9.2.x

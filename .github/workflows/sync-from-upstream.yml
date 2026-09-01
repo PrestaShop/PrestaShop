@@ -70,7 +70,7 @@ jobs:
       TARGET_REPO: ${{ github.repository }}
       # Closed list on purpose: edit it (via PR upstream) when a version
       # branch opens or reaches end of life.
-      BRANCHES: "develop 9.2.x 9.1.x 8.2.x"
+      BRANCHES: "develop 9.2.x 8.2.x"
     steps:
       - name: Clone official repository (bare)
         run: |

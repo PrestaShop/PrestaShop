@@ -21,7 +21,7 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: 'Core branch to open a sync PR for — "all" = develop + 9.2.x + 9.1.x, or any branch name (e.g. build-920)'
+        description: 'Core branch to open a sync PR for — "all" = develop + 9.2.x, or any branch name (e.g. build-920)'
         type: string
         default: all
       lf_branch:
@@ -46,7 +46,7 @@ jobs:
           TARGET: ${{ inputs.target }}
         run: |
           if [ "$TARGET" = "all" ]; then
-            echo 'matrix=["develop","9.2.x","9.1.x"]' >> "$GITHUB_OUTPUT"
+            echo 'matrix=["develop","9.2.x"]' >> "$GITHUB_OUTPUT"
           else
             echo "matrix=$(jq -cn --arg b "$TARGET" '[$b]')" >> "$GITHUB_OUTPUT"
           fi

@@ -1,0 +1,47 @@
+# Automatically re-runs the failed jobs of a nightly test run, up to 3 retries
+# (run_attempt < 4). Each rerun re-executes only the failed campaigns plus their
+# dependents — including the "Combine all reports and upload them" job, which
+# re-merges all campaign reports and overwrites the same date-based file on GCS.
+# The report import cron (cron_nightly_tests_reports.yml) runs once, later, and
+# picks up the improved report.
+#
+# The rerun re-emits a `workflow_run: completed` event for the same run with an
+# incremented run_attempt, so the retry chain self-terminates at the cap.
+name: Auto-retry failed nightly jobs
+
+on:
+  workflow_run:
+    workflows:
+      - 'Nightly tests and report - develop (mysql)'
+      - 'Nightly tests and report - develop (mariadb)'
+      - 'Nightly tests and report - 9.2.x (mysql)'
+      - 'Nightly tests and report - 9.2.x (mariadb)'
+      - 'Nightly tests and report - 8.2.x'
+    types:
+      - completed
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  retry:
+    name: Re-run failed jobs (attempt ${{ github.event.workflow_run.run_attempt }})
+    if: >
+      github.event.workflow_run.conclusion == 'failure' &&
+      github.event.workflow_run.run_attempt < 4
+    runs-on: ubuntu-latest
+    steps:
+      - name: Re-run failed jobs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: |
+          echo "Workflow: $WORKFLOW_NAME"
+          echo "Run URL:  $RUN_URL"
+          echo "Attempt $RUN_ATTEMPT failed — triggering rerun of failed jobs only."
+          gh run rerun "$RUN_ID" --failed
