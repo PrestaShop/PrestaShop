@@ -809,7 +809,9 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                 ],
                 // Every parameter of the command without a default value, so the ones the request must provide.
                 // The carrierId is absent since it is a URI variable, the shop constraint since the API fills it from
-                // the request context, and the four fields above since the operation defaults them.
+                // the request context, and the five defaulted fields since the operation fills them: the four fields
+                // above with literal values, and the associatedShopIds with a context default resolved per request
+                // (the shops of the request context), which is why it is not required despite having no literal value.
                 'required' => [
                     'name',
                     'delays',
@@ -818,7 +820,6 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     'enabled',
                     'associatedGroupIds',
                     'zones',
-                    'associatedShopIds',
                 ],
             ]),
         ];
