@@ -72,7 +72,7 @@ class OrderSlipCreator
         Order $order,
         OrderRefundSummary $orderRefundSummary
     ) {
-        if ($orderRefundSummary->getRefundedAmount() > 0) {
+        if ($orderRefundSummary->getRefundedAmount() > 0 || $this->refundsOnlyFreeProducts($orderRefundSummary)) {
             $orderSlipCreated = $this->createOrderSlip(
                 $order,
                 $orderRefundSummary->getProductRefunds(),
@@ -136,6 +136,26 @@ class OrderSlipCreator
         } else {
             throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_AMOUNT);
         }
+    }
+
+    /**
+     * A refund of products that cost nothing moves no money but still has to be recorded. Any other refund
+     * that comes to zero or less, a voucher larger than what is refunded for instance, is refused as before.
+     */
+    private function refundsOnlyFreeProducts(OrderRefundSummary $orderRefundSummary): bool
+    {
+        $productRefunds = $orderRefundSummary->getProductRefunds();
+        if (empty($productRefunds) || $orderRefundSummary->getRefundedAmount() < 0) {
+            return false;
+        }
+
+        foreach ($productRefunds as $productRefund) {
+            if (!isset($productRefund['total_price_tax_incl']) || (float) $productRefund['total_price_tax_incl'] > 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
