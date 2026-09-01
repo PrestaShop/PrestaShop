@@ -3019,6 +3019,79 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @return bool
      */
+    /**
+     * Copies the `use` statements a module override declares into an override file that already
+     * exists, keeping the ones it already has. Only the class body is merged, so without this the
+     * methods brought over would reference short class names nothing imports.
+     *
+     * @param array<int, string> $overrideFile lines of the existing override
+     * @param array<int, string> $moduleHeader lines of the module override above its class
+     *
+     * @return array<int, string> the override lines, with the missing imports inserted
+     */
+    protected function addMissingUseStatements(array $overrideFile, array $moduleHeader): array
+    {
+        $overrideFile = array_values($overrideFile);
+
+        $wanted = $this->extractUseStatements($moduleHeader);
+        if (empty($wanted)) {
+            return $overrideFile;
+        }
+
+        $existing = $this->extractUseStatements($overrideFile);
+        $missing = array_diff_key($wanted, $existing);
+        if (empty($missing)) {
+            return $overrideFile;
+        }
+
+        // After the last import if there is one, otherwise after the namespace or the strict_types
+        // declaration, otherwise after the opening tag, so the result stays valid whatever the existing
+        // file looks like. WHY the declare() arm: it has to be the very first statement in the file, so
+        // an import placed between `<?php` and it makes the override a parse error - which the installer
+        // only discovers when it eval()s the merged class.
+        $insertAt = null;
+        foreach ($overrideFile as $index => $line) {
+            if (preg_match('/^\s*use\s+[^;]+;/', $line)
+                || preg_match('/^\s*namespace\s+[^;]+;/', $line)
+                || preg_match('/^\s*declare\s*\(/', $line)) {
+                $insertAt = $index + 1;
+            } elseif (null === $insertAt && preg_match('/^\s*<\?php/', $line)) {
+                $insertAt = $index + 1;
+            } elseif (preg_match('/^\s*(final\s+|abstract\s+)?class\s/i', $line)) {
+                break;
+            }
+        }
+
+        if (null === $insertAt) {
+            return $overrideFile;
+        }
+
+        array_splice($overrideFile, $insertAt, 0, array_values($missing));
+
+        return $overrideFile;
+    }
+
+    /**
+     * @param array<int, string> $lines
+     *
+     * @return array<string, string> imported name => the line that imports it
+     */
+    private function extractUseStatements(array $lines): array
+    {
+        $statements = [];
+        foreach ($lines as $line) {
+            if (preg_match('/^\s*use\s+(?<import>[^;]+);/', $line, $matches)) {
+                $import = preg_replace('/\s+/', ' ', trim($matches['import']));
+                $statements[$import] = $line;
+            }
+            if (preg_match('/^\s*(final\s+|abstract\s+)?class\s/i', $line)) {
+                break;
+            }
+        }
+
+        return $statements;
+    }
+
     public function addOverride($classname)
     {
         $orig_path = $path = PrestashopAutoload::getInstance()->getClassPath($classname . 'Core');
@@ -3133,6 +3206,16 @@ abstract class ModuleCore implements ModuleInterface
             // Insert the methods from module override in override
             $copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
             array_splice($override_file, $override_class->getEndLine() - 1, 0, $copy_from);
+
+            // The module override's imports live above its class, so copying only the class body leaves
+            // the merged methods referring to short class names that the existing override does not
+            // import. This runs after the splice above so that it cannot shift the line the class body
+            // is inserted at.
+            $override_file = $this->addMissingUseStatements(
+                $override_file,
+                array_slice($module_file, 0, $module_class->getStartLine())
+            );
+
             $code = implode('', $override_file);
 
             file_put_contents($override_path, preg_replace($pattern_escape_com, '', $code));
