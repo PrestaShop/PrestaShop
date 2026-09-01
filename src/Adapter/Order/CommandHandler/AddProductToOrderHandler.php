@@ -22,6 +22,7 @@ use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
+use Pack;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -573,10 +574,10 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         // check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($command->getProductId()->getValue()))) {
             $combinationId = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
-            $availableQuantity = StockAvailable::getQuantityAvailableByProduct(
-                $command->getProductId()->getValue(),
-                $combinationId,
-                $shopId
+            $availableQuantity = $this->getAvailableQuantity(
+                (int) $command->getProductId()->getValue(),
+                (int) $combinationId,
+                (int) $shopId
             );
 
             if ($availableQuantity < $command->getProductQuantity()) {
@@ -621,5 +622,25 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $invoiceNumber = $orderInvoice->getInvoiceNumberFormatted((int) Configuration::get('PS_LANG_DEFAULT'), $order->id_shop);
             throw new DuplicateProductInOrderInvoiceException($invoiceNumber, 'You cannot add this product in this invoice as it is already present');
         }
+    }
+
+    /**
+     * A pack that decrements the products it contains is not limited by its own stock row but by what its
+     * contents allow, and Pack::getQuantity() is what knows the difference. Reading the pack's own row let
+     * an order be raised past what the pack could actually be assembled from.
+     *
+     * @param int $productId
+     * @param int $combinationId
+     * @param int $shopId
+     *
+     * @return int
+     */
+    private function getAvailableQuantity(int $productId, int $combinationId, int $shopId): int
+    {
+        if (Pack::isPack($productId)) {
+            return (int) Pack::getQuantity($productId, $combinationId);
+        }
+
+        return (int) StockAvailable::getQuantityAvailableByProduct($productId, $combinationId, $shopId);
     }
 }
