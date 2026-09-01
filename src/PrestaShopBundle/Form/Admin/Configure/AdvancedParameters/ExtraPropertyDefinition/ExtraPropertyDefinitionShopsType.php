@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition;
 
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,7 +32,7 @@ class ExtraPropertyDefinitionShopsType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        private readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
+        private readonly ModuleRepository $moduleRepository,
         private readonly ShopRepository $shopRepository,
     ) {
         parent::__construct($translator, $locales);
@@ -76,7 +76,7 @@ class ExtraPropertyDefinitionShopsType extends TranslatorAwareType
             return $this->trans('Leave empty to make this property available in all stores.', 'Admin.Advparameters.Help');
         }
 
-        $moduleShopIds = $this->definitionShopFilter->getModuleEnabledShopIds($moduleName);
+        $moduleShopIds = $this->moduleRepository->getEnabledShopIds($moduleName);
         if ([] === $moduleShopIds) {
             return $this->trans('Leave empty to follow the module\'s store association.', 'Admin.Advparameters.Help');
         }

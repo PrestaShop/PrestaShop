@@ -58,13 +58,4 @@ interface ExtraPropertyDefinitionShopFilterInterface
      * @return list<int>
      */
     public function getAvailableShopIds(ExtraPropertyDefinition $definition, array $shopIds): array;
-
-    /**
-     * Shops one module is enabled on (ps_module_shop), empty when it has no row at all —
-     * the raw input of the module fallback, exposed so the BO can explain it (e.g. the
-     * shop-association help text listing the module's current stores).
-     *
-     * @return list<int>
-     */
-    public function getModuleEnabledShopIds(string $moduleName): array;
 }

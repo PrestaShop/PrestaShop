@@ -152,27 +152,6 @@ class ExtraPropertyDefinitionShopFilter implements ExtraPropertyDefinitionShopFi
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * Uncached on purpose: only used by BO pages explaining the fallback, where a stale
-     * list would be more confusing than the one extra query is costly.
-     */
-    public function getModuleEnabledShopIds(string $moduleName): array
-    {
-        return array_map(
-            intval(...),
-            $this->connection->createQueryBuilder()
-                ->select('ms.id_shop')
-                ->from($this->prefix . 'module_shop', 'ms')
-                ->innerJoin('ms', $this->prefix . 'module', 'm', 'm.id_module = ms.id_module')
-                ->where('m.name = :moduleName')
-                ->setParameter('moduleName', $moduleName)
-                ->orderBy('ms.id_shop', 'ASC')
-                ->fetchFirstColumn()
-        );
-    }
-
-    /**
      * Module technical names enabled on one shop, cached per shop id.
      *
      * @return list<string>

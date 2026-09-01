@@ -454,7 +454,6 @@ class ExtraPropertyWriterTest extends TestCase
             )))
         );
         $filter->method('filterByShopConstraint')->willReturnArgument(0);
-        $filter->method('getModuleEnabledShopIds')->willReturn([]);
 
         return $filter;
     }

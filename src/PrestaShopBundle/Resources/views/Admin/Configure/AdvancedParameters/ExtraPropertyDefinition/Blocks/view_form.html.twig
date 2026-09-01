@@ -21,7 +21,7 @@
    # Standalone form so the read-only definition form above stays unbound. Only present
    # when multistore is used (the controller passes null otherwise). #}
   {% if shopAssociationForm is defined and shopAssociationForm is not null %}
-    {{ form_start(shopAssociationForm, {'action': path('admin_extra_property_definitions_view', {'extraPropertyDefinitionId': app.request.get('extraPropertyDefinitionId')})}) }}
+    {{ form_start(shopAssociationForm, {action: path('admin_extra_property_definitions_view', {extraPropertyDefinitionId: app.request.get('extraPropertyDefinitionId')})}) }}
       <div class="card mt-3">
         <div class="card-header">
           <h3 class="card-header-title">

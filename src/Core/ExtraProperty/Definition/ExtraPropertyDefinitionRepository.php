@@ -190,38 +190,27 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
     }
 
     /**
-     * Persists the definition's shop association as part of save(), honoring the
-     * associatedShopIds tri-state (see the ExtraPropertyDefinition property docblock):
-     * null = no information, the stored association is left untouched — so a module
-     * re-registering its definition without shop data cannot clobber a BO-configured
-     * restriction; [] or a list = the stored rows are replaced.
+     * Persists the definition's shop association as part of save() — the definition is
+     * the single write path for the association — honoring the associatedShopIds
+     * tri-state (see the ExtraPropertyDefinition property docblock): null = no
+     * information, the stored association is left untouched — so a module re-registering
+     * its definition without shop data cannot clobber a BO-configured restriction;
+     * [] or a list = the stored extra_property_definition_shop rows are replaced
+     * ([] deletes them all, reverting to the fallback behavior).
      */
     protected function persistShopAssociation(int $definitionId, ExtraPropertyDefinition $definition): void
     {
-        if (null === $definition->getAssociatedShopIds()) {
+        // Already normalized by the ExtraPropertyDefinition constructor (int cast, deduplicated).
+        $shopIds = $definition->getAssociatedShopIds();
+        if (null === $shopIds) {
             return;
         }
 
-        $this->updateShopAssociation($definitionId, $definition->getAssociatedShopIds());
-    }
-
-    /**
-     * Replaces the extra_property_definition_shop rows of one definition
-     * (null/[] = delete only, reverting to the fallback behavior).
-     *
-     * Internal to save()/persistShopAssociation() — the definition carried by save() is
-     * the single write path for the association.
-     *
-     * @param list<int>|null $shopIds
-     */
-    protected function updateShopAssociation(int $definitionId, ?array $shopIds): void
-    {
         $table = $this->prefix . 'extra_property_definition_shop';
-        $normalizedShopIds = null === $shopIds ? [] : array_values(array_unique(array_map('intval', $shopIds)));
 
-        $this->connection->transactional(function () use ($table, $definitionId, $normalizedShopIds): void {
+        $this->connection->transactional(function () use ($table, $definitionId, $shopIds): void {
             $this->connection->delete($table, ['id_extra_property_definition' => $definitionId]);
-            foreach ($normalizedShopIds as $shopId) {
+            foreach ($shopIds as $shopId) {
                 $this->connection->insert($table, [
                     'id_extra_property_definition' => $definitionId,
                     'id_shop' => $shopId,
