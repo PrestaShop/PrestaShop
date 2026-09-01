@@ -103,6 +103,13 @@ function str2url(str, encoding, ucfirst)
   str = str.replace(/[\u0028\u0029\u0021\u003F\u002E\u0026\u005E\u007E\u002B\u002A\u002F\u003A\u003B\u003C\u003D\u003E]/g, '');
   str = str.replace(/[\s\'\:\/\[\]-]+/g, ' ');
 
+  // A separator at either end collapses to a space, which would otherwise become a leading or trailing
+  // dash. Left alone when the name is nothing but separators, matching the PHP side, because an empty
+  // result would not be a valid link_rewrite while the single dash is.
+  if (str.trim() !== '') {
+    str = str.trim();
+  }
+
   // Add special char not used for url rewrite
   str = str.replace(/[ ]/g, '-');
   str = str.replace(/[\/\\"'|,;%]*/g, '');
