@@ -89,6 +89,7 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
             associatedForms: isset($data['associated_forms']) ? explode(',', $data['associated_forms']) : null,
             associatedGrids: isset($data['associated_grids']) ? explode(',', $data['associated_grids']) : null,
             associatedApis: isset($data['associated_apis']) ? explode(',', $data['associated_apis']) : null,
+            associatedShopIds: isset($data['associated_shop_ids']) ? $this->referencesToIds($data['associated_shop_ids']) : null,
         );
 
         try {
@@ -171,6 +172,11 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['associated_apis'])) {
             $command->setAssociatedApis(explode(',', $data['associated_apis']));
         }
+        if (isset($data['associated_shop_ids'])) {
+            // An empty cell means "revert to the fallback" ([]); an absent row leaves the
+            // stored association untouched (the setter is simply never called).
+            $command->setAssociatedShopIds($this->referencesToIds($data['associated_shop_ids']));
+        }
 
         try {
             $this->getCommandBus()->handle($command);
@@ -247,6 +253,10 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
             if (in_array($field, ['nullable', 'display_front', 'required'], true)) {
                 $expected = filter_var($expected, FILTER_VALIDATE_BOOL) ? 'true' : 'false';
             }
+            if ('associated_shop_ids' === $field) {
+                // Cells hold shop references, resolved to the ids the definition stores.
+                $expected = implode(',', $this->referencesToIds($expected));
+            }
 
             if ($actual !== $expected) {
                 throw new RuntimeException(sprintf(
@@ -283,6 +293,7 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
             'associated_forms' => implode(',', $definition->getAssociatedForms() ?? []),
             'associated_grids' => implode(',', $definition->getAssociatedGrids() ?? []),
             'associated_apis' => implode(',', $definition->getAssociatedApis() ?? []),
+            'associated_shop_ids' => implode(',', $definition->getAssociatedShopIds() ?? []),
             default => throw new RuntimeException(sprintf('Unknown extra property definition parameter "%s".', $field)),
         };
     }
