@@ -51,6 +51,12 @@ class BusinessEntityRepository extends EntityRepository
         return $businessEntity;
     }
 
+    public function delete(BusinessEntity $businessEntity): void
+    {
+        $businessEntity->setDeleted(true);
+        $this->getEntityManager()->flush();
+    }
+
     /**
      * Counts every b2b customer linked to the entity, whatever the customer's own b2b status:
      * a link is a link, and filtering on the customer status is deliberately left out until

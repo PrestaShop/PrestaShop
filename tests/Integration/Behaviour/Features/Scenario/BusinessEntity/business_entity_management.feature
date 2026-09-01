@@ -286,3 +286,23 @@ Feature: Manage business entities
   Scenario: Editing a business entity that does not exist raises a not found error
     When I edit the business entity with id 999999
     Then I should get an error that the business entity was not found
+
+  Scenario: Delete a business entity
+    Given there is a business entity named "Deletable Corp" with status "active"
+    When I delete the business entity "Deletable Corp"
+    Then the business entity "Deletable Corp" should be soft deleted
+    And the business entity "Deletable Corp" should no longer appear in the business entities list
+
+  Scenario: Bulk delete business entities leaves non-selected entities untouched
+    Given there is a business entity named "Bulk One" with status "active"
+    And there is a business entity named "Bulk Two" with status "active"
+    And there is a business entity named "Bulk Keep" with status "active"
+    When I bulk delete the business entities "Bulk One, Bulk Two"
+    Then the business entity "Bulk One" should be soft deleted
+    And the business entity "Bulk One" should no longer appear in the business entities list
+    And the business entity "Bulk Two" should be soft deleted
+    And the business entity "Bulk Keep" should not be deleted
+
+  Scenario: Deleting a business entity that does not exist raises a not found error
+    When I delete the business entity with id 999999
+    Then I should get an error that the business entity was not found
