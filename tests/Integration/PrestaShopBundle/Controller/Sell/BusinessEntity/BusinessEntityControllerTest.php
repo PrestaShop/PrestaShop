@@ -22,6 +22,8 @@ class BusinessEntityControllerTest extends GridControllerTestCase
     private const DEFAULT_CUSTOMER_GROUP_ID = 1;
     private const DEFAULT_COUNTRY_ID = 8;
 
+    private const SAVE_BUTTON_SELECTOR = 'save-button';
+
     private const ACTIVE_COMPANY_NAME = 'Grid active company';
     private const PENDING_COMPANY_NAME = 'Grid pending company';
 
@@ -105,6 +107,210 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         ]));
 
         $this->resetGridFilters();
+    }
+
+    /**
+     * @depends testIndex
+     */
+    public function testEditPageIsPrefilled(): void
+    {
+        $crawler = $this->client->request('GET', $this->generateEditUrl(self::$activeBusinessEntityId));
+        $this->assertResponseIsSuccessful();
+
+        $formValues = $this->getFormByButton($crawler, self::SAVE_BUTTON_SELECTOR)->getValues();
+
+        // AC3 lists six in-scope fields; asserting a subset would let a provider regression through.
+        $this->assertSame(self::ACTIVE_COMPANY_NAME, $formValues[$this->fieldName('name')]);
+        $this->assertSame('Grid active legal name', $formValues[$this->fieldName('legal_name')]);
+        $this->assertSame(BusinessEntityStatus::ACTIVE->value, $formValues[$this->fieldName('status')]);
+        $this->assertSame(
+            (string) self::DEFAULT_CUSTOMER_GROUP_ID,
+            $formValues[$this->fieldName('customer_group_id')]
+        );
+        $this->assertSame('', $formValues[$this->fieldName('external_ref')]);
+        $this->assertSame('1', $formValues[$this->fieldName('delivery_authorized')]);
+    }
+
+    /**
+     * @depends testEditPageIsPrefilled
+     */
+    public function testEditRedirectsToViewPageAndPersists(): void
+    {
+        $this->client->disableReboot();
+
+        $editUrl = $this->generateEditUrl(self::$activeBusinessEntityId);
+        $crawler = $this->client->request('GET', $editUrl);
+        $this->assertResponseIsSuccessful();
+
+        $form = $this->getFormByButton($crawler, self::SAVE_BUTTON_SELECTOR);
+        $form[$this->fieldName('name')] = 'Grid renamed company';
+        $form[$this->fieldName('legal_name')] = 'Grid renamed legal name';
+        $form[$this->fieldName('external_ref')] = 'EXT-HTTP-1';
+        $form[$this->fieldName('delivery_authorized')] = '0';
+        $form[$this->fieldName('status')] = BusinessEntityStatus::PENDING->value;
+        $this->client->submit($form);
+
+        $this->assertResponseRedirects($this->router->generate(
+            'admin_business_entities_view',
+            ['businessEntityId' => self::$activeBusinessEntityId]
+        ));
+
+        $crawler = $this->client->followRedirect();
+        $this->assertResponseIsSuccessful();
+        $this->assertStringContainsString('Grid renamed company', $crawler->filter('body')->text());
+        // AC5 also asks for a success message. Target the flash node AND its text: the admin layout
+        // renders an empty #ajax_confirmation.alert-success on every page, so matching the class
+        // alone would pass even with no flash at all.
+        $this->assertStringContainsString(
+            'Successful update.',
+            $crawler->filter('.alert-success .alert-text')->text(),
+            'A success message must be shown after a successful edit'
+        );
+
+        // Every edited field must survive the round-trip, not only the one that shows in the H1.
+        $formValues = $this->getFormByButton(
+            $this->client->request('GET', $editUrl),
+            self::SAVE_BUTTON_SELECTOR
+        )->getValues();
+        $this->assertSame('Grid renamed company', $formValues[$this->fieldName('name')]);
+        $this->assertSame('Grid renamed legal name', $formValues[$this->fieldName('legal_name')]);
+        $this->assertSame('EXT-HTTP-1', $formValues[$this->fieldName('external_ref')]);
+        $this->assertSame('0', $formValues[$this->fieldName('delivery_authorized')]);
+        $this->assertSame(BusinessEntityStatus::PENDING->value, $formValues[$this->fieldName('status')]);
+
+        $this->restoreActiveBusinessEntity($editUrl);
+    }
+
+    /**
+     * @depends testEditRedirectsToViewPageAndPersists
+     */
+    public function testEditClearsTheExternalReference(): void
+    {
+        $this->client->disableReboot();
+
+        $editUrl = $this->generateEditUrl(self::$activeBusinessEntityId);
+
+        $form = $this->getFormByButton($this->client->request('GET', $editUrl), self::SAVE_BUTTON_SELECTOR);
+        $form[$this->fieldName('external_ref')] = 'EXT-TO-CLEAR';
+        $this->client->submit($form);
+        $this->client->followRedirect();
+
+        $form = $this->getFormByButton($this->client->request('GET', $editUrl), self::SAVE_BUTTON_SELECTOR);
+        $form[$this->fieldName('external_ref')] = '';
+        $this->client->submit($form);
+        $this->client->followRedirect();
+
+        $formValues = $this->getFormByButton(
+            $this->client->request('GET', $editUrl),
+            self::SAVE_BUTTON_SELECTOR
+        )->getValues();
+        $this->assertSame('', $formValues[$this->fieldName('external_ref')]);
+
+        $this->restoreActiveBusinessEntity($editUrl);
+    }
+
+    /**
+     * The edit tests share one fixture, so each of them puts it back the way it found it.
+     */
+    private function restoreActiveBusinessEntity(string $editUrl): void
+    {
+        $form = $this->getFormByButton($this->client->request('GET', $editUrl), self::SAVE_BUTTON_SELECTOR);
+        $form[$this->fieldName('name')] = self::ACTIVE_COMPANY_NAME;
+        $form[$this->fieldName('legal_name')] = 'Grid active legal name';
+        $form[$this->fieldName('external_ref')] = '';
+        $form[$this->fieldName('delivery_authorized')] = '1';
+        $form[$this->fieldName('status')] = BusinessEntityStatus::ACTIVE->value;
+        $this->client->submit($form);
+        $this->client->followRedirect();
+    }
+
+    /**
+     * @depends testEditPageIsPrefilled
+     */
+    public function testEditRejectsABlankRequiredField(): void
+    {
+        $this->client->disableReboot();
+
+        $editUrl = $this->generateEditUrl(self::$activeBusinessEntityId);
+        $form = $this->getFormByButton(
+            $this->client->request('GET', $editUrl),
+            self::SAVE_BUTTON_SELECTOR
+        );
+        $form[$this->fieldName('name')] = '';
+        $this->client->submit($form);
+
+        $this->assertResponseIsSuccessful();
+
+        $formValues = $this->getFormByButton(
+            $this->client->request('GET', $editUrl),
+            self::SAVE_BUTTON_SELECTOR
+        )->getValues();
+        $this->assertSame(self::ACTIVE_COMPANY_NAME, $formValues[$this->fieldName('name')]);
+    }
+
+    /**
+     * @depends testEditPageIsPrefilled
+     */
+    public function testEditPageOffersACancelLinkBackToTheViewPage(): void
+    {
+        $crawler = $this->client->request('GET', $this->generateEditUrl(self::$activeBusinessEntityId));
+        $this->assertResponseIsSuccessful();
+
+        $viewUrl = $this->router->generate(
+            'admin_business_entities_view',
+            ['businessEntityId' => self::$activeBusinessEntityId]
+        );
+
+        $this->assertNotEmpty(
+            $crawler->filter(sprintf('a[href="%s"]', $viewUrl)),
+            'The edit page must offer a link back to the view page'
+        );
+    }
+
+    /**
+     * @depends testIndex
+     */
+    public function testTheListAndTheViewPageBothLinkToTheEditPage(): void
+    {
+        // Admin urls carry a per-generation CSRF token, so the path is what identifies the target.
+        $editPath = sprintf('/sell/business-entities/%d/edit', self::$activeBusinessEntityId);
+
+        $listCrawler = $this->client->request('GET', $this->generateGridUrl());
+        $this->assertResponseIsSuccessful();
+        $this->assertCount(
+            1,
+            $listCrawler->filter(sprintf('%s a[href*="%s"]', $this->getGridSelector(), $editPath)),
+            'The list row action must link to the edit page'
+        );
+        // AC1 asks for Edit to sit in the three-dots menu. The action column renders the FIRST
+        // regular action outside the dropdown and the rest inside it, so a reorder in the grid
+        // definition factory would silently promote Edit to the visible button: pin the dropdown.
+        $this->assertCount(
+            1,
+            $listCrawler->filter(sprintf('%s .dropdown-menu a[href*="%s"]', $this->getGridSelector(), $editPath)),
+            'AC1: the Edit action must sit inside the kebab menu, not as the visible button'
+        );
+
+        $viewCrawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_view',
+            ['businessEntityId' => self::$activeBusinessEntityId]
+        ));
+        $this->assertResponseIsSuccessful();
+        $this->assertCount(
+            1,
+            $viewCrawler->filter(sprintf('.toolbar-icons a[href*="%s"]', $editPath)),
+            'The view page toolbar must link to the edit page'
+        );
+    }
+
+    private function generateEditUrl(int $businessEntityId): string
+    {
+        return $this->router->generate('admin_business_entities_edit', ['businessEntityId' => $businessEntityId]);
+    }
+
+    private function fieldName(string $field): string
+    {
+        return sprintf('business_entity[general_information][%s]', $field);
     }
 
     private static function createBusinessEntity(

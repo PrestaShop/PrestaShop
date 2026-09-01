@@ -68,12 +68,14 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
             ->add(self::FIELD_STATUS, EnumType::class, [
                 'label' => $this->trans('Status', 'Admin.Global'),
                 'class' => BusinessEntityStatus::class,
+                'constraints' => [new NotBlank()],
             ])
             ->add(self::FIELD_CUSTOMER_GROUP_ID, ChoiceType::class, [
                 'label' => $this->trans('Customer group', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Customer group attached to this business entity.', 'Admin.Catalog.Feature'),
                 'choices' => $this->groupByIdChoiceProvider->getChoices(),
                 'required' => true,
+                'constraints' => [new NotBlank()],
             ]);
     }
 

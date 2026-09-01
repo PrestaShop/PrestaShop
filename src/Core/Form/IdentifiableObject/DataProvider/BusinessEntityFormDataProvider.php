@@ -44,7 +44,7 @@ final class BusinessEntityFormDataProvider implements FormDataProviderInterface
      *
      * @return array<string, mixed>
      */
-    public function getData($id)
+    public function getData($id): array
     {
         /** @var EditableBusinessEntity $editableBusinessEntity */
         $editableBusinessEntity = $this->queryBus->handle(new GetBusinessEntityForEditing((int) $id));
@@ -70,7 +70,7 @@ final class BusinessEntityFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getDefaultData()
+    public function getDefaultData(): array
     {
         return [
             BusinessEntityType::GENERAL_INFORMATION => [

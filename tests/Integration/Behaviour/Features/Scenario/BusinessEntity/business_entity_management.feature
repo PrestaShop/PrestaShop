@@ -196,6 +196,7 @@ Feature: Manage business entities
       | alias   | address1  | city  | postcode | country_id | is_default |
       | Billing | 1 Edit St | Paris | 75001    | 8          | 1          |
     When I add the business entity
+    And the business entity "Editable Entity" was last updated an hour ago
     And I edit the business entity "Editable Entity" with the following details:
       | name                | Edited Entity |
       | legal_name          | Edited Legal  |
@@ -210,6 +211,78 @@ Feature: Manage business entities
       | status              | active       |
       | customer_group_id   | 1            |
     And the business entity "Edited Entity" should have 1 address
+    And the business entity "Edited Entity" should have a refreshed updated_at
+    And the business entity "Edited Entity" should be editable with the following details:
+      | legal_name          | Edited Legal |
+      | external_ref        | EXT-010-B    |
+      | delivery_authorized | 1            |
+      | status              | active       |
+      | customer_group_id   | 1            |
+
+  Scenario: Editing only one field leaves every other field untouched
+    Given there is a business entity with the following details:
+      | name                | Partial Entity |
+      | legal_name          | Partial Legal  |
+      | external_ref        | EXT-011        |
+      | delivery_authorized | 1              |
+      | status              | pending        |
+      | billing_as_shipping | 1              |
+    And the business entity has the following billing addresses:
+      | alias   | address1     | city  | postcode | country_id | is_default |
+      | Billing | 1 Partial St | Paris | 75001    | 8          | 1          |
+    When I add the business entity
+    And I edit the business entity "Partial Entity" with the following details:
+      | status | active |
+    Then the business entity "Partial Entity" should have the following details:
+      | legal_name          | Partial Legal |
+      | external_ref        | EXT-011       |
+      | delivery_authorized | 1             |
+      | status              | active        |
+
+  Scenario: Turning delivery authorization off with the word false
+    Given there is a business entity with the following details:
+      | name                | Switchable Entity |
+      | legal_name          | Switchable Legal  |
+      | external_ref        | EXT-013           |
+      | delivery_authorized | 1                 |
+      | status              | active            |
+      | billing_as_shipping | 1                 |
+    And the business entity has the following billing addresses:
+      | alias   | address1        | city  | postcode | country_id | is_default |
+      | Billing | 1 Switchable St | Paris | 75001    | 8          | 1          |
+    When I add the business entity
+    And I edit the business entity "Switchable Entity" with the following details:
+      | delivery_authorized | false |
+    # Written with "false" on the way in and "0" on the way out on purpose: a naive (bool) cast
+    # reads "false" as TRUE, so a symmetric table would expect true and pass without testing
+    # anything. "0" is falsy under either cast, so only a correct input cast makes this pass.
+    Then the business entity "Switchable Entity" should have the following details:
+      | delivery_authorized | 0                |
+      | legal_name          | Switchable Legal |
+      | status              | active           |
+
+  Scenario: Clearing the external reference of a business entity
+    Given there is a business entity with the following details:
+      | name                | Clearable Entity |
+      | legal_name          | Clearable Legal  |
+      | external_ref        | EXT-012          |
+      | delivery_authorized | 1                |
+      | status              | active           |
+      | billing_as_shipping | 1                |
+    And the business entity has the following billing addresses:
+      | alias   | address1       | city  | postcode | country_id | is_default |
+      | Billing | 1 Clearable St | Paris | 75001    | 8          | 1          |
+    When I add the business entity
+    And I edit the business entity "Clearable Entity" with the following details:
+      | external_ref |  |
+    Then the business entity "Clearable Entity" should have the following details:
+      | external_ref        |                 |
+      | legal_name          | Clearable Legal |
+      | delivery_authorized | 1               |
+      | status              | active          |
+    And the business entity "Clearable Entity" should be editable with the following details:
+      | external_ref |  |
 
   Scenario: Editing a business entity that does not exist raises a not found error
-    When editing the business entity with id 999999 should raise a not found error
+    When I edit the business entity with id 999999
+    Then I should get an error that the business entity was not found

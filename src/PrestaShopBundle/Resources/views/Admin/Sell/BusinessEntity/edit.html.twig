@@ -7,15 +7,12 @@
 
 {% form_theme businessEntityForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
-{% block pageTitle %}
-  {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/header.html.twig') }}
-{% endblock %}
-
 {% block content %}
-  {{ form_start(businessEntityForm) }}
+  {{ form_start(businessEntityForm, {attr: {novalidate: 'novalidate'}}) }}
+  {{ form_errors(businessEntityForm) }}
 
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-12">
       <div class="card">
         <h3 class="card-header">
           {{ 'General information'|trans({}, 'Admin.Global') }}
@@ -28,15 +25,15 @@
             </div>
 
             {# Business identifiers are read-only here; their management is handled in US2.1.6 / US2.1.7. #}
-            {% set identifiers = businessEntity.getIdentifiers %}
+            {% set identifiers = businessEntity.identifiers %}
             {% if identifiers is not empty %}
               <hr>
               <div class="row">
                 {% for identifier in identifiers %}
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label class="form-control-label">{{ identifier.getLabel }}</label>
-                      <input type="text" class="form-control" value="{{ identifier.getValue }}" disabled>
+                      <label class="form-control-label">{{ identifier.label }}</label>
+                      <input type="text" class="form-control" value="{{ identifier.value }}" disabled>
                     </div>
                   </div>
                 {% endfor %}
@@ -56,19 +53,15 @@
         </div>
       </div>
     </div>
-
-    <div class="col-md-4">
-      {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/company_summary.html.twig') }}
-    </div>
   </div>
 
   {# Addresses are read-only here; linking/editing addresses is handled in US2.1.8. #}
   <div class="alert alert-info mt-3" role="alert">
-    {{ 'Editing addresses will be available in a future release.'|trans({}, 'Admin.Notifications.Info') }}
+    <p class="alert-text">{{ 'Addresses are read-only on this page.'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
   </div>
 
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 mb-3 mb-md-0">
       {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/billing_address.html.twig') }}
     </div>
     <div class="col-md-6">
@@ -79,7 +72,7 @@
   <div class="d-flex justify-content-end mt-3">
     <a href="{{ path('admin_business_entities_view', {businessEntityId: businessEntityId}) }}"
        class="btn btn-outline-secondary mr-3">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</a>
-    <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+    <button type="submit" class="btn btn-primary" id="save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
   </div>
 
   {{ form_widget(businessEntityForm._token) }}
