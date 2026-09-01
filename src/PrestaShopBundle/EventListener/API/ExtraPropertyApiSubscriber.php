@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Api\ExtraPropertyApiListRecordCollector;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
@@ -56,6 +57,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
         protected readonly ShopContext $shopContext,
         protected readonly LanguageContext $languageContext,
         protected readonly LocalizedValueUpdater $localizedValueUpdater,
+        protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
         protected readonly ?PropertyNameCollectionFactoryInterface $propertyNameCollectionFactory = null,
         protected readonly ?PropertyMetadataFactoryInterface $propertyMetadataFactory = null,
     ) {
@@ -101,8 +103,14 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
         $uriTemplate = (string) $operation->getUriTemplate();
         $method = (string) $operation->getMethod();
 
-        // Single match: the definitions targeting this operation. When none match there is nothing to do.
-        $definitions = $this->repository->getAllDefinitions()->filterByApi($uriTemplate, $method);
+        // Single match: the definitions targeting this operation, restricted to the request's shop
+        // scope (?shopId= / ?shopGroupId= / ?shopIds / ?allShops → ShopContext) — a definition not
+        // available there is neither exposed in the response nor written from the payload.
+        // When none match there is nothing to do.
+        $definitions = $this->definitionShopFilter->filterByShopConstraint(
+            $this->repository->getAllDefinitions()->filterByApi($uriTemplate, $method),
+            $this->shopContext->getShopConstraint()
+        );
         if ($definitions->isEmpty()) {
             return;
         }

@@ -67,6 +67,7 @@ final class GetExtraPropertyDefinitionForEditingHandler implements GetExtraPrope
             associatedForms: $definition->getAssociatedForms(),
             associatedGrids: $definition->getAssociatedGrids(),
             associatedApis: $definition->getAssociatedApis(),
+            associatedShopIds: $definition->getAssociatedShopIds(),
         );
     }
 }

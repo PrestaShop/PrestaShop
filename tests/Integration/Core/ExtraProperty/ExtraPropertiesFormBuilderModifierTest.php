@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormBuilderModifier;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister;
@@ -213,10 +214,14 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
                 $captured = $valuesByModule;
             });
 
+        $definitionShopFilter = $this->createMock(ExtraPropertyDefinitionShopFilterInterface::class);
+        $definitionShopFilter->method('filterByShopConstraint')->willReturnArgument(0);
+
         $persister = new ExtraPropertiesFormDataPersister(
             $this->repositoryReturning($definition),
             $writer,
             $this->shopContext(),
+            $definitionShopFilter,
         );
 
         $persister->persist($form, 'product', 5);
@@ -255,6 +260,9 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
         $translator = $this->createMock(\Symfony\Contracts\Translation\TranslatorInterface::class);
         $translator->method('trans')->willReturnArgument(0);
 
+        $definitionShopFilter = $this->createMock(ExtraPropertyDefinitionShopFilterInterface::class);
+        $definitionShopFilter->method('filterByShopConstraint')->willReturnArgument(0);
+
         return new ExtraPropertiesFormBuilderModifier(
             $this->repositoryReturning($definition),
             $this->createMock(ExtraPropertyReaderInterface::class),
@@ -262,6 +270,7 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
             $this->shopContext(),
             new FormBuilderModifier(),
             new ExtraPropertyFormTypeMap(),
+            $definitionShopFilter,
         );
     }
 

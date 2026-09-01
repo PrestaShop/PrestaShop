@@ -13,6 +13,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use Psr\Log\LoggerInterface;
@@ -33,6 +34,7 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
         protected readonly Connection $connection,
         protected readonly string $prefix,
         protected readonly ShopListResolverInterface $shopListResolver,
+        protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
         // Optional: the hand-built FO legacy container has no logger service.
         protected readonly ?LoggerInterface $logger = null,
     ) {
@@ -83,6 +85,10 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
         }
 
         $allDefinitions = $definitions ?? $this->repository->getAllDefinitions()->filterByEntity($entityName);
+        // Shop availability is enforced here unconditionally — injected collections included:
+        // the filter is idempotent, and a definition not associated to the requested scope
+        // must never surface a value, whatever the caller forgot.
+        $allDefinitions = $this->definitionShopFilter->filterByShopConstraint($allDefinitions, $shopConstraint);
         if ($allDefinitions->isEmpty()) {
             return [];
         }

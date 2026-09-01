@@ -45,6 +45,7 @@ class AddExtraPropertyDefinitionCommand
      * @param list<string>|null $associatedForms Form placement entries (e.g. "product:reference:after")
      * @param list<string>|null $associatedGrids Grid placement entries (e.g. "product:reference:after")
      * @param list<string>|null $associatedApis Admin API placement entries (e.g. "/products:GET")
+     * @param list<int>|null $associatedShopIds Shops the definition is restricted to; null/empty = available on all shops
      */
     public function __construct(
         protected readonly string $entityName,
@@ -68,6 +69,7 @@ class AddExtraPropertyDefinitionCommand
         protected readonly ?array $associatedForms = null,
         protected readonly ?array $associatedGrids = null,
         protected readonly ?array $associatedApis = null,
+        protected readonly ?array $associatedShopIds = null,
     ) {
     }
 
@@ -192,5 +194,13 @@ class AddExtraPropertyDefinitionCommand
     public function getAssociatedApis(): ?array
     {
         return $this->associatedApis;
+    }
+
+    /**
+     * @return list<int>|null
+     */
+    public function getAssociatedShopIds(): ?array
+    {
+        return $this->associatedShopIds;
     }
 }

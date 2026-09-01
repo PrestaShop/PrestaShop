@@ -204,4 +204,26 @@ final class ExtraPropertyDefinitionCollection implements Countable, IteratorAggr
             static fn (ExtraPropertyDefinition $d): bool => $d->matchesApi($uriTemplate, $method)
         )));
     }
+
+    /**
+     * Returns a new collection containing only definitions available for at least one of the
+     * given shops (via ExtraPropertyDefinition::isAvailableForShops()).
+     *
+     * Pure filter: resolving a ShopConstraint to shop ids and loading the module→shops
+     * association is the job of ExtraPropertyDefinitionShopFilterInterface — use its
+     * filterByShopConstraint() unless both inputs are already resolved.
+     *
+     * @param list<int> $shopIds shops in the current scope
+     * @param array<string, list<int>> $moduleShopIdsByName enabled shop ids indexed by module technical name
+     */
+    public function filterByShops(array $shopIds, array $moduleShopIdsByName = []): self
+    {
+        return new self(array_values(array_filter(
+            $this->definitions,
+            static fn (ExtraPropertyDefinition $d): bool => $d->isAvailableForShops(
+                $shopIds,
+                null !== $d->getModuleName() ? ($moduleShopIdsByName[$d->getModuleName()] ?? null) : null
+            )
+        )));
+    }
 }

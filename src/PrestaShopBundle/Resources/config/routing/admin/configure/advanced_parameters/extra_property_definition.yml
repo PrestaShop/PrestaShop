@@ -41,7 +41,9 @@ admin_extra_property_definitions_edit:
 
 admin_extra_property_definitions_view:
   path: /{extraPropertyDefinitionId}/view
-  methods: GET
+  # POST handles the shop-association mini form — the single field of a module-owned
+  # definition that remains editable from the BO.
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ExtraPropertyDefinitionController::viewAction'
     _legacy_controller: AdminExtraPropertyDefinitions

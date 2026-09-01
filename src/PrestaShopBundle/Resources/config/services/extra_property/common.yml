@@ -36,6 +36,21 @@ services:
     alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Definition\CachedExtraPropertyDefinitionRepository'
     public: true
 
+  # ─── Shop filter (definition-level shop association) ────────────────────────
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilter:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $prefix: '%database_prefix%'
+      $shopListResolver: '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+      # Same pool as the cached repository: module state changes wipe var/cache/{env}
+      # entirely (ModuleManagementEvent → SymfonyCacheClearer), which covers its entries.
+      $definitionCache: '@prestashop.extra_property.definition.filesystem_cache'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface:
+    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilter'
+    public: true
+
   # ─── Validation ──────────────────────────────────────────────────────────────
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator:
@@ -56,6 +71,7 @@ services:
       $connection: '@doctrine.dbal.default_connection'
       $prefix: '%database_prefix%'
       $shopListResolver: '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+      $definitionShopFilter: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface'
       # Optional on purpose: absent from the hand-built FO legacy container.
       $logger: '@?logger'
 
@@ -71,6 +87,7 @@ services:
       $prefix: '%database_prefix%'
       $definitionRepository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
       $shopListResolver: '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+      $definitionShopFilter: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface:
     alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriter'

@@ -30,6 +30,8 @@ services:
     parent: 'prestashop.core.grid.abstract_query_builder'
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+      - '@prestashop.adapter.feature.multistore'
     public: true
 
   prestashop.core.grid.query_builder.product:

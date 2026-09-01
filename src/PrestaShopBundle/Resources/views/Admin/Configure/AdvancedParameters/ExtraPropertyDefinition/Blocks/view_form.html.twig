@@ -17,6 +17,30 @@
     {{ form_row(extraPropertyDefinitionForm) }}
   </div>
 
+  {# The one editable field of a module-owned definition: its shop association.
+   # Standalone form so the read-only definition form above stays unbound. Only present
+   # when multistore is used (the controller passes null otherwise). #}
+  {% if shopAssociationForm is defined and shopAssociationForm is not null %}
+    {{ form_start(shopAssociationForm, {'action': path('admin_extra_property_definitions_view', {'extraPropertyDefinitionId': app.request.get('extraPropertyDefinitionId')})}) }}
+      <div class="card mt-3">
+        <div class="card-header">
+          <h3 class="card-header-title">
+            <i class="material-icons">store</i>
+            {{ 'Store association'|trans({}, 'Admin.Global') }}
+          </h3>
+        </div>
+        <div class="card-body">
+          {{ form_row(shopAssociationForm.shop_association) }}
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+          </div>
+        </div>
+      </div>
+    {{ form_end(shopAssociationForm) }}
+  {% endif %}
+
   <div class="card-footer">
     <a href="{{ path('admin_extra_property_definitions_index') }}" class="btn btn-outline-secondary">
       {{ 'Back to list'|trans({}, 'Admin.Actions') }}

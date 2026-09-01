@@ -906,6 +906,14 @@ CREATE TABLE `PREFIX_extra_property_definition` (
   KEY `module_name` (`module_name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
+/* Shops an extra property definition is restricted to (no row = no explicit restriction) */
+CREATE TABLE `PREFIX_extra_property_definition_shop` (
+  `id_extra_property_definition` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id_extra_property_definition`, `id_shop`),
+  KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 /* Position of each feature */
 CREATE TABLE `PREFIX_feature` (
   `id_feature` int(10) unsigned NOT NULL auto_increment,

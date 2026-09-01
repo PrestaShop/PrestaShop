@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridQueryBuilderModifier;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -249,7 +250,10 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         $shopContext = $this->createMock(ShopContext::class);
         $shopContext->method('getShopConstraint')->willReturn(ShopConstraint::shop(self::CONTEXT_SHOP_ID));
 
-        return new ExtraPropertiesGridQueryBuilderModifier($repository, 'ps_', $languageContext, $shopContext);
+        $definitionShopFilter = $this->createMock(ExtraPropertyDefinitionShopFilterInterface::class);
+        $definitionShopFilter->method('filterByShopConstraint')->willReturnArgument(0);
+
+        return new ExtraPropertiesGridQueryBuilderModifier($repository, 'ps_', $languageContext, $shopContext, $definitionShopFilter);
     }
 
     /**

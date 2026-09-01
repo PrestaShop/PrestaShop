@@ -54,6 +54,15 @@ services:
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'extra_property_definition'
 
+  # Enriches the records with the associated_shops column data (shop names + ids).
+  prestashop.adapter.grid.data_factory.extra_property_definition_decorator:
+    class: 'PrestaShop\PrestaShop\Adapter\ExtraProperty\Grid\Data\Factory\ExtraPropertyDefinitionGridDataFactoryDecorator'
+    arguments:
+      - '@prestashop.core.grid.data_factory.extra_property_definition'
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@prestashop.adapter.feature.multistore'
+
   prestashop.core.grid.data_provider.meta:
     class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
     arguments:

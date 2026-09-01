@@ -68,6 +68,20 @@ final class ExtraPropertyDefinition
     protected readonly string $entityName;
 
     /**
+     * Shops this definition is explicitly restricted to (values cast to int, deduplicated
+     * at construction). Three states:
+     *  - non-empty list: explicit restriction;
+     *  - null: no information — a hydrated definition without association rows, or an
+     *    incoming definition whose author did not decide anything (persisting it leaves
+     *    the stored association untouched);
+     *  - []: write-time "clear" marker — persisting it removes every association row,
+     *    reverting to the fallback rules. Hydrated definitions never carry it (no rows
+     *    hydrate to null), and availability treats it like null.
+     * See isAvailableForShops() for the fallback rules.
+     */
+    protected readonly ?array $associatedShopIds;
+
+    /**
      * @param string $entityName Entity table name (e.g. 'product'). Required — must be non-empty. Normalized to lower snake_case at construction.
      * @param string $propertyName Property name as declared by the module (e.g. 'video_link'). Required.
      * @param ExtraPropertyType $type Field storage type. Determines the SQL column type via ColumnDefinitionMapper.
@@ -91,6 +105,7 @@ final class ExtraPropertyDefinition
      * @param string|null $descriptionWording translation wording key shown as BO help text
      * @param string|null $descriptionDomain translation domain for description wording
      * @param bool|null $multiShop Whether values are stored per shop (the storage table carries an id_shop column). Not persisted — the live storage table schema is the source of truth (see ExtraPropertyDefinitionRepository::enrichRowsWithColumnMetadata()). Null = not introspected yet; isMultiShop() then falls back to the scope's structural default (SHOP → true, COMMON/LANG → false).
+     * @param list<int>|null $associatedShopIds Shops this definition is restricted to, persisted in the extra_property_definition_shop association table by the repository's save(). Null = no information — the stored association is left untouched on save, so a module re-registering without shop data cannot clobber a BO-configured restriction; [] = clear the stored association (revert to fallback); non-empty = explicit restriction. Without explicit rows, core-owned definitions apply to all shops and module-owned definitions follow their module's enabled shops (see isAvailableForShops()).
      *
      * @throws InvalidExtraPropertyDefinitionException when entityName or propertyName is empty or not a valid SQL identifier, when associatedForms/associatedGrids have invalid format or duplicates, when labelWording is missing despite being required, or when the computed storage column name exceeds 64 characters
      */
@@ -118,7 +133,16 @@ final class ExtraPropertyDefinition
         protected readonly ?string $descriptionWording = null,
         protected readonly ?string $descriptionDomain = null,
         protected readonly ?bool $multiShop = null,
+        ?array $associatedShopIds = null,
     ) {
+        // Normalize the explicit shop restriction values (int cast, deduplicated). The
+        // null / [] distinction is deliberately preserved: null means "no information"
+        // while [] is the write-time marker that clears the stored association — see the
+        // $associatedShopIds property docblock.
+        $this->associatedShopIds = null === $associatedShopIds
+            ? null
+            : array_values(array_unique(array_map('intval', $associatedShopIds)));
+
         // Entity names are SQL identifier fragments (tables + primary key column):
         // normalize to lower snake_case before validating and storing — tableize()
         // converts CamelCase (ProductAttribute → product_attribute), then hyphens
@@ -286,6 +310,7 @@ final class ExtraPropertyDefinition
             descriptionWording: isset($row['description_wording']) && '' !== $row['description_wording'] ? (string) $row['description_wording'] : null,
             descriptionDomain: isset($row['description_domain']) && '' !== $row['description_domain'] ? (string) $row['description_domain'] : null,
             multiShop: array_key_exists('multi_shop', $row) ? (bool) $row['multi_shop'] : null,
+            associatedShopIds: isset($row['associated_shop_ids']) && is_array($row['associated_shop_ids']) ? $row['associated_shop_ids'] : null,
         );
     }
 
@@ -368,6 +393,7 @@ final class ExtraPropertyDefinition
             descriptionWording: $this->descriptionWording,
             descriptionDomain: $this->descriptionDomain,
             multiShop: $this->multiShop,
+            associatedShopIds: $this->associatedShopIds,
         );
     }
 
@@ -407,6 +433,7 @@ final class ExtraPropertyDefinition
             descriptionWording: array_key_exists('descriptionWording', $overrides) ? $overrides['descriptionWording'] : $this->descriptionWording,
             descriptionDomain: array_key_exists('descriptionDomain', $overrides) ? $overrides['descriptionDomain'] : $this->descriptionDomain,
             multiShop: array_key_exists('multiShop', $overrides) ? $overrides['multiShop'] : $this->multiShop,
+            associatedShopIds: array_key_exists('associatedShopIds', $overrides) ? $overrides['associatedShopIds'] : $this->associatedShopIds,
         );
     }
 
@@ -541,6 +568,57 @@ final class ExtraPropertyDefinition
     public function isMultiShop(): bool
     {
         return $this->multiShop ?? (ExtraPropertyScope::SHOP === $this->scope);
+    }
+
+    /**
+     * Shops this definition is explicitly restricted to, or null when it has no explicit
+     * restriction ([] is the transient write-time "clear" marker — see the property
+     * docblock). Distinct from isMultiShop(), which describes how VALUES are stored:
+     * this field describes on which shops the definition exists at all — a COMMON-scope
+     * definition can be restricted to specific shops (the restriction is then pure
+     * visibility, since its single storage row is shared by every shop).
+     *
+     * @return list<int>|null
+     */
+    public function getAssociatedShopIds(): ?array
+    {
+        return $this->associatedShopIds;
+    }
+
+    /**
+     * Returns true when this definition is available for at least one of the given shops.
+     *
+     * Availability rules:
+     *  - explicit restriction set → available when it intersects $shopIds;
+     *  - no restriction, core-owned → available everywhere;
+     *  - no restriction, module-owned → follows the owning module's enabled shops
+     *    ($moduleShopIds): an empty list means "the module is enabled on other shops
+     *    only" and excludes the definition, while null means "unknown or no shop rows
+     *    at all" and is treated as unrestricted — registration runs during install(),
+     *    before the module is enabled on any shop, so absence of data must not hide
+     *    the definition (same degenerate rule as
+     *    ExtraPropertyWriter::filterShopScopeByAssociations()).
+     *
+     * Pure array logic — resolving a ShopConstraint to shop ids and loading the module
+     * association is the job of ExtraPropertyDefinitionShopFilter.
+     *
+     * @param list<int> $shopIds shops in the current scope
+     * @param list<int>|null $moduleShopIds shops the owning module is enabled on, restricted or not to $shopIds
+     *                                      (ignored for core-owned definitions); null = unknown/unrestricted
+     */
+    public function isAvailableForShops(array $shopIds, ?array $moduleShopIds = null): bool
+    {
+        // An empty list is the transient write-time "clear" marker, equivalent to the
+        // no-restriction state it reverts to — only a non-empty set restricts.
+        if (!empty($this->associatedShopIds)) {
+            return [] !== array_intersect($this->associatedShopIds, $shopIds);
+        }
+
+        if (!$this->isModuleOwned() || null === $moduleShopIds) {
+            return true;
+        }
+
+        return [] !== array_intersect($moduleShopIds, $shopIds);
     }
 
     /**

@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
@@ -40,6 +41,14 @@ use Throwable;
  * refresh shops the entity is associated with, explicitly named shops always get their
  * row — while LANG rows cover the full scope like native lang-multishop writes do.
  * Fan-out writes are batched into one multi-row UPSERT per table.
+ *
+ * DEFINITION-level shop availability (extra_property_definition_shop + module fallback,
+ * see ExtraPropertyDefinition::isAvailableForShops()) is enforced on top of all of this:
+ * a definition not available anywhere in the constraint's scope is skipped entirely, and
+ * per-shop rows (SHOP scope, multishop LANG) only fan out to the shops each definition is
+ * available for — unlike the entity association rule above, this applies to LANG rows too
+ * (definition availability is a different axis: the reader never surfaces a value on a
+ * shop the definition does not exist for, so such rows would be unreadable garbage).
  */
 class ExtraPropertyWriter implements ExtraPropertyWriterInterface
 {
@@ -48,6 +57,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
         protected readonly string $prefix,
         protected readonly ExtraPropertyDefinitionRepositoryInterface $definitionRepository,
         protected readonly ShopListResolverInterface $shopListResolver,
+        protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
     ) {
     }
 
@@ -71,9 +81,24 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
             return;
         }
 
+        // One row per shop covered by the constraint — native ObjectModel parity
+        // (a group / all-shops edit updates every shop in scope).
+        $shopIds = $this->shopListResolver->resolveShopIds($shopConstraint);
+
+        // Definitions not available anywhere in the scope are skipped entirely — their
+        // values are silently dropped, mirroring the reader which never surfaces them.
+        $definitions = $this->definitionShopFilter->filterByShopIds($definitions, $shopIds);
+        if ($definitions->isEmpty()) {
+            return;
+        }
+
         $entityValues = [];
-        $langValuesByIdLang = [];
-        $shopValues = [];
+        // Per-shop rows fan out to each DEFINITION's available subset of the scope, so
+        // definitions restricted to different shops cannot share one multi-row statement:
+        // buckets group definitions by identical effective shop set (a single bucket in
+        // the common unrestricted case).
+        $langBuckets = [];
+        $shopBuckets = [];
         $entityTableName = null;
         $langTableName = null;
         $langIsMultiShop = null;
@@ -102,57 +127,63 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
             if (ExtraPropertyScope::LANG === $definition->getScope()) {
                 $langTableName ??= $definition->getExtraTableName();
                 $langIsMultiShop ??= $definition->isMultiShop();
+                // The entity's lang table may have no id_shop column: then one row per
+                // language, shared by all shops (single 'shared' bucket).
+                $effectiveShopIds = $langIsMultiShop
+                    ? $this->definitionShopFilter->getAvailableShopIds($definition, $shopIds)
+                    : null;
+                $bucketKey = null === $effectiveShopIds ? 'shared' : implode(',', $effectiveShopIds);
+                $langBuckets[$bucketKey]['shopIds'] = $effectiveShopIds;
                 if (is_array($value)) {
                     // Multilang array: one entry per language.
                     foreach ($value as $langId => $langValue) {
                         if ((int) $langId <= 0 || (null === $langValue && !$isNullable)) {
                             continue;
                         }
-                        $langValuesByIdLang[(int) $langId][$columnName] = $langValue;
+                        $langBuckets[$bucketKey]['valuesByLang'][(int) $langId][$columnName] = $langValue;
                     }
                 } elseif (null !== $defaultLangId && $defaultLangId > 0) {
                     // Scalar lang value: written for the caller-provided language only.
-                    $langValuesByIdLang[$defaultLangId][$columnName] = $value;
+                    $langBuckets[$bucketKey]['valuesByLang'][$defaultLangId][$columnName] = $value;
                 }
             } elseif (ExtraPropertyScope::SHOP === $definition->getScope()) {
                 $shopTableName ??= $definition->getExtraTableName();
-                $shopValues[$columnName] = $value;
+                $effectiveShopIds = $this->definitionShopFilter->getAvailableShopIds($definition, $shopIds);
+                $bucketKey = implode(',', $effectiveShopIds);
+                $shopBuckets[$bucketKey]['shopIds'] = $effectiveShopIds;
+                $shopBuckets[$bucketKey]['values'][$columnName] = $value;
             } else {
                 $entityTableName ??= $definition->getExtraTableName();
                 $entityValues[$columnName] = $value;
             }
         }
 
-        // One row per shop covered by the constraint — native ObjectModel parity
-        // (a group / all-shops edit updates every shop in scope).
-        $shopIds = $this->shopListResolver->resolveShopIds($shopConstraint);
-
         if (!empty($entityValues) && null !== $entityTableName) {
             $this->writeCommon($entityTableName, $primaryKeyName, $entityId, $entityValues);
         }
 
-        // LANG rows deliberately cover the FULL scope, associations ignored — native parity:
-        // ObjectModel::update() writes one {entity}_lang row per context shop the same way.
-        if (!empty($langValuesByIdLang) && null !== $langTableName) {
-            $this->writeLang(
-                $langTableName,
-                $primaryKeyName,
-                $entityId,
-                // The entity's lang table may have no id_shop column: then one row per
-                // language, shared by all shops.
-                $langIsMultiShop ? $shopIds : null,
-                $langValuesByIdLang
-            );
+        // LANG rows deliberately cover their FULL available scope, entity associations
+        // ignored — native parity: ObjectModel::update() writes one {entity}_lang row per
+        // context shop the same way.
+        if (null !== $langTableName) {
+            foreach ($langBuckets as $bucket) {
+                if (empty($bucket['valuesByLang'])) {
+                    continue;
+                }
+                $this->writeLang($langTableName, $primaryKeyName, $entityId, $bucket['shopIds'], $bucket['valuesByLang']);
+            }
         }
 
-        if (!empty($shopValues) && null !== $shopTableName) {
-            // SHOP rows follow native {entity}_shop semantics: broad scopes (group, all
-            // shops) only refresh the shops the entity is associated with, while an
-            // explicitly named shop (single-shop constraint, ShopCollection) always gets
-            // its row, like native CONTEXT_SHOP / $id_shop_list inserts.
-            $shopScopeIds = $this->filterShopScopeByAssociations($entityName, $primaryKeyName, $entityId, $shopConstraint, $shopIds);
-            if (!empty($shopScopeIds)) {
-                $this->writeShop($shopTableName, $primaryKeyName, $entityId, $shopScopeIds, $shopValues);
+        if (null !== $shopTableName) {
+            foreach ($shopBuckets as $bucket) {
+                // SHOP rows follow native {entity}_shop semantics: broad scopes (group, all
+                // shops) only refresh the shops the entity is associated with, while an
+                // explicitly named shop (single-shop constraint, ShopCollection) always gets
+                // its row, like native CONTEXT_SHOP / $id_shop_list inserts.
+                $shopScopeIds = $this->filterShopScopeByAssociations($entityName, $primaryKeyName, $entityId, $shopConstraint, $bucket['shopIds']);
+                if (!empty($shopScopeIds)) {
+                    $this->writeShop($shopTableName, $primaryKeyName, $entityId, $shopScopeIds, $bucket['values']);
+                }
             }
         }
     }
@@ -190,6 +221,9 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
         $readShopId = null;
         if ($isMultiShop) {
             $shopIds = $this->shopListResolver->resolveShopIds($shopConstraint);
+            // Definition availability first (a toggle must not create rows on shops the
+            // definition does not exist for), then the entity association rule.
+            $shopIds = $this->definitionShopFilter->getAvailableShopIds($definition, $shopIds);
             if (ExtraPropertyScope::SHOP === $scope) {
                 // Same association rule as writeAll(): broad scopes only touch associated shops.
                 $shopIds = $this->filterShopScopeByAssociations($definition->getEntityName(), $primaryKeyName, $entityId, $shopConstraint, $shopIds);
@@ -204,6 +238,13 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
             $readShopId = $this->shopListResolver->resolveRepresentativeShopId($shopConstraint);
             if (!in_array($readShopId, $shopIds, true)) {
                 $readShopId = $shopIds[0];
+            }
+        } else {
+            // Shared storage row: still a no-op when the definition is not available
+            // anywhere in the scope (mirrors writeAll's collection filtering).
+            $scopeShopIds = $this->shopListResolver->resolveShopIds($shopConstraint);
+            if ([] !== $scopeShopIds && [] === $this->definitionShopFilter->getAvailableShopIds($definition, $scopeShopIds)) {
+                return;
             }
         }
 

@@ -20,6 +20,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriter;
@@ -196,6 +197,84 @@ class ExtraPropertyWriterTest extends TestCase
         $this->assertSame([5, 1, 'CEO', 5, 2, 'PDG'], $this->statements[0]['params']);
     }
 
+    public function testDefinitionRestrictionIntersectsTheFanOutPerDefinition(): void
+    {
+        // custom_date (SHOP scope) is restricted to shop 2, video_link (LANG scope) is not:
+        // a broad save fans the lang rows out to both shops but the shop row only to shop 2.
+        $writer = $this->buildWriter(['custom_date' => [2]]);
+
+        $writer->writeAll('product', 'id_product', 7, [
+            'demoextrafield' => [
+                'video_link' => [1 => 'https://en'],
+                'custom_date' => '2026-06-12 10:00:00',
+            ],
+        ], ShopConstraint::allShops());
+
+        $this->assertCount(2, $this->statements);
+        $this->assertSame([7, 1, 1, 'https://en', 7, 2, 1, 'https://en'], $this->statements[0]['params']);
+        $this->assertSame([7, 2, '2026-06-12 10:00:00'], $this->statements[1]['params']);
+    }
+
+    public function testDefinitionsWithDifferentRestrictionsGetSeparateStatements(): void
+    {
+        // Two SHOP-scope definitions with different effective shop sets cannot share one
+        // multi-row upsert: each bucket gets its own statement covering its own shops.
+        $writer = $this->buildWriter(['custom_date' => [1]]);
+
+        $writer->writeAll('product', 'id_product', 7, [
+            'demoextrafield' => [
+                'custom_date' => '2026-06-12 10:00:00',
+                'shop_note' => 'hello',
+            ],
+        ], ShopConstraint::allShops());
+
+        $this->assertCount(2, $this->statements);
+        $this->assertSame([7, 1, '2026-06-12 10:00:00'], $this->statements[0]['params']);
+        $this->assertSame([7, 1, 'hello', 7, 2, 'hello'], $this->statements[1]['params']);
+    }
+
+    public function testDefinitionNotAvailableInTheScopeIsSkippedEntirely(): void
+    {
+        // reference_code (COMMON scope, single shared row) is restricted to a shop outside
+        // the write scope: its value is dropped, like the reader that would never surface it.
+        $writer = $this->buildWriter(['reference_code' => [2]]);
+
+        $writer->writeAll('product', 'id_product', 7, [
+            'demoextrafield' => ['reference_code' => 'REF-1'],
+        ], ShopConstraint::shop(1));
+
+        $this->assertCount(0, $this->statements);
+    }
+
+    public function testLangRestrictionLimitsTheLangFanOut(): void
+    {
+        // Unlike the {entity}_shop association rule (which LANG writes ignore for native
+        // parity), the definition-level restriction applies to LANG rows too.
+        $writer = $this->buildWriter(['video_link' => [2]]);
+
+        $writer->writeAll('product', 'id_product', 7, [
+            'demoextrafield' => ['video_link' => [1 => 'https://en']],
+        ], ShopConstraint::allShops());
+
+        $this->assertCount(1, $this->statements);
+        $this->assertSame([7, 2, 1, 'https://en'], $this->statements[0]['params']);
+    }
+
+    public function testToggleIsANoOpWhenTheDefinitionIsNotAvailableOnTheShop(): void
+    {
+        // Definition availability applies even to an explicitly named shop — unlike the
+        // entity association rule, the definition simply does not exist there.
+        $writer = $this->buildWriter(['shop_flag' => [2]]);
+
+        $writer->toggleExtraProperty(
+            $this->definition('shop_flag', ExtraPropertyType::BOOL, ExtraPropertyScope::SHOP, nullable: false),
+            7,
+            ShopConstraint::shop(1)
+        );
+
+        $this->assertCount(0, $this->statements);
+    }
+
     public function testToggleCommonScopeDeducesPrimaryKeyFromDefinition(): void
     {
         $writer = $this->buildWriter();
@@ -305,7 +384,11 @@ class ExtraPropertyWriterTest extends TestCase
         );
     }
 
-    private function buildWriter(): ExtraPropertyWriter
+    /**
+     * @param array<string, list<int>> $shopRestrictionsByProperty Definition-level shop
+     *                                                             restrictions (propertyName → shop ids); absent = unrestricted
+     */
+    private function buildWriter(array $shopRestrictionsByProperty = []): ExtraPropertyWriter
     {
         $this->statements = [];
 
@@ -338,10 +421,42 @@ class ExtraPropertyWriterTest extends TestCase
             $this->definition('is_dangerous', ExtraPropertyType::BOOL, ExtraPropertyScope::COMMON, nullable: false),
             $this->definition('video_link', ExtraPropertyType::STRING, ExtraPropertyScope::LANG, nullable: true),
             $this->definition('custom_date', ExtraPropertyType::DATE, ExtraPropertyScope::SHOP, nullable: true),
+            $this->definition('shop_note', ExtraPropertyType::STRING, ExtraPropertyScope::SHOP, nullable: true),
             $this->definition('job_title', ExtraPropertyType::STRING, ExtraPropertyScope::LANG, nullable: true, entityName: 'contact', multiShop: false),
         ]));
 
-        return new ExtraPropertyWriter($connection, 'ps_', $repository, $this->buildShopListResolver());
+        return new ExtraPropertyWriter($connection, 'ps_', $repository, $this->buildShopListResolver(), $this->buildShopFilter($shopRestrictionsByProperty));
+    }
+
+    /**
+     * Definition shop filter honoring the given per-property restrictions (unrestricted
+     * pass-through by default, i.e. multistore-off behavior — the pre-existing scenarios
+     * keep their exact expectations). Availability semantics mirror
+     * ExtraPropertyDefinition::isAvailableForShops().
+     *
+     * @param array<string, list<int>> $shopRestrictionsByProperty
+     */
+    private function buildShopFilter(array $shopRestrictionsByProperty = []): ExtraPropertyDefinitionShopFilterInterface
+    {
+        $availableShopIds = static function (ExtraPropertyDefinition $definition, array $shopIds) use ($shopRestrictionsByProperty): array {
+            $restriction = $shopRestrictionsByProperty[$definition->getPropertyName()] ?? null;
+
+            return null === $restriction ? $shopIds : array_values(array_intersect($shopIds, $restriction));
+        };
+
+        $filter = $this->createMock(ExtraPropertyDefinitionShopFilterInterface::class);
+        $filter->method('getAvailableShopIds')->willReturnCallback($availableShopIds);
+        $filter->method('filterByShopIds')->willReturnCallback(
+            static fn (ExtraPropertyDefinitionCollection $definitions, array $shopIds): ExtraPropertyDefinitionCollection => new ExtraPropertyDefinitionCollection(array_values(array_filter(
+                iterator_to_array($definitions),
+                static fn (ExtraPropertyDefinition $definition): bool => !isset($shopRestrictionsByProperty[$definition->getPropertyName()])
+                    || [] !== $availableShopIds($definition, $shopIds)
+            )))
+        );
+        $filter->method('filterByShopConstraint')->willReturnArgument(0);
+        $filter->method('getModuleEnabledShopIds')->willReturn([]);
+
+        return $filter;
     }
 
     /**

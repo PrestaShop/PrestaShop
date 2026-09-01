@@ -11,6 +11,7 @@ namespace Tests\Integration\ApiPlatform\EndPoint;
 use Db;
 use Module;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
@@ -215,6 +216,50 @@ final class ExtraPropertyMultiShopEndpointTest extends ApiTestCase
         // lowest shop id — the alternative branch of the resolve rule.
         $otherGroupRead = $this->getItem('/products/' . self::PRODUCT_ID . '?shopGroupId=' . self::$secondGroupId, [self::PRODUCT_READ]);
         $this->assertSame('third-shop-value', $otherGroupRead['extraProperties']['_core']['api_shop_note']);
+    }
+
+    public function testDefinitionRestrictedToSomeShopsDisappearsFromTheOthers(): void
+    {
+        // Restrict the core SHOP-scoped definition to the third shop (definition-level shop
+        // association): outside that shop the property is neither exposed nor writable.
+        $definitionId = (int) Db::getInstance()->getValue(sprintf(
+            "SELECT id_extra_property_definition FROM `%sextra_property_definition` WHERE property_name = 'api_shop_note'",
+            _DB_PREFIX_
+        ));
+        $registry = self::getContainer()->get(ExtraPropertyRegistryInterface::class);
+        $repository = self::getContainer()->get(ExtraPropertyDefinitionRepositoryInterface::class);
+        // The association travels inside the definition through the single register() endpoint.
+        $registry->register(
+            $repository->getDefinitionById($definitionId)->withOverrides(['associatedShopIds' => [self::$thirdShopId]])
+        );
+
+        try {
+            // Write attempt on a non-associated shop: the payload entry is silently ignored
+            // (like any unknown key) and the response does not expose the property.
+            $patched = $this->partialUpdateItem(
+                '/products/' . self::PRODUCT_ID . '?shopId=' . self::DEFAULT_SHOP_ID,
+                ['extraProperties' => ['_core' => ['api_shop_note' => 'must-not-land']]],
+                [self::PRODUCT_WRITE]
+            );
+            $this->assertArrayNotHasKey('api_shop_note', $patched['extraProperties']['_core'] ?? []);
+            $this->assertSame(0, (int) Db::getInstance()->getValue(
+                'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'product_extra_shop`'
+            ));
+
+            // On the associated shop the property is exposed and writable as usual.
+            $patched = $this->partialUpdateItem(
+                '/products/' . self::PRODUCT_ID . '?shopId=' . self::$thirdShopId,
+                ['extraProperties' => ['_core' => ['api_shop_note' => 'third-only']]],
+                [self::PRODUCT_WRITE]
+            );
+            $this->assertSame('third-only', $patched['extraProperties']['_core']['api_shop_note']);
+        } finally {
+            // Revert to unrestricted ([] clears the stored rows) so the association never
+            // leaks into another scenario.
+            $registry->register(
+                $repository->getDefinitionById($definitionId)->withOverrides(['associatedShopIds' => []])
+            );
+        }
     }
 
     private static function shopScopedDefinition(): ExtraPropertyDefinition

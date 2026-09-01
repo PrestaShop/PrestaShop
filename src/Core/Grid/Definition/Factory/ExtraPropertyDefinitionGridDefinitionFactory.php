@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ExtraPropertyScopeChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ExtraPropertyTypeChoiceProvider;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
@@ -20,6 +21,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\AssociatedShopsColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BooleanColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
@@ -52,6 +54,7 @@ final class ExtraPropertyDefinitionGridDefinitionFactory extends AbstractGridDef
         private readonly ModuleExtraPropertyDefinitionAccessibilityChecker $moduleOwnedAccessibilityChecker,
         private readonly ExtraPropertyTypeChoiceProvider $typeChoiceProvider,
         private readonly ExtraPropertyScopeChoiceProvider $scopeChoiceProvider,
+        private readonly FeatureInterface $multistoreFeature,
     ) {
         parent::__construct($hookDispatcher);
     }
@@ -77,7 +80,7 @@ final class ExtraPropertyDefinitionGridDefinitionFactory extends AbstractGridDef
      */
     protected function getColumns(): ColumnCollection
     {
-        return (new ColumnCollection())
+        $columns = (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('bulk_action'))
                     ->setOptions([
@@ -135,7 +138,26 @@ final class ExtraPropertyDefinitionGridDefinitionFactory extends AbstractGridDef
                         'false_name' => $this->trans('No', [], 'Admin.Global'),
                         'clickable' => false,
                     ])
-            )
+            );
+
+        // Which shops each definition applies to — only meaningful when the multistore
+        // feature is used, but then shown in EVERY shop context: even on a grid already
+        // filtered to a single shop, a row's full association is information the context
+        // alone does not give. The names/ids are resolved by
+        // ExtraPropertyDefinitionGridDataFactoryDecorator.
+        if ($this->multistoreFeature->isUsed()) {
+            $columns->add(
+                (new AssociatedShopsColumn('associated_shops'))
+                    ->setName($this->trans('Store(s)', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'associated_shops',
+                        'max_displayed_characters' => 40,
+                        'empty_label' => $this->trans('All stores', [], 'Admin.Global'),
+                    ])
+            );
+        }
+
+        return $columns
             ->add(
                 (new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Global'))

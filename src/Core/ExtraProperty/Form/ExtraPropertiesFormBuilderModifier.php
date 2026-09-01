@@ -13,6 +13,7 @@ use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface;
 use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
@@ -55,6 +56,7 @@ class ExtraPropertiesFormBuilderModifier
         protected readonly ShopContext $shopContext,
         protected readonly FormBuilderModifier $formBuilderModifier,
         protected readonly ExtraPropertyFormTypeMap $formTypeMap,
+        protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
     ) {
     }
 
@@ -64,7 +66,13 @@ class ExtraPropertiesFormBuilderModifier
      */
     public function apply(FormBuilderInterface $formBuilder, string $formId, ?int $entityId): void
     {
-        $formDefinitions = $this->repository->getAllDefinitions()->filterByForm($formId);
+        // A definition not available for the current shop scope renders no field at all —
+        // same filter as ExtraPropertiesFormDataPersister so a field is never built without
+        // its persistence (or the reverse).
+        $formDefinitions = $this->definitionShopFilter->filterByShopConstraint(
+            $this->repository->getAllDefinitions()->filterByForm($formId),
+            $this->shopContext->getShopConstraint()
+        );
         if ($formDefinitions->isEmpty()) {
             return;
         }

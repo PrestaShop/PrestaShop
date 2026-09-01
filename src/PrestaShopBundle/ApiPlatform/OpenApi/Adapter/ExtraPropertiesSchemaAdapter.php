@@ -34,6 +34,10 @@ use Throwable;
  *
  * Registered with a very low priority so it runs AFTER SchemaSynchronizer (which strips properties that are not
  * declared on the resource class) — otherwise the synthetic `extraProperties` property would be removed again.
+ *
+ * Deliberately NOT filtered by shop association: the OpenAPI document describes the API's full
+ * capability, not one shop context — a definition restricted to some shops is still documented;
+ * at runtime the subscriber/validator simply ignore it outside its shops.
  */
 class ExtraPropertiesSchemaAdapter implements OpenApiSchemaAdapterInterface
 {

@@ -41,6 +41,10 @@ class ExtraPropertyApiListRecordCollector implements ResetInterface
      * operation (URI template + HTTP method). A column only ends up stored when the grid actually fetched it
      * (i.e. the property is both API- and grid-associated), so nothing not displayed in a list is kept.
      *
+     * No shop filter here on purpose: shop availability is inherited from the grid, whose
+     * ExtraPropertiesGridQueryBuilderModifier only SELECTs the definitions available for the request's shop
+     * scope — an out-of-scope column is simply absent from the records and nothing gets captured for it.
+     *
      * @param array<int, array<string, mixed>> $records Records as returned by the grid data factory
      */
     public function capture(array $records, string $uriTemplate, string $method): void
