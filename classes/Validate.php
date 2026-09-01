@@ -280,9 +280,30 @@ class ValidateCore
      *
      * @return bool Validity is ok or not
      */
+    /**
+     * Casting a small float to string gives scientific notation - (string) 0.00002 is "2.0E-5" - which
+     * the price patterns cannot match, so such a value was rejected while 0.0002 was accepted. Render
+     * a float in plain decimal notation instead, without rounding it: a value carrying more decimals
+     * than the patterns allow still has them and is still refused.
+     *
+     * @param mixed $price
+     *
+     * @return string
+     */
+    private static function normalizePriceNotation($price): string
+    {
+        if (!is_float($price)) {
+            return (string) $price;
+        }
+
+        $decimal = rtrim(rtrim(number_format($price, 10, '.', ''), '0'), '.');
+
+        return '' === $decimal || '-' === $decimal ? '0' : $decimal;
+    }
+
     public static function isPrice($price)
     {
-        return preg_match('/^[0-9]{1,10}(\.[0-9]{1,9})?$/', $price);
+        return preg_match('/^[0-9]{1,10}(\.[0-9]{1,9})?$/', self::normalizePriceNotation($price));
     }
 
     /**
@@ -294,7 +315,7 @@ class ValidateCore
      */
     public static function isNegativePrice($price)
     {
-        return preg_match('/^[-]?[0-9]{1,10}(\.[0-9]{1,9})?$/', $price);
+        return preg_match('/^[-]?[0-9]{1,10}(\.[0-9]{1,9})?$/', self::normalizePriceNotation($price));
     }
 
     /**
