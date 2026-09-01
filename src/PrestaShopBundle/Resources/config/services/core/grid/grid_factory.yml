@@ -7,7 +7,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.logs'
       - '@prestashop.core.grid.data.factory.log_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.email_logs:
@@ -15,7 +15,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.email_logs'
       - '@prestashop.core.grid.data_factory.email_logs'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.request_sql:
@@ -23,7 +23,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.request_sql'
       - '@prestashop.core.grid.data_factory.request_sql'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.backup:
@@ -31,7 +31,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.backup'
       - '@prestashop.core.backup.listing.grid_data_factory'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.email_body_template:
@@ -39,7 +39,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.email_body_template'
       - '@prestashop.core.grid.data_factory.email_body_template'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.webservice_key:
@@ -47,7 +47,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.webservice_key'
       - '@prestashop.core.grid.data_factory.webservice_key'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.extra_property_definition:
@@ -55,7 +55,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.extra_property_definition'
       - '@prestashop.core.grid.data_factory.extra_property_definition'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.meta:
@@ -63,7 +63,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.meta'
       - '@prestashop.core.grid.data_provider.meta'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.category:
@@ -85,7 +85,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.employee'
       - '@prestashop.core.grid.data_provider.employee'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.contacts:
@@ -93,7 +93,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.contacts'
       - '@prestashop.core.grid.data_provider.contacts'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.customer:
@@ -101,7 +101,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.customer'
       - '@prestashop.core.grid.data_provider.customer_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.customer.discount:
@@ -109,7 +109,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.customer.discount'
       - '@prestashop.core.grid.data_provider.customer_discount'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.customer.address:
@@ -117,7 +117,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.customer.address'
       - '@prestashop.core.grid.data_provider.customer_address_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.customer.cart:
@@ -125,7 +125,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.customer.cart'
       - '@prestashop.core.grid.data_provider.customer_cart_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.customer.order:
@@ -133,7 +133,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.customer.order'
       - '@prestashop.core.grid.data_provider.customer_order_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.customer.bought_product:
@@ -141,7 +141,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.customer.bought_product'
       - '@prestashop.core.grid.data_provider.customer_bought_product'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.customer.viewed_product:
@@ -149,7 +149,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.customer.viewed_product'
       - '@prestashop.core.grid.data_provider.customer_viewed_product'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.language:
@@ -157,7 +157,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.language'
       - '@prestashop.core.grid.factory.language_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.supplier:
@@ -165,7 +165,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.supplier'
       - '@prestashop.core.grid.factory.supplier_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.currency:
@@ -173,7 +173,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.currency'
       - '@prestashop.core.currency.grid_data_factory'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.profiles:
@@ -181,13 +181,13 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.profile'
       - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\ProfileGridDataFactoryDecorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.cms_page_category:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.cms_page_category'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory'
       - '@prestashop.core.grid.data_provider.cms_page_category'
       - '@prestashop.core.grid.filter.cms_page_form_factory'
       - '@prestashop.core.hook.dispatcher'
@@ -197,7 +197,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.tax'
       - '@prestashop.core.grid.data_factory.tax'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.manufacturer:
@@ -205,7 +205,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.manufacturer'
       - '@prestashop.core.grid.data.factory.manufacturer_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.manufacturer_address:
@@ -213,13 +213,13 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.manufacturer_address'
       - '@prestashop.core.grid.data.factory.manufacturer_address_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.cms_page:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.cms_page'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory'
       - '@prestashop.core.grid.data_provider.cms_page'
       - '@prestashop.core.grid.filter.cms_page_form_factory'
       - '@prestashop.core.hook.dispatcher'
@@ -227,57 +227,57 @@ services:
   prestashop.core.grid.grid_factory.empty_category:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.monitoring.empty_category'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory'
       - '@prestashop.core.grid.data.factory.empty_category_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.no_qty_product_with_combination:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.monitoring.no_qty_product_with_combination'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithCombinationGridDefinitionFactory'
       - '@prestashop.core.grid.data.factory.no_qty_product_with_combination'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.no_qty_product_without_combination:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.monitoring.no_qty_product_without_combination'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithoutCombinationGridDefinitionFactory'
       - '@prestashop.core.grid.data.factory.no_qty_product_without_combination'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.disabled_product:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.monitoring.disabled_product'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\DisabledProductGridDefinitionFactory'
       - '@prestashop.core.grid.data.factory.disabled_product'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.product_without_image:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.monitoring.product_without_image'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutImageGridDefinitionFactory'
       - '@prestashop.core.grid.data.factory.product_without_image'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.product_without_description:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.monitoring.product_without_description'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutDescriptionGridDefinitionFactory'
       - '@prestashop.core.grid.data.factory.product_without_description'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.product_without_price:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.monitoring.product_without_price'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutPriceGridDefinitionFactory'
       - '@prestashop.core.grid.data.factory.product_without_price'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.order:
@@ -285,7 +285,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.order'
       - '@prestashop.core.grid.data.factory.order_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.discount:
@@ -293,7 +293,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.discount'
       - '@prestashop.core.grid.data.factory.discount_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.catalog_price_rule:
@@ -301,7 +301,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.catalog_price_rule'
       - '@prestashop.core.grid.data.factory.catalog_price_rule_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.order_message:
@@ -309,7 +309,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.order_message'
       - '@prestashop.core.grid.data.factory.order_message'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.attachment:
@@ -317,7 +317,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.attachment'
       - '@prestashop.core.grid.data_factory.attachment_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.attribute:
@@ -325,7 +325,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.attribute'
       - '@prestashop.core.grid.data.factory.attribute_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.attribute_group:
@@ -333,7 +333,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.attribute_group'
       - '@prestashop.core.grid.data.factory.attribute_group_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.order_return:
@@ -349,7 +349,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxRuleGridDefinitionFactory'
       - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\TaxRuleGridDataFactory'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.tax_rules_group:
@@ -357,7 +357,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.tax_rules_group'
       - '@prestashop.core.grid.data.factory.tax_rules_group'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.address:
@@ -365,7 +365,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.address'
       - '@prestashop.core.grid.data.factory.address'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.credit_slip:
@@ -379,17 +379,17 @@ services:
   prestashop.core.grid.factory.order_states:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.order_states'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory'
       - '@prestashop.core.grid.data_provider.order_states'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.order_return_states:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
-      - '@prestashop.core.grid.definition.factory.order_return_states'
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory'
       - '@prestashop.core.grid.data_provider.order_return_states'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.outstanding:
@@ -397,7 +397,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.outstanding'
       - '@prestashop.core.grid.data.factory.outstanding_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.carrier:
@@ -405,7 +405,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.carrier'
       - '@prestashop.core.grid.data.factory.carrier_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.zone:
@@ -413,7 +413,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.zone'
       - '@prestashop.core.grid.data.factory.zone'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.country:
@@ -421,7 +421,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.country'
       - '@prestashop.core.grid.data.factory.country'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.search_engines:
@@ -429,7 +429,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.search_engines'
       - '@prestashop.core.grid.data_provider.search_engines'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.product:
@@ -437,7 +437,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.product'
       - '@PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductGridDataFactoryDecorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.product.shops:
@@ -445,7 +445,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.product.shops'
       - '@PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductShopsGridDataFactoryDecorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.product_light:
@@ -453,7 +453,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.product_light'
       - '@PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductLightGridDataFactoryDecorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.security.session.employee:
@@ -461,7 +461,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.security.session.employee'
       - '@prestashop.core.grid.data_factory.security.session.employee'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.security.session.customer:
@@ -469,7 +469,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.security.session.customer'
       - '@prestashop.core.grid.data_factory.security.session.customer'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.state:
@@ -477,7 +477,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.state'
       - '@prestashop.core.grid.data.factory.state'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.title:
@@ -485,7 +485,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.title'
       - '@prestashop.core.grid.factory.title_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.customer_thread:
@@ -493,7 +493,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.customer_thread'
       - '@prestashop.core.grid.data_provider.customer_thread_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.customer_groups:
@@ -501,7 +501,7 @@ services:
     arguments:
       - '@prestashop.core.grid.definition.factory.customer_groups'
       - '@prestashop.core.grid.data.factory.customer_groups'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.alias:
@@ -509,7 +509,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AliasGridDefinitionFactory'
       - '@prestashop.core.grid.data_provider.alias_decorator'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.grid_factory.feature:
@@ -517,7 +517,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory'
       - '@prestashop.core.grid.data.factory.feature'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   PrestaShop\PrestaShop\Core\Grid\Factory\FeatureValueGridFactory:
@@ -525,14 +525,14 @@ services:
     arguments:
       $definitionFactory: '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureValueGridDefinitionFactory'
       $dataFactory: '@prestashop.core.grid.data.factory.feature_value'
-      $filterFormFactory: '@prestashop.core.grid.filter.form_factory'
+      $filterFormFactory: '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
 
   prestashop.core.grid.grid_factory.store:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StoreGridDefinitionFactory'
       - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\StoreGridDataFactory'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.api_client:
@@ -540,7 +540,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ApiClientGridDefinitionFactory'
       - '@prestashop.core.grid.data_factory.api_client'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.cart:
@@ -548,7 +548,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory'
       - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\CartGridDataFactory'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.image_type:
@@ -556,7 +556,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ImageTypeGridDefinitionFactory'
       - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\ImageTypeGridDataFactory'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   PrestaShop\PrestaShop\Core\Grid\Factory\ShipmentFactory:
@@ -564,7 +564,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ShipmentGridDefinitionFactory'
       - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\ShipmentGridDataFactory'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   PrestaShop\PrestaShop\Core\Grid\Factory\TagFactory:
@@ -572,7 +572,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TagGridDefinitionFactory'
       - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\TagGridDataFactory'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'
 
   prestashop.core.grid.factory.quick_access:
@@ -580,5 +580,5 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\QuickAccessGridDefinitionFactory'
       - '@prestashop.core.grid.data_factory.quick_access'
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@prestashop.core.hook.dispatcher'

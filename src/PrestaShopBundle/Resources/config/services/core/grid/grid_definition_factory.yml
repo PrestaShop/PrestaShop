@@ -29,7 +29,7 @@ services:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     public: true
     arguments:
-      - '@prestashop.core.form.choice_provider.language_by_id'
+      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider'
 
   prestashop.core.grid.definition.factory.request_sql:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory'
@@ -66,7 +66,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
-      - '@prestashop.adapter.shop.context'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Context'
       - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
       - '@request_stack'
     public: true
@@ -155,7 +155,7 @@ services:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@request_stack'
-      - '@prestashop.adapter.shop.context'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Context'
       - '@=service("prestashop.adapter.multistore_feature").isUsed()'
     public: true
 
@@ -185,7 +185,7 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
       - '@request_stack'
-      - '@prestashop.adapter.shop.context'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Context'
       - '@=service("prestashop.adapter.multistore_feature").isUsed()'
     public: true
 
@@ -260,12 +260,12 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.form.choice_provider.order_countries'
-      - '@prestashop.core.form.choice_provider.order_state_by_id'
+      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
       - '@prestashop.adapter.feature.multistore'
       - '@prestashop.core.grid.action.row.accessibility_checker.print_invoice'
       - '@prestashop.core.grid.action.row.accessibility_checker.print_delivery_slip'
-      - '@prestashop.core.form.choice_provider.order_state_by_id'
+      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
     public: true
 
   prestashop.core.grid.definition.factory.discount:
@@ -279,7 +279,7 @@ services:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
       - '@request_stack'
-      - '@prestashop.adapter.shop.context'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Context'
       - '@=service("prestashop.adapter.multistore_feature").isUsed()'
     public: true
 
@@ -392,7 +392,7 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
-      - '@prestashop.adapter.shop.context'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Context'
       - '@form.factory'
       - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductSingleShopAssociatedAccessibilityChecker'
       - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductMultipleShopsAssociatedAccessibilityChecker'
@@ -435,16 +435,16 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TitleGridDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
-      - '@prestashop.core.form.choice_provider.gender_choice_provider'
+      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GenderChoiceProvider'
     public: true
 
   prestashop.core.grid.definition.factory.customer_thread:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerThreadGridDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     arguments:
-      - '@prestashop.core.form.choice_provider.contact_type_choice_provider'
+      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactTypeChoiceProvider'
       - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
-      - '@prestashop.core.form.choice_provider.customer_thread_statuses_choice_provider'
+      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerThreadStatusesChoiceProvider'
     public: true
 
   prestashop.core.grid.definition.factory.customer_groups:
@@ -504,7 +504,7 @@ services:
     autowire: true
     public: true
     arguments:
-      - '@prestashop.core.form.choice_provider.language_by_id'
+      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider'
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\QuickAccessGridDefinitionFactory:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory

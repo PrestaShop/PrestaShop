@@ -5,7 +5,7 @@ services:
   prestashop.translation.translator_language_loader:
     class: PrestaShopBundle\Translation\TranslatorLanguageLoader
     arguments:
-      - '@prestashop.adapter.module.repository.module_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository'
       - '@prestashop.translation.extractor.extra_property'
 
   prestashop.translation.builder.translation_tree:
@@ -162,7 +162,7 @@ services:
   prestashop.translation.loader.database:
     class: PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader
     arguments:
-      - "@prestashop.core.admin.lang.repository"
+      - '@PrestaShopBundle\Entity\Repository\LangRepository'
       - "@prestashop.core.admin.translation.repository"
 
   prestashop.translation.sql_loader:

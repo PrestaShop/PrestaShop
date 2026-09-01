@@ -109,9 +109,9 @@ services:
       package: PrestaShop\PrestaShop
       version: 9.0
 
-  PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface: '@prestashop.adapter.shop.context'
-  PrestaShop\PrestaShop\Core\Shop\ShopContextInterface: '@prestashop.adapter.shop.context'
-  PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface: '@prestashop.adapter.shop.context'
+  PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface: '@PrestaShop\PrestaShop\Adapter\Shop\Context'
+  PrestaShop\PrestaShop\Core\Shop\ShopContextInterface: '@PrestaShop\PrestaShop\Adapter\Shop\Context'
+  PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface: '@PrestaShop\PrestaShop\Adapter\Shop\Context'
 
   PrestaShop\PrestaShop\Adapter\ImageManager:
     arguments: [ '@PrestaShop\PrestaShop\Adapter\LegacyContext' ]
