@@ -507,6 +507,13 @@ class CartCore extends ObjectModel
             $result = Cache::retrieve($cache_key);
         }
 
+        // Everything below exists to enrich each row, so a cart carrying no rule has nothing to do here.
+        // Without this the base totals were rebuilt on every call for the ordinary voucher-less cart,
+        // and this method is called several times while a cart or a checkout page is rendered.
+        if (empty($result)) {
+            return $result;
+        }
+
         // Define virtual context to prevent case where the cart is not the in the global context
         $virtual_context = Context::getContext()->cloneContext();
         /* @phpstan-ignore-next-line */
