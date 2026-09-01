@@ -394,6 +394,10 @@ class InstallControllerHttp
     public static function registerFatalErrorHandler(): void
     {
         register_shutdown_function(static function (): void {
+            // The fatal being reported is often the memory limit itself, and the handler has to be able
+            // to allocate to report it. Raising the limit here costs nothing: the request is over.
+            @ini_set('memory_limit', '-1');
+
             $answer = self::buildFatalErrorAnswer();
 
             if (null === $answer) {
