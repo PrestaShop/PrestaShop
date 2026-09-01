@@ -20,4 +20,4 @@ services:
     arguments:
       - "@hook_repository"
       - "@logger"
-      - "@prestashop.module.manager"
+      - '@PrestaShop\PrestaShop\Core\Module\ModuleManager'

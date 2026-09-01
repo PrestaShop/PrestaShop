@@ -5,9 +5,9 @@ services:
   PrestaShopBundle\Service\Grid\ResponseBuilder:
     public: false
     arguments:
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@router'
-      - '@prestashop.core.admin.admin_filter.repository'
+      - '@PrestaShopBundle\Entity\Repository\AdminFilterRepository'
       - '@=service("prestashop.adapter.legacy.context").getContext().employee.id'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       - '@request_stack'
@@ -22,7 +22,7 @@ services:
   PrestaShopBundle\Service\Grid\ControllerResponseBuilder:
     public: false
     arguments:
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@router'
 
   prestashop.bundle.grid.controller_response_builder:
