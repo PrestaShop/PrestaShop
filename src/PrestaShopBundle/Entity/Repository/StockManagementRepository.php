@@ -349,6 +349,7 @@ abstract class StockManagementRepository
             '{supplier}' => 'supplier_name',
             '{available_quantity}' => 'product_available_quantity',
             '{physical_quantity}' => 'product_physical_quantity',
+            '{reserved_quantity}' => 'product_reserved_quantity',
             '{id_stock_mvt}' => 'id_stock_mvt',
             '{date_add}' => 'date_add',
             '{product_low_stock_alert}' => 'product_low_stock_alert',
