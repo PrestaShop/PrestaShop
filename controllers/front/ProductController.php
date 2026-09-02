@@ -776,8 +776,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     }
                     $id_attributes = Db::getInstance()->executeS('SELECT pac2.`id_attribute` FROM `' . _DB_PREFIX_ . 'product_attribute_combination` pac2' .
                         ((!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && false === (bool) Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) ?
+                        // The stock rows of every shop live in the same table, so without the restriction an
+                        // attribute stays selectable because some other shop, possibly in a group this one
+                        // shares nothing with, still has stock for that combination.
                         ' INNER JOIN `' . _DB_PREFIX_ . 'stock_available` pa ON pa.id_product_attribute = pac2.id_product_attribute
-                        WHERE pa.quantity > 0 AND ' :
+                        WHERE pa.quantity > 0' . StockAvailable::addSqlShopRestriction(null, null, 'pa') . ' AND ' :
                         ' WHERE ') .
                         'pac2.`id_product_attribute` IN (' . implode(',', array_map('intval', $id_product_attributes)) . ')
                         AND pac2.id_attribute NOT IN (' . implode(',', array_map('intval', $current_selected_attributes)) . ')');
