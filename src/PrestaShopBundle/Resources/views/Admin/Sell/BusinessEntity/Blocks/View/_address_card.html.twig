@@ -1,0 +1,34 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<div class="card business-entity-view-addresses">
+  <h3 class="card-header">
+    {{ title }}
+  </h3>
+
+  <div class="card-body">
+    {% if addresses is empty %}
+      <div class="text-center">
+        <p class="text-muted">{{ emptyLabel }}</p>
+      </div>
+    {% else %}
+      {% for address in addresses %}
+        <div class="business-entity-view-address{% if not loop.first %} mt-3{% endif %}">
+          <div class="business-entity-view-address__title">
+            <strong>{{ address.alias ?: 'Address'|trans({}, 'Admin.Global') }}</strong>
+            {% if address.default %}
+              <span class="badge business-entity-view-address__default-badge">
+                {{ 'Default'|trans({}, 'Admin.Global') }}
+              </span>
+            {% endif %}
+          </div>
+          {% for line in address.formattedAddress|split('\n') %}
+            <p class="mb-0">{{ line }}</p>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>

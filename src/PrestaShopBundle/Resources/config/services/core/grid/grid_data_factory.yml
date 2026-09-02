@@ -755,3 +755,16 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'quick_access'
+
+  prestashop.core.grid.data.factory.business_entity:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\BusinessEntityQueryBuilder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'business_entity'
+
+  PrestaShop\PrestaShop\Core\Grid\Data\Factory\BusinessEntityGridDataFactory:
+    arguments:
+      - '@prestashop.core.grid.data.factory.business_entity'
+      - '@translator'

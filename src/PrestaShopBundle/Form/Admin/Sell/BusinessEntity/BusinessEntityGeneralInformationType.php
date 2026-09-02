@@ -52,7 +52,7 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
                 'required' => true,
             ])
             ->add(self::FIELD_LEGAL_NAME, TextType::class, [
-                'label' => $this->trans('Legal Name', 'Admin.Global'),
+                'label' => $this->trans('Legal name', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans('The official registered name of the company.', 'Admin.Catalog.Feature'),
                 'constraints' => $this->getNameConstraints(),
                 'required' => true,
@@ -70,7 +70,7 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
                 'class' => BusinessEntityStatus::class,
             ])
             ->add(self::FIELD_CUSTOMER_GROUP_ID, ChoiceType::class, [
-                'label' => $this->trans('Customer group', 'Admin.Global'),
+                'label' => $this->trans('Customer group', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Customer group attached to this business entity.', 'Admin.Catalog.Feature'),
                 'choices' => $this->groupByIdChoiceProvider->getChoices(),
                 'required' => true,

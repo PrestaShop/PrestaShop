@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerB2b;
 
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
@@ -15,7 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CustomerB2bController extends PrestaShopAdminController
 {
-    #[AdminSecurity("is_granted('read', 'AdminCustomersB2b')")]
+    /**
+     * Lists the B2B customers. The grid itself lands with the customer/entity link management.
+     */
+    #[AdminSecurity("is_granted('read', 'AdminCustomersB2B')")]
     public function listAction(): Response
     {
         return $this->render('@PrestaShop/Admin/Sell/CustomerB2b/list.html.twig');
