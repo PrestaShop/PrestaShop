@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ExtraPropertyTransl
 use PrestaShop\PrestaShop\Core\Translation\Storage\Normalizer\DomainNormalizer;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\TranslatorBagInterface;
@@ -174,7 +175,7 @@ class TranslatorLanguageLoader
         string $locale,
         bool $withDB = true
     ): void {
-        $translationDir = sprintf('%s/translations/%s', $modulePath, $locale);
+        $translationDir = Path::join($modulePath, 'translations', $locale);
         if (!is_dir($translationDir)) {
             return;
         }
@@ -214,7 +215,14 @@ class TranslatorLanguageLoader
         $locations = ['core' => self::TRANSLATION_DIR];
 
         if (null !== $theme) {
-            $activeThemeLocation = $theme->getDirectory() . '/translations';
+            if ($theme->has('parent_directory')) {
+                $parentThemeLocation = Path::join($theme->get('parent_directory'), 'translations');
+                if (is_dir($parentThemeLocation)) {
+                    $locations['parent_theme'] = $parentThemeLocation;
+                }
+            }
+
+            $activeThemeLocation = Path::join($theme->getDirectory(), 'translations');
             if (is_dir($activeThemeLocation)) {
                 $locations['theme'] = $activeThemeLocation;
             }
