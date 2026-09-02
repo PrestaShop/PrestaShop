@@ -189,7 +189,15 @@ class ImageManagerCore
             return false;
         }
 
-        list($tmpWidth, $tmpHeight, $sourceFileType) = getimagesize($sourceFile);
+        $imageSize = getimagesize($sourceFile);
+        // WHY: getimagesize() answers false for a file that is not an image, and destructuring false raises a
+        // warning before the width check further down refuses the file anyway. Same answer, without the warning.
+        if (false === $imageSize) {
+            $error = self::ERROR_FILE_WIDTH;
+
+            return false;
+        }
+        list($tmpWidth, $tmpHeight, $sourceFileType) = $imageSize;
         $rotate = 0;
         if (function_exists('exif_read_data')) {
             $exif = @exif_read_data($sourceFile);
@@ -844,7 +852,14 @@ class ImageManagerCore
             $tgt_width = $tgt_height = 0;
             $src_width = $src_height = 0;
             $error = 0;
-            ImageManager::resize($tmpfile, $path . '.jpg', null, null, 'jpg', false, $error, $tgt_width, $tgt_height, 5, $src_width, $src_height);
+            // A download can succeed and still not be an image: an HTTP error page, a redirect to a login
+            // form, or a rewrite rule that answers with HTML. Nothing is written in that case, so report
+            // the failure instead of letting the caller record an image that has no file behind it.
+            if (!ImageManager::resize($tmpfile, $path . '.jpg', null, null, 'jpg', false, $error, $tgt_width, $tgt_height, 5, $src_width, $src_height)) {
+                @unlink($orig_tmpfile);
+
+                return false;
+            }
             $images_types = ImageType::getImagesTypes($entity, true);
 
             if ($regenerate) {
