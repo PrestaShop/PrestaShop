@@ -86,6 +86,15 @@ class ShopListResolver implements ShopListResolverInterface
     /**
      * PS_SHOP_DEFAULT is a global-only configuration value, hence the explicit all-shops
      * constraint (same pattern as the shop context listeners).
+     *
+     * Configuration is always read through the configuration abstraction, never straight
+     * from the DB: configuration is not bound to the DB persistence layer and may gain
+     * other sources (environment variables, static parameter files), so a direct query
+     * would silently bypass them. An earlier revision queried the DB directly under the
+     * mistaken belief that the configuration service was unavailable in some containers —
+     * the Adapter\Configuration service is wired in every container, including the
+     * hand-built FO legacy one. No memoization here: Configuration keeps its own
+     * static cache, a second lookup never hits the DB.
      */
     protected function getDefaultShopId(): int
     {

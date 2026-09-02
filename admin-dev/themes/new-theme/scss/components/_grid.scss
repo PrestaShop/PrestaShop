@@ -324,10 +324,7 @@ table .column-filters {
             }
           }
 
-          &.shop_list-type {
-            min-width: var(--#{$cdk}size-144);
-          }
-
+          &.shop_list-type,
           &.associated_shops-type {
             min-width: var(--#{$cdk}size-144);
           }
