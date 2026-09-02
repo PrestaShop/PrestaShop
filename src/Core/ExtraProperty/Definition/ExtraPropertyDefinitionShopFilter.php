@@ -28,11 +28,11 @@ use Symfony\Contracts\Cache\CacheInterface;
  *  - a shop created or duplicated after the cache was warmed simply has no entry yet,
  *    so per-shop keys can never serve stale data for it.
  *
- * The module association lookups are direct queries because they read entity data
- * (ps_module_shop / ps_module), not configuration; the multistore flag goes through the
- * configuration service like everywhere else. Constructible in every container the pool
- * and resolver are wired in — the three Symfony kernels and the hand-built FO legacy
- * container.
+ * The module association and shop count lookups are direct queries because they read
+ * entity data (ps_module_shop / ps_module / ps_shop), not configuration; the multistore
+ * flag goes through the configuration service like everywhere else. Constructible in
+ * every container the pool and resolver are wired in — the three Symfony kernels and
+ * the hand-built FO legacy container.
  */
 class ExtraPropertyDefinitionShopFilter implements ExtraPropertyDefinitionShopFilterInterface
 {
@@ -47,6 +47,8 @@ class ExtraPropertyDefinitionShopFilter implements ExtraPropertyDefinitionShopFi
      * @var list<string>|null
      */
     protected ?array $associatedModuleNames = null;
+
+    protected ?bool $multiShopUsed = null;
 
     public function __construct(
         protected readonly Connection $connection,
@@ -64,7 +66,7 @@ class ExtraPropertyDefinitionShopFilter implements ExtraPropertyDefinitionShopFi
         ExtraPropertyDefinitionCollection $definitions,
         ShopConstraint $shopConstraint,
     ): ExtraPropertyDefinitionCollection {
-        if ($definitions->isEmpty() || !$this->isMultiShopActive()) {
+        if ($definitions->isEmpty() || !$this->isMultiShopUsed()) {
             return $definitions;
         }
 
@@ -78,7 +80,7 @@ class ExtraPropertyDefinitionShopFilter implements ExtraPropertyDefinitionShopFi
         ExtraPropertyDefinitionCollection $definitions,
         array $shopIds,
     ): ExtraPropertyDefinitionCollection {
-        if ($definitions->isEmpty() || !$this->isMultiShopActive()) {
+        if ($definitions->isEmpty() || !$this->isMultiShopUsed()) {
             return $definitions;
         }
 
@@ -90,7 +92,7 @@ class ExtraPropertyDefinitionShopFilter implements ExtraPropertyDefinitionShopFi
      */
     public function getAvailableShopIds(ExtraPropertyDefinition $definition, array $shopIds): array
     {
-        if (!$this->isMultiShopActive()) {
+        if (!$this->isMultiShopUsed()) {
             return $shopIds;
         }
 
@@ -207,11 +209,29 @@ class ExtraPropertyDefinitionShopFilter implements ExtraPropertyDefinitionShopFi
     }
 
     /**
+     * Multistore is USED when the feature flag is on AND more than one shop exists —
+     * the same semantics as MultistoreFeature::isUsed() / Shop::isFeatureActive(), which
+     * is the single criterion shared by every extra-property multistore gate, filtering
+     * layer (here, the grid query builder) and UI (grid column, form fields) alike: with
+     * a single shop a restriction can never usefully exclude anything, so enforcing it
+     * while the UI to manage it is hidden would only produce invisible definitions.
+     *
      * PS_MULTISHOP_FEATURE_ACTIVE is a global-only configuration value, hence the explicit
-     * all-shops constraint (same pattern as the shop context listeners).
+     * all-shops constraint (same pattern as the shop context listeners). The shop count is
+     * memoized per request only, NEVER stored in the filesystem pool: creating a shop does
+     * not clear that pool, so a pooled count could keep single-shop semantics alive after
+     * the second shop is created.
      */
-    protected function isMultiShopActive(): bool
+    protected function isMultiShopUsed(): bool
     {
-        return (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE', false, ShopConstraint::allShops());
+        if (null === $this->multiShopUsed) {
+            $this->multiShopUsed = (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE', false, ShopConstraint::allShops())
+                && (int) $this->connection->createQueryBuilder()
+                    ->select('COUNT(s.id_shop)')
+                    ->from($this->prefix . 'shop', 's')
+                    ->fetchOne() > 1;
+        }
+
+        return $this->multiShopUsed;
     }
 }

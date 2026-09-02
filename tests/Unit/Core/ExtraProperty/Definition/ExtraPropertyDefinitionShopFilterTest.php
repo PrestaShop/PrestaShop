@@ -27,9 +27,10 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
  * 4-shop installation (shops 1+2 in group 1, shops 3+4 in group 2):
  *  - the pure VO predicate ExtraPropertyDefinition::isAvailableForShops(),
  *  - the pure collection filter ExtraPropertyDefinitionCollection::filterByShops(),
- *  - the ExtraPropertyDefinitionShopFilter service: multistore-off short-circuit, constraint
- *    resolution, module fallback (including the degenerate "module with no shop rows at all"
- *    rule) and the per-shop caching of the module→shops association.
+ *  - the ExtraPropertyDefinitionShopFilter service: multistore-not-used short-circuit
+ *    (feature flag off, or a single shop), constraint resolution, module fallback
+ *    (including the degenerate "module with no shop rows at all" rule) and the per-shop
+ *    caching of the module→shops association.
  */
 class ExtraPropertyDefinitionShopFilterTest extends TestCase
 {
@@ -43,11 +44,14 @@ class ExtraPropertyDefinitionShopFilterTest extends TestCase
 
     private bool $multiShopActive = true;
 
+    private int $shopCount = 4;
+
     private int $moduleQueryCount = 0;
 
     protected function setUp(): void
     {
         $this->multiShopActive = true;
+        $this->shopCount = 4;
         $this->moduleQueryCount = 0;
     }
 
@@ -130,6 +134,22 @@ class ExtraPropertyDefinitionShopFilterTest extends TestCase
         ]);
 
         // Stale association rows are ignored entirely when the feature is off.
+        $this->assertSame($collection, $filter->filterByShopConstraint($collection, ShopConstraint::shop(1)));
+        $this->assertSame([1], $filter->getAvailableShopIds($this->definition('restricted', shopIds: [3]), [1]));
+        $this->assertSame(0, $this->moduleQueryCount);
+    }
+
+    public function testActiveButSingleShopShortCircuitsToo(): void
+    {
+        // Multistore is not USED with a single shop (MultistoreFeature::isUsed() semantics,
+        // the criterion shared by every extra-property multistore gate): a restriction can
+        // never usefully exclude anything, and the UI to manage it is not rendered.
+        $this->shopCount = 1;
+        $filter = $this->buildFilter();
+        $collection = new ExtraPropertyDefinitionCollection([
+            $this->definition('restricted', shopIds: [3]),
+        ]);
+
         $this->assertSame($collection, $filter->filterByShopConstraint($collection, ShopConstraint::shop(1)));
         $this->assertSame([1], $filter->getAvailableShopIds($this->definition('restricted', shopIds: [3]), [1]));
         $this->assertSame(0, $this->moduleQueryCount);
@@ -219,15 +239,23 @@ class ExtraPropertyDefinitionShopFilterTest extends TestCase
         $connection->method('createQueryBuilder')->willReturnCallback(
             fn (): QueryBuilder => new QueryBuilder($connection)
         );
-        // Module association lookups (QueryBuilder::fetchFirstColumn() executes through here).
+        // Module association and shop count lookups (the QueryBuilder fetch helpers execute
+        // through Connection::executeQuery()).
         $connection->method('executeQuery')->willReturnCallback(
             function (string $sql, array $params = []): Result {
+                $result = $this->createMock(Result::class);
+
+                // isMultiShopUsed() shop count — not a module association lookup.
+                if (str_contains($sql, 'COUNT(')) {
+                    $result->method('fetchOne')->willReturn($this->shopCount);
+
+                    return $result;
+                }
+
                 ++$this->moduleQueryCount;
                 $rows = str_contains($sql, 'DISTINCT')
                     ? array_values(array_unique(array_merge(...array_values(self::MODULES_BY_SHOP))))
                     : self::MODULES_BY_SHOP[(int) ($params['shopId'] ?? 0)] ?? [];
-
-                $result = $this->createMock(Result::class);
                 $result->method('fetchFirstColumn')->willReturn($rows);
 
                 return $result;

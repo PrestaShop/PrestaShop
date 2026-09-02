@@ -95,12 +95,15 @@ final class ExtraPropertyDefinitionQueryBuilder extends AbstractDoctrineQueryBui
     /**
      * Restricts the rows to the definitions available for the shop scope carried by the
      * search criteria. No-op in all-shops context (everything is listed there, that is
-     * where the whole registry is managed) and when multistore is disabled (by convention
-     * every definition belongs to the only shop; stale association rows are ignored).
+     * where the whole registry is managed) and when multistore is not USED (feature
+     * disabled, or a single shop — where a restriction can never usefully exclude
+     * anything; stale association rows are ignored). isUsed() is the single criterion
+     * shared by every extra-property multistore gate — filtering layer and UI alike
+     * (ExtraPropertyDefinitionShopFilter, the grid column, the form fields).
      */
     protected function applyShopContextRestriction(QueryBuilder $qb, SearchCriteriaInterface $searchCriteria): void
     {
-        if (!$this->multistoreFeature->isActive()) {
+        if (!$this->multistoreFeature->isUsed()) {
             return;
         }
 
