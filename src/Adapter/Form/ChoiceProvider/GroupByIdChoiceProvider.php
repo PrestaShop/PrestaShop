@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use Group;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
@@ -40,7 +41,6 @@ final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices(): array
     {
-        $choices = [];
         $groups = Group::getGroups($this->contextLangId, true);
 
         $groupsToSkip = [
@@ -48,16 +48,22 @@ final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
             (int) $this->configuration->get('PS_GUEST_GROUP'),
         ];
 
+        $selectableGroups = [];
         foreach ($groups as $group) {
-            $groupId = $group['id_group'];
-
+            // NOTE: this compares the whole $groups list against the ids, so it has never matched and
+            // no group is actually skipped. Making it work would drop the Visitor and Guest groups from
+            // every form fed by this provider, which is a behaviour change rather than a bug fix, so the
+            // condition is left exactly as it was - see PrestaShop/PrestaShop#34709.
             if (in_array($groups, $groupsToSkip)) {
                 continue;
             }
 
-            $choices[$group['name']] = (int) $groupId;
+            $selectableGroups[] = $group;
         }
 
-        return $choices;
+        // WHY: choices used to be keyed by group name, so groups sharing a name overwrote each other and
+        // only the last survived - the form then applied a saved change to that one alone. FormChoiceFormatter
+        // keeps every group and disambiguates the duplicates by appending their id.
+        return FormChoiceFormatter::formatFormChoices($selectableGroups, 'id_group', 'name', false);
     }
 }
