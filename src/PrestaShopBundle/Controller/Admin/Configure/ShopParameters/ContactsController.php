@@ -7,7 +7,8 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Support\ContactDeleter;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Command\BulkDeleteContactCommand;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Command\DeleteContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
@@ -16,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -29,6 +31,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ContactsController extends PrestaShopAdminController
 {
+    use BulkActionsTrait;
+
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
@@ -138,17 +142,15 @@ class ContactsController extends PrestaShopAdminController
     #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_contacts_index')]
     public function deleteAction(
-        int $contactId,
-        ContactDeleter $contactDeleter,
+        int $contactId
     ): RedirectResponse {
-        if ($errors = $contactDeleter->delete([$contactId])) {
-            $this->addFlashErrors($errors);
-        } else {
-            $this->addFlash(
-                'success',
-                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
-            );
+        try {
+            $this->dispatchCommand(new DeleteContactCommand($contactId));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
+
+        $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_contacts_index');
     }
@@ -156,19 +158,15 @@ class ContactsController extends PrestaShopAdminController
     #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_contacts_index', message: 'You do not have permission to delete this.')]
     public function deleteBulkAction(
-        Request $request,
-        ContactDeleter $contactDeleter,
+        Request $request
     ): RedirectResponse {
-        $contactIds = $request->request->all('contact_bulk');
-
-        if ($errors = $contactDeleter->delete($contactIds)) {
-            $this->addFlashErrors($errors);
-        } else {
-            $this->addFlash(
-                'success',
-                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
-            );
+        try {
+            $this->dispatchCommand(new BulkDeleteContactCommand($this->getBulkActionIds($request, 'contact_bulk')));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
+
+        $this->addFlash('success', $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_contacts_index');
     }
