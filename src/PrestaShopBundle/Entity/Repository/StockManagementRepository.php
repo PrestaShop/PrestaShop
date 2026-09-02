@@ -320,6 +320,7 @@ abstract class StockManagementRepository
             '{combination_mpn}' => 'combination_mpn',
             '{supplier_name}' => 'supplier_name',
             '{product_name}' => 'product_name',
+            '{product_location}' => 'product_location',
         ]);
     }
 

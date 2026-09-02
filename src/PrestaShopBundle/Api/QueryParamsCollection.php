@@ -721,6 +721,7 @@ abstract class QueryParamsCollection
                 '{combination_mpn}',
                 '{product_name}',
                 '{combination_name}',
+                '{product_location}',
             ];
 
             $conditions = array_map(function ($field) use ($index) {
