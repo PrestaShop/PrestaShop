@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
 
+use JsonException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyConstraintException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
@@ -319,13 +321,28 @@ final class ExtraPropertyDefinition
         if ('{' === $raw[0]) {
             try {
                 return ExtraPropertyConstraintMapper::constraintsFromJson($raw);
-            } catch (\JsonException) {
+            } catch (JsonException|InvalidExtraPropertyConstraintException $e) {
+                // Corrupt or unsupported JSON constraint blob — degrade to "no constraints"
+                // instead of crashing the page. The error is logged so the shop owner can
+                // investigate and re-save the affected definition.
+                if (class_exists(InvalidExtraPropertyConstraintException::class)) {
+                    @trigger_error(
+                        sprintf('ExtraPropertyDefinition: failed to decode JSON constraints: %s', $e->getMessage()),
+                        E_USER_WARNING
+                    );
+                }
+
                 return null;
             }
         }
 
         // Legacy path: PHP-serialized blob from a row that has not been re-saved yet.
-        $decoded = @unserialize($raw, ['allowed_classes' => true]);
+        // allowed_classes => false prevents __wakeup() and any object instantiation —
+        // all objects become __PHP_Incomplete_Class, which filterConstraints() drops
+        // (they are not Constraint instances). Legacy rows effectively lose their
+        // constraints until re-saved through the BO form or a module re-register,
+        // but the PHP Object Injection surface (CWE-502) is fully closed.
+        $decoded = @unserialize($raw, ['allowed_classes' => false]);
 
         return is_array($decoded) ? self::filterConstraints($decoded) : null;
     }

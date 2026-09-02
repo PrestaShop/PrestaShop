@@ -1067,27 +1067,21 @@ class ExtraPropertyConstraintMapperTest extends TestCase
         $this->assertSame(['a', 'b', 'c'], $decoded[0]->choices);
     }
 
-    public function testJsonFromJsonSkipsUnknownConstraintNames(): void
+    public function testJsonFromJsonThrowsOnUnknownConstraintNames(): void
     {
         $json = '{"version":1,"constraints":[{"name":"NonExistentConstraint","options":{}}]}';
 
-        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
-
-        $this->assertNull($decoded, 'Unknown constraint names must be dropped');
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+        ExtraPropertyConstraintMapper::constraintsFromJson($json);
     }
 
-    public function testJsonFromJsonSkipsNonScalarOptions(): void
+    public function testJsonFromJsonThrowsOnNonScalarOptions(): void
     {
-        // An object inside options must be dropped, not cause an error.
+        // An object inside options must be rejected explicitly, not silently dropped.
         $json = '{"version":1,"constraints":[{"name":"Length","options":{"min":2,"nested":{"evil":"object"}}}]}';
 
-        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
-
-        $this->assertNotNull($decoded);
-        $this->assertCount(1, $decoded);
-        $this->assertInstanceOf(Assert\Length::class, $decoded[0]);
-        $this->assertSame(2, $decoded[0]->min, 'Scalar option preserved');
-        $this->assertNull($decoded[0]->max, 'Non-scalar option dropped');
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+        ExtraPropertyConstraintMapper::constraintsFromJson($json);
     }
 
     public function testJsonFromJsonReturnsNullForInvalidJson(): void
@@ -1107,6 +1101,83 @@ class ExtraPropertyConstraintMapperTest extends TestCase
 
         $this->assertNotNull($json);
         $this->assertSame('{', $json[0]);
+    }
+
+    // -- JSON: version check -----------------------------------------------------------------
+
+    public function testJsonFromJsonThrowsOnUnsupportedVersion(): void
+    {
+        $json = '{"version":99,"constraints":[{"name":"NotBlank","options":{}}]}';
+
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+        $this->expectExceptionMessage('Unsupported JSON constraint schema version');
+        ExtraPropertyConstraintMapper::constraintsFromJson($json);
+    }
+
+    public function testJsonFromJsonReturnsNullForMissingVersion(): void
+    {
+        $json = '{"constraints":[{"name":"NotBlank","options":{}}]}';
+
+        $this->assertNull(ExtraPropertyConstraintMapper::constraintsFromJson($json));
+    }
+
+    public function testJsonFromJsonReturnsNullForNonIntVersion(): void
+    {
+        $json = '{"version":"1","constraints":[{"name":"NotBlank","options":{}}]}';
+
+        $this->assertNull(ExtraPropertyConstraintMapper::constraintsFromJson($json));
+    }
+
+    // -- JSON: encoder rejects non-whitelisted FQCN -----------------------------------------
+
+    public function testJsonEncoderThrowsOnNonWhitelistedFqcn(): void
+    {
+        // A custom constraint whose short name collides with a whitelisted name
+        // must be rejected by FQCN, not silently mis-encoded.
+        $customConstraint = new class() extends Constraint {
+            public string $message = 'custom';
+        };
+
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+        $this->expectExceptionMessage('not in the whitelist');
+        ExtraPropertyConstraintMapper::constraintsToJson([$customConstraint]);
+    }
+
+    // -- JSON: decoder rejects invalid entries explicitly -----------------------------------
+
+    public function testJsonFromJsonThrowsOnMissingNameKey(): void
+    {
+        $json = '{"version":1,"constraints":[{"options":{}}]}';
+
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+        $this->expectExceptionMessage('missing or non-string "name" key');
+        ExtraPropertyConstraintMapper::constraintsFromJson($json);
+    }
+
+    public function testJsonFromJsonThrowsOnNonStringNameKey(): void
+    {
+        $json = '{"version":1,"constraints":[{"name":123,"options":{}}]}';
+
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+        ExtraPropertyConstraintMapper::constraintsFromJson($json);
+    }
+
+    public function testJsonFromJsonThrowsOnCompositeMissingChildrenKey(): void
+    {
+        $json = '{"version":1,"constraints":[{"name":"All"}]}';
+
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+        $this->expectExceptionMessage('missing its "constraints" or "fields" key');
+        ExtraPropertyConstraintMapper::constraintsFromJson($json);
+    }
+
+    public function testJsonFromJsonThrowsOnNonStringOptionKey(): void
+    {
+        $json = '{"version":1,"constraints":[{"name":"Length","options":{"min":2,"123":"bad"}}]}';
+
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+        $this->expectExceptionMessage('keys must be strings');
+        ExtraPropertyConstraintMapper::constraintsFromJson($json);
     }
 
     public function testJsonRoundTripSequentially(): void
@@ -1191,15 +1262,14 @@ class ExtraPropertyConstraintMapperTest extends TestCase
         $this->assertInstanceOf(Assert\Url::class, $optionalInner);
     }
 
-    public function testJsonFromJsonSkipsConstraintWithInvalidOptions(): void
+    public function testJsonFromJsonThrowsOnConstraintWithInvalidOptions(): void
     {
-        // TypedRegex requires a 'type' option; omitting it should cause a construction
-        // failure that is caught and skipped, not a crash.
+        // TypedRegex requires a 'type' option; an unknown "wrong" option must be
+        // rejected explicitly (InvalidExtraPropertyConstraintException), not silently skipped.
         $json = '{"version":1,"constraints":[{"name":"TypedRegex","options":{"wrong":"value"}}]}';
 
-        $decoded = ExtraPropertyConstraintMapper::constraintsFromJson($json);
-
-        $this->assertNull($decoded, 'Constraint with invalid options must be silently skipped');
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+        ExtraPropertyConstraintMapper::constraintsFromJson($json);
     }
 
     public function testJsonFromJsonSkipsEmptyCompositeEntry(): void

@@ -81,15 +81,15 @@ class ExtraPropertyDefinitionFromRowTest extends TestCase
     public function testConstraintsRoundTripFromLegacySerializedRow(): void
     {
         // Legacy rows written before the JSON migration use PHP serialize().
-        // They must still decode (backward compatibility) until re-saved.
+        // With allowed_classes => false (CWE-502 hardening), objects become
+        // __PHP_Incomplete_Class and are filtered out — legacy rows lose their
+        // constraints until re-saved through the BO form or a module re-register.
+        // This is the intentional trade-off: no __wakeup(), no object instantiation.
         $row = self::BASE_ROW + ['constraints' => serialize([new Assert\Url(), new Assert\Length(['max' => 50])])];
 
         $constraints = ExtraPropertyDefinition::fromRow($row)->getConstraints();
 
-        $this->assertIsArray($constraints);
-        $this->assertCount(2, $constraints);
-        $this->assertInstanceOf(Assert\Url::class, $constraints[0]);
-        $this->assertInstanceOf(Assert\Length::class, $constraints[1]);
+        $this->assertNull($constraints, 'Legacy serialized constraints are dropped (allowed_classes => false) until re-saved as JSON.');
     }
 
     public function testConstraintsAbsentOrUnusableFallBackToNull(): void

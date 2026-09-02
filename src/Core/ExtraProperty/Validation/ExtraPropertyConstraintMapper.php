@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Validation;
 
+use JsonException;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
@@ -201,12 +202,15 @@ class ExtraPropertyConstraintMapper
      * eliminating the PHP Object Injection attack surface (CWE-502) that unserialize() with
      * allowed_classes => true created on the read path.
      *
-     * Constraints whose name is not in the whitelist (module-attached custom constraints) are
-     * still encoded by name + short FQCN so the read-only view page can display them, but
-     * fromJson() will skip them on read-back (they cannot be re-instantiated without the module
-     * being loaded). This matches the existing toNames()/fromNames() asymmetry.
+     * Only constraints whose FQCN is in the whitelist can be encoded — a module's custom
+     * constraint named "Length" is NOT mistaken for the Symfony one (the lookup compares
+     * the full class name). Non-whitelisted constraints throw
+     * InvalidExtraPropertyConstraintException so the caller knows the save cannot proceed
+     * without dropping or replacing the offending constraint.
      *
      * @param list<Constraint>|null $constraints
+     *
+     * @throws InvalidExtraPropertyConstraintException when a constraint's FQCN is not in the whitelist
      */
     public static function constraintsToJson(?array $constraints): ?string
     {
@@ -232,10 +236,13 @@ class ExtraPropertyConstraintMapper
      * Replaces PHP unserialize() in ExtraPropertyDefinition::decodeConstraints(). Only
      * whitelisted constraint names are accepted; options must be scalars or arrays of scalars
      * (no objects, no nested arrays beyond one level) — this is the strict rule that closes
-     * the Object Injection surface. Unknown names and non-scalar options are silently dropped
-     * (the constraint is skipped), mirroring filterConstraints()'s "drop non-Constraint" behavior.
+     * the Object Injection surface. The JSON schema version must match JSON_VERSION exactly.
+     * Invalid entries (unknown name, non-scalar option, missing composite key) throw
+     * InvalidExtraPropertyConstraintException so the caller can degrade gracefully.
      *
      * @return list<Constraint>|null
+     *
+     * @throws InvalidExtraPropertyConstraintException when the JSON schema version is unsupported or an entry is malformed
      */
     public static function constraintsFromJson(?string $json): ?array
     {
@@ -245,20 +252,41 @@ class ExtraPropertyConstraintMapper
 
         try {
             $data = json_decode($json, true, 32, JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
+        } catch (JsonException) {
             return null;
         }
 
-        if (!is_array($data) || !isset($data['constraints']) || !is_array($data['constraints'])) {
+        if (!is_array($data) || !isset($data['version']) || !is_int($data['version'])) {
+            return null;
+        }
+
+        // Reject unknown JSON schema versions explicitly — the shape may have changed
+        // in ways this decoder cannot handle safely.
+        if ($data['version'] !== self::JSON_VERSION) {
+            throw new InvalidExtraPropertyConstraintException(sprintf(
+                'Unsupported JSON constraint schema version %d. This decoder supports version %d only.',
+                $data['version'],
+                self::JSON_VERSION
+            ));
+        }
+
+        if (!isset($data['constraints']) || !is_array($data['constraints'])) {
             return null;
         }
 
         $constraints = [];
-        foreach ($data['constraints'] as $entry) {
-            $constraint = self::arrayToConstraint($entry);
-            if (null !== $constraint) {
-                $constraints[] = $constraint;
+        try {
+            foreach ($data['constraints'] as $entry) {
+                $constraint = self::arrayToConstraint($entry);
+                if (null !== $constraint) {
+                    $constraints[] = $constraint;
+                }
             }
+        } catch (InvalidExtraPropertyConstraintException $e) {
+            // Invalid entries are rejected explicitly by arrayToConstraint(). The read
+            // path (fromRow) catches this so a corrupt DB row degrades to "no constraints"
+            // instead of crashing the page, but the error is surfaced to the caller.
+            throw $e;
         }
 
         return [] !== $constraints ? $constraints : null;
@@ -275,10 +303,23 @@ class ExtraPropertyConstraintMapper
      */
     private static function constraintToArray(Constraint $constraint): array
     {
-        $shortName = (new ReflectionClass($constraint))->getShortName();
+        // Validate the constraint's FQCN against the whitelist by reverse lookup.
+        // This prevents a module's custom constraint named "Length" from being
+        // encoded as the Symfony Length and decoded back as the wrong class.
+        // Non-whitelisted constraints cannot be round-tripped through JSON and
+        // must fail explicitly rather than being silently dropped or mis-encoded.
+        $name = self::nameOf($constraint);
+        if (null === $name) {
+            throw new InvalidExtraPropertyConstraintException(sprintf(
+                'Constraint "%s" is not in the whitelist and cannot be JSON-encoded. ' .
+                'Only core Symfony constraints and PrestaShop custom constraints registered in %s are allowed.',
+                $constraint::class,
+                self::class
+            ));
+        }
 
         if ($constraint instanceof Composite) {
-            $entry = ['name' => $shortName];
+            $entry = ['name' => $name];
             $nested = $constraint->getNestedConstraints();
             if (Assert\Collection::class === $constraint::class) {
                 $fields = [];
@@ -311,7 +352,7 @@ class ExtraPropertyConstraintMapper
         }
 
         $configured = self::configuredOptions($constraint);
-        $entry = ['name' => $shortName];
+        $entry = ['name' => $name];
         $options = [];
         foreach ($configured as $option => $value) {
             if (self::isJsonSafeScalar($value)) {
@@ -328,82 +369,100 @@ class ExtraPropertyConstraintMapper
     }
 
     /**
-     * Decodes a single JSON array entry back into a Constraint instance, or null if the entry
-     * is not a whitelisted constraint or carries non-scalar options.
+     * Decodes a single JSON array entry back into a Constraint instance.
+     *
+     * Throws InvalidExtraPropertyConstraintException for any invalid entry (unknown name,
+     * non-scalar option, missing composite key, etc.) so the caller can decide whether to
+     * abort or degrade. Returns null only for a valid composite entry with no children.
      *
      * @param mixed $entry
+     *
+     * @throws InvalidExtraPropertyConstraintException when the entry is malformed or carries an unknown name
      */
     private static function arrayToConstraint(mixed $entry): ?Constraint
     {
         if (!is_array($entry) || !isset($entry['name']) || !is_string($entry['name'])) {
-            return null;
+            throw new InvalidExtraPropertyConstraintException(
+                'Invalid JSON constraint entry: missing or non-string "name" key.'
+            );
         }
 
         $name = $entry['name'];
 
-        // Only whitelisted names can be re-instantiated.
+        // Only whitelisted names can be re-instantiated — reject explicitly.
         if (!isset(self::ALLOWED_CONSTRAINTS[$name])) {
-            return null;
+            throw new InvalidExtraPropertyConstraintException(sprintf(
+                'Unknown constraint "%s" in JSON data. Allowed constraints: %s.',
+                $name,
+                implode(', ', self::getAllowedNames())
+            ));
         }
 
         $fqcn = self::ALLOWED_CONSTRAINTS[$name];
 
-        try {
-            // Composite shape: "constraints" (list) or "fields" (Collection).
-            if (is_subclass_of($fqcn, Composite::class)) {
-                $children = [];
-                if (Assert\Collection::class === $fqcn && isset($entry['fields']) && is_array($entry['fields'])) {
-                    foreach ($entry['fields'] as $key => $child) {
-                        if (!is_string($key)) {
-                            continue;
-                        }
-                        $childConstraint = self::arrayToConstraint($child);
-                        if (null !== $childConstraint) {
-                            // Re-wrap in Optional or Required (default).
-                            $isOptional = is_array($child) && isset($child['optional']) && true === $child['optional'];
-                            $children[$key] = $isOptional
-                                ? new Assert\Optional($childConstraint)
-                                : new Assert\Required($childConstraint);
-                        }
+        // Composite shape: "constraints" (list) or "fields" (Collection).
+        if (is_subclass_of($fqcn, Composite::class)) {
+            $children = [];
+            if (Assert\Collection::class === $fqcn && isset($entry['fields']) && is_array($entry['fields'])) {
+                foreach ($entry['fields'] as $key => $child) {
+                    if (!is_string($key)) {
+                        throw new InvalidExtraPropertyConstraintException(sprintf(
+                            'Invalid Collection field key in constraint "%s": keys must be strings, got %s.',
+                            $name,
+                            get_debug_type($key)
+                        ));
                     }
-
-                    return [] !== $children ? self::instantiate($fqcn, $name, ['fields' => $children]) : null;
+                    $childConstraint = self::arrayToConstraint($child);
+                    // Re-wrap in Optional or Required (default).
+                    $isOptional = is_array($child) && isset($child['optional']) && true === $child['optional'];
+                    $children[$key] = $isOptional
+                        ? new Assert\Optional($childConstraint)
+                        : new Assert\Required($childConstraint);
                 }
 
-                if (isset($entry['constraints']) && is_array($entry['constraints'])) {
-                    foreach ($entry['constraints'] as $child) {
-                        $childConstraint = self::arrayToConstraint($child);
-                        if (null !== $childConstraint) {
-                            $children[] = $childConstraint;
-                        }
-                    }
-                    $defaultOption = self::defaultOptionOf($fqcn) ?? 'constraints';
-
-                    return [] !== $children ? self::instantiate($fqcn, $name, [$defaultOption => $children]) : null;
-                }
-
-                return null;
+                return [] !== $children ? self::instantiate($fqcn, $name, ['fields' => $children]) : null;
             }
 
-            // Non-composite shape: "options" (scalar/array-of-scalar map).
-            $options = [];
-            if (isset($entry['options']) && is_array($entry['options'])) {
-                foreach ($entry['options'] as $option => $value) {
-                    if (!is_string($option)) {
-                        continue;
-                    }
-                    if (self::isJsonSafeScalar($value) || (is_array($value) && self::isScalarList($value))) {
-                        $options[$option] = $value;
-                    }
+            if (isset($entry['constraints']) && is_array($entry['constraints'])) {
+                foreach ($entry['constraints'] as $child) {
+                    $children[] = self::arrayToConstraint($child);
                 }
+                $defaultOption = self::defaultOptionOf($fqcn) ?? 'constraints';
+
+                return [] !== $children ? self::instantiate($fqcn, $name, [$defaultOption => $children]) : null;
             }
 
-            return [] !== $options ? self::instantiate($fqcn, $name, $options) : self::instantiate($fqcn, $name, null);
-        } catch (InvalidExtraPropertyConstraintException) {
-            // Malformed JSON entry (invalid options for the constraint type) — silently skip,
-            // mirroring filterConstraints()'s "drop non-Constraint" behavior.
-            return null;
+            throw new InvalidExtraPropertyConstraintException(sprintf(
+                'Composite constraint "%s" is missing its "constraints" or "fields" key in JSON data.',
+                $name
+            ));
         }
+
+        // Non-composite shape: "options" (scalar/array-of-scalar map).
+        $options = [];
+        if (isset($entry['options']) && is_array($entry['options'])) {
+            foreach ($entry['options'] as $option => $value) {
+                if (!is_string($option)) {
+                    throw new InvalidExtraPropertyConstraintException(sprintf(
+                        'Invalid option key in constraint "%s": keys must be strings, got %s.',
+                        $name,
+                        get_debug_type($option)
+                    ));
+                }
+                if (self::isJsonSafeScalar($value) || (is_array($value) && self::isScalarList($value))) {
+                    $options[$option] = $value;
+                } else {
+                    throw new InvalidExtraPropertyConstraintException(sprintf(
+                        'Invalid option "%s" in constraint "%s": value must be a scalar or array of scalars, got %s.',
+                        $option,
+                        $name,
+                        get_debug_type($value)
+                    ));
+                }
+            }
+        }
+
+        return [] !== $options ? self::instantiate($fqcn, $name, $options) : self::instantiate($fqcn, $name, null);
     }
 
     /**
@@ -412,6 +471,25 @@ class ExtraPropertyConstraintMapper
     private static function isJsonSafeScalar(mixed $value): bool
     {
         return null === $value || is_string($value) || is_int($value) || is_float($value) || is_bool($value);
+    }
+
+    /**
+     * Reverse lookup: returns the whitelist short name for a constraint's exact FQCN,
+     * or null when the FQCN is not in the whitelist. This is the safe counterpart to
+     * resolveName() — it compares the full class name, not the short name, so a
+     * module's custom constraint named "Length" is NOT mistaken for the Symfony one.
+     */
+    private static function nameOf(Constraint $constraint): ?string
+    {
+        $fqcn = $constraint::class;
+
+        foreach (self::ALLOWED_CONSTRAINTS as $shortName => $allowedFqcn) {
+            if ($fqcn === $allowedFqcn) {
+                return $shortName;
+            }
+        }
+
+        return null;
     }
 
     /**
