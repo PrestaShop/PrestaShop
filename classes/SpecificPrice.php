@@ -553,6 +553,7 @@ class SpecificPriceCore extends ObjectModel
 				FROM `' . _DB_PREFIX_ . 'specific_price`
 				WHERE
                 `id_shop` ' . self::formatIntInQuery(0, $id_shop) . ' AND
+                `id_shop_group` ' . self::formatIntInQuery(0, (int) Shop::getGroupFromShop($id_shop)) . ' AND
                 `id_currency` ' . self::formatIntInQuery(0, $id_currency) . ' AND
                 `id_country` ' . self::formatIntInQuery(0, $id_country) . ' AND
                 `id_group` ' . self::formatIntInQuery(0, $id_group) . ' ' . $query_extra . '
@@ -605,6 +606,7 @@ class SpecificPriceCore extends ObjectModel
 				FROM `' . _DB_PREFIX_ . 'specific_price`
 				WHERE
 					`id_shop` ' . self::formatIntInQuery(0, $id_shop) . ' AND
+					`id_shop_group` ' . self::formatIntInQuery(0, (int) Shop::getGroupFromShop($id_shop)) . ' AND
 					`id_currency` ' . self::formatIntInQuery(0, $id_currency) . ' AND
 					`id_country` ' . self::formatIntInQuery(0, $id_country) . ' AND
 					`id_group` ' . self::formatIntInQuery(0, $id_group) . ' ' . $query_extra . '
@@ -644,6 +646,7 @@ class SpecificPriceCore extends ObjectModel
 			FROM `' . _DB_PREFIX_ . 'specific_price`
 			WHERE
 					`id_shop` ' . self::formatIntInQuery(0, $id_shop) . ' AND
+					`id_shop_group` ' . self::formatIntInQuery(0, (int) Shop::getGroupFromShop($id_shop)) . ' AND
 					`id_currency` ' . self::formatIntInQuery(0, $id_currency) . ' AND
 					`id_country` ' . self::formatIntInQuery(0, $id_country) . ' AND
 					`id_group` ' . self::formatIntInQuery(0, $id_group) . ' AND
@@ -663,6 +666,7 @@ class SpecificPriceCore extends ObjectModel
 			SELECT `id_product`, `id_product_attribute`
 			FROM `' . _DB_PREFIX_ . 'specific_price`
 			WHERE	`id_shop` ' . self::formatIntInQuery(0, $id_shop) . ' AND
+					`id_shop_group` ' . self::formatIntInQuery(0, (int) Shop::getGroupFromShop($id_shop)) . ' AND
 					`id_currency` ' . self::formatIntInQuery(0, $id_currency) . ' AND
 					`id_country` ' . self::formatIntInQuery(0, $id_country) . ' AND
 					`id_group` ' . self::formatIntInQuery(0, $id_group) . ' AND
