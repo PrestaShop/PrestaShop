@@ -713,7 +713,8 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
-     * Get Currencies by Shop ID.
+     * Get Currencies by Shop ID. Soft deleted currencies are excluded, like in every other listing
+     * of this class, because they cannot be reached from the back office anymore.
      *
      * @param int $idShop Shop ID
      *
@@ -725,7 +726,7 @@ class CurrencyCore extends ObjectModel
 		SELECT *
 		FROM `' . _DB_PREFIX_ . 'currency` c
 		LEFT JOIN `' . _DB_PREFIX_ . 'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
-        ' . ($idShop ? ' WHERE cs.`id_shop` = ' . (int) $idShop : '') . '
+		WHERE c.`deleted` = 0' . ($idShop ? ' AND cs.`id_shop` = ' . (int) $idShop : '') . '
 		ORDER BY `iso_code` ASC');
 
         return self::addCldrDatasToCurrency($currencies);
