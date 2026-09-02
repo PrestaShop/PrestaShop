@@ -179,9 +179,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         $sorter = new Sorter();
         $products = $sorter->natural(
             $products,
-            $query->getProductsSorting()->getValue(),
-            'product_reference',
-            'product_supplier_reference'
+            $query->getProductsSorting()->getSortingOrder(),
+            ...$query->getProductsSorting()->getSortingFields()
         );
 
         $productsForViewing = [];
