@@ -167,7 +167,7 @@
         </div>
       {% endif %}
       {% for customization in product.customizations.textCustomizations %}
-        <p>
+        <p class="text-break">
           <strong>{{ customization.name }} :</strong>
           {% if customization.htmlAllowed %}
             {{ customization.value|raw_purified }}
