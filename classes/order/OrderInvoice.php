@@ -63,6 +63,9 @@ class OrderInvoiceCore extends ObjectModel
     /** @var string shop address */
     public $shop_address;
 
+    /** @var string|null Invoice address of the customer, as printed when the invoice was issued */
+    public $customer_address;
+
     /** @var string note */
     public $note;
 
@@ -101,6 +104,7 @@ class OrderInvoiceCore extends ObjectModel
             'total_wrapping_tax_excl' => ['type' => self::TYPE_FLOAT],
             'total_wrapping_tax_incl' => ['type' => self::TYPE_FLOAT],
             'shop_address' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
+            'customer_address' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'note' => ['type' => self::TYPE_HTML, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
@@ -111,6 +115,7 @@ class OrderInvoiceCore extends ObjectModel
         $order = new Order($this->id_order);
 
         $this->shop_address = OrderInvoice::getCurrentFormattedShopAddress($order->id_shop);
+        $this->customer_address = OrderInvoice::getFormattedCustomerAddress((int) $order->id_address_invoice);
 
         return parent::add();
     }
@@ -889,6 +894,30 @@ class OrderInvoiceCore extends ObjectModel
         $address->id_country = (int) Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $id_shop);
 
         return AddressFormat::generateAddress($address, [], '<br />', ' ');
+    }
+
+    /**
+     * Formats the invoice address of an order the way the invoice prints it, so the document keeps the
+     * address it carried when it was issued.
+     *
+     * `shop_address` above already does this for the merchant's own address; editing a customer address
+     * afterwards used to rewrite invoices that had been sent.
+     *
+     * @param int $idAddress
+     *
+     * @return string|null null when the address is gone, so the caller falls back to the live one
+     */
+    public static function getFormattedCustomerAddress($idAddress)
+    {
+        $address = new Address((int) $idAddress);
+
+        if (!Validate::isLoadedObject($address)) {
+            return null;
+        }
+
+        $patternRules = json_decode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
+
+        return AddressFormat::generateAddress($address, is_array($patternRules) ? $patternRules : [], '<br />', ' ');
     }
 
     /**
