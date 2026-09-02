@@ -46,8 +46,10 @@ class Mutation
 
     /**
      * @ORM\Column(name="mutation_row_id", type="bigint")
+     *
+     * @var string|int
      */
-    private int $mutationRowId;
+    private mixed $mutationRowId;
 
     /**
      * @ORM\Column(name="mutation_action", enumType="PrestaShopBundle\Entity\MutationAction", columnDefinition="ENUM('create', 'update', 'delete')"), options={"default": "create"}, nullable=false)
@@ -91,12 +93,18 @@ class Mutation
         return $this;
     }
 
-    public function getMutationRowId(): int
+    /**
+     * @return string|int
+     */
+    public function getMutationRowId(): mixed
     {
         return $this->mutationRowId;
     }
 
-    public function setMutationRowId(int $mutationRowId): static
+    /**
+     * @param string|int $mutationRowId
+     */
+    public function setMutationRowId(mixed $mutationRowId): static
     {
         $this->mutationRowId = $mutationRowId;
 

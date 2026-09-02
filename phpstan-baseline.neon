@@ -1579,18 +1579,6 @@ parameters:
 			path: src/PrestaShopBundle/DependencyInjection/AddOnsConfiguration.php
 
 		-
-			message: '#^Property PrestaShopBundle\\Entity\\Employee\\EmployeeSession\:\:\$token type mapping mismatch\: database can contain string\|null but property expects string\.$#'
-			identifier: doctrine.columnType
-			count: 1
-			path: src/PrestaShopBundle/Entity/Employee/EmployeeSession.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\Mutation\:\:\$mutationRowId type mapping mismatch\: database can contain string but property expects int\.$#'
-			identifier: doctrine.columnType
-			count: 1
-			path: src/PrestaShopBundle/Entity/Mutation.php
-
-		-
 			message: '#^Using _THEME_COL_DIR_ is forbidden, Use dependency injection instead\.$#'
 			identifier: disallowed.constant
 			count: 1
@@ -1679,18 +1667,6 @@ parameters:
 			identifier: disallowed.namespace
 			count: 1
 			path: src/PrestaShopBundle/Entity/Repository/SupplierRepository.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\StockMvt\:\:\$idStockMvt type mapping mismatch\: database can contain string but property expects int\.$#'
-			identifier: doctrine.columnType
-			count: 1
-			path: src/PrestaShopBundle/Entity/StockMvt.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\StockMvt\:\:\$referer type mapping mismatch\: database can contain string\|null but property expects int\|null\.$#'
-			identifier: doctrine.columnType
-			count: 1
-			path: src/PrestaShopBundle/Entity/StockMvt.php
 
 		-
 			message: '#^Cannot access constant class on \(callable\)\|class\-string\|object\.$#'
