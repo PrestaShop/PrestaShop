@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -310,7 +290,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
     public function postProcess()
     {
         if ($id_customer_thread = (int) Tools::getValue('id_customer_thread')) {
-            if (($id_contact = (int) Tools::getValue('id_contact'))) {
+            if ($id_contact = (int) Tools::getValue('id_contact')) {
                 $result = Db::getInstance()->execute(
                     '
 					UPDATE ' . _DB_PREFIX_ . 'customer_thread
@@ -381,7 +361,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $params,
                         $employee->email,
                         $employee->firstname . ' ' . $employee->lastname,
-                        $current_employee->email,
+                        (string) Configuration::get('PS_SHOP_EMAIL'),
                         $current_employee->firstname . ' ' . $current_employee->lastname,
                         null,
                         null,
@@ -413,7 +393,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $params,
                         $email,
                         null,
-                        $current_employee->email,
+                        (string) Configuration::get('PS_SHOP_EMAIL'),
                         $current_employee->firstname . ' ' . $current_employee->lastname,
                         null,
                         null,
@@ -453,13 +433,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     $params = [
                         '{reply}' => Tools::nl2br(Tools::htmlentitiesUTF8(Tools::getValue('reply_message'))),
                         '{link}' => Tools::url(
-                            $this->context->link->getPageLink('contact', true, null, null, false, $ct->id_shop),
+                            $this->context->link->getPageLink('contact', null, null, null, false, $ct->id_shop),
                             'id_customer_thread=' . (int) $ct->id . '&token=' . $ct->token
                         ),
                         '{firstname}' => $customer->firstname,
                         '{lastname}' => $customer->lastname,
                     ];
-                    //#ct == id_customer_thread    #tc == token of thread   <== used in the synchronization imap
+                    // #ct == id_customer_thread    #tc == token of thread   <== used in the synchronization imap
                     $contact = new Contact((int) $ct->id_contact, (int) $ct->id_lang);
 
                     if (Validate::isLoadedObject($contact)) {
@@ -510,6 +490,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
         return parent::postProcess();
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         if (isset($_GET['filename'])) {
@@ -538,6 +523,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             '.jpeg' => 'image/jpeg',
             '.gif' => 'image/gif',
             '.jpg' => 'image/jpeg',
+            '.webp' => 'image/webp',
         ];
 
         $extension = false;
@@ -549,8 +535,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
             }
         }
 
-        if (!$extension || !Validate::isFileName($filename)) {
-            die(Tools::displayError());
+        if (!$extension) {
+            throw new PrestaShopException('Invalid file extension.');
+        }
+
+        if (!Validate::isFileName($filename)) {
+            throw new PrestaShopException('Invalid filename.');
         }
 
         if (ob_get_level() && ob_get_length() > 0) {
@@ -575,7 +565,6 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $helper->id = 'box-pending-messages';
         $helper->icon = 'icon-envelope';
         $helper->color = 'color1';
-        $helper->href = $this->context->link->getAdminLink('AdminCustomerThreads');
         $helper->title = $this->trans('Pending Discussion Threads', [], 'Admin.Catalog.Feature');
         if (ConfigurationKPI::get('PENDING_MESSAGES') !== false) {
             $helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
@@ -620,7 +609,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
      * @return string|void
      *
      * @throws PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function renderView()
     {
@@ -844,7 +833,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         return $timeline;
     }
 
-    protected function displayMessage($message, $email = false, $id_employee = null)
+    protected function displayMessage(array $message, string|bool $email = false, ?int $id_employee = null)
     {
         $tpl = $this->createTemplate('message.tpl');
 
@@ -867,7 +856,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             '<a href="\1">\1</a>\2',
             html_entity_decode(
                 $message['message'],
-            ENT_QUOTES,
+                ENT_QUOTES,
                 'UTF-8'
             )
         );
@@ -898,7 +887,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         return $tpl->fetch();
     }
 
-    protected function displayButton($content)
+    protected function displayButton(string $content)
     {
         return '<div><p>' . $content . '</p></div>';
     }
@@ -1032,7 +1021,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         $mbox = @imap_open('{' . $url . ':' . $port . $conf_str . '}', $user, $password);
 
-        //checks if there is no error when connecting imap server
+        // checks if there is no error when connecting imap server
         $errors = imap_errors();
         if (is_array($errors)) {
             $errors = array_unique($errors);
@@ -1047,12 +1036,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
             }
             $str_errors = rtrim(trim($str_errors), ',');
         }
-        //checks if imap connexion is active
+        // checks if imap connexion is active
         if (!$mbox) {
-            return ['hasError' => true, 'errors' => ['Cannot connect to the mailbox :<br />' . ($str_errors)]];
+            return ['hasError' => true, 'errors' => ['Cannot connect to the mailbox :<br />' . $str_errors]];
         }
 
-        //Returns information about the current mailbox. Returns FALSE on failure.
+        // Returns information about the current mailbox. Returns FALSE on failure.
         $check = imap_check($mbox);
         if (!$check) {
             return ['hasError' => true, 'errors' => ['Fail to get information about the current mailbox']];
@@ -1065,13 +1054,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $result = imap_fetch_overview($mbox, "1:{$check->Nmsgs}", 0);
         $message_errors = [];
         foreach ($result as $overview) {
-            //check if message exist in database
+            // check if message exist in database
             if (isset($overview->subject)) {
                 $subject = $overview->subject;
             } else {
                 $subject = '';
             }
-            //Creating an md5 to check if message has been allready processed
+            // Creating an md5 to check if message has been allready processed
             $md5 = md5($overview->date . $overview->from . $subject . $overview->msgno);
             $exist = Db::getInstance()->getValue(
                 'SELECT `md5_header`
@@ -1085,7 +1074,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     }
                 }
             } else {
-                //check if subject has id_order
+                // check if subject has id_order
                 preg_match('/\#ct([0-9]*)/', $subject, $matches1);
                 preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
                 $match_found = false;
@@ -1130,21 +1119,21 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         }
 
                         $customer = new Customer();
-                        $client = $customer->getByEmail($from); //check if we already have a customer with this email
+                        $client = $customer->getByEmail($from); // check if we already have a customer with this email
                         $ct = new CustomerThread();
-                        if (isset($client->id)) { //if mail is owned by a customer assign to him
+                        if (isset($client->id)) { // if mail is owned by a customer assign to him
                             $ct->id_customer = $client->id;
                         }
                         $ct->email = $from;
                         $ct->id_contact = $id_contact;
                         $ct->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
-                        $ct->id_shop = $this->context->shop->id; //new customer threads for unrecognized mails are not shown without shop id
+                        $ct->id_shop = $this->context->shop->id; // new customer threads for unrecognized mails are not shown without shop id
                         $ct->status = 'open';
                         $ct->token = Tools::passwdGen(12);
                         $ct->add();
                     } else {
                         $ct = new CustomerThread((int) $matches1[1]);
-                    } //check if order exist in database
+                    } // check if order exist in database
 
                     if (Validate::isLoadedObject($ct) && ((isset($matches2[1]) && $ct->token == $matches2[1]) || $new_ct)) {
                         $structure = imap_bodystruct($mbox, $overview->msgno, '1');

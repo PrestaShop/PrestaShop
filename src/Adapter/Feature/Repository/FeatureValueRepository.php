@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -33,11 +13,14 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use FeatureValue;
 use PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValueValidator;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureValueException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotUpdateFeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureValueIdException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
@@ -153,7 +136,92 @@ class FeatureValueRepository extends AbstractObjectModelRepository
      */
     public function getProductFeatureValues(ProductId $productId, ?int $limit = null, ?int $offset = null, ?array $filters = []): array
     {
-        return $this->getFeatureValues($limit, $offset, array_merge($filters, ['id_product' => $productId->getValue()]));
+        return $this->getFeatureValues($limit, $offset, array_merge($filters ?? [], ['id_product' => $productId->getValue()]));
+    }
+
+    public function getAllProductFeatureValues(ProductId $productId, ShopId $shopId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->from($this->dbPrefix . 'feature_value', 'fv')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_product', 'fp', 'fp.id_feature_value = fv.id_feature_value AND fp.id_product = :productId')
+            ->innerJoin('fp', $this->dbPrefix . 'feature_shop', 'fs', 'fp.id_feature = fs.id_feature AND fs.id_shop = :shopId')
+            ->leftJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value')
+            ->select('fv.*, fvl.*')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAllAssociative();
+        $featureValues = [];
+        foreach ($result as $featureValue) {
+            $featureValueId = (int) $featureValue['id_feature_value'];
+            if (!isset($featureValues[$featureValueId])) {
+                $featureValues[$featureValueId] = [
+                    'id_feature_value' => $featureValueId,
+                    'id_feature' => (int) $featureValue['id_feature'],
+                    'custom' => (int) $featureValue['custom'],
+                ];
+            }
+            $featureValues[$featureValueId]['localized_values'][(int) $featureValue['id_lang']] = $featureValue['value'];
+        }
+
+        return array_values($featureValues);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param ShopId $shopId
+     *
+     * @return array
+     */
+    public function getAllCombinationFeatureValues(CombinationId $combinationId, ShopId $shopId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->from($this->dbPrefix . 'feature_value', 'fv')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_product_attribute', 'fpa', 'fpa.id_feature_value = fv.id_feature_value AND fpa.id_product_attribute = :combinationId')
+            ->innerJoin('fpa', $this->dbPrefix . 'feature_shop', 'fs', 'fpa.id_feature = fs.id_feature AND fs.id_shop = :shopId')
+            ->leftJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value')
+            ->select('fv.*, fvl.*')
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+
+        $result = $qb->executeQuery()->fetchAllAssociative();
+        $featureValues = [];
+        foreach ($result as $featureValue) {
+            $featureValueId = (int) $featureValue['id_feature_value'];
+            if (!isset($featureValues[$featureValueId])) {
+                $featureValues[$featureValueId] = [
+                    'id_feature_value' => $featureValueId,
+                    'id_feature' => (int) $featureValue['id_feature'],
+                    'custom' => (int) $featureValue['custom'],
+                ];
+            }
+            $featureValues[$featureValueId]['localized_values'][(int) $featureValue['id_lang']] = $featureValue['value'];
+        }
+
+        return array_values($featureValues);
+    }
+
+    /**
+     * @param int $langId
+     * @param array $filters
+     *
+     * @return array
+     */
+    public function getFeatureValuesByLang(int $langId, array $filters): array
+    {
+        $qb = $this->getFeatureValuesQueryBuilder(array_merge($filters, ['id_lang' => $langId]))
+            ->leftJoin('f', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value AND fvl.id_lang = :langId')
+            ->setParameter('langId', $langId)
+            ->select('fv.*, fvl.value')
+            // Override the default order by feature position and ID
+            ->orderBy('fvl.value')
+        ;
+
+        return $qb->execute()->fetchAllAssociative();
     }
 
     /**
@@ -167,16 +235,24 @@ class FeatureValueRepository extends AbstractObjectModelRepository
     {
         $qb = $this->getFeatureValuesQueryBuilder($filters)
             ->select('fv.*')
-            ->setFirstResult($offset)
+            ->setFirstResult($offset ?? 0)
             ->setMaxResults($limit)
         ;
 
-        $featureValues = $qb->execute()->fetchAll();
-        foreach ($featureValues as $index => $featureValue) {
-            $featureValues[$index]['localized_values'] = $this->getFeatureValueLocalizedValues((int) $featureValue['id_feature_value']);
+        $featureValues = $qb->executeQuery()->fetchAllAssociative();
+
+        $indexedFeatureValues = [];
+        foreach ($featureValues as $featureValue) {
+            $indexedFeatureValues[$featureValue['id_feature_value']] = $featureValue;
+        }
+        $featureValueIds = array_keys($indexedFeatureValues);
+
+        $localizedFeatureValues = $this->getFeatureValueLocalizedValues($featureValueIds, $filters);
+        foreach ($localizedFeatureValues as $localizedFeatureValue) {
+            $indexedFeatureValues[$localizedFeatureValue['id_feature_value']]['localized_values'][$localizedFeatureValue['id_lang']] = $localizedFeatureValue['value'];
         }
 
-        return $featureValues;
+        return array_values($indexedFeatureValues);
     }
 
     /**
@@ -201,30 +277,76 @@ class FeatureValueRepository extends AbstractObjectModelRepository
             ->select('COUNT(fv.id_feature_value) AS total_feature_values')
         ;
 
-        return (int) $qb->execute()->fetch()['total_feature_values'];
+        return (int) $qb->executeQuery()->fetchAssociative()['total_feature_values'];
+    }
+
+    public function delete(FeatureValueId $featureValueId): void
+    {
+        $this->deleteObjectModel($this->get($featureValueId), CannotDeleteFeatureValueException::class);
     }
 
     /**
-     * @param int $featureValueId
+     * Get features information by feature value IDs
+     *
+     * @param int[] $featureValueIds
+     * @param int $langId
+     *
+     * @return array<int, array{id_feature: int, feature_name: string|null, feature_value_name: string|null}>
+     */
+    public function getFeaturesInfoByFeatureValueIds(array $featureValueIds, int $langId): array
+    {
+        if (empty($featureValueIds)) {
+            return [];
+        }
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('fv.id_feature_value, fv.id_feature, fl.name as feature_name, fvl.value as feature_value_name')
+            ->from($this->dbPrefix . 'feature_value', 'fv')
+            ->leftJoin('fv', $this->dbPrefix . 'feature', 'f', 'f.id_feature = fv.id_feature')
+            ->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature AND fl.id_lang = :langId')
+            ->leftJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value AND fvl.id_lang = :langId')
+            ->where('fv.id_feature_value IN (:featureValueIds)')
+            ->setParameter('langId', $langId)
+            ->setParameter('featureValueIds', $featureValueIds, Connection::PARAM_INT_ARRAY);
+
+        $result = $qb->executeQuery()->fetchAllAssociative();
+        $featuresInfo = [];
+        foreach ($result as $row) {
+            $featuresInfo[(int) $row['id_feature_value']] = [
+                'id_feature' => (int) $row['id_feature'],
+                'feature_name' => $row['feature_name'],
+                'feature_value_name' => $row['feature_value_name'],
+            ];
+        }
+
+        return $featuresInfo;
+    }
+
+    /**
+     * @param array $featureValuesIds
+     * @param array $filters
      *
      * @return array
      */
-    private function getFeatureValueLocalizedValues(int $featureValueId): array
+    private function getFeatureValueLocalizedValues(array $featureValuesIds, array $filters): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'feature_value_lang', 'fvl')
             ->select('fvl.*')
-            ->where('fvl.id_feature_value= :featureValueId')
-            ->setParameter('featureValueId', $featureValueId)
+            ->where('fvl.id_feature_value IN(:featureValueIds)')
+            ->setParameter('featureValueIds', $featureValuesIds, Connection::PARAM_INT_ARRAY)
         ;
 
-        $values = $qb->execute()->fetchAll();
-        $localizedValues = [];
-        foreach ($values as $value) {
-            $localizedValues[(int) $value['id_lang']] = $value['value'];
+        if (!empty($filters['id_lang'])) {
+            $languageIds = is_array($filters['id_lang']) ? $filters['id_lang'] : [$filters['id_lang']];
+            $qb
+                ->andWhere('fvl.id_lang IN (:languageIds)')
+                ->setParameter('languageIds', $languageIds, Connection::PARAM_INT_ARRAY)
+            ;
         }
 
-        return $localizedValues;
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -235,15 +357,34 @@ class FeatureValueRepository extends AbstractObjectModelRepository
     private function getFeatureValuesQueryBuilder(?array $filters): QueryBuilder
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->from($this->dbPrefix . 'feature_value', 'fv')
-            ->leftJoin('fv', $this->dbPrefix . 'feature_product', 'fp', 'fp.id_feature_value = fv.id_feature_value')
-            ->leftJoin('fv', $this->dbPrefix . 'feature', 'f', 'f.id_feature = fv.id_feature')
-            ->orderBy('f.position,fv.id_feature_value', 'ASC')
+        $qb
+            ->from($this->dbPrefix . 'feature_value', 'fv')
+        ;
+
+        // Join only on specified feature if requested
+        if (!empty($filters['id_feature'])) {
+            $qb
+                ->innerJoin('fv', $this->dbPrefix . 'feature', 'f', 'f.id_feature = fv.id_feature AND f.id_feature = :featureId')
+                ->setParameter('featureId', (int) $filters['id_feature'])
+            ;
+        } else {
+            $qb->leftJoin('fv', $this->dbPrefix . 'feature', 'f', 'f.id_feature = fv.id_feature');
+        }
+
+        // Join only on specified product if requested
+        if (!empty($filters['id_product'])) {
+            $qb
+                ->innerJoin('fv', $this->dbPrefix . 'feature_product', 'fp', 'fp.id_feature_value = fv.id_feature_value AND fp.id_product = :productId')
+                ->setParameter('productId', (int) $filters['id_product'])
+            ;
+        }
+
+        $qb
+            ->addGroupBy('fv.id_feature_value')
+            ->orderBy('f.position, fv.id_feature_value', 'ASC')
         ;
 
         $availableFilters = [
-            'id_product',
-            'id_feature',
             'id_feature_value',
             'custom',
         ];
@@ -253,22 +394,78 @@ class FeatureValueRepository extends AbstractObjectModelRepository
                 continue;
             }
 
-            switch ($key) {
-                case 'id_product':
-                    $qb
-                        ->andWhere('fp.id_product = :productId')
-                        ->setParameter('productId', (int) $value)
-                    ;
-                break;
-                default:
-                    $qb
-                        ->andWhere(sprintf('fv.%s = :%s', $key, $key))
-                        ->setParameter($key, $value)
-                    ;
-                break;
-            }
+            $qb
+                ->andWhere(sprintf('fv.%s = :%s', $key, $key))
+                ->setParameter($key, $value)
+            ;
         }
 
         return $qb;
+    }
+
+    /**
+     * Localized texts of the product's current CUSTOM value for one feature,
+     * [] when the product carries none. Import uses it to update a custom
+     * value without losing the other languages: SetProductFeatureValuesCommand
+     * REPLACES the custom value row, so keeping a translation means re-sending
+     * it.
+     *
+     * @return array<int, string> language id => value
+     */
+    public function getProductCustomFeatureValueTexts(int $featureId, int $productId): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select('fvl.id_lang, fvl.value')
+            ->from($this->dbPrefix . 'feature_product', 'fp')
+            ->innerJoin('fp', $this->dbPrefix . 'feature_value', 'fv', 'fv.id_feature_value = fp.id_feature_value')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value')
+            ->where('fp.id_product = :productId')
+            ->andWhere('fp.id_feature = :featureId')
+            ->andWhere('fv.custom = 1')
+            ->orderBy('fv.id_feature_value', 'ASC')
+            ->setParameter('productId', $productId)
+            ->setParameter('featureId', $featureId)
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $texts = [];
+        foreach ($rows as $row) {
+            $texts[(int) $row['id_lang']] = (string) $row['value'];
+        }
+
+        return $texts;
+    }
+
+    /**
+     * Exact pre-defined (non custom) value lookup within a feature, resolving ids
+     * directly (unlike the listing-oriented getFeatureValuesByLang() which loads
+     * every value).
+     *
+     * feature_value_lang.value carries no unique constraint per feature, so EVERY
+     * match is returned, ordered by id ASC: callers use the first one and report
+     * the count when there is more than one, rather than silently picking the
+     * oldest duplicate.
+     *
+     * @return list<int>
+     */
+    public function getFeatureValueIdsByValue(int $featureId, string $value, int $languageId): array
+    {
+        $featureValueIds = $this->connection->createQueryBuilder()
+            ->select('fv.id_feature_value')
+            ->from($this->dbPrefix . 'feature_value', 'fv')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value AND fvl.id_lang = :languageId')
+            ->where('fv.id_feature = :featureId')
+            ->andWhere('fv.custom = 0')
+            ->andWhere('fvl.value = :value')
+            ->orderBy('fv.id_feature_value', 'ASC')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('featureId', $featureId)
+            ->setParameter('value', $value)
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+
+        return array_map('intval', $featureValueIds);
     }
 }

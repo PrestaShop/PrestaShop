@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -34,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 use PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\SpecificPriceFixedPriceTransformer;
 use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -54,15 +35,15 @@ class SpecificPriceImpactType extends TranslatorAwareType
     /**
      * @var string
      */
-    private $defaultCurrencyIso;
+    private $defaultCurrencyIsoCode;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        string $defaultCurrencyIso
+        string $defaultCurrencyIsoCode
     ) {
         parent::__construct($translator, $locales);
-        $this->defaultCurrencyIso = $defaultCurrencyIso;
+        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -70,7 +51,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
         $builder
             ->add('reduction', PriceReductionType::class, [
                 'label' => $this->trans('Apply a discount to the initial price', 'Admin.Catalog.Feature'),
-                'label_subtitle' => $this->trans('For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.', 'Admin.Catalog.Feature'),
+                'alert_message' => $this->trans('For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'constraints' => [
                     new Reduction([
@@ -95,11 +76,11 @@ class SpecificPriceImpactType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Set specific price', 'Admin.Catalog.Feature'),
                 'label_subtitle' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => ['data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION],
                 'row_attr' => [
                     'class' => 'js-fixed-price-row',
                 ],
-                'currency' => $this->defaultCurrencyIso,
+                'currency' => $this->defaultCurrencyIsoCode,
                 'constraints' => [
                     new NotBlank(['groups' => [self::FIXED_PRICE_GROUP]]),
                     new Type(['type' => 'float', 'groups' => [self::FIXED_PRICE_GROUP]]),

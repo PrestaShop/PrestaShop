@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -44,6 +24,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -51,36 +32,49 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageSizeException;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ImageController extends FrameworkBundleAdminController
+class ImageController extends PrestaShopAdminController
 {
-    /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     *
-     * @param int $productId
-     *
-     * @return JsonResponse
-     */
-    public function getImagesAction(int $productId, Request $request): JsonResponse
+    public static function getSubscribedServices(): array
     {
-        /** @var ProductImage[] $images */
-        $images = $this->getQueryBus()->handle(new GetProductImages($productId, $request->attributes->get('shopConstraint')));
-
-        return new JsonResponse(array_map([$this, 'formatImage'], $images));
+        return array_merge(parent::getSubscribedServices(), [
+            ShopRepository::class => ShopRepository::class,
+        ]);
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to red or update this.")
+     * Retrieves images for all shops, but the cover (which is multi-shop compatable) is retrieved based on $shopId
      *
+     * @param int $productId
+     * @param int $shopId
+     *
+     * @return JsonResponse
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
+    public function getImagesForShopAction(int $productId, int $shopId): JsonResponse
+    {
+        /** @var ProductImage[] $images */
+        $images = $this->dispatchQuery(new GetProductImages(
+            $productId,
+            ShopConstraint::shop($shopId)
+        ));
+
+        return $this->json(array_map([$this, 'formatImage'], $images));
+    }
+
+    /**
      * @param int $productId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to red or update this.')]
     public function productShopImagesAction(int $productId, Request $request): JsonResponse
     {
         if ($request->isMethod(Request::METHOD_POST)) {
@@ -93,7 +87,7 @@ class ImageController extends FrameworkBundleAdminController
                         $imageAssociation['shops']
                     ));
                 }
-                $this->getQueryBus()->handle($command);
+                $this->dispatchQuery($command);
             } catch (CoreException $e) {
                 return $this->json([
                     'status' => false,
@@ -106,19 +100,23 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function addImageAction(Request $request): JsonResponse
-    {
-        $imageForm = $this->getProductImageFormBuilder()->getForm();
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
+    public function addImageAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.product_image_form_builder')]
+        FormBuilderInterface $productImageFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.product_image_form_handler')]
+        FormHandlerInterface $productImageFormHandler
+    ): JsonResponse {
+        $imageForm = $productImageFormBuilder->getForm();
         $imageForm->handleRequest($request);
 
         try {
-            $result = $this->getProductImageFormHandler()->handle($imageForm);
+            $result = $productImageFormHandler->handle($imageForm);
 
             if (!$result->isSubmitted() || !$result->isValid()) {
                 return new JsonResponse([
@@ -141,22 +139,27 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     *
      * @param Request $request
      * @param int $productImageId
      *
      * @return JsonResponse
      */
-    public function updateImageAction(Request $request, int $productImageId): JsonResponse
-    {
-        $imageForm = $this->getProductImageFormBuilder()->getFormFor($productImageId, [], [
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
+    public function updateImageAction(
+        Request $request,
+        int $productImageId,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.product_image_form_builder')]
+        FormBuilderInterface $productImageFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.product_image_form_handler')]
+        FormHandlerInterface $productImageFormHandler
+    ): JsonResponse {
+        $imageForm = $productImageFormBuilder->getFormFor($productImageId, [], [
             'method' => $request->getMethod(),
         ]);
         $imageForm->handleRequest($request);
 
         try {
-            $result = $this->getProductImageFormHandler()->handleFor($productImageId, $imageForm);
+            $result = $productImageFormHandler->handleFor($productImageId, $imageForm);
 
             if (!$result->isSubmitted() || !$result->isValid()) {
                 return new JsonResponse([
@@ -174,16 +177,15 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     *
      * @param int $productImageId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
     public function deleteImageAction(int $productImageId): JsonResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteProductImageCommand($productImageId));
+            $this->dispatchCommand(new DeleteProductImageCommand($productImageId));
         } catch (Exception $e) {
             return new JsonResponse([
                 'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
@@ -193,26 +195,10 @@ class ImageController extends FrameworkBundleAdminController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    /**
-     * @return FormBuilderInterface
-     */
-    private function getProductImageFormBuilder(): FormBuilderInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.builder.product_image_form_builder');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    private function getProductImageFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.product_image_form_handler');
-    }
-
     private function getProductShopImagesJsonResponse(int $productId): JsonResponse
     {
         /** @var ShopProductImagesCollection $shopImages */
-        $shopImages = $this->getQueryBus()->handle(new GetShopProductImages($productId));
+        $shopImages = $this->dispatchQuery(new GetShopProductImages($productId));
 
         return new JsonResponse($this->formatShopImages($shopImages));
     }
@@ -224,15 +210,18 @@ class ImageController extends FrameworkBundleAdminController
      */
     private function getProductImageJsonResponse(int $productImageId): JsonResponse
     {
-        $productImage = $this->getQueryBus()->handle(new GetProductImage($productImageId));
+        $productImage = $this->dispatchQuery(new GetProductImage(
+            $productImageId,
+            ShopConstraint::shop($this->getShopContext()->getId())
+        ));
 
-        return new JsonResponse($this->formatImage($productImage));
+        return $this->json($this->formatImage($productImage));
     }
 
     /**
      * @param ProductImage $image
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function formatImage(ProductImage $image): array
     {
@@ -243,6 +232,7 @@ class ImageController extends FrameworkBundleAdminController
             'image_url' => $image->getImageUrl(),
             'thumbnail_url' => $image->getThumbnailUrl(),
             'legends' => $image->getLocalizedLegends(),
+            'shop_ids' => $image->getShopIds(),
         ];
     }
 
@@ -253,8 +243,7 @@ class ImageController extends FrameworkBundleAdminController
      */
     private function formatShopImages(ShopProductImagesCollection $shopImagesCollection): array
     {
-        /** @var ShopRepository $shopRepository */
-        $shopRepository = $this->get(ShopRepository::class);
+        $shopRepository = $this->container->get(ShopRepository::class);
         $formattedShopsImages = [];
         foreach ($shopImagesCollection as $shopProductImage) {
             $shopImages = [
@@ -286,52 +275,63 @@ class ImageController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(Exception $e): array
     {
-        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
-
-        return [
+        $messages = [
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_ID => $this->trans(
                     'Invalid ID.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             ProductImageNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             UploadedImageConstraintException::class => [
-                UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
-                'Max file size allowed is "%s" bytes.',
-                'Admin.Notifications.Error',
-                    [$iniConfig->getUploadMaxSizeInBytes()]
-                ),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             MemoryLimitException::class => $this->trans(
                 'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotAddProductImageException::class => $this->trans(
                 'An error occurred while attempting to save.',
+                [],
                 'Admin.Notifications.Error'
             ),
             FileUploadException::class => [
                 UPLOAD_ERR_NO_FILE => $this->trans(
                     'No file was uploaded.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
             CannotUnlinkImageException::class => $this->trans(
                 'Cannot delete file',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotRemoveCoverException::class => $this->trans(
-                'Cannot remove cover image',
+                'Cannot remove cover image.',
+                [],
                 'Admin.Notifications.Error'
             ),
         ];
+
+        if ($e instanceof UploadedImageSizeException) {
+            $messages[UploadedImageSizeException::class] = $this->trans(
+                'Max file size allowed is "%s" bytes.',
+                [$e->getAllowedSizeBytes()],
+                'Admin.Notifications.Error'
+            );
+        }
+
+        return $messages;
     }
 }

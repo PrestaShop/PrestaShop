@@ -201,8 +201,8 @@
   "fi": {
     "name": "Suomi (Finnish)",
     "iso_code": "fi",
-    "date_format_lite": "Y-m-d",
-    "date_format_full": "Y-m-d H:i:s",
+    "date_format_lite": "d.m.Y",
+    "date_format_full": "d.m.Y H:i:s",
     "is_rtl": "0",
     "language_code": "fi-fi",
     "locale": "fi-FI"

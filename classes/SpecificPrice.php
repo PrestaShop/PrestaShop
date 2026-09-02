@@ -1,31 +1,8 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-
-use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
-
 class SpecificPriceCore extends ObjectModel
 {
     public const ORDER_DEFAULT_FROM_QUANTITY = 1;
@@ -162,13 +139,23 @@ class SpecificPriceCore extends ObjectModel
 
     public function add($autodate = true, $nullValues = false)
     {
+        $specificPriceUsed = (bool) Configuration::getGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
+
+        if (!$specificPriceUsed) {
+            // Set cache of feature detachable to true
+            Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', '1');
+        }
+
         if (parent::add($autodate, $nullValues)) {
             // Flush cache when we adding a new specific price
             $this->flushCache();
-            // Set cache of feature detachable to true
-            Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', '1');
 
             return true;
+        }
+
+        if (!$specificPriceUsed) {
+            // Restore previous PS_SPECIFIC_PRICE_FEATURE_ACTIVE state because the add operation failed
+            Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', false);
         }
 
         return false;
@@ -268,7 +255,7 @@ class SpecificPriceCore extends ObjectModel
         }
         $priority = 'id_customer;' . $priority;
 
-        return preg_split('/;/', $priority);
+        return explode(';', $priority);
     }
 
     /**
@@ -544,7 +531,7 @@ class SpecificPriceCore extends ObjectModel
             );
         }
 
-        if (!array_key_exists($key, self::$_specificPriceCache)) {
+        if ($key === null || !array_key_exists($key, self::$_specificPriceCache)) {
             $query_extra = self::computeExtraConditions($id_product, $id_product_attribute, $id_customer, $id_cart);
             if ($key === null) {
                 // compute the key after calling computeExtraConditions as it initializes some useful cache
@@ -580,37 +567,6 @@ class SpecificPriceCore extends ObjectModel
     }
 
     /**
-     * @deprecated since 8.0 and will be removed in next major version.
-     * @see SpecificPricePriorityUpdater::updateDefaultPriorities()
-     *
-     * @param array $priorities
-     *
-     * @return bool
-     */
-    public static function setPriorities($priorities)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.0. Use %s instead.',
-                __METHOD__,
-                SpecificPricePriorityUpdater::class . '::updateDefaultPriorities()'
-            ),
-            E_USER_DEPRECATED
-        );
-
-        $value = '';
-        if (is_array($priorities)) {
-            foreach ($priorities as $priority) {
-                $value .= pSQL($priority) . ';';
-            }
-        }
-
-        SpecificPrice::deletePriorities();
-
-        return Configuration::updateValue('PS_SPECIFIC_PRICE_PRIORITIES', rtrim($value, ';'));
-    }
-
-    /**
      * Truncate the specific price priorities.
      *
      * @return bool
@@ -642,7 +598,7 @@ class SpecificPriceCore extends ObjectModel
             return [];
         }
 
-        $query_extra = self::computeExtraConditions($id_product, ((!$all_combinations) ? $id_product_attribute : null), $id_customer, null);
+        $query_extra = self::computeExtraConditions($id_product, (!$all_combinations) ? $id_product_attribute : null, $id_customer, null);
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *,
 					' . SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer) . '
@@ -783,8 +739,6 @@ class SpecificPriceCore extends ObjectModel
 
     /**
      * This method is allow to know if a feature is used or active.
-     *
-     * @since 1.5.0.1
      *
      * @return bool
      */

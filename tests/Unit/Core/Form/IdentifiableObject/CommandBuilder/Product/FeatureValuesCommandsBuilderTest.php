@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -34,7 +14,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\SetProductFea
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidProductFeatureValuesFormatException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\FeatureValuesCommandsBuilder;
 
-class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands
@@ -45,20 +25,20 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
         $builder = new FeatureValuesCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
     public function getExpectedCommands(): Generator
     {
-        yield [
+        yield 'random useless no commands' => [
             [
                 'random' => ['useless'],
             ],
             [],
         ];
 
-        yield [
+        yield 'empty features no commands' => [
             [
                 'details' => [
                     'features' => [],
@@ -67,11 +47,11 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [],
         ];
 
-        yield [
+        yield 'empty feature values, remove all command' => [
             [
                 'details' => [
                     'features' => [
-                        'feature_values' => [],
+                        'feature_collection' => [],
                     ],
                 ],
             ],
@@ -84,12 +64,17 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 ['feature_id' => 42, 'feature_value_id' => 51],
             ]
         );
-        yield [
+        yield 'assign existing feature value' => [
             [
                 'details' => [
                     'features' => [
-                        'feature_values' => [
-                            ['feature_id' => 42, 'feature_value_id' => 51],
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                                'feature_values' => [
+                                    ['feature_value_id' => 51],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -107,12 +92,17 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 ['feature_id' => 42, 'custom_values' => $localizedValues],
             ]
         );
-        yield [
+        yield 'create new custom values' => [
             [
                 'details' => [
                     'features' => [
-                        'feature_values' => [
-                            ['feature_id' => 42, 'custom_value' => $localizedValues],
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                                'feature_values' => [
+                                    ['is_custom' => 1, 'custom_value' => $localizedValues],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -123,15 +113,20 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command = new SetProductFeatureValuesCommand(
             $this->getProductId()->getValue(),
             [
-                ['feature_id' => 42, 'feature_value_id' => 69, 'custom_values' => $localizedValues],
+                ['feature_id' => 42, 'feature_value_id' => 69],
             ]
         );
-        yield [
+        yield 'custom values are not used if is_custom is not specified' => [
             [
                 'details' => [
                     'features' => [
-                        'feature_values' => [
-                            ['feature_id' => 42, 'custom_value_id' => 69, 'custom_value' => $localizedValues],
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                                'feature_values' => [
+                                    ['feature_value_id' => 69, 'custom_value' => $localizedValues],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -139,19 +134,23 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        // custom_feature_id has priority over feature_value_id when present
         $command = new SetProductFeatureValuesCommand(
             $this->getProductId()->getValue(),
             [
-                ['feature_id' => 42, 'feature_value_id' => 69, 'custom_values' => $localizedValues],
+                ['feature_id' => 42, 'feature_value_id' => 51, 'custom_values' => $localizedValues],
             ]
         );
-        yield [
+        yield 'updating existing custom values' => [
             [
                 'details' => [
                     'features' => [
-                        'feature_values' => [
-                            ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value_id' => 69, 'custom_value' => $localizedValues],
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                                'feature_values' => [
+                                    ['feature_value_id' => 51, 'is_custom' => 1, 'custom_value' => $localizedValues],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -159,27 +158,6 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        // feature_value_id is not used if custom_value is set (priority for custom value creation)
-        $command = new SetProductFeatureValuesCommand(
-            $this->getProductId()->getValue(),
-            [
-                ['feature_id' => 42, 'custom_values' => $localizedValues],
-            ]
-        );
-        yield [
-            [
-                'details' => [
-                    'features' => [
-                        'feature_values' => [
-                            ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value' => $localizedValues],
-                        ],
-                    ],
-                ],
-            ],
-            [$command],
-        ];
-
-        // if custom values only contains empty values it is ignored
         $localizedValues = [
             1 => '',
             2 => null,
@@ -190,12 +168,17 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 ['feature_id' => 42, 'feature_value_id' => 51],
             ]
         );
-        yield [
+        yield 'if custom values only contains empty values it is ignored' => [
             [
                 'details' => [
                     'features' => [
-                        'feature_values' => [
-                            ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value' => $localizedValues],
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                                'feature_values' => [
+                                    ['feature_value_id' => 51, 'custom_value' => $localizedValues],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -203,7 +186,24 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        // one custom value is enough for creation
+        yield 'if custom values only contains empty values it is ignored even when is_custom is true' => [
+            [
+                'details' => [
+                    'features' => [
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                                'feature_values' => [
+                                    ['feature_value_id' => 51, 'is_custom' => 1, 'custom_value' => $localizedValues],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
         $localizedValues = [
             1 => 'plop',
             2 => '',
@@ -214,12 +214,17 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 ['feature_id' => 42, 'custom_values' => $localizedValues],
             ]
         );
-        yield [
+        yield 'one non empty custom value is enough for creation' => [
             [
                 'details' => [
                     'features' => [
-                        'feature_values' => [
-                            ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value' => $localizedValues],
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                                'feature_values' => [
+                                    ['is_custom' => 1, 'custom_value' => $localizedValues],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -236,12 +241,88 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 ['feature_id' => 42, 'custom_values' => $localizedValues],
             ]
         );
-        yield [
+        yield 'only one language value is enough for creation' => [
             [
                 'details' => [
                     'features' => [
-                        'feature_values' => [
-                            ['feature_id' => 42, 'custom_value' => $localizedValues],
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                                'feature_values' => [
+                                    ['is_custom' => 1, 'custom_value' => $localizedValues],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $localizedValues = [
+            1 => 'plop',
+            2 => '',
+        ];
+        $command = new SetProductFeatureValuesCommand(
+            $this->getProductId()->getValue(),
+            [
+                ['feature_id' => 42, 'feature_value_id' => 51, 'custom_values' => $localizedValues],
+            ]
+        );
+        yield 'one custom value is enough for update' => [
+            [
+                'details' => [
+                    'features' => [
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                                'feature_values' => [
+                                    ['feature_value_id' => 51, 'is_custom' => 1, 'custom_value' => $localizedValues],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $localizedValues = [
+            1 => 'french',
+            2 => 'english',
+        ];
+        $newLocalizedValues = [
+            1 => 'new french',
+            2 => 'new english',
+        ];
+        $command = new SetProductFeatureValuesCommand(
+            $this->getProductId()->getValue(),
+            [
+                ['feature_id' => 42, 'feature_value_id' => 51, 'custom_values' => $localizedValues],
+                ['feature_id' => 42, 'feature_value_id' => 69],
+                ['feature_id' => 42, 'custom_values' => $newLocalizedValues],
+                ['feature_id' => 13, 'feature_value_id' => 21],
+            ]
+        );
+        yield 'rich command with multiple different feature values' => [
+            [
+                'details' => [
+                    'features' => [
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                                'feature_values' => [
+                                    ['feature_value_id' => 51, 'is_custom' => 1, 'custom_value' => $localizedValues],
+                                    ['feature_value_id' => 69],
+                                    ['is_custom' => 1, 'custom_value' => $newLocalizedValues],
+                                ],
+                            ],
+                            [
+                                'feature_id' => 13,
+                                'feature_values' => [
+                                    ['feature_value_id' => 21],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -260,17 +341,37 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
     {
         $this->expectException($exceptionClass);
         $builder = new FeatureValuesCommandsBuilder();
-        $builder->buildCommands($this->getProductId(), $formData);
+        $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
     }
 
     public function getInvalidCommands(): Generator
     {
-        yield [
+        yield 'feature collection without empty values' => [
             [
                 'details' => [
                     'features' => [
-                        'feature_values' => [
-                            ['feature_id' => 42],
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                            ],
+                            'feature_values' => [
+                                [],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            InvalidProductFeatureValuesFormatException::class,
+        ];
+
+        yield 'feature collection without values' => [
+            [
+                'details' => [
+                    'features' => [
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                            ],
                         ],
                     ],
                 ],

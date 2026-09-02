@@ -1,35 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-/**
- * @since 1.5.0
- */
 class ShopCore extends ObjectModel
 {
     /** @var int ID of shop group */
@@ -50,16 +28,16 @@ class ShopCore extends ObjectModel
     public $active = true;
     public $deleted;
 
-    /** @var string Physical uri of main url (read only) */
+    /** @var ?string Physical uri of main url (read only) */
     public $physical_uri;
 
-    /** @var string Virtual uri of main url (read only) */
+    /** @var ?string Virtual uri of main url (read only) */
     public $virtual_uri;
 
-    /** @var string Domain of main url (read only) */
+    /** @var ?string Domain of main url (read only) */
     public $domain;
 
-    /** @var string Domain SSL of main url (read only) */
+    /** @var ?string Domain SSL of main url (read only) */
     public $domain_ssl;
 
     /** @var ShopGroup|null Shop group object */
@@ -80,15 +58,18 @@ class ShopCore extends ObjectModel
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
-            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 50],
             'id_category' => ['type' => self::TYPE_INT, 'required' => true],
-            'theme_name' => ['type' => self::TYPE_STRING, 'validate' => 'isThemeName'],
+            'theme_name' => ['type' => self::TYPE_STRING, 'validate' => 'isThemeName', 'size' => 255],
             'id_shop_group' => ['type' => self::TYPE_INT, 'required' => true],
         ],
     ];
 
     /** @var array|null List of shops cached */
     protected static $shops;
+
+    /** @var array|null List of shop group IDs cached */
+    protected static $shopGroupIds = null;
 
     protected static $asso_tables = [];
     protected static $id_shop_default_tables = [];
@@ -116,15 +97,15 @@ class ShopCore extends ObjectModel
     /** @var bool|null is multistore activated */
     protected static $feature_active;
 
-    /** @var Theme * */
+    /** @var Theme|null * */
     public $theme;
 
     /**
      * There are 3 kinds of shop context : shop, group shop and general.
      */
-    public const CONTEXT_SHOP = 1;
-    public const CONTEXT_GROUP = 2;
-    public const CONTEXT_ALL = 4;
+    public const CONTEXT_SHOP = ShopConstraint::SHOP;
+    public const CONTEXT_GROUP = ShopConstraint::SHOP_GROUP;
+    public const CONTEXT_ALL = ShopConstraint::ALL_SHOPS;
 
     /**
      * Some data can be shared between shops, like customers or orders.
@@ -506,7 +487,7 @@ class ShopCore extends ObjectModel
         $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
         $themeRepository = $themeManagerBuilder->buildRepository($this instanceof Shop ? $this : null);
         if (empty($this->theme_name)) {
-            $this->theme_name = 'classic';
+            $this->theme_name = Theme::getDefaultTheme();
         }
         $this->theme = $themeRepository->getInstanceByName($this->theme_name);
     }
@@ -903,6 +884,32 @@ class ShopCore extends ObjectModel
     }
 
     /**
+     * Dedicated method to get the shop group ID based on a shop ID, because getGroupFromShop is based on a cache dependent
+     * of the Context->employee which can cause unexpected behaviour.
+     *
+     * @param int $shopId
+     *
+     * @return int|null
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public static function getGroupIdFromShopId(int $shopId): ?int
+    {
+        if (null === self::$shopGroupIds) {
+            self::$shopGroupIds = [];
+            $sql = 'SELECT s.id_shop, s.id_shop_group FROM ' . _DB_PREFIX_ . 'shop s';
+            if ($results = Db::getInstance()->executeS($sql)) {
+                foreach ($results as $shop) {
+                    self::$shopGroupIds[(int) $shop['id_shop']] = (int) $shop['id_shop_group'];
+                }
+            }
+        }
+
+        return self::$shopGroupIds[(int) $shopId] ?? null;
+    }
+
+    /**
      * If the shop group has the option $type activated, get all shops ID of this group, else get current shop ID.
      *
      * @param int $shop_id
@@ -985,7 +992,7 @@ class ShopCore extends ObjectModel
                 break;
             case self::CONTEXT_SHOP:
                 self::$context_id_shop = (int) $id;
-                self::$context_id_shop_group = Shop::getGroupFromShop($id);
+                self::$context_id_shop_group = Shop::getGroupIdFromShopId($id);
 
                 break;
             default:
@@ -1009,6 +1016,7 @@ class ShopCore extends ObjectModel
     {
         parent::resetStaticCache();
         static::$shops = null;
+        static::$shopGroupIds = null;
         static::$feature_active = null;
         static::$context_shop_group = null;
         Cache::clean('Shop::*');
@@ -1196,6 +1204,11 @@ class ShopCore extends ObjectModel
             $old_id = Configuration::get('PS_SHOP_DEFAULT');
         }
 
+        // Default currency import to avoid missing currency data when the option is not explicitly set.
+        if (!isset($tables_import['currency'])) {
+            $tables_import['currency'] = 'on';
+        }
+
         if (isset($tables_import['carrier'])) {
             $tables_import['carrier_tax_rules_group_shop'] = true;
             $tables_import['carrier_lang'] = true;
@@ -1279,6 +1292,7 @@ class ShopCore extends ObjectModel
         if (is_array($modules_list) && count($modules_list) > 0) {
             foreach ($modules_list as $m) {
                 if (!$tables_import || isset($tables_import['Module' . ucfirst($m['module'])])) {
+                    // Hook called only for the module concerned
                     Hook::exec('actionShopDataDuplication', [
                         'old_id_shop' => (int) $old_id,
                         'new_id_shop' => (int) $this->id,

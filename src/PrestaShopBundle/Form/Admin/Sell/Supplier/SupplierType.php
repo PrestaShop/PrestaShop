@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Sell\Supplier;
@@ -40,12 +20,12 @@ use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -71,7 +51,7 @@ class SupplierType extends TranslatorAwareType
     private $isMultistoreEnabled;
 
     /**
-     * @var Router
+     * @var UrlGeneratorInterface
      */
     private $router;
 
@@ -80,15 +60,15 @@ class SupplierType extends TranslatorAwareType
      * @param int $contextCountryId
      * @param TranslatorInterface $translator
      * @param bool $isMultistoreEnabled
-     * @param Router $router
+     * @param UrlGeneratorInterface $router
      * @param array $locales
      */
     public function __construct(
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
-        $contextCountryId,
+        int $contextCountryId,
         TranslatorInterface $translator,
-        $isMultistoreEnabled,
-        Router $router,
+        bool $isMultistoreEnabled,
+        UrlGeneratorInterface $router,
         array $locales = []
     ) {
         parent::__construct($translator, $locales);
@@ -151,6 +131,7 @@ class SupplierType extends TranslatorAwareType
                 'required' => false,
                 'type' => FormattedTextareaType::class,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                     'constraints' => [
                         new CleanHtml([
                             'message' => $this->trans(
@@ -229,11 +210,10 @@ class SupplierType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+                'autocomplete' => true,
                 'attr' => [
                     'class' => 'js-supplier-country-select',
                     'data-states-url' => $this->router->generate('admin_country_states'),
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
                 ],
             ])
             ->add('id_state', ChoiceType::class, [
@@ -245,10 +225,7 @@ class SupplierType extends TranslatorAwareType
                         'id_country' => $countryId,
                     ]),
                 ],
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
+                'autocomplete' => true,
             ])
             ->add('dni', TextType::class, [
                 'label' => $this->trans('DNI', 'Admin.Global'),
@@ -319,31 +296,6 @@ class SupplierType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('meta_keyword', TranslatableType::class, [
-                'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => $keywordHint,
-                'type' => TextType::class,
-                'required' => false,
-                'options' => [
-                    'attr' => [
-                        'class' => 'js-taggable-field',
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
-                    ],
-                    'constraints' => [
-                        new TypedRegex([
-                            'type' => TypedRegex::TYPE_GENERIC_NAME,
-                        ]),
-                        new Length([
-                            'max' => SupplierSettings::MAX_META_KEYWORD_LENGTH,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
-                                'Admin.Notifications.Error',
-                                ['%limit%' => SupplierSettings::MAX_META_KEYWORD_LENGTH]
-                            ),
-                        ]),
-                    ],
-                ],
-            ])
             ->add('is_enabled', SwitchType::class, [
                 'label' => $this->trans('Enabled', 'Admin.Global'),
                 'required' => false,
@@ -352,7 +304,7 @@ class SupplierType extends TranslatorAwareType
 
         if ($this->isMultistoreEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
-                'label' => $this->trans('Shop association', 'Admin.Global'),
+                'label' => $this->trans('Store association', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [
                     new NotBlank([

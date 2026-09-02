@@ -3,7 +3,6 @@ admin_common_notifications:
   methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\CommonController::notificationsAction'
-    _legacy_controller: AdminCommon
     _legacy_link: AdminCommon
   options:
     expose: true
@@ -51,3 +50,19 @@ admin_common_reset_search_by_filter_id:
     _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'
     controller: ''
     action: ''
+
+admin_common_secured_file_image_reader:
+  path: /secured/upload/document
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\SecuredFileReaderController::readUploadDocument'
+
+admin_common_extra_properties_toggle:
+  # No {shopId} parameter: the shop context of shop-scoped toggles is resolved
+  # server-side from ShopContext, never from the client.
+  path: /extra-properties/toggle/{entityName}/{entityId}/{moduleName}/{propertyName}
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::toggleExtraPropertyAction'
+  options:
+    expose: true

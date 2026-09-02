@@ -1,3 +1,10 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
   <head>
@@ -15,12 +22,14 @@
       <link rel="stylesheet" type="text/css" media="all" href="theme/rtl.css" />
     <?php } ?>
 
-    <script type="text/javascript" src="../js/jquery/jquery-3.5.1.min.js"></script>
-    <script type="text/javascript" src="../js/jquery/jquery-migrate-3.1.0.min.js"></script>
+    <script type="text/javascript" src="../js/jquery/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery/jquery-migrate-3.4.0.min.js"></script>
     <script type="text/javascript" src="../js/jquery/plugins/jquery.chosen.js"></script>
 
     <script src="theme/js/sprintf.min.js" integrity="sha512-pmG0OkYtZVB2EqETE5HPsEaok7sNZFfStp5rNdpHv0tGQjbt1z8Qjzhtx88/4wsttOtDwq5DZGJyKyzEe7ribg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="theme/js/zxcvbn.js" integrity="sha512-TZlMGFY9xKj38t/5m2FzJ+RM/aD5alMHDe26p0mYUMoCF5G7ibfHUQILq0qQPV3wlsnCwL+TPRNK4vIWGLOkUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="theme/js/zxcvbn-core.js"></script>
+    <script src="theme/js/zxcvbn-language-common.js"></script>
+    <script src="theme/js/zxcvbn-language-en.js"></script>
 
     <script type="text/javascript" src="theme/js/install.js"></script>
     <?php if (file_exists(_PS_INSTALL_PATH_ . 'theme/js/' . self::getSteps()->current()->getName() . '.js')) { ?>
@@ -34,44 +43,48 @@
 
   <body>
     <div id="container">
-
       <?php echo $this->getTemplate('header'); ?>
 
       <!-- Ajax loader animation -->
       <div id="loaderSpace">
         <div id="loader">&nbsp;</div>
       </div>
-
-      <?php echo $this->getTemplate('menu'); ?>
-
+      
+        
       <!-- Page content -->
       <form id="mainForm" action="index.php" method="post">
-        <div id="sheets" class="sheet shown">
-          <div id="sheet_<?php echo self::getSteps()->current()->getName(); ?>" class="sheet shown clearfix">
-            <div class="contentTitle">
-              <h1><?php echo $this->translator->trans('Installation Assistant', [], 'Install'); ?></h1>
-              <ul id="stepList_1" class="stepList clearfix">
-                <?php foreach (self::getSteps() as $step) { ?>
-                  <li <?php if ($this->isStepFinished($step->getName())) { ?>class="ok"<?php } ?>><?php echo $step; ?></li>
-                <?php } ?>
-              </ul>
-            </div>
-            <noscript>
-              <h4 class="errorBlock" style="margin-bottom:10px">
-                <?php echo $this->translator->trans('To install PrestaShop, you need to have JavaScript enabled in your browser.', [], 'Install'); ?>
-                <a href="<?php echo $this->translator->trans('https://enable-javascript.com/', [], 'Install'); ?>" target="_blank" rel="noopener noreferrer">
-                  <img src="theme/img/help.png" style="height:16px;width:16px" />
-                </a>
-              </h4>
-            </noscript>
+        <div class="mainForm__header">
+          <h1><?php echo $this->translator->trans('Installation Assistant', [], 'Install'); ?></h1>
 
-            <div>
-              <?php echo $this->getContent(); ?>
+          <ul id="stepList_1" class="stepList">
+            <?php foreach (self::getSteps() as $step) { ?>
+              <li <?php if ($this->isStepFinished($step->getName())) { ?>class="ok"<?php } ?>><?php echo $step; ?></li>
+            <?php } ?>
+          </ul>
+        </div>
+
+        <div class="mainForm__content">
+          <?php echo $this->getTemplate('menu'); ?>
+
+          <div id="sheets" class="sheet shown">
+            <div id="sheet_<?php echo self::getSteps()->current()->getName(); ?>" class="sheet shown clearfix">
+              <noscript>
+                <h4 class="errorBlock" style="margin-bottom:10px">
+                  <?php echo $this->translator->trans('To install PrestaShop, you need to have JavaScript enabled in your browser.', [], 'Install'); ?>
+                  <a href="<?php echo $this->translator->trans('https://enable-javascript.com/', [], 'Install'); ?>" target="_blank" rel="noopener noreferrer">
+                    <img src="theme/img/help.png" style="height:16px;width:16px" />
+                  </a>
+                </h4>
+              </noscript>
+
+              <div>
+                <?php echo $this->getContent(); ?>
+              </div>
             </div>
           </div>
         </div>
 
-        <div id="buttons">
+        <div id="buttons" class="mainForm__footer">
           <?php if (!$this->isLastStep()) { ?>
             <?php if ($this->next_button) { ?>
               <input id="btNext" class="button little" type="submit" name="submitNext" value="<?php echo $this->translator->trans('Next', [], 'Install'); ?>" />

@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 import SpecificMap from './selectors-map';
 
@@ -164,7 +144,7 @@ class SpecificPriceFormHandler {
     const usePrefixForCreate = true;
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    $(SpecificMap.cancel).click(() => {
+    $(SpecificMap.cancel).on('click', () => {
       this.resetCreatePriceFormDefaultValues();
       $(SpecificMap.priceForm).collapse('hide');
     });
@@ -190,12 +170,12 @@ class SpecificPriceFormHandler {
     const usePrefixForCreate = false;
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    $(SpecificMap.modalCancel).click(() => this.closeEditPriceModalAndRemoveForm(),
+    $(SpecificMap.modalCancel).on('click', () => this.closeEditPriceModalAndRemoveForm(),
     );
-    $(SpecificMap.modalClose).click(() => this.closeEditPriceModalAndRemoveForm(),
+    $(SpecificMap.modalClose).on('click', () => this.closeEditPriceModalAndRemoveForm(),
     );
 
-    $(SpecificMap.modalSave).click(() => this.submitEditPriceForm());
+    $(SpecificMap.modalSave).on('click', () => this.submitEditPriceForm());
 
     this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate);
 
@@ -215,7 +195,16 @@ class SpecificPriceFormHandler {
    * @private
    */
   private reinitializeDatePickers() {
-    $('.datepicker input').datetimepicker({format: 'YYYY-MM-DD'});
+    $('.datepicker input').datetimepicker({
+      format: 'YYYY-MM-DD HH:mm:ss',
+      sideBySide: true,
+      icons: {
+        time: 'time',
+        date: 'date',
+        up: 'up',
+        down: 'down',
+      },
+    });
   }
 
   /**

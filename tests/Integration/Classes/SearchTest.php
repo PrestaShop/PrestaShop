@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -32,7 +12,7 @@ use Configuration;
 use PHPUnit\Framework\TestCase;
 use Search;
 
-class SearchTest extends Testcase
+class SearchTest extends TestCase
 {
     /**
      * @dataProvider providerSearchString()
@@ -52,15 +32,25 @@ class SearchTest extends Testcase
                 'langId' => 1,
                 'expected' => ['test'],
             ],
+            'with special characters' => [
+                'input' => '&&',
+                'langId' => 1,
+                'expected' => [''],
+            ],
+            'with special characters (allowed)' => [
+                'input' => 'test t&t',
+                'langId' => 1,
+                'expected' => ['test', 't&t'],
+            ],
             'with hyphen' => [
                 'input' => 'test1-test2',
                 'langId' => 1,
-                'expected' => ['test1', 'test2', 'test1test2', 'test1-test2'],
+                'expected' => ['test1', 'test2', 'test1-test2', 'test1test2'],
             ],
             'with hyphen with double' => [
                 'input' => 'test1-test-test',
                 'langId' => 1,
-                'expected' => ['test1', 'test', 'test1testtest', 'test1-test-test'],
+                'expected' => ['test1', 'test', 'test1-test-test', 'test1testtest'],
             ],
             'with space' => [
                 'input' => 'test1 test2',
@@ -90,7 +80,7 @@ class SearchTest extends Testcase
             'with multiple hyphens' => [
                 'input' => 'test1--test2',
                 'langId' => 1,
-                'expected' => ['test1', '-test2', 'test1test2', 'test1--test2'],
+                'expected' => ['test1', '-test2', 'test1--test2', 'test1test2'],
             ],
             'with space separated hyphen' => [
                 'input' => 'test1 - test2',
@@ -111,6 +101,23 @@ class SearchTest extends Testcase
                 'input' => 'test1 - - test2',
                 'langId' => 1,
                 'expected' => ['test1', '-', 'test2'],
+            ],
+            // Block-level tags separate words so list items do not merge (#40244 search index pollution).
+            'with html list items' => [
+                'input' => '<ul><li>red</li><li>shirt</li></ul>',
+                'langId' => 1,
+                'expected' => ['red', 'shirt'],
+            ],
+            'with adjacent block paragraphs' => [
+                'input' => '<p>hello</p><p>world</p>',
+                'langId' => 1,
+                'expected' => ['hello', 'world'],
+            ],
+            // Inline tags are stripped without a separator so a word styled mid-way stays whole.
+            'with mixed inline styling inside a word' => [
+                'input' => '<b>bio</b><span>logic</span>',
+                'langId' => 1,
+                'expected' => ['biologic'],
             ],
         ];
     }

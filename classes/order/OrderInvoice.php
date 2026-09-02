@@ -1,28 +1,11 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 class OrderInvoiceCore extends ObjectModel
 {
     public const TAX_EXCL = 0;
@@ -60,6 +43,9 @@ class OrderInvoiceCore extends ObjectModel
     public $total_products_wt;
 
     /** @var float */
+    public $total_shipping;
+
+    /** @var float */
     public $total_shipping_tax_excl;
 
     /** @var float */
@@ -89,6 +75,9 @@ class OrderInvoiceCore extends ObjectModel
     /** @var Order|null */
     private $order;
 
+    /** @var bool|null */
+    public $is_delivery;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -111,8 +100,8 @@ class OrderInvoiceCore extends ObjectModel
             'shipping_tax_computation_method' => ['type' => self::TYPE_INT],
             'total_wrapping_tax_excl' => ['type' => self::TYPE_FLOAT],
             'total_wrapping_tax_incl' => ['type' => self::TYPE_FLOAT],
-            'shop_address' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000],
-            'note' => ['type' => self::TYPE_HTML],
+            'shop_address' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
+            'note' => ['type' => self::TYPE_HTML, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
@@ -138,24 +127,37 @@ class OrderInvoiceCore extends ObjectModel
         ' . ($this->id && $this->number ? ' AND od.`id_order_invoice` = ' . (int) $this->id : '') . ' ORDER BY od.`product_name`');
     }
 
-    public static function getInvoiceByNumber($id_invoice)
+    /**
+     * Returns OrderInvoice for a specific invoice number and order ID.
+     * It's highly recommended to also provide an order ID, because you
+     * may end up with a different invoice than you wanted.
+     *
+     * DO NOT CONFUSE the number with id_order_invoice, that's a different,
+     * unique identifier of the invoice.
+     *
+     * @param string|int $invoiceNumber
+     * @param int $orderId
+     *
+     * @return OrderInvoice|false
+     */
+    public static function getInvoiceByNumber($invoiceNumber, $orderId = null)
     {
-        if (is_numeric($id_invoice)) {
-            $id_invoice = (int) $id_invoice;
-        } elseif (is_string($id_invoice)) {
+        if (is_numeric($invoiceNumber)) {
+            $invoiceNumber = (int) $invoiceNumber;
+        } elseif (is_string($invoiceNumber)) {
             $matches = [];
-            if (preg_match('/^(?:' . Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id) . ')\s*([0-9]+)$/i', $id_invoice, $matches)) {
-                $id_invoice = $matches[1];
+            if (preg_match('/^(?:' . Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id) . ')\s*([0-9]+)$/i', $invoiceNumber, $matches)) {
+                $invoiceNumber = $matches[1];
             }
         }
-        if (!$id_invoice) {
+        if (!$invoiceNumber) {
             return false;
         }
 
         $id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT `id_order_invoice`
             FROM `' . _DB_PREFIX_ . 'order_invoice`
-            WHERE number = ' . (int) $id_invoice
+            WHERE `number` = ' . (int) $invoiceNumber . (!empty($orderId) ? ' AND `id_order` = ' . (int) $orderId : '')
         );
 
         return $id_order_invoice ? new OrderInvoice((int) $id_order_invoice) : false;
@@ -242,9 +244,6 @@ class OrderInvoiceCore extends ObjectModel
             $row['total_price_tax_excl_including_ecotax'] = $row['total_price_tax_excl'];
             $row['total_price_tax_incl_including_ecotax'] = $row['total_price_tax_incl'];
 
-            if ($customized_datas) {
-                Product::addProductCustomizationPrice($row, $customized_datas);
-            }
             /* Stock product */
             $result_array[(int) $row['id_order_detail']] = $row;
         }
@@ -257,8 +256,6 @@ class OrderInvoiceCore extends ObjectModel
         $product['customizedDatas'] = null;
         if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']])) {
             $product['customizedDatas'] = $customized_datas[$product['product_id']][$product['product_attribute_id']];
-        } else {
-            $product['customizationQuantityTotal'] = 0;
         }
     }
 
@@ -269,13 +266,8 @@ class OrderInvoiceCore extends ObjectModel
      */
     protected function setProductCurrentStock(&$product)
     {
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-            && (int) $product['advanced_stock_management'] == 1
-            && (int) $product['id_warehouse'] > 0) {
-            $product['current_stock'] = StockManagerFactory::getManager()->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], null, true);
-        } else {
-            $product['current_stock'] = '--';
-        }
+        $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct((int) $product['product_id'], (int) $product['product_attribute_id'], (int) $product['id_shop']);
+        $product['location'] = StockAvailable::getLocation((int) $product['product_id'], (int) $product['product_attribute_id'], (int) $product['id_shop']);
     }
 
     /**
@@ -313,8 +305,6 @@ class OrderInvoiceCore extends ObjectModel
      * This method returns true if at least one order details uses the
      * One After Another tax computation method.
      *
-     * @since 1.5
-     *
      * @return bool
      */
     public function useOneAfterAnotherTaxComputationMethod()
@@ -329,7 +319,7 @@ class OrderInvoiceCore extends ObjectModel
     		AND od.`tax_computation_method` = ' . (int) TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
             || Configuration::get(
                 'PS_INVOICE_TAXES_BREAKDOWN'
-        );
+            );
     }
 
     public function displayTaxBasesInProductTaxesBreakdown()
@@ -411,8 +401,6 @@ class OrderInvoiceCore extends ObjectModel
 
     /**
      * Returns the shipping taxes breakdown.
-     *
-     * @since 1.5
      *
      * @param Order $order
      *
@@ -549,8 +537,6 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Returns the ecotax taxes breakdown.
      *
-     * @since 1.5
-     *
      * @return array
      */
     public function getEcoTaxTaxesBreakdown()
@@ -579,8 +565,6 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Returns all the order invoice that match the date interval.
      *
-     * @since 1.5
-     *
      * @param string $date_from
      * @param string $date_to
      *
@@ -603,8 +587,6 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * @since 1.5.0.3
-     *
      * @param int $id_order_state
      *
      * @return array collection of OrderInvoice
@@ -625,8 +607,6 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * @since 1.5.0.3
-     *
      * @param string $date_from
      * @param string $date_to
      *
@@ -648,8 +628,6 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * @since 1.5
-     *
      * @param int $id_order_invoice
      */
     public static function getCarrier($id_order_invoice)
@@ -663,8 +641,6 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * @since 1.5
-     *
      * @param int $id_order_invoice
      */
     public static function getCarrierId($id_order_invoice)
@@ -696,8 +672,6 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Amounts of payments.
      *
-     * @since 1.5.0.2
-     *
      * @return float Total paid
      */
     public function getTotalPaid()
@@ -721,23 +695,15 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Rest Paid.
      *
-     * @since 1.5.0.2
-     *
      * @return float Rest Paid
      */
     public function getRestPaid()
     {
-        if (!$this->number) {
-            return 0;
-        }
-
-        return round($this->total_paid_tax_incl + $this->getSiblingTotal() - $this->getTotalPaid(), 2);
+        return round($this->total_paid_tax_incl + (float) $this->getSiblingTotal() - $this->getTotalPaid(), 2);
     }
 
     /**
      * Return collection of order invoice object linked to the payments of the current order invoice object.
-     *
-     * @since 1.5.0.14
      *
      * @return PrestaShopCollection|array Collection of OrderInvoice or empty array
      */
@@ -777,8 +743,6 @@ class OrderInvoiceCore extends ObjectModel
      * @param int $mod TAX_EXCL, TAX_INCL, DETAIL
      *
      * @return float|array
-     *
-     * @since 1.5.0.14
      */
     public function getSiblingTotal($mod = OrderInvoice::TAX_INCL)
     {
@@ -815,8 +779,6 @@ class OrderInvoiceCore extends ObjectModel
      * Get global rest to paid
      *    This method will return something different of the method getRestPaid if
      *    there is an other invoice linked to the payments of the current invoice.
-     *
-     * @since 1.5.0.13
      */
     public function getGlobalRestPaid()
     {
@@ -845,8 +807,6 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * @since 1.5.0.2
-     *
      * @return bool Is paid ?
      */
     public function isPaid()
@@ -855,8 +815,6 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * @since 1.5.0.2
-     *
      * @return PrestaShopCollection Collection of Order payment
      */
     public function getOrderPaymentCollection()
@@ -866,8 +824,6 @@ class OrderInvoiceCore extends ObjectModel
 
     /**
      * Get the formatted number of invoice.
-     *
-     * @since 1.5.0.2
      *
      * @param int $id_lang for invoice_prefix
      *
@@ -940,8 +896,6 @@ class OrderInvoiceCore extends ObjectModel
      * (because uses the whole environnement of PS classes that is not available during upgrade).
      * This method should execute once on an upgraded PrestaShop to fix all OrderInvoices in one shot.
      * This method is triggered once during a (non bulk) creation of a PDF from an OrderInvoice that is not fixed yet.
-     *
-     * @since 1.6.1.1
      */
     public static function fixAllShopAddresses()
     {

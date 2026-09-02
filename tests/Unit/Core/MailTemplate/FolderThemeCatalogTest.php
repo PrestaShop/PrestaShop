@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Unit\Core\MailTemplate;
@@ -106,7 +86,7 @@ class FolderThemeCatalogTest extends TestCase
         $layoutCollection = $theme->getLayouts();
         $this->assertCount(8, $layoutCollection);
 
-        //Check core layouts
+        // Check core layouts
         $coreLayouts = $this->filterCoreLayouts($layoutCollection);
         $this->assertCount(4, $coreLayouts);
 
@@ -124,7 +104,7 @@ class FolderThemeCatalogTest extends TestCase
         $this->assertNotNull($layout->getModuleName());
         $this->assertEmpty($layout->getModuleName());
 
-        //Check module layouts
+        // Check module layouts
         $modulesLayouts = $this->filterModulesLayouts($layoutCollection);
         $this->assertCount(4, $modulesLayouts);
 
@@ -210,7 +190,7 @@ class FolderThemeCatalogTest extends TestCase
     public function testListThemesWithoutCoreFolder()
     {
         $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $this->createHookDispatcherMock(4));
-        //No bug occurs if the folder does not exist
+        // No bug occurs if the folder does not exist
         $this->fs->remove(implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'classic', MailTemplateInterface::CORE_CATEGORY]));
 
         /** @var ThemeCollectionInterface $themes */
@@ -333,7 +313,7 @@ class FolderThemeCatalogTest extends TestCase
 
         /** @var ThemeInterface $theme */
         foreach ($this->expectedThemes as $theme) {
-            //Insert core files
+            // Insert core files
             $themeFolder = $this->tempDir . DIRECTORY_SEPARATOR . $theme->getName();
             $coreFolder = implode(DIRECTORY_SEPARATOR, [$themeFolder, MailTemplateInterface::CORE_CATEGORY]);
             $this->fs->mkdir($coreFolder);
@@ -341,7 +321,7 @@ class FolderThemeCatalogTest extends TestCase
                 $this->fs->touch(implode(DIRECTORY_SEPARATOR, [$coreFolder, $layout]));
             }
 
-            //Insert modules files
+            // Insert modules files
             $modulesFolder = $themeFolder . DIRECTORY_SEPARATOR . MailTemplateInterface::MODULES_CATEGORY;
             foreach ($this->moduleLayouts as $moduleName => $moduleLayouts) {
                 $moduleFolder = $modulesFolder . DIRECTORY_SEPARATOR . $moduleName;
@@ -351,7 +331,7 @@ class FolderThemeCatalogTest extends TestCase
                 }
             }
 
-            //Insert components files used in layoutss
+            // Insert components files used in layoutss
             $componentsFolder = $themeFolder . DIRECTORY_SEPARATOR . 'components';
             $this->fs->mkdir($componentsFolder);
             $this->fs->touch($componentsFolder . DIRECTORY_SEPARATOR . 'title.twig');

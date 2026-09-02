@@ -1,0 +1,135 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult;
+
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\QueryResult\Attribute;
+
+class AttributeGroup
+{
+    /**
+     * @var int
+     */
+    private $attributeGroupId;
+
+    /**
+     * @var string[]
+     */
+    private $localizedNames;
+
+    /**
+     * @var string[]
+     */
+    private $localizedPublicNames;
+
+    /**
+     * @var string
+     */
+    private $groupType;
+
+    /**
+     * @var bool
+     */
+    private $isColorGroup;
+
+    /**
+     * @var int
+     */
+    private $position;
+
+    /**
+     * @var Attribute[]|null
+     */
+    private $attributes;
+
+    /**
+     * @param int $attributeGroupId
+     * @param string[] $localizedNames
+     * @param string[] $localizedPublicNames
+     * @param string $groupType
+     * @param bool $isColorGroup
+     * @param int $position
+     * @param Attribute[]|null $attributes
+     */
+    public function __construct(
+        int $attributeGroupId,
+        array $localizedNames,
+        array $localizedPublicNames,
+        string $groupType,
+        bool $isColorGroup,
+        int $position,
+        ?array $attributes = null
+    ) {
+        $this->attributeGroupId = $attributeGroupId;
+        $this->localizedNames = $localizedNames;
+        $this->localizedPublicNames = $localizedPublicNames;
+        $this->groupType = $groupType;
+        $this->isColorGroup = $isColorGroup;
+        $this->position = $position;
+        $this->attributes = $attributes;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAttributeGroupId(): int
+    {
+        return $this->attributeGroupId;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedPublicNames(): array
+    {
+        return $this->localizedPublicNames;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGroupType(): string
+    {
+        return $this->groupType;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isColorGroup(): bool
+    {
+        return $this->isColorGroup;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    /**
+     * Returns list of attributes since it's optional returns null when attributes were
+     * not queried. Empty array however means that the group contains no attributes.
+     *
+     * @return Attribute[]|null
+     */
+    public function getAttributes(): ?array
+    {
+        return $this->attributes;
+    }
+}

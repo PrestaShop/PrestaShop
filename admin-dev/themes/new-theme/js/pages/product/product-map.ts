@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 const combinationListFormId = '#combination_list';
@@ -35,8 +15,13 @@ const shopPreviewRowClass = 'shop-preview-row';
 export default {
   productForm: 'form[name=product]',
   productLocalizedNameInput: 'input[name^="product[header][name]"]',
+  productNameLocaleSelector: '.header-name .js-locale-btn',
   productLocalizedLinkRewriteInput: 'input[name^="product[seo][link_rewrite]"]',
   productTypePreview: '.product-type-preview',
+  summaryTotalQuantityContainer: '.product-field-preview[data-role="quantity"]',
+  summaryTotalQuantity: '.product-field-preview[data-role="quantity"] .product-total-quantity',
+  summaryTotalQuantityLabel: '.product-field-preview[data-role="quantity"] .product-total-quantity-label',
+  onlineSwitch: '#product_header_active input',
   productType: {
     headerSelector: '#product_header_type',
     headerPreviewButton: '.product-type-preview',
@@ -87,15 +72,54 @@ export default {
   manageShopImagesButtonContainer: '.manage-shop-images-button-container',
   manageShopImagesButton: '.manage-shop-images-button',
   featureValues: {
-    collectionContainer: '.feature-values-collection',
-    collectionRowsContainer: '.feature-values-collection > .col-sm',
-    collectionRow: 'div.product-feature',
+    controlsContainer: '.product-features-controls',
+    collectionContainer: '.feature-values-table-collection',
+    collectionRowsContainer: '.feature-values-table-collection > tbody',
     featureSelect: 'select.feature-selector',
     featureValueSelect: 'select.feature-value-selector',
-    customValueInput: '.custom-values input',
-    customFeatureIdInput: 'input.custom-value-id',
+    newCustomValuesContainers: '.new-custom-values',
+    newCustomValueInputs: 'input.form-control',
+    featureRow: 'tr.product-feature-collection',
+    featureRowByFeatureId: (featureId: string): string => `tr.product-feature-collection[feature-id=${featureId}]`,
+    featureValueRow: 'tr.product-feature-value',
+    featureIdInput: 'input.feature-id',
+    featureNameInput: 'input.feature-name',
+    featureNameCell: 'td.feature-column',
+    featureValueRowByFeatureId: (featureId: string): string => `tr.product-feature-value[feature-id=${featureId}]`,
+    featureValueIdInput: 'input.feature-value-id',
+    featureValueNameInput: 'input.feature-value-name',
+    featureValueNamePreview: '.feature-value-preview .text-preview-value',
+    isCustomInput: 'input.is-custom-feature-value',
+    customValuesContainer: '.custom-values-form-group',
+    customValueByLangId: (langId: number): string => `.js-locale-input[data-lang-id="${langId}"] input.form-control`,
     deleteFeatureValue: 'button.delete-feature-value',
     addFeatureValue: '.feature-value-add-button',
+    featureValueLoader: '.feature-value-spinner',
+  },
+  combinationFeatureValues: {
+    controlsContainer: '.combination-product-features-controls',
+    collectionContainer: '.combination-feature-values-table-collection',
+    collectionRowsContainer: '.combination-feature-values-table-collection > tbody',
+    featureSelect: 'select.combination-feature-selector',
+    featureValueSelect: 'select.combination-feature-value-selector',
+    newCustomValuesContainers: '.combination-new-custom-values',
+    newCustomValueInputs: 'input.form-control',
+    featureRow: 'tr.combination-product-feature-collection',
+    featureRowByFeatureId: (featureId: string): string => `tr.combination-product-feature-collection[feature-id=${featureId}]`,
+    featureValueRow: 'tr.combination-product-feature-value',
+    featureIdInput: 'input.combination-feature-id',
+    featureNameInput: 'input.combination-feature-name',
+    featureNameCell: 'td.combination-feature-column',
+    featureValueRowByFeatureId: (featureId: string): string => `tr.combination-product-feature-value[feature-id=${featureId}]`,
+    featureValueIdInput: 'input.combination-feature-value-id',
+    featureValueNameInput: 'input.combination-feature-value-name',
+    featureValueNamePreview: '.combination-feature-value-preview .text-preview-value',
+    isCustomInput: 'input.combination-is-custom-feature-value',
+    customValuesContainer: '.combination-custom-values-form-group',
+    customValueByLangId: (langId: number): string => `.js-locale-input[data-lang-id="${langId}"] input.form-control`,
+    deleteFeatureValue: 'button.combination-delete-feature-value',
+    addFeatureValue: '.combination-feature-value-add-button',
+    featureValueLoader: '.combination-feature-value-spinner',
   },
   customizations: {
     customizationsContainer: '.product-customizations-collection',
@@ -117,14 +141,14 @@ export default {
     combinationsPaginatedList: '#combinations-paginated-list',
     combinationsFormContainer: '#combinations-list-form-container',
     combinationsFiltersContainer: '#combinations_filters',
-    filtersSelectorButtons: '.combinations-filters-dropdown button',
+    filtersSelectorButtons: '#combinations_filters .ps-checkboxes-dropdown button.dropdown-toggle',
     combinationsGeneratorContainer: '#product_combinations_generator',
     combinationsTable: `${combinationListFormId}`,
     combinationsTableBody: `${combinationListFormId} tbody`,
     combinationIdInputsSelector: '.combination-id-input',
     deleteCombinationSelector: '.delete-combination-item',
     deleteCombinationAllShopsSelector: '.delete-combination-all-shops',
-    combinationName: 'form .combination-name-row .text-preview',
+    combinationName: 'form .combination-name-row .text-preview-value',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
     impactOnPriceInputWrapper: '.combination-impact-on-price',
@@ -159,6 +183,7 @@ export default {
       deleteButton: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_delete`,
     },
     list: {
+      attributeFilterInputName: 'combination-attribute-filter',
       combinationRow: '.combination-list-row',
       priceImpactTaxExcluded: '.combination-impact-on-price-tax-excluded',
       priceImpactTaxIncluded: '.combination-impact-on-price-tax-included',
@@ -168,16 +193,16 @@ export default {
       finalPricePreview: '.text-preview',
       modifiedFieldClass: 'combination-value-changed',
       invalidClass: 'is-invalid',
-      editionModeClass: 'edition-mode',
+      editionModeClass: 'combination-edition-mode',
       fieldInputs: `.combination-list-row :input:not(.${commonBulkSelectAllClass}):not(.${isSelectedCombinationClass})`,
       errorAlerts: '.combination-list-row .alert-danger',
-      rowActionButtons: '.combination-row-actions button',
+      rowActionButtons: '.combination-row-actions button, .combination-row-actions .dropdown-toggle',
       footer: {
         cancel: '#cancel-combinations-edition',
-        reset: '#reset-combinations-edition',
         save: '#save-combinations-edition',
       },
     },
+    availabilityContainer: '.combination-availability',
     editModal: '#combination-edit-modal',
     images: {
       selectorContainer: '.combination-images-selector',
@@ -206,8 +231,9 @@ export default {
     bulkFixedQuantitySwitchName: 'bulk_combination[stock][disabling_switch_fixed_quantity]',
   },
   virtualProduct: {
-    container: '.virtual-product-file-container',
-    fileContentContainer: '.virtual-product-file-content',
+    fileContentContainer: '.virtual-product-file-container .virtual-product-file-content',
+    fileUploadInput: '#product_stock_virtual_product_file_file',
+    filenameInput: '#product_stock_virtual_product_file_name',
   },
   dropzone: {
     configuration: {
@@ -243,11 +269,15 @@ export default {
   shipping: {
     deliveryTimeTypeInput: 'input[name="product[shipping][delivery_time_note_type]"]',
     deliveryTimeNotesBlock: '#product_shipping_delivery_time_notes',
+    carrierSelectorContainer: '#product_shipping_carriers',
+    carrierChoiceLabel: '.carrier-choice-label',
+    carrierCheckboxesDropdownId: 'carrier-checkboxes-dropdown',
   },
   seo: {
     container: '#product_seo_serp',
     defaultTitle: '.serp-default-title:input',
     watchedTitle: '.serp-watched-title:input',
+    appendTitle: '#product_seo_combination_title',
     defaultDescription: '.serp-default-description',
     watchedDescription: '.serp-watched-description',
     watchedMetaUrl: '.serp-watched-url:input',
@@ -263,14 +293,15 @@ export default {
     },
     resetLinkRewriteBtn: '.reset-link-rewrite',
   },
-  jsTabs: '.js-tabs',
-  jsArrow: '.js-arrow',
-  jsNavTabs: '.js-nav-tabs',
-  toggleTab: '[data-toggle="tab"]',
+  jsTabs: '#product-tabs',
+  jsArrow: '#product-tabs .js-arrow',
+  jsNavTabs: '#product-tabs .js-nav-tabs',
+  toggleTab: '#product-tabs [data-toggle="tab"]',
   formContentTab: '#product-tabs-content > .form-contenttab',
   leftArrow: '.left-arrow',
   rightArrow: '.right-arrow',
   footer: {
+    container: '.product-footer',
     previewUrlButton: '.preview-url-button',
     deleteProductButton: '.delete-product-button',
     deleteProductModalId: 'delete-product-footer-modal',

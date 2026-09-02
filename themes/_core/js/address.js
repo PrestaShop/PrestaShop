@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 import $ from 'jquery';
 import prestashop from 'prestashop';
 
@@ -8,13 +12,17 @@ import prestashop from 'prestashop';
  * @param selectors
  */
 function handleCountryChange(selectors) {
-  $('body').on('change', selectors.country, () => {
+  $('body').on('change', selectors.country, (event) => {
     const requestData = {
       id_country: $(selectors.country).val(),
       id_address: $(`${selectors.address} form`).data('id-address'),
     };
     const getFormViewUrl = $(`${selectors.address} form`).data('refresh-url');
     const formFieldsSelector = `${selectors.address} input`;
+    const target = $(event.target);
+
+    const submitButton = $(`${selectors.address} [type="submit"]`);
+    submitButton.prop('disabled', true);
 
     $.post(getFormViewUrl, requestData).then((resp) => {
       const inputs = [];
@@ -24,7 +32,7 @@ function handleCountryChange(selectors) {
         inputs[$(this).prop('name')] = $(this).val();
       });
 
-      $(selectors.address).replaceWith(resp.address_form);
+      $(target.closest(selectors.address)).replaceWith(resp.address_form);
 
       // Restore fields values
       $(formFieldsSelector).each(function () {
@@ -33,12 +41,13 @@ function handleCountryChange(selectors) {
 
       prestashop.emit('updatedAddressForm', {target: $(selectors.address), resp});
     }).fail((resp) => {
+      submitButton.prop('disabled', false);
       prestashop.emit('handleError', {eventType: 'updateAddressForm', resp});
     });
   });
 }
 
-$(document).ready(() => {
+$(() => {
   handleCountryChange({
     country: '.js-country',
     address: '.js-address-form',

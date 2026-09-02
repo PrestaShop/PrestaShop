@@ -1,35 +1,20 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
@@ -81,6 +66,16 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private $configuration;
 
     /**
+     * @var FeaturesChoiceProvider
+     */
+    private $featuresChoiceProvider;
+
+    /**
+     * @var array|null
+     */
+    private $featureNames = null;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param ConfigurationInterface $configuration
      * @param int $contextLangId
@@ -92,13 +87,15 @@ class ProductFormDataProvider implements FormDataProviderInterface
         ConfigurationInterface $configuration,
         int $contextLangId,
         int $defaultShopId,
-        ?int $contextShopId
+        ?int $contextShopId,
+        FeaturesChoiceProvider $featuresChoiceProvider
     ) {
         $this->queryBus = $queryBus;
         $this->configuration = $configuration;
         $this->contextLangId = $contextLangId;
         $this->defaultShopId = $defaultShopId;
         $this->contextShopId = $contextShopId;
+        $this->featuresChoiceProvider = $featuresChoiceProvider;
     }
 
     /**
@@ -120,7 +117,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'details' => $this->extractDetailsData($productForEditing, $shopConstraint),
             'stock' => $this->extractStockData($productForEditing, $shopConstraint),
             'pricing' => $this->extractPricingData($productForEditing),
-            'seo' => $this->extractSEOData($productForEditing),
+            'seo' => $this->extractSEOData($productForEditing, $shopConstraint),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
         ];
@@ -217,8 +214,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
      */
     protected function extractPackedProducts(int $productId, ShopConstraint $shopConstraint): array
     {
-        /** @var PackedProductDetails[] $packedProductsDetails
-         */
+        /** @var PackedProductDetails[] $packedProductsDetails */
         $packedProductsDetails = $this->queryBus->handle(
             new GetPackedProducts(
                 $productId,
@@ -317,11 +313,11 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'references' => [
                 'mpn' => $details->getMpn(),
                 'upc' => $details->getUpc(),
-                'ean_13' => $details->getEan13(),
+                'ean_13' => $details->getGtin(),
                 'isbn' => $details->getIsbn(),
                 'reference' => $details->getReference(),
             ],
-            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
+            'features' => $this->extractFeatureValues($productForEditing->getProductId(), $shopConstraint),
             'attachments' => $this->extractAttachmentsData($productForEditing),
             'show_condition' => $options->showCondition(),
             'condition' => $options->getCondition(),
@@ -331,33 +327,44 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param int $productId
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<string, array<int, array<string, int|array<int, string>>>>
      */
-    private function extractFeatureValues(int $productId): array
+    private function extractFeatureValues(int $productId, ShopConstraint $shopConstraint): array
     {
         /** @var ProductFeatureValue[] $featureValues */
-        $featureValues = $this->queryBus->handle(new GetProductFeatureValues($productId));
+        $featureValues = $this->queryBus->handle(new GetProductFeatureValues($productId, $shopConstraint->getShopId()->getValue()));
         if (empty($featureValues)) {
             return [];
         }
 
-        $productFeatureValues = [];
+        $featureNames = $this->getFeatureNames();
+        $productFeatureCollection = [];
         foreach ($featureValues as $featureValue) {
+            if (!isset($productFeatureCollection[$featureValue->getFeatureId()])) {
+                $productFeatureCollection[$featureValue->getFeatureId()] = [
+                    'feature_id' => $featureValue->getFeatureId(),
+                    'feature_name' => $featureNames[$featureValue->getFeatureId()],
+                    'feature_values' => [],
+                ];
+            }
+
             $productFeatureValue = [
-                'feature_id' => $featureValue->getFeatureId(),
                 'feature_value_id' => $featureValue->getFeatureValueId(),
+                'feature_value_name' => $featureValue->getLocalizedValues()[$this->contextLangId],
+                'is_custom' => $featureValue->isCustom(),
             ];
             if ($featureValue->isCustom()) {
                 $productFeatureValue['custom_value'] = $featureValue->getLocalizedValues();
-                $productFeatureValue['custom_value_id'] = $featureValue->getFeatureValueId();
             }
 
-            $productFeatureValues[] = $productFeatureValue;
+            $productFeatureCollection[$featureValue->getFeatureId()]['feature_values'][] = $productFeatureValue;
         }
 
         return [
-            'feature_values' => $productFeatureValues,
+            // Return 0-indexed array, not mapped by feature ID
+            'feature_collection' => array_values($productFeatureCollection),
         ];
     }
 
@@ -382,6 +389,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                     $productForEditing->getProductId(),
                     $shopConstraint
                 ),
+                'pack_quantity' => $productForEditing->getStockInformation()->getPackQuantity(),
                 'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             ],
             'options' => [
@@ -420,6 +428,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                     'type' => $stockMovement->getType(),
                     'date' => $date,
                     'employee_name' => $stockMovement->getEmployeeName(),
+                    'api_client_name' => implode(', ', $stockMovement->getApiClientNames()) ?: null,
                     'delta_quantity' => $stockMovement->getDeltaQuantity(),
                 ];
             },
@@ -485,23 +494,40 @@ class ProductFormDataProvider implements FormDataProviderInterface
      *
      * @return array
      */
-    private function extractSEOData(ProductForEditing $productForEditing): array
+    private function extractSEOData(ProductForEditing $productForEditing, ShopConstraint $shopConstraint): array
     {
         $seoOptions = $productForEditing->getProductSeoOptions();
 
-        return [
+        $seoData = [
             'meta_title' => $seoOptions->getLocalizedMetaTitles(),
             'meta_description' => $seoOptions->getLocalizedMetaDescriptions(),
             'link_rewrite' => $seoOptions->getLocalizedLinkRewrites(),
             'redirect_option' => $this->extractRedirectOptionData($productForEditing),
             'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
         ];
+        if ($productForEditing->getType() === ProductType::TYPE_COMBINATIONS) {
+            if ((bool) $this->configuration->get('PS_PRODUCT_ATTRIBUTES_IN_TITLE')) {
+                /** @var CombinationId[] $combinationIds */
+                $combinationIds = $this->queryBus->handle(
+                    new GetCombinationIds($productForEditing->getProductId(), $shopConstraint, 1)
+                );
+                if (!empty($combinationIds)) {
+                    /** @var CombinationForEditing $combinationForEditing */
+                    $combinationForEditing = $this->queryBus->handle(
+                        new GetCombinationForEditing($combinationIds[0]->getValue(), $shopConstraint)
+                    );
+                    $seoData['combination_title'] = $combinationForEditing->getName();
+                }
+            }
+        }
+
+        return $seoData;
     }
 
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array{type: string, target: null|array}
+     * @return array{type: string, target: array|null}
      */
     private function extractRedirectOptionData(ProductForEditing $productForEditing): array
     {
@@ -617,6 +643,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'name' => $customizationField->getLocalizedNames(),
                 'type' => $customizationField->getType(),
                 'required' => $customizationField->isRequired(),
+                'addedByModule' => $customizationField->isAddedByModule(),
             ];
         }
 
@@ -693,5 +720,26 @@ class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         return array_values(PriorityList::AVAILABLE_PRIORITIES);
+    }
+
+    /**
+     * Revert the array from form choices provider because it uses the name as they key and the ID as the value.
+     * We need the opposite so we reformat this array. Also, we use the choice provider instead of the repository
+     * for performance reason because it already handles an internal cache, so we don't need to perform the same
+     * SQL query several times.
+     *
+     * @return array
+     */
+    private function getFeatureNames(): array
+    {
+        if (null === $this->featureNames) {
+            $this->featureNames = [];
+            $featureChoices = $this->featuresChoiceProvider->getChoices();
+            foreach ($featureChoices as $featureName => $featureId) {
+                $this->featureNames[$featureId] = $featureName;
+            }
+        }
+
+        return $this->featureNames;
     }
 }

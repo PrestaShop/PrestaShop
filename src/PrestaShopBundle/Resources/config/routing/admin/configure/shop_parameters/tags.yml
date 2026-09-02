@@ -1,0 +1,59 @@
+admin_tags_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TagController::indexAction
+    _legacy_controller: AdminTags
+    _legacy_link: AdminTags
+    _legacy_feature_flag: tag
+
+admin_tags_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TagGridDefinitionFactory
+    redirectRoute: admin_tags_index
+    _legacy_controller: AdminTags
+    _legacy_link: AdminTags:submitFiltertags
+    _legacy_feature_flag: tag
+
+admin_tags_create:
+  path: /tags/create
+  methods: [ GET, POST, PATCH ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TagController::createAction
+    _legacy_controller: AdminTags
+    _legacy_link: AdminTags:addtag
+    _legacy_feature_flag: tag
+
+admin_tags_edit:
+  path: /tags/{tagId}/edit
+  methods: [ GET, POST, PATCH ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TagController::editAction
+    _legacy_controller: AdminTags
+    _legacy_link: AdminTags:updatetag
+    _legacy_feature_flag: tag
+
+admin_tag_delete:
+  path: /{tagId}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TagController::deleteAction
+    _legacy_controller: AdminTags
+    _legacy_link: AdminTags:deletetag
+    _legacy_feature_flag: tag
+    _legacy_parameters:
+      id_tag: tagId
+  requirements:
+    tagId: \d+
+
+admin_tag_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\TagController::bulkDeleteAction
+    _legacy_controller: AdminTags
+    _legacy_link: AdminTags:submitBulkdeletetag
+    _legacy_feature_flag: tag

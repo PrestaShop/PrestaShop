@@ -34,7 +34,6 @@ Feature: Update product combination suppliers in Back Office (BO)
       | description[en-US]      | just a supplier    |
       | meta title[en-US]       | my supplier nr one |
       | meta description[en-US] |                    |
-      | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
     And I add new supplier supplier2 with the following properties:
       | name                    | my supplier 2      |
@@ -45,7 +44,6 @@ Feature: Update product combination suppliers in Back Office (BO)
       | description[en-US]      | just a supplier    |
       | meta title[en-US]       | my supplier nr two |
       | meta description[en-US] |                    |
-      | meta keywords[en-US]    | sup,2              |
       | shops                   | [shop1]            |
     And I add new supplier supplier3 with the following properties:
       | name                    | my supplier 3    |
@@ -56,7 +54,6 @@ Feature: Update product combination suppliers in Back Office (BO)
       | description[en-US]      | just a 3         |
       | meta title[en-US]       | my third supp    |
       | meta description[en-US] |                  |
-      | meta keywords[en-US]    | sup,3            |
       | shops                   | [shop1]          |
     And I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
@@ -128,8 +125,8 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier1 |           | USD      | 0                  |
       | supplier2 |           | USD      | 0                  |
     And product product1 should have following supplier values:
-      | default supplier           | supplier2           |
-      | default supplier reference |                     |
+      | default supplier           | supplier2 |
+      | default supplier reference |           |
     # Infos are for product form, they should remain empty for combination products
     But product product1 should not have suppliers infos
     When I update following suppliers for combination "product1SWhite":
@@ -311,7 +308,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier1 |
       | supplier2 |
     And product product4 should have following supplier values:
-      | default supplier           | supplier2 |
+      | default supplier | supplier2 |
     And combination "product4SWhite" should have following suppliers:
       | product_supplier        | supplier  | reference          | currency | price_tax_excluded |
       | product4SWhiteSupplier1 | supplier1 | white S supplier 1 | USD      | 51                 |
@@ -376,7 +373,6 @@ Feature: Update product combination suppliers in Back Office (BO)
       | description[en-US]      | just a supplier     |
       | meta title[en-US]       | my supplier nr four |
       | meta description[en-US] |                     |
-      | meta keywords[en-US]    | sup,4               |
       | shops                   | [shop1]             |
     And I add new supplier supplier5 with the following properties:
       | name                    | my supplier 5       |
@@ -387,7 +383,6 @@ Feature: Update product combination suppliers in Back Office (BO)
       | description[en-US]      | just a supplier     |
       | meta title[en-US]       | my supplier nr five |
       | meta description[en-US] |                     |
-      | meta keywords[en-US]    | sup,5               |
       | shops                   | [shop1]             |
     And I add product "product5" with following information:
       | name[en-US] | really unique T-shirt |
@@ -403,7 +398,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product5 should have following supplier values:
-      | default supplier           | supplier4 |
+      | default supplier | supplier4 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     # No combinations but suppliers display the product regardless
@@ -499,7 +494,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product5 should have following supplier values:
-      | default supplier           | supplier4 |
+      | default supplier | supplier4 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     # No combinations but suppliers display the product regardless
@@ -528,7 +523,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product6 should have following supplier values:
-      | default supplier           | supplier5 |
+      | default supplier | supplier5 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     And supplier "supplier4" should have following details for product "even more unique T-shirt":
@@ -544,7 +539,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product6 should have following supplier values:
-      | default supplier           | supplier5 |
+      | default supplier | supplier5 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     And supplier "supplier4" should have following details for product "even more unique T-shirt":
@@ -583,7 +578,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product6 should have following supplier values:
-      | default supplier           | supplier5 |
+      | default supplier | supplier5 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     And supplier "supplier4" should have following details for product "even more unique T-shirt":
@@ -611,7 +606,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product7 should have following supplier values:
-      | default supplier           | supplier5 |
+      | default supplier | supplier5 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     And supplier "supplier4" should have following details for product "even more unique T-shirt":

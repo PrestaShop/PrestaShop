@@ -1,0 +1,67 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  # Engine reader: working files are produced by CsvImportFileNormalizer using
+  # one canonical CSV dialect, so this reader needs no per-run separator and
+  # no session coupling (unlike the legacy prestashop.core.import.csv_file_reader).
+  prestashop.core.import.engine.csv_file_reader:
+    class: PrestaShop\PrestaShop\Core\Import\File\CsvFileReader
+    arguments:
+      $fileOpener: '@prestashop.adapter.import.file_opener'
+
+  PrestaShop\PrestaShop\Core\Import\File\ResumableFileReaderInterface:
+    alias: prestashop.core.import.engine.csv_file_reader
+
+  PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\ValueParser: ~
+
+  # Local file_url/image paths are confined to the shop CONTENT directories (a
+  # fetched file can become a downloadable virtual product file, so the config
+  # files under the shop root must stay out of reach). The directories are
+  # wired here so the engine class is not coupled to the legacy constants.
+  PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader:
+    arguments:
+      $allowedLocalRoots:
+        - '%prestashop.admin_dir%/import'
+        - !php/const _PS_UPLOAD_DIR_
+        - !php/const _PS_IMG_DIR_
+        - !php/const _PS_DOWNLOAD_DIR_
+
+  # Registry of every tagged importer; the tag is applied automatically to
+  # any autoconfigured service implementing EntityImporterInterface
+  # (registerForAutoconfiguration in PrestaShopExtension) - including module
+  # services, as long as their definitions enable autoconfiguration.
+  # Public: it is the engine's single entry point — nothing injects it yet
+  # (the PR2 CQRS handlers will), so it must stay resolvable by id, and its
+  # reference is what keeps the tagged importers alive in the container.
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterRegistry:
+    public: true
+
+  # Shared entity-importer internals
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\RowMapper: ~
+
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+
+  # Finders (match-only: never create, never build messages, never throw)
+  # and resolvers (resolve-or-create) shared by the entity importers —
+  # callers own severity and wording
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ShopFinder: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\SupplierFinder: ~
+
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\RunShopIdsProvider: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\ManufacturerResolver: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\FeatureResolver: ~
+
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\CategoryResolver: ~
+
+  # Product importer and its internals (persistence goes through CQRS
+  # commands and the existing Adapter repositories)
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowValidator: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ProductImporter: ~

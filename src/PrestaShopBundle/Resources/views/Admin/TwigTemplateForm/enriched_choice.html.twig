@@ -1,0 +1,41 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+
+{% block enriched_choice_widget %}
+  {%- set attr = attr|merge({
+    class: (attr.class|default('') ~ ' enriched-choice')|trim,
+  }) -%}
+
+  {% if flex_direction == 'column' %}
+    {%- set attr = attr|merge({
+      class: (attr.class|default('') ~ ' enriched-choice-column')|trim,
+    }) -%}
+  {% else %}
+    {%- set attr = attr|merge({
+      class: (attr.class|default('') ~ ' enriched-choice-row')|trim,
+    }) -%}
+  {% endif %}
+  {{ block('choice_widget') }}
+{% endblock %}
+
+{% block checkbox_radio_label -%}
+  <label class="form-check-label enriched-choice-radio-label">
+    {{- widget|raw -}}
+    <div class="enriched-choice-label">
+      {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw_purified : label|raw_purified) -}}
+      {% if form.vars.attr['badge-label'] is defined and form.vars.attr['badge-label'] is not empty %}
+        <span class="badge badge-secondary enriched-choice-badge-label">{{ form.vars.attr['badge-label'] }}</span>
+      {% endif %}
+      {% if form.vars.attr.help is defined and form.vars.attr.help is not empty %}
+        <small class="form-text enriched-choice-help">{{ form.vars.attr.help }}</small>
+      {% endif %}
+    </div>
+    {% if form.vars.attr.icon is defined and form.vars.attr.icon is not empty %}
+      <i class="material-icons enriched-choice-type-icon">{{ form.vars.attr.icon }}</i>
+    {% endif %}
+  </label>
+{% endblock %}

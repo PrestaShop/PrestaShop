@@ -1,26 +1,6 @@
-<!--**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+<!--*
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *-->
 <template>
   <div id="serp">
@@ -84,11 +64,20 @@
         return this.title;
       },
       displayedDescription() {
-        if (this.description.length > 150) {
-          return `${this.description.substring(0, 150)}...`;
+        const plainTextDescription = this.stripHtml(this.description);
+
+        if (plainTextDescription.length > 150) {
+          return `${plainTextDescription.substring(0, 150)}...`;
         }
 
-        return this.description;
+        return plainTextDescription;
+      },
+    },
+    methods: {
+      stripHtml(html) {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        return div.textContent || '';
       },
     },
   });
@@ -99,25 +88,25 @@
   @import "~@scss/config/settings.scss";
 
   .serp-preview {
-    max-width: 43.75rem;
-    padding: 1.5rem 1.875rem;
-    margin: 0.938rem 0;
-    background-color: $white;
-    border: solid 1px $widget-border-color;
-    @include border-radius(0.25rem);
-    @include box-shadow(0 0 0.375rem 0 rgba($black, 0.1));
+    padding: var(--#{$cdk}size-24) var(--#{$cdk}size-30);
+    margin: var(--#{$cdk}size-16) 0;
+    background-color: var(--#{$cdk}white);
+    border: 1px solid var(--#{$cdk}primary-400);
+    box-shadow: var(--#{$cdk}box-shadow-default);
 
     .serp-url {
       font-family: arial, sans-serif;
-      font-size: 0.875rem;
+      font-size: var(--#{$cdk}size-12);
       font-style: normal;
       font-weight: 400;
-      line-height: 1.5rem;
+      line-height: var(--#{$cdk}size-18);
       color: $serp-url-light-color;
       text-align: left;
       direction: ltr;
       cursor: pointer;
       visibility: visible;
+      display: flex;
+      align-items: center;
     }
 
     .serp-base-url {
@@ -125,8 +114,8 @@
     }
 
     .serp-url-more {
-      margin: -0.25rem 0 0 0.875rem;
-      font-size: 1.125rem;
+      margin-left: var(--#{$cdk}size-12);
+      font-size: var(--#{$cdk}size-18);
       color: $serp-url-light-color;
       cursor: pointer;
     }
@@ -141,6 +130,8 @@
       white-space: nowrap;
       cursor: pointer;
       visibility: visible;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     .serp-title:hover {

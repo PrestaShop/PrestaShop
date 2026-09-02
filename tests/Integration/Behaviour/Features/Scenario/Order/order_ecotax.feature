@@ -35,7 +35,7 @@ Feature: Ecotax for Order in Back Office (BO)
     And customer "testCustomer" has address in "FR" country
     ## Carrier
     And a carrier "default_carrier" with name "My carrier" exists
-    And I associate the tax rule group "fr-tax-6-group" to carrier "default_carrier"
+    And I set tax rule "fr-tax-6-group" for carrier "default_carrier" I get a new carrier referenced as "default_carrier"
     ## Cart for Customer
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"

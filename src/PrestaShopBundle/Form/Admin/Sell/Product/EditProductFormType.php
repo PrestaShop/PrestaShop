@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -85,13 +65,17 @@ class EditProductFormType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $productId = $options['product_id'];
+        $shopId = $options['shop_id'];
 
         $builder
             ->add('header', HeaderType::class, [
                 'active' => $options['active'],
+                'force_default_active' => $options['force_default_active'],
+                'product_id' => $productId,
             ])
             ->add('description', DescriptionType::class, [
                 'product_id' => $productId,
+                'shop_id' => $shopId,
             ])
             ->add('details', DetailsType::class)
             ->add('combinations', CombinationsType::class, [
@@ -108,6 +92,7 @@ class EditProductFormType extends TranslatorAwareType
             ])
             ->add('seo', SEOType::class, [
                 'product_id' => $productId,
+                'active' => $options['active'],
             ])
             ->add('options', OptionsType::class)
             ->add('extra_modules', ExtraModulesType::class, [
@@ -135,6 +120,7 @@ class EditProductFormType extends TranslatorAwareType
             'product_type' => $options['product_type'],
             'product_id' => $options['product_id'],
             'shop_id' => $options['shop_id'],
+            'force_default_active' => $options['force_default_active'] ? 1 : 0,
         ];
 
         $view->vars = array_replace($view->vars, $formVars);
@@ -152,10 +138,14 @@ class EditProductFormType extends TranslatorAwareType
             ->setDefaults([
                 'virtual_product_file_id' => null,
                 'active' => false,
+                'force_default_active' => false,
                 'allow_extra_fields' => true,
                 'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig',
                 'use_default_themes' => false,
                 'toolbar_buttons' => [],
+                'toolbar_options' => [
+                    'use_inline_labels' => false,
+                ],
             ])
             ->setRequired([
                 'product_id',

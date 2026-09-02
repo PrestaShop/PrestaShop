@@ -1,0 +1,10 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/_address_card.html.twig', {
+  addresses: businessEntity.invoiceAddresses,
+  title: 'Billing address'|trans({}, 'Admin.Orderscustomers.Feature'),
+  emptyLabel: 'No billing addresses configured'|trans({}, 'Admin.Orderscustomers.Feature'),
+}) }}

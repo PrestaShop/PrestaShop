@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 declare(strict_types=1);
 
@@ -105,31 +85,41 @@ final class MetaSettingsUrlSchemaFormDataProvider implements FormDataProviderInt
     private function validateData(array $data)
     {
         $patternErrors = [];
-        $requiredFieldErrors = [];
-        foreach ($data as $routeId => $rule) {
-            if (!$this->routeValidator->isRoutePattern($rule)) {
-                $patternErrors[] = $this->translator->trans(
-                  'The route %routeRule% is not valid',
-                  [
-                      '%routeRule%' => htmlspecialchars($rule),
-                  ],
-                  'Admin.Shopparameters.Feature'
-                );
+        $fieldErrors = [];
+        foreach ($data as $routeId => $routeData) {
+            // Skip multistore checkbox helper fields added to the form, they are not route patterns.
+            if (str_starts_with($routeId, 'multistore_') && is_bool($routeData)) {
+                continue;
             }
-
-            $missingKeywords = $this->routeValidator->doesRouteContainsRequiredKeywords($routeId, $rule);
-
-            if (!empty($missingKeywords)) {
-                foreach ($missingKeywords as $keyword) {
-                    $requiredFieldErrors[] = $this->translator->trans(
-                        'Keyword "{%keyword%}" required for route "%routeName%" (rule: "%routeRule%")',
+            foreach ($routeData as $langId => $routeRule) {
+                if (!$this->routeValidator->isRoutePattern($routeRule)) {
+                    $patternErrors[] = $this->translator->trans(
+                        'The route %routeRule% is not valid',
                         [
-                            '%keyword%' => $keyword,
-                            '%routeName%' => $routeId,
-                            '%routeRule%' => $rule,
+                            '%routeRule%' => htmlspecialchars($routeRule),
                         ],
                         'Admin.Shopparameters.Feature'
                     );
+                }
+
+                $errors = $this->routeValidator->isRouteValid($routeId, $routeRule);
+
+                foreach (['missing', 'unknown'] as $type) {
+                    if (!empty($errors[$type])) {
+                        foreach ($errors[$type] as $keyword) {
+                            $fieldErrors[] = $this->translator->trans(
+                                $type === 'missing'
+                                    ? 'Keyword "{%keyword%}" required for route "%routeName%" (rule: "%routeRule%")'
+                                    : 'Keyword "{%keyword%}" doesn\'t exist for route "%routeName%" (rule: "%routeRule%")',
+                                [
+                                    '%keyword%' => $keyword,
+                                    '%routeName%' => $routeId,
+                                    '%routeRule%' => $routeRule,
+                                ],
+                                'Admin.Shopparameters.Feature'
+                            );
+                        }
+                    }
                 }
             }
         }
@@ -138,6 +128,6 @@ final class MetaSettingsUrlSchemaFormDataProvider implements FormDataProviderInt
             return $patternErrors;
         }
 
-        return $requiredFieldErrors;
+        return $fieldErrors;
     }
 }

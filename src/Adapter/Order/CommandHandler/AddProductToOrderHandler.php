@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -49,12 +29,19 @@ use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderDetailRepository;
+use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductAssigner;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Product;
 use ProductAttribute;
 use Shop;
@@ -67,6 +54,7 @@ use Tools;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class AddProductToOrderHandler extends AbstractOrderHandler implements AddProductToOrderHandlerInterface
 {
     /**
@@ -104,19 +92,15 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     private $orderDetailUpdater;
 
-    /**
-     * @param TranslatorInterface $translator
-     * @param ContextStateManager $contextStateManager
-     * @param OrderAmountUpdater $orderAmountUpdater
-     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
-     * @param OrderDetailUpdater $orderDetailUpdater
-     */
     public function __construct(
         TranslatorInterface $translator,
         ContextStateManager $contextStateManager,
         OrderAmountUpdater $orderAmountUpdater,
         OrderProductQuantityUpdater $orderProductQuantityUpdater,
-        OrderDetailUpdater $orderDetailUpdater
+        OrderDetailUpdater $orderDetailUpdater,
+        private OrderDetailRepository $orderDetailRepository,
+        private FeatureFlagStateCheckerInterface $featureFlagStateCheckerInterface,
+        private ShipmentProductAssigner $shipmentProductAssigner,
     ) {
         $this->context = Context::getContext();
         $this->translator = $translator;
@@ -207,17 +191,40 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $command->getProductId()->getValue(),
                 null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0,
                 $command->getProductPriceTaxExcluded(),
-                $command->getProductPriceTaxIncluded()
+                $command->getProductPriceTaxIncluded(),
+                0
             );
-            StockAvailable::synchronize($product->id);
 
             $this->updateAffectedOrderDetails(
                 $order,
                 $updateModifications
             );
 
-            // Update totals amount of order
-            $this->orderAmountUpdater->update($order, $cart, null !== $invoice ? (int) $invoice->id : null);
+            if (
+                $this->featureFlagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)
+                && $command->isVirtual() !== null && $command->isVirtual() === false
+            ) {
+                $orderDetail = $this->orderDetailRepository->findByOrderIdAndProductId(
+                    $command->getOrderId(),
+                    $command->getProductId(),
+                    $command->getCombinationId()
+                );
+
+                $this->shipmentProductAssigner->assign(
+                    $command->getShipmentId(),
+                    $order,
+                    $orderDetail,
+                    $command->getCarrierId()
+                );
+            }
+
+            if (
+                !$this->featureFlagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)
+            ) {
+                // Update totals amount of order
+                $this->orderAmountUpdater->update($order, $cart, null !== $invoice ? (int) $invoice->id : null);
+            }
+
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } finally {
             $this->contextStateManager->restorePreviousContext();
@@ -242,8 +249,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Cart $cart
      * @param array $cartProducts
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function createOrderDetails(Order $order, ?OrderInvoice $invoice, Cart $cart, array $cartProducts): void
     {
@@ -266,8 +273,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param CartProductUpdate[] $updatedProducts
      *
      * @throws OrderException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function updateAffectedOrderDetails(
         Order $order,
@@ -377,6 +384,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             0,
             new Shop($cart->id_shop),
             true,
+            true,
+            true,
             true
         );
 
@@ -457,7 +466,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $freeShippingCartRule->add();
 
             // Add cart rule to cart and in order
-            $cart->addCartRule($freeShippingCartRule->id);
+            $cart->addCartRule($freeShippingCartRule->id, true);
             $values = [
                 'tax_incl' => $freeShippingCartRule->getContextualValue(true),
                 'tax_excl' => $freeShippingCartRule->getContextualValue(false),
@@ -561,7 +570,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     private function checkProductInStock(Product $product, AddProductToOrderCommand $command, int $shopId): void
     {
-        //check if product is available in stock
+        // check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($command->getProductId()->getValue()))) {
             $combinationId = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
             $availableQuantity = StockAvailable::getQuantityAvailableByProduct(

@@ -1,9 +1,11 @@
 services:
   _defaults:
-    public: true
+    public: false
 
-  prestashop.core.help.documentation:
+  # Must be public for now because it is used in controllers and controllers are still using the global container.
+  PrestaShop\PrestaShop\Core\Help\Documentation:
+    public: true
     class: PrestaShop\PrestaShop\Core\Help\Documentation
+    autowire: true
     arguments:
-      - "@prestashop.core.foundation.version"
-      - "https://help.prestashop-project.org/"
+      $host: "https://help.prestashop-project.org/"

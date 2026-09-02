@@ -1,58 +1,27 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Preferences;
 
-use Cookie;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
+use PrestaShop\PrestaShop\Core\Feature\Enum\ShopModeEnum;
+use PrestaShop\PrestaShop\Core\Feature\ShopModeFeature;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
+use PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType;
+use PrestaShopLogger;
 
 /**
  * This class will provide Shop Preferences configuration.
  */
 class PreferencesConfiguration implements DataConfigurationInterface
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * @var FeatureFlagRepository
-     */
-    protected $featureFlagRepository;
-
     public function __construct(
-        Configuration $configuration,
-        FeatureFlagRepository $featureFlagRepository
+        private readonly Configuration $configuration,
     ) {
-        $this->configuration = $configuration;
-        $this->featureFlagRepository = $featureFlagRepository;
     }
 
     /**
@@ -60,10 +29,16 @@ class PreferencesConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
+        $shopMode = $this->configuration->getEnum(
+            ShopModeFeature::CONFIGURATION_NAME,
+            ShopModeEnum::class,
+            ShopModeFeature::DEFAULT_SHOP_MODE
+        );
+
         return [
             'enable_ssl' => $this->configuration->getBoolean('PS_SSL_ENABLED'),
-            'enable_ssl_everywhere' => $this->configuration->getBoolean('PS_SSL_ENABLED_EVERYWHERE'),
             'enable_token' => $this->configuration->getBoolean('PS_TOKEN_ENABLE'),
+            PreferencesType::SHOP_MODE => $shopMode,
             'allow_html_iframes' => $this->configuration->getBoolean('PS_ALLOW_HTML_IFRAME'),
             'use_htmlpurifier' => $this->configuration->getBoolean('PS_USE_HTMLPURIFIER'),
             'price_round_mode' => $this->configuration->get('PS_PRICE_ROUND_MODE'),
@@ -72,7 +47,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
             'display_manufacturers' => $this->configuration->getBoolean('PS_DISPLAY_MANUFACTURERS'),
             'display_best_sellers' => $this->configuration->getBoolean('PS_DISPLAY_BEST_SELLERS'),
             'multishop_feature_active' => $this->configuration->getBoolean('PS_MULTISHOP_FEATURE_ACTIVE'),
-            'shop_activity' => $this->configuration->get('PS_SHOP_ACTIVITY'),
         ];
     }
 
@@ -101,11 +75,30 @@ class PreferencesConfiguration implements DataConfigurationInterface
             ];
         }
 
-        $previousMultistoreFeatureState = $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE');
+        /** @var ShopModeEnum $newShopModeValue */
+        $newShopModeValue = $configuration[PreferencesType::SHOP_MODE];
+
+        /** @var ShopModeEnum $oldShopModeValue */
+        $oldShopModeValue = $this->configuration->getEnum(
+            ShopModeFeature::CONFIGURATION_NAME,
+            ShopModeEnum::class,
+            ShopModeFeature::DEFAULT_SHOP_MODE
+        );
+
+        if ($oldShopModeValue !== $newShopModeValue) {
+            PrestaShopLogger::addLog(
+                sprintf('Shop mode updated: from "%s" to "%s"', $oldShopModeValue->value, $newShopModeValue->value),
+                1,
+                null,
+                'Configuration',
+                0,
+                true
+            );
+        }
 
         $this->configuration->set('PS_SSL_ENABLED', $configuration['enable_ssl']);
-        $this->configuration->set('PS_SSL_ENABLED_EVERYWHERE', $configuration['enable_ssl_everywhere']);
         $this->configuration->set('PS_TOKEN_ENABLE', $configuration['enable_token']);
+        $this->configuration->set(ShopModeFeature::CONFIGURATION_NAME, $newShopModeValue->value);
         $this->configuration->set('PS_ALLOW_HTML_IFRAME', $configuration['allow_html_iframes']);
         $this->configuration->set('PS_USE_HTMLPURIFIER', $configuration['use_htmlpurifier']);
         $this->configuration->set('PS_PRICE_ROUND_MODE', $configuration['price_round_mode']);
@@ -114,12 +107,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
         $this->configuration->set('PS_DISPLAY_MANUFACTURERS', $configuration['display_manufacturers']);
         $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
         $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
-        $this->configuration->set('PS_SHOP_ACTIVITY', $configuration['shop_activity']);
-
-        // Update product page feature automatically based on PS_MULTISHOP_FEATURE_ACTIVE
-        if (!$previousMultistoreFeatureState && (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE')) {
-            $this->featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
-        }
 
         return [];
     }
@@ -134,11 +121,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
      */
     protected function validateSameSiteConfiguration(array $configuration): bool
     {
-        return (
-            $configuration['enable_ssl'] === false
-            || $configuration['enable_ssl_everywhere'] === false
-        )
-            && $this->configuration->get('PS_COOKIE_SAMESITE') === Cookie::SAMESITE_NONE;
+        return $configuration['enable_ssl'] === false && $this->configuration->get('PS_COOKIE_SAMESITE') === CookieOptions::SAMESITE_NONE;
     }
 
     /**
@@ -148,8 +131,8 @@ class PreferencesConfiguration implements DataConfigurationInterface
     {
         return isset(
             $configuration['enable_ssl'],
-            $configuration['enable_ssl_everywhere'],
             $configuration['enable_token'],
+            $configuration[PreferencesType::SHOP_MODE],
             $configuration['allow_html_iframes'],
             $configuration['use_htmlpurifier'],
             $configuration['price_round_mode'],

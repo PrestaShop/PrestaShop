@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
@@ -34,6 +14,7 @@ use CustomerThread;
 use DateTime;
 use Employee;
 use Order;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerInformation;
@@ -45,6 +26,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThread
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadMessageType;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Product;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
@@ -53,6 +35,7 @@ use Validate;
 /**
  * @internal
  */
+#[AsQueryHandler]
 class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingHandlerInterface
 {
     /**
@@ -66,12 +49,19 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
     private $translator;
 
     /**
-     * @param Context $context
+     * @var Locale
      */
-    public function __construct(Context $context)
+    protected $locale;
+
+    /**
+     * @param Context $context
+     * @param Locale $locale
+     */
+    public function __construct(Context $context, Locale $locale)
     {
         $this->context = $context;
         $this->translator = $context->getTranslator();
+        $this->locale = $locale;
     }
 
     /**
@@ -103,7 +93,7 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
     {
         $threadMessages = [];
 
-        foreach ($messages as $key => $message) {
+        foreach ($messages as $message) {
             $employeeImage = null;
 
             if ($message['id_employee']) {
@@ -116,7 +106,7 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
             if (!empty($message['file_name'])
                 && file_exists(_PS_UPLOAD_DIR_ . $message['file_name'])
             ) {
-                $attachmentFile = _THEME_PROD_PIC_DIR_ . $message['file_name'];
+                $attachmentFile = $message['file_name'];
             }
 
             $productId = null;
@@ -349,9 +339,9 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
                 }
 
                 $orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
-                $orders[$key]['total_paid_real'] = Tools::displayPrice(
+                $orders[$key]['total_paid_real'] = $this->locale->formatPrice(
                     $order['total_paid_real'],
-                    new Currency((int) $order['id_currency'])
+                    (new Currency((int) $order['id_currency']))->iso_code
                 );
             }
         }
@@ -362,7 +352,9 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
             $customer->lastname,
             $thread->email,
             count($ordersOk),
-            $totalOk ? Tools::displayPrice($totalOk, $this->context->currency) : $totalOk,
+            $totalOk
+                ? $this->context->getCurrentLocale()->formatPrice($totalOk, $this->context->currency->iso_code)
+                : $totalOk,
             (new DateTime($customer->date_add))->format($this->context->language->date_format_lite)
         );
     }

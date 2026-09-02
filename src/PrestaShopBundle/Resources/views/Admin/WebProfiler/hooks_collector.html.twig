@@ -1,27 +1,7 @@
-{#**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
 {% import _self as helper %}
@@ -44,22 +24,37 @@
                     <thead>
                     <tr>
                         <th>Hook name</th>
-                        <th>Call(s)</th>
+                        <th>Dispatches</th>
+                        <th>Calls</th>
                     </tr>
                     </thead>
                     <tbody class="sf-toolbar-ajax-request-list">
-                        {% for hookName, hooks in collector.calledHooks %}
-                            <tr><td>{{ hookName }}</td><td>{{ hooks|length }}</td></tr>
+                        {% for hookName, hook in collector.calledHooks %}
+                            <tr><td>{{ hookName }}</td><td>{{ hook.dispatch_count }}</td><td>{{ hook.calls_count }}</td></tr>
                         {% else %}
-                            <tr><td colspan="2">No hook dispatched.</td></tr>
+                            <tr><td colspan="3">No hook dispatched.</td></tr>
                         {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <table class="sf-toolbar-ajax-requests">
+                    <tbody>
+                        <tr>
+                            <td>Dispatched without active modules</td>
+                            <td>{{ collector.notCalledHooks|length }}</td>
+                        </tr>
+                        <tr>
+                            <td>Dispatched without listeners</td>
+                            <td>{{ collector.notRegisteredHooks|length }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     {% endset %}
 
-    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true }) }}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {link: true}) }}
 
 {% endblock %}
 
@@ -119,12 +114,37 @@
                     {% endif %}
                 </div>
             </div>
+
+          <div class="tab">
+            <h3 class="tab-title">
+              Not registered hooks
+              <span class="badge">{{ collector.notRegisteredHooks|length }}</span>
+            </h3>
+            <p>
+              These hooks have been dispatched by PrestaShop but they are not registered in the database, meaning no modules registered them
+              and they were not added in the hook fixtures for core hooks.
+            </p>
+            <div class="tab-content">
+              {% if collector.notRegisteredHooks is empty %}
+                <div class="empty">
+                  <p>
+                    <strong>There are no unregistered hooks</strong>.
+                  </p>
+                  <p>
+                    Seems like all hooks had appropriate listeners so they were all correctly registered in the database.
+                  </p>
+                </div>
+              {% else %}
+                {{ helper.render_table(collector.notRegisteredHooks, false) }}
+              {% endif %}
+            </div>
+          </div>
         </div>
     {% endif %}
 {% endblock %}
 
 {% macro render_table(hookList, hookModules) %}
-    {% for hookName, hooks in hookList %}
+    {% for hookName, hook in hookList %}
         <h3>{{ hookName }}</h3>
 
         <table>
@@ -132,13 +152,14 @@
                 <tr>
                     <th>Arguments</th>
                     <th>Location</th>
+                    <th>Dispatches</th>
+                    <th>Calls</th>
                     {% if hookModules %}
                         <th>Hooked modules</th>
                     {% endif %}
                 </tr>
             </thead>
             <tbody>
-            {% for position, hook in hooks %}
             <tr>
                 <td>
                     {{ profiler_dump(hook.args) }}
@@ -146,6 +167,8 @@
                 <td>
                     <span class="text-muted">{{ hook.location }}</span>
                 </td>
+                <td>{{ hook.dispatch_count }}</td>
+                <td>{{ hook.calls_count }}</td>
                 {% if hookModules %}
                     <td>
                         {% set modules = hook.modules %}
@@ -172,7 +195,6 @@
                     </td>
                 {% endif %}
             </tr>
-            {% endfor %}
             </tbody>
         </table>
     {% endfor %}

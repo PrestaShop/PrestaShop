@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Stock;
@@ -32,13 +12,16 @@ use Configuration;
 use Context;
 use DateTime;
 use Employee;
+use Exception;
 use Mail;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
-use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Mutation\MutationTracker;
+use PrestaShopBundle\Entity\MutationAction;
 use PrestaShopBundle\Entity\StockMvt;
+use PrestaShopException;
 use Product;
 use StockAvailable;
 
@@ -47,6 +30,15 @@ use StockAvailable;
  */
 class StockManager
 {
+    /**
+     * The tracker is optional because this class is still instantiated without the
+     * container in some legacy paths (e.g. OrderHistory); no mutation is recorded there.
+     */
+    public function __construct(
+        private readonly ?MutationTracker $mutationTracker = null,
+    ) {
+    }
+
     /**
      * This will update a Pack quantity and will decrease the quantity of containing Products if needed.
      *
@@ -96,7 +88,7 @@ class StockManager
 
     /**
      * This will decrease (if needed) Packs containing this product
-     * (with the right declination) if there is not enough product in stocks.
+     * (with the right combination) if there is not enough product in stocks.
      *
      * @param Product $product A product object to update its quantity
      * @param int $id_product_attribute The product attribute to update
@@ -140,11 +132,11 @@ class StockManager
     }
 
     /**
-     * Will update Product available stock int he given declinaison. If product is a Pack, could decrease the sub products.
+     * Will update Product available stock int he given combination. If product is a Pack, could decrease the sub products.
      * If Product is contained in a Pack, Pack could be decreased or not (only if sub product stocks become not sufficient).
      *
      * @param Product $product The product to update its stockAvailable
-     * @param int $id_product_attribute The declinaison to update (null if not)
+     * @param int|null $id_product_attribute The combination to update (null if not)
      * @param int $delta_quantity The quantity change (positive or negative)
      * @param int|null $id_shop Optional
      * @param bool $add_movement Optional
@@ -277,8 +269,8 @@ class StockManager
      * @param int $id_product_attribute
      * @param int $newQuantity
      *
-     * @throws \Exception
-     * @throws \PrestaShopException
+     * @throws Exception
+     * @throws PrestaShopException
      */
     protected function sendLowStockAlert($product, $id_product_attribute, $newQuantity)
     {
@@ -366,8 +358,15 @@ class StockManager
         }
 
         $stockMvtRepository = $sfContainer->get('prestashop.core.api.stock_movement.repository');
+        $stockMovementId = $stockMvtRepository->saveStockMvt($stockMvt);
 
-        return $stockMvtRepository->saveStockMvt($stockMvt);
+        if ($stockMovementId) {
+            // Records which API client created the movement (no-op when the request is not
+            // authenticated with an API client), since StockMvt has no api client relation
+            $this->mutationTracker?->addMutationForApiClient('stock_mvt', (int) $stockMovementId, MutationAction::CREATE);
+        }
+
+        return $stockMovementId;
     }
 
     /**
@@ -382,9 +381,15 @@ class StockManager
      */
     private function prepareMovement($productId, $productAttributeId, $deltaQuantity, $params = [])
     {
-        $product = (new ProductDataProvider())->getProductInstance($productId);
+        $product = new Product($productId);
 
         if ($product->id) {
+            $combinationAdapter = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Combination');
+
+            if ($productAttributeId > 0 && !$combinationAdapter->existsInDatabase((int) $productAttributeId)) {
+                return false;
+            }
+
             $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
             $stockAvailable = $stockManager->getStockAvailableByProduct($product, $productAttributeId, $params['id_shop'] ?? null);
 
@@ -401,18 +406,16 @@ class StockManager
                     $stockMvt->setIdStockMvtReason((int) $params['id_stock_mvt_reason']);
                 }
 
-                if (!empty($params['id_supply_order'])) {
-                    $stockMvt->setIdSupplyOrder((int) $params['id_supply_order']);
-                }
-
                 $stockMvt->setSign($deltaQuantity >= 1 ? 1 : -1);
                 $stockMvt->setPhysicalQuantity(abs($deltaQuantity));
 
                 $stockMvt->setDateAdd(new DateTime());
 
                 $employee = (new ContextAdapter())->getContext()->employee;
-                if (!empty($employee)) {
-                    $stockMvt->setIdEmployee($employee->id);
+                // The context may hold an employee without an id (e.g. when the stock movement is
+                // triggered outside the back office, like from the Admin API), keep the default 0.
+                if (!empty($employee) && !empty($employee->id)) {
+                    $stockMvt->setIdEmployee((int) $employee->id);
                     $stockMvt->setEmployeeFirstname($employee->firstname);
                     $stockMvt->setEmployeeLastname($employee->lastname);
                 }

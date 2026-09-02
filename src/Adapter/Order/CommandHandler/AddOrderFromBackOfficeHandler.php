@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
@@ -33,22 +13,30 @@ use Configuration;
 use Context;
 use Currency;
 use Customer;
+use CustomerMessage;
+use CustomerThread;
 use Employee;
 use Exception;
 use Message;
 use Module;
+use Order;
 use PaymentModule;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOfficeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShopDatabaseException;
+use PrestaShopException;
+use Tools;
 use Validate;
 
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler implements AddOrderFromBackOfficeHandlerInterface
 {
     /**
@@ -81,17 +69,8 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
 
         $this->assertAddressesAreNotDisabled($cart);
 
-        //Context country, language and currency is used in PaymentModule::validateOrder (it should rely on cart address country instead)
+        // Context country, language and currency is used in PaymentModule::validateOrder (it should rely on cart address country instead)
         $this->setCartContext($this->contextStateManager, $cart);
-
-        $translator = Context::getContext()->getTranslator();
-        $employee = new Employee($command->getEmployeeId()->getValue());
-        $message = sprintf(
-            '%s %s. %s',
-            $translator->trans('Manual order -- Employee:', [], 'Admin.Orderscustomers.Feature'),
-            $employee->firstname[0],
-            $employee->lastname
-        );
 
         try {
             $orderMessage = $command->getOrderMessage();
@@ -104,7 +83,7 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
                 $command->getOrderStateId(),
                 $cart->getOrderTotal(),
                 $paymentModule->displayName,
-                $message,
+                '',
                 [],
                 null,
                 false,
@@ -120,7 +99,66 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
             throw new OrderException('Failed to add order.');
         }
 
-        return new OrderId((int) $paymentModule->currentOrder);
+        $orderId = (int) $paymentModule->currentOrder;
+
+        // Keep track of which employee created the order from the back office, so it is
+        // displayed in the order "Messages" block (regression from 1.6, see issue #9676).
+        if ($command->getEmployeeId()->getValue()) {
+            $this->addEmployeeCreationMessage($orderId, (int) $command->getEmployeeId()->getValue());
+        }
+
+        return new OrderId($orderId);
+    }
+
+    /**
+     * Records, as a private message attached to the order's customer thread, which employee
+     * created the order from the back office, so it is displayed in the order "Messages" block.
+     *
+     * @param int $orderId
+     * @param int $employeeId
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    private function addEmployeeCreationMessage(int $orderId, int $employeeId): void
+    {
+        $employee = new Employee($employeeId);
+        if (!Validate::isLoadedObject($employee)) {
+            return;
+        }
+
+        $order = new Order($orderId);
+        $customer = new Customer((int) $order->id_customer);
+
+        $customerThreadId = (int) CustomerThread::getIdCustomerThreadByEmailAndIdOrder($customer->email, (int) $order->id);
+        if (!$customerThreadId) {
+            $customerThread = new CustomerThread();
+            $customerThread->id_contact = 0;
+            $customerThread->id_customer = (int) $order->id_customer;
+            $customerThread->id_shop = (int) $order->id_shop;
+            $customerThread->id_order = (int) $order->id;
+            $customerThread->id_lang = (int) $order->id_lang;
+            $customerThread->email = $customer->email;
+            $customerThread->status = 'open';
+            $customerThread->token = Tools::passwdGen(12);
+            $customerThread->add();
+            $customerThreadId = (int) $customerThread->id;
+        }
+
+        $translator = Context::getContext()->getTranslator();
+        $message = sprintf(
+            '%s %s. %s',
+            $translator->trans('Manual order -- Employee:', [], 'Admin.Orderscustomers.Feature'),
+            $employee->firstname[0],
+            $employee->lastname
+        );
+
+        $customerMessage = new CustomerMessage();
+        $customerMessage->id_customer_thread = $customerThreadId;
+        $customerMessage->id_employee = $employeeId;
+        $customerMessage->message = $message;
+        $customerMessage->private = true;
+        $customerMessage->add();
     }
 
     /**
@@ -129,8 +167,8 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
      * @param Cart $cart
      * @param string $orderMessage
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      * @throws OrderConstraintException
      */
     private function addOrderMessage(Cart $cart, string $orderMessage): void

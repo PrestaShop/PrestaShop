@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
@@ -31,6 +11,7 @@ use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -89,7 +70,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                     'multistore_configuration_key' => 'PS_INVOICE',
                     'label' => $this->trans('Enable invoices', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
-                        'If enabled, your customers will receive an invoice for the purchase.',
+                        'When enabled, your customers will receive an invoice for the purchase.',
                         'Admin.Orderscustomers.Help'
                     ),
                 ]
@@ -113,7 +94,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                     'multistore_configuration_key' => 'PS_PDF_IMG_INVOICE',
                     'label' => $this->trans('Enable product image', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
-                        'Adds an image in front of the product name on the invoice',
+                        'Adds an image in front of the product name on the invoice.',
                         'Admin.Orderscustomers.Help'
                     ),
                 ]
@@ -191,7 +172,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                     'multistore_configuration_key' => 'PS_INVOICE_LEGAL_FREE_TEXT',
                     'label' => $this->trans('Legal free text', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
-                        'Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).',
+                        'Use this field to show additional information on the invoice such as specific legal information. It will be displayed below the payment methods summary.',
                         'Admin.Orderscustomers.Help'
                     ),
                 ]
@@ -217,7 +198,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                     'translation_domain' => false,
                     'multistore_configuration_key' => 'PS_INVOICE_MODEL',
                     'label' => $this->trans('Invoice model', 'Admin.Orderscustomers.Feature'),
-                    'help' => $this->trans('Choose an invoice model.', 'Admin.Orderscustomers.Help'),
+                    'help' => $this->trans('Choose an invoice model', 'Admin.Orderscustomers.Help'),
                 ]
             )
             ->add(

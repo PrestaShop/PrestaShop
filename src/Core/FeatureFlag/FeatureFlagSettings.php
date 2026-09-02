@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -30,13 +10,34 @@ namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 
 class FeatureFlagSettings
 {
+    /**
+     * Stability consts
+     */
     public const STABILITY_STABLE = 'stable';
     public const STABILITY_BETA = 'beta';
 
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2 = 'product_page_v2';
+    /**
+     * Type consts
+     */
+    public const TYPE_DEFAULT = 'env,dotenv,db';
+    public const TYPE_ENV = 'env';
+    public const TYPE_QUERY = 'query';
+    public const TYPE_DOTENV = 'dotenv';
+    public const TYPE_DB = 'db';
 
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP = 'product_page_v2_multi_shop';
+    /**
+     * Prefix for DotEnv & Env Layers
+     */
+    public const PREFIX = 'PS_FF_';
 
-    public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
-    public const FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT = 'multiple_image_format';
+    public const FEATURE_FLAG_ADMIN_API_MULTISTORE = 'admin_api_multistore';
+    public const FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS = 'admin_api_experimental_endpoints';
+    public const FEATURE_FLAG_FRONT_CONTAINER_V2 = 'front_container_v2';
+    public const FEATURE_FLAG_IMPROVED_SHIPMENT = 'improved_shipment';
+    public const FEATURE_FLAG_DISCOUNT = 'discount';
+    public const FEATURE_FLAG_IMPROVED_B2B = 'improved_b2b';
+    public const FEATURE_FLAG_NEW_PRICING = 'new_pricing';
+    public const FEATURE_FLAG_EMAIL_BODY_TRANSLATION = 'email_body_translation';
+    public const FEATURE_FLAG_HOOK_MODULE_V2 = 'hook_module_v2';
+    public const FEATURE_FLAG_COMBINATION_FEATURE_VALUES = 'combination_feature_values';
 }

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -50,15 +30,15 @@ class ImageDropzoneType extends TranslatorAwareType
     /**
      * @var FeatureInterface
      */
-    private $multistoreFeature;
+    private $multiStoreFeature;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FeatureInterface $multistoreFeature
+        FeatureInterface $multiStoreFeature
     ) {
         parent::__construct($translator, $locales);
-        $this->multistoreFeature = $multistoreFeature;
+        $this->multiStoreFeature = $multiStoreFeature;
     }
 
     /**
@@ -68,9 +48,9 @@ class ImageDropzoneType extends TranslatorAwareType
     {
         parent::buildForm($builder, $options);
 
-        if ($this->multistoreFeature->isUsed()) {
+        if ($this->multiStoreFeature->isUsed()) {
             $builder->add('shop_images', ButtonType::class, [
-                'label' => $this->trans('Manage images', 'Admin.Catalog.feature'),
+                'label' => $this->trans('Manage images', 'Admin.Catalog.Feature'),
                 'row_attr' => [
                     'class' => 'manage-shop-images-button-container',
                     'data-product-id' => $options['product_id'],
@@ -99,6 +79,7 @@ class ImageDropzoneType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
+            'is_multi_store_active' => $this->multiStoreFeature->isActive(),
             'translations' => [
                 'window.selectAll' => $this->trans('Select all', 'Admin.Actions'),
                 'window.settingsUpdated' => $this->trans('Settings updated', 'Admin.Global'),
@@ -111,7 +92,9 @@ class ImageDropzoneType extends TranslatorAwareType
                     'Admin.Catalog.Feature',
                     ['[1]' => '<span>', '[/1]' => '</span>']
                 ),
+                'window.notAssociatedToShop' => $this->trans('Image is not associated to this store', 'Admin.Catalog.Feature'),
                 'window.useAsCover' => $this->trans('Use as cover image', 'Admin.Catalog.Feature'),
+                'window.applyToAllStores' => $this->trans('Apply changes to all associated stores', 'Admin.Global'),
                 'window.saveImage' => $this->trans('Save image settings', 'Admin.Actions'),
                 'window.delete' => $this->trans('Delete selection', 'Admin.Actions'),
                 'window.close' => $this->trans('Close window', 'Admin.Actions'),
@@ -150,10 +133,14 @@ class ImageDropzoneType extends TranslatorAwareType
         $resolver
             ->setRequired([
                 'product_id',
+                'shop_id',
+                'is_multi_store_active',
             ])
             ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('shop_id', 'int')
             ->setAllowedTypes('update_form_type', ['string', 'null'])
             ->setAllowedTypes('translations', ['array'])
+            ->setAllowedTypes('is_multi_store_active', ['bool'])
         ;
     }
 
@@ -166,6 +153,9 @@ class ImageDropzoneType extends TranslatorAwareType
         $view->vars['locales'] = $this->locales;
         $view->vars['translations'] = $options['translations'];
         $view->vars['product_id'] = $options['product_id'];
+        $view->vars['shop_id'] = $options['shop_id'];
+        // twig acts strange when data attr is bool, so we cast it to int to be safe
+        $view->vars['is_multi_store_active'] = (int) $options['is_multi_store_active'];
         $view->vars['update_form_name'] = StringUtil::fqcnToBlockPrefix($options['update_form_type']) ?: '';
     }
 }

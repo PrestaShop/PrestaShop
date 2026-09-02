@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -49,11 +29,50 @@ class NotificationCore
     {
         $notifications = [];
         $employeeInfos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT id_last_order, id_last_customer_message, id_last_customer
-		FROM `' . _DB_PREFIX_ . 'employee`
-		WHERE `id_employee` = ' . (int) Context::getContext()->employee->id);
+        SELECT id_last_order, id_last_customer_message, id_last_customer
+        FROM `' . _DB_PREFIX_ . 'employee`
+        WHERE `id_employee` = ' . (int) Context::getContext()->employee->id);
 
         foreach ($this->types as $type) {
+            $notifications[$type] = Notification::getLastElementsIdsByType($type, $employeeInfos['id_last_' . $type]);
+        }
+
+        return $notifications;
+    }
+
+    /**
+     * getActiveLastElements returns all allowed notifications in the backoffice
+     * Get allowed notifications.
+     *
+     * @return array containing the notifications
+     */
+    public function getActiveLastElements(): array
+    {
+        $types = array_flip($this->types);
+
+        if (!(bool) Configuration::get('PS_SHOW_NEW_ORDERS')) {
+            unset($types['order']);
+        }
+        if (!(bool) Configuration::get('PS_SHOW_NEW_CUSTOMERS')) {
+            unset($types['customer']);
+        }
+        if (!(bool) Configuration::get('PS_SHOW_NEW_MESSAGES')) {
+            unset($types['customer_message']);
+        }
+
+        if (0 == count($types)) {
+            return [];
+        }
+
+        $notifications = [];
+        $employeeInfos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+        SELECT id_last_order, id_last_customer_message, id_last_customer
+        FROM `' . _DB_PREFIX_ . 'employee`
+        WHERE `id_employee` = ' . (int) Context::getContext()->employee->id);
+
+        $types = array_flip($types);
+
+        foreach ($types as $type) {
             $notifications[$type] = Notification::getLastElementsIdsByType($type, $employeeInfos['id_last_' . $type]);
         }
 

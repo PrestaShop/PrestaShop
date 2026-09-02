@@ -1,0 +1,5 @@
+admin_customer_b2b_list:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerB2b\CustomerB2bController::listAction

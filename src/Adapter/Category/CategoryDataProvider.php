@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Category;
@@ -31,6 +11,7 @@ use Context;
 use LogicException;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Product;
 use Shop;
 
 /**
@@ -65,9 +46,9 @@ class CategoryDataProvider
      * @param int|null $idLang
      * @param int|null $idShop
      *
-     * @throws LogicException If the category id is not set
-     *
      * @return Category
+     *
+     * @throws LogicException If the category id is not set
      */
     public function getCategory($idCategory = null, $idLang = null, $idShop = null)
     {
@@ -133,7 +114,7 @@ class CategoryDataProvider
     /**
      * Return a simple array id/name of categories for a specified product.
      *
-     * @param \Product $product
+     * @param Product $product
      *
      * @return array Categories
      */
@@ -246,11 +227,18 @@ class CategoryDataProvider
         $results = [];
         foreach ($searchCategories as $category) {
             $breadCrumb = $this->getBreadCrumb($category['id_category']);
+
+            if (file_exists(_PS_CAT_IMG_DIR_ . $category['id_category'] . '.jpg')) {
+                $image = Context::getContext()->link->getCatImageLink($category['name'], $category['id_category']);
+            } else {
+                $image = Context::getContext()->link->getMediaLink(_THEME_CAT_DIR_ . Context::getContext()->language->iso_code . '-default-category_default.jpg');
+            }
+
             $results[] = [
                 'id' => $category['id_category'],
                 'name' => ($nameAsBreadCrumb ? $breadCrumb : $category['name']),
                 'breadcrumb' => $breadCrumb,
-                'image' => Context::getContext()->link->getCatImageLink($category['name'], $category['id_category']),
+                'image' => $image,
             ];
         }
 
@@ -263,7 +251,7 @@ class CategoryDataProvider
      *
      * @return Category
      */
-    public function getRootCategory($idLang = null, Shop $shop = null)
+    public function getRootCategory($idLang = null, ?Shop $shop = null)
     {
         return Category::getRootCategory($idLang, $shop);
     }

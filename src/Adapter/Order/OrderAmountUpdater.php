@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -39,7 +19,7 @@ use Order;
 use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -195,8 +175,8 @@ class OrderAmountUpdater
                 $this->orderDetailUpdater->updateOrderDetail(
                     $orderDetail,
                     $order,
-                    new Number((string) $cartProduct['price_with_reduction_without_tax']),
-                    new Number((string) $cartProduct['price_with_reduction'])
+                    new DecimalNumber((string) $cartProduct['price_with_reduction_without_tax']),
+                    new DecimalNumber((string) $cartProduct['price_with_reduction'])
                 );
             }
         }
@@ -371,13 +351,13 @@ class OrderAmountUpdater
         $cartProducts = $cart->getProducts(true, false, null, true, $this->keepOrderPrices);
         foreach ($order->getCartProducts() as $orderProduct) {
             $orderDetail = new OrderDetail($orderProduct['id_order_detail'], null, $this->contextStateManager->getContext());
-            $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
+            $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id, (int) $orderDetail->id_customization);
 
             $this->orderDetailUpdater->updateOrderDetail(
                 $orderDetail,
                 $order,
-                new Number((string) $cartProduct['price_with_reduction_without_tax']),
-                new Number((string) $cartProduct['price_with_reduction'])
+                new DecimalNumber((string) $cartProduct['price_with_reduction_without_tax']),
+                new DecimalNumber((string) $cartProduct['price_with_reduction'])
             );
         }
     }
@@ -389,17 +369,18 @@ class OrderAmountUpdater
      *
      * @return array
      */
-    private function getProductFromCart(array $cartProducts, int $productId, int $productAttributeId): array
+    private function getProductFromCart(array $cartProducts, int $productId, int $productAttributeId, int $customizationId = 0): array
     {
-        $cartProduct = array_reduce($cartProducts, function ($carry, $item) use ($productId, $productAttributeId) {
+        $cartProduct = array_reduce($cartProducts, function ($carry, $item) use ($productId, $productAttributeId, $customizationId) {
             if (null !== $carry) {
                 return $carry;
             }
 
             $productMatch = $item['id_product'] == $productId;
             $combinationMatch = $item['id_product_attribute'] == $productAttributeId;
+            $customizationMatch = $item['id_customization'] == $customizationId;
 
-            return $productMatch && $combinationMatch ? $item : null;
+            return $productMatch && $combinationMatch && $customizationMatch ? $item : null;
         });
 
         // This shouldn't happen, if it does something was not done before updating the Order (removing an OrderDetail maybe)
@@ -431,14 +412,20 @@ class OrderAmountUpdater
         int $computingPrecision,
         ?int $orderInvoiceId
     ): void {
+        /*
+         * We need to run automatic cart rule actions.
+         * autoAddToCart is required to automatically assigning newly created cart rules with no code (automatic).
+         * autoRemoveFromCart is needed to verify, if the cart rules already in a cart are still valid.
+         * Note that we are calling both with a $useOrderPrice flag set to true.
+         */
         CartRule::autoAddToCart(null, true);
         CartRule::autoRemoveFromCart(null, true);
-        $carrierId = $order->id_carrier;
 
-        $newCartRules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
+        $newCartRules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false, true);
+
         // We need the calculator to compute the discount on the whole products because they can interact with each
         // other so they can't be computed independently, it needs to keep order prices
-        $calculator = $cart->newCalculator($cart->getProducts(), $newCartRules, $carrierId, $computingPrecision, $this->keepOrderPrices);
+        $calculator = $cart->newCalculator($cart->getProducts(), $newCartRules, $order->id_carrier, $computingPrecision, $this->keepOrderPrices);
         $calculator->processCalculation();
 
         foreach ($order->getCartRules() as $orderCartRuleData) {

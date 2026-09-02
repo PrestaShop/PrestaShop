@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
@@ -539,21 +519,21 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $order['id_currency'] == Currency::getDefaultCurrencyId()
                     ? Configuration::get('CONF_' . strtoupper($order['module']) . '_FIXED')
                     : Configuration::get('CONF_' . strtoupper($order['module']) . '_FIXED_FOREIGN')
-                );
+            );
 
             // Add variable fees for this order
             $var_fees = $order['total_paid_tax_incl'] * (
                 $order['id_currency'] == Currency::getDefaultCurrencyId()
                     ? Configuration::get('CONF_' . strtoupper($order['module']) . '_VAR')
                     : Configuration::get('CONF_' . strtoupper($order['module']) . '_VAR_FOREIGN')
-                ) / 100;
+            ) / 100;
 
             // Add shipping fees for this order
             $shipping_fees = $order['total_shipping_tax_excl'] * (
                 $order['id_country'] == Configuration::get('PS_COUNTRY_DEFAULT')
                     ? Configuration::get('CONF_' . strtoupper($order['carrier_reference']) . '_SHIP')
                     : Configuration::get('CONF_' . strtoupper($order['carrier_reference']) . '_SHIP_OVERSEAS')
-                ) / 100;
+            ) / 100;
 
             // Tally up these fees
             if ($granularity == 'day') {
@@ -584,12 +564,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     true,
                     date('Y-m-d', strtotime('-31 day')),
                     date('Y-m-d', strtotime('-1 day')),
-                    false /*'day'*/
+                    false /* 'day' */
                 );
                 $orders = AdminStatsController::getOrders(
                     date('Y-m-d', strtotime('-31 day')),
                     date('Y-m-d', strtotime('-1 day')),
-                    false /*'day'*/
+                    false /* 'day' */
                 );
 
                 $visits_sum = $visitors;
@@ -682,9 +662,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
             case 'disabled_products':
                 $value = round(
-                        100 * AdminStatsController::getDisabledProducts() / AdminStatsController::getTotalProducts(),
-                        2
-                    ) . '%';
+                    100 * AdminStatsController::getDisabledProducts() / AdminStatsController::getTotalProducts(),
+                    2
+                ) . '%';
                 $tooltip = $this->trans(
                     '%value% of your products are disabled and not visible to your customers',
                     ['%value%' => $value],
@@ -1000,7 +980,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
         /** @var ModuleGraph|false $graph */
         $graph = Module::getInstanceByName($module);
         if (false === $graph) {
-            $this->ajaxRender(Tools::displayError());
+            $this->ajaxRender($this->trans(
+                'Graph module could not be loaded.',
+                [],
+                'Admin.Notifications.Error'
+            ));
 
             return;
         }
@@ -1028,19 +1012,23 @@ class AdminStatsControllerCore extends AdminStatsTabController
         $render = Tools::getValue('render');
         $type = Tools::getValue('type');
         $option = Tools::getValue('option');
-        $width = (int) (Tools::getValue('width', 600));
-        $height = (int) (Tools::getValue('height', 920));
-        $start = (int) (Tools::getValue('start', 0));
-        $limit = (int) (Tools::getValue('limit', 40));
+        $width = (int) Tools::getValue('width', 600);
+        $height = (int) Tools::getValue('height', 920);
+        $start = (int) Tools::getValue('start', 0);
+        $limit = (int) Tools::getValue('limit', 40);
         $sort = Tools::getValue('sort', 0); // Should be a String. Default value is an Integer because we don't know what can be the name of the column to sort.
         $dir = Tools::getValue('dir', 0); // Should be a String : Either ASC or DESC
-        $id_employee = (int) (Tools::getValue('id_employee'));
-        $id_lang = (int) (Tools::getValue('id_lang'));
+        $id_employee = (int) Tools::getValue('id_employee');
+        $id_lang = (int) Tools::getValue('id_lang');
 
         /** @var ModuleGrid|false $grid */
         $grid = Module::getInstanceByName($module);
         if (false === $grid) {
-            $this->ajaxRender(Tools::displayError());
+            $this->ajaxRender($this->trans(
+                'Grid module could not be loaded.',
+                [],
+                'Admin.Notifications.Error'
+            ));
 
             return;
         }

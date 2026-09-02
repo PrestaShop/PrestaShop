@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 // External components
@@ -36,6 +16,7 @@ import DateRange from '@js/components/form/date-range';
 import DeltaQuantityInput from '@components/form/delta-quantity-input';
 import DisablingSwitch from '@components/form/disabling-switch';
 import GeneratableInput from '@js/components/generatable-input';
+import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
 import Grid from '@components/grid/grid';
 import ModifyAllShopsCheckbox from '@components/modify-all-shops-checkbox';
 import MultipleChoiceTable from '@js/components/multiple-choice-table';
@@ -48,6 +29,10 @@ import TextWithLengthCounter from '@components/form/text-with-length-counter';
 import TinyMCEEditor from '@js/components/tinymce-editor';
 import TranslatableField from '@js/components/translatable-field';
 import TranslatableInput from '@js/components/translatable-input';
+import EntitySearchInput from '@js/components/entity-search-input';
+import MultipleZoneChoice from '@js/components/form/multiple-zone-choice';
+import ToggleChildrenChoice from '@js/components/form/toggle-children-choice';
+import FilterLinkGroup from '@components/filter/filter-link-group';
 
 // Grid extensions
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
@@ -70,6 +55,7 @@ import AjaxBulkActionExtension from '@components/grid/extension/ajax-bulk-action
 import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import FormFieldToggler from '@components/form/form-field-toggler';
+import EmailInput from '@components/email-input';
 
 const GridExtensions = {
   AjaxBulkActionExtension,
@@ -79,6 +65,7 @@ const GridExtensions = {
   ChoiceExtension,
   ColumnTogglingExtension,
   ExportToSqlManagerExtension,
+  FilterLinkGroup,
   FiltersResetExtension,
   FiltersSubmitButtonEnablerExtension,
   LinkRowActionExtension,
@@ -152,12 +139,17 @@ const initPrestashopComponents = (): void => {
     MultistoreConfigField,
     PreviewOpener,
     Router,
+    TextWithRecommendedLengthCounter,
     ShopSelector,
     TaggableField,
     TextWithLengthCounter,
     TinyMCEEditor,
     TranslatableField,
     TranslatableInput,
+    EntitySearchInput,
+    EmailInput,
+    MultipleZoneChoice,
+    ToggleChildrenChoice,
   };
 };
 export default initPrestashopComponents;

@@ -21,6 +21,7 @@ Feature: Add virtual product file from BO (Back Office).
       | download times limit | 0               |
       | expiration date      |                 |
     And file "file1" for product "product1" should exist in system
+    And file file1 for product product1 should have same file as app_icon.png
 
   Scenario: I add virtual product file with limited access days, downloads and expiration date
     Given I add product "product2" with following information:
@@ -58,6 +59,7 @@ Feature: Add virtual product file from BO (Back Office).
       | download times limit | 100                 |
       | expiration date      | 2000-01-20 09:01:01 |
     And file "file3" for product "product3" should exist in system
+    And file file3 for product product3 should have same file as dummy_zip.zip
 
   Scenario: I should not be able to add file to a product which is not virtual
     Given I add product product4 with following information:
@@ -85,6 +87,7 @@ Feature: Add virtual product file from BO (Back Office).
       | access days          | 0                                  |
       | download times limit | 0                                  |
       | expiration date      |                                    |
+    And file file5 for product product5 should have same file as dummy_zip.zip
     When I add virtual product file "file5-5" to product "product5" with following details:
       | file name    | app_icon.png     |
       | display name | puffin-logo2.png |
@@ -95,6 +98,8 @@ Feature: Add virtual product file from BO (Back Office).
       | download times limit | 0                                  |
       | expiration date      |                                    |
     And file "file5" for product "product5" should exist in system
+    # Check that the file as not modified
+    And file file5 for product product5 should have same file as dummy_zip.zip
 
   Scenario: I should not be able to add a file with invalid details
     Given I add product product6 with following information:

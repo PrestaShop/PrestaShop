@@ -1,37 +1,19 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Translations;
 
 use Link;
 use Module;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Service\TranslationService;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -75,30 +57,36 @@ class TranslationRouteFinder
     private $moduleRepository;
 
     /**
+     * @var FeatureFlagStateCheckerInterface
+     */
+    private $featureFlagStateChecker;
+
+    /**
      * @param TranslationService $translationService
      * @param Link $link
      * @param ModuleRepositoryInterface $moduleRepository
+     * @param FeatureFlagStateCheckerInterface $featureFlagStateChecker
      */
     public function __construct(
         TranslationService $translationService,
         Link $link,
-        ModuleRepositoryInterface $moduleRepository
+        ModuleRepositoryInterface $moduleRepository,
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker
     ) {
         $this->translationService = $translationService;
         $this->link = $link;
         $this->moduleRepository = $moduleRepository;
+        $this->featureFlagStateChecker = $featureFlagStateChecker;
     }
 
     /**
      * Finds the correct translation route out of given query.
      *
-     * @param ParameterBag $query
-     *
      * @return string
      */
-    public function findRoute(ParameterBag $query)
+    public function findRoute(Request $request)
     {
-        $routeProperties = $query->get('form');
+        $routeProperties = $request->request->all('form');
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $route = 'admin_international_translation_overview';
 
@@ -106,18 +94,22 @@ class TranslationRouteFinder
             case self::MAILS:
                 if (self::BODY === $propertyAccessor->getValue($routeProperties, '[email_content_type]')) {
                     $language = $propertyAccessor->getValue($routeProperties, '[language]');
-                    $route = $this->link->getAdminLink(
-                        'AdminTranslations',
-                        true,
-                        [],
-                        [
-                            'lang' => $language,
-                            'type' => self::MAILS,
-                            'selected-emails' => self::BODY,
-                            'selected-theme' => $propertyAccessor->getValue($routeProperties, '[theme]'),
-                            'locale' => $this->translationService->langToLocale($language),
-                        ]
-                    );
+                    if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_EMAIL_BODY_TRANSLATION)) {
+                        $route = 'admin_email_body_translation_index';
+                    } else {
+                        $route = $this->link->getAdminLink(
+                            'AdminTranslations',
+                            true,
+                            [],
+                            [
+                                'lang' => $language,
+                                'type' => self::MAILS,
+                                'selected-emails' => self::BODY,
+                                'selected-theme' => $propertyAccessor->getValue($routeProperties, '[theme]'),
+                                'locale' => $this->translationService->langToLocale($language),
+                            ]
+                        );
+                    }
                 }
 
                 break;
@@ -150,13 +142,11 @@ class TranslationRouteFinder
     /**
      * Finds parameters for translation route out of given query.
      *
-     * @param ParameterBag $query
-     *
      * @return array of route parameters
      */
-    public function findRouteParameters(ParameterBag $query)
+    public function findRouteParameters(Request $request): array
     {
-        $routeProperties = $query->get('form');
+        $routeProperties = $request->request->all('form');
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $language = $propertyAccessor->getValue($routeProperties, '[language]');
 
@@ -176,7 +166,13 @@ class TranslationRouteFinder
                 $emailContentType = $propertyAccessor->getValue($routeProperties, '[email_content_type]');
 
                 if (self::BODY === $emailContentType) {
-                    $parameters = [];
+                    if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_EMAIL_BODY_TRANSLATION)) {
+                        $parameters = [
+                            'locale' => $language,
+                        ];
+                    } else {
+                        $parameters = [];
+                    }
                 }
 
                 break;

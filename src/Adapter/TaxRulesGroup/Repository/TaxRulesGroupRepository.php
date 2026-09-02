@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,17 +9,24 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Validate\TaxRulesGroupValidator;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotUpdateStoreException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRulesGroupException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\TaxRule\ValueObject\TaxRuleId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
+use Product;
 use TaxRulesGroup;
 
 /**
  * Provides access to TaxRulesGroup data source
  */
-class TaxRulesGroupRepository extends AbstractObjectModelRepository
+class TaxRulesGroupRepository extends AbstractMultiShopObjectModelRepository
 {
     /**
      * @var Connection
@@ -52,15 +39,23 @@ class TaxRulesGroupRepository extends AbstractObjectModelRepository
     private $dbPrefix;
 
     /**
+     * @var TaxRulesGroupValidator
+     */
+    private $taxRulesGroupValidator;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param TaxRulesGroupValidator $taxRulesGroupValidator
      */
     public function __construct(
         Connection $connection,
-        string $dbPrefix
+        string $dbPrefix,
+        TaxRulesGroupValidator $taxRulesGroupValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->taxRulesGroupValidator = $taxRulesGroupValidator;
     }
 
     /**
@@ -86,7 +81,7 @@ class TaxRulesGroupRepository extends AbstractObjectModelRepository
             ])
         ;
 
-        $rawData = $qb->execute()->fetchAll();
+        $rawData = $qb->executeQuery()->fetchAllAssociative();
         if (empty($rawData)) {
             return 0;
         }
@@ -128,5 +123,112 @@ class TaxRulesGroupRepository extends AbstractObjectModelRepository
             'tax_rules_group',
             TaxRulesGroupNotFoundException::class
         );
+    }
+
+    /**
+     * @param TaxRulesGroup $taxRulesGroup
+     * @param ShopId[] $shopIds
+     * @param int $errorCode
+     *
+     * @return TaxRulesGroupId
+     */
+    public function add(TaxRulesGroup $taxRulesGroup, array $shopIds, int $errorCode = 0): TaxRulesGroupId
+    {
+        $this->taxRulesGroupValidator->validate($taxRulesGroup);
+        $id = $this->addObjectModelToShops(
+            $taxRulesGroup,
+            $shopIds,
+            CannotAddTaxRulesGroupException::class,
+            $errorCode
+        );
+
+        return new TaxRulesGroupId($id);
+    }
+
+    /**
+     * @param TaxRulesGroup $taxRulesGroup
+     * @param ShopId[] $shopIds
+     */
+    public function update(TaxRulesGroup $taxRulesGroup, array $shopIds): void
+    {
+        $this->taxRulesGroupValidator->validate($taxRulesGroup);
+        $this->updateObjectModelForShops(
+            $taxRulesGroup,
+            $shopIds,
+            CannotUpdateTaxRulesGroupException::class
+        );
+    }
+
+    /**
+     * @param TaxRulesGroup $taxRulesGroup
+     * @param array $propertiesToUpdate
+     * @param ShopId[] $shopIds
+     * @param int $errorCode
+     */
+    public function partialUpdate(
+        TaxRulesGroup $taxRulesGroup,
+        array $propertiesToUpdate,
+        array $shopIds,
+        int $errorCode
+    ): void {
+        $this->partiallyUpdateObjectModelForShops(
+            $taxRulesGroup,
+            $propertiesToUpdate,
+            $shopIds,
+            CannotUpdateStoreException::class,
+            $errorCode
+        );
+    }
+
+    /**
+     * Triggers historization if the group is used in orders.
+     * When a group is used, it is duplicated: old group is soft-deleted,
+     * rules are copied to the new group, and product/carrier references are updated.
+     *
+     * @param TaxRulesGroupId $taxRulesGroupId
+     *
+     * @return TaxRulesGroupId the (potentially new) group id
+     */
+    public function historizeIfUsed(TaxRulesGroupId $taxRulesGroupId): TaxRulesGroupId
+    {
+        $taxRulesGroup = $this->get($taxRulesGroupId);
+
+        // TaxRulesGroup::update() handles historization internally:
+        // if the group is used in orders, it duplicates the group and all its rules
+        $taxRulesGroup->update();
+
+        // After update(), the id may have changed if historization occurred
+        return new TaxRulesGroupId((int) $taxRulesGroup->id);
+    }
+
+    /**
+     * After historization, maps an old tax rule id to the new one in the new group.
+     *
+     * @param TaxRulesGroupId $newGroupId the new group id (after historization)
+     * @param TaxRuleId $oldTaxRuleId the old tax rule id
+     *
+     * @return TaxRuleId the remapped tax rule id in the new group
+     */
+    public function remapTaxRuleId(TaxRulesGroupId $newGroupId, TaxRuleId $oldTaxRuleId): TaxRuleId
+    {
+        $taxRulesGroup = $this->get($newGroupId);
+        $newId = (int) $taxRulesGroup->getIdTaxRuleGroupFromHistorizedId($oldTaxRuleId->getValue());
+
+        if ($newId <= 0) {
+            // If no remap is found, the rule was not historized (group wasn't used)
+            return $oldTaxRuleId;
+        }
+
+        return new TaxRuleId($newId);
+    }
+
+    /**
+     * Get most used Tax.
+     *
+     * @return int
+     */
+    public function getIdTaxRulesGroupMostUsed()
+    {
+        return (int) Product::getIdTaxRulesGroupMostUsed();
     }
 }

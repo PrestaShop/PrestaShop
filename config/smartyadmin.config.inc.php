@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 global $smarty;
 $smarty->debugging = false;
@@ -44,11 +24,17 @@ smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('Addre
 smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
 smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
 smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef'));
+smartyRegisterFunction($smarty, 'function', 'isBrightColor', 'isBrightColor');
 smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
 smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
 
 $module_resources['modules'] = _PS_MODULE_DIR_;
 $smarty->registerResource('module', new SmartyResourceModule($module_resources, $isAdmin = true));
+
+function isBrightColor(string $params): bool {
+    $colorBrightnessCalculator = new PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator();
+    return $colorBrightnessCalculator->isBright($params);
+}
 
 function toolsConvertPrice($params, &$smarty)
 {
@@ -71,8 +57,28 @@ function smartyTranslate($params, $smarty)
         $sprintf = $params['sprintf'];
     }
 
-    if (($htmlEntities || $addSlashes)) {
-        $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
+    if ($isInPDF && empty($params['d'])) {
+        return Translate::postProcessTranslation(
+            Translate::getPdfTranslation(
+                $params['s'],
+                $sprintf
+            ),
+            $params
+        );
+    }
+
+    // If the template is part of a module
+    if ($isInModule && empty($params['d'])) {
+        return Translate::postProcessTranslation(
+            Translate::getModuleTranslation(
+                $params['mod'],
+                $params['s'],
+                basename($smarty->source->name, '.tpl'),
+                $sprintf,
+                isset($params['js'])
+            ),
+            $params
+        );
     }
 
     if (!empty($params['d'])) {
@@ -110,34 +116,10 @@ function smartyTranslate($params, $smarty)
             }
         }
 
-        return $translator->trans($params['s'], $sprintf, $params['d']);
+        $translatedValue = $translator->trans($params['s'], $sprintf, $params['d']);
+    } else {
+        $translatedValue = $translator->trans($params['s'], $sprintf, null);
     }
-
-    if ($isInPDF) {
-        return Translate::postProcessTranslation(
-            Translate::getPdfTranslation(
-                $params['s'],
-                $sprintf
-            ),
-            $params
-        );
-    }
-
-    // If the template is part of a module
-    if ($isInModule) {
-        return Translate::postProcessTranslation(
-            Translate::getModuleTranslation(
-                $params['mod'],
-                $params['s'],
-                basename($smarty->source->name, '.tpl'),
-                $sprintf,
-                isset($params['js'])
-            ),
-            $params
-        );
-    }
-
-    $translatedValue = $translator->trans($params['s'], $sprintf, null);
 
     if ($htmlEntities) {
         $translatedValue = htmlspecialchars($translatedValue, ENT_COMPAT, 'UTF-8');

@@ -1,0 +1,42 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+
+  {% if pendingCount > 0 %}
+    <div class="alert alert-info business-entity-pending-banner" role="alert">
+      <div class="business-entity-pending-banner__content">
+        <div class="business-entity-pending-banner__text">
+          <p class="alert-text business-entity-pending-banner__title mb-1">
+            <strong>{{ 'Pending validation(s).'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          </p>
+          <p class="alert-text mb-0">
+            {% if pendingCount == 1 %}
+              {{ 'There is %pendingCount% business entity waiting for validation.'|trans({'%pendingCount%': pendingCount}, 'Admin.Orderscustomers.Feature') }}
+            {% else %}
+              {{ 'There are %pendingCount% business entities waiting for validation.'|trans({'%pendingCount%': pendingCount}, 'Admin.Orderscustomers.Feature') }}
+            {% endif %}
+          </p>
+        </div>
+        {% if not isPendingFilter %}
+          <a class="btn btn-outline-primary business-entity-pending-banner__btn" href="{{ pendingUrl }}">
+            {{ 'Review pending'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: businessEntityGrid}) }}
+
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/business_entity.bundle.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+{% endblock %}

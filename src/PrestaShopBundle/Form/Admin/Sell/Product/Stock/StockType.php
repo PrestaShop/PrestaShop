@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 declare(strict_types=1);
 
@@ -29,7 +9,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
+use PrestaShopBundle\Form\Admin\Type\ProductSearchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -80,31 +60,25 @@ class StockType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('packed_products', EntitySearchInputType::class, [
+            ->add('packed_products', ProductSearchType::class, [
+                'include_combinations' => true,
                 'label' => $this->trans('Pack of products', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
+                'limit' => 0,
                 'entry_type' => PackedProductType::class,
-                'entry_options' => [
-                    'block_prefix' => 'packed',
+                'filters' => [
+                    'filteredTypes' => [ProductType::TYPE_PACK],
                 ],
-                'remote_url' => $this->router->generate('admin_products_v2_search_combinations', [
-                    'languageCode' => $this->employeeIsoCode,
-                    'filters' => [
-                        'filteredTypes' => [ProductType::TYPE_PACK],
-                    ],
-                    'query' => '__QUERY__',
-                ]),
                 'attr' => [
                     'class' => 'product_packed_products',
                     'data-reference-label' => $this->trans('Ref: %s', 'Admin.Catalog.Feature'),
                 ],
                 'min_length' => 3,
                 'filtered_identities' => $options['product_id'] > 0 ? [$options['product_id'] . '_0'] : [],
-                'identifier_field' => 'unique_identifier',
-                'placeholder' => $this->trans('Search combination', 'Admin.Catalog.Help'),
             ])
             ->add('quantities', QuantityType::class, [
                 'product_id' => $options['product_id'],
+                'product_type' => $options['product_type'],
             ])
             ->add('options', StockOptionsType::class)
             ->add('virtual_product_file', VirtualProductFileType::class, [
@@ -113,11 +87,16 @@ class StockType extends TranslatorAwareType
             ->add('pack_stock_type', ChoiceType::class, [
                 'choices' => $this->packStockTypeChoiceProvider->getChoices(),
                 'expanded' => true,
-                'label' => $this->trans('Pack quantities', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Pack stock behavior', 'Admin.Catalog.Feature'),
+                'label_help_box' => $this->trans('Controls how you want stock of the pack to be calculated. You can decide, if you want to manage the stock of pack manually, or if it should be calculated automatically depending on stock of the products inside. In that case, the quantity of the pack is ignored.', 'Admin.Catalog.Help'),
                 'label_tag_name' => 'h3',
                 'required' => false,
                 'placeholder' => false,
                 'modify_all_shops' => true,
+                'external_link' => [
+                    'text' => $this->trans('[1]Edit default behavior[/1]', 'Admin.Catalog.Feature'),
+                    'href' => $this->router->generate('admin_product_preferences') . '#configuration_fieldset_stock',
+                ],
             ])
             ->add('availability', AvailabilityType::class)
         ;

@@ -1,0 +1,6 @@
+# Dedicated services for Front app
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true

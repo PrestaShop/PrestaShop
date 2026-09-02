@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /* eslint-disable */
@@ -310,7 +290,7 @@ function setPreviousYear() {
 let datepickerStart;
 let datepickerEnd;
 
-$(document).ready(() => {
+$(() => {
   // Instanciate datepickers
   datepickerStart = $('.datepicker1').daterangepicker({
     dates: window.translated_dates,
@@ -346,21 +326,21 @@ $(document).ready(() => {
   }
 
   // Events binding
-  $('#date-start').focus(function () {
+  $('#date-start').on('focus', function () {
     datepickerStart.setCompare(false);
     datepickerEnd.setCompare(false);
     $('.date-input').removeClass('input-selected');
     $(this).addClass('input-selected');
   });
 
-  $('#date-end').focus(function () {
+  $('#date-end').on('focus', function () {
     datepickerStart.setCompare(false);
     datepickerEnd.setCompare(false);
     $('.date-input').removeClass('input-selected');
     $(this).addClass('input-selected');
   });
 
-  $('#date-start-compare').focus(function () {
+  $('#date-start-compare').on('focus', function () {
     datepickerStart.setCompare(true);
     datepickerEnd.setCompare(true);
     $('#compare-options').val(3);
@@ -368,7 +348,7 @@ $(document).ready(() => {
     $(this).addClass('input-selected');
   });
 
-  $('#date-end-compare').focus(function () {
+  $('#date-end-compare').on('focus', function () {
     datepickerStart.setCompare(true);
     datepickerEnd.setCompare(true);
     $('#compare-options').val(3);
@@ -376,16 +356,16 @@ $(document).ready(() => {
     $(this).addClass('input-selected');
   });
 
-  $('#datepicker-cancel').click(() => {
+  $('#datepicker-cancel').on('click', () => {
     $('#datepicker').addClass('hide');
   });
 
-  $('#datepicker').show(() => {
+  $('#datepicker').on('show', () => {
     $('#date-start').focus();
     $('#date-start').trigger('change');
   });
 
-  $('#datepicker-compare').click(function () {
+  $('#datepicker-compare').on('click', function () {
     if ($(this).prop('checked')) {
       $('#compare-options').trigger('change');
       $('#form-date-body-compare').show();
@@ -401,7 +381,7 @@ $(document).ready(() => {
     }
   });
 
-  $('#compare-options').change(function () {
+  $('#compare-options').on('change', function () {
     if (this.value === '1') setPreviousPeriod();
 
     if (this.value === '2') setPreviousYear();

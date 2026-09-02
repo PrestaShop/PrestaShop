@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -306,8 +286,6 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'link_rewrite' => 'productSeoOptions.localizedLinkRewrites',
             'redirect_type' => 'productSeoOptions.redirectType',
             'redirect_target' => 'productSeoOptions.redirectTarget',
-            'use_advanced_stock_management' => 'stockInformation.useAdvancedStockManagement',
-            'depends_on_stock' => 'stockInformation.dependsOnStock',
             'pack_stock_type' => 'stockInformation.packStockType',
             'out_of_stock_type' => 'stockInformation.outOfStockType',
             'quantity' => 'stockInformation.quantity',
@@ -389,17 +367,5 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         }
 
         return $this->getSharedStorage()->get($manufacturerReference);
-    }
-
-    /**
-     * @param string $shopReferences
-     *
-     * @return int[]
-     */
-    protected function getShopIdsFromReferences(string $shopReferences): array
-    {
-        return array_map(function (string $shopReference) {
-            return (int) $this->getSharedStorage()->get(trim($shopReference));
-        }, explode(',', $shopReferences));
     }
 }

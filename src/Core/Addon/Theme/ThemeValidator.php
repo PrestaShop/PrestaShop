@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
@@ -68,7 +48,7 @@ class ThemeValidator
                     $this->errors[$themeName] = [];
                 }
 
-                $this->errors[$themeName] = $this->translator->trans(
+                $this->errors[$themeName][] = $this->translator->trans(
                     'An error occurred. The information "%s" is missing.',
                     [$prop],
                     'Admin.Design.Notification'
@@ -115,7 +95,7 @@ class ThemeValidator
                     $this->errors[$themeName] = [];
                 }
 
-                $this->errors[$themeName] = $this->translator->trans('An error occurred. The template "%s" is missing.', [$file], 'Admin.Design.Notification');
+                $this->errors[$themeName][] = $this->translator->trans('An error occurred. The template "%s" is missing.', [$file], 'Admin.Design.Notification');
             }
         }
 
@@ -134,30 +114,30 @@ class ThemeValidator
             'templates/catalog/product.tpl',
             'templates/catalog/listing/product-list.tpl',
             'templates/checkout/cart.tpl',
+            'templates/checkout/cart-empty.tpl',
             'templates/checkout/checkout.tpl',
+            'templates/checkout/order-confirmation.tpl',
             'templates/cms/category.tpl',
             'templates/cms/page.tpl',
+            'templates/cms/sitemap.tpl',
+            'templates/cms/stores.tpl',
+            'templates/contact.tpl',
             'templates/customer/address.tpl',
             'templates/customer/addresses.tpl',
+            'templates/customer/authentication.tpl',
             'templates/customer/guest-tracking.tpl',
             'templates/customer/guest-login.tpl',
             'templates/customer/history.tpl',
             'templates/customer/identity.tpl',
-            'templates/index.tpl',
             'templates/customer/my-account.tpl',
-            'templates/checkout/order-confirmation.tpl',
             'templates/customer/order-detail.tpl',
             'templates/customer/order-follow.tpl',
             'templates/customer/order-return.tpl',
             'templates/customer/order-slip.tpl',
+            'templates/customer/registration.tpl',
             'templates/errors/404.tpl',
             'templates/errors/forbidden.tpl',
-            'templates/checkout/cart-empty.tpl',
-            'templates/cms/sitemap.tpl',
-            'templates/cms/stores.tpl',
-            'templates/customer/authentication.tpl',
-            'templates/customer/registration.tpl',
-            'templates/contact.tpl',
+            'templates/index.tpl',
         ];
     }
 }

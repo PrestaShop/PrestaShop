@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
@@ -36,7 +16,9 @@ use OrderReturn;
 use OrderSlip;
 use Pack;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderProductsForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
@@ -47,40 +29,24 @@ use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Util\Sorter;
+use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use Product;
 use Shop;
 use StockAvailable;
-use Warehouse;
-use WarehouseProductLocation;
 
 /**
  * Handles GetOrderProductsForViewing query using legacy object models
  */
+#[AsQueryHandler]
 final class GetOrderProductsForViewingHandler extends AbstractOrderHandler implements GetOrderProductsForViewingHandlerInterface
 {
-    /**
-     * @var ImageTagSourceParserInterface
-     */
-    private $imageTagSourceParser;
-
-    /**
-     * @var int
-     */
-    private $contextLanguageId;
-
-    /**
-     * @var Locale
-     */
-    private $locale;
-
     public function __construct(
-        ImageTagSourceParserInterface $imageTagSourceParser,
-        int $contextLanguageId,
-        Locale $locale
+        private readonly ImageTagSourceParserInterface $imageTagSourceParser,
+        private readonly int $contextLanguageId,
+        private readonly Locale $locale,
+        private readonly ShipmentRepository $shipmentRepository,
+        private readonly ModuleHtmlAuthorizationChecker $moduleHtmlAuthorizationChecker
     ) {
-        $this->imageTagSourceParser = $imageTagSourceParser;
-        $this->contextLanguageId = $contextLanguageId;
-        $this->locale = $locale;
     }
 
     public function handle(GetOrderProductsForViewing $query): OrderProductsForViewing
@@ -118,7 +84,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                                 $customizations[] = new OrderProductCustomizationForViewing(
                                     (int) $data['type'],
                                     (string) $data['name'],
-                                    $data['value']
+                                    (string) $data['value'],
+                                    $this->moduleHtmlAuthorizationChecker->isModuleHtmlAllowed((int) ($data['id_module'] ?? 0))
                                 );
                             }
                         }
@@ -137,20 +104,6 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
             $product['amount_refunded'] = $product[$resumeAmountKey] ?? 0;
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
-
-            if ($product['id_warehouse'] != 0) {
-                $warehouse = new Warehouse((int) $product['id_warehouse']);
-                $product['warehouse_name'] = $warehouse->name;
-                $warehouse_location = WarehouseProductLocation::getProductLocation($product['product_id'], $product['product_attribute_id'], $product['id_warehouse']);
-                if (!empty($warehouse_location)) {
-                    $product['warehouse_location'] = $warehouse_location;
-                } else {
-                    $product['warehouse_location'] = false;
-                }
-            } else {
-                $product['warehouse_name'] = '--';
-                $product['warehouse_location'] = false;
-            }
 
             $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->contextLanguageId, true) : [];
             foreach ($pack_items as &$pack_item) {
@@ -199,8 +152,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $unitPrice = (new DecimalNumber((string) $unitPrice))->round($precision, $this->getNumberRoundMode());
             }
 
-            $totalPrice = $unitPrice *
-                (!empty($product['customizedDatas']) ? $product['customizationQuantityTotal'] : $product['product_quantity']);
+            $totalPrice = $unitPrice * $product['product_quantity'];
 
             $unitPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
             $totalPriceFormatted = $this->locale->formatPrice($totalPrice, $currency->iso_code);
@@ -214,6 +166,19 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 OrderProductForViewing::TYPE_PRODUCT_WITHOUT_COMBINATIONS;
 
             $orderInvoice = new OrderInvoice($product['id_order_invoice']);
+            $shipments = $this->shipmentRepository->findByOrderId($order->id);
+            $shipmentIds = [];
+
+            if ($shipments) {
+                foreach ($shipments as $shipment) {
+                    $shipmentProducts = $shipment->getProducts();
+                    foreach ($shipmentProducts as $shipmentProduct) {
+                        if ($shipmentProduct->getOrderDetailId() == $product['id_order_detail']) {
+                            $shipmentIds[] = $shipment->getId();
+                        }
+                    }
+                }
+            }
 
             $packItems = [];
             foreach ($product['pack_items'] as $pack_item) {
@@ -245,7 +210,10 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                     null,
                     '',
                     $packItemType,
-                    (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($pack_item['id_product']))
+                    (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($pack_item['id_product'])),
+                    [],
+                    null,
+                    $pack_item['mpn']
                 );
             }
 
@@ -271,19 +239,21 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $product['location'],
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
                 !empty($product['id_order_invoice'])
-                    ? $orderInvoice->getInvoiceNumberFormatted((int) $order->getAssociatedLanguage()->getId())
+                    ? $orderInvoice->getInvoiceNumberFormatted($this->contextLanguageId)
                     : '',
                 $productType,
                 (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product['product_id'])),
                 $packItems,
-                $product['customizations']
+                $product['customizations'],
+                $product['product_mpn'],
+                $shipmentIds
             );
         }
 
         $offset = $query->getOffset();
         $limit = $query->getLimit();
 
-        //@todo: its not really paginated, as all products are retrieved from legacy Order::getProducts(). But could be improved in future.
+        // @todo: its not really paginated, as all products are retrieved from legacy Order::getProducts(). But could be improved in future.
         if (null !== $offset && $limit) {
             $productsForViewing = array_slice($products, (int) $offset, (int) $limit);
         }

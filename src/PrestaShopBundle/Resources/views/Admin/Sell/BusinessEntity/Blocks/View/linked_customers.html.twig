@@ -1,0 +1,21 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<div class="card business-entity-linked-customers">
+  <h3 class="card-header">
+    {{ 'Linked B2B customers'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    <span class="badge rounded business-entity-linked-customers__count">{{ businessEntity.linkedCustomersCount }}</span>
+  </h3>
+
+  <div class="card-body">
+    <div class="text-center">
+      {% if businessEntity.linkedCustomersCount > 0 %}
+        <p class="text-muted">{{ 'The list of linked customers is not available yet.'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+      {% else %}
+        <p class="text-muted">{{ 'No customer linked yet.'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>

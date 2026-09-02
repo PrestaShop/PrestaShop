@@ -1,34 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
 
 namespace PrestaShopBundle\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
@@ -36,69 +15,61 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\FeatureFlagRepository")
+ *
  * @ORM\Table()
+ *
  * @UniqueEntity("name")
- * @ApiResource()
  */
 class FeatureFlag
 {
     /**
-     * @var int
-     *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_feature_flag", type="integer", options={"unsigned":true})
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="name", type="string", length=191, unique=true)
      */
-    private $name;
+    private string $name;
 
     /**
-     * @var bool
-     *
+     * @ORM\Column(name="type", type="string", length=64, options={"default": FeatureFlagSettings::TYPE_DEFAULT})
+     */
+    private string $type;
+
+    /**
      * @ORM\Column(name="state", type="boolean", options={"default":0, "unsigned":true})
      */
-    private $state;
+    private bool $state;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="label_wording", type="string", length=512, options={"default":""})
+     * @ORM\Column(name="label_wording", type="string", length=191, options={"default":""})
      */
-    private $labelWording;
+    private string $labelWording;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="label_domain", type="string", length=255, options={"default":""})
      */
-    private $labelDomain;
+    private string $labelDomain;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="description_wording", type="string", length=512, options={"default":""})
+     * @ORM\Column(name="description_wording", type="string", length=191, options={"default":""})
      */
-    private $descriptionWording;
+    private string $descriptionWording;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="description_domain", type="string", length=255, options={"default":""})
      */
-    private $descriptionDomain;
+    private string $descriptionDomain;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="stability", type="string", length=64, options={"default":"beta"})
      */
-    private $stability;
+    private string $stability;
 
     /**
      * @param string $name
@@ -109,6 +80,7 @@ class FeatureFlag
             throw new InvalidArgumentException('Feature flag name cannot be empty');
         }
         $this->name = $name;
+        $this->type = FeatureFlagSettings::TYPE_DEFAULT;
         $this->state = false;
         $this->descriptionWording = '';
         $this->descriptionDomain = '';
@@ -117,146 +89,108 @@ class FeatureFlag
         $this->stability = FeatureFlagSettings::STABILITY_BETA;
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
     public function isEnabled(): bool
     {
         return $this->state;
     }
 
-    /**
-     * @return self
-     */
-    public function disable(): self
+    public function disable(): static
     {
         $this->state = false;
 
         return $this;
     }
 
-    /**
-     * @return self
-     */
-    public function enable(): self
+    public function enable(): static
     {
         $this->state = true;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLabelWording(): string
     {
         return $this->labelWording;
     }
 
-    /**
-     * @param string $labelWording
-     *
-     * @return self
-     */
-    public function setLabelWording(string $labelWording): self
+    public function setLabelWording(string $labelWording): static
     {
         $this->labelWording = $labelWording;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLabelDomain(): string
     {
         return $this->labelDomain;
     }
 
-    /**
-     * @param string $labelDomain
-     *
-     * @return self
-     */
-    public function setLabelDomain(string $labelDomain): self
+    public function setLabelDomain(string $labelDomain): static
     {
         $this->labelDomain = $labelDomain;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDescriptionWording(): string
     {
         return $this->descriptionWording;
     }
 
-    /**
-     * @param string $descriptionWording
-     *
-     * @return self
-     */
-    public function setDescriptionWording(string $descriptionWording): self
+    public function setDescriptionWording(string $descriptionWording): static
     {
         $this->descriptionWording = $descriptionWording;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDescriptionDomain(): string
     {
         return $this->descriptionDomain;
     }
 
-    /**
-     * @param string $descriptionDomain
-     *
-     * @return self
-     */
-    public function setDescriptionDomain(string $descriptionDomain): self
+    public function setDescriptionDomain(string $descriptionDomain): static
     {
         $this->descriptionDomain = $descriptionDomain;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getStability(): string
     {
         return $this->stability;
     }
 
-    /**
-     * @param string $stability
-     *
-     * @return self
-     */
-    public function setStability(string $stability): self
+    public function setStability(string $stability): static
     {
         $this->stability = $stability;
+
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getOrderedTypes(): array
+    {
+        return explode(',', $this->type);
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

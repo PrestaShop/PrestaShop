@@ -34,20 +34,7 @@ $(function(){
 		var panel_selection_single_selection = panel_selection.find("#modules-position-single-selection");
 		var panel_selection_multiple_selection = panel_selection.find("#modules-position-multiple-selection");
 
-		var panel_selection_original_y = panel_selection.offset().top;
-		var panel_selection_original_y_top_margin = 111;
-
-		panel_selection.css("position", "relative").hide();
-
-		$(window).on("scroll", function (event) {
-			var scroll_top = $(window).scrollTop();
-			panel_selection.css(
-				"top",
-				scroll_top < panel_selection_original_y_top_margin
-					? 0
-					: scroll_top - panel_selection_original_y + panel_selection_original_y_top_margin
-			);
-		});
+		panel_selection.hide();
 
 		var modules_list = $(".modules-position-checkbox");
 
@@ -72,7 +59,7 @@ $(function(){
 			}
 		});
 
-		panel_selection.find("button").click(function () {
+		panel_selection.find("button").on('click', function () {
 			$("button[name='unhookform']").trigger("click");
 		});
 
@@ -88,16 +75,16 @@ $(function(){
 
 		var show_modules = $("#show_modules");
 		show_modules.select2();
-		show_modules.bind("change", function () {
+		show_modules.on("change", function () {
 			modulesPositionFilterHooks();
 		});
 
 		var hook_position = $("#hook_position");
-		hook_position.bind("change", function () {
+		hook_position.on("change", function () {
 			modulesPositionFilterHooks();
 		});
 
-		$('#hook_search').bind('input', function () {
+		$('#hook_search').on('input', function () {
 			modulesPositionFilterHooks();
 		});
 
@@ -161,7 +148,7 @@ $(function(){
 	//
 	// Used for the anchor module page
 	//
-	$("#hook_module_form").find("select[name='id_module']").change(function(){
+	$("#hook_module_form").find("select[name='id_module']").on('change', function(){
 
 		var $this = $(this);
 		var hook_select = $("select[name='id_hook']");
@@ -179,7 +166,7 @@ $(function(){
 				dataType: 'json',
 				data: {
 					action: 'getPossibleHookingListForModule',
-					tab: 'AdminModulesPositions',
+					controller: 'AdminModulesPositions',
 					ajax: 1,
 					module_id: $this.val(),
 					token: token

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Import;
@@ -35,6 +15,8 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Class ImageCopier copies images during import process.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by \PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader for the download; image association and thumbnail generation are handled by the CQRS image commands
  */
 final class ImageCopier
 {
@@ -80,7 +62,7 @@ final class ImageCopier
      * Copy an image located in $url and save it in a path.
      *
      * @param int $entityId id of product or category (set in entity)
-     * @param int $imageId id of the image if watermark enabled
+     * @param int $imageId id of the image if watermark enabled (calls hook actionWatermark)
      * @param string $url path or url to use
      * @param string $entity 'products' or 'categories'
      * @param bool $regenerate
@@ -91,7 +73,6 @@ final class ImageCopier
     {
         $tmpDir = $this->configuration->get('_PS_TMP_IMG_DIR_');
         $tmpFile = tempnam($tmpDir, 'ps_import');
-        $watermarkTypes = explode(',', $this->configuration->get('WATERMARK_TYPES'));
 
         switch ($entity) {
             default:
@@ -116,6 +97,13 @@ final class ImageCopier
         $url = urldecode(trim($url));
         $parsedUrl = parse_url($url);
 
+        // A malformed URL would blow up in http_build_url() below.
+        if ($parsedUrl === false) {
+            @unlink($tmpFile);
+
+            return false;
+        }
+
         if (isset($parsedUrl['path'])) {
             $uri = ltrim($parsedUrl['path'], '/');
             $parts = explode('/', $uri);
@@ -136,7 +124,8 @@ final class ImageCopier
 
         $origTmpfile = $tmpFile;
 
-        if ($this->tools->copy($url, $tmpFile)) {
+        // Untrusted URL (import): use the SSRF-hardened download path.
+        if ($this->tools->copyFromUntrustedSource($url, $tmpFile)) {
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (!ImageManager::checkImageMemoryLimit($tmpFile)) {
                 @unlink($tmpFile);
@@ -182,7 +171,8 @@ final class ImageCopier
                         $targetHeight,
                         5,
                         $sourceWidth,
-                        $sourceHeight
+                        $sourceHeight,
+                        $imageType['image_fitment']
                     )) {
                         // the last image should not be added in the candidate list if it's bigger than the original image
                         if ($targetWidth <= $sourceWidth && $targetHeight <= $sourceHeight) {
@@ -234,7 +224,7 @@ final class ImageCopier
         $pathInfos = array_reverse($pathInfos);
         $path = '';
         foreach ($pathInfos as $pathInfo) {
-            list($width, $height, $path) = $pathInfo;
+            [$width, $height, $path] = $pathInfo;
             if ($width >= $targetWidth && $height >= $targetHeight) {
                 return $path;
             }

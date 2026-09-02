@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 class HelperShopCore extends Helper
 {
@@ -72,9 +52,9 @@ class HelperShopCore extends Helper
 
         $current_shop_name = '';
         if ($this->noShopSelection()) {
-            $current_shop_name = Translate::getAdminTranslation('All shops');
+            $current_shop_name = Context::getContext()->getTranslator()->trans('All stores');
         } elseif ($shop_context == Shop::CONTEXT_GROUP) {
-            $current_shop_name = sprintf(Translate::getAdminTranslation('%s group'), $tree[Shop::getContextShopGroupID()]['name']);
+            $current_shop_name = sprintf(Context::getContext()->getTranslator()->trans('%s group'), $tree[Shop::getContextShopGroupID()]['name']);
         } else {
             foreach ($tree as $group_data) {
                 foreach ($group_data['shops'] as $shop_id => $shop_data) {
@@ -98,7 +78,7 @@ class HelperShopCore extends Helper
         $shop_context = Shop::getContext();
         $context = Context::getContext();
 
-        return $shop_context == Shop::CONTEXT_ALL ||
-        ($context->controller->multishop_context_group == false && $shop_context == Shop::CONTEXT_GROUP);
+        return $shop_context == Shop::CONTEXT_ALL
+        || ($context->controller->multishop_context_group == false && $shop_context == Shop::CONTEXT_GROUP);
     }
 }

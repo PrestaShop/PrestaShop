@@ -1,4 +1,8 @@
 /**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+/**
  * modal confirmation management
  */
 window.modalConfirmation = (function () {
@@ -17,14 +21,14 @@ window.modalConfirmation = (function () {
     },
   };
 
-  modal.find('button.cancel').click(() => {
+  modal.find('button.cancel').on('click', () => {
     if (typeof actionsCallbacks.onCancel === 'function') {
       actionsCallbacks.onCancel();
     }
     modalConfirmation.hide();
   });
 
-  modal.find('button.continue').click(() => {
+  modal.find('button.continue').on('click', () => {
     if (typeof actionsCallbacks.onContinue === 'function') {
       actionsCallbacks.onContinue();
     }

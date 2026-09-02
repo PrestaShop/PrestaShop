@@ -1,26 +1,20 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-import productsPage from '@pages/BO/catalog/products';
-import addProductPage from '@pages/BO/catalog/products/add';
-// Import FO pages
-import productPage from '@pages/FO/product';
-import homePage from '@pages/FO/home';
-import searchResultsPage from '@pages/FO/searchResults';
-
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boLoginPage,
+  boProductsPage,
+  boProductsCreatePage,
+  boProductSettingsPage,
+  type BrowserContext,
+  FakerProduct,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsStock_allowOrderingOutOfStock';
 
@@ -28,146 +22,173 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductData = new ProductData({type: 'Standard product', quantity: 0});
+  const productData: FakerProduct = new FakerProduct({type: 'standard', quantity: 0});
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  describe('Allow ordering of out-of-stock products', async () => {
+    it('should login in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
 
-  it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
 
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.productsLink,
-    );
-    await productsPage.closeSfToolBar(page);
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
+    });
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-  it('should go to create product page and create a product', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
+      );
+      await boProductsPage.closeSfToolBar(page);
 
-    await productsPage.goToAddProductPage(page);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
+    });
 
-    const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
-    await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
-  });
+    it('should click on new product button and go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductPage', baseContext);
 
-  it('should go to \'Shop parameters > Product Settings\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
 
-    await addProductPage.goToSubMenu(
-      page,
-      addProductPage.shopParametersParentLink,
-      addProductPage.productSettingsLink,
-    );
+      await boProductsPage.selectProductType(page, productData.type);
 
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
-  });
+      await boProductsPage.clickOnAddNewProduct(page);
 
-  const tests = [
-    {args: {action: 'enable', enable: true}},
-    {args: {action: 'disable', enable: false}},
-  ];
-  tests.forEach((test) => {
-    it(`should ${test.args.action} allow ordering of out-of-stock products`, async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `${test.args.action}AllowOrderingOutOfStock`,
-        baseContext,
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
+    });
+
+    it('should create standard product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
+
+      const createProductMessage = await boProductsCreatePage.setProduct(page, productData);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
+    });
+
+    it('should go to \'Shop parameters > Product Settings\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
+
+      await boProductsCreatePage.goToSubMenu(
+        page,
+        boProductsCreatePage.shopParametersParentLink,
+        boProductsCreatePage.productSettingsLink,
       );
 
-      const result = await productSettingsPage.setAllowOrderingOutOfStockStatus(page, test.args.enable);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
-    it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${test.args.action}`, baseContext);
+    const tests = [
+      {args: {action: 'enable', enable: true}},
+      {args: {action: 'disable', enable: false}},
+    ];
+    tests.forEach((test) => {
+      it(`should ${test.args.action} allow ordering of out-of-stock products`, async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `${test.args.action}AllowOrderingOutOfStock`,
+          baseContext,
+        );
 
-      // Go to FO
-      page = await productSettingsPage.viewMyShop(page);
+        const result = await boProductSettingsPage.setAllowOrderingOutOfStockStatus(page, test.args.enable);
+        expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
+      });
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page was not opened').to.be.true;
+      it('should view my shop', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${test.args.action}`, baseContext);
+
+        // Go to FO
+        page = await boProductSettingsPage.viewMyShop(page);
+
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+        expect(isHomePage, 'Home page was not opened').to.eq(true);
+      });
+
+      it('should search for the product and go to product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToProductPage${test.args.action}`, baseContext);
+
+        // Search and go to product page
+        await foHummingbirdHomePage.searchProduct(page, productData.name);
+        await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
+
+        const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
+        expect(pageTitle).to.contains(productData.name);
+      });
+
+      it('should check add to cart button is enabled or not', async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `checkOrderingOutOfStock${test.args.action}`,
+          baseContext,
+        );
+
+        // Check add to cart button
+        const lastQuantityIsVisible = await foHummingbirdProductPage.isAddToCartButtonEnabled(page);
+        expect(lastQuantityIsVisible).to.be.equal(test.args.enable);
+      });
+
+      it('should go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${test.args.action}`, baseContext);
+
+        // Go back to BO
+        page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
+
+        const pageTitle = await boProductSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
+      });
     });
 
-    it('should search for the product and go to product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goToProductPage${test.args.action}`, baseContext);
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDeleteProduct', baseContext);
 
-      // Search and go to product page
-      await homePage.searchProduct(page, productData.name);
-      await searchResultsPage.goToProductPage(page, 1);
-
-      const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productData.name);
-    });
-
-    it('should check add to cart button is enabled or not', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkOrderingOutOfStock${test.args.action}`,
-        baseContext,
+      await boProductSettingsPage.goToSubMenu(
+        page,
+        boProductSettingsPage.catalogParentLink,
+        boProductSettingsPage.productsLink,
       );
 
-      // Check add to cart button
-      const lastQuantityIsVisible = await productPage.isAddToCartButtonEnabled(page);
-      await expect(lastQuantityIsVisible).to.be.equal(test.args.enable);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${test.args.action}`, baseContext);
+    it('should click on delete product button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
 
-      // Go back to BO
-      page = await productPage.closePage(browserContext, page, 0);
-
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const isModalVisible = await boProductsPage.clickOnDeleteProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
     });
-  });
 
-  it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDeleteProduct', baseContext);
+    it('should delete product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-    await productSettingsPage.goToSubMenu(
-      page,
-      productSettingsPage.catalogParentLink,
-      productSettingsPage.productsLink,
-    );
+      const textMessage = await boProductsPage.clickOnConfirmDialogButton(page);
+      expect(textMessage).to.equal(boProductsPage.successfulDeleteMessage);
+    });
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
-  it('should delete product', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+      await boProductsPage.resetFilter(page);
 
-    const deleteTextResult = await productsPage.deleteProduct(page, productData);
-    await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
-  });
-
-  it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
-
-    await productsPage.resetFilterCategory(page);
-
-    const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProducts).to.be.above(0);
+      const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfProducts).to.be.above(0);
+    });
   });
 });

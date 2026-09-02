@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -39,9 +19,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\UpdateProductCommandsBuilder;
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 
-class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands
@@ -476,7 +456,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         ];
 
         $command = $this->getSingleShopCommand();
-        $command->setEan13('13');
+        $command->setGtin('13');
         yield [
             [
                 'details' => [
@@ -550,7 +530,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->setLocalizedLinkRewrites($localizedLinkRewrites)
             ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
             ->setIsbn('0-8044-2957-X')
-            ->setEan13('13')
+            ->setGtin('13')
             ->setUpc('1345')
             ->setMpn('mpn')
             ->setReference('0123456789')
@@ -753,8 +733,8 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             2 => 'English summary',
         ];
 
-        $command = $this->getAllShopsCommand();
-        $command
+        $command = $this
+            ->getSingleShopCommand()
             ->setLocalizedNames($localizedNames)
             ->setLocalizedDescriptions($localizedDescriptions)
             ->setLocalizedShortDescriptions($localizedShortDescriptions)
@@ -762,6 +742,29 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'header' => [
+                    'name' => $localizedNames,
+                ],
+                'description' => [
+                    'description' => $localizedDescriptions,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'description' => false,
+                    'description_short' => $localizedShortDescriptions,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this
+            ->getAllShopsCommand()
+            ->setActive(true)
+            ->setLocalizedNames($localizedNames)
+            ->setLocalizedDescriptions($localizedDescriptions)
+            ->setLocalizedShortDescriptions($localizedShortDescriptions)
+        ;
+        yield 'all shops name is only filled in all shops command if product is being activated in all shops' => [
+            [
+                'header' => [
+                    'active' => true,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'active' => true,
                     'name' => $localizedNames,
                     self::MODIFY_ALL_SHOPS_PREFIX . 'name' => true,
                 ],
@@ -775,38 +778,59 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = $this->getSingleShopCommand();
-        $command
+        $command = $this
+            ->getAllShopsCommand()
+            ->setActive(false)
             ->setLocalizedNames($localizedNames)
-            ->setLocalizedDescriptions($localizedDescriptions)
-            ->setLocalizedShortDescriptions($localizedShortDescriptions)
         ;
-        yield [
+        yield 'all shops name is only filled in all shops command if product is not being activated in all shops' => [
             [
                 'header' => [
+                    'active' => false,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'active' => true,
                     'name' => $localizedNames,
-                ],
-                'description' => [
-                    'description' => $localizedDescriptions,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'description' => false,
-                    'description_short' => $localizedShortDescriptions,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'name' => true,
                 ],
             ],
             [$command],
         ];
 
-        $allShopsCommand = $this->getAllShopsCommand();
-        $singleCommand = $this->getSingleShopCommand();
-        $singleCommand
-            ->setLocalizedDescriptions($localizedDescriptions)
+        $command = $this
+            ->getSingleShopCommand()
+            ->setActive(false)
         ;
-        $allShopsCommand
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setLocalizedNames($localizedNames)
+        ;
+        yield 'all shops name is only filled in all shops command if product is not being activated in single shop' => [
+            [
+                'header' => [
+                    'active' => false,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'active' => false,
+                    'name' => $localizedNames,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'name' => true,
+                ],
+            ],
+            [$command, $allShopsCommand],
+        ];
+
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
             ->setLocalizedNames($localizedNames)
             ->setLocalizedShortDescriptions($localizedShortDescriptions)
         ;
-        yield [
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
+            ->setLocalizedNames($localizedNames)
+            ->setActive(true)
+            ->setLocalizedDescriptions($localizedDescriptions)
+        ;
+        yield 'all shops name is filled in both single and all shops commands when product is being activated in single shop' => [
             [
                 'header' => [
+                    'active' => true,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'active' => false,
                     'name' => $localizedNames,
                     self::MODIFY_ALL_SHOPS_PREFIX . 'name' => true,
                 ],
@@ -817,17 +841,17 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     self::MODIFY_ALL_SHOPS_PREFIX . 'description_short' => true,
                 ],
             ],
-            [$singleCommand, $allShopsCommand],
+            [$singleShopCommand, $allShopsCommand],
         ];
 
-        $allShopsCommand = $this->getAllShopsCommand();
-        $singleCommand = $this->getSingleShopCommand();
-        $singleCommand
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setLocalizedDescriptions($localizedDescriptions)
+        ;
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
             ->setLocalizedNames($localizedNames)
             ->setLocalizedShortDescriptions($localizedShortDescriptions)
-        ;
-        $allShopsCommand
-            ->setLocalizedDescriptions($localizedDescriptions)
         ;
         yield [
             [
@@ -841,11 +865,13 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     self::MODIFY_ALL_SHOPS_PREFIX . 'description_short' => false,
                 ],
             ],
-            [$singleCommand, $allShopsCommand],
+            [$singleShopCommand, $allShopsCommand],
         ];
 
-        $command = $this->getAllShopsCommand();
-        $command->setCondition(ProductCondition::NEW);
+        $command = $this
+            ->getAllShopsCommand()
+            ->setCondition(ProductCondition::NEW)
+        ;
         yield [
             [
                 'details' => [
@@ -856,8 +882,10 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = $this->getAllShopsCommand();
-        $command->setShowCondition(false);
+        $command = $this
+            ->getAllShopsCommand()
+            ->setShowCondition(false)
+        ;
         yield [
             [
                 'details' => [
@@ -869,8 +897,10 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = $this->getAllShopsCommand();
-        $command->setShowPrice(false);
+        $command = $this
+            ->getAllShopsCommand()
+            ->setShowPrice(false)
+        ;
         yield [
             [
                 'options' => [
@@ -884,8 +914,10 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = $this->getAllShopsCommand();
-        $command->setAvailableForOrder(true);
+        $command = $this
+            ->getAllShopsCommand()
+            ->setAvailableForOrder(true)
+        ;
         yield [
             [
                 'options' => [
@@ -898,8 +930,10 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = $this->getAllShopsCommand();
-        $command->setVisibility(ProductVisibility::INVISIBLE);
+        $command = $this
+            ->getAllShopsCommand()
+            ->setVisibility(ProductVisibility::INVISIBLE)
+        ;
         yield [
             [
                 'options' => [
@@ -912,8 +946,10 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = $this->getAllShopsCommand();
-        $command->setOnlineOnly(false);
+        $command = $this
+            ->getAllShopsCommand()
+            ->setOnlineOnly(false)
+        ;
         yield [
             [
                 'options' => [
@@ -926,10 +962,14 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $singleShopCommand = $this->getSingleShopCommand();
-        $singleShopCommand->setVisibility(ProductVisibility::VISIBLE_EVERYWHERE);
-        $allShopsCommand = $this->getAllShopsCommand();
-        $allShopsCommand->setAvailableForOrder(true);
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
+            ->setVisibility(ProductVisibility::VISIBLE_EVERYWHERE)
+        ;
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setAvailableForOrder(true)
+        ;
         yield [
             [
                 'options' => [
@@ -958,7 +998,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->getSingleShopCommand()
             ->setLocalizedMetaTitles($localizedMetaTitles)
         ;
-        yield 'meta title' => [
+        yield 'meta title multishop' => [
             [
                 'seo' => [
                     'meta_title' => $localizedMetaTitles,
@@ -971,7 +1011,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->getSingleShopCommand()
             ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
         ;
-        yield 'meta description' => [
+        yield 'meta description multishop' => [
             [
                 'seo' => [
                     'meta_description' => $localizedMetaDescriptions,
@@ -988,7 +1028,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->getSingleShopCommand()
             ->setLocalizedLinkRewrites($localizedLinkRewrites)
         ;
-        yield 'link rewrite' => [
+        yield 'link rewrite multishop' => [
             [
                 'seo' => [
                     'link_rewrite' => $localizedLinkRewrites,
@@ -1001,7 +1041,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->getSingleShopCommand()
             ->setRedirectOption(RedirectType::TYPE_NOT_FOUND, 0)
         ;
-        yield 'redirect not found' => [
+        yield 'redirect not found multishop' => [
             [
                 'seo' => [
                     'redirect_option' => [
@@ -1016,7 +1056,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->getSingleShopCommand()
             ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
         ;
-        yield 'redirect to product' => [
+        yield 'redirect to product multishop' => [
             [
                 'seo' => [
                     'redirect_option' => [
@@ -1034,7 +1074,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->getSingleShopCommand()
             ->setRedirectOption(RedirectType::TYPE_CATEGORY_TEMPORARY, 51)
         ;
-        yield 'redirect to category' => [
+        yield 'redirect to category multishop' => [
             [
                 'seo' => [
                     'redirect_option' => [
@@ -1057,8 +1097,8 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             2 => 'Available later en',
         ];
 
-        $singleShopCommand = $this->getSingleShopCommand();
-        $singleShopCommand
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
             ->setVisibility(ProductVisibility::VISIBLE_EVERYWHERE)
             ->setLocalizedShortDescriptions($localizedShortDescriptions)
             ->setLocalizedMetaTitles($localizedMetaTitles)
@@ -1072,14 +1112,13 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 1 => 'Out of stock',
                 2 => 'Isparduota',
             ])
-            ->setActive(true)
             ->setLowStockThreshold(10)
             ->setLocalizedAvailableLaterLabels($localizedAvailableLaterLabels)
             ->setAvailableDate(new DateTime('2022-10-11'))
         ;
 
-        $allShopsCommand = $this->getAllShopsCommand();
-        $allShopsCommand
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
             ->setAvailableForOrder(true)
             ->setLocalizedNames($localizedNames)
             ->setLocalizedDescriptions($localizedDescriptions)
@@ -1100,7 +1139,6 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'header' => [
                     'name' => $localizedNames,
                     self::MODIFY_ALL_SHOPS_PREFIX . 'name' => true,
-                    'active' => true,
                 ],
                 'description' => [
                     'description' => $localizedDescriptions,

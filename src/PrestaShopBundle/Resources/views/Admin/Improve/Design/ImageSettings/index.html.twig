@@ -1,0 +1,27 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  <div class="alert alert-danger">
+    {{ 'By default, all images settings are already installed in your store. Do not delete them, you will need it!'|trans({}, 'Admin.Design.Help') }}
+  </div>
+
+  {% block image_types_listing %}
+     {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {grid: imageTypeGrid} %}
+      {% block grid_panel_extra_content %}
+        {{ include('@PrestaShop/Admin/Improve/Design/ImageSettings/Blocks/delete_image_type.html.twig') }}
+      {% endblock %}
+    {% endembed %}
+  {% endblock %}
+  {{ include('@PrestaShop/Admin/Improve/Design/ImageSettings/form-settings.html.twig') }}
+  {{ include('@PrestaShop/Admin/Improve/Design/ImageSettings/form-regenerate-thumbnails.html.twig') }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/image_settings.bundle.js') }}"></script>
+{% endblock %}

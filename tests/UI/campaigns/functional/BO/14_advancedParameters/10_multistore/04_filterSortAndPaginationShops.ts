@@ -1,129 +1,115 @@
-// Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
+import setMultiStoreStatus from '@commonTests/BO/advancedParameters/multistore';
 
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import generalPage from '@pages/BO/shopParameters/general';
-import multiStorePage from '@pages/BO/advancedParameters/multistore';
-import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
-import shopPage from '@pages/BO/advancedParameters/multistore/shop';
-
-// Import data
-import ShopData from '@data/faker/shop';
-
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boMultistorePage,
+  boMultistoreShopPage,
+  boMultistoreShopCreatePage,
+  type BrowserContext,
+  FakerShop,
+  type Page,
+  utilsCore,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_advancedParameters_multistore_filterSortAndPaginationShops';
 
-/*
-Enable multistore
-Create 20 shops
-Filter by: Id, shop name, shop group, root category and URL
-Pagination between pages
-Sort table by: Id, shop name, shop group, root category and URL
-Delete the created shop
-Disable multistore
+/**
+ * Enable multistore
+ * Create 20 shops
+ * Filter by: Id, shop name, shop group, root category and URL
+ * Pagination between pages
+ * Sort table by: Id, shop name, shop group, root category and URL
+ * Delete the created shop
+ * Disable multistore
  */
 describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination shops', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const shopCreate: ShopData = new ShopData({name: 'todelete0', shopGroup: 'Default', categoryRoot: 'Home'});
+  const shopCreate: FakerShop = new FakerShop({name: 'todelete0', shopGroup: 'Default', categoryRoot: 'Home'});
 
-  // before and after functions
+  // Pre-condition: Enable multistore
+  setMultiStoreStatus(true, `${baseContext}_preTest`);
+
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
-  });
-
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
-
-  // 1 : Enable multi store
-  describe('Enable \'Multistore\'', async () => {
-    it('should go to \'Shop Parameters > General\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.shopParametersGeneralLink,
-      );
-      await generalPage.closeSfToolBar(page);
-
-      const pageTitle = await generalPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(generalPage.pageTitle);
-    });
-
-    it('should enable \'Multistore\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'enableMultiStore', baseContext);
-
-      const result = await generalPage.setMultiStoreStatus(page, true);
-      await expect(result).to.contains(generalPage.successfulUpdateMessage);
-    });
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // 2 : Go to multistore page
   describe('Go to \'Multistore\' page and create the first shop', async () => {
+    it('should login in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
+    });
+
     it('should go to \'Advanced Parameters > Multistore\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.multistoreLink,
+        boDashboardPage.advancedParametersLink,
+        boDashboardPage.multistoreLink,
       );
-      await multiStorePage.closeSfToolBar(page);
+      await boMultistorePage.closeSfToolBar(page);
 
-      const pageTitle = await multiStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(multiStorePage.pageTitle);
+      const pageTitle = await boMultistorePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMultistorePage.pageTitle);
     });
 
     it('should go to add new shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewShopsPage', baseContext);
 
-      await multiStorePage.goToNewShopPage(page);
+      await boMultistorePage.goToNewShopPage(page);
 
-      const pageTitle = await addShopPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addShopPage.pageTitleCreate);
+      const pageTitle = await boMultistoreShopCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMultistoreShopCreatePage.pageTitleCreate);
     });
 
     it('should create shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createFirstShop', baseContext);
 
-      const textResult = await addShopPage.setShop(page, shopCreate);
-      await expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
+      const textResult = await boMultistoreShopCreatePage.setShop(page, shopCreate);
+      expect(textResult).to.contains(boMultistorePage.successfulCreationMessage);
     });
   });
 
   // 3 : Create 19 shops
   describe('Create 19 shops', async () => {
     Array(19).fill(0, 0, 19).forEach((test: number, index: number) => {
-      const shopCreate: ShopData = new ShopData({name: `Todelete${index + 1}`, shopGroup: 'Default', categoryRoot: 'Home'});
+      const shopCreate: FakerShop = new FakerShop({
+        name: `Todelete${index + 1}`,
+        shopGroup: 'Default',
+        categoryRoot: 'Home',
+      });
       it('should go to add new shop page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewShopsPage${index}`, baseContext);
 
-        await shopPage.goToNewShopPage(page);
+        await boMultistoreShopPage.goToNewShopPage(page);
 
-        const pageTitle = await addShopPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addShopPage.pageTitleCreate);
+        const pageTitle = await boMultistoreShopCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boMultistoreShopCreatePage.pageTitleCreate);
       });
 
       it(`should create shop n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createShop${index}`, baseContext);
 
-        const textResult = await addShopPage.setShop(page, shopCreate);
-        await expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
+        const textResult = await boMultistoreShopCreatePage.setShop(page, shopCreate);
+        expect(textResult).to.contains(boMultistorePage.successfulCreationMessage);
       });
     });
   });
@@ -131,30 +117,30 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   // 4 : Filter shops
   describe('Filter shops table', async () => {
     [
-      {args: {filterBy: 'id_shop', filterValue: '10'}},
-      {args: {filterBy: 'a!name', filterValue: 'Todelete10'}},
-      {args: {filterBy: 'gs!name', filterValue: 'Default'}},
-      {args: {filterBy: 'cl!name', filterValue: 'Home'}},
-      {args: {filterBy: 'url', filterValue: 'Click here'}},
-    ].forEach((test: {args: {filterBy: string, filterValue: string}}, index: number) => {
-      it(`should filter list by ${test.args.filterBy}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `filterBy_${test.args.filterBy}`, baseContext);
+      {filterBy: 'id_shop', filterValue: '10'},
+      {filterBy: 'a!name', filterValue: 'Todelete10'},
+      {filterBy: 'gs!name', filterValue: 'Default'},
+      {filterBy: 'cl!name', filterValue: 'Home'},
+      {filterBy: 'url', filterValue: 'Click here'},
+    ].forEach((arg: {filterBy: string, filterValue: string }, index: number) => {
+      it(`should filter list by ${arg.filterBy}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `filterBy_${arg.filterBy}`, baseContext);
 
-        await shopPage.filterTable(page, test.args.filterBy, test.args.filterValue);
+        await boMultistoreShopPage.filterTable(page, arg.filterBy, arg.filterValue);
 
-        const numberOfElementAfterFilter = await shopPage.getNumberOfElementInGrid(page);
+        const numberOfElementAfterFilter = await boMultistoreShopPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
-          const textColumn = await shopPage.getTextColumn(page, i, test.args.filterBy);
-          await expect(textColumn).to.contains(test.args.filterValue);
+          const textColumn = await boMultistoreShopPage.getTextColumn(page, i, arg.filterBy);
+          expect(textColumn).to.contains(arg.filterValue);
         }
       });
 
       it('should reset filter and check the number of shops', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter_${index}`, baseContext);
 
-        const numberOfElement = await shopPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfElement).to.be.above(20);
+        const numberOfElement = await boMultistoreShopPage.resetAndGetNumberOfLines(page);
+        expect(numberOfElement).to.be.above(20);
       });
     });
   });
@@ -164,28 +150,28 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await shopPage.selectPaginationLimit(page, 20);
+      const paginationNumber = await boMultistoreShopPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await shopPage.paginationNext(page);
+      const paginationNumber = await boMultistoreShopPage.paginationNext(page);
       expect(paginationNumber).to.equal('2');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await shopPage.paginationPrevious(page);
+      const paginationNumber = await boMultistoreShopPage.paginationPrevious(page);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await shopPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boMultistoreShopPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -194,92 +180,84 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   describe('Sort shops table', async () => {
     [
       {
-        args:
-          {
-            testIdentifier: 'sortByIdDesc', sortBy: 'id_shop', sortDirection: 'down', isFloat: true,
-          },
+        testIdentifier: 'sortByIdDesc',
+        sortBy: 'id_shop',
+        sortDirection: 'down',
+        isFloat: true,
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByShopNameAsc', sortBy: 'a!name', sortDirection: 'up',
-          },
+        testIdentifier: 'sortByShopNameAsc',
+        sortBy: 'a!name',
+        sortDirection: 'up',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByShopNameDesc', sortBy: 'a!name', sortDirection: 'down',
-          },
+        testIdentifier: 'sortByShopNameDesc',
+        sortBy: 'a!name',
+        sortDirection: 'down',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByShopGroupAsc', sortBy: 'gs!name', sortDirection: 'up',
-          },
+        testIdentifier: 'sortByShopGroupAsc',
+        sortBy: 'gs!name',
+        sortDirection: 'up',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByShopGroupDesc', sortBy: 'gs!name', sortDirection: 'down',
-          },
+        testIdentifier: 'sortByShopGroupDesc',
+        sortBy: 'gs!name',
+        sortDirection: 'down',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByMessageAsc', sortBy: 'cl!name', sortDirection: 'up',
-          },
+        testIdentifier: 'sortByMessageAsc',
+        sortBy: 'cl!name',
+        sortDirection: 'up',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByRootCategoryDesc', sortBy: 'cl!name', sortDirection: 'down',
-          },
+        testIdentifier: 'sortByRootCategoryDesc',
+        sortBy: 'cl!name',
+        sortDirection: 'down',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByURLAsc', sortBy: 'url', sortDirection: 'up',
-          },
+        testIdentifier: 'sortByURLAsc',
+        sortBy: 'url',
+        sortDirection: 'up',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByURLDesc', sortBy: 'url', sortDirection: 'down',
-          },
+        testIdentifier: 'sortByURLDesc',
+        sortBy: 'url',
+        sortDirection: 'down',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByIdAsc', sortBy: 'id_shop', sortDirection: 'up', isFloat: true,
-          },
+        testIdentifier: 'sortByIdAsc',
+        sortBy: 'id_shop',
+        sortDirection: 'up',
+        isFloat: true,
       },
-    ].forEach((test: {args: {testIdentifier: string, sortBy: string, sortDirection: string, isFloat?: boolean}}) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+    ].forEach((arg: {testIdentifier: string, sortBy: string, sortDirection: string, isFloat?: boolean}) => {
+      it(`should sort by '${arg.sortBy}' '${arg.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', arg.testIdentifier, baseContext);
 
-        const nonSortedTable = await shopPage.getAllRowsColumnContent(page, test.args.sortBy);
-        await shopPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const nonSortedTable = await boMultistoreShopPage.getAllRowsColumnContent(page, arg.sortBy);
+        await boMultistoreShopPage.sortTable(page, arg.sortBy, arg.sortDirection);
 
-        const sortedTable = await shopPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boMultistoreShopPage.getAllRowsColumnContent(page, arg.sortBy);
 
-        if (test.args.isFloat) {
+        if (arg.isFloat) {
           const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          if (arg.sortDirection === 'up') {
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+          if (arg.sortDirection === 'up') {
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -292,36 +270,14 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       it(`should delete the shop 'Todelete${index}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteShop${index}`, baseContext);
 
-        await shopPage.filterTable(page, 'a!name', `Todelete${index}`);
+        await boMultistoreShopPage.filterTable(page, 'a!name', `Todelete${index}`);
 
-        const textResult = await shopPage.deleteShop(page, 1);
-        await expect(textResult).to.contains(shopPage.successfulDeleteMessage);
+        const textResult = await boMultistoreShopPage.deleteShop(page, 1);
+        expect(textResult).to.contains(boMultistoreShopPage.successfulDeleteMessage);
       });
     });
   });
 
-  // 8 : Disable multi store
-  describe('Disable \'Multistore\'', async () => {
-    it('should go to \'Shop Parameters > General\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage2', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.shopParametersGeneralLink,
-      );
-
-      await generalPage.closeSfToolBar(page);
-
-      const pageTitle = await generalPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(generalPage.pageTitle);
-    });
-
-    it('should disable \'Multistore\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableMultiStore', baseContext);
-
-      const result = await generalPage.setMultiStoreStatus(page, false);
-      await expect(result).to.contains(generalPage.successfulUpdateMessage);
-    });
-  });
+  // Post-condition : Disable multi store
+  setMultiStoreStatus(false, `${baseContext}_postTest`);
 });

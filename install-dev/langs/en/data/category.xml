@@ -5,7 +5,6 @@
     <description/>
     <link_rewrite>root</link_rewrite>
     <meta_title/>
-    <meta_keywords/>
     <meta_description/>
   </category>
   <category id="Home" id_shop="1">
@@ -13,7 +12,6 @@
     <description/>
     <link_rewrite>home</link_rewrite>
     <meta_title/>
-    <meta_keywords/>
     <meta_description/>
   </category>
 </entity_category>

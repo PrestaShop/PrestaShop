@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -38,6 +18,8 @@ use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFromOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use SpecificPrice;
 
 class OrderProductRemover
@@ -61,6 +43,7 @@ class OrderProductRemover
     ): CartProductsComparator {
         $cart = new Cart($order->id_cart);
 
+        $this->removeSpecificProductCartRules($order, $orderDetail);
         // Important to remove order cart rule before the product is removed, so that cart rule can detect if it's applied on it
         $this->deleteOrderCartRule($order, $orderDetail, $cart);
 
@@ -116,7 +99,8 @@ class OrderProductRemover
             null,
             true,
             false,
-            false // Do not preserve gift removal
+            false, // Do not preserve gift removal
+            true
         );
     }
 
@@ -125,8 +109,8 @@ class OrderProductRemover
      * @param OrderDetail $orderDetail
      *
      * @throws DeleteProductFromOrderException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function deleteOrderDetail(
         Order $order,
@@ -229,6 +213,37 @@ class OrderProductRemover
         if (!empty($existingSpecificPriceId)) {
             $specificPrice = new SpecificPrice($existingSpecificPriceId);
             $specificPrice->delete();
+        }
+    }
+
+    /**
+     * This method removes cart rules which was applied to specific product when that product is being deleted.
+     *
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     *
+     * @return void
+     */
+    private function removeSpecificProductCartRules(
+        Order $order,
+        OrderDetail $orderDetail
+    ): void {
+        foreach ($order->getCartRules() as $orderCartRule) {
+            $cartRuleId = (int) $orderCartRule['id_cart_rule'];
+            $cartRule = new CartRule($cartRuleId);
+
+            if ($cartRuleId === (int) $cartRule->id && (int) $cartRule->reduction_product !== (int) $orderDetail->product_id) {
+                continue;
+            }
+
+            $orderCartRuleId = (int) $orderCartRule['id_order_cart_rule'];
+            $orderCartRuleObj = new OrderCartRule($orderCartRuleId);
+            if ((int) $orderCartRuleObj->id !== $orderCartRuleId) {
+                continue;
+            }
+
+            $orderCartRuleObj->deleted = true;
+            $orderCartRuleObj->save();
         }
     }
 }

@@ -46,22 +46,12 @@ class Cart extends CartCore
             $this->update();
         }
 
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-		SET `id_address_delivery` = ' . (int) $id_address_new . '
-		WHERE  `id_cart` = ' . (int) $this->id . '
-			AND `id_address_delivery` = ' . (int) $id_address;
-        Db::getInstance()->execute($sql);
-
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'customization`
-			SET `id_address_delivery` = ' . (int) $id_address_new . '
-			WHERE  `id_cart` = ' . (int) $this->id . '
-				AND `id_address_delivery` = ' . (int) $id_address;
         Db::getInstance()->execute($sql);
     }
 
     public function delete()
     {
-        if ($this->OrderExists()) { //NOT delete a cart which is associated with an order
+        if ($this->OrderExists()) { // NOT delete a cart which is associated with an order
             return false;
         }
 

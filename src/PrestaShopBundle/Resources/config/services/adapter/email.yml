@@ -8,5 +8,9 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@translator'
 
+  PrestaShop\PrestaShop\Core\Email\EmailConfigurationTesterInterface: '@prestashop.adapter.email.email_configuration_tester'
+
   prestashop.adapter.email.email_log_eraser:
     class: 'PrestaShop\PrestaShop\Adapter\Email\EmailLogEraser'
+
+  PrestaShop\PrestaShop\Core\Email\EmailLogEraserInterface: '@prestashop.adapter.email.email_log_eraser'

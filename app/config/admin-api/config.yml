@@ -1,0 +1,30 @@
+# Dedicated config for Oauth Endpoint, these are the common rules for all environments (dev, prod, test)
+# They specify the dedicated security rules and routing mostly
+imports:
+  - { resource: security.yml }
+  - { resource: services.yml }
+
+framework:
+  router:
+    resource: "%kernel.project_dir%/app/config/admin-api/routing.yml"
+    strict_requirements: ~
+
+api_platform:
+  formats:
+    json: [ 'application/json', 'application/merge-patch+json' ]
+    # Allow this format for other API endpoint than native endpoint (by default we will use json)
+    jsonld: [ 'application/ld+json' ]
+    # Multipart format for file upload
+    multipart: [ 'multipart/form-data' ]
+  patch_formats:
+    json: [ 'application/merge-patch+json' ]
+  error_formats:
+    json: [ 'application/json' ]
+  mapping:
+    paths:
+      - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
+  oauth:
+    enabled: true
+    type: 'oauth2'
+    flow: 'clientCredentials'
+    tokenUrl: '/admin-api/access_token'

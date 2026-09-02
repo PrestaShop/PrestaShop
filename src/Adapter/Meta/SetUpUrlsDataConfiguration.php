@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Meta;
@@ -45,6 +25,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
      */
     private const CONFIGURATION_FIELDS = [
         'friendly_url',
+        'default_language_url_prefix',
         'accented_url',
         'canonical_url_redirection',
         'disable_apache_multiview',
@@ -87,6 +68,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
 
         return [
             'friendly_url' => (bool) $this->configuration->get('PS_REWRITING_SETTINGS', false, $shopConstraint),
+            'default_language_url_prefix' => (bool) $this->configuration->get('PS_DEFAULT_LANGUAGE_URL_PREFIX', false, $shopConstraint),
             'accented_url' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL', false, $shopConstraint),
             'canonical_url_redirection' => (int) $this->configuration->get('PS_CANONICAL_REDIRECT', 0, $shopConstraint),
             'disable_apache_multiview' => (bool) $this->configuration->get('PS_HTACCESS_DISABLE_MULTIVIEWS', false, $shopConstraint),
@@ -105,6 +87,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
             $shopConstraint = $this->getShopConstraint();
 
             $this->updateConfigurationValue('PS_REWRITING_SETTINGS', 'friendly_url', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_DEFAULT_LANGUAGE_URL_PREFIX', 'default_language_url_prefix', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_ALLOW_ACCENTED_CHARS_URL', 'accented_url', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_CANONICAL_REDIRECT', 'canonical_url_redirection', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_HTACCESS_DISABLE_MULTIVIEWS', 'disable_apache_multiview', $configuration, $shopConstraint);
@@ -151,6 +134,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
             ->setAllowedTypes('friendly_url', 'bool')
+            ->setAllowedTypes('default_language_url_prefix', 'bool')
             ->setAllowedTypes('accented_url', 'bool')
             ->setAllowedTypes('canonical_url_redirection', 'int')
             ->setAllowedTypes('disable_apache_multiview', 'bool')

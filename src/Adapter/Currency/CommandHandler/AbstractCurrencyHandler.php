@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
@@ -30,7 +10,9 @@ use Configuration;
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
@@ -112,9 +94,9 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
     /**
      * @param Currency $entity
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws LocalizationException
      */
     protected function refreshLocalizedData(Currency $entity)
     {
@@ -125,7 +107,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
             ];
         }
 
-        //This method will insert the missing localized names/symbols and detect if the currency has been modified
+        // This method will insert the missing localized names/symbols and detect if the currency has been modified
         $entity->refreshLocalizedCurrencyData($languagesData, $this->localeRepoCLDR);
     }
 
@@ -151,7 +133,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
 
     /**
      * @param Currency $entity
-     * @param AddCurrencyCommand $command
+     * @param AddCurrencyCommand|AddUnofficialCurrencyCommand $command
      *
      * @throws CannotCreateCurrencyException
      * @throws LanguageNotFoundException
@@ -159,7 +141,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    protected function addEntity(Currency $entity, AddCurrencyCommand $command)
+    protected function addEntity(Currency $entity, AddCurrencyCommand|AddUnofficialCurrencyCommand $command)
     {
         $entity->iso_code = $command->getIsoCode()->getValue();
         $entity->active = $command->isEnabled();
@@ -174,7 +156,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         $this->refreshLocalizedData($entity);
         $this->validateCurrency($entity);
 
-        //IMPORTANT: specify that we want to save null values
+        // IMPORTANT: specify that we want to save null values
         if (false === $entity->save(true, true)) {
             throw new CannotCreateCurrencyException('Failed to create new currency');
         }
@@ -185,7 +167,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
 
     /**
      * @param Currency $entity
-     * @param EditCurrencyCommand $command
+     * @param EditCurrencyCommand|EditUnofficialCurrencyCommand $command
      *
      * @throws CannotUpdateCurrencyException
      * @throws LanguageNotFoundException
@@ -193,7 +175,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    protected function updateEntity(Currency $entity, EditCurrencyCommand $command)
+    protected function updateEntity(Currency $entity, EditCurrencyCommand|EditUnofficialCurrencyCommand $command)
     {
         if (null !== $command->getExchangeRate()) {
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
@@ -216,7 +198,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         $this->refreshLocalizedData($entity);
         $this->validateCurrency($entity);
 
-        //IMPORTANT: specify that we want to save null values
+        // IMPORTANT: specify that we want to save null values
         if (false === $entity->update(true)) {
             throw new CannotUpdateCurrencyException(
                 sprintf(

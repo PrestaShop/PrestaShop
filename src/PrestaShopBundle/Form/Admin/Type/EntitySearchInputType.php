@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -83,11 +63,6 @@ class EntitySearchInputType extends CollectionType
 
             // Default entry type that matches the default template from the prestashop ui kit form theme
             'entry_type' => EntityItemType::class,
-            'entry_options' => [
-                // Force block prefix to easily profit from the UI kit theme (without changing it in the entity type itself)
-                'block_prefix' => 'entity_item',
-            ],
-
             // This is an optional entity type that can be useful to identify which type of entity is searched
             'entity_type' => null,
             // The remote url is used internally by a javascript component which performs a request when search input is used
@@ -166,8 +141,10 @@ class EntitySearchInputType extends CollectionType
             }
         }
 
-        // Force the data in prototype so that placeholders are injected in the prototype template then render the view
-        $prototype->setData($options['prototype_mapping']);
+        // Force the data in prototype so that placeholders are injected in the prototype template then render the view,
+        // unless some default_empty_data has been specified on the prototype, in which case the prototype default data is
+        // preferred over the placeholder
+        $prototype->setData(($prototype->getConfig()->getOption('default_empty_data') ?? []) + $options['prototype_mapping']);
         parent::buildView($view, $form, $options);
 
         // Reformat parameter name for javascript (PHP and JS don't have same naming conventions)
@@ -198,7 +175,7 @@ class EntitySearchInputType extends CollectionType
      *
      * @return string The prefix name
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'entity_search_input';
     }

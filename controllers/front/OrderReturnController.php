@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnLazyArray;
@@ -43,7 +23,7 @@ class OrderReturnControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -55,7 +35,7 @@ class OrderReturnControllerCore extends FrontController
         } else {
             $order_return = new OrderReturn((int) $id_order_return);
             if (Validate::isLoadedObject($order_return) && $order_return->id_customer == $this->context->cookie->id_customer) {
-                $order = new Order((int) ($order_return->id_order));
+                $order = new Order((int) $order_return->id_order);
                 if (Validate::isLoadedObject($order)) {
                     if ($order_return->state == 1) {
                         $this->warning[] = $this->trans('You must wait for confirmation before returning any merchandise.', [], 'Shop.Notifications.Warning');
@@ -82,7 +62,7 @@ class OrderReturnControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         if (Configuration::isCatalogMode()) {
             Tools::redirect('index.php');
@@ -92,7 +72,7 @@ class OrderReturnControllerCore extends FrontController
         $this->setTemplate('customer/order-return');
     }
 
-    public function getTemplateVarOrderReturn($orderReturn)
+    public function getTemplateVarOrderReturn(OrderReturn $orderReturn)
     {
         $orderReturns = OrderReturn::getOrdersReturn($orderReturn->id_customer, $orderReturn->id_order, false, null, $orderReturn->id);
 
@@ -108,7 +88,7 @@ class OrderReturnControllerCore extends FrontController
         return $orderReturnPresenter->present(array_shift($orderReturns));
     }
 
-    public function getTemplateVarProducts($order_return_id, $order)
+    public function getTemplateVarProducts(int $order_return_id, Order $order)
     {
         $products = [];
         $return_products = OrderReturn::getOrdersReturnProducts((int) $order_return_id, $order);
@@ -169,7 +149,7 @@ class OrderReturnControllerCore extends FrontController
         return $product_customizations;
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

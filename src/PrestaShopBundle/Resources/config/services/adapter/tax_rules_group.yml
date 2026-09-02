@@ -2,41 +2,67 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\AddTaxRulesGroupHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\EditTaxRulesGroupHandler:
+    autowire: true
+    autoconfigure: true
+
   prestashop.adapter.tax_rules_group.command_handler.delete_tax_rules_group_handler:
     class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\DeleteTaxRulesGroupHandler'
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\DeleteTaxRulesGroupCommand'
+    autoconfigure: true
 
   prestashop.adapter.tax_rules_group.command_handler.bulk_delete_tax_rules_group_handler:
     class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\BulkDeleteTaxRulesGroupHandler'
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkDeleteTaxRulesGroupCommand'
+    autoconfigure: true
 
   prestashop.adapter.tax_rules_group.command_handler.bulk_set_tax_rules_group_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\BulkSetTaxRulesGroupStatusHandler'
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkSetTaxRulesGroupStatusCommand'
+    autoconfigure: true
 
   prestashop.adapter.tax_rules_group.query_handler.get_tax_rules_group_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\QueryHandler\GetTaxRulesGroupForEditingHandler'
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRulesGroupForEditing'
+    autoconfigure: true
 
   prestashop.adapter.tax_rules_group.command_handler.set_tax_rules_group_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\SetTaxRulesGroupStatusHandler'
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\SetTaxRulesGroupStatusCommand'
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+      - '@PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Validate\TaxRulesGroupValidator'
 
-  prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository:
-    alias: PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository
-    deprecated: ~
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Validate\TaxRulesGroupValidator: ~
+
+  # TaxRule handlers
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\AddTaxRuleHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\EditTaxRuleHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\DeleteTaxRuleHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\BulkDeleteTaxRuleHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\QueryHandler\GetTaxRuleForEditingHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\QueryHandler\GetTaxRuleListHandler:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRuleRepository: ~

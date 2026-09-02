@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\VirtualProductFileSettings;
@@ -114,7 +94,7 @@ class ProductDownloadCore extends ObjectModel
     {
         if (parent::update($nullValues)) {
             // Refresh cache of feature detachable because the row can be deactive
-            //Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', ProductDownload::isCurrentlyUsed($this->def['table'], true));
+            // Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', ProductDownload::isCurrentlyUsed($this->def['table'], true));
             return true;
         }
 
@@ -202,8 +182,6 @@ class ProductDownloadCore extends ObjectModel
      * @param string $filename Filename physically
      *
      * @return int Product the id for this virtual product
-     *
-     * @since 1.5.0.1
      */
     public static function getIdFromFilename($filename)
     {
@@ -249,16 +227,12 @@ class ProductDownloadCore extends ObjectModel
     /**
      * Return text link.
      *
-     * @param bool $admin specific to backend (optional)
      * @param string|false $hash hash code in table order detail (optional)
      *
      * @return string Html all the code for print a link to the file
      */
-    public function getTextLink($admin = true, $hash = false)
+    public function getTextLink($hash = false)
     {
-        if ($admin) {
-            return 'get-file-admin.php?file=' . $this->filename;
-        }
         $key = $this->filename . '-' . ($hash ? $hash : 'orderdetail');
 
         return Context::getContext()->link->getPageLink('get-file&key=' . $key);
@@ -268,14 +242,13 @@ class ProductDownloadCore extends ObjectModel
      * Return html link.
      *
      * @param string|bool $class CSS selector
-     * @param bool $admin specific to backend
      * @param string|bool $hash hash code in table order detail
      *
      * @return string Html all the code for print a link to the file
      */
-    public function getHtmlLink($class = false, $admin = true, $hash = false)
+    public function getHtmlLink($class = false, $hash = false)
     {
-        $link = $this->getTextLink($admin, $hash);
+        $link = $this->getTextLink($hash);
         $html = '<a href="' . $link . '" title=""';
         if ($class) {
             $html .= ' class="' . $class . '"';
@@ -329,8 +302,6 @@ class ProductDownloadCore extends ObjectModel
      * This method is allow to know if a feature is used or active.
      *
      * @return bool
-     *
-     * @since 1.5.0.1
      */
     public static function isFeatureActive()
     {

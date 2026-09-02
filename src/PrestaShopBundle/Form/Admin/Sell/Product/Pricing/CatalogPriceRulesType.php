@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,8 +9,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -45,6 +27,8 @@ class CatalogPriceRulesType extends TranslatorAwareType
      */
     private $legacyContext;
 
+    private const CATALOG_PRICE_RULE_ID_PLACEHOLDER = 987654321;
+
     /**
      * PricingType constructor.
      *
@@ -55,7 +39,9 @@ class CatalogPriceRulesType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        LegacyContext $legacyContext
+        LegacyContext $legacyContext,
+        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
         parent::__construct($translator, $locales);
         $this->legacyContext = $legacyContext;
@@ -68,18 +54,45 @@ class CatalogPriceRulesType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
 
-        /**
-         * %catalog_price_rule_id% can't be used in this function, because getAdminLink adds unneeded stuff to % while creating url
-         * That's why catalog_price_rule_id is used and then string replaced.
-         */
-        $catalogPriceRuleEditLink = $this->legacyContext->getAdminLink(
-            'AdminSpecificPriceRule',
-            true,
-            ['updatespecific_price_rule' => '', 'id_specific_price_rule' => 'catalog_price_rule_id']
-        );
-        $catalogPriceRuleIndexLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule');
-        /** Adding % to make link more unique */
-        $catalogPriceRuleEditLink = str_replace('catalog_price_rule_id', '%catalog_price_rule_id%', $catalogPriceRuleEditLink);
+        // When the Catalog price rules feature is enabled, links must point directly
+        // to the new Symfony pages. Using getAdminLink() would resolve the legacy
+        // controller to the Symfony route and attempt to generate it with a textual
+        // placeholder that does not satisfy the route's numeric requirement.
+        if ($this->featureFlagStateChecker->isEnabled('catalog_price_rule')) {
+            $catalogPriceRuleIndexLink = $this->urlGenerator->generate(
+                'admin_catalog_price_rules_index'
+            );
+
+            // The edit route only accepts a numeric catalogPriceRuleId, so the final
+            // JavaScript placeholder cannot be passed directly to the URL generator.
+            // A temporary numeric value is used to generate a valid URL and is then
+            // replaced with the placeholder expected by the JavaScript component.
+            $catalogPriceRuleEditLink = $this->urlGenerator->generate(
+                'admin_catalog_price_rules_edit',
+                [
+                    'catalogPriceRuleId' => self::CATALOG_PRICE_RULE_ID_PLACEHOLDER,
+                ]
+            );
+
+            $catalogPriceRuleEditLink = str_replace(
+                sprintf('/%d/edit', self::CATALOG_PRICE_RULE_ID_PLACEHOLDER),
+                '/%catalog_price_rule_id%/edit',
+                $catalogPriceRuleEditLink
+            );
+        } else {
+            /**
+             * %catalog_price_rule_id% can't be used in this function, because getAdminLink adds unneeded stuff to % while creating url
+             * That's why catalog_price_rule_id is used and then string replaced.
+             */
+            $catalogPriceRuleEditLink = $this->legacyContext->getAdminLink(
+                'AdminSpecificPriceRule',
+                true,
+                ['updatespecific_price_rule' => '', 'id_specific_price_rule' => 'catalog_price_rule_id']
+            );
+            $catalogPriceRuleIndexLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule');
+            /** Adding % to make link more unique */
+            $catalogPriceRuleEditLink = str_replace('catalog_price_rule_id', '%catalog_price_rule_id%', $catalogPriceRuleEditLink);
+        }
 
         $resolver->setDefaults([
             'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/catalog_price_rules.html.twig',

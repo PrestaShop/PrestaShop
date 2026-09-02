@@ -36,6 +36,10 @@ class bankwire extends PaymentModule
     public $owner;
     public $address;
     public $extra_mail_vars;
+    /**
+     * @var int
+     */
+    public $is_eu_compatible;
 
     public function __construct()
     {

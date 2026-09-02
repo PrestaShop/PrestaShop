@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -34,7 +14,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
 use Tests\Integration\PrestaShopBundle\Controller\FormGridControllerTestCase;
@@ -48,15 +27,9 @@ class ProductControllerTest extends FormGridControllerTestCase
     private const TEST_MINIMAL_QUANTITY = 2;
     private const TEST_RETAIL_PRICE_TAX_EXCLUDED = 87.7;
 
-    /**
-     * @var bool
-     */
-    private $changedProductFeatureFlag = false;
-
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::mockContext();
         ProductResetter::resetProducts();
     }
 
@@ -64,27 +37,6 @@ class ProductControllerTest extends FormGridControllerTestCase
     {
         parent::tearDownAfterClass();
         ProductResetter::resetProducts();
-    }
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
-        if (!$featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2)) {
-            $featureFlagRepository->enable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-            $this->changedProductFeatureFlag = true;
-        }
-    }
-
-    public function tearDown(): void
-    {
-        if ($this->changedProductFeatureFlag) {
-            $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
-            $featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-        }
-
-        // Call parent tear down later or the kernel will be shut down
-        parent::tearDown();
     }
 
     public function testIndex(): int
@@ -104,6 +56,7 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     public function testCreate(int $initialEntityCount): int
     {
+        $this->client->disableReboot();
         // First create product
         $formData = [
             'create_product[type]' => ProductType::TYPE_STANDARD,
@@ -137,6 +90,7 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     public function testEdit(int $productId): int
     {
+        $this->client->disableReboot();
         // @todo: need to add dedicated tests for different product types, they all cannot be tested in one scenario,
         //       because inputs existence depends on product type
         // @todo: also the fields with disabling input doesnt seem to work in tests. The data dissappears from request.
@@ -300,10 +254,12 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     public function testDelete(int $productId): void
     {
+        $this->client->disableReboot();
+
         $products = $this->getEntitiesFromGrid();
         $initialEntityCount = $products->count();
 
-        $this->deleteEntityFromPage('admin_products_v2_delete', ['productId' => $productId]);
+        $this->deleteEntityFromPage('admin_products_delete_from_all_shops', ['productId' => $productId]);
 
         $newProducts = $this->getEntitiesFromGrid();
         $this->assertCount($initialEntityCount - 1, $newProducts);
@@ -338,7 +294,7 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     protected function generateCreateUrl(): string
     {
-        return $this->router->generate('admin_products_v2_create');
+        return $this->router->generate('admin_products_create');
     }
 
     /**
@@ -346,7 +302,7 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     protected function generateEditUrl(array $routeParams): string
     {
-        return $this->router->generate('admin_products_v2_edit', $routeParams);
+        return $this->router->generate('admin_products_edit', $routeParams);
     }
 
     /**
@@ -367,8 +323,8 @@ class ProductControllerTest extends FormGridControllerTestCase
     {
         return new TestEntityDTO(
             (int) trim($tr->filter('.column-id_product')->text()),
-           [
-           ]
+            [
+            ]
         );
     }
 
@@ -384,7 +340,7 @@ class ProductControllerTest extends FormGridControllerTestCase
             ];
         }
 
-        return $this->router->generate('admin_products_v2_index', $routeParams);
+        return $this->router->generate('admin_products_index', $routeParams);
     }
 
     /**

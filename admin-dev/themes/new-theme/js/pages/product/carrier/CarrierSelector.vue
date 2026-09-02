@@ -1,0 +1,160 @@
+<!--*
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ *-->
+<template>
+  <div class="carrier-selector">
+    <div
+      class="form-check form-check-radio form-radio"
+    >
+      <div
+        class="carrier-selector-line"
+        v-if="carrierChoices.length"
+      >
+        <checkboxes-dropdown
+          :id="checkboxesDropdownId"
+          :choices="carrierChoices"
+          :label="getLabel"
+          :selected-choice-ids="this.selectedCarrierIds"
+          @selectChoice="addCarrier"
+          @unselectChoice="removeCarrier"
+        />
+        <button
+          type="button"
+          v-if="this.selectedCarrierIds.length > 0"
+          class="btn btn-outline-secondary carrier-choices-clear"
+          @click="clearAllSelected"
+        >
+          <i class="material-icons">close</i>
+          {{ $t('allCarriers.label') }}
+        </button>
+      </div>
+    </div>
+    <div
+      v-if="selectedCarrierIds.length"
+      id="selected-carriers"
+    >
+      <span>
+        <ul>
+          <li
+            v-for="(selectedCarrier, key) in selectedCarriers"
+            :key="key"
+          >
+            {{ selectedCarrier.label }}<span v-if="key !== selectedCarriers.length -1 ">, </span>
+          </li>
+        </ul>
+      </span>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+  import CheckboxesDropdown from '@app/components/checkboxes-dropdown/CheckboxesDropdown.vue';
+  import {defineComponent, PropType} from 'vue';
+  import {Choice} from '@app/components/checkboxes-dropdown/types';
+  import EventEmitter from '@components/event-emitter';
+  import ProductMap from '@pages/product/product-map';
+
+  export default defineComponent({
+    name: 'CarrierSelector',
+    data(): {
+      selectedCarrierIds: number[],
+      modifyAllShopsVisible: boolean,
+    } {
+      return {
+        selectedCarrierIds: [],
+        modifyAllShopsVisible: false,
+      };
+    },
+    props: {
+      initialCarrierIds: {
+        type: Array as PropType<number[]>,
+        required: true,
+      },
+      carrierChoices: {
+        type: Array as PropType<Choice[]>,
+        required: true,
+      },
+      choiceInputName: {
+        type: String,
+        required: true,
+      },
+      eventEmitter: {
+        type: Object as PropType<typeof EventEmitter>,
+        required: true,
+      },
+    },
+    components: {
+      CheckboxesDropdown,
+    },
+    mounted() {
+      this.selectedCarrierIds = this.initialCarrierIds;
+    },
+    computed: {
+      selectedCarriers(): Choice[] {
+        return this.carrierChoices.filter((carrier: Choice) => this.selectedCarrierIds.includes(carrier.id));
+      },
+      getLabel(): string {
+        return this.selectedCarrierIds.length > 0
+          ? this.$t('selectedCarriers.label')
+          : this.$t('allCarriers.label');
+      },
+      checkboxesDropdownId(): string {
+        return ProductMap.shipping.carrierCheckboxesDropdownId;
+      },
+    },
+    methods: {
+      addCarrier(carrier: Choice): void {
+        this.selectedCarrierIds.push(carrier.id);
+      },
+      removeCarrier(carrier: Choice): void {
+        this.selectedCarrierIds = this.selectedCarrierIds.filter(
+          (id: number) => carrier.id !== id,
+        );
+      },
+      clearAllSelected(): void {
+        const previouslySelectedCarrierIds = this.selectedCarrierIds;
+        this.selectedCarrierIds = [];
+        previouslySelectedCarrierIds.forEach((id: number) => {
+          const checkbox = <HTMLInputElement> document.querySelector(
+            `#${this.checkboxesDropdownId} input[type="checkbox"][value="${id}"]`,
+          );
+          // trigger change event manually on every checkbox which was unchecked
+          // this will allow modify_all_shops checkbox to stay visible after clearing all carriers and
+          // trigger form save button state change
+          checkbox.dispatchEvent(new CustomEvent('change', {bubbles: true}));
+        });
+      },
+    },
+  });
+</script>
+
+<style lang="scss" type="text/scss">
+@import "~@scss/config/_settings.scss";
+
+.carrier-selector {
+  .control-label {
+    font-weight: 600;
+    color: var(--#{$cdk}primary-800);
+    margin-bottom: var(--#{$cdk}size-16);
+  }
+
+  &-line {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin: 0 calc(-1 * var(--#{$cdk}size-6));
+  }
+
+  #selected-carriers {
+    margin-left: var(--#{$cdk}size-10);
+    ul {
+      padding: 0;
+      li {
+        list-style-type: none;
+        display: inline;
+      }
+    }
+  }
+}
+</style>

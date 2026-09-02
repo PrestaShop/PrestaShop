@@ -1,30 +1,11 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 use PrestaShopBundle\Install\LanguageList;
+use Symfony\Component\Finder\Finder;
 
 class InstallControllerHttp
 {
@@ -147,25 +128,17 @@ class InstallControllerHttp
         $detect_language = $this->language->detectLanguage();
 
         if (empty($this->session->lang)) {
-            $this->session->lang = $detect_language['primarytag'];
+            // Set the en as default fallback in case we can't detect a better one
+            $this->session->lang = 'en';
+            if (isset($detect_language['primarytag'])
+                && in_array($detect_language['primarytag'], $this->language->getIsoList())) {
+                $this->session->lang = $detect_language['primarytag'];
+            }
         }
 
-        Context::getContext()->language = $this->language->getLanguage(
-            $this->session->lang ?: false
-        );
-
+        Context::getContext()->language = $this->language->getLanguage($this->session->lang);
         $this->translator = Context::getContext()->getTranslator(true);
-
-        if (isset($this->session->lang)) {
-            $lang = $this->session->lang;
-        } else {
-            $lang = (isset($detect_language['primarytag'])) ? $detect_language['primarytag'] : false;
-        }
-
-        if (!in_array($lang, $this->language->getIsoList())) {
-            $lang = 'en';
-        }
-        $this->language->setLanguage($lang);
+        $this->language->setLanguage($this->session->lang);
 
         if (empty(self::getSteps())) {
             $this->initSteps();
@@ -185,11 +158,6 @@ class InstallControllerHttp
     final public static function execute()
     {
         $self = new static();
-
-        if (Tools::getValue('compile_templates')) {
-            require_once _PS_INSTALL_CONTROLLERS_PATH_ . 'http/smarty_compile.php';
-            exit;
-        }
 
         $session = InstallSession::getInstance();
         if (!$session->last_step || $session->last_step === 'welcome') {
@@ -390,7 +358,7 @@ class InstallControllerHttp
      * @param bool $success
      * @param string $message
      */
-    public function ajaxJsonAnswer(bool $success, $message = ''): void
+    public function ajaxJsonAnswer(bool $success, $message = '', $warning = ''): void
     {
         if (!$success && empty($message)) {
             $message = print_r(@error_get_last(), true);
@@ -399,6 +367,7 @@ class InstallControllerHttp
         die(json_encode([
             'success' => (bool) $success,
             'message' => $message,
+            'warning' => $warning,
         ]));
     }
 
@@ -414,6 +383,16 @@ class InstallControllerHttp
 
         if (file_exists($customPath . $template . '.php')) {
             return $this->renderTemplate($customPath, $template);
+        }
+
+        // Loop through the modules in modules folder and search for a potential template override
+        $finder = new Finder();
+        $finder->in(_PS_CORE_DIR_ . '/modules')->directories()->depth(0);
+        foreach ($finder as $dir) {
+            $moduleInstallTheme = $dir->getRealPath() . '/install-theme/';
+            if (file_exists($moduleInstallTheme . $template . '.php')) {
+                return $this->renderTemplate($moduleInstallTheme, $template);
+            }
         }
 
         if (file_exists($path . $template . '.php')) {

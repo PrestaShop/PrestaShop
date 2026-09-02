@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
@@ -47,10 +27,11 @@ class Environment implements EnvironmentInterface
     private $name;
 
     /**
-     * @param bool|null $isDebug
-     * @param string|null $name
+     * @var string
      */
-    public function __construct($isDebug = null, $name = null)
+    private $appId;
+
+    public function __construct(?bool $isDebug = null, ?string $name = null, ?string $appId = null)
     {
         if (null === $isDebug) {
             $this->isDebug = defined('_PS_MODE_DEV_') ? _PS_MODE_DEV_ : true;
@@ -65,6 +46,16 @@ class Environment implements EnvironmentInterface
                 $this->name = _PS_ENV_;
             } else {
                 $this->name = $this->isDebug ? 'dev' : 'prod';
+            }
+        }
+
+        if (null !== $appId) {
+            $this->appId = $appId;
+        } else {
+            if (defined('_PS_APP_ID_')) {
+                $this->appId = _PS_APP_ID_;
+            } else {
+                $this->appId = 'admin';
             }
         }
     }
@@ -85,6 +76,11 @@ class Environment implements EnvironmentInterface
         return $this->isDebug;
     }
 
+    public function getAppId(): string
+    {
+        return $this->appId;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -94,6 +90,6 @@ class Environment implements EnvironmentInterface
             return _PS_CACHE_DIR_;
         }
 
-        return _PS_ROOT_DIR_ . '/var/cache/' . $this->getName() . '/';
+        return _PS_ROOT_DIR_ . '/var/cache/' . $this->getName() . '/' . $this->getAppId() . '/';
     }
 }

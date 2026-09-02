@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -50,16 +30,25 @@ class CountryControllerTest extends FormGridControllerTestCase
      */
     public function testCreate(int $initialEntityCount): int
     {
+        $this->client->disableReboot();
+
+        // Address format must contain every required field (firstname, lastname,
+        // address1, city, Country:name) — both the Symfony form constraint and the
+        // CQRS handler reject formats missing any of them.
+        $addressFormat = "firstname lastname\naddress1\ncity\nCountry:name";
+        $isoCode = 'AA';
+        $zipCodeFormat = '1NL';
+
         // First create country
         $formData = [
             'country[name][1]' => 'createName',
-            'country[iso_code]' => 'TE',
+            'country[iso_code]' => $isoCode,
             'country[call_prefix]' => 123,
             'country[default_currency]' => 1,
             'country[zone]' => 1,
             'country[need_zip_code]' => '1',
-            'country[zip_code_format]' => '12NNNLL',
-            'country[address_format]' => 'todo', //todo: add when address format will be implemented
+            'country[zip_code_format]' => $zipCodeFormat,
+            'country[address_format]' => $addressFormat,
             'country[is_enabled]' => 1,
             'country[contains_states]' => 0,
             'country[need_identification_number]' => 0,
@@ -72,6 +61,11 @@ class CountryControllerTest extends FormGridControllerTestCase
         $this->assertCount($initialEntityCount + 1, $newCountry);
         $this->assertCollectionContainsEntity($newCountry, $countryId);
 
+        $this->assertFormValuesFromPage(
+            ['countryId' => $countryId],
+            $formData
+        );
+
         return $countryId;
     }
 
@@ -80,23 +74,62 @@ class CountryControllerTest extends FormGridControllerTestCase
      *
      * @param int $countryId
      */
-    public function testEdit(int $countryId): void
+    public function testEdit(int $countryId): int
     {
-        $this->markTestSkipped('Not implemented');
-        // TODO: Implement when edit action is created
+        $this->client->disableReboot();
+
+        // Use a different format than testCreate so the assertion proves the edit
+        // round-trips. All required fields are present.
+        // ISO code must be a user-assigned code absent from the country fixtures
+        // (e.g. ZZ), otherwise the duplicate ISO code validation rejects the edit.
+        $addressFormat = "firstname lastname\ncompany\naddress1\npostcode city\nCountry:name";
+        $isoCode = 'ZZ';
+        $zipCodeFormat = '2NL';
+
+        // First update the country with new data
+        $formData = [
+            'country[name][1]' => 'editName',
+            'country[iso_code]' => $isoCode,
+            'country[call_prefix]' => 1234,
+            'country[default_currency]' => 1,
+            'country[zone]' => 1,
+            'country[need_zip_code]' => '1',
+            'country[zip_code_format]' => $zipCodeFormat,
+            'country[address_format]' => $addressFormat,
+            'country[is_enabled]' => 1,
+            'country[contains_states]' => 0,
+            'country[need_identification_number]' => 0,
+            'country[display_tax_label]' => 1,
+        ];
+        $this->editEntityFromPage(['countryId' => $countryId], $formData);
+
+        // Then check that it was correctly updated.
+        // Note: the AddressFormat::getFormatDB static cache is invalidated by the
+        // Add/Edit handlers via Cache::clean, so the read here returns the new value.
+        $this->assertFormValuesFromPage(
+            ['countryId' => $countryId],
+            $formData
+        );
+
+        return $countryId;
     }
 
-    public function testFilters(): int
+    /**
+     * @depends testEdit
+     *
+     * @param int $countryId
+     *
+     * @return int
+     */
+    public function testFilters(int $countryId): int
     {
-        //todo: when edit form is finished we can use it for filter test. Example AddressControllerTest.php
-        $countryId = 1;
         $gridFilters = [
             ['country[id_country]' => $countryId],
-            ['country[name]' => 'Germany'],
-            ['country[iso_code]' => 'DE'],
-            ['country[call_prefix]' => 49],
+            ['country[name]' => 'editName'],
+            ['country[iso_code]' => 'ZZ'],
+            ['country[call_prefix]' => 1234],
             ['country[zone_name]' => 'Europe'],
-            ['country[active]' => 0],
+            ['country[active]' => 1],
         ];
 
         foreach ($gridFilters as $testFilter) {
@@ -109,6 +142,24 @@ class CountryControllerTest extends FormGridControllerTestCase
         }
 
         return $countryId;
+    }
+
+    /**
+     * @depends testFilters
+     *
+     * @param int $countryId
+     */
+    public function testDelete(int $countryId): void
+    {
+        $this->client->disableReboot();
+
+        $countries = $this->getEntitiesFromGrid();
+        $initialEntityCount = $countries->count();
+
+        $this->deleteEntityFromPage('admin_countries_delete', ['countryId' => $countryId]);
+
+        $newCountries = $this->getEntitiesFromGrid();
+        $this->assertCount($initialEntityCount - 1, $newCountries);
     }
 
     /**
@@ -145,8 +196,7 @@ class CountryControllerTest extends FormGridControllerTestCase
      */
     protected function generateEditUrl(array $routeParams): string
     {
-        // TODO: Implement generateEditUrl() method.
-        return 'Not implemented yet';
+        return $this->router->generate('admin_countries_edit', $routeParams);
     }
 
     /**
@@ -154,8 +204,7 @@ class CountryControllerTest extends FormGridControllerTestCase
      */
     protected function getEditSubmitButtonSelector(): string
     {
-        // TODO: Implement getEditSubmitButtonSelector() method.
-        return 'Not implemented yet';
+        return 'save-button';
     }
 
     /**

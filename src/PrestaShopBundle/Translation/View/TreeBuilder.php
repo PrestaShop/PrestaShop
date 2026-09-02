@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Translation\View;
@@ -118,18 +98,18 @@ class TreeBuilder
         if (is_string($search)) {
             $search = strtolower($search);
 
-            return false !== strpos(strtolower($data['default']), $search) ||
-                false !== strpos(strtolower($data['xlf']), $search) ||
-                false !== strpos(strtolower($data['db']), $search);
+            return str_contains(strtolower($data['default']), $search)
+                || str_contains(strtolower($data['xlf']), $search)
+                || str_contains(strtolower($data['db']), $search);
         }
 
         if (is_array($search)) {
             $contains = true;
             foreach ($search as $s) {
                 $s = strtolower($s);
-                $contains &= false !== strpos(strtolower($data['default']), $s) ||
-                    false !== strpos(strtolower($data['xlf']), $s) ||
-                    false !== strpos(strtolower($data['db']), $s);
+                $contains &= str_contains(strtolower($data['default']), $s)
+                    || str_contains(strtolower($data['xlf']), $s)
+                    || str_contains(strtolower($data['db']), $s);
             }
 
             return $contains;
@@ -165,7 +145,7 @@ class TreeBuilder
             $subtree['__messages'] = [$domain => $messages];
             if (isset($messages['__metadata'])) {
                 $subtree['__fixed_length_id'] = '_' . sha1($domain);
-                list($subtree['__domain']) = explode('.', $domain);
+                [$subtree['__domain']] = explode('.', $domain);
                 $subtree['__metadata'] = $messages['__metadata'];
                 $subtree['__metadata']['domain'] = $subtree['__domain'];
                 unset($messages['__metadata']);
@@ -201,7 +181,7 @@ class TreeBuilder
         $index1 = 0;
         foreach ($tree as $k1 => $t1) {
             $index2 = 0;
-            if (is_array($t1) && '__' !== substr($k1, 0, 2)) {
+            if (is_array($t1) && !str_starts_with($k1, '__')) {
                 $this->addTreeInfo($router, $cleanTree, $index1, $k1, $k1, $this->theme, $search, $module);
 
                 if (array_key_exists('__messages', $t1)) {
@@ -221,7 +201,7 @@ class TreeBuilder
 
                 foreach ($t1 as $k2 => $t2) {
                     $index3 = 0;
-                    if (is_array($t2) && '__' !== substr($k2, 0, 2)) {
+                    if (is_array($t2) && !str_starts_with($k2, '__')) {
                         $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1 . $k2, $this->theme, $search, $module);
 
                         if (array_key_exists('__messages', $t2)) {
@@ -242,7 +222,7 @@ class TreeBuilder
                         }
 
                         foreach ($t2 as $k3 => $t3) {
-                            if (is_array($t3) && '__' !== substr($k3, 0, 2)) {
+                            if (is_array($t3) && !str_starts_with($k3, '__')) {
                                 $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1 . $k2 . $k3, $this->theme, $search, $module);
 
                                 if (array_key_exists('__messages', $t3)) {

@@ -1,32 +1,12 @@
 {**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
 <script type="text/javascript">
-   $(document).ready(function() {
+   $(function() {
       var id_tab_parentmodule = {$id_tab_parentmodule|intval};
       var id_tab_module = {$id_tab_module|intval};
-      $('tr.child-'+id_tab_parentmodule+' > td > input.view.'+id_tab_module).change( function () {
+      $('tr.child-'+id_tab_parentmodule+' > td > input.view.'+id_tab_module).on('change', function () {
          if (!$(this).prop('checked'))
          {
             $('#table_module_2 thead th:eq(1) input').trigger('click');
@@ -34,7 +14,7 @@
                $('#table_module_2 thead th:eq(1) input').trigger('click');
          }
       });
-      $('tr.child-'+id_tab_parentmodule+' > td > input.edit.'+id_tab_module).change( function () {
+      $('tr.child-'+id_tab_parentmodule+' > td > input.edit.'+id_tab_module).on('change', function () {
          if (!$(this).prop('checked'))
          {
             $('#table_module_2 thead th:eq(2) input').trigger('click');
@@ -46,7 +26,7 @@
       $('div.productTabs').find('a').each(function() {
          $(this).attr('href', '#');
       });
-      $('div.productTabs a').click(function() {
+      $('div.productTabs a').on('click', function() {
          var id = $(this).attr('id');
          $('.nav-profile').removeClass('selected');
          $(this).addClass('selected active');
@@ -64,7 +44,7 @@
          }
          return false;
       }
-      $('.ajaxPower').change(function(){
+      $('.ajaxPower').on('change', function(){
          var tout = $(this).data('rel').split('||');
          var rel = $(this).data('rel');
          var id_tab = tout[0];
@@ -190,7 +170,7 @@
             }
          });
       });
-      $(".changeModuleAccess").change(function(){
+      $(".changeModuleAccess").on('change', function(){
          var tout = $(this).data('rel').split('||');
          var id_module = tout[0];
          var perm = tout[1];
@@ -238,25 +218,21 @@
       });
    });
 </script>
-{if $show_toolbar}
-  {include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
-  <div class="leadin">{block name="leadin"}{/block}</div>
-{/if}
 <div class="row">
   <div class="productTabs col-lg-2">
     <div class="tab list-group">
       {foreach $profiles as $profile}
         <a class="list-group-item nav-profile {if $profile.id_profile == $current_profile}active{/if}"
-           id="profile-{$profile.id_profile}"
-           href="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_profile={$profile.id_profile}">{$profile.name}</a>
+           id="profile-{$profile.id_profile|escape:'html':'UTF-8'}"
+           href="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_profile={$profile.id_profile|escape:'html':'UTF-8'}">{$profile.name|escape:'html':'UTF-8'}</a>
       {/foreach}
     </div>
   </div>
-  <form id="{$table}_form" class="defaultForm form-horizontal col-lg-10"
-        action="{$current|escape:'html':'UTF-8'}&amp;{$submit_action}=1&amp;token={$token|escape:'html':'UTF-8'}"
+  <form id="{$table|escape:'html':'UTF-8'}_form" class="defaultForm form-horizontal col-lg-10"
+        action="{$current|escape:'html':'UTF-8'}&amp;{$submit_action|escape:'html':'UTF-8'}=1&amp;token={$token|escape:'html':'UTF-8'}"
         method="post" enctype="multipart/form-data">
     {if $form_id}
-      <input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}"/>
+      <input type="hidden" name="{$identifier|escape:'html':'UTF-8'}" id="{$identifier|escape:'html':'UTF-8'}" value="{$form_id|escape:'html':'UTF-8'}"/>
     {/if}
     {assign var=tabsize value=count($tabs)}
     {foreach $tabs AS $tab}
@@ -265,14 +241,14 @@
       {/if}
     {/foreach}
     {foreach $profiles as $profile}
-      <div class="profile-{$profile.id_profile} tab-profile"
+      <div class="profile-{$profile.id_profile|escape:'html':'UTF-8'} tab-profile"
            style="display:{if $profile.id_profile != $current_profile}none{/if}">
         <div class="row">
           {if $profile.id_profile != $admin_profile}
             <div class="col-lg-6">
               <div class="panel">
                 <h3>{l s='Menu' d='Admin.Advparameters.Feature'}</h3>
-                <table class="table" id="table_{$profile.id_profile}">
+                <table class="table" id="table_{$profile.id_profile|escape:'html':'UTF-8'}">
                   {assign var=enable_bulk_view value=true}
                   {assign var=enable_bulk_add value=true}
                   {assign var=enable_bulk_edit value=true}
@@ -288,19 +264,19 @@
                       {assign var=access value=$accesses[$profile.id_profile]}
                       {assign var=result_accesses value=0}
                       <tr class="parent">
-                        <td class="bold"> &raquo;<strong>{$tab.name}</strong></td>
+                        <td class="bold"> &raquo;<strong>{$tab.name|escape:'html':'UTF-8'}</strong></td>
                         {assign var=has_all_rights value=true}
                         {foreach $perms as $perm}
                           {assign var=id_perm value=$id_perms[$perm]}
                           {if $access_edit == 1 && $accesses[$employee_profile_id][$tab.id_tab][$perm]}
                             <td>
                               <input type="checkbox"
-                                     data-id="{$id_perm}"
+                                     data-id="{$id_perm|escape:'html':'UTF-8'}"
                                      data-parent="0"
-                                     data-type="{$perm}"
-                                     data-classname="{$tab.class_name}"
-                                     data-rel="{$access[$tab.id_tab]['id_tab']}||{$profile.id_profile}||{$perm}||{$tabsize}||{count($tabs)}"
-                                     class="ajaxPower {$perm} {$access[$tab.id_tab]['id_tab']}"
+                                     data-type="{$perm|escape:'html':'UTF-8'}"
+                                     data-classname="{$tab.class_name|escape:'html':'UTF-8'}"
+                                     data-rel="{$access[$tab.id_tab]['id_tab']}||{$profile.id_profile|escape:'html':'UTF-8'}||{$perm|escape:'html':'UTF-8'}||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"
+                                     class="ajaxPower {$perm|escape:'html':'UTF-8'} {$access[$tab.id_tab]['id_tab']}"
                                      {if $access[$tab.id_tab][$perm] == 1} checked="checked"{/if}
                               />
                             </td>
@@ -323,8 +299,8 @@
                               data-id="4"
                               data-parent="0"
                               data-type="all"
-                              data-classname="{$tab.class_name}"
-                              data-rel="{$access[$tab.id_tab]['id_tab']}||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}"
+                              data-classname="{$tab.class_name|escape:'html':'UTF-8'}"
+                              data-rel="{$access[$tab.id_tab]['id_tab']}||{$profile.id_profile|escape:'html':'UTF-8'}||all||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"
                               class="ajaxPower all {$access[$tab.id_tab]['id_tab']}"
                             {else}
                               class="all {$access[$tab.id_tab]['id_tab']}"
@@ -340,19 +316,19 @@
                             {if isset($access[$child.id_tab])}
                               {assign var=is_child value=true}
                               {assign var=result_accesses value=0}
-                              <tr class="child-{$child.id_parent}">
-                                <td class="bold"> &raquo; {$child.name}</td>
+                              <tr class="child-{$child.id_parent|escape:'html':'UTF-8'}">
+                                <td class="bold"> &raquo; {$child.name|escape:'html':'UTF-8'}</td>
                                 {assign var=has_all_rights value=true}
                                 {foreach $perms as $perm}
                                   {assign var=id_perm value=$id_perms[$perm]}
                                   {if $access_edit == 1 && $accesses[$employee_profile_id][$child.id_tab][$perm]}
                                     <td>
                                       <input type="checkbox"
-                                             data-id="{$id_perm}" data-parent="{$child.id_parent}"
-                                             data-type="{$perm}"
-                                             data-classname="{$child.class_name}"
-                                             data-rel="{$access[$child.id_tab]['id_tab']}||{$profile.id_profile}||{$perm}||{$tabsize}||{count($tabs)}"
-                                             class="ajaxPower {$perm} {$access[$child.id_tab]['id_tab']}"
+                                             data-id="{$id_perm|escape:'html':'UTF-8'}" data-parent="{$child.id_parent|escape:'html':'UTF-8'}"
+                                             data-type="{$perm|escape:'html':'UTF-8'}"
+                                             data-classname="{$child.class_name|escape:'html':'UTF-8'}"
+                                             data-rel="{$access[$child.id_tab]['id_tab']}||{$profile.id_profile|escape:'html':'UTF-8'}||{$perm|escape:'html':'UTF-8'}||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"
+                                             class="ajaxPower {$perm|escape:'html':'UTF-8'} {$access[$child.id_tab]['id_tab']}"
                                              {if $access[$child.id_tab][$perm] == 1} checked="checked"{/if}
                                       />
                                     </td>
@@ -371,10 +347,10 @@
                                     type="checkbox"
                                     {if $access_edit == 1 && $has_all_rights}
                                       data-id="4"
-                                      data-parent="{$child.id_parent}"
+                                      data-parent="{$child.id_parent|escape:'html':'UTF-8'}"
                                       data-type="all"
-                                      data-classname="{$child.class_name}"
-                                      data-rel="{$access[$child.id_tab]['id_tab']}||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}"
+                                      data-classname="{$child.class_name|escape:'html':'UTF-8'}"
+                                      data-rel="{$access[$child.id_tab]['id_tab']}||{$profile.id_profile|escape:'html':'UTF-8'}||all||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"
                                       class="ajaxPower all {$access[$child.id_tab]['id_tab']}"
                                     {else}
                                       class="all {$access[$child.id_tab]['id_tab']}"
@@ -391,20 +367,20 @@
                                 {if isset($access[$subChild.id_tab])}
                                   {assign var=is_child value=true}
                                   {assign var=result_accesses value=0}
-                                  <tr class="child-child-{$subChild.id_parent}">
-                                    <td class="bold"> &nbsp; &nbsp; &raquo; {$subChild.name}</td>
+                                  <tr class="child-child-{$subChild.id_parent|escape:'html':'UTF-8'}">
+                                    <td class="bold"> &nbsp; &nbsp; &raquo; {$subChild.name|escape:'html':'UTF-8'}</td>
                                     {assign var=has_all_rights value=true}
                                     {foreach $perms as $perm}
                                       {assign var=id_perm value=$id_perms[$perm]}
                                       {if $access_edit == 1 && $accesses[$employee_profile_id][$subChild.id_tab][$perm]}
                                         <td>
                                           <input type="checkbox"
-                                                 data-id="{$id_perm}"
-                                                 data-parent="{$subChild.id_parent}"
-                                                 data-type="{$perm}"
-                                                 data-classname="{$subChild.class_name}"
-                                                 data-rel="{$access[$subChild.id_tab]['id_tab']}||{$profile.id_profile}||{$perm}||{$tabsize}||{count($tabs)}"
-                                                 class="ajaxPower {$perm} {$access[$subChild.id_tab]['id_tab']}"
+                                                 data-id="{$id_perm|escape:'html':'UTF-8'}"
+                                                 data-parent="{$subChild.id_parent|escape:'html':'UTF-8'}"
+                                                 data-type="{$perm|escape:'html':'UTF-8'}"
+                                                 data-classname="{$subChild.class_name|escape:'html':'UTF-8'}"
+                                                 data-rel="{$access[$subChild.id_tab]['id_tab']}||{$profile.id_profile|escape:'html':'UTF-8'}||{$perm|escape:'html':'UTF-8'}||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"
+                                                 class="ajaxPower {$perm|escape:'html':'UTF-8'} {$access[$subChild.id_tab]['id_tab']}"
                                                  {if $access[$subChild.id_tab][$perm] == 1} checked="checked"{/if}
                                           />
                                         </td>
@@ -425,10 +401,10 @@
                                         type="checkbox"
                                         {if $access_edit == 1 && $has_all_rights}
                                           data-id="4"
-                                          data-parent="{$subChild.id_parent}"
+                                          data-parent="{$subChild.id_parent|escape:'html':'UTF-8'}"
                                           data-type="all"
-                                          data-classname="{$subChild.class_name}"
-                                          data-rel="{$access[$subChild.id_tab]['id_tab']}||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}"
+                                          data-classname="{$subChild.class_name|escape:'html':'UTF-8'}"
+                                          data-rel="{$access[$subChild.id_tab]['id_tab']}||{$profile.id_profile|escape:'html':'UTF-8'}||all||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"
                                           class="ajaxPower all {$access[$subChild.id_tab]['id_tab']}"
                                         {else}
                                           class="all {$access[$subChild.id_tab]['id_tab']}"
@@ -443,19 +419,19 @@
                                       {if isset($access[$subsubChild.id_tab])}
                                         {assign var=is_child value=true}
                                         {assign var=result_accesses value=0}
-                                        <tr class="child-child-child-{$subsubChild.id_parent}">
-                                          <td class="bold">&nbsp; &nbsp; &nbsp; &nbsp; &raquo; {$subsubChild.name}</td>
+                                        <tr class="child-child-child-{$subsubChild.id_parent|escape:'html':'UTF-8'}">
+                                          <td class="bold">&nbsp; &nbsp; &nbsp; &nbsp; &raquo; {$subsubChild.name|escape:'html':'UTF-8'}</td>
                                           {assign var=has_all_rights value=true}
                                           {foreach $perms as $perm}
                                             {assign var=id_perm value=$id_perms[$perm]}
                                             {if $access_edit == 1  && $accesses[$employee_profile_id][$subsubChild.id_tab][$perm]}
                                               <td>
-                                                <input type="checkbox" data-id="{$id_perm}"
-                                                       data-parent="{$subsubChild.id_parent}"
-                                                       data-type="{$perm}"
-                                                       data-classname="{$subsubChild.class_name}"
-                                                       data-rel="{$access[$subsubChild.id_tab]['id_tab']}||{$profile.id_profile}||{$perm}||{$tabsize}||{count($tabs)}"
-                                                       class="ajaxPower {$perm} {$access[$subsubChild.id_tab]['id_tab']}"
+                                                <input type="checkbox" data-id="{$id_perm|escape:'html':'UTF-8'}"
+                                                       data-parent="{$subsubChild.id_parent|escape:'html':'UTF-8'}"
+                                                       data-type="{$perm|escape:'html':'UTF-8'}"
+                                                       data-classname="{$subsubChild.class_name|escape:'html':'UTF-8'}"
+                                                       data-rel="{$access[$subsubChild.id_tab]['id_tab']}||{$profile.id_profile|escape:'html':'UTF-8'}||{$perm|escape:'html':'UTF-8'}||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"
+                                                       class="ajaxPower {$perm|escape:'html':'UTF-8'} {$access[$subsubChild.id_tab]['id_tab']}"
                                                        {if $access[$subsubChild.id_tab][$perm] == 1} checked="checked"{/if}
                                                 />
                                               </td>
@@ -476,10 +452,10 @@
                                               type="checkbox"
                                               {if $access_edit == 1  && $has_all_rights}
                                                 data-id="4"
-                                                data-parent="{$subChild.id_parent}"
+                                                data-parent="{$subChild.id_parent|escape:'html':'UTF-8'}"
                                                 data-type="all"
-                                                data-classname="{$subsubChild.class_name}"
-                                                data-rel="{$access[$subsubChild.id_tab]['id_tab']}||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}"
+                                                data-classname="{$subsubChild.class_name|escape:'html':'UTF-8'}"
+                                                data-rel="{$access[$subsubChild.id_tab]['id_tab']}||{$profile.id_profile|escape:'html':'UTF-8'}||all||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"
                                                 class="ajaxPower all {$access[$subsubChild.id_tab]['id_tab']}"
                                               {else}
                                                 {assign var=enable_bulk_all value=false}
@@ -507,27 +483,27 @@
                     <th></th>
                     <th>
                       <input type="checkbox" name="1"
-                             class="viewall ajaxPower"{if $access_edit == 1 && $enable_bulk_view} data-id="0" data-parent="0" data-type="view" data-rel="-1||{$profile.id_profile}||view||{$tabsize}||{count($tabs)}"{else} disabled="disabled"{/if}/>
+                             class="viewall ajaxPower"{if $access_edit == 1 && $enable_bulk_view} data-id="0" data-parent="0" data-type="view" data-rel="-1||{$profile.id_profile|escape:'html':'UTF-8'}||view||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"{else} disabled="disabled"{/if}/>
                       {l s='View' d='Admin.Actions'}
                     </th>
                     <th>
                       <input type="checkbox" name="1"
-                             class="addall ajaxPower"{if $access_edit == 1 && $enable_bulk_add} data-id="1" data-parent="0" data-type="add" data-rel="-1||{$profile.id_profile}||add||{$tabsize}||{count($tabs)}"{else} disabled="disabled"{/if}/>
+                             class="addall ajaxPower"{if $access_edit == 1 && $enable_bulk_add} data-id="1" data-parent="0" data-type="add" data-rel="-1||{$profile.id_profile|escape:'html':'UTF-8'}||add||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"{else} disabled="disabled"{/if}/>
                       {l s='Add' d='Admin.Actions'}
                     </th>
                     <th>
                       <input type="checkbox" name="1"
-                             class="editall ajaxPower"{if $access_edit == 1 && $enable_bulk_edit} data-id="2" data-parent="0" data-type="edit" data-rel="-1||{$profile.id_profile}||edit||{$tabsize}||{count($tabs)}"{else} disabled="disabled"{/if}/>
+                             class="editall ajaxPower"{if $access_edit == 1 && $enable_bulk_edit} data-id="2" data-parent="0" data-type="edit" data-rel="-1||{$profile.id_profile|escape:'html':'UTF-8'}||edit||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"{else} disabled="disabled"{/if}/>
                       {l s='Edit' d='Admin.Actions'}
                     </th>
                     <th>
                       <input type="checkbox" name="1"
-                             class="deleteall ajaxPower"{if $access_edit == 1 && $enable_bulk_delete} data-id="3" data-parent="0" data-type="delete" data-rel="-1||{$profile.id_profile}||delete||{$tabsize}||{count($tabs)}"{else} disabled="disabled"{/if}/>
+                             class="deleteall ajaxPower"{if $access_edit == 1 && $enable_bulk_delete} data-id="3" data-parent="0" data-type="delete" data-rel="-1||{$profile.id_profile|escape:'html':'UTF-8'}||delete||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"{else} disabled="disabled"{/if}/>
                       {l s='Delete' d='Admin.Actions'}
                     </th>
                     <th>
                       <input type="checkbox" name="1"
-                             class="allall ajaxPower"{if $access_edit == 1 && $enable_bulk_all} data-id="4" data-parent="0" data-type="all" data-rel="-1||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}"{else} disabled="disabled"{/if}/>
+                             class="allall ajaxPower"{if $access_edit == 1 && $enable_bulk_all} data-id="4" data-parent="0" data-type="all" data-rel="-1||{$profile.id_profile|escape:'html':'UTF-8'}||all||{$tabsize|escape:'html':'UTF-8'}||{count($tabs)}"{else} disabled="disabled"{/if}/>
                       {l s='All' d='Admin.Global'}
                     </th>
                   </tr>
@@ -538,7 +514,7 @@
             <div class="col-lg-6">
               <div class="panel">
                 <h3>{l s='Modules' d='Admin.Global'}</h3>
-                <table class="table" id="table_module_{$profile.id_profile}">
+                <table class="table" id="table_module_{$profile.id_profile|escape:'html':'UTF-8'}">
                   <tbody>
                   {if !count($modules)}
                     <tr>
@@ -550,18 +526,18 @@
                     {assign var=enable_bulk_uninstall value=true}
                     {foreach from=$modules[$profile.id_profile] item=module key=k}
                       <tr>
-                        <td>&raquo; {$module.name}</td>
+                        <td>&raquo; {$module.name|escape:'html':'UTF-8'}</td>
                         <td>
                           <input type="checkbox"
-                                 value="1"{if $module.view == true} checked="checked"{/if}{if $access_edit == 1 && $modules[$employee_profile_id][$k].view} class="ajax-ma-view changeModuleAccess" data-rel="{$module.id_module}||view||{$profile.id_profile}"{else}{assign var=enable_bulk_view value=false} class="ajax-ma-view" disabled="disabled"{/if}/>
+                                 value="1"{if $module.view == true} checked="checked"{/if}{if $access_edit == 1 && $modules[$employee_profile_id][$k].view} class="ajax-ma-view changeModuleAccess" data-rel="{$module.id_module|escape:'html':'UTF-8'}||view||{$profile.id_profile|escape:'html':'UTF-8'}"{else}{assign var=enable_bulk_view value=false} class="ajax-ma-view" disabled="disabled"{/if}/>
                         </td>
                         <td>
                           <input type="checkbox"
-                                 value="1"{if $module.configure == true} checked="checked"{/if}{if $access_edit == 1 && $modules[$employee_profile_id][$k].configure} class="ajax-ma-configure changeModuleAccess" data-rel="{$module.id_module}||configure||{$profile.id_profile}"{else}{assign var=enable_bulk_configure value=false} class="ajax-ma-configure" disabled="disabled"{/if}/>
+                                 value="1"{if $module.configure == true} checked="checked"{/if}{if $access_edit == 1 && $modules[$employee_profile_id][$k].configure} class="ajax-ma-configure changeModuleAccess" data-rel="{$module.id_module|escape:'html':'UTF-8'}||configure||{$profile.id_profile|escape:'html':'UTF-8'}"{else}{assign var=enable_bulk_configure value=false} class="ajax-ma-configure" disabled="disabled"{/if}/>
                         </td>
                         <td>
                           <input type="checkbox"
-                                 value="1"{if $module.uninstall == true} checked="checked"{/if}{if $access_edit == 1 && $modules[$employee_profile_id][$k].uninstall} class="ajax-ma-uninstall changeModuleAccess" data-rel="{$module.id_module}||uninstall||{$profile.id_profile}"{else}{assign var=enable_bulk_uninstall value=false} class="ajax-ma-uninstall" disabled="disabled"{/if}/>
+                                 value="1"{if $module.uninstall == true} checked="checked"{/if}{if $access_edit == 1 && $modules[$employee_profile_id][$k].uninstall} class="ajax-ma-uninstall changeModuleAccess" data-rel="{$module.id_module|escape:'html':'UTF-8'}||uninstall||{$profile.id_profile|escape:'html':'UTF-8'}"{else}{assign var=enable_bulk_uninstall value=false} class="ajax-ma-uninstall" disabled="disabled"{/if}/>
                         </td>
                       </tr>
                     {/foreach}
@@ -572,15 +548,15 @@
                     <th></th>
                     <th>
                       <input
-                        type="checkbox"{if $access_edit == 1 && $enable_bulk_view} class="changeModuleAccess" data-rel="-1||view||{$profile.id_profile}"{else} disabled="disabled"{/if}/> {l s='View' d='Admin.Actions'}
+                        type="checkbox"{if $access_edit == 1 && $enable_bulk_view} class="changeModuleAccess" data-rel="-1||view||{$profile.id_profile|escape:'html':'UTF-8'}"{else} disabled="disabled"{/if}/> {l s='View' d='Admin.Actions'}
                     </th>
                     <th>
                       <input
-                        type="checkbox"{if $access_edit == 1 && $enable_bulk_configure} class="changeModuleAccess" data-rel="-1||configure||{$profile.id_profile}"{else} disabled="disabled"{/if}/> {l s='Configure' d='Admin.Actions'}
+                        type="checkbox"{if $access_edit == 1 && $enable_bulk_configure} class="changeModuleAccess" data-rel="-1||configure||{$profile.id_profile|escape:'html':'UTF-8'}"{else} disabled="disabled"{/if}/> {l s='Configure' d='Admin.Actions'}
                     </th>
                     <th>
                       <input
-                        type="checkbox"{if $access_edit == 1 && $enable_bulk_uninstall} class="changeModuleAccess" data-rel="-1||uninstall||{$profile.id_profile}"{else} disabled="disabled"{/if}/> {l s='Uninstall' d='Admin.Actions'}
+                        type="checkbox"{if $access_edit == 1 && $enable_bulk_uninstall} class="changeModuleAccess" data-rel="-1||uninstall||{$profile.id_profile|escape:'html':'UTF-8'}"{else} disabled="disabled"{/if}/> {l s='Uninstall' d='Admin.Actions'}
                     </th>
                   </tr>
                   </thead>

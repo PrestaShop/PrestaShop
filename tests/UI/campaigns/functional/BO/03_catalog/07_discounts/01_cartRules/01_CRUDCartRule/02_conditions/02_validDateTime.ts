@@ -1,0 +1,143 @@
+import testContext from '@utils/testContext';
+import {expect} from 'chai';
+
+// Import commonTests
+import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
+
+import {
+  boCartRulesPage,
+  boCartRulesCreatePage,
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  FakerCartRule,
+  foHummingbirdCartPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdModalBlockCartPage,
+  foHummingbirdModalQuickViewPage,
+  type Page,
+  utilsDate,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
+
+const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_validDateTime';
+
+describe('BO - Cart rules - Condition : Case 2 - Valid Date Time', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  // Data to create a date format
+  const pastDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'past');
+  const newCartRuleData: FakerCartRule = new FakerCartRule({
+    name: 'Cart Rule Valid date time',
+    discountType: 'Amount',
+    discountAmount: {
+      value: 1,
+      currency: 'EUR',
+      tax: 'Tax excluded',
+    },
+    dateFrom: pastDate,
+    dateTo: pastDate,
+  });
+
+  before(async function () {
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
+  });
+
+  after(async () => {
+    await utilsPlaywright.closeBrowserContext(browserContext);
+  });
+
+  describe('BO : Create new cart rule', async () => {
+    it('should login in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
+    });
+
+    it('should go to \'Catalog > Discounts\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.discountsLink,
+      );
+
+      const pageTitle = await boCartRulesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
+    });
+
+    it('should go to new cart rule page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage', baseContext);
+
+      await boCartRulesPage.goToAddNewCartRulesPage(page);
+
+      const pageTitle = await boCartRulesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesCreatePage.pageTitle);
+    });
+
+    it('should create new cart rule', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
+
+      const validationMessage = await boCartRulesCreatePage.createEditCartRules(page, newCartRuleData);
+      expect(validationMessage).to.contains(boCartRulesCreatePage.successfulCreationMessage);
+    });
+  });
+
+  describe('FO : View discount', async () => {
+    it('should open the shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
+
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
+
+      const result = await foHummingbirdHomePage.isHomePage(page);
+      expect(result).to.eq(true);
+    });
+
+    it('should quick view the first product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'quickViewTheFirstProduct', baseContext);
+
+      await foHummingbirdLoginPage.goToHomePage(page);
+      await foHummingbirdHomePage.quickViewProduct(page, 1);
+
+      const isQuickViewModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
+      expect(isQuickViewModalVisible).to.equal(true);
+    });
+
+    it('should add the product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
+
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
+      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
+
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.eq(foHummingbirdCartPage.pageTitle);
+    });
+
+    it('should check that there is no discount applied', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNoDiscount', baseContext);
+
+      const isVisible = await foHummingbirdCartPage.isCartRuleNameVisible(page);
+      expect(isVisible).to.eq(false);
+    });
+
+    it('should delete the last product from the cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteLastProduct', baseContext);
+
+      await foHummingbirdCartPage.deleteProduct(page, 1);
+
+      const notificationNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
+      expect(notificationNumber).to.eq(0);
+    });
+  });
+
+  // Post-condition: Delete the created cart rule
+  deleteCartRuleTest(newCartRuleData.name, `${baseContext}_postTest`);
+});

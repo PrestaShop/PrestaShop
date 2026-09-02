@@ -1,0 +1,19 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{{ form_start(discountForm) }}
+  {{ form_errors(discountForm) }}
+  {% block discount_form_rest %}
+    {{ form_rest(discountForm) }}
+  {% endblock %}
+  <div class="d-flex justify-content-between gap-2 mt-3">
+    <a href="{{ path('admin_discounts_index') }}" class="btn btn-outline-secondary">
+      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+    </a>
+    <button type="submit" class="btn btn-primary">
+      {{ 'Save'|trans({}, 'Admin.Actions') }}
+    </button>
+  </div>
+{{ form_end(discountForm) }}

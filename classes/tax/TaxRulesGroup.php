@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 class TaxRulesGroupCore extends ObjectModel
 {
@@ -62,6 +42,14 @@ class TaxRulesGroupCore extends ObjectModel
 
     protected static $_taxes = [];
 
+    /**
+     * @param bool $null_values
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function update($null_values = false)
     {
         if (!$this->deleted && $this->isUsed()) {
@@ -81,34 +69,28 @@ class TaxRulesGroupCore extends ObjectModel
     /**
      * Save the object with the field deleted to true.
      *
-     *  @return bool
+     * @return bool
      */
     public function historize(TaxRulesGroup $tax_rules_group)
     {
-        $this->deleted = true;
-
-        return parent::update() &&
-        Db::getInstance()->execute('
+        return $this->softDelete()
+        && Db::getInstance()->execute('
 		INSERT INTO ' . _DB_PREFIX_ . 'tax_rule
 		(id_tax_rules_group, id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description)
 		(
 			SELECT ' . (int) $tax_rules_group->id . ', id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description
 			FROM ' . _DB_PREFIX_ . 'tax_rule
 			WHERE id_tax_rules_group=' . (int) $this->id . '
-		)') &&
-        Db::getInstance()->execute('
+		)')
+        && Db::getInstance()->execute('
 		UPDATE ' . _DB_PREFIX_ . 'product
 		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
-		WHERE id_tax_rules_group=' . (int) $this->id) &&
-        Db::getInstance()->execute('
+		WHERE id_tax_rules_group=' . (int) $this->id)
+        && Db::getInstance()->execute('
 		UPDATE ' . _DB_PREFIX_ . 'product_shop
 		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
-		WHERE id_tax_rules_group=' . (int) $this->id) &&
-        Db::getInstance()->execute('
-		UPDATE ' . _DB_PREFIX_ . 'carrier
-		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
-		WHERE id_tax_rules_group=' . (int) $this->id) &&
-        Db::getInstance()->execute('
+		WHERE id_tax_rules_group=' . (int) $this->id)
+        && Db::getInstance()->execute('
 		UPDATE ' . _DB_PREFIX_ . 'carrier_tax_rules_group_shop
 		SET id_tax_rules_group=' . (int) $tax_rules_group->id . '
 		WHERE id_tax_rules_group=' . (int) $this->id);
@@ -187,7 +169,7 @@ class TaxRulesGroupCore extends ObjectModel
                 INNER JOIN ' . _DB_PREFIX_ . 'tax_rule tr
                 ON g.id_tax_rules_group = tr.id_tax_rules_group
                 INNER JOIN ' . _DB_PREFIX_ . 'tax t
-                ON tr.id_tax = t.id_tax
+                ON (tr.id_tax = t.id_tax AND t.active = 1)
             ';
         }
 
@@ -241,7 +223,8 @@ class TaxRulesGroupCore extends ObjectModel
         return (int) Db::getInstance()->getValue(
             'SELECT `id_tax_rules_group`
 			FROM `' . _DB_PREFIX_ . 'tax_rules_group` rg
-			WHERE `name` = \'' . pSQL($name) . '\''
+			WHERE `name` = \'' . pSQL($name) . '\'
+            ORDER BY `active` DESC, `deleted` ASC'
         );
     }
 

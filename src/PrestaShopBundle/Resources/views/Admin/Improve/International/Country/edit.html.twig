@@ -1,0 +1,22 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% set layoutTitle = 'Edit: %value%'|trans({'%value%': countryName}, 'Admin.Actions') %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {{ include('@PrestaShop/Admin/Improve/International/Country/Blocks/form.html.twig') }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/country_form.bundle.js') }}"></script>
+{% endblock %}

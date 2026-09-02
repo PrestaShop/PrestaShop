@@ -1,32 +1,18 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 
 /**
- * Class ProductAssemblerCore.
+ * This class is responsible for enriching product data by all required fields
+ * in a performant way, before it goes into ProductLazyArray or ProductListingLazyArray.
+ *
+ * If you want to enrich a whole list of products, use assembleProducts method to get the data in one query.
+ *
+ * Currently, the data is passing through Product::getProductProperties also, but this step should be removed
+ * and all data from getProductProperties loaded on demand in the lazy arrays.
  */
 class ProductAssemblerCore
 {
@@ -36,7 +22,7 @@ class ProductAssemblerCore
     /**
      * ProductAssemblerCore constructor.
      *
-     * @param \Context $context
+     * @param Context $context
      */
     public function __construct(Context $context)
     {
@@ -70,7 +56,7 @@ class ProductAssemblerCore
     }
 
     /**
-     * Add missing product fields to multiple products
+     * Add missing product fields to multiple products.
      *
      * @param array $rawProducts
      *
@@ -108,7 +94,7 @@ class ProductAssemblerCore
     }
 
     /**
-     * Return the SQL query to get all product fields
+     * Return the SQL query to get all product fields.
      *
      * @param array $productIds
      *
@@ -170,6 +156,7 @@ class ProductAssemblerCore
     /**
      * Get basic product data for single product.
      * The only required property is id_product.
+     * If some data were already provided in $rawProduct, it won't be overwritten.
      *
      * @param array $rawProduct
      *
@@ -191,6 +178,7 @@ class ProductAssemblerCore
     /**
      * Get basic product data for multiple products.
      * The only required property for each product is id_product.
+     * If some data were already provided in $rawProducts, it won't be overwritten.
      *
      * @param array $rawProducts Array with multiple products
      *

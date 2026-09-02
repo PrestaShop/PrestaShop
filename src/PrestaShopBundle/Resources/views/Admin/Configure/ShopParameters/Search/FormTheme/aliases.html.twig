@@ -1,0 +1,26 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% block aliases_collection_widget %}
+  {{ form_widget(form, {attr: {class: 'js-aliases-collection'}}) }}
+  <button type="button" class="btn btn-outline-secondary js-btn-add-alias">
+    <i class="material-icons">add_circle</i>
+    <span class="btn-label">{{ 'Add alias'|trans({}, 'Admin.Shopparameters.Feature') }}</span>
+  </button>
+{% endblock %}
+
+{% block alias_type_widget %}
+  <div class="row">
+    <div class="col col-6 col-md-7 col-lg-9">
+      {{ form_widget(form.alias) }}
+    </div>
+    <div class="col col-4 col-md-3 col-lg-2">
+      {{ form_widget(form.active, {row_attr: {class: 'small'}}) }}
+    </div>
+    <div class="col col-1 col-md-2 col-lg-1 text-right">
+      <button type="button" class="btn js-btn-delete-alias"><i class="material-icons">delete</i></button>
+    </div>
+  </div>
+{% endblock %}

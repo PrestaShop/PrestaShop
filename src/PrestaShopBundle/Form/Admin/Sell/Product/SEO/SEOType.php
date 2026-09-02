@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,12 +9,14 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -65,6 +47,11 @@ class SEOType extends TranslatorAwareType
     private $legacyContext;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param RouterInterface $router
@@ -78,13 +65,15 @@ class SEOType extends TranslatorAwareType
         RouterInterface $router,
         bool $friendlyUrlEnabled,
         bool $forceFriendlyUrl,
-        LegacyContext $legacyContext
+        LegacyContext $legacyContext,
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
         $this->friendlyUrlEnabled = $friendlyUrlEnabled;
         $this->forceFriendlyUrl = $forceFriendlyUrl;
         $this->legacyContext = $legacyContext;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -92,15 +81,22 @@ class SEOType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // Automatic update is only enabled when product is offline and the configuration is enabled
+        $automaticUrlUpdate = false;
+        if (!$options['active'] && (bool) $this->configuration->get('PS_FORCE_FRIENDLY_PRODUCT')) {
+            $automaticUrlUpdate = true;
+        }
+
         $builder
             ->add('serp', SerpType::class)
+            ->add('combination_title', HiddenType::class)
             ->add('meta_title', TranslatableType::class, [
                 'label' => $this->trans('Meta title', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('Public title for the product page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the right of the field.', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('Public title that may appear in the browser and search engines. The recommended length is about 60 characters (including spaces). If you leave it blank, the product name will be used.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'type' => TextWithLengthCounterType::class,
                 'help' => $this->trans(
-                    'Public title for the product page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the right of the field.',
+                    'Public title that may appear in the browser and search engines. The recommended length is about 60 characters (including spaces). If you leave it blank, the product name will be used.',
                     'Admin.Catalog.Help'
                 ),
                 'options' => [
@@ -125,11 +121,11 @@ class SEOType extends TranslatorAwareType
             ])
             ->add('meta_description', TranslatableType::class, [
                 'label' => $this->trans('Meta description', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('Summary for robots, that could appear in search engines. The recommended length is about 160 characters (including spaces). If you leave it blank, an excerpt from the short description will be used.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'type' => TextWithLengthCounterType::class,
                 'help' => $this->trans(
-                    'This description will appear in search engines. It should be a single sentence, shorter than 160 characters (including spaces).',
+                    'Summary for robots, that could appear in search engines. The recommended length is about 160 characters (including spaces). If you leave it blank, an excerpt from the short description will be used.',
                     'Admin.Catalog.Help'
                 ),
                 'options' => [
@@ -169,6 +165,7 @@ class SEOType extends TranslatorAwareType
                     ],
                     'attr' => [
                         'class' => 'serp-watched-url',
+                        'data-automatic-update' => (int) $automaticUrlUpdate,
                     ],
                 ],
                 'modify_all_shops' => true,
@@ -212,16 +209,7 @@ class SEOType extends TranslatorAwareType
         $friendlyUrl = $this->router->generate('admin_metas_index') . '#meta_settings_set_up_urls_form';
         $productPreferencesUrl = $this->router->generate('admin_product_preferences') . '#configuration_fieldset_products';
 
-        if ($this->friendlyUrlEnabled) {
-            $alertMessages[] = sprintf(
-                '<strong>%s</strong> %s',
-                $this->trans('Friendly URLs are currently enabled.', 'Admin.Catalog.Notification'),
-                $this->trans('To disable it, go to [1]SEO and URLs[/1]', 'Admin.Catalog.Notification', [
-                    '[1]' => '<a target="_blank" href="' . $friendlyUrl . '">',
-                    '[/1]' => '</a>',
-                ])
-            );
-        } else {
+        if (!$this->friendlyUrlEnabled) {
             $alertMessages[] = sprintf(
                 '<strong>%s</strong> %s',
                 $this->trans('Friendly URLs are currently disabled.', 'Admin.Catalog.Notification'),
@@ -259,11 +247,13 @@ class SEOType extends TranslatorAwareType
                 'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product_seo.html.twig',
+                'active' => false,
             ])
             ->setRequired([
                 'product_id',
             ])
             ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('active', ['bool'])
         ;
     }
 }

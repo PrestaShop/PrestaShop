@@ -1,0 +1,274 @@
+# This workflow aim to run all UI tests on active branches
+# and upload the report on Google cloud platform storage
+name: Nightly tests (Run & Upload)
+
+on:
+  workflow_call:
+    inputs:
+      BRANCH:
+        required: true
+        type: string
+      PHP_VERSION:
+        description: 'PHP Version'
+        required: true
+        type: string
+      NODE_VERSION:
+        description: 'Node Version'
+        required: true
+        type: string
+      DB_SERVER:
+        description: 'Database Server (MySQL `mysql` / MariaDB `mariadb`)'
+        required: true
+        type: string
+      UBUNTU_VERSION:
+        description: 'Ubuntu Server'
+        required: false
+        type: string
+        default: 'ubuntu-latest'
+      TESTS_DIR:
+        description: 'Where UI tests are'
+        required: false
+        type: string
+        default: 'tests/UI'
+    secrets:
+      ## GCP Project ID
+      GC_PROJECT_ID:
+        required: true
+      ## GCP Service Key
+      GC_SERVICE_KEY:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+
+  # First job: Run tests in parallel
+  test:
+    name: Nightly tests
+    runs-on: ${{ inputs.UBUNTU_VERSION }}
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH:
+          - ${{ inputs.BRANCH }}
+        CAMPAIGN:
+          - 'audit'
+          - 'cldr'
+          - 'sanity'
+          - 'sanity:productV2'
+          - 'functional:BO:login'
+          - 'functional:BO:dashboard'
+          - 'functional:BO:orders:01:0-1'
+          - 'functional:BO:orders:01-create-orders'
+          - 'functional:BO:orders:01-view-and-edit-order'
+          - 'functional:BO:orders:02'
+          - 'functional:BO:orders:03-05'
+          - 'functional:BO:catalog:01-02'
+          - 'functional:BO:catalog:03-04'
+          - 'functional:BO:catalog:05-06'
+          - 'functional:BO:catalog:07-08'
+          - 'functional:BO:customer:01'
+          - 'functional:BO:customer:02-03'
+          - 'functional:BO:customer-service'
+          - 'functional:BO:modules'
+          - 'functional:BO:design'
+          - 'functional:BO:shipping'
+          - 'functional:BO:payment'
+          - 'functional:BO:international:01'
+          - 'functional:BO:international:02'
+          - 'functional:BO:international:03-04'
+          - 'functional:BO:shop-parameters:01-02'
+          - 'functional:BO:shop-parameters:03-04'
+          - 'functional:BO:shop-parameters:05-07'
+          - 'functional:BO:advanced-parameters:01-06'
+          - 'functional:BO:advanced-parameters:07-10'
+          - 'functional:BO:advanced-parameters:11-12'
+          - 'functional:BO:header'
+          - 'functional:FO:classic:01-03'
+          - 'functional:FO:classic:04-07'
+          - 'functional:FO:classic:08-12'
+          - 'functional:FO:hummingbird:01-03'
+          - 'functional:FO:hummingbird:04-07'
+          - 'functional:FO:hummingbird:08-12'
+          - 'functional:productV2'
+          - 'functional:API'
+          - 'functional:WS'
+          - 'modules'
+          - 'modules:01-09'
+          - 'modules:10-19'
+          - 'modules:20-29'
+          - 'modules:30-39'
+          - 'regression'
+        exclude:
+          ## 8.2.x
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'audit'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'functional:FO:hummingbird:04-07'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'functional:FO:hummingbird:08-12'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'modules:01-09'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'modules:10-19'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'modules:20-29'
+          - BRANCH: 8.2.x
+            CAMPAIGN: 'modules:30-39'
+          ## 9.2.x
+          - BRANCH: 9.2.x
+            CAMPAIGN: 'sanity:productV2'
+          - BRANCH: 9.2.x
+            CAMPAIGN: 'functional:productV2'
+          - BRANCH: 9.2.x
+            CAMPAIGN: 'modules'
+          ## develop
+          - BRANCH: develop
+            CAMPAIGN: 'sanity:productV2'
+          - BRANCH: develop
+            CAMPAIGN: 'functional:productV2'
+          - BRANCH: develop
+            CAMPAIGN: 'modules'
+
+    env:
+      GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test
+      REPORTS_DIR: 'reports_${{ matrix.BRANCH }}'  # Where to move test's reports
+      TEST_CAMPAIGN: ${{ matrix.CAMPAIGN }}  # Command to execute from the matrix
+      INSTALL_AUTO: ${{ (matrix.CAMPAIGN == 'sanity') && 'false' || 'true' }}
+      CLIENT_ID_API: ui-test-client
+      CLIENT_SECRET_API: 18c7b983c2eaa22a111609ce2b1c435e
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ env.GH_BRANCH }}
+
+      - name: Setup Environment
+        timeout-minutes: 15
+        uses: ./.github/actions/setup-env
+        with:
+          PHP_VERSION: ${{ inputs.PHP_VERSION }}
+          INSTALL_AUTO: ${{ env.INSTALL_AUTO }}
+          CP_API_CONFIG: ${{ (env.GH_BRANCH == '8.2.x') && 'true' || 'false' }}
+          DB_SERVER: ${{ inputs.DB_SERVER }}
+      - name: Setup Environment failure
+        uses: ./.github/actions/setup-env-export-logs
+        with:
+          DOCKER_PREFIX: prestashop
+          ARTIFACT_NAME: setup-nightly-${{ matrix.BRANCH }}-${{ matrix.CAMPAIGN }}-${{ inputs.DB_SERVER }}
+          DB_SERVER: ${{ inputs.DB_SERVER }}
+          INSTALL_AUTO: ${{ env.INSTALL_AUTO }}
+        if: failure()
+
+      # Create API Client for API campaign
+      - name: Create API client
+        if: ${{ (startsWith(env.GH_BRANCH, '9.') || env.GH_BRANCH == 'develop') && env.TEST_CAMPAIGN == 'functional:API' }}
+        run: |
+          docker exec prestashop-prestashop-git-1 php ./bin/console prestashop:api-client create ${{ env.CLIENT_ID_API }} --all-scopes --name='Test client' --description='Test client with all scopes' --timeout=3600 --secret=${{ env.CLIENT_SECRET_API }}
+
+      # Keycloak is only needed for API campaign
+      - name: Setup Keycloak
+        uses: ./.github/actions/setup-keycloak
+        if: ${{ (startsWith(env.GH_BRANCH, '9.') || env.GH_BRANCH == 'develop') && env.TEST_CAMPAIGN == 'functional:API' }}
+
+      - name: Run Tests
+        continue-on-error: true
+        uses: ./.github/actions/ui-test
+        with:
+          NODE_VERSION: ${{ inputs.NODE_VERSION }}
+          TEST_CAMPAIGN: ${{ env.TEST_CAMPAIGN }}
+          TESTS_DIR: ${{ inputs.TESTS_DIR }}
+          DB_SERVER: ${{ inputs.DB_SERVER }}
+        env:
+          CLIENT_ID_API: ${{ env.CLIENT_ID_API }}
+          CLIENT_SECRET_API: ${{ env.CLIENT_SECRET_API }}
+          PS_VERSION: ${{ env.GH_BRANCH }}
+
+      - name: Clean environment variable
+        run: echo "TEST_CAMPAIGN_ARTIFACT=$( echo -e '${{ env.TEST_CAMPAIGN }}' | tr ':' '-' )" >> $GITHUB_ENV
+
+      # Rename and upload report as artifact
+      - name: Rename file reports
+        working-directory: ${{ inputs.TESTS_DIR }}
+        env:
+          REPORTS_DIR_PATH: ${{ github.workspace }}/${{ env.REPORTS_DIR }}
+        run: |
+          mkdir -p ${{ env.REPORTS_DIR_PATH }}
+          mv ./mochawesome-report/mochawesome.json ${{ env.REPORTS_DIR_PATH }}/${{ env.TEST_CAMPAIGN_ARTIFACT }}.json
+
+      - name: Upload report
+        uses: actions/upload-artifact@v6
+        with:
+          name: reports_${{ env.GH_BRANCH }}_${{ env.TEST_CAMPAIGN_ARTIFACT }}
+          path: ${{ env.REPORTS_DIR }}
+          # A retried job must be able to replace the artifact uploaded by a
+          # previous attempt of the same run (auto_retry_failed_nightly_jobs.yml)
+          overwrite: true
+
+  # Second job: Merge Mochawesome reports and upload them on GCP
+  ## Always executed even if tests are in error
+  merge-upload-reports:
+    name: Combine all reports and upload them
+    if: ${{ always() }}
+    needs:
+      - test
+    runs-on: ${{ inputs.UBUNTU_VERSION }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH:
+          - ${{ inputs.BRANCH }}
+
+    env:
+      GH_BRANCH: ${{ matrix.branch }}  # Branch to test
+      REPORTS_DIR: 'reports_${{ matrix.BRANCH }}'  # Where to move test's reports
+      COMBINED_REPORT_DIR: 'combined_reports'  # Where to store the combined report
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ env.GH_BRANCH }}
+
+      - uses: actions/download-artifact@v5
+        name: Download reports
+        with:
+          path: ${{ env.REPORTS_DIR }}
+          pattern: reports_${{ env.GH_BRANCH }}_*
+          merge-multiple: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: ${{ inputs.TESTS_DIR }}
+        run: npm ci
+
+      - name: Combine reports
+        working-directory: ${{ inputs.TESTS_DIR }}
+        env:
+          REPORTS_DIR_PATH: ${{ github.workspace }}/${{ env.REPORTS_DIR }}
+          COMBINED_REPORT_DIR_PATH: ${{ github.workspace }}/${{ env.COMBINED_REPORT_DIR }}
+        run: |
+          mkdir -p ${{ env.COMBINED_REPORT_DIR_PATH }}
+          REPORT_NAME="$(date +%Y-%m-%d)-${{ env.GH_BRANCH }}-${{ inputs.DB_SERVER }}"
+          npx mochawesome-merge "${{ env.REPORTS_DIR_PATH }}/*.json" -o "${{ env.COMBINED_REPORT_DIR_PATH }}/${REPORT_NAME}.json"
+
+      - name: Auth Cloud Sdk
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GC_SERVICE_KEY }}
+          project_id: ${{ secrets.GC_PROJECT_ID }}
+
+      - name: Setup Cloud Sdk
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Upload to Google Cloud Storage (GCS)
+        run: gsutil cp -r "${{ env.COMBINED_REPORT_DIR }}/**" gs://prestashop-core-nightly/reports

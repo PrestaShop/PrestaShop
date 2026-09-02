@@ -128,31 +128,31 @@ Feature: Search stock movements from Back Office (BO)
     When I search stock movements of combination "product1SBlack" I should get following results:
       | type    | employee   | delta_quantity |
       | orders  |            | -6             |
-      | edition | Puff Daddy | 5              |
+      | edition | Puffin Mummy | 5              |
       | orders  |            | -9             |
-      | edition | Puff Daddy | 10             |
+      | edition | Puffin Mummy | 10             |
       # Since no stock movement is generated until the order is shipped this orders movement only has a quantity of -2,
       # not -5 because second order is still waiting for payment
       | orders  |            | -2             |
     When I search stock movements of combination "product1SBlack" with offset 0 and limit 6 I should get following results:
       | type    | employee   | delta_quantity |
       | orders  |            | -6             |
-      | edition | Puff Daddy | 5              |
+      | edition | Puffin Mummy | 5              |
       | orders  |            | -9             |
-      | edition | Puff Daddy | 10             |
+      | edition | Puffin Mummy | 10             |
       | orders  |            | -2             |
-      | edition | Puff Daddy | 100            |
+      | edition | Puffin Mummy | 100            |
     When I search stock movements of combination "product1SBlack" with offset 1 and limit 5 I should get following results:
       | type    | employee   | delta_quantity |
-      | edition | Puff Daddy | 5              |
+      | edition | Puffin Mummy | 5              |
       | orders  |            | -9             |
-      | edition | Puff Daddy | 10             |
+      | edition | Puffin Mummy | 10             |
       | orders  |            | -2             |
-      | edition | Puff Daddy | 100            |
+      | edition | Puffin Mummy | 100            |
     When I search stock movements of combination "product1SBlack" with offset 2 and limit 3 I should get following results:
       | type    | employee   | delta_quantity |
       | orders  |            | -9             |
-      | edition | Puff Daddy | 10             |
+      | edition | Puffin Mummy | 10             |
       | orders  |            | -2             |
 
   Scenario: I can search the last stock movements also if the first one is an edition (and can have multiple editions one after another)
@@ -179,7 +179,30 @@ Feature: Search stock movements from Back Office (BO)
     Then combination "product1MWhite" should have 5 available items
     When I search stock movements of combination "product1MWhite" I should get following results:
       | type    | employee   | delta_quantity |
-      | edition | Puff Daddy | -3             |
+      | edition | Puffin Mummy | -3             |
       | orders  |            | -2             |
-      | edition | Puff Daddy | -5             |
-      | edition | Puff Daddy | 15             |
+      | edition | Puffin Mummy | -5             |
+      | edition | Puffin Mummy | 15             |
+
+  Scenario: A combination stock update triggered by an API client records the movement related to it
+    Given I create an api client "combinationStockApiClient" with following properties:
+      | clientName  | Combination stock API client    |
+      | clientId    | combination-stock-api-client    |
+      | enabled     | true                            |
+      | description | client used to update the stock |
+      | lifetime    | 3600                            |
+    When I update combination "product1MBlack" stock with following details:
+      | delta quantity | 10 |
+    Then combination "product1MBlack" should have 10 available items
+    # The Admin API context: an API client is authenticated and the employee has no id
+    When the current employee context has no id
+    And I am logged in as api client with id "combination-stock-api-client"
+    And I update combination "product1MBlack" stock with following details:
+      | delta quantity | -4 |
+    Then combination "product1MBlack" should have 6 available items
+    When I search stock movements of combination "product1MBlack" I should get following results:
+      | type    | employee     | api_client_names             | delta_quantity |
+      | edition |              | Combination stock API client | -4             |
+      | edition | Puffin Mummy |                              | 10             |
+    # Reset the API client context so it does not leak into the following scenarios
+    And I am not logged in as an api client

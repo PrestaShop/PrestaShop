@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -158,7 +138,7 @@ abstract class AbstractFormCore implements FormInterface
                     );
 
                     continue;
-                } elseif (!$this->checkFieldLength($field)) {
+                } elseif (!$this->checkFieldMaxLength($field)) {
                     $field->addError(
                         $this->translator->trans(
                             'The %1$s field is too long (%2$d chars max).',
@@ -166,15 +146,31 @@ abstract class AbstractFormCore implements FormInterface
                             'Shop.Notifications.Error'
                         )
                     );
+                } elseif (!$this->checkFieldMinLength($field)) {
+                    $field->addError(
+                        $this->translator->trans(
+                            'The %1$s field is too short (%2$d chars min).',
+                            [$field->getLabel(), $field->getMinLength()],
+                            'Shop.Notifications.Error'
+                        )
+                    );
                 }
             } else {
                 if (!$field->getValue()) {
                     continue;
-                } elseif (!$this->checkFieldLength($field)) {
+                } elseif (!$this->checkFieldMaxLength($field)) {
                     $field->addError(
                         $this->translator->trans(
                             'The %1$s field is too long (%2$d chars max).',
                             [$field->getLabel(), $field->getMaxLength()],
+                            'Shop.Notifications.Error'
+                        )
+                    );
+                } elseif (!$this->checkFieldMinLength($field)) {
+                    $field->addError(
+                        $this->translator->trans(
+                            'The %1$s field is too short (%2$d chars min).',
+                            [$field->getLabel(), $field->getMinLength()],
                             'Shop.Notifications.Error'
                         )
                     );
@@ -248,13 +244,41 @@ abstract class AbstractFormCore implements FormInterface
     /**
      * Validate field length
      *
+     * @deprecated Since 9.0 and will be removed in 10.0 - Please use `checkFieldMaxLength`
+     *
      * @param FormField $field the field to check
      *
      * @return bool
      */
     protected function checkFieldLength($field)
     {
+        return $this->checkFieldMaxLength($field);
+    }
+
+    /**
+     * Validate field length
+     *
+     * @param FormField $field the field to check
+     *
+     * @return bool
+     */
+    protected function checkFieldMaxLength(FormField $field): bool
+    {
         $error = $field->getMaxLength() != null && Tools::strlen($field->getValue()) > (int) $field->getMaxLength();
+
+        return !$error;
+    }
+
+    /**
+     * Validate field length
+     *
+     * @param FormField $field the field to check
+     *
+     * @return bool
+     */
+    protected function checkFieldMinLength(FormField $field): bool
+    {
+        $error = $field->getMinLength() != null && Tools::strlen($field->getValue()) < (int) $field->getMinLength();
 
         return !$error;
     }

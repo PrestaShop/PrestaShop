@@ -1,0 +1,38 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12 mb-3">
+      <a href="{{ path('admin_international_translations_show_settings') }}" class="btn btn-outline-secondary">
+        <i class="material-icons">arrow_back</i>
+        {{ 'Back to translations'|trans({}, 'Admin.International.Feature') }}
+      </a>
+    </div>
+  </div>
+
+  {% block email_body_template_grid %}
+    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: emailBodyTemplateGrid}) }}
+  {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/email_body_translation.bundle.js') }}"></script>
+  <script>
+    $(function () {
+      var searchFormUrl = '{{ path('admin_email_body_translation_search', {locale: locale}) }}';
+      var indexUrl = '{{ path('admin_email_body_translation_index', {locale: locale}) }}';
+      var $filterForm = $('#email_body_template_filter_form');
+      if ($filterForm.length) {
+        $filterForm.attr('action', searchFormUrl);
+      }
+      $('[data-redirect]').attr('data-redirect', indexUrl);
+    });
+  </script>
+{% endblock %}

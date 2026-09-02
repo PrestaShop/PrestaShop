@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 declare(strict_types=1);
 
@@ -63,7 +43,7 @@ class CombinationItemType extends TranslatorAwareType
     /**
      * @var FeatureInterface
      */
-    private $multistoreFeature;
+    private $multiStoreFeature;
 
     /**
      * @var int
@@ -74,12 +54,12 @@ class CombinationItemType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         Currency $defaultCurrency,
-        FeatureInterface $multistoreFeature,
+        FeatureInterface $multiStoreFeature,
         int $contextShopId
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
-        $this->multistoreFeature = $multistoreFeature;
+        $this->multiStoreFeature = $multiStoreFeature;
         $this->contextShopId = $contextShopId;
     }
 
@@ -88,7 +68,7 @@ class CombinationItemType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if ($this->multistoreFeature->isActive()) {
+        if ($this->multiStoreFeature->isActive()) {
             $deleteItemMessage = $this->trans('Delete selected item from current store?', 'Admin.Notifications.Warning');
         } else {
             $deleteItemMessage = $this->trans('Delete selected item?', 'Admin.Notifications.Warning');
@@ -126,7 +106,7 @@ class CombinationItemType extends TranslatorAwareType
             ],
         ];
 
-        if ($this->multistoreFeature->isActive()) {
+        if ($this->multiStoreFeature->isActive()) {
             $actionButtons['delete_for_all_shops'] = [
                 'type' => IconButtonType::class,
                 'options' => [
@@ -225,7 +205,7 @@ class CombinationItemType extends TranslatorAwareType
                 'label' => $this->trans('Quantity', 'Admin.Global'),
             ])
             ->add('is_default', RadioType::class, [
-                'label' => false,
+                'label' => $this->trans('Default combination', 'Admin.Catalog.Feature'),
                 'attr' => [
                     'class' => 'combination-is-default-input',
                 ],

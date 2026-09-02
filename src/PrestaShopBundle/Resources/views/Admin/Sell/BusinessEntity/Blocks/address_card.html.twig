@@ -1,0 +1,18 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<div class="card" data-address-index="{{ index }}">
+  <div class="card-header d-flex justify-content-between">
+    <div class="js-business-entity-address-position">
+      {{ 'Address #%position%'|trans({'%position%': position}, 'Admin.Global') }}
+    </div>
+    <div class="d-flex">
+      <div class="set-as-default-business-entity-address-btn-placeholder"></div>
+      <div class="delete-business-entity-address-btn-placeholder"></div>
+    </div>
+  </div>
+  <div class="card-body">
+    {{ form_widget(address) }}
+  </div>
+</div>

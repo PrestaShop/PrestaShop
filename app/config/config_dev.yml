@@ -1,12 +1,5 @@
 imports:
   - { resource: config.yml }
-  - { resource: security_dev.yml }
-
-framework:
-  router:
-    resource: "%kernel.root_dir%/config/routing_dev.yml"
-    strict_requirements: true
-  profiler: { only_exceptions: false }
 
 web_profiler:
   toolbar: '%use_debug_toolbar%'
@@ -16,7 +9,7 @@ monolog:
   handlers:
     main:
       type: rotating_file
-      max_files: '%env(PS_LOG_MAX_FILES)%'
+      max_files: '%env(int:PS_LOG_MAX_FILES)%'
       path: '%env(PS_LOG_OUTPUT)%'
       level: debug
       channels: [ "!event" ]
@@ -44,17 +37,7 @@ monolog:
       #  type:   chromephp
       #  level:  info
 
-# swiftmailer:
-#  delivery_address: me@example.com
-
 prestashop:
   addons:
     api_client:
       ttl: 300  # 5min
-
-tactician:
-  commandbus:
-    default:
-      middleware:
-        - prestashop.core.command_bus.middleware.command_register_middleware
-        - tactician.middleware.command_handler

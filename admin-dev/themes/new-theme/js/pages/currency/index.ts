@@ -1,56 +1,25 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-import Grid from '@components/grid/grid';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import ExchangeRatesUpdateScheduler from '@pages/currency/ExchangeRatesUpdateScheduler';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 
 const {$} = window;
 
 $(() => {
-  const currency = new Grid('currency');
+  const currency = new window.prestashop.component.Grid('currency');
 
-  currency.addExtension(new BulkActionCheckboxExtension());
-  currency.addExtension(new SubmitBulkExtension());
-  currency.addExtension(new ExportToSqlManagerExtension());
-  currency.addExtension(new SortingExtension());
-  currency.addExtension(new FiltersResetExtension());
-  currency.addExtension(new ReloadListActionExtension());
-  currency.addExtension(new ColumnTogglingExtension());
-  currency.addExtension(new SubmitRowActionExtension());
-  currency.addExtension(new FiltersSubmitButtonEnablerExtension());
-  currency.addExtension(new LinkRowActionExtension());
+  currency.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  currency.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  currency.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  currency.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  currency.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  currency.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  currency.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  currency.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  currency.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  currency.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 
   new ExchangeRatesUpdateScheduler();
 });

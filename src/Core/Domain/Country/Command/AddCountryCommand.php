@@ -1,33 +1,14 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CallPrefix;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
 use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 use Tools;
@@ -37,99 +18,34 @@ use Tools;
  */
 class AddCountryCommand
 {
-    /**
-     * @var string[]
-     */
-    protected $localizedNames;
+    private string $isoCode;
+    private CallPrefix $callPrefix;
+    private ZoneId $zoneId;
+    private ?CountryZipCodeFormat $zipCodeFormat;
 
     /**
-     * @var string
+     * @param string[] $localizedNames
+     * @param int[] $shopAssociation
      */
-    protected $isoCode;
-
-    /**
-     * @var int
-     */
-    protected $callPrefix;
-
-    /**
-     * @var int
-     */
-    protected $defaultCurrency = 0;
-
-    /**
-     * @var ZoneId
-     */
-    protected $zoneId;
-
-    /**
-     * @var bool
-     */
-    protected $needZipCode = false;
-
-    /**
-     * @var ?CountryZipCodeFormat
-     */
-    protected $zipCodeFormat;
-
-    /**
-     * @var string
-     */
-    protected $addressFormat = '';
-
-    /**
-     * @var bool
-     */
-    protected $enabled = false;
-
-    /**
-     * @var bool
-     */
-    protected $containsStates = false;
-
-    /**
-     * @var bool
-     */
-    protected $needIdNumber = false;
-
-    /**
-     * @var bool
-     */
-    protected $displayTaxLabel = false;
-
-    /**
-     * @var int[]
-     */
-    protected $shopAssociation = [];
-
     public function __construct(
-        array $localizedNames,
+        private array $localizedNames,
         string $isoCode,
         int $callPrefix,
-        int $defaultCurrency,
+        private int $defaultCurrency,
         int $zoneId,
-        bool $needZipCode,
+        private bool $needZipCode,
         ?string $zipCodeFormat,
-        string $addressFormat,
-        bool $enabled,
-        bool $containsStates,
-        bool $needIdNumber,
-        bool $displayTaxLabel,
-        array $shopAssociation
+        private string $addressFormat,
+        private bool $enabled,
+        private bool $containsStates,
+        private bool $needIdNumber,
+        private bool $displayTaxLabel,
+        private array $shopAssociation,
     ) {
-        $this->localizedNames = $localizedNames;
         $this->isoCode = Tools::strtoupper(Tools::substr($isoCode, 0, 2));
-        $this->callPrefix = $callPrefix;
-        $this->defaultCurrency = $defaultCurrency;
+        $this->callPrefix = new CallPrefix($callPrefix);
         $this->zoneId = new ZoneId($zoneId);
-        $this->needZipCode = $needZipCode;
         $this->zipCodeFormat = $zipCodeFormat ? new CountryZipCodeFormat($zipCodeFormat) : null;
-        $this->addressFormat = $addressFormat;
-        $this->enabled = $enabled;
-        $this->containsStates = $containsStates;
-        $this->needIdNumber = $needIdNumber;
-        $this->displayTaxLabel = $displayTaxLabel;
-        $this->shopAssociation = $shopAssociation;
     }
 
     /**
@@ -140,12 +56,12 @@ class AddCountryCommand
         return $this->localizedNames;
     }
 
-    public function getIsoCode()
+    public function getIsoCode(): string
     {
         return $this->isoCode;
     }
 
-    public function getCallPrefix(): int
+    public function getCallPrefix(): CallPrefix
     {
         return $this->callPrefix;
     }

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Util\String;
@@ -55,14 +35,58 @@ final class StringModifier implements StringModifierInterface
      */
     public function cutEnd(string $string, int $expectedLength): string
     {
-        $length = strlen($string);
-
-        if ($length > $expectedLength) {
-            // cut symbols difference from the end of the string
-            $string = substr($string, 0, $expectedLength - $length);
+        if (mb_strlen($string, 'UTF-8') > $expectedLength) {
+            return mb_substr($string, 0, $expectedLength, 'UTF-8');
         }
 
         return $string;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function htmlToText(string $html): string
+    {
+        // Replace explicit line breaks with spaces so words from adjacent lines stay separated.
+        $html = preg_replace('/<br\s*\/?>/i', ' ', $html);
+
+        // Add commas after list items before stripping tags so list values stay separated.
+        $html = preg_replace('/<\/li\s*>/i', ', ', $html);
+
+        // Add a sentence boundary after lists before stripping tags.
+        $html = preg_replace('/<\/(?:ul|ol)\s*>/i', '. ', $html);
+
+        // Replace common block endings with spaces so paragraphs and headings stay separated.
+        $html = preg_replace('/<\/(?:p|div|section|article|header|footer|aside|nav|blockquote|h[1-6]|tr|td|th)\s*>/i', ' ', $html);
+
+        // Remove remaining HTML tags after separators have been inserted.
+        $text = strip_tags($html);
+
+        // Decode HTML entities so the returned text contains readable characters.
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        // Normalize all whitespace first so punctuation cleanup can use predictable spacing.
+        $text = preg_replace('/\s+/u', ' ', $text);
+
+        // Remove spaces before punctuation introduced by stripped tags.
+        $text = preg_replace('/\s+([,.!?;:])/', '$1', $text);
+
+        // Remove commas before sentence punctuation, for example after the last list item.
+        $text = preg_replace('/,\s*([.!?])/', '$1', $text);
+
+        // Remove list commas after items that already ended with sentence punctuation.
+        $text = preg_replace('/([.!?])\s*,/', '$1', $text);
+
+        // Collapse repeated commas created by empty list items.
+        $text = preg_replace('/(?:\s*,\s*){2,}/', ', ', $text);
+
+        // Collapse repeated sentence dots created by list endings next to existing punctuation.
+        $text = preg_replace('/(?:\.\s*){2,}/', '. ', $text);
+
+        // Normalize whitespace again after punctuation cleanup.
+        $text = preg_replace('/\s+/u', ' ', $text);
+
+        return trim($text);
     }
 
     /**
@@ -73,13 +97,18 @@ final class StringModifier implements StringModifierInterface
      *
      * @return string
      */
-    public function str2url(string $string): string
+    public function str2url(string $string, bool $allow_accented_chars): string
     {
         $return_str = trim($string);
         $return_str = mb_strtolower($return_str, 'UTF-8');
 
-        $return_str = $this->replaceAccentedChars($return_str);
-        $return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-\p{L}]/u', '', $return_str);
+        if ($allow_accented_chars) {
+            $return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-\p{L}]/u', '', $return_str);
+        } else {
+            $return_str = $this->replaceAccentedChars($return_str);
+            $return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-]/', '', $return_str);
+        }
+
         $return_str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $return_str);
 
         return str_replace([' ', '/'], '-', $return_str);

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,8 +9,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Grid\Data\Factory;
 
 use Doctrine\DBAL\Query\QueryBuilder;
-use PDOStatement;
+use Doctrine\DBAL\Result;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridQueryBuilderModifier;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
@@ -47,11 +28,17 @@ class DoctrineGridDataFactoryTest extends TestCase
 
         $queryParser = $this->createQueryParserMock();
 
+        // castExtraProperties() returns the records untouched, like the real implementation
+        // does when no extra property is registered for the grid.
+        $extraPropertiesModifier = $this->createMock(ExtraPropertiesGridQueryBuilderModifier::class);
+        $extraPropertiesModifier->method('castExtraProperties')->willReturnArgument(0);
+
         $doctrineGridDataFactory = new DoctrineGridDataFactory(
             $this->createDoctrineQueryBuilderMock(),
             $hookDispatcher,
             $queryParser,
-            'test_grid_id'
+            'test_grid_id',
+            $extraPropertiesModifier
         );
 
         $criteria = $this->createMock(SearchCriteriaInterface::class);
@@ -63,7 +50,15 @@ class DoctrineGridDataFactoryTest extends TestCase
 
         $this->assertEquals(4, $data->getRecordsTotal());
         $this->assertCount(2, $data->getRecords());
-        $this->assertEquals('SELECT * FROM ps_test WHERE id = 1', $data->getQuery());
+        $this->assertEquals(
+            'SELECT' . PHP_EOL
+            . '  *' . PHP_EOL
+            . 'FROM' . PHP_EOL
+            . '  ps_test' . PHP_EOL
+            . 'WHERE' . PHP_EOL
+            . '  id = 1',
+            $data->getQuery()
+        );
     }
 
     /**
@@ -71,8 +66,8 @@ class DoctrineGridDataFactoryTest extends TestCase
      */
     private function createDoctrineQueryBuilderMock(): DoctrineQueryBuilderInterface
     {
-        $statement = $this->createMock(PDOStatement::class);
-        $statement->method('fetchAll')
+        $result = $this->createMock(Result::class);
+        $result->method('fetchAllAssociative')
             ->willReturn([
                 [
                     'id' => 1,
@@ -83,12 +78,12 @@ class DoctrineGridDataFactoryTest extends TestCase
                     'name' => 'Test name 2',
                 ],
             ]);
-        $statement->method('fetch')
+        $result->method('fetchOne')
             ->willReturn(4);
 
         $qb = $this->createMock(QueryBuilder::class);
-        $qb->method('execute')
-            ->willReturn($statement);
+        $qb->method('executeQuery')
+            ->willReturn($result);
         $qb->method('getSQL')
             ->willReturn('SELECT * FROM ps_test WHERE id = :id');
         $qb->method('getParameters')
@@ -125,7 +120,7 @@ class DoctrineGridDataFactoryTest extends TestCase
     private function createQueryParserMock(): QueryParserInterface
     {
         $queryParser = $this->getMockBuilder(QueryParserInterface::class)
-            ->setMethods(['parse'])
+            ->onlyMethods(['parse'])
             ->getMockForAbstractClass();
 
         $queryParser->method('parse')->willReturn('SELECT * FROM ps_test WHERE id = 1');

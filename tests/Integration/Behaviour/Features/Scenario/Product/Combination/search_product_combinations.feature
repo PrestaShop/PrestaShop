@@ -39,7 +39,9 @@ Feature: Search attribute combinations for product in Back Office (BO) of multip
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
     And product product1 type should be combinations
-    And I copy product product1 from shop shop1 to shop shop2
+    When I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     When I generate combinations in shop "shop1" for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
@@ -60,6 +62,14 @@ Feature: Search attribute combinations for product in Back Office (BO) of multip
       | product1Blue  | Color - Blue     |           | [Color:Blue]  | 0               | 0        | false      |
 
   Scenario: Search combinations by attributes
+    When I list product "product1" combinations in language "en" for shop "shop1" limited to "10" results I should see following results:
+      | id reference   | combination name        |
+      | product1SWhite | Size - S, Color - White |
+      | product1SBlack | Size - S, Color - Black |
+      | product1SBlue  | Size - S, Color - Blue  |
+      | product1MWhite | Size - M, Color - White |
+      | product1MBlack | Size - M, Color - Black |
+      | product1MBlue  | Size - M, Color - Blue  |
     When I search product "product1" combinations by phrase "b" in language "en" for shop "shop2" limited to "20" results I should see following results:
       | id reference  | combination name |
       | product1Black | Color - Black    |
@@ -131,13 +141,17 @@ Feature: Search attribute combinations for product in Back Office (BO) of multip
       | id reference   | combination name        |
 
   Scenario: Search for combinations by attribute groups which doesn't exist in shop should not find any combinations
-    Given I copy product "product1" from shop "shop1" to shop "shop3"
+    Given I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop3 |
     And attribute group "Color" is not associated to shops "shop3"
     When I search product "product1" combinations by phrase "Color" in language "en" for shop "shop3" limited to "20" results I should see following results:
       | id reference   | combination name        |
 
   Scenario: Search for combinations by attribute which doesn't exist in shop should not find any combinations
-    Given I copy product "product1" from shop "shop1" to shop "shop4"
+    Given I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop4 |
     And attribute "White" is not associated to shops "shop4"
     When I search product "product1" combinations by phrase "White" in language "en" for shop "shop4" limited to "20" results I should see following results:
       | id reference   | combination name        |

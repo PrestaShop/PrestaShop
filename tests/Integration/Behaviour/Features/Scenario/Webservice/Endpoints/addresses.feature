@@ -70,7 +70,7 @@ Feature: Webservice key management
     And webservice key "ENABLEDENABLEDENABLEDENABLEDENAB" should have "PUT" permission for "addresses" resources
     And webservice key "ENABLEDENABLEDENABLEDENABLEDENAB" should have "DELETE" permission for "addresses" resources
     And I use Webservice with key "ENABLEDENABLEDENABLEDENABLEDENAB" to list "addresses"
-    Then I should get 6 items of type "address"
+    Then I should get 5 items of type "address"
 
   Scenario: Manipulate data
     # I need permission before I can add the address
@@ -87,7 +87,6 @@ Feature: Webservice key management
       | id_customer     | 0              |
       | id_manufacturer | 0              |
       | id_supplier     | 0              |
-      | id_warehouse    | 0              |
       | id_country      | 8              |
       | id_state        |                |
       | alias           | dadadada       |
@@ -106,14 +105,13 @@ Feature: Webservice key management
       | deleted         | 0              |
     ## Check if it is added
     When I use Webservice with key "ENABLEDENABLEDENABLEDENABLEDENAB" to list "addresses"
-    Then I should get 7 items of type "address"
+    Then I should get 6 items of type "address"
     ## Check if data are updated
     And using Webservice with key "ENABLEDENABLEDENABLEDENABLEDENAB" to view "addresses" for reference "address_6", I should get following properties:
       | key             | value          |
       | id_customer     | 0              |
       | id_manufacturer | 0              |
       | id_supplier     | 0              |
-      | id_warehouse    | 0              |
       | id_country      | 8              |
       | id_state        | 0              |
       | alias           | dadadada       |
@@ -136,7 +134,6 @@ Feature: Webservice key management
       | id_customer     | 0              |
       | id_manufacturer | 0              |
       | id_supplier     | 0              |
-      | id_warehouse    | 0              |
       | id_country      | 8              |
       | id_state        |                |
       | alias           | alias          |
@@ -159,7 +156,6 @@ Feature: Webservice key management
       | id_customer     | 0              |
       | id_manufacturer | 0              |
       | id_supplier     | 0              |
-      | id_warehouse    | 0              |
       | id_country      | 8              |
       | id_state        | 0              |
       | alias           | alias          |
@@ -180,4 +176,4 @@ Feature: Webservice key management
     And I use Webservice with key "ENABLEDENABLEDENABLEDENABLEDENAB" to remove "addresses" with reference "address_6"
     ## Check if it is deleted
     When I use Webservice with key "ENABLEDENABLEDENABLEDENABLEDENAB" to list "addresses"
-    Then I should get 6 items of type "address"
+    Then I should get 5 items of type "address"

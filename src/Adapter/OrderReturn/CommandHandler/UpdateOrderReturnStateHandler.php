@@ -1,40 +1,30 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler;
 
+use Configuration;
+use Customer;
+use Language;
+use Mail;
+use Order;
 use OrderReturn;
+use OrderReturnState;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
 use PrestaShop\PrestaShop\Adapter\OrderReturnState\Repository\OrderReturnStateRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\UpdateOrderReturnStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Validate;
 
+#[AsCommandHandler]
 class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInterface
 {
     /**
@@ -48,17 +38,25 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
     private $orderReturnStateRepository;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * UpdateOrderReturnStateHandler constructor.
      *
      * @param OrderReturnRepository $orderReturnRepository
      * @param OrderReturnStateRepository $orderReturnStateRepository
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         OrderReturnRepository $orderReturnRepository,
-        OrderReturnStateRepository $orderReturnStateRepository
+        OrderReturnStateRepository $orderReturnStateRepository,
+        TranslatorInterface $translator
     ) {
         $this->orderReturnRepository = $orderReturnRepository;
         $this->orderReturnStateRepository = $orderReturnStateRepository;
+        $this->translator = $translator;
     }
 
     /**
@@ -67,9 +65,65 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
     public function handle(UpdateOrderReturnStateCommand $command): void
     {
         $orderReturn = $this->orderReturnRepository->get($command->getOrderReturnId());
+        $previousState = (int) $orderReturn->state;
         $orderReturn = $this->updateOrderReturnWithCommandData($orderReturn, $command);
 
         $this->orderReturnRepository->update($orderReturn);
+
+        // Notify the customer when the return status actually changes, mirroring the legacy
+        // AdminReturnController behaviour (the migration had dropped this email).
+        if ((int) $orderReturn->state !== $previousState) {
+            $this->sendStateChangeEmail($orderReturn);
+        }
+    }
+
+    /**
+     * Sends the "order return status has changed" email to the customer, in the order's language
+     * and shop context.
+     *
+     * @param OrderReturn $orderReturn
+     */
+    private function sendStateChangeEmail(OrderReturn $orderReturn): void
+    {
+        $order = new Order((int) $orderReturn->id_order);
+        $customer = new Customer((int) $orderReturn->id_customer);
+
+        if (!Validate::isLoadedObject($order) || !Validate::isLoadedObject($customer)) {
+            return;
+        }
+
+        $orderReturnState = new OrderReturnState((int) $orderReturn->state);
+        $orderLanguage = new Language((int) $order->id_lang);
+
+        $stateName = $orderReturnState->name[(int) $order->id_lang]
+            ?? $orderReturnState->name[(int) Configuration::get('PS_LANG_DEFAULT')]
+            ?? '';
+
+        Mail::Send(
+            (int) $order->id_lang,
+            'order_return_state',
+            $this->translator->trans(
+                'Your order return status has changed',
+                [],
+                'Emails.Subject',
+                $orderLanguage->locale
+            ),
+            [
+                '{lastname}' => $customer->lastname,
+                '{firstname}' => $customer->firstname,
+                '{id_order_return}' => (int) $orderReturn->id,
+                '{state_order_return}' => $stateName,
+            ],
+            $customer->email,
+            $customer->firstname . ' ' . $customer->lastname,
+            null,
+            null,
+            null,
+            null,
+            _PS_MAIL_DIR_,
+            true,
+            (int) $order->id_shop
+        );
     }
 
     /**

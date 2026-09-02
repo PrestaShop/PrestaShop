@@ -1,0 +1,92 @@
+admin_quick_accesses_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\QuickAccessController::indexAction'
+    _legacy_controller: AdminQuickAccesses
+    _legacy_link: AdminQuickAccesses
+    _legacy_feature_flag: quick_access
+
+admin_quick_accesses_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\QuickAccessGridDefinitionFactory'
+    redirectRoute: admin_quick_accesses_index
+    _legacy_controller: AdminQuickAccesses
+    _legacy_link: AdminQuickAccesses:submitFilterquick_access
+    _legacy_feature_flag: quick_access
+
+admin_quick_accesses_delete:
+  path: /{quickAccessId}/delete
+  methods: [ DELETE, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\QuickAccessController::deleteAction'
+    _legacy_controller: AdminQuickAccesses
+    _legacy_link: AdminQuickAccesses:deletequick_access
+    _legacy_feature_flag: quick_access
+    _legacy_parameters:
+      id_quick_access: quickAccessId
+  requirements:
+    quickAccessId: \d+
+
+admin_quick_accesses_bulk_delete:
+  path: /bulk-delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\QuickAccessController::bulkDeleteAction'
+    _legacy_controller: AdminQuickAccesses
+    _legacy_link: AdminQuickAccesses:submitBulkdeletequick_access
+    _legacy_feature_flag: quick_access
+
+admin_quick_accesses_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\QuickAccessController::createAction'
+    _legacy_controller: AdminQuickAccesses
+    _legacy_link: AdminQuickAccesses:addquick_access
+    _legacy_feature_flag: quick_access
+
+admin_quick_accesses_edit:
+  path: /{quickAccessId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\QuickAccessController::editAction'
+    _legacy_controller: AdminQuickAccesses
+    _legacy_link: AdminQuickAccesses:updatequick_access
+    _legacy_feature_flag: quick_access
+    _legacy_parameters:
+      id_quick_access: quickAccessId
+  requirements:
+    quickAccessId: \d+
+
+admin_quick_accesses_ajax_add:
+  path: /ajax/add
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\QuickAccessController::ajaxAddQuickLinkAction'
+    _legacy_controller: AdminQuickAccesses
+    _legacy_feature_flag: quick_access
+
+admin_quick_accesses_ajax_delete:
+  path: /ajax/delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\QuickAccessController::ajaxDeleteQuickLinkAction'
+    _legacy_controller: AdminQuickAccesses
+    _legacy_feature_flag: quick_access
+
+admin_quick_accesses_toggle_new_window:
+  path: /{quickAccessId}/toggle-new-window
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\QuickAccessController::toggleNewWindowAction'
+    _legacy_controller: AdminQuickAccesses
+    _legacy_link: AdminQuickAccesses:statusquick_access
+    _legacy_feature_flag: quick_access
+    _legacy_parameters:
+      id_quick_access: quickAccessId
+  requirements:
+    quickAccessId: \d+

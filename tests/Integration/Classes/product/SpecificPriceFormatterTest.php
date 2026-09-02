@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -67,7 +47,7 @@ class SpecificPriceFormatterTest extends KernelTestCase
             $xmlContent = $localizationWarmer->warmUp(_PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR);
 
             $localizationPack = new LocalizationPack();
-            $localizationPack->loadLocalisationPack($xmlContent, [], true);
+            $localizationPack->loadLocalisationPack($xmlContent[0], [], true);
         }
     }
 
@@ -114,8 +94,15 @@ class SpecificPriceFormatterTest extends KernelTestCase
         $formattedSpecificPrice = $specificPriceFormatter->formatSpecificPrice($price, $taxRate, $ecotaxAmount);
 
         $priceFormatter = new PriceFormatter();
-        $this->assertEquals($priceFormatter->format($expected[0]['discount']), $formattedSpecificPrice['discount']);
-        $this->assertEquals($priceFormatter->format($expected[0]['save']), $formattedSpecificPrice['save']);
+
+        $checkKeys = ['discount', 'save', 'discounted_unit_price', 'initial_price'];
+        foreach ($checkKeys as $checkKey) {
+            $this->assertEquals(
+                $priceFormatter->format($expected[0][$checkKey]),
+                $formattedSpecificPrice[$checkKey],
+                "checkKey: $checkKey"
+            );
+        }
     }
 
     public function dataProviderSpecificPriceFormatter(): array
@@ -223,6 +210,8 @@ class SpecificPriceFormatterTest extends KernelTestCase
                     [
                         'discount' => 7.80,
                         'save' => 117.00,
+                        'discounted_unit_price' => 23.40,
+                        'initial_price' => 31.2,
                     ],
                 ],
             ],
@@ -237,6 +226,8 @@ class SpecificPriceFormatterTest extends KernelTestCase
                     [
                         'discount' => 6.00,
                         'save' => 90.00,
+                        'discounted_unit_price' => 18,
+                        'initial_price' => 24,
                     ],
                 ],
             ],
@@ -251,6 +242,8 @@ class SpecificPriceFormatterTest extends KernelTestCase
                     [
                         'discount' => 6.63,
                         'save' => 99.45,
+                        'discounted_unit_price' => 24.57,
+                        'initial_price' => 31.2,
                     ],
                 ],
             ],
@@ -265,6 +258,8 @@ class SpecificPriceFormatterTest extends KernelTestCase
                     [
                         'discount' => 5.10,
                         'save' => 76.50,
+                        'discounted_unit_price' => 18.90,
+                        'initial_price' => 24,
                     ],
                 ],
             ],
@@ -279,6 +274,8 @@ class SpecificPriceFormatterTest extends KernelTestCase
                     [
                         'discount' => 11.70,
                         'save' => 175.50,
+                        'discounted_unit_price' => 19.50,
+                        'initial_price' => 31.2,
                     ],
                 ],
             ],
@@ -293,6 +290,8 @@ class SpecificPriceFormatterTest extends KernelTestCase
                     [
                         'discount' => 9.00,
                         'save' => 135.00,
+                        'discounted_unit_price' => 15.00,
+                        'initial_price' => 24,
                     ],
                 ],
             ],
@@ -307,6 +306,8 @@ class SpecificPriceFormatterTest extends KernelTestCase
                     [
                         'discount' => 2.46,
                         'save' => 24.60,
+                        'discounted_unit_price' => 9.84,
+                        'initial_price' => 12.30,
                     ],
                 ],
             ],
@@ -321,6 +322,8 @@ class SpecificPriceFormatterTest extends KernelTestCase
                     [
                         'discount' => 4.26,
                         'save' => 12.78,
+                        'discounted_unit_price' => 11.22,
+                        'initial_price' => 15.48,
                     ],
                 ],
             ],

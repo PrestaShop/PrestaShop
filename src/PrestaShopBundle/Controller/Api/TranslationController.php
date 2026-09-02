@@ -1,33 +1,15 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Controller\Api;
 
+use Context;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\EntityTranslatorFactory;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\CoreDomainProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
@@ -37,34 +19,33 @@ use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
+use PrestaShopBundle\Translation\TranslatorInterface;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TranslationController extends ApiController
 {
-    /**
-     * @var QueryTranslationParamsCollection
-     */
-    public $queryParams;
-
-    /**
-     * @var TranslationService
-     */
-    public $translationService;
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly QueryTranslationParamsCollection $queryParams,
+        private readonly TranslationService $translationService,
+    ) {
+    }
 
     /**
      * Show translations for 1 domain & 1 locale given & 1 theme given (optional).
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function listDomainTranslationAction(Request $request): JsonResponse
     {
         try {
@@ -78,11 +59,11 @@ class TranslationController extends ApiController
             $domain = $request->attributes->get('domain');
             $theme = $request->attributes->get('theme');
             $module = $request->query->get('module');
-            $search = $request->query->get('search');
+            $search = $request->query->all('search');
 
             try {
                 $this->translationService->findLanguageByLocale($locale);
-            } catch (InvalidLanguageException $e) {
+            } catch (InvalidLanguageException) {
                 // If the locale is invalid, no need to call the translation provider.
                 throw UnsupportedLocaleException::invalidLocale($locale);
             }
@@ -95,8 +76,8 @@ class TranslationController extends ApiController
                 $providerDefinition = new ModuleProviderDefinition($module);
             } elseif (
                 !empty($theme)
-                // Default theme is not considered like other themes because its translations belong to the Core
-                && ThemeProviderDefinition::DEFAULT_THEME_NAME !== $theme
+                // Core themes are not considered like other themes because their translations belong to the Core
+                && !in_array($theme, Theme::CORE_THEMES)
             ) {
                 $providerDefinition = new ThemeProviderDefinition($theme);
             } else {
@@ -123,12 +104,11 @@ class TranslationController extends ApiController
     /**
      * Show tree for translation page with some params.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function listTreeAction(Request $request)
     {
         try {
@@ -141,7 +121,7 @@ class TranslationController extends ApiController
             $type = $request->attributes->get('type');
             $selected = $request->attributes->get('selected');
 
-            $search = $request->query->get('search');
+            $search = $request->query->all('search');
 
             if (!in_array($type, ProviderDefinitionInterface::ALLOWED_TYPES)) {
                 throw new Exception(sprintf("The 'type' parameter '%s' is not valid", $type));
@@ -172,12 +152,11 @@ class TranslationController extends ApiController
     /**
      * Route to edit translation.
      *
-     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) or is_granted('update', request.get('_legacy_controller'))")]
     public function translationEditAction(Request $request)
     {
         try {
@@ -230,12 +209,11 @@ class TranslationController extends ApiController
     /**
      * Route to reset translation.
      *
-     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) or is_granted('update', request.get('_legacy_controller'))")]
     public function translationResetAction(Request $request)
     {
         try {
@@ -285,9 +263,9 @@ class TranslationController extends ApiController
 
         $decodedContent = $this->guardAgainstInvalidJsonBody($content);
 
-        if (empty($decodedContent) ||
-            !array_key_exists('translations', $decodedContent) ||
-            !is_array($decodedContent['translations'])
+        if (empty($decodedContent)
+            || !array_key_exists('translations', $decodedContent)
+            || !is_array($decodedContent['translations'])
         ) {
             $message = 'The request body should contain a JSON-encoded array of translations';
 
@@ -307,10 +285,10 @@ class TranslationController extends ApiController
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
-            if (!array_key_exists('locale', $item) ||
-                !array_key_exists('domain', $item) ||
-                !array_key_exists('default', $item) ||
-                !array_key_exists('edited', $item)
+            if (!array_key_exists('locale', $item)
+                || !array_key_exists('domain', $item)
+                || !array_key_exists('default', $item)
+                || !array_key_exists('edited', $item)
             ) {
                 throw new BadRequestHttpException(sprintf($message, $index));
             }
@@ -327,9 +305,9 @@ class TranslationController extends ApiController
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
-            if (!array_key_exists('locale', $item) ||
-                !array_key_exists('domain', $item) ||
-                !array_key_exists('default', $item)
+            if (!array_key_exists('locale', $item)
+                || !array_key_exists('domain', $item)
+                || !array_key_exists('default', $item)
             ) {
                 throw new BadRequestHttpException(sprintf($message, $index));
             }
@@ -342,21 +320,19 @@ class TranslationController extends ApiController
      * @param string[] $modifiedDomains List of modified domains
      * @param Lang $lang
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function translateMultilingualContent(array $modifiedDomains, Lang $lang)
     {
         if (in_array('AdminNavigationMenu', $modifiedDomains)) {
-            $translator = $this->container->get('translator');
-
             // reset translator
-            $translator->clearLanguage($lang->getLocale());
+            $this->translator->clearLanguage($lang->getLocale());
 
             // update menu items (tabs)
-            (new EntityTranslatorFactory($translator))
+            (new EntityTranslatorFactory($this->translator))
                 ->buildFromTableName('tab', $lang->getLocale())
-                ->translate($lang->getId(), \Context::getContext()->shop->id);
+                ->translate($lang->getId(), Context::getContext()->shop->id);
         }
     }
 

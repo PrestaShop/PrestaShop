@@ -1,0 +1,14 @@
+ 
+
+{shop_url}
+
+Hi,
+
+{product} is almost out of stock.
+
+There are now less than {last_qty} items in stock.
+Remaining stock: {qty}
+Replenish your inventory, go to the Catalog > Stocks section of your back office to manage your stock.
+
+[{shop_name}]({shop_url})
+Powered by [PrestaShop](https://www.prestashop-project.org/)

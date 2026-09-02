@@ -1,71 +1,51 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use DateTime;
+use PrestaShop\PrestaShop\Adapter\PDF\CreditSlipPdfGenerator;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Exception\CreditSlipNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\Query\GetCreditSlipIdsByDateRange;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\ValueObject\CreditSlipId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CreditSlipGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactory;
 use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CreditSlipFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\GeneratePdfByDateType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible for Sell > Orders > Credit slips page
  */
-class CreditSlipController extends FrameworkBundleAdminController
+class CreditSlipController extends PrestaShopAdminController
 {
     /**
      * Show credit slips listing page.
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param CreditSlipFilters $creditSlipFilters
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
-        CreditSlipFilters $creditSlipFilters
+        CreditSlipFilters $creditSlipFilters,
+        #[Autowire(service: 'prestashop.core.grid.factory.credit_slip')] GridFactory $creditSlipGridFactory,
+        #[Autowire(service: 'prestashop.admin.credit_slip_options.form_handler')] FormHandlerInterface $creditSlipOptionsFormHandler,
     ) {
-        $creditSlipGridFactory = $this->get('prestashop.core.grid.factory.credit_slip');
         $creditSlipGrid = $creditSlipGridFactory->getGrid($creditSlipFilters);
 
-        $creditSlipOptionsFormHandler = $this->getSlipOptionsFormHandler();
         $creditSlipOptionsForm = $creditSlipOptionsFormHandler->getForm();
         $creditSlipOptionsForm->handleRequest($request);
 
@@ -73,9 +53,9 @@ class CreditSlipController extends FrameworkBundleAdminController
             $errors = $creditSlipOptionsFormHandler->save($creditSlipOptionsForm->getData());
 
             if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
             } else {
-                $this->flashErrors($errors);
+                $this->addflashErrors($errors);
             }
 
             return $this->redirectToRoute('admin_credit_slips_index');
@@ -92,48 +72,35 @@ class CreditSlipController extends FrameworkBundleAdminController
             'creditSlipGrid' => $this->presentGrid($creditSlipGrid),
             'pdfByDateForm' => $pdfByDateForm->createView(),
             'creditSlipOptionsForm' => $creditSlipOptionsForm->createView(),
+            'layoutTitle' => $this->trans('Credit slips', [], 'Admin.Navigation.Menu'),
         ]);
-    }
-
-    /**
-     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
-     *
-     * Provides filters functionality
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.credit_slip'),
-            $request,
-            CreditSlipGridDefinitionFactory::GRID_ID,
-            'admin_credit_slips_index'
-        );
     }
 
     /**
      * Generates PDF of requested credit slip by provided id
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param int $creditSlipId
      *
      * @return Response
      */
-    public function generatePdfAction($creditSlipId)
-    {
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function generatePdfAction(
+        int $creditSlipId,
+        #[Autowire(service: 'prestashop.adapter.pdf.credit_slip_pdf_generator')] CreditSlipPdfGenerator $creditSlipPdfGenerator,
+    ) {
         try {
-            $creditSlipId = new CreditSlipId((int) $creditSlipId);
+            $creditSlipId = new CreditSlipId($creditSlipId);
+            $generatedPdf = $creditSlipPdfGenerator->generatePDFForResponse([$creditSlipId]);
 
-            return new Response($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF([$creditSlipId]));
+            $response = new Response($generatedPdf->getContent());
+            $disposition = HeaderUtils::makeDisposition(
+                HeaderUtils::DISPOSITION_ATTACHMENT,
+                $generatedPdf->getFileName()
+            );
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response->headers->set('Content-Disposition', $disposition);
+
+            return $response;
         } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
@@ -144,40 +111,42 @@ class CreditSlipController extends FrameworkBundleAdminController
     /**
      * Generates PDF of credit slips found by requested date range
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
-    public function generatePdfByDateAction(Request $request)
-    {
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function generatePdfByDateAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.pdf.credit_slip_pdf_generator')] CreditSlipPdfGenerator $creditSlipPdfGenerator,
+    ) {
         $pdfByDateForm = $this->createForm(GeneratePdfByDateType::class, [], ['method' => Request::METHOD_GET]);
         $pdfByDateForm->handleRequest($request);
 
         if ($pdfByDateForm->isSubmitted() && $pdfByDateForm->isValid()) {
             try {
                 $dateRange = $pdfByDateForm->getData();
-                $slipIds = $this->getQueryBus()->handle(new GetCreditSlipIdsByDateRange(
+                $slipIds = $this->dispatchQuery(new GetCreditSlipIdsByDateRange(
                     new DateTime($dateRange['from']),
                     new DateTime($dateRange['to'])
                 ));
+                $generatedPdf = $creditSlipPdfGenerator->generatePDFForResponse($slipIds);
 
-                return new Response($this->get('prestashop.adapter.pdf.credit_slip_pdf_generator')->generatePDF($slipIds));
+                $response = new Response($generatedPdf->getContent());
+                $disposition = HeaderUtils::makeDisposition(
+                    HeaderUtils::DISPOSITION_ATTACHMENT,
+                    $generatedPdf->getFileName()
+                );
+                $response->headers->set('Content-Type', 'application/pdf');
+                $response->headers->set('Content-Disposition', $disposition);
+
+                return $response;
             } catch (CoreException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
         }
 
         return $this->redirectToRoute('admin_credit_slips_index');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    private function getSlipOptionsFormHandler()
-    {
-        return $this->get('prestashop.admin.credit_slip_options.form_handler');
     }
 
     /**
@@ -191,11 +160,13 @@ class CreditSlipController extends FrameworkBundleAdminController
             CreditSlipNotFoundException::class => [
                 CreditSlipNotFoundException::BY_DATE_RANGE => $this->trans(
                     'No order slips were found for this period.',
+                    [],
                     'Admin.Orderscustomers.Notification'
                 ),
             ],
             MissingDataException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
         ];

@@ -1,27 +1,7 @@
-{#**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
 
 {% block order_preview %}
   <div class="row order-preview-content mt-2" data-role="preview-row">
@@ -65,7 +45,7 @@
               </p>
 
               {% if not orderPreview.virtual %}
-                {% for line in orderPreview.shippingAddressFormatted|split("\n") %}
+                {% for line in orderPreview.shippingAddressFormatted|split('\n') %}
                   <p{% if not loop.last %} class="mb-0"{% endif %}>{{ line }}</p>
                 {% endfor %}
               {% endif %}
@@ -98,8 +78,7 @@
                 <strong>{{ 'Invoice details'|trans({}, 'Admin.Orderscustomers.Feature') }}:</strong>
               </p>
 
-
-              {% for line in orderPreview.invoiceAddressFormatted|split("\n") %}
+              {% for line in orderPreview.invoiceAddressFormatted|split('\n') %}
                 <p{% if not loop.last %} class="mb-0"{% endif %}>{{ line }}</p>
               {% endfor %}
             </div>
@@ -139,7 +118,13 @@
           <tbody>
           {% for productDetail in orderPreview.productDetails %}
             <tr class="{% if loop.index > productsPreviewLimit %}js-product-preview-more d-none{% endif %}">
-              <td class="p-1"><a class="px-0 external-link" href="{{ path('admin_product_form', {'id': productDetail.id}) }}" target="_blank">{{ productDetail.name }}</a></td>
+              <td class="p-1">
+                {% if productDetail.id %}
+                  <a class="px-0 external-link" href="{{ path('admin_products_edit', {productId: productDetail.id}) }}" target="_blank">{{ productDetail.name }}</a>
+                {% else %}
+                  {{ productDetail.name }} ({{ 'Product deleted'|trans({}, 'Admin.Catalog.Feature') }})
+                {% endif %}
+              </td>
               <td class="p-1">{{ productDetail.reference }}</td>
               <td class="p-1 js-cell-product-stock-location">
                 {% if productDetail.location is not empty %}{{ productDetail.location }}{% endif %}
@@ -158,7 +143,7 @@
                 <a href="#" class="js-preview-more-products-btn text-dark">
                   <i class="material-icons">more_horiz</i>
                   {{ '(%count% more)'|trans({
-                    '%count%': orderPreview.productDetails|length - productsPreviewLimit
+                    '%count%': orderPreview.productDetails|length - productsPreviewLimit,
                   }, 'Admin.Global') }}
                 </a>
               </td>
@@ -169,12 +154,12 @@
       </div>
 
       <div class="text-right">
-        <a href="{{ path('admin_orders_view', {'orderId': orderId}) }}" class="btn btn-primary btn-sm mb-3">
+        <a href="{{ path('admin_orders_view', {orderId: orderId}) }}" class="btn btn-primary btn-sm mb-3">
           {{ 'Open details'|trans({}, 'Admin.Orderscustomers.Feature') }}
           <i class="material-icons rtl-flip">arrow_right_alt</i>
         </a>
       </div>
     </div>
   </div>
-  {{ renderhook('displayOrderPreview', {'order_id': orderId}) }}
+  {{ renderhook('displayOrderPreview', {order_id: orderId}) }}
 {% endblock %}

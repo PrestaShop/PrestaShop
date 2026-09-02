@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Core\MailTemplate;
@@ -165,14 +145,14 @@ class MailTemplateGeneratorTest extends TestCase
         $generator = new MailTemplateGenerator($this->createRendererMock());
         $this->assertNotNull($generator);
 
-        $generator->generateTemplates($this->theme, $this->createLanguageMock(), $this->coreTempDir, $this->modulesTempDir);
+        $generator->generateTemplates($this->theme, $this->createLanguageMock('en'), $this->coreTempDir, $this->modulesTempDir);
         $expectedFiles = [
-            'core/account.html' => 'account_html__',
-            'core/account.txt' => 'account_txt__',
-            'modules/followup/mails/followup_1.html' => 'followup_1_html_followup_',
-            'modules/followup/mails/followup_1.txt' => 'followup_1_txt_followup_',
-            'modules/ps_reminder/mails/productoutofstock.html' => 'productoutofstock_html_ps_reminder_',
-            'modules/ps_reminder/mails/productoutofstock.txt' => 'productoutofstock_txt_ps_reminder_',
+            'core/en/account.html' => 'account_html__en',
+            'core/en/account.txt' => 'account_txt__en',
+            'modules/followup/mails/en/followup_1.html' => 'followup_1_html_followup_en',
+            'modules/followup/mails/en/followup_1.txt' => 'followup_1_txt_followup_en',
+            'modules/ps_reminder/mails/en/productoutofstock.html' => 'productoutofstock_html_ps_reminder_en',
+            'modules/ps_reminder/mails/en/productoutofstock.txt' => 'productoutofstock_txt_ps_reminder_en',
         ];
         $this->checkExpectedFiles($expectedFiles);
     }
@@ -222,7 +202,7 @@ class MailTemplateGeneratorTest extends TestCase
         $generator->generateTemplates($this->theme, $this->createLanguageMock('fr'), $this->coreTempDir, $this->modulesTempDir);
         $this->checkExpectedFiles(array_merge($expectedFiles, $previousFiles));
 
-        //Now check overwriting
+        // Now check overwriting
         $generator = new MailTemplateGenerator($this->createRendererMock(3, 3));
         $this->assertNotNull($generator);
 
@@ -288,7 +268,7 @@ class MailTemplateGeneratorTest extends TestCase
      *
      * @return MockObject|LanguageInterface
      */
-    private function createLanguageMock($isoCode = null)
+    private function createLanguageMock(?string $isoCode = null)
     {
         $languageMock = $this->getMockBuilder(LanguageInterface::class)
             ->disableOriginalConstructor()
@@ -297,7 +277,7 @@ class MailTemplateGeneratorTest extends TestCase
         $languageMock
             ->expects(null !== $isoCode ? $this->atLeastOnce() : $this->any())
             ->method('getIsoCode')
-            ->willReturn($isoCode)
+            ->willReturn($isoCode ?? 'en')
         ;
 
         return $languageMock;

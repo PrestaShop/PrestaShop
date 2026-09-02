@@ -1,59 +1,82 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-// Product feature flag in 1.7.8
-trans('Experimental product page', 'Admin.Advparameters.Feature');
-trans(
-    'This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.',
-    'Admin.Advparameters.Help'
-);
+// Admin API - Multistore feature flag
+trans('Admin API - Multistore', 'Admin.Advparameters.Feature');
+trans('Enable or disable the Admin API when multistore is enabled.', 'Admin.Advparameters.Help');
 
-// Product feature flag in 8.0
-trans('New product page - Single store', 'Admin.Advparameters.Feature');
-trans('This page benefits from increased performance and includes new features such as a new combination management system.', 'Admin.Advparameters.Help');
+// Admin Api - Enable experimental endpoints
+trans('Admin API - Enable experimental endpoints', 'Admin.Advparameters.Feature');
+trans('Experimental API endpoints are disabled by default in prod environment, this configuration allows to forcefully enable them.', 'Admin.Advparameters.Help');
 
-// Product multi store feature flag in 8.0
-trans('New product page - Multistore', 'Admin.Advparameters.Feature');
-trans('Access the new product page, even in a multistore context. This is a work in progress and some features are not available.', 'Admin.Advparameters.Help');
-
-// Legacy link feature flags
-trans('Attribute groups', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated attribute groups page.', 'Admin.Advparameters.Help');
-
-// Authorization server feature flag
-trans('Authorization server', 'Admin.Advparameters.Feature');
-trans('Enable or disable the authorization server page.', 'Admin.Advparameters.Help');
-
-// Cart rules feature flag
-trans('Cart rules', 'Admin.Advparameters.Feature');
-trans('Enable / Disable the migrated cart rules page.', 'Admin.Advparameters.Help');
-
-// Cart rules feature flag
+// Catalog price rules feature flag
 trans('Catalog price rules', 'Admin.Advparameters.Feature');
-trans('Enable / Disable the migrated catalog price rules page.', 'Admin.Advparameters.Help');
+trans('Enable or disable the migrated catalog price rules page.', 'Admin.Advparameters.Help');
 
-// Multiple image formats feature flags
-trans('Enable / Disable having more than one image format (jpg, webp, avif, png...)', 'Admin.Advparameters.Feature');
+// Countries feature flag
+trans('Countries', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated countries page.', 'Admin.Advparameters.Help');
+
+// States feature flag
+trans('States', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated states page.', 'Admin.Advparameters.Help');
+
+// Carriers feature flag
+trans('Carriers', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated carriers page.', 'Admin.Advparameters.Help');
+
+// Permissions feature flag
+trans('Permissions', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated permissions page.', 'Admin.Advparameters.Help');
+
+// Tax rule groups feature flag
+trans('Tax rule groups', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated tax rules page.', 'Admin.Advparameters.Help');
+
+// Customer threads feature flag
+trans('Customer threads', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated customer threads page.', 'Admin.Advparameters.Help');
+
+// Order states feature flag
+trans('Order states', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated order states page.', 'Admin.Advparameters.Help');
+
+trans('New front container', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the new front container.', 'Admin.Advparameters.Help');
+
+trans('Customer group', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the customer group page.', 'Admin.Advparameters.Help');
+
+trans('Store', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the store page.', 'Admin.Advparameters.Help');
+
+trans('Merchandise return', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the merchandise return page.', 'Admin.Advparameters.Help');
+
+trans('Improved shipment', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the newly improved shipment system.', 'Admin.Advparameters.Help');
+
+trans('Discount', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the new discount system.', 'Admin.Advparameters.Help');
+
+trans('Tag', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the tag page.', 'Admin.Advparameters.Help');
+
+// New pricing feature flag
+trans('New pricing', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the new pricing system. This feature introduces an improved pricing engine.', 'Admin.Advparameters.Help');
+
+// Quick access feature flag
+trans('Quick access', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the migrated quick access page.', 'Admin.Advparameters.Help');
+
+// Stats feature flag
+trans('Stats', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the migrated stats page.', 'Admin.Advparameters.Help');
+
+// Dashboard feature flag
+trans('Dashboard', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the migrated Symfony dashboard page. Native dashboard modules are not yet compatible with the new page and will not display until they are migrated.', 'Admin.Advparameters.Help');

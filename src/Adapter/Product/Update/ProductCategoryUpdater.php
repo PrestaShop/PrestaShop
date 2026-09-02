@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -31,7 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 use Cache;
 use Category;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -48,7 +28,7 @@ use SpecificPriceRule;
 class ProductCategoryUpdater
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -58,10 +38,10 @@ class ProductCategoryUpdater
     private $categoryRepository;
 
     /**
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      */
     public function __construct(
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         CategoryRepository $categoryRepository
     ) {
         $this->productRepository = $productRepository;
@@ -91,7 +71,7 @@ class ProductCategoryUpdater
      * @param ProductId $productId
      * @param CategoryId[] $newCategoryIds
      * @param CategoryId $defaultCategoryId
-     * @param shopConstraint $shopConstraint
+     * @param ShopConstraint $shopConstraint
      *
      * Warning: $categoryIds will replace current categories, erasing previous data, it will only impact the categories
      * matching the shop constraint though
@@ -104,7 +84,7 @@ class ProductCategoryUpdater
         $newCategoryIds = $this->formatCategoryIdsList($newCategoryIds, $defaultCategoryId);
         $this->assertCategoriesExists($newCategoryIds);
 
-        // Get curren categories based on the provided shop constraint
+        // Get current categories based on the provided shop constraint
         $this->deleteCategoriesAssociations($productId, $newCategoryIds, $shopConstraint);
         $this->categoryRepository->addProductAssociations($productId, $newCategoryIds);
         $this->updateDefaultCategory($productId, $defaultCategoryId, $shopConstraint);
@@ -228,7 +208,7 @@ class ProductCategoryUpdater
             foreach ($categoryIds as $categoryId) {
                 $this->categoryRepository->assertCategoryExists($categoryId);
             }
-        } catch (CategoryNotFoundException $e) {
+        } catch (CategoryNotFoundException) {
             throw new CannotUpdateProductException(
                 sprintf('Failed to update product categories. Some of categories doesn\'t exist.'),
                 CannotUpdateProductException::FAILED_UPDATE_CATEGORIES

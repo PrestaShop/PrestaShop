@@ -1,37 +1,17 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Db;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Module as LegacyModule;
 use PhpParser;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
-use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
@@ -68,7 +48,7 @@ class ModuleDataProvider
      */
     private $employeeID;
 
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator, EntityManager $entityManager = null)
+    public function __construct(LoggerInterface $logger, TranslatorInterface $translator, ?EntityManager $entityManager = null)
     {
         $this->logger = $logger;
         $this->translator = $translator;
@@ -104,7 +84,6 @@ class ModuleDataProvider
         if ($result) {
             $result['installed'] = 1;
             $result['active'] = $this->isEnabled($name);
-            $result['active_on_mobile'] = (bool) ($this->getDeviceStatus($name) & AddonListFilterDeviceStatus::DEVICE_MOBILE);
             $lastAccessDate = '0000-00-00 00:00:00';
 
             if (!Tools::isPHPCLI() && null !== $this->entityManager && $this->employeeID) {
@@ -135,7 +114,7 @@ class ModuleDataProvider
 
     /**
      * Return installed modules along with their id, name and version
-     * If a specific shop is selected, active and active_on_mobile keys are added
+     * If a specific shop is selected, active keys are added
      *
      * @return array
      */
@@ -145,24 +124,18 @@ class ModuleDataProvider
         $from = ' FROM `' . _DB_PREFIX_ . 'module` m';
 
         $id_shops = (new Context())->getContextListShopID();
-        if (count($id_shops) === 1) {
-            $select .= ', ms.`id_module` as active, ms.`enable_device` as active_on_mobile';
+        if (count($id_shops) > 0) {
             $from .= ' LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON ms.`id_module` = m.`id_module`';
-            $from .= ' AND ms.`id_shop` = ' . reset($id_shops);
+            $from .= ' AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')';
         }
 
         $results = Db::getInstance()->executeS($select . $from);
         $modules = [];
 
-        /** @var array{id: int, name:string, version: string, installed: int}|array{id: int, name:string, version: string, installed: int, active:int, active_on_mobile: int} $module */
+        /** @var array{id: int, name:string, version: string, installed: int}|array{id: int, name:string, version: string, installed: int, active:int} $module */
         foreach ($results as $module) {
             $module['installed'] = (bool) $module['installed'];
-            if (array_key_exists('active_on_mobile', $module)) {
-                $module['active_on_mobile'] = (bool) ($module['active_on_mobile'] & AddonListFilterDeviceStatus::DEVICE_MOBILE);
-            }
-            if (array_key_exists('active', $module)) {
-                $module['active'] = (bool) $module['active'];
-            }
+            $module['active'] = $this->isModuleActive($module['id'], $id_shops);
             $modules[$module['name']] = $module;
         }
 
@@ -312,7 +285,7 @@ class ModuleDataProvider
         $require_correct = function ($name) use ($file_path, $logger, $log_context_data) {
             try {
                 require_once $file_path;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $logger->error(
                     $this->translator->trans(
                         'Error while loading file of module %module%. %error_message%',
@@ -348,26 +321,16 @@ class ModuleDataProvider
     }
 
     /**
-     * Check if the module has been enabled on mobile.
-     *
-     * @param string $name The technical module name to check
-     *
-     * @return int|false The devices enabled for this module
+     * Checks if the module is active on at least one shop of the context.
      */
-    private function getDeviceStatus($name)
+    private function isModuleActive(int $id, array $id_shops): bool
     {
-        $id_shops = (new Context())->getContextListShopID();
-        // ToDo: Load list of all installed modules ?
-
-        $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`
+        $result = Db::getInstance()->getRow('SELECT m.`active`, ms.`id_module` as `shop_active`
             FROM `' . _DB_PREFIX_ . 'module` m
             LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
-            WHERE `name` = "' . pSQL($name) . '"
-            AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')');
-        if ($result) {
-            return (int) $result['enable_device'];
-        }
+            WHERE m.`id_module` = ' . $id . '
+            AND ms.`id_shop` IN (' . implode(',', $id_shops) . ')');
 
-        return false;
+        return !empty($result);
     }
 }

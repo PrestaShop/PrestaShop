@@ -27,7 +27,7 @@ Feature: Customer Management
     When I query customer "CUST-1" I should get a Customer with properties:
       | firstName | Jean |
 
-  Scenario: Fail to create a duplicate customer
+  Scenario: Fail to create a duplicate registered customer, if registered customer with that email exists
     When I create a customer "CUST-2" with following properties:
       | firstName | Mathieu                     |
       | lastName  | Napoler                     |
@@ -38,7 +38,21 @@ Feature: Customer Management
       | lastName  | Napoler                     |
       | email     | naapoler.dev@prestashop.com |
       | password  | PrestaShopForever1_!        |
-    Then I should be returned an error message 'Customer with email "naapoler.dev@prestashop.com" already exists'
+    Then I should be returned an error message 'Registered customer with email "naapoler.dev@prestashop.com" already exists'
+
+  Scenario: Ability to create a guest customer, even if registered customer with that email exists
+    When I create a customer "CUST-3" with following properties:
+      | firstName | Mathieu                     |
+      | lastName  | Napoler                     |
+      | email     | naapoler.dev@prestashop.com |
+      | isGuest   | true                        |
+    And I query customer "CUST-3" I should get a Customer with properties:
+      | firstName      | Mathieu                     |
+      | lastName       | Napoler                     |
+      | email          | naapoler.dev@prestashop.com |
+      | guest          | true                        |
+      | defaultGroupId | Guest                       |
+      | groupIds       | [Guest]                     |
 
   Scenario: Create a complete customer and edit it
     When I create a customer "CUST-4" with following properties:
@@ -151,3 +165,56 @@ Feature: Customer Management
       | defaultGroupId | Guest                        |
       | groupIds       | [Guest]                      |
     And customer "CUST-7" should be soft deleted
+
+  Scenario: Edit guest customer email, even if a registered customer with the same email exists
+    When I create a customer "CUST-8" with following properties:
+      | firstName      | Mathieu                     |
+      | lastName       | Guest                       |
+      | email          | guest@prestashop.com        |
+      | isGuest        | true                        |
+    And I create a customer "CUST-9" with following properties:
+      | firstName | Mathieu                     |
+      | lastName  | Customer                    |
+      | email     | customernine@prestashop.com |
+      | password  | PrestaShopForever1_!        |
+    And I edit customer "CUST-8" and I change the following properties:
+      | email | customernine@prestashop.com |
+    Then I query customer "CUST-8" I should get a Customer with properties:
+      | email | customernine@prestashop.com |
+
+  Scenario: Attempt to edit registered customer email, while another customer with this email exists
+    When I create a customer "CUST-10" with following properties:
+      | firstName | Mathieu                       |
+      | lastName  | Customer                      |
+      | email     | customereten@prestashop.com   |
+      | password  | PrestaShopForever1_!          |
+    And I create a customer "CUST-11" with following properties:
+      | firstName | Mathieu                       |
+      | lastName  | Customer                      |
+      | email     | customereleven@prestashop.com |
+      | password  | PrestaShopForever1_!          |
+    And I attempt to edit customer "CUST-10" and I change the following properties:
+      | email | customereleven@prestashop.com |
+    Then I should be returned an error message 'Registered customer with email "customereleven@prestashop.com" already exists'
+
+  Scenario: Fail to create a customer with mismatching groups
+    When I attempt to create a customer "CUST-12" with following properties:
+      | firstName      | Mathieu                       |
+      | lastName       | Napoler                       |
+      | email          | customertwelve@prestashop.com |
+      | password       | PrestaShopForever1_!          |
+      | defaultGroupId | Visitor                       |
+      | groupIds       | [Customer]                    |
+    Then I should be returned an error message 'Customer default group with id "1" must be in access groups'
+
+  Scenario: Fail to set mismatching groups on a customer
+    When I create a customer "CUST-13" with following properties:
+      | firstName      | Mathieu                            |
+      | lastName       | Customer                           |
+      | email          | customerethirteen@prestashop.com   |
+      | password       | PrestaShopForever1_!               |
+      | defaultGroupId | Customer                           |
+      | groupIds       | [Customer]                         |
+    And I attempt to edit customer "CUST-13" and I change the following properties:
+      | defaultGroupId | Visitor |
+    Then I should be returned an error message 'Customer default group with id "1" must be in access groups'

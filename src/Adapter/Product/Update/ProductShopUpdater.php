@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -33,9 +13,9 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
@@ -58,12 +38,12 @@ use Product;
 class ProductShopUpdater
 {
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
     /**
-     * @var StockAvailableMultiShopRepository
+     * @var StockAvailableRepository
      */
     private $stockAvailableRepository;
 
@@ -73,9 +53,9 @@ class ProductShopUpdater
     private $shopRepository;
 
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
-    private $productImageMultiShopRepository;
+    private $productImageRepository;
 
     /**
      * @var ProductStockUpdater
@@ -108,10 +88,10 @@ class ProductShopUpdater
     private $categoryRepository;
 
     public function __construct(
-        ProductMultiShopRepository $productRepository,
-        StockAvailableMultiShopRepository $stockAvailableRepository,
+        ProductRepository $productRepository,
+        StockAvailableRepository $stockAvailableRepository,
         ShopRepository $shopRepository,
-        ProductImageMultiShopRepository $productImageMultiShopRepository,
+        ProductImageRepository $productImageRepository,
         ProductStockUpdater $productStockUpdater,
         CombinationRepository $combinationMultiShopRepository,
         CombinationStockUpdater $combinationStockUpdater,
@@ -122,7 +102,7 @@ class ProductShopUpdater
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->shopRepository = $shopRepository;
-        $this->productImageMultiShopRepository = $productImageMultiShopRepository;
+        $this->productImageRepository = $productImageRepository;
         $this->productStockUpdater = $productStockUpdater;
         $this->combinationRepository = $combinationMultiShopRepository;
         $this->combinationStockUpdater = $combinationStockUpdater;
@@ -177,7 +157,7 @@ class ProductShopUpdater
         // Then try to get the target stock, if it doesn't exist create it
         try {
             $targetStock = $this->stockAvailableRepository->getForProduct($productId, $targetShopId);
-        } catch (StockAvailableNotFoundException $e) {
+        } catch (StockAvailableNotFoundException) {
             $targetStock = $this->stockAvailableRepository->createStockAvailable($productId, $targetShopId);
         }
 
@@ -185,10 +165,8 @@ class ProductShopUpdater
         if ($deltaQuantity !== 0 || (int) $sourceStock->out_of_stock !== (int) $targetStock->out_of_stock || $sourceStock->location !== $targetStock->location) {
             $stockModification = StockModification::buildFixedQuantity((int) $sourceStock->quantity);
             $stockProperties = new ProductStockProperties(
-                null,
                 $stockModification,
                 $outOfStock,
-                null,
                 $sourceStock->location
             );
             $this->productStockUpdater->update($productId, $stockProperties, ShopConstraint::shop($targetShopId->getValue()));
@@ -214,7 +192,7 @@ class ProductShopUpdater
             // Then try to get the target stock, if it doesn't exist create it
             try {
                 $targetStock = $this->stockAvailableRepository->getForCombination($combinationId, $targetShopId);
-            } catch (StockAvailableNotFoundException $e) {
+            } catch (StockAvailableNotFoundException) {
                 $targetStock = $this->stockAvailableRepository->createStockAvailable($productId, $targetShopId, $combinationId);
             }
 
@@ -223,7 +201,6 @@ class ProductShopUpdater
                 $stockModification = StockModification::buildDeltaQuantity($deltaQuantity);
                 $stockProperties = new CombinationStockProperties(
                     $stockModification,
-                    null,
                     $sourceStock->location
                 );
                 $this->combinationStockUpdater->update($combinationId, $stockProperties, $targetConstraint);
@@ -263,17 +240,17 @@ class ProductShopUpdater
      */
     private function copyImageAssociations(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
     {
-        $imagesFromSourceShop = $this->productImageMultiShopRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
+        $imagesFromSourceShop = $this->productImageRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
         $targetImageIds = array_map(static function (ImageId $imageId): int {
             return $imageId->getValue();
-        }, $this->productImageMultiShopRepository->getImagesIds($productId, ShopConstraint::shop($targetShopId->getValue())));
+        }, $this->productImageRepository->getImageIds($productId, ShopConstraint::shop($targetShopId->getValue())));
 
         foreach ($imagesFromSourceShop as $image) {
             // skip image if it is already associated with the target shop
             if (in_array((int) $image->id, $targetImageIds, true)) {
                 continue;
             }
-            $this->productImageMultiShopRepository->associateImageToShop($image, $targetShopId);
+            $this->productImageRepository->associateImageToShop($image, $targetShopId);
         }
     }
 

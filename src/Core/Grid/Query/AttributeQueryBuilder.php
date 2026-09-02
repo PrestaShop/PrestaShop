@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
@@ -97,11 +77,13 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('DISTINCT a.id_attribute, a.color, a.id_attribute_group, al.name AS value, a.position');
+            ->select('DISTINCT a.id_attribute, a.color, a.id_attribute_group, al.name, a.position');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb);
+            ->applySorting($searchCriteria, $qb)
+            ->applyDeterministicSorting($searchCriteria, $qb, 'a', 'id_attribute')
+        ;
 
         return $qb;
     }
@@ -173,7 +155,7 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $allowedFiltersMap = [
             'id_attribute' => 'a.id_attribute',
-            'value' => 'al.name',
+            'name' => 'al.name',
             'position' => 'a.position',
             'color' => 'a.color',
         ];
@@ -183,7 +165,7 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('value' === $filterName || 'color' === $filterName) {
+            if ('name' === $filterName || 'color' === $filterName) {
                 $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
                     ->setParameter($filterName, '%' . $value . '%');
                 continue;

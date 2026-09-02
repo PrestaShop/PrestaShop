@@ -1,31 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -59,21 +41,29 @@ final class FormHandler implements FormHandlerInterface
     private $isDemoModeEnabled;
 
     /**
+     * @var ExtraPropertiesFormDataPersister
+     */
+    private $extraPropertiesFormDataPersister;
+
+    /**
      * @param FormDataHandlerInterface $dataHandler
      * @param HookDispatcherInterface $hookDispatcher
      * @param TranslatorInterface $translator
      * @param bool $isDemoModeEnabled
+     * @param ExtraPropertiesFormDataPersister $extraPropertiesFormDataPersister
      */
     public function __construct(
         FormDataHandlerInterface $dataHandler,
         HookDispatcherInterface $hookDispatcher,
         TranslatorInterface $translator,
-        $isDemoModeEnabled
+        $isDemoModeEnabled,
+        ExtraPropertiesFormDataPersister $extraPropertiesFormDataPersister
     ) {
         $this->dataHandler = $dataHandler;
         $this->hookDispatcher = $hookDispatcher;
         $this->translator = $translator;
         $this->isDemoModeEnabled = $isDemoModeEnabled;
+        $this->extraPropertiesFormDataPersister = $extraPropertiesFormDataPersister;
     }
 
     /**
@@ -140,14 +130,23 @@ final class FormHandler implements FormHandlerInterface
             'id' => $id,
         ]);
 
-        $this->dataHandler->update($id, $data);
+        $newId = $this->dataHandler->update($id, $data);
+
+        $entityId = $this->resolveExtraPropertyEntityId($newId ?? $id);
+        if (null !== $entityId) {
+            $this->extraPropertiesFormDataPersister->persist(
+                $form,
+                $this->getExtraPropertyEntityName($form),
+                $entityId
+            );
+        }
 
         $this->hookDispatcher->dispatchWithParameters('actionAfterUpdate' . Container::camelize($form->getName()) . 'FormHandler', [
             'id' => $id,
             'form_data' => &$data,
         ]);
 
-        return FormHandlerResult::createWithId($id);
+        return FormHandlerResult::createWithId($newId ?? $id);
     }
 
     /**
@@ -167,11 +166,61 @@ final class FormHandler implements FormHandlerInterface
 
         $id = $this->dataHandler->create($data);
 
+        $entityId = $this->resolveExtraPropertyEntityId($id);
+        if (null !== $entityId) {
+            $this->extraPropertiesFormDataPersister->persist(
+                $form,
+                $this->getExtraPropertyEntityName($form),
+                $entityId
+            );
+        }
+
         $this->hookDispatcher->dispatchWithParameters('actionAfterCreate' . Container::camelize($form->getName()) . 'FormHandler', [
             'id' => $id,
             'form_data' => &$data,
         ]);
 
         return FormHandlerResult::createWithId($id);
+    }
+
+    /**
+     * Same entity key as FormBuilder (registry type block prefix). Do not use $form->getName() here:
+     * the DOM/form tree name can differ from the type prefix (empty name, wrapper, createNamedBuilder).
+     */
+    private function getExtraPropertyEntityName(FormInterface $form): string
+    {
+        return $form->getConfig()->getType()->getBlockPrefix();
+    }
+
+    /**
+     * Best-effort extraction of an integer entity id from a data handler result.
+     *
+     * Most handlers return a plain int, the rest an identity value object exposing
+     * getValue(): int. Anything else (e.g. an array of ids) cannot be reduced to a
+     * single int, so null is returned and the extra properties are simply not
+     * persisted rather than crashing on a force cast.
+     *
+     * CreatedApiClient is handled as an explicit exception: it carries both an id
+     * and a secret (so it has no top-level getValue()), but the id is needed to
+     * persist extra properties. Such composite results are rare enough that an
+     * ad hoc case is preferable to a generic, over-engineered resolution.
+     *
+     * @param mixed $id
+     */
+    private function resolveExtraPropertyEntityId($id): ?int
+    {
+        if (is_int($id) || (is_string($id) && ctype_digit($id))) {
+            return (int) $id;
+        }
+
+        if ($id instanceof CreatedApiClient) {
+            return $id->getApiClientId()->getValue();
+        }
+
+        if (is_object($id) && method_exists($id, 'getValue') && is_int($id->getValue())) {
+            return $id->getValue();
+        }
+
+        return null;
     }
 }

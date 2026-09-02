@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -30,6 +10,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use OrderReturn;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductsFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Exception\NotImplementedException;
 
@@ -56,9 +37,16 @@ class OrderReturnFormDataHandler implements FormDataHandlerInterface
      */
     public function update($orderReturnId, array $data): void
     {
-        $orderReturnStateId = (int) $data['order_return_state'];
+        // Issue #27628: per-row deletions are staged client-side and committed here in one bulk
+        // command, so the user only ever submits the page once. Deletions run first so the state
+        // update sees the final product list.
+        $stagedRows = $this->parseStagedDeletions($data['staged_product_deletions'] ?? []);
+        if ($stagedRows !== []) {
+            $this->commandBus->handle(new BulkDeleteProductsFromOrderReturnCommand((int) $orderReturnId, $stagedRows));
+        }
 
-        $this->commandBus->handle(new UpdateOrderReturnStateCommand($orderReturnId, $orderReturnStateId));
+        $orderReturnStateId = (int) $data['order_return_state'];
+        $this->commandBus->handle(new UpdateOrderReturnStateCommand((int) $orderReturnId, $orderReturnStateId));
     }
 
     /**
@@ -71,5 +59,43 @@ class OrderReturnFormDataHandler implements FormDataHandlerInterface
     public function create(array $data): void
     {
         throw new NotImplementedException(OrderReturn::class . ' is not created by form, this method should never be called');
+    }
+
+    /**
+     * The front-end writes a JSON string of the form
+     *   [{"order_detail_id":42,"customization_id":0},{"order_detail_id":43,"customization_id":7}]
+     * into the staged_product_deletions hidden field. We tolerate malformed or empty input.
+     *
+     * @param mixed $rawJson raw value coming from the hidden field
+     *
+     * @return array<int, array{order_detail_id: int, customization_id: int}>
+     */
+    private function parseStagedDeletions($rawJson): array
+    {
+        if (!is_string($rawJson) || $rawJson === '') {
+            return [];
+        }
+
+        $decoded = json_decode($rawJson, true);
+        if (!is_array($decoded)) {
+            return [];
+        }
+
+        $parsed = [];
+        foreach ($decoded as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $orderDetailId = (int) ($row['order_detail_id'] ?? 0);
+            if ($orderDetailId <= 0) {
+                continue;
+            }
+            $parsed[] = [
+                'order_detail_id' => $orderDetailId,
+                'customization_id' => (int) ($row['customization_id'] ?? 0),
+            ];
+        }
+
+        return $parsed;
     }
 }

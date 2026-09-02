@@ -1,6 +1,19 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 .attributes-color-container {
   display: block;
   width: 40px;
   height: 25px;
   border: solid 1px $black;
+}
+
+.image-container {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+  margin: auto;
+  object-fit: cover;
 }

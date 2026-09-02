@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 class PageNotFoundControllerCore extends FrontController
 {
@@ -33,11 +13,37 @@ class PageNotFoundControllerCore extends FrontController
     public $ssl = true;
 
     /**
+     * @see FrontController::init()
+     */
+    public function init()
+    {
+        Hook::exec('actionNotFound');
+        parent::init();
+    }
+
+    /**
+     * Without an entry of its own the breadcrumb holds nothing but the home link, and a
+     * one-level breadcrumb is what themes hide as empty. The wording matches the meta title
+     * this page is registered with.
+     */
+    public function getBreadcrumbLinks(): array
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->getTranslator()->trans('404 error', [], 'Shop.Navigation'),
+            'url' => $this->context->link->getPageLink('pagenotfound'),
+        ];
+
+        return $breadcrumb;
+    }
+
+    /**
      * Assign template vars related to page content.
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         header('HTTP/1.1 404 Not Found');
         header('Status: 404 Not Found');
@@ -46,17 +52,23 @@ class PageNotFoundControllerCore extends FrontController
         $this->setTemplate('errors/404');
     }
 
-    protected function canonicalRedirection($canonical_url = '')
+    protected function canonicalRedirection(string $canonical_url = ''): void
     {
         // 404 - no need to redirect to the canonical url
     }
 
-    protected function sslRedirection()
+    protected function sslRedirection(): void
     {
         // 404 - no need to redirect
     }
 
-    public function getTemplateVarPage()
+    /**
+     * Initializes a set of commonly used variables related to the current page, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
+    public function getTemplateVarPage(): array
     {
         $page = parent::getTemplateVarPage();
         $page['title'] = $this->trans('The page you are looking for was not found.', [], 'Shop.Theme.Global');
@@ -64,7 +76,7 @@ class PageNotFoundControllerCore extends FrontController
         return $page;
     }
 
-    public function displayAjax()
+    public function displayAjax(): void
     {
         header('Content-Type: application/json');
         echo json_encode($this->trans('The page you are looking for was not found.', [], 'Shop.Theme.Global'));

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
@@ -43,6 +23,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use RuntimeException;
 use State;
+use Supplier;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class SupplierFeatureContext extends AbstractDomainFeatureContext
@@ -108,7 +89,6 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
                 $data['description'],
                 $data['meta title'],
                 $data['meta description'],
-                $data['meta keywords'],
                 $this->getShopIdsByReferences($data['shops']),
                 $data['address2'] ?? null,
                 $data['post code'] ?? null,
@@ -121,6 +101,23 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
         } catch (SupplierException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @Given supplier :manufacturerReference named :name exists
+     *
+     * @param string $name
+     * @param string $supplierReference
+     */
+    public function assertSupplierExistsByName(string $name, string $supplierReference): void
+    {
+        if ($supplierId = Supplier::getIdByName($name)) {
+            $this->getSharedStorage()->set($supplierReference, $supplierId);
+
+            return;
+        }
+
+        throw new RuntimeException(sprintf('Supplier %s named "%s" does not exist', $supplierReference, $name));
     }
 
     /**
@@ -177,9 +174,6 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['meta description'])) {
             $editCommand->setLocalizedMetaDescriptions($data['meta description']);
         }
-        if (isset($data['meta keywords'])) {
-            $editCommand->setLocalizedMetaKeywords($data['meta keywords']);
-        }
         if (isset($data['shops'])) {
             $editCommand->setAssociatedShops($this->getShopIdsByReferences($data['shops']));
         }
@@ -200,7 +194,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $supplierReference
      */
-    public function assertManufacturerHasLogoImage(string $supplierReference): void
+    public function assertSupplierHasLogoImage(string $supplierReference): void
     {
         $editableSupplier = $this->getEditableSupplier($supplierReference);
         Assert::assertNotNull($editableSupplier->getLogoImage());
@@ -211,7 +205,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $supplierReference
      */
-    public function assertManufacturerHasNotLogoImage(string $supplierReference)
+    public function assertSupplierHasNoLogoImage(string $supplierReference): void
     {
         $editableSupplier = $this->getEditableSupplier($supplierReference);
         Assert::assertNull($editableSupplier->getLogoImage());
@@ -294,11 +288,6 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
             $data['meta description'],
             $editableSupplier->getLocalizedMetaDescriptions(),
             'Unexpected supplier localized meta descriptions'
-        );
-        Assert::assertEquals(
-            $data['meta keywords'],
-            $editableSupplier->getLocalizedMetaKeywords(),
-            'Unexpected supplier localized meta keywords'
         );
         Assert::assertEquals(
             $this->getShopIdsByReferences($data['shops']),

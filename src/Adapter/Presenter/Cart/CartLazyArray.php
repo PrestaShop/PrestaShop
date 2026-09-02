@@ -1,0 +1,587 @@
+<?php
+
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
+
+use Cart;
+use CartRule;
+use Configuration;
+use Context;
+use Country;
+use Hook;
+use Link;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
+use PrestaShop\PrestaShop\Core\Cart\Calculator;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Tools;
+
+#[LazyArrayAttribute(isRewritable: true)]
+class CartLazyArray extends AbstractLazyArray
+{
+    private bool $shouldSeparateGifts;
+
+    private CartPresenter $cartPresenter;
+
+    private Cart $cart;
+
+    private TranslatorInterface $translator;
+
+    private PriceFormatter $priceFormatter;
+
+    private Calculator $calculator;
+
+    private array $products;
+
+    private array $totals;
+
+    private array $subTotals;
+
+    private string $summaryString;
+
+    private int $productsCount;
+
+    private array $vouchers;
+
+    private float $minimalPurchase;
+
+    private string $minimalPurchaseRequired;
+
+    private array $labels;
+
+    private int $idAddressDelivery;
+
+    private int $idAddressInvoice;
+
+    private bool $isVirtual;
+
+    private array $discounts;
+
+    private Link $link;
+
+    private ImageRetriever $imageRetriever;
+
+    private CartProductPresenter $cartProductPresenter;
+
+    public function __construct(Cart $cart, CartPresenter $cartPresenter, bool $shouldSeparateGifts = false)
+    {
+        $this->shouldSeparateGifts = $shouldSeparateGifts;
+        $this->cart = $cart;
+        $this->cartPresenter = $cartPresenter;
+        $this->initExtraPropertiesBag(Cart::class, (int) $cart->id, (int) $cart->id_lang ?: null);
+        $context = Context::getContext();
+        $this->translator = $context->getTranslator();
+        $this->link = $context->link;
+        $this->imageRetriever = new ImageRetriever($this->link);
+        $this->priceFormatter = new PriceFormatter();
+        $this->cartProductPresenter = new CartProductPresenter(
+            $this->imageRetriever,
+            $this->link,
+            $this->priceFormatter,
+            new ProductColorsRetriever(),
+            $this->translator
+        );
+        $this->calculator = $this->cart->newCalculator(
+            $this->cart->getProducts(),
+            $this->cart->getCartRules(CartRule::FILTER_ACTION_ALL, false),
+            null,
+            $context->getComputingPrecision()
+        );
+        $this->calculator->processCalculation();
+        parent::__construct();
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getProducts(): array
+    {
+        // Get raw products
+        $rawProducts = $this->shouldSeparateGifts
+            ? $this->cart->getProductsWithSeparatedGifts()
+            : $this->cart->getProducts();
+
+        /*
+         * Now, we will fetch additional product data by the assembler, like we do when presenting
+         * lists of products. With one exception. Assembler overwrites the previous data of the product,
+         * in our context, we need to keep it. That's why we will manually do array_merge and keep the data
+         * from rawProducts intact.
+         *
+         * We could possibly add something like $prioritizeOriginalData to ProductAssembler.
+         */
+        $assembledProducts = $this->cartPresenter->getProductAssembler()->assembleProducts($rawProducts);
+        foreach ($rawProducts as $k => $v) {
+            $rawProducts[$k] = array_merge($assembledProducts[$k], $v);
+        }
+
+        // Present them
+        $presentedProducts = array_map([$this, 'presentProduct'], $rawProducts);
+
+        // And add customizations made
+        $this->products = $this->cartPresenter->addCustomizedData($presentedProducts, $this->cart);
+
+        return $this->products;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getTotals(): array
+    {
+        $total_excluding_tax = $this->cart->getOrderTotal(false);
+        $total_including_tax = $this->cart->getOrderTotal(true);
+
+        $this->totals = [
+            'total' => [
+                'type' => 'total',
+                'label' => $this->translator->trans('Total', [], 'Shop.Theme.Checkout'),
+                'amount' => $this->cartPresenter->includeTaxes() ? $total_including_tax : $total_excluding_tax,
+                'value' => $this->priceFormatter->format(
+                    $this->cartPresenter->includeTaxes() ? $total_including_tax : $total_excluding_tax
+                ),
+            ],
+            'total_including_tax' => [
+                'type' => 'total',
+                'label' => $this->translator->trans('Total (tax incl.)', [], 'Shop.Theme.Checkout'),
+                'amount' => $total_including_tax,
+                'value' => $this->priceFormatter->format($total_including_tax),
+            ],
+            'total_excluding_tax' => [
+                'type' => 'total',
+                'label' => $this->translator->trans('Total (tax excl.)', [], 'Shop.Theme.Checkout'),
+                'amount' => $total_excluding_tax,
+                'value' => $this->priceFormatter->format($total_excluding_tax),
+            ],
+        ];
+
+        return $this->totals;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getSubtotals(): array
+    {
+        $subtotals = [];
+        $totalCartAmount = $this->cart->getOrderTotal($this->cartPresenter->includeTaxes(), Cart::ONLY_PRODUCTS);
+        $total_discount = $this->cart->getOrderTotal($this->cartPresenter->includeTaxes(), Cart::ONLY_DISCOUNTS);
+        $subtotals['products'] = [
+            'type' => 'products',
+            'label' => $this->translator->trans('Subtotal', [], 'Shop.Theme.Checkout'),
+            'amount' => $totalCartAmount,
+            'value' => $this->priceFormatter->format($totalCartAmount),
+        ];
+        if ($total_discount) {
+            $subtotals['discounts'] = [
+                'type' => 'discount',
+                'label' => $this->translator->trans('Discount(s)', [], 'Shop.Theme.Checkout'),
+                'amount' => $total_discount,
+                'value' => $this->priceFormatter->format($total_discount),
+            ];
+        } else {
+            $subtotals['discounts'] = null;
+        }
+        if ($this->cart->gift) {
+            $giftWrappingPrice = ($this->cart->getGiftWrappingPrice($this->cartPresenter->includeTaxes()) != 0)
+                ? $this->cart->getGiftWrappingPrice($this->cartPresenter->includeTaxes())
+                : 0;
+
+            $subtotals['gift_wrapping'] = [
+                'type' => 'gift_wrapping',
+                'label' => $this->translator->trans('Gift wrapping', [], 'Shop.Theme.Checkout'),
+                'amount' => $giftWrappingPrice,
+                'value' => ($giftWrappingPrice > 0)
+                    ? $this->priceFormatter->convertAndFormat($giftWrappingPrice)
+                    : $this->translator->trans('Free', [], 'Shop.Theme.Checkout'),
+            ];
+        }
+        if (!$this->cart->isVirtualCart()) {
+            $shippingCost = $this->cart->getTotalShippingCost(null, $this->cartPresenter->includeTaxes());
+        } else {
+            $shippingCost = 0;
+        }
+        $subtotals['shipping'] = [
+            'type' => 'shipping',
+            'label' => $this->translator->trans('Shipping', [], 'Shop.Theme.Checkout'),
+            'amount' => $shippingCost,
+            'value' => $this->getShippingDisplayValue($shippingCost),
+        ];
+        $subtotals['tax'] = null;
+        if (Configuration::get('PS_TAX_DISPLAY')) {
+            $total_excluding_tax = $this->cart->getOrderTotal(false);
+            $total_including_tax = $this->cart->getOrderTotal(true);
+            $taxAmount = $total_including_tax - $total_excluding_tax;
+            $subtotals['tax'] = [
+                'type' => 'tax',
+                'label' => ($this->cartPresenter->includeTaxes())
+                    ? $this->translator->trans('Included taxes', [], 'Shop.Theme.Checkout')
+                    : $this->translator->trans('Taxes', [], 'Shop.Theme.Checkout'),
+                'amount' => $taxAmount,
+                'value' => $this->priceFormatter->format($taxAmount),
+            ];
+        }
+
+        $this->subTotals = $subtotals;
+
+        return $this->subTotals;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getProductsCount(): int
+    {
+        // If product list is already available, no need to execute a new sql query
+        if (isset($this->products)) {
+            $this->productsCount = array_reduce($this->products, function ($count, $product) {
+                return $count + $product['quantity'];
+            }, 0);
+
+            return $this->productsCount;
+        }
+
+        // Product list is not available, only query the nb of products
+        $this->productsCount = (int) $this->cart->getNbProducts($this->cart->id);
+
+        return $this->productsCount;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getSummaryString(): string
+    {
+        $productsCount = $this->getProductsCount();
+
+        $this->summaryString = $productsCount === 1 ?
+            $this->translator->trans('1 item', [], 'Shop.Theme.Checkout') :
+            $this->translator->trans('%count% items', ['%count%' => $productsCount], 'Shop.Theme.Checkout');
+
+        return $this->summaryString;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getLabels(): array
+    {
+        $this->labels = [
+            'tax_short' => ($this->cartPresenter->includeTaxes())
+                ? $this->translator->trans('(tax incl.)', [], 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excl.)', [], 'Shop.Theme.Global'),
+            'tax_long' => ($this->cartPresenter->includeTaxes())
+                ? $this->translator->trans('(tax included)', [], 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excluded)', [], 'Shop.Theme.Global'),
+        ];
+
+        return $this->labels;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getIdAddressDelivery(): ?int
+    {
+        $this->idAddressDelivery = $this->cart->id_address_delivery;
+
+        return $this->idAddressDelivery;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getIdAddressInvoice(): ?int
+    {
+        $this->idAddressInvoice = $this->cart->id_address_invoice;
+
+        return $this->idAddressInvoice;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getIsVirtual(): bool
+    {
+        $this->isVirtual = $this->cart->isVirtualCart();
+
+        return $this->isVirtual;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getVouchers(): array
+    {
+        $this->vouchers = $this->getTemplateVarVouchers();
+
+        return $this->vouchers;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getDiscounts(): array
+    {
+        $vouchers = $this->getVouchers();
+        $cartRulesIds = array_keys($vouchers['added']);
+
+        $discounts = $this->cart->getDiscounts();
+        $customerId = $this->cart->id_customer;
+        $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds, $customerId) {
+            $voucherCustomerId = (int) $discount['id_customer'];
+            $voucherIsRestrictedToASingleCustomer = ($voucherCustomerId !== 0);
+            $voucherIsEmptyCode = empty($discount['code']);
+            if ($voucherIsRestrictedToASingleCustomer && $customerId !== $voucherCustomerId && $voucherIsEmptyCode) {
+                return false;
+            }
+
+            return !in_array($discount['id_cart_rule'], $cartRulesIds);
+        });
+
+        $this->discounts = $discounts;
+
+        return $this->discounts;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true, indexName: 'minimalPurchase')]
+    public function getMinimalPurchase(): float
+    {
+        $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
+        Hook::exec('overrideMinimalPurchasePrice', [
+            'minimalPurchase' => &$minimalPurchase,
+        ]);
+
+        $this->minimalPurchase = $minimalPurchase;
+
+        return $this->minimalPurchase;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true, indexName: 'minimalPurchaseRequired')]
+    public function getMinimalPurchaseRequired(): string
+    {
+        $minimalPurchase = $this->getMinimalPurchase();
+        $productsTotalExcludingTax = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+        $this->minimalPurchaseRequired = ($productsTotalExcludingTax < $minimalPurchase) ?
+            $this->translator->trans(
+                'A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).',
+                [
+                    '%amount%' => $this->priceFormatter->format($minimalPurchase),
+                    '%total%' => $this->priceFormatter->format($productsTotalExcludingTax),
+                ],
+                'Shop.Theme.Checkout'
+            ) :
+            '';
+
+        return $this->minimalPurchaseRequired;
+    }
+
+    /**
+     * Accepts a cart object with the shipping cost amount and formats the shipping cost display value accordingly.
+     * If the shipping cost is 0, then we must check if this is because of a free carrier and thus display 'Free' or
+     * simply because the system was unable to determine shipping cost at this point and thus send an empty string to hide the shipping line.
+     *
+     * @param float $shippingCost
+     *
+     * @return string
+     */
+    private function getShippingDisplayValue($shippingCost): string
+    {
+        $shippingDisplayValue = '';
+
+        // if one of the applied cart rules have free shipping, then the shipping display value is 'Free'
+        foreach ($this->cart->getCartRules() as $rule) {
+            if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
+                return $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
+            }
+        }
+
+        if ($shippingCost != 0) {
+            $shippingDisplayValue = $this->priceFormatter->format($shippingCost);
+        } else {
+            $defaultCountry = null;
+
+            /*
+             * @todo
+             * This condition should fill default_country with something, but it will never work, since context->cookie->id_country
+             * is never set anywhere. NULL will be passed in $default_country down the stream and it will usually be resolved
+             * to proper values all the way in getPackageShippingCostValue.
+             */
+            if (isset(Context::getContext()->cookie->id_country)) {
+                $defaultCountry = new Country((int) Context::getContext()->cookie->id_country);
+            }
+
+            $deliveryOptionList = $this->cart->getDeliveryOptionList($defaultCountry);
+
+            if (count($deliveryOptionList) > 0) {
+                foreach ($deliveryOptionList as $option) {
+                    foreach ($option as $currentCarrier) {
+                        if (isset($currentCarrier['is_free']) && $currentCarrier['is_free'] > 0) {
+                            $shippingDisplayValue = $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
+                            break 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $shippingDisplayValue;
+    }
+
+    private function getTemplateVarVouchers(): array
+    {
+        $vouchers = [];
+
+        $cartHasTax = null === $this->cart->id ? false : $this->cart->getAverageProductsTaxRate() * 100;
+        $freeShippingAlreadySet = false;
+
+        foreach ($this->calculator->getCartRulesData() as $cartRuleData) {
+            /** @var array{id_cart_rule:int, name: string, code: string, reduction_percent: float, reduction_currency: int, free_shipping: bool, reduction_tax: bool, reduction_amount:float, value_real:float|int|string, value_tax_exc:float|int|string} $cartVoucher */
+            $cartVoucher = $cartRuleData->getRuleData();
+            $discountApplied = $cartRuleData->getDiscountApplied();
+
+            $freeShippingOnly = false;
+            $totalCartVoucherReduction = 0;
+
+            if ($this->cartVoucherHasFreeShippingOnly($cartVoucher)) {
+                $freeShippingOnly = true;
+                if ($freeShippingAlreadySet) {
+                    continue;
+                }
+                $freeShippingAlreadySet = true;
+            } else {
+                $totalCartVoucherReduction = $this->cartPresenter->includeTaxes()
+                    ? $discountApplied->getTaxIncluded()
+                    : $discountApplied->getTaxExcluded();
+            }
+
+            $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
+            $vouchers[$cartVoucher['id_cart_rule']]['name'] = $cartVoucher['name'];
+            $vouchers[$cartVoucher['id_cart_rule']]['code'] = $cartVoucher['code'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_percent'] = $cartVoucher['reduction_percent'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_currency'] = $cartVoucher['reduction_currency'];
+            $vouchers[$cartVoucher['id_cart_rule']]['free_shipping'] = (bool) $cartVoucher['free_shipping'];
+
+            // Voucher reduction depending of the cart tax rule
+            // if $cartHasTax & voucher is tax excluded, set amount voucher to tax included
+            if ($cartHasTax && $cartVoucher['reduction_tax'] == '0') {
+                $cartVoucher['reduction_amount'] = $cartVoucher['reduction_amount'] * (1 + $cartHasTax / 100);
+            }
+
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = $cartVoucher['reduction_amount'];
+
+            if ($this->cartVoucherHasGiftProductReduction($cartVoucher)) {
+                $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
+            }
+
+            // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $freeShippingOnly
+                ? $this->translator->trans('Free shipping', [], 'Shop.Theme.Checkout')
+                : '-' . $this->priceFormatter->format($totalCartVoucherReduction);
+
+            $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
+                'cart',
+                null,
+                null,
+                [
+                    'deleteDiscount' => $cartVoucher['id_cart_rule'],
+                    'token' => Tools::getToken(false),
+                ]
+            );
+        }
+
+        return [
+            'allowed' => (int) CartRule::isFeatureActive(),
+            'added' => $vouchers,
+        ];
+    }
+
+    private function cartVoucherHasGiftProductReduction(array $cartVoucher): bool
+    {
+        return !empty($cartVoucher['gift_product']);
+    }
+
+    private function cartVoucherHasFreeShippingOnly(array $cartVoucher): bool
+    {
+        /*
+         * Here, we cannot just use $cartVoucher['free_shipping'], because the rule can do multiple things.
+         * If it gives a money discount AND free shipping, we must still display a numeric value.
+         */
+        return !$this->cartVoucherHasPercentReduction($cartVoucher)
+            && !$this->cartVoucherHasAmountReduction($cartVoucher)
+            && !$this->cartVoucherHasGiftProductReduction($cartVoucher)
+            && $cartVoucher['free_shipping'];
+    }
+
+    private function cartVoucherHasPercentReduction(array $cartVoucher): bool
+    {
+        return isset($cartVoucher['reduction_percent'])
+            && $cartVoucher['reduction_percent'] > 0
+            && $cartVoucher['reduction_amount'] == '0.00';
+    }
+
+    private function cartVoucherHasAmountReduction(array $cartVoucher): bool
+    {
+        return isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0;
+    }
+
+    /**
+     * @param array $rawProduct
+     *
+     * @return ProductLazyArray|ProductListingLazyArray
+     */
+    private function presentProduct(array $rawProduct)
+    {
+        if (isset($rawProduct['attributes']) && is_string($rawProduct['attributes'])) {
+            $rawProduct['attributes'] = $this->cartPresenter->getAttributesArrayFromString($rawProduct['attributes']);
+        }
+        $rawProduct['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
+            $rawProduct['id_product'],
+            $rawProduct['id_product_attribute']
+        );
+
+        $rawProduct['up_quantity_url'] = $this->link->getUpQuantityCartURL(
+            $rawProduct['id_product'],
+            $rawProduct['id_product_attribute']
+        );
+
+        $rawProduct['down_quantity_url'] = $this->link->getDownQuantityCartURL(
+            $rawProduct['id_product'],
+            $rawProduct['id_product_attribute']
+        );
+
+        $rawProduct['update_quantity_url'] = $this->link->getUpdateQuantityCartURL(
+            $rawProduct['id_product'],
+            $rawProduct['id_product_attribute']
+        );
+
+        $resetFields = [
+            'ecotax_rate',
+            'specific_prices',
+            'customizable',
+            'online_only',
+            'reduction',
+            'reduction_without_tax',
+            'new',
+            'condition',
+            'pack',
+        ];
+        foreach ($resetFields as $field) {
+            if (!array_key_exists($field, $rawProduct)) {
+                $rawProduct[$field] = '';
+            }
+        }
+
+        $rawProduct['price'] = Tools::ps_round($rawProduct['price'], Context::getContext()->getComputingPrecision());
+        $rawProduct['price_wt'] = Tools::ps_round($rawProduct['price_wt'], Context::getContext()->getComputingPrecision());
+
+        if ($this->cartPresenter->includeTaxes()) {
+            $rawProduct['price_amount'] = $rawProduct['price'] = $rawProduct['price_wt'];
+            $rawProduct['unit_price'] = $rawProduct['unit_price_tax_included'];
+        } else {
+            $rawProduct['price_amount'] = $rawProduct['price_tax_exc'] = $rawProduct['price'];
+            $rawProduct['unit_price'] = $rawProduct['unit_price_tax_excluded'];
+        }
+
+        $rawProduct['total'] = $this->priceFormatter->format(
+            $this->cartPresenter->includeTaxes() ?
+                $rawProduct['total_wt'] :
+                $rawProduct['total']
+        );
+
+        // Pass the cart quantity as quantity wanted for proper price calculation
+        $rawProduct['quantity_wanted'] = $rawProduct['cart_quantity'];
+
+        return $this->cartProductPresenter->present(
+            $this->cartPresenter->getSettings(),
+            $rawProduct,
+            Context::getContext()->language
+        );
+    }
+}

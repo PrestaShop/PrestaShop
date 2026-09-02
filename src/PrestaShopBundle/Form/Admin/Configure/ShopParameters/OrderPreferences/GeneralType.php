@@ -1,36 +1,18 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -43,11 +25,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class GeneralType extends TranslatorAwareType
 {
     /**
-     * @var string
-     */
-    private $defaultCurrencyIsoCode;
-
-    /**
      * CMS pages choices for Terms Of Service.
      *
      * @var array
@@ -59,25 +36,29 @@ class GeneralType extends TranslatorAwareType
      */
     private $configuration;
 
+    /**
+     * @var CurrencyDataProviderInterface
+     */
+    private $currencyDataProvider;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
+        CurrencyDataProviderInterface $currencyDataProvider,
         ConfigurationInterface $configuration,
-        $defaultCurrencyIsoCode,
         array $tosCmsChoices
     ) {
         parent::__construct($translator, $locales);
 
-        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
         $this->tosCmsChoices = $tosCmsChoices;
         $this->configuration = $configuration;
+        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $configuration = $this->configuration;
-        $isMultishippingEnabled = (bool) $configuration->get('PS_ALLOW_MULTISHIPPING');
-        $currencyIsoCode = $this->defaultCurrencyIsoCode;
+        $currencyIsoCode = $this->currencyDataProvider->getDefaultCurrencyIsoCode();
 
         $builder
             ->add('enable_final_summary', SwitchType::class, [
@@ -100,8 +81,8 @@ class GeneralType extends TranslatorAwareType
             ])
             ->add('purchase_minimum_value', MoneyWithSuffixType::class, [
                 'required' => false,
-                'label' => $this->trans('Minimum purchase total required in order to validate the order', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Set to 0 to disable this feature.', 'Admin.Shopparameters.Help'),
+                'label' => $this->trans('Minimum order value', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Set the minimum order value required to proceed to checkout. Customers won’t be able to continue if their cart total is below this amount. Set to 0 to disable this restriction.', 'Admin.Shopparameters.Help'),
                 'currency' => $currencyIsoCode,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
                 'multistore_configuration_key' => 'PS_PURCHASE_MINIMUM',
@@ -109,18 +90,9 @@ class GeneralType extends TranslatorAwareType
             ->add('recalculate_shipping_cost', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Recalculate shipping costs after editing the order', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Automatically updates the shipping costs when you edit an order.', 'Admin.Shopparameters.Help'),
+                'help' => $this->trans('Automatically updates the shipping costs when an order is edited in the back office. If you disable this option, make sure to review the shipping costs whenever you make changes to an order.', 'Admin.Shopparameters.Help'),
                 'multistore_configuration_key' => 'PS_ORDER_RECALCULATE_SHIPPING',
             ]);
-
-        if ($isMultishippingEnabled) {
-            $builder->add('allow_multishipping', SwitchType::class, [
-                'required' => false,
-                'label' => $this->trans('Allow multishipping', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.', 'Admin.Shopparameters.Help'),
-                'multistore_configuration_key' => 'PS_ALLOW_MULTISHIPPING',
-            ]);
-        }
 
         $builder
             ->add('allow_delayed_shipping', SwitchType::class, [
@@ -132,7 +104,7 @@ class GeneralType extends TranslatorAwareType
             ->add('enable_tos', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Terms of service', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Require customers to accept or decline terms of service before processing an order.', 'Admin.Shopparameters.Help'),
+                'help' => $this->trans('Require customers to accept terms of service before processing an order.', 'Admin.Shopparameters.Help'),
                 'multistore_configuration_key' => 'PS_CONDITIONS',
             ])
             ->add('tos_cms_id', ChoiceType::class, [
@@ -142,10 +114,7 @@ class GeneralType extends TranslatorAwareType
                 'placeholder' => $this->trans('None', 'Admin.Global'),
                 'choices' => $this->tosCmsChoices,
                 'multistore_configuration_key' => 'PS_CONDITIONS_CMS_ID',
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
+                'autocomplete' => true,
             ])
             ->add('enable_backorder_status', SwitchType::class, [
                 'required' => false,

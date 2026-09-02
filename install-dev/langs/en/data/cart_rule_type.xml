@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<entity_cart_rule_type>
+  <cart_rule_type id="free_shipping" name="On free shipping">
+    <description>Discount that provides free shipping to the order</description>
+  </cart_rule_type>
+  <cart_rule_type id="cart_level" name="On cart amount">
+    <description>Discount applied to cart</description>
+  </cart_rule_type>
+  <cart_rule_type id="order_level" name="On total order">
+    <description>Discount applied to the order</description>
+  </cart_rule_type>
+  <cart_rule_type id="product_level" name="On catalog products">
+    <description>Discount applied to specific products</description>
+  </cart_rule_type>
+  <cart_rule_type id="free_gift" name="On free gift">
+    <description>Discount that provides a free gift product</description>
+  </cart_rule_type>
+</entity_cart_rule_type>

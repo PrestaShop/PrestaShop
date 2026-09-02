@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 window.Tree = function (element, options) {
@@ -35,8 +15,9 @@ Tree.prototype = {
   init() {
     const name = this.$element.parent().find('ul.tree input').first().attr('name');
     const idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
-    this.$element.find('label.tree-toggler, .icon-folder-close, .icon-folder-open').unbind('click');
-    this.$element.find('label.tree-toggler, .icon-folder-close, .icon-folder-open').click(
+    this.$element.find('label.tree-toggler, .icon-folder-close, .icon-folder-open').off('click');
+    this.$element.find('label.tree-toggler, .icon-folder-close, .icon-folder-open').on(
+      'click',
       function () {
         if ($(this).parent().parent().children('ul.tree')
           .is(':visible')) {
@@ -96,8 +77,9 @@ Tree.prototype = {
         }
       },
     );
-    this.$element.find('li').unbind('click');
-    this.$element.find('li').click(
+    this.$element.find('li').off('click');
+    this.$element.find('li').on(
+      'click',
       () => {
         $('.tree-selected').removeClass('tree-selected');
         $('li input:checked').parent().addClass('tree-selected');
@@ -106,8 +88,8 @@ Tree.prototype = {
 
     if (typeof (idTree) !== 'undefined') {
       if ($('select#id_category_default').length) {
-        this.$element.find(':input[type=checkbox]').unbind('click');
-        this.$element.find(':input[type=checkbox]').click(function () {
+        this.$element.find(':input[type=checkbox]').off('click');
+        this.$element.find(':input[type=checkbox]').on('click', function () {
           // eslint-disable-next-line
           if ($(this).prop('checked')) addDefaultCategory($(this));
           else {
@@ -120,10 +102,10 @@ Tree.prototype = {
         });
       }
       if (typeof (treeClickFunc) !== 'undefined') {
-        this.$element.find(':input[type=radio]').unbind('click');
+        this.$element.find(':input[type=radio]').off('click');
 
         // eslint-disable-next-line
-        this.$element.find(':input[type=radio]').click(treeClickFunc);
+        this.$element.find(':input[type=radio]').on('click', treeClickFunc);
       }
     }
 

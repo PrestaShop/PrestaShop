@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,7 +9,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Domain\FeatureValue\ValueObject;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 class FeatureIdTest extends TestCase
@@ -37,7 +17,7 @@ class FeatureIdTest extends TestCase
     /**
      * @dataProvider getValidInput
      */
-    public function testValidInput($featureValueId): void
+    public function testValidInput(int $featureValueId): void
     {
         $vo = new FeatureId($featureValueId);
         $this->assertEquals($featureValueId, $vo->getValue());
@@ -45,8 +25,8 @@ class FeatureIdTest extends TestCase
 
     public function getValidInput(): iterable
     {
-        yield [0];
-        yield [42];
+        yield [1000];
+        yield [1];
     }
 
     /**
@@ -54,15 +34,14 @@ class FeatureIdTest extends TestCase
      */
     public function testInvalidInput($featureValueId): void
     {
-        $this->expectException(InvalidFeatureIdException::class);
+        $this->expectException(FeatureConstraintException::class);
+        $this->expectExceptionCode(FeatureConstraintException::INVALID_ID);
         new FeatureId($featureValueId);
     }
 
     public function getInvalidInput(): iterable
     {
+        yield [0];
         yield [-1];
-        yield [1.1];
-        yield ['a'];
-        yield ['+'];
     }
 }

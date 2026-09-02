@@ -1,0 +1,33 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% form_theme tagForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block tag_form_block %}
+  {{ form_start(tagForm) }}
+
+  <div class="card">
+    <h3 class="card-header">
+      {{ 'Tag'|trans({}, 'Admin.Advparameters.Feature') }}
+    </h3>
+
+    <div class="card-body">
+      <div class="form-wrapper">
+        {{ form_widget(tagForm) }}
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <a href="{{ path('admin_tags_index') }}" class="btn btn-outline-secondary">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+      <button class="btn btn-primary float-right" id="save-button">
+        {{ 'Save'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
+  </div>
+
+  {{ form_end(tagForm) }}
+{% endblock %}

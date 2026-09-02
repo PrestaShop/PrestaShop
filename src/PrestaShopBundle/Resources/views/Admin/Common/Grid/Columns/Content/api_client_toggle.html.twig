@@ -1,0 +1,17 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{# This is an override of the toggle template for api_client grid used to hide the toggle button for external api clients #}
+{% if record['external_issuer'] is null %}
+  {{ include('@PrestaShop/Admin/Common/Grid/Columns/Content/toggle.html.twig', {
+    column: column,
+    record: record,
+  },
+  ) }}
+{% else %}
+  <div class="text-center">
+    {{ 'N/A'|trans({}, 'Admin.Global') }}
+  </div>
+{% endif %}

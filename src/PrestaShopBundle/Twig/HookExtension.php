@@ -1,31 +1,12 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Twig;
 
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
@@ -62,7 +43,7 @@ class HookExtension extends AbstractExtension
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         ModuleDataProvider $moduleDataProvider,
-        ModuleRepository $moduleRepository = null
+        ?ModuleRepository $moduleRepository = null
     ) {
         $this->hookDispatcher = $hookDispatcher;
         $this->moduleDataProvider = $moduleDataProvider;
@@ -115,14 +96,14 @@ class HookExtension extends AbstractExtension
      * @param string $hookName the name of the hook to trigger
      * @param array $hookParameters the parameters to send to the Hook
      *
-     * @throws \Exception if the hookName is missing
-     *
      * @return array[string] All listener's responses, ordered by the listeners' priorities
+     *
+     * @throws Exception if the hookName is missing
      */
     public function renderHooksArray($hookName, $hookParameters = [])
     {
         if ('' == $hookName) {
-            throw new \Exception('Hook name missing');
+            throw new Exception('Hook name missing');
         }
 
         // The call to the render of the hooks is encapsulated into a ob management to avoid any call of echo from the
@@ -154,14 +135,14 @@ class HookExtension extends AbstractExtension
      * @param string $hookName the name of the hook to trigger
      * @param array $hookParameters the parameters to send to the Hook
      *
-     * @throws \Exception if the hookName is missing
-     *
      * @return string all listener's responses, concatenated in a simple string, ordered by the listeners' priorities
+     *
+     * @throws Exception if the hookName is missing
      */
     public function renderHook($hookName, array $hookParameters = [])
     {
         if ($hookName == '') {
-            throw new \Exception('Hook name missing');
+            throw new Exception('Hook name missing');
         }
 
         return $this->hookDispatcher

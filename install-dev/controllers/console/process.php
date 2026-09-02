@@ -1,31 +1,14 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 use PrestaShopBundle\Install\Database;
 use PrestaShopBundle\Install\Install;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 
 class InstallControllerConsoleProcess extends InstallControllerConsole implements HttpConfigureInterface
@@ -45,10 +28,13 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     public function init()
     {
-        $this->model_install = new Install();
+        $output = new ConsoleOutput();
+        $logger = new SymfonyConsoleLogger($output, SymfonyConsoleLogger::INFO);
+
+        $this->model_install = new Install(null, null, $logger);
         $this->model_install->setTranslator($this->translator);
 
-        $this->model_database = new Database();
+        $this->model_database = new Database($logger);
         $this->model_database->setTranslator($this->translator);
     }
 
@@ -107,6 +93,11 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         require_once _PS_ROOT_DIR_ . '/config/smarty.config.inc.php';
 
         Context::getContext()->smarty = $smarty;
+
+        $container = SymfonyContainer::getInstance();
+        /** @var ContextBuilderPreparer $preparer */
+        $preparer = $container->get(ContextBuilderPreparer::class);
+        $preparer->prepareFromLegacyContext(Context::getContext());
     }
 
     public function process()
@@ -115,7 +106,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {
-            $steps = ['database', 'modules', 'theme', 'fixtures', 'postInstall'];
+            $steps = ['database', 'modules', 'theme', 'fixtures', 'postInstall', 'finalize'];
         }
         if (!file_exists(PS_INSTALLATION_LOCK_FILE)) {
             // Set the install lock file
@@ -124,7 +115,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
         if (in_array('database', $steps)) {
             if (!$this->processGenerateSettingsFile()) {
-                $this->printErrors();
+                $this->printErrors('processGenerateSettingsFile');
             }
 
             if ($this->datas->database_create) {
@@ -139,49 +130,58 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
                 $this->datas->database_prefix,
                 $this->datas->database_clear
             )) {
-                $this->printErrors();
+                $this->printErrors('testDatabaseSettings');
             }
 
             // Deferred Kernel Init
             $this->initKernel();
 
             if (!$this->processInstallDatabase()) {
-                $this->printErrors();
+                $this->printErrors('processInstallDatabase');
             }
 
             if (!$this->processInstallDefaultData()) {
-                $this->printErrors();
+                $this->printErrors('processInstallDefaultData');
             }
             if (!$this->processPopulateDatabase()) {
-                $this->printErrors();
+                $this->printErrors('processPopulateDatabase');
             }
 
             if (!$this->processConfigureShop()) {
-                $this->printErrors();
+                $this->printErrors('processConfigureShop');
             }
         }
 
-        if (in_array('theme', $steps)) {
-            if (!$this->processInstallTheme()) {
-                $this->printErrors();
-            }
-        }
-
+        // First install modules
         if (in_array('modules', $steps)) {
             if (!$this->processInstallModules()) {
-                $this->printErrors();
+                $this->printErrors('processInstallModules');
+            }
+        }
+
+        // Once modules are installed enabled selected theme since it could enable/disable
+        // some of the installed modules
+        if (in_array('theme', $steps)) {
+            if (!$this->processInstallTheme()) {
+                $this->printErrors('processInstallTheme');
             }
         }
 
         if (in_array('fixtures', $steps) && $this->datas->fixtures) {
             if (!$this->processInstallFixtures()) {
-                $this->printErrors();
+                $this->printErrors('processInstallFixtures');
             }
         }
 
         if (in_array('postInstall', $steps)) {
             if (!$this->processPostInstall()) {
-                $this->printErrors();
+                $this->printErrors('processPostInstall');
+            }
+        }
+
+        if (in_array('finalize', $steps)) {
+            if (!$this->processFinalize()) {
+                $this->printErrors('processFinalize');
             }
         }
 
@@ -262,7 +262,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
         return $this->model_install->configureShop([
             'shop_name' => $this->datas->shop_name,
-            'shop_activity' => $this->datas->shop_activity,
             'shop_country' => $this->datas->shop_country,
             'shop_timezone' => $this->datas->timezone,
             'use_smtp' => false,
@@ -305,7 +304,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         }
 
         $this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
-        $result = $this->model_install->installFixtures(null, ['shop_activity' => $this->datas->shop_activity, 'shop_country' => $this->datas->shop_country]);
+        $result = $this->model_install->installFixtures(null, ['shop_country' => $this->datas->shop_country]);
         $this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
 
         return $result;
@@ -317,6 +316,19 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     public function processPostInstall(): bool
     {
         return $this->model_install->postInstall();
+    }
+
+    public function processFinalize(): bool
+    {
+        $this->initializeContext();
+
+        $result = $this->model_install->finalize();
+
+        if (!$result) {
+            $this->printErrors();
+        }
+
+        return $result;
     }
 
     /**
@@ -364,7 +376,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         require_once _PS_CORE_DIR_ . '/config/bootstrap.php';
 
         global $kernel;
-        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+        $kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
         $kernel->boot();
     }
 
@@ -377,7 +389,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     private function rebootWithoutTranslationsCache()
     {
         global $kernel;
-        (new Filesystem())->remove($kernel->getCacheDir() . 'translations');
+        (new Filesystem())->remove($kernel->getCacheDir() . DIRECTORY_SEPARATOR . 'translations');
         $kernel->reboot($kernel->getCacheDir());
     }
 }

@@ -1,0 +1,15 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<script src="{{ asset('themes/new-theme/public/main.bundle.js') }}"></script>
+<script src="{{ asset('admin.js', 'front_js') }}"></script>
+<script src="{{ asset('themes/new-theme/public/cldr.bundle.js') }}"></script>
+<script src="{{ asset('tools.js', 'front_js') }}"></script>
+<script src="{{ asset('jquery/plugins/fancybox/jquery.fancybox.js', 'front_js') }}"></script>
+<script src="{{ asset('jquery/plugins/chosen/jquery.chosen.js', 'front_js') }}"></script>
+{# This is handled as an external common dependency for both themes, but once new-theme is the only one it should be integrated directly into the main.bundle.js file #}
+<script src="{{ asset('themes/new-theme/public/create_product.bundle.js') }}"></script>
+{% if ps.isMultiShop %}
+  <script src="{{ asset('themes/new-theme/public/multistore_dropdown.bundle.js') }}"></script>
+{% endif %}

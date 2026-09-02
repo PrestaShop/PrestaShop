@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Type;
@@ -31,53 +11,34 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CountryChoiceType is responsible for providing country choices with -- symbol in front of array.
  */
 class CountryChoiceType extends AbstractType
 {
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $countriesChoiceProvider;
+    private array $countriesAttr = [];
+    private bool $needDni = false;
+    private bool $needPostcode = false;
 
-    /**
-     * @var FormChoiceAttributeProviderInterface
-     */
-    private $countriesAttrChoicesProvider;
+    private bool $needLogo = false;
 
-    /**
-     * @var array
-     */
-    private $countriesAttr = [];
-
-    /**
-     * @var bool
-     */
-    private $needDni = false;
-
-    /**
-     * @var bool
-     */
-    private $needPostcode = false;
-
-    /**
-     * @param FormChoiceProviderInterface $countriesChoiceProvider
-     */
-    public function __construct(FormChoiceProviderInterface $countriesChoiceProvider, FormChoiceAttributeProviderInterface $countriesAttrChoicesProvider)
-    {
-        $this->countriesChoiceProvider = $countriesChoiceProvider;
-        $this->countriesAttrChoicesProvider = $countriesAttrChoicesProvider;
+    public function __construct(
+        private readonly FormChoiceProviderInterface&FormChoiceAttributeProviderInterface $countriesChoiceProvider,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if ($options['with_dni_attr'] || $options['with_postcode_attr']) {
+        if ($options['with_dni_attr'] || $options['with_postcode_attr'] || $options['with_logo_attr']) {
             $this->needDni = $options['with_dni_attr'];
             $this->needPostcode = $options['with_postcode_attr'];
-            $this->countriesAttr = $this->countriesAttrChoicesProvider->getChoicesAttributes();
+            $this->needLogo = $options['with_logo_attr'];
+            $this->countriesAttr = $this->countriesChoiceProvider->getChoicesAttributes();
         }
         parent::buildForm($builder, $options);
     }
@@ -85,19 +46,35 @@ class CountryChoiceType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'choices' => $this->countriesChoiceProvider->getChoices(),
+            'choices' => [],
             'choice_attr' => [$this, 'getChoiceAttr'],
             'placeholder' => '--',
+            'add_all_countries_option' => false,
             'with_dni_attr' => false,
             'with_postcode_attr' => false,
+            'with_logo_attr' => false,
         ]);
+
+        $resolver->addNormalizer('choices', function (Options $options) {
+            $countries = $this->countriesChoiceProvider->getChoices();
+
+            if ($options['add_all_countries_option']) {
+                return array_merge(
+                    [$this->translator->trans('All countries', [], 'Admin.Global') => 0],
+                    $countries
+                );
+            }
+
+            return $countries;
+        });
 
         $resolver
             ->setAllowedTypes('with_dni_attr', 'boolean')
-            ->setAllowedTypes('with_postcode_attr', 'boolean');
+            ->setAllowedTypes('with_postcode_attr', 'boolean')
+            ->setAllowedTypes('with_logo_attr', 'boolean');
     }
 
     public function getChoiceAttr($value, $key)
@@ -109,6 +86,9 @@ class CountryChoiceType extends AbstractType
         if ($this->needPostcode && isset($this->countriesAttr[$key], $this->countriesAttr[$key]['need_postcode'])) {
             $attr['need_postcode'] = 1;
         }
+        if ($this->needLogo && isset($this->countriesAttr[$key], $this->countriesAttr[$key]['data-logo'])) {
+            $attr['data-logo'] = $this->countriesAttr[$key]['data-logo'];
+        }
 
         return $attr;
     }
@@ -116,7 +96,7 @@ class CountryChoiceType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function getParent(): string
     {
         return ChoiceType::class;
     }

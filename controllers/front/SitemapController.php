@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 class SitemapControllerCore extends FrontController
 {
@@ -33,9 +13,9 @@ class SitemapControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
-        $urls = [
+        $sitemapUrls = [
             'our_offers' => [
                 'name' => $this->trans('Our Offers', [], 'Shop.Theme.Global'),
                 'links' => $this->getOffersLinks(),
@@ -55,48 +35,40 @@ class SitemapControllerCore extends FrontController
         ];
 
         /*
-         * Backward compatibility with older themes.
-         * Intentionally not modifiable by a hook, so somebody doesn't remove a group completely.
-         * (this would break the theme relying on the var on being there)
-         * This should be removed as soon as possible, because $pages variable is overwriting
-         * our global template variable assigned in FrontController.
-         */
-        $this->context->smarty->assign(
-            [
-                'our_offers' => $urls['our_offers']['name'],
-                'categories' => $urls['categories']['name'],
-                'your_account' => $urls['your_account']['name'],
-                'pages' => $urls['pages']['name'],
-                'links' => [
-                    'offers' => $urls['our_offers']['links'],
-                    'pages' => $urls['pages']['links'],
-                    'user_account' => $urls['your_account']['links'],
-                    'categories' => $urls['categories']['links'],
-                ],
-            ]
-        );
-
-        /*
          * Allows modules to add own urls (even whole new groups) to frontend sitemap.
          * For example landing pages, blog posts and others.
          */
         Hook::exec(
             'actionModifyFrontendSitemap',
-            ['urls' => &$urls],
-            null,
-            false,
-            true,
-            false,
-            null,
-            true
+            ['urls' => &$sitemapUrls]
         );
 
-        $this->context->smarty->assign('urls', $urls);
+        /*
+         * Backward compatibility with older themes.
+         * This should be removed as soon as possible, because $pages variable is overwriting
+         * our global template variable assigned in FrontController.
+         */
+        $this->context->smarty->assign(
+            [
+                'our_offers' => !empty($sitemapUrls['our_offers']['name']) ? $sitemapUrls['our_offers']['name'] : '',
+                'categories' => !empty($sitemapUrls['categories']['name']) ? $sitemapUrls['categories']['name'] : '',
+                'your_account' => !empty($sitemapUrls['your_account']['name']) ? $sitemapUrls['your_account']['name'] : '',
+                'pages' => !empty($sitemapUrls['pages']['name']) ? $sitemapUrls['pages']['name'] : '',
+                'links' => [
+                    'offers' => !empty($sitemapUrls['our_offers']['links']) ? $sitemapUrls['our_offers']['links'] : [],
+                    'pages' => !empty($sitemapUrls['pages']['links']) ? $sitemapUrls['pages']['links'] : [],
+                    'user_account' => !empty($sitemapUrls['your_account']['links']) ? $sitemapUrls['your_account']['links'] : [],
+                    'categories' => !empty($sitemapUrls['categories']['links']) ? $sitemapUrls['categories']['links'] : [],
+                ],
+            ]
+        );
+
+        $this->context->smarty->assign('sitemapUrls', $sitemapUrls);
         parent::initContent();
         $this->setTemplate('cms/sitemap');
     }
 
-    public function getCategoriesLinks()
+    public function getCategoriesLinks(): array
     {
         return [Category::getRootCategory()->recurseLiteCategTree(0, 0, null, null, 'sitemap')];
     }
@@ -104,16 +76,19 @@ class SitemapControllerCore extends FrontController
     /**
      * @return array
      */
-    protected function getPagesLinks()
+    protected function getPagesLinks(): array
     {
         $cms = CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1);
         $links = $this->getCmsTree($cms);
 
-        $links[] = [
-            'id' => 'stores-page',
-            'label' => $this->trans('Our stores', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('stores'),
-        ];
+        // We hide stores page, if there is no page configured
+        if (Store::atLeastOneStoreExists()) {
+            $links[] = [
+                'id' => 'stores-page',
+                'label' => $this->trans('Our stores', [], 'Shop.Theme.Global'),
+                'url' => $this->context->link->getPageLink('stores'),
+            ];
+        }
 
         $links[] = [
             'id' => 'contact-page',
@@ -133,7 +108,7 @@ class SitemapControllerCore extends FrontController
     /**
      * @return array
      */
-    protected function getCmsTree($cms)
+    protected function getCmsTree($cms): array
     {
         $links = [];
 
@@ -162,7 +137,7 @@ class SitemapControllerCore extends FrontController
     /**
      * @return array
      */
-    protected function getUserAccountLinks()
+    protected function getUserAccountLinks(): array
     {
         $links = [];
 
@@ -184,7 +159,7 @@ class SitemapControllerCore extends FrontController
     /**
      * @return array
      */
-    protected function getOffersLinks()
+    protected function getOffersLinks(): array
     {
         $links = [
             [
@@ -233,15 +208,23 @@ class SitemapControllerCore extends FrontController
         return $links;
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = [
             'title' => $this->trans('Sitemap', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('sitemap', true),
+            'url' => $this->context->link->getPageLink('sitemap'),
         ];
 
         return $breadcrumb;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL(): string
+    {
+        return $this->context->link->getPageLink('sitemap');
     }
 }

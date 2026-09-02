@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -34,6 +14,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkDeleteStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkUpdateStateZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
@@ -45,9 +26,9 @@ use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use RuntimeException;
 use State;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -55,17 +36,6 @@ use Zone;
 
 class StateFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default shop id from configs
-     */
-    private $defaultLangId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
-    }
-
     /**
      * @When I add new state :stateReference with following properties:
      *
@@ -79,7 +49,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
         try {
             /** @var StateId $stateId */
             $stateId = $this->getCommandBus()->handle(new AddStateCommand(
-                (int) Country::getIdByName($this->defaultLangId, $data['country']),
+                (int) Country::getIdByName($this->getDefaultLangId(), $data['country']),
                 Zone::getIdByName($data['zone']),
                 $data['name'],
                 $data['iso_code'],
@@ -115,7 +85,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
             $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']));
         }
         if (isset($data['country'])) {
-            $command->setCountryId((int) Country::getIdByName($this->defaultLangId, $data['country']));
+            $command->setCountryId((int) Country::getIdByName($this->getDefaultLangId(), $data['country']));
         }
         if (isset($data['zone'])) {
             $command->setZoneId((int) Zone::getIdByName($data['zone']));
@@ -224,7 +194,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
         $state = new State((int) SharedStorage::getStorage()->get($stateReference));
         $country = new Country($state->id_country);
 
-        if ($country->name[$this->defaultLangId] !== $name) {
+        if ($country->name[$this->getDefaultLangId()] !== $name) {
             throw new RuntimeException(sprintf(
                 'Country "%s" has "%s" name, but "%s" was expected.',
                 $stateReference,
@@ -257,6 +227,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Given /^state "(.*)" is (enabled|disabled)?$/
+     *
      * @Then /^state "(.*)" should be (enabled|disabled)?$/
      *
      * @param string $stateReference
@@ -326,6 +297,28 @@ class StateFeatureContext extends AbstractDomainFeatureContext
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($stateReferences) as $stateReference) {
             $this->assertStateIsDeleted($stateReference);
+        }
+    }
+
+    /**
+     * @When I bulk update states :stateReferences to zone :zoneName
+     *
+     * @param string $stateReferences
+     * @param string $zoneName
+     */
+    public function bulkUpdateStatesZone(string $stateReferences, string $zoneName): void
+    {
+        $stateIds = [];
+        foreach (PrimitiveUtils::castStringArrayIntoArray($stateReferences) as $stateReference) {
+            $stateIds[] = (int) SharedStorage::getStorage()->get($stateReference);
+        }
+
+        $zoneId = (int) Zone::getIdByName($zoneName);
+
+        try {
+            $this->getCommandBus()->handle(new BulkUpdateStateZoneCommand($stateIds, $zoneId));
+        } catch (StateException|StateNotFoundException|ZoneNotFoundException|CannotUpdateStateException $e) {
+            $this->setLastException($e);
         }
     }
 

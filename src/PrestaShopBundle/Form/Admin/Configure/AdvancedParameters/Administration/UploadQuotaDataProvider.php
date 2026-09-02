@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
@@ -44,11 +25,14 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
      * @var DataConfigurationInterface
      */
     private $dataConfiguration;
+    private UploadSizeConfigurationInterface $uploadSizeConfiguration;
 
     public function __construct(
-        DataConfigurationInterface $dataConfiguration
+        DataConfigurationInterface $dataConfiguration,
+        UploadSizeConfigurationInterface $uploadSizeConfiguration
     ) {
         $this->dataConfiguration = $dataConfiguration;
+        $this->uploadSizeConfiguration = $uploadSizeConfiguration;
     }
 
     /**
@@ -80,8 +64,8 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
 
         if (isset($data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES])) {
             $maxSizeAttachedFile = $data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES];
-            if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0) {
-                $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
+            if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0 || $this->convertBytes($maxSizeAttachedFile . 'm') > $this->uploadSizeConfiguration->getMaxUploadSizeInBytes()) {
+                $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_MAX_SIZE_ATTACHED_FILES, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
             }
         }
 
@@ -102,6 +86,33 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
 
         if (!$errors->isEmpty()) {
             throw new DataProviderException('Upload quota data is invalid', 0, null, $errors);
+        }
+    }
+
+    private function convertBytes($value): int
+    {
+        if (is_numeric($value)) {
+            return $value;
+        } else {
+            $value_length = strlen($value);
+            $qty = (int) substr($value, 0, $value_length - 1);
+            $unit = strtolower(substr($value, $value_length - 1));
+            switch ($unit) {
+                case 'k':
+                    $qty *= 1024;
+
+                    break;
+                case 'm':
+                    $qty *= 1048576;
+
+                    break;
+                case 'g':
+                    $qty *= 1073741824;
+
+                    break;
+            }
+
+            return $qty;
         }
     }
 }

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -40,6 +20,7 @@ use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ModuleManagerTest extends TestCase
@@ -53,6 +34,9 @@ class ModuleManagerTest extends TestCase
 
     /** @var Module&MockObject */
     private $module;
+
+    /** @var LegacyModule&MockObject */
+    private $legacyModule;
 
     public function setUp(): void
     {
@@ -76,6 +60,9 @@ class ModuleManagerTest extends TestCase
                 $translatorMock,
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(HookManager::class),
+                _PS_MODULE_DIR_,
+                new XliffFileLoader(),
+                null,
             ])
             ->onlyMethods(['upgradeMigration'])
             ->getMock()
@@ -94,7 +81,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->uninstall(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->uninstall(self::UNINSTALLED_MODULE_NAME);
     }
 
@@ -103,7 +90,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->enable(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->enable(self::UNINSTALLED_MODULE_NAME);
     }
 
@@ -112,26 +99,8 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->disable(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->disable(self::UNINSTALLED_MODULE_NAME);
-    }
-
-    public function testEnableMobile(): void
-    {
-        $this->assertTrue($this->moduleManager->enableMobile(self::INSTALLED_MODULE_NAME));
-
-        $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
-        $this->moduleManager->enableMobile(self::UNINSTALLED_MODULE_NAME);
-    }
-
-    public function testDisableMobile(): void
-    {
-        $this->assertTrue($this->moduleManager->disableMobile(self::INSTALLED_MODULE_NAME));
-
-        $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
-        $this->moduleManager->disableMobile(self::UNINSTALLED_MODULE_NAME);
     }
 
     public function testUpgrade(): void
@@ -140,7 +109,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->upgrade(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->upgrade(self::UNINSTALLED_MODULE_NAME);
     }
 
@@ -153,7 +122,7 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->reset(self::INSTALLED_MODULE_NAME, true));
 
         $this->expectException(Exception::class);
-        $this->expectErrorMessage('The module %module% must be installed first');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->reset(self::UNINSTALLED_MODULE_NAME);
     }
 
@@ -177,18 +146,16 @@ class ModuleManagerTest extends TestCase
 
     public function testGetError(): void
     {
-        $moduleInstance = $this->createMock(LegacyModule::class);
-        $moduleInstance->method('getErrors')->willReturnOnConsecutiveCalls([], ['my error']);
-        $this->module->method('getInstance')->willReturn($moduleInstance);
+        $this->legacyModule->method('getErrors')->willReturnOnConsecutiveCalls([], ['my error']);
         $this->module->method('hasValidInstance')->willReturnOnConsecutiveCalls(false, true, true);
 
         $this->assertEquals(
-            'The module is invalid and cannot be loaded.',
+            'The module %module% is invalid and cannot be loaded.',
             $this->moduleManager->getError(self::INSTALLED_MODULE_NAME)
         );
 
         $this->assertEquals(
-            'Unfortunately, the module did not return additional details.',
+            'Unfortunately, the module %module% did not return additional details.',
             $this->moduleManager->getError(self::INSTALLED_MODULE_NAME)
         );
 
@@ -207,23 +174,27 @@ class ModuleManagerTest extends TestCase
         $module = $this->getMockBuilder(Module::class)
             ->disableOriginalConstructor()
             ->enableOriginalClone()
-            ->setMethodsExcept([])
-            ->addMethods(['reset', 'postInstall'])
             ->getMock()
         ;
+
+        $this->legacyModule = $this->getMockBuilder(LegacyModule::class)
+            ->disableOriginalConstructor()
+            ->enableOriginalClone()
+            ->addMethods(['reset'])
+            ->onlyMethods(['getErrors'])
+            ->getMock()
+        ;
+        $this->legacyModule->method('reset')->willReturn(true);
 
         $module->method('get')->with('version')->willReturn('1.0.0');
         $module->method('onInstall')->willReturn(true);
         $module->method('onUninstall')->willReturn(true);
         $module->method('onEnable')->willReturn(true);
         $module->method('onDisable')->willReturn(true);
-        $module->method('onMobileEnable')->willReturn(true);
-        $module->method('onMobileDisable')->willReturn(true);
         $module->method('onUpgrade')->willReturn(true);
         $module->method('onReset')->willReturn(true);
         $module->method('onPostInstall')->willReturn(true);
-        $module->method('reset')->willReturn(true);
-        $module->method('postInstall')->willReturn(true);
+        $module->method('getInstance')->willReturn($this->legacyModule);
 
         return $module;
     }
@@ -255,6 +226,13 @@ class ModuleManagerTest extends TestCase
             ->willReturnMap([
                 [self::INSTALLED_MODULE_NAME, true],
                 [self::UNINSTALLED_MODULE_NAME, false],
+            ])
+        ;
+
+        $moduleDataProvider->method('getModuleIdByName')
+            ->willReturnMap([
+                [self::INSTALLED_MODULE_NAME, false, 1],
+                [self::UNINSTALLED_MODULE_NAME, false, null],
             ])
         ;
 

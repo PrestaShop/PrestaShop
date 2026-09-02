@@ -37,7 +37,9 @@ Feature: Order from Back Office (BO)
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
 
-  Scenario: Check customer message can be null
+  # Even without a customer message, the employee who created the order from the BO must be
+  # recorded in the order messages block (regression from 1.6, see issue #9676).
+  Scenario: An order created from the BO with no customer message still records its creating employee
     When I create an empty cart "dummy_cart2" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart2"
@@ -46,7 +48,7 @@ Feature: Order from Back Office (BO)
       | message             |                             |
       | payment module name | dummy_payment               |
       | status              | Awaiting bank wire payment  |
-    Then order "bo_order2" must have no customer message
+    Then order "bo_order2" must have a customer message created by employee "test@prestashop.com"
 
   Scenario: Check customer message is saved when creating an order
     When I create an empty cart "dummy_cart2" for customer "testCustomer"
@@ -58,6 +60,7 @@ Feature: Order from Back Office (BO)
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
     Then order "bo_order2" must have customer message with content "test"
+    And order "bo_order2" must have a customer message created by employee "test@prestashop.com"
 
   Scenario: Update order status
     When I update order "bo_order1" status to "Awaiting Cash On Delivery validation"
@@ -123,6 +126,7 @@ Feature: Order from Back Office (BO)
   Scenario: Duplicate order cart
     When I duplicate order "bo_order1" cart "dummy_cart" with reference "duplicated_dummy_cart"
     Then there is duplicated cart "duplicated_dummy_cart" for cart dummy_cart
+    And cart "duplicated_dummy_cart" should belong to customer "testCustomer"
 
   Scenario: Add product to an existing Order without invoice without free shipping and new invoice
     Given there is a product in the catalog named "Test Added Product" with a price of 15.0 and 100 items in stock

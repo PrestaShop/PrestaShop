@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 @mixin hover {
   @if $enable-hover-media-query {
     // See Media Queries Level 4: http://drafts.csswg.org/mediaqueries/#hover

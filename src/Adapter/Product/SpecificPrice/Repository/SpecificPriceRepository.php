@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -184,11 +164,11 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
                 country_lang.name as country_name,
                 gl.name as group_name'
             )
-            ->setFirstResult($offset)
+            ->setFirstResult($offset ?? 0)
             ->setMaxResults($limit)
         ;
 
-        return $qb->execute()->fetchAllAssociative();
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -206,7 +186,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
             ->select('sp.id_specific_price')
             ->where('sp.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
-            ->execute()->fetchAllAssociative());
+            ->executeQuery()->fetchAllAssociative());
     }
 
     /**
@@ -222,7 +202,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
             ->select('COUNT(sp.id_specific_price) AS total_specific_prices')
         ;
 
-        return (int) $qb->execute()->fetch()['total_specific_prices'];
+        return (int) $qb->executeQuery()->fetchAssociative()['total_specific_prices'];
     }
 
     /**
@@ -298,7 +278,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
             ->setParameter('productId', $productId->getValue())
         ;
 
-        $result = $qb->execute()->fetchOne();
+        $result = $qb->executeQuery()->fetchOne();
 
         if (!$result) {
             return null;
@@ -336,7 +316,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
      */
     private function getSpecificPricesQueryBuilder(ProductId $productId, LanguageId $langId, array $filters): QueryBuilder
     {
-        //@todo: filters are not fully handled.
+        // @todo: filters are not fully handled.
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'specific_price', 'sp')
             ->leftJoin(

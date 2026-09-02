@@ -1,38 +1,22 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\Repository;
 
+use Db;
+use Order;
 use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteProductFromOrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
@@ -85,5 +69,87 @@ class OrderReturnRepository extends AbstractObjectModelRepository
             $orderReturn,
             OrderReturnException::class
         );
+    }
+
+    /**
+     * Deletes the merchandise return and its `order_return_detail` rows. The legacy
+     * ObjectModel::delete() does not cascade to `order_return_detail`, so we wipe the
+     * detail rows manually first to avoid orphans.
+     *
+     * @throws OrderReturnException when the ObjectModel exists but delete() returns false
+     */
+    public function delete(OrderReturnId $orderReturnId): void
+    {
+        $orderReturn = $this->get($orderReturnId);
+
+        Db::getInstance()->delete(
+            'order_return_detail',
+            'id_order_return = ' . (int) $orderReturnId->getValue()
+        );
+
+        $this->deleteObjectModel($orderReturn, OrderReturnException::class);
+    }
+
+    /**
+     * Lists classic (non-customized) products attached to a return.
+     *
+     * Each row is the legacy associative array returned by Order::getProducts() augmented with
+     * 'product_quantity' (sum of returned qty for that order line) and 'customizations'
+     * (last id_customization seen — 0 when none). Keys match the indexes used by Order::getProducts().
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getProductsForReturn(OrderReturnId $orderReturnId): array
+    {
+        $orderReturn = $this->get($orderReturnId);
+        $order = new Order((int) $orderReturn->id_order);
+
+        return OrderReturn::getOrdersReturnProducts($orderReturnId->getValue(), $order);
+    }
+
+    /**
+     * Counts product lines (rows in `order_return_detail`) attached to a return.
+     */
+    public function countProductLines(OrderReturnId $orderReturnId): int
+    {
+        return (int) $this->get($orderReturnId)->countProduct();
+    }
+
+    /**
+     * Removes a single row from `order_return_detail`.
+     *
+     * @throws DeleteProductFromOrderReturnException
+     */
+    public function deleteProductLine(OrderReturnId $orderReturnId, OrderReturnProductId $productId): void
+    {
+        $deleted = OrderReturn::deleteOrderReturnDetail(
+            $orderReturnId->getValue(),
+            $productId->getOrderDetailId(),
+            $productId->getCustomizationId()
+        );
+
+        if (!$deleted) {
+            throw new DeleteProductFromOrderReturnException(sprintf(
+                'Failed to delete product line (orderReturn=%d, orderDetail=%d, customization=%d).',
+                $orderReturnId->getValue(),
+                $productId->getOrderDetailId(),
+                $productId->getCustomizationId()
+            ));
+        }
+    }
+
+    /**
+     * Lists customized products attached to a return.
+     *
+     * Returns the legacy associative arrays produced by OrderReturn::getReturnedCustomizedProducts(),
+     * each enriched with product_id, product_attribute_id, name, reference, id_address_delivery.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getCustomizedProductsForReturn(OrderReturnId $orderReturnId): array
+    {
+        $orderReturn = $this->get($orderReturnId);
+
+        return OrderReturn::getReturnedCustomizedProducts((int) $orderReturn->id_order);
     }
 }

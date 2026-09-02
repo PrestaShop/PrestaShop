@@ -1,69 +1,57 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\DBAL\Exception as ExceptionAlias;
 use Doctrine\DBAL\Query\QueryBuilder;
 use ObjectModel;
-use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\ValueObject\AttributeGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductShopAssociationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopGroupAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use PrestaShopException;
 use Product;
 
-/**
- * Methods to access data storage for Product
- */
-class ProductRepository extends AbstractObjectModelRepository
+class ProductRepository extends AbstractMultiShopObjectModelRepository
 {
     /**
      * @var Connection
@@ -91,24 +79,710 @@ class ProductRepository extends AbstractObjectModelRepository
     private $manufacturerRepository;
 
     /**
+     * @var CategoryRepository
+     */
+    private $categoryRepository;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param ProductValidator $productValidator
      * @param TaxRulesGroupRepository $taxRulesGroupRepository
      * @param ManufacturerRepository $manufacturerRepository
+     * @param CategoryRepository $categoryRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         ProductValidator $productValidator,
         TaxRulesGroupRepository $taxRulesGroupRepository,
-        ManufacturerRepository $manufacturerRepository
+        ManufacturerRepository $manufacturerRepository,
+        CategoryRepository $categoryRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productValidator = $productValidator;
         $this->taxRulesGroupRepository = $taxRulesGroupRepository;
         $this->manufacturerRepository = $manufacturerRepository;
+        $this->categoryRepository = $categoryRepository;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     */
+    public function get(ProductId $productId, ShopId $shopId): Product
+    {
+        return $this->getProductByShopId($productId, $shopId);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return ShopId
+     *
+     * @throws ProductNotFoundException
+     */
+    public function getProductDefaultShopId(ProductId $productId): ShopId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('id_shop_default')
+            ->from($this->dbPrefix . 'product')
+            ->where('id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->executeQuery()->fetchAssociative();
+        if (empty($result['id_shop_default'])) {
+            throw new ProductNotFoundException(sprintf(
+                'Could not find Product with id %d',
+                $productId->getValue()
+            ));
+        }
+
+        return new ShopId((int) $result['id_shop_default']);
+    }
+
+    /**
+     * Returns the default shop of a product among a group, if the product's default shop is in the group it will
+     * naturally be returned. In the other case the first shop associated to the product in the group is returned.
+     *
+     * @param ProductId $productId
+     * @param ShopGroupId $shopGroupId
+     *
+     * @return ShopId
+     */
+    public function getProductDefaultShopIdForGroup(ProductId $productId, ShopGroupId $shopGroupId): ShopId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('p.id_shop_default, s.id_shop')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->innerJoin(
+                'p',
+                $this->dbPrefix . 'product_shop',
+                'ps',
+                'ps.id_product = p.id_product'
+            )
+            ->innerJoin(
+                'ps',
+                $this->dbPrefix . 'shop',
+                's',
+                's.id_shop = ps.id_shop'
+            )
+            ->where('p.id_product = :productId')
+            ->andWhere('s.id_shop_group = :shopGroupId')
+            ->addOrderBy('s.id_shop', 'ASC')
+            ->setParameter('shopGroupId', $shopGroupId->getValue())
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->executeQuery()->fetchAllAssociative();
+        if (empty($result)) {
+            throw new ShopGroupAssociationNotFound(sprintf(
+                'Could not find association between Product %d and Shop group %d',
+                $productId->getValue(),
+                $shopGroupId->getValue()
+            ));
+        }
+
+        // By default, the first shop from the group is considered the default one
+        $defaultShopId = (int) $result[0]['id_shop'];
+        foreach ($result as $productShop) {
+            // If one of the shops from the group is the actual product's default shop it takes priority
+            if ((int) $productShop['id_shop_default'] === (int) $productShop['id_shop']) {
+                $defaultShopId = (int) $productShop['id_shop_default'];
+                break;
+            }
+        }
+
+        return new ShopId($defaultShopId);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     */
+    public function getByShopConstraint(ProductId $productId, ShopConstraint $shopConstraint): Product
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            return $this->getProductByShopGroup($productId, $shopConstraint->getShopGroupId());
+        }
+
+        if ($shopConstraint->forAllShops()) {
+            return $this->getProductByDefaultShop($productId);
+        }
+
+        if ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+            return $this->getProductByShopId($productId, $shopConstraint->getShopIds()[0]);
+        }
+
+        return $this->getProductByShopId($productId, $shopConstraint->getShopId());
+    }
+
+    /**
+     * @param array<int, string> $localizedNames
+     * @param array<int, string> $localizedLinkRewrites
+     * @param string $productType
+     * @param ShopId $shopId
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     */
+    public function create(
+        array $localizedNames,
+        array $localizedLinkRewrites,
+        string $productType,
+        ShopId $shopId
+    ): Product {
+        $defaultCategoryId = $this->categoryRepository->getShopDefaultCategory($shopId);
+
+        $product = new Product(null, false, null, $shopId->getValue());
+        $product->active = false;
+        $product->id_category_default = $defaultCategoryId->getValue();
+        $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
+        $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
+        $product->product_type = $productType;
+        $product->id_shop_default = $shopId->getValue();
+        $product->name = $localizedNames;
+        $product->link_rewrite = $localizedLinkRewrites;
+        $product->id_tax_rules_group = $this->taxRulesGroupRepository->getIdTaxRulesGroupMostUsed();
+
+        $this->productValidator->validateCreation($product);
+        $this->addObjectModelToShops($product, [$shopId], CannotAddProductException::class);
+        $this->categoryRepository->addProductAssociations(
+            new ProductId((int) $product->id),
+            [$defaultCategoryId]
+        );
+
+        return $product;
+    }
+
+    /**
+     * Import-engine fallback: creates a minimal product shell with a
+     * caller-chosen id, mirroring create() with ObjectModel::$force_id
+     * enabled (same pattern as combination creation).
+     *
+     * WARNING: forcing ids is deliberately not expressible through the CQRS
+     * product commands — this method exists only for the import "force IDs"
+     * option. Do NOT use it outside the import engine.
+     *
+     * @param array<int, string> $localizedNames indexed by language id
+     * @param array<int, string> $localizedLinkRewrites indexed by language id
+     */
+    public function createWithForcedId(
+        int $forcedProductId,
+        array $localizedNames,
+        array $localizedLinkRewrites,
+        string $productType,
+        int $shopId
+    ): Product {
+        $shopIdVo = new ShopId($shopId);
+        $defaultCategoryId = $this->categoryRepository->getShopDefaultCategory($shopIdVo);
+
+        $product = new Product(null, false, null, $shopId);
+        $product->id = $forcedProductId;
+        $product->force_id = true;
+        $product->active = false;
+        $product->id_category_default = $defaultCategoryId->getValue();
+        $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
+        $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
+        $product->product_type = $productType;
+        $product->id_shop_default = $shopId;
+        $product->name = $localizedNames;
+        $product->link_rewrite = $localizedLinkRewrites;
+        $product->id_tax_rules_group = $this->taxRulesGroupRepository->getIdTaxRulesGroupMostUsed();
+
+        $this->productValidator->validateCreation($product);
+        $this->addObjectModelToShops($product, [$shopIdVo], CannotAddProductException::class);
+        $this->categoryRepository->addProductAssociations(
+            new ProductId((int) $product->id),
+            [$defaultCategoryId]
+        );
+
+        return $product;
+    }
+
+    /**
+     * Import-engine fallback: sets date_add on an existing product.
+     *
+     * WARNING: the CQRS product commands deliberately force date_upd/date_add
+     * to now — this direct write exists only for the import date_add column.
+     * Do NOT use it outside the import engine.
+     *
+     * The shop restriction relies on the ShopConstraintTrait convention:
+     * product_shop carries no id_shop_group column, so a shop-group
+     * constraint is not supported here (single shop, shop list or all shops).
+     *
+     * @throws CannotUpdateProductException
+     */
+    public function setDateAdd(int $productId, DateTimeImmutable $dateAdd, ShopConstraint $shopConstraint): void
+    {
+        $formattedDate = $dateAdd->format('Y-m-d H:i:s');
+
+        try {
+            // the product table row is shared by every shop: always updated
+            $this->connection->createQueryBuilder()
+                ->update($this->dbPrefix . 'product')
+                ->set('date_add', ':dateAdd')
+                ->where('id_product = :productId')
+                ->setParameter('dateAdd', $formattedDate)
+                ->setParameter('productId', $productId)
+                ->executeStatement();
+
+            $shopQb = $this->connection->createQueryBuilder()
+                ->update($this->dbPrefix . 'product_shop')
+                ->set('date_add', ':dateAdd')
+                ->where('id_product = :productId')
+                ->setParameter('dateAdd', $formattedDate)
+                ->setParameter('productId', $productId);
+            $this->applyShopConstraint($shopQb, $shopConstraint);
+            $shopQb->executeStatement();
+        } catch (ExceptionAlias $e) {
+            throw new CannotUpdateProductException(sprintf('Could not set date_add on product %d', $productId), 0, $e);
+        }
+    }
+
+    /**
+     * Shop-scoped reference lookup, as used by the import match_ref option
+     * (the legacy import had two divergent reference lookups; this is the
+     * unified one). The constraint restricts the product_shop association:
+     * pass ShopConstraint::allShops() for a catalog-wide lookup.
+     *
+     * The shop restriction relies on the ShopConstraintTrait convention: the
+     * unqualified id_shop resolves to product_shop (the product table has no
+     * such column), and since product_shop carries no id_shop_group column a
+     * shop-group constraint is not supported here.
+     *
+     * product.reference carries a plain (non unique) index, so EVERY match is
+     * returned, ordered by id ASC. Callers MUST handle more than one: legacy
+     * resolved this with Db::getValue() and no ORDER BY, i.e. it updated whichever
+     * homonym MySQL happened to return first. The GROUP BY collapses the
+     * product_shop fan-out, so each returned id is a distinct product.
+     *
+     * @return list<int>
+     */
+    public function getProductIdsByReference(string $reference, ShopConstraint $shopConstraint): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('p.id_product')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->innerJoin('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product')
+            ->where('p.reference = :reference')
+            ->setParameter('reference', $reference)
+            ->groupBy('p.id_product')
+            ->orderBy('p.id_product', 'ASC');
+        $this->applyShopConstraint($qb, $shopConstraint);
+
+        return array_map('intval', $qb->executeQuery()->fetchFirstColumn());
+    }
+
+    /**
+     * @param Product $product
+     * @param array $propertiesToUpdate
+     * @param ShopConstraint $shopConstraint
+     * @param int $errorCode
+     */
+    public function partialUpdate(Product $product, array $propertiesToUpdate, ShopConstraint $shopConstraint, int $errorCode): void
+    {
+        $this->validateProduct($product, $propertiesToUpdate);
+        $shopIds = $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint);
+
+        $this->partiallyUpdateObjectModelForShops(
+            $product,
+            $propertiesToUpdate,
+            $shopIds,
+            CannotUpdateProductException::class,
+            $errorCode
+        );
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param CarrierReferenceId[] $carrierReferenceIds
+     * @param ShopConstraint $shopConstraint
+     *
+     * @throws ProductNotFoundException
+     */
+    public function setCarrierReferences(ProductId $productId, array $carrierReferenceIds, ShopConstraint $shopConstraint): void
+    {
+        $this->assertProductExists($productId);
+
+        $shopIds = array_map(function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $this->getShopIdsByConstraint($productId, $shopConstraint));
+
+        $productIdValue = $productId->getValue();
+
+        $deleteQb = $this->connection->createQueryBuilder();
+        $deleteQb->delete($this->dbPrefix . 'product_carrier')
+            ->where('id_product = :productId')
+            ->andWhere($deleteQb->expr()->in('id_shop', ':shopIds'))
+            ->setParameter('productId', $productIdValue)
+            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
+            ->executeStatement()
+        ;
+
+        $insertValues = [];
+        foreach ($carrierReferenceIds as $referenceId) {
+            foreach ($shopIds as $shopId) {
+                $insertValues[] = sprintf(
+                    '(%d, %d, %d)',
+                    $productIdValue,
+                    $referenceId->getValue(),
+                    $shopId
+                );
+            }
+        }
+
+        if (empty($insertValues)) {
+            return;
+        }
+
+        $stmt = '
+            INSERT INTO ' . $this->dbPrefix . 'product_carrier (
+                id_product,
+                id_carrier_reference,
+                id_shop
+            )
+            VALUES ' . implode(',', $insertValues) . '
+        ';
+
+        $this->connection->executeStatement($stmt);
+    }
+
+    /**
+     * @param Product $product
+     * @param ShopConstraint $shopConstraint
+     * @param int $errorCode
+     */
+    public function update(Product $product, ShopConstraint $shopConstraint, int $errorCode): void
+    {
+        $this->validateProduct($product);
+        $this->updateObjectModelForShops(
+            $product,
+            $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint),
+            CannotUpdateProductException::class,
+            $errorCode
+        );
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return ShopId[]
+     */
+    public function getAssociatedShopIds(ProductId $productId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('id_shop')
+            ->from($this->dbPrefix . 'product_shop')
+            ->where('id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        return array_map(static function (array $shop) {
+            return new ShopId((int) $shop['id_shop']);
+        }, $qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopGroupId $shopGroupId
+     *
+     * @return ShopId[]
+     */
+    public function getAssociatedShopIdsFromGroup(ProductId $productId, ShopGroupId $shopGroupId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('ps.id_shop')
+            ->from($this->dbPrefix . 'product_shop', 'ps')
+            ->innerJoin(
+                'ps',
+                $this->dbPrefix . 'shop',
+                's',
+                's.id_shop = ps.id_shop'
+            )
+            ->where('ps.id_product = :productId')
+            ->andWhere('s.id_shop_group = :shopGroupId')
+            ->setParameter('shopGroupId', $shopGroupId->getValue())
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        return array_map(static function (array $shop) {
+            return new ShopId((int) $shop['id_shop']);
+        }, $qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId[] $shopIds
+     *
+     * @throws CannotDeleteProductException
+     * @throws ShopAssociationNotFound
+     */
+    public function deleteFromShops(ProductId $productId, array $shopIds): void
+    {
+        if (empty($shopIds)) {
+            return;
+        }
+
+        foreach ($shopIds as $shopId) {
+            $this->checkShopAssociation($productId->getValue(), Product::class, $shopId);
+        }
+
+        // We fetch the product from its default shop, the values don't matter anyway we just need a Product instance
+        $product = $this->getProductByDefaultShop($productId);
+
+        $this->deleteObjectModelFromShops($product, $shopIds, CannotDeleteProductException::class);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     */
+    public function deleteByShopConstraint(ProductId $productId, ShopConstraint $shopConstraint): void
+    {
+        // We fetch the product from its default shop, the values don't matter anyway we just need a Product instance
+        $product = $this->getProductByDefaultShop($productId);
+        $shopIds = $this->getShopIdsByConstraint($productId, $shopConstraint);
+        $this->deleteObjectModelFromShops($product, $shopIds, CannotDeleteProductException::class);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return bool
+     */
+    public function hasCombinations(ProductId $productId): bool
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->select('pa.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->where('pa.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        return !empty($result);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return AttributeGroupId[]
+     */
+    public function getProductAttributesGroupIds(ProductId $productId, ShopConstraint $shopConstraint): array
+    {
+        $shopIds = array_map(static function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $this->getShopIdsByConstraint($productId, $shopConstraint));
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('a.id_attribute_group')
+            ->from($this->dbPrefix . 'attribute', 'a')
+            ->innerJoin(
+                'a',
+                $this->dbPrefix . 'product_attribute_combination',
+                'pac',
+                'a.id_attribute = pac.id_attribute'
+            )
+            ->innerJoin(
+                'pac',
+                $this->dbPrefix . 'product_attribute_shop',
+                'pas',
+                'pas.id_product_attribute = pac.id_product_attribute'
+            )
+            ->where('pas.id_product = :productId')
+            ->andWhere($qb->expr()->in('pas.id_shop', ':shopIds'))
+            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('productId', $productId->getValue())
+            ->groupBy('a.id_attribute_group')
+        ;
+
+        $results = $qb->executeQuery()->fetchFirstColumn();
+
+        return array_map(static function (string $id): AttributeGroupId {
+            return new AttributeGroupId((int) $id);
+        }, $results);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return AttributeId[]
+     */
+    public function getProductAttributesIds(ProductId $productId, ShopConstraint $shopConstraint): array
+    {
+        $shopIds = array_map(static function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $this->getShopIdsByConstraint($productId, $shopConstraint));
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pac.id_attribute')
+            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
+            ->innerJoin(
+                'pac',
+                $this->dbPrefix . 'product_attribute_shop',
+                'pas',
+                'pac.id_product_attribute = pas.id_product_attribute'
+            )
+            ->where('pas.id_product = :productId')
+            ->andWhere($qb->expr()->in('pas.id_shop', ':shopIds'))
+            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('productId', $productId->getValue())
+            ->groupBy('pac.id_attribute')
+        ;
+
+        $results = $qb->executeQuery()->fetchFirstColumn();
+
+        return array_map(static function (string $id): AttributeId {
+            return new AttributeId((int) $id);
+        }, $results);
+    }
+
+    /**
+     * Updates the Product's cache default attribute by selecting appropriate value from combination tables
+     *
+     * @param ProductId $productId
+     */
+    public function updateCachedDefaultCombination(ProductId $productId, ShopConstraint $shopConstraint): void
+    {
+        $shopIds = array_map(function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $this->getShopIdsByConstraint($productId, $shopConstraint));
+
+        $defaultShopId = $this->getProductDefaultShopId($productId)->getValue();
+        $defaultCombinations = $this->connection->fetchAllAssociative(
+            sprintf('
+                SELECT id_product_attribute, id_shop
+                FROM %sproduct_attribute_shop
+                WHERE id_product = %d
+                AND id_shop IN (%s)
+                AND default_on = 1
+                ORDER BY id_shop ASC
+            ',
+                $this->dbPrefix,
+                $productId->getValue(),
+                implode(',', $shopIds)
+            )
+        );
+
+        $productShopTable = sprintf('%sproduct_shop', $this->dbPrefix);
+        $combinationIdForDefaultShop = null;
+        $combinationShopIds = [];
+
+        foreach ($defaultCombinations as $defaultCombination) {
+            $combinationId = (int) $defaultCombination['id_product_attribute'];
+            $combinationShopId = (int) $defaultCombination['id_shop'];
+            $combinationShopIds[] = $combinationShopId;
+
+            if ($defaultShopId === $combinationShopId) {
+                $combinationIdForDefaultShop = $combinationId;
+            }
+
+            $this->connection->executeStatement(sprintf(
+                'UPDATE %s SET cache_default_attribute = %d WHERE id_product = %d AND id_shop = %d',
+                $productShopTable,
+                $combinationId,
+                $productId->getValue(),
+                $combinationShopId
+            ));
+        }
+
+        $this->connection->executeStatement(sprintf(
+            'UPDATE %sproduct SET cache_default_attribute = %d WHERE id_product = %d',
+            $this->dbPrefix,
+            $combinationIdForDefaultShop,
+            $productId->getValue()
+        ));
+
+        $unhandledShopIds = array_diff($shopIds, $combinationShopIds);
+        foreach ($unhandledShopIds as $shopId) {
+            // reset default combination to 0 to all shop ids which have no combinations
+            $this->connection->executeStatement(sprintf(
+                'UPDATE %s SET cache_default_attribute = %d WHERE id_product = %d AND id_shop = %d',
+                $productShopTable,
+                0,
+                $productId->getValue(),
+                $shopId
+            ));
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return ProductType
+     *
+     * @throws ProductNotFoundException
+     */
+    public function getProductType(ProductId $productId): ProductType
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->select('p.product_type')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->where('p.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->executeQuery()
+            ->fetchAssociative()
+        ;
+
+        if (empty($result)) {
+            throw new ProductNotFoundException(sprintf(
+                'Cannot find product type for product %d because it does not exist',
+                $productId->getValue()
+            ));
+        }
+
+        if (!empty($result['product_type'])) {
+            return new ProductType($result['product_type']);
+        }
+
+        // Older products that were created before product page v2, might have no type, so we determine it dynamically
+        return new ProductType($this->getProductByDefaultShop($productId)->getDynamicProductType());
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return Product
+     *
+     * @throws ProductNotFoundException
+     */
+    public function getProductByDefaultShop(ProductId $productId): Product
+    {
+        $defaultShopId = $this->getProductDefaultShopId($productId);
+
+        return $this->getProductByShopId($productId, $defaultShopId);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @throws ShopAssociationNotFound
+     */
+    public function assertProductIsAssociatedToShop(ProductId $productId, ShopId $shopId): void
+    {
+        $this->checkShopAssociation(
+            $productId->getValue(),
+            Product::class,
+            $shopId
+        );
     }
 
     /**
@@ -130,83 +804,13 @@ class ProductRepository extends AbstractObjectModelRepository
             ->setParameter('categoryId', $categoryId->getValue())
         ;
 
-        $position = $qb->execute()->fetchOne();
+        $position = $qb->executeQuery()->fetchOne();
 
         if (!$position) {
             return null;
         }
 
         return (int) $position;
-    }
-
-    /**
-     * Gets product price by provided shop
-     *
-     * @param ProductId $productId
-     * @param ShopId $shopId
-     *
-     * @return DecimalNumber|null
-     */
-    public function getPriceByShop(ProductId $productId, ShopId $shopId): ?DecimalNumber
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('price')
-            ->from($this->dbPrefix . 'product_shop')
-            ->where('id_product = :productId')
-            ->andWhere('id_shop = :shopId')
-            ->setParameter('productId', $productId->getValue())
-            ->setParameter('shopId', $shopId->getValue())
-        ;
-
-        $result = $qb->execute()->fetch();
-
-        if (!$result) {
-            return null;
-        }
-
-        return new DecimalNumber($result['price']);
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @throws ProductNotFoundException
-     */
-    public function assertProductExists(ProductId $productId): void
-    {
-        $this->assertObjectModelExists($productId->getValue(), 'product', ProductNotFoundException::class);
-    }
-
-    /**
-     * @param ProductId[] $productIds
-     *
-     * @throws ProductNotFoundException
-     */
-    public function assertAllProductsExists(array $productIds): void
-    {
-        //@todo: no shop association. Should it be checked here?
-        $ids = array_map(function (ProductId $productId): int {
-            return $productId->getValue();
-        }, $productIds);
-        $ids = array_unique($ids);
-
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('COUNT(id_product) as product_count')
-            ->from($this->dbPrefix . 'product')
-            ->where('id_product IN (:productIds)')
-            ->setParameter('productIds', $ids, Connection::PARAM_INT_ARRAY)
-        ;
-
-        $results = $qb->execute()->fetch();
-
-        if (!$results || (int) $results['product_count'] !== count($ids)) {
-            throw new ProductNotFoundException(
-                sprintf(
-                    'Some of these products do not exist: %s',
-                    implode(',', $ids)
-                )
-            );
-        }
     }
 
     /**
@@ -228,7 +832,7 @@ class ProductRepository extends AbstractObjectModelRepository
 
         try {
             $accessories = Product::getAccessoriesLight($languageId->getValue(), $productIdValue);
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CoreException(sprintf(
                 'Error occurred when fetching related products for product #%d',
                 $productIdValue
@@ -241,80 +845,43 @@ class ProductRepository extends AbstractObjectModelRepository
     /**
      * @param ProductId $productId
      *
-     * @return Product
-     *
-     * @throws CoreException
+     * @throws ProductNotFoundException
      */
-    public function get(ProductId $productId): Product
+    public function assertProductExists(ProductId $productId): void
     {
-        /** @var Product $product */
-        $product = $this->getObjectModel(
-            $productId->getValue(),
-            Product::class,
-            ProductNotFoundException::class
-        );
-
-        return $this->loadProduct($product);
+        $this->assertObjectModelExists($productId->getValue(), 'product', ProductNotFoundException::class);
     }
 
     /**
-     * @param ProductId $productId
-     *
-     * @return ProductType
+     * @param ProductId[] $productIds
      *
      * @throws ProductNotFoundException
      */
-    public function getProductType(ProductId $productId): ProductType
+    public function assertAllProductsExists(array $productIds): void
     {
-        $result = $this->connection->createQueryBuilder()
-            ->select('p.product_type')
-            ->from($this->dbPrefix . 'product', 'p')
-            ->where('p.id_product = :productId')
-            ->setParameter('productId', $productId->getValue())
-            ->execute()
-            ->fetchAssociative()
+        // @todo: no shop association. Should it be checked here?
+        $ids = array_map(function (ProductId $productId): int {
+            return $productId->getValue();
+        }, $productIds);
+        $ids = array_unique($ids);
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('COUNT(id_product) as product_count')
+            ->from($this->dbPrefix . 'product')
+            ->where('id_product IN (:productIds)')
+            ->setParameter('productIds', $ids, Connection::PARAM_INT_ARRAY)
         ;
 
-        if (empty($result)) {
-            throw new ProductNotFoundException(sprintf(
-                'Cannot find product type for product %d because it does not exist',
-                $productId->getValue()
-            ));
+        $results = $qb->executeQuery()->fetchAssociative();
+
+        if (!$results || (int) $results['product_count'] !== count($ids)) {
+            throw new ProductNotFoundException(
+                sprintf(
+                    'Some of these products do not exist: %s',
+                    implode(',', $ids)
+                )
+            );
         }
-
-        if (!empty($result['product_type'])) {
-            return new ProductType($result['product_type']);
-        }
-
-        // Older products that were created before product page v2, might have no type, so we determine it dynamically
-        return new ProductType($this->get($productId)->getDynamicProductType());
-    }
-
-    /**
-     * @param Product $product
-     * @param array $propertiesToUpdate
-     * @param int $errorCode
-     */
-    public function partialUpdate(Product $product, array $propertiesToUpdate, int $errorCode): void
-    {
-        $this->validateProduct($product, $propertiesToUpdate);
-
-        $this->partiallyUpdateObjectModel(
-            $product,
-            $propertiesToUpdate,
-            CannotUpdateProductException::class,
-            $errorCode
-        );
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @throws CoreException
-     */
-    public function delete(ProductId $productId): void
-    {
-        $this->deleteObjectModel($this->get($productId), CannotDeleteProductException::class);
     }
 
     /**
@@ -334,13 +901,13 @@ class ProductRepository extends AbstractObjectModelRepository
             [],
             $limit);
         $qb
-            ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
+            ->addSelect('p.id_product, pl.name, p.reference, i.id_image, p.product_type')
             ->addGroupBy('p.id_product')
             ->addOrderBy('pl.name', 'ASC')
             ->addOrderBy('p.id_product', 'ASC')
         ;
 
-        return $qb->execute()->fetchAllAssociative();
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -381,17 +948,59 @@ class ProductRepository extends AbstractObjectModelRepository
             ->addOrderBy('pa.id_product_attribute', 'ASC')
         ;
 
-        return $qb->execute()->fetchAllAssociative();
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 
-    public function getProductTaxRulesGroupId(ProductId $productId): TaxRulesGroupId
+    public function hasAnyProduct(): bool
+    {
+        return (bool) $this->connection->createQueryBuilder()
+            ->select('1')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchOne();
+    }
+
+    /**
+     * @param string $searchPhrase
+     * @param LanguageId $languageId
+     * @param ShopId $shopId
+     * @param int|null $limit
+     *
+     * @return array<int, array<string, int|string>>
+     */
+    public function searchProductsForFreeGift(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
+    {
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            [],
+            $limit
+        );
+        $qb
+            ->addSelect('p.id_product, pl.name, p.reference, i.id_image, p.product_type')
+            ->addSelect('ps.available_for_order, ps.minimal_quantity, ps.customizable')
+            ->addSelect('sa.quantity as stock_quantity, sa.out_of_stock')
+            ->leftJoin('p', $this->dbPrefix . 'stock_available', 'sa', 'sa.id_product = p.id_product AND sa.id_shop = :shopId AND sa.id_product_attribute = 0')
+            ->addGroupBy('p.id_product')
+            ->addOrderBy('pl.name', 'ASC')
+            ->addOrderBy('p.id_product', 'ASC')
+        ;
+
+        return $qb->executeQuery()->fetchAllAssociative();
+    }
+
+    public function getProductTaxRulesGroupId(ProductId $productId, ShopId $shopId): TaxRulesGroupId
     {
         $result = $this->connection->createQueryBuilder()
-            ->addSelect('p.id_tax_rules_group')
-            ->from($this->dbPrefix . 'product', 'p')
-            ->where('id_product = :productId')
+            ->addSelect('p_shop.id_tax_rules_group')
+            ->from($this->dbPrefix . 'product_shop', 'p_shop')
+            ->where('p_shop.id_product = :productId')
+            ->andWhere('p_shop.id_shop = :shopId')
+            ->setParameter('shopId', $shopId->getValue())
             ->setParameter('productId', $productId->getValue())
-            ->execute()
+            ->executeQuery()
             ->fetchOne()
         ;
 
@@ -429,37 +1038,36 @@ class ProductRepository extends AbstractObjectModelRepository
             ->addGroupBy('p.id_product')
         ;
 
-        $dbSearchPhrase = sprintf('"%%%s%%"', $searchPhrase);
         $qb->where($qb->expr()->or(
-            $qb->expr()->like('pl.name', $dbSearchPhrase),
+            $qb->expr()->like('pl.name', ':dbSearchPhrase'),
 
             // Product references
-            $qb->expr()->like('p.isbn', $dbSearchPhrase),
-            $qb->expr()->like('p.upc', $dbSearchPhrase),
-            $qb->expr()->like('p.mpn', $dbSearchPhrase),
-            $qb->expr()->like('p.reference', $dbSearchPhrase),
-            $qb->expr()->like('p.ean13', $dbSearchPhrase),
-            $qb->expr()->like('p.supplier_reference', $dbSearchPhrase),
+            $qb->expr()->like('p.isbn', ':dbSearchPhrase'),
+            $qb->expr()->like('p.upc', ':dbSearchPhrase'),
+            $qb->expr()->like('p.mpn', ':dbSearchPhrase'),
+            $qb->expr()->like('p.reference', ':dbSearchPhrase'),
+            $qb->expr()->like('p.ean13', ':dbSearchPhrase'),
+            $qb->expr()->like('p.supplier_reference', ':dbSearchPhrase'),
 
             // Combination attributes
-            $qb->expr()->like('pa.isbn', $dbSearchPhrase),
-            $qb->expr()->like('pa.upc', $dbSearchPhrase),
-            $qb->expr()->like('pa.mpn', $dbSearchPhrase),
-            $qb->expr()->like('pa.reference', $dbSearchPhrase),
-            $qb->expr()->like('pa.ean13', $dbSearchPhrase),
-            $qb->expr()->like('pa.supplier_reference', $dbSearchPhrase)
+            $qb->expr()->like('pa.isbn', ':dbSearchPhrase'),
+            $qb->expr()->like('pa.upc', ':dbSearchPhrase'),
+            $qb->expr()->like('pa.mpn', ':dbSearchPhrase'),
+            $qb->expr()->like('pa.reference', ':dbSearchPhrase'),
+            $qb->expr()->like('pa.ean13', ':dbSearchPhrase'),
+            $qb->expr()->like('pa.supplier_reference', ':dbSearchPhrase')
         ));
+        $dbSearchPhrase = sprintf('%%%s%%', $searchPhrase);
+        $qb->setParameter('dbSearchPhrase', $dbSearchPhrase);
 
-        if (!empty($filters)) {
-            foreach ($filters as $type => $filter) {
-                switch ($type) {
-                    case 'filteredTypes':
-                        $qb->andWhere('p.product_type not in(:filter)')
-                            ->setParameter('filter', implode(', ', $filter));
-                        break;
-                    default:
-                        break;
-                }
+        foreach ($filters as $type => $filter) {
+            switch ($type) {
+                case 'filteredTypes':
+                    $qb->andWhere('p.product_type not in(:filter)')
+                        ->setParameter('filter', implode(', ', $filter));
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -470,14 +1078,83 @@ class ProductRepository extends AbstractObjectModelRepository
         return $qb;
     }
 
-    /**
-     * This override was needed because of the extra parameter in product constructor
-     *
-     * {@inheritDoc}
-     */
-    protected function constructObjectModel(int $id, string $objectModelClass, ?int $shopId): ObjectModel
+    private function getProductByShopGroup(ProductId $productId, ShopGroupId $shopGroupId): Product
     {
-        return new Product($id, false, null, $shopId);
+        $groupDefaultShopId = $this->getProductDefaultShopIdForGroup($productId, $shopGroupId);
+
+        return $this->getProductByShopId($productId, $groupDefaultShopId);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     */
+    private function getProductByShopId(ProductId $productId, ShopId $shopId): Product
+    {
+        /** @var Product $product */
+        $product = $this->getObjectModelForShop(
+            $productId->getValue(),
+            Product::class,
+            ProductNotFoundException::class,
+            $shopId,
+            ProductShopAssociationNotFoundException::class
+        );
+
+        return $this->loadProduct($product);
+    }
+
+    /**
+     * Returns a single shop ID when the constraint is a single shop, and the list of shops associated to the product
+     * when the constraint is for all shops (shop group constraint is forbidden)
+     *
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return ShopId[]
+     */
+    public function getShopIdsByConstraint(ProductId $productId, ShopConstraint $shopConstraint): array
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            return $this->getAssociatedShopIdsFromGroup($productId, $shopConstraint->getShopGroupId());
+        }
+
+        if ($shopConstraint->forAllShops()) {
+            return $this->getAssociatedShopIds($productId);
+        }
+
+        if ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+            return $shopConstraint->getShopIds();
+        }
+
+        return [$shopConstraint->getShopId()];
+    }
+
+    /**
+     * @todo: this should be removable soon once the deprecated stock properties have been removed see PR #26682
+     *
+     * @param Product $product
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     */
+    private function loadProduct(Product $product): Product
+    {
+        try {
+            $product->loadStockData();
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to load Product stock #%d', $product->id),
+                0,
+                $e
+            );
+        }
+
+        return $product;
     }
 
     /**
@@ -510,26 +1187,12 @@ class ProductRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @todo: this should be removable soon once the deprecated stock properties have been removed see PR #26682
+     * This override was needed because of the extra parameter in product constructor
      *
-     * @param Product $product
-     *
-     * @return Product
-     *
-     * @throws CoreException
+     * {@inheritDoc}
      */
-    private function loadProduct(Product $product): Product
+    protected function constructObjectModel(int $id, string $objectModelClass, ?int $shopId): ObjectModel
     {
-        try {
-            $product->loadStockData();
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to load Product stock #%d', $product->id),
-                0,
-                $e
-            );
-        }
-
-        return $product;
+        return new Product($id, false, null, $shopId);
     }
 }

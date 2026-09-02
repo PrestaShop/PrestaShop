@@ -1,0 +1,20 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{# Override money_widget inside this theme to render a plain input without the input-group-prepend/append currency symbol #}
+{%- block money_widget -%}
+  {{- block('form_widget_simple') -}}
+{%- endblock -%}
+
+{%- block currency_money_widget -%}
+  <div class="input-group currency-money">
+    {{ form_widget(form.amount, {attr: form.amount.vars.attr|merge({class: (form.amount.vars.attr.class|default('') ~ ' form-control')|trim})}) }}
+    <div class="input-group-append">
+      {{ form_widget(form.currency, {attr: form.currency.vars.attr|merge({class: (form.currency.vars.attr.class|default('') ~ ' form-control')|trim})}) }}
+    </div>
+  </div>
+  {{ form_errors(form.amount) }}
+  {{ form_errors(form.currency) }}
+{%- endblock -%}

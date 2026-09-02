@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -78,7 +58,9 @@ class StockMovementRepository
                 'GROUP_CONCAT(id_employee) id_employee_list',
                 'MIN(employee_firstname) employee_firstname',
                 'MIN(employee_lastname) employee_lastname',
-                'SUM(sm.sign * sm.physical_quantity) delta_quantity',
+                // SQL doesn't allow use to multiply physical_quantity by negative number because its unsignedInt
+                'SUM(IF(sign = 1, physical_quantity, 0)) delta_quantity_positive',
+                'SUM(IF(sign = -1, physical_quantity, 0)) delta_quantity_negative',
                 'MIN(sm.date_add) date_add_min',
                 'MAX(sm.date_add) date_add_max'
             )
@@ -88,7 +70,6 @@ class StockMovementRepository
         $this->addGroupingCondition($queryBuilder);
 
         $queryBuilder
-            ->andHaving('delta_quantity != 0')
             ->orderBy('id_stock_mvt_min', 'DESC')
             ->andWhere('sm.id_stock = :stockId')
             ->setParameter('stockId', $stockId->getValue())
@@ -98,9 +79,57 @@ class StockMovementRepository
 
         // It is CRITICAL to reset the counter before each request
         $this->connection->executeStatement('SET @grouping_id := null');
-        $result = $queryBuilder->execute()->fetchAllAssociative();
+        $result = $queryBuilder->executeQuery()->fetchAllAssociative();
+        foreach ($result as $key => $row) {
+            $totalQuantity = $row['delta_quantity_positive'] - $row['delta_quantity_negative'];
+            if ($totalQuantity === 0) {
+                unset($result[$key]);
+                continue;
+            }
+            $result[$key]['delta_quantity'] = $totalQuantity;
+        }
 
         return $result;
+    }
+
+    /**
+     * Returns the API clients that created the given stock movements, based on the mutation
+     * table (StockMvt has no api client relation). The result is indexed by stock movement id:
+     *
+     *     [<id_stock_mvt> => ['id_api_client' => int, 'client_name' => string]]
+     *
+     * @param int[]|string[] $stockMovementIds
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getApiClientsByStockMovementIds(array $stockMovementIds): array
+    {
+        if (empty($stockMovementIds)) {
+            return [];
+        }
+
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $queryBuilder
+            ->select('m.mutation_row_id', 'ac.id_api_client', 'ac.client_name')
+            ->from($this->dbPrefix . 'mutation', 'm')
+            ->innerJoin('m', $this->dbPrefix . 'api_client', 'ac', 'ac.id_api_client = m.mutator_identifier')
+            ->andWhere('m.mutation_table = :mutationTable')
+            ->andWhere('m.mutator_type = :mutatorType')
+            ->andWhere('m.mutation_row_id IN (:stockMovementIds)')
+            ->setParameter('mutationTable', 'stock_mvt')
+            ->setParameter('mutatorType', 'api_client')
+            ->setParameter('stockMovementIds', array_map('intval', $stockMovementIds), Connection::PARAM_INT_ARRAY)
+        ;
+
+        $apiClientsByStockMovementId = [];
+        foreach ($queryBuilder->executeQuery()->fetchAllAssociative() as $row) {
+            $apiClientsByStockMovementId[(int) $row['mutation_row_id']] = [
+                'id_api_client' => (int) $row['id_api_client'],
+                'client_name' => $row['client_name'],
+            ];
+        }
+
+        return $apiClientsByStockMovementId;
     }
 
     private function addGroupingCondition(QueryBuilder $queryBuilder): void

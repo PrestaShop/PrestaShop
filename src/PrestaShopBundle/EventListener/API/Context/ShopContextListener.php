@@ -1,0 +1,108 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShopBundle\EventListener\API\Context;
+
+use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
+use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
+use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+
+/**
+ * Listener dedicated to set up Shop context for the Back-Office/Admin application.
+ */
+class ShopContextListener
+{
+    public function __construct(
+        private readonly ShopContextBuilder $shopContextBuilder,
+        private readonly MultistoreFeature $multistoreFeature,
+        private readonly ShopConfigurationInterface $configuration,
+        private readonly ShopListResolverInterface $shopListResolver,
+    ) {
+    }
+
+    public function onKernelRequest(RequestEvent $event): void
+    {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
+        if (!$this->multistoreFeature->isUsed()) {
+            // When multistore is not enabled shop context is pretty straightforward to setup, simply use the default shop
+            $defaultShopId = $this->getConfiguredDefaultShopId();
+            $shopConstraint = ShopConstraint::shop($defaultShopId);
+            $this->shopContextBuilder->setShopConstraint($shopConstraint);
+            $this->shopContextBuilder->setShopId($defaultShopId);
+        } else {
+            // When multishop is used the context must be specified via request parameters
+            $shopConstraint = $this->getShopConstraintFromRequest($event->getRequest());
+            if (null === $shopConstraint) {
+                $event->setResponse(new JsonResponse('Multi shop is enabled, you must specify a shop context', JsonResponse::HTTP_BAD_REQUEST));
+
+                return;
+            }
+
+            $this->shopContextBuilder->setShopConstraint($shopConstraint);
+            // The context single shop id must belong to the constraint's scope: the default
+            // shop is only used when it is part of that scope (a shop group may not contain
+            // it), otherwise the scope's lowest shop id is used. Every ShopContext::getId()
+            // consumer (grids, forms, extra properties…) then reads an in-scope shop.
+            $representativeShopId = $this->shopListResolver->resolveRepresentativeShopId($shopConstraint);
+            $this->shopContextBuilder->setShopId(
+                $representativeShopId > 0 ? $representativeShopId : $this->getConfiguredDefaultShopId()
+            );
+        }
+
+        // Set shop constraint easily accessible via request attribute
+        $event->getRequest()->attributes->set('shopConstraint', $shopConstraint);
+    }
+
+    private function getConfiguredDefaultShopId(): int
+    {
+        return (int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops());
+    }
+
+    private function getShopConstraintFromRequest(Request $request): ?ShopConstraint
+    {
+        if ($request->get('shopId')) {
+            return ShopConstraint::shop((int) $request->get('shopId'));
+        }
+
+        if ($request->get('shopGroupId')) {
+            return ShopConstraint::shopGroup((int) $request->get('shopGroupId'));
+        }
+
+        if ($request->get('shopIds')) {
+            $shopIds = $request->get('shopIds');
+            if (is_string($shopIds)) {
+                $shopIds = explode(',', $shopIds);
+            }
+
+            return ShopCollection::shops(array_map(fn (string $shopId) => (int) $shopId, $shopIds));
+        }
+
+        // Parameter allShops indicate the all shops context regardless of its value, it can be empty it's enough
+        if ($request->query->has('allShops') || $request->request->has('allShops') || $request->attributes->has('allShops')) {
+            return ShopConstraint::allShops();
+        }
+
+        // Special use case when calling the access token controller, we don't want to block the endpoint even if no
+        // context parameters was specified, so we use the default shop as a fallback
+        if ($request->attributes->get('_controller') === AccessTokenController::class) {
+            return ShopConstraint::shop($this->getConfiguredDefaultShopId());
+        }
+
+        return null;
+    }
+}

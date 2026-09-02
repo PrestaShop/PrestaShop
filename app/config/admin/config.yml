@@ -1,0 +1,34 @@
+# Dedicated config for Admin Endpoint, these are the common rules for all environments (dev, prod, test)
+# They specify the dedicated security rules and routing mostly
+imports:
+  - { resource: security.yml }
+  - { resource: services.yml }
+
+framework:
+  router:
+    resource: "%kernel.project_dir%/app/config/admin/routing.yml"
+    strict_requirements: ~
+  session:
+    cookie_secure: 'auto'
+
+ux_icons:
+  icon_dir: '%prestashop.admin_dir%/themes/new-theme/icons'
+
+api_platform:
+  # Swagger API doc is accessible from the BackOffice, you need to be logged in to access it
+  title: Backoffice API
+  version: 0.1.0
+  enable_docs: true
+  enable_entrypoint: false
+  enable_swagger: true
+  enable_swagger_ui: true
+  enable_re_doc: true
+  docs_formats:
+    # This is used to allow using the Swagger UI in HTML presentation
+    html: [ 'text/html' ]
+    json: [ 'application/json' ]
+  oauth:
+    enabled: true
+    type: 'oauth2'
+    flow: 'clientCredentials'
+    tokenUrl: '/admin-api/access_token'

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
@@ -86,26 +66,63 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this
+        // WHY: id-first pagination (#41916). The display query streams 20+ columns plus a
+        // correlated "new customer" sub-select for every row; because the ORDER BY forces a
+        // filesort, the database evaluates all of that for EVERY matching order before the
+        // LIMIT — seconds on shops with tens of thousands of orders. Resolve the paginated
+        // page of order ids first (only the joins/filters/sort needed to select and order
+        // them), then hydrate the display columns for just those rows.
+        $paginatedIdsQb = $this
             ->getBaseQueryBuilder($searchCriteria->getFilters())
-            ->addSelect($this->getCustomerField() . ' AS `customer`')
+            ->select('o.id_order')
+        ;
+        $paginatedIdsQb = $this->applyNewCustomerFilter($paginatedIdsQb, $searchCriteria->getFilters());
+        // WHY: no `customer` SELECT alias exists in the id-only query, so sort by its expression.
+        $this->applySorting($paginatedIdsQb, $searchCriteria, $this->getCustomerField());
+        $this->criteriaApplicator
+            ->applyPagination($searchCriteria, $paginatedIdsQb)
+            ->applyDeterministicSorting($searchCriteria, $paginatedIdsQb, 'o', 'id_order')
+        ;
+
+        $qb = $this->connection
+            ->createQueryBuilder()
+            ->select($this->getCustomerField() . ' AS `customer`')
             ->addSelect('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname')
             ->addSelect('o.id_currency, cur.iso_code')
             ->addSelect('o.current_state, o.id_customer')
             ->addSelect('cu.`id_customer` IS NULL as `deleted_customer`')
             ->addSelect('os.color, o.payment, s.name AS shop_name')
             ->addSelect('o.date_add, cu.company, cl.name AS country_name, o.invoice_number, o.delivery_number')
+            ->from('(' . $paginatedIdsQb->getSQL() . ')', 'paginated')
+            ->innerJoin('paginated', $this->dbPrefix . 'orders', 'o', 'o.id_order = paginated.id_order')
+            ->leftJoin('o', $this->dbPrefix . 'customer', 'cu', 'o.id_customer = cu.id_customer')
+            ->leftJoin('o', $this->dbPrefix . 'currency', 'cur', 'o.id_currency = cur.id_currency')
+            ->innerJoin('o', $this->dbPrefix . 'address', 'a', 'o.id_address_delivery = a.id_address')
+            ->innerJoin('a', $this->dbPrefix . 'country', 'c', 'a.id_country = c.id_country')
+            ->innerJoin(
+                'c',
+                $this->dbPrefix . 'country_lang',
+                'cl',
+                'c.id_country = cl.id_country AND cl.id_lang = :context_lang_id'
+            )
+            ->leftJoin('o', $this->dbPrefix . 'order_state', 'os', 'o.current_state = os.id_order_state')
+            ->leftJoin(
+                'os',
+                $this->dbPrefix . 'order_state_lang',
+                'osl',
+                'os.id_order_state = osl.id_order_state AND osl.id_lang = :context_lang_id'
+            )
+            ->leftJoin('o', $this->dbPrefix . 'shop', 's', 'o.id_shop = s.id_shop')
         ;
+
+        // WHY: the id query already holds every bound value (context lang/shop, grid filters,
+        // the optional "new" filter); the display joins reference :context_lang_id too, so
+        // carrying the same parameters over binds every occurrence.
+        $qb->setParameters($paginatedIdsQb->getParameters(), $paginatedIdsQb->getParameterTypes());
 
         $this->addNewCustomerField($qb);
-
         $this->applySorting($qb, $searchCriteria);
-
-        $qb = $this->applyNewCustomerFilter($qb, $searchCriteria->getFilters());
-
-        $this->criteriaApplicator
-            ->applyPagination($searchCriteria, $qb)
-        ;
+        $this->criteriaApplicator->applyDeterministicSorting($searchCriteria, $qb, 'o', 'id_order');
 
         return $qb;
     }
@@ -280,7 +297,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      * @param QueryBuilder $qb
      * @param SearchCriteriaInterface $criteria
      */
-    private function applySorting(QueryBuilder $qb, SearchCriteriaInterface $criteria)
+    private function applySorting(QueryBuilder $qb, SearchCriteriaInterface $criteria, string $customerSortField = 'customer')
     {
         $sortableFields = [
             'id_order' => 'o.id_order',
@@ -289,7 +306,10 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             'reference' => 'o.`reference`',
             'company' => 'cu.`company`',
             'payment' => 'o.`payment`',
-            'customer' => 'customer',
+            // WHY: the `customer` column is an alias of the SELECT list, so it can be sorted by
+            // name in the display query but must be sorted by its raw expression in the id-only
+            // paginating query (which has no SELECT alias). See getSearchQueryBuilder().
+            'customer' => $customerSortField,
             'osname' => 'osl.name',
             'date_add' => 'o.`date_add`',
         ];

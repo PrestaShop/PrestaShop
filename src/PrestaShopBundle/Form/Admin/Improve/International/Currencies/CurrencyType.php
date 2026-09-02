@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
@@ -98,10 +78,8 @@ class CurrencyType extends TranslatorAwareType
                     'choice_translation_domain' => false,
                     'required' => false,
                     'placeholder' => '--',
-                    'attr' => [
-                        'data-toggle' => 'select2',
-                        'data-minimumResultsForSearch' => '1',
-                    ],
+                    'autocomplete' => true,
+                    'autocomplete_minimum_choices' => 1,
                 ])
                 ->add('unofficial', CheckboxType::class, [
                     'required' => false,
@@ -166,7 +144,7 @@ class CurrencyType extends TranslatorAwareType
             ->add('iso_code', TextType::class, [
                 'attr' => $isoCodeAttrs,
                 'label' => $this->trans(
-                  'ISO code',
+                    'ISO code',
                     'Admin.International.Feature'
                 ),
                 'help' => $this->trans(
@@ -194,7 +172,7 @@ class CurrencyType extends TranslatorAwareType
                     'Admin.International.Feature'
                 ),
                 'help' => $this->trans(
-                    'Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).',
+                    'Exchange rates are calculated from one unit of your store\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).',
                     'Admin.International.Help'
                 ),
                 'scale' => 6,
@@ -283,7 +261,7 @@ class CurrencyType extends TranslatorAwareType
         if ($this->isShopFeatureEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
                 'label' => $this->trans(
-                    'Shop association',
+                    'Store association',
                     'Admin.Global'
                 ),
                 'constraints' => [
@@ -292,7 +270,7 @@ class CurrencyType extends TranslatorAwareType
                             'The %s field is required.',
                             'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->trans('Shop association', 'Admin.Global')),
+                                sprintf('"%s"', $this->trans('Store association', 'Admin.Global')),
                             ]
                         ),
                     ]),

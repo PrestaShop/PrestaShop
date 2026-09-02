@@ -4,33 +4,23 @@ services:
 
   prestashop.adapter.order_return_state.command_handler.add_order_return_state:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler\AddOrderReturnStateHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\AddOrderReturnStateCommand'
+    autoconfigure: true
 
   prestashop.adapter.order_return_state.query_handler.get_order_return_state_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\QueryHandler\GetOrderReturnStateForEditingHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query\GetOrderReturnStateForEditing'
+    autoconfigure: true
 
   prestashop.adapter.order_return_state.command_handler.edit_order_return_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler\EditOrderReturnStateHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\EditOrderReturnStateCommand'
+    autoconfigure: true
 
   prestashop.adapter.order_return_state.repository.order_return_state_repository:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\Repository\OrderReturnStateRepository'
 
   prestashop.adapter.order_return_state.command_handler.delete_order_return_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler\DeleteOrderReturnStateHandler'
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\DeleteOrderReturnStateCommand'
+    autoconfigure: true
 
   prestashop.adapter.order_return_state.command_handler.bulk_delete_order_return_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler\BulkDeleteOrderReturnStateHandler'
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\BulkDeleteOrderReturnStateCommand'
+    autoconfigure: true

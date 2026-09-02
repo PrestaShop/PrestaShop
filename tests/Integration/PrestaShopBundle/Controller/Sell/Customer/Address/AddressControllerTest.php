@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,18 +9,16 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Customer\Address;
 
 use Country;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
 use Tests\Integration\PrestaShopBundle\Controller\FormGridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
+use Tests\Resources\Resetter\ConfigurationResetter;
 
 class AddressControllerTest extends FormGridControllerTestCase
 {
-    private $countryId;
-
-    private $backupCountry;
-
-    private $legacyContext;
+    private int $countryId;
 
     /**
      * {@inheritDoc}
@@ -49,13 +27,11 @@ class AddressControllerTest extends FormGridControllerTestCase
     {
         parent::setUp();
 
-        // We get the country ID for Lithuania, and we set this country in the context so the controller will
+        // We get the country ID for Lithuania, and we configure this country as the default one so the controller will
         // generate a form adapted to this country (especially regarding states selector)
-        $this->legacyContext = $this->client->getContainer()->get('prestashop.adapter.legacy.context');
-        $this->backupCountry = $this->legacyContext->getContext()->country;
-
         $this->countryId = Country::getByIso('LT');
-        $this->legacyContext->getContext()->country = new Country($this->countryId);
+        $configuration = $this->client->getContainer()->get(ConfigurationInterface::class);
+        $configuration->set('PS_COUNTRY_DEFAULT', $this->countryId);
     }
 
     /**
@@ -64,7 +40,7 @@ class AddressControllerTest extends FormGridControllerTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        $this->legacyContext->getContext()->country = $this->backupCountry;
+        ConfigurationResetter::resetConfiguration();
     }
 
     public function testIndex(): int
@@ -84,6 +60,8 @@ class AddressControllerTest extends FormGridControllerTestCase
      */
     public function testCreate(int $initialEntityCount): int
     {
+        $this->client->disableReboot();
+
         // First create address
         $formData = [
             'customer_address[customer_email]' => 'pub@prestashop.com',
@@ -121,6 +99,8 @@ class AddressControllerTest extends FormGridControllerTestCase
      */
     public function testEdit(int $addressId): int
     {
+        $this->client->disableReboot();
+
         // First update the address with a few data
         $formData = [
             'customer_address[alias]' => 'edit_alias',
@@ -181,6 +161,8 @@ class AddressControllerTest extends FormGridControllerTestCase
      */
     public function testDelete(int $addressId): void
     {
+        $this->client->disableReboot();
+
         $addresses = $this->getEntitiesFromGrid();
         $initialEntityCount = $addresses->count();
 

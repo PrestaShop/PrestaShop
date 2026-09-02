@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 declare(strict_types=1);
 
@@ -41,7 +21,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\LowStockThreshold;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Dimension;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Gtin;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -186,10 +166,7 @@ class UpdateProductCommand
      */
     private $upc;
 
-    /**
-     * @var Ean13|null
-     */
-    private $ean13;
+    private ?Gtin $gtin = null;
 
     /**
      * @var string|null
@@ -714,9 +691,9 @@ class UpdateProductCommand
     /**
      * @param int $manufacturerId
      *
-     * @throws ManufacturerConstraintException
-     *
      * @return self
+     *
+     * @throws ManufacturerConstraintException
      */
     public function setManufacturerId(int $manufacturerId): self
     {
@@ -769,21 +746,35 @@ class UpdateProductCommand
     }
 
     /**
-     * @return Ean13|null
+     * @deprecated since 9.0 will be removed in 10.0
+     *
+     * @return Gtin|null
      */
-    public function getEan13(): ?Ean13
+    public function getEan13(): ?Gtin
     {
-        return $this->ean13;
+        return $this->getGtin();
     }
 
     /**
-     * @param string $ean13
+     * @deprecated since 9.0 will be removed in 10.0
+     *
+     * @param string $gtin
      *
      * @return self
      */
-    public function setEan13(string $ean13): self
+    public function setEan13(string $gtin): self
     {
-        $this->ean13 = new Ean13($ean13);
+        return $this->setGtin($gtin);
+    }
+
+    public function getGtin(): ?Gtin
+    {
+        return $this->gtin;
+    }
+
+    public function setGtin(string $gtin): self
+    {
+        $this->gtin = new Gtin($gtin);
 
         return $this;
     }

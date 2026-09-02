@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\AjaxBulkAction;
@@ -44,6 +25,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\EmptyColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
@@ -51,11 +33,15 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Product\ShopListColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Grid\Filter\HiddenFilter;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
+use PrestaShopBundle\Form\Admin\Sell\Product\ProductSearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
 use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -93,7 +79,12 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @var AccessibilityCheckerInterface
      */
-    private $productPreviewChecker;
+    private $singleShopChecker;
+
+    /**
+     * @var AccessibilityCheckerInterface
+     */
+    private $multipleShopsChecker;
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
@@ -101,14 +92,18 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         FeatureInterface $multistoreFeature,
         ShopConstraintContextInterface $shopConstraintContext,
         FormFactoryInterface $formFactory,
-        AccessibilityCheckerInterface $productPreviewChecker
+        AccessibilityCheckerInterface $singleShopChecker,
+        AccessibilityCheckerInterface $multipleShopsChecker,
+        protected readonly AccessCheckerInterface $accessChecker,
+        protected readonly ContextEmployeeProviderInterface $contextEmployerProvider
     ) {
         parent::__construct($hookDispatcher);
         $this->configuration = $configuration;
         $this->multistoreFeature = $multistoreFeature;
         $this->shopConstraintContext = $shopConstraintContext;
         $this->formFactory = $formFactory;
-        $this->productPreviewChecker = $productPreviewChecker;
+        $this->singleShopChecker = $singleShopChecker;
+        $this->multipleShopsChecker = $multipleShopsChecker;
     }
 
     /**
@@ -132,7 +127,12 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        $editAttributes = $this->getEditColumnAttributes();
+        $editAttributes = $this->getMultiShopEditionAttributes();
+
+        $shopId = null;
+        if ($this->shopConstraintContext->getShopConstraint()->getShopId()) {
+            $shopId = $this->shopConstraintContext->getShopConstraint()->getShopId()->getValue();
+        }
 
         $columns = (new ColumnCollection())
             ->add(
@@ -161,7 +161,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Name', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'name',
-                        'route' => 'admin_products_v2_edit',
+                        'route' => 'admin_products_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'attr' => $editAttributes,
@@ -172,7 +172,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Reference', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'reference',
-                        'route' => 'admin_products_v2_edit',
+                        'route' => 'admin_products_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_details-tab',
@@ -191,7 +191,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'price_tax_excluded',
-                        'route' => 'admin_products_v2_edit',
+                        'route' => 'admin_products_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_pricing-tab',
@@ -204,23 +204,44 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'field' => 'price_tax_included',
                         'sortable' => false,
-                        'route' => 'admin_products_v2_edit',
+                        'route' => 'admin_products_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_pricing-tab',
                         'attr' => $editAttributes,
                     ])
             )
-            ->add(
-                (new ToggleColumn('active'))
-                    ->setName($this->trans('Status', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'active',
-                        'primary_field' => 'id_product',
-                        'route' => 'admin_products_v2_toggle_status',
-                        'route_param_name' => 'productId',
-                    ])
-            )
+        ;
+
+        if (!empty($shopId)) {
+            $columns
+                ->add(
+                    (new ToggleColumn('active'))
+                        ->setName($this->trans('Status', [], 'Admin.Global'))
+                        ->setOptions([
+                            'field' => 'active',
+                            'primary_field' => 'id_product',
+                            'route' => 'admin_products_toggle_status_for_shop',
+                            'route_param_name' => 'productId',
+                            'extra_route_params' => [
+                                'shopId' => $shopId,
+                            ],
+                        ])
+                )
+            ;
+        } else {
+            $columns
+                ->add(
+                    (new EmptyColumn('active'))
+                        ->setName($this->trans('Status', [], 'Admin.Global'))
+                        ->setOptions([
+                            'empty_value' => '-',
+                        ])
+                )
+            ;
+        }
+
+        $columns
             ->add(
                 (new PositionColumn('position'))
                     ->setName($this->trans('Position', [], 'Admin.Global'))
@@ -228,7 +249,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'id_field' => 'id_product',
                         'position_field' => 'position',
                         'update_method' => 'POST',
-                        'update_route' => 'admin_products_v2_update_position',
+                        'update_route' => 'admin_products_update_position',
                         'record_route_params' => [
                             'id_category' => 'id_category',
                         ],
@@ -240,10 +261,10 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => $this->getRowActions(),
-            ])
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => $this->getRowActions(),
+                ])
             )
         ;
 
@@ -254,7 +275,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Quantity', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'quantity',
-                        'route' => 'admin_products_v2_edit',
+                        'route' => 'admin_products_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_stock-tab',
@@ -281,91 +302,182 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     }
 
     /**
-     * @return array<string, string>
+     * {@inheritDoc}
      */
-    protected function getEditColumnAttributes(): array
-    {
-        if ($this->shopConstraintContext->getShopConstraint()->forAllShops() || $this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
-            return [
-                'class' => 'multi-shop-edit-product',
-                'data-modal-title' => $this->trans('Select a store', [], 'Admin.Catalog.Feature'),
-                'data-shop-selector' => $this->formFactory->create(ShopSelectorType::class),
-            ];
-        }
-
-        return [];
-    }
-
     protected function getRowActions(): RowActionCollection
     {
-        $editOptions = [
-            'route' => 'admin_products_v2_edit',
-            'route_param_name' => 'productId',
-            'route_param_field' => 'id_product',
-            'clickable_row' => true,
-        ];
         if ($this->shopConstraintContext->getShopConstraint()->forAllShops() || $this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
-            $editOptions['attr'] = [
-                'class' => 'multi-shop-edit-product',
-                'data-modal-title' => $this->trans('Select a store', [], 'Admin.Catalog.Feature'),
-                'data-shop-selector' => $this->formFactory->create(ShopSelectorType::class),
-            ];
+            return $this->getSingleMultiShopsRowActions();
         }
 
-        // By default use the default value from the trait
+        return $this->getSingleShopRowActions();
+    }
+
+    protected function getSingleShopRowActions(): RowActionCollection
+    {
+        // By default, use the default value from the trait
         $deleteLabel = null;
-        $deleteRouteName = 'admin_products_v2_delete';
-        $extraDeleteParams = [];
+        $duplicateLabel = $this->trans('Duplicate', [], 'Admin.Actions');
+        $shopId = $this->shopConstraintContext->getShopConstraint()->getShopId()->getValue();
         if ($this->multistoreFeature->isActive()) {
-            if ($this->shopConstraintContext->getShopConstraint()->forAllShops()) {
-                $deleteLabel = $this->trans('Delete from all stores', [], 'Admin.Actions');
-            } elseif ($this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
-                $deleteLabel = $this->trans('Delete from group', [], 'Admin.Actions');
-                $deleteRouteName = 'admin_products_v2_delete_from_shop_group';
-                $extraDeleteParams = [
-                    'shopGroupId' => $this->shopConstraintContext->getShopConstraint()->getShopGroupId()->getValue(),
-                ];
-            } elseif ($this->shopConstraintContext->getShopConstraint()->getShopId()) {
-                $deleteLabel = $this->trans('Delete from shop', [], 'Admin.Actions');
-                $deleteRouteName = 'admin_products_v2_delete_from_shop';
-                $extraDeleteParams = [
-                    'shopId' => $this->shopConstraintContext->getShopConstraint()->getShopId()->getValue(),
-                ];
-            }
+            $deleteLabel = $this->trans('Delete from store', [], 'Admin.Actions');
+            $duplicateLabel = $this->trans('Duplicate for current store', [], 'Admin.Actions');
+        }
+
+        $rowActions = new RowActionCollection();
+        if ($this->accessChecker->isEmployeeGranted('AdminProducts_' . Permission::UPDATE, $this->contextEmployerProvider->getProfileId())) {
+            $rowActions
+                ->add((new LinkRowAction('edit'))
+                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                    ->setIcon('edit')
+                    ->setOptions([
+                        'route' => 'admin_products_edit',
+                        'route_param_name' => 'productId',
+                        'route_param_field' => 'id_product',
+                        'clickable_row' => true,
+                    ])
+                );
+        }
+        $rowActions
+            ->add((new LinkRowAction('preview'))
+                ->setName($this->trans('Preview', [], 'Admin.Actions'))
+                ->setIcon('remove_red_eye')
+                ->setOptions([
+                    'route' => 'admin_products_preview',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'target' => '_blank',
+                    'accessibility_checker' => $this->singleShopChecker,
+                ])
+            );
+        if ($this->accessChecker->isEmployeeGranted('AdminProducts_' . Permission::CREATE, $this->contextEmployerProvider->getProfileId())) {
+            $rowActions
+                ->add((new SubmitRowAction('duplicate'))
+                    ->setName($duplicateLabel)
+                    ->setIcon('content_copy')
+                    ->setOptions([
+                        'method' => 'POST',
+                        'route' => 'admin_products_duplicate_shop',
+                        'route_param_name' => 'productId',
+                        'route_param_field' => 'id_product',
+                        'extra_route_params' => [
+                            'shopId' => $shopId,
+                        ],
+                        'confirm_message' => $this->trans('Remember to properly edit all information after duplicating - including SEO information and friendly URL.', [], 'Admin.Catalog.Notification'),
+                        'modal_options' => new ModalOptions([
+                            'title' => $this->trans('Duplicate product', [], 'Admin.Actions'),
+                            'confirm_button_label' => $duplicateLabel,
+                            'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+                        ]),
+                    ])
+                );
+        }
+        if ($this->accessChecker->isEmployeeGranted('AdminProducts_' . Permission::DELETE, $this->contextEmployerProvider->getProfileId())) {
+            $rowActions
+                ->add(
+                    $this->buildDeleteAction(
+                        'admin_products_delete_from_shop',
+                        'productId',
+                        'id_product',
+                        'POST',
+                        ['shopId' => $shopId],
+                        [],
+                        $deleteLabel
+                    )
+                )
+            ;
+        }
+
+        return $rowActions;
+    }
+
+    protected function getSingleMultiShopsRowActions(): RowActionCollection
+    {
+        // We use only one variable for extra params because they happen to match for all use cases, they may need to be split in the future
+        $extraRouteParams = [];
+        if ($this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
+            $deleteRouteName = 'admin_products_delete_from_shop_group';
+            $duplicateRouteName = 'admin_products_duplicate_shop_group';
+            $enableRouteName = 'admin_products_enable_for_shop_group';
+            $disableRouteName = 'admin_products_disable_for_shop_group';
+            $extraRouteParams = [
+                'shopGroupId' => $this->shopConstraintContext->getShopConstraint()->getShopGroupId()->getValue(),
+            ];
+
+            $deleteLabel = $this->trans('Delete from group', [], 'Admin.Actions');
+            $enableLabel = $this->trans('Enable for group', [], 'Admin.Actions');
+            $disableLabel = $this->trans('Disable for group', [], 'Admin.Actions');
+            $duplicateLabel = $this->trans('Duplicate group', [], 'Admin.Actions');
+        } else {
+            $deleteRouteName = 'admin_products_delete_from_all_shops';
+            $duplicateRouteName = 'admin_products_duplicate_all_shops';
+            $enableRouteName = 'admin_products_enable_for_all_shops';
+            $disableRouteName = 'admin_products_disable_for_all_shops';
+
+            $deleteLabel = $this->trans('Delete from all stores', [], 'Admin.Actions');
+            $enableLabel = $this->trans('Enable on all stores', [], 'Admin.Actions');
+            $disableLabel = $this->trans('Disable on all stores', [], 'Admin.Actions');
+            $duplicateLabel = $this->trans('Duplicate all stores', [], 'Admin.Actions');
         }
 
         $rowActions = new RowActionCollection();
         $rowActions
-            ->add((new LinkRowAction('edit'))
-            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-            ->setIcon('edit')
-            ->setOptions($editOptions)
+            ->add((new LinkRowAction('single_shop_edit'))
+                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                ->setIcon('edit')
+                ->setOptions([
+                    'route' => 'admin_products_edit',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'clickable_row' => true,
+                    // Only present when product has strictly one shop
+                    'accessibility_checker' => $this->singleShopChecker,
+                    // We force the shop switching in this case
+                    'extra_route_params' => [
+                        'switchToShop' => 'id_shop_default',
+                    ],
+                ])
+            )
+            ->add((new LinkRowAction('multi_shops_edit'))
+                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                ->setIcon('edit')
+                ->setOptions([
+                    'route' => 'admin_products_edit',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'clickable_row' => true,
+                    'attr' => $this->getMultiShopEditionAttributes(),
+                    // Only present when product has more than one shop
+                    'accessibility_checker' => $this->multipleShopsChecker,
+                ])
             )
             ->add((new LinkRowAction('preview'))
-            ->setName($this->trans('Preview', [], 'Admin.Actions'))
-            ->setIcon('remove_red_eye')
-            ->setOptions([
-                'route' => 'admin_products_v2_preview',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'target' => '_blank',
-                'accessibility_checker' => $this->productPreviewChecker,
-            ])
+                ->setName($this->trans('Preview', [], 'Admin.Actions'))
+                ->setIcon('remove_red_eye')
+                ->setOptions([
+                    'route' => 'admin_products_preview',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'target' => '_blank',
+                    'accessibility_checker' => $this->singleShopChecker,
+                ])
             )
             ->add((new SubmitRowAction('duplicate'))
-            ->setName($this->trans('Duplicate', [], 'Admin.Actions'))
-            ->setIcon('content_copy')
-            ->setOptions([
-                'method' => 'POST',
-                'route' => 'admin_products_v2_duplicate',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'modal_options' => new ModalOptions([
-                    'title' => $this->trans('Duplicate product', [], 'Admin.Actions'),
-                    'confirm_button_label' => $this->trans('Duplicate', [], 'Admin.Actions'),
-                    'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
-                ]),
-            ])
+                ->setName($duplicateLabel)
+                ->setIcon('content_copy')
+                ->setOptions([
+                    'method' => 'POST',
+                    'route' => $duplicateRouteName,
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'extra_route_params' => $extraRouteParams,
+                    'confirm_message' => $this->trans('Remember to properly edit all information after duplicating - including SEO information and friendly URL.', [], 'Admin.Catalog.Notification'),
+                    'modal_options' => new ModalOptions([
+                        'title' => $this->trans('Duplicate product', [], 'Admin.Actions'),
+                        'confirm_button_label' => $duplicateLabel,
+                        'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+                    ]),
+                ])
             )
             ->add(
                 $this->buildDeleteAction(
@@ -373,50 +485,33 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'productId',
                     'id_product',
                     'POST',
-                    $extraDeleteParams,
+                    $extraRouteParams,
                     [],
                     $deleteLabel
                 )
             )
-        ;
-
-        // Toggle column is disabled when product is associated to more than one shop, so enable/disable actions are handled via the dropdown actions
-        if ($this->shopConstraintContext->getShopConstraint()->forAllShops() || $this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
-            $extraParams = [];
-            if ($this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
-                $enableLabel = $this->trans('Enable for group', [], 'Admin.Actions');
-                $disableLabel = $this->trans('Disable for group', [], 'Admin.Actions');
-                $extraParams = [
-                    'shopGroupId' => $this->shopConstraintContext->getShopConstraint()->getShopGroupId()->getValue(),
-                ];
-            } else {
-                $enableLabel = $this->trans('Enable on all stores', [], 'Admin.Actions');
-                $disableLabel = $this->trans('Disable on all stores', [], 'Admin.Actions');
-            }
-
-            $rowActions
-                ->add((new LinkRowAction('enable'))
+            // Toggle column is disabled when product is associated to more than one shop, so enable/disable actions are handled via the dropdown actions
+            ->add((new LinkRowAction('enable'))
                 ->setName($enableLabel)
                 ->setIcon('radio_button_checked')
                 ->setOptions([
-                    'route' => 'admin_products_v2_enable',
+                    'route' => $enableRouteName,
                     'route_param_name' => 'productId',
                     'route_param_field' => 'id_product',
-                    'extra_route_params' => $extraParams,
+                    'extra_route_params' => $extraRouteParams,
                 ])
-                )
-                ->add((new LinkRowAction('disable'))
+            )
+            ->add((new LinkRowAction('disable'))
                 ->setName($disableLabel)
                 ->setIcon('radio_button_unchecked')
                 ->setOptions([
-                    'route' => 'admin_products_v2_disable',
+                    'route' => $disableRouteName,
                     'route_param_name' => 'productId',
                     'route_param_field' => 'id_product',
-                    'extra_route_params' => $extraParams,
+                    'extra_route_params' => $extraRouteParams,
                 ])
-                )
-            ;
-        }
+            )
+        ;
 
         return $rowActions;
     }
@@ -427,6 +522,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         $filters = (new FilterCollection())
+            ->add(new HiddenFilter('id_category'))
             ->add(
                 (new Filter('id_product', IntegerMinMaxFilterType::class))
                     ->setTypeOptions([
@@ -475,20 +571,15 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('active', YesAndNoChoiceType::class))
                     ->setAssociatedColumn('active')
             )
-            ->add((new Filter('position', TextType::class))
-            ->setAssociatedColumn('position')
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
-                ],
-            ])
+            ->add(
+                (new Filter('position', ReorderPositionsButtonType::class))
+                    ->setAssociatedColumn('position')
             )
             ->add(
-                (new Filter('actions', SearchAndResetType::class))
+                (new Filter('actions', ProductSearchAndResetType::class))
                     ->setTypeOptions([
                         'reset_route' => 'admin_products_reset_grid_search',
-                        'redirect_route' => 'admin_products_v2_index',
+                        'redirect_route' => 'admin_products_index',
                     ])
                     ->setAssociatedColumn('actions')
             );
@@ -537,6 +628,14 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
+                (new LinkGridAction('export'))
+                    ->setName($this->trans('Export', [], 'Admin.Actions'))
+                    ->setIcon('cloud_download')
+                    ->setOptions([
+                        'route' => 'admin_products_export',
+                    ])
+            )
+            ->add(
                 (new SimpleGridAction('common_refresh_list'))
                     ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
                     ->setIcon('refresh')
@@ -558,42 +657,103 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getBulkActions()
     {
+        if ($this->shopConstraintContext->getShopConstraint()->getShopId()) {
+            $bulkEnableRoute = 'admin_products_bulk_enable_shop';
+            $bulkDisableRoute = 'admin_products_bulk_disable_shop';
+            $bulkDuplicateRoute = 'admin_products_bulk_duplicate_shop';
+            $bulkDeleteRoute = 'admin_products_bulk_delete_from_shop';
+            $routeParams = [
+                'shopId' => $this->shopConstraintContext->getShopConstraint()->getShopId()->getValue(),
+            ];
+            if ($this->multistoreFeature->isActive()) {
+                $bulkEnableLabel = $this->trans('Activate selection for current store', [], 'Admin.Actions');
+                $bulkDisableLabel = $this->trans('Deactivate selection for current store', [], 'Admin.Actions');
+                $bulkDuplicateLabel = $this->trans('Duplicate selection for current store', [], 'Admin.Actions');
+                $bulkDeleteLabel = $this->trans('Delete selection for current store', [], 'Admin.Actions');
+            } else {
+                $bulkEnableLabel = $this->trans('Activate selection', [], 'Admin.Actions');
+                $bulkDisableLabel = $this->trans('Deactivate selection', [], 'Admin.Actions');
+                $bulkDuplicateLabel = $this->trans('Duplicate selection', [], 'Admin.Actions');
+                $bulkDeleteLabel = $this->trans('Delete selection', [], 'Admin.Actions');
+            }
+        } elseif ($this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
+            $bulkEnableRoute = 'admin_products_bulk_enable_shop_group';
+            $bulkDisableRoute = 'admin_products_bulk_disable_shop_group';
+            $bulkDuplicateRoute = 'admin_products_bulk_duplicate_shop_group';
+            $bulkDeleteRoute = 'admin_products_bulk_delete_from_shop_group';
+            $routeParams = [
+                'shopGroupId' => $this->shopConstraintContext->getShopConstraint()->getShopGroupId()->getValue(),
+            ];
+            $bulkEnableLabel = $this->trans('Activate selection for group', [], 'Admin.Actions');
+            $bulkDisableLabel = $this->trans('Deactivate selection for group', [], 'Admin.Actions');
+            $bulkDuplicateLabel = $this->trans('Duplicate selection for group', [], 'Admin.Actions');
+            $bulkDeleteLabel = $this->trans('Delete selection for group', [], 'Admin.Actions');
+        } else {
+            $bulkEnableRoute = 'admin_products_bulk_enable_all_shops';
+            $bulkDisableRoute = 'admin_products_bulk_disable_all_shops';
+            $bulkDuplicateRoute = 'admin_products_bulk_duplicate_all_shops';
+            $bulkDeleteRoute = 'admin_products_bulk_delete_from_all_shops';
+            $routeParams = [];
+            $bulkEnableLabel = $this->trans('Activate selection for associated stores', [], 'Admin.Actions');
+            $bulkDisableLabel = $this->trans('Deactivate selection for associated stores', [], 'Admin.Actions');
+            $bulkDuplicateLabel = $this->trans('Duplicate selection for associated stores', [], 'Admin.Actions');
+            $bulkDeleteLabel = $this->trans('Delete selection for associated stores', [], 'Admin.Actions');
+        }
+
         return (new BulkActionCollection())
             ->add($this->buildAjaxBulkAction(
                 'enable_selection_ajax',
-                'admin_products_v2_bulk_enable',
-                $this->trans('Activate selection', [], 'Admin.Actions'),
+                $bulkEnableRoute,
+                $bulkEnableLabel,
                 $this->trans('Activating %total% products', [], 'Admin.Actions'),
                 $this->trans('Activating %done% / %total% products', [], 'Admin.Actions'),
                 'radio_button_checked',
-                ['productStatus' => true]
+                $routeParams
             ))
             ->add($this->buildAjaxBulkAction(
                 'disable_selection_ajax',
-                'admin_products_v2_bulk_disable',
-                $this->trans('Deactivate selection', [], 'Admin.Actions'),
+                $bulkDisableRoute,
+                $bulkDisableLabel,
                 $this->trans('Deactivating %total% products', [], 'Admin.Actions'),
                 $this->trans('Deactivating %done% / %total% products', [], 'Admin.Actions'),
                 'radio_button_unchecked',
-                ['productStatus' => false]
+                $routeParams
             ))
             ->add($this->buildAjaxBulkAction(
                 'bulk_duplicate_ajax',
-                'admin_products_v2_bulk_duplicate',
-                $this->trans('Duplicate selection', [], 'Admin.Actions'),
+                $bulkDuplicateRoute,
+                $bulkDuplicateLabel,
                 $this->trans('Duplicating %total% products', [], 'Admin.Actions'),
                 $this->trans('Duplicating %done% / %total% products', [], 'Admin.Actions'),
-                'content_copy'
+                'content_copy',
+                $routeParams
             ))
             ->add($this->buildAjaxBulkAction(
                 'bulk_delete_ajax',
-                'admin_products_v2_bulk_delete',
-                $this->trans('Delete selection', [], 'Admin.Actions'),
+                $bulkDeleteRoute,
+                $bulkDeleteLabel,
                 $this->trans('Deleting %total% products', [], 'Admin.Actions'),
                 $this->trans('Deleting %done% / %total% products', [], 'Admin.Actions'),
-                'delete'
+                'delete',
+                $routeParams
             ))
         ;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function getMultiShopEditionAttributes(): array
+    {
+        if ($this->shopConstraintContext->getShopConstraint()->forAllShops() || $this->shopConstraintContext->getShopConstraint()->getShopGroupId()) {
+            return [
+                'class' => 'multi-shop-edit-product',
+                'data-modal-title' => $this->trans('Select a store', [], 'Admin.Catalog.Feature'),
+                'data-shop-selector' => $this->formFactory->create(ShopSelectorType::class),
+            ];
+        }
+
+        return [];
     }
 
     protected function buildAjaxBulkAction(

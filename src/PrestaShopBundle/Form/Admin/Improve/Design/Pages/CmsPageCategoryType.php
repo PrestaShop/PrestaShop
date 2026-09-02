@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Pages;
@@ -49,7 +29,6 @@ class CmsPageCategoryType extends TranslatorAwareType
 {
     public const NAME_MAX_LENGTH = 64;
     public const META_TITLE_MAX_LENGTH = 255;
-    public const META_KEYWORDS_MAX_LENGTH = 255;
     public const META_DESCRIPTION_MAX_LENGTH = 512;
 
     /**
@@ -165,29 +144,6 @@ class CmsPageCategoryType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('meta_keywords', TranslatableType::class, [
-                'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => $invalidCharactersForNameLabel,
-                'required' => false,
-                'options' => [
-                    'constraints' => [
-                        new TypedRegex([
-                            'type' => 'generic_name',
-                        ]),
-                        new Length([
-                            'max' => self::META_KEYWORDS_MAX_LENGTH,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
-                                'Admin.Notifications.Error',
-                                ['%limit%' => self::META_KEYWORDS_MAX_LENGTH]
-                            ),
-                        ]),
-                    ],
-                    'attr' => [
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
-                    ],
-                ],
-            ])
             ->add('friendly_url', TranslatableType::class, [
                 'label' => $this->trans('Friendly URL', 'Admin.Global'),
                 'help' => $this->trans('Unless the \'Accented URL\' option is enabled (in Shop parameters > Traffic & SEO), only letters, numbers, underscores (_), and hyphens (-) are allowed.', 'Admin.Catalog.Help'),
@@ -212,14 +168,14 @@ class CmsPageCategoryType extends TranslatorAwareType
 
         if ($this->isShopFeatureEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
-                'label' => $this->trans('Shop association', 'Admin.Global'),
+                'label' => $this->trans('Store association', 'Admin.Global'),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
                             'The %s field is required.',
                             'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->trans('Shop association', 'Admin.Global')),
+                                sprintf('"%s"', $this->trans('Store association', 'Admin.Global')),
                             ]
                         ),
                     ]),

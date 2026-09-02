@@ -102,31 +102,31 @@ Feature: Search stock movements from Back Office (BO)
     When I search stock movements of product "product1" I should get following results:
       | type    | employee   | delta_quantity |
       | orders  |            | -6             |
-      | edition | Puff Daddy | 5              |
+      | edition | Puffin Mummy | 5              |
       | orders  |            | -9             |
-      | edition | Puff Daddy | 10             |
+      | edition | Puffin Mummy | 10             |
       # Since no stock movement is generated until the order is shipped this orders movement only has a quantity of -2,
       # not -5 because second order is still waiting for payment
       | orders  |            | -2             |
     When I search stock movements of product "product1" with offset 0 and limit 6 I should get following results:
       | type    | employee   | delta_quantity |
       | orders  |            | -6             |
-      | edition | Puff Daddy | 5              |
+      | edition | Puffin Mummy | 5              |
       | orders  |            | -9             |
-      | edition | Puff Daddy | 10             |
+      | edition | Puffin Mummy | 10             |
       | orders  |            | -2             |
-      | edition | Puff Daddy | 100            |
+      | edition | Puffin Mummy | 100            |
     When I search stock movements of product "product1" with offset 1 and limit 5 I should get following results:
       | type    | employee   | delta_quantity |
-      | edition | Puff Daddy | 5              |
+      | edition | Puffin Mummy | 5              |
       | orders  |            | -9             |
-      | edition | Puff Daddy | 10             |
+      | edition | Puffin Mummy | 10             |
       | orders  |            | -2             |
-      | edition | Puff Daddy | 100            |
+      | edition | Puffin Mummy | 100            |
     When I search stock movements of product "product1" with offset 2 and limit 3 I should get following results:
       | type    | employee   | delta_quantity |
       | orders  |            | -9             |
-      | edition | Puff Daddy | 10             |
+      | edition | Puffin Mummy | 10             |
       | orders  |            | -2             |
 
   Scenario: I can search the last stock movements also if the first one is an edition (and can have multiple editions one after another)
@@ -150,7 +150,39 @@ Feature: Search stock movements from Back Office (BO)
     Then the available stock for product "product2" should be 94
     When I search stock movements of product "product2" I should get following results:
       | type    | employee   | delta_quantity |
-      | edition | Puff Daddy | 1              |
+      | edition | Puffin Mummy | 1              |
       | orders  |            | -2             |
-      | edition | Puff Daddy | -5             |
-      | edition | Puff Daddy | 100            |
+      | edition | Puffin Mummy | -5             |
+      | edition | Puffin Mummy | 100            |
+
+  Scenario: A stock update triggered from a context whose employee has no id records the movement without a TypeError
+    # Regression: the context can hold an Employee whose id is null (e.g. when the update is
+    # triggered from the Admin API, where the authenticated principal is an API client). The
+    # StockManager guard used to call setIdEmployee(null) and throw a TypeError, aborting the
+    # whole update.
+    Given there is a product in the catalog named "no_employee_product" with a price of 5.0 and 10 items in stock
+    And the current employee context has no id
+    When I update product "no_employee_product" stock with following information:
+      | delta_quantity | -1 |
+    Then the available stock for product "no_employee_product" should be 9
+
+  Scenario: A stock update triggered by an API client records the movement related to it
+    Given there is a product in the catalog named "api_client_product" with a price of 5.0 and 10 items in stock
+    And I create an api client "stockApiClient" with following properties:
+      | clientName  | Stock API client                |
+      | clientId    | stock-api-client                |
+      | enabled     | true                            |
+      | description | client used to update the stock |
+      | lifetime    | 3600                            |
+    # The Admin API context: an API client is authenticated and the employee has no id
+    And the current employee context has no id
+    And I am logged in as api client with id "stock-api-client"
+    When I update product "api_client_product" stock with following information:
+      | delta_quantity | -1 |
+    Then the available stock for product "api_client_product" should be 9
+    When I search stock movements of product "api_client_product" I should get following results:
+      | type    | employee     | api_client_names | delta_quantity |
+      | edition |              | Stock API client | -1             |
+      | edition | Puffin Mummy |                  | 10             |
+    # Reset the API client context so it does not leak into the following scenarios
+    And I am not logged in as an api client

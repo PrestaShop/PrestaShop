@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
@@ -29,12 +9,14 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectOption;
 
 /**
- * Creates/updates root category from data submited in category form
+ * Creates/updates root category from data submitted in category form
+ *
+ * @internal
  */
 final class RootCategoryFormDataHandler implements FormDataHandlerInterface
 {
@@ -44,36 +26,12 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var ImageUploaderInterface
-     */
-    private $categoryCoverUploader;
-
-    /**
-     * @var ImageUploaderInterface
-     */
-    private $categoryThumbnailUploader;
-
-    /**
-     * @var ImageUploaderInterface
-     */
-    private $categoryMenuThumbnailUploader;
-
-    /**
      * @param CommandBusInterface $commandBus
-     * @param ImageUploaderInterface $categoryCoverUploader
-     * @param ImageUploaderInterface $categoryThumbnailUploader
-     * @param ImageUploaderInterface $categoryMenuThumbnailUploader
      */
     public function __construct(
-        CommandBusInterface $commandBus,
-        ImageUploaderInterface $categoryCoverUploader,
-        ImageUploaderInterface $categoryThumbnailUploader,
-        ImageUploaderInterface $categoryMenuThumbnailUploader
+        CommandBusInterface $commandBus
     ) {
         $this->commandBus = $commandBus;
-        $this->categoryCoverUploader = $categoryCoverUploader;
-        $this->categoryThumbnailUploader = $categoryThumbnailUploader;
-        $this->categoryMenuThumbnailUploader = $categoryMenuThumbnailUploader;
     }
 
     /**
@@ -86,31 +44,17 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
         /** @var CategoryId $categoryId */
         $categoryId = $this->commandBus->handle($command);
 
-        $this->uploadImages(
-            $categoryId->getValue(),
-            $data['cover_image'],
-            $data['thumbnail_image'],
-            $data['menu_thumbnail_images']
-        );
-
         return $categoryId->getValue();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function update($rootCategoryId, array $data)
+    public function update($categoryId, array $data)
     {
-        $command = $this->createEditRootCategoryCommand($rootCategoryId, $data);
+        $command = $this->createEditRootCategoryCommand((int) $categoryId, $data);
 
         $this->commandBus->handle($command);
-
-        $this->uploadImages(
-            $rootCategoryId,
-            $data['cover_image'],
-            $data['thumbnail_image'],
-            $data['menu_thumbnail_images']
-        );
     }
 
     /**
@@ -119,8 +63,10 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
      * @param array $data
      *
      * @return AddRootCategoryCommand
+     *
+     * @throws CategoryConstraintException
      */
-    public function createAddRootCategoryCommand(array $data)
+    public function createAddRootCategoryCommand(array $data): AddRootCategoryCommand
     {
         $command = new AddRootCategoryCommand(
             $data['name'],
@@ -132,9 +78,19 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
         $command->setLocalizedAdditionalDescriptions($data['additional_description']);
         $command->setLocalizedMetaTitles($data['meta_title']);
         $command->setLocalizedMetaDescriptions($data['meta_description']);
-        $command->setLocalizedMetaKeywords($data['meta_keyword']);
         $command->setAssociatedGroupIds($data['group_association']);
-        $command->setAssociatedShopIds($data['shop_association']);
+        $command->setCoverImage($data['cover_image']);
+        $command->setThumbnailImage($data['thumbnail_image']);
+        if (isset($data['shop_association'])) {
+            $command->setAssociatedShopIds($data['shop_association']);
+        }
+
+        $redirectOption = new RedirectOption(
+            $data['redirect_option']['type'],
+            $data['redirect_option']['target']['id'] ?? 0
+        );
+
+        $command->setRedirectOption($redirectOption);
 
         return $command;
     }
@@ -144,8 +100,10 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
      * @param array $data
      *
      * @return EditRootCategoryCommand
+     *
+     * @throws CategoryConstraintException
      */
-    private function createEditRootCategoryCommand($rootCategoryId, array $data)
+    private function createEditRootCategoryCommand(int $rootCategoryId, array $data): EditRootCategoryCommand
     {
         $command = new EditRootCategoryCommand($rootCategoryId);
         $command->setIsActive($data['active']);
@@ -155,37 +113,21 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
         $command->setLocalizedAdditionalDescriptions($data['additional_description']);
         $command->setLocalizedMetaTitles($data['meta_title']);
         $command->setLocalizedMetaDescriptions($data['meta_description']);
-        $command->setLocalizedMetaKeywords($data['meta_keyword']);
         $command->setAssociatedGroupIds($data['group_association']);
-        $command->setAssociatedShopIds($data['shop_association']);
+
+        $command->setCoverImage($data['cover_image']);
+        $command->setThumbnailImage($data['thumbnail_image']);
+        if (isset($data['shop_association'])) {
+            $command->setAssociatedShopIds($data['shop_association']);
+        }
+
+        $redirectOption = new RedirectOption(
+            $data['redirect_option']['type'],
+            $data['redirect_option']['target']['id'] ?? 0
+        );
+
+        $command->setRedirectOption($redirectOption);
 
         return $command;
-    }
-
-    /**
-     * @param int $categoryId
-     * @param UploadedFile $coverImage
-     * @param UploadedFile $thumbnailImage
-     * @param UploadedFile[] $menuThumbnailImages
-     */
-    private function uploadImages(
-        $categoryId,
-        UploadedFile $coverImage = null,
-        UploadedFile $thumbnailImage = null,
-        array $menuThumbnailImages = []
-    ) {
-        if (null !== $coverImage) {
-            $this->categoryCoverUploader->upload($categoryId, $coverImage);
-        }
-
-        if (null !== $thumbnailImage) {
-            $this->categoryThumbnailUploader->upload($categoryId, $thumbnailImage);
-        }
-
-        if (!empty($menuThumbnailImages)) {
-            foreach ($menuThumbnailImages as $menuThumbnail) {
-                $this->categoryMenuThumbnailUploader->upload($categoryId, $menuThumbnail);
-            }
-        }
     }
 }

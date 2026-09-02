@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 .grid-toggler-icon-valid {
   color: #78d07d;
   cursor: pointer;
@@ -25,42 +29,43 @@ table.grid-ordering-column tr {
 }
 
 table.grid-ordering-column tr.position-row-while-drag {
-  color: $white;
+  color: var(--#{$cdk}white);
   background: none;
-  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: var(--#{$cdk}box-shadow-md);
   transform: translate(5px, 10px);
 
   td {
-    background-color: $medium-gray;
-  }
-
-  td:first-child {
-    @include border-left-radius(3px);
-  }
-
-  td:last-child {
-    @include border-right-radius(3px);
+    background-color: var(--#{$cdk}primary-800);
   }
 
   .position-drag-handle,
   .position-drag-handle:hover,
   .btn,
   .btn::after,
-  .btn .material-icons {
-    color: $white;
+  .btn .material-icons,
+  a,
+  a::after {
+    // stylelint-disable-next-line
+    color: var(--#{$cdk}white) !important;
   }
 }
 
 .js-drag-handle {
   cursor: move;
+
+  &:hover {
+    .material-icons {
+      color: var(--#{$cdk}primary-700);
+    }
+  }
 }
 
 .position-drag-handle {
-  color: $gray-medium;
+  color: var(--#{$cdk}primary-800);
   visibility: hidden;
 
   &:hover {
-    color: $primary;
+    color: var(--#{$cdk}primary-700);
   }
 }
 
@@ -78,20 +83,36 @@ table.grid-ordering-column tr.position-row-while-drag {
   a.dropdown-toggle,
   button.dropdown-toggle,
   .dropdown-toggle {
-    color: $gray-medium;
+    color: var(--#{$cdk}primary-500);
 
     &::after {
       content: "more_vert";
     }
 
     &:hover {
-      color: $primary;
+      color: var(--#{$cdk}primary-800);
+      text-decoration: none;
+
+      &::after {
+        color: currentcolor;
+      }
     }
+  }
+
+  .btn-group-inline {
+    gap: var(--#{$cdk}size-4);
   }
 
   .btn.tooltip-link {
     display: flex;
+    flex-grow: 0;
     align-items: center;
+
+    &:focus,
+    &:active {
+      background-color: transparent;
+      outline: none;
+    }
   }
 }
 
@@ -111,9 +132,15 @@ table .column-filters {
 
   td:last-child .grid-search-button,
   td:last-child .grid-reset-button {
+    display: flex;
     margin-left: auto;
     white-space: nowrap;
   }
+}
+
+.table thead .column-filters td,
+.table thead .column-filters th {
+  padding-block: var(--#{$cdk}size-8);
 }
 
 .grid {
@@ -128,7 +155,7 @@ table .column-filters {
 
             ~ .form-control {
               display: inline-block;
-              /* stylelint-disable-next-line */
+              // stylelint-disable-next-line
               width: calc(100% - 32px);
             }
           }
@@ -141,7 +168,7 @@ table .column-filters {
         $tr: &;
 
         &:hover {
-          background: #fafbfc;
+          background: var(--#{$cdk}primary-100);
         }
 
         &.preview-row,
@@ -150,17 +177,17 @@ table .column-filters {
         }
 
         &.preview-open {
-          background-color: #e9f8fb;
+          background-color: var(--#{$cdk}primary-100);
         }
 
         // styling for row that is being dragged
         &.dragging-row {
           cursor: move;
-          background: $gray-250;
+          background: var(--#{$cdk}primary-200);
 
           td {
-            color: $white;
-            background: #67868e;
+            color: var(--#{$cdk}white);
+            background: var(--#{$cdk}primary-800);
             transform: translate(5px, 10px);
 
             // make all icons and links white
@@ -169,7 +196,8 @@ table .column-filters {
             i.material-icons,
             a,
             a::after {
-              color: $white;
+              // stylelint-disable-next-line
+              color: var(--#{$cdk}white) !important;
             }
           }
         }
@@ -188,9 +216,8 @@ table .column-filters {
 
             @at-root {
               #{$tr}:hover .draggable-column {
-                /* stylelint-disable declaration-no-important */
-                color: #15b7d7 !important;
-                /* stylelint-enable declaration-no-important */
+                // stylelint-disable-next-line
+                color: var(--#{$cdk}primary-800) !important;
               }
             }
           }
@@ -273,7 +300,7 @@ table .column-filters {
 
           &.image-type {
             img {
-              max-width: 3rem;
+              max-width: 2rem;
               height: auto;
             }
           }
@@ -282,14 +309,23 @@ table .column-filters {
             word-break: normal;
           }
 
-          &.api_accesses_states-type {
-            .active {
-              color: #21834d;
-            }
+          &.identifier-type {
+            line-height: var(--#{$cdk}size-24);
+            vertical-align: middle;
 
-            .inactive {
-              color: #f44336;
+            .preview-toggle {
+              display: inline-block;
+              line-height: 1;
+              vertical-align: middle;
+
+              i {
+                vertical-align: middle;
+              }
             }
+          }
+
+          &.shop_list-type {
+            min-width: var(--#{$cdk}size-144);
           }
         }
       }
@@ -319,10 +355,6 @@ table {
 
       td[data-column-id^="id_"] {
         max-width: 8rem;
-
-        input {
-          max-width: 6rem;
-        }
       }
 
       td[data-column-id^="price_tax_excluded"] {
@@ -336,6 +368,70 @@ table {
           max-width: 6rem;
         }
       }
+
+      td,
+      th {
+        padding: var(--#{$cdk}size-4);
+      }
+
+      td {
+        .input-group {
+          &:nth-child(2) {
+            margin-top: -1px;
+          }
+
+          .form-control {
+            position: relative;
+
+            &:hover,
+            &:focus,
+            &:active {
+              z-index: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// FilterLinkGroup component styles
+.filter-link-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--cdk-size-16);
+  margin-top: var(--cdk-size-16);
+  margin-bottom: 0;
+
+  &__item {
+    padding-bottom: var(--cdk-size-4);
+    font-weight: 600;
+    color: var(--cdk-color-grey-700);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: color var(--#{$cdk}default-transition-duration), border-color var(--#{$cdk}default-transition-duration);
+
+    &:hover,
+    &:focus {
+      color: var(--cdk-color-primary-600);
+      text-decoration: none;
+    }
+
+    &.is-active {
+      color: var(--cdk-color-primary-600);
+      border-color: var(--cdk-color-primary-500);
+    }
+  }
+}
+
+// Ensure FilterLinkGroup links don't have underline
+[data-filter-link-group] {
+  a {
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
     }
   }
 }

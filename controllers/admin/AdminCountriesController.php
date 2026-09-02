@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -119,7 +99,7 @@ class AdminCountriesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_country'] = [
-                'href' => self::$currentIndex . '&addcountry&token=' . $this->token,
+                'href' => $this->context->link->getAdminLink('AdminCountries', true, [], ['addcountry' => 1]),
                 'desc' => $this->trans('Add new country', [], 'Admin.International.Feature'),
                 'icon' => 'process-icon-new',
             ];
@@ -199,7 +179,7 @@ class AdminCountriesControllerCore extends AdminController
                     'name' => 'name',
                     'lang' => true,
                     'required' => true,
-                    'hint' => $this->trans('Country name', [], 'Admin.International.Feature') . ' - ' . $this->trans('Invalid characters:', [], 'Admin.Global') . ' &lt;&gt;;=#{} ',
+                    'hint' => $this->trans('Country name', [], 'Admin.International.Feature') . ' - ' . $this->trans('Invalid characters:', [], 'Admin.Global') . ' &lt;&gt;{} ',
                 ],
                 [
                     'type' => 'text',
@@ -221,7 +201,6 @@ class AdminCountriesControllerCore extends AdminController
                     'name' => 'call_prefix',
                     'maxlength' => 3,
                     'class' => 'uppercase',
-                    'required' => true,
                     'hint' => $this->trans('International call prefix, (e.g. 1 for United States).', [], 'Admin.International.Help'),
                 ],
                 [
@@ -251,7 +230,7 @@ class AdminCountriesControllerCore extends AdminController
                 ],
                 [
                     'type' => 'switch',
-                    'label' => $this->trans('Does it need Zip/Postal code?', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Does it need a ZIP/Postal code?', [], 'Admin.International.Feature'),
                     'name' => 'need_zip_code',
                     'required' => false,
                     'is_bool' => true,
@@ -270,9 +249,8 @@ class AdminCountriesControllerCore extends AdminController
                 ],
                 [
                     'type' => 'text',
-                    'label' => $this->trans('Zip/Postal code format', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('ZIP/Postal code format', [], 'Admin.International.Feature'),
                     'name' => 'zip_code_format',
-                    'required' => true,
                     'desc' => $this->trans('Indicate the format of the postal code: use L for a letter, N for a number, and C for the country\'s ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.', [], 'Admin.International.Help'),
                 ],
                 [
@@ -364,7 +342,7 @@ class AdminCountriesControllerCore extends AdminController
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', [], 'Admin.Global'),
+                'label' => $this->trans('Store association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
             ];
         }
@@ -392,7 +370,7 @@ class AdminCountriesControllerCore extends AdminController
 
                 if (count($ids)) {
                     $res = Db::getInstance()->execute(
-                            'UPDATE `' . _DB_PREFIX_ . 'state`
+                        'UPDATE `' . _DB_PREFIX_ . 'state`
 							SET `id_zone` = ' . (int) Tools::getValue('id_zone') . '
 							WHERE `id_state` IN (' . implode(',', $ids) . ')'
                     );
@@ -493,7 +471,6 @@ class AdminCountriesControllerCore extends AdminController
     {
         /* The following translations are needed later - don't remove the comments!
         $this->trans('Customer', [], 'Admin.Global');
-        $this->trans('Warehouse', [], 'Admin.Global');
         $this->trans('Country', [], 'Admin.Global');
         $this->trans('State', [], 'Admin.Global');
         $this->trans('Address', [], 'Admin.Global');
@@ -514,7 +491,7 @@ class AdminCountriesControllerCore extends AdminController
             }
             $fields = [];
             $html_tabnav .= '<li' . ($class_tab_active ? ' class="' . $class_tab_active . '"' : '') . '>
-				<a href="#availableListFieldsFor_' . $class_name . '"><i class="icon-caret-down"></i>&nbsp;' . Translate::getAdminTranslation($class_name, 'AdminCountries') . '</a></li>';
+				<a href="#availableListFieldsFor_' . $class_name . '"><i class="icon-caret-down"></i>&nbsp;' . Context::getContext()->getTranslator()->trans($class_name, [], 'AdminCountries') . '</a></li>';
 
             foreach (AddressFormat::getValidateFields($class_name) as $name) {
                 $fields[] = '<a href="javascript:void(0);" class="addPattern btn btn-default btn-xs" id="' . ($class_name == 'Address' ? $name : $class_name . ':' . $name) . '">

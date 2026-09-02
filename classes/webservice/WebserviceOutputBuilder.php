@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -77,6 +57,7 @@ class WebserviceOutputBuilderCore
      * Set the Content-type for the http header.
      *
      * @param WebserviceOutputInterface $obj_render
+     *
      * @throw WebserviceException if the object render is not an instance of WebserviceOutputInterface
      *
      * @return $this
@@ -162,6 +143,7 @@ class WebserviceOutputBuilderCore
 
     /**
      * @param string|null $key if null get all header params otherwise the params specified by the key
+     *
      * @throw WebserviceException if the key is corrupted (use Validate::isCleanHtml method)
      * @throw WebserviceException if the asked key does'nt exists.
      *
@@ -673,7 +655,7 @@ class WebserviceOutputBuilderCore
                         foreach ($object_assoc as $id) {
                             if ($class_name !== null) {
                                 $child_object = new $class_name($id);
-                                $output_details .= $this->renderEntity($child_object, ($depth - 2 ? 0 : $depth - 2));
+                                $output_details .= $this->renderEntity($child_object, $depth - 2 ? 0 : $depth - 2);
                             }
                         }
                     }
@@ -715,7 +697,7 @@ class WebserviceOutputBuilderCore
                     $field['sqlId'] = 'id';
                     $field['value'] = isset($object_assoc['id']) ? $object_assoc['id'] : null;
                 } elseif (!isset($field['sqlId'])) {
-                    $field['sqlId'] = $field_name;
+                    $field['sqlId'] = $field_name ?: 'id';
                     $field['value'] = isset($object_assoc[$field_name]) ? $object_assoc[$field_name] : null;
                 }
                 $field['entities_name'] = $assoc_name;

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -38,6 +18,10 @@ class AdminQuickAccessesControllerCore extends AdminController
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
+
+        // list_content.tpl uses $tr.link as the row onclick URL when present; quick access links
+        // have no token so row-click would redirect to security/compromised. Use Edit action instead.
+        $this->list_no_link = true;
 
         parent::__construct();
 
@@ -87,7 +71,7 @@ class AdminQuickAccessesControllerCore extends AdminController
                     'lang' => true,
                     'maxlength' => 32,
                     'required' => true,
-                    'hint' => $this->trans('Forbidden characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Forbidden characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;{}',
                 ],
                 [
                     'type' => 'text',
@@ -207,7 +191,7 @@ class AdminQuickAccessesControllerCore extends AdminController
     public function ajaxProcessGetUrl()
     {
         if (Tools::strtolower(Tools::getValue('method')) === 'add') {
-            $params['new_window'] = 0;
+            $params['new_window'] = (int) Tools::getValue('new_window', 0);
             $params['name_' . (int) Configuration::get('PS_LANG_DEFAULT')] = Tools::getValue('name');
             $params['link'] = Tools::getValue('url');
             $params['submitAddquick_access'] = 1;

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
@@ -29,8 +9,13 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Currency;
 use Exception;
 use InvalidArgumentException;
-use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\PDF\DeliverySlipPdfGenerator;
+use PrestaShop\PrestaShop\Adapter\PDF\OrderInvoicePdfGenerator;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarriersForProduct;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
@@ -81,42 +66,65 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductSearchEmptyPhraseException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\EditShipment;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\FulfillShipmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\MergeProductsToShipment;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\SplitShipment;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\CannotEditShipmentShippedException;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetOrderShipments;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentsForOrderDetail;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\ListAvailableShipmentsForProduct;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\OrderShipment;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
+use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
+use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\ShipmentFilters;
 use PrestaShopBundle\Component\CsvResponse;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
-use PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType;
 use PrestaShopBundle\Form\Admin\Sell\Order\CartSummaryType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
-use PrestaShopBundle\Form\Admin\Sell\Order\EditProductRowType;
 use PrestaShopBundle\Form\Admin\Sell\Order\InternalNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use ReflectionClass;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Manages "Sell > Orders" page
  */
-class OrderController extends FrameworkBundleAdminController
+class OrderController extends PrestaShopAdminController
 {
     /**
      * Default number of products per page (in case invalid value is used)
@@ -128,20 +136,26 @@ class OrderController extends FrameworkBundleAdminController
      */
     public const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
 
+    public function __construct(private readonly FormFactoryInterface $formFactory)
+    {
+    }
+
     /**
      * Shows list of orders
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param OrderFilters $filters
      *
      * @return Response
      */
-    public function indexAction(Request $request, OrderFilters $filters)
-    {
-        $orderKpiFactory = $this->get('prestashop.core.kpi_row.factory.orders');
-        $orderGrid = $this->get('prestashop.core.grid.factory.order')->getGrid($filters);
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function indexAction(
+        Request $request,
+        OrderFilters $filters,
+        #[Autowire(service: 'prestashop.core.kpi_row.factory.orders')] KpiRowFactoryInterface $orderKpiFactory,
+        #[Autowire(service: 'prestashop.core.grid.factory.order')] GridFactory $orderGridFactory,
+    ) {
+        $orderGrid = $orderGridFactory->getGrid($filters);
 
         $changeOrderStatusesForm = $this->createForm(ChangeOrdersStatusType::class);
 
@@ -165,18 +179,19 @@ class OrderController extends FrameworkBundleAdminController
     {
         $toolbarButtons = [];
 
-        $isSingleShopContext = $this->get('prestashop.adapter.shop.context')->isSingleShopContext();
+        $isSingleShopContext = $this->getShopContext()->getShopConstraint()->isSingleShopContext();
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_orders_create'),
-            'desc' => $this->trans('Add new order', 'Admin.Orderscustomers.Feature'),
+            'desc' => $this->trans('Add new order', [], 'Admin.Orderscustomers.Feature'),
             'icon' => 'add_circle_outline',
             'disabled' => !$isSingleShopContext,
         ];
 
         if (!$isSingleShopContext) {
             $toolbarButtons['add']['help'] = $this->trans(
-                'You can use this feature in a single shop context only. Switch context to enable it.',
+                'You can use this feature in a single-store context only. Switch contexts to enable it.',
+                [],
                 'Admin.Orderscustomers.Feature'
             );
             $toolbarButtons['add']['href'] = '#';
@@ -188,21 +203,20 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Places an order from BO
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function placeAction(Request $request)
-    {
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    public function placeAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.cart_summary_form_handler')] FormHandlerInterface $formHandler
+    ) {
         $summaryForm = $this->createForm(CartSummaryType::class);
         $summaryForm->handleRequest($request);
-        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.cart_summary_form_handler');
 
         try {
             $result = $formHandler->handle($summaryForm);
-
             if ($result->getIdentifiableObjectId() instanceof OrderId) {
                 /** @var OrderId $orderId */
                 $orderId = $result->getIdentifiableObjectId();
@@ -223,20 +237,21 @@ class OrderController extends FrameworkBundleAdminController
      * Whole page dynamics are on javascript side.
      * To load specific cart pass cartId to url query params (handled by javascript)
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
-    public function createAction(Request $request)
-    {
-        /** @var ShopContext $shopContextChecker */
-        $shopContextChecker = $this->container->get('prestashop.adapter.shop.context');
-
-        if (!$shopContextChecker->isSingleShopContext()) {
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    public function createAction(
+        Request $request,
+        LanguageByIdChoiceProvider $languageChoiceProvider,
+        #[Autowire(service: 'prestashop.core.form.choice_provider.currency_by_id')] FormChoiceProviderInterface $currencyChoiceProvider,
+    ) {
+        $isSingleShopContext = $this->getShopContext()->getShopConstraint()->isSingleShopContext();
+        if (!$isSingleShopContext) {
             $this->addFlash('error', $this->trans(
                 'You have to select a shop before creating new orders.',
+                [],
                 'Admin.Orderscustomers.Notification'
             ));
 
@@ -244,17 +259,16 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         $summaryForm = $this->createForm(CartSummaryType::class);
-        $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices(
+        $languages = $languageChoiceProvider->getChoices(
             [
-                'shop_id' => $shopContextChecker->getContextShopID(),
+                'shop_id' => $this->getShopContext()->getShopConstraint()->getShopId()?->getValue(),
             ]
         );
-        $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
 
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $configuration = $this->getConfiguration();
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/create.html.twig', [
-            'currencies' => $currencies,
+            'currencies' => $currencyChoiceProvider->getChoices(),
             'languages' => $languages,
             'summaryForm' => $summaryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -263,23 +277,22 @@ class OrderController extends FrameworkBundleAdminController
             'giftSettingsEnabled' => (bool) $configuration->get('PS_GIFT_WRAPPING'),
             'stockManagementEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
             'isB2BEnabled' => (bool) $configuration->get('PS_B2B_ENABLE'),
+            'layoutTitle' => $this->trans('New order', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function searchAction(Request $request)
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.order'),
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    public function searchAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.definition.factory.order')] OrderGridDefinitionFactory $orderGridDefinitionFactory,
+    ) {
+        return $this->buildSearchResponse(
+            $orderGridDefinitionFactory,
             $request,
             OrderGridDefinitionFactory::GRID_ID,
             'admin_orders_index'
@@ -289,42 +302,104 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Generates invoice PDF for given order
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      */
-    public function generateInvoicePdfAction($orderId)
-    {
-        $this->get('prestashop.adapter.pdf.order_invoice_pdf_generator')->generatePDF([$orderId]);
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    public function generateInvoicePdfAction(
+        int $orderId,
+        #[Autowire(service: 'prestashop.adapter.pdf.order_invoice_pdf_generator')] OrderInvoicePdfGenerator $invoicePdfGenerator,
+    ): Response {
+        $generatedPdf = $invoicePdfGenerator->generatePDFForResponse([$orderId]);
 
-        // When using legacy generator,
-        // we want to be sure that displaying PDF is the last thing this controller will do
-        die();
+        $response = new Response($generatedPdf->getContent());
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $generatedPdf->getFileName()
+        );
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
     }
 
     /**
      * Generates delivery slip PDF for given order
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      */
-    public function generateDeliverySlipPdfAction($orderId)
-    {
-        $this->get('prestashop.adapter.pdf.delivery_slip_pdf_generator')->generatePDF([$orderId]);
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    public function generateDeliverySlipPdfAction(
+        int $orderId,
+        #[Autowire(service: 'prestashop.adapter.pdf.delivery_slip_pdf_generator')] DeliverySlipPdfGenerator $deliverySlipPdfGenerator,
+    ): Response {
+        $generatedPdf = $deliverySlipPdfGenerator->generatePDFForResponse([$orderId]);
 
-        // When using legacy generator,
-        // we want to be sure that displaying PDF is the last thing this controller will do
-        die();
+        $response = new Response($generatedPdf->getContent());
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $generatedPdf->getFileName()
+        );
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
+    }
+
+    /**
+     * Generate delivery slip PDF for a specific shipment
+     */
+    #[AdminSecurity("is_granted('read', 'AdminOrders')", message: 'You do not have permission to view this.', redirectRoute: 'admin_orders_index')]
+    public function generateShipmentDeliverySlipPdfAction(
+        int $shipmentId,
+        #[Autowire(service: 'prestashop.adapter.pdf.shipment_delivery_slip_pdf_generator')] PDFGeneratorInterface $shipmentDeliverySlipPdfGenerator,
+    ): BinaryFileResponse {
+        return new BinaryFileResponse($shipmentDeliverySlipPdfGenerator->generatePDF([$shipmentId]));
+    }
+
+    /**
+     * Generate delivery slip PDF for multiple shipments or all shipments of an order
+     *
+     * @return BinaryFileResponse|RedirectResponse
+     */
+    #[AdminSecurity("is_granted('read', 'AdminOrders')", message: 'You do not have permission to view this.', redirectRoute: 'admin_orders_index')]
+    public function generateShipmentsDeliverySlipPdfAction(
+        Request $request,
+        int $orderId,
+        #[Autowire(service: 'prestashop.adapter.pdf.shipment_delivery_slip_pdf_generator')] PDFGeneratorInterface $shipmentDeliverySlipPdfGenerator,
+    ) {
+        $shipmentIds = $request->isMethod('POST')
+            ? $request->request->all('shipmentIds')
+            : $request->query->all('shipmentIds');
+
+        if (empty($shipmentIds)) {
+            /** @var OrderShipment[] $orderShipments */
+            $orderShipments = $this->dispatchQuery(new GetOrderShipments($orderId));
+
+            $shipmentIds = [];
+            foreach ($orderShipments as $shipment) {
+                if ($shipment->getTrackingNumber() !== null && $shipment->getPackedAt() !== null) {
+                    $shipmentIds[] = $shipment->getId();
+                }
+            }
+        }
+
+        $shipmentIds = array_map('intval', (array) $shipmentIds);
+
+        if (empty($shipmentIds)) {
+            $this->addFlash('error', $this->trans('There is no fulfilled shipment to download', [], 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_orders_view');
+        }
+
+        return new BinaryFileResponse($shipmentDeliverySlipPdfGenerator->generatePDF($shipmentIds));
     }
 
     /**
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function changeOrdersStatusAction(Request $request)
     {
         $changeOrdersStatusForm = $this->createForm(ChangeOrdersStatusType::class);
@@ -333,11 +408,11 @@ class OrderController extends FrameworkBundleAdminController
         $data = $changeOrdersStatusForm->getData();
 
         try {
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new BulkChangeOrderStatusCommand($data['order_ids'], (int) $data['new_order_status_id'])
             );
 
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
         } catch (ChangeOrderStatusException $e) {
             $this->handleChangeOrderStatusException($e);
         } catch (Exception $e) {
@@ -348,33 +423,34 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param OrderFilters $filters
      *
      * @return CsvResponse
      */
-    public function exportAction(OrderFilters $filters)
-    {
-        $isB2bEnabled = $this->get('prestashop.adapter.legacy.configuration')->get('PS_B2B_ENABLE');
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    public function exportAction(
+        OrderFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.order')] GridFactory $orderGridFactory,
+    ) {
+        $isB2bEnabled = $this->getConfiguration()->get('PS_B2B_ENABLE');
 
         $filters = new OrderFilters(['limit' => null] + $filters->all());
-        $orderGrid = $this->get('prestashop.core.grid.factory.order')->getGrid($filters);
+        $orderGrid = $orderGridFactory->getGrid($filters);
 
         $headers = [
-            'id_order' => $this->trans('ID', 'Admin.Global'),
-            'reference' => $this->trans('Reference', 'Admin.Global'),
-            'new' => $this->trans('New client', 'Admin.Orderscustomers.Feature'),
-            'country_name' => $this->trans('Delivery', 'Admin.Global'),
-            'customer' => $this->trans('Customer', 'Admin.Global'),
-            'total_paid_tax_incl' => $this->trans('Total', 'Admin.Global'),
-            'payment' => $this->trans('Payment', 'Admin.Global'),
-            'osname' => $this->trans('Status', 'Admin.Global'),
-            'date_add' => $this->trans('Date', 'Admin.Global'),
+            'id_order' => $this->trans('ID', [], 'Admin.Global'),
+            'reference' => $this->trans('Reference', [], 'Admin.Global'),
+            'new' => $this->trans('New client', [], 'Admin.Orderscustomers.Feature'),
+            'country_name' => $this->trans('Delivery', [], 'Admin.Global'),
+            'customer' => $this->trans('Customer', [], 'Admin.Global'),
+            'total_paid_tax_incl' => $this->trans('Total', [], 'Admin.Global'),
+            'payment' => $this->trans('Payment', [], 'Admin.Global'),
+            'osname' => $this->trans('Status', [], 'Admin.Global'),
+            'date_add' => $this->trans('Date', [], 'Admin.Global'),
         ];
 
         if ($isB2bEnabled) {
-            $headers['company'] = $this->trans('Company', 'Admin.Global');
+            $headers['company'] = $this->trans('Company', [], 'Admin.Global');
         }
 
         $data = [];
@@ -406,34 +482,48 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return Response
      */
-    public function viewAction(int $orderId, Request $request): Response
-    {
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function viewAction(
+        int $orderId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.adapter.order.order_sibling_provider')] OrderSiblingProviderInterface $orderSiblingProvider,
+        CurrencyDataProvider $currencyDataProvider,
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker,
+        #[Autowire(service: 'PrestaShop\PrestaShop\Core\Grid\Factory\ShipmentFactory')] GridFactoryInterface $shipmentGridFactory,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.add_product_form_builder')] FormBuilderInterface $addProductFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.edit_order_product_form_builder')] FormBuilderInterface $editProductFormBuilder,
+        ShipmentFilters $filters,
+        Tools $tools,
+    ): Response {
         try {
             /** @var OrderForViewing $orderForViewing */
-            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
+            $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId, QuerySorting::DESC));
         } catch (OrderException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             return $this->redirectToRoute('admin_orders_index');
         }
 
-        $formFactory = $this->get('form.factory');
-        $updateOrderStatusForm = $formFactory->createNamed(
+        $filters = new ShipmentFilters(['filters' => ['order_id' => $orderId]] + $filters->all());
+        $shipmentsGrid = $shipmentGridFactory->getGrid($filters);
+
+        $updateOrderStatusForm = $this->formFactory->createNamed(
             'update_order_status',
-            UpdateOrderStatusType::class, [
+            UpdateOrderStatusType::class,
+            [
                 'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
             ]
         );
-        $updateOrderStatusActionBarForm = $formFactory->createNamed(
+        $updateOrderStatusActionBarForm = $this->formFactory->createNamed(
             'update_order_status_action_bar',
-            UpdateOrderStatusType::class, [
+            UpdateOrderStatusType::class,
+            [
                 'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
             ]
         );
@@ -477,29 +567,20 @@ class OrderController extends FrameworkBundleAdminController
             'order_id' => $orderId,
         ]);
 
-        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
-        //@todo: Fix me. Should not rely on legacy object model - Currency
+        // @todo: Fix me. Should not rely on legacy object model - Currency
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
-        $addProductRowForm = $this->createForm(AddProductRowType::class, [], [
-            'order_id' => $orderId,
-            'currency_id' => $orderForViewing->getCurrencyId(),
-            'symbol' => $orderCurrency->symbol,
-        ]);
-        $editProductRowForm = $this->createForm(EditProductRowType::class, [], [
-            'order_id' => $orderId,
-            'symbol' => $orderCurrency->symbol,
-        ]);
+        $addProductForm = $addProductFormBuilder->getFormFor($orderId);
+        $editProductRowForm = $editProductFormBuilder->getFormFor($orderId);
 
         $internalNoteForm = $this->createForm(InternalNoteType::class, [
             'note' => $orderForViewing->getNote(),
         ]);
 
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $backOfficeOrderButtons = new ActionsBarButtonsCollection();
 
         try {
-            $this->dispatchHook(
+            $this->dispatchHookWithParameters(
                 'actionGetAdminOrderButtons',
                 [
                     'controller' => $this,
@@ -517,12 +598,9 @@ class OrderController extends FrameworkBundleAdminController
 
         $this->handleOutOfStockProduct($orderForViewing);
 
-        $merchandiseReturnEnabled = (bool) $this->configuration->get('PS_ORDER_RETURN');
+        $merchandiseReturnEnabled = (bool) $this->getConfiguration()->get('PS_ORDER_RETURN');
 
-        /** @var OrderSiblingProviderInterface $orderSiblingProvider */
-        $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
-
-        $paginationNum = (int) $this->configuration->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
+        $paginationNum = ($this->getConfiguration()->get('PS_ORDER_PRODUCTS_NB_PER_PAGE') ?? self::DEFAULT_PRODUCTS_NUMBER);
         $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
         if (!in_array($paginationNum, $paginationNumOptions)) {
             $paginationNumOptions[] = $paginationNum;
@@ -531,17 +609,37 @@ class OrderController extends FrameworkBundleAdminController
 
         $metatitle = sprintf(
             '%s %s %s',
-            $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
-            $this->configuration->get('PS_NAVIGATION_PIPE', '>'),
+            $this->trans('Orders', [], 'Admin.Orderscustomers.Feature'),
+            $this->getConfiguration()->get('PS_NAVIGATION_PIPE') ?? '>',
             $this->trans(
                 'Order %reference% from %firstname% %lastname%',
-                'Admin.Orderscustomers.Feature',
                 [
                     '%reference%' => $orderForViewing->getReference(),
                     '%firstname%' => $orderForViewing->getCustomer()->getFirstName(),
                     '%lastname%' => $orderForViewing->getCustomer()->getLastName(),
-                ]
+                ],
+                'Admin.Orderscustomers.Feature',
             )
+        );
+
+        $shipmentsLabel = $this->trans(
+            'Shipments ([1]%shipment_count%[/1])',
+            [
+                '%shipment_count%' => $shipmentsGrid->getData()->getRecordsTotal(),
+                '[1]' => '<span class="count">',
+                '[/1]' => '</span>',
+            ],
+            'Admin.Shipping.Feature'
+        );
+
+        $carriersLabel = $this->trans(
+            'Carriers ([1]%carriers_count%[/1])',
+            [
+                '%carriers_count%' => count($orderForViewing->getShipping()->getCarriers()),
+                '[1]' => '<span class="count">',
+                '[/1]' => '</span>',
+            ],
+            'Admin.Shipping.Feature'
         );
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
@@ -556,43 +654,347 @@ class OrderController extends FrameworkBundleAdminController
             'updateOrderStatusActionBarForm' => $updateOrderStatusActionBarForm->createView(),
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
-            'privateNoteForm' => $privateNoteForm ? $privateNoteForm->createView() : null,
+            'privateNoteForm' => $privateNoteForm?->createView(),
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
             'cancelProductForm' => $cancelProductForm->createView(),
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
-            'changeOrderAddressForm' => $changeOrderAddressForm ? $changeOrderAddressForm->createView() : null,
+            'changeOrderAddressForm' => $changeOrderAddressForm?->createView(),
             'orderMessageForm' => $orderMessageForm->createView(),
-            'addProductRowForm' => $addProductRowForm->createView(),
+            'addProductRowForm' => $addProductForm->createView(),
             'editProductRowForm' => $editProductRowForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
             'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
-            'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
+            'priceSpecification' => $this->getLanguageContext()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
             'previousOrderId' => $orderSiblingProvider->getPreviousOrderId($orderId),
             'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
             'paginationNum' => $paginationNum,
             'paginationNumOptions' => $paginationNumOptions,
-            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
+            'isAvailableQuantityDisplayed' => (bool) $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
             'internalNoteForm' => $internalNoteForm->createView(),
+            'isImprovedShipmentFeatureFlagEnabled' => $featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT),
+            'orderHasShipment' => $this->orderHasShipment($orderForViewing->getId()),
+            'shipmentsGrid' => $this->presentGrid($shipmentsGrid),
+            'shipmentsLabel' => $tools->purifyHTML($shipmentsLabel),
+            'carriersLabel' => $tools->purifyHTML($carriersLabel),
+        ]);
+    }
+
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function getMergeShipmentForm(int $orderId, int $shipmentId, Request $request, #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.merge_shipment_form_builder')] FormBuilderInterface $formBuilder): Response
+    {
+        $form = $formBuilder->getFormFor($orderId);
+        $data = $form->getData();
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/merge_shipment_form.html.twig', [
+            'mergeShipmentForm' => $form->createView(),
+            'orderId' => $orderId,
+            'shipmentId' => $shipmentId,
+            'products' => $data['products'],
+            'isShipped' => $data['is_shipped'],
+        ]);
+    }
+
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function getAddProductForm(
+        int $orderId,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.add_product_form_builder')] FormBuilderInterface $addProductFormBuilder,
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker
+    ): Response {
+        $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId, QuerySorting::DESC));
+        $form = $addProductFormBuilder->getFormFor($orderId);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_form.html.twig', [
+            'addProductForm' => $form->createView(),
+            'orderForViewing' => $orderForViewing,
+            'orderHasShipment' => $this->orderHasShipment($orderForViewing->getId()),
+            'isMultishipmentIsEnabled' => $featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT),
+            'orderId' => $orderId,
+        ]);
+    }
+
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function getEditProductForm(
+        int $orderId,
+        int $orderDetailId,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.edit_order_product_form_builder')] FormBuilderInterface $orderProductFormBuilder,
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker,
+        CurrencyDataProvider $currencyDataProvider
+    ): Response {
+        $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId, QuerySorting::DESC));
+        $form = $orderProductFormBuilder->getFormFor($orderId);
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
+        $shipments = $this->dispatchQuery(new GetShipmentsForOrderDetail($orderId, $orderDetailId));
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_form.html.twig', [
+            'editProductForm' => $form->createView(),
+            'orderForViewing' => $orderForViewing,
+            'orderHasShipment' => $this->orderHasShipment($orderForViewing->getId()),
+            'isMultishipmentIsEnabled' => $featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT),
+            'orderId' => $orderId,
+            'currencySymbol' => $orderCurrency->symbol,
+            'shipments' => $shipments,
+        ]);
+    }
+
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function getEditShipmentForm(int $orderId, int $shipmentId, Request $request, #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.edit_shipment_form_builder')] FormBuilderInterface $formBuilder): Response
+    {
+        $form = $formBuilder->getFormFor($orderId);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_shipment_form.html.twig', [
+            'editShipmentForm' => $form->createView(),
+            'orderId' => $orderId,
+            'shipmentId' => $shipmentId,
         ]);
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function partialRefundAction(int $orderId, Request $request)
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function mergeShipmentAction(int $orderId, Request $request, #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.merge_shipment_form_builder')] FormBuilderInterface $formBuilder): RedirectResponse
     {
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
-        $formHandler = $this->get('prestashop.core.form.identifiable_object.partial_refund_form_handler');
+        try {
+            $shipmentId = (int) $request->attributes->get('shipmentId');
+            $form = $formBuilder->getFormFor($orderId);
+            $form->handleRequest($request);
+
+            if (!$form->isSubmitted() || !$form->isValid()) {
+                $this->addFlash('error', 'Invalid merge shipment form.');
+
+                return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
+            }
+            $data = $form->getData();
+
+            /** @var OrderShipment $targetShipment */
+            $targetShipment = $form->get('merge_to_shipment')->getData();
+            $targetShipmentId = $targetShipment->getId();
+
+            if ($data['is_shipped']) {
+                $this->addFlash('error', $this->trans('This shipment can\'t be merged because a tracking number has already been assigned, indicating that it has already been shipped.', [], 'Admin.Orderscustomers.Notification'));
+
+                return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
+            }
+
+            $submittedData = $request->request->all('merge_shipment');
+            $selectedProducts = [];
+
+            foreach ($submittedData as $key => $value) {
+                if (str_starts_with($key, 'product_') && $value) {
+                    $orderDetailId = (int) str_replace('product_', '', $key);
+                    $quantityKey = 'quantity_' . $orderDetailId;
+
+                    $selectedProducts[] = [
+                        'id_order_detail' => $orderDetailId,
+                        'quantity' => (int) $submittedData[$quantityKey],
+                    ];
+                }
+            }
+
+            $command = new MergeProductsToShipment(
+                $shipmentId,
+                $targetShipmentId,
+                $selectedProducts
+            );
+            $this->dispatchCommand($command);
+        } catch (Exception $e) {
+            if ((new ReflectionClass($e))->getName() === CannotEditShipmentShippedException::class) {
+                $this->addFlash('error', $this->trans('You cannot merge shipment when is already shipped.', [], 'Admin.Orderscustomers.Notification'));
+            } else {
+                throw $e;
+            }
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function editShipmentAction(int $orderId, int $shipmentId, Request $request, #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.edit_shipment_form_builder')] FormBuilderInterface $formBuilder): RedirectResponse
+    {
+        $form = $formBuilder->getFormFor($orderId, [], ['method' => 'PUT']);
+        $form->handleRequest($request);
+        $submittedData = $request->request->all('edit_shipment');
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            $this->addFlash('error', 'An error occurred while editing shipment');
+
+            return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
+        }
+
+        $command = new EditShipment(
+            $shipmentId,
+            $submittedData['carrier']
+        );
+
+        $this->dispatchCommand($command);
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function getFulfillShipmentForm(
+        int $orderId,
+        int $shipmentId,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.fulfill_shipment_form_builder')] FormBuilderInterface $formBuilder,
+    ): Response {
+        $form = $formBuilder->getFormFor($orderId);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/fulfill_shipment_form.html.twig', [
+            'fulfillShipmentForm' => $form->createView(),
+            'shipmentInformation' => $form->getData(),
+            'orderId' => $orderId,
+            'shipmentId' => $shipmentId,
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function fulfillShipmentAction(int $orderId, int $shipmentId, Request $request, #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.fulfill_shipment_form_builder')] FormBuilderInterface $formBuilder): RedirectResponse
+    {
+        $form = $formBuilder->getFormFor($orderId);
+        $form->handleRequest($request);
+        $submittedData = $request->request->all('fulfill_shipment');
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            $this->addFlash('error', $this->trans('An error occured while fulfilling shipment', [], 'Admin.Orderscustomers.Notification'));
+
+            return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
+        }
+
+        $command = new FulfillShipmentCommand(
+            $shipmentId,
+            $submittedData['tracking_number'],
+        );
+
+        $this->dispatchCommand($command);
+
+        $this->addFlash('success', $this->trans('The shipment was successfully fulfilled.', [], 'Admin.Orderscustomers.Notification'));
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function splitShipmentAction(int $orderId, int $shipmentId, Request $request): RedirectResponse
+    {
+        try {
+            $data = $request->get('split_shipment', []);
+            $carrier = isset($data['carrier']) ? (int) $data['carrier'] : null;
+
+            $productsRaw = $data['products'] ?? [];
+            $products = [];
+
+            foreach ($productsRaw as $prod) {
+                if (isset($prod['selected']) && (int) $prod['selected'] === 1) {
+                    $products[] = [
+                        'id_order_detail' => (int) $prod['order_detail_id'],
+                        'quantity' => (int) $prod['selected_quantity'],
+                    ];
+                }
+            }
+
+            $this->dispatchQuery(new SplitShipment($shipmentId, $products, $carrier));
+        } catch (Exception $e) {
+            if ((new ReflectionClass($e))->getName() === CannotEditShipmentShippedException::class) {
+                $this->addFlash('error', $this->trans('You cannot split shipment when is already shipped.', [], 'Admin.Orderscustomers.Notification'));
+            } else {
+                throw $e;
+            }
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+            'shipmentId' => $shipmentId,
+        ]);
+    }
+
+    /**
+     * @throws CoreException
+     * @throws Exception
+     */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", message: 'You do not have permission to show this.')]
+    public function getSplitShipmentForm(
+        int $orderId,
+        int $shipmentId,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.split_shipment_form_builder')] FormBuilderInterface $formBuilder,
+    ): Response {
+        $form = $formBuilder->getFormFor($orderId);
+        $data = $form->getData();
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/split_shipment_form.html.twig', [
+            'splitShipmentForm' => $form->createView(),
+            'orderId' => $orderId,
+            'shipmentId' => $shipmentId,
+            'formIsValid' => $data['form_is_valid'],
+            'isShipped' => $data['is_shipped'],
+        ]);
+    }
+
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", message: 'You do not have permission to show this.')]
+    public function getShipmentsForProduct(
+        int $orderId,
+        int $productId,
+    ): Response {
+        $shipments = $this->dispatchCommand(new ListAvailableShipmentsForProduct($orderId, $productId));
+        $shipments[] = [
+            'id' => 0,
+            'name' => $this->trans('Create a shipment', [], 'Admin.Orderscustomers.Feature'),
+        ];
+
+        return $this->json(
+            ['shipments' => $shipments],
+            Response::HTTP_OK
+        );
+    }
+
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", message: 'You do not have permission to show this.')]
+    public function getCarriersForProduct(
+        int $productId,
+    ): Response {
+        if (empty($productId)) {
+            return $this->json(
+                ['error' => 'missing productId'],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+        $carriers = $this->dispatchQuery(new GetCarriersForProduct($productId));
+
+        return $this->json(
+            ['carriers' => $carriers],
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function partialRefundAction(
+        int $orderId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
+    ) {
         $form = $formBuilder->getFormFor($orderId);
 
         try {
@@ -600,7 +1002,7 @@ class OrderController extends FrameworkBundleAdminController
             $result = $formHandler->handleFor($orderId, $form);
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification'));
+                    $this->addFlash('success', $this->trans('A partial refund was successfully created.', [], 'Admin.Orderscustomers.Notification'));
                 } else {
                     $this->addFlashFormErrors($form);
                 }
@@ -615,19 +1017,18 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function standardRefundAction(int $orderId, Request $request)
-    {
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
-        $formHandler = $this->get('prestashop.core.form.identifiable_object.standard_refund_form_handler');
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
+    public function standardRefundAction(
+        int $orderId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.standard_refund_form_handler')] FormHandlerInterface $formHandler,
+    ) {
         $form = $formBuilder->getFormFor($orderId);
 
         try {
@@ -635,7 +1036,7 @@ class OrderController extends FrameworkBundleAdminController
             $result = $formHandler->handleFor($orderId, $form);
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('A standard refund was successfully created.', 'Admin.Orderscustomers.Notification'));
+                    $this->addFlash('success', $this->trans('A standard refund was successfully created.', [], 'Admin.Orderscustomers.Notification'));
                 } else {
                     $this->addFlashFormErrors($form);
                 }
@@ -650,19 +1051,18 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function returnProductAction(int $orderId, Request $request)
-    {
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
-        $formHandler = $this->get('prestashop.core.form.identifiable_object.return_product_form_handler');
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
+    public function returnProductAction(
+        int $orderId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.return_product_form_handler')] FormHandlerInterface $formHandler,
+    ) {
         $form = $formBuilder->getFormFor($orderId);
 
         try {
@@ -670,7 +1070,7 @@ class OrderController extends FrameworkBundleAdminController
             $result = $formHandler->handleFor($orderId, $form);
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('The product was successfully returned.', 'Admin.Orderscustomers.Notification'));
+                    $this->addFlash('success', $this->trans('The product was successfully returned.', [], 'Admin.Orderscustomers.Notification'));
                 } else {
                     $this->addFlashFormErrors($form);
                 }
@@ -689,7 +1089,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     private function handleOutOfStockProduct(OrderForViewing $orderForViewing)
     {
-        $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
+        $isStockManagementEnabled = (bool) $this->getConfiguration()->get('PS_STOCK_MANAGEMENT');
         if (!$isStockManagementEnabled || $orderForViewing->isDelivered() || $orderForViewing->isShipped()) {
             return;
         }
@@ -698,24 +1098,28 @@ class OrderController extends FrameworkBundleAdminController
             if ($product->getAvailableQuantity() <= 0) {
                 $this->addFlash(
                     'warning',
-                    $this->trans('This product is out of stock:', 'Admin.Orderscustomers.Notification') . ' ' . $product->getName()
+                    $this->trans('This product is out of stock:', [], 'Admin.Orderscustomers.Notification') . ' ' . $product->getName()
                 );
             }
         }
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return Response
      */
-    public function addProductAction(int $orderId, Request $request): Response
-    {
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    public function addProductAction(
+        int $orderId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
+        CurrencyDataProvider $currencyDataProvider,
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker,
+    ): Response {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
+        $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
         $previousProducts = [];
         foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
@@ -723,16 +1127,25 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         $invoiceId = (int) $request->get('invoice_id');
+        $productId = (int) $request->get('product_id');
+        $combinationId = (int) $request->get('combination_id');
+        $shipmentId = (int) $request->get('shipment_id', null);
+        $carrierId = (int) $request->get('carrier_id', null);
+        $isVirtual = (bool) $request->get('virtual', false);
+
         try {
             if ($invoiceId > 0) {
                 $addProductCommand = AddProductToOrderCommand::toExistingInvoice(
                     $orderId,
                     $invoiceId,
-                    (int) $request->get('product_id'),
-                    (int) $request->get('combination_id'),
+                    $productId,
+                    $combinationId,
                     $request->get('price_tax_incl'),
                     $request->get('price_tax_excl'),
-                    (int) $request->get('quantity')
+                    (int) $request->get('quantity'),
+                    $shipmentId,
+                    $carrierId,
+                    $isVirtual
                 );
             } else {
                 $hasFreeShipping = null;
@@ -741,15 +1154,19 @@ class OrderController extends FrameworkBundleAdminController
                 }
                 $addProductCommand = AddProductToOrderCommand::withNewInvoice(
                     $orderId,
-                    (int) $request->get('product_id'),
-                    (int) $request->get('combination_id'),
+                    $productId,
+                    $combinationId,
                     $request->get('price_tax_incl'),
                     $request->get('price_tax_excl'),
                     (int) $request->get('quantity'),
-                    $hasFreeShipping
+                    $hasFreeShipping,
+                    $shipmentId,
+                    $carrierId,
+                    $isVirtual
                 );
             }
-            $this->getCommandBus()->handle($addProductCommand);
+
+            $this->dispatchCommand($addProductCommand);
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
@@ -762,7 +1179,7 @@ class OrderController extends FrameworkBundleAdminController
          * We keep it for now to avoid Breaking Change
          */
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
+        $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
         $updatedProducts = [];
         foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
@@ -771,10 +1188,8 @@ class OrderController extends FrameworkBundleAdminController
 
         $newProducts = array_diff_key($updatedProducts, $previousProducts);
 
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
-        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         $addedGridRows = '';
@@ -784,9 +1199,11 @@ class OrderController extends FrameworkBundleAdminController
                 'product' => $newProduct,
                 'isColumnLocationDisplayed' => $newProduct->getLocation() !== '',
                 'isColumnRefundedDisplayed' => $newProduct->getQuantityRefunded() > 0,
-                'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
+                'isAvailableQuantityDisplayed' => (bool) $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
                 'cancelProductForm' => $cancelProductForm->createView(),
                 'orderCurrency' => $orderCurrency,
+                'isImprovedShipmentFeatureFlagEnabled' => $featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT),
+                'orderHasShipment' => $this->orderHasShipment($orderForViewing->getId()),
             ]);
         }
 
@@ -794,16 +1211,15 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getProductPricesAction(int $orderId): Response
     {
         try {
-            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+            $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId));
             $productsForViewing = $orderForViewing->getProducts();
             $productList = $productsForViewing->getProducts();
 
@@ -830,17 +1246,16 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      */
-    public function getInvoicesAction(int $orderId)
-    {
-        /** @var ConfigurableFormChoiceProviderInterface $choiceProvider */
-        $choiceProvider = $this->get('prestashop.adapter.form.choice_provider.order_invoice_by_id');
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    public function getInvoicesAction(
+        int $orderId,
+        #[Autowire(service: 'prestashop.adapter.form.choice_provider.order_invoice_by_id')] ConfigurableFormChoiceProviderInterface $choiceProvider,
+    ) {
         $choices = $choiceProvider->getChoices([
             'id_order' => $orderId,
-            'id_lang' => $this->getContextLangId(),
+            'id_lang' => $this->getLanguageContext()->getId(),
             'display_total' => true,
         ]);
 
@@ -850,14 +1265,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getDocumentsAction(int $orderId)
     {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId));
 
         return $this->json([
             'total' => count($orderForViewing->getDocuments()->getDocuments()),
@@ -868,14 +1282,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getShippingAction(int $orderId)
     {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId));
 
         return $this->json([
             'total' => count($orderForViewing->getShipping()->getCarriers()),
@@ -885,19 +1298,30 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
+    #[AdminSecurity("is_granted('read', 'AdminOrders')", message: 'You do not have permission to show this.')]
+    public function getShipmentsAction(
+        int $orderId,
+        #[Autowire(service: 'PrestaShop\PrestaShop\Core\Grid\Factory\ShipmentFactory')] GridFactoryInterface $shipmentGridFactory,
+        ShipmentFilters $filters
+    ) {
+        $filters = new ShipmentFilters(['filters' => ['order_id' => $orderId]] + $filters->all());
+        $shipmentsGrid = $shipmentGridFactory->getGrid($filters);
+
+        return $this->json([
+            'total' => $shipmentsGrid->getData()->getRecordsTotal(),
+            'html' => $this->render('@PrestaShop/Admin/Common/Grid/grid.html.twig', [
+                'grid' => $this->presentGrid($shipmentsGrid),
+            ])->getContent(),
+        ]);
+    }
+
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function updateShippingAction(int $orderId, Request $request): RedirectResponse
     {
         $form = $this->createForm(UpdateOrderShippingType::class, [], [
@@ -909,7 +1333,7 @@ class OrderController extends FrameworkBundleAdminController
             $data = $form->getData();
 
             try {
-                $this->getCommandBus()->handle(
+                $this->dispatchCommand(
                     new UpdateOrderShippingDetailsCommand(
                         $orderId,
                         (int) $data['current_order_carrier_id'],
@@ -918,12 +1342,13 @@ class OrderController extends FrameworkBundleAdminController
                     )
                 );
 
-                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
-            } catch (TransistEmailSendingException $e) {
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
+            } catch (TransistEmailSendingException) {
                 $this->addFlash(
                     'error',
                     $this->trans(
                         'An error occurred while sending an email to the customer.',
+                        [],
                         'Admin.Orderscustomers.Notification'
                     )
                 );
@@ -938,25 +1363,19 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminOrders')",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param int $orderCartRuleId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function removeCartRuleAction(int $orderId, int $orderCartRuleId): RedirectResponse
     {
-        $this->getCommandBus()->handle(
+        $this->dispatchCommand(
             new DeleteCartRuleFromOrderCommand($orderId, $orderCartRuleId)
         );
 
-        $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
@@ -964,27 +1383,21 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminOrders')",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param int $orderInvoiceId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function updateInvoiceNoteAction(int $orderId, int $orderInvoiceId, Request $request): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new UpdateInvoiceNoteCommand(
+            $this->dispatchCommand(new UpdateInvoiceNoteCommand(
                 $orderInvoiceId,
                 $request->request->get('invoice_note')
             ));
-            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
         } catch (InvoiceException $e) {
             $this->addFlash(
                 'error',
@@ -998,25 +1411,33 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      * @param int $orderDetailId
      * @param Request $request
      *
      * @return Response
      */
-    public function updateProductAction(int $orderId, int $orderDetailId, Request $request): Response
-    {
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    public function updateProductAction(
+        int $orderId,
+        int $orderDetailId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
+        CurrencyDataProvider $currencyDataProvider,
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker,
+    ): Response {
         try {
-            $this->getCommandBus()->handle(
+            $data = json_decode($request->getContent(), true);
+
+            $this->dispatchCommand(
                 new UpdateProductInOrderCommand(
                     $orderId,
                     $orderDetailId,
-                    $request->get('price_tax_incl'),
-                    $request->get('price_tax_excl'),
-                    (int) $request->get('quantity'),
-                    (int) $request->get('invoice')
+                    $data['price_tax_incl'],
+                    $data['price_tax_excl'],
+                    (int) $data['quantity'],
+                    (int) $data['invoice'],
+                    $data['shipmentProducts'] ?? null
                 )
             );
         } catch (Exception $e) {
@@ -1027,7 +1448,7 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
+        $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
         $products = $orderForViewing->getProducts()->getProducts();
         $product = array_reduce($products, function ($result, OrderProductForViewing $item) use ($orderDetailId) {
@@ -1039,36 +1460,54 @@ class OrderController extends FrameworkBundleAdminController
             return new Response('');
         }
 
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
-        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'cancelProductForm' => $cancelProductForm->createView(),
             'isColumnLocationDisplayed' => $product->getLocation() !== '',
             'isColumnRefundedDisplayed' => $product->getQuantityRefunded() > 0,
-            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
+            'isAvailableQuantityDisplayed' => (bool) $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
             'orderCurrency' => $orderCurrency,
             'orderForViewing' => $orderForViewing,
             'product' => $product,
+            'orderHasShipment' => $this->orderHasShipment($orderId),
+            'isImprovedShipmentFeatureFlagEnabled' => $featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT),
         ]);
     }
 
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", message: 'You do not have permission to edit this.')]
+    public function getCarriersAction(int $orderId): Response
+    {
+        try {
+            /** @var OrderForViewing $orderForViewing */
+            $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId));
+            $carriers = $orderForViewing->getShipping()->getCarriers();
+
+            $carrierList = [];
+            foreach ($carriers as $carrier) {
+                $carrierList[] = [
+                    'id' => $carrier->getCarrierId(),
+                    'name' => $carrier->getName(),
+                ];
+            }
+
+            return $this->json(['carriers' => $carrierList]);
+        } catch (OrderNotFoundException $e) {
+            return $this->json(['message' => 'Order not found'], Response::HTTP_NOT_FOUND);
+        } catch (Exception $e) {
+            return $this->json(['message' => 'An error occurred'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminOrders')",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function addCartRuleAction(int $orderId, Request $request): RedirectResponse
     {
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
@@ -1081,7 +1520,7 @@ class OrderController extends FrameworkBundleAdminController
                 $data = $addOrderCartRuleForm->getData();
 
                 try {
-                    $this->getCommandBus()->handle(
+                    $this->dispatchCommand(
                         new AddCartRuleToOrderCommand(
                             $orderId,
                             $data['name'],
@@ -1091,7 +1530,7 @@ class OrderController extends FrameworkBundleAdminController
                         )
                     );
 
-                    $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
                 } catch (Exception $e) {
                     $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
                 }
@@ -1111,15 +1550,12 @@ class OrderController extends FrameworkBundleAdminController
      * @param int $orderId
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function updateStatusAction(int $orderId, Request $request): RedirectResponse
     {
-        $formFactory = $this->get('form.factory');
-
-        $form = $formFactory->createNamed(
+        $form = $this->formFactory->createNamed(
             'update_order_status',
             UpdateOrderStatusType::class
         );
@@ -1127,7 +1563,7 @@ class OrderController extends FrameworkBundleAdminController
 
         if (!$form->isSubmitted() || !$form->isValid()) {
             // Check if the form is submit from the action bar
-            $form = $formFactory->createNamed(
+            $form = $this->formFactory->createNamed(
                 'update_order_status_action_bar',
                 UpdateOrderStatusType::class
             );
@@ -1149,10 +1585,9 @@ class OrderController extends FrameworkBundleAdminController
      * @param int $orderId
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function updateStatusFromListAction(int $orderId, Request $request): RedirectResponse
     {
         $this->handleOrderStatusUpdate($orderId, $request->request->getInt('value'));
@@ -1161,20 +1596,16 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminOrders')",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function addPaymentAction(int $orderId, Request $request): RedirectResponse
-    {
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", message: 'You do not have permission to edit this.', redirectQueryParamsToKeep: ['orderId'], redirectRoute: 'admin_orders_view')]
+    public function addPaymentAction(
+        int $orderId,
+        Request $request,
+    ): RedirectResponse {
         $form = $this->createForm(OrderPaymentType::class, [], [
             'id_order' => $orderId,
         ]);
@@ -1185,20 +1616,20 @@ class OrderController extends FrameworkBundleAdminController
                 $data = $form->getData();
 
                 try {
-                    $this->getCommandBus()->handle(
+                    $this->dispatchCommand(
                         new AddPaymentCommand(
                             $orderId,
                             $data['date'],
                             $data['payment_method'],
                             $data['amount'],
                             $data['id_currency'],
-                            (int) $this->getContext()->employee->id,
+                            $this->getEmployeeContext()->getEmployee()->getId(),
                             $data['id_invoice'],
                             $data['transaction_id']
                         )
                     );
 
-                    $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
                 } catch (Exception $e) {
                     $this->addFlash('error', $this->getErrorMessageForException($e, $this->getPaymentErrorMessages($e)));
                 }
@@ -1215,17 +1646,16 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param int $orderId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function previewAction(int $orderId): JsonResponse
     {
         try {
             /** @var OrderPreview $orderPreview */
-            $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+            $orderPreview = $this->dispatchQuery(new GetOrderPreview($orderId));
 
             return $this->json([
                 'preview' => $this->renderView('@PrestaShop/Admin/Sell/Order/Order/preview.html.twig', [
@@ -1245,18 +1675,17 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Duplicates cart from specified order
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param int $orderId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function duplicateOrderCartAction(int $orderId)
     {
-        $cartId = $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId))->getValue();
+        $cartId = $this->dispatchCommand(new DuplicateOrderCartCommand($orderId))->getValue();
 
         return $this->json(
-            $this->getQueryBus()->handle(
+            $this->dispatchQuery(
                 (new GetCartForOrderCreation($cartId))
                     ->setHideDiscounts(true)
             )
@@ -1264,24 +1693,18 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     * @DemoRestricted(
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"}
-     * )
-     *
      * @param Request $request
      * @param int $orderId
      *
      * @return Response
      */
-    public function sendMessageAction(Request $request, int $orderId): Response
-    {
+    #[DemoRestricted(redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'])]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function sendMessageAction(
+        Request $request,
+        int $orderId,
+        RouterInterface $router
+    ): Response {
         $orderMessageForm = $this->createForm(OrderMessageType::class);
 
         $orderMessageForm->handleRequest($request);
@@ -1290,7 +1713,7 @@ class OrderController extends FrameworkBundleAdminController
             $data = $orderMessageForm->getData();
 
             try {
-                $this->getCommandBus()->handle(new AddOrderCustomerMessageCommand(
+                $this->dispatchCommand(new AddOrderCustomerMessageCommand(
                     $orderId,
                     $data['message'],
                     !$data['is_displayed_to_customer']
@@ -1298,18 +1721,19 @@ class OrderController extends FrameworkBundleAdminController
 
                 $this->addFlash(
                     'success',
-                    $this->trans('Comment successfully added.', 'Admin.Notifications.Success')
+                    $this->trans('Comment successfully added.', [], 'Admin.Notifications.Success')
                 );
-            } catch (CannotSendEmailException $exception) {
+            } catch (CannotSendEmailException) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Comment successfully added.', 'Admin.Notifications.Success')
+                    $this->trans('Comment successfully added.', [], 'Admin.Notifications.Success')
                 );
 
                 $this->addFlash(
                     'error',
                     $this->trans(
                         'An error occurred while sending an email to the customer.',
+                        [],
                         'Admin.Orderscustomers.Notification'
                     )
                 );
@@ -1321,11 +1745,11 @@ class OrderController extends FrameworkBundleAdminController
             }
         }
 
-        $routesCollection = $this->get('router')->getRouteCollection();
+        $routesCollection = $router->getRouteCollection();
 
-        if (null !== $routesCollection &&
-            !$orderMessageForm->isValid() &&
-            $viewRoute = $routesCollection->get('admin_orders_view')
+        if (
+            !$orderMessageForm->isValid()
+            && $viewRoute = $routesCollection->get('admin_orders_view')
         ) {
             $attributes = $viewRoute->getDefaults();
             $attributes['orderId'] = $orderId;
@@ -1342,17 +1766,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminOrders')",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function changeCustomerAddressAction(Request $request): RedirectResponse
     {
         $orderId = $request->query->get('orderId');
@@ -1385,9 +1803,9 @@ class OrderController extends FrameworkBundleAdminController
                 $command = new ChangeOrderInvoiceAddressCommand((int) $orderId, (int) $data['new_address_id']);
             }
 
-            $this->getCommandBus()->handle($command);
+            $this->dispatchCommand($command);
 
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -1398,18 +1816,12 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function changeCurrencyAction(int $orderId, Request $request): RedirectResponse
     {
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class);
@@ -1424,11 +1836,11 @@ class OrderController extends FrameworkBundleAdminController
         $data = $changeOrderCurrencyForm->getData();
 
         try {
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new ChangeOrderCurrencyCommand($orderId, (int) $data['new_currency_id'])
             );
 
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -1439,29 +1851,23 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', 'AdminOrders')",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param int $orderStatusId
      * @param int $orderHistoryId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function resendEmailAction(int $orderId, int $orderStatusId, int $orderHistoryId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new ResendOrderEmailCommand($orderId, $orderStatusId, $orderHistoryId)
             );
 
             $this->addFlash(
                 'success',
-                $this->trans('The message was successfully sent to the customer.', 'Admin.Orderscustomers.Notification')
+                $this->trans('The message was successfully sent to the customer.', [], 'Admin.Orderscustomers.Notification')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -1473,17 +1879,16 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      * @param int $orderDetailId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function deleteProductAction(int $orderId, int $orderDetailId): JsonResponse
     {
         try {
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new DeleteProductFromOrderCommand($orderId, $orderDetailId)
             );
 
@@ -1497,16 +1902,15 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getDiscountsAction(int $orderId): Response
     {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId));
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig', [
             'discounts' => $orderForViewing->getDiscounts()->getDiscounts(),
@@ -1515,16 +1919,15 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getPricesAction(int $orderId): JsonResponse
     {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId));
         $orderForViewingPrices = $orderForViewing->getPrices();
 
         return $this->json([
@@ -1539,17 +1942,16 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function getPaymentsAction(int $orderId): Response
     {
         try {
             /** @var OrderForViewing $orderForViewing */
-            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+            $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId));
 
             return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments_alert.html.twig', [
                 'payments' => $orderForViewing->getPayments(),
@@ -1564,24 +1966,25 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
      * @param int $orderId
      *
      * @return Response
      */
-    public function getProductsListAction(int $orderId): Response
-    {
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    public function getProductsListAction(
+        int $orderId,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
+        CurrencyDataProvider $currencyDataProvider,
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker,
+    ): Response {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
+        $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
-        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
-        $paginationNum = $this->configuration->getInt('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
+        $paginationNum = ($this->getConfiguration()->get('PS_ORDER_PRODUCTS_NB_PER_PAGE') ?? self::DEFAULT_PRODUCTS_NUMBER);
         $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
         if (!in_array($paginationNum, $paginationNumOptions)) {
             $paginationNumOptions[] = $paginationNum;
@@ -1607,28 +2010,26 @@ class OrderController extends FrameworkBundleAdminController
             'paginationNum' => $paginationNum,
             'isColumnLocationDisplayed' => $isColumnLocationDisplayed,
             'isColumnRefundedDisplayed' => $isColumnRefundedDisplayed,
-            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
+            'isAvailableQuantityDisplayed' => (bool) $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
+            'isImprovedShipmentFeatureFlagEnabled' => $featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT),
+            'orderHasShipment' => $this->orderHasShipment($orderForViewing->getId()),
         ]);
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to generate this."
-     * )
-     *
      * Generates invoice for given order
      *
      * @param int $orderId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to generate this.')]
     public function generateInvoiceAction(int $orderId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new GenerateInvoiceCommand($orderId));
+            $this->dispatchCommand(new GenerateInvoiceCommand($orderId));
 
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -1641,19 +2042,18 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Sends email with process order link to customer
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function sendProcessOrderEmailAction(Request $request): JsonResponse
     {
         try {
-            $this->getCommandBus()->handle(new SendProcessOrderEmailCommand($request->request->getInt('cartId')));
+            $this->dispatchCommand(new SendProcessOrderEmailCommand($request->request->getInt('cartId')));
 
             return $this->json([
-                'message' => $this->trans('The email was sent to your customer.', 'Admin.Orderscustomers.Notification'),
+                'message' => $this->trans('The email was sent to your customer.', [], 'Admin.Orderscustomers.Notification'),
             ]);
         } catch (Exception $e) {
             return $this->json(
@@ -1664,29 +2064,25 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_view",
-     *     redirectQueryParamsToKeep={"orderId"},
-     *     message="You do not have permission to edit this."
-     * )
-     *
      * @param int $orderId
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function cancellationAction(int $orderId, Request $request)
-    {
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
-        $formHandler = $this->get('prestashop.core.form.identifiable_object.cancellation_form_handler');
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function cancellationAction(
+        int $orderId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.cancellation_form_handler')] FormHandlerInterface $formHandler,
+    ) {
         $form = $formBuilder->getFormFor($orderId);
         try {
             $form->handleRequest($request);
             $result = $formHandler->handleFor($orderId, $form);
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('Selected products were successfully canceled.', 'Admin.Catalog.Notification'));
+                    $this->addFlash('success', $this->trans('Selected products were successfully canceled.', [], 'Admin.Catalog.Notification'));
                 } else {
                     $this->addFlashFormErrors($form);
                 }
@@ -1701,12 +2097,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function configureProductPaginationAction(Request $request): JsonResponse
     {
         $numPerPage = (int) $request->request->get('numPerPage');
@@ -1715,7 +2110,7 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->configuration->set('PS_ORDER_PRODUCTS_NB_PER_PAGE', $numPerPage);
+            $this->getConfiguration()->set('PS_ORDER_PRODUCTS_NB_PER_PAGE', $numPerPage);
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
@@ -1729,22 +2124,24 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Method for downloading customization picture
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param int $orderId
      * @param string $value
      *
      * @return BinaryFileResponse|RedirectResponse
      */
-    public function displayCustomizationImageAction(int $orderId, string $value)
-    {
-        $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function displayCustomizationImageAction(
+        int $orderId,
+        string $value,
+        LegacyContext $context
+    ) {
+        $uploadDir = $context->getUploadDirectory();
         $filePath = $uploadDir . $value;
         $filesystem = new Filesystem();
 
         try {
             if (!$filesystem->exists($filePath)) {
-                $this->addFlash('error', $this->trans('The product customization picture could not be found.', 'Admin.Notifications.Error'));
+                $this->addFlash('error', $this->trans('The product customization picture could not be found.', [], 'Admin.Notifications.Error'));
 
                 return $this->redirectToRoute('admin_orders_view', [
                     'orderId' => $orderId,
@@ -1767,26 +2164,22 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Set order internal note.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_orders_index"
-     * )
-     *
      * @param mixed $orderId
      * @param Request $request
      *
      * @return Response
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function setInternalNoteAction($orderId, Request $request)
     {
         $internalNoteForm = $this->createForm(InternalNoteType::class);
         $internalNoteForm->handleRequest($request);
 
-        if ($internalNoteForm->isSubmitted()) {
+        if ($internalNoteForm->isSubmitted() && $internalNoteForm->isValid()) {
             $data = $internalNoteForm->getData();
 
             try {
-                $this->getCommandBus()->handle(new SetInternalOrderNoteCommand(
+                $this->dispatchCommand(new SetInternalOrderNoteCommand(
                     (int) $orderId,
                     $data['note']
                 ));
@@ -1794,16 +2187,20 @@ class OrderController extends FrameworkBundleAdminController
                 if ($request->isXmlHttpRequest()) {
                     return $this->json([
                         'success' => true,
-                        'message' => $this->trans('Update successful', 'Admin.Notifications.Success'),
+                        'message' => $this->trans('Update successful', [], 'Admin.Notifications.Success'),
                     ]);
                 }
 
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
             } catch (OrderException $e) {
                 $this->addFlash(
                     'error',
                     $this->getErrorMessageForException($e, $this->getErrorMessages($e))
                 );
+            }
+        } else {
+            foreach ($internalNoteForm->getErrors(true) as $error) {
+                $this->addFlash('error', htmlentities($error->getMessage()));
             }
         }
 
@@ -1813,19 +2210,15 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))",
-     *     message="You do not have permission to perform this search."
-     * )
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to perform this search.')]
     public function searchProductsAction(Request $request): JsonResponse
     {
         try {
-            $defaultCurrencyId = (int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_CURRENCY_DEFAULT');
+            $defaultCurrencyId = (int) $this->getConfiguration()->get('PS_CURRENCY_DEFAULT');
 
             $searchPhrase = $request->query->get('search_phrase');
             $currencyId = $request->query->get('currency_id');
@@ -1838,7 +2231,7 @@ class OrderController extends FrameworkBundleAdminController
             }
 
             /** @var FoundProduct[] $foundProducts */
-            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyIsoCode, $orderId));
+            $foundProducts = $this->dispatchQuery(new SearchProducts($searchPhrase, 10, $currencyIsoCode, $orderId));
 
             return $this->json([
                 'products' => $foundProducts,
@@ -1865,13 +2258,13 @@ class OrderController extends FrameworkBundleAdminController
     private function handleOrderStatusUpdate(int $orderId, int $orderStatusId): void
     {
         try {
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new UpdateOrderStatusCommand(
                     $orderId,
                     $orderStatusId
                 )
             );
-            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
         } catch (ChangeOrderStatusException $e) {
             $this->handleChangeOrderStatusException($e);
         } catch (Exception $e) {
@@ -1898,110 +2291,138 @@ class OrderController extends FrameworkBundleAdminController
         return [
             ProductSearchEmptyPhraseException::class => $this->trans(
                 'Product search phrase must not be an empty string.',
+                [],
                 'Admin.Orderscustomers.Notification'
             ),
             CannotEditDeliveredOrderProductException::class => $this->trans(
                 'You cannot edit the cart once the order delivered.',
+                [],
                 'Admin.Orderscustomers.Notification'
             ),
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
                 $this->trans(
                     'Order #%d cannot be loaded.',
+                    ['#%d' => $e->getOrderId()->getValue()],
                     'Admin.Orderscustomers.Notification',
-                    ['#%d' => $e->getOrderId()->getValue()]
                 ) : '',
             OrderEmailSendException::class => $this->trans(
                 'An error occurred while sending the e-mail to the customer.',
+                [],
                 'Admin.Orderscustomers.Notification'
             ),
             OrderException::class => $this->trans(
                 $e->getMessage(),
+                [],
                 'Admin.Orderscustomers.Notification'
             ),
             InvoiceException::class => $this->trans(
                 $e->getMessage(),
+                [],
                 'Admin.Orderscustomers.Notification'
             ),
             InvalidAmountException::class => $this->trans(
                 'Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.',
+                [],
                 'Admin.Orderscustomers.Notification'
             ),
             InvalidCartRuleDiscountValueException::class => [
                 InvalidCartRuleDiscountValueException::INVALID_MIN_PERCENT => $this->trans(
                     'Percent value must be greater than 0.',
+                    [],
                     'Admin.Orderscustomers.Notification'
                 ),
                 InvalidCartRuleDiscountValueException::INVALID_MAX_PERCENT => $this->trans(
                     'Percent value cannot exceed 100.',
+                    [],
                     'Admin.Orderscustomers.Notification'
                 ),
                 InvalidCartRuleDiscountValueException::INVALID_MIN_AMOUNT => $this->trans(
                     'Amount value must be greater than 0.',
+                    [],
                     'Admin.Orderscustomers.Notification'
                 ),
                 InvalidCartRuleDiscountValueException::INVALID_MAX_AMOUNT => $this->trans(
                     'Discount value cannot exceed the total price of this order.',
+                    [],
                     'Admin.Orderscustomers.Notification'
                 ),
                 InvalidCartRuleDiscountValueException::INVALID_FREE_SHIPPING => $this->trans(
                     'Shipping discount value cannot exceed the total price of this order.',
+                    [],
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::DUPLICATE_FREE_SHIPPING => $this->trans(
+                    'This order already has a free shipping discount.',
+                    [],
                     'Admin.Orderscustomers.Notification'
                 ),
             ],
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
                     'Positive product quantity is required.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 InvalidCancelProductException::QUANTITY_TOO_HIGH => $this->trans(
                     'Please enter a maximum quantity of [1].',
-                    'Admin.Orderscustomers.Notification',
-                    ['[1]' => $refundableQuantity]
+                    ['[1]' => $refundableQuantity],
+                    'Admin.Orderscustomers.Notification'
                 ),
                 InvalidCancelProductException::NO_REFUNDS => $this->trans(
                     'Please select at least one product.',
+                    [],
                     'Admin.Orderscustomers.Notification'
                 ),
                 InvalidCancelProductException::INVALID_AMOUNT => $this->trans(
                     'Please enter a positive amount.',
+                    [],
                     'Admin.Orderscustomers.Notification'
                 ),
                 InvalidCancelProductException::NO_GENERATION => $this->trans(
                     'Please generate at least one credit slip or voucher.',
+                    [],
                     'Admin.Orderscustomers.Notification'
                 ),
             ],
             InvalidModuleException::class => $this->trans(
                 'You must choose a payment module to create the order.',
+                [],
                 'Admin.Orderscustomers.Notification'
             ),
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock.',
+                [],
                 'Admin.Catalog.Notification'
             ),
             NegativePaymentAmountException::class => $this->trans(
                 'Invalid value: the payment must be a positive amount.',
+                [],
                 'Admin.Notifications.Error'
             ),
             InvalidOrderStateException::class => [
                 InvalidOrderStateException::ALREADY_PAID => $this->trans(
                     'Invalid action: this order has already been paid.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 InvalidOrderStateException::DELIVERY_NOT_FOUND => $this->trans(
                     'Invalid action: this order has not been delivered.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 InvalidOrderStateException::UNEXPECTED_DELIVERY => $this->trans(
                     'Invalid action: this order has already been delivered.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 InvalidOrderStateException::NOT_PAID => $this->trans(
                     'Invalid action: this order has not been paid.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 InvalidOrderStateException::INVALID_ID => $this->trans(
                     'You must choose an order status to create the order.',
+                    [],
                     'Admin.Orderscustomers.Notification'
                 ),
             ],
@@ -2009,24 +2430,28 @@ class OrderController extends FrameworkBundleAdminController
             OrderConstraintException::class => [
                 OrderConstraintException::INVALID_CUSTOMER_MESSAGE => $this->trans(
                     'The order message given is invalid.',
+                    [],
                     'Admin.Orderscustomers.Notification'
                 ),
             ],
             InvalidProductQuantityException::class => $this->trans(
                 'Positive product quantity is required.',
+                [],
                 'Admin.Notifications.Error'
             ),
             DuplicateProductInOrderException::class => $this->trans(
                 'This product is already in your order, please edit the quantity instead.',
+                [],
                 'Admin.Notifications.Error'
             ),
             DuplicateProductInOrderInvoiceException::class => $this->trans(
                 'This product is already in the invoice [1], please edit the quantity instead.',
-                'Admin.Notifications.Error',
-                ['[1]' => $orderInvoiceNumber]
+                ['[1]' => $orderInvoiceNumber],
+                'Admin.Notifications.Error'
             ),
             CannotFindProductInOrderException::class => $this->trans(
                 'You cannot edit the price of a product that no longer exists in your catalog.',
+                [],
                 'Admin.Notifications.Error'
             ),
         ];
@@ -2037,6 +2462,7 @@ class OrderController extends FrameworkBundleAdminController
         return array_merge($this->getErrorMessages($e), [
             InvalidArgumentException::class => $this->trans(
                 'Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.',
+                [],
                 'Admin.Orderscustomers.Notification'
             ),
             OrderConstraintException::class => [
@@ -2044,10 +2470,12 @@ class OrderController extends FrameworkBundleAdminController
                     '%s %s %s',
                     $this->trans(
                         'The selected payment method is invalid.',
+                        [],
                         'Admin.Orderscustomers.Notification'
                     ),
                     $this->trans(
                         'Invalid characters:',
+                        [],
                         'Admin.Notifications.Info'
                     ),
                     AddPaymentCommand::INVALID_CHARACTERS_NAME
@@ -2072,8 +2500,8 @@ class OrderController extends FrameworkBundleAdminController
                 'error',
                 $this->trans(
                     'An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.',
-                    'Admin.Orderscustomers.Notification',
-                    ['#%d' => $orderId->getValue()]
+                    ['#%d' => $orderId->getValue()],
+                    'Admin.Orderscustomers.Notification'
                 )
             );
         }
@@ -2083,8 +2511,8 @@ class OrderController extends FrameworkBundleAdminController
                 'error',
                 $this->trans(
                     'Order #%d has already been assigned this status.',
-                    'Admin.Orderscustomers.Notification',
-                    ['#%d' => $orderId->getValue()]
+                    ['#%d' => $orderId->getValue()],
+                    'Admin.Orderscustomers.Notification'
                 )
             );
         }
@@ -2096,25 +2524,33 @@ class OrderController extends FrameworkBundleAdminController
             OrderNotFoundException::class => $exception instanceof OrderNotFoundException ?
                 $this->trans(
                     'Order #%d cannot be loaded.',
-                    'Admin.Orderscustomers.Notification',
-                    ['#%d' => $exception->getOrderId()->getValue()]
+                    ['#%d' => $exception->getOrderId()->getValue()],
+                    'Admin.Orderscustomers.Notification'
                 ) : '',
             CustomerMessageConstraintException::class => [
                 CustomerMessageConstraintException::MISSING_MESSAGE => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
-                        sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
-                    ]
+                        sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
+                    ],
+                    'Admin.Notifications.Error'
                 ),
                 CustomerMessageConstraintException::INVALID_MESSAGE => $this->trans(
                     'The %s field is not valid',
-                    'Admin.Notifications.Error',
                     [
-                        sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
-                    ]
+                        sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
+                    ],
+                    'Admin.Notifications.Error'
                 ),
             ],
         ];
+    }
+
+    private function orderHasShipment(int $orderId): bool
+    {
+        /** @var OrderShipment[] $shipments */
+        $shipments = $this->dispatchQuery(new GetOrderShipments($orderId, true));
+
+        return count($shipments) > 0;
     }
 }

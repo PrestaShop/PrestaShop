@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -32,7 +12,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use PrestaShopBundle\Api\QueryStockParamsCollection;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -253,7 +233,7 @@ class QueryParamsCollectionTest extends TestCase
         $supplierFilterMessage = 'It should provide with a SQL condition clause on supplier';
         $categoryFilterMessage = 'It should provide with a SQL condition clause on category';
         $keywordsFilterMessage =
-            'It should provide with SQL conditions clauses on product references, names and supplier names';
+            'It should provide with SQL conditions clauses on product references, names, EAN/isbn/upc/mpn codes and supplier names';
         $attributesFilterMessage = 'It should provide with SQL conditions clauses on product attributes';
         $featuresFilterMessage = 'It should provide with SQL conditions clauses on product features';
 
@@ -287,6 +267,14 @@ class QueryParamsCollectionTest extends TestCase
                     QueryParamsCollection::SQL_CLAUSE_HAVING => 'AND (' .
                         '{supplier_name} LIKE :keyword_0 OR ' .
                         '{product_reference} LIKE :keyword_0 OR ' .
+                        '{product_ean13} LIKE :keyword_0 OR ' .
+                        '{combination_ean13} LIKE :keyword_0 OR ' .
+                        '{product_isbn} LIKE :keyword_0 OR ' .
+                        '{combination_isbn} LIKE :keyword_0 OR ' .
+                        '{product_upc} LIKE :keyword_0 OR ' .
+                        '{combination_upc} LIKE :keyword_0 OR ' .
+                        '{product_mpn} LIKE :keyword_0 OR ' .
+                        '{combination_mpn} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
                         '{combination_name} LIKE :keyword_0' .
                         ')',
@@ -300,6 +288,14 @@ class QueryParamsCollectionTest extends TestCase
                     QueryParamsCollection::SQL_CLAUSE_HAVING => 'AND (' .
                         '{supplier_name} LIKE :keyword_0 OR ' .
                         '{product_reference} LIKE :keyword_0 OR ' .
+                        '{product_ean13} LIKE :keyword_0 OR ' .
+                        '{combination_ean13} LIKE :keyword_0 OR ' .
+                        '{product_isbn} LIKE :keyword_0 OR ' .
+                        '{combination_isbn} LIKE :keyword_0 OR ' .
+                        '{product_upc} LIKE :keyword_0 OR ' .
+                        '{combination_upc} LIKE :keyword_0 OR ' .
+                        '{product_mpn} LIKE :keyword_0 OR ' .
+                        '{combination_mpn} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
                         '{combination_name} LIKE :keyword_0' .
                         ')',
@@ -313,18 +309,42 @@ class QueryParamsCollectionTest extends TestCase
                     QueryParamsCollection::SQL_CLAUSE_HAVING => 'AND (' .
                         '{supplier_name} LIKE :keyword_0 OR ' .
                         '{product_reference} LIKE :keyword_0 OR ' .
+                        '{product_ean13} LIKE :keyword_0 OR ' .
+                        '{combination_ean13} LIKE :keyword_0 OR ' .
+                        '{product_isbn} LIKE :keyword_0 OR ' .
+                        '{combination_isbn} LIKE :keyword_0 OR ' .
+                        '{product_upc} LIKE :keyword_0 OR ' .
+                        '{combination_upc} LIKE :keyword_0 OR ' .
+                        '{product_mpn} LIKE :keyword_0 OR ' .
+                        '{combination_mpn} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
                         '{combination_name} LIKE :keyword_0' .
                         ')' . "\n" .
                         'AND (' .
                         '{supplier_name} LIKE :keyword_1 OR ' .
                         '{product_reference} LIKE :keyword_1 OR ' .
+                        '{product_ean13} LIKE :keyword_1 OR ' .
+                        '{combination_ean13} LIKE :keyword_1 OR ' .
+                        '{product_isbn} LIKE :keyword_1 OR ' .
+                        '{combination_isbn} LIKE :keyword_1 OR ' .
+                        '{product_upc} LIKE :keyword_1 OR ' .
+                        '{combination_upc} LIKE :keyword_1 OR ' .
+                        '{product_mpn} LIKE :keyword_1 OR ' .
+                        '{combination_mpn} LIKE :keyword_1 OR ' .
                         '{product_name} LIKE :keyword_1 OR ' .
                         '{combination_name} LIKE :keyword_1' .
                         ')' . "\n" .
                         'AND (' .
                         '{supplier_name} LIKE :keyword_2 OR ' .
                         '{product_reference} LIKE :keyword_2 OR ' .
+                        '{product_ean13} LIKE :keyword_2 OR ' .
+                        '{combination_ean13} LIKE :keyword_2 OR ' .
+                        '{product_isbn} LIKE :keyword_2 OR ' .
+                        '{combination_isbn} LIKE :keyword_2 OR ' .
+                        '{product_upc} LIKE :keyword_2 OR ' .
+                        '{combination_upc} LIKE :keyword_2 OR ' .
+                        '{product_mpn} LIKE :keyword_2 OR ' .
+                        '{combination_mpn} LIKE :keyword_2 OR ' .
                         '{product_name} LIKE :keyword_2 OR ' .
                         '{combination_name} LIKE :keyword_2' .
                         ')',
@@ -433,9 +453,9 @@ AND EXISTS(SELECT 1
     /**
      * @param array $testedParams
      *
-     * @return ParameterBag
+     * @return InputBag
      */
-    private function mockQuery(array $testedParams): ParameterBag
+    private function mockQuery(array $testedParams): InputBag
     {
         $params = [];
         $validQueryParams = [
@@ -455,8 +475,8 @@ AND EXISTS(SELECT 1
             }
         });
 
-        $queryMock = $this->createMock(ParameterBag::class);
-        $queryMock->method('all')->willReturn($params);
+        $queryMock = new InputBag();
+        $queryMock->replace($params);
 
         return $queryMock;
     }
@@ -464,12 +484,12 @@ AND EXISTS(SELECT 1
     /**
      * @param array $attributes
      *
-     * @return ParameterBag
+     * @return InputBag
      */
     private function mockAttributes(array $attributes)
     {
-        $attributesMock = $this->createMock(ParameterBag::class);
-        $attributesMock->method('all')->willReturn($attributes);
+        $attributesMock = new InputBag();
+        $attributesMock->replace($attributes);
 
         return $attributesMock;
     }

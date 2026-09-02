@@ -1,9 +1,11 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags duplicate-product
 @restore-products-before-feature
 @restore-languages-after-feature
-@duplicate-product
+@restore-taxes-after-feature
 @reset-downloads-after-feature
+@reset-img-after-feature
 @clear-cache-after-feature
+@duplicate-product
 Feature: Duplicate product from Back Office (BO).
   As an employee I want to be able to duplicate product
 
@@ -12,11 +14,14 @@ Feature: Duplicate product from Back Office (BO).
     And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
-    And carrier carrier1 named "ecoCarrier" exists
-    And carrier carrier2 named "Fast carry" exists
+    And I create carrier "carrier1" with specified properties:
+      | name | ecoCarrier |
+    And I create carrier "carrier2" with specified properties:
+      | name | Fast carry |
     And attribute group "Color" named "Color" in en language exists
     And attribute "Red" named "Red" in en language exists
     And attribute "Blue" named "Blue" in en language exists
+    And attribute "Pink" named "Pink" in en language exists
     And shop "shop1" with name "test_shop" exists
     And single shop shop1 context is loaded
 
@@ -120,9 +125,9 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | Its so smart |
       | fr-FR  | lel joke     |
     And product "productWithFieldsCopy" localized "link_rewrite" should be:
-      | locale | value              |
-      | en-US  | smart-sunglasses   |
-      | fr-FR  | lunettes-de-soleil |
+      | locale | value                       |
+      | en-US  | copy-of-smart-sunglasses    |
+      | fr-FR  | copie-de-lunettes-de-soleil |
     And product productWithFieldsCopy should have following seo options:
       | redirect_type   | 301-product           |
       | redirect_target | productForRedirection |
@@ -140,7 +145,82 @@ Feature: Duplicate product from Back Office (BO).
       | carriers                                | []                   |
     And productWithFields and productWithFieldsCopy have different values
 
-  #@todo: assert stock info
+  Scenario: I duplicate a product its stock is copied
+    When I add product "productWithStock" with following information:
+      | name[en-US] | smart sunglasses   |
+      | name[fr-FR] | lunettes de soleil |
+      | type        | standard           |
+    When I update product "productWithStock" stock with following information:
+      | delta_quantity | 51  |
+      | location       | dtc |
+    And I update product "productWithStock" stock with following information:
+      | delta_quantity | -9 |
+    Then product "productWithStock" should have following stock information:
+      | quantity | 42  |
+      | location | dtc |
+    And product "productWithStock" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puffin Mummy | -9             |
+      | Puffin Mummy | 51             |
+    And product "productWithStock" last stock movement decreased by 9
+    When I duplicate product productWithStock to a productWithStockCopy
+    Then product "productWithStockCopy" should have following stock information:
+      | quantity | 42  |
+      | location | dtc |
+    And product "productWithStockCopy" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puffin Mummy | 42             |
+
+  Scenario: I duplicate a product with combinations their stock are copied
+    When I add product "productWithCombinationAndStock" with following information:
+      | name[en-US] | Jar of sand  |
+      | type        | combinations |
+    And I generate combinations for product productWithCombinationAndStock using following attributes:
+      | Color | [Red,Blue] |
+    Then product "productWithCombinationAndStock" should have following combinations:
+      | id reference                | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | productWithCombinationsBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
+    And I update combination "productWithCombinationsRed" stock with following details:
+      | delta quantity | 100         |
+      | location       | Storage nr1 |
+    And I update combination "productWithCombinationsRed" stock with following details:
+      | delta quantity | -40 |
+    And I update combination "productWithCombinationsBlue" stock with following details:
+      | delta quantity | 50          |
+      | location       | Storage nr1 |
+    And I update combination "productWithCombinationsBlue" stock with following details:
+      | delta quantity | 20          |
+      | location       | Storage nr2 |
+    When I duplicate product productWithCombinationAndStock to a productWithCombinationAndStockCopy
+    Then product "productWithCombinationAndStockCopy" should have following combinations:
+      | id reference                    | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationsRedCopy  | Color - Red      |           | [Color:Red]  | 0               | 60       | true       |
+      | productWithCombinationsBlueCopy | Color - Blue     |           | [Color:Blue] | 0               | 70       | false      |
+    And productWithCombinationsRed and productWithCombinationsRedCopy have different values
+    And productWithCombinationsBlue and productWithCombinationsBlueCopy have different values
+    And combination "productWithCombinationsRedCopy" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 60          |
+      | location                   | Storage nr1 |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | available date             |             |
+    And combination "productWithCombinationsRedCopy" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puffin Mummy | 60             |
+    And combination "productWithCombinationsBlueCopy" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 70          |
+      | location                   | Storage nr2 |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | available date             |             |
+    And combination "productWithCombinationsBlueCopy" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puffin Mummy | 70             |
 
   Scenario: I duplicate a product all its categories are correctly copied
     Given category "home" in default language named "Home" exists
@@ -219,13 +299,22 @@ Feature: Duplicate product from Back Office (BO).
       | name[fr-FR] | lunettes de soleil |
       | type        | standard           |
     And I update product productWithCustomizations with following customization fields:
-      | reference    | type | name[en-US]               | name[fr-FR]                         | is required |
-      | customField1 | text | text on top of left lense | texte en haut de la lentille gauche | true        |
+      | reference    | type | name[en-US]                 | name[fr-FR]                         | is required |
+      | customField1 | text | text on top of left lense   | texte en haut de la lentille gauche | true        |
+      | customField2 | file | image on top of right lense | image en haut de la lentille droite | false       |
+    Then product productWithCustomizations should have following customization fields:
+      | reference    | type | name[en-US]                 | name[fr-FR]                         | is required |
+      | customField1 | text | text on top of left lense   | texte en haut de la lentille gauche | true        |
+      | customField2 | file | image on top of right lense | image en haut de la lentille droite | false       |
     When I duplicate product productWithCustomizations to a productWithCustomizationsCopy
-    And product productWithCustomizationsCopy should have identical customization fields to productWithCustomizations
-    And product productWithCustomizationsCopy should have 1 customizable text field
-    And product productWithCustomizationsCopy should have 0 customizable file fields
-    # assert new customization values and check that new ID as created
+    Then product productWithCustomizationsCopy should have 1 customizable text field
+    And product productWithCustomizationsCopy should have 1 customizable file field
+    And product productWithCustomizationsCopy should have following customization fields:
+      | new reference    | type | name[en-US]                 | name[fr-FR]                         | is required |
+      | customField1Copy | text | text on top of left lense   | texte en haut de la lentille gauche | true        |
+      | customField2Copy | file | image on top of right lense | image en haut de la lentille droite | false       |
+    And customField1 and customField1Copy have different values
+    And customField2 and customField2Copy have different values
 
   Scenario: I duplicate a product its attachments are copied
     Given I add product "productWithAttachments" with following information:
@@ -245,18 +334,29 @@ Feature: Duplicate product from Back Office (BO).
       | attachment reference | title                       | description                           | file name    | type      | size  |
       | att1                 | en-US:puffin;fr-Fr:macareux | en-US:puffin photo nr1;fr-Fr:macareux | app_icon.png | image/png | 19187 |
 
-  #todo: add specific prices & priorities
-  Scenario: I duplicate a product its specific prices are copied
+  Scenario: I duplicate a product its specific prices and priorities are copied
     Given I add product "productWithSpecificPrices" with following information:
       | name[en-US] | smart sunglasses   |
       | name[fr-FR] | lunettes de soleil |
       | type        | standard           |
+    And default specific price priorities are set to following:
+      | priorities  |
+      | id_group    |
+      | id_currency |
+      | id_country  |
+      | id_shop     |
     And I add a specific price price1 to product productWithSpecificPrices with following details:
       | fixed price     | 0.00   |
       | reduction type  | amount |
       | reduction value | 5.00   |
       | includes tax    | true   |
       | from quantity   | 1      |
+    And I set following custom specific price priorities for product productWithSpecificPrices:
+      | priorities  |
+      | id_country  |
+      | id_currency |
+      | id_group    |
+      | id_shop     |
     When I duplicate product productWithSpecificPrices to a productWithSpecificPricesCopy
     And product "productWithSpecificPricesCopy" should have 1 specific prices
     Then product "productWithSpecificPricesCopy" should have following list of specific prices in "en" language:
@@ -293,6 +393,18 @@ Feature: Duplicate product from Back Office (BO).
       | customer              |                               |
       | product               | productWithSpecificPricesCopy |
     And price1 and price1Copy have different values
+    And product productWithSpecificPricesCopy should have following custom specific price priorities:
+      | priorities  |
+      | id_country  |
+      | id_currency |
+      | id_group    |
+      | id_shop     |
+    And following specific price priorities should be used for product productWithSpecificPricesCopy:
+      | priorities  |
+      | id_country  |
+      | id_currency |
+      | id_group    |
+      | id_shop     |
 
   Scenario: I duplicate a product its suppliers are copied
     Given I add product "productWithSuppliers" with following information:
@@ -308,7 +420,6 @@ Feature: Duplicate product from Back Office (BO).
       | description[en-US]      | just a supplier    |
       | meta title[en-US]       | my supplier nr one |
       | meta description[en-US] |                    |
-      | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
     When I associate suppliers to product "productWithSuppliers"
       | supplier  | product_supplier  |
@@ -456,5 +567,170 @@ Feature: Duplicate product from Back Office (BO).
       | access days          | 0               |
       | download times limit | 0               |
       | expiration date      |                 |
+    And file file1Copy for product virtualProductCopy should exist in system
     And virtualProduct and virtualProductCopy have different values
     And file1 and file1Copy have different values
+    And file file1 for product virtualProduct should have same file as app_icon.png
+    And file file1Copy for product virtualProductCopy should have same file as app_icon.png
+
+  Scenario: I duplicate product features
+    Given I create product feature "element" with specified properties:
+      | name[en-US]      | Nature Element |
+      | associated shops | shop1          |
+    And I create feature value "fire" for feature "element" with following properties:
+      | value[en-US]     | Fire  |
+      | value[fr-FR]     | Feu   |
+      | associated shops | shop1 |
+    And I create product feature "emotion" with specified properties:
+      | name[en-US]      | Emotion |
+      | associated shops | shop1   |
+    And I create feature value "anger" for feature "emotion" with following properties:
+      | value[en-US] | Anger  |
+      | value[fr-FR] | Colère |
+    # Now create the product with both regular features and custom ones
+    Given I add product "darkMagicBook" with following information:
+      | name[en-US] | Dark Magic Book |
+      | type        | standard        |
+    And I set to product "darkMagicBook" the following feature values:
+      | feature | feature_value | custom_values                 | custom_reference |
+      | element | fire          |                               |                  |
+      | emotion | anger         |                               |                  |
+      | element |               | en-US:Darkness;fr-FR:Ténèbres | darkness         |
+    Then product "darkMagicBook" should have following feature values:
+      | feature | feature_value | custom_values                 |
+      | element | fire          |                               |
+      | emotion | anger         |                               |
+      | element | darkness      | en-US:Darkness;fr-FR:Ténèbres |
+    When I duplicate product darkMagicBook to a darkMagicBookCopy
+    Then product "darkMagicBookCopy" should have following feature values:
+      | feature | feature_value | new_feature_value | custom_values                 |
+      | element | fire          |                   |                               |
+      | emotion | anger         |                   |                               |
+      | element |               | darknessCopy      | en-US:Darkness;fr-FR:Ténèbres |
+    And darkness and darknessCopy have different values
+
+  Scenario: I duplicate a product its combination feature values are copied
+    Given I create product feature "combiElement" with specified properties:
+      | name[en-US]      | Combi Element |
+      | associated shops | shop1         |
+    And I create feature value "water" for feature "combiElement" with following properties:
+      | value[en-US]     | Water |
+      | value[fr-FR]     | Eau   |
+      | associated shops | shop1 |
+    And I add product "magicShirt" with following information:
+      | name[en-US] | Magic shirt  |
+      | type        | combinations |
+    And I generate combinations for product magicShirt using following attributes:
+      | Color | [Red,Blue] |
+    And product "magicShirt" should have following combinations:
+      | id reference   | combination name | reference | attributes   | impact on price | quantity | is default |
+      | magicShirtRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | magicShirtBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
+    # Associate a predefined and a custom feature value to one combination only
+    When I set to combination "magicShirtRed" the following feature values:
+      | feature      | feature_value | custom_values           | custom_reference |
+      | combiElement | water         |                         |                  |
+      | combiElement |               | en-US:Magma;fr-FR:Magma | magma            |
+    Then combination "magicShirtRed" should have following feature values:
+      | feature      | feature_value | custom_values           |
+      | combiElement | water         |                         |
+      | combiElement | magma         | en-US:Magma;fr-FR:Magma |
+    When I duplicate product magicShirt to a magicShirtCopy
+    Then product "magicShirtCopy" should have following combinations:
+      | id reference       | combination name | reference | attributes   | impact on price | quantity | is default |
+      | magicShirtCopyRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | magicShirtCopyBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
+    # The predefined value is shared, the custom one is duplicated into a brand new value
+    And combination "magicShirtCopyRed" should have following feature values:
+      | feature      | feature_value | new_feature_value | custom_values           |
+      | combiElement | water         |                   |                         |
+      | combiElement |               | magmaCopy         | en-US:Magma;fr-FR:Magma |
+    And magma and magmaCopy have different values
+    # The combination without feature values stays empty
+    And combination "magicShirtCopyBlue" should have no feature values
+
+  Scenario: I duplicate a product with images they are correctly duplicated and associated
+    When I add product "productWithCombinationAndImages" with following information:
+      | name[en-US] | Jar of sand  |
+      | type        | combinations |
+    And I add new image "image1" named "app_icon.png" to product "productWithCombinationAndImages"
+    And I add new image "image2" named "logo.jpg" to product "productWithCombinationAndImages"
+    And I add new image "image3" named "app_icon.png" to product "productWithCombinationAndImages"
+    And I add new image "image4" named "logo.jpg" to product "productWithCombinationAndImages"
+    And product "productWithCombinationAndImages" should have following images:
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |               |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image3          | false    |               |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image4          | false    |               |               | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
+    And images "[image1, image2, image3, image4]" should have following types generated:
+      | name           | width | height |
+      | cart_default   | 125   | 125    |
+      | home_default   | 250   | 250    |
+      | large_default  | 800   | 800    |
+      | medium_default | 452   | 452    |
+      | small_default  | 98    | 98     |
+    And image "image1" should have same file as "app_icon.png"
+    And image "image2" should have same file as "logo.jpg"
+    And image "image3" should have same file as "app_icon.png"
+    And image "image4" should have same file as "logo.jpg"
+    When I generate combinations for product productWithCombinationAndImages using following attributes:
+      | Color | [Red,Blue,Pink] |
+    Then product "productWithCombinationAndImages" should have following combinations:
+      | id reference                        | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationAndImagesRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | productWithCombinationAndImagesBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
+      | productWithCombinationAndImagesPink | Color - Pink     |           | [Color:Pink] | 0               | 0        | false      |
+    And combination "productWithCombinationAndImagesRed" should have no images
+    And combination "productWithCombinationAndImagesRed" should have the following cover "http://myshop.com/img/p/{image1}-cart_default.jpg"
+    When I associate "[image2]" to combination "productWithCombinationAndImagesBlue"
+    Then combination "productWithCombinationAndImagesBlue" should have following images "[image2]"
+    And combination "productWithCombinationAndImagesBlue" should have the following cover "http://myshop.com/img/p/{image2}-cart_default.jpg"
+    When I associate "[image3, image4]" to combination "productWithCombinationAndImagesPink"
+    Then combination "productWithCombinationAndImagesPink" should have following images "[image3, image4]"
+    And combination "productWithCombinationAndImagesPink" should have the following cover "http://myshop.com/img/p/{image3}-cart_default.jpg"
+    And product "productWithCombinationAndImages" should have following combinations:
+      | id reference                        | combination name | reference | attributes   | impact on price | quantity | is default | image url                                          |
+      | productWithCombinationAndImagesRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | productWithCombinationAndImagesBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | productWithCombinationAndImagesPink | Color - Pink     |           | [Color:Pink] | 0               | 0        | false      | http://myshop.com/img/p/{image3}-small_default.jpg |
+    # Now duplicate the product check the images are correctly duplicated and combination associations as well
+    When I duplicate product productWithCombinationAndImages to a productWithCombinationAndImagesCopy
+    And product "productWithCombinationAndImagesCopy" should have following images:
+      | new image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                                | thumbnail url                                          |
+      | image1Copy          | true     |               |               | 1        | http://myshop.com/img/p/{image1Copy}.jpg | http://myshop.com/img/p/{image1Copy}-small_default.jpg |
+      | image2Copy          | false    |               |               | 2        | http://myshop.com/img/p/{image2Copy}.jpg | http://myshop.com/img/p/{image2Copy}-small_default.jpg |
+      | image3Copy          | false    |               |               | 3        | http://myshop.com/img/p/{image3Copy}.jpg | http://myshop.com/img/p/{image3Copy}-small_default.jpg |
+      | image4Copy          | false    |               |               | 4        | http://myshop.com/img/p/{image4Copy}.jpg | http://myshop.com/img/p/{image4Copy}-small_default.jpg |
+    And image1 and image1Copy have different values
+    And image2 and image2Copy have different values
+    And image3 and image3Copy have different values
+    And image4 and image4Copy have different values
+    And image image1Copy should have same file as "app_icon.png"
+    And image image2Copy should have same file as "logo.jpg"
+    And image image3Copy should have same file as "app_icon.png"
+    And image image4Copy should have same file as "logo.jpg"
+    And images "[image1Copy, image2Copy, image3Copy, image4Copy]" should have following types generated:
+      | name           | width | height |
+      | cart_default   | 125   | 125    |
+      | home_default   | 250   | 250    |
+      | large_default  | 800   | 800    |
+      | medium_default | 452   | 452    |
+      | small_default  | 98    | 98     |
+    # Check combinations associations
+    And product "productWithCombinationAndImagesCopy" should have following combinations:
+      | id reference                            | combination name | reference | attributes   | impact on price | quantity | is default |
+      | productWithCombinationAndImagesRedCopy  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | productWithCombinationAndImagesBlueCopy | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
+      | productWithCombinationAndImagesPinkCopy | Color - Pink     |           | [Color:Pink] | 0               | 0        | false      |
+    And combination "productWithCombinationAndImagesRedCopy" should have no images
+    And combination "productWithCombinationAndImagesRedCopy" should have the following cover "http://myshop.com/img/p/{image1Copy}-cart_default.jpg"
+    And combination "productWithCombinationAndImagesBlueCopy" should have following images "[image2Copy]"
+    And combination "productWithCombinationAndImagesBlueCopy" should have the following cover "http://myshop.com/img/p/{image2Copy}-cart_default.jpg"
+    Then combination "productWithCombinationAndImagesPinkCopy" should have following images "[image3Copy, image4Copy]"
+    And combination "productWithCombinationAndImagesPinkCopy" should have the following cover "http://myshop.com/img/p/{image3Copy}-cart_default.jpg"
+    And product "productWithCombinationAndImagesCopy" should have following combinations:
+      | combination id                          | combination name | reference | attributes   | impact on price | quantity | is default | image url                                              |
+      | productWithCombinationAndImagesRedCopy  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       | http://myshop.com/img/p/{image1Copy}-small_default.jpg |
+      | productWithCombinationAndImagesBlueCopy | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      | http://myshop.com/img/p/{image2Copy}-small_default.jpg |
+      | productWithCombinationAndImagesPinkCopy | Color - Pink     |           | [Color:Pink] | 0               | 0        | false      | http://myshop.com/img/p/{image3Copy}-small_default.jpg |

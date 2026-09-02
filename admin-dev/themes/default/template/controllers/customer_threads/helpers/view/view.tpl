@@ -1,26 +1,6 @@
 {**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
 
 {extends file="helpers/view/view.tpl"}
@@ -86,14 +66,14 @@
 			</div>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" data-role="thread-messages">
 		{foreach $messages as $message}
 			{include file="./message.tpl" message=$message initial=false}
 		{/foreach}
 	</div>
 </div>
 <div class="panel">
-	<h3 id="reply-form-title">{l s="Your answer to" d='Admin.Orderscustomers.Feature'} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
+	<h3 id="reply-form-title">{l s="Your answer to" d='Admin.Orderscustomers.Feature'} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email|escape:'html':'UTF-8'}{/if}</h3>
 	<form action="{$link->getAdminLink('AdminCustomerThreads', true, [], ['id_customer_thread' => $thread->id|intval, 'viewcustomer_thread' => 1])|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 	<div class="row">
 		<div class="media">
@@ -114,7 +94,7 @@
 		-->
 		<button class="btn btn-default pull-right" name="submitReply"><i class="process-icon-mail-reply"></i> {l s="Send"}</button>
 		<input type="hidden" name="id_customer_thread" value="{$thread->id|intval}" />
-		<input type="hidden" name="msg_email" value="{$thread->email}" />
+		<input type="hidden" name="msg_email" value="{$thread->email|escape:'html':'UTF-8'}" />
 	</div>
 	</form>
 </div>
@@ -136,8 +116,8 @@
 {/if}
 <script type="text/javascript">
 	var timer;
-		$(document).ready(function(){
-			$('select[name=id_employee_forward]').change(function(){
+		$(function(){
+			$('select[name=id_employee_forward]').on('change', function(){
 				if ($(this).val() >= 0)
 					$('#message_forward').show(400);
 				else
@@ -147,7 +127,7 @@
 				else
 					$('#message_forward_email').hide(200);
 			});
-			$('textarea[name=message_forward]').click(function(){
+			$('textarea[name=message_forward]').on('click', function(){
 				if($(this).val() == '{l s='You can add a comment here.'}')
 				{
 					$(this).val('');

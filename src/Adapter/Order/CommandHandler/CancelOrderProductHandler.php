@@ -1,51 +1,34 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
 use Configuration;
-use Customization;
 use Hook;
 use Order;
 use OrderDetail;
 use OrderHistory;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\CancellationActionType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class CancelOrderProductHandler extends AbstractOrderCommandHandler implements CancelOrderProductHandlerInterface
 {
     /**
@@ -90,10 +73,9 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
         $this->checkOrderState($order);
 
         $cartId = Cart::getCartIdByOrderId($command->getOrderId()->getValue());
-        $customizationQuantities = Customization::countQuantityByCart($cartId);
         $orderDetails = $this->getOrderDetails($command);
 
-        $this->assertCancelableProductQuantities($orderDetails, $customizationQuantities);
+        $this->assertCancelableProductQuantities($orderDetails);
 
         $this->cancelProducts($order, $orderDetails);
 
@@ -105,23 +87,17 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
     private function getOrderDetails(CancelOrderProductCommand $command)
     {
         $productList = [];
-        $customizedCancelQuantity = [];
         $productCancelQuantity = [];
 
         foreach ($command->getCancelledProducts() as $orderDetailId => $cancelQuantity) {
             $orderDetail = new OrderDetail($orderDetailId);
             $productList[] = $orderDetail;
-            if ((int) $orderDetail->id_customization > 0) {
-                $customizedCancelQuantity[$orderDetail->id_customization] = $cancelQuantity;
-            } else {
-                $productCancelQuantity[$orderDetail->id_order_detail] = $cancelQuantity;
-            }
+            $productCancelQuantity[$orderDetail->id_order_detail] = $cancelQuantity;
         }
 
         return [
             'productsOrderDetails' => $productList,
             'productCancelQuantity' => $productCancelQuantity,
-            'customizedCancelQuantity' => $customizedCancelQuantity,
         ];
     }
 
@@ -131,7 +107,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
             throw new InvalidCancelProductException(InvalidCancelProductException::NO_REFUNDS);
         }
 
-        foreach ($command->getCancelledProducts() as $orderDetailId => $quantity) {
+        foreach ($command->getCancelledProducts() as $quantity) {
             if ((int) $quantity <= 0) {
                 throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_QUANTITY);
             }
@@ -176,46 +152,16 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
      *
      * @throws InvalidCancelProductException
      */
-    private function assertCancelableProductQuantities(array $orderDetails, array $customizationQuantities)
+    private function assertCancelableProductQuantities(array $orderDetails)
     {
         if (empty($orderDetails['productsOrderDetails'])) {
             throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_QUANTITY, 0);
         }
-        $customizationList = [];
         foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
             // check non customized product quantities
-            if ((int) $orderDetail->id_customization <= 0) {
-                $customizationQuantity = 0;
-                $cancelQuantity = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
-                if (array_key_exists($orderDetail->product_id, $customizationQuantities) && array_key_exists($orderDetail->product_attribute_id, $customizationQuantities[$orderDetail->product_id])) {
-                    $customizationQuantity = (int) $customizationQuantities[$orderDetail->product_id][$orderDetail->product_attribute_id];
-                }
-                $cancellableQuantity = $orderDetail->product_quantity - $customizationQuantity - $orderDetail->product_quantity_refunded - $orderDetail->product_quantity_return;
-                if ($cancellableQuantity < $cancelQuantity) {
-                    throw new InvalidCancelProductException(InvalidCancelProductException::QUANTITY_TOO_HIGH, $cancellableQuantity);
-                }
-                continue;
-            }
-            // get list of customizations
-            $customizationList[$orderDetail->id_customization] = $orderDetail->id_order_detail;
-        }
-
-        if (empty($customizationList)) {
-            return;
-        }
-
-        $customization_quantities = Customization::retrieveQuantitiesFromIds(array_keys($customizationList));
-
-        // check customized products quantities
-        foreach ($customizationList as $id_customization => $id_order_detail) {
-            $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$id_customization]);
-            $customization_quantity = $customization_quantities[$id_customization];
-            if (!$qtyCancelProduct) {
-                throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_QUANTITY);
-            }
-            $cancellableQuantity = $customization_quantity['quantity'] - ($customization_quantity['quantity_refunded'] + $customization_quantity['quantity_returned']);
-
-            if ($qtyCancelProduct > $cancellableQuantity) {
+            $cancelQuantity = (int) $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
+            $cancellableQuantity = $orderDetail->product_quantity - $orderDetail->product_quantity_refunded - $orderDetail->product_quantity_return;
+            if ($cancellableQuantity < $cancelQuantity) {
                 throw new InvalidCancelProductException(InvalidCancelProductException::QUANTITY_TOO_HIGH, $cancellableQuantity);
             }
         }
@@ -225,22 +171,19 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
      * @param Order $order
      * @param array $orderDetails
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      * @throws \PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException
      */
     private function cancelProducts(Order $order, array $orderDetails)
     {
         if (!empty($orderDetails['productsOrderDetails'])) {
             foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
-                if ((int) $orderDetail->id_customization > 0) {
-                    $qty_cancel_product = abs($orderDetails['customizedCancelQuantity'][$orderDetail->id_customization]);
-                } else {
-                    $qty_cancel_product = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
-                }
+                $qty_cancel_product = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
                 $newQuantity = max((int) $orderDetail->product_quantity - (int) $qty_cancel_product, 0);
                 $orderInvoice = $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null;
                 $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, $orderInvoice);
+                // Hook called only for the shop concerned
                 Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail, 'cancel_quantity' => $qty_cancel_product, 'action' => CancellationActionType::CANCEL_PRODUCT], null, false, true, false, $order->id_shop);
             }
         }

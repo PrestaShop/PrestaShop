@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 declare(strict_types=1);
 
@@ -47,8 +27,6 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class TranslationCatalogueExporter
 {
-    private const EXPORT_ZIP_FILENAME = '%s/translations_export_%s.zip';
-
     /**
      * @var TranslationCatalogueBuilder
      */
@@ -117,22 +95,25 @@ class TranslationCatalogueExporter
     {
         $this->validateParameters($selections);
 
+        // Create directory, where we will do our exports, if it doesn't exist
+        // This is var/cache/<env>/export
         if (!$this->filesystem->exists($this->exportDir)) {
             $this->filesystem->mkdir($this->exportDir);
         }
 
-        $zipFilename = sprintf(self::EXPORT_ZIP_FILENAME, $this->exportDir, $locale);
-        $path = dirname($zipFilename);
+        // Prepare unique export identifier so we don't interfere with other exports
+        $exportIdentifier = uniqid();
 
-        // Clean export folder
-        $this->filesystem->remove($path);
-        $this->filesystem->mkdir($path);
-        $dumpOptions = [
-            'path' => $path,
-            'default_locale' => $locale,
-            'root_dir' => _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR,
-        ];
+        // Create our working folder, this is a temporary folder inside var/cache/<env>/export
+        $workingFolder = $this->exportDir . '/' . $exportIdentifier;
+        if (!$this->filesystem->exists($workingFolder)) {
+            $this->filesystem->mkdir($workingFolder);
+        }
 
+        // Prepare the name of the final zip file we will return
+        $zipFilename = sprintf('%s/translations_export_%s.zip', $this->exportDir, $locale);
+
+        // Dump all XLF files into var/cache/<env>/export/<exportIdentifier>/<locale>
         foreach ($selections as $selection) {
             $providerDefinition = $this->providerDefinitionFactory->build($selection['type'], $selection['selected']);
 
@@ -142,14 +123,26 @@ class TranslationCatalogueExporter
             // Transform into messageCatalogue object
             $messageCatalogue = $this->transformCatalogueMapToMessageCatalogue($catalogue, $locale);
 
-            // Dump catalogue into XLF files
-            $this->dumper->dump($messageCatalogue, $dumpOptions);
+            // Dump catalogue into XLF files into our temporary folder
+            $this->dumper->dump(
+                $messageCatalogue,
+                [
+                    'path' => $workingFolder,
+                    'default_locale' => $locale,
+                    'root_dir' => _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR,
+                    'split_files' => false,
+                ]
+            );
         }
 
-        // Rename files to add locale in it
-        $this->renameCatalogues($locale, $path);
+        // Now, we append the locale to the names of the catalogues
+        $this->renameCatalogues($locale, $workingFolder);
 
-        $this->zipManager->createArchive($zipFilename, $path);
+        // Zip them
+        $this->zipManager->createArchive($zipFilename, $workingFolder);
+
+        // And clean after ourselves
+        $this->filesystem->remove($workingFolder);
 
         return $zipFilename;
     }
@@ -170,7 +163,7 @@ class TranslationCatalogueExporter
 
             if (
                 null === $selection['selected']
-                && (in_array($selection['type'], [ProviderDefinitionInterface::TYPE_MODULES, ProviderDefinitionInterface::TYPE_THEMES], true))
+                && in_array($selection['type'], [ProviderDefinitionInterface::TYPE_MODULES, ProviderDefinitionInterface::TYPE_THEMES], true)
             ) {
                 throw new Exception(sprintf('Selected value cannot be null for type %s.', $selection['type']));
             }
@@ -191,29 +184,21 @@ class TranslationCatalogueExporter
         return $messageCatalogue;
     }
 
+    /**
+     * After export, our files are named with their domain only, FullDomainName.xlf for example.
+     * This method will append the locale name to the end of the file, so the result is something like
+     * FullDomainName.ab-AB.xlf
+     *
+     * @param string $locale Locale to append to filenames
+     * @param string $path Folder to work in
+     */
     protected function renameCatalogues(string $locale, string $path): void
     {
         $finder = Finder::create();
-
         foreach ($finder->in($path . DIRECTORY_SEPARATOR . $locale)->files() as $file) {
-            $filenameParts = explode('.', $file->getFilename());
-            unset($filenameParts[count($filenameParts) - 1]); // Remove the extension
-            /*
-             * The destination file name will have the format
-             * DIRECTORY/ab-AB/FullDomainName.ab-AB.xlf
-             */
-            $destinationFilename = sprintf(
-                '%s' . DIRECTORY_SEPARATOR . '%s' . DIRECTORY_SEPARATOR . '%s.%s.%s',
-                $path,
-                $locale,
-                implode('.', $filenameParts),
-                $locale,
-                $file->getExtension()
-            );
-            if ($this->filesystem->exists($destinationFilename)) {
-                $this->filesystem->remove($destinationFilename);
-            }
-            $this->filesystem->rename($file->getPathname(), $destinationFilename);
+            $currentName = $file->getPathname();
+            $newName = preg_replace('/\.xlf$/', '.' . $locale . '.xlf', $currentName);
+            $this->filesystem->rename($currentName, $newName);
         }
     }
 }

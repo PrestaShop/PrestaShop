@@ -1,0 +1,18 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{%- block minimum_amount_widget -%}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' minimum-amount-widget row')|trim}) %}
+  <div {{ block('widget_attributes') }}>
+    {% for child in form.children %}
+      {% with {row_attr: child.vars.row_attr|merge({class: (child.vars.row_attr.class|default('') ~ ' col col-md-3')|trim})} %}
+        <div {{ block('row_attributes') }}>
+      {% endwith %}
+      {{ form_widget(child) }}
+      {{ form_errors(child) }}
+      </div>
+    {% endfor -%}
+  </div>
+{%- endblock -%}

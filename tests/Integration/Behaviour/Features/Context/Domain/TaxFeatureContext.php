@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
@@ -43,7 +23,6 @@ use Tax;
 use TaxCalculator;
 use TaxRule;
 use TaxRulesGroup;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -51,18 +30,6 @@ use Tests\Resources\Resetter\TaxesResetter;
 
 class TaxFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default language id from configuration
-     */
-    private $defaultLangId;
-
-    public function __construct()
-    {
-        $this->defaultLangId = CommonFeatureContext::getContainer()
-            ->get('prestashop.adapter.legacy.configuration')
-            ->get('PS_LANG_DEFAULT');
-    }
-
     /**
      * @BeforeFeature @restore-taxes-before-feature
      */
@@ -99,10 +66,10 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $taxId = (int) $tax->id;
         $command = new EditTaxCommand($taxId);
         if (isset($data['name'])) {
-            $command->setLocalizedNames([$this->defaultLangId => $data['name']]);
+            $command->setLocalizedNames([$this->getDefaultLangId() => $data['name']]);
         }
         if (isset($data['rate'])) {
-            $command->setRate($data['rate']);
+            $command->setRate((float) $data['rate']);
         }
 
         if (isset($data['is_enabled'])) {
@@ -211,7 +178,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         /** @var Tax $tax */
         $tax = SharedStorage::getStorage()->get($taxReference);
 
-        if ($tax->name[$this->defaultLangId] !== $name) {
+        if ($tax->name[$this->getDefaultLangId()] !== $name) {
             throw new RuntimeException(sprintf('Tax "%s" has "%s" name, but "%s" was expected.', $taxReference, $tax->name, $name));
         }
     }
@@ -243,6 +210,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then /^tax "(.*)" should be (enabled|disabled)?$/
+     *
      * @Given /^tax "(.*)" is (enabled|disabled)?$/
      */
     public function assertTaxStatus($taxReference, $status)
@@ -264,7 +232,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     private function createTaxUsingCommand(string $taxReference, array $data): void
     {
         $command = new AddTaxCommand(
-            [$this->defaultLangId => $data['name']],
+            [$this->getDefaultLangId() => $data['name']],
             $data['rate'],
             PrimitiveUtils::castStringBooleanIntoBoolean($data['is_enabled'])
         );

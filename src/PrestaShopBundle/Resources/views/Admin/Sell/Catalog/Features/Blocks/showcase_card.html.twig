@@ -1,0 +1,28 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% if not isShowcaseCardClosed %}
+  <div id="featuresShowcaseCard" class="helper-card card">
+    <div class="helper-card__left helper-card__feature shape-one">
+      <img src="{{ asset('themes/new-theme/public/helper-card/features@3x.svg') }}" class="img-fluid" width="320" height="auto">
+    </div>
+    <div class="helper-card__right">
+      <h2>{{ 'Set features'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+      <p>{{ 'Features are your product\'s intrinsic characteristics. If you sell tee-shirts, their cotton composition is considered a feature because it remains the same, unlike colors or sizes.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+      <a class="btn btn-outline-secondary"
+         href="{{ documentation_link('feature') }}"
+         target="_blank"
+      >
+        {{ 'Learn more'|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+    <i class="showcase-card__close material-icons js-remove-helper-block"
+       data-card-name="{{ showcaseCardName }}"
+       data-close-url="{{ path('admin_close_showcase_card') }}"
+    >
+      close
+    </i>
+  </div>
+{% endif %}

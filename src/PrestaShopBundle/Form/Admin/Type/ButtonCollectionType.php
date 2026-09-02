@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -77,6 +57,7 @@ class ButtonCollectionType extends AbstractType
         $view->vars['justify_content'] = $options['justify_content'];
         $view->vars['inline_buttons_limit'] = $options['inline_buttons_limit'];
         $view->vars['use_inline_labels'] = $options['use_inline_labels'];
+        $view->vars['use_button_groups'] = $options['use_button_groups'];
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -88,6 +69,8 @@ class ButtonCollectionType extends AbstractType
                 'justify_content' => 'space-between',
                 'inline_buttons_limit' => null,
                 'use_inline_labels' => true,
+                // Use bootstrap buttons groups (buttons stick to each other as a group)
+                'use_button_groups' => false,
             ])
             ->setAllowedTypes('buttons', 'array')
             ->setAllowedTypes('inline_buttons_limit', ['int', 'null'])

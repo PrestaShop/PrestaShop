@@ -1,0 +1,16 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% if ps.isRtlLanguage %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme_rtl.css') }}" media="all">
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/rtl.css') }}" media="all">
+{% else %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme.css') }}" media="all">
+{% endif %}
+<link rel="stylesheet" href="{{ asset('jquery/plugins/fancybox/jquery.fancybox.css', 'front_js') }}" media="all">
+<link rel="stylesheet" href="{{ asset('jquery/plugins/chosen/jquery.chosen.css', 'front_js') }}" media="all">
+<link rel="stylesheet" href="{{ asset('themes/new-theme/public/create_product_default_theme.css') }}" media="all">
+{% if lightDisplay %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/light_theme.css') }}" media="all">
+{% endif %}

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -44,26 +24,12 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
     private $bus;
 
     /**
-     * @var int
-     */
-    private $defaultShopId;
-
-    /**
-     * @var int|null
-     */
-    private $contextShopId;
-
-    /**
      * @param CommandBusInterface $bus
      */
     public function __construct(
-        CommandBusInterface $bus,
-        int $defaultShopId,
-        ?int $contextShopId
+        CommandBusInterface $bus
     ) {
         $this->bus = $bus;
-        $this->defaultShopId = $defaultShopId;
-        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -72,6 +38,7 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         $uploadedFile = $data['file'] ?? null;
+
         if (!($uploadedFile instanceof UploadedFile)) {
             throw new FileUploadException('No file was uploaded', UPLOAD_ERR_NO_FILE);
         }
@@ -79,7 +46,7 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
         $command = new AddProductImageCommand(
             (int) ($data['product_id'] ?? 0),
             $uploadedFile->getPathname(),
-            $this->getShopConstraint()
+            !empty($data['shop_id']) ? ShopConstraint::shop((int) $data['shop_id']) : ShopConstraint::allShops()
         );
 
         /** @var ImageId $imageId */
@@ -93,7 +60,13 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $command = new UpdateProductImageCommand((int) $id, $this->getShopConstraint());
+        if (!empty($data['shop_id'])) {
+            $shopConstraint = ShopConstraint::shop((int) $data['shop_id']);
+        } else {
+            $shopConstraint = ShopConstraint::allShops();
+        }
+
+        $command = new UpdateProductImageCommand((int) $id, $shopConstraint);
 
         if (isset($data['is_cover'])) {
             $command->setIsCover($data['is_cover']);
@@ -113,10 +86,5 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
         }
 
         $this->bus->handle($command);
-    }
-
-    private function getShopConstraint(): ShopConstraint
-    {
-        return null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
     }
 }

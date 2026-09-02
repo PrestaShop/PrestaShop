@@ -1,33 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Translation\Provider;
 
 use InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\DomainNormalizer;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
@@ -129,7 +109,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function setDomain($domain)
     {
-        throw new InvalidArgumentException(__CLASS__ . ' does not allow calls to setDomain()');
+        throw new InvalidArgumentException(self::class . ' does not allow calls to setDomain()');
     }
 
     /**
@@ -157,7 +137,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
                 ->setLocale($this->locale)
                 ->getXliffCatalogue()
             ;
-        } catch (FileNotFoundException $exception) {
+        } catch (TranslationFilesNotFoundException) {
             $translationCatalogue = $this->buildTranslationCatalogueFromLegacyFiles();
         }
 
@@ -200,14 +180,15 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
                 $this->getDefaultResourceDirectory(),
                 $this->locale
             );
-        } catch (UnsupportedLocaleException $exception) {
+        } catch (UnsupportedLocaleException) {
             // this happens when there no translation file is found for the desired locale
             return $catalogueFromPhpAndSmartyFiles;
         }
 
         foreach ($catalogueFromPhpAndSmartyFiles->all() as $currentDomain => $items) {
             foreach (array_keys($items) as $translationKey) {
-                $legacyKey = md5($translationKey);
+                // Same as in Translate::getModuleTranslation()
+                $legacyKey = md5(preg_replace("/\\\*'/", "\'", $translationKey));
 
                 if ($catalogueFromLegacyTranslationFiles->has($legacyKey, $currentDomain)) {
                     $legacyFilesCatalogue->set(
@@ -289,7 +270,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
                 ->setModuleName($this->moduleName)
                 ->setLocale($this->locale)
                 ->getDefaultCatalogue();
-        } catch (FileNotFoundException $exception) {
+        } catch (TranslationFilesNotFoundException) {
             // there are no xliff files for this module in the core
         }
 
@@ -297,7 +278,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
             // analyze files and extract wordings
             $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $this->locale);
             $defaultCatalogue = $this->filterDomains($additionalDefaultCatalogue);
-        } catch (UnsupportedLocaleException $exception) {
+        } catch (UnsupportedLocaleException) {
             // Do nothing as support of legacy files is deprecated
         }
 

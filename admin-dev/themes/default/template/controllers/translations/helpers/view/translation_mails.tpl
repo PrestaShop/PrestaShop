@@ -1,26 +1,6 @@
 {**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
 
 {extends file="helpers/view/view.tpl"}
@@ -55,8 +35,8 @@
 				<input type="hidden" name="type" value="{$type}" />
 				<input type="hidden" name="selected-theme" value="{$theme}" />
 				<script type="text/javascript">
-					$(document).ready(function(){
-						$('a.useSpecialSyntax').click(function(){
+					$(function(){
+						$('a.useSpecialSyntax').on('click', function(){
 							var syntax = $(this).find('img').attr('alt');
 							$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
 						});
@@ -104,7 +84,7 @@
 				{literal}
 				<script type="text/javascript">
 				//<![CDATA[
-					$(document).ready(function () {
+					$(function () {
 						$('.mails_field').on('shown.bs.collapse', function () {
 							// get active email
 							var active_email = $(this).find('.email-collapse.in');
@@ -119,6 +99,7 @@
 							rte_mail_config['editor_selector'] = 'rte-mail-' + rte_mail_selector;
 							rte_mail_config['height'] = '500px';
 							rte_mail_config['plugins'] = 'colorpicker link image paste pagebreak table contextmenu filemanager table code media autoresize textcolor anchor fullpage';
+							rte_mail_config['protect'] = [/(?<=<\/(?:tr|thead|tbody|tfoot)>\s*(?:\{[a-zA-Z_]\w*\}\s*)*)\{[a-zA-Z_]\w*\}/g];
 							// move controls to active panel
 							$('#translation_mails-control-actions').appendTo($(this).find('.panel-collapse.in'));
 							// when user first open email

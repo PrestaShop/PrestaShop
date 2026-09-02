@@ -1,26 +1,6 @@
-<!--**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+<!--*
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *-->
 <template>
   <div
@@ -28,10 +8,12 @@
     id="app"
     class="translations-app"
   >
-    <div class="container-fluid">
-      <div class="row justify-content-between align-items-center">
+    <div class="row justify-content-between align-items-end">
+      <div class="col-md-8 mb-3">
         <Search @search="onSearch" />
-        <div class="translations-summary">
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="translations-summary text-md-right">
           <span>{{ totalTranslations }}</span>
           <span v-show="totalMissingTranslations">
             -
@@ -39,18 +21,23 @@
           </span>
         </div>
       </div>
+    </div>
 
-      <div class="row">
+    <div class="row">
+      <div class="col-md-5 col-lg-4 mb-3">
         <Sidebar
           :modal="$refs.transModal"
           :principal="$refs.principal"
         />
+      </div>
+      <div class="col-md-7 col-lg-8 mb-3">
         <Principal
           :modal="$refs.transModal"
           ref="principal"
         />
       </div>
     </div>
+
     <PSModal
       ref="transModal"
       :translations="translations"
@@ -174,11 +161,11 @@
   }
 
   .missing {
-    color: $danger;
+    color: var(--#{$cdk}red-500);
   }
 
   .translations-summary {
-    font-weight: $font-weight-semibold;
-    font-size: 1rem;
+    font-weight: 500;
+    font-size: var(--#{$cdk}size-16);
   }
 </style>

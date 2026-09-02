@@ -1,4 +1,28 @@
 <?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
 
 if ($_SESSION["verify"] != "RESPONSIVEfilemanager") {
     die('forbiden');
@@ -271,33 +295,47 @@ function config_loading($current_path, $fld)
     return false;
 }
 
+/**
+ * Check if memory is enough to process image
+ *
+ * @param string $img
+ * @param int $max_breedte
+ * @param int $max_hoogte
+ *
+ * @return bool
+ */
 function image_check_memory_usage($img, $max_breedte, $max_hoogte)
 {
-    if (file_exists($img)) {
-        $K64 = 65536;    // number of bytes in 64K
-    $memory_usage = memory_get_usage();
-        $memory_limit = abs((int) (str_replace('M', '', ini_get('memory_limit'))*1024*1024));
-        $image_properties = getimagesize($img);
-        $image_width = $image_properties[0];
-        $image_height = $image_properties[1];
-        $image_bits = $image_properties['bits'];
-        $image_memory_usage = $K64 + ($image_width * $image_height * ($image_bits)  * 2);
-        $thumb_memory_usage = $K64 + ($max_breedte * $max_hoogte * ($image_bits) * 2);
-        $memory_needed = (int) ($memory_usage + $image_memory_usage + $thumb_memory_usage);
+	if (file_exists($img))
+	{
+		$K64 = 65536; // number of bytes in 64K
+		$memory_usage = memory_get_usage();
+		if(ini_get('memory_limit') > 0 ){
+			
+			$mem = ini_get('memory_limit');
+			$memory_limit = 0;
+			if (strpos($mem, 'M') !== false) $memory_limit = abs(intval(str_replace(array('M'), '', $mem) * 1024 * 1024));
+			if (strpos($mem, 'G') !== false) $memory_limit = abs(intval(str_replace(array('G'), '', $mem) * 1024 * 1024 * 1024));
+			
+			$image_properties = getimagesize($img);
+			$image_width = $image_properties[0];
+			$image_height = $image_properties[1];
+			if (isset($image_properties['bits']))
+				$image_bits = $image_properties['bits'];
+			else
+				$image_bits = 0;
+			$image_memory_usage = $K64 + ($image_width * $image_height * ($image_bits >> 3) * 2);
+			$thumb_memory_usage = $K64 + ($max_breedte * $max_hoogte * ($image_bits >> 3) * 2);
+			$memory_needed = abs(intval($memory_usage + $image_memory_usage + $thumb_memory_usage));
 
-        if ($memory_needed > $memory_limit) {
-            ini_set('memory_limit', ((int) ($memory_needed/1024/1024)+5) . 'M');
-            if (ini_get('memory_limit') == ((int) ($memory_needed/1024/1024)+5) . 'M') {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return true;
-        }
-    } else {
-        return false;
-    }
+			if ($memory_needed > $memory_limit)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
 }
 
 function endsWith($haystack, $needle)
@@ -363,7 +401,6 @@ function get_file_by_url($url)
         curl_setopt($ch, CURLOPT_URL, $url);
 
         $data = curl_exec($ch);
-        curl_close($ch);
     } elseif (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'))) {
         $data = file_get_contents($url);
     }

@@ -1,43 +1,22 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
 
 use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
-use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
-use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use PrestaShopBundle\Controller\Admin\MultistoreController;
-use PrestaShopBundle\Form\Admin\Extension\MultistoreExtension;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Extension\MultistoreExtension;
 use PrestaShopBundle\Form\FormCloner;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
+use PrestaShopBundle\Service\Form\MultistoreConfigurationDropdownRenderer;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Test\TypeTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class MultistoreCheckboxEnablerTest extends TypeTestCase
 {
@@ -58,11 +37,10 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
     public function testShouldAddMultistoreElements(bool $isMultistoreUsed, bool $isAllShopContext, bool $expectedValue): void
     {
         $checkboxEnabler = new MultistoreCheckboxEnabler(
-            $this->createMultistoreFeatureMock($isMultistoreUsed),
             $this->mockedShopConfiguration,
-            $this->createMultistoreContextMock($isAllShopContext),
-            $this->createMultistoreControllerMock(),
-            new FormCloner()
+            $this->mockShopContext($isMultistoreUsed, $isAllShopContext, !$isAllShopContext),
+            new FormCloner(),
+            $this->createMultistoreConfigurationDropdownRendererMock(),
         );
 
         $this->assertEquals($expectedValue, $checkboxEnabler->shouldAddMultistoreElements());
@@ -82,17 +60,17 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
     }
 
     /**
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
+     * @throws PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
      */
     public function testAddMultistoreElements(): void
     {
         $form = $this->getFormToTest();
+
         $checkboxEnabler = new MultistoreCheckboxEnabler(
-            $this->createMultistoreFeatureMock(),
             $this->mockedShopConfiguration,
-            $this->createMultistoreContextMock(),
-            $this->createMultistoreControllerMock(),
-            new FormCloner()
+            $this->mockShopContext(),
+            new FormCloner(),
+            $this->createMultistoreConfigurationDropdownRendererMock(),
         );
 
         $checkboxEnabler->addMultistoreElements($form);
@@ -140,36 +118,22 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
         return $formBuilder->getForm();
     }
 
-    /**
-     * @param bool $isMultistoreUsed
-     *
-     * @return FeatureInterface
-     */
-    private function createMultistoreFeatureMock(bool $isMultistoreUsed = true): FeatureInterface
+    private function mockShopContext(bool $isMultiShopUsed = true, bool $isAllShopContext = false, bool $isGroupShopContext = true): ShopContext
     {
-        $stub = $this->createMock(FeatureInterface::class);
-        $stub->method('isUsed')->willReturn($isMultistoreUsed);
+        $shopContextMock = $this->createMock(ShopContext::class);
+        $shopContextMock->method('isMultiShopUsed')->willReturn($isMultiShopUsed);
 
-        return $stub;
-    }
+        // We only need to mock getShopConstraint, all the related method to check shop context derive from it
+        if ($isAllShopContext) {
+            $shopConstraint = ShopConstraint::allShops();
+        } elseif ($isGroupShopContext) {
+            $shopConstraint = ShopConstraint::shopGroup(1);
+        } else {
+            $shopConstraint = ShopConstraint::shop(1);
+        }
+        $shopContextMock->method('getShopConstraint')->willReturn($shopConstraint);
 
-    /**
-     * @param bool $isAllShopContext
-     * @param bool $isGroupShopContext
-     *
-     * @return ShopContext
-     */
-    private function createMultistoreContextMock(bool $isAllShopContext = false, bool $isGroupShopContext = true): ShopContext
-    {
-        $shopGroupObject = new stdClass();
-        $shopGroupObject->id = 2;
-        $stub = $this->createMock(ShopContext::class);
-        $stub->method('getContextShopId')->willReturn(1);
-        $stub->method('isAllShopContext')->willReturn($isAllShopContext);
-        $stub->method('isGroupShopContext')->willReturn($isGroupShopContext);
-        $stub->method('getContextShopGroup')->willReturn($shopGroupObject);
-
-        return $stub;
+        return $shopContextMock;
     }
 
     /**
@@ -185,15 +149,13 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
     }
 
     /**
-     * @return MultistoreController
+     * @return MultistoreConfigurationDropdownRenderer
      */
-    private function createMultistoreControllerMock(): MultistoreController
+    private function createMultistoreConfigurationDropdownRendererMock(): MultistoreConfigurationDropdownRenderer
     {
-        $multistoreStub = $this->createMock(MultistoreController::class);
-        $responseStub = $this->createMock(Response::class);
-        $responseStub->method('getContent')->willReturn('some-string');
-        $multistoreStub->method('configurationDropdown')->willReturn($responseStub);
+        $dropdownRenderer = $this->createMock(MultistoreConfigurationDropdownRenderer::class);
+        $dropdownRenderer->method('renderDropdown')->willReturn('');
 
-        return $multistoreStub;
+        return $dropdownRenderer;
     }
 }

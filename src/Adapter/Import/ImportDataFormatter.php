@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Import;
@@ -32,6 +12,17 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
  * Class ImportDataFormatter is an adapter with data formatting methods for import.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - every method has an
+ *             import-engine equivalent, and its remaining callers are the deprecated
+ *             \PrestaShop\PrestaShop\Adapter\Import\Handler\* classes:
+ *             - getBoolean() -> \PrestaShop\PrestaShop\Core\Import\Engine\ValueParser::parseBoolean()
+ *               (which also stops treating "false" and "no" as true)
+ *             - getPrice() -> ValueParser::parseDecimal()
+ *             - split() -> ValueParser::split() / ValueParser::splitPreservingEmpty()
+ *             - createMultiLangField() -> \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait::localizeForCreation()
+ *             - createFriendlyUrl() -> \PrestaShop\PrestaShop\Adapter\Tools::linkRewrite(), which is
+ *               all this method ever delegated to
  */
 final class ImportDataFormatter
 {
@@ -130,7 +121,7 @@ final class ImportDataFormatter
             return [];
         }
 
-        $content = fgetcsv($fd, 0, $separator);
+        $content = fgetcsv($fd, 0, $separator, '"', '');
         fclose($fd);
 
         if ($uniqidPath !== false && file_exists($uniqidPath)) {

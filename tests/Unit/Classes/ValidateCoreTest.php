@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Unit\Classes;
@@ -37,16 +17,6 @@ class ValidateCoreTest extends TestCase
     public function testIsIp2Long($expected, $input)
     {
         $this->assertEquals($expected, Validate::isIp2Long($input));
-    }
-
-    /**
-     * @deprecated since PrestaShop 8.1 and will be removed in Prestashop 9.0
-     *
-     * @return void
-     */
-    public function testIsAnything()
-    {
-        $this->assertTrue(Validate::isAnything());
     }
 
     /**
@@ -130,6 +100,7 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @depends testIsFloat
+     *
      * @dataProvider isOptFloatDataProvider
      */
     public function testIsOptFloat($expected, $input)
@@ -146,6 +117,25 @@ class ValidateCoreTest extends TestCase
     public function testIsArrayWithIds(bool $expected, $input)
     {
         $this->assertSame($expected, Validate::isArrayWithIds($input));
+    }
+
+    /**
+     * @dataProvider isUrlDataProvider
+     *
+     * @param bool $expected
+     * @param string $url
+     */
+    public function testIsUrl(bool $expected, string $url): void
+    {
+        $this->assertEquals($expected, Validate::isUrl($url));
+    }
+
+    public function isUrlDataProvider(): iterable
+    {
+        yield 'test quick access link' => [
+            true,
+            'index.php?controller=AdminCartRules&addcart_rule',
+        ];
     }
 
     public function isIp2LongDataProvider()
@@ -259,7 +249,7 @@ class ValidateCoreTest extends TestCase
             [false, 'john.doe@prestashop'],
             [true, 'john.doe@сайт.рф'],
             [true, 'john.doe@xn--80aswg.xn--p1ai'],
-            [false, 'иван@prestashop.com'], // rfc6531 valid but not swift mailer compatible
+            [false, 'иван@prestashop.com'], // rfc6531 valid but not cyrillic mailer compatible
             [true, 'xn--80adrw@prestashop.com'],
             [true, 'xn--80adrw@xn--80aswg.xn--p1ai'],
             [false, 123456789],
@@ -305,7 +295,7 @@ class ValidateCoreTest extends TestCase
             [false, date('Y-m-d', strtotime('+1 year +1 month'))],
             [false, date('Y-m-d', strtotime('+1 year +1 month -1 day'))],
             [false, date('Y-m-d', strtotime('+1 year +1 month +1 day'))],
-            [false, date('Y-m-d', strtotime('-201 year'))],
+            [false, date('Y-m-d', strtotime('-121 year'))],
         ];
     }
 

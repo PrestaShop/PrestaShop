@@ -1,3 +1,10 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+?>
+
 	<h3>Core: Open Software License ("OSL") v. 3.0</h3>
 	<p>This Open Software License (the "License") applies to any original work of authorship (the "Original Work") whose owner (the "Licensor") has placed the following licensing notice adjacent to the copyright notice for the Original Work:</p>
 	<h4>Licensed under the Open Software License version 3.0</h4>

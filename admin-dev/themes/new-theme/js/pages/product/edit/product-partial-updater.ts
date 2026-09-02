@@ -1,31 +1,12 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 import _ from 'lodash';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
+import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
 
@@ -46,15 +27,7 @@ export default class ProductPartialUpdater {
 
   private $productFormSubmitButton: JQuery;
 
-  private $productFormPreviewButton: JQuery;
-
-  private $productFormDuplicateButton: JQuery;
-
-  private $productFormNewProductButton: JQuery;
-
-  private $productFormGoToCatalogButton: JQuery;
-
-  private $productFormCancelButton: JQuery;
+  private $productTypePreview: JQuery;
 
   private initialData: Record<string, any>;
 
@@ -63,31 +36,15 @@ export default class ProductPartialUpdater {
   /**
    * @param eventEmitter {EventEmitter}
    * @param $productForm {JQuery}
-   * @param $productFormSubmitButton {JQuery}
-   * @param $productFormPreviewButton {JQuery}
-   * @param $productFormDuplicateButton {JQuery}
-   * @param $productFormNewProductButton {JQuery}
-   * @param $productFormGoToCatalogButton {JQuery}
-   * @param $productFormCancelButton {JQuery}
    */
   constructor(
     eventEmitter: EventEmitter,
     $productForm: JQuery,
-    $productFormSubmitButton: JQuery,
-    $productFormPreviewButton: JQuery,
-    $productFormDuplicateButton: JQuery,
-    $productFormNewProductButton: JQuery,
-    $productFormGoToCatalogButton: JQuery,
-    $productFormCancelButton: JQuery,
   ) {
     this.eventEmitter = eventEmitter;
     this.$productForm = $productForm;
-    this.$productFormSubmitButton = $productFormSubmitButton;
-    this.$productFormPreviewButton = $productFormPreviewButton;
-    this.$productFormDuplicateButton = $productFormDuplicateButton;
-    this.$productFormNewProductButton = $productFormNewProductButton;
-    this.$productFormGoToCatalogButton = $productFormGoToCatalogButton;
-    this.$productFormCancelButton = $productFormCancelButton;
+    this.$productFormSubmitButton = $(ProductMap.productFormSubmitButton);
+    this.$productTypePreview = $(ProductMap.productType.headerPreviewButton);
     this.initialData = {};
 
     this.watch();
@@ -99,12 +56,25 @@ export default class ProductPartialUpdater {
    */
   private watch(): void {
     // Avoid submitting form when pressing Enter
-    this.$productForm.keypress((e) => e.which !== 13);
+    this.$productForm.keypress((event) => {
+      if (event.which === 13) {
+        const target = (event.target as HTMLElement);
+
+        // Allow Enter in textareas and contenteditable elements
+        if (target.tagName.toLocaleLowerCase() !== 'textarea' && !target.isContentEditable) {
+          event.preventDefault(); // Prevent form submit
+        }
+      }
+    });
     this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
-    this.$productForm.submit(() => this.updatePartialForm());
+    this.$productForm.on('submit', () => this.updatePartialForm());
     // 'dp.change' event allows tracking datepicker input changes
-    this.$productForm.on('keyup change dp.change', ':input', () => this.updateFooterButtonStates());
+    this.$productForm.on('keyup change dp.change',
+      // listen for all inputs except combination filters
+      `:input[name!="${ProductMap.combinations.list.attributeFilterInputName}"]`,
+      () => this.updateFooterButtonStates(),
+    );
     this.eventEmitter.on(ProductEventMap.updateSubmitButtonState, () => this.updateFooterButtonStates());
     this.eventEmitter.on(ProductEventMap.combinations.listEditionMode, (editionMode) => {
       this.listEditionMode = editionMode;
@@ -227,27 +197,53 @@ export default class ProductPartialUpdater {
     const updatedData = this.getUpdatedFormData();
 
     if (this.listEditionMode) {
-      this.$productFormSubmitButton.prop('disabled', true);
-      this.$productFormCancelButton.addClass('disabled');
-      this.$productFormGoToCatalogButton.addClass('disabled');
-      this.$productFormPreviewButton.addClass('disabled');
-      this.$productFormDuplicateButton.addClass('disabled');
-      this.$productFormNewProductButton.addClass('disabled');
+      this.toggleButtonsState([
+        ProductMap.productFormSubmitButton,
+        ProductMap.footer.cancelButton,
+        ProductMap.footer.goToCatalogButton,
+        ProductMap.footer.previewUrlButton,
+        ProductMap.footer.duplicateProductButton,
+        ProductMap.footer.newProductButton,
+        ProductMap.productType.headerPreviewButton,
+      ], false);
+      // Disable type button permanently
+      this.$productTypePreview.off('click');
     } else if (updatedData === null) {
-      this.$productFormSubmitButton.prop('disabled', true);
-      this.$productFormCancelButton.addClass('disabled');
-      this.$productFormGoToCatalogButton.removeClass('disabled');
-      this.$productFormPreviewButton.removeClass('disabled');
-      this.$productFormDuplicateButton.removeClass('disabled');
-      this.$productFormNewProductButton.removeClass('disabled');
+      // Initial mode no modification
+      this.toggleButtonsState([
+        ProductMap.productFormSubmitButton,
+        ProductMap.footer.cancelButton,
+      ], false);
+      this.toggleButtonsState([
+        ProductMap.footer.goToCatalogButton,
+        ProductMap.footer.previewUrlButton,
+        ProductMap.footer.duplicateProductButton,
+        ProductMap.footer.newProductButton,
+        ProductMap.productType.headerPreviewButton,
+      ], true);
     } else {
-      this.$productFormSubmitButton.prop('disabled', false);
-      this.$productFormCancelButton.removeClass('disabled');
-      this.$productFormGoToCatalogButton.addClass('disabled');
-      this.$productFormPreviewButton.addClass('disabled');
-      this.$productFormDuplicateButton.addClass('disabled');
-      this.$productFormNewProductButton.addClass('disabled');
+      this.toggleButtonsState([
+        ProductMap.productFormSubmitButton,
+        ProductMap.footer.cancelButton,
+      ], true);
+      this.toggleButtonsState([
+        ProductMap.footer.goToCatalogButton,
+        ProductMap.footer.previewUrlButton,
+        ProductMap.footer.duplicateProductButton,
+        ProductMap.footer.newProductButton,
+        ProductMap.productType.headerPreviewButton,
+      ], false);
+      // Disable type button permanently
+      this.$productTypePreview.off('click');
     }
+  }
+
+  private toggleButtonsState(buttons: string[], enabled: boolean): void {
+    buttons.forEach((buttonSelector: string) => {
+      const $button = $(buttonSelector);
+      $button.prop('disabled', !enabled);
+      $button.toggleClass('disabled', !enabled);
+    });
   }
 
   /**

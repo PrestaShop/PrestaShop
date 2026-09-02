@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 class OrderCarrierCore extends ObjectModel
 {
@@ -65,7 +45,7 @@ class OrderCarrierCore extends ObjectModel
             'weight' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'shipping_cost_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'shipping_cost_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
-            'tracking_number' => ['type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'],
+            'tracking_number' => ['type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber', 'size' => 64],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
@@ -100,6 +80,11 @@ class OrderCarrierCore extends ObjectModel
             throw new PrestaShopException('Can\'t load Address object');
         }
 
+        if (!$carrier->url) {
+            // the url field of the carrier is empty therefore the e-mail must not be sent
+            return true;
+        }
+
         $products = $order->getCartProducts();
         $link = Context::getContext()->link;
 
@@ -107,14 +92,14 @@ class OrderCarrierCore extends ObjectModel
         foreach ($products as $product) {
             $prod_obj = new Product((int) $product['product_id']);
 
-            //try to get the first image for the purchased combination
+            // try to get the first image for the purchased combination
             $img = $prod_obj->getCombinationImages($orderLanguageId);
             $link_rewrite = $prod_obj->link_rewrite[$orderLanguageId];
             $combination_img = $img[$product['product_attribute_id']][0]['id_image'] ?? null;
             if ($combination_img != null) {
                 $img_url = $link->getImageLink($link_rewrite, $combination_img, 'large_default');
             } else {
-                //if there is no combination image, then get the product cover instead
+                // if there is no combination image, then get the product cover instead
                 $img = $prod_obj->getCover($prod_obj->id);
                 $img_url = !empty($img['id_image']) ? $link->getImageLink($link_rewrite, $img['id_image']) : '';
             }

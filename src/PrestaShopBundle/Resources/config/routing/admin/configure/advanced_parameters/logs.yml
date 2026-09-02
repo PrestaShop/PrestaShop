@@ -14,6 +14,14 @@ admin_logs_save_settings:
     _legacy_controller: AdminLogs
     _legacy_link: AdminLogs:update
 
+admin_logs_save_database_settings:
+  path: /database-settings
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\LogsController::saveDatabaseSettingsAction'
+    _legacy_controller: AdminLogs
+    _legacy_link: AdminLogs:updateDatabase
+
 admin_logs_delete_all:
   path: /delete-all
   methods: [ POST ]

@@ -1,0 +1,29 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<div class="modal fade" id="createDiscountModal" tabindex="-1" aria-hidden="true" role="dialog">
+  <div class="modal-dialog" role="document">
+    <!-- Modal content-->
+    {{ form_start(discountTypeForm, {action: path('admin_discounts_create')}) }}
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title module-modal-title">{{ 'Select discount type'|trans({}, 'Admin.Catalog.Feature') }}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{ form_row(discountTypeForm) }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </button>
+        <button id="discountTypeSubmit" type="submit" class="btn btn-primary disabled" disabled="disabled">
+          {{ 'Create discount'|trans({}, 'Admin.Catalog.Feature') }}
+        </button>
+    </div>
+  </div>
+  {{ form_end(discountTypeForm) }}
+</div>

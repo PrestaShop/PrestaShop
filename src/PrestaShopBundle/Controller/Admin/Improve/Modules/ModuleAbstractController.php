@@ -1,37 +1,19 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
+use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShop\PrestaShop\Core\Security\Permission;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 
-abstract class ModuleAbstractController extends FrameworkBundleAdminController
+abstract class ModuleAbstractController extends PrestaShopAdminController
 {
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
 
@@ -39,29 +21,39 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
     public const UPDATABLE_MODULE_TYPE = 'to_update';
     public const TOTAL_MODULE_TYPE = 'count';
 
-    final protected function getNotificationPageData(ModuleCollection $moduleCollection): array
+    public static function getSubscribedServices(): array
     {
-        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
-        $moduleRepository = $this->getModuleRepository();
+        return parent::getSubscribedServices() + [
+            ModuleRepository::class => ModuleRepository::class,
+            ModulePresenter::class => ModulePresenter::class,
+        ];
+    }
 
-        $moduleRepository->setActionUrls($moduleCollection);
+    protected function getNotificationPageData(ModuleCollection $moduleCollection): array
+    {
+        $this->getModuleRepository()->setActionUrls($moduleCollection);
 
         return [
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-            'layoutTitle' => $this->trans('Module notifications', 'Admin.Modules.Feature'),
+            'layoutTitle' => $this->trans('Module notifications', [], 'Admin.Navigation.Menu'),
             'help_link' => $this->generateSidebarLink('AdminModules'),
-            'modules' => $modulePresenter->presentCollection($moduleCollection),
+            'modules' => $this->getModulePresenter()->presentCollection($moduleCollection),
             'requireBulkActions' => false,
             'requireFilterStatus' => false,
-            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
-            'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
+            'level' => $this->getAuthorizationLevel($this::CONTROLLER_NAME),
+            'errorMessage' => $this->trans('You do not have permission to add this.', [], 'Admin.Notifications.Error'),
         ];
+    }
+
+    protected function getModulePresenter(): ModulePresenter
+    {
+        return $this->container->get(ModulePresenter::class);
     }
 
     protected function getModuleRepository(): ModuleRepositoryInterface
     {
-        return $this->get('prestashop.core.admin.module.repository');
+        return $this->container->get(ModuleRepository::class);
     }
 
     /**
@@ -69,23 +61,17 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    protected function getToolbarButtons()
+    protected function getToolbarButtons(): array
     {
         // toolbarButtons
         $toolbarButtons = [];
 
-        if (!in_array(
-            $this->authorizationLevel($this::CONTROLLER_NAME),
-            [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-            ]
-        )) {
+        if ($this->isGranted(Permission::CREATE, self::CONTROLLER_NAME) || $this->isGranted(Permission::DELETE, self::CONTROLLER_NAME)) {
             $toolbarButtons['add_module'] = [
                 'href' => '#',
-                'desc' => $this->trans('Upload a module', 'Admin.Modules.Feature'),
+                'desc' => $this->trans('Upload a module', [], 'Admin.Modules.Feature'),
                 'icon' => 'cloud_upload',
-                'help' => $this->trans('Upload a module', 'Admin.Modules.Feature'),
+                'help' => $this->trans('Upload a module', [], 'Admin.Modules.Feature'),
             ];
         }
 

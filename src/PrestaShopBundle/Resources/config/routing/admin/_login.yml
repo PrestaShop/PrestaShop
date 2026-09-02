@@ -1,0 +1,39 @@
+admin_login:
+  path: /login
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\LoginController::loginAction'
+    _legacy_controller: AdminLogin
+    _legacy_link:
+      - AdminLogin
+      - AdminLogin:submitLogin
+
+admin_logout:
+  path: /logout
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\LoginController::logoutAction'
+    _legacy_controller: AdminLogin
+    _legacy_link: AdminLogin:logout
+
+admin_request_password_reset:
+  path: /request-password-reset
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\LoginController::requestPasswordResetAction'
+    _legacy_controller: AdminLogin
+    _legacy_link: AdminLogin:submitForgot
+
+admin_reset_password:
+  path: /reset-password/{resetToken}
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\LoginController::resetPasswordAction'
+    _legacy_controller: AdminLogin
+    _legacy_link: AdminLogin:submitReset
+
+admin_homepage:
+  path: /
+  condition: request.getMethod() == 'GET' and not request.query.has('controller')
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\LoginController::homepageAction'

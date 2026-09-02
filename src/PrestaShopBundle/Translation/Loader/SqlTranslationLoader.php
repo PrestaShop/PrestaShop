@@ -1,34 +1,14 @@
 <?php
-
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Translation\Loader;
 
 use Db;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShopException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -56,18 +36,24 @@ class SqlTranslationLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $locale, $domain = 'messages')
+    public function load($resource, $locale, $domain = 'messages'): MessageCatalogue
     {
         static $localeResults = [];
 
         if (!array_key_exists($locale, $localeResults)) {
-            $locale = Db::getInstance()->escape($locale, false, true);
+            try {
+                $locale = Db::getInstance()->escape($locale, false, true);
 
-            $localeResults[$locale] = Db::getInstance()->getRow(
-                'SELECT `id_lang`
+                $localeResults[$locale] = Db::getInstance()->getRow(
+                    'SELECT `id_lang`
                 FROM `' . _DB_PREFIX_ . 'lang`
                 WHERE `locale` = "' . $locale . '"'
-            );
+                );
+            } catch (PrestaShopException) {
+                // When no DB is created there is nothing to fetch, so we return an empty catalog to avoid breaking process for
+                // invalid reasons (like CLI commands before the shop is installed)
+                return new MessageCatalogue($locale);
+            }
         }
 
         if (empty($localeResults[$locale])) {
@@ -78,7 +64,8 @@ class SqlTranslationLoader implements LoaderInterface
             SELECT `key`, `translation`, `domain`
             FROM `' . _DB_PREFIX_ . 'translation`
             WHERE `id_lang` = ' . $localeResults[$locale]['id_lang'] . '
-            AND theme ' . ($this->theme !== null ? '= "' . $this->theme->getName() . '"' : 'IS NULL');
+            AND ' . $this->buildThemeCondition() . '
+            ORDER BY theme IS NOT NULL';
 
         $translations = Db::getInstance()->executeS($selectTranslationsQuery) ?: [];
 
@@ -86,6 +73,30 @@ class SqlTranslationLoader implements LoaderInterface
         $this->addTranslationsToCatalogue($translations, $catalogue);
 
         return $catalogue;
+    }
+
+    /**
+     * Builds the WHERE sub-condition that restricts which ps_translation rows are loaded.
+     *
+     * Always covers both core rows (theme IS NULL) and theme-specific rows for every
+     * active shop. This is required because in PS9 the Symfony container is always active,
+     * so getTranslator() never calls TranslatorLanguageLoader::loadLanguage() and setTheme()
+     * is never invoked. A single loader instance must therefore handle both row types.
+     *
+     * In the PS8 legacy path, TranslatorLanguageLoader registers two separate instances
+     * (a plain 'db' loader and a 'db.theme' loader with setTheme() called). With the
+     * unified condition both instances load the same rows; the second pass is redundant
+     * but harmless.
+     *
+     * ORDER BY theme IS NOT NULL in the caller ensures theme=NULL rows are processed first
+     * inside addTranslationsToCatalogue(), so shop-specific overrides win on duplicate keys.
+     *
+     * The correct column is ps_shop.theme_name — ps_shop.theme has never existed; referencing
+     * it causes MySQL/MariaDB to silently return an empty result set (issue #41232, Bug A).
+     */
+    protected function buildThemeCondition(): string
+    {
+        return '(theme IS NULL OR theme IN (SELECT `theme_name` FROM `' . _DB_PREFIX_ . 'shop` WHERE `active` = 1))';
     }
 
     /**

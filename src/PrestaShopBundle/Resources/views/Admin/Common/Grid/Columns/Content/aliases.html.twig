@@ -1,0 +1,8 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% for alias in record[column.id] %}
+ {% set tag = alias.active ? 'span' : 'del' %}
+ <{{ tag }}>{{ alias.alias }}</{{ tag }}>{% if loop.last == false %}, {% endif %}
+{% endfor %}

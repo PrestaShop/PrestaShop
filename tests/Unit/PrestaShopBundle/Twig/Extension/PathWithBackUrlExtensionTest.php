@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Unit\PrestaShopBundle\Twig\Extension;
@@ -30,19 +10,19 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension;
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PathWithBackUrlExtensionTest extends TestCase
 {
     public const FALLBACK_URL = 'https://www.prestashop.com/en';
 
     /**
-     * @var MockObject|RoutingExtension
+     * @var MockObject|UrlGeneratorInterface
      */
-    private $routingExtensionMock;
+    private $urlGeneratorInterfaceMock;
 
     /**
      * @var MockObject|RequestStack
@@ -58,15 +38,13 @@ class PathWithBackUrlExtensionTest extends TestCase
     {
         parent::setUp();
 
-        $this->routingExtensionMock = $this
-            ->getMockBuilder(RoutingExtension::class)
-            ->disableOriginalConstructor()
+        $this->urlGeneratorInterfaceMock = $this
+            ->getMockBuilder(UrlGeneratorInterface::class)
             ->getMock()
         ;
 
-        $this
-            ->routingExtensionMock
-            ->method('getPath')
+        $this->urlGeneratorInterfaceMock
+            ->method('generate')
             ->willReturn(self::FALLBACK_URL)
         ;
 
@@ -81,19 +59,6 @@ class PathWithBackUrlExtensionTest extends TestCase
         ;
     }
 
-    public function testItFallBacksToDefaultUrlWhenRequestStackIsNull()
-    {
-        $extension = new PathWithBackUrlExtension(
-            $this->routingExtensionMock,
-            $this->backUrlProviderMock,
-            null
-        );
-
-        $url = $extension->getPathWithBackUrl('prestashop');
-
-        $this->assertEquals(self::FALLBACK_URL, $url);
-    }
-
     public function testItFallBacksToDefaultUrlWhenBackUrlIsNotFound()
     {
         $requestMock = $this
@@ -101,7 +66,7 @@ class PathWithBackUrlExtensionTest extends TestCase
             ->getMock()
         ;
 
-        $requestMock->query = new ParameterBag();
+        $requestMock->query = new InputBag();
 
         $this->requestStackMock
             ->method('getCurrentRequest')
@@ -114,7 +79,7 @@ class PathWithBackUrlExtensionTest extends TestCase
         ;
 
         $extension = new PathWithBackUrlExtension(
-            $this->routingExtensionMock,
+            $this->urlGeneratorInterfaceMock,
             $this->backUrlProviderMock,
             $this->requestStackMock
         );
@@ -133,7 +98,7 @@ class PathWithBackUrlExtensionTest extends TestCase
             ->getMock()
         ;
 
-        $requestMock->query = new ParameterBag();
+        $requestMock->query = new InputBag();
 
         $this->requestStackMock
             ->method('getCurrentRequest')
@@ -145,7 +110,7 @@ class PathWithBackUrlExtensionTest extends TestCase
             ->willReturn($expectedUrl);
 
         $extension = new PathWithBackUrlExtension(
-            $this->routingExtensionMock,
+            $this->urlGeneratorInterfaceMock,
             $this->backUrlProviderMock,
             $this->requestStackMock
         );

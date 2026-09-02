@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
@@ -64,7 +45,8 @@ class AvailabilityType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         FormChoiceProviderInterface $outOfStockTypeChoiceProvider,
-        RouterInterface $router
+        RouterInterface $router,
+        private ShopContext $shopContext
     ) {
         parent::__construct($translator, $locales);
         $this->outOfStockTypeChoiceProvider = $outOfStockTypeChoiceProvider;
@@ -83,6 +65,10 @@ class AvailabilityType extends TranslatorAwareType
                 'expanded' => true,
                 'column_breaker' => true,
                 'modify_all_shops' => true,
+                'help' => $this->shopContext->isMultiShopEnabled()
+                        && $this->shopContext->hasGroupSharingStocks() ?
+                        $this->trans('Stock is shared between the stores in this group, so this setting is automatically applied to all of them, regardless of the "Apply changes to all stores" checkbox.', 'Admin.Catalog.Feature') :
+                        null,
                 'external_link' => [
                     'text' => $this->trans('[1]Edit default behavior[/1]', 'Admin.Catalog.Feature'),
                     'href' => $this->router->generate('admin_product_preferences') . '#configuration_fieldset_stock',
@@ -106,11 +92,18 @@ class AvailabilityType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'help' => $this->trans('This will be the displayed availability of the product, if there is at least 1 in stock. If you don\'t enter anything, value from [1]Shop Parameters > Product Settings[/1] will be used.',
+                    'Admin.Catalog.Help',
+                    [
+                        '[1]' => '<a href="' . $this->router->generate('admin_product_preferences') . '#configuration_fieldset_stock">',
+                        '[/1]' => '</a>',
+                    ]
+                ),
             ])
             ->add('available_later_label', TranslatableType::class, [
                 'type' => TextType::class,
                 'label' => $this->trans(
-                    'Label when out of stock (and backorders allowed)',
+                    'Label when out of stock',
                     'Admin.Catalog.Feature'
                 ),
                 'required' => false,
@@ -128,6 +121,13 @@ class AvailabilityType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'help' => $this->trans('This will be the displayed availability of the product, if it\'s not in stock. If you don\'t enter anything, value from [1]Shop Parameters > Product Settings[/1] will be used.',
+                    'Admin.Catalog.Help',
+                    [
+                        '[1]' => '<a href="' . $this->router->generate('admin_product_preferences') . '#configuration_fieldset_stock">',
+                        '[/1]' => '</a>',
+                    ]
+                ),
             ])
             ->add('available_date', DatePickerType::class, [
                 'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
@@ -148,6 +148,7 @@ class AvailabilityType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('When out of stock', 'Admin.Catalog.Feature'),
+            'label_help_box' => $this->trans('Choose what should happen when this product is not in stock. Can it be ordered? Use the default store setting or override it for this product.', 'Admin.Catalog.Help'),
             'label_tag_name' => 'h3',
             'required' => false,
             'columns_number' => 3,

@@ -1,0 +1,73 @@
+admin_products_images_for_shop:
+  path: /{productId}/images-for-shop/{shopId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::getImagesForShopAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:getimages
+    _legacy_parameters:
+      id_product: productId
+  options:
+    expose: true
+  requirements:
+    productId: \d+
+    shopId: \d+
+
+admin_products_product_shop_images:
+  path: /{productId}/shopImages
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::productShopImagesAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:getshopimages
+    _legacy_parameters:
+      id_product: productId
+  options:
+    expose: true
+  requirements:
+    productId: \d+
+
+admin_products_add_image:
+  path: /images/add
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::addImageAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:addimage
+    _legacy_parameters:
+      id_product: productId
+  options:
+    expose: true
+
+admin_products_update_image:
+  path: /images/{productImageId}/update
+  methods: [ PATCH ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::updateImageAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:editimage
+    _legacy_parameters:
+      id_product_image: productImageId
+  options:
+    expose: true
+  requirements:
+    productImageId: \d+
+
+admin_products_delete_image:
+  path: /images/{productImageId}/delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::deleteImageAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:deleteimage
+    _legacy_parameters:
+      id_product_image: productImageId
+  options:
+    expose: true
+  requirements:
+    productImageId: \d+

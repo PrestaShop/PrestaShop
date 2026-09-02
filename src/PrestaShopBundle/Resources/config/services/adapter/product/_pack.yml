@@ -3,37 +3,29 @@ services:
     public: true
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository:
+    autowire: true
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler\SetPackProductsHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler\RemoveAllProductsFromPackHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler\GetPackedProductsHandler:
+    autowire: true
+    public: false
+    autoconfigure: true
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
-      - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
-      - '@translator'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts
+      $defaultLangId: '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      $translator: '@translator'

@@ -34,9 +34,13 @@ _webservice:
   resource: "webservice.yml"
   prefix: /webservice-keys/
 
-_authorization_server:
-  resource: "authorization_server.yml"
-  prefix: /authorization-server/
+_extra_property_definitions:
+  resource: "extra_property_definition.yml"
+  prefix: /extra-property-definitions/
+
+_admin-api:
+  resource: "admin_api.yml"
+  prefix: /admin-api/
 
 _backup:
   resource: "backup.yml"
@@ -61,3 +65,7 @@ _security:
 _permission:
   resource: "permission.yml"
   prefix: /permissions
+
+_quick_access:
+  resource: "quick_access.yml"
+  prefix: /quick-accesses

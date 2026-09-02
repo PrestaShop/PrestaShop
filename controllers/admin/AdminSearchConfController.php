@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -40,29 +20,6 @@ class AdminSearchConfControllerCore extends AdminController
         $this->lang = false;
 
         parent::__construct();
-
-        // Alias fields
-        $this->addRowAction('edit');
-        $this->addRowAction('delete');
-
-        if (!Tools::getValue('realedit')) {
-            $this->deleted = false;
-        }
-
-        $this->bulk_actions = [
-            'delete' => [
-                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Info'),
-                'icon' => 'icon-trash',
-            ],
-        ];
-
-        $this->fields_list = [
-            'alias' => ['title' => $this->trans('Aliases', [], 'Admin.Shopparameters.Feature')],
-            // Search is a noum here.
-            'search' => ['title' => $this->trans('Search', [], 'Admin.Shopparameters.Feature')],
-            'active' => ['title' => $this->trans('Status', [], 'Admin.Global'), 'class' => 'fixed-width-sm', 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false],
-        ];
 
         $params = [
             'action' => 'searchCron',
@@ -132,10 +89,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).',
-                                [],
-                                'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            'By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ) . '<br/>' .
                             $this->trans(
                                 'With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.',
                                 [],
@@ -160,10 +117,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, if you search "book", you will have "book", "bookcase" and "bookend".',
-                                [],
-                                'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            'By default, if you search "book", you will have "book", "bookcase" and "bookend".',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ) . '<br/>' .
                             $this->trans(
                                 'With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.',
                                 [],
@@ -188,10 +145,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".',
-                                [],
-                                'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            'By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ) . '<br/>' .
                             $this->trans(
                                 'Disabling this option will require exact spelling for the search to match results.',
                                 [],
@@ -213,6 +170,21 @@ class AdminSearchConfControllerCore extends AdminController
                         ),
                         'hint' => $this->trans(
                             'Note that this option is resource-consuming: the more you search, the longer it takes.',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ),
+                        'validation' => 'isUnsignedInt',
+                        'type' => 'text',
+                        'cast' => 'intval',
+                    ],
+                    'PS_SEARCH_FUZZY_MAX_DIFFERENCE' => [
+                        'title' => $this->trans(
+                            'Maximum acceptable word difference',
+                            [],
+                            'Admin.Shopparameters.Feature'
+                        ),
+                        'desc' => $this->trans(
+                            'This option defines how much different can the alternative words found by fuzzy search be. Or, how many characters can be different/missing/added. The default value is 5.',
                             [],
                             'Admin.Shopparameters.Help'
                         ),
@@ -273,25 +245,25 @@ class AdminSearchConfControllerCore extends AdminController
                 'title' => $this->trans('Weight', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-cogs',
                 'info' => $this->trans(
-                        'The "weight" represents its importance and relevance for the ranking of the products when completing a new search.',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ) . '<br />
+                    'The "weight" represents its importance and relevance for the ranking of the products when completing a new search.',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ) . '<br />
 						' . $this->trans(
-                        'A word with a weight of eight will have four times more value than a word with a weight of two.',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ) . '<br /><br />
+                    'A word with a weight of eight will have four times more value than a word with a weight of two.',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ) . '<br /><br />
 						' . $this->trans(
-                        'We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ) . '<br /><br />
+                    'We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ) . '<br /><br />
 						' . $this->trans(
-                        'Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ),
                 'fields' => [
                     'PS_SEARCH_WEIGHT_PNAME' => [
                         'title' => $this->trans('Product name weight', [], 'Admin.Shopparameters.Feature'),
@@ -423,7 +395,7 @@ class AdminSearchConfControllerCore extends AdminController
                     'required' => true,
                     'hint' => [
                         $this->trans('Enter each alias separated by a comma (e.g. \'prestshop,preztashop,prestasohp\').', [], 'Admin.Shopparameters.Help'),
-                        $this->trans('Forbidden characters: &lt;&gt;;=#{}', [], 'Admin.Shopparameters.Help'),
+                        $this->trans('Forbidden characters: &lt;&gt;{}', [], 'Admin.Shopparameters.Help'),
                     ],
                 ],
                 [

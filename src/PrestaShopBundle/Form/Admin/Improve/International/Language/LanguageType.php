@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Language;
@@ -29,6 +9,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Language;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -104,7 +85,7 @@ class LanguageType extends TranslatorAwareType
                     'maxLength' => 5,
                 ],
                 'label' => $this->trans('Language code', 'Admin.International.Feature'),
-                'help' => $this->trans('IETF language tag (e.g. en-US, pt-BR).', 'Admin.International.Help'),
+                'help' => $this->trans('IETF language tag (e.g. en-us, pt-br) in lower case.', 'Admin.International.Help'),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
@@ -113,6 +94,10 @@ class LanguageType extends TranslatorAwareType
                         'type' => 'language_code',
                     ]),
                 ],
+            ])
+            ->add('locale', TextPreviewType::class, [
+                'label' => $this->trans('Locale', 'Admin.International.Feature'),
+                'help' => $this->trans('IETF language tag (e.g. en-US, pt-BR).', 'Admin.International.Help'),
             ])
             ->add('short_date_format', TextType::class, [
                 'label' => $this->trans('Date format', 'Admin.International.Feature'),
@@ -186,7 +171,7 @@ class LanguageType extends TranslatorAwareType
 
         if ($this->isMultistoreFeatureActive) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
-                'label' => $this->trans('Shop association', 'Admin.Global'),
+                'label' => $this->trans('Store association', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [
                     new NotBlank([

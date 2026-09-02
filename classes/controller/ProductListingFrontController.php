@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Core\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
@@ -39,6 +19,12 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
  */
 abstract class ProductListingFrontControllerCore extends ProductPresentingFrontController
 {
+    /**
+     * This variable is used to cache the result of "getProductSearchVariables", which
+     * is an expensive method that should not be called twice during the same request.
+     */
+    private $productSearchVariablesCache = null;
+
     /**
      * Generates an URL to a product listing controller
      * with only the essential query params and page remaining.
@@ -78,8 +64,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     private function prepareProductForTemplate(array $rawProduct)
     {
         // Enrich data of product
-        $product = (new ProductAssembler($this->context))
-            ->assembleProduct($rawProduct);
+        $product = (new ProductAssembler($this->context))->assembleProduct($rawProduct);
 
         // Prepare configuration
         $presenter = $this->getProductPresenter();
@@ -104,8 +89,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     protected function prepareMultipleProductsForTemplate(array $products)
     {
         // Enrich data set of products
-        $products = (new ProductAssembler($this->context))
-            ->assembleProducts($products);
+        $products = (new ProductAssembler($this->context))->assembleProducts($products);
 
         // Prepare configuration
         $presenter = $this->getProductPresenter();
@@ -153,12 +137,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         foreach ($facetsArray['filters'] as &$filter) {
             $filter['facetLabel'] = $facet->getLabel();
             if ($filter['nextEncodedFacets']) {
-                $filter['nextEncodedFacetsURL'] = $this->updateQueryString([
+                $filter['nextEncodedFacetsURL'] = Tools::updateCurrentQueryString([
                     'q' => $filter['nextEncodedFacets'],
                     'page' => null,
                 ]);
             } else {
-                $filter['nextEncodedFacetsURL'] = $this->updateQueryString([
+                $filter['nextEncodedFacetsURL'] = Tools::updateCurrentQueryString([
                     'q' => null,
                 ]);
             }
@@ -202,7 +186,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'js_enabled' => $this->ajax,
             'activeFilters' => $activeFilters,
             'sort_order' => $result->getCurrentSortOrder()->toString(),
-            'clear_all_link' => $this->updateQueryString(['q' => null, 'page' => null]),
+            'clear_all_link' => Tools::updateCurrentQueryString(['q' => null, 'page' => null]),
         ]);
     }
 
@@ -237,7 +221,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         return $this->render('catalog/_partials/active_filters', [
             'activeFilters' => $activeFilters,
-            'clear_all_link' => $this->updateQueryString(['q' => null, 'page' => null]),
+            'clear_all_link' => Tools::updateCurrentQueryString(['q' => null, 'page' => null]),
         ]);
     }
 
@@ -267,6 +251,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      */
     private function getProductSearchProviderFromModules($query)
     {
+        // An array [module_name => module_output] will be returned
         $providers = Hook::exec(
             'productSearchProvider',
             ['query' => $query],
@@ -295,6 +280,11 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      */
     protected function getProductSearchVariables()
     {
+        // If we've already done the work, no need to do it again
+        if ($this->productSearchVariablesCache !== null) {
+            return $this->productSearchVariablesCache;
+        }
+
         /*
          * To render the page we need to find something (a ProductSearchProviderInterface)
          * that knows how to query products.
@@ -326,7 +316,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         ;
 
         // set the sort order if provided in the URL
-        if (($encodedSortOrder = Tools::getValue('order'))) {
+        if ($encodedSortOrder = Tools::getValue('order')) {
             $query->setSortOrder(SortOrder::newFromString(
                 $encodedSortOrder
             ));
@@ -435,13 +425,16 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'rendered_facets' => $rendered_facets,
             'rendered_active_filters' => $rendered_active_filters,
             'js_enabled' => $this->ajax,
-            'current_url' => $this->updateQueryString([
+            'current_url' => Tools::updateCurrentQueryString([
                 'q' => $result->getEncodedFacets(),
             ]),
         ];
 
         Hook::exec('filterProductSearch', ['searchVariables' => &$searchVariables]);
         Hook::exec('actionProductSearchAfter', $searchVariables);
+
+        // Cache the result in case it's needed later during the same request
+        $this->productSearchVariablesCache = $searchVariables;
 
         return $searchVariables;
     }
@@ -508,14 +501,14 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $itemsShownTo = $query->getResultsPerPage() * $query->getPage();
 
         $pages = array_map(function ($link) {
-            $link['url'] = $this->updateQueryString([
+            $link['url'] = Tools::updateCurrentQueryString([
                 'page' => $link['page'] > 1 ? $link['page'] : null,
             ]);
 
             return $link;
         }, $pagination->buildLinks());
 
-        //Filter next/previous link on first/last page
+        // Filter next/previous link on first/last page
         $pages = array_filter($pages, function ($page) use ($pagination) {
             if ('previous' === $page['type'] && 1 === $pagination->getPage()) {
                 return false;
@@ -556,13 +549,79 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         return array_map(function ($sortOrder) use ($currentSortOrderURLParameter) {
             $order = $sortOrder->toArray();
             $order['current'] = $order['urlParameter'] === $currentSortOrderURLParameter;
-            $order['url'] = $this->updateQueryString([
+            $order['url'] = Tools::updateCurrentQueryString([
                 'order' => $order['urlParameter'],
                 'page' => null,
             ]);
 
             return $order;
         }, $sortOrders);
+    }
+
+    /**
+     * Do not index filtered pages or when sorting was used.
+     * This should correlate with robots.txt content. Make sure to update it also,
+     * if you change anything here.
+     */
+    public function getTemplateVarPage()
+    {
+        $page = parent::getTemplateVarPage();
+
+        // If some search parameters are submitted, or user selected some custom sorting,
+        if (Tools::isSubmit('q') || Tools::isSubmit('order')) {
+            $page['meta']['robots'] = 'noindex';
+        }
+
+        return $page;
+    }
+
+    /**
+     * Generates structured data for the current listing, extending the default ones.
+     *
+     * @return array
+     */
+    public function getStructuredData(): array
+    {
+        $structuredData = parent::getStructuredData();
+
+        // Prepare the new key
+        $structuredData['itemlist'] = [
+            '@context' => 'https://schema.org/',
+            '@type' => 'ItemList',
+            'itemListElement' => [],
+        ];
+
+        // Get search data
+        $variables = $this->getProductSearchVariables();
+
+        // Fill the itemListElement with the products of the listing
+        if (!empty($variables['products']) && is_array($variables['products'])) {
+            $index = 0;
+            foreach ($variables['products'] as $product) {
+                $structuredData['itemlist']['itemListElement'][] = [
+                    '@type' => 'ListItem',
+                    'position' => $index + 1,
+                    'name' => $product['name'],
+                    'url' => $product['url'],
+                ];
+                ++$index;
+            }
+        }
+
+        // Fill total count
+        if (isset($variables['pagination']['total_items'])) {
+            $structuredData['itemlist']['numberOfItems'] = $variables['pagination']['total_items'];
+        }
+
+        // Fill label name
+        if (isset($variables['label'])) {
+            $structuredData['itemlist']['name'] = $variables['label'];
+        }
+
+        // Fill canonical URL of this listing
+        $structuredData['itemlist']['url'] = $this->getCanonicalURL();
+
+        return $structuredData;
     }
 
     /**

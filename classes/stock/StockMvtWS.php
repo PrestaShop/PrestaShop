@@ -1,33 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
  * Webservice entity for stock movements.
  *
- * @since 1.5.0
+ * @deprecated since 9.0 and will be removed in 10.0, this object model is no longer needed
  */
 class StockMvtWSCore extends ObjectModelCore
 {
@@ -161,8 +141,8 @@ class StockMvtWSCore extends ObjectModelCore
         'primary' => 'id_stock_mvt',
         'fields' => [
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'employee_firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
-            'employee_lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'employee_firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'size' => 255],
+            'employee_lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'size' => 255],
             'id_stock' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'physical_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
             'id_stock_mvt_reason' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
@@ -231,7 +211,7 @@ class StockMvtWSCore extends ObjectModelCore
         parent::__construct($id, $id_lang, $id_shop);
 
         if ((int) $this->id != 0) {
-            $res = $this->getWebserviceObjectList('', (' AND ' . $this->def['primary'] . ' = ' . (int) $this->id), '', '', true);
+            $res = $this->getWebserviceObjectList('', ' AND ' . $this->def['primary'] . ' = ' . (int) $this->id, '', '', true);
             if (isset($res[0])) {
                 foreach ($this->tables_assoc as $key => $param) {
                     $this->{$key} = $res[0][$key];

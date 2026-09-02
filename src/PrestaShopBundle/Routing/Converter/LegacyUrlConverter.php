@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Routing\Converter;
@@ -73,14 +53,6 @@ final class LegacyUrlConverter
      */
     public function convertByParameters(array $parameters)
     {
-        //Tab parameter can be used as an alias for controller
-        if (!empty($parameters['tab'])) {
-            if (empty($parameters['controller'])) {
-                $parameters['controller'] = $parameters['tab'];
-            }
-            unset($parameters['tab']);
-        }
-
         if (empty($parameters['controller'])) {
             throw new ArgumentException('Missing required controller argument');
         }
@@ -133,9 +105,22 @@ final class LegacyUrlConverter
         $this->router->getContext()->fromRequest($request);
         $this->checkAlreadyMatchingRoute($request->getRequestUri());
 
-        $parameters = array_merge($request->query->all(), $request->request->all());
+        // We can't use convertByParameters with the combined parameters, or the POST parameters will be added
+        // in the redirection URL, so we do check for the validity of parameters and the matching route based on
+        // all the parameters
+        $allParameters = $request->query->all() + $request->request->all();
+        if (empty($allParameters['controller'])) {
+            throw new ArgumentException('Missing required controller argument');
+        }
 
-        return $this->convertByParameters($parameters);
+        /** @var LegacyRoute $legacyRoute */
+        $legacyRoute = $this->findLegacyRouteNameByParameters($allParameters);
+
+        // But only query parameters are used to generate the new URL, so we clean them (remove controller, action, ...)
+        // the POST parameters will remain unchanged in the 308 redirection
+        $queryParameters = $this->convertLegacyParameters($request->query->all(), $legacyRoute);
+
+        return $this->router->generate($legacyRoute->getRouteName(), $queryParameters, UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
     /**
@@ -149,7 +134,7 @@ final class LegacyUrlConverter
         $legacyAction = $this->getActionFromParameters($parameters);
 
         foreach ($legacyRoute->getRouteParameters() as $legacyParameter => $parameter) {
-            if (isset($parameters[$legacyParameter])) {
+            if (isset($parameters[$legacyParameter]) && !isset($parameters[$parameter])) {
                 $parameters[$parameter] = $parameters[$legacyParameter];
                 unset($parameters[$legacyParameter]);
             }
@@ -192,9 +177,9 @@ final class LegacyUrlConverter
             $legacyAction = $parameters['action'];
         }
 
-        //Actions can be defined as simple query parameter (e.g: ?controller=AdminProducts&save)
+        // Actions can be defined as simple query parameter (e.g: ?controller=AdminProducts&save)
         if (null === $legacyAction) {
-            //We prioritize the actions defined in the migrated routes
+            // We prioritize the actions defined in the migrated routes
             $controllerActions = $this->legacyRouteProvider->getActionsByController($parameters['controller']);
             foreach ($parameters as $parameter => $value) {
                 if (in_array($parameter, $controllerActions)) {
@@ -205,17 +190,17 @@ final class LegacyUrlConverter
             }
         }
 
-        //Last chance if a non migrated action is present (note: a bit risky since any empty parameter can be
-        //interpreted as an action.. but some old link need this feature, ?controller=AdminModulesPositions&addToHook)
+        // Last chance if a non migrated action is present (note: a bit risky since any empty parameter can be
+        // interpreted as an action.. but some old link need this feature, ?controller=AdminModulesPositions&addToHook)
         if (null === $legacyAction) {
             foreach ($parameters as $parameter => $value) {
                 if ($value === '' || $value === '1' || $value === 1) {
-                    //Avoid confusing an entity/row id with an action
+                    // Avoid confusing an entity/row id with an action
                     // e.g.
                     //  create=1 is an action
                     //  id_product=1 is NOT an action
-                    if (false === strpos($parameter, 'id_')
-                        && false === strpos($parameter, '_id')) {
+                    if (!str_contains($parameter, 'id_')
+                        && !str_contains($parameter, '_id')) {
                         $legacyAction = $parameter;
 
                         break;
@@ -243,7 +228,7 @@ final class LegacyUrlConverter
                 $this->router->match($urlPath);
                 throw new AlreadyConvertedException(sprintf('%s is already a converted url', $url));
             }
-        } catch (ExceptionInterface $e) {
+        } catch (ExceptionInterface) {
         }
     }
 }

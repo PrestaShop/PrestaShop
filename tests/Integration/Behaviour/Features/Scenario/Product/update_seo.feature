@@ -360,14 +360,14 @@ Feature: Update product SEO options from Back Office (BO)
       | redirect_type   | 301-product                          |
       | redirect_target | product3                             |
       | redirect_name   | amazing boots                        |
-      | redirect_image  | http://myshop.com/img/p/{image1}.jpg |
+      | redirect_image  | http://myshop.com/img/p/{image1}-small_default.jpg |
     When I update image "image2" with following information:
       | cover | true |
     Then product product2 should have following seo options:
       | redirect_type   | 301-product                          |
       | redirect_target | product3                             |
       | redirect_name   | amazing boots                        |
-      | redirect_image  | http://myshop.com/img/p/{image2}.jpg |
+      | redirect_image  | http://myshop.com/img/p/{image2}-small_default.jpg |
     When I update product "product2" with following values:
       | redirect_type   | 301-category |
       | redirect_target | men          |

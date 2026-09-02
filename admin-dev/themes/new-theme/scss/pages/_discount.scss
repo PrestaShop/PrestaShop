@@ -1,0 +1,86 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+#createDiscountModal {
+  .modal-dialog {
+    max-width: 400px;
+
+    .modal-title {
+      font-size: var(--#{$cdk}size-24);
+    }
+  }
+}
+
+.discount-type-badge {
+  display: block;
+  width: fit-content;
+  font-size: var(--#{$cdk}size-14);
+
+  .text-preview-value {
+    display: none;
+  }
+}
+
+.entity-search-widget {
+  .customer-disabled-badge,
+  .customer-guest-badge {
+    display: none;
+    color: $gray-800;
+  }
+
+  .customer-disabled-badge {
+    margin-right: 0.25rem;
+    margin-left: auto;
+  }
+
+  .customer-guest-badge {
+    margin-right: 0.5rem;
+  }
+
+  [data-customer-active="0"] .customer-disabled-badge {
+    display: inline-block;
+  }
+
+  [data-customer-guest="1"] .customer-guest-badge {
+    display: inline-block;
+  }
+
+  .customer-suggestion-disabled-badge,
+  .customer-suggestion-guest-badge {
+    display: none;
+    margin-left: 0.35rem;
+    color: $gray-800;
+  }
+
+  .tt-suggestion {
+    .customer-suggestion-disabled-badge,
+    .customer-suggestion-guest-badge {
+      display: inline-block;
+    }
+  }
+}
+
+.specific-product-item {
+  .form-group {
+    margin-bottom: 0;
+  }
+
+  .specific-product-quantity-row {
+    max-width: 250px;
+  }
+
+  .specific-product-combination-row {
+    min-width: 250px;
+  }
+
+  .select2-selection,
+  .select2-container:not(.select2-container--bootstrap4) .select2-selection {
+    padding: var(--cdk-size-5) var(--cdk-size-32) var(--cdk-size-4) var(--cdk-size-16);
+  }
+
+  .select2 {
+    margin-right: var(--cdk-size-8);
+  }
+}
+

@@ -1,0 +1,65 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  {% form_theme emailBodyTemplateEditForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+  <div class="alert alert-warning" role="alert">
+    <p>
+      {{ 'Some of these expressions use this special syntax: %s.'|trans({'%s': '%d'}, 'Admin.International.Help') }}
+      <br>
+      {{ 'You must use this syntax in your translations. Here are several examples:'|trans({}, 'Admin.International.Help') }}
+    </p>
+    <ul>
+      <li>"{{ 'There are [1]%replace%[/1] products'|trans({'%replace%': '%d', '[1]': '<strong>', '[/1]': '</strong>'}, 'Admin.International.Help')|raw }}": {{ '"%s" will be replaced by a number.'|trans({'%s': '%d'}, 'Admin.International.Help') }}</li>
+      <li>"{{ 'List of pages in [1]%replace%[/1]'|trans({'%replace%': '%s', '[1]': '<strong>', '[/1]': '</strong>'}, 'Admin.International.Help')|raw }}": {{ '"%s" will be replaced by a string.'|trans({'%s': '%s'}, 'Admin.International.Help') }}</li>
+      <li>"{{ 'Feature: [1]%1%[/1] ([1]%2%[/1] values)'|trans({'%1%': '%1$s', '%2%': '%2$d', '[1]': '<strong>', '[/1]': '</strong>'}, 'Admin.International.Help')|raw }}": {{ 'The numbers enable you to reorder the variables when necessary.'|trans({}, 'Admin.International.Help') }}</li>
+    </ul>
+  </div>
+
+  {{ form_start(emailBodyTemplateEditForm) }}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">email</i>
+        {{ 'HTML content'|trans({}, 'Admin.International.Feature') }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_row(emailBodyTemplateEditForm.html_content) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">text_fields</i>
+        {{ 'Text content'|trans({}, 'Admin.International.Feature') }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_row(emailBodyTemplateEditForm.txt_content) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-footer">
+        <a href="{{ path('admin_email_body_translation_index', {locale: locale}) }}" class="btn btn-outline-secondary">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+        <button class="btn btn-primary float-right" id="save-button">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  {{ form_end(emailBodyTemplateEditForm) }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/email_body_translation_form.bundle.js') }}"></script>
+{% endblock %}

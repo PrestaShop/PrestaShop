@@ -1,0 +1,69 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<div id="header_quick" class="component">
+  <div class="dropdown" id="quick-access-container">
+    <button
+      id="quick_select"
+      class="btn btn-link dropdown-toggle"
+      data-toggle="dropdown"
+    >{{ 'Quick Access'|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">arrow_drop_down</i></button>
+    <ul class="dropdown-menu">
+      {% for quickAccess in this.quickAccesses %}
+        <li class="quick-row-link{% if quickAccess.active %} active{% endif %}">
+          <a {% if quickAccess.class is defined %}class="{{ quickAccess.class }}"{% endif %}
+          href="{{ quickAccess.link }}" {% if quickAccess.new_window %}target="_blank"{% endif %}
+          data-item="{{ quickAccess.name }}"
+          >
+            {{ quickAccess.name }}
+          </a>
+        </li>
+      {% endfor %}
+
+      <li class="divider"></li>
+      {% if this.activeQuickAccess %}
+      <li>
+        <a id="quick-remove-link"
+           href="#"
+           class="ajax-quick-link js-quick-link"
+           data-method="remove"
+           data-quicklink-id="{{ this.activeQuickAccess.id_quick_access }}"
+           data-rand="{{ random(1, 200) }}"
+           data-url="{{ this.activeQuickAccess.link }}"
+           data-post-link="{{ this.ajaxDeleteUrl }}"
+           data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header') }}"
+           data-link="{{ this.activeQuickAccess.name }}"
+        >
+          <i class="material-icons">remove_circle</i>
+          {{ 'Remove from Quick Access'|trans({}, 'Admin.Navigation.Header') }}
+        </a>
+      </li>
+      {% else %}
+      <li>
+        <a id="quick-add-link"
+           href="#"
+           class="ajax-quick-link js-quick-link"
+           data-method="add"
+           data-rand="{{ random(1, 200) }}"
+           data-icon="{{ this.currentPageIcon }}"
+           data-url="{{ this.currentPageQuickAccessLink }}"
+           data-post-link="{{ this.ajaxAddUrl }}"
+           data-link="{{ this.currentPageTitle }}"
+        >
+          <i class="material-icons">add_circle</i>
+          {{ 'Add current page to Quick Access'|trans({}, 'Admin.Actions') }}
+        </a>
+      </li>
+      {% endif %}
+      <li>
+        <a id="quick-manage-link" href="{{ this.manageUrl }}">
+        <i class="material-icons">settings</i>
+          {{ 'Manage your quick accesses'|trans({}, 'Admin.Navigation.Header') }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{{ include('@PrestaShop/Admin/Component/quick_access_add_modal.html.twig', {legacyLayout: true}) }}

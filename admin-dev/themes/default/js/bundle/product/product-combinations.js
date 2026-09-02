@@ -1,4 +1,8 @@
 /**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+/**
  * Function for removing bad characters from localization formating.
  */
 function replaceBadLocaleCharacters() {
@@ -44,7 +48,6 @@ window.combinations = (function () {
             elem.removeAttr('disabled');
             $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').removeAttr('disabled');
             supplierCombinations.refresh();
-            warehouseCombinations.refresh();
             if ($('.js-combinations-list .combination').length <= 0) {
               $('#combinations_thead').fadeOut();
             }

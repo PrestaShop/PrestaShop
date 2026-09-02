@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
@@ -124,6 +104,13 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
+                (new DataColumn('locale'))
+                    ->setName($this->trans('Locale', [], 'Admin.International.Feature'))
+                    ->setOptions([
+                        'field' => 'locale',
+                    ])
+            )
+            ->add(
                 (new DataColumn('date_format_lite'))
                     ->setName($this->trans('Date format', [], 'Admin.International.Feature'))
                     ->setOptions([
@@ -182,80 +169,90 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new FilterCollection())
             ->add(
-                 (new Filter('id_lang', NumberType::class))
-                     ->setTypeOptions([
-                         'required' => false,
-                         'attr' => [
-                             'placeholder' => $this->translator->trans('Search ID', [], 'Admin.Actions'),
-                         ],
-                     ])
-                     ->setAssociatedColumn('id_lang')
-             )
+                (new Filter('id_lang', NumberType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Search ID', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('id_lang')
+            )
             ->add(
-                 (new Filter('name', TextType::class))
-                     ->setTypeOptions([
-                         'required' => false,
-                         'attr' => [
-                             'placeholder' => $this->translator->trans('Search name', [], 'Admin.Actions'),
-                         ],
-                     ])
-                     ->setAssociatedColumn('name')
-             )
+                (new Filter('name', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Search name', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('name')
+            )
             ->add(
-                 (new Filter('iso_code', TextType::class))
-                     ->setTypeOptions([
-                         'required' => false,
-                         'attr' => [
-                             'placeholder' => $this->translator->trans('Search ISO code', [], 'Admin.Actions'),
-                         ],
-                     ])
-                     ->setAssociatedColumn('iso_code')
-             )
+                (new Filter('iso_code', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Search ISO code', [], 'Admin.International.Help'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('iso_code')
+            )
             ->add(
-                 (new Filter('language_code', TextType::class))
-                     ->setTypeOptions([
-                         'required' => false,
-                         'attr' => [
-                             'placeholder' => $this->translator->trans('Search code', [], 'Admin.Actions'),
-                         ],
-                     ])
-                     ->setAssociatedColumn('language_code')
-             )
+                (new Filter('language_code', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Search code', [], 'Admin.International.Help'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('language_code')
+            )
             ->add(
-                 (new Filter('date_format_lite', TextType::class))
-                     ->setTypeOptions([
-                         'required' => false,
-                         'attr' => [
-                             'placeholder' => $this->translator->trans('Search date format', [], 'Admin.Actions'),
-                         ],
-                     ])
-                     ->setAssociatedColumn('date_format_lite')
-             )
+                (new Filter('locale', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Search locale', [], 'Admin.International.Help'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('locale')
+            )
             ->add(
-                 (new Filter('date_format_full', TextType::class))
-                     ->setTypeOptions([
-                         'required' => false,
-                         'attr' => [
-                             'placeholder' => $this->translator->trans('Search date format', [], 'Admin.Actions'),
-                         ],
-                     ])
-                     ->setAssociatedColumn('date_format_full')
-             )
+                (new Filter('date_format_lite', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Search date format', [], 'Admin.International.Help'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('date_format_lite')
+            )
             ->add(
-                 (new Filter('active', YesAndNoChoiceType::class))
-                     ->setAssociatedColumn('active')
-             )
+                (new Filter('date_format_full', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Search date format', [], 'Admin.International.Help'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('date_format_full')
+            )
             ->add(
-                 (new Filter('actions', SearchAndResetType::class))
-                     ->setTypeOptions([
-                         'reset_route' => 'admin_common_reset_search_by_filter_id',
-                         'reset_route_params' => [
-                             'filterId' => self::GRID_ID,
-                         ],
-                         'redirect_route' => 'admin_languages_index',
-                     ])
-                     ->setAssociatedColumn('actions')
-             )
+                (new Filter('active', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('active')
+            )
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
+                    ->setTypeOptions([
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
+                        ],
+                        'redirect_route' => 'admin_languages_index',
+                    ])
+                    ->setAssociatedColumn('actions')
+            )
         ;
     }
 

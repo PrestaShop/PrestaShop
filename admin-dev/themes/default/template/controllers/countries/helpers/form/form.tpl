@@ -1,26 +1,6 @@
 {**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
 {extends file="helpers/form/form.tpl"}
 
@@ -80,22 +60,22 @@
 
 {block name=script}
 
-	$(document).ready(function() {
+	$(function() {
 
-		$('.addPattern').click(function() {
+		$('.addPattern').on('click', function() {
 			addFieldsToCursorPosition($(this).attr("id"))
 			lastLayoutModified = $("#ordered_fields").val();
 		});
 
-		$('#ordered_fields').keyup(function() {
+		$('#ordered_fields').on('keyup', function() {
 			lastLayoutModified = $(this).val();
 		});
 
-		$('#need_zip_code_on, #need_zip_code_off').change(function() {
+		$('#need_zip_code_on, #need_zip_code_off').on('change', function() {
 			disableZipFormat();
 		});
 
-		$('#iso_code').change(function() {
+		$('#iso_code').on('change', function() {
 			disableTAASC();
 		});
 		disableTAASC();
@@ -110,7 +90,7 @@
 		$("#ordered_fields").val(unescape(defaultLayout.replace(/\+/g, " ")));
 	}
 
-	$('#custom-address-fields a').click(function (e) {
+	$('#custom-address-fields a').on('click', function (e) {
   		e.preventDefault();
   		$(this).tab('show')
 	})

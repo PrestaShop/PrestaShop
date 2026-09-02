@@ -1,0 +1,10 @@
+admin_dashboard_index:
+  path: /
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\DashboardController::indexAction'
+    _legacy_controller: AdminDashboard
+    _legacy_link: AdminDashboard
+    _legacy_feature_flag: dashboard
+  options:
+    expose: true

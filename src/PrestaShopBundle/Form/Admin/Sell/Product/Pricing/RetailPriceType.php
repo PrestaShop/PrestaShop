@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -38,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -149,7 +130,7 @@ class RetailPriceType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
                 'attr' => [
-                    'data-display-price-precision' => self::PRESTASHOP_DECIMALS,
+                    'data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION,
                     'data-price-specification' => json_encode($this->contextLocale->getPriceSpecification($this->defaultCurrency->iso_code)->toArray()),
                 ],
                 'row_attr' => [
@@ -166,13 +147,13 @@ class RetailPriceType extends TranslatorAwareType
             ])
             ->add('tax_rules_group_id', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoicesProvider->getChoices(),
+                'disabled' => !$this->isTaxEnabled,
                 'required' => false,
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
                 'choice_attr' => $this->taxRuleGroupChoicesProvider->getChoicesAttributes(),
+                'autocomplete' => true,
                 'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
                     'data-tax-enabled' => $this->isTaxEnabled,
                 ],
                 'row_attr' => [
@@ -181,17 +162,12 @@ class RetailPriceType extends TranslatorAwareType
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
                 'help' => !$this->isTaxEnabled ?
                     $this->trans('Tax feature is disabled, it will not affect price tax included.', 'Admin.Catalog.Feature')
-                    : '', //we replace help text in js on load when tax is enabled
+                    : '', // we replace help text in js on load when tax is enabled
                 'help_attr' => [
                     'class' => 'js-tax-rule-help',
                     'data-place-holder-without-state' => $taxRateHelpPlaceholderWithoutState,
                     'data-place-holder-with-state' => $taxRateHelpPlaceholderWithState,
                     'data-is-tax-enabled' => $this->isTaxEnabled,
-                ],
-                'external_link' => [
-                    'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
-                    'href' => $this->router->generate('admin_taxes_index'),
-                    'align' => 'right',
                 ],
                 'modify_all_shops' => true,
             ]);
@@ -220,7 +196,7 @@ class RetailPriceType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Retail price (tax incl.)', 'Admin.Catalog.Feature'),
                 'attr' => [
-                    'data-display-price-precision' => self::PRESTASHOP_DECIMALS,
+                    'data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION,
                 ],
                 'row_attr' => [
                     'class' => 'retail-price-tax-included',
@@ -230,6 +206,11 @@ class RetailPriceType extends TranslatorAwareType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                     new PositiveOrZero(),
+                ],
+                'external_link' => [
+                    'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
+                    'href' => $this->router->generate('admin_taxes_index'),
+                    'align' => 'right',
                 ],
                 'default_empty_data' => 0.0,
                 'modify_all_shops' => true,

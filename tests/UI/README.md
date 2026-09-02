@@ -2,7 +2,7 @@
 
 ## Requirement
 
-Before begin working on tests, make sure you have installed 
+Before begin working on tests, make sure you have installed
 
 * [nodejs](https://nodejs.org/) v10.x or newer
 * [npm](https://www.npmjs.com/) v6.x or newer
@@ -14,51 +14,114 @@ Before begin working on tests, make sure you have installed
 git clone https://github.com/PrestaShop/PrestaShop/
 # Install dependencies in UI folder
 cd tests/UI/
-npm install
+npm ci
+```
+
+## How to run tests locally (linux distribution)
+
+We must first install the dependencies necessary for the execution of the tests.
+
+```bash
+# Install dependencies in UI folder
+cd tests/UI/
+npm ci
+npx playwright install --with-deps
+```
+
+Subsequently, we can use the envFile to define the test environment variables,
+to do this we copy the .env.ci file renaming it .env, and we edit the values we want.
+Another option is to pass the variables directly via command line.
+The list of parameters is visible in the section [Available command line parameters](#available-command-line-parameters)
+
+```bash
+cp .env.ci .env
+```
+
+We can then launch our tests.
+
+```bash
+npm run test:all
+```
+
+We can launch a particular scenario, for this we can see the list in the script part of the package.json.
+
+```bash
+npm run test:functional:BO:orders
 ```
 
 ## Available command line parameters
 
 ### PrestaShop parameters
 
-| Parameter           | Description      |
-|---------------------|----------------- |
-| URL_FO              | URL of your PrestaShop website Front Office (default to **`http://localhost/prestashop/`**) |
-| URL_BO              | URL of your PrestaShop website Back Office (default to **`URL_FO + admin-dev/`**) |
-| URL_INSTALL         | URL of the Install folder (default to **`URL_FO + install-dev/`**) |
-| FIRSTNAME           | Firstname of your admin employee (default to **`demo`**) |
-| LASTNAME            | Lastname of your admin employee (default to **`demo`**) |
-| LOGIN               | LOGIN of your PrestaShop website (default to **`demo@prestashop.com`**) |
-| PASSWD              | PASSWD of your PrestaShop website (default to **`prestashop_demo`**) |
-| SHOP_NAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
-| DB_SERVER           | The Database server address (default to **`127.0.0.1`**) |
-| DB_USER             | Login user of your MySql (default to **`root`**) |
-| DB_NAME             | Name of the MySql database (default to **`prestashop_db`**) |
-| DB_PASSWD           | Password for your MySql (default to **`empty`**) |
-| DB_PREFIX           | Prefix for the database tables (default to **`tst_`**) |
+| Parameter          | Description                                                                                 |
+|--------------------|---------------------------------------------------------------------------------------------|
+| URL_FO             | URL of your PrestaShop website Front Office (default to **`http://localhost/prestashop/`**) |
+| URL_BO             | URL of your PrestaShop website Back Office (default to **`URL_FO + admin-dev/`**)           |
+| URL_INSTALL        | URL of the Install folder (default to **`URL_FO + install-dev/`**)                          |
+| ENABLE_SSL         | Enable SSL (default to **`false`**)                                                         |
+| FIRSTNAME          | Firstname of your admin employee (default to **`demo`**)                                    |
+| LASTNAME           | Lastname of your admin employee (default to **`demo`**)                                     |
+| LOGIN              | LOGIN of your PrestaShop website (default to **`demo@prestashop.com`**)                     |
+| PASSWD             | PASSWD of your PrestaShop website (default to **`prestashop_demo`**)                        |
+| SHOP_NAME          | Shop Name of tour PrestaShop (default to **`Prestashop`**)                                  |
+| DB_SERVER          | The Database server address (default to **`127.0.0.1`**)                                    |
+| DB_USER            | Login user of your MySql (default to **`root`**)                                            |
+| DB_NAME            | Name of the MySql database (default to **`prestashop_db`**)                                 |
+| DB_PASSWD          | Password for your MySql (default to **`empty`**)                                            |
+| DB_PREFIX          | Prefix for the database tables (default to **`tst_`**)                                      |
+| PS_PARAMETERS_FILE | Parameters files (default to **`app/config/parameters.php`**)                               |
 
 ### Maildev parameters
 
-| Parameter           | Description                                          |
-|---------------------|----------------------------------------------------- |
-| SMTP_SERVER             | The smtp server address for maildev (default to **`172.20.0.4`**)|
-| SMTP_PORT            | The smtp port for maildev (default to **`1025`**)|
+| Parameter   | Description                                                       |
+|-------------|-------------------------------------------------------------------|
+| SMTP_SERVER | The smtp server address for maildev (default to **`172.20.0.4`**) |
+| SMTP_PORT   | The smtp port for maildev (default to **`1026`**)                 |
+
+### Admin API parameters
+
+| Parameter         | Description                                                   |
+|-------------------|---------------------------------------------------------------|
+| URL_API           | The Admin API base URL (default to **`URL_FO + admin-api/`**) |
+| CLIENT_ID_API     | The API Client client ID                                      |
+| CLIENT_SECRET_API | The API Client client secret                                  |
+
+To run the API tests you need to create an API Client before you run the related tests, and the env variables should be adpted to use the appropriate Client ID and secret.
+
+You can create an API Client with this command at the root of your project (where `{clientId}` and `{secret}` are placeholders to fill):
+
+```bash
+php ./bin/console prestashop:api-client create {clientId} --all-scopes --name='Test client' --description='Test client with all scopes' --timeout=3600 --secret={secret}
+```
+
+### Keycloak parameters
+
+| Parameter               | Description                                                                                              |
+|-------------------------|----------------------------------------------------------------------------------------------------------|
+| KEYCLOAK_URL_EXTERNAL   | The external URL for Keycloak (default to **`http://localhost:8003`**) (outside Docker)                  |
+| KEYCLOAK_URL_INTERNAL   | The internal URL for Keycloak (default to **`http://keycloak:8080`**) (inside Docker)                    |
+| KEYCLOAK_ADMIN_USER     | The admin user for connecting to Keycloak (default to **`admin`**)                                       |
+| KEYCLOAK_ADMIN_PASS     | The admin password for connecting to Keycloak (default to **`admin`**)                                   |
+| KEYCLOAK_CLIENT_ID      | The Client ID for using in PrestaShop & Keycloak (default to **`prestashop-keycloak`**)                  |
+| KKEYCLOAK_CLIENT_SECRET | The Client Secret for using in PrestaShop & Keycloak (default to **`O2kKN0fprCK2HWP6PS6reVbZThWf5LFw`**) |
 
 ### Playwright parameters
 
-| Parameter           | Description                                          |
-|---------------------|----------------------------------------------------- |
-| BROWSER             | Specific browser to launch for tests (default to **`chromium`**) |
-| HEADLESS            | Boolean to run tests in [headless mode](https://en.wikipedia.org/wiki/Headless_software) or not (default to **`true`**) |
-| SLOW_MO             | Integer to slow down Playwright operations by the specified amount of milliseconds (default to 5 milliseconds) |
+| Parameter | Description                                                                                                             |
+|-----------|-------------------------------------------------------------------------------------------------------------------------|
+| BROWSER   | Specific browser to launch for tests (default to **`chromium`**)                                                        |
+| HEADLESS  | Boolean to run tests in [headless mode](https://en.wikipedia.org/wiki/Headless_software) or not (default to **`true`**) |
+| SLOW_MO   | Integer to slow down Playwright operations by the specified amount of milliseconds (default to 5 milliseconds)          |
 
-Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`test:specific` command](README.md#specific-test).
+Before running tests, you should install your shop manually or run the install script *
+*`campaigns/sanity/01_installShop/*`** with the [`test:specific` command](README.md#specific-test).
 
-## Sanity tests 
+## Sanity tests
 
 This campaign includes a non-exhaustive set of tests and will ensure that the most important functions work.
 
 ### Launch all scripts
+
 If you want to run all sanity tests, you can run scripts in **`campaigns/sanity/*`**
 
 #### With default values
@@ -68,42 +131,54 @@ npm run test:sanity
 ```
 
 #### With custom values
-You can add parameters that you need in the beginning of your command 
+
+You can add parameters that you need in the beginning of your command
+
 ```bash
 HEADLESS=false URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" npm run test:sanity
 ```
 
 ### Stop tests when first step in failed
-If you want to run all sanity tests "safely", you can use the Travis-specific command : this will add the Mocha `--bail` parameter which stops the campaign when the first test fails.
+
+If you want to run all sanity tests "safely", you can use the Travis-specific command : this will add the Mocha `--bail`
+parameter which stops the campaign when the first test fails.
 
 ```bash
 npm run test:sanity:fast-fail
 ```
 
-## Functional tests 
-This campaign verifies that each function of the software application operate in conformance with the functional requirements. 
-Each and every functionality of the system is tested by providing appropriate input, verifying the output, and comparing the actual results with the expected results.
+## Functional tests
+
+This campaign verifies that each function of the software application operate in conformance with the functional
+requirements.
+Each and every functionality of the system is tested by providing appropriate input, verifying the output, and comparing
+the actual results with the expected results.
 
 ```bash
 URL_FO="Your_Shop_URL_FO" npm run test:functional
 ```
 
-## Specific test 
-If you want to run only one test from a campaign or a couple of tests in the same folder, you can use **`test:specific`** command.
+## Specific test
+
+If you want to run only one test from a campaign or a couple of tests in the same folder, you can use **`test:specific`
+** command.
 
 To specify which test to run, you can add the **`TEST_PATH`** parameter in the beginning of the command
 
 ```bash
 # To run the **Filter Products** test from sanity campaign
-TEST_PATH="sanity/02_productsBO/01_filterProducts" URL_FO="Your_Shop_URL_FO" npm run test:specific
-# To run all **Products BO** tests 
-TEST_PATH="sanity/02_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run test:specific
+TEST_PATH="sanity/03_productsBO/01_filterProducts" URL_FO="Your_Shop_URL_FO" npm run test:specific
+# To run all **Products BO** tests
+TEST_PATH="sanity/03_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run test:specific
 ```
 
 ## LinkChecker
-This script will detect not found and erroneous pages, by crawling your back office and front office. It's still a Work In Progress.
+
+This script will detect not found and erroneous pages, by crawling your back office and front office. It's still a Work
+In Progress.
 
 ### Launch script
+
 If you want to run the links checker test you can run the script **`tools/linkchecker.ts`**.
 It uses a `urls.ts` file describing all the URLs it can crawl.
 
@@ -111,38 +186,12 @@ You **must** disable the Security Token before running this script ! Add this li
 
 ```bash
 SetEnv _TOKEN_ disabled
-``` 
+```
 
 #### With default values
 
 ```bash
 npm run check:links
-```
-
-## Documentation
-
-To help contributors find more documentation about UI tests, [JS-DOC](https://jsdoc.app/) was added on these directories:
-
-- `pages`
-- `campaigns/data/faker`
-- `campaigns/utils`
-
-### Before generating documentation
-
-[jsdoc-to-markdown](https://github.com/jsdoc2md/jsdoc-to-markdown) is the library used, it will create `.md` files using js files from the above directories.
-
-To install `jsdoc-to-markdown` :
-```shell
-cd tests/UI
-npm install
-```
-
-### Generate documentation
-
-By running the command below, it will generate jsdoc on `.doc` directory.
-
-```shell
-bash scripts/generate-jsdoc.sh
 ```
 
 Enjoy :wink: :v:

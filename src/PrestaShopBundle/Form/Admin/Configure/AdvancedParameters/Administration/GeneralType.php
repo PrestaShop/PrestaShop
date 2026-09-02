@@ -1,34 +1,16 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
-use Cookie;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -49,21 +31,25 @@ class GeneralType extends TranslatorAwareType
             ->add('check_ip_address', SwitchType::class, [
                 'label' => $this->trans('Check the cookie\'s IP address', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Check the IP address of the cookie in order to prevent your cookie from being stolen.', 'Admin.Advparameters.Help'),
+                'multistore_configuration_key' => 'PS_COOKIE_CHECKIP',
             ])
             ->add(self::FIELD_FRONT_COOKIE_LIFETIME, IntegerType::class, [
                 'label' => $this->trans('Lifetime of front office cookies', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.', 'Admin.Advparameters.Help'),
                 'unit' => $this->trans('hours', 'Admin.Shopparameters.Feature'),
+                'multistore_configuration_key' => 'PS_COOKIE_LIFETIME_FO',
             ])
             ->add(self::FIELD_BACK_COOKIE_LIFETIME, IntegerType::class, [
                 'label' => $this->trans('Lifetime of back office cookies', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.', 'Admin.Advparameters.Help'),
                 'unit' => $this->trans('hours', 'Admin.Shopparameters.Feature'),
+                'multistore_configuration_key' => 'PS_COOKIE_LIFETIME_BO',
             ])
             ->add(self::FIELD_COOKIE_SAMESITE, ChoiceType::class, [
                 'label' => $this->trans('Cookie SameSite', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Allows you to declare if your cookie should be restricted to a first-party or same-site context.', 'Admin.Advparameters.Help'),
-                'choices' => Cookie::SAMESITE_AVAILABLE_VALUES,
+                'choices' => CookieOptions::SAMESITE_AVAILABLE_VALUES,
+                'multistore_configuration_key' => 'PS_COOKIE_SAMESITE',
             ]);
     }
 
@@ -83,5 +69,15 @@ class GeneralType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'administration_general_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

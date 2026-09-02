@@ -1,28 +1,10 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 /**
  * Class AddressCore.
@@ -38,12 +20,11 @@ class AddressCore extends ObjectModel
     /** @var int Supplier ID which address belongs to */
     public $id_supplier = null;
 
-    /**
-     * @since 1.5.0
+    /** @var int Id warehouse the address belongs to
      *
-     * @var int Warehouse ID which address belongs to
+     * @deprecated since 9.0, advanced stock management has been completely removed
      */
-    public $id_warehouse = null;
+    public $id_warehouse = 0;
 
     /** @var int Country ID */
     public $id_country;
@@ -102,13 +83,16 @@ class AddressCore extends ObjectModel
     /** @var bool True if address has been deleted (staying in database as deleted) */
     public $deleted = false;
 
+    /** @var int|null */
+    public $id_address;
+
     /** @var array Zone IDs cache */
     protected static $_idZones = [];
 
     /** @var array Country IDs cache */
     protected static $_idCountries = [];
 
-    /** @var array<int, bool> Store if an adress ID exists */
+    /** @var array<int, bool> Store if an adress ID exists. Please note that soft-deleted address also belongs to this cache. */
     protected static $addressExists = [];
 
     /**
@@ -131,12 +115,12 @@ class AddressCore extends ObjectModel
             'company' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
             'lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255],
             'firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255],
-            'vat_number' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'vat_number' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32],
             'address1' => ['type' => self::TYPE_STRING, 'validate' => 'isAddress', 'required' => true, 'size' => 128],
             'address2' => ['type' => self::TYPE_STRING, 'validate' => 'isAddress', 'size' => 128],
             'postcode' => ['type' => self::TYPE_STRING, 'validate' => 'isPostCode', 'size' => 12],
             'city' => ['type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64],
-            'other' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => 300],
+            'other' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'phone' => ['type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 32],
             'phone_mobile' => ['type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 32],
             'dni' => ['type' => self::TYPE_STRING, 'validate' => 'isDniLite', 'size' => 16],
@@ -153,7 +137,6 @@ class AddressCore extends ObjectModel
             'id_customer' => ['xlink_resource' => 'customers'],
             'id_manufacturer' => ['xlink_resource' => 'manufacturers'],
             'id_supplier' => ['xlink_resource' => 'suppliers'],
-            'id_warehouse' => ['xlink_resource' => 'warehouse'],
             'id_country' => ['xlink_resource' => 'countries'],
             'id_state' => ['xlink_resource' => 'states'],
         ],
@@ -218,6 +201,7 @@ class AddressCore extends ObjectModel
         }
 
         // Update the cache
+        // This is probably not correct, because it should be true only if the address is NOT flagged as deleted
         static::$addressExists[$this->id] = true;
 
         if (Validate::isUnsignedId($this->id_customer)) {
@@ -241,51 +225,51 @@ class AddressCore extends ObjectModel
             Customer::resetAddressCache($this->id_customer, $this->id);
         }
 
-        if (!$this->isUsed()) {
-            $this->deleteCartAddress();
+        /*
+         * Deleting an address can go two ways.
+         *
+         * 1) If the address is used in an order, we will only soft-delete it. This means mark it with a flag,
+         *    hide it everywhere and prevent anyone using it. We must absolutely retain all the business data
+         *    for the order.
+         * 2) If it's not used, we can safely delete the address.
+         */
 
-            // Update the cache
+        // First step is to unlink this address from all NON-ORDERED carts.
+        $this->deleteCartAddress();
+
+        // Second step - check if the address has been used in some order.
+        if (!$this->isUsed()) {
+            // If NO, we can safely delete it.
             if (isset(static::$addressExists[$this->id])) {
                 static::$addressExists[$this->id] = false;
             }
 
             return parent::delete();
         } else {
-            $this->deleted = true;
-
-            return $this->update();
+            // If YES, we only soft delete it and keep it in the database.
+            return $this->softDelete();
         }
     }
 
     /**
-     * removes the address from carts using it, to avoid errors on not existing address
+     * Removes the address from all non ordered carts using it,
+     * to avoid errors on not existing address.
      */
     protected function deleteCartAddress()
     {
-        // keep pending carts, but unlink it from current address
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
-                    SET id_address_delivery = 0
-                    WHERE id_address_delivery = ' . $this->id;
+        // Reset it from all delivery addresses
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
+            LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
+            SET c.id_address_delivery = 0
+            WHERE c.id_address_delivery = ' . $this->id . ' AND o.id_order IS NULL';
         Db::getInstance()->execute($sql);
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
-                    SET id_address_invoice = 0
-                    WHERE id_address_invoice = ' . $this->id;
+
+        // Reset it from all invoice addresses
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
+            LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
+            SET c.id_address_invoice = 0
+            WHERE c.id_address_invoice = ' . $this->id . ' AND o.id_order IS NULL';
         Db::getInstance()->execute($sql);
-    }
-
-    /**
-     * Returns fields required for an address in an array hash.
-     *
-     * @return array Hash values
-     */
-    public static function getFieldsValidate()
-    {
-        $tmp_addr = new Address();
-        $out = $tmp_addr->fieldsValidate;
-
-        unset($tmp_addr);
-
-        return $out;
     }
 
     /**
@@ -381,7 +365,7 @@ class AddressCore extends ObjectModel
 
             return $this->trans(
                 'Property %s is empty.',
-                [get_class($this) . '->' . $field],
+                [get_class($this) . '->' . htmlspecialchars($field)],
                 'Admin.Notifications.Error'
             );
         }
@@ -390,8 +374,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Request to check if DNI field is required
-     * depending on the current selected country.
+     * Checks if DNI field is required for a given country.
      *
      * @param int $idCountry
      *
@@ -407,7 +390,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Check if Address is used (at least one order placed).
+     * Checks if the address has been used in an order as delivery on invoice address.
      *
      * @return int|bool Order count for this Address
      */
@@ -431,7 +414,7 @@ class AddressCore extends ObjectModel
      *
      * @param int $id_address Address ID
      *
-     * @return array
+     * @return array|bool
      */
     public static function getCountryAndState($id_address)
     {
@@ -451,7 +434,8 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Specify if an address is already in base.
+     * Specify if an address is already in database.
+     * Please note that a soft-deleted address also counts as existing.
      *
      * @param int $id_address Address id
      * @param bool $useCache Use Cache for optimizing queries
@@ -479,7 +463,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Check if the address is valid.
+     * Check if the address is valid - active and not deleted.
      *
      * @param int $id_address Address id
      *
@@ -515,7 +499,8 @@ class AddressCore extends ObjectModel
                 '
 				SELECT `id_address`
 				FROM `' . _DB_PREFIX_ . 'address`
-				WHERE `id_customer` = ' . (int) $id_customer . ' AND `deleted` = 0' . ($active ? ' AND `active` = 1' : '')
+				WHERE `id_customer` = ' . (int) $id_customer . ' AND `deleted` = 0' . ($active ? ' AND `active` = 1' : '') . '
+                ORDER BY `id_address` ASC'
             );
             Cache::store($cache_id, $result);
 
@@ -540,11 +525,14 @@ class AddressCore extends ObjectModel
     {
         $context = Context::getContext();
 
+        /*
+         * To save performance, we cache the result, here we resolve a unique hash
+         * depending on the parameters used to initialize the address.
+         */
         if ($id_address) {
             $context_hash = (int) $id_address;
         } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
-            $context_hash = md5((int) $context->customer->geoloc_id_country . '-' . (int) $context->customer->id_state . '-' .
-                                $context->customer->postcode);
+            $context_hash = md5((int) $context->customer->geoloc_id_country . '-' . (int) $context->customer->id_state . '-' . $context->customer->postcode);
         } else {
             $context_hash = md5((string) $context->country->id);
         }
@@ -552,29 +540,49 @@ class AddressCore extends ObjectModel
         $cache_id = 'Address::initialize_' . $context_hash;
 
         if (!Cache::isStored($cache_id)) {
-            // if an id_address has been specified retrieve the address
+            /*
+             * Case 1 - Specific address ID is provided. We just load it.
+             */
             if ($id_address) {
                 $address = new Address((int) $id_address);
 
                 if (!Validate::isLoadedObject($address)) {
                     throw new PrestaShopException('Invalid address #' . (int) $id_address);
                 }
+            /*
+             * Case 2 - We try to use geolocation information if allowed. However, geoloc_id_country
+             * is not set to the customer anywhere in the current codebase. Most geolocation logic either
+             * native or from modules depend on setting the country directly in the context. So, this will
+             * probably never work.
+             */
             } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
                 $address = new Address();
                 $address->id_country = (int) $context->customer->geoloc_id_country;
                 $address->id_state = (int) $context->customer->id_state;
                 $address->postcode = $context->customer->postcode;
+            /*
+             * Case 3 - There is already a country set in the context and it's not the shop country.
+             * This is pretty common if you either use geolocation modules or let the user select his country
+             * via a custom country selector on the front office.
+             */
             } elseif ((int) $context->country->id && ((int) $context->country->id != Configuration::get('PS_SHOP_COUNTRY_ID'))) {
                 $address = new Address();
                 $address->id_country = (int) $context->country->id;
                 $address->id_state = 0;
                 $address->postcode = '0';
+            /*
+             * Case 4 - If there is no country in the context, or the country is the same, we use the shop country.
+             * We also assign the state and postcode if available.
+             */
             } elseif ((int) Configuration::get('PS_SHOP_COUNTRY_ID')) {
                 // set the default address
                 $address = new Address();
                 $address->id_country = (int) Configuration::get('PS_SHOP_COUNTRY_ID');
                 $address->id_state = (int) Configuration::get('PS_SHOP_STATE_ID');
                 $address->postcode = Configuration::get('PS_SHOP_CODE');
+            /*
+             * Case 5 - As a last resort, we just use the default country. It will most likely be the shop country anyway.
+             */
             } else {
                 // set the default address
                 $address = new Address();
@@ -582,6 +590,8 @@ class AddressCore extends ObjectModel
                 $address->id_state = 0;
                 $address->postcode = '0';
             }
+
+            // Store it in cache, so we don't have to re-initialize it again
             Cache::store($cache_id, $address);
 
             return $address;
@@ -592,8 +602,6 @@ class AddressCore extends ObjectModel
 
     /**
      * Returns Address ID for a given Supplier ID.
-     *
-     * @since 1.5.0
      *
      * @param int $id_supplier Supplier ID
      *
@@ -608,7 +616,6 @@ class AddressCore extends ObjectModel
         $query->where('deleted = 0');
         $query->where('id_customer = 0');
         $query->where('id_manufacturer = 0');
-        $query->where('id_warehouse = 0');
 
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
@@ -621,6 +628,7 @@ class AddressCore extends ObjectModel
      * @param int $id_customer Customer id
      *
      * @return false|string|null Amount of aliases found
+     *
      * @todo: Find out if we shouldn't be returning an int instead? (breaking change)
      */
     public static function aliasExist($alias, $id_address, $id_customer)

@@ -1,0 +1,59 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# Error 404 page is rendered very early in the process as soon as no route is found, the user is not loaded yet so we cannot display the regular layout, this page is very simple on purpose #}
+{% extends '@PrestaShop/base.html.twig' %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme' ~ rtl_suffix ~ '.css') }}"/>
+{% endblock %}
+
+{% block title %}
+  {{ 'Page not found'|trans({}, 'Admin.Notifications.Error') }}
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="mt-5">
+      <div class="card">
+        <div class="card-body text-center">
+          <img class="img-responsive" src="{{ asset('themes/new-theme/img/error/error.svg') }}" width="320" height="auto" alt="{{ 'Page not found'|trans({}, 'Admin.Notifications.Error') }}">
+
+          <div class="mt-3">
+            <p class="error-header">
+              {{ 'Page not found'|trans({}, 'Admin.Notifications.Error') }}
+            </p>
+
+            <div class="mx-auto">
+              <p class="mb-0">{{ 'The page you\'re looking for could not be found. This might be due to a typo in the URL, an outdated link, or because the page was part of a module that is no longer installed.'|trans({}, 'Admin.Notifications.Error') }}</p>
+            </div>
+
+            {% if exception is defined and exception %}
+              <div class="mx-auto">
+                <p class="mb-0">{{ exception.message }}</p>
+              </div>
+            {% endif %}
+
+            {% if errorMessage is defined %}
+              <div class="mx-auto">
+                <p class="mb-0">{{ errorMessage }}</p>
+              </div>
+            {% endif %}
+
+            <div class="mt-4">
+              <button class="btn btn-primary js-go-back-btn" type="button">
+                <i class="material-icons">arrow_back</i> {{ 'Back to previous page'|trans({}, 'Admin.Actions') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="{{ asset('themes/new-theme/public/error.bundle.js') }}"></script>
+{% endblock %}

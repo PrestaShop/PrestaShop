@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
@@ -85,10 +65,9 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
-     * @throws TypeException
-     *
      * @return string
      *
+     * @throws TypeException
      * @throws FileNotFoundException
      * @throws TypeException
      */
@@ -101,10 +80,10 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
+     * @return string
+     *
      * @throws FileNotFoundException
      * @throws TypeException
-     *
-     * @return string
      */
     public function renderTxt(LayoutInterface $layout, LanguageInterface $language)
     {
@@ -137,7 +116,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
 
         try {
             $renderedTemplate = $this->twig->render($layoutPath, $layoutVariables);
-        } catch (LoaderError $e) {
+        } catch (LoaderError) {
             throw new FileNotFoundException(sprintf('Could not find layout file: %s', $layoutPath));
         }
 
@@ -171,7 +150,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         $templateTransformations = new TransformationCollection();
         /** @var TransformationInterface $transformation */
         foreach ($this->transformations as $transformation) {
-            if (get_class($transformation) == 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation' && $themeName == 'modern') {
+            if ($transformation::class == 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation' && $themeName == 'modern') {
                 continue;
             }
             if ($templateType !== $transformation->getType()) {
@@ -181,7 +160,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
             $templateTransformations->add($transformation);
         }
 
-        //This hook allows to add/remove transformations during a layout rendering
+        // This hook allows to add/remove transformations during a layout rendering
         $this->hookDispatcher->dispatchWithParameters(
             MailTemplateRendererInterface::GET_MAIL_LAYOUT_TRANSFORMATIONS,
             [

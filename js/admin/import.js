@@ -1,34 +1,14 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 var importCancelRequest = false;
 var importContinueRequest = false;
 
-$(document).ready(function(){
+$(function(){
 
-	$('#saveImportMatchs').unbind('click').click(function(){
+	$('#saveImportMatchs').off('click').on('click', function(){
 
 	var newImportMatchs = $('#newImportMatchs').val();
 	if (newImportMatchs == '')
@@ -45,7 +25,7 @@ $(document).ready(function(){
 	       async: false,
 	       cache: false,
 	       dataType : "json",
-	       data: 'ajax=1&action=saveImportMatchs&tab=AdminImport&token=' + token + '&skip=' + $('input[name=skip]').val() + '&newImportMatchs=' + newImportMatchs + matchFields,
+	       data: 'ajax=1&action=saveImportMatchs&controller=AdminImport&token=' + token + '&skip=' + $('input[name=skip]').val() + '&newImportMatchs=' + newImportMatchs + matchFields,
 	       success: function(jsonData)
 	       {
 				$('#valueImportMatchs').append('<option id="'+jsonData.id+'" value="'+matchFields+'" selected="selected">'+newImportMatchs+'</option>');
@@ -60,7 +40,7 @@ $(document).ready(function(){
 	}
 	});
 
-	$('#loadImportMatchs').unbind('click').click(function(){
+	$('#loadImportMatchs').off('click').on('click', function(){
 
 		var idToLoad = $('select#valueImportMatchs option:selected').attr('id');
 		$.ajax({
@@ -69,13 +49,13 @@ $(document).ready(function(){
 		       async: false,
 		       cache: false,
 		       dataType : "json",
-		       data: 'ajax=1&action=loadImportMatchs&tab=AdminImport&token=' + token + '&idImportMatchs=' + idToLoad,
+		       data: 'ajax=1&action=loadImportMatchs&controller=AdminImport&token=' + token + '&idImportMatchs=' + idToLoad,
 		       success: function(jsonData)
 		       {
 					var matchs = jsonData.matchs.split('|')
 					$('input[name=skip]').val(jsonData.skip);
 					for (i=0;i<matchs.length;i++)
-						$('#type_value\\['+i+'\\]').val(matchs[i]).attr('selected',true);
+						$('#type_value\\['+i+'\\]').val(matchs[i]).attr('selected',true).trigger("chosen:updated");
 		       },
 		      error: function(XMLHttpRequest, textStatus, errorThrown)
 		       {
@@ -85,7 +65,7 @@ $(document).ready(function(){
 		   });
 	});
 
-	$('#deleteImportMatchs').unbind('click').click(function(){
+	$('#deleteImportMatchs').off('click').on('click', function(){
 
 		var idToDelete = $('select#valueImportMatchs option:selected').attr('id');
 		$.ajax({
@@ -94,7 +74,7 @@ $(document).ready(function(){
 		       async: false,
 		       cache: false,
 		       dataType : "json",
-		       data: 'ajax=1&action=deleteImportMatchs&tab=AdminImport&token=' + token + '&idImportMatchs=' + idToDelete ,
+		       data: 'ajax=1&action=deleteImportMatchs&controller=AdminImport&token=' + token + '&idImportMatchs=' + idToDelete ,
 		       success: function(jsonData)
 		       {
 					$('select#valueImportMatchs option[id=\''+idToDelete+'\']').remove();
@@ -109,7 +89,7 @@ $(document).ready(function(){
 
 	});
 
-	$('#import_stop_button').unbind('click').click(function(){
+	$('#import_stop_button').off('click').on('click', function(){
 		if (importContinueRequest) {
 			$('#importProgress').modal('hide');
 			importContinueRequest = false;
@@ -124,7 +104,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#import_continue_button').unbind('click').click(function(){
+	$('#import_continue_button').off('click').on('click', function(){
 		$('#import_continue_button').hide();
 		importContinueRequest = false;
 		$('#import_progress_div').show();
@@ -186,7 +166,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables, more
     var startingTime = new Date().getTime();
     $.ajax({
        type: 'POST',
-       url: 'index.php?ajax=1&action=import&tab=AdminImport&offset='+offset+'&limit='+limit+'&token='+token+(validateOnly?'&validateOnly=1':'')+((moreStep>0)?'&moreStep='+moreStep:''),
+       url: 'index.php?ajax=1&action=import&controller=AdminImport&offset='+offset+'&limit='+limit+'&token='+token+(validateOnly?'&validateOnly=1':'')+((moreStep>0)?'&moreStep='+moreStep:''),
        cache: false,
        dataType: "json",
        data: data,
@@ -361,8 +341,13 @@ function updateProgression(currentPosition, total, nextPosition, finish, moreSte
 			$('#import_progressbar_next').width((progressionNext-progressionDone)+'%');
 		} else {
 			$('#import_progressbar_next').width('0%');
-			$('#import_progressbar_done').width((100-progressionDone)+'%');
-			$('#import_progressbar_done2').width(progressionDone+'%');
+      if (progressionDone === 100) {
+        $('#import_progressbar_done').width('100%');
+        $('#import_progressbar_done2').width('0%');
+      } else {
+        $('#import_progressbar_done').width((100-progressionDone)+'%');
+        $('#import_progressbar_done2').width(progressionDone+'%');
+      }
 			if (moreStepLabel) $('#import_progressbar_done2 span').html(moreStepLabel);
 		}
 	}

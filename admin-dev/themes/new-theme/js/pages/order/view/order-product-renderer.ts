@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
@@ -32,12 +12,17 @@ const {$} = window;
 export default class OrderProductRenderer {
   router: Router;
 
+  isMultishipmentIsEnabled: boolean;
+
   constructor() {
     this.router = new Router();
+
+    // eslint-disable-next-line max-len
+    this.isMultishipmentIsEnabled = document.querySelector<HTMLElement>(OrderViewPageMap.productsTable)?.dataset.multishipmentEnabled === '1';
   }
 
   addOrUpdateProductToList($productRow: JQuery, newRow: HTMLElement): void {
-    if ($productRow.length > 0) {
+    if ($productRow.length > 0 && !this.isMultishipmentIsEnabled) {
       $productRow.html($(newRow).html());
     } else {
       $(OrderViewPageMap.productAddRow).before(
@@ -49,7 +34,7 @@ export default class OrderProductRenderer {
   }
 
   updateNumProducts(numProducts: number): void {
-    $(OrderViewPageMap.productsCount).html(<string>(<unknown>numProducts));
+    $(OrderViewPageMap.productsCount).html(String(numProducts));
   }
 
   editProductFromList(
@@ -76,24 +61,32 @@ export default class OrderProductRenderer {
       orderInvoiceId,
       isOrderTaxIncluded,
     });
-    $(OrderViewPageMap.productAddActionBtn).addClass('d-none');
-    $(OrderViewPageMap.productAddRow).addClass('d-none');
+    if (!this.isMultishipmentIsEnabled) {
+      $(OrderViewPageMap.productAddActionBtn).addClass('d-none');
+      $(OrderViewPageMap.productAddRow).addClass('d-none');
+    }
   }
 
   moveProductsPanelToModificationPosition(scrollTarget = 'body'): void {
     $(OrderViewPageMap.productActionBtn).addClass('d-none');
-    $(
-      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`,
-    ).removeClass('d-none');
+    if (!this.isMultishipmentIsEnabled) {
+      $(
+        `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`,
+      ).removeClass('d-none');
+    }
     this.moveProductPanelToTop(scrollTarget);
   }
 
   moveProductsPanelToRefundPosition(): void {
     this.resetAllEditRows();
-    $(
-      /* eslint-disable-next-line max-len */
-      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`,
-    ).addClass('d-none');
+    if (!this.isMultishipmentIsEnabled) {
+      $(
+        /* eslint-disable-next-line max-len */
+        `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`,
+      ).addClass('d-none');
+    } else {
+      $(OrderViewPageMap.productActionBtn).addClass('d-none');
+    }
     this.moveProductPanelToTop();
   }
 
@@ -141,9 +134,13 @@ export default class OrderProductRenderer {
 
     $(OrderViewPageMap.productsPagination).removeClass('d-none');
     $(OrderViewPageMap.productActionBtn).removeClass('d-none');
-    $(
-      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`,
-    ).addClass('d-none');
+    if (!this.isMultishipmentIsEnabled) {
+      $(
+        `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`,
+      ).addClass('d-none');
+    } else {
+      $(OrderViewPageMap.productAddRow).addClass('d-none');
+    }
 
     // Restore pagination
     this.paginate(1);
@@ -161,7 +158,9 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productAddAvailableText).html('');
     $(OrderViewPageMap.productAddLocationText).html('');
     $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
-    $(OrderViewPageMap.productAddActionBtn).prop('disabled', true);
+    if (!this.isMultishipmentIsEnabled) {
+      $(OrderViewPageMap.productAddActionBtn).prop('disabled', true);
+    }
   }
 
   resetAllEditRows(): void {

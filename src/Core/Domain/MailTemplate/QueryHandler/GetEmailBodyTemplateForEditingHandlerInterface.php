@@ -1,0 +1,15 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+namespace PrestaShop\PrestaShop\Core\Domain\MailTemplate\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Query\GetEmailBodyTemplateForEditing;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\QueryResult\EditableEmailBodyTemplate;
+
+interface GetEmailBodyTemplateForEditingHandlerInterface
+{
+    public function handle(GetEmailBodyTemplateForEditing $query): EditableEmailBodyTemplate;
+}

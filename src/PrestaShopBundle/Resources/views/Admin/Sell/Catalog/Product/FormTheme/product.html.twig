@@ -1,50 +1,31 @@
-{#**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
 
 {# This form theme is the root one for all the product form so we define here which base theme is used for all the children #}
 {% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
 {% block image_dropzone_widget %}
   {% set attr = attr|merge({
-    'class': (attr.class|default('') ~ ' image-dropzone')|trim,
+    class: (attr.class|default('') ~ ' image-dropzone')|trim,
     'data-translations': translations|json_encode,
     'data-locales': locales|json_encode,
     'data-product-id': product_id,
+    'data-shop-id': shop_id,
+    'data-is-multi-store-active': is_multi_store_active,
     'data-form-name': update_form_name,
-    'data-token': csrf_token(update_form_name)
+    'data-token': csrf_token(update_form_name),
   }) %}
 
   {% if form.shop_images is defined %}
     {{ form_row(form.shop_images) }}
   {% endif %}
-  <div {{ block('widget_attributes') }}>
-  </div>
+  <div {{ block('widget_attributes') }}></div>
 {% endblock %}
 
 {% block related_product_row %}
-  {% set attr = attr|merge({'class': (attr.class|default('') ~ ' related-product entity-item')|trim}) %}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' related-product entity-item')|trim}) %}
   <li {{ block('widget_container_attributes') }}>
     <div class="related-product-image">
       {{ form_widget(form.image) }}
@@ -63,7 +44,7 @@
     </div>
     <div class="packed-product-legend">
       {{ form_widget(form.name, {prefix: '<i class="material-icons entity-item-delete">delete</i>'}) }}
-      {{ form_widget(form.reference)}}
+      {{ form_widget(form.reference) }}
     </div>
     <div class="form-group">
       <div class="packed-product-quantity">
@@ -76,7 +57,6 @@
     {{ form_widget(form.combination_id) }}
   </li>
 {% endblock %}
-
 
 {% block product_type_row %}
   <div class="product-type-selector form-group">

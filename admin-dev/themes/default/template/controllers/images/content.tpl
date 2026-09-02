@@ -1,26 +1,6 @@
 {**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
 
 <div class="alert alert-danger">
@@ -74,7 +54,7 @@
 					<select name="type" onchange="changeFormat(this)">
 						<option value="all">{l s='All' d='Admin.Global'}</option>
 						{foreach $types AS $k => $type}
-							<option value="{$k}">{$type}</option>
+							<option value="{$k|escape:'html':'UTF-8'}">{$type|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				</div>
@@ -87,7 +67,7 @@
 					<select name="format_{$k}">
 						<option value="all">{l s='All' d='Admin.Global'}</option>
 						{foreach $formats[$k] AS $format}
-							<option value="{$format['id_image_type']}">{$format['name']}</option>
+							<option value="{$format['id_image_type']|escape:'html':'UTF-8'}">{$format['name']|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				</div>

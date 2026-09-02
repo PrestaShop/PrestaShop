@@ -1,0 +1,38 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleTechnicalName;
+
+/**
+ * Install module
+ */
+class InstallModuleCommand
+{
+    /**
+     * @var ModuleTechnicalName
+     */
+    private $technicalName;
+
+    /**
+     * @param string $technicalName Technical name for module
+     */
+    public function __construct(string $technicalName)
+    {
+        $this->technicalName = new ModuleTechnicalName($technicalName);
+    }
+
+    /**
+     * @return ModuleTechnicalName
+     */
+    public function getTechnicalName(): ModuleTechnicalName
+    {
+        return $this->technicalName;
+    }
+}

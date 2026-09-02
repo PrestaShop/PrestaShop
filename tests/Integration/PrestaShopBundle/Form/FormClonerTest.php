@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -30,6 +10,7 @@ namespace Tests\Integration\PrestaShopBundle\Form;
 
 use Closure;
 use PrestaShopBundle\Form\FormCloner;
+use ReflectionProperty;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\ChoiceList\ChoiceListInterface;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -50,7 +31,7 @@ class FormClonerTest extends AbstractFormTester
     public function testClone(): void
     {
         $form = $this->createForm(AdvancedFormType::class);
-        $this->assertTotalNumberOfListeners($form, 5);
+        $this->assertTotalNumberOfListeners($form, 6);
         $formCloner = new FormCloner();
         $clonedForm = $formCloner->cloneForm($form);
         $this->compareForms($form, $clonedForm);
@@ -62,7 +43,7 @@ class FormClonerTest extends AbstractFormTester
         $form = $this->createForm(AdvancedFormType::class, [
             'add_model_transformer' => $transformer,
         ]);
-        $this->assertTotalNumberOfListeners($form, 5);
+        $this->assertTotalNumberOfListeners($form, 6);
 
         $formTransformers = $form->getConfig()->getModelTransformers();
         $this->assertContains($transformer, $formTransformers);
@@ -84,7 +65,7 @@ class FormClonerTest extends AbstractFormTester
         $form = $this->createForm(AdvancedFormType::class, [
             'add_model_transformer' => $transformer,
         ]);
-        $this->assertTotalNumberOfListeners($form, 5);
+        $this->assertTotalNumberOfListeners($form, 6);
 
         $formTransformers = $form->get('target')->getConfig()->getModelTransformers();
         $this->assertContains($transformer, $formTransformers);
@@ -105,7 +86,7 @@ class FormClonerTest extends AbstractFormTester
         $form = $this->createForm(AdvancedFormType::class, [
             'add_view_transformer' => $transformer,
         ]);
-        $this->assertTotalNumberOfListeners($form, 5);
+        $this->assertTotalNumberOfListeners($form, 6);
 
         $formTransformers = $form->getConfig()->getViewTransformers();
         $this->assertContains($transformer, $formTransformers);
@@ -127,7 +108,7 @@ class FormClonerTest extends AbstractFormTester
         $form = $this->createForm(AdvancedFormType::class, [
             'add_view_transformer' => $transformer,
         ]);
-        $this->assertTotalNumberOfListeners($form, 5);
+        $this->assertTotalNumberOfListeners($form, 6);
 
         $formTransformers = $form->get('target')->getConfig()->getViewTransformers();
         $this->assertContains($transformer, $formTransformers);
@@ -148,12 +129,12 @@ class FormClonerTest extends AbstractFormTester
         $form = $this->createForm(AdvancedFormType::class, [
             'add_event_subscriber' => $subscriber,
         ]);
-        $this->assertTotalNumberOfListeners($form, 10);
+        $this->assertTotalNumberOfListeners($form, 11);
 
         $formCloner = new FormCloner();
         $clonedForm = $formCloner->cloneForm($form);
         $this->compareForms($form, $clonedForm);
-        $this->assertTotalNumberOfListeners($clonedForm, 10);
+        $this->assertTotalNumberOfListeners($clonedForm, 11);
     }
 
     public function testCloneWithEventListener(): void
@@ -167,12 +148,12 @@ class FormClonerTest extends AbstractFormTester
         $form = $this->createForm(AdvancedFormType::class, [
             'add_event_listener' => $listener,
         ]);
-        $this->assertTotalNumberOfListeners($form, 6);
+        $this->assertTotalNumberOfListeners($form, 7);
 
         $formCloner = new FormCloner();
         $clonedForm = $formCloner->cloneForm($form);
         $this->compareForms($form, $clonedForm);
-        $this->assertTotalNumberOfListeners($clonedForm, 6);
+        $this->assertTotalNumberOfListeners($clonedForm, 7);
     }
 
     public function testCloneWithOptions(): void
@@ -180,7 +161,7 @@ class FormClonerTest extends AbstractFormTester
         $form = $this->createForm(AdvancedFormType::class, [
             'required' => false,
         ]);
-        $this->assertTotalNumberOfListeners($form, 5);
+        $this->assertTotalNumberOfListeners($form, 6);
         $formCloner = new FormCloner();
         $clonedForm = $formCloner->cloneForm($form, [
             'required' => true,
@@ -237,7 +218,7 @@ class FormClonerTest extends AbstractFormTester
      */
     private function getTransformerChoiceList(DataTransformerInterface $transformer): ChoiceListInterface
     {
-        $reflectionProperty = new \ReflectionProperty(ChoiceToValueTransformer::class, 'choiceList');
+        $reflectionProperty = new ReflectionProperty(ChoiceToValueTransformer::class, 'choiceList');
         $reflectionProperty->setAccessible(true);
 
         $choiceList = $reflectionProperty->getValue($transformer);

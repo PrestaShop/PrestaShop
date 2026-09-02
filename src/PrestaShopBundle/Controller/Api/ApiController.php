@@ -1,32 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -34,30 +15,27 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 abstract class ApiController
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected LoggerInterface $logger;
+    protected ContainerInterface $container;
+    protected AuthorizationCheckerInterface $authorizationChecker;
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
     public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
+    }
+
+    public function setAuthorizationChecker(AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -94,11 +72,11 @@ abstract class ApiController
      */
     protected function clearCache()
     {
-        $cacheRefresh = $this->container->get('prestashop.cache.refresh');
+        /** @var SymfonyCacheClearer $cacheClearer */
+        $cacheClearer = $this->container->get(SymfonyCacheClearer::class);
 
         try {
-            $cacheRefresh->addCacheClear();
-            $cacheRefresh->execute();
+            $cacheClearer->clear();
         } catch (Exception $exception) {
             $this->container->get('logger')->error($exception->getMessage());
         }
@@ -115,7 +93,7 @@ abstract class ApiController
      */
     protected function addAdditionalInfo(
         Request $request,
-        QueryParamsCollection $queryParams = null,
+        ?QueryParamsCollection $queryParams = null,
         $headers = []
     ) {
         $router = $this->container->get('router');
@@ -148,9 +126,9 @@ abstract class ApiController
             $info['previous_url'] = $router->generate($request->attributes->get('_route'), $previousParams);
         }
 
-        if (array_key_exists('Total-Pages', $headers) &&
-            array_key_exists('page_index', $allParams) &&
-            $headers['Total-Pages'] > $allParams['page_index']) {
+        if (array_key_exists('Total-Pages', $headers)
+            && array_key_exists('page_index', $allParams)
+            && $headers['Total-Pages'] > $allParams['page_index']) {
             $nextParams = $allParams;
             if (array_key_exists('page_index', $nextParams)) {
                 ++$nextParams['page_index'];
@@ -182,7 +160,7 @@ abstract class ApiController
     protected function jsonResponse(
         $data,
         Request $request,
-        QueryParamsCollection $queryParams = null,
+        ?QueryParamsCollection $queryParams = null,
         $status = 200,
         $headers = []
     ) {
@@ -197,14 +175,14 @@ abstract class ApiController
     /**
      * Checks if access is granted.
      *
-     * @param array $accessLevel
+     * @param mixed $accessLevel
      * @param string $controller name of the controller
      *
      * @return bool
      */
-    protected function isGranted(array $accessLevel, $controller)
+    protected function isGranted($accessLevel, $controller)
     {
-        return $this->container->get('security.authorization_checker')->isGranted(
+        return $this->authorizationChecker->isGranted(
             $accessLevel,
             $controller . '_'
         );

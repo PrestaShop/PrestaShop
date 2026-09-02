@@ -25,14 +25,14 @@ Feature: Legacy products have consistent product type through dynamic checking (
     Given there is a product in the catalog named "Standard Product" with a price of 15.0 and 100 items in stock
     Then there is a product "standard_product" with name "Standard Product"
     And product "standard_product" type should be standard
-    And product "standard_product" persisted type should be undefined
+    And product "standard_product" persisted type should be standard
     And product "standard_product" dynamic type should be standard
 
   Scenario: I create a product and add combinations using legacy methods, its product type should be combinations
     Given there is a product in the catalog named "Product With Combinations" with a price of 15.0 and 100 items in stock
     Then there is a product "product_with_combinations" with name "Product With Combinations"
     And product "product_with_combinations" type should be standard
-    And product "product_with_combinations" persisted type should be undefined
+    And product "product_with_combinations" persisted type should be standard
     And product "Product With Combinations" has combinations with following details:
       | reference | quantity | attributes         |
       | whiteM    | 150      | Size:M;Color:White |
@@ -45,7 +45,7 @@ Feature: Legacy products have consistent product type through dynamic checking (
     Given there is a product in the catalog named "Virtual Product" with a price of 15.0 and 100 items in stock
     Then there is a product "virtual_product" with name "Virtual Product"
     And product "virtual_product" type should be standard
-    And product "virtual_product" persisted type should be undefined
+    And product "virtual_product" persisted type should be standard
     And product "virtual_product" dynamic type should be standard
     Given product "Virtual Product" is virtual
     Then product "virtual_product" type should be virtual
@@ -57,7 +57,7 @@ Feature: Legacy products have consistent product type through dynamic checking (
     And there is a product in the catalog named "Product in pack" with a price of 15.0 and 100 items in stock
     Then there is a product "pack_product" with name "Pack Product"
     And product "pack_product" type should be standard
-    And product "pack_product" persisted type should be undefined
+    And product "pack_product" persisted type should be standard
     And product "pack_product" dynamic type should be standard
     Given product "Pack Product" is a pack containing 10 items of product "Product in pack"
     Then product "Pack Product" is considered as a pack
@@ -69,6 +69,5 @@ Feature: Legacy products have consistent product type through dynamic checking (
     Given there is a product in the catalog named "Undefined Product" with a price of 15.0 and 100 items in stock
     Then there is a product "undefined_product" with name "Undefined Product"
     And product "undefined_product" type should be standard
-    And product "undefined_product" persisted type should be undefined
+    And product "undefined_product" persisted type should be standard
     And product "undefined_product" dynamic type should be standard
-    And product "Undefined Product" should be editable

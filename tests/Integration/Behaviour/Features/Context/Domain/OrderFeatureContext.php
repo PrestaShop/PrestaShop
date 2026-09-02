@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -35,16 +15,18 @@ use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Configuration;
 use Context;
+use Currency;
 use FrontController;
 use Order;
 use OrderInvoice;
 use OrderState;
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand;
@@ -75,6 +57,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
 use PrestaShopCollection;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Product;
 use RuntimeException;
 use SpecificPrice;
@@ -85,9 +69,11 @@ use TaxManagerFactory;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
+    use ExtendedTestCaseMethodsTrait;
     private const ORDER_CART_RULE_FREE_SHIPPING = 'Free Shipping';
 
     /**
@@ -106,6 +92,26 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $adminControllerTestDouble->controller_type = 'admin';
         $adminControllerTestDouble->php_self = 'dummyTestDouble';
         Context::getContext()->controller = $adminControllerTestDouble;
+    }
+
+    /**
+     * @Given I change for the order :orderReference the currency :oldCurrency to :newCurrency
+     *
+     * @param string $orderReference
+     * @param string $oldCurrency
+     * @param string $newCurrency
+     */
+    public function changeOrderCurrency(string $orderReference, string $oldCurrency, string $newCurrency): void
+    {
+        $oldCurrencyId = Currency::getIdByIsoCode($oldCurrency, 0, true);
+        $newCurrencyId = Currency::getIdByIsoCode($newCurrency, 0, true);
+
+        $this->getCommandBus()->handle(
+            new ChangeOrderCurrencyCommand(
+                (int) SharedStorage::getStorage()->get($orderReference),
+                $newCurrencyId
+            )
+        );
     }
 
     /**
@@ -190,14 +196,27 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $combinationId = isset($data['combination']) ? $this->getProductCombinationId($product, $data['combination']) : 0;
 
         if (empty($data['price_tax_incl'])) {
-            $data['price_tax_incl'] = (string) $this->getProductTaxCalculator((int) $orderId, $productId)
-                ->addTaxes($data['price']);
+            $data['price_tax_incl'] = (string) $this
+                ->getProductTaxCalculator((int) $orderId, $productId)
+                ->addTaxes((float) $data['price']);
         }
 
         try {
             $hasFreeShipping = null;
             if (isset($data['free_shipping'])) {
                 $hasFreeShipping = PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']);
+            }
+            $shipmentId = null;
+            if (!empty($data['shipment_id'])) {
+                $shipmentId = (int) SharedStorage::getStorage()->get($data['shipment_id']);
+            }
+            $carrierId = null;
+            if (!empty($data['carrier_id'])) {
+                $carrierId = (int) SharedStorage::getStorage()->get($data['carrier_id']);
+            }
+            $isVirtual = null;
+            if (isset($data['is_virtual'])) {
+                $isVirtual = PrimitiveUtils::castStringBooleanIntoBoolean($data['is_virtual']);
             }
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::withNewInvoice(
@@ -207,7 +226,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     $data['price_tax_incl'],
                     $data['price'],
                     (int) $data['amount'],
-                    $hasFreeShipping
+                    $hasFreeShipping,
+                    $shipmentId,
+                    $carrierId,
+                    $isVirtual
                 )
             );
         } catch (InvalidProductQuantityException $e) {
@@ -284,8 +306,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (empty($data['price_tax_incl'])) {
-            $data['price_tax_incl'] = (string) $this->getProductTaxCalculator((int) $orderId, $product->getProductId())
-                ->addTaxes($data['price']);
+            $data['price_tax_incl'] = (string) $this
+                ->getProductTaxCalculator((int) $orderId, $product->getProductId())
+                ->addTaxes((float) $data['price']);
         }
 
         try {
@@ -365,7 +388,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         foreach ($invoiceShippingData as $invoiceShippingIndex => $invoiceShippingDetails) {
             $shippingTaxDetails = $invoiceShippingTaxDetails[$invoiceShippingIndex];
             foreach ($invoiceShippingDetails as $shippingField => $shippingValue) {
-                Assert::assertEquals(
+                $this->assertEqualsWithEpsilon(
                     (float) $shippingValue,
                     (float) $shippingTaxDetails[$shippingField],
                     sprintf(
@@ -408,7 +431,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         foreach ($invoiceProductData as $invoiceProductIndex => $invoiceProductDetails) {
             $productTaxDetails = $invoiceProductTaxDetails[$invoiceProductIndex];
             foreach ($invoiceProductDetails as $taxField => $taxValue) {
-                Assert::assertEquals(
+                $this->assertEqualsWithEpsilon(
                     (float) $taxValue,
                     (float) $productTaxDetails[$taxField],
                     sprintf(
@@ -649,6 +672,20 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 ->addTaxes($data['price']);
         }
 
+        $shipments = null;
+
+        if (!empty($data['shipment_mapping'])) {
+            $shipments = [];
+
+            foreach (explode(',', $data['shipment_mapping']) as $pair) {
+                list($shipmentRef, $qty) = explode(':', trim($pair));
+                $shipments[] = [
+                    'shipment_id' => (int) SharedStorage::getStorage()->get(trim($shipmentRef)),
+                    'quantity' => (int) $qty,
+                ];
+            }
+        }
+
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductInOrderCommand(
@@ -657,7 +694,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     $data['price_tax_incl'],
                     $data['price'],
                     (int) $data['amount'],
-                    $invoiceId
+                    $invoiceId,
+                    $shipments
                 )
             );
         } catch (InvalidProductQuantityException $e) {
@@ -757,6 +795,45 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         if ($currentOrderStateId !== $expectedStatusId) {
             throw new RuntimeException('After changing order status id should be [' . $expectedStatusId . '] but received [' . $currentOrderStateId . ']');
+        }
+    }
+
+    /**
+     * @Then order :orderReference has the following status history:
+     *
+     * @param string $orderReference
+     * @param TableNode $tableNode
+     *
+     * @throws RuntimeException
+     */
+    public function orderHasHistoryStatus(string $orderReference, TableNode $tableNode)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderStatusHistory = $orderForViewing->getHistory()->getStatuses();
+
+        /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
+        $orderStateChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.order_state_by_id');
+        $availableOrderStates = $orderStateChoiceProvider->getChoices();
+
+        $expectedOrderStatusHistory = $tableNode->getColumnsHash();
+        Assert::assertEquals(count($expectedOrderStatusHistory), count($orderStatusHistory));
+
+        foreach ($expectedOrderStatusHistory as $key => $expectedOrderStatus) {
+            if (!isset($availableOrderStates[$expectedOrderStatus['status']])) {
+                throw new RuntimeException('Unknown order status ' . $expectedOrderStatus['status']);
+            }
+            $expectedOrderStatusHistory[$key]['status_id'] = (int) $availableOrderStates[$expectedOrderStatus['status']];
+        }
+
+        foreach ($expectedOrderStatusHistory as $key => $expectedOrderStatus) {
+            $orderStatus = $orderStatusHistory[$key];
+            Assert::assertEquals($expectedOrderStatus['status_id'], $orderStatus->getOrderStatusId());
+            Assert::assertEquals($expectedOrderStatus['status'], $orderStatus->getName());
+            Assert::assertEquals($expectedOrderStatus['employee_first_name'], $orderStatus->getEmployeeFirstName());
+            Assert::assertEquals($expectedOrderStatus['employee_last_name'], $orderStatus->getEmployeeLastName());
+            Assert::assertEquals($expectedOrderStatus['api_client_id'], $orderStatus->getApiClientId());
         }
     }
 
@@ -1180,6 +1257,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Given Order :orderReference has following prices:
+     *
      * @Then Order :orderReference should have following prices:
      */
     public function assertOrderPrices(string $orderReference, TableNode $table)
@@ -1245,8 +1323,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $invoicePosition
      * @param TableNode $table
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function addCartRuleAndUpdateSingleInvoice(string $orderReference, string $invoicePosition, TableNode $table)
     {
@@ -1314,6 +1392,17 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(
             InvalidCartRuleDiscountValueException::class,
             InvalidCartRuleDiscountValueException::INVALID_MIN_AMOUNT
+        );
+    }
+
+    /**
+     * @Then I should get error that order already has a free shipping discount
+     */
+    public function assertDuplicateFreeShippingCartRule(): void
+    {
+        $this->assertLastErrorIs(
+            InvalidCartRuleDiscountValueException::class,
+            InvalidCartRuleDiscountValueException::DUPLICATE_FREE_SHIPPING
         );
     }
 
@@ -1543,9 +1632,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $productName
      *
-     * @throws RuntimeException
-     *
      * @return FoundProduct
+     *
+     * @throws RuntimeException
      */
     private function getProductByName(string $productName): FoundProduct
     {
@@ -1633,7 +1722,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $data = [];
         $cartId = SharedStorage::getStorage()->get($testCaseData['cart']);
         $data['cartId'] = $cartId;
-        $data['employeeId'] = Context::getContext()->employee->id;
+        $data['employeeId'] = (int) Context::getContext()->employee?->id;
         $data['orderMessage'] = $testCaseData['message'];
         $data['paymentModuleName'] = $testCaseData['payment module name'];
 
@@ -1710,12 +1799,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      *
      * @return PrestaShopCollection
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function getOrderInvoices(int $orderId): PrestaShopCollection
     {
-        $order = new \Order($orderId);
+        $order = new Order($orderId);
 
         return $order->getInvoicesCollection();
     }
@@ -1815,8 +1904,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      *
      * @return TaxCalculator
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function getProductTaxCalculator(int $orderId, int $productId): TaxCalculator
     {

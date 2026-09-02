@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
@@ -29,8 +9,11 @@ import InvoiceNoteManager from '@pages/order/invoice-note-manager';
 import OrderViewPage from '@pages/order/view/order-view-page';
 import OrderProductAutocomplete from '@pages/order/view/order-product-add-autocomplete';
 import OrderProductAdd from '@pages/order/view/order-product-add';
-import TextWithLengthCounter from '@components/form/text-with-length-counter';
+import SplitShipmentManager from '@pages/order/split-shipment-manager';
 import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
+import MergeShipmentManager from './merge-shipment-manager';
+import EditShipmentManager from './edit-shipment-manager';
+import FulfillShipmentManager from './fulfill-shipment-manager';
 
 const {$} = window;
 
@@ -38,12 +21,27 @@ $(() => {
   const DISCOUNT_TYPE_AMOUNT = 'amount';
   const DISCOUNT_TYPE_PERCENT = 'percent';
   const DISCOUNT_TYPE_FREE_SHIPPING = 'free_shipping';
+  // eslint-disable-next-line max-len
+  const multishipmentIsEnabled = document.querySelector<HTMLElement>(OrderViewPageMap.productsTable)?.dataset.multishipmentEnabled === '1';
 
+  new SplitShipmentManager();
+  new MergeShipmentManager();
+  new EditShipmentManager();
   new OrderShippingManager();
-  new TextWithLengthCounter();
+  new FulfillShipmentManager();
+
+  window.prestashop.component.initComponents([
+    'TextWithLengthCounter',
+  ]);
   const orderViewPage = new OrderViewPage();
-  const orderAddAutocomplete = new OrderProductAutocomplete($(OrderViewPageMap.productSearchInput));
-  const orderAdd = new OrderProductAdd();
+
+  if (!multishipmentIsEnabled) {
+    const orderAddAutocomplete = new OrderProductAutocomplete($(OrderViewPageMap.productSearchInput));
+    const orderAdd = new OrderProductAdd();
+
+    orderAddAutocomplete.listenForSearch();
+    orderAddAutocomplete.onItemClickedCallback = (product: Record<string, any> | undefined): void => orderAdd.setProduct(product);
+  }
 
   orderViewPage.listenForProductPack();
   orderViewPage.listenForProductDelete();
@@ -52,9 +50,6 @@ $(() => {
   orderViewPage.listenForProductPagination();
   orderViewPage.listenForRefund();
   orderViewPage.listenForCancelProduct();
-
-  orderAddAutocomplete.listenForSearch();
-  orderAddAutocomplete.onItemClickedCallback = (product: Record<string, any> | undefined): void => orderAdd.setProduct(product);
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
@@ -157,6 +152,11 @@ $(() => {
 
     $modal.on('shown.bs.modal', () => {
       $(OrderViewPageMap.addCartRuleSubmit).prop('disabled', true);
+    });
+    $modal.on('hidden.bs.modal', () => {
+      $(OrderViewPageMap.addCartRuleNameInput).val('');
+      $(OrderViewPageMap.addCartRuleTypeSelect).val(DISCOUNT_TYPE_PERCENT).trigger('change');
+      $(OrderViewPageMap.addCartRuleValueInput).val('');
     });
 
     $form.find(OrderViewPageMap.addCartRuleNameInput).on('keyup', (event) => {

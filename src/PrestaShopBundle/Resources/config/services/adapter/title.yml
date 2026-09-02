@@ -2,6 +2,14 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Adapter\Title\CommandHandler\AddTitleHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Title\CommandHandler\EditTitleHandler:
+    autowire: true
+    autoconfigure: true
+
   prestashop.adapter.title.title_image_thumbnail_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Title\TitleImageThumbnailProvider'
     arguments:
@@ -11,12 +19,19 @@ services:
 
   prestashop.adapter.title.command_handler.delete_title_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Title\CommandHandler\DeleteTitleHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand'
+    autowire: true
+    autoconfigure: true
 
   prestashop.adapter.title.command_handler.bulk_delete_title_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Title\CommandHandler\BulkDeleteTitleHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\BulkDeleteTitleCommand'
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Title\QueryHandler\GetTitleForEditingHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Title\Repository\TitleRepository:
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Title\Validate\TitleValidator: ~

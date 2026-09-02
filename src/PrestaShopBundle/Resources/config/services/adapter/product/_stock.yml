@@ -5,17 +5,11 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator: ~
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository:
+    autowire: true
+    public: false
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator'
-
-  PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository:
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator'
-      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository:
     arguments:
@@ -27,29 +21,19 @@ services:
       - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetProductStockMovementsHandler:
+    autoconfigure: true
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository'
       - '@translator'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetCombinationStockMovementsHandler:
+    autoconfigure: true
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository'
       - '@translator'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Core\Stock\StockManager'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository'
-      - '@PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface'
-      - '@PrestaShop\PrestaShop\Adapter\HookManager'
-      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository'
+    autowire: true
+    public: false

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -37,9 +17,11 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Tests\Integration\Utility\LoginTrait;
 
 class PositionsControllerTest extends WebTestCase
 {
+    use LoginTrait;
     /**
      * @var int
      */
@@ -56,10 +38,6 @@ class PositionsControllerTest extends WebTestCase
      * @var Router
      */
     protected $router;
-    /**
-     * @var Session
-     */
-    protected $session;
 
     protected function setUp(): void
     {
@@ -67,19 +45,18 @@ class PositionsControllerTest extends WebTestCase
         Module::clearStaticCache();
 
         parent::setUp();
-        self::bootKernel();
 
+        $this->client = self::createClient();
+        $this->loginUser($this->client);
         /** @var ModuleManager */
-        $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
+        $moduleManager = self::$kernel->getContainer()->get(ModuleManager::class);
         if (!$moduleManager->isInstalled('ps_emailsubscription')) {
             $moduleManager->install('ps_emailsubscription');
         }
 
         $this->moduleId = Module::getModuleIdByName('ps_emailsubscription');
         $this->hookId = Hook::getIdByName('displayFooterBefore');
-        $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');
-        $this->session = self::$kernel->getContainer()->get('session');
     }
 
     public function testUnhooksListAction(): void
@@ -111,7 +88,9 @@ class PositionsControllerTest extends WebTestCase
             $response->getStatusCode()
         );
 
-        $messages = $this->session->getFlashBag()->all();
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
         $this->assertArrayHasKey(
             'error',
             $messages
@@ -143,14 +122,15 @@ class PositionsControllerTest extends WebTestCase
                 'hookId' => $this->hookId,
             ]
         );
-
         $response = $this->client->getResponse();
         $this->assertEquals(
             Response::HTTP_FOUND,
             $response->getStatusCode()
         );
 
-        $messages = $this->session->getFlashBag()->all();
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
         $this->assertArrayNotHasKey(
             'error',
             $messages

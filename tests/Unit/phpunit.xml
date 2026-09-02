@@ -2,7 +2,7 @@
     bootstrap="bootstrap.php"
     backupGlobals="true">
   <php>
-    <server name="KERNEL_CLASS" value="AppKernel" />
+    <server name="KERNEL_CLASS" value="AdminKernel" />
   </php>
   <testsuites>
     <testsuite name="Unit">

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -31,10 +11,12 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
+use PrestaShopBundle\Form\Admin\Type\ButtonCollectionType;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Toolbar\ToolbarButtonsProviderInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -55,19 +37,28 @@ class HeaderType extends TranslatorAwareType
     private $isEcotaxEnabled;
 
     /**
+     * @var ToolbarButtonsProviderInterface
+     */
+    private $toolbarButtonsProvider;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param bool $stockManagementEnabled
+     * @param bool $isEcotaxEnabled
+     * @param ToolbarButtonsProviderInterface $toolbarButtonsProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         bool $stockManagementEnabled,
-        bool $isEcotaxEnabled
+        bool $isEcotaxEnabled,
+        ToolbarButtonsProviderInterface $toolbarButtonsProvider
     ) {
         parent::__construct($translator, $locales);
         $this->stockManagementEnabled = $stockManagementEnabled;
         $this->isEcotaxEnabled = $isEcotaxEnabled;
+        $this->toolbarButtonsProvider = $toolbarButtonsProvider;
     }
 
     /**
@@ -82,11 +73,6 @@ class HeaderType extends TranslatorAwareType
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Product name', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,
-                'help' => $this->trans(
-                    'Invalid characters are: %invalidCharacters%',
-                    'Admin.Catalog.Feature',
-                    ['%invalidCharacters%' => '<>;=#{}']
-                ),
                 'constraints' => $options['active'] ? [new DefaultLanguage()] : [],
                 'options' => [
                     'constraints' => [
@@ -96,7 +82,7 @@ class HeaderType extends TranslatorAwareType
                                 'message' => $this->trans(
                                     'This field contains invalid characters: %invalidCharacters%',
                                     'Admin.Catalog.Feature',
-                                    ['%invalidCharacters%' => '<>;=#{}']
+                                    ['%invalidCharacters%' => '<>{}']
                                 ),
                             ]
                         ),
@@ -134,6 +120,15 @@ class HeaderType extends TranslatorAwareType
                     $this->trans('Offline', 'Admin.Global') => false,
                     $this->trans('Online', 'Admin.Global') => true,
                 ],
+                'modify_all_shops' => true,
+                'default_empty_data' => $options['force_default_active'],
+            ])
+            ->add('mobile_toolbar', ButtonCollectionType::class, [
+                'buttons' => $this->toolbarButtonsProvider->getToolbarButtonsOptions(['productId' => $options['product_id']]),
+                'inline_buttons_limit' => 0,
+                'row_attr' => [
+                    'class' => 'header-mobile-toolbar',
+                ],
             ])
             ->add('initial_type', HiddenType::class)
         ;
@@ -149,10 +144,15 @@ class HeaderType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'active' => false,
+                'force_default_active' => false,
                 'required' => false,
                 'label' => false,
                 'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/header.html.twig',
             ])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
             ->setAllowedTypes('active', ['bool'])
         ;
     }

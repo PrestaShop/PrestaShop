@@ -14,6 +14,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
+    project: './tsconfig.json',
   },
   rules: {
     'no-plusplus': [2, {allowForLoopAfterthoughts: true}],
@@ -65,6 +66,7 @@ module.exports = {
         'class-methods-use-this': 0,
         'no-alert': 0,
         '@typescript-eslint/ban-ts-comment': 0,
+        '@typescript-eslint/no-deprecated': 'error',
         '@typescript-eslint/no-non-null-assertion': 0,
         '@typescript-eslint/no-explicit-any': 0,
         '@typescript-eslint/no-this-alias': 0,

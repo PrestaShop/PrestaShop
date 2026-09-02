@@ -1,45 +1,27 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use AppKernel;
+use AdminKernel;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Exception;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use RuntimeException;
 use Tests\Integration\Utility\PaymentModuleFake;
+use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
+    use ExtendedTestCaseMethodsTrait;
 
     /**
      * @var Order[]
@@ -62,7 +44,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         // need to boot kernel for usage in $paymentModule->validateOrder()
         global $kernel;
         $previousKernel = $kernel;
-        $kernel = new AppKernel('test', true);
+        $kernel = new AdminKernel('test', true);
         $kernel->boot();
 
         // need to update secret_key in order to get payment working
@@ -204,7 +186,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         foreach ($taxDetailsData as $taxDetailsIndex => $expectedTaxDetails) {
             $productsTaxDetails = $orderProductsTaxDetails[$taxDetailsIndex];
             foreach ($expectedTaxDetails as $taxField => $taxValue) {
-                Assert::assertEquals(
+                $this->assertEqualsWithEpsilon(
                     (float) $taxValue,
                     (float) $productsTaxDetails[$taxField],
                     sprintf(
@@ -303,6 +285,20 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             $order->delete();
         }
         $this->orders = [];
+    }
+
+    /**
+     * @Then I reference order :orderReference delivery address as :addressReference
+     *
+     * @param string $orderReference
+     * @param string $addressReference
+     */
+    public function saveAddressIdFromOrder(string $orderReference, string $addressReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+
+        SharedStorage::getStorage()->set($addressReference, $order->id_address_delivery);
     }
 
     /**

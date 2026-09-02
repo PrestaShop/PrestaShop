@@ -1,32 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Service;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
@@ -41,6 +22,11 @@ class TranslationService
      * @var Container
      */
     public $container;
+
+    /**
+     * @var \PrestaShop\PrestaShop\Core\Validation\ValidatorInterface
+     */
+    public $validator;
 
     /**
      * @param string $lang
@@ -100,7 +86,7 @@ class TranslationService
      */
     private function getResourcesDirectory()
     {
-        return $this->container->getParameter('kernel.root_dir') . '/Resources';
+        return $this->container->getParameter('kernel.project_dir') . '/app/Resources';
     }
 
     /**
@@ -116,7 +102,7 @@ class TranslationService
         $factory = $this->container->get('ps.translations_factory');
 
         if ($this->requiresThemeTranslationsFactory($theme, $type)) {
-            if ('classic' === $theme) {
+            if (in_array($theme, Theme::CORE_THEMES)) {
                 $type = 'front';
             } else {
                 $type = $theme;
@@ -188,7 +174,9 @@ class TranslationService
      * @return array
      *
      * @throws Exception
+     *
      * @todo: we need module information here
+     *
      * @todo: we need to improve the Vuejs application to send the information
      */
     public function listDomainTranslation(
@@ -242,14 +230,14 @@ class TranslationService
                 ->createQueryBuilder('t')
                 ->where('t.lang = :lang')->setParameter('lang', $lang)
                 ->andWhere('t.domain = :domain')->setParameter('domain', $domain)
-                ->andWhere('t.key LIKE :key')->setParameter('key', $key)
+                ->andWhere('t.key = :key')->setParameter('key', $key)
             ;
             if ($theme !== null) {
                 $queryBuilder->andWhere('t.theme = :theme')->setParameter('theme', $theme);
             } else {
                 $queryBuilder->andWhere('t.theme IS NULL');
             }
-            $translation = $queryBuilder->getQuery()->getSingleResult();
+            $translation = $queryBuilder->getQuery()->getOneOrNullResult();
         } catch (Exception $exception) {
             $logger->error($exception->getMessage(), $log_context);
         }
@@ -277,6 +265,10 @@ class TranslationService
                 $logger->error($violation->getMessage(), $log_context);
             }
 
+            return false;
+        }
+
+        if ($this->validator->isCleanHtml($translation->getTranslation()) === false) {
             return false;
         }
 

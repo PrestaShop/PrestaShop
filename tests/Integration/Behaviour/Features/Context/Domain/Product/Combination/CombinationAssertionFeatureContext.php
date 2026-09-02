@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -33,6 +13,8 @@ use DateTime;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotGenerateCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
@@ -45,6 +27,25 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CombinationAssertionFeatureContext extends AbstractCombinationFeatureContext
 {
+    /**
+     * @Then combination(s) :combinationReferences should not exist anymore
+     *
+     * @param string $combinationReferences
+     */
+    public function checkCombinationsNotFound(string $combinationReferences): void
+    {
+        foreach (explode(',', $combinationReferences) as $combinationReference) {
+            $caughtException = null;
+            try {
+                $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId());
+            } catch (CombinationNotFoundException $e) {
+                $caughtException = $e;
+            }
+
+            Assert::assertNotNull($caughtException);
+        }
+    }
+
     /**
      * @Then combination :combinationReference should have following details:
      *
@@ -124,14 +125,14 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
         return new CombinationPrices(
             new DecimalNumber($dataRows['impact on price']),
             new DecimalNumber($dataRows['impact on price with taxes']),
-            new DecimalNUmber($dataRows['impact on unit price']),
-            new DecimalNUmber($dataRows['impact on unit price with taxes']),
+            new DecimalNumber($dataRows['impact on unit price']),
+            new DecimalNumber($dataRows['impact on unit price with taxes']),
             new DecimalNumber($dataRows['eco tax']),
             new DecimalNumber($dataRows['eco tax with taxes']),
-            new DecimalNUmber($dataRows['wholesale price']),
-            new DecimalNUmber($dataRows['product tax rate']),
-            new DecimalNUmber($dataRows['product price']),
-            new DecimalNUmber($dataRows['product ecotax'])
+            new DecimalNumber($dataRows['wholesale price']),
+            new DecimalNumber($dataRows['product tax rate']),
+            new DecimalNumber($dataRows['product price']),
+            new DecimalNumber($dataRows['product ecotax'])
         );
     }
 
@@ -165,6 +166,17 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
     }
 
     /**
+     * @Then I should get error that it is not allowed to generate combinations when not all attributes are present in all shops
+     */
+    public function assertCannotGenerateCombinationError(): void
+    {
+        $this->assertLastErrorIs(
+            CannotGenerateCombinationException::class,
+            CannotGenerateCombinationException::DIFFERENT_ATTRIBUTES_BETWEEN_SHOPS
+        );
+    }
+
+    /**
      * @Then combination ":combinationReference" should have following stock details:
      *
      * @param string $combinationReference
@@ -176,7 +188,7 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
     }
 
     /**
-     * @Then combination :combinationReference should have following stock details for shops :shopReferences:
+     * @Then combination :combinationReference should have following stock details for shop(s) :shopReferences:
      *
      * @param string $combinationReference
      * @param CombinationStock $expectedStock

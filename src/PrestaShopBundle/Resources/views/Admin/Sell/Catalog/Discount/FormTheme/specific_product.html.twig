@@ -1,0 +1,24 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% block entity_item_list_row %}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' media entity-item specific-product-item')|trim}) %}
+  <li {{ block('widget_container_attributes') }}>
+    <div class="media-left">
+      {{ form_widget(form.image) }}
+    </div>
+    <div class="media-body media-middle">
+      <div class="d-inline-flex">
+        {{ form_row(form.name) }}
+      </div>
+    </div>
+    <div class="media-right d-inline-flex">
+      {{ form_row(form.combination_id) }}
+      {{ form_row(form.quantity) }}
+      {{ form_rest(form) }}
+      <i class="material-icons entity-item-delete">clear</i>
+    </div>
+  </li>
+{% endblock %}

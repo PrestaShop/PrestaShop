@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -31,7 +11,6 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 use Cache;
 use DOMElement;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
@@ -42,15 +21,9 @@ use Tests\Resources\Resetter\ProductResetter;
 
 class CombinationControllerTest extends FormGridControllerTestCase
 {
-    /**
-     * @var bool
-     */
-    private $changedProductFeatureFlag = false;
-
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::mockContext();
         ProductResetter::resetProducts();
     }
 
@@ -60,39 +33,20 @@ class CombinationControllerTest extends FormGridControllerTestCase
         ProductResetter::resetProducts();
     }
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
-        if (!$featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2)) {
-            $featureFlagRepository->enable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-            $this->changedProductFeatureFlag = true;
-        }
-    }
-
-    public function tearDown(): void
-    {
-        if ($this->changedProductFeatureFlag) {
-            $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
-            $featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-        }
-
-        // Call parent tear down later or the kernel will be shut down
-        parent::tearDown();
-    }
-
     /**
      * @return int
      */
     public function testCreate(): int
     {
+        $this->client->disableReboot();
+
         // First create product, we don't check if this works very thoroughly as it is already handled
         // by ProductControllerTest this is only to have a parent for combinations.
         $formData = [
             'create_product[type]' => ProductType::TYPE_COMBINATIONS,
         ];
 
-        $createEntityUrl = $this->router->generate('admin_products_v2_create');
+        $createEntityUrl = $this->router->generate('admin_products_create');
 
         $this->fillAndSubmitEntityForm($createEntityUrl, $formData, 'create_product_create');
         $formHandlerChecker = $this->client->getContainer()->get('prestashop.core.form.identifiable_object.product_form_handler');
@@ -112,6 +66,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testGenerateCombinations(int $productId): array
     {
+        $this->client->disableReboot();
+
         $this->client->xmlHttpRequest('GET', $this->router->generate('admin_all_attribute_groups'));
         $attributeGroups = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertNotFalse($attributeGroups);
@@ -149,6 +105,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testEditDefaultCombination(array $generatedCombinations): array
     {
+        $this->client->disableReboot();
+
         $defaultCombinationId = $generatedCombinations['combination_ids'][0];
         // First assert that first combination is the default one
         $formData = [
@@ -211,6 +169,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testEditNotDefaultCombination(array $generatedCombinations): array
     {
+        $this->client->disableReboot();
+
         $initialDefaultCombinationId = $generatedCombinations['combination_ids'][0];
         $newDefaultCombinationId = $generatedCombinations['combination_ids'][1];
 
@@ -234,6 +194,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testEditFromList(array $generatedCombinations): array
     {
+        $this->client->disableReboot();
+
         $newDefaultCombinationId = $generatedCombinations['combination_ids'][1];
         $productId = $generatedCombinations['product_id'];
 
@@ -280,6 +242,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testDefaultFromList(array $generatedCombinations): array
     {
+        $this->client->disableReboot();
+
         $initialDefaultCombinationId = $generatedCombinations['combination_ids'][0];
         $newDefaultCombinationId = $generatedCombinations['combination_ids'][1];
         $productId = $generatedCombinations['product_id'];
@@ -344,7 +308,7 @@ class CombinationControllerTest extends FormGridControllerTestCase
     private function updateCombinationFromList(int $productId, array $formData): void
     {
         // Get token from product form page
-        $productCrawler = $this->client->request('GET', $this->router->generate('admin_products_v2_edit', ['productId' => $productId]));
+        $productCrawler = $this->client->request('GET', $this->router->generate('admin_products_edit', ['productId' => $productId]));
         $tokenCrawler = $productCrawler->filter('[name="combination_list[_token]"]');
 
         $tokenInput = $tokenCrawler->getNode(0);

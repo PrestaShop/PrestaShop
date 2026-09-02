@@ -1,33 +1,11 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
  * Class TranslateCore.
- *
- * @since 1.5.0
  */
 class TranslateCore
 {
@@ -70,41 +48,6 @@ class TranslateCore
         }
 
         return $addslashes ? addslashes($str) : stripslashes($str);
-    }
-
-    /**
-     * Get a translation for an admin controller.
-     *
-     * @deprecated Use Context::getContext()->getTranslator()->trans()
-     *
-     * @param string $string
-     * @param string $class
-     * @param bool $addslashes
-     * @param bool $htmlentities
-     * @param array|null $sprintf
-     *
-     * @return string
-     */
-    public static function getAdminTranslation($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true, $sprintf = null)
-    {
-        @trigger_error(__FUNCTION__ . 'is deprecated. Use Context::getContext()->getTranslator()->trans() instead.', E_USER_DEPRECATED);
-
-        $str = Context::getContext()->getTranslator()->trans($string);
-
-        if ($htmlentities) {
-            $str = htmlspecialchars($str, ENT_QUOTES, 'utf-8');
-        }
-        $str = str_replace('"', '&quot;', $str);
-
-        if (
-            $sprintf !== null &&
-            (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
-        ) {
-            $str = Translate::checkAndReplaceArgs($str, $sprintf);
-        }
-
-        return $addslashes ? addslashes($str) : $str;
     }
 
     /**
@@ -197,9 +140,9 @@ class TranslateCore
             }
 
             if (
-                $sprintf !== null &&
-                (!is_array($sprintf) || !empty($sprintf)) &&
-                !(count($sprintf) === 1 && isset($sprintf['legacy']))
+                $sprintf !== null
+                && (!is_array($sprintf) || !empty($sprintf))
+                && !(count($sprintf) === 1 && isset($sprintf['legacy']))
             ) {
                 $ret = Translate::checkAndReplaceArgs($ret, $sprintf);
             }
@@ -257,7 +200,7 @@ class TranslateCore
         }
 
         if (!isset($_LANGPDF) || !is_array($_LANGPDF)) {
-            return str_replace('"', '&quot;', $string);
+            return str_replace('"', '&quot;', Translate::checkAndReplaceArgs($string, $sprintf));
         }
 
         $string = preg_replace("/\\\*'/", "\'", $string);
@@ -266,9 +209,9 @@ class TranslateCore
         $str = (array_key_exists('PDF' . $key, $_LANGPDF) ? $_LANGPDF['PDF' . $key] : $string);
 
         if (
-            $sprintf !== null &&
-            (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+            $sprintf !== null
+            && (!is_array($sprintf) || !empty($sprintf))
+            && !(count($sprintf) === 1 && isset($sprintf['legacy']))
         ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
@@ -319,28 +262,6 @@ class TranslateCore
         }
 
         return $string;
-    }
-
-    /**
-     * Compatibility method that just calls postProcessTranslation.
-     *
-     * @deprecated renamed this to postProcessTranslation, since it is not only used in relation to smarty
-     */
-    public static function smartyPostProcessTranslation($string, $params)
-    {
-        return Translate::postProcessTranslation($string, $params);
-    }
-
-    /**
-     * Helper function to make calls to postProcessTranslation more readable.
-     *
-     * @deprecated 1.7.1.0
-     */
-    public static function ppTags($string, $tags)
-    {
-        Tools::displayAsDeprecated();
-
-        return Translate::postProcessTranslation($string, ['tags' => $tags]);
     }
 
     /**

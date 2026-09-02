@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Classes\module;
@@ -30,6 +10,7 @@ use Cache;
 use Module;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use ReflectionMethod;
 use Tests\Integration\Utility\ContextMockerTrait;
 
 /**
@@ -54,7 +35,6 @@ class ModuleTest extends TestCase
     {
         return [
             ['bankwire'],
-            ['cronjobs'],
             ['ganalytics'],
             ['ps_emailsubscription'],
             ['ps_featuredproducts'],
@@ -62,7 +42,7 @@ class ModuleTest extends TestCase
     }
 
     /**
-     * Check if html in trans is escaped when the _raw parameter is used
+     * Check if html in trans is not escaped by trans method but escaped with htmlspecialchars on parameters
      *
      * @dataProvider providerModulesOnDisk
      *
@@ -71,13 +51,13 @@ class ModuleTest extends TestCase
     public function testTrans(string $moduleName): void
     {
         $module = Module::getInstanceByName($moduleName);
-        $transMethod = new \ReflectionMethod($module, 'trans');
+        $transMethod = new ReflectionMethod($module, 'trans');
         $transMethod->setAccessible(true);
-        $trans = $transMethod->invoke($module, '<a href="test">%d Succesful deletion "%s"</a>', ['_raw' => true, 10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
+        $trans = $transMethod->invoke($module, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
         $this->assertEquals('<a href="test">10 Succesful deletion "<b>stringTest</b>"</a>', $trans);
 
-        $trans = $transMethod->invoke($module, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
-        $this->assertEquals('&lt;a href="test"&gt;10 Succesful deletion "&lt;b&gt;stringTest&lt;/b&gt;"&lt;/a&gt;', $trans);
+        $trans = $transMethod->invoke($module, '<a href="test">%d Succesful deletion "%s"</a>', [10, htmlspecialchars('<b>stringTest</b>')], 'Admin.Notifications.Success');
+        $this->assertEquals('<a href="test">10 Succesful deletion "&lt;b&gt;stringTest&lt;/b&gt;"</a>', $trans);
     }
 
     /**
@@ -102,7 +82,7 @@ class ModuleTest extends TestCase
         $overrides = $module->getOverrides();
 
         $this->assertContains('Cart', $overrides);
-        $this->assertContains('AdminProductsController', $overrides);
+        $this->assertContains('DummyAdminController', $overrides);
         $this->assertCount(2, $overrides);
 
         HelperModule::removeModule('pscsx3241');

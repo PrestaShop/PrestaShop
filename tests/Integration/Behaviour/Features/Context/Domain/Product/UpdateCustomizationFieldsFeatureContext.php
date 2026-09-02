@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -38,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -59,11 +40,24 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @When I update product :productReference with following customization fields for shop :shopReference:
      *
      * @param string $productReference
+     * @param string $shopReference
      * @param TableNode $table
      */
     public function updateCustomizationFieldsForShop(string $productReference, TableNode $table, string $shopReference): void
     {
         $this->updateCustomizationFields($productReference, $table, ShopConstraint::shop((int) $this->getSharedStorage()->get($shopReference)));
+    }
+
+    /**
+     * @When I update product :productReference with following customization fields for shops :shopReferences:
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     * @param TableNode $table
+     */
+    public function updateCustomizationFieldsForShopCollection(string $productReference, TableNode $table, string $shopReferences): void
+    {
+        $this->updateCustomizationFields($productReference, $table, ShopCollection::shops($this->referencesToIds($shopReferences)));
     }
 
     /**
@@ -93,6 +87,30 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @Given product :productReference requires customization
+     *
+     * @param string $productReference
+     */
+    public function setProductRequiresCustomization(string $productReference): void
+    {
+        $defaultLangId = (int) Language::getIdByIso('en');
+        $this->updateProductCustomizationFields(
+            $productReference,
+            ['required_customization_field'],
+            [
+                [
+                    'id' => null,
+                    'type' => CustomizationFieldType::TYPE_TEXT,
+                    'localized_names' => [$defaultLangId => 'Required customization'],
+                    'is_required' => true,
+                    'added_by_module' => false,
+                ],
+            ],
+            ShopConstraint::shop($this->getDefaultShopId())
+        );
     }
 
     /**
@@ -261,6 +279,21 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
         $actualFields = $this->getProductCustomizationFields($productReference, $shopConstraint);
         $notFoundExpectedFields = [];
 
+        // Assign new references if defined
+        foreach ($data as $index => $expectedField) {
+            if (!isset($expectedField['new reference'])) {
+                break;
+            }
+
+            // If a new reference is being set we match it with the same order as the returned data
+            if (!$this->getSharedStorage()->exists($expectedField['new reference'])) {
+                $actualField = $actualFields[$index];
+                $this->getSharedStorage()->set($expectedField['new reference'], $actualField->getCustomizationFieldId());
+                // New reference becomes the expected reference for the second loop
+                $data[$index]['reference'] = $expectedField['new reference'];
+            }
+        }
+
         foreach ($data as $expectedField) {
             $expectedId = $this->getSharedStorage()->get($expectedField['reference']);
             $foundExpectedField = false;
@@ -299,7 +332,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
                             );
                         }
                     }
-                    //unset this asserted customization field so we can check if there any left after loop
+                    // unset this asserted customization field so we can check if there any left after loop
                     unset($actualFields[$key]);
 
                     continue;
@@ -315,7 +348,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
             throw new RuntimeException(sprintf(
                 'Following customization fields were not found for product %s: %s',
                 $productReference,
-                var_export($notFoundExpectedFields)
+                var_export($notFoundExpectedFields, true)
             ));
         }
 
@@ -323,7 +356,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
             throw new RuntimeException(sprintf(
                 'Product "%s" contains unexpected customization fields: %s',
                 $productReference,
-                var_export($actualFields)
+                var_export($actualFields, true)
             ));
         }
     }

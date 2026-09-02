@@ -20,8 +20,10 @@ Feature: Duplicate product from Back Office (BO).
     And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
-    And carrier carrier1 named "ecoCarrier" exists
-    And carrier carrier2 named "Fast carry" exists
+    And I create carrier "carrier1" with specified properties:
+      | name | ecoCarrier |
+    And I create carrier "carrier2" with specified properties:
+      | name | Fast carry |
     And I add new supplier supplier1 with the following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
@@ -31,7 +33,6 @@ Feature: Duplicate product from Back Office (BO).
       | description[en-US]      | just a supplier    |
       | meta title[en-US]       | my supplier nr one |
       | meta description[en-US] |                    |
-      | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
     And I add product "product1" with following information:
       | name[en-US] | smart sunglasses   |
@@ -178,7 +179,7 @@ Feature: Duplicate product from Back Office (BO).
       | product1 |
     And I update product product2 with following customization fields:
       | reference    | type | name[en-US]               | name[fr-FR]                         | is required |
-      | customField1 | text | text on top of left lense | texte en haut de la lentille gauche | true        |
+      | customField2 | text | text on top of left lense | texte en haut de la lentille gauche | true        |
     And I enable product "product2"
     And product product2 should have following seo options:
       | redirect_type   | 301-product |
@@ -249,9 +250,9 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | Its so smart |
       | fr-FR  | lel joke     |
     And product "copy_of_product1" localized "link_rewrite" should be:
-      | locale | value              |
-      | en-US  | smart-sunglasses   |
-      | fr-FR  | lunettes-de-soleil |
+      | locale | value                       |
+      | en-US  | copy-of-smart-sunglasses    |
+      | fr-FR  | copie-de-lunettes-de-soleil |
     And product copy_of_product1 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product2    |
@@ -273,9 +274,13 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should have following attachments associated:
       | attachment reference | title                       | description                           | file name    | type      | size  |
       | att1                 | en-US:puffin;fr-Fr:macareux | en-US:puffin photo nr1;fr-Fr:macareux | app_icon.png | image/png | 19187 |
-    And product copy_of_product1 should have identical customization fields to product1
+
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields
+    And product copy_of_product1 should have following customization fields:
+      | new reference    | type | name[en-US]               | name[fr-FR]                         | is required |
+      | customField1Copy | text | text on top of left lense | texte en haut de la lentille gauche | true        |
+    And customField1 and customField1Copy have different values
 
     And product "copy_of_product2" should be disabled
     And product "copy_of_product2" type should be standard
@@ -336,9 +341,9 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | You can read now           |
       | fr-FR  | You can read in french now |
     And product "copy_of_product2" localized "link_rewrite" should be:
-      | locale | value               |
-      | en-US  | reading-glasses     |
-      | fr-FR  | lunettes-de-lecture |
+      | locale | value                        |
+      | en-US  | copy-of-reading-glasses      |
+      | fr-FR  | copie-de-lunettes-de-lecture |
     And product copy_of_product2 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product1    |

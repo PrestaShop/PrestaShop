@@ -1,33 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
  * Represents one product ordered.
  *
- * @since 1.5.0
+ * @deprecated since 9.0 and will be removed in 10.0
  */
 class SupplyOrderDetailCore extends ObjectModel
 {
@@ -272,84 +252,6 @@ class SupplyOrderDetailCore extends ObjectModel
     }
 
     /**
-     * @see ObjectModel::validateController()
-     *
-     * @param bool $htmlentities Optional
-     *
-     * @return array Errors, if any..
-     */
-    public function validateController($htmlentities = true)
-    {
-        $errors = [];
-
-        /* required fields */
-        $fields_required = $this->fieldsRequired;
-
-        $objectName = $this->getObjectName();
-        if (isset(self::$fieldsRequiredDatabase[$objectName])) {
-            $fields_required = array_merge(
-                $this->fieldsRequired,
-                self::$fieldsRequiredDatabase[$objectName]
-            );
-        }
-
-        foreach ($fields_required as $field) {
-            if (($value = $this->{$field}) == false && (string) $value != '0') {
-                if (!$this->id || $field != 'passwd') {
-                    $errors[] = $this->trans(
-                        '%s is required.',
-                        [
-                            '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b>',
-                        ],
-                        'Shop.Notifications.Error'
-                    );
-                }
-            }
-        }
-
-        /* Checks maximum fields sizes */
-        foreach ($this->fieldsSize as $field => $max_length) {
-            $value = $this->{$field};
-            if ($value && Tools::strlen($value) > $max_length) {
-                $errors[] = $this->trans(
-                    'The %1$s field is too long (%2$d chars max).',
-                    [SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities), $max_length],
-                    'Shop.Notifications.Error'
-                );
-            }
-        }
-
-        /* Checks fields validity */
-        foreach ($this->fieldsValidate as $field => $function) {
-            if ($value = $this->{$field}) {
-                if (!Validate::$function($value)) {
-                    $errors[] = '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
-                } elseif ($field == 'passwd') {
-                    if ($value = Tools::getValue($field)) {
-                        $this->{$field} = Tools::hash($value);
-                    } else {
-                        $this->{$field} = $value;
-                    }
-                }
-            }
-        }
-
-        if ($this->quantity_expected <= 0) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
-        }
-
-        if ($this->tax_rate < 0 || $this->tax_rate > 100) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
-        }
-
-        if ($this->discount_rate < 0 || $this->discount_rate > 100) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
-        }
-
-        return $errors;
-    }
-
-    /**
      * @see ObjectModel::hydrate()
      */
     public function hydrate(array $data, $id_lang = null)
@@ -361,8 +263,8 @@ class SupplyOrderDetailCore extends ObjectModel
         foreach ($data as $key => $value) {
             if (array_key_exists($key, get_object_vars($this))) {
                 // formats prices and floats
-                if ($this->def['fields'][$key]['validate'] == 'isFloat' ||
-                    $this->def['fields'][$key]['validate'] == 'isPrice') {
+                if ($this->def['fields'][$key]['validate'] == 'isFloat'
+                    || $this->def['fields'][$key]['validate'] == 'isPrice') {
                     $value = Tools::ps_round($value, 6);
                 }
                 $this->$key = $value;

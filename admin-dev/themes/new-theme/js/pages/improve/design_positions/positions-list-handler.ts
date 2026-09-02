@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 const {$} = window;
@@ -31,8 +11,6 @@ class PositionsListHandler {
   $panelSelectionSingleSelection: JQuery;
 
   $panelSelectionMultipleSelection: JQuery;
-
-  $panelSelectionOriginalY: number;
 
   $showModules: JQuery;
 
@@ -60,12 +38,6 @@ class PositionsListHandler {
     this.$panelSelectionMultipleSelection = $(
       '#modules-position-multiple-selection',
     );
-    const $alertMessage = $('#content-message-box + .alert');
-
-    this.$panelSelectionOriginalY = <number> this.$panelSelection.offset()?.top;
-    if ($alertMessage.length > 0) {
-      this.$panelSelectionOriginalY += <number> $alertMessage.outerHeight();
-    }
     this.$showModules = $('#show-modules');
     this.$modulesList = $('.modules-position-checkbox');
     this.$hookPosition = $('#hook-position');
@@ -95,14 +67,6 @@ class PositionsListHandler {
   handleList(): void {
     const self = this;
 
-    $(window).on('scroll', () => {
-      const $scrollTop = <number>$(window).scrollTop();
-      self.$panelSelection.css(
-        'top',
-        $scrollTop < 20 ? 0 : $scrollTop - self.$panelSelectionOriginalY,
-      );
-    });
-
     self.$modulesList.on('change', () => {
       const $checkedCount = self.$modulesList.filter(':checked').length;
 
@@ -127,7 +91,7 @@ class PositionsListHandler {
       }
     });
 
-    self.$panelSelection.find('button').click(() => {
+    self.$panelSelection.find('button').on('click', () => {
       $('button[name="unhookform"]').trigger('click');
     });
 
@@ -273,15 +237,20 @@ class PositionsListHandler {
     const $moduleId = <string>self.$showModules.val();
     const $regex = new RegExp(`(${$hookName})`, 'gi');
 
-    // Update "Transplant module" button
-    const transplantModuleHref = new URL(this.$transplantModuleButton.prop('href'));
-    transplantModuleHref.searchParams.set('show_modules', $moduleId);
-    this.$transplantModuleButton.attr('href', transplantModuleHref.toString());
+    // Update "Transplant module" button (only present on the positions list page)
+    const transplantModuleRawHref = this.$transplantModuleButton.prop('href');
+
+    if (transplantModuleRawHref) {
+      const transplantModuleHref = new URL(transplantModuleRawHref);
+      transplantModuleHref.searchParams.set('show_modules', $moduleId);
+      this.$transplantModuleButton.attr('href', transplantModuleHref.toString());
+    }
+
+    const isVisible: boolean = $hookName === '' && $moduleId === 'all';
 
     for (let $id = 0; $id < self.$hooksList.length; $id += 1) {
-      self.$hooksList[$id].container.toggle(
-        $hookName === '' && $moduleId === 'all',
-      );
+      self.$hooksList[$id].container.toggleClass('hook-visible', isVisible);
+      self.$hooksList[$id].container.toggle(isVisible);
       self.$hooksList[$id].element.html(self.$hooksList[$id].title);
       self.$hooksList[$id].container
         .find('.module-item')
@@ -331,12 +300,15 @@ class PositionsListHandler {
 
       // Nothing selected
       if ($moduleId === 'all' && $hookName !== '') {
+        $hooksToShowFromHookName.toggleClass('hook-visible', true);
         $hooksToShowFromHookName.show();
       } else if ($hookName === '' && $moduleId !== 'all') {
         // Have no hook bug have a module
+        $hooksToShowFromModule.toggleClass('hook-visible', true);
         $hooksToShowFromModule.show();
       } else {
         // Both selected
+        $hooksToShowFromHookName.filter($hooksToShowFromModule).toggleClass('hook-visible', true);
         $hooksToShowFromHookName.filter($hooksToShowFromModule).show();
       }
     }
@@ -344,6 +316,7 @@ class PositionsListHandler {
     if (!self.$hookPosition.prop('checked')) {
       for (let $id = 0; $id < self.$hooksList.length; $id += 1) {
         if (self.$hooksList[$id].container.is('.hook-position')) {
+          self.$hooksList[$id].container.toggleClass('hook-visible', false);
           self.$hooksList[$id].container.hide();
         }
       }

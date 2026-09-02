@@ -4,25 +4,22 @@ parameters:
   translations_theme_dir: "%resources_dir%/themes"
   translations_modules_dir: "%resources_dir%/modules"
   prestashop.security.voter.product.class: Tests\Integration\Utility\PageVoter
-  AdapterSecurityAdminClass: Tests\Integration\Utility\AdapterSecurityAdmin
 
 imports:
-  - { resource: config_dev.yml }
+  - { resource: config.yml }
   - { resource: "../../tests/Resources/config/services.yml" }
 
 framework:
   test: ~
   session:
-    storage_id: session.storage.mock_file
+    storage_factory_id: session.storage.factory.mock_file
   profiler:
     collect: false
+  trusted_proxies: 'REMOTE_ADDR'
 
 web_profiler:
   toolbar: '%use_debug_toolbar%'
   intercept_redirects: true
-
-swiftmailer:
-  disable_delivery: true
 
 # Doctrine Configuration
 doctrine:
@@ -30,3 +27,33 @@ doctrine:
     connections:
       default:
         dbname: "test_%database_name%"
+
+monolog:
+  handlers:
+    main:
+      type: rotating_file
+      max_files: '%env(int:PS_LOG_MAX_FILES)%'
+      path: '%env(PS_LOG_OUTPUT)%'
+      level: debug
+      channels: [ "!event" ]
+    console:
+      type: console
+      bubble: false
+      verbosity_levels:
+        VERBOSITY_VERBOSE: INFO
+        VERBOSITY_VERY_VERBOSE: DEBUG
+      channels: [ "!doctrine" ]
+    console_very_verbose:
+      type: console
+      bubble: false
+      verbosity_levels:
+        VERBOSITY_VERBOSE: NOTICE
+        VERBOSITY_VERY_VERBOSE: NOTICE
+        VERBOSITY_DEBUG: DEBUG
+      channels: [ "doctrine" ]
+
+api_platform:
+  mapping:
+    paths:
+      - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
+      - '%kernel.project_dir%/tests/Resources/ApiPlatform/Resources'

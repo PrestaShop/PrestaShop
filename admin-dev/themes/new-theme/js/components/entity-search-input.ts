@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 import AutoCompleteSearch, {InputAutoCompleteSearchConfig} from '@components/auto-complete-search';
@@ -28,7 +8,8 @@ import ComponentsMap from '@components/components-map';
 import ConfirmModal from '@components/modal';
 // @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
-import {isUndefined} from '@PSTypes/typeguard';
+import {isUndefined} from '@components/typeguard';
+import {escape} from 'lodash';
 
 const EntitySearchInputMap = ComponentsMap.entitySearchInput;
 
@@ -40,16 +21,13 @@ export interface EntitySearchInputOptions extends OptionsObject {
   prototypeIndex: string,
   prototypeMapping: OptionsObject,
   identifierField: string;
-
   allowDelete: boolean,
   dataLimit: number,
   minLength: number,
   remoteUrl: string,
   filterSelected: boolean,
   filteredIdentities: Array<string>,
-
   removeModal: ModalOptions,
-
   searchInputSelector: string,
   entitiesContainerSelector: string,
   listContainerSelector: string,
@@ -57,11 +35,10 @@ export interface EntitySearchInputOptions extends OptionsObject {
   entityDeleteSelector: string,
   emptyStateSelector: string,
   queryWildcard: string,
-
   onRemovedContent: RemoveFunction | undefined,
   onSelectedContent: SelectFunction | undefined,
-
   suggestionTemplate: SuggestionFunction | undefined,
+  extraQueryParams?: () => Record<string, string>,
 }
 export interface ModalOptions extends OptionsObject {
   id: string;
@@ -128,7 +105,7 @@ export default class EntitySearchInput {
       return;
     }
 
-    values.forEach((index: number, value: any) => {
+    values.forEach((value: any) => {
       this.appendSelectedItem(value);
     });
   }
@@ -213,6 +190,7 @@ export default class EntitySearchInput {
 
       // Template function
       suggestionTemplate: undefined,
+      extraQueryParams: undefined,
     };
 
     Object.keys(defaultOptions).forEach((optionName) => {
@@ -291,6 +269,10 @@ export default class EntitySearchInput {
         suggestion: (entity: any) => this.showSuggestion(entity),
       },
       onSelect: (selectedItem: any) => {
+        // Prevent selection of disabled items (e.g. ineligible products for free gift)
+        if (selectedItem.disabled) {
+          return false;
+        }
         // When limit is one we cannot select additional elements so we replace them instead
         if (this.options.dataLimit === 1) {
           return this.replaceSelectedItem(selectedItem);
@@ -319,7 +301,15 @@ export default class EntitySearchInput {
       entityImage = `<img src="${entity.image}" /> `;
     }
 
-    return `<div class="search-suggestion">${entityImage}${entity[this.options.suggestionField]}</div>`;
+    const disabledClass = entity.disabled ? ' disabled' : '';
+    const escapedReason = entity.disabled_reason ? escape(entity.disabled_reason) : undefined;
+    const title = entity.disabled && escapedReason ? ` title="${escapedReason}"` : '';
+
+    const disabledLabel = entity.disabled && escapedReason ? ` (${escapedReason})` : '';
+
+    const suggestionName = `${entity[this.options.suggestionField]}${disabledLabel}`;
+
+    return `<div class="search-suggestion${disabledClass}"${title}>${entityImage}${suggestionName}</div>`;
   }
 
   /**
@@ -337,8 +327,24 @@ export default class EntitySearchInput {
       },
       remote: {
         url: this.options.remoteUrl,
+        replace: (query: string, searchPhrase: string) => {
+          // need to replace wildcard manually, because here we are overriding the default replace function
+          const url = query.replace(this.options.queryWildcard, searchPhrase);
+
+          if (!isUndefined(this.options.extraQueryParams)) {
+            // this allows appending extra parameters to the query, such as shopId
+            const extraParams = this.options.extraQueryParams();
+            const encodedExtraParams = Object
+              .keys(extraParams)
+              .map((key: string) => `${key}=${encodeURIComponent(extraParams[key])}`)
+              .join('&');
+
+            return `${url}&${encodedExtraParams}`;
+          }
+
+          return url;
+        },
         cache: false,
-        wildcard: this.options.queryWildcard,
         transform: (response: any) => {
           if (!response) {
             return [];

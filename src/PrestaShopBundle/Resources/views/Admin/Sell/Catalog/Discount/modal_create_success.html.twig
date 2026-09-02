@@ -1,0 +1,18 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+{% endblock %}
+
+{% block javascripts %}
+  <script type="text/javascript">
+    {# Script dedicated to close the "Add new voucher" fancybox used in Add an Order #}
+    if (typeof window.parent.order_create !== "undefined") {
+      window.parent.order_create.refreshCart();
+    }
+    window.parent.$.fancybox.close();
+  </script>
+{% endblock %}

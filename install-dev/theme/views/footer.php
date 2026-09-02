@@ -1,3 +1,10 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+?>
+
 <ul id="footer">
   <?php if (is_array($this->getConfig('footer.links'))): ?>
     <?php foreach($this->getConfig('footer.links') as $link => $label): ?>

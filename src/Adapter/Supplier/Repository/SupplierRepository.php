@@ -1,33 +1,14 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\Repository;
 
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -38,6 +19,12 @@ use Supplier;
  */
 class SupplierRepository extends AbstractObjectModelRepository
 {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly string $dbPrefix,
+    ) {
+    }
+
     /**
      * @param SupplierId $supplierId
      *
@@ -65,5 +52,29 @@ class SupplierRepository extends AbstractObjectModelRepository
         );
 
         return $supplier;
+    }
+
+    /**
+     * Exact-name lookup (legacy Supplier::getIdByName parity).
+     *
+     * supplier.name carries no unique constraint, so EVERY match is returned,
+     * ordered by id ASC: callers use the first one and report the count when there
+     * is more than one, rather than silently picking the oldest homonym.
+     *
+     * @return list<int>
+     */
+    public function getSupplierIdsByName(string $name): array
+    {
+        $supplierIds = $this->connection->createQueryBuilder()
+            ->select('s.id_supplier')
+            ->from($this->dbPrefix . 'supplier', 's')
+            ->where('s.name = :name')
+            ->orderBy('s.id_supplier', 'ASC')
+            ->setParameter('name', $name)
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+
+        return array_map('intval', $supplierIds);
     }
 }

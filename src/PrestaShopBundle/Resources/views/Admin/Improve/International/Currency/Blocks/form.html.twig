@@ -1,35 +1,15 @@
-{#**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
 
 {% form_theme currencyForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block form %}
   {{ form_start(currencyForm, {
-    'attr': {
-      'id': 'currency_form',
-      'data-reference-url': path('admin_currencies_get_reference_data', {'currencyIsoCode': 'CURRENCY_ISO_CODE'})|replace({'/CURRENCY_ISO_CODE': '{/id}'}),
+    attr: {
+      id: 'currency_form',
+      'data-reference-url': path('admin_currencies_get_reference_data', {currencyIsoCode: 'CURRENCY_ISO_CODE'})|replace({'/CURRENCY_ISO_CODE': '{/id}'}),
       'data-languages': languages|json_encode,
       'data-translations': {
         'step.symbol': '1. Enter symbol'|trans({}, 'Admin.International.Feature'),
@@ -47,15 +27,15 @@
         'modal.restore.title': 'Are you sure you want to restore default settings?'|trans({}, 'Admin.International.Feature'),
         'modal.restore.apply': 'Restore'|trans({}, 'Admin.Actions'),
         'modal.restore.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
-        'modal.restore.body': 'Restoring your currency\'s default settings will delete all the customizations you made before. Parameters will look just the same as when the currency is freshly imported.'|trans({}, 'Admin.International.Feature')
-      }|json_encode
-    }
+        'modal.restore.body': 'Restoring your currency\'s default settings will delete all the customizations you made before. Parameters will look just the same as when the currency is freshly imported.'|trans({}, 'Admin.International.Feature'),
+      }|json_encode,
+    },
     }) }}
 
     <div class="card card-currency">
-      <div class="card-header">
-        {{ 'Currencies'|trans({}, 'Admin.Global') }}
-      </div>
+      <h3 class="card-header">
+        {{ 'Currency'|trans({}, 'Admin.Global') }}
+      </h3>
       <div class="card-body">
         <div class="form-wrapper">
           {{ form_errors(currencyForm) }}
@@ -74,7 +54,7 @@
           {{ form_row(currencyForm.names) }}
 
           {% set symbolsClass = currencyForm.symbols.vars.errors|length ? '' : 'd-none' %}
-          {{ form_row(currencyForm.symbols, {'row_attr': {'class': symbolsClass}}) }}
+          {{ form_row(currencyForm.symbols, {row_attr: {class: symbolsClass}}) }}
           {{ form_widget(currencyForm) }}
         </div>
       </div>
@@ -86,7 +66,7 @@
           </a>
 
           {% if currencyForm.vars.data.id is defined and not currencyForm.vars.data.unofficial %}
-            <button type="button" id="currency_reset_default_settings" class="btn btn-outline-primary card-currency-reset">
+            <button type="button" id="currency_reset_default_settings" class="btn btn-outline-secondary card-currency-reset">
               <i class="material-icons">refresh</i>
               {{ 'Restore default settings'|trans({}, 'Admin.International.Feature') }}
             </button>

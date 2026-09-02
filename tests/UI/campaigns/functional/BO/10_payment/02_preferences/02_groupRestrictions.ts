@@ -1,29 +1,23 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import login steps
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import customersPage from '@pages/BO/customers';
-import addCustomerPage from '@pages/BO/customers/add';
-import preferencesPage from '@pages/BO/payment/preferences';
-// Import FO pages
-import cartPage from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import homePage from '@pages/FO/home';
-import productPage from '@pages/FO/product';
-
-// Import data
-import Customers from '@data/demo/customers';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boCustomersPage,
+  boCustomersCreatePage,
+  boDashboardPage,
+  boLoginPage,
+  boPaymentPreferencesPage,
+  type BrowserContext,
+  dataCustomers,
+  FakerAddress,
+  FakerCustomer,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_payment_preferences_groupRestrictions';
 
@@ -33,69 +27,75 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
 
   let numberOfCustomers: number = 0;
 
-  const address: AddressData = new AddressData({city: 'Paris', country: 'France'});
-  const visitorData: CustomerData = new CustomerData({defaultCustomerGroup: 'Visitor'});
-  const guestData: CustomerData = new CustomerData({defaultCustomerGroup: 'Guest'});
+  const address: FakerAddress = new FakerAddress({city: 'Paris', country: 'France'});
+  const visitorData: FakerCustomer = new FakerCustomer({defaultCustomerGroup: 'Visitor'});
+  const guestData: FakerCustomer = new FakerCustomer({defaultCustomerGroup: 'Guest'});
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   describe('Create two customers in visitor and guest groups', async () => {
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToCreate', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.customersLink,
       );
-      await customersPage.closeSfToolBar(page);
+      await boCustomersPage.closeSfToolBar(page);
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetBeforeCreate', baseContext);
 
-      numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomers).to.be.above(0);
+      numberOfCustomers = await boCustomersPage.resetAndGetNumberOfLines(page);
+      expect(numberOfCustomers).to.be.above(0);
     });
 
     [
       {args: {customerData: visitorData}},
       {args: {customerData: guestData}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should go to add new customer page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCustomerPage${index}`, baseContext);
 
-        await customersPage.goToAddNewCustomerPage(page);
+        await boCustomersPage.goToAddNewCustomerPage(page);
 
-        const pageTitle = await addCustomerPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+        const pageTitle = await boCustomersCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomersCreatePage.pageTitleCreate);
       });
 
       it(`should create customer n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCustomer${index}`, baseContext);
 
         // Create customer
-        const textResult = await addCustomerPage.createEditCustomer(page, test.args.customerData);
-        await expect(textResult).to.equal(customersPage.successfulCreationMessage);
+        const textResult = await boCustomersCreatePage.createEditCustomer(page, test.args.customerData);
+        expect(textResult).to.equal(boCustomersPage.successfulCreationMessage);
 
         // Check number of customers
-        const numberOfCustomersAfterCreation = await customersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + index + 1);
+        const numberOfCustomersAfterCreation = await boCustomersPage.getNumberOfElementInGrid(page);
+        expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + index + 1);
       });
     });
   });
@@ -104,21 +104,21 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
     it('should go to \'Payment > Preferences\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPreferencesPage', baseContext);
 
-      await customersPage.goToSubMenu(
+      await boCustomersPage.goToSubMenu(
         page,
-        customersPage.paymentParentLink,
-        customersPage.preferencesLink,
+        boCustomersPage.paymentParentLink,
+        boCustomersPage.preferencesLink,
       );
 
-      const pageTitle = await preferencesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+      const pageTitle = await boPaymentPreferencesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boPaymentPreferencesPage.pageTitle);
     });
 
     [
       {args: {groupName: 'Visitor', id: '0', customer: visitorData}},
       {args: {groupName: 'Guest', id: '1', customer: guestData}},
-      {args: {groupName: 'Customer', id: '2', customer: Customers.johnDoe}},
-    ].forEach((group, groupIndex) => {
+      {args: {groupName: 'Customer', id: '2', customer: dataCustomers.johnDoe}},
+    ].forEach((group, groupIndex: number) => {
       describe(`Configure '${group.args.groupName}' group restrictions then check in FO`, async () => {
         const tests = [
           {
@@ -163,7 +163,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
           },
         ];
 
-        tests.forEach((test, index) => {
+        tests.forEach((test, index: number) => {
           it(`should ${test.args.action} '${test.args.paymentModuleToEdit}'`, async function () {
             await testContext.addContextItem(
               this,
@@ -172,29 +172,29 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
               baseContext,
             );
 
-            const result = await preferencesPage.setGroupRestrictions(
+            const result = await boPaymentPreferencesPage.setGroupRestrictions(
               page,
               group.args.id,
               test.args.paymentModuleToEdit,
               test.args.check,
             );
-            await expect(result).to.contains(preferencesPage.successfulUpdateMessage);
+            expect(result).to.contains(boPaymentPreferencesPage.successfulUpdateMessage);
           });
 
           it('should view my shop', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}${groupIndex}`, baseContext);
 
             // Click on view my shop
-            page = await preferencesPage.viewMyShop(page);
+            page = await boPaymentPreferencesPage.viewMyShop(page);
             // Logout if already login
             if (index === 0 && groupIndex !== 0) {
-              await homePage.logout(page);
+              await foHummingbirdHomePage.logout(page);
             }
             // Change FO language
-            await homePage.changeLanguage(page, 'en');
+            await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-            const pageTitle = await homePage.getPageTitle(page);
-            await expect(pageTitle).to.contains(homePage.pageTitle);
+            const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+            expect(pageTitle).to.contains(foHummingbirdHomePage.pageTitle);
           });
 
           it('should add the first product to the cart and proceed to checkout', async function () {
@@ -206,14 +206,14 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             );
 
             // Go to the first product page
-            await homePage.goToProductPage(page, 1);
+            await foHummingbirdHomePage.goToProductPage(page, 1);
             // Add the product to the cart
-            await productPage.addProductToTheCart(page);
+            await foHummingbirdProductPage.addProductToTheCart(page);
             // Proceed to checkout the shopping cart
-            await cartPage.clickOnProceedToCheckout(page);
+            await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-            const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-            await expect(isCheckoutPage).to.be.true;
+            const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
+            expect(isCheckoutPage).to.eq(true);
           });
 
           // Personal information step - Login
@@ -226,10 +226,10 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
                 baseContext,
               );
 
-              await checkoutPage.clickOnSignIn(page);
+              await foHummingbirdCheckoutPage.clickOnSignIn(page);
 
-              const isStepLoginComplete = await checkoutPage.customerLogin(page, group.args.customer);
-              await expect(isStepLoginComplete, 'Step Personal information is not complete').to.be.true;
+              const isStepLoginComplete = await foHummingbirdCheckoutPage.customerLogin(page, group.args.customer);
+              expect(isStepLoginComplete, 'Step Personal information is not complete').to.eq(true);
             });
           }
 
@@ -243,8 +243,8 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
                 baseContext,
               );
 
-              const isStepAddressComplete = await checkoutPage.setAddress(page, address);
-              await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+              const isStepAddressComplete = await foHummingbirdCheckoutPage.setAddress(page, address);
+              expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
             });
           }
 
@@ -258,8 +258,8 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
                 baseContext,
               );
 
-              const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-              await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+              const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
+              expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
             });
           }
 
@@ -273,26 +273,26 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             );
 
             // Go to payment step
-            const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-            await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+            const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
+            expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
             // Check wire Payment block
-            let isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.paymentModuleToEdit);
-            await expect(isVisible).to.be.equal(test.args.wirePaymentExist);
+            let isVisible = await foHummingbirdCheckoutPage.isPaymentMethodExist(page, test.args.paymentModuleToEdit);
+            expect(isVisible).to.be.equal(test.args.wirePaymentExist);
 
             // Check Payment block
-            isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.defaultPaymentModule);
-            await expect(isVisible).to.be.equal(test.args.checkPaymentExist);
+            isVisible = await foHummingbirdCheckoutPage.isPaymentMethodExist(page, test.args.defaultPaymentModule);
+            expect(isVisible).to.be.equal(test.args.checkPaymentExist);
           });
 
           it('should go back to BO', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}${groupIndex}`, baseContext);
 
             // Close current tab
-            page = await homePage.closePage(browserContext, page, 0) as Page;
+            page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
-            const pageTitle = await preferencesPage.getPageTitle(page);
-            await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+            const pageTitle = await boPaymentPreferencesPage.getPageTitle(page);
+            expect(pageTitle).to.contains(boPaymentPreferencesPage.pageTitle);
           });
         });
       });
@@ -303,46 +303,46 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
 
-      await preferencesPage.goToSubMenu(
+      await boPaymentPreferencesPage.goToSubMenu(
         page,
-        preferencesPage.customersParentLink,
-        preferencesPage.customersLink,
+        boPaymentPreferencesPage.customersParentLink,
+        boPaymentPreferencesPage.customersLink,
       );
 
-      const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
+      const pageTitle = await boCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersPage.pageTitle);
     });
 
     [
       {args: {customerData: visitorData}},
       {args: {customerData: guestData}},
-    ].forEach((test, index) => {
+    ].forEach((test, index: number) => {
       it('should filter list by email', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 
         // Reset before filter
-        await customersPage.resetFilter(page);
+        await boCustomersPage.resetFilter(page);
 
-        await customersPage.filterCustomers(
+        await boCustomersPage.filterCustomers(
           page,
           'input',
           'email',
           test.args.customerData.email,
         );
 
-        const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-        await expect(textEmail).to.contains(test.args.customerData.email);
+        const textEmail = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'email');
+        expect(textEmail).to.contains(test.args.customerData.email);
       });
 
       it(`should delete customer n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteCustomer${index}`, baseContext);
 
-        const textResult = await customersPage.deleteCustomer(page, 1);
-        await expect(textResult).to.equal(customersPage.successfulDeleteMessage);
+        const textResult = await boCustomersPage.deleteCustomer(page, 1);
+        expect(textResult).to.equal(boCustomersPage.successfulDeleteMessage);
 
         // Check number of customers after delete
-        const numberOfCustomersAfterDelete = await customersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers - index + 1);
+        const numberOfCustomersAfterDelete = await boCustomersPage.resetAndGetNumberOfLines(page);
+        expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers - index + 1);
       });
     });
   });

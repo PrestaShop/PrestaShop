@@ -1,27 +1,7 @@
-{#**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
 
 <div class="product-header-details">
 {% block header_summary %}
@@ -68,29 +48,46 @@
 
     {# Only display stock when Stock management is enabled #}
     {% if stockEnabled %}
-      {% set quantityData = productData.stock.quantities.delta_quantity.quantity %}
+      {% if productData.header.type == 'pack' and productData.stock.quantities.pack_quantity is not null %}
+        {% set quantityData = productData.stock.quantities.pack_quantity %}
+      {% else %}
+        {% set quantityData = productData.stock.quantities.delta_quantity.quantity %}
+      {% endif %}
+
       {% if productData.header.type != 'combinations' %}
         {% set lowStock = productData.stock.options.low_stock_threshold %}
       {% else %}
         {% set lowStock = 0 %}
       {% endif %}
 
+      {% set outOfStockLabel = 'out of stock'|trans({}, 'Admin.Catalog.Feature') %}
+      {% set lowStockLabel = 'low stock'|trans({}, 'Admin.Catalog.Feature') %}
+      {% set inStockLabel = 'in stock'|trans({}, 'Admin.Catalog.Feature') %}
+
       {% if quantityData <= 0 %}
         {% set stockClass = 'danger' %}
-        {% set stockLabel = 'out of stock'|trans({}, 'Admin.Catalog.Feature') %}
+        {% set stockLabel = outOfStockLabel %}
       {% elseif lowStock > 0 and quantityData <= lowStock %}
         {% set stockClass = 'warning' %}
-        {% set stockLabel = 'low stock'|trans({}, 'Admin.Catalog.Feature') %}
+        {% set stockLabel = lowStockLabel %}
       {% else %}
         {% set stockClass = 'success' %}
-        {% set stockLabel = 'in stock'|trans({}, 'Admin.Catalog.Feature') %}
+        {% set stockLabel = inStockLabel %}
       {% endif %}
 
-      <div class="product-field-preview" data-role="quantity">
-        <div class="product-field-value {{ stockClass }}">
+      <div
+        class="product-field-preview"
+        data-role="quantity"
+        {# these data attributes are needed for dynamic quantity update in javascript side #}
+        data-low-stock-threshold="{{ lowStock }}"
+        data-out-of-stock-label="{{ outOfStockLabel }}"
+        data-low-stock-label="{{ lowStockLabel }}"
+        data-in-stock-label="{{ inStockLabel }}"
+      >
+        <div class="product-total-quantity product-field-value {{ stockClass }}">
           {{ quantityData }}
         </div>
-        <div class="product-field-label">
+        <div class="product-field-label product-total-quantity-label">
           {{ stockLabel }}
         </div>
       </div>
@@ -101,9 +98,9 @@
 {% block header_references %}
   {% set referencesForm = productForm.details.references %}
   <div class="product-header-references">
-    {% for child in referencesForm.children %}
+    {% for keyChild, child in referencesForm.children %}
       {% if child.vars.value is not empty %}
-        <div class="product-reference">
+        <div class="product-reference" data-reference-type="{{ keyChild }}">
           <label>{{ child.vars.label }}</label>
           <span>{{ child.vars.value }}</span>
         </div>

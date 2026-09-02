@@ -1,33 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
  * Holds Stock.
  *
- * @since 1.5.0
+ * @deprecated since 9.0 and will be removed in 10.0
  */
 class WarehouseCore extends ObjectModel
 {
@@ -307,22 +287,24 @@ class WarehouseCore extends ObjectModel
     public static function getProductWarehouseList($id_product, $id_product_attribute = 0, $id_shop = null)
     {
         // if it's a pack, returns warehouses if and only if some products use the advanced stock management
-        $share_stock = false;
         if ($id_shop === null) {
             if (Shop::getContext() == Shop::CONTEXT_GROUP) {
                 $shop_group = Shop::getContextShopGroup();
+                $shop_group_id = (int) $shop_group->id;
             } else {
                 $shop_group = Context::getContext()->shop->getGroup();
+                $shop_group_id = (int) $shop_group->id;
                 $id_shop = (int) Context::getContext()->shop->id;
             }
             $share_stock = $shop_group->share_stock;
         } else {
-            $shop_group = Shop::getGroupFromShop($id_shop);
+            $shop_group = Shop::getGroupFromShop($id_shop, false);
             $share_stock = $shop_group['share_stock'];
+            $shop_group_id = (int) $shop_group['id'];
         }
 
-        if ($share_stock) {
-            $ids_shop = Shop::getShops(true, (int) $shop_group->id, true);
+        if ($share_stock && $shop_group_id) {
+            $ids_shop = Shop::getShops(true, $shop_group_id, true);
         } else {
             $ids_shop = [(int) $id_shop];
         }
@@ -522,8 +504,6 @@ class WarehouseCore extends ObjectModel
 
         // warehouses of the pack
         $pack_warehouses = WarehouseProductLocation::getCollection((int) $id_product);
-        // products in the pack
-        $products = Pack::getItems((int) $id_product, Configuration::get('PS_LANG_DEFAULT'));
 
         // array with all warehouses id to check
         $list = [];
@@ -534,34 +514,26 @@ class WarehouseCore extends ObjectModel
             $list['pack_warehouses'][] = (int) $pack_warehouse->id_warehouse;
         }
 
-        // for each products in the pack
-        foreach ($products as $product) {
-            if ($product->advanced_stock_management) {
-                // gets the warehouses of one product
-                $product_warehouses = Warehouse::getProductWarehouseList((int) $product->id, (int) $product->cache_default_attribute, (int) $id_shop);
-                $list[(int) $product->id] = [];
-                // fills array with warehouses for this product
-                foreach ($product_warehouses as $product_warehouse) {
-                    $list[(int) $product->id][] = $product_warehouse['id_warehouse'];
-                }
-            }
-        }
-
         $res = false;
         // returns final list
-        if (count($list) > 1) {
+        if (!empty($list)) {
             $res = call_user_func_array('array_intersect', $list);
         }
 
         return $res;
     }
 
+    /**
+     * @deprecated Since 9.0 and will be removed in 10.0
+     */
     public function resetStockAvailable()
     {
-        $products = WarehouseProductLocation::getProducts((int) $this->id);
-        foreach ($products as $product) {
-            StockAvailable::synchronize((int) $product['id_product']);
-        }
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
+
+        return true;
     }
 
     /*********************************\

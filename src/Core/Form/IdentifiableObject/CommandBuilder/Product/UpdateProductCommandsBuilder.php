@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 declare(strict_types=1);
 
@@ -34,12 +14,12 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 
 /**
  * Builds @see UpdateProductCommand for both single and All shops
  */
-class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * @var string
@@ -70,11 +50,13 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->configureStockInformation($config, $formData)
         ;
 
-        $config->addField('[header][active]', 'setActive', DataField::TYPE_BOOL);
+        $config->addMultiShopField('[header][active]', 'setActive', DataField::TYPE_BOOL);
 
         $commandBuilder = new CommandBuilder($config);
         $shopCommand = new UpdateProductCommand($productId->getValue(), $singleShopConstraint);
         $allShopsCommand = new UpdateProductCommand($productId->getValue(), ShopConstraint::allShops());
+
+        $this->setNameDependingOnStatus($formData, $shopCommand);
 
         return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
@@ -215,8 +197,8 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
         if (
             // if low stock threshold switch is falsy, then we must set lowStockThreshold to its disabled value
             // which will end up being 0 after falsy bool to int conversion
-            isset($formData['stock']['options'][$lowStockThresholdSwitchKey]) &&
-            !$formData['stock']['options'][$lowStockThresholdSwitchKey]
+            isset($formData['stock']['options'][$lowStockThresholdSwitchKey])
+            && !$formData['stock']['options'][$lowStockThresholdSwitchKey]
         ) {
             $config->addMultiShopField(sprintf('[stock][options][%s]', $lowStockThresholdSwitchKey), 'setLowStockThreshold', DataField::TYPE_INT);
         } else {
@@ -238,5 +220,33 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
         }
 
         return $this;
+    }
+
+    /**
+     * Name and status are related - when name is not filled, then product cannot be enabled.
+     * When name is being updated for all shops, but status only for single shop, then status would be filled into
+     * single shop command while name only in all shops command. Since single shop command is always executed first,
+     * it will try to enable product before name is inserted in allShopsCommand and will end up throwing
+     * error about name being empty.
+     *
+     * So to solve that, we check if status is being updated for single shop,
+     * and if that is the case, then we manually fill the name into single shop command too.
+     * So at the end it will end up updating name twice - with single shop command and with all shops command,
+     * but at least it won't throw the error.
+     *
+     * @param array<string, mixed> $formData
+     * @param UpdateProductCommand $singleShopCommand
+     *
+     * @return void
+     */
+    private function setNameDependingOnStatus(array $formData, UpdateProductCommand $singleShopCommand): void
+    {
+        if (
+            !empty($formData['header']['active'])
+            && empty($formData['header'][$this->modifyAllNamePrefix . 'active'])
+            && isset($formData['header']['name'])
+        ) {
+            $singleShopCommand->setLocalizedNames($formData['header']['name']);
+        }
     }
 }

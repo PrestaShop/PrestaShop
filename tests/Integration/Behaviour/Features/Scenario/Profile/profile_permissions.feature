@@ -1,8 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s profile --tags profile-permissions
 @profile-permissions
-# Reset was needed at first, but since we reset the permissions as they were as long as the whole suite is a success we
-# shouldn't need to reset the DB
-# @reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Manage profile permissions from BO
   As a BO user
   I need to be able to edit profilepermissions
@@ -109,35 +107,35 @@ Feature: Manage profile permissions from BO
 
   Scenario: I can get profile module permissions for profiles
     Then profile super_admin should have the following permissions for modules:
-      | ps_banner      | view,configure,uninstall |
-      | ps_wirepayment | view,configure,uninstall |
+      | ps_banner | view,configure,uninstall |
+      | bankwire  | view,configure,uninstall |
     Then profile logistician should have the following permissions for modules:
-      | ps_banner      |                          |
-      | ps_wirepayment |                          |
+      | ps_banner |  |
+      | bankwire  |  |
     Then profile translator should have the following permissions for modules:
-      | ps_banner      |                          |
-      | ps_wirepayment |                          |
+      | ps_banner |  |
+      | bankwire  |  |
     Then profile salesman should have the following permissions for modules:
-      | ps_banner      |                          |
-      | ps_wirepayment |                          |
+      | ps_banner |  |
+      | bankwire  |  |
 
   Scenario: I can edit module permission for a profile
     When I enable view permission for module ps_banner for profile logistician
     And I enable configure permission for module ps_banner for profile logistician
     And I enable uninstall permission for module ps_banner for profile logistician
     Then profile logistician should have the following permissions for modules:
-      | ps_banner      | view,configure,uninstall |
-      | ps_wirepayment |                          |
+      | ps_banner | view,configure,uninstall |
+      | bankwire  |                          |
     When I disable view permission for module ps_banner for profile logistician
     And I disable configure permission for module ps_banner for profile logistician
     And I disable uninstall permission for module ps_banner for profile logistician
     Then profile logistician should have the following permissions for modules:
-      | ps_banner      |                          |
-      | ps_wirepayment |                          |
+      | ps_banner |  |
+      | bankwire  |  |
     # SuperAdmin role has all permissions hard coded even if you try to disable them
     When I disable view permission for module ps_banner for profile super_admin
     And I disable configure permission for module ps_banner for profile super_admin
     And I disable uninstall permission for module ps_banner for profile super_admin
     Then profile super_admin should have the following permissions for modules:
-      | ps_banner      | view,configure,uninstall |
-      | ps_wirepayment | view,configure,uninstall |
+      | ps_banner | view,configure,uninstall |
+      | bankwire  | view,configure,uninstall |

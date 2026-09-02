@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
@@ -37,7 +17,6 @@ use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Query\GetZoneForEditing;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -45,17 +24,6 @@ use Zone;
 
 class ZoneFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default shop id from configs
-     */
-    private $defaultShopId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
-    }
-
     /**
      * @When I add new zone :zoneReference with following properties:
      *
@@ -70,7 +38,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
             $zoneId = $this->getCommandBus()->handle(new AddZoneCommand(
                 $data['name'],
                 PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']),
-                [$this->defaultShopId]
+                [$this->getDefaultShopId()]
             ));
             $this->getSharedStorage()->set($zoneReference, new Zone($zoneId->getValue()));
         } catch (ZoneException $e) {
@@ -189,7 +157,24 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given there is a zone :reference named :name
+     *
+     * @param string $zoneReference
+     * @param string $name
+     */
+    public function assignZoneReference(string $zoneReference, string $name): void
+    {
+        $zoneId = Zone::getIdByName($name);
+        if (empty($zoneId)) {
+            throw new RuntimeException(sprintf('Zone name %s not found', $name));
+        }
+
+        SharedStorage::getStorage()->set($zoneReference, new Zone($zoneId));
+    }
+
+    /**
      * @Given /^zone "(.*)" is (enabled|disabled)?$/
+     *
      * @Then /^zone "(.*)" should be (enabled|disabled)?$/
      *
      * @param string $zoneReference

@@ -1,0 +1,21 @@
+name: Release workflows
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  pull-requests: write
+
+jobs:
+  normalize-dependabot-pr:
+    name: Normalize Dependabot PR
+    if: contains(github.actor, 'dependabot')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Normalize Dependabot PR
+        uses: PrestaShop/.github/.github/actions/normalize-dependabot-pr@master
+        with:
+          default-branch: ${{ github.event.pull_request.base.ref }}

@@ -1,33 +1,12 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
-use PrestaShop\PrestaShop\Core\Util\Inflector;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -47,14 +26,8 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        //We need the list of active modules to load their config, during install the parameter might no be available
-        //if the parameters file has not been generated yet, so we skip this part of the build
-        if (!$container->hasParameter('kernel.active_modules')) {
-            return;
-        }
-
-        $activeModules = $container->getParameter('kernel.active_modules');
-        $compilerPassList = $this->getCompilerPassList($activeModules);
+        $installedModules = $container->getParameter('prestashop.installed_modules');
+        $compilerPassList = $this->getCompilerPassList($installedModules);
         /** @var CompilerPassInterface $compilerPass */
         foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {
             $compilerPass->process($container);
@@ -81,13 +54,15 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
             if (in_array($moduleFolder->getFilename(), $activeModules)
                 && is_dir($moduleFolder . '/src/Entity')
             ) {
-                $moduleNamespace = $this->getModuleNamespace($moduleFolder);
+                $moduleEntityDirectory = realpath($moduleFolder . '/src/Entity');
+                if ($moduleEntityDirectory === false) {
+                    continue;
+                }
+                $moduleNamespace = $this->getModuleNamespace($moduleEntityDirectory);
                 if (empty($moduleNamespace)) {
                     continue;
                 }
-                $modulePrefix = 'Module' . Inflector::getInflector()->camelize($moduleFolder->getFilename());
-                $moduleEntityDirectory = realpath($moduleFolder . '/src/Entity');
-                $mappingPass = $this->createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory, $modulePrefix);
+                $mappingPass = $this->createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory);
                 $mappingsPassList[$moduleEntityDirectory] = $mappingPass;
             }
         }
@@ -103,11 +78,10 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
      *
      * @param string $moduleNamespace
      * @param string $moduleEntityDirectory
-     * @param string $modulePrefix
      *
      * @return DoctrineOrmMappingsPass
      */
-    private function createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory, $modulePrefix)
+    private function createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory)
     {
         $reader = new Reference('annotation_reader');
         $driverDefinition = new Definition('Doctrine\ORM\Mapping\Driver\AnnotationDriver', [$reader, [$moduleEntityDirectory]]);
@@ -116,22 +90,35 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
             $driverDefinition->addMethodCall('addExcludePaths', [[$indexFile]]);
         }
 
-        return new DoctrineOrmMappingsPass($driverDefinition, [$moduleNamespace], [], false, [$modulePrefix => $moduleNamespace]);
+        return new DoctrineOrmMappingsPass($driverDefinition, [$moduleNamespace], [], false, []);
     }
 
     /**
-     * @param SplFileInfo $moduleFolder
+     * @param string $moduleEntityDirectory
      *
      * @return string
      */
-    private function getModuleNamespace(SplFileInfo $moduleFolder)
+    private function getModuleNamespace(string $moduleEntityDirectory)
     {
         $finder = new Finder();
-        $finder->files()->in($moduleFolder->getRealPath() . '/src/Entity')->name('*.php');
+        $finder->files()->in($moduleEntityDirectory)->name('*.php');
+
         foreach ($finder as $phpFile) {
-            $phpContent = file_get_contents($phpFile->getRealPath());
-            if (preg_match('~namespace[ \t]+(.+)[ \t]*;~Um', $phpContent, $matches)) {
-                return $matches[1];
+            if (preg_match('~namespace[ \t]+(.*)[ \t]*;~Um', $phpFile->getContents(), $matches)) {
+                if (($namespace = trim($matches[1])) === '') {
+                    continue;
+                }
+
+                // We strip the last part of the namespace to get the namespace matching with the entity folder
+                // This is required in case you have sub-folders like src/Entity/Category/Category.php
+                // The first matching PHP file would be in a sub namespace and be returned, thus the Entity
+                // namespace would not be parsed completely
+                if (($pos = strpos($namespace, '\\Entity')) !== false) {
+                    return substr($namespace, 0, $pos + strlen('\\Entity'));
+                }
+
+                // Fallback: if for some reason there's no '\Entity', I'll use what was found anyway
+                return $namespace;
             }
         }
 

@@ -1,37 +1,19 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
+use Attribute;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
  * Provides regex validation by type
  */
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class TypedRegex extends Constraint
 {
     /**
@@ -51,7 +33,11 @@ class TypedRegex extends Constraint
     public const TYPE_FILE_NAME = 'file_name';
     public const TYPE_DNI_LITE = 'dni_lite';
     public const TYPE_UPC = 'upc';
+    /**
+     * @deprecated since 9.0 will be removed in 10.0
+     */
     public const TYPE_EAN_13 = 'ean_13';
+    public const TYPE_GTIN = 'gtin';
     public const TYPE_ISBN = 'isbn';
     public const TYPE_REFERENCE = 'reference';
     public const TYPE_URL = 'url';
@@ -60,6 +46,10 @@ class TypedRegex extends Constraint
     public const TYPE_WEBSERVICE_KEY = 'webservice_key';
     public const TYPE_LINK_REWRITE = 'link_rewrite';
     public const TYPE_ZIP_CODE_FORMAT = 'zip_code_format';
+    public const TYPE_IMAGE_TYPE_NAME = 'image_type_name';
+    public const TYPE_DISCOUNT_CODE = 'discount_code';
+    public const CLEAN_HTML_NO_IFRAME = 'clean_html_no_iframe';
+    public const CLEAN_HTML_ALLOW_IFRAME = 'clean_html_allow_iframe';
 
     /**
      * @var string

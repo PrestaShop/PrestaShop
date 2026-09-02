@@ -1,0 +1,74 @@
+services:
+  _defaults:
+    public: false
+
+  PrestaShopBundle\Security\OAuth2\Repository\ClientRepository:
+    arguments:
+      - '@PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider'
+      - '@security.user_password_hasher'
+
+  PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository:
+
+  PrestaShopBundle\Security\OAuth2\GrantType\CustomClientCredentialsGrant:
+
+  PrestaShopBundle\Security\OAuth2\Repository\ScopeRepository:
+    arguments:
+      - '@PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface'
+      - '@PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider'
+
+  League\OAuth2\Server\Grant\ClientCredentialsGrant:
+
+  prestashop.api.private_key:
+    class: League\OAuth2\Server\CryptKey
+    arguments: [ '%api_private_key%' ]
+
+  prestashop.api.public_key:
+    class: League\OAuth2\Server\CryptKey
+    arguments: [ '%api_public_key%' ]
+
+  League\OAuth2\Server\AuthorizationServer:
+    arguments:
+      - '@PrestaShopBundle\Security\OAuth2\Repository\ClientRepository'
+      - '@PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository'
+      - '@PrestaShopBundle\Security\OAuth2\Repository\ScopeRepository'
+      - '@prestashop.api.private_key'
+      - '%new_cookie_key%'
+    calls:
+      - [ 'enableGrantType', [ '@PrestaShopBundle\Security\OAuth2\GrantType\CustomClientCredentialsGrant' ] ]
+
+  League\OAuth2\Server\ResourceServer:
+    arguments:
+      - '@PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository'
+      - '@prestashop.api.public_key'
+
+  Nyholm\Psr7\Factory\Psr17Factory:
+
+  Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory:
+    arguments:
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+
+  Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface:
+    class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
+
+  Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface:
+    class: Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory
+    autowire: true
+
+  Psr\Http\Message\ResponseFactoryInterface:
+    class: Nyholm\Psr7\Factory\Psr17Factory
+
+  Psr\Http\Message\ServerRequestFactoryInterface:
+    class: Nyholm\Psr7\Factory\Psr17Factory
+
+  Psr\Http\Message\StreamFactoryInterface:
+    class: Nyholm\Psr7\Factory\Psr17Factory
+
+  Psr\Http\Message\UploadedFileFactoryInterface:
+    class: Nyholm\Psr7\Factory\Psr17Factory
+
+  PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController:
+    autowire: true
+    autoconfigure: true

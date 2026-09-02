@@ -1,29 +1,13 @@
 <?php
+
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 
 class OrderDetailControllerCore extends FrontController
 {
@@ -38,14 +22,52 @@ class OrderDetailControllerCore extends FrontController
 
     protected $order_to_display;
 
+    protected $order;
+
     protected $reference;
+
+    protected function loadOrder(): void
+    {
+        $id_order = (int) Tools::getValue('id_order');
+        $id_order = $id_order && Validate::isUnsignedId($id_order) ? $id_order : false;
+
+        if (!$id_order) {
+            $reference = Tools::getValue('reference');
+            $reference = $reference && Validate::isReference($reference) ? $reference : false;
+            $order = $reference ? Order::getByReference($reference)->getFirst() : false;
+            $id_order = $order ? $order->id : false;
+        }
+
+        if (!$id_order) {
+            $this->redirect_after = '404';
+            $this->redirect();
+        }
+
+        $order = new Order($id_order);
+        if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id) {
+            $this->redirect_after = '404';
+            $this->redirect();
+        }
+
+        if ($order->id_shop != $this->context->shop->id && $this->context->customer->id_shop_group == $this->context->shop->id_shop_group) {
+            $shopGroup = new ShopGroup($this->context->customer->id_shop_group);
+            if (!$shopGroup->share_order) {
+                $this->redirect_after = '404';
+                $this->redirect();
+            }
+        }
+
+        $this->order = $order;
+        $this->order_to_display = (new OrderPresenter())->present($order);
+        $this->reference = $order->reference;
+    }
 
     /**
      * Start forms process.
      *
      * @see FrontController::postProcess()
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         if (Tools::isSubmit('submitMessage')) {
             $idOrder = (int) Tools::getValue('id_order');
@@ -60,7 +82,7 @@ class OrderDetailControllerCore extends FrontController
             if (!count($this->errors)) {
                 $order = new Order($idOrder);
                 if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
-                    //check if a thread already exist
+                    // check if a thread already exist
                     $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($this->context->customer->email, $order->id);
                     $id_product = (int) Tools::getValue('id_product');
                     $cm = new CustomerMessage();
@@ -86,6 +108,7 @@ class OrderDetailControllerCore extends FrontController
 
                     $cm->id_customer_thread = $ct->id;
                     $cm->message = $msgText;
+                    $cm->id_product = $id_product;
                     $client_ip_address = Tools::getRemoteAddr();
                     $cm->ip_address = (string) ip2long($client_ip_address);
                     $cm->add();
@@ -137,7 +160,15 @@ class OrderDetailControllerCore extends FrontController
                         );
                     }
 
-                    Tools::redirect('index.php?controller=order-detail&id_order=' . $idOrder . '&messagesent');
+                    Tools::redirect($this->context->link->getPageLink(
+                        'order-detail',
+                        null,
+                        null,
+                        [
+                            'id_order' => $idOrder,
+                            'messagesent' => 1,
+                        ]
+                    ));
                 } else {
                     $this->redirect_after = '404';
                     $this->redirect();
@@ -151,70 +182,44 @@ class OrderDetailControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
-        parent::initContent();
         if (Configuration::isCatalogMode()) {
             Tools::redirect('index.php');
         }
 
-        $id_order = (int) Tools::getValue('id_order');
-        $id_order = $id_order && Validate::isUnsignedId($id_order) ? $id_order : false;
+        $this->loadOrder();
 
-        if (!$id_order) {
-            $reference = Tools::getValue('reference');
-            $reference = $reference && Validate::isReference($reference) ? $reference : false;
-            $order = $reference ? Order::getByReference($reference)->getFirst() : false;
-            $id_order = $order ? $order->id : false;
+        parent::initContent();
+
+        if (Tools::getIsset('errorQuantity')) {
+            $this->errors[] = $this->trans('You do not have enough products to request an additional merchandise return.', [], 'Shop.Notifications.Error');
+        } elseif (Tools::getIsset('errorMsg')) {
+            $this->errors[] = $this->trans('Please provide an explanation for your RMA.', [], 'Shop.Notifications.Error');
+        } elseif (Tools::getIsset('errorDetail1')) {
+            $this->errors[] = $this->trans('Please check at least one product you would like to return.', [], 'Shop.Notifications.Error');
+        } elseif (Tools::getIsset('errorDetail2')) {
+            $this->errors[] = $this->trans('For each product you wish to add, please specify the desired quantity.', [], 'Shop.Notifications.Error');
+        } elseif (Tools::getIsset('errorNotReturnable')) {
+            $this->errors[] = $this->trans('This order cannot be returned', [], 'Shop.Notifications.Error');
+        } elseif (Tools::getIsset('messagesent')) {
+            $this->success[] = $this->trans('Message successfully sent', [], 'Shop.Notifications.Success');
         }
 
-        if (!$id_order) {
-            $this->redirect_after = '404';
-            $this->redirect();
-        } else {
-            if (Tools::getIsset('errorQuantity')) {
-                $this->errors[] = $this->trans('You do not have enough products to request an additional merchandise return.', [], 'Shop.Notifications.Error');
-            } elseif (Tools::getIsset('errorMsg')) {
-                $this->errors[] = $this->trans('Please provide an explanation for your RMA.', [], 'Shop.Notifications.Error');
-            } elseif (Tools::getIsset('errorDetail1')) {
-                $this->errors[] = $this->trans('Please check at least one product you would like to return.', [], 'Shop.Notifications.Error');
-            } elseif (Tools::getIsset('errorDetail2')) {
-                $this->errors[] = $this->trans('For each product you wish to add, please specify the desired quantity.', [], 'Shop.Notifications.Error');
-            } elseif (Tools::getIsset('errorNotReturnable')) {
-                $this->errors[] = $this->trans('This order cannot be returned', [], 'Shop.Notifications.Error');
-            } elseif (Tools::getIsset('messagesent')) {
-                $this->success[] = $this->trans('Message successfully sent', [], 'Shop.Notifications.Success');
-            }
+        /** @var FeatureFlagStateCheckerInterface $featureFlagManager */
+        $featureFlagManager = $this->get(FeatureFlagStateCheckerInterface::class);
 
-            $order = new Order($id_order);
-            if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
-                if ($order->id_shop != $this->context->shop->id && $this->context->customer->id_shop_group == $this->context->shop->id_shop_group) {
-                    $shopGroup = new ShopGroup($this->context->customer->id_shop_group);
-                    if (!$shopGroup->share_order) {
-                        $this->redirect_after = '404';
-                        $this->redirect();
-                    }
-                }
-                $this->order_to_display = (new OrderPresenter())->present($order);
-
-                $this->reference = $order->reference;
-
-                $this->context->smarty->assign([
-                    'order' => $this->order_to_display,
-                    'orderIsVirtual' => $order->isVirtual(),
-                    'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $order]),
-                ]);
-            } else {
-                $this->redirect_after = '404';
-                $this->redirect();
-            }
-            unset($order);
-        }
+        $this->context->smarty->assign([
+            'order' => $this->order_to_display,
+            'orderIsVirtual' => $this->order->isVirtual(),
+            'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order]),
+            'is_multishipment_enabled' => $featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT),
+        ]);
 
         $this->setTemplate('customer/order-detail');
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

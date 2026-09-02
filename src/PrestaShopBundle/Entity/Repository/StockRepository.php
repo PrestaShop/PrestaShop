@@ -1,37 +1,17 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Entity\Repository;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
+use PDO;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
-use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\StockManager;
 use PrestaShop\PrestaShop\Core\Stock\StockManager as StockManagerCore;
 use PrestaShopBundle\Api\QueryParamsCollection;
@@ -39,6 +19,7 @@ use PrestaShopBundle\Api\Stock\Movement;
 use PrestaShopBundle\Api\Stock\MovementsCollection;
 use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Exception\ProductNotFoundException;
+use Product;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class StockRepository extends StockManagementRepository
@@ -120,7 +101,7 @@ class StockRepository extends StockManagementRepository
         $delta = $movement->getDelta();
 
         if ($productIdentity->getProductId() && $delta !== 0) {
-            $product = (new ProductDataProvider())->getProduct($productIdentity->getProductId());
+            $product = new Product($productIdentity->getProductId());
 
             if ($product->id) {
                 $configurationAdapter = new Configuration();
@@ -173,9 +154,9 @@ class StockRepository extends StockManagementRepository
         $statement = $this->connection->prepare($query);
         $this->bindStockManagementValues($statement, null, $productIdentity);
 
-        $statement->execute();
-        $rows = $statement->fetchAll();
-        $statement->closeCursor();
+        $result = $statement->executeQuery();
+        $rows = $result->fetchAllAssociative();
+        $result->free();
         $this->foundRows = $this->getFoundRows();
 
         if (count($rows) === 0) {
@@ -258,7 +239,15 @@ class StockRepository extends StockManagementRepository
           p.id_product                                                                      AS product_id,
           COALESCE(pa.id_product_attribute, 0)                                              AS combination_id,
           IF(COALESCE(p.reference, "") = "", "N/A", p.reference)                            AS product_reference,
+          IF(COALESCE(p.ean13, "") = "", "N/A", p.ean13)                                    AS product_ean13,
+          IF(COALESCE(p.isbn, "") = "", "N/A", p.isbn)                                      AS product_isbn,
+          IF(COALESCE(p.upc, "") = "", "N/A", p.upc)                                        AS product_upc,
+          IF(COALESCE(p.mpn, "") = "", "N/A", p.mpn)                                        AS product_mpn,
           IF(COALESCE(pa.reference, "") = "", "N/A", pa.reference)                          AS combination_reference,
+          IF(COALESCE(pa.ean13, "") = "", "N/A", pa.ean13)                                  AS combination_ean13,
+          IF(COALESCE(pa.isbn, "") = "", "N/A", pa.isbn)                                    AS combination_isbn,
+          IF(COALESCE(pa.upc, "") = "", "N/A", pa.upc)                                      AS combination_upc,
+          IF(COALESCE(pa.mpn, "") = "", "N/A", pa.mpn)                                      AS combination_mpn,
           pl.name                                                                           AS product_name,
           p.id_supplier                                                                     AS supplier_id,
           COALESCE(s.name, "N/A")                                                           AS supplier_name,
@@ -324,9 +313,8 @@ class StockRepository extends StockManagementRepository
      */
     protected function addAdditionalData(array $rows)
     {
-        $rows = $this->addCombinationsAndFeatures($rows);
-        $rows = $this->addImageThumbnailPaths($rows);
-        $rows = $this->addEditProductLink($rows);
+        $rows = parent::addAdditionalData($rows);
+        $rows = $this->addStockApiUrls($rows);
 
         return $rows;
     }
@@ -359,16 +347,16 @@ class StockRepository extends StockManagementRepository
                         FROM ' . $this->tablePrefix . 'product_attribute pa
                         WHERE id_product=:id_product';
             $statement = $this->connection->prepare($query);
-            $statement->bindValue('id_product', (int) $row['product_id'], \PDO::PARAM_INT);
-            $statement->execute();
-            $this->totalCombinations[$row['product_id']] = $statement->fetchColumn(0);
-            $statement->closeCursor();
+            $statement->bindValue('id_product', (int) $row['product_id'], PDO::PARAM_INT);
+            $result = $statement->executeQuery();
+            $this->totalCombinations[$row['product_id']] = $result->fetchOne();
+            $result->free();
         }
 
         return $this->totalCombinations[$row['product_id']];
     }
 
-    private function addEditProductLink(array $rows)
+    private function addStockApiUrls(array $rows)
     {
         $router = $this->container->get('router');
 

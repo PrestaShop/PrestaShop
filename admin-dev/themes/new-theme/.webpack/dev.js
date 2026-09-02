@@ -9,6 +9,7 @@ function devConfig() {
   const dev = Object.assign(
     common,
     {
+      mode: 'development',
       devtool: 'inline-source-map',
       devServer: {
         allowedHosts: 'all',

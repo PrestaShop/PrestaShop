@@ -1,6 +1,8 @@
 services:
   _defaults:
     public: true
+    bind:
+      $queryBus: '@prestashop.core.query_bus'
 
   prestashop.core.form.identifiable_object.data_provider.sql_request_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SqlRequestFormDataProvider'
@@ -34,6 +36,10 @@ services:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
 
+  prestashop.core.form.identifiable_object.data_provider.extra_property_definition_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ExtraPropertyDefinitionFormDataProvider'
+    autowire: true
+
   prestashop.core.form.identifiable_object.data_provider.meta_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\MetaFormDataProvider'
     arguments:
@@ -41,17 +47,18 @@ services:
 
   prestashop.core.form.identifiable_object.data_provider.category_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CategoryFormDataProvider'
+    autowire: true
     arguments:
       - '@prestashop.core.query_bus'
-      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.getCategory()'
       - '@prestashop.adapter.group.group_data_provider'
+      - '@prestashop.adapter.shop.url.category_provider'
+      - '@router.default'
 
   prestashop.core.form.identifiable_object.data_provider.contact_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ContactFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
-      - '@prestashop.bundle.form.data_transformer.string_array_to_integer_array'
+      - '@PrestaShopBundle\Form\DataTransformer\StringArrayToIntegerArrayDataTransformer'
       - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
 
   prestashop.core.form.identifiable_object.data_provider.cms_page_category_form_data_provider:
@@ -106,12 +113,26 @@ services:
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
       - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AttributeGroupFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AttributeFormDataProvider:
+    autowire: true
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@router.default'
+
   prestashop.core.form.identifiable_object.data_provider.feature_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FeatureFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FeatureValueFormDataProvider:
+    autowire: true
+    public: false
 
   prestashop.core.form.identifiable_object.data_provider.order_message_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\OrderMessageFormDataProvider'
@@ -166,18 +187,19 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
       - "@=service('prestashop.adapter.shop.context').getContextShopID()"
+      - '@prestashop.adapter.form.choice_provider.features_choice_provider'
 
-  prestashop.core.form.identifiable_object.data_provider.product_shops_form_data_provider:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductShopsFormDataProvider'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductShopsFormDataProvider:
+    autowire: true
+    public: false
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - "@=service('prestashop.adapter.shop.context').getContextShopID()"
+      $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
 
   prestashop.core.form.identifiable_object.data_provider.combination_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider'
+    autowire: true
     arguments:
-      - '@prestashop.core.query_bus'
-      - '@prestashop.adapter.shop.context'
+      $featuresChoiceProvider: '@prestashop.adapter.form.choice_provider.features_choice_provider'
 
   prestashop.core.form.identifiable_object.data_provider.bulk_combination_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\BulkCombinationFormDataProvider'
@@ -189,6 +211,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductImageFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
 
   prestashop.core.form.identifiable_object.data_provider.zone_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ZoneFormDataProvider'
@@ -220,3 +243,70 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TaxRulesGroupFormDataProvider:
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TaxRuleFormDataProvider:
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\DiscountFormDataProvider:
+    autowire: true
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TitleFormDataProvider:
+    autowire: true
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApiClientFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ImageTypeFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CarrierFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AliasFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TagFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AddProductFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\MergeShipmentFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EditShipmentFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SplitShipmentFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FulfillShipmentFormDataProvider:
+    autowire: true
+    public: false
+
+  prestashop.core.form.identifiable_object.data_provider.quick_access_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\QuickAccessFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EditProductFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\BusinessEntityFormDataProvider:
+    autowire: true
+    public: false

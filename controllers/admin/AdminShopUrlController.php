@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -63,12 +43,12 @@ class AdminShopUrlControllerCore extends AdminController
 
         $this->fields_list = [
             'id_shop_url' => [
-                'title' => $this->trans('Shop URL ID', [], 'Admin.Advparameters.Feature'),
+                'title' => $this->trans('Store URL ID', [], 'Admin.Advparameters.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
             ],
             'shop_name' => [
-                'title' => $this->trans('Shop name', [], 'Admin.Advparameters.Feature'),
+                'title' => $this->trans('Store name', [], 'Admin.Advparameters.Feature'),
                 'filter_key' => 's!name',
             ],
             'url' => [
@@ -106,7 +86,8 @@ class AdminShopUrlControllerCore extends AdminController
 
     public function renderList()
     {
-        $this->addRowActionSkipList('delete', [1]);
+        // We will hide "delete" action for all URLs that are set as main ones for the store
+        $this->addRowActionSkipList('delete', $this->getUnremovableUrls());
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
@@ -120,6 +101,19 @@ class AdminShopUrlControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         return parent::renderList();
+    }
+
+    /**
+     * Returns a list of URLs that are selected as main ones for some store.
+     *
+     * @return array of URLs that are selected as main
+     */
+    protected function getUnremovableUrls()
+    {
+        return array_column(
+            Db::getInstance()->executeS('SELECT id_shop_url FROM ' . _DB_PREFIX_ . 'shop_url WHERE main = 1'),
+            'id_shop_url'
+        );
     }
 
     /**
@@ -153,7 +147,7 @@ class AdminShopUrlControllerCore extends AdminController
                     'input' => [
                         [
                             'type' => 'select',
-                            'label' => $this->trans('Shop', [], 'Admin.Global'),
+                            'label' => $this->trans('Store', [], 'Admin.Global'),
                             'name' => 'id_shop',
                             'onchange' => 'checkMainUrlInfo(this.value);',
                             'options' => [
@@ -170,7 +164,7 @@ class AdminShopUrlControllerCore extends AdminController
                         ],
                         [
                             'type' => 'switch',
-                            'label' => $this->trans('Is it the main URL for this shop?', [], 'Admin.Advparameters.Feature'),
+                            'label' => $this->trans('Is it the main URL for this store?', [], 'Admin.Advparameters.Feature'),
                             'name' => 'main',
                             'is_bool' => true,
                             'class' => 't',
@@ -223,7 +217,7 @@ class AdminShopUrlControllerCore extends AdminController
             [
                 'form' => [
                     'legend' => [
-                        'title' => $this->trans('Shop URL', [], 'Admin.Advparameters.Feature'),
+                        'title' => $this->trans('Store URL', [], 'Admin.Advparameters.Feature'),
                         'icon' => 'icon-shopping-cart',
                     ],
                     'input' => [
@@ -310,7 +304,7 @@ class AdminShopUrlControllerCore extends AdminController
             }
 
             $this->page_header_toolbar_btn['edit'] = [
-                'desc' => $this->trans('Edit this shop', [], 'Admin.Advparameters.Feature'),
+                'desc' => $this->trans('Edit this store', [], 'Admin.Advparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShop') . '&updateshop&shop_id=' . (int) $this->id_shop,
             ];
 
@@ -341,6 +335,11 @@ class AdminShopUrlControllerCore extends AdminController
         }
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         parent::initContent();
@@ -459,7 +458,7 @@ class AdminShopUrlControllerCore extends AdminController
         }
 
         $unallowed = str_replace('/', '', Tools::getValue('virtual_uri'));
-        if ($unallowed == 'c' || $unallowed == 'img' || is_numeric($unallowed)) {
+        if ($unallowed == 'c' || $unallowed == 'img' || is_numeric($unallowed) || !preg_match('/^[a-z\d\-_]*$/i', $unallowed)) {
             $this->errors[] = $this->trans(
                 'A shop virtual URL cannot be "%URL%"',
                 [

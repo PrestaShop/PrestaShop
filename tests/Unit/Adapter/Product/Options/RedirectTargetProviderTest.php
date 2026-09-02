@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -33,15 +13,15 @@ use Language;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository;
+use PrestaShop\PrestaShop\Adapter\SEO\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryPreview;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPreview;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductRedirectTarget;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Domain\QueryResult\RedirectTargetInformation;
 
 class RedirectTargetProviderTest extends TestCase
 {
@@ -55,9 +35,9 @@ class RedirectTargetProviderTest extends TestCase
      * @param array|null $mockOptions
      * @param string $redirectType
      * @param int $redirectTargetId
-     * @param ProductRedirectTarget|null $expectedTarget
+     * @param RedirectTargetInformation|null $expectedTarget
      */
-    public function testGetRedirectTarget(?array $mockOptions, string $redirectType, int $redirectTargetId, ?ProductRedirectTarget $expectedTarget): void
+    public function testGetRedirectTarget(?array $mockOptions, string $redirectType, int $redirectTargetId, ?RedirectTargetInformation $expectedTarget): void
     {
         $provider = new RedirectTargetProvider(
             $this->getProductPreviewRepositoryMock($mockOptions),
@@ -73,9 +53,9 @@ class RedirectTargetProviderTest extends TestCase
     {
         $breadcrumb = 'Category > Path';
         $categoryImage = 'path/to/c/1.jpg';
-        $redirectTarget = new ProductRedirectTarget(
+        $redirectTarget = new RedirectTargetInformation(
             self::CATEGORY_TARGET_ID,
-            ProductRedirectTarget::CATEGORY_TYPE,
+            RedirectTargetInformation::CATEGORY_TYPE,
             $breadcrumb,
             $categoryImage
         );
@@ -106,9 +86,9 @@ class RedirectTargetProviderTest extends TestCase
 
         $productName = 'Product 1';
         $productImage = '/path/p/45.jpg';
-        $redirectTarget = new ProductRedirectTarget(
+        $redirectTarget = new RedirectTargetInformation(
             self::PRODUCT_TARGET_ID,
-            ProductRedirectTarget::PRODUCT_TYPE,
+            RedirectTargetInformation::PRODUCT_TYPE,
             $productName,
             $productImage
         );

@@ -1,36 +1,16 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
-use Cookie;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
@@ -46,6 +26,8 @@ final class GeneralDataProvider implements FormDataProviderInterface
      * Hours are converted to seconds, so int might be turned to float if it's way to high.
      * Cookie classes crash if lifetime goes beyond year 9999, there are probably multiple other things.
      * So we need to set some sort of max value. 100 years seems like a lifetime beyond reasonable use.
+     *
+     * @deprecated since 9.0 use CookieOptions constants instead.
      */
     public const MAX_COOKIE_VALUE = 876000;
 
@@ -59,19 +41,12 @@ final class GeneralDataProvider implements FormDataProviderInterface
      */
     private $sslEnabled;
 
-    /**
-     * @var bool
-     */
-    private $sslEnabledEverywhere;
-
     public function __construct(
         DataConfigurationInterface $dataConfiguration,
-        bool $sslEnabled,
-        bool $sslEnabledEverywhere
+        bool $sslEnabled
     ) {
         $this->dataConfiguration = $dataConfiguration;
         $this->sslEnabled = $sslEnabled;
-        $this->sslEnabledEverywhere = $sslEnabledEverywhere;
     }
 
     /**
@@ -106,7 +81,7 @@ final class GeneralDataProvider implements FormDataProviderInterface
                 $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
             }
 
-            if ($frontOfficeLifeTimeCookie > self::MAX_COOKIE_VALUE) {
+            if ($frontOfficeLifeTimeCookie > CookieOptions::MAX_COOKIE_VALUE) {
                 $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
             }
         }
@@ -117,7 +92,7 @@ final class GeneralDataProvider implements FormDataProviderInterface
                 $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
             }
 
-            if ($backOfficeLifeTimeCookie > self::MAX_COOKIE_VALUE) {
+            if ($backOfficeLifeTimeCookie > CookieOptions::MAX_COOKIE_VALUE) {
                 $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
             }
         }
@@ -143,8 +118,8 @@ final class GeneralDataProvider implements FormDataProviderInterface
      */
     protected function validateSameSite(string $sameSite): bool
     {
-        if ($sameSite === Cookie::SAMESITE_NONE) {
-            return $this->sslEnabled && $this->sslEnabledEverywhere;
+        if ($sameSite === CookieOptions::SAMESITE_NONE) {
+            return $this->sslEnabled;
         }
 
         return true;

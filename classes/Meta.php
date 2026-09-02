@@ -1,30 +1,10 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
-use Symfony\Component\HttpFoundation\IpUtils;
+use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 
 /**
  * Class MetaCore.
@@ -35,7 +15,6 @@ class MetaCore extends ObjectModel
     public $configurable = 1;
     public $title;
     public $description;
-    public $keywords;
     public $url_rewrite;
 
     /**
@@ -53,7 +32,6 @@ class MetaCore extends ObjectModel
             /* Lang fields */
             'title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128],
             'description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
-            'keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
             'url_rewrite' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'size' => 255],
         ],
     ];
@@ -70,14 +48,14 @@ class MetaCore extends ObjectModel
     {
         $selectedPages = [];
         if (!$files = Tools::scandir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'front' . DIRECTORY_SEPARATOR, 'php', '', true)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Cannot scan root directory', [], 'Admin.Notifications.Error')));
+            throw new PrestaShopException(Context::getContext()->getTranslator()->trans('Cannot scan root directory', [], 'Admin.Notifications.Error'));
         }
 
         $overrideDir = _PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'front' . DIRECTORY_SEPARATOR;
         if (!is_dir($overrideDir)) {
             $overrideFiles = [];
         } elseif (!$overrideFiles = Tools::scandir($overrideDir, 'php', '', true)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Cannot scan "override" directory', [], 'Admin.Notifications.Error')));
+            throw new PrestaShopException(Context::getContext()->getTranslator()->trans('Cannot scan "override" directory', [], 'Admin.Notifications.Error'));
         }
 
         $files = array_values(array_unique(array_merge($files, $overrideFiles)));
@@ -252,11 +230,8 @@ class MetaCore extends ObjectModel
      *
      * @return bool
      */
-    public function deleteSelection($selection)
+    public function deleteSelection(array $selection)
     {
-        if (!is_array($selection)) {
-            die(Tools::displayError());
-        }
         $result = true;
         foreach ($selection as $id) {
             $this->id = (int) $id;
@@ -292,13 +267,10 @@ class MetaCore extends ObjectModel
 
     /**
      * Get meta tags.
-     *
-     * @since 1.5.0
      */
     public static function getMetaTags($idLang, $pageName, $title = '')
     {
-        if (Configuration::get('PS_SHOP_ENABLE')
-            || IpUtils::checkIp(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
+        if (Configuration::get('PS_SHOP_ENABLE') || Tools::isAllowedToBypassMaintenance()) {
             if ($pageName == 'product' && ($idProduct = Tools::getValue('id_product'))) {
                 return Meta::getProductMetas($idProduct, $idLang, $pageName);
             } elseif ($pageName == 'category' && ($idCategory = Tools::getValue('id_category'))) {
@@ -324,15 +296,12 @@ class MetaCore extends ObjectModel
      * @param string $pageName Page name
      *
      * @return array Meta tags
-     *
-     * @since 1.5.0
      */
     public static function getHomeMetas($idLang, $pageName)
     {
         $metas = Meta::getMetaByPage($pageName, $idLang);
         $ret['meta_title'] = (isset($metas['title']) && $metas['title']) ? $metas['title'] : Configuration::get('PS_SHOP_NAME');
         $ret['meta_description'] = (isset($metas['description']) && $metas['description']) ? $metas['description'] : '';
-        $ret['meta_keywords'] = (isset($metas['keywords']) && $metas['keywords']) ? $metas['keywords'] : '';
         $ret = Meta::completeMetaTags($ret, $ret['meta_title']);
 
         return $ret;
@@ -346,22 +315,32 @@ class MetaCore extends ObjectModel
      * @param string $pageName
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getProductMetas($idProduct, $idLang, $pageName)
     {
-        $product = new Product($idProduct, false, $idLang);
-        if (Validate::isLoadedObject($product) && $product->active) {
-            $row = Meta::getPresentedObject($product);
-            if (empty($row['meta_description'])) {
-                $row['meta_description'] = strip_tags($row['description_short']);
-            }
+        // Get cache key and check if the result is already cached.
+        $cacheId = 'Meta::getProductMetas' . (int) $idProduct . '-' . (int) $idLang;
+        if (!Cache::isStored($cacheId)) {
+            // Check if the product exists and is active, if yes, process the meta, if not, load home metas as a fallback.
+            $product = new Product($idProduct, false, $idLang);
+            if (Validate::isLoadedObject($product) && $product->active) {
+                $row = Meta::getPresentedObject($product);
 
-            return Meta::completeMetaTags($row, $row['name']);
+                // Use the short description as meta description fallback.
+                if (empty($row['meta_description'])) {
+                    $row['meta_description'] = Meta::getMetaDescriptionFallback($row['description_short']);
+                }
+
+                $result = Meta::completeMetaTags($row, $row['name']);
+            } else {
+                $result = Meta::getHomeMetas($idLang, $pageName);
+            }
+            Cache::store($cacheId, $result);
+
+            return $result;
         }
 
-        return Meta::getHomeMetas($idLang, $pageName);
+        return Cache::retrieve($cacheId);
     }
 
     /**
@@ -370,23 +349,26 @@ class MetaCore extends ObjectModel
      * @param int $idCategory
      * @param int $idLang
      * @param string $pageName
+     * @param string $title
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getCategoryMetas($idCategory, $idLang, $pageName, $title = '')
     {
-        $category = new Category($idCategory, $idLang);
-
-        $cacheId = 'Meta::getCategoryMetas' . (int) $idCategory . '-' . (int) $idLang;
+        // Get cache key and check if the result is already cached.
+        $cacheId = 'Meta::getCategoryMetas' . (int) $idCategory . '-' . (int) $idLang . '-' . md5((string) $title);
         if (!Cache::isStored($cacheId)) {
+            // Check if the category exists and is loaded, if yes, process the meta, if not, load home metas as a fallback.
+            $category = new Category($idCategory, $idLang);
             if (Validate::isLoadedObject($category)) {
                 $row = Meta::getPresentedObject($category);
+
+                // Use the category description as meta description fallback.
                 if (empty($row['meta_description'])) {
-                    $row['meta_description'] = strip_tags($row['description']);
+                    $row['meta_description'] = Meta::getMetaDescriptionFallback($row['description']);
                 }
 
+                // Prefer the provided title, otherwise use the category meta title or name.
                 if (is_string($title) && $title !== '') {
                     $row['meta_title'] = $title;
                 } else {
@@ -413,23 +395,32 @@ class MetaCore extends ObjectModel
      * @param string $pageName
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getManufacturerMetas($idManufacturer, $idLang, $pageName)
     {
-        $manufacturer = new Manufacturer($idManufacturer, $idLang);
-        if (Validate::isLoadedObject($manufacturer)) {
-            $row = Meta::getPresentedObject($manufacturer);
-            if (!empty($row['meta_description'])) {
-                $row['meta_description'] = strip_tags($row['meta_description']);
-            }
-            $row['meta_title'] = $row['meta_title'] ?: $row['name'];
+        // Get cache key and check if the result is already cached.
+        $cacheId = 'Meta::getManufacturerMetas' . (int) $idManufacturer . '-' . (int) $idLang;
+        if (!Cache::isStored($cacheId)) {
+            // Check if the manufacturer exists and is loaded, if yes, process the meta, if not, load home metas as a fallback.
+            $manufacturer = new Manufacturer($idManufacturer, $idLang);
+            if (Validate::isLoadedObject($manufacturer)) {
+                $row = Meta::getPresentedObject($manufacturer);
 
-            return Meta::completeMetaTags($row, $row['meta_title']);
+                // Use the manufacturer short description as meta description fallback.
+                if (empty($row['meta_description'])) {
+                    $row['meta_description'] = Meta::getMetaDescriptionFallback($row['short_description']);
+                }
+
+                $result = Meta::completeMetaTags($row, $row['name']);
+            } else {
+                $result = Meta::getHomeMetas($idLang, $pageName);
+            }
+            Cache::store($cacheId, $result);
+
+            return $result;
         }
 
-        return Meta::getHomeMetas($idLang, $pageName);
+        return Cache::retrieve($cacheId);
     }
 
     /**
@@ -440,22 +431,32 @@ class MetaCore extends ObjectModel
      * @param string $pageName
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getSupplierMetas($idSupplier, $idLang, $pageName)
     {
-        $supplier = new Supplier($idSupplier, $idLang);
-        if (Validate::isLoadedObject($supplier)) {
-            $row = Meta::getPresentedObject($supplier);
-            if (!empty($row['meta_description'])) {
-                $row['meta_description'] = strip_tags($row['meta_description']);
-            }
+        // Get cache key and check if the result is already cached.
+        $cacheId = 'Meta::getSupplierMetas' . (int) $idSupplier . '-' . (int) $idLang;
+        if (!Cache::isStored($cacheId)) {
+            // Check if the supplier exists and is loaded, if yes, process the meta, if not, load home metas as a fallback.
+            $supplier = new Supplier($idSupplier, $idLang);
+            if (Validate::isLoadedObject($supplier)) {
+                $row = Meta::getPresentedObject($supplier);
 
-            return Meta::completeMetaTags($row, $row['name']);
+                // Use the supplier description as meta description fallback.
+                if (empty($row['meta_description'])) {
+                    $row['meta_description'] = Meta::getMetaDescriptionFallback($row['description']);
+                }
+
+                $result = Meta::completeMetaTags($row, $row['name']);
+            } else {
+                $result = Meta::getHomeMetas($idLang, $pageName);
+            }
+            Cache::store($cacheId, $result);
+
+            return $result;
         }
 
-        return Meta::getHomeMetas($idLang, $pageName);
+        return Cache::retrieve($cacheId);
     }
 
     /**
@@ -466,20 +467,33 @@ class MetaCore extends ObjectModel
      * @param string $pageName
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getCmsMetas($idCms, $idLang, $pageName)
     {
-        $cms = new CMS($idCms, $idLang);
-        if (Validate::isLoadedObject($cms)) {
-            $row = Meta::getPresentedObject($cms);
-            $row['meta_title'] = !empty($row['head_seo_title']) ? $row['head_seo_title'] : $row['meta_title'];
+        // Get cache key and check if the result is already cached.
+        $cacheId = 'Meta::getCmsMetas' . (int) $idCms . '-' . (int) $idLang;
+        if (!Cache::isStored($cacheId)) {
+            // Check if the CMS page exists and is loaded, if yes, process the meta, if not, load home metas as a fallback.
+            $cms = new CMS($idCms, $idLang);
+            if (Validate::isLoadedObject($cms)) {
+                $row = Meta::getPresentedObject($cms);
+                /*
+                 * The CMS page fields are historically misnamed - somebody made a solid mess.
+                 * Against what you might think, meta_title stores the page name - the visible one.
+                 * While head_seo_title stores the actual meta title used in the page head.
+                 */
+                $row['meta_title'] = !empty($row['head_seo_title']) ? $row['head_seo_title'] : $row['meta_title'];
 
-            return Meta::completeMetaTags($row, $row['meta_title']);
+                $result = Meta::completeMetaTags($row, $row['meta_title']);
+            } else {
+                $result = Meta::getHomeMetas($idLang, $pageName);
+            }
+            Cache::store($cacheId, $result);
+
+            return $result;
         }
 
-        return Meta::getHomeMetas($idLang, $pageName);
+        return Cache::retrieve($cacheId);
     }
 
     /**
@@ -490,26 +504,29 @@ class MetaCore extends ObjectModel
      * @param string $pageName
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getCmsCategoryMetas($idCmsCategory, $idLang, $pageName)
     {
-        $cmsCategory = new CMSCategory($idCmsCategory, $idLang);
-        if (Validate::isLoadedObject($cmsCategory)) {
-            $row = Meta::getPresentedObject($cmsCategory);
-            $row['meta_title'] = empty($row['meta_title']) ? $row['name'] : $row['meta_title'];
+        // Get cache key and check if the result is already cached.
+        $cacheId = 'Meta::getCmsCategoryMetas' . (int) $idCmsCategory . '-' . (int) $idLang;
+        if (!Cache::isStored($cacheId)) {
+            // Check if the CMS category exists and is loaded, if yes, process the meta, if not, load home metas as a fallback.
+            $cmsCategory = new CMSCategory($idCmsCategory, $idLang);
+            if (Validate::isLoadedObject($cmsCategory)) {
+                $row = Meta::getPresentedObject($cmsCategory);
+                $result = Meta::completeMetaTags($row, $row['name']);
+            } else {
+                $result = Meta::getHomeMetas($idLang, $pageName);
+            }
+            Cache::store($cacheId, $result);
 
-            return Meta::completeMetaTags($row, $row['meta_title']);
+            return $result;
         }
 
-        return Meta::getHomeMetas($idLang, $pageName);
+        return Cache::retrieve($cacheId);
     }
 
-    /**
-     * @since 1.5.0
-     */
-    public static function completeMetaTags($metaTags, $defaultValue, Context $context = null)
+    public static function completeMetaTags($metaTags, $defaultValue, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -555,5 +572,20 @@ class MetaCore extends ObjectModel
         $objectPresenter = new ObjectPresenter();
 
         return $objectPresenter->present($object);
+    }
+
+    /**
+     * Convert HTML content to a plain text meta description fallback and trim it to the SEO field limit.
+     *
+     * @param string $description
+     *
+     * @return string
+     */
+    protected static function getMetaDescriptionFallback(string $description): string
+    {
+        // Convert HTML descriptions to readable text before trimming them for the meta description field.
+        $description = Tools::htmlToText($description);
+
+        return mb_substr($description, 0, SeoSettings::MAX_DESCRIPTION_LENGTH);
     }
 }

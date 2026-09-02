@@ -1,31 +1,9 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 global $smarty;
-
-use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 
 $template_dirs = array(_PS_THEME_DIR_.'templates');
 $plugin_dirs = array(_PS_THEME_DIR_.'plugins');
@@ -57,22 +35,57 @@ smartyRegisterFunction($smarty, 'function', 'render', 'smartyRender');
 smartyRegisterFunction($smarty, 'function', 'form_field', 'smartyFormField');
 smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
 
-function withWidget($params, callable $cb)
+function withWidget($params, callable $cb, $smarty)
 {
-    if (!isset($params['name'])) {
-        throw new Exception('Smarty helper `render_widget` expects at least the `name` parameter.');
+    // Check if name was provided
+    if (empty($params['name'])) {
+        if (_PS_MODE_DEV_) {
+            trigger_error(
+                sprintf(
+                    'When using {widget}, you must provide at least the `name` parameter. Template - %1$s',
+                    $smarty->source->filepath
+                ),
+                E_USER_NOTICE
+            );
+        }
+        return;
     }
 
+    // Get module name
     $moduleName = $params['name'];
     unset($params['name']);
 
+    // Try to load module
     $moduleInstance = Module::getInstanceByName($moduleName);
 
+    // If it's not installed, nothing to do here
+    if (empty($moduleInstance)) {
+        if (_PS_MODE_DEV_) {
+            trigger_error(
+                sprintf(
+                    'Module %1$s cannot be used as a widget, because it\'s not installed. Template - %2$s',
+                    $moduleName,
+                    $smarty->source->filepath
+                ),
+                E_USER_NOTICE
+            );
+        }
+        return;
+    }
+
+    // Check if this module supports widget interface
     if (!$moduleInstance instanceof PrestaShop\PrestaShop\Core\Module\WidgetInterface) {
-        throw new Exception(sprintf(
-            'Module `%1$s` is not a WidgetInterface.',
-            $moduleName
-        ));
+        if (_PS_MODE_DEV_) {
+            trigger_error(
+                sprintf(
+                    'Module `%1$s` cannot be used as a widget, because it\'s not a WidgetInterface. Template - %2$s',
+                    $moduleName,
+                    $smarty->source->filepath
+                ),
+                E_USER_NOTICE
+            );
+        }
+        return;
     }
 
     return $cb($moduleInstance, $params);
@@ -86,14 +99,31 @@ function smartyWidget($params, &$smarty)
             isset($params['hook']) ? $params['hook'] : null,
             $params
         );
-    });
+    }, $smarty);
 }
 
 function smartyRender($params, &$smarty)
 {
+    // Check if proper object was passed
+    if (empty($params['ui']) || !method_exists($params['ui'], 'render')) {
+        if (_PS_MODE_DEV_) {
+            trigger_error(
+                sprintf(
+                    'When using {render}, you must provide proper `ui` parameter with the form. Template - %1$s',
+                    $smarty->source->filepath
+                ),
+                E_USER_NOTICE
+            );
+        }
+        return;
+    }
+
     $ui = $params['ui'];
 
-    if (array_key_exists('file', $params)) {
+    // If specific template file was provided, we pass it along
+    if (!empty($params['file'])) {
+        // Ignoring the next line because PHPStan is not aware of the object passed
+        /** @phpstan-ignore-next-line */
         $ui->setTemplate($params['file']);
     }
 
@@ -139,7 +169,7 @@ function smartyWidgetBlock($params, $content, $smarty)
                 $smarty->assign($key, $value);
             }
             $backedUpVariablesStack[] = $backedUpVariables;
-        });
+        }, $smarty);
         // We don't display anything since the template is not rendered yet.
         return '';
     } else {

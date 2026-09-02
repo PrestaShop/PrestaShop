@@ -1,28 +1,10 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
+use PrestaShop\PrestaShop\Core\Security\Permission;
 
 /**
  * Class AccessCore.
@@ -133,6 +115,7 @@ class AccessCore extends ObjectModel
      * @param string $authSlug Slug
      *
      * @return string Tab ID
+     *
      * @todo: Find out if we should return an int instead. (breaking change)
      */
     public static function findIdTabByAuthSlug($authSlug)
@@ -214,7 +197,7 @@ class AccessCore extends ObjectModel
      */
     public static function sluggifyTab($tab, $authorization = '')
     {
-        return sprintf('ROLE_MOD_TAB_%s_%s', strtoupper($tab['class_name'] ?? ''), $authorization);
+        return sprintf('%s%s_%s', Permission::PREFIX_TAB, strtoupper($tab['class_name'] ?? ''), $authorization);
     }
 
     /**
@@ -227,7 +210,7 @@ class AccessCore extends ObjectModel
      */
     public static function sluggifyModule($module, $authorization = '')
     {
-        return sprintf('ROLE_MOD_MODULE_%s_%s', strtoupper($module['name'] ?? ''), $authorization);
+        return sprintf('%s%s_%s', Permission::PREFIX_MODULE, strtoupper($module['name'] ?? ''), $authorization);
     }
 
     /**
@@ -344,7 +327,7 @@ class AccessCore extends ObjectModel
         $idTab = (int) $idTab;
 
         if ($idTab == -1) {
-            $slug = 'ROLE_MOD_TAB_%_';
+            $slug = Permission::PREFIX_TAB . '%_';
         } else {
             $slug = self::findSlugByIdTab($idTab);
         }
@@ -373,7 +356,7 @@ class AccessCore extends ObjectModel
         ');
 
         if (empty($roles)) {
-            throw new \Exception('Cannot find role slug');
+            throw new Exception('Cannot find role slug');
         }
 
         $res = [];
@@ -404,7 +387,7 @@ class AccessCore extends ObjectModel
         $idModule = (int) $idModule;
 
         if ($idModule == -1) {
-            $slug = 'ROLE_MOD_MODULE_%_';
+            $slug = Permission::PREFIX_MODULE . '%_';
         } else {
             $slug = self::findSlugByIdModule($idModule);
         }

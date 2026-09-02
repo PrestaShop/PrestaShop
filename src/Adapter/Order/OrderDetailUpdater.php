@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -88,7 +68,7 @@ class OrderDetailUpdater
         DecimalNumber $priceTaxExcluded,
         DecimalNumber $priceTaxIncluded
     ): void {
-        list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
+        [$roundType, $computingPrecision, $taxAddress] = $this->prepareOrderContext($order);
 
         try {
             $ecotax = new DecimalNumber((string) $orderDetail->ecotax);
@@ -134,9 +114,10 @@ class OrderDetailUpdater
         int $productId,
         int $combinationId,
         DecimalNumber $priceTaxExcluded,
-        DecimalNumber $priceTaxIncluded
+        DecimalNumber $priceTaxIncluded,
+        int $customizationId = 0
     ): void {
-        list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
+        [$roundType, $computingPrecision, $taxAddress] = $this->prepareOrderContext($order);
 
         try {
             $this->applyUpdatesForProduct(
@@ -147,7 +128,8 @@ class OrderDetailUpdater
                 $priceTaxIncluded,
                 $roundType,
                 $computingPrecision,
-                $taxAddress
+                $taxAddress,
+                $customizationId
             );
         } finally {
             $this->contextStateManager->restorePreviousContext();
@@ -159,22 +141,23 @@ class OrderDetailUpdater
      */
     public function updateOrderDetailsTaxes(Order $order): void
     {
-        list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
+        [$roundType, $computingPrecision, $taxAddress] = $this->prepareOrderContext($order);
 
         try {
             $orderDetailsData = $order->getProducts();
             foreach ($orderDetailsData as $orderDetailData) {
-                $orderDetail = new OrderDetail($orderDetailData['id_order_detail']);
+                $orderDetail = new OrderDetail((int) $orderDetailData['id_order_detail']);
 
                 // Clean existing order_detail_tax
                 Db::getInstance()->delete('order_detail_tax', 'id_order_detail = ' . (int) $orderDetail->id);
 
                 $taxCalculator = $this->getTaxCalculatorByAddress($taxAddress, $orderDetail);
                 $taxesAmount = $taxCalculator->getTaxesAmount($orderDetail->unit_price_tax_excl);
-                $unitAmount = $totalAmount = 0;
+                $sumUnitAmount = $sumTotalAmount = 0;
                 if (!empty($taxesAmount)) {
                     $orderDetailTaxes = [];
                     foreach ($taxesAmount as $taxId => $amount) {
+                        $unitAmount = $totalAmount = 0;
                         switch ($roundType) {
                             case Order::ROUND_ITEM:
                                 $unitAmount = (float) Tools::ps_round($amount, $computingPrecision);
@@ -198,18 +181,73 @@ class OrderDetailUpdater
                             'unit_amount' => (float) $unitAmount,
                             'total_amount' => (float) $totalAmount,
                         ];
-                        $orderDetail->unit_price_tax_incl = (float) $orderDetail->unit_price_tax_excl + $unitAmount;
-                        $orderDetail->total_price_tax_incl = (float) $orderDetail->total_price_tax_incl + $totalAmount;
+                        $sumUnitAmount += $unitAmount;
+                        $sumTotalAmount += $totalAmount;
                     }
 
                     Db::getInstance()->insert('order_detail_tax', $orderDetailTaxes, false);
                 }
 
                 // Update OrderDetail values
-                $orderDetail->unit_price_tax_incl = (float) $orderDetail->unit_price_tax_excl + $unitAmount;
-                $orderDetail->total_price_tax_incl = (float) $orderDetail->total_price_tax_incl + $totalAmount;
+                $orderDetail->unit_price_tax_incl = (float) $orderDetail->unit_price_tax_excl + $sumUnitAmount;
+                $orderDetail->total_price_tax_incl = (float) $orderDetail->total_price_tax_excl + $sumTotalAmount;
                 if (!$orderDetail->update()) {
                     throw new OrderException('An error occurred while editing the product line.');
+                }
+            }
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
+    }
+
+    /**
+     * Updates only the order_detail_tax table without recalculating or modifying order_detail prices
+     * This is used when prices have been precisely set and we only need to update the tax breakdown
+     *
+     * Note: This method does NOT update order_detail table, only order_detail_tax
+     */
+    public function updateOrderDetailTaxTableOnly(Order $order): void
+    {
+        list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
+
+        try {
+            $orderDetailsData = $order->getProducts();
+            foreach ($orderDetailsData as $orderDetailData) {
+                $orderDetail = new OrderDetail($orderDetailData['id_order_detail']);
+
+                // Clean existing order_detail_tax
+                Db::getInstance()->delete('order_detail_tax', 'id_order_detail = ' . (int) $orderDetail->id);
+
+                $taxCalculator = $this->getTaxCalculatorByAddress($taxAddress, $orderDetail);
+                $taxesAmount = $taxCalculator->getTaxesAmount($orderDetail->unit_price_tax_excl);
+                if (!empty($taxesAmount)) {
+                    $orderDetailTaxes = [];
+                    foreach ($taxesAmount as $taxId => $amount) {
+                        $unitAmount = 0;
+                        $totalAmount = 0;
+                        switch ($roundType) {
+                            case Order::ROUND_ITEM:
+                                $unitAmount = (float) Tools::ps_round($amount, $computingPrecision);
+                                $totalAmount = $unitAmount * $orderDetail->product_quantity;
+                                break;
+                            case Order::ROUND_LINE:
+                                $unitAmount = $amount;
+                                $totalAmount = Tools::ps_round($unitAmount * $orderDetail->product_quantity, $computingPrecision);
+                                break;
+                            case Order::ROUND_TOTAL:
+                                $unitAmount = $amount;
+                                $totalAmount = $unitAmount * $orderDetail->product_quantity;
+                                break;
+                        }
+                        $orderDetailTaxes[] = [
+                            'id_order_detail' => $orderDetail->id,
+                            'id_tax' => $taxId,
+                            'unit_amount' => (float) $unitAmount,
+                            'total_amount' => (float) $totalAmount,
+                        ];
+                    }
+
+                    Db::getInstance()->insert('order_detail_tax', $orderDetailTaxes, false);
                 }
             }
         } finally {
@@ -314,9 +352,10 @@ class OrderDetailUpdater
         DecimalNumber $priceTaxIncluded,
         int $roundType,
         int $computingPrecision,
-        Address $taxAddress
+        Address $taxAddress,
+        int $customizationId = 0
     ): void {
-        $identicalOrderDetails = $this->getOrderDetailsForProduct($order, $productId, $combinationId);
+        $identicalOrderDetails = $this->getOrderDetailsForProduct($order, $productId, $combinationId, $customizationId);
         if (empty($identicalOrderDetails)) {
             return;
         }
@@ -361,13 +400,15 @@ class OrderDetailUpdater
     private function getOrderDetailsForProduct(
         Order $order,
         int $productId,
-        int $combinationId
+        int $combinationId,
+        int $customizationId = 0
     ): array {
         $identicalOrderDetails = [];
         $orderDetails = $order->getOrderDetailList();
         foreach ($orderDetails as $orderDetail) {
             if ((int) $orderDetail['product_id'] === $productId
-                && (int) $orderDetail['product_attribute_id'] === $combinationId) {
+                && (int) $orderDetail['product_attribute_id'] === $combinationId
+                && (int) $orderDetail['id_customization'] === $customizationId) {
                 $identicalOrderDetails[] = new OrderDetail($orderDetail['id_order_detail']);
             }
         }

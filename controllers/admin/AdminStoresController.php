@@ -1,28 +1,10 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 
 /**
  * @property Store $object
@@ -296,7 +278,7 @@ class AdminStoresControllerCore extends AdminController
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', [], 'Admin.Global'),
+                'label' => $this->trans('Store association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
             ];
         }
@@ -329,6 +311,8 @@ class AdminStoresControllerCore extends AdminController
             'days' => $days,
             'hours' => $hours,
         ];
+
+        $this->tpl_form_vars['states_url'] = $this->getContainer()->get('router')->generate('admin_country_states');
 
         return parent::renderForm();
     }
@@ -411,24 +395,38 @@ class AdminStoresControllerCore extends AdminController
     protected function postImage($id)
     {
         $ret = parent::postImage($id);
-        $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
+
+        /*
+        * Let's resolve which formats we will use for image generation.
+        *
+        * In case of .jpg images, the actual format inside is decided by ImageManager.
+        */
+        $configuredImageFormats = $this->get(ImageFormatConfiguration::class)->getGenerationFormats();
 
         if (($id_store = (int) Tools::getValue('id_store')) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
             foreach ($images_types as $image_type) {
-                ImageManager::resize(
-                    _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
-                    _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '.jpg',
-                    (int) $image_type['width'],
-                    (int) $image_type['height']
-                );
+                foreach ($configuredImageFormats as $imageFormat) {
+                    $error = 0;
+                    $targetWidth = null;
+                    $targetHeight = null;
+                    $sourceWidth = null;
+                    $sourceHeight = null;
 
-                if ($generate_hight_dpi_images) {
                     ImageManager::resize(
                         _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
-                        _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '2x.jpg',
-                        (int) $image_type['width'] * 2,
-                        (int) $image_type['height'] * 2
+                        _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '.' . $imageFormat,
+                        (int) $image_type['width'],
+                        (int) $image_type['height'],
+                        $imageFormat,
+                        false,
+                        $error,
+                        $targetWidth,
+                        $targetHeight,
+                        5,
+                        $sourceWidth,
+                        $sourceHeight,
+                        $image_type['image_fitment']
                     );
                 }
             }
@@ -453,7 +451,7 @@ class AdminStoresControllerCore extends AdminController
 
         $formFields = [
             'PS_SHOP_NAME' => [
-                'title' => $this->trans('Shop name', [], 'Admin.Shopparameters.Feature'),
+                'title' => $this->trans('Store name', [], 'Admin.Shopparameters.Feature'),
                 'hint' => $this->trans('Displayed in emails and page titles.', [], 'Admin.Shopparameters.Feature'),
                 'validation' => 'isGenericName',
                 'required' => true,
@@ -526,7 +524,7 @@ class AdminStoresControllerCore extends AdminController
         return $formFields;
     }
 
-    protected function _buildOrderedFieldsShop($formFields)
+    protected function _buildOrderedFieldsShop(array $formFields)
     {
         // You cannot do that, because the fields must be sorted for the country you've selected.
         // Simple example: the current country is France, where we don't display the state. You choose "US" as a country in the form. The state is not dsplayed at the right place...
@@ -602,8 +600,11 @@ class AdminStoresControllerCore extends AdminController
      *
      * @return array
      */
-    protected function adaptHoursFormat($value)
+    protected function adaptHoursFormat(?array $value)
     {
+        if (null === $value) {
+            return [];
+        }
         $separator = array_fill(0, count($value), ' | ');
 
         return array_map('implode', $separator, $value);

@@ -1,10 +1,7 @@
 name: PHP
 on:
-  push:
   pull_request:
-    # Do not run when only tests are updated
-    paths-ignore:
-      - 'tests/UI/**'
+  push:
 
 permissions:
   contents: read
@@ -21,18 +18,18 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.0
+          php-version: 8.1
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
       - name: Get Composer Cache Directory
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer Directory
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -42,39 +39,48 @@ jobs:
         run: composer validate --strict
 
       - name: Composer Install
-        run: composer install --ansi --prefer-dist --no-interaction --no-progress
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
       - name: Run PHPCSFixer
         run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
 
       - name: Run ergebnis/composer-normalize
         run: composer normalize --dry-run --no-check-lock
+
+  # Define which PHP versions need to be used
+  workflow_matrix_generator:
+    name: PHP matrix
+    uses: ./.github/workflows/workflow-matrix-generator.yml
+    with:
+      matrix_type: PHP
   phpstan:
     permissions:
       contents: read  # for actions/checkout to fetch code
     name: PHP Static Analysis
     runs-on: ubuntu-latest
+    needs: workflow_matrix_generator
     strategy:
       matrix:
-        php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
+        php: ${{ fromJSON(needs.workflow_matrix_generator.outputs.dynamic_matrix) }}
       fail-fast: false
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
+          php-version: '8.1'  # will be overriden by platform.php in composer.json see https://phpstan.org/config-reference#phpversion
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
+          coverage: none  # disable coverage to disable xdebug in the action.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
       - name: Get Composer Cache Directory
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer Directory
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -82,7 +88,7 @@ jobs:
 
       - name: Composer Install
         run: |
-          composer install --ansi --prefer-dist --no-interaction --no-progress
+          COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
           rm composer.lock
           composer config platform.php ${{ matrix.php }}
 
@@ -93,9 +99,10 @@ jobs:
       contents: read  # for actions/checkout to fetch code
     name: PHPUnit
     runs-on: ubuntu-latest
+    needs: workflow_matrix_generator
     strategy:
       matrix:
-        php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
+        php: ${{ fromJSON(needs.workflow_matrix_generator.outputs.dynamic_matrix) }}
       fail-fast: false
     steps:
       - name: Setup PHP
@@ -106,7 +113,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
       - name: PrestaShop Configuration
         run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
@@ -116,21 +123,17 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer Directory
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Composer Install
-        run: composer install --ansi --prefer-dist --no-interaction --no-progress
-
-      - name: Update phpunit version
-        if: ${{ startsWith(matrix.php, '8.') }}
-        run: composer update -w --ignore-platform-reqs --no-interaction phpunit/phpunit sebastian/comparator:4.0.6
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
       - name: Run phpunit
-        run: ./vendor/phpunit/phpunit/phpunit -c tests/Unit/phpunit.xml
+        run: composer run-script unit-tests --timeout=0
         env:
           SYMFONY_DEPRECATIONS_HELPER: disabled
 

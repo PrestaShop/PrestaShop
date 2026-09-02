@@ -1,31 +1,12 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Util;
 
+use DateTime;
 use Exception;
 use RuntimeException;
 
@@ -64,7 +45,7 @@ class PrimitiveUtils
                 return $element;
 
             case self::TYPE_DATETIME:
-                return new \DateTime($element);
+                return new DateTime($element);
 
             case self::TYPE_ARRAY:
                 if ('empty' === $element) {
@@ -83,7 +64,7 @@ class PrimitiveUtils
                     return $element;
                 }
 
-            // no break
+                // no break
             case self::TYPE_OBJECT:
             case self::TYPE_RESOURCE:
             case self::TYPE_UNKNOWN:
@@ -94,8 +75,8 @@ class PrimitiveUtils
     }
 
     /**
-     * @param mixed $element1
-     * @param mixed $element2
+     * @param mixed|DateTime $element1
+     * @param mixed|DateTime $element2
      *
      * @return bool
      */
@@ -105,12 +86,11 @@ class PrimitiveUtils
             return false;
         }
 
-        $type = gettype($element1);
-        $isADateTime = (($type === self::TYPE_OBJECT) && (get_class($element1) === 'DateTime'));
-        if ($isADateTime) {
-            $type = self::TYPE_DATETIME;
+        if ($element1 instanceof DateTime) {
+            return $element1->format('YmdHis') === $element2->format('YmdHis');
         }
 
+        $type = gettype($element1);
         switch ($type) {
             case self::TYPE_BOOLEAN:
             case self::TYPE_INTEGER:
@@ -120,9 +100,6 @@ class PrimitiveUtils
                 $epsilon = 0.00001;
 
                 return abs($element1 - $element2) < $epsilon;
-
-            case self::TYPE_DATETIME:
-                return $element1->format('YmdHis') === $element2->format('YmdHis');
 
             case self::TYPE_STRING:
                 $cleanedString1 = trim($element1);

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -41,7 +21,11 @@ class CustomizationCore extends ObjectModel
     /** @var int */
     public $id_product;
 
-    /** @var int */
+    /**
+     * @deprecated Since 9.0.0. Use the quantity from the table cart_product instead.
+     *
+     * @var int
+     */
     public $quantity;
 
     /** @var int */
@@ -123,13 +107,13 @@ class CustomizationCore extends ObjectModel
         if (($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT ore.`id_order_return`, ord.`id_order_detail`, ord.`id_customization`, ord.`product_quantity`
 			FROM `' . _DB_PREFIX_ . 'order_return` ore
-			INNER JOIN `' . _DB_PREFIX_ . 'order_return_detail` ord ON (ord.`id_order_return` = ore.`id_order_return`)
-			WHERE ore.`id_order` = ' . (int) ($idOrder) . ' AND ord.`id_customization` != 0')) === false) {
+			INNER JOIN `' . _DB_PREFIX_ . 'order_return_detail` ord ON (ord.`id_order_return` = ore.`id_order_return` AND ord.`cancelled` = 0)
+			WHERE ore.`id_order` = ' . (int) $idOrder . ' AND ord.`id_customization` != 0')) === false) {
             return false;
         }
         $customizations = [];
         foreach ($result as $row) {
-            $customizations[(int) ($row['id_customization'])] = $row;
+            $customizations[(int) $row['id_customization']] = $row;
         }
 
         return $customizations;
@@ -145,12 +129,12 @@ class CustomizationCore extends ObjectModel
      */
     public static function getOrderedCustomizations($idCart)
     {
-        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_customization`, `quantity` FROM `' . _DB_PREFIX_ . 'customization` WHERE `id_cart` = ' . (int) ($idCart))) {
+        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_customization`, `quantity` FROM `' . _DB_PREFIX_ . 'customization` WHERE `id_cart` = ' . (int) $idCart)) {
             return false;
         }
         $customizations = [];
         foreach ($result as $row) {
-            $customizations[(int) ($row['id_customization'])] = $row;
+            $customizations[(int) $row['id_customization']] = $row;
         }
 
         return $customizations;
@@ -169,6 +153,7 @@ class CustomizationCore extends ObjectModel
             return 0;
         }
 
+        // For anyone migrating this - not sure why there is a SUM, when there can be only one line
         return (float) Db::getInstance()->getValue(
             '
             SELECT SUM(`price`) FROM `' . _DB_PREFIX_ . 'customized_data`
@@ -189,6 +174,7 @@ class CustomizationCore extends ObjectModel
             return 0;
         }
 
+        // For anyone migrating this - not sure why there is a SUM, when there can be only one line
         return (float) Db::getInstance()->getValue(
             '
             SELECT SUM(`weight`) FROM `' . _DB_PREFIX_ . 'customized_data`
@@ -263,7 +249,7 @@ class CustomizationCore extends ObjectModel
 
         if (!empty($inValues)) {
             $results = Db::getInstance()->executeS(
-                            'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
+                'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
 							 FROM `' . _DB_PREFIX_ . 'customization`
 							 WHERE `id_customization` IN (' . $inValues . ')'
             );
@@ -304,8 +290,6 @@ class CustomizationCore extends ObjectModel
     /**
      * This method is allow to know if a feature is used or active.
      *
-     * @since 1.5.0.1
-     *
      * @return bool
      */
     public static function isFeatureActive()
@@ -315,8 +299,6 @@ class CustomizationCore extends ObjectModel
 
     /**
      * This method is allow to know if a Customization entity is currently used.
-     *
-     * @since 1.5.0.1
      *
      * @param string|null $table Name of table linked to entity
      * @param bool $hasActiveColumn True if the table has an active column

@@ -1,31 +1,12 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use BadMethodCallException;
 use Context;
 use Hook;
 use PrestaShopBundle\Service\Hook\HookEvent;
@@ -102,29 +83,29 @@ class LegacyHookSubscriber implements EventSubscriberInterface
      * @param string $name The method called
      * @param array $args The HookEvent, and then the hook name (eventName)
      *
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function __call($name, $args)
     {
-        if (strpos($name, 'call_') !== 0) {
-            throw new \BadMethodCallException('The call to \'' . $name . '\' is not recognized.');
+        if (!str_starts_with($name, 'call_')) {
+            throw new BadMethodCallException('The call to \'' . $name . '\' is not recognized.');
         }
 
         $ids = explode('_', $name);
         array_shift($ids); // remove 'call'
 
         if (count($ids) !== 2) {
-            throw new \BadMethodCallException('The call to \'' . $name . '\' is not recognized.');
+            throw new BadMethodCallException('The call to \'' . $name . '\' is not recognized.');
         }
 
         $moduleId = (int) $ids[1];
-        list($event, $hookName) = $args;
+        [$event, $hookName] = $args;
 
         $content = Hook::exec(
             $hookName,
             $event->getHookParameters(),
             $moduleId,
-            ($event instanceof RenderingHookEvent)
+            $event instanceof RenderingHookEvent
         );
 
         if (

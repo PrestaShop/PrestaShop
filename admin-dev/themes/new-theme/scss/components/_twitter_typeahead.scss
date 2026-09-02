@@ -1,0 +1,26 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+.twitter-typeahead {
+  .tt-menu {
+    width: 100%;
+    max-height: var(--#{$cdk}size-320);
+    padding: var(--#{$cdk}size-4) 0;
+    overflow: auto;
+    background: var(--#{$cdk}white);
+    border: 1px solid var(--#{$cdk}primary-400);
+  }
+
+  .tt-suggestion {
+    padding: var(--#{$cdk}size-8);
+    color: var(--#{$cdk}primary-800);
+    cursor: pointer;
+
+    &:hover,
+    &.tt-cursor {
+      color: var(--#{$cdk}primary-800);
+      background-color: var(--#{$cdk}primary-200);
+    }
+  }
+}

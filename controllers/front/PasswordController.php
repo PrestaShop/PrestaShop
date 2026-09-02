@@ -1,28 +1,9 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 
 class PasswordControllerCore extends FrontController
@@ -50,7 +31,7 @@ class PasswordControllerCore extends FrontController
      *
      * @see FrontController::postProcess()
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         $this->setTemplate('customer/password-email');
 
@@ -63,7 +44,7 @@ class PasswordControllerCore extends FrontController
         }
     }
 
-    protected function sendRenewPasswordLink()
+    protected function sendRenewPasswordLink(): void
     {
         if (!($email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('email')))) || !Validate::isEmail($email)) {
             $this->errors[] = $this->trans('Invalid email address.', [], 'Shop.Notifications.Error');
@@ -76,7 +57,7 @@ class PasswordControllerCore extends FrontController
 
             if (!Validate::isLoadedObject($customer)) {
                 $this->success[] = $this->trans(
-                    'If this email address has been registered in our shop, you will receive a link to reset your password at %email%.',
+                    'If this email address has been registered in our store, you will receive a link to reset your password at %email%.',
                     ['%email%' => $customer->email],
                     'Shop.Notifications.Success'
                 );
@@ -95,7 +76,7 @@ class PasswordControllerCore extends FrontController
                     '{email}' => $customer->email,
                     '{lastname}' => $customer->lastname,
                     '{firstname}' => $customer->firstname,
-                    '{url}' => $this->context->link->getPageLink('password', true, null, 'token=' . $customer->secure_key . '&id_customer=' . (int) $customer->id . '&reset_token=' . $customer->reset_password_token),
+                    '{url}' => $this->context->link->getPageLink('password', null, null, 'token=' . $customer->secure_key . '&id_customer=' . (int) $customer->id . '&reset_token=' . $customer->reset_password_token),
                 ];
 
                 if (
@@ -112,7 +93,7 @@ class PasswordControllerCore extends FrontController
                         $customer->firstname . ' ' . $customer->lastname
                     )
                 ) {
-                    $this->success[] = $this->trans('If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', ['%email%' => $customer->email], 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('If this email address has been registered in our store, you will receive a link to reset your password at %email%.', ['%email%' => $customer->email], 'Shop.Notifications.Success');
                     $this->setTemplate('customer/password-infos');
                 } else {
                     $this->errors[] = $this->trans('An error occurred while sending the email.', [], 'Shop.Notifications.Error');
@@ -121,7 +102,7 @@ class PasswordControllerCore extends FrontController
         }
     }
 
-    protected function changePassword()
+    protected function changePassword(): void
     {
         $token = Tools::getValue('token');
         $id_customer = (int) Tools::getValue('id_customer');
@@ -160,9 +141,37 @@ class PasswordControllerCore extends FrontController
                         $this->errors[] = $this->trans('The confirmation password doesn\'t match.', [], 'Shop.Notifications.Error');
                     }
 
-                    if (!Validate::isPlaintextPassword($passwd)) {
+                    if (!Validate::isAcceptablePasswordLength($passwd)) {
                         $this->errors[] = $this->trans('The password is not in a valid format.', [], 'Shop.Notifications.Error');
                     }
+                }
+
+                if (Validate::isAcceptablePasswordLength($passwd) === false) {
+                    $this->errors[] = $this->translator->trans(
+                        'Password must be between %d and %d characters long',
+                        [
+                            Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH),
+                            Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH),
+                        ],
+                        'Shop.Notifications.Error'
+                    );
+                }
+
+                if (Validate::isAcceptablePasswordScore($passwd) === false) {
+                    $wordingsForScore = [
+                        $this->translator->trans('Very weak', [], 'Shop.Theme.Global'),
+                        $this->translator->trans('Weak', [], 'Shop.Theme.Global'),
+                        $this->translator->trans('Average', [], 'Shop.Theme.Global'),
+                        $this->translator->trans('Strong', [], 'Shop.Theme.Global'),
+                        $this->translator->trans('Very strong', [], 'Shop.Theme.Global'),
+                    ];
+                    $this->errors[] = $this->translator->trans(
+                        'The minimum score must be: %s',
+                        [
+                            $wordingsForScore[(int) Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE)],
+                        ],
+                        'Shop.Notifications.Error'
+                    );
                 }
             }
 
@@ -179,7 +188,12 @@ class PasswordControllerCore extends FrontController
             } else {
                 // Both password fields posted. Check if all is right and store new password properly.
                 if (!$reset_token || (strtotime($customer->last_passwd_gen . '+' . (int) Configuration::get('PS_PASSWD_TIME_FRONT') . ' minutes') - time()) > 0) {
-                    Tools::redirect('index.php?controller=authentication&error_regen_pwd');
+                    Tools::redirect($this->context->link->getPageLink(
+                        'authentication',
+                        null,
+                        null,
+                        ['error_regen_pwd' => 1]
+                    ));
                 } else {
                     $customer->passwd = $this->get('hashing')->hash($password = Tools::getValue('passwd'), _COOKIE_KEY_);
                     $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
@@ -214,7 +228,7 @@ class PasswordControllerCore extends FrontController
                             ]);
                             $this->success[] = $this->trans('Your password has been successfully reset and a confirmation has been sent to your email address: %s', [$customer->email], 'Shop.Notifications.Success');
                             $this->context->updateCustomer($customer);
-                            $this->redirectWithNotifications('index.php?controller=my-account');
+                            $this->redirectWithNotifications($this->context->link->getPageLink('my-account'));
                         } else {
                             $this->errors[] = $this->trans('An error occurred while sending the email.', [], 'Shop.Notifications.Error');
                         }
@@ -229,9 +243,9 @@ class PasswordControllerCore extends FrontController
     }
 
     /**
-     * @return bool
+     * @return void
      */
-    public function display()
+    public function display(): void
     {
         $this->context->smarty->assign(
             [
@@ -245,14 +259,12 @@ class PasswordControllerCore extends FrontController
         );
 
         $this->smartyOutputContent($this->template);
-
-        return true;
     }
 
     /**
      * @return array
      */
-    protected function getErrors()
+    protected function getErrors(): array
     {
         $notifications = $this->prepareNotifications();
 
@@ -267,7 +279,7 @@ class PasswordControllerCore extends FrontController
     /**
      * @return array
      */
-    protected function getSuccesses()
+    protected function getSuccesses(): array
     {
         $notifications = $this->prepareNotifications();
 
@@ -280,7 +292,7 @@ class PasswordControllerCore extends FrontController
         return $successes;
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
@@ -290,5 +302,13 @@ class PasswordControllerCore extends FrontController
         ];
 
         return $breadcrumb;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL(): string
+    {
+        return $this->context->link->getPageLink('password');
     }
 }

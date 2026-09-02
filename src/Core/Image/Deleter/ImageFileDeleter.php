@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Image\Deleter;
@@ -43,7 +23,7 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
         foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
             $pattern = '/^[0-9]+(\-(.*))?\.' . $format . '$/';
 
-            if ($recursively && is_dir($path . $file) && (preg_match('/^[0-9]$/', $file))) {
+            if ($recursively && is_dir($path . $file) && preg_match('/^[0-9]$/', $file)) {
                 // Recursion
                 $this->deleteFromPath($path . $file . '/', $recursively, $deleteSubdirectories, $format);
             }
@@ -61,7 +41,7 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
         if ($deleteSubdirectories && is_numeric(basename($path))) {
             $removeFolder = true;
             foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
-                if (($file != '.' && $file != '..' && $file != 'index.php')) {
+                if ($file != '.' && $file != '..' && $file != 'index.php') {
                     $removeFolder = false;
                     break;
                 }

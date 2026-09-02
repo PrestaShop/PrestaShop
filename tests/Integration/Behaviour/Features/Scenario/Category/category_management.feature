@@ -41,8 +41,8 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
+      | redirect type                 | 301                            |
+      | redirect target               | home-accessories               |
     Then category "category1" should have following details:
       | name[en-US]                   | PC parts                       |
       | name[fr-FR]                   | PC parts fr                    |
@@ -60,8 +60,8 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
+      | redirect type                 | 301                            |
+      | redirect target               | home-accessories               |
 
   Scenario: Edit category
     Given I add new category "category2" with following details:
@@ -71,6 +71,8 @@ Feature: Category Management
       | parent category     | home             |
       | link rewrite[en-US] | mobile-phones-en |
       | link rewrite[fr-FR] | mobile-phones-fr |
+      | redirect type       | 301              |
+      | redirect target     | home             |
     And category "category2" should have following details:
       | name[en-US]                   | Mobile phones                         |
       | name[fr-FR]                   | Mobile phones fr                      |
@@ -88,8 +90,8 @@ Feature: Category Management
       | meta description[fr-FR]       |                                       |
       | meta title[en-US]             |                                       |
       | meta title[fr-FR]             |                                       |
-      | meta keywords[en-US]          |                                       |
-      | meta keywords[fr-FR]          |                                       |
+      | redirect type                 | 301                                   |
+      | redirect target               | home                                  |
     When I edit category "category2" with following details:
       | name[en-US]                   | Mobile phones super            |
       | name[fr-FR]                   | Mobile phones super fr         |
@@ -106,8 +108,7 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
+      | redirect type                 | 302                            |
     Then category "category2" should have following details:
       | name[en-US]                   | Mobile phones super            |
       | name[fr-FR]                   | Mobile phones super fr         |
@@ -125,8 +126,7 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
+      | redirect type                 | 302                            |
 
   Scenario: Delete category
     Given I add new category "category3" with following details:
@@ -592,8 +592,7 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
+      | redirect type                 | 404                            |
     Then category "home" should have following details:
       | name[en-US]                   | PC parts                       |
       | name[fr-FR]                   | PC parts fr                    |
@@ -611,8 +610,7 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,keyword,english           |
-      | meta keywords[fr-FR]          | meta,keyword,french            |
+      | redirect type                 | 404                            |
 
   Scenario: Add new home category
     When I add new home category "home2" with following details:
@@ -631,8 +629,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,english                   |
-      | meta keywords[fr-FR]          | meta,french                    |
     Then category "home2" should have following details:
       | name[en-US]                   | Home sweet home                |
       | name[fr-FR]                   | Home sweet home fr             |
@@ -650,8 +646,6 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-      | meta keywords[en-US]          | meta,english                   |
-      | meta keywords[fr-FR]          | meta,french                    |
 
   # We cannot test the actual image upload due to its dependency from real HTTP upload,
   # but we can mimic the upload and test EditableCategory construct and images deletion
@@ -686,19 +680,6 @@ Feature: Category Management
     And category "category19" should not have a thumbnail image
     When I upload thumbnail image "thumb1" named "app_icon.png" to category "category19"
     Then category "category19" should have a thumbnail image
-
-  Scenario: Assert and delete category menu thumbnail images
-    Given I add new category "category20" with following details:
-      | name[en-US]         | not important |
-      | name[fr-FR]         | not important |
-      | active              | true          |
-      | parent category     | home          |
-      | link rewrite[en-US] | not-important |
-      | link rewrite[en-US] | not-important |
-    Then category "category20" does not have menu thumbnail image
-    When I upload menu thumbnail image "menu_thumb1" named "app_icon.png" to category "category20"
-    When I delete category "category20" menu thumbnail image
-    Then category "category20" does not have menu thumbnail image
 
   # enabled seems to be the same as displayed
   Scenario: Update category status

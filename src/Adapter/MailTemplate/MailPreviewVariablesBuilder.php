@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
@@ -33,11 +13,14 @@ use Cart;
 use Context;
 use Order;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
+use PrestaShopException;
 use Product;
+use SmartyException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 
@@ -80,6 +63,11 @@ final class MailPreviewVariablesBuilder
     private $translator;
 
     /**
+     * @var OrderShipmentService
+     */
+    private $orderShipmentService;
+
+    /**
      * MailPreviewVariablesBuilder constructor.
      *
      * @param ConfigurationInterface $configuration
@@ -95,8 +83,10 @@ final class MailPreviewVariablesBuilder
         ContextEmployeeProviderInterface $employeeProvider,
         MailPartialTemplateRenderer $mailPartialTemplateRenderer,
         Locale $locale,
-        TranslatorInterface $translatorComponent
+        TranslatorInterface $translatorComponent,
+        OrderShipmentService $orderShipmentService
     ) {
+        $this->orderShipmentService = $orderShipmentService;
         $this->configuration = $configuration;
         $this->legacyContext = $legacyContext;
         $this->context = $this->legacyContext->getContext();
@@ -111,14 +101,14 @@ final class MailPreviewVariablesBuilder
      *
      * @return array
      *
-     * @throws \SmartyException
+     * @throws SmartyException
      */
     public function buildTemplateVariables(LayoutInterface $mailLayout)
     {
         $imageDir = $this->configuration->get('_PS_IMG_DIR_');
         $baseUrl = $this->context->link->getBaseLink();
 
-        //Logo url
+        // Logo url
         $logoMail = $this->configuration->get('PS_LOGO_MAIL');
         $logo = $this->configuration->get('PS_LOGO');
         if (!empty($logoMail) && file_exists($imageDir . $logoMail)) {
@@ -137,10 +127,10 @@ final class MailPreviewVariablesBuilder
         $templateVars['{lastname}'] = $employeeData['lastname'];
         $templateVars['{email}'] = $employeeData['email'];
         $templateVars['{shop_name}'] = $this->context->shop->name;
-        $templateVars['{shop_url}'] = $this->context->link->getPageLink('index', true);
-        $templateVars['{my_account_url}'] = $this->context->link->getPageLink('my-account', true);
-        $templateVars['{guest_tracking_url}'] = $this->context->link->getPageLink('guest-tracking', true);
-        $templateVars['{history_url}'] = $this->context->link->getPageLink('history', true);
+        $templateVars['{shop_url}'] = $this->context->link->getPageLink('index');
+        $templateVars['{my_account_url}'] = $this->context->link->getPageLink('my-account');
+        $templateVars['{guest_tracking_url}'] = $this->context->link->getPageLink('guest-tracking');
+        $templateVars['{history_url}'] = $this->context->link->getPageLink('history');
         $templateVars['{color}'] = $this->configuration->get('PS_MAIL_COLOR');
         $templateVars = array_merge($templateVars, $this->buildOrderVariables($mailLayout));
 
@@ -163,13 +153,16 @@ final class MailPreviewVariablesBuilder
     /**
      * @return array
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
-     * @throws \SmartyException
+     * @throws SmartyException
      */
     private function buildOrderVariables(LayoutInterface $mailLayout)
     {
         $orders = Order::getOrdersWithInformations(1);
+        if (!isset($orders[0]['id_order'])) {
+            return [];
+        }
         $order = new Order($orders[0]['id_order']);
 
         if (self::ORDER_CONFIRMATION == $mailLayout->getName()) {
@@ -211,12 +204,20 @@ final class MailPreviewVariablesBuilder
             return [];
         }
 
-        $carrier = new Carrier($order->id_carrier);
         $delivery = new Address($order->id_address_delivery);
         $invoice = new Address($order->id_address_invoice);
 
+        if ($this->orderShipmentService->orderHasShipment($order->id)) {
+            $carriers = $this->orderShipmentService->getAllCarriersForOrder($order->id);
+            $carrierNames = array_map(fn ($carrier) => $carrier->name, $carriers);
+            $carrierNames = implode(', ', $carrierNames);
+        } else {
+            $carrier = new Carrier($order->id_carrier);
+            $carrierNames = $carrier->name;
+        }
+
         return array_merge($productVariables, [
-            '{carrier}' => $carrier->name,
+            '{carrier}' => $carrierNames,
             '{delivery_block_txt}' => $this->getFormatedAddress($delivery, "\n"),
             '{invoice_block_txt}' => $this->getFormatedAddress($invoice, "\n"),
             '{delivery_block_html}' => $this->getFormatedAddress($delivery, '<br />', [
@@ -247,7 +248,7 @@ final class MailPreviewVariablesBuilder
      *
      * @return string
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     private function getNewOrderItems(Order $order)
@@ -256,7 +257,6 @@ final class MailPreviewVariablesBuilder
 
         $products = $order->getProducts();
         $customizedDatas = Product::getAllCustomizedDatas($order->id_cart);
-        Product::addCustomizationPrice($products, $customizedDatas);
         foreach ($products as $key => $product) {
             $unitPrice = $product['product_price_wt'];
 
@@ -298,7 +298,7 @@ final class MailPreviewVariablesBuilder
 					<td style="padding:0.6em 0.4em; text-align:right;">' . $this->locale->formatPrice($unitPrice, $this->context->currency->iso_code) . '</td>
 					<td style="padding:0.6em 0.4em; text-align:center;">' . (int) $product['product_quantity'] . '</td>
 					<td style="padding:0.6em 0.4em; text-align:right;">'
-                . $this->locale->formatPrice(($unitPrice * $product['product_quantity']), $this->context->currency->iso_code)
+                . $this->locale->formatPrice($unitPrice * $product['product_quantity'], $this->context->currency->iso_code)
                 . '</td>
 				</tr>';
         }
@@ -318,7 +318,7 @@ final class MailPreviewVariablesBuilder
      *
      * @return string
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     private function getReturnSlipItems(Order $order)
     {
@@ -355,16 +355,30 @@ final class MailPreviewVariablesBuilder
 
         $productTemplateList = [];
         foreach ($productList as $product) {
-            $price = Product::getPriceStatic((int) $product['id_product'], false, ($product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
-            $priceWithTax = Product::getPriceStatic((int) $product['id_product'], true, ($product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
+            $price = Product::getPriceStatic((int) $product['id_product'], false, $product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null, 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
+            $priceWithTax = Product::getPriceStatic((int) $product['id_product'], true, $product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null, 2, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
 
             $productPrice = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $priceWithTax;
+
+            $carrierName = null;
+            if ($this->orderShipmentService->orderHasShipment($order->id)) {
+                $carrier = $this->orderShipmentService->getCarrierForProduct($order->id, (int) $product['id_product']);
+                if ($carrier) {
+                    $carrierName = $carrier->name;
+                }
+            }
 
             $productTemplate = [
                 'id_product' => $product['id_product'],
                 'id_product_attribute' => $product['id_product_attribute'],
                 'reference' => $product['reference'],
-                'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
+                'name' => $this->trans(
+                    '%name%%attributes%%carrier%',
+                    [
+                        '%name%' => $product['name'],
+                        '%attributes%' => !empty($product['attributes']) ? $this->trans(' - %attributes%', ['%attributes%' => $product['attributes']], 'Emails.Body') : '',
+                        '%carrier%' => $carrierName ? $this->trans(' - Carrier: %carrier_name%', ['%carrier_name%' => $carrierName], 'Emails.Body') : '',
+                    ], 'Emails.Body'),
                 'price' => $this->locale->formatPrice($productPrice * $product['quantity'], $this->context->currency->iso_code),
                 'quantity' => $product['quantity'],
                 'customization' => [],

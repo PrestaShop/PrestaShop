@@ -1,30 +1,10 @@
 {**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale={(isset($viewport_scale)) ? $viewport_scale : '1'}">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="robots" content="NOFOLLOW, NOINDEX">
 
 <link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
@@ -52,14 +32,14 @@
     youEditFieldFor = '{l s='This field will be modified for this shop:' js=1 d='Admin.Notifications.Info'} <b>{$shop_name|@addcslashes:'\''}</b>';
     {/if}
     {/if}
-    var new_order_msg = '{l s='A new order has been placed on your shop.' js=1 d='Admin.Navigation.Header'}';
+    var new_order_msg = '{l s='A new order has been placed on your store.' js=1 d='Admin.Navigation.Header'}';
     var order_number_msg = '{l s='Order number:' js=1 d='Admin.Navigation.Header'} ';
     var total_msg = '{l s='Total:' js=1 d='Admin.Global'} ';
     var from_msg = '{l s='From:' js=1 d='Admin.Global'} ';
     var see_order_msg = '{l s='View this order' js=1 d='Admin.Orderscustomers.Feature'}';
-    var new_customer_msg = '{l s='A new customer registered on your shop.' js=1 d='Admin.Navigation.Header'}';
-    var customer_name_msg = '{l s='Customer name:' js=1 d='Admin.Navigation.Header'} ';
-    var new_msg = '{l s='A new message was posted on your shop.' js=1 d='Admin.Navigation.Header'}';
+    var new_customer_msg = '{l s='A new customer registered on your store.' js=1 d='Admin.Navigation.Header'}';
+    var customer_name_msg = '{l s='Registered on:' js=1 d='Admin.Navigation.Header'} ';
+    var new_msg = '{l s='A new message was posted on your store.' js=1 d='Admin.Navigation.Header'}';
     var see_msg = '{l s='Read this message' js=1 d='Admin.Navigation.Header'}';
     var token = '{$token|addslashes}';
     var currentIndex = '{$currentIndex|@addcslashes:'\''}';
@@ -69,7 +49,6 @@
     var admin_modules_link = '{$link->getAdminLink("AdminModulesSf", true, ['route' => "admin_module_manage"])|addslashes}';
     var admin_notification_get_link = '{$link->getAdminLink("AdminCommon")|addslashes}';
     var admin_notification_push_link = adminNotificationPushLink = '{$link->getAdminLink("AdminCommon", true, ['route' => 'admin_common_notifications_ack'])|addslashes}';
-    var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
     var update_success_msg = '{l s='Update successful' js=1 d='Admin.Notifications.Success'}';
     var search_product_msg = '{l s='Search for a product' js=1 d='Admin.Orderscustomers.Feature'}';
   </script>

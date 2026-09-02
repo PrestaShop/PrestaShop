@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring;
@@ -106,7 +86,7 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     ->setOptions([
                         'field' => 'active',
                         'primary_field' => 'id_product',
-                        'route' => 'admin_product_toggle_status',
+                        'route' => 'admin_products_toggle_status_for_all_shops',
                         'route_param_name' => 'productId',
                     ])
             )
@@ -199,18 +179,17 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
                     ->setOptions([
-                        'route' => 'admin_product_form',
-                        'route_param_name' => 'id',
+                        'route' => 'admin_products_edit',
+                        'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                     ])
             )
             ->add(
                 $this->buildDeleteAction(
-                    'admin_product_unit_action',
-                    'id',
+                    'admin_products_delete_from_all_shops',
+                    'productId',
                     'id_product',
                     Request::METHOD_POST,
-                    ['action' => 'delete']
                 )
             );
     }

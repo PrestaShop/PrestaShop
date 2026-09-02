@@ -1,43 +1,13 @@
-{#**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends(template_from_string(
-  getLegacyLayout(
-    app.request.attributes.get('_legacy_controller'),
-    layoutTitle is defined ? layoutTitle : '',
-    layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [],
-    layoutDisplayType is defined ? layoutDisplayType : '',
-    showContentHeader is defined ? showContentHeader : true,
-    headerTabContent is defined ? headerTabContent : '',
-    enableSidebar is defined ? enableSidebar : false,
-    help_link is defined ? help_link : '',
-    js_router_metadata(),
-    meta_title is defined ? meta_title : '',
-    use_regular_h1_structure is defined ? use_regular_h1_structure : true,
-    legacyBaseLayout is defined ? legacyBaseLayout : 'layout.tpl'
-  )
-  )) %}
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% set lightDisplay = lightDisplay is defined ? lightDisplay : app.request.query.get('liteDisplaying', false) %}
+{% set showContentHeader = showContentHeader is defined ? showContentHeader : true %}
+{% set layoutHeaderToolbarBtn = layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [] %}
+{% set metaTitle = meta_title is defined ? meta_title : (layoutTitle is defined ? layoutTitle : '') %}
+
+{% extends (lightDisplay ? '@PrestaShop/Admin/Layout/light_layout.html.twig' : '@PrestaShop/Admin/Layout/default_layout.html.twig') %}
 
 {% block javascripts %}
   <script src="{{ asset('themes/default/js/bundle/default.js') }}"></script>
@@ -65,13 +35,13 @@
       {% if flashbagContent|length > 1 %}
         <ul class="alert-text">
           {% for flashMessage in flashbagContent %}
-            <li>{{ flashMessage|raw }}</li>
+            <li>{{ flashMessage|raw_purified }}</li>
           {% endfor %}
         </ul>
       {% else %}
         <div class="alert-text">
           {% for flashMessage in flashbagContent %}
-            <p>{{ flashMessage|raw }}</p>
+            <p>{{ flashMessage|raw_purified }}</p>
           {% endfor %}
         </div>
       {% endif %}

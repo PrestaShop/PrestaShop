@@ -1,31 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Component;
 
+use InvalidArgumentException;
+use LogicException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -166,7 +148,7 @@ class CsvResponse extends StreamedResponse
      *
      * @return $this
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function setFileName($fileName)
     {
@@ -196,7 +178,7 @@ class CsvResponse extends StreamedResponse
     /**
      * Callback function for StreamedResponse.
      *
-     * @throws \LogicException
+     * @throws LogicException
      */
     public function processData()
     {
@@ -214,7 +196,30 @@ class CsvResponse extends StreamedResponse
             return;
         }
 
-        throw new \LogicException('The data must be an array or a valid PHP callable function.');
+        throw new LogicException('The data must be an array or a valid PHP callable function.');
+    }
+
+    /**
+     * Sanitizes a row of data to prevent CSV formula injection (OWASP).
+     * Values starting with =, +, -, @, tab or carriage return are prefixed with a single quote.
+     *
+     * @param array $row
+     *
+     * @return array
+     */
+    private function sanitizeRow(array $row): array
+    {
+        return array_map(function ($value) {
+            if ($value === null) {
+                return '';
+            }
+            $value = (string) $value;
+            if (strlen($value) > 0 && in_array($value[0], ['=', '+', '-', '@', "\t", "\r"], true)) {
+                $value = "'" . $value;
+            }
+
+            return $value;
+        }, $row);
     }
 
     /**
@@ -225,11 +230,11 @@ class CsvResponse extends StreamedResponse
         $handle = tmpfile();
 
         if ($this->includeHeaderRow) {
-            fputcsv($handle, $this->headersData, ';');
+            fputcsv($handle, $this->sanitizeRow($this->headersData), ';', '"', '');
         }
 
         foreach ($this->data as $line) {
-            fputcsv($handle, $line, ';');
+            fputcsv($handle, $this->sanitizeRow($line), ';', '"', '');
         }
 
         $this->dumpFile($handle);
@@ -243,7 +248,7 @@ class CsvResponse extends StreamedResponse
         $handle = tmpfile();
 
         if ($this->includeHeaderRow) {
-            fputcsv($handle, $this->headersData, ';');
+            fputcsv($handle, $this->sanitizeRow($this->headersData), ';', '"', '');
         }
 
         do {
@@ -263,7 +268,7 @@ class CsvResponse extends StreamedResponse
                     }
                 }
 
-                fputcsv($handle, $lineData, ';');
+                fputcsv($handle, $this->sanitizeRow($lineData), ';', '"', '');
             }
 
             $this->incrementData();
@@ -293,7 +298,7 @@ class CsvResponse extends StreamedResponse
     /**
      * Increment the start data for the process.
      *
-     * @throws \LogicException
+     * @throws LogicException
      */
     private function incrementData()
     {
@@ -309,7 +314,7 @@ class CsvResponse extends StreamedResponse
             return;
         }
 
-        throw new \LogicException('The modeType is not a valid value.');
+        throw new LogicException('The modeType is not a valid value.');
     }
 
     /**

@@ -15,6 +15,8 @@ This tool needs these system commands:
 - php
 - cut
 
+You also need to have the right PHP and Node.js versions. Read the [documentation about system requirements](https://devdocs.prestashop-project.org/9/basics/installation/system-requirements/) to find which versions you need. Make sure you are reading the page for the right version.
+
 ### Install and use
 
 To create a release:
@@ -24,7 +26,7 @@ php tools/build/CreateRelease.php --version="1.7.2.4"
 ```
 
 Available options:
-* --version: Desired release version of PrestaShop. Required.
+* --version: Desired release version of PrestaShop. Default: current version set in \PrestaShop\PrestaShop\Core\Version::VERSION const.
 * --no-installer: Do not put the installer in the release. Default: false.
 * --no-zip: Do not zip the release directory. Default: false.
 * --destination-dir: Path where the release will be stored. Default: tools/build/releases/prestashop_{version}.

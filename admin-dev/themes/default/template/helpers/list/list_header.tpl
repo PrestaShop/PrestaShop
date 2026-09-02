@@ -1,32 +1,12 @@
 {**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
 
 {if $ajax}
 	<script type="text/javascript">
 		$(function () {
-			$(".ajax_table_link").click(function () {
+			$(".ajax_table_link").on('click', function () {
 				var link = $(this);
 				$.post($(this).attr('href'), function (data) {
 				  // If response comes from symfony controller
@@ -69,7 +49,7 @@
 {if !$simple_header}
 	<script type="text/javascript">
 		$(function() {
-			$('table.{$list_id} .filter').keypress(function(e){
+			$('table.{$list_id} .filter').on('keypress', function(e){
 				var key = (e.keyCode ? e.keyCode : e.which);
 				if (key == 13)
 				{
@@ -77,7 +57,7 @@
 					formSubmit(e, 'submitFilterButton{$list_id}');
 				}
 			})
-			$('#submitFilterButton{$list_id}').click(function() {
+			$('#submitFilterButton{$list_id}').on('click', function() {
 				$('#submitFilter{$list_id}').val(1);
 			});
 
@@ -209,14 +189,14 @@
 						//hide standard submit button
 						btn_submit.hide();
 						//bind enter key press to validate form
-						$('#{$table}_form').keypress(function (e) {
+						$('#{$table}_form').on('keypress', function (e) {
 							if (e.which == 13 && e.target.localName != 'textarea') {
 								$('#desc-{$table}-save').click();
 							}
 						});
 						//submit the form
 						{block name=formSubmit}
-							btn_save.click(function() {
+							btn_save.on('click', function() {
 								// Avoid double click
 								if (submited) {
 									return false;
@@ -228,7 +208,7 @@
 								return false;
 							});
 							if (btn_save_and_stay) {
-								btn_save_and_stay.click(function() {
+								btn_save_and_stay.on('click', function() {
 									//add hidden input to emulate submit button click when posting the form -> field name posted
 									btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'AndStay" value="1" />');
 									$('#{$table}_form').submit();
@@ -320,7 +300,7 @@
 						<th>
 							<span class="title_box">
 							{if $shop_link_type == 'shop'}
-								{l s='Shop' d='Admin.Global'}
+								{l s='Store' d='Admin.Global'}
 							{else}
 								{l s='Shop group'}
 							{/if}
@@ -389,7 +369,7 @@
 											<option value="" {if $params.value == ''} selected="selected" {/if}>-</option>
 											{if isset($params.list) && is_array($params.list)}
 												{foreach $params.list AS $option_value => $option_display}
-													<option value="{$option_value}" {if (string)$option_display === (string)$params.value ||  (string)$option_value === (string)$params.value} selected="selected"{/if}>{$option_display}</option>
+													<option value="{$option_value|escape:'html':'UTF-8'}" {if (string)$option_display === (string)$params.value ||  (string)$option_value === (string)$params.value} selected="selected"{/if}>{$option_display|escape:'html':'UTF-8'}</option>
 												{/foreach}
 											{/if}
 										</select>

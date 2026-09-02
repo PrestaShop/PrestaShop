@@ -1,27 +1,7 @@
-{#**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block stylesheets %}
@@ -38,51 +18,44 @@
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
   {% set shopId = productForm.vars.shop_id %}
+  {# Passed via data attribute only so that the iframe modal can replicate it in its redirection url #}
+  {% set forceDefaultActive = productForm.vars.force_default_active %}
 
   <div class="header-toolbar d-print-none">
-    {{ multistoreProductHeader(productId) }}
+    {{ component('MultistoreProductHeader', {productId: productId}) }}
   </div>
 
-  {{ form_start(productForm, {'attr': {
-    'class': 'form-horizontal product-page justify-content-md-center product-form',
-    'novalidate': 'novalidate',
+  {{ form_start(productForm, {attr: {
+    class: 'form-horizontal product-page justify-content-md-center product-form',
+    novalidate: 'novalidate',
     'data-product-id': productId,
     'data-shop-id': shopId,
-    'data-product-type': productType
+    'data-product-type': productType,
+    'data-force-default-active': forceDefaultActive,
   }}) }}
 
   {# Header form child is rendered separately because it's not one of the tabs so it needs to be rendered before #}
   {% block product_header %}
-    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {'productForm': productForm}) }}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {productForm: productForm}) }}
   {% endblock %}
 
   {# Footer form child is rendered separately because it's not one of the tabs so it needs to be rendered before #}
   {% block product_footer %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
-      'productForm': productForm,
-      'editable': editable,
-      'productId': productId,
+      productForm: productForm,
+      editable: editable,
+      productId: productId,
     }) }}
   {% endblock %}
 
   {{ block('session_alert') }}
 
-  {% if isMultistoreActive %}
-  <div class="alert alert-info alert-experimental" role="alert">
-    <p class="mb-1">
-      <strong>{{ 'This is the experimental product page.'|trans({}, 'Admin.Catalog.Notification') }}</strong>
-    </p>
-    <p class="alert-text">
-      {{ 'This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.'|trans({}, 'Admin.Advparameters.Help') }}
-    </p>
-  </div>
-  {% endif %}
   <div id="contextual-notification-box"></div>
 
   {{ form_widget(productForm) }}
 
   {% block product_rest %}
-  {{ form_end(productForm) }}
+    {{ form_end(productForm) }}
   {% endblock %}
 
   {% block category_tree_form %}

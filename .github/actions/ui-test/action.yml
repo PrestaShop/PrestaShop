@@ -1,0 +1,78 @@
+name: Setup and Run UI tests
+description: Setup a UI Tests Environment and run tests
+
+inputs:
+  # TEST Config inputs
+  TESTS_DIR:
+    required: false
+    description: Tests Folder on PrestaShop
+    default: './tests/UI/'
+  ENABLE_SSL:
+    required: false
+    description: True to Run with SSL
+    default: 'true'
+  TEST_CAMPAIGN:
+    required: true
+    description: Campaign To Run
+  NODE_VERSION:
+    required: false
+    description: Node Version for tests
+    default: '20'
+  BROWSER:
+    required: false
+    description: Bowser for tests
+    default: 'chromium'
+  INSTALL_BROWSERS:
+    required: false
+    description: True To Install Browsers
+    default: 'true'
+  DB_SERVER:
+    required: false
+    description: Database Server (mysql/mariadb)
+    default: 'mysql'
+  TAKE_SCREENSHOT_AFTER_EACH_STEP:
+    required: false
+    description: Take screenshot after each step
+    default: 'false'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.NODE_VERSION }}
+
+    - name: Use .env.ci
+      working-directory: ${{ inputs.TESTS_DIR }}
+      shell: bash
+      run: |
+        cp .env.ci .env
+        sed -i -e "s/TAKE_SCREENSHOT_AFTER_EACH_STEP.*/TAKE_SCREENSHOT_AFTER_EACH_STEP=${{ inputs.TAKE_SCREENSHOT_AFTER_EACH_STEP == 'false' && 'false' || 'true' }}/g" .env
+
+    - name: Install dependencies
+      working-directory: ${{ inputs.TESTS_DIR }}
+      shell: bash
+      run: npm ci
+
+    - name: Install browsers
+      if: inputs.INSTALL_BROWSERS == 'true'
+      working-directory: ${{ inputs.TESTS_DIR }}
+      shell: bash
+      run: npx playwright install ${{ inputs.BROWSER }} --with-deps
+
+    # Run tests
+    - name: Run tests
+      working-directory: ${{ inputs.TESTS_DIR }}
+      env:
+        BROWSER: ${{ inputs.BROWSER }}
+        ENABLE_SSL: ${{ inputs.ENABLE_SSL }}
+        URL_FO: ${{ (env.URL_FO != '') && env.URL_FO || ((inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/' || 'https://localhost:8002/') }}
+        URL_BO: ${{ (inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/admin-dev/' || 'https://localhost:8002/admin-dev/' }}
+        URL_API: ${{ (inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/admin-api/' || 'https://localhost:8002/admin-api/' }}
+        URL_INSTALL: ${{ (inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/install-dev/' || 'https://localhost:8002/install-dev/' }}
+        DB_SERVER: ${{ inputs.DB_SERVER }}
+        LANG: 'en-GB'
+        DEBUG: ${{ (inputs.TEST_CAMPAIGN == '' && 'pw:api' || '') }}
+      shell: bash
+      run: npm run test:${{ inputs.TEST_CAMPAIGN }}

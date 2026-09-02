@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
@@ -41,7 +21,7 @@ class GuestTrackingControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         if ($this->context->customer->isLogged()) {
             Tools::redirect('history.php');
@@ -55,7 +35,7 @@ class GuestTrackingControllerCore extends FrontController
      *
      * @see FrontController::postProcess()
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         $order_reference = current(explode('#', Tools::getValue('order_reference')));
         $email = Tools::getValue('email');
@@ -75,10 +55,10 @@ class GuestTrackingControllerCore extends FrontController
         $this->order = Order::getByReferenceAndEmail($order_reference, $email);
         if (!Validate::isLoadedObject($this->order)) {
             $this->errors[] = $this->getTranslator()->trans(
-                    'We couldn\'t find your order with the information provided, please try again',
-                    [],
-                    'Shop.Notifications.Error'
-                );
+                'We couldn\'t find your order with the information provided, please try again',
+                [],
+                'Shop.Notifications.Error'
+            );
         }
 
         if (Tools::isSubmit('submitTransformGuestToCustomer') && Tools::getValue('password')) {
@@ -113,6 +93,13 @@ class GuestTrackingControllerCore extends FrontController
                     [],
                     'Shop.Notifications.Error'
                 );
+            // Check if a different customer with the same email was not already created in a different window or through backoffice
+            } elseif (Customer::customerExists($customer->email)) {
+                $this->errors[] = $this->trans(
+                    'You can\'t transform your account into a customer account, because a registered customer with the same email already exists.',
+                    [],
+                    'Shop.Notifications.Error'
+                );
             // Attempt to convert the customer
             } elseif ($customer->transformToCustomer($this->context->language->id, $password)) {
                 $this->success[] = $this->trans(
@@ -135,12 +122,14 @@ class GuestTrackingControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
 
         if (!Validate::isLoadedObject($this->order)) {
-            return $this->setTemplate('customer/guest-login');
+            $this->setTemplate('customer/guest-login');
+
+            return;
         }
 
         if ((int) $this->order->isReturnable()) {
@@ -152,7 +141,7 @@ class GuestTrackingControllerCore extends FrontController
         }
 
         // Kept for backwards compatibility (is_customer), inline it in later versions
-        $registered_customer_exists = Customer::customerExists(Tools::getValue('email'), false, true);
+        $registered_customer_exists = Customer::customerExists(Tools::getValue('email'));
 
         $this->context->smarty->assign([
             'order' => (new OrderPresenter())->present($this->order),
@@ -162,10 +151,10 @@ class GuestTrackingControllerCore extends FrontController
             'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order]),
         ]);
 
-        return $this->setTemplate('customer/guest-tracking');
+        $this->setTemplate('customer/guest-tracking');
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumbLinks = parent::getBreadcrumbLinks();
 
@@ -182,5 +171,13 @@ class GuestTrackingControllerCore extends FrontController
         }
 
         return $breadcrumbLinks;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL(): string
+    {
+        return $this->context->link->getPageLink('guest-tracking');
     }
 }

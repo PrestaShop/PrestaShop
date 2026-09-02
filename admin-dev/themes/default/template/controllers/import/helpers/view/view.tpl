@@ -1,26 +1,6 @@
 {**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
@@ -42,14 +22,14 @@
 			current = nb;
 			$('#table' + current).show();
 		}
-		$(document).ready(function() {
+		$(function() {
 			var btn_save_import = $('span[class~="process-icon-save-import"]').parent();
 			var btn_submit_import = $('#import');
 			if (btn_save_import.length > 0 && btn_submit_import.length > 0) {
 				btn_submit_import.closest('.form-group').hide();
 				btn_save_import.find('span').removeClass('process-icon-save-import');
 				btn_save_import.find('span').addClass('process-icon-save');
-				btn_save_import.click(function(){
+				btn_save_import.on('click', function(){
 					btn_submit_import.before('<input type="hidden" name="' + btn_submit_import.attr("name") + '" value="1" />');
 					$('#import_form').submit();
 				});
@@ -68,7 +48,7 @@
 				<div id="selectDivImportMatchs" class="col-lg-7">
 					<select id="valueImportMatchs">
 						{foreach $import_matchs as $match}
-							<option id="{$match.id_import_match}" value="{$match.match}">{$match.name}</option>
+							<option id="{$match.id_import_match|escape:'html':'UTF-8'}" value="{$match.match|escape:'html':'UTF-8'}">{$match.name|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				</div>
@@ -133,11 +113,11 @@
 			</div>
 			<div class="panel-footer">
 				<button type="button" class="btn btn-default" onclick="window.history.back();">
-					<i class="process-icon-cancel text-danger"></i>
+					<i class="process-icon-cancel"></i>
 					{l s='Cancel' d='Admin.Actions'}
 				</button>
 				<button id="import" name="import" type="submit" onclick="return (validateImportation(new Array({$res})));"  class="btn btn-default pull-right">
-					<i class="process-icon-ok text-success"></i>
+					<i class="process-icon-ok"></i>
 					{l s='Import' d='Admin.Actions'}
 				</button>
 			</div>

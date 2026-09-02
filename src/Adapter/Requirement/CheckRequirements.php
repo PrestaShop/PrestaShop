@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Requirement;
@@ -101,6 +81,7 @@ class CheckRequirements
             'json' => $this->translator->trans('Enable the JSON extension on your server.', [], 'Admin.Advparameters.Notification'),
             'mbstring' => $this->translator->trans('Enable the Mbstring extension on your server.', [], 'Admin.Advparameters.Notification'),
             'openssl' => $this->translator->trans('Enable the OpenSSL extension on your server.', [], 'Admin.Advparameters.Notification'),
+            'openssl_key_generation' => $this->translator->trans('Unable to generate private keys using openssl_pkey_new. Check your OpenSSL configuration, especially the path to openssl.cafile.', [], 'Admin.Advparameters.Notification'),
             'pdo_mysql' => $this->translator->trans('Enable the PDO Mysql extension on your server.', [], 'Admin.Advparameters.Notification'),
             'simplexml' => $this->translator->trans('Enable the XML extension on your server.', [], 'Admin.Advparameters.Notification'),
             'zip' => $this->translator->trans('Enable the ZIP extension on your server.', [], 'Admin.Advparameters.Notification'),

@@ -1,5 +1,10 @@
 {
+  "require": [
+    "tsconfig-paths/register"
+  ],
   "slow": 45000,
   "timeout": 0,
-  "reporter": "mochawesome"
+  "reporter": "mochawesome",
+  "extension": ["ts"],
+  "recursive": true
 }

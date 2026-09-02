@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
@@ -441,7 +421,7 @@ class CurrencyCore extends ObjectModel
      *
      * @return bool Indicates whether the selected Currencies have been succesfully deleted
      */
-    public function deleteSelection($selection)
+    public function deleteSelection(array $selection)
     {
         if (!is_array($selection)) {
             return false;
@@ -480,12 +460,10 @@ class CurrencyCore extends ObjectModel
             Configuration::updateValue('PS_CURRENCY_DEFAULT', $result['id_currency']);
         }
 
-        $this->deleted = true;
-
         // Remove currency restrictions
         $res = Db::getInstance()->delete('module_currency', 'id_currency = ' . (int) $this->id);
 
-        return $res && $this->update();
+        return $res && $this->softDelete();
     }
 
     /**
@@ -1005,7 +983,7 @@ class CurrencyCore extends ObjectModel
                 $rate = 1;
             } else {
                 foreach ($data->currency as $obj) {
-                    if ($this->iso_code == (string) ($obj['iso_code'])) {
+                    if ($this->iso_code == (string) $obj['iso_code']) {
                         $rate = (float) $obj['rate'];
 
                         break;
@@ -1061,7 +1039,7 @@ class CurrencyCore extends ObjectModel
         }
 
         // Default feed currency (EUR)
-        $isoCodeSource = (string) ($feed->source['iso_code']);
+        $isoCodeSource = (string) $feed->source['iso_code'];
 
         if (!$defaultCurrency = Currency::getDefaultCurrency()) {
             return Context::getContext()->getTranslator()->trans('No default currency', [], 'Admin.Notifications.Error');
@@ -1088,24 +1066,10 @@ class CurrencyCore extends ObjectModel
     public static function getCurrencyInstance($id)
     {
         if (!isset(self::$currencies[$id])) {
-            self::$currencies[(int) ($id)] = new Currency($id);
+            self::$currencies[(int) $id] = new Currency($id);
         }
 
-        return self::$currencies[(int) ($id)];
-    }
-
-    /**
-     * Get conversion rate.
-     *
-     * @return int|string
-     *
-     * @deprecated 1.7.2.0, use Currency::getConversionRate() instead
-     */
-    public function getConversationRate()
-    {
-        Tools::displayAsDeprecated('Use Currency::getConversionRate() instead');
-
-        return $this->getConversionRate();
+        return self::$currencies[(int) $id];
     }
 
     /**
@@ -1163,7 +1127,7 @@ class CurrencyCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function refreshLocalizedCurrencyData(array $languages, LocaleRepository $localeRepoCLDR)
     {

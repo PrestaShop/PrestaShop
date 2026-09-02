@@ -34,6 +34,18 @@ admin_cms_pages_edit:
   requirements:
     cmsPageId: \d+
 
+admin_cms_pages_preview:
+  path: /{cmsPageId}/preview
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\CmsPageController::previewAction'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:preview
+    _legacy_parameters:
+      id_cms: cmsPageId
+  requirements:
+    cmsPageId: \d+
+
 admin_cms_pages_toggle:
   path: /{cmsId}/toggle-status
   methods: POST

@@ -1,7 +1,0 @@
-services:
-  _defaults:
-    public: false
-
-  PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor:
-    arguments:
-      - '@property_accessor'

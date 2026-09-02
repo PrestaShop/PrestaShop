@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -56,17 +36,37 @@ class ModuleManagerBuilderTest extends TestCase
      * @var string[]
      */
     public $moduleNames;
+    /**
+     * @var string[]
+     */
+    public $conflictModuleNames;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
         $dirResources = dirname(__DIR__, 4);
+
         if (is_dir($dirResources . '/Resources/modules_tests/pscsx3241')) {
             Tools::recurseCopy($dirResources . '/Resources/modules_tests/pscsx3241', _PS_MODULE_DIR_ . '/pscsx3241');
         }
         if (is_dir($dirResources . '/Resources/modules_tests/pscsx32412')) {
             Tools::recurseCopy($dirResources . '/Resources/modules_tests/pscsx32412', _PS_MODULE_DIR_ . '/pscsx32412');
+        }
+        if (is_dir($dirResources . '/Resources/modules_tests/testconflict')) {
+            Tools::recurseCopy($dirResources . '/Resources/modules_tests/testconflict', _PS_MODULE_DIR_ . '/testconflict');
+        }
+        if (is_dir($dirResources . '/Resources/modules_tests/testtrickyconflict')) {
+            Tools::recurseCopy($dirResources . '/Resources/modules_tests/testtrickyconflict', _PS_MODULE_DIR_ . '/testtrickyconflict');
+        }
+        if (is_dir($dirResources . '/Resources/modules_tests/testpropertyconflict')) {
+            Tools::recurseCopy($dirResources . '/Resources/modules_tests/testpropertyconflict', _PS_MODULE_DIR_ . '/testpropertyconflict');
+        }
+        if (is_dir($dirResources . '/Resources/modules_tests/testtypedpropertyoverride')) {
+            Tools::recurseCopy($dirResources . '/Resources/modules_tests/testtypedpropertyoverride', _PS_MODULE_DIR_ . '/testtypedpropertyoverride');
+        }
+        if (is_dir($dirResources . '/Resources/modules_tests/testmultilinepropertyoverride')) {
+            Tools::recurseCopy($dirResources . '/Resources/modules_tests/testmultilinepropertyoverride', _PS_MODULE_DIR_ . '/testmultilinepropertyoverride');
         }
     }
 
@@ -81,6 +81,21 @@ class ModuleManagerBuilderTest extends TestCase
         if (Module::isInstalled('pscsx32412')) {
             Module::getInstanceByName('pscsx32412')->uninstall();
         }
+        if (Module::isInstalled('testconflict')) {
+            Module::getInstanceByName('testconflict')->uninstall();
+        }
+        if (Module::isInstalled('testtrickyconflict')) {
+            Module::getInstanceByName('testtrickyconflict')->uninstall();
+        }
+        if (Module::isInstalled('testpropertyconflict')) {
+            Module::getInstanceByName('testpropertyconflict')->uninstall();
+        }
+        if (Module::isInstalled('testtypedpropertyoverride')) {
+            Module::getInstanceByName('testtypedpropertyoverride')->uninstall();
+        }
+        if (Module::isInstalled('testmultilinepropertyoverride')) {
+            Module::getInstanceByName('testmultilinepropertyoverride')->uninstall();
+        }
 
         // Remove modules
         if (is_dir(_PS_MODULE_DIR_ . '/pscsx3241')) {
@@ -89,9 +104,24 @@ class ModuleManagerBuilderTest extends TestCase
         if (is_dir(_PS_MODULE_DIR_ . '/pscsx32412')) {
             Tools::deleteDirectory(_PS_MODULE_DIR_ . '/pscsx32412');
         }
+        if (is_dir(_PS_MODULE_DIR_ . '/testconflict')) {
+            Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testconflict');
+        }
+        if (is_dir(_PS_MODULE_DIR_ . '/testtrickyconflict')) {
+            Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testtrickyconflict');
+        }
+        if (is_dir(_PS_MODULE_DIR_ . '/testpropertyconflict')) {
+            Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testpropertyconflict');
+        }
+        if (is_dir(_PS_MODULE_DIR_ . '/testtypedpropertyoverride')) {
+            Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testtypedpropertyoverride');
+        }
+        if (is_dir(_PS_MODULE_DIR_ . '/testmultilinepropertyoverride')) {
+            Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testmultilinepropertyoverride');
+        }
 
         // Remove overrides
-        @unlink(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php');
+        @unlink(_PS_ROOT_DIR_ . '/override/controllers/admin/DummyAdminController.php');
         @unlink(_PS_ROOT_DIR_ . '/override/classes/Cart.php');
 
         // Reset modules folder
@@ -110,7 +140,11 @@ class ModuleManagerBuilderTest extends TestCase
         $this->moduleNames = [
             'pscsx32412',
             'pscsx3241',
+            'testtypedpropertyoverride',
+            'testmultilinepropertyoverride',
         ];
+
+        $this->conflictModuleNames = ['testbasicconflict', 'testtrickyconflict', 'testpropertyconflict'];
     }
 
     public function testInstall(): void
@@ -129,21 +163,22 @@ class ModuleManagerBuilderTest extends TestCase
          */
         $resource_path = dirname(__DIR__, 4) . '/Resources/modules_tests/override/';
 
-        $actual_override_cart = file_get_contents(_PS_ROOT_DIR_ . '/override/classes/Cart.php');
-        $expected_override_cart = file_get_contents($resource_path . '/Cart.php');
-
-        $actual_override_cart = $this->cleanup($actual_override_cart);
-        $expected_override_cart = $this->cleanup($expected_override_cart);
-
-        $this->assertEquals($expected_override_cart, $actual_override_cart);
-
-        $actual_override_admin_product = file_get_contents(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php');
-        $expected_override_admin_product = file_get_contents($resource_path . '/AdminProductsController.php');
+        $actual_override_cart = $this->cleanup(file_get_contents(_PS_ROOT_DIR_ . '/override/classes/Cart.php'));
+        $expected_override_cart = $this->cleanup(file_get_contents($resource_path . 'classes/Cart.php'));
 
         $this->assertEquals(
-            $this->cleanup($expected_override_admin_product),
-            $this->cleanup($actual_override_admin_product),
-            'AdminProductsController.php file different'
+            $expected_override_cart,
+            $actual_override_cart,
+            'Cart.php file different'
+        );
+
+        $actual_override_admin_product = $this->cleanup(file_get_contents(_PS_ROOT_DIR_ . '/override/controllers/admin/DummyAdminController.php'));
+        $expected_override_admin_product = $this->cleanup(file_get_contents($resource_path . '/controllers/admin/DummyAdminController.php'));
+
+        $this->assertEquals(
+            $actual_override_admin_product,
+            $expected_override_admin_product,
+            'DummyAdminController.php file different'
         );
 
         // Then it checks that the overrides are removed once the modules are uninstalled.
@@ -151,12 +186,21 @@ class ModuleManagerBuilderTest extends TestCase
             $this->assertTrue((bool) $this->moduleManager->uninstall($name));
         }
 
-        if (method_exists($this, 'assertFileDoesNotExist')) {
-            $this->assertFileDoesNotExist($actual_override_cart);
-            $this->assertFileDoesNotExist($actual_override_admin_product);
-        } else {
-            $this->assertFileNotExists($actual_override_cart);
-            $this->assertFileNotExists($actual_override_admin_product);
+        $this->assertFileDoesNotExist($actual_override_cart);
+        $this->assertFileDoesNotExist($actual_override_admin_product);
+    }
+
+    public function testOverrideConflictAtInstall(): void
+    {
+        $this->moduleManager->install($this->moduleNames[1]);
+
+        /*
+         * this will test that install fails when module has a conflicting override,
+         * using test modules "testbasicconflict" and "testtrickyconflict", tricky conflict
+         * adds several spaces in function definition (it must still be detected as a conflicting method)
+         */
+        foreach ($this->conflictModuleNames as $name) {
+            $this->assertFalse($this->moduleManager->install($name), 'override conflict test on module ' . $name . ' failed');
         }
     }
 

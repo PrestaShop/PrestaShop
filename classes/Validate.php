@@ -1,45 +1,27 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
-use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\ApeCode;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Gtin;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
-use PrestaShop\PrestaShop\Core\Email\SwiftMailerValidation;
+use PrestaShop\PrestaShop\Core\Email\CyrillicCharactersInEmailValidation;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validation;
 use ZxcvbnPhp\Zxcvbn;
 
 class ValidateCore
 {
     public const ORDER_BY_REGEXP = '/^(?:(`?)[\w!_-]+\1\.)?(?:(`?)[\w!_-]+\2)$/';
-    public const OBJECT_CLASS_NAME_REGEXP = '/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/';
+    public const OBJECT_CLASS_NAME_REGEXP = '/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*(\\\\[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)*$/';
     /**
      * Maximal 32 bits value: (2^32)-1
      *
@@ -47,32 +29,9 @@ class ValidateCore
      */
     public const MYSQL_UNSIGNED_INT_MAX = 4294967295;
 
-    /**
-     * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH
-     */
-    public const ADMIN_PASSWORD_LENGTH = 8;
-
-    /**
-     * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH
-     */
-    public const PASSWORD_LENGTH = 5;
-
     public static function isIp2Long($ip)
     {
         return preg_match('#^-?[0-9]+$#', (string) $ip);
-    }
-
-    /**
-     * @deprecated since PrestaShop 8.1 and will be removed in Prestashop 9.0
-     */
-    public static function isAnything()
-    {
-        @trigger_error(
-            'This function is deprecated PrestaShop 8.1 and will be removed in Prestashop 9.0.',
-            E_USER_DEPRECATED
-        );
-
-        return true;
     }
 
     /**
@@ -89,11 +48,19 @@ class ValidateCore
             return false;
         }
 
-        // Check if the value is correct according to both validators (RFC & SwiftMailer)
+        $validator = Validation::createValidator();
+        $errors = $validator->validate($email, new Email([
+            'mode' => 'strict',
+        ]));
+
+        if (count($errors) > 0) {
+            return false;
+        }
+
+        // Check if the value is correct according to both validators (RFC & CyrillicCharactersInEmailValidation)
         return (new EmailValidator())->isValid($email, new MultipleValidationWithAnd([
             new RFCValidation(),
-            new SwiftMailerValidation(), // special validation to be compatible with Swift Mailer
-            new NoRFCWarningsValidation(),
+            new CyrillicCharactersInEmailValidation(),
         ]));
     }
 
@@ -112,7 +79,7 @@ class ValidateCore
         } elseif (substr($url, -4) != '.tar' && substr($url, -4) != '.zip' && substr($url, -4) != '.tgz' && substr($url, -7) != '.tar.gz') {
             $errors[] = Context::getContext()->getTranslator()->trans('Unknown archive type.', [], 'Admin.Modules.Notification');
         } else {
-            if ((strpos($url, 'http')) === false) {
+            if (strpos($url, 'http') === false) {
                 $url = 'http://' . $url;
             }
             if (!is_array(@get_headers($url))) {
@@ -188,7 +155,7 @@ class ValidateCore
      */
     public static function isCarrierName($name)
     {
-        return empty($name) || preg_match('/^[^<>;=#{}]*$/u', $name);
+        return empty($name) || preg_match('/^[^<>{}]*$/u', $name);
     }
 
     /**
@@ -255,7 +222,7 @@ class ValidateCore
      */
     public static function isMailName($mail_name)
     {
-        return is_string($mail_name) && preg_match('/^[^<>;=#{}]*$/u', $mail_name);
+        return is_string($mail_name) && preg_match('/^[^<>{}]*$/u', $mail_name);
     }
 
     /**
@@ -390,7 +357,7 @@ class ValidateCore
      */
     public static function isCatalogName($name)
     {
-        return preg_match('/^[^<>;=#{}]*$/u', $name);
+        return preg_match('/^[^<>{}]*$/u', $name);
     }
 
     /**
@@ -482,7 +449,7 @@ class ValidateCore
      */
     public static function isValidSearch($search)
     {
-        return preg_match('/^[^<>;=#{}]{0,64}$/u', $search);
+        return preg_match('/^[^<>{}]{0,64}$/u', $search);
     }
 
     /**
@@ -494,7 +461,7 @@ class ValidateCore
      */
     public static function isGenericName($name)
     {
-        return empty($name) || preg_match('/^[^<>={}]*$/u', $name);
+        return empty($name) || preg_match('/^[^<>{}]*$/u', $name);
     }
 
     /**
@@ -506,19 +473,94 @@ class ValidateCore
      */
     public static function isCleanHtml($html, $allow_iframe = false)
     {
-        $events = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange';
-        $events .= '|onsubmit|ondblclick|onclick|onkeydown|onkeyup|onkeypress|onmouseenter|onmouseleave|onerror|onselect|onreset|onabort|ondragdrop|onresize|onactivate|onafterprint|onmoveend';
-        $events .= '|onafterupdate|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforepaste|onbeforeprint|onbeforeunload|onbeforeupdate|onmove';
-        $events .= '|onbounce|oncellchange|oncontextmenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondeactivate|ondrag|ondragend|ondragenter|onmousewheel';
-        $events .= '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
-        $events .= '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
-        $events .= '|onselectstart|onstart|onstop';
+        // any html attribute starting with "on" (event attributes)
+        $eventAttributeRegex = '/<\s*\w+[^>]*\s(on\w+)=["\'][^"\']*["\']/ims';
 
-        if (preg_match('/<[\s]*script/ims', $html) || preg_match('/(' . $events . ')[\s]*=/ims', $html) || preg_match('/.*script\:/ims', $html)) {
+        $events = 'onabort|onactivate|onactive|onaddsourcebuffer|onaddstream|onaddtrack|onafterprint|onafterscriptexecute|onafterupdate|onalerting|onanimationcancel|onanimationend|onanimationiteration|onanimationstart'
+            . '|onantennaavailablechange|onappinstalled|onaudioend|onaudioprocess|onaudiostart|onautocomplete|onautocompleteerror|onauxclick'
+            . '|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforeinput|onbeforeinstallprompt|onbeforematch|onbeforepaste|onbeforeprint|onbeforescriptexecute|onbeforetoggle|onbeforeunload|onbeforeupdate|onbeforexrselect'
+            . '|onbegin|onbeginevent|onblocked|onblur|onbounce|onboundary|onbroadcast|onbusy|oncached|oncallschanged|oncancel|oncanplay|oncanplaythrough|oncardstatechange|oncellchange|oncfstatechange|onchange|onchargingchange|onchargingtimechange|oncheckboxstatechange|onchecking'
+            . '|onclick|onclose|oncommand|oncommandupdate|oncompassneedscalibration|oncomplete|oncompositionend|oncompositionstart|oncompositionupdate'
+            . '|onconnect|onconnected|onconnecting|onconnectioninfoupdate|oncontactchange|oncontentvisibilityautostatechange|oncontextlost|oncontextmenu|oncontextrestored'
+            . '|oncontrollerchange|oncontrolselect|oncopy|oncuechange|oncurrentchannelchanged|oncurrentsourcechanged|oncut'
+            . '|ondata|ondataavailable|ondatachange|ondatachannel|ondataerror|ondatasetchanged|ondatasetcomplete'
+            . '|ondblclick|ondeactivate|ondelivered|ondeliveryerror|ondeliverysuccess'
+            . '|ondevicechange|ondevicelight|ondevicemotion|ondeviceorientation|ondeviceproximity|ondialing|ondisabled|ondischargingtimechange|ondisconnected|ondisconnecting'
+            . '|ondomattrmodified|ondomcharacterdatamodified|ondomcontentloaded|ondommenuitemactive|ondommenuiteminactive|ondommousescroll|ondomnodeinserted|ondomnodeinsertedintodocument|ondomnoderemoved|ondomnoderemovedfromdocument|ondomsubtreemodified'
+            . '|ondownloading'
+            . '|ondrag|ondragdrop|ondragend|ondragenter|ondragexit|ondragleave|ondragover|ondragstart|ondrain|ondrop|ondurationchange'
+            . '|oneitbroadcasted|onemptied|onenabled|onencrypted'
+            . '|onend|onended|oneendevent|onenter|onenterpictureinpicture|onerror|onerrorupdate|onexit'
+            . '|onfailed|onfetch|onfilterchange|onfinish'
+            . '|onfocus|onfocusin|onfocusout'
+            . '|onformchange|onformdata|onforminput'
+            . '|onfrequencychange'
+            . '|onfullscreenchange|onfullscreenerror'
+            . '|ongamepadconnected|ongamepaddisconnected'
+            . '|ongesturechange|ongestureend|ongesturestart|ongotpointercapture'
+            . '|onhashchange|onheadphoneschange|onheld|onhelp|onholding'
+            . '|onicccardlockerror|oniccinfochange'
+            . '|onicecandidate|oniceconnectionstatechange|onicegatheringstatechange'
+            . '|onidentityresult|onidpassertionerror|onidpvalidationerror'
+            . '|oninactive|onincoming|oninput|oninstall|oninvalid|onisolationchange'
+            . '|onkeydown|onkeypress|onkeystatuschange|onkeyup'
+            . '|onlanguagechange|onlayoutcomplete|onleavepictureinpicture|onlevelchange'
+            . '|onload|onloaded|onloadeddata|onloadedmetadata|onloadend|onloading|onloadingdone|onloadingerror|onloadstart|onlocalized'
+            . '|onlosecapture|onlostpointercapture|onmark'
+            . '|onmediacomplete|onmediaerror'
+            . '|onmessage|onmessageerror|onmidimessage'
+            . '|onmousedown|onmouseenter|onmouseleave|onmousemove|onmouseout|onmouseover|onmouseup|onmousewheel'
+            . '|onmove|onmoveend|onmovestart|onmozaudioavailable'
+            // mozbrowser* events
+            . '|onmozbrowseractivitydone|onmozbrowserasyncscroll|onmozbrowseraudioplaybackchange|onmozbrowsercaretstatechanged|onmozbrowserclose|onmozbrowsercontextmenu|onmozbrowserdocumentfirstpaint|onmozbrowsererror|onmozbrowserfindchange|onmozbrowserfirstpaint|onmozbrowsericonchange|onmozbrowserloadend|onmozbrowserloadstart|onmozbrowserlocationchange|onmozbrowsermanifestchange|onmozbrowsermetachange|onmozbrowseropensearch|onmozbrowseropentab|onmozbrowseropenwindow|onmozbrowserresize|onmozbrowserscroll|onmozbrowserscrollareachanged|onmozbrowserselectionstatechanged|onmozbrowsershowmodalprompt|onmozbrowsertitlechange|onmozbrowserusernameandpasswordrequired|onmozbrowservisibilitychange'
+            . '|onmozfullscreenchange|onmozfullscreenerror|onmozgamepadbuttondown|onmozgamepadbuttonup|onmozinterruptbegin|onmozinterruptend|onmozmousepixelscroll|onmozorientation|onmozpointerlockchange|onmozpointerlockerror|onmozscrolledareachanged|onmoztimechange'
+            . '|onmscontentzoom|onmsgesturechange|onmsgesturedoubletap|onmsgestureend|onmsgesturehold|onmsgesturerestart|onmsgesturestart|onmsgesturetap|onmsgotpointercapture|onmsinertiastart|onmslostpointercapture|onmsmanipulationstatechanged|onmsneedkey|onmspointercancel|onmspointerdown|onmspointerenter|onmspointerhover|onmspointerleave|onmspointermove|onmspointerout|onmspointerover|onmspointerup'
+            . '|onmute|onnegotiationneeded|onnodecreate|onnomatch|onnotificationclick|onnoupdate|onobsolete|onoffline|ononline|onopen'
+            . '|onorientationchange|onoutofsync|onoverconstrained'
+            . '|onoverflow|onpage|onpagehide|onpagereveal|onpageshow|onpageswap'
+            . '|onpaste|onpause|onpeeridentity|onpeerinfoupdate'
+            . '|onplay|onplaying'
+            . '|onpointercancel|onpointerdown|onpointerenter|onpointerleave|onpointerlockchange|onpointerlockerror|onpointermove|onpointerout|onpointerover|onpointerrawupdate|onpointerup'
+            . '|onpopstate|onpopuphidden|onpopuphiding|onpopupshowing|onpopupshown'
+            . '|onprogress|onpropertychange|onpush|onpushsubscriptionchange|onradiostatechange|onratechange|onreadystatechange|onreceived|onrejectionhandled'
+            . '|onremovesourcebuffer|onremovestream|onremovetrack'
+            . '|onrepeat|onrepeatevent|onreset|onresize|onresizeend|onresizestart|onresourcetimingbufferfull'
+            . '|onresult|onresume|onresuming|onretrieving|onreverse'
+            . '|onrowdelete|onrowenter|onrowexit|onrowinserted|onrowsdelete|onrowsinserted'
+            . '|onscanningstatechanged|onscroll|onscrollend|onscrollsnapchange|onscrollsnapchanging'
+            . '|onsearch|onsecuritypolicyviolation|onseek|onseeked|onseeking'
+            . '|onselect|onselectionchange|onselectstart'
+            . '|onsending|onsent|onsessionavailable|onsessionconnect|onsettingchange'
+            . '|onshippingaddresschange|onshippingoptionchange|onshow|onsignalingstatechange|onslotchange|onsmartcard|onsort'
+            . '|onsoundend|onsoundstart|onsourceclose|onsourceended|onsourceopen|onspeakerforcedchange'
+            . '|onspeechend|onspeechstart|onstalled|onstart|onstarted|onstatechange|onstatuschange'
+            . '|onstkcommand|onstksessionend|onstop|onstorage|onsubmit|onsuccess|onsuspend'
+            . '|onsvgabort|onsvgerror|onsvgload|onsvgresize|onsvgscroll|onsvgunload|onsvgzoom|onsynchrestored'
+            . '|ontimeerror|ontimeout|ontimer|ontimeupdate|ontoggle|ontonechange'
+            . '|ontouchcancel|ontouchend|ontouchenter|ontouchleave|ontouchmove|ontouchstart'
+            . '|ontrackchange'
+            . '|ontransitioncancel|ontransitionend|ontransitionrun|ontransitionstart'
+            . '|onunderflow|onunhandledrejection|onunload|onunmute|onupdate|onupdateend|onupdatefound|onupdateready|onupdatestart|onupgradeneeded|onurlflip'
+            . '|onuserproximity|onussdreceived|onvaluechange|onversionchange|onvisibilitychange|onvoicechange|onvoiceschanged|onvolumechange'
+            . '|onvrdisplayactivate|onvrdisplayblur|onvrdisplayconnect|onvrdisplayconnected|onvrdisplaydeactivate|onvrdisplaydisconnect|onvrdisplaydisconnected|onvrdisplayfocus|onvrdisplaypresentchange'
+            . '|onwaiting|onwaitingforkey|onwebglcontextcreationerror|onwebglcontextlost|onwebglcontextrestored'
+            . '|onwebkitanimationend|onwebkitanimationiteration|onwebkitanimationstart|onwebkitfullscreenchange|onwebkitfullscreenerror|onwebkitmouseforcechanged|onwebkitmouseforcedown|onwebkitmouseforceup|onwebkitmouseforcewillbegin|onwebkitplaybacktargetavailabilitychanged|onwebkitpresentationmodechanged|onwebkittransitionend|onwebkitwillrevealbottom'
+            . '|onwheel|onwriteend|onzoom';
+
+        if (preg_match('/<[\s]*script/ims', $html) || preg_match($eventAttributeRegex, $html) || preg_match('/(' . $events . ')[\s]*=/ims', $html) || preg_match('/.*script\:/ims', $html)) {
             return false;
         }
 
         if (!$allow_iframe && preg_match('/<[\s]*(i?frame|form|input|embed|object)/ims', $html)) {
+            return false;
+        }
+
+        // RLO characters detection
+        $rloCharacters = "\xE2\x80\xAE";
+
+        // Check if the RLO character is in the string
+        if (strpos($html, $rloCharacters) !== false) {
+            // RLO character found, potential RLO attack
             return false;
         }
 
@@ -543,16 +585,20 @@ class ValidateCore
      * @param string $password Password to validate
      *
      * @return bool Indicates whether the given string is a valid password
-     *
-     * @since 8.0.0
      */
     public static function isAcceptablePasswordScore(string $password): bool
     {
         $zxcvbn = new Zxcvbn();
         $result = $zxcvbn->passwordStrength($password);
-        $minScore = Configuration::hasKey(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE) ?
-                  Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE) :
-                  PasswordPolicyConfiguration::PASSWORD_SAFELY_UNGUESSABLE;
+
+        // During install, Configuration is not available; require strong password (score 3) without relying on DB
+        if (defined('PS_INSTALLATION_IN_PROGRESS')) {
+            $minScore = PasswordPolicyConfiguration::PASSWORD_SAFELY_UNGUESSABLE;
+        } else {
+            $minScore = Configuration::hasKey(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE) ?
+                      Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE) :
+                      PasswordPolicyConfiguration::PASSWORD_SAFELY_UNGUESSABLE;
+        }
 
         return isset($result['score']) && $result['score'] >= $minScore;
     }
@@ -563,8 +609,6 @@ class ValidateCore
      * @param string $password Password to validate
      *
      * @return bool Indicates whether the given string is a valid password length
-     *
-     * @since 8.0.0
      */
     public static function isAcceptablePasswordLength(string $password): bool
     {
@@ -581,24 +625,6 @@ class ValidateCore
     }
 
     /**
-     * Check if plaintext password is valid
-     * Size is limited by `password_hash()` (72 chars).
-     *
-     * @param string $plaintextPasswd Password to validate
-     * @param int $size
-     *
-     * @return bool Indicates whether the given string is a valid plaintext password
-     *
-     * @since 1.7.0
-     * @deprecated since 8.0, use Validate::isAcceptablePasswordLength instead
-     */
-    public static function isPlaintextPassword($plaintextPasswd, $size = Validate::PASSWORD_LENGTH)
-    {
-        // The password length is limited by `password_hash()`
-        return Tools::strlen($plaintextPasswd) >= $size && Tools::strlen($plaintextPasswd) <= 72;
-    }
-
-    /**
      * Check if hashed password is valid
      * PrestaShop supports both MD5 and `PASSWORD_BCRYPT` (PHP API)
      * The lengths are 32 (MD5) or 60 (`PASSWORD_BCRYPT`)
@@ -607,20 +633,10 @@ class ValidateCore
      * @param string $hashedPasswd Password to validate
      *
      * @return bool Indicates whether the given string is a valid hashed password
-     *
-     * @since 1.7.0
      */
     public static function isHashedPassword($hashedPasswd)
     {
         return Tools::strlen($hashedPasswd) == 32 || Tools::strlen($hashedPasswd) == 60;
-    }
-
-    /**
-     * @deprecated since 8.0
-     */
-    public static function isPasswdAdmin($passwd)
-    {
-        return Validate::isPlaintextPassword($passwd, Validate::ADMIN_PASSWORD_LENGTH);
     }
 
     /**
@@ -687,7 +703,7 @@ class ValidateCore
     }
 
     /**
-     * Check for birthDate validity. To avoid year in two digits, disallow date < 200 years ago
+     * Check for birthDate validity. To avoid year in two digits, disallow date < 120 years ago to match with BO rules
      *
      * @param string $date birthdate to validate
      * @param string $format optional format
@@ -704,10 +720,10 @@ class ValidateCore
         if (!empty(DateTime::getLastErrors()['warning_count']) || false === $d) {
             return false;
         }
-        $twoHundredYearsAgo = new Datetime();
-        $twoHundredYearsAgo->sub(new DateInterval('P200Y'));
+        $oneHundredTwentyYearsAgo = new DateTime();
+        $oneHundredTwentyYearsAgo->sub(new DateInterval('P120Y'));
 
-        return $d->setTime(0, 0, 0) <= new Datetime() && $d->setTime(0, 0, 0) >= $twoHundredYearsAgo;
+        return $d->setTime(0, 0, 0) <= new DateTime() && $d->setTime(0, 0, 0) >= $oneHundredTwentyYearsAgo;
     }
 
     /**
@@ -744,6 +760,18 @@ class ValidateCore
     public static function isEan13($ean13)
     {
         return !$ean13 || preg_match('/^[0-9]{0,13}$/', $ean13);
+    }
+
+    /**
+     * Check for barcode validity (GTIN)
+     *
+     * @param $gtin
+     *
+     * @return bool
+     */
+    public static function isGtin($gtin): bool
+    {
+        return !$gtin || preg_match(Gtin::VALID_PATTERN, $gtin);
     }
 
     /**
@@ -898,6 +926,18 @@ class ValidateCore
             && (string) (int) $value === (string) $value
             && $value < (static::MYSQL_UNSIGNED_INT_MAX + 1)
             && $value >= 0;
+    }
+
+    /**
+     * Check for a number (int) bigger than 0
+     *
+     * @param mixed $value Integer with value bigger than 0 to validate
+     *
+     * @return bool Validity is ok or not
+     */
+    public static function isPositiveInt($value)
+    {
+        return self::isUnsignedInt($value) && $value > 0;
     }
 
     /**
@@ -1294,7 +1334,7 @@ class ValidateCore
         }
         $sum = 0;
         for ($i = 0; $i != 14; ++$i) {
-            $tmp = ((($i + 1) % 2) + 1) * (int) ($siret[$i]);
+            $tmp = ((($i + 1) % 2) + 1) * (int) $siret[$i];
             if ($tmp >= 10) {
                 $tmp -= 9;
             }
@@ -1313,7 +1353,7 @@ class ValidateCore
      */
     public static function isApe($ape)
     {
-        return (bool) preg_match('/^[0-9]{3,4}[a-zA-Z]{1}$/s', $ape);
+        return (bool) preg_match(ApeCode::PATTERN, $ape);
     }
 
     public static function isControllerName($name)
@@ -1334,6 +1374,25 @@ class ValidateCore
     public static function isThemeName($theme_name)
     {
         return (bool) preg_match('/^[\w-]{3,255}$/u', $theme_name);
+    }
+
+    public static function isRequiredWhenActive($value, ObjectModelCore $object): bool
+    {
+        $isActive = property_exists($object, 'active') ? $object->active : true;
+
+        return !$isActive || !empty($value);
+    }
+
+    public static function defaultLanguageRequiredWhenActive($value, ?int $langId, ObjectModelCore $object): bool
+    {
+        static $defaultLangId = null;
+        if (null === $defaultLangId) {
+            $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
+        }
+
+        $isActive = property_exists($object, 'active') ? $object->active : true;
+
+        return !$isActive || !empty($value) || $langId !== $defaultLangId;
     }
 
     /**

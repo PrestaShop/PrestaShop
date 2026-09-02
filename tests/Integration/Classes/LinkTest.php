@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -32,11 +12,40 @@ use Context;
 use Dispatcher;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use ReflectionProperty;
 
 class LinkTest extends TestCase
 {
-    private function getProductLink(bool $statusUseRoutes, int $id_product, ?int $id_product_attribute): array
+    private $originalUseRoutes;
+
+    protected function setUp(): void
     {
+        parent::setUp();
+        $this->originalUseRoutes = $this->getUseRoutesProperty()->getValue(Dispatcher::getInstance());
+    }
+
+    protected function tearDown(): void
+    {
+        // Restore the Dispatcher singleton state mutated by the tests, otherwise the forced
+        // use_routes value leaks into other test classes and changes their generated URLs.
+        $this->getUseRoutesProperty()->setValue(Dispatcher::getInstance(), $this->originalUseRoutes);
+        parent::tearDown();
+    }
+
+    private function getUseRoutesProperty(): ReflectionProperty
+    {
+        $property = (new ReflectionClass('Dispatcher'))->getProperty('use_routes');
+        $property->setAccessible(true);
+
+        return $property;
+    }
+
+    private function getProductLink(
+        bool $statusUseRoutes,
+        int $id_product,
+        ?int $id_product_attribute,
+        ?string $ean13 = null
+    ): array {
         $reflectionDispatcher = new ReflectionClass('Dispatcher');
         $property = $reflectionDispatcher->getProperty('use_routes');
         $property->setAccessible(true);
@@ -46,7 +55,7 @@ class LinkTest extends TestCase
             $id_product,
             null,
             null,
-            null,
+            $ean13,
             Context::getContext()->language->id,
             null,
             $id_product_attribute,
@@ -86,5 +95,28 @@ class LinkTest extends TestCase
 
         $this->assertEquals(1, $query['id_product']);
         $this->assertArrayNotHasKey('id_product_attribute', $query);
+    }
+
+    public function testSupplierUrlOmitsMetaTitleWhenRouteHasNoMetaTitleKeyword(): void
+    {
+        $reflectionDispatcher = new ReflectionClass('Dispatcher');
+        $property = $reflectionDispatcher->getProperty('use_routes');
+        $property->setAccessible(true);
+        $property->setValue(Dispatcher::getInstance(), true);
+
+        $url = Context::getContext()->link->getSupplierLink(1);
+        parse_str(parse_url($url)['query'] ?? '', $query);
+
+        $this->assertArrayNotHasKey('meta_title', $query);
+    }
+
+    public function testProductUrlOmitsEan13WhenRouteHasNoEan13Keyword(): void
+    {
+        parse_str(
+            $this->getProductLink(true, 1, null, '1234567890128')['query'] ?? '',
+            $query
+        );
+
+        $this->assertArrayNotHasKey('ean13', $query);
     }
 }

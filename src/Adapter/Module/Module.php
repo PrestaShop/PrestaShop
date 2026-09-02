@@ -1,34 +1,14 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Exception;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
-use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -43,11 +23,11 @@ class Module implements ModuleInterface
     public const ACTION_UNINSTALL = 'uninstall';
     public const ACTION_ENABLE = 'enable';
     public const ACTION_DISABLE = 'disable';
-    public const ACTION_ENABLE_MOBILE = 'enableMobile';
-    public const ACTION_DISABLE_MOBILE = 'disableMobile';
     public const ACTION_RESET = 'reset';
     public const ACTION_UPGRADE = 'upgrade';
+    public const ACTION_UPLOAD = 'upload';
     public const ACTION_CONFIGURE = 'configure';
+    public const ACTION_DELETE = 'delete';
 
     /**
      * @var LegacyModule Module The instance of the legacy module
@@ -57,21 +37,21 @@ class Module implements ModuleInterface
     /**
      * Module attributes (name, displayName etc.).
      *
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
+     * @var ParameterBag
      */
     public $attributes;
 
     /**
      * Module attributes from disk.
      *
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
+     * @var ParameterBag
      */
     public $disk;
 
     /**
      * Module attributes from database.
      *
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
+     * @var ParameterBag
      */
     public $database;
 
@@ -138,7 +118,6 @@ class Module implements ModuleInterface
     private $database_default = [
         'installed' => 0,
         'active' => null,
-        'active_on_mobile' => null,
         'version' => null,
         'last_access_date' => '0000-00-00 00:00:00',
         'date_add' => null,
@@ -209,7 +188,7 @@ class Module implements ModuleInterface
             // We try to instantiate the legacy class if not done yet
             try {
                 $this->instanciateLegacyModule();
-            } catch (\Exception $e) {
+            } catch (Exception) {
                 $this->disk->set('is_valid', false);
 
                 return false;
@@ -229,14 +208,14 @@ class Module implements ModuleInterface
         return (bool) $this->database->get('active');
     }
 
-    public function isActiveOnMobile(): bool
-    {
-        return (bool) $this->database->get('active_on_mobile');
-    }
-
     public function isInstalled(): bool
     {
         return (bool) $this->database->get('installed');
+    }
+
+    public function isUninstalled(): bool
+    {
+        return !$this->isInstalled() && $this->disk->get('is_present');
     }
 
     public function isConfigurable(): bool
@@ -341,36 +320,6 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onMobileEnable(): bool
-    {
-        if (!$this->hasValidInstance()) {
-            return false;
-        }
-
-        $result = $this->instance->enableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
-        $this->database->set('active_on_mobile', $result);
-
-        return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function onMobileDisable(): bool
-    {
-        if (!$this->hasValidInstance()) {
-            return false;
-        }
-
-        $result = $this->instance->disableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
-        $this->database->set('active_on_mobile', !$result);
-
-        return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function onReset(): bool
     {
         if (!$this->hasValidInstance()) {
@@ -444,7 +393,7 @@ class Module implements ModuleInterface
             AddonListFilterOrigin::ADDONS_MUST_HAVE => 'addonsMustHave',
         ];
 
-        return isset($conversionTable[$value]) ? $conversionTable[$value] : '';
+        return is_null($value) ? '' : (isset($conversionTable[$value]) ? $conversionTable[$value] : '');
     }
 
     /**

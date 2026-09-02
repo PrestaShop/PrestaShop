@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 class AuthControllerCore extends FrontController
 {
@@ -32,7 +12,14 @@ class AuthControllerCore extends FrontController
     /** @var bool */
     public $auth = false;
 
-    public function checkAccess()
+    /**
+     * Check if the controller is available for the current user/visitor.
+     *
+     * @see Controller::checkAccess()
+     *
+     * @return bool
+     */
+    public function checkAccess(): bool
     {
         if ($this->context->customer->isLogged() && !$this->ajax) {
             $this->redirect_after = $this->authRedirection ? urlencode($this->authRedirection) : 'my-account';
@@ -42,10 +29,15 @@ class AuthControllerCore extends FrontController
         return parent::checkAccess();
     }
 
-    public function initContent()
+    /**
+     * Assign template vars related to page content.
+     *
+     * @see FrontController::initContent()
+     */
+    public function initContent(): void
     {
         if (Tools::isSubmit('create_account')) {
-            return $this->redirectWithNotifications('registration');
+            $this->redirectWithNotifications('registration');
         }
 
         $should_redirect = false;
@@ -73,22 +65,22 @@ class AuthControllerCore extends FrontController
             if (Tools::urlBelongsToShop($back)) {
                 // Checks to see if "back" is a fully qualified
                 // URL that is on OUR domain, with the right protocol
-                return $this->redirectWithNotifications($back);
+                $this->redirectWithNotifications($back);
             }
 
             // Well we're not redirecting to a URL,
             // so...
             if ($this->authRedirection) {
                 // We may need to go there if defined
-                return $this->redirectWithNotifications($this->authRedirection);
+                $this->redirectWithNotifications($this->authRedirection);
             }
 
             // go home
-            return $this->redirectWithNotifications(__PS_BASE_URI__);
+            $this->redirectWithNotifications(__PS_BASE_URI__);
         }
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
@@ -98,5 +90,13 @@ class AuthControllerCore extends FrontController
         ];
 
         return $breadcrumb;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCanonicalURL(): string
+    {
+        return $this->context->link->getPageLink('authentication');
     }
 }

@@ -1,33 +1,13 @@
-{#**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
 
   {{ form_start(updateOrderStatusActionBarForm, {
-    'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
-    'attr': {
-      'id': 'update_order_status_action_form'
-    }
+    action: path('admin_orders_update_status', {orderId: orderForViewing.id}),
+    attr: {
+      id: 'update_order_status_action_form',
+    },
   }) }}
 
   <div class="input-group">
@@ -41,10 +21,10 @@
     {% endfor %}
     <div class="select-status{% if isBright %} is-bright{% endif %}" id="update_order_status_action_input_wrapper" style="background-color:{{ backgroundColor }};">
         {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {
-          'attr': {
-            'class': 'select-status-colored',
+          attr: {
+            class: 'select-status-colored',
           },
-          'id': 'update_order_status_action_input',
+          id: 'update_order_status_action_input',
         }) }}
     </div>
 
@@ -65,7 +45,7 @@
   {% if orderForViewing.documents.canGenerateInvoice %}
     <form class="order-actions-invoice">
       <div class="input-group">
-        <a href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}"
+        <a href="{{ path('admin_orders_generate_invoice_pdf', {orderId: orderForViewing.id}) }}"
            class="btn btn-action" data-role="view-invoice">
           <i class="material-icons">receipt</i>
           {{ 'View invoice'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -83,10 +63,10 @@
     </div>
   </form>
 
-  {% if orderForViewing.documents.canGenerateDeliverySlip %}
+  {% if orderForViewing.documents.canGenerateDeliverySlip and (not orderHasShipment) %}
     <form class="order-actions-delivery">
       <div class="input-group">
-        <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}"
+        <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {orderId: orderForViewing.id}) }}"
            class="btn btn-action" data-role="view-delivery-slip">
           <i class="material-icons">local_shipping</i>
           {{ 'View delivery slip'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -95,7 +75,39 @@
     </form>
   {% endif %}
 
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
+  {# All shipments delivery slips - disabled until all shipments are fulfilled #}
+  {% set totalShipments = orderForViewing.shipments.totalCount %}
+  {% set fulfilledShipments = orderForViewing.shipments.fulfilledCount %}
+  {% set allShipmentsFulfilled = orderForViewing.shipments.areAllShipmentsPacked() %}
+
+  {% if orderForViewing.documents.canGenerateDeliverySlip and orderHasShipment %}
+  <form class="order-actions-delivery-all">
+    <div class="input-group">
+      {% if not allShipmentsFulfilled %}
+        <button
+          type="button"
+          class="btn btn-action"
+          data-toggle="pstooltip"
+          data-placement="bottom"
+          title="{{ 'Only %fulfilled% on %total% shipments have been fulfilled'|trans({'%fulfilled%': fulfilledShipments, '%total%': totalShipments}, 'Admin.Orderscustomers.Feature') }}"
+          disabled
+        >
+          {{ 'Download delivery slips'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
+      {% else %}
+        <a
+          href="{{ path('admin_orders_generate_shipments_delivery_slip_pdf', {orderId: orderForViewing.id}) }}"
+          class="btn btn-action"
+        >
+          <i class="material-icons">local_shipping</i>
+          {{ 'Download delivery slips'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </a>
+      {% endif %}
+    </div>
+  </form>
+  {% endif %}
+
+  {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig') }}
 
   {% if merchandiseReturnEnabled %}
     {% if orderForViewing.isDelivered() %}
@@ -122,4 +134,4 @@
       </button>
   {% endif %}
 
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_navigation.html.twig' %}
+  {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_navigation.html.twig') }}

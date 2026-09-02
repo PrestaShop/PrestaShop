@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
@@ -30,7 +10,8 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -72,38 +53,33 @@ class EditProductRowType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $invoices = $options['order_id'] ?
+        $data = $builder->getData();
+
+        $invoices = $data['order_id'] ?
             $this->orderInvoiceByIdChoiceProvider->getChoices([
-                'id_order' => $options['order_id'],
+                'id_order' => $data['order_id'],
                 'id_lang' => $this->contextLangId,
                 'display_total' => false,
             ]) : [];
 
         $builder
-            ->add('price_tax_excluded', NumberType::class, [
-                'label' => false,
-                'unit' => sprintf('%s %s',
-                    $options['symbol'],
-                    $this->trans('tax excl.', 'Admin.Global')
-                ),
+            ->add('price_tax_excluded', MoneyType::class, [
+                'label' => $this->trans('tax excl.', 'Admin.Global'),
+                'currency' => $data['currency']->iso_code,
                 'attr' => [
                     'class' => 'editProductPriceTaxExcl',
                 ],
             ])
-            ->add('price_tax_included', NumberType::class, [
-                'label' => false,
-                'unit' => sprintf('%s %s',
-                    $options['symbol'],
-                    $this->trans('tax incl.', 'Admin.Global')
-                ),
+            ->add('price_tax_included', MoneyType::class, [
+                'label' => $this->trans('tax incl.', 'Admin.Global'),
+                'currency' => $data['currency']->iso_code,
                 'attr' => [
                     'class' => 'editProductPriceTaxIncl',
                 ],
             ])
-            ->add('quantity', NumberType::class, [
+            ->add('quantity', IntegerType::class, [
                 'label' => false,
                 'data' => 1,
-                'scale' => 0,
                 'attr' => [
                     'min' => 1,
                     'class' => 'editProductQuantity',
@@ -127,7 +103,7 @@ class EditProductRowType extends TranslatorAwareType
                 'disabled' => true,
                 'attr' => [
                     'class' => 'btn btn-sm btn-primary js-product-edit-action-btn mt-2 mb-2 productEditSaveBtn',
-                    'data-order-id' => $options['order_id'],
+                    'data-order-id' => $data['order_id'],
                     'data-update-message' => $this->trans('Are you sure?', 'Admin.Notifications.Warning'),
                 ],
             ])
@@ -139,13 +115,10 @@ class EditProductRowType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver
-            ->setRequired(['symbol'])
-            ->setDefaults([
-                'order_id' => null,
-            ])
-            ->setAllowedTypes('order_id', ['int', 'null'])
-            ->setAllowedTypes('symbol', ['string'])
-        ;
+        $resolver->setDefaults([
+            'order_id' => null,
+            'currency' => [],
+            'is_multishipment_is_enabled' => false,
+        ]);
     }
 }

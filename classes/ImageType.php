@@ -1,28 +1,10 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
 
 /**
  * Class ImageTypeCore.
@@ -39,6 +21,9 @@ class ImageTypeCore extends ObjectModel
 
     /** @var int Height */
     public $height;
+
+    /** @var value-of<ImageFitment::AVAILABLE_VALUES> Image fitment */
+    public $image_fitment = ImageFitment::FIT;
 
     /** @var bool Apply to products */
     public $products;
@@ -65,6 +50,7 @@ class ImageTypeCore extends ObjectModel
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 64],
             'width' => ['type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true],
             'height' => ['type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true],
+            'image_fitment' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 16, 'values' => ImageFitment::AVAILABLE_VALUES],
             'categories' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'products' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'manufacturers' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
@@ -127,7 +113,7 @@ class ImageTypeCore extends ObjectModel
     }
 
     /**
-     * Check if type already is already registered in database.
+     * Check if type is already registered in database.
      *
      * @param string $typeName Name
      *
@@ -136,7 +122,7 @@ class ImageTypeCore extends ObjectModel
     public static function typeAlreadyExists($typeName)
     {
         if (!Validate::isImageTypeName($typeName)) {
-            die(Tools::displayError());
+            throw new PrestaShopException(sprintf('"%s" is not valid image type name.', $typeName));
         }
 
         Db::getInstance()->executeS('
@@ -194,7 +180,7 @@ class ImageTypeCore extends ObjectModel
         $themeName = Context::getContext()->shop->theme_name;
         $nameWithoutThemeName = str_replace(['_' . $themeName, $themeName . '_'], '', $name);
 
-        //check if the theme name is already in $name if yes only return $name
+        // check if the theme name is already in $name if yes only return $name
         if ($themeName !== null && strstr($name, $themeName) && self::getByNameNType($name)) {
             return $name;
         }
@@ -207,7 +193,12 @@ class ImageTypeCore extends ObjectModel
             return $themeName . '_' . $nameWithoutThemeName;
         }
 
-        return $nameWithoutThemeName . '_default';
+        // only if "default" isn't already in name, we return it with default
+        if (!strstr($name, 'default')) {
+            return $nameWithoutThemeName . '_default';
+        }
+
+        return $nameWithoutThemeName;
     }
 
     /**

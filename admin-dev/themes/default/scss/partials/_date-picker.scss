@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 // ui-datepicker: The outer container of the datepicker. If the datepicker is inline, this element will additionally have a ui-datepicker-inline class. If the isRTL option is set, this element will additionally have a class of ui-datepicker-rtl.
 // ui-datepicker-header: The container for the datepicker's header.
 // ui-datepicker-prev: The control used to select previous months.
@@ -63,5 +67,23 @@
     color: #fff !important;
     background: $primary-color !important;
     border: solid 1px darken($primary-color, 10%) !important;
+  }
+
+  .ui-slider-handle {
+    cursor: pointer !important;
+    background: var(--#{$cdk}primary-300) !important;
+    border: var(--#{$cdk}size-1) solid var(--#{$cdk}primary-800) !important;
+    transition-duration: var(--#{$cdk}default-transition-duration);
+    transition-property: border, background;
+
+    &.ui-state-hover {
+      background: var(--#{$cdk}primary-800) !important;
+      border: var(--#{$cdk}size-1) solid var(--#{$cdk}primary-800) !important;
+    }
+
+    &.ui-state-focus {
+      background: var(--#{$cdk}primary-700) !important;
+      border: var(--#{$cdk}size-1) solid var(--#{$cdk}primary-700) !important;
+    }
   }
 }

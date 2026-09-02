@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
@@ -79,45 +59,45 @@ final class OrderMessageGridDefinitionFactory extends AbstractFilterableGridDefi
                     ])
             )
             ->add((new DataColumn('id_order_message'))
-            ->setName($this->trans('ID', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'id_order_message',
-            ])
+                ->setName($this->trans('ID', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_order_message',
+                ])
             )
             ->add((new DataColumn('name'))
-            ->setName($this->trans('Name', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'name',
-            ])
+                ->setName($this->trans('Name', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'name',
+                ])
             )
             ->add((new DataColumn('message'))
-            ->setName($this->trans('Message', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'message',
-            ])
+                ->setName($this->trans('Message', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'message',
+                ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                        (new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_order_messages_edit',
-                                'route_param_name' => 'orderMessageId',
-                                'route_param_field' => 'id_order_message',
-                            ])
-                    )
-                    ->add(
-                        $this->buildDeleteAction(
-                            'admin_order_messages_delete',
-                            'orderMessageId',
-                            'id_order_message'
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add(
+                            (new LinkRowAction('edit'))
+                                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                ->setIcon('edit')
+                                ->setOptions([
+                                    'route' => 'admin_order_messages_edit',
+                                    'route_param_name' => 'orderMessageId',
+                                    'route_param_field' => 'id_order_message',
+                                ])
                         )
-                    ),
-            ])
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_order_messages_delete',
+                                'orderMessageId',
+                                'id_order_message'
+                            )
+                        ),
+                ])
             )
         ;
     }
@@ -129,41 +109,41 @@ final class OrderMessageGridDefinitionFactory extends AbstractFilterableGridDefi
     {
         return (new FilterCollection())
             ->add((new Filter('id_order_message', TextType::class))
-            ->setTypeOptions([
-                'attr' => [
-                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                ],
-                'required' => false,
-            ])
-            ->setAssociatedColumn('id_order_message')
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_order_message')
             )
             ->add((new Filter('name', TextType::class))
-            ->setTypeOptions([
-                'attr' => [
-                    'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
-                ],
-                'required' => false,
-            ])
-            ->setAssociatedColumn('name')
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('name')
             )
             ->add((new Filter('message', TextType::class))
-            ->setTypeOptions([
-                'attr' => [
-                    'placeholder' => $this->trans('Search message', [], 'Admin.Actions'),
-                ],
-                'required' => false,
-            ])
-            ->setAssociatedColumn('message')
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search message', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('message')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-            ->setTypeOptions([
-                'reset_route' => 'admin_common_reset_search_by_filter_id',
-                'reset_route_params' => [
-                    'filterId' => self::GRID_ID,
-                ],
-                'redirect_route' => 'admin_order_messages_index',
-            ])
-            ->setAssociatedColumn('actions'))
+                ->setTypeOptions([
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
+                    'reset_route_params' => [
+                        'filterId' => self::GRID_ID,
+                    ],
+                    'redirect_route' => 'admin_order_messages_index',
+                ])
+                ->setAssociatedColumn('actions'))
         ;
     }
 

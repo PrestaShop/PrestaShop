@@ -1,28 +1,10 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 /**
  * Class MessageCore.
@@ -59,7 +41,7 @@ class MessageCore extends ObjectModel
         'table' => 'message',
         'primary' => 'id_message',
         'fields' => [
-            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 1600],
+            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'id_cart' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
@@ -111,12 +93,8 @@ class MessageCore extends ObjectModel
      *
      * @return array Messages
      */
-    public static function getMessagesByOrderId($idOrder, $private = false, Context $context = null)
+    public static function getMessagesByOrderId($idOrder, bool $private = false, ?Context $context = null)
     {
-        if (!Validate::isBool($private)) {
-            die(Tools::displayError());
-        }
-
         if (!$context) {
             $context = Context::getContext();
         }
@@ -146,12 +124,8 @@ class MessageCore extends ObjectModel
      *
      * @return array Messages
      */
-    public static function getMessagesByCartId($idCart, $private = false, Context $context = null)
+    public static function getMessagesByCartId($idCart, bool $private = false, ?Context $context = null)
     {
-        if (!Validate::isBool($private)) {
-            die(Tools::displayError());
-        }
-
         if (!$context) {
             $context = Context::getContext();
         }
@@ -180,8 +154,11 @@ class MessageCore extends ObjectModel
      */
     public static function markAsReaded($idMessage, $idEmployee)
     {
-        if (!Validate::isUnsignedId($idMessage) || !Validate::isUnsignedId($idEmployee)) {
-            die(Tools::displayError());
+        if (!Validate::isUnsignedId($idMessage)) {
+            throw new PrestaShopException('Message ID is invalid.');
+        }
+        if (!Validate::isUnsignedId($idEmployee)) {
+            throw new PrestaShopException('Employee ID is invalid.');
         }
 
         $result = Db::getInstance()->execute('

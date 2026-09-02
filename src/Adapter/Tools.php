@@ -1,32 +1,14 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Context;
 use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
+use PrestaShopException;
 use Tools as LegacyTools;
 
 /**
@@ -112,9 +94,9 @@ class Tools
     }
 
     /**
-     * returns the rounded value of $value to specified precision, according to your configuration;.
+     * Returns the rounded value of $value to specified precision, according to your configuration.
      *
-     * @note : PHP 5.3.0 introduce a 3rd parameter mode in round function
+     * Warning - this method accepts our own PS rounding constants with different integer values.
      *
      * @param float $value
      * @param int $precision
@@ -124,6 +106,11 @@ class Tools
     public function round($value, $precision = 0, $round_mode = null)
     {
         return LegacyTools::ps_round($value, $precision, $round_mode);
+    }
+
+    public function convertPrice($price, $currency = null, $toCurrency = true, ?Context $context = null)
+    {
+        return LegacyTools::convertPrice($price, $currency, $toCurrency, $context);
     }
 
     /**
@@ -164,6 +151,20 @@ class Tools
     }
 
     /**
+     * Copy content from a source that can be influenced by user input, blocking requests
+     * to private/reserved hosts and non-HTTP(S)/FTP(S) stream wrappers.
+     *
+     * @param string $source
+     * @param string $destination
+     *
+     * @return bool
+     */
+    public function copyFromUntrustedSource($source, $destination)
+    {
+        return LegacyTools::copyFromUntrustedSource($source, $destination);
+    }
+
+    /**
      * Sanitize a string.
      *
      * @param string $value
@@ -190,25 +191,11 @@ class Tools
     }
 
     /**
-     * Delete unicode class from regular expression patterns.
-     *
-     * @deprecated Since 8.0.0 and will be removed in the next major.
-     *
-     * @param string $pattern
-     *
-     * @return string pattern
-     */
-    public function cleanNonUnicodeSupport($pattern)
-    {
-        return LegacyTools::cleanNonUnicodeSupport($pattern);
-    }
-
-    /**
      * @see LegacyTools::displayDate()
      *
      * @return string
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function displayDate($date, $full = false)
     {

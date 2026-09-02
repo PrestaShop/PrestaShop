@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 declare(strict_types=1);
 
@@ -73,7 +53,14 @@ class Profiler
 
     private function __construct()
     {
-        $this->startTime = microtime(true);
+        global $start_time;
+        if (isset($_SERVER['REQUEST_TIME_FLOAT'])) {
+            $this->startTime = (float) $_SERVER['REQUEST_TIME_FLOAT'];
+        } elseif (!empty($start_time)) {
+            $this->startTime = $start_time;
+        } else {
+            $this->startTime = microtime(true);
+        }
     }
 
     /**
@@ -147,11 +134,15 @@ class Profiler
      *
      * @param mixed $var
      *
-     * @return string|object
+     * @return string|object|array
      */
     private function getVarData($var)
     {
         if (is_object($var)) {
+            return $var;
+        }
+
+        if (is_array($var)) {
             return $var;
         }
 
@@ -202,7 +193,9 @@ class Profiler
     {
         // Including a lot of files uses memory
         foreach (get_included_files() as $file) {
-            $this->totalFilesize += filesize($file);
+            if (file_exists($file)) {
+                $this->totalFilesize += filesize($file);
+            }
         }
 
         foreach ($GLOBALS as $key => $value) {
@@ -320,10 +313,10 @@ class Profiler
 
         return [
             'summary' => [
-                'loadTime' => $this->profiler[count($this->profiler) - 1]['time'] - $this->startTime,
+                'loadTime' => empty($this->profiler) ? null : $this->profiler[count($this->profiler) - 1]['time'] - $this->startTime,
                 'queryTime' => round(1000 * $this->totalQueryTime),
                 'nbQueries' => count($this->queries),
-                'peakMemoryUsage' => $this->profiler[count($this->profiler) - 1]['peak_memory_usage'],
+                'peakMemoryUsage' => empty($this->profiler) ? null : $this->profiler[count($this->profiler) - 1]['peak_memory_usage'],
                 'globalVarSize' => $this->globalVarSize,
                 'includedFiles' => count(get_included_files()),
                 'totalFileSize' => $this->totalFilesize,

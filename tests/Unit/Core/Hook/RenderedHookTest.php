@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -72,6 +52,29 @@ class RenderedHookTest extends TestCase
         $expected = '<h1>Hello World</h1><p>How are you?</p> '; // one extra space in the end is intended.
         $this->assertIsString($this->renderedHook->outputContent());
         $this->assertSame($expected, $this->renderedHook->outputContent());
+    }
+
+    /**
+     * A legacy module may return an array instead of a string from a rendering hook.
+     * Such a value reaches RenderedHook as a (possibly nested) array and must be
+     * concatenated to a string without triggering an "Array to string conversion" warning.
+     *
+     * @see https://github.com/PrestaShop/PrestaShop/issues/41609
+     */
+    public function testOutputContentFlattensArrayContent()
+    {
+        $renderedHook = new RenderedHook($this->hookStub, [
+            'module_1' => '<h1>Hello World</h1>',
+            'module_2' => ['<p>How are you?</p>'], // single-element array (subscriber wrap)
+            'module_3' => ['<span>a</span>', '<span>b</span>'], // multi-element array
+            'module_4' => [], // empty array
+        ]);
+
+        $this->assertIsString($renderedHook->outputContent());
+        $this->assertSame(
+            '<h1>Hello World</h1><p>How are you?</p><span>a</span><span>b</span>',
+            $renderedHook->outputContent()
+        );
     }
 
     /**

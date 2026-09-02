@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Import\Handler;
@@ -48,6 +28,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CategoryImportHandler holds legacy logic of category import.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by the import engine
+ *             importers implementing \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface
+ *             (the category importer itself lands with the remaining entities;
+ *             \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ProductImporter is the reference
+ *             implementation to follow)
  */
 final class CategoryImportHandler extends AbstractImportHandler
 {
@@ -419,7 +405,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                 $this->error(
                     sprintf(
                         $this->translator->trans(
-                'A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).',
+                            'A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).',
                             [],
                             'Admin.Advparameters.Notification'
                         ),
@@ -434,10 +420,10 @@ final class CategoryImportHandler extends AbstractImportHandler
             $category->doNotRegenerateNTree = true;
 
             // If id category AND id category already in base, trying to update
-            if ($category->id &&
-                $category->categoryExists($category->id) &&
-                !in_array($category->id, $this->coreCategories) &&
-                !$runtimeConfig->shouldValidateData()
+            if ($category->id
+                && $category->categoryExists($category->id)
+                && !in_array($category->id, $this->coreCategories)
+                && !$runtimeConfig->shouldValidateData()
             ) {
                 $result = $category->update();
             }
@@ -474,7 +460,7 @@ final class CategoryImportHandler extends AbstractImportHandler
             throw new SkippedIterationException();
         }
 
-        //copying images of categories
+        // copying images of categories
         if (!empty($category->image)) {
             $copyResult = $this->imageCopier->copyImg(
                 $category->id,

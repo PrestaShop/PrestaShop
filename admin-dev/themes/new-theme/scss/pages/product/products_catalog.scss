@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 // Config
 /* stylelint-disable */
 @import "@scss/config/_settings";
@@ -6,7 +10,6 @@
 /* stylelint-enable */
 
 .products-catalog {
-
   .catalog-tools {
     flex: 0 0 2rem;
     max-width: 2rem;
@@ -64,6 +67,10 @@
     font-size: 12rem;
     color: $gray-light;
   }
+}
+
+table tr.column-filters td[data-column-id^="id_"] input {
+  min-width: 5rem;
 }
 
 // Create product modal

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 declare(strict_types=1);
 
@@ -29,9 +9,9 @@ namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider;
 
 use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnsupportedLocaleException;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ExtraPropertyTranslationExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\LegacyModuleExtractorInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Normalizer\DomainNormalizer;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder\DefaultCatalogueFinder;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder\FileTranslatedCatalogueFinder;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder\UserTranslatedCatalogueFinder;
@@ -118,6 +98,11 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     private $translationDomains;
 
     /**
+     * @var ExtraPropertyTranslationExtractor
+     */
+    private $extraPropertyTranslationExtractor;
+
+    /**
      * @param DatabaseTranslationLoader $databaseTranslationLoader
      * @param LegacyModuleExtractorInterface $legacyModuleExtractor
      * @param LoaderInterface $legacyFileLoader
@@ -126,6 +111,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      * @param string $moduleName
      * @param array<int, string> $filenameFilters
      * @param array<int, string> $translationDomains
+     * @param ExtraPropertyTranslationExtractor $extraPropertyTranslationExtractor
      */
     public function __construct(
         DatabaseTranslationLoader $databaseTranslationLoader,
@@ -135,7 +121,8 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         string $translationsDirectory,
         string $moduleName,
         array $filenameFilters,
-        array $translationDomains
+        array $translationDomains,
+        ExtraPropertyTranslationExtractor $extraPropertyTranslationExtractor
     ) {
         $this->databaseTranslationLoader = $databaseTranslationLoader;
         $this->moduleName = $moduleName;
@@ -145,6 +132,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         $this->legacyFileLoader = $legacyFileLoader;
         $this->filenameFilters = $filenameFilters;
         $this->translationDomains = $translationDomains;
+        $this->extraPropertyTranslationExtractor = $extraPropertyTranslationExtractor;
     }
 
     /**
@@ -159,7 +147,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         // First we search in translation directory in case the module is native
         try {
             $defaultCatalogue = $this->getDefaultCatalogueFinder()->getCatalogue($locale);
-        } catch (TranslationFilesNotFoundException $e) {
+        } catch (TranslationFilesNotFoundException) {
             $defaultCatalogue = new MessageCatalogue($locale);
         }
 
@@ -184,13 +172,13 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     {
         try { // First we search in the module's translation directory
             return $this->getModuleBuiltInFileTranslatedCatalogueFinder()->getCatalogue($locale);
-        } catch (TranslationFilesNotFoundException $exception) {
+        } catch (TranslationFilesNotFoundException) {
             // If no translation file was found in the module, No Exception
             // we search in the Core's files
         }
         try {
             return $this->getCoreFileTranslatedCatalogueFinder()->getCatalogue($locale);
-        } catch (TranslationFilesNotFoundException $exception) {
+        } catch (TranslationFilesNotFoundException) {
             // And finally if no translation was found in the Core files, we search in the legacy files
             return $this->buildTranslationCatalogueFromLegacyFiles($locale);
         }
@@ -296,14 +284,14 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
                 $this->getBuiltInModuleDirectory(),
                 $locale
             );
-        } catch (UnsupportedLocaleException $exception) {
+        } catch (UnsupportedLocaleException) {
             // this happens when there is no translation file found for the desired locale
             return $catalogueFromPhpAndSmartyFiles;
         }
 
         foreach ($catalogueFromPhpAndSmartyFiles->all() as $currentDomain => $items) {
             foreach (array_keys($items) as $translationKey) {
-                $legacyKey = md5($translationKey);
+                $legacyKey = md5((string) $translationKey);
 
                 if ($catalogueFromLegacyTranslationFiles->has($legacyKey, $currentDomain)) {
                     $legacyFilesCatalogue->set(
@@ -365,8 +353,17 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
             // analyze template files and extract wordings
             /** @var MessageCatalogue $additionalDefaultCatalogue */
             $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $locale);
+
+            // add the label/description wordings declared in the extra property registry so they
+            // become translatable too; convertDomainsAndFilterCatalogue() then normalizes their
+            // domains and keeps only the ones belonging to this module
+            $extraPropertyCatalogue = $this->extraPropertyTranslationExtractor->extract($locale);
+            foreach ($extraPropertyCatalogue->getDomains() as $domain) {
+                $additionalDefaultCatalogue->add($extraPropertyCatalogue->all($domain), $domain);
+            }
+
             $defaultCatalogue = $this->convertDomainsAndFilterCatalogue($additionalDefaultCatalogue);
-        } catch (UnsupportedLocaleException $exception) {
+        } catch (UnsupportedLocaleException) {
             // Do nothing as support of legacy files is deprecated
         }
 
@@ -386,26 +383,6 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      */
     private function convertDomainsAndFilterCatalogue(MessageCatalogue $catalogue): MessageCatalogue
     {
-        $normalizer = new DomainNormalizer();
-        $newCatalogue = new MessageCatalogue($catalogue->getLocale());
-
-        foreach ($catalogue->getDomains() as $domain) {
-            // remove dots
-            $newDomain = $normalizer->normalize($domain);
-
-            // add delimiters
-            // only add if the domain is relevant to this module
-            foreach ($this->filenameFilters as $pattern) {
-                if (preg_match($pattern, $newDomain)) {
-                    $newCatalogue->add(
-                        $catalogue->all($domain),
-                        $newDomain
-                    );
-                    break;
-                }
-            }
-        }
-
-        return $newCatalogue;
+        return (new CatalogueDomainConverter())->normalizeAndFilter($catalogue, $this->filenameFilters);
     }
 }

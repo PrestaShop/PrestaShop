@@ -1,0 +1,27 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% block content %}
+  {% if settingsTipMessage is not empty %}
+    {{ ps.infotip(settingsTipMessage, true) }}
+  {% endif %}
+  {% block feature_group_showcase_card %}
+      {{ include('@PrestaShop/Admin/Sell/Catalog/Features/Blocks/showcase_card.html.twig') }}
+  {% endblock %}
+  {% block features_listing %}
+    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: featureGrid}) }}
+  {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/feature.bundle.js') }}"></script>
+{% endblock %}

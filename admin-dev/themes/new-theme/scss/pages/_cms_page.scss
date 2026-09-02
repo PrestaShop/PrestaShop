@@ -1,3 +1,11 @@
-.helper-card__cms-pages-background {
-  background-image: url("img/helper-card/content-background@3x.png");
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+#cms_page {
+  .seo_preview {
+    .input-container {
+      max-width: calc(66.66%);
+    }
+  }
 }

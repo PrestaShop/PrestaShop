@@ -8,6 +8,8 @@ services:
       - '@prestashop.adapter.multistore_feature'
       - '@prestashop.adapter.shop.context'
 
+  PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsCheckerInterface: '@prestashop.core.team.employee.configuration.options_checker'
+
   prestashop.core.employee.profile_access_checker:
     class: 'PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessChecker'
     arguments:

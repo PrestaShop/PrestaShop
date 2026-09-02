@@ -1,0 +1,42 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<div class="card" id="orderBasicInfo">
+  <div class="card-header">
+    <h3 class="card-header-title">
+      <i class="material-icons">info</i> {{ 'Basic information'|trans({}, 'Admin.Global') }}
+    </h3>
+  </div>
+  <div class="card-body">
+    <div class="row mb-1">
+      <div class="col-xxl-4 text-xxl-right font-weight-bold">{{ 'ID'|trans({}, 'Admin.Global') }}</div>
+      <div class="col-xxl-8" id="orderId">{{ orderForViewing.id }}</div>
+    </div>
+    <div class="row mb-1">
+      <div class="col-xxl-4 text-xxl-right font-weight-bold">{{ 'Order reference'|trans({}, 'Admin.Global') }}</div>
+      <div class="col-xxl-8">{{ orderForViewing.reference }}</div>
+    </div>
+    <div class="row mb-1">
+      <div class="col-xxl-4 text-xxl-right font-weight-bold">{{ 'Created from cart'|trans({}, 'Admin.Global') }}</div>
+      <div class="col-xxl-8"><a href="{{ path('admin_carts_view', {cartId: orderForViewing.cartId}) }}">#{{ orderForViewing.cartId }}</a>
+    </div></div>
+    <div class="row mb-1">
+      <div class="col-xxl-4 text-xxl-right font-weight-bold">{{ 'Total price'|trans({}, 'Admin.Global') }}</div>
+      <div class="col-xxl-8">{{ orderForViewing.prices.totalAmountFormatted }}</div>
+    </div>
+    <div class="row mb-1">
+      <div class="col-xxl-4 text-xxl-right font-weight-bold">{{ 'Created on'|trans({}, 'Admin.Global') }}</div>
+      <div class="col-xxl-8">{{ orderForViewing.createdAt|date_format_full }}</div>
+    </div>
+    <div class="row mb-1">
+      <div class="col-xxl-4 text-xxl-right font-weight-bold">{{ 'Payment'|trans({}, 'Admin.Global') }}</div>
+      <div class="col-xxl-8">{{ orderForViewing.paymentName }}</div>
+    </div>
+    <div class="row mb-1">
+      <div class="col-xxl-4 text-xxl-right font-weight-bold">{{ 'Delivery'|trans({}, 'Admin.Global') }}</div>
+      <div class="col-xxl-8">{{ orderForViewing.carrierName }}</div>
+    </div>
+  </div>
+</div>

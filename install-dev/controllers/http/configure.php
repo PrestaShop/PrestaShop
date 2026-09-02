@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -29,10 +9,6 @@
  */
 class InstallControllerHttpConfigure extends InstallControllerHttp implements HttpConfigureInterface
 {
-    /**
-     * @var array
-     */
-    public $list_activities = [];
     /**
      * @var array
      */
@@ -54,7 +30,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         if (Tools::isSubmit('shop_name')) {
             // Save shop configuration
             $this->session->shop_name = trim(Tools::getValue('shop_name'));
-            $this->session->shop_activity = Tools::getValue('shop_activity');
             $this->session->enable_ssl = (bool) Tools::getValue('enable_ssl');
             $this->session->shop_country = Tools::getValue('shop_country');
             $this->session->shop_timezone = Tools::getValue('shop_timezone');
@@ -71,6 +46,18 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
 
             if (!$this->session->admin_password_confirm || trim(Tools::getValue('admin_password_confirm'))) {
                 $this->session->admin_password_confirm = trim(Tools::getValue('admin_password_confirm'));
+            }
+
+            if (!$this->session->adminFolderName) {
+                if (file_exists(_PS_ROOT_DIR_ . '/admin-dev')) {
+                    $this->session->adminFolderName = 'admin-dev';
+                } else {
+                    $this->session->adminFolderName = sprintf(
+                        'admin%03d%s/',
+                        mt_rand(0, 999),
+                        Tools::strtolower(Tools::passwdGen(16))
+                    );
+                }
             }
         }
     }
@@ -197,33 +184,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
      */
     public function display(): void
     {
-        // List of activities
-        $list_activities = [
-            1 => $this->translator->trans('Lingerie and Adult', [], 'Install'),
-            2 => $this->translator->trans('Animals and Pets', [], 'Install'),
-            3 => $this->translator->trans('Art and Culture', [], 'Install'),
-            4 => $this->translator->trans('Babies', [], 'Install'),
-            5 => $this->translator->trans('Beauty and Personal Care', [], 'Install'),
-            6 => $this->translator->trans('Cars', [], 'Install'),
-            7 => $this->translator->trans('Computer Hardware and Software', [], 'Install'),
-            8 => $this->translator->trans('Download', [], 'Install'),
-            9 => $this->translator->trans('Fashion and accessories', [], 'Install'),
-            10 => $this->translator->trans('Flowers, Gifts and Crafts', [], 'Install'),
-            11 => $this->translator->trans('Food and beverage', [], 'Install'),
-            12 => $this->translator->trans('HiFi, Photo and Video', [], 'Install'),
-            13 => $this->translator->trans('Home and Garden', [], 'Install'),
-            14 => $this->translator->trans('Home Appliances', [], 'Install'),
-            15 => $this->translator->trans('Jewelry', [], 'Install'),
-            16 => $this->translator->trans('Mobile and Telecom', [], 'Install'),
-            17 => $this->translator->trans('Services', [], 'Install'),
-            18 => $this->translator->trans('Shoes and accessories', [], 'Install'),
-            19 => $this->translator->trans('Sports and Entertainment', [], 'Install'),
-            20 => $this->translator->trans('Travel', [], 'Install'),
-        ];
-
-        asort($list_activities);
-        $this->list_activities = $list_activities;
-
         // Countries list
         $this->list_countries = [];
         $countries = $this->language->getCountries();

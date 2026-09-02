@@ -17,7 +17,7 @@ services:
 
     hook_configurator:
         class: PrestaShop\PrestaShop\Core\Module\HookConfigurator
-        arguments: ["@hook_repository"]
+        arguments: ["@hook_repository", "@logger", "@prestashop.module.manager"]
 
     theme_validator:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator

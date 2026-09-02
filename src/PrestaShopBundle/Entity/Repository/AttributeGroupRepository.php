@@ -1,32 +1,11 @@
 <?php
+
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Entity\Repository;
-
-use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * AttributeGroupRepository.
@@ -37,39 +16,48 @@ use Doctrine\ORM\Query\Expr\Join;
 class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
 {
     /**
-     * @param bool $withAttributes
-     * @param array $attributeIds
+     * Finds attribute groups by language and shop.
      *
-     * @return array
+     * @param int $idLang Language ID
+     * @param int $idShop Shop ID
+     *
+     * @return \PrestaShopBundle\Entity\AttributeGroup[]
      */
-    public function listOrderedAttributeGroups(bool $withAttributes, array $attributeIds = []): array
+    public function findByLangAndShop(int $idLang, int $idShop): array
     {
-        $qb = $this
-            ->createQueryBuilder('ag')
-            ->addSelect('ag')
+        return $this->createQueryBuilder('ag')
             ->addSelect('agl')
-            ->innerJoin('ag.attributeGroupLangs', 'agl')
-            ->addOrderBy('ag.position', 'ASC')
-        ;
+            ->join('ag.shops', 'ags')
+            ->join('ag.attributeGroupLangs', 'agl')
+            ->andWhere('agl.lang = :idLang')
+            ->andWhere('ags.id = :idShop')
+            ->orderBy('ag.position', 'ASC')
+            ->setParameters([
+                'idShop' => $idShop,
+                'idLang' => $idLang,
+            ])->getQuery()->getResult();
+    }
 
-        if (!empty($attributeIds)) {
-            $qb
-                ->innerJoin('ag.attributes', 'a', Join::WITH, 'a.id IN (:attributeIds)')
-                ->setParameter('attributeIds', $attributeIds)
-            ;
-        } else {
-            $qb->innerJoin('ag.attributes', 'a');
-        }
-
-        if ($withAttributes) {
-            $qb
-                ->innerJoin('a.attributeLangs', 'al')
-                ->addSelect('a')
-                ->addSelect('al')
-                ->addOrderBy('a.position', 'ASC')
-            ;
-        }
-
-        return $qb->getQuery()->getResult();
+    /**
+     * Finds attribute groups by language and shops.
+     *
+     * @param int $idLang Language ID
+     * @param int[] $idShops Shop IDs
+     *
+     * @return \PrestaShopBundle\Entity\AttributeGroup[]
+     */
+    public function findByLangForShops(int $idLang, array $idShops): array
+    {
+        return $this->createQueryBuilder('ag')
+            ->addSelect('agl')
+            ->join('ag.shops', 'ags')
+            ->join('ag.attributeGroupLangs', 'agl')
+            ->andWhere('agl.lang = :idLang')
+            ->andWhere('ags.id IN (:idShops)')
+            ->orderBy('ag.position', 'ASC')
+            ->setParameters([
+                'idLang' => $idLang,
+                'idShops' => $idShops,
+            ])->getQuery()->getResult();
     }
 }

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -164,7 +144,7 @@ class AdminReturnControllerCore extends AdminController
         $order = new Order($this->object->id_order);
         $quantity_displayed = [];
         // Customized products */
-        if ($returned_customizations = OrderReturn::getReturnedCustomizedProducts((int) ($this->object->id_order))) {
+        if ($returned_customizations = OrderReturn::getReturnedCustomizedProducts((int) $this->object->id_order)) {
             foreach ($returned_customizations as $returned_customization) {
                 $quantity_displayed[(int) $returned_customization['id_order_detail']] = isset($quantity_displayed[(int) $returned_customization['id_order_detail']]) ? $quantity_displayed[(int) $returned_customization['id_order_detail']] + (int) $returned_customization['product_quantity'] : (int) $returned_customization['product_quantity'];
             }
@@ -196,7 +176,7 @@ class AdminReturnControllerCore extends AdminController
             'url_order' => $orderUrl,
             'picture_folder' => _THEME_PROD_PIC_DIR_,
             'returnedCustomizations' => $returned_customizations,
-            'customizedDatas' => Product::getAllCustomizedDatas((int) ($order->id_cart)),
+            'customizedDatas' => Product::getAllCustomizedDatas((int) $order->id_cart),
             'products' => $products,
             'quantityDisplayed' => $quantity_displayed,
             'id_order_return' => $this->object->id,
@@ -226,17 +206,18 @@ class AdminReturnControllerCore extends AdminController
     public function postProcess()
     {
         $this->context = Context::getContext();
+        // Delete
         if (Tools::isSubmit('deleteorder_return_detail')) {
             if ($this->access('delete')) {
-                if (($id_order_detail = (int) (Tools::getValue('id_order_detail'))) && Validate::isUnsignedId($id_order_detail)) {
-                    if (($id_order_return = (int) (Tools::getValue('id_order_return'))) && Validate::isUnsignedId($id_order_return)) {
+                if (($id_order_detail = (int) Tools::getValue('id_order_detail')) && Validate::isUnsignedId($id_order_detail)) {
+                    if (($id_order_return = (int) Tools::getValue('id_order_return')) && Validate::isUnsignedId($id_order_return)) {
                         $orderReturn = new OrderReturn($id_order_return);
                         if (!Validate::isLoadedObject($orderReturn)) {
-                            die(Tools::displayError());
+                            throw new PrestaShopException(sprintf('Order return with ID "%s" could not be loaded.', $id_order_return));
                         }
-                        if ((int) ($orderReturn->countProduct()) > 1) {
-                            if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int) (Tools::getValue('id_customization', 0)))) {
-                                Tools::redirectAdmin(self::$currentIndex . '&conf=4token=' . $this->token);
+                        if ((int) $orderReturn->countProduct() > 1) {
+                            if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int) Tools::getValue('id_customization', 0))) {
+                                Tools::redirectAdmin(self::$currentIndex . '&updateorder_return&id_order_return=' . $id_order_return . '&conf=4&token=' . $this->token);
                             } else {
                                 $this->errors[] = $this->trans('An error occurred while deleting the details of your order return.', [], 'Admin.Orderscustomers.Notification');
                             }
@@ -254,14 +235,20 @@ class AdminReturnControllerCore extends AdminController
             }
         } elseif (Tools::isSubmit('submitAddorder_return') || Tools::isSubmit('submitAddorder_returnAndStay')) {
             if ($this->access('edit')) {
-                if (($id_order_return = (int) (Tools::getValue('id_order_return'))) && Validate::isUnsignedId($id_order_return)) {
+                if (($id_order_return = (int) Tools::getValue('id_order_return')) && Validate::isUnsignedId($id_order_return)) {
                     $orderReturn = new OrderReturn($id_order_return);
                     $order = new Order($orderReturn->id_order);
                     $customer = new Customer($orderReturn->id_customer);
                     $orderLanguage = new Language((int) $order->id_lang);
-                    $orderReturn->state = (int) (Tools::getValue('state'));
+                    $orderReturn->state = (int) Tools::getValue('state');
                     if ($orderReturn->save()) {
                         $orderReturnState = new OrderReturnState($orderReturn->state);
+                        // Cancel Returns if cancellable
+                        if ($orderReturnState->is_cancelling_return === true) {
+                            OrderReturn::setCancelledStatus((int) $id_order_return, true);
+                        }
+
+                        // Send email
                         $vars = [
                             '{lastname}' => $customer->lastname,
                             '{firstname}' => $customer->firstname,

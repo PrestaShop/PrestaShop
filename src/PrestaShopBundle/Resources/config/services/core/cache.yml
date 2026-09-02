@@ -19,6 +19,7 @@ services:
       - '@prestashop.adapter.cache.clearer.xml_cache_clearer'
       - '@prestashop.adapter.cache.clearer.media_cache_clearer'
       - '@prestashop.adapter.cache.clearer.class_index_cache_clearer'
+      - '@PrestaShop\PrestaShop\Adapter\Cache\Clearer\DoctrineCacheClearer'
 
   prestashop.core.cache.clearer.product_cache_clearer_chain:
     class: 'PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerChain'

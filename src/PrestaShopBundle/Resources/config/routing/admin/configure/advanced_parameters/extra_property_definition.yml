@@ -1,0 +1,73 @@
+admin_extra_property_definitions_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ExtraPropertyDefinitionController::indexAction'
+
+admin_extra_property_definitions_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.extra_property_definition
+    redirectRoute: admin_extra_property_definitions_index
+
+admin_extra_property_definitions_form_fields:
+  path: /form-fields/{formId}
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ExtraPropertyDefinitionController::formFieldsAction'
+  requirements:
+    formId: '[A-Za-z0-9_]+'
+
+admin_extra_property_definitions_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ExtraPropertyDefinitionController::createAction'
+    _parent: admin_extra_property_definitions_index
+
+admin_extra_property_definitions_edit:
+  path: /{extraPropertyDefinitionId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ExtraPropertyDefinitionController::editAction'
+    _parent: admin_extra_property_definitions_index
+  requirements:
+    extraPropertyDefinitionId: \d+
+
+admin_extra_property_definitions_view:
+  path: /{extraPropertyDefinitionId}/view
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ExtraPropertyDefinitionController::viewAction'
+  requirements:
+    extraPropertyDefinitionId: \d+
+
+admin_extra_property_definitions_delete:
+  path: /{extraPropertyDefinitionId}/delete
+  methods: [ DELETE, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ExtraPropertyDefinitionController::deleteAction'
+  requirements:
+    extraPropertyDefinitionId: \d+
+
+admin_extra_property_definitions_delete_drop_column:
+  path: /{extraPropertyDefinitionId}/delete-drop-column
+  methods: [ DELETE, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ExtraPropertyDefinitionController::deleteDropColumnAction'
+  requirements:
+    extraPropertyDefinitionId: \d+
+
+admin_extra_property_definitions_bulk_delete:
+  path: /bulk-delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ExtraPropertyDefinitionController::bulkDeleteAction'
+
+admin_extra_property_definitions_bulk_delete_drop_column:
+  path: /bulk-delete-drop-column
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ExtraPropertyDefinitionController::bulkDeleteDropColumnAction'

@@ -1,31 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
+use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
+use PrestaShopBundle\Form\Admin\Type\CurrencyChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -46,36 +28,20 @@ class LocalizationConfigurationType extends TranslatorAwareType
     /**
      * @var array
      */
-    private $countryChoices;
-
-    /**
-     * @var array
-     */
-    private $currencyChoices;
-
-    /**
-     * @var array
-     */
     private $timezoneChoices;
 
     /**
      * @param array $languageChoices
-     * @param array $countryChoices
-     * @param array $currencyChoices
      * @param array $timezoneChoices
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $languageChoices,
-        array $countryChoices,
-        array $currencyChoices,
         array $timezoneChoices
     ) {
         parent::__construct($translator, $locales);
         $this->languageChoices = $languageChoices;
-        $this->countryChoices = $countryChoices;
-        $this->currencyChoices = $currencyChoices;
         $this->timezoneChoices = $timezoneChoices;
     }
 
@@ -96,10 +62,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 ),
                 'choices' => $this->languageChoices,
                 'choice_translation_domain' => false,
-                'attr' => [
-                    'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2',
-                ],
+                'autocomplete' => true,
             ])
             ->add('detect_language_from_browser', SwitchType::class, [
                 'label' => $this->trans(
@@ -111,7 +74,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'Admin.International.Help'
                 ),
             ])
-            ->add('default_country', ChoiceType::class, [
+            ->add('default_country', CountryChoiceType::class, [
                 'label' => $this->trans(
                     'Default country',
                     'Admin.International.Feature'
@@ -120,12 +83,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'The default country used in your shop.',
                     'Admin.International.Help'
                 ),
-                'choices' => $this->countryChoices,
-                'choice_translation_domain' => false,
-                'attr' => [
-                    'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2',
-                ],
+                'autocomplete' => true,
             ])
             ->add('detect_country_from_browser', SwitchType::class, [
                 'label' => $this->trans(
@@ -138,9 +96,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 ),
             ]
             )
-            ->add('default_currency', ChoiceType::class, [
-                'choices' => $this->currencyChoices,
-                'choice_translation_domain' => false,
+            ->add('default_currency', CurrencyChoiceType::class, [
                 'label' => $this->trans(
                     'Default currency',
                     'Admin.International.Feature'
@@ -149,10 +105,9 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'The default currency used in your shop.',
                     'Admin.International.Help'
                 ),
+                'autocomplete' => true,
                 'attr' => [
                     'data-warning-message' => 'Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.',
-                    'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2',
                 ],
             ])
             ->add('timezone', ChoiceType::class, [
@@ -162,10 +117,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 ),
                 'choices' => $this->timezoneChoices,
                 'choice_translation_domain' => false,
-                'attr' => [
-                    'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2',
-                ],
+                'autocomplete' => true,
             ]);
     }
 }

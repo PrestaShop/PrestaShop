@@ -57,3 +57,27 @@ Feature: Webservice key management
     And webservice key "ABCD1EFGHIJKLM2PQRS345TUVWXYZ678" should have "PUT" permission for "employees" resources
     And webservice key "ABCD1EFGHIJKLM2PQRS345TUVWXYZ678" should have "DELETE" permission for "orders" resources
     And webservice key "ABCD1EFGHIJKLM2PQRS345TUVWXYZ678" should have "HEAD" permission for "addresses" resources
+
+  Scenario: Deleting Webservice Key
+    When I delete webservice key "ABCD1EFGHIJKLM2PQRS345TUVWXYZ678"
+    Then webservice key "ABCD1EFGHIJKLM2PQRS345TUVWXYZ678" should not exist
+
+  Scenario: Bulk Deleting Webservice Key
+    Given I add a new webservice key with specified properties:
+      | key              | DFS51LTKBBMBGF5QQRG523JMQYEHU4X7 |
+      | description      | Testing webservice key           |
+      | is_enabled       | 1                                |
+      | shop_association | shop1                            |
+      | permission_GET   | addresses, carriers, carts       |
+    Then webservice key "DFS51LTKBBMBGF5QQRG523JMQYEHU4X7" should exist
+    Given I add a new webservice key with specified properties:
+      | key              | ABCD1EFGHIJKLM2PQRS345TUVWXYZ000 |
+      | description      | Testing webservice key           |
+      | is_enabled       | 1                                |
+      | shop_association | shop1                            |
+      | permission_GET   | addresses, carriers, carts       |
+    Then webservice key "ABCD1EFGHIJKLM2PQRS345TUVWXYZ000" should exist
+    
+    When I bulk delete webservice keys "DFS51LTKBBMBGF5QQRG523JMQYEHU4X7,ABCD1EFGHIJKLM2PQRS345TUVWXYZ000"
+    Then webservice key "ABCD1EFGHIJKLM2PQRS345TUVWXYZ000" should not exist
+    And webservice key "DFS51LTKBBMBGF5QQRG523JMQYEHU4X7" should not exist

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,7 +9,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Module\Configuration;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\PDOMySql\Driver;
+use Doctrine\DBAL\Driver\PDO\MySQL\Driver;
+use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -73,10 +54,10 @@ class ModuleSelfConfiguratorTest extends TestCase
     }
 
     private function getModuleSelfConfigurator(
-        ModuleRepository $moduleRepository = null,
-        Configuration $configuration = null,
-        Connection $connection = null,
-        Filesystem $filesystem = null
+        ?ModuleRepository $moduleRepository = null,
+        ?Configuration $configuration = null,
+        ?Connection $connection = null,
+        ?Filesystem $filesystem = null
     ): ModuleSelfConfigurator {
         return new ModuleSelfConfigurator(
             $moduleRepository ?: $this->moduleRepository,
@@ -186,18 +167,20 @@ class ModuleSelfConfiguratorTest extends TestCase
         $mockFilesystem = $this->getMockBuilder('\Symfony\Component\Filesystem\Filesystem')
             ->getMock();
 
-        $mockFilesystem->expects($this->exactly(2))
+        $invokedCount = $this->exactly(2);
+        $mockFilesystem->expects($invokedCount)
             ->method('copy')
-            ->withConsecutive(
-                [
-                    $this->equalTo($basePath . '/modules/ganalytics/ganalytics.php'),
-                    $this->equalTo($basePath . '/modules/ganalytics/ganalytics_copy.php'),
-                ],
-                [
-                    $this->equalTo('http://localhost/img/logo.png'),
-                    $this->equalTo($basePath . '/modules/ganalytics/another-logo.png'),
-                ]
-            );
+            ->willReturnCallback(function (string $originFile, string $targetFile) use ($invokedCount, $basePath) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($basePath . '/modules/ganalytics/ganalytics.php', $originFile);
+                    $this->assertEquals($basePath . '/modules/ganalytics/ganalytics_copy.php', $targetFile);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals('http://localhost/img/logo.png', $originFile);
+                    $this->assertEquals($basePath . '/modules/ganalytics/another-logo.png', $targetFile);
+                }
+            });
 
         $moduleSelfConfigurator = $this->getModuleSelfConfigurator(
             null,
@@ -248,7 +231,7 @@ class ModuleSelfConfiguratorTest extends TestCase
         // Test context with mocks
         require_once $php_filepath;
         $mock = $this->getMockBuilder('\MyComplexModuleConfiguration')
-            ->setMethods(['run'])
+            ->onlyMethods(['run'])
             ->getMock();
         $mock->expects($this->exactly(2))
             ->method('run');
@@ -259,7 +242,7 @@ class ModuleSelfConfiguratorTest extends TestCase
                 '\PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator'
             )
             ->setConstructorArgs([$this->moduleRepository, $this->configuration, $this->connection, new Filesystem()])
-            ->setMethods(['loadPhpFile'])
+            ->onlyMethods(['loadPhpFile'])
             ->getMock();
 
         $moduleSelfConfigurator
@@ -294,12 +277,6 @@ class ModuleSelfConfiguratorTest extends TestCase
             ->method('onReset')
             ->willReturn(true);
         $moduleS
-            ->method('onMobileDisable')
-            ->willReturn(true);
-        $moduleS
-            ->method('onMobileEnable')
-            ->willReturn(true);
-        $moduleS
             ->method('hasValidInstance')
             ->willReturn(true);
 
@@ -317,14 +294,14 @@ class ConfigurationMock extends Configuration
 {
     private $configurationData = [];
 
-    public function set($key, $value, ShopConstraint $shopConstraint = null, array $options = [])
+    public function set($key, $value, ?ShopConstraint $shopConstraint = null, array $options = [])
     {
         $this->configurationData[$key] = $value;
 
         return $this;
     }
 
-    public function get($key, $default = null, ShopConstraint $shopConstraint = null)
+    public function get($key, $default = null, ?ShopConstraint $shopConstraint = null): mixed
     {
         return isset($this->configurationData[$key]) ? $this->configurationData[$key] : $default;
     }
@@ -367,7 +344,7 @@ class ConnectionMock extends Connection
         return true;
     }
 
-    public function prepare($statement)
+    public function prepare($statement): Statement
     {
         $this->sql[] = $statement;
 
@@ -382,8 +359,15 @@ class StatementMock extends Statement
     {
     }
 
-    public function execute($params = null)
+    public function execute($params = null): Result
     {
-        return true;
+        return new ResultMock();
+    }
+}
+
+class ResultMock extends Result
+{
+    public function __construct()
+    {
     }
 }

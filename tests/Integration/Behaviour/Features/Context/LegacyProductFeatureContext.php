@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
@@ -42,7 +22,6 @@ use Product;
 use RuntimeException;
 use SpecificPrice;
 use StockAvailable;
-use Symfony\Component\HttpFoundation\Request;
 use TaxRulesGroup;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
@@ -128,6 +107,42 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
             (string) Context::getContext()->shop->id : '';
 
         return isset($this->products[$productName . $idShop]);
+    }
+
+    /**
+     * Force update of the cached instance of a product, important when the content was modified in DB and not via
+     * the cached instance. Updating the cached instance makes it up to date with the DB, thus if it is used to update
+     * some other data relying on the cached instance the cached data won't be forced into the DB and won't erase
+     * intermediate changes.
+     *
+     * @param string $productName
+     */
+    private function updateCachedProduct(string $productName): void
+    {
+        $idShop = (int) Context::getContext()->shop->id !== (int) Configuration::get('PS_SHOP_DEFAULT') ?
+            (string) Context::getContext()->shop->id : '';
+
+        if (isset($this->products[$productName . $idShop])) {
+            $cachedProduct = $this->products[$productName . $idShop];
+            $this->products[$productName . $idShop] = new Product($cachedProduct->id, false, null, (int) $idShop);
+        }
+    }
+
+    /**
+     * Same as previous one but for cached combinations.
+     *
+     * @param string $productName
+     * @param string $combinationName
+     */
+    private function updateCachedCombination(string $productName, string $combinationName): void
+    {
+        if (isset($this->combinations[$productName][$combinationName])) {
+            $idShop = (int) Context::getContext()->shop->id !== (int) Configuration::get('PS_SHOP_DEFAULT') ?
+                (string) Context::getContext()->shop->id : '';
+
+            $cachedCombination = $this->combinations[$productName][$combinationName];
+            $this->combinations[$productName][$combinationName] = new Combination($cachedCombination->id, null, (int) $idShop);
+        }
     }
 
     /**
@@ -297,6 +312,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameIsOutOfStock(string $productName): void
     {
         $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
         $this->getProductWithName($productName)->quantity = 0;
         $this->getProductWithName($productName)->out_of_stock = 0;
         $this->getProductWithName($productName)->save();
@@ -313,6 +329,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameSetStatusOutOfStockOrders(string $productName, string $status): void
     {
         $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
         // Update Product
         $this->getProductWithName($productName)->out_of_stock = ($status === 'allows' ? 1 : 0);
         $this->getProductWithName($productName)->save();
@@ -332,6 +349,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function setProductPackDecrementMode(string $productName, string $mode): void
     {
         $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
         switch ($mode) {
             case 'pack only':
                 $this->getProductWithName($productName)->pack_stock_type = Pack::STOCK_TYPE_PACK_ONLY;
@@ -355,6 +373,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function setProductWeight(string $productName, float $weight)
     {
         $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
         $this->getProductWithName($productName)->weight = $weight;
         $this->getProductWithName($productName)->save();
     }
@@ -368,6 +387,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function setProductPrice(string $productName, float $price)
     {
         $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
         $this->products[$productName]->price = $price;
         $this->products[$productName]->save();
 
@@ -385,6 +405,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function setProductEcotax(string $productName, float $ecotax): void
     {
         $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
         $this->products[$productName]->ecotax = $ecotax;
         $this->products[$productName]->save();
 
@@ -403,6 +424,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCombinationWithNameExists($productName, $combinationName);
+        $this->updateCachedCombination($productName, $combinationName);
         $this->combinations[$productName][$combinationName]->ecotax = $ecotax;
         $this->combinations[$productName][$combinationName]->save();
 
@@ -421,6 +443,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCombinationWithNameExists($productName, $combinationName);
+        $this->updateCachedCombination($productName, $combinationName);
         $this->combinations[$productName][$combinationName]->price = $price;
         $this->combinations[$productName][$combinationName]->save();
 
@@ -438,7 +461,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productCheckEcotax(string $productName, float $ecotax): void
     {
         $this->checkProductWithNameExists($productName);
-        if ($this->products[$productName]->ecotax !== $ecotax) {
+        if ((float) $this->products[$productName]->ecotax !== $ecotax) {
             throw new RuntimeException(sprintf('Expects %f, got %f instead', $ecotax, $this->products[$productName]->ecotax));
         }
     }
@@ -469,6 +492,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function setProductMinimalQuantity(string $productName, int $minimalQty)
     {
         $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
         $this->getProductWithName($productName)->minimal_quantity = $minimalQty;
         $this->getProductWithName($productName)->save();
     }
@@ -619,6 +643,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function setProductTaxRuleGroupId(string $productName, int $taxRuleGroupId): void
     {
         $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
         $this->getProductWithName($productName)->id_tax_rules_group = $taxRuleGroupId;
         $this->getProductWithName($productName)->save();
     }
@@ -654,7 +679,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCombinationWithNameExists($productName, $combinationName);
-
+        $this->updateCachedCombination($productName, $combinationName);
         $this->combinations[$productName][$combinationName]->minimal_quantity = $minimalQty;
         $this->combinations[$productName][$combinationName]->save();
     }
@@ -773,6 +798,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameHasACustomizationWithName(string $productName, string $customizationFieldName): void
     {
         $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
         $this->getProductWithName($productName)->customizable = 1;
         $this->getProductWithName($productName)->save();
 
@@ -911,6 +937,8 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
             $this->products[$containedProductName]->id,
             $containedQuantity
         );
+        // Update cached instance since the product is now a Pack
+        $this->updateCachedProduct($packName);
         Pack::resetStaticCache();
     }
 
@@ -953,6 +981,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameProductIsVirtual($productName)
     {
         $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
         $this->getProductWithName($productName)->is_virtual = true;
         $this->getProductWithName($productName)->save();
     }
@@ -963,6 +992,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameProductInInCategory($productName, $categoryName)
     {
         $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
         $this->categoryFeatureContext->checkCategoryWithNameExists($categoryName);
 
         $category = $this->categoryFeatureContext->getCategoryWithName($categoryName);
@@ -985,23 +1015,6 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
                 throw new RuntimeException(sprintf('Expects %s, got %s instead', $priceWithReduction, $productPrices['price_with_reduction']));
             }
         }
-    }
-
-    /**
-     * @Then product :productName should be editable
-     */
-    public function productShouldBeEditable($productName)
-    {
-        $this->checkProductWithNameExists($productName);
-        $productId = (int) $this->getProductWithName($productName)->id;
-
-        $formBuilder = CommonFeatureContext::getContainer()->get('prestashop.core.form.identifiable_object.builder.edit_product_form_builder');
-
-        $productForm = $formBuilder->getFormFor($productId, [], [
-            'product_id' => $productId,
-            'shop_id' => (int) Configuration::get('PS_SHOP_DEFAULT'),
-            'method' => Request::METHOD_POST,
-        ]);
     }
 
     /**

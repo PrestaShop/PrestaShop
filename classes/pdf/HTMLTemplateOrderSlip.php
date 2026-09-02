@@ -1,34 +1,11 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 use PrestaShop\PrestaShop\Core\Util\Sorter;
 
-/**
- * @since 1.5
- */
 class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 {
     /**
@@ -58,14 +35,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         $this->order = new Order((int) $order_slip->id_order);
         $this->id_cart = $this->order->id_cart;
 
-        $products = OrderSlip::getOrdersSlipProducts($this->order_slip->id, $this->order);
-
-        foreach ($products as $product) {
-            $customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, null, (int) $product['id_customization']);
-            Product::addProductCustomizationPrice($product, $customized_datas);
-        }
-
-        $this->order->products = $products;
+        $this->order->products = OrderSlip::getOrdersSlipProducts($this->order_slip->id, $this->order);
         $this->smarty = $smarty;
         $this->smarty->assign('isTaxEnabled', (bool) Configuration::get('PS_TAX'));
 
@@ -131,7 +101,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             }
             unset($product);
         } else {
-            $this->order->products = null;
+            $this->order->products = [];
         }
 
         if ($this->order_slip->shipping_cost == 0) {
@@ -163,8 +133,11 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $order_details = $this->order->products;
         // Sort products by Reference ID (and if equals (like combination) by Supplier Reference)
-        $sorter = new Sorter();
-        $order_details = $sorter->natural($order_details, Sorter::ORDER_DESC, 'product_reference', 'product_supplier_reference');
+        // We must verify if any product is in the orderslip, as failure to do so will result in an Exception when $order_details is NULL.
+        if (!empty($order_details)) {
+            $sorter = new Sorter();
+            $order_details = $sorter->natural($order_details, Sorter::ORDER_DESC, 'product_reference', 'product_supplier_reference');
+        }
 
         $this->smarty->assign([
             'order' => $this->order,

@@ -1,0 +1,124 @@
+admin_discounts_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::indexAction'
+    _legacy_controller: AdminCartRules
+    _legacy_link: AdminCartRules
+    _legacy_feature_flag: discount
+
+admin_discounts_search_grid:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.discount
+    redirectRoute: admin_discounts_index
+    _legacy_controller: AdminCartRules
+    _legacy_link: AdminCartRules:submitFiltercart_rule
+    _legacy_feature_flag: discount
+
+admin_discounts_reset_grid:
+  path: /reset_discount_search
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::resetSearchAction'
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+
+admin_discounts_create:
+  path: /new/{discountType}
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::createAction'
+    _legacy_controller: AdminCartRules
+    _legacy_link: AdminCartRules:addcart_rule
+    _legacy_feature_flag: discount
+    discountType: null
+
+admin_discount_edit:
+  path: /{discountId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::editAction'
+    _legacy_controller: AdminCartRules
+    _legacy_link: AdminCartRules:updatecart_rule
+    _legacy_feature_flag: discount
+    _legacy_parameters:
+      id_cart_rule: discountId
+  requirements:
+    discountId: \d+
+
+admin_discount_toggle_status:
+  path: /{discountId}/toggle-status
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::toggleStatusAction'
+    _legacy_controller: AdminCartRules
+    _legacy_link: AdminCartRules:statuscart_rule
+    _legacy_feature_flag: discount
+    _legacy_parameters:
+      id_cart_rule: discountId
+  requirements:
+    discountId: \d+
+
+admin_discount_bulk_enable_status:
+  path: /bulk-status-enable
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::bulkEnableStatusAction
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+    _legacy_link: AdminCartRules:statuscart_rule
+
+admin_discount_bulk_disable_status:
+  path: /bulk-status-disable
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::bulkDisableStatusAction
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+    _legacy_link: AdminCartRules:statuscart_rule
+
+admin_discount_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::bulkDeleteAction
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+    _legacy_link: AdminCartRules:submitBulkdeletecart_rule
+
+admin_discounts_duplicate:
+  path: /{discountId}/duplicate
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::duplicateAction'
+    _legacy_controller: AdminCartRules
+    _legacy_link: AdminCartRules:duplicatecart_rule
+    _legacy_feature_flag: discount
+    _legacy_parameters:
+      id_cart_rule: discountId
+  requirements:
+    discountId: \d+
+
+admin_discounts_search_gift_products:
+  path: /search-gift-products
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::searchGiftProductsAction'
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+
+admin_discounts_delete:
+  path: /{discountId}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::deleteAction'
+    _legacy_controller: AdminCartRules
+    _legacy_link: AdminCartRules:deletecart_rule
+    _legacy_feature_flag: discount
+    _legacy_parameters:
+      id_cart_rule: discountId
+  requirements:
+    discountId: \d+

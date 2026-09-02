@@ -1,0 +1,109 @@
+# These decorators are used to generate the OpenApi Json schema automatically for CQRS commands with format and examples
+# matching our expected contract They interact with the implementation of API Platform that handles this Open API doc generation
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  # This decorator's job is to use the CQRS commands constructor scalar inputs in priority in the expected schema (not the Value Objects)
+  PrestaShopBundle\ApiPlatform\Metadata\Property\Factory\CQRSConstructorPropertyMetadataFactory:
+    decorates: 'api_platform.metadata.property.metadata_factory'
+    decoration_priority: !php/const PrestaShopBundle\ApiPlatform\Metadata\Property\Factory\CQRSConstructorPropertyMetadataFactory::DECORATION_PRIORITY
+    arguments:
+      $decorated: '@.inner'
+      $constructorExtractor: '@prestashop_bundle.api_platform.open_api.constructor_extractor'
+      $commandsAndQueries: '%prestashop.commands_and_queries%'
+
+  prestashop_bundle.api_platform.open_api.constructor_extractor:
+    class: Symfony\Component\PropertyInfo\Extractor\ConstructorExtractor
+    arguments:
+      $extractors:
+        - '@prestashop_bundle.api_platform.open_api.reflection_extractor'
+
+  prestashop_bundle.api_platform.open_api.reflection_extractor:
+    class: Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor
+
+  # OpenAPI Schema Adapters - individual adapters for different schema transformations
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\LocalizedValueAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: 40 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 20 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\PositionCollectionAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 20 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\DecimalNumberAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: 30 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 10 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\DatePropertyAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: 20 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 0 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\MultiParameterSetterAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 60 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\CommandMappingAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 50 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\SchemaSynchronizer:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: 10 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 40 }
+
+  # Reapplies the openapiContext declared on the resource ApiProperty attributes. Runs after every adapter detecting
+  # a format automatically, so that an explicit context always wins over a guessed one.
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\ApiPropertyOpenApiContextAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: -50 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: -50 }
+
+  # Lists the required properties of the write operations, based on the CQRS command constructor. Runs after the
+  # SchemaSynchronizer so that only documented properties are listed.
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\CommandRequiredPropertiesAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: -60 }
+
+  # Documents the default values declared by an operation. Runs after the required properties are listed, since a
+  # property the API defaults itself is not required in the payload.
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\DefaultValuesAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: -70 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\FileUploadRequestBodyBuilder: ~
+
+  # Documents the extraProperties sub-object. Runs LAST (after SchemaSynchronizer, which would otherwise strip
+  # this synthetic property since it is not declared on the resource class).
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\ExtraPropertiesSchemaAdapter:
+    arguments:
+      $resourceMetadataFactory: '@api_platform.metadata.resource.metadata_collection_factory'
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: -100 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: -100 }
+
+  # Schema adapter chains - orchestrates adapters in the correct order
+  prestashop_bundle.api_platform.open_api.resource_schema_adapter_chain:
+    class: PrestaShopBundle\ApiPlatform\OpenApi\Adapter\SchemaAdapterChain
+    arguments:
+      $adapters: !tagged_iterator 'prestashop.openapi.schema_adapter.resource'
+
+  prestashop_bundle.api_platform.open_api.operation_schema_adapter_chain:
+    class: PrestaShopBundle\ApiPlatform\OpenApi\Adapter\SchemaAdapterChain
+    arguments:
+      $adapters: !tagged_iterator 'prestashop.openapi.schema_adapter.operation'
+
+  # This decorator applies the CQRSCommandMapping on the full extracted schema
+  PrestaShopBundle\ApiPlatform\OpenApi\Factory\CQRSOpenApiFactory:
+    decorates: 'api_platform.openapi.factory'
+    decoration_on_invalid: ignore
+    arguments:
+      $decorated: '@.inner'
+      $definitionNameFactory: '@api_platform.json_schema.definition_name_factory'
+      $resourceSchemaAdapterChain: '@prestashop_bundle.api_platform.open_api.resource_schema_adapter_chain'
+      $operationSchemaAdapterChain: '@prestashop_bundle.api_platform.open_api.operation_schema_adapter_chain'

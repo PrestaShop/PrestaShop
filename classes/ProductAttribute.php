@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -32,7 +12,7 @@ class ProductAttributeCore extends ObjectModel
     /** @var int Group id which attribute belongs */
     public $id_attribute_group;
 
-    /** @var string Name */
+    /** @var string|string[] Name */
     public $name;
     /** @var string */
     public $color;
@@ -50,7 +30,7 @@ class ProductAttributeCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             'id_attribute_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32],
             'position' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
 
             /* Lang fields */
@@ -155,7 +135,7 @@ class ProductAttributeCore extends ObjectModel
     public function add($autoDate = true, $nullValues = false)
     {
         if ($this->position <= 0) {
-            $this->position = static::getHigherPosition($this->id_attribute_group) + 1;
+            $this->position = static::getHighestPosition($this->id_attribute_group) + 1;
         }
 
         $return = parent::add($autoDate, $nullValues);
@@ -240,13 +220,30 @@ class ProductAttributeCore extends ObjectModel
      *
      * @return bool Quantity is available or not
      */
-    public static function checkAttributeQty($idProductAttribute, $qty, Shop $shop = null)
+    public static function checkAttributeQty($idProductAttribute, $qty, ?Shop $shop = null)
     {
         if (!$shop) {
             $shop = Context::getContext()->shop;
         }
 
-        $result = StockAvailable::getQuantityAvailableByProduct(null, (int) $idProductAttribute, $shop->id);
+        $result = Hook::exec(
+            'actionCheckAttributeQuantity',
+            [
+                'id_product_attribute' => $idProductAttribute,
+                'qty' => $qty,
+                'shop' => $shop,
+            ],
+            null,
+            false,
+            true,
+            false,
+            null,
+            true
+        );
+
+        if (!is_int($result)) {
+            $result = StockAvailable::getQuantityAvailableByProduct(null, (int) $idProductAttribute, $shop->id);
+        }
 
         return $result && $qty <= $result;
     }
@@ -379,23 +376,39 @@ class ProductAttributeCore extends ObjectModel
     }
 
     /**
-     * get highest position.
-     *
      * Get the highest attribute position from a group attribute
      *
      * @param int $idAttributeGroup AttributeGroup ID
      *
      * @return int $position Position
-     * @todo: Shouldn't this be called getHighestPosition instead?
+     *
+     * @deprecated Since 9.2, use ProductAttribute::getHighestPosition() instead.
      */
     public static function getHigherPosition($idAttributeGroup)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.2. Use %s instead.',
+                __METHOD__,
+                self::class . '::getHighestPosition()'
+            ),
+            E_USER_DEPRECATED
+        );
+
+        return self::getHighestPosition((int) $idAttributeGroup);
+    }
+
+    /**
+     * Get the highest attribute position from a group attribute
+     */
+    public static function getHighestPosition(int $idAttributeGroup): int
+    {
         $sql = 'SELECT MAX(`position`)
-				FROM `' . _DB_PREFIX_ . 'attribute`
-				WHERE id_attribute_group = ' . (int) $idAttributeGroup;
+                FROM `' . _DB_PREFIX_ . 'attribute`
+                WHERE id_attribute_group = ' . (int) $idAttributeGroup;
 
         $position = Db::getInstance()->getValue($sql);
 
-        return (is_numeric($position)) ? $position : -1;
+        return (is_numeric($position)) ? (int) $position : -1;
     }
 }

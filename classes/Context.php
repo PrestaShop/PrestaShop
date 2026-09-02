@@ -1,38 +1,21 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+use Detection\MobileDetect;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopBundle\Install\Language as InstallLanguage;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -46,8 +29,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * This class is responsible for holding all basic information about the environment,
  * the customer, cart, currency, language etc.
- *
- * @since 1.5.0.1
  */
 class ContextCore
 {
@@ -75,7 +56,7 @@ class ContextCore
     /** @var Employee|null */
     public $employee;
 
-    /** @var AdminController|FrontController|LegacyControllerBridgeInterface|null */
+    /** @var AdminController|FrontController|LegacyControllerContext|null */
     public $controller;
 
     /** @var string */
@@ -90,7 +71,7 @@ class ContextCore
     /**
      * Current locale instance.
      *
-     * @var Locale|null
+     * @var LocaleInterface|null
      */
     public $currentLocale;
 
@@ -106,8 +87,7 @@ class ContextCore
     /** @var Smarty|null */
     public $smarty;
 
-    /** @var Mobile_Detect */
-    public $mobile_detect;
+    public ?MobileDetect $mobile_detect = null;
 
     /** @var int */
     public $mode;
@@ -127,18 +107,12 @@ class ContextCore
     /** @var int */
     protected $priceComputingPrecision = null;
 
-    /**
-     * Mobile device of the customer.
-     *
-     * @var bool|null
-     */
-    protected $mobile_device = null;
+    /** Mobile device of the customer. */
+    protected ?bool $mobile_device = null;
 
-    /** @var bool|null */
-    protected $is_mobile = null;
+    protected ?bool $is_mobile = null;
 
-    /** @var bool|null */
-    protected $is_tablet = null;
+    protected ?bool $is_tablet = null;
 
     /** @var int */
     public const DEVICE_COMPUTER = 1;
@@ -161,26 +135,18 @@ class ContextCore
     /** @var int */
     public const MODE_HOST = 8;
 
-    /**
-     * Sets Mobile_Detect tool object.
-     *
-     * @return Mobile_Detect
-     */
-    public function getMobileDetect()
+    /** Sets MobileDetect tool object. */
+    public function getMobileDetect(): MobileDetect
     {
         if ($this->mobile_detect === null) {
-            $this->mobile_detect = new Mobile_Detect();
+            $this->mobile_detect = new MobileDetect();
         }
 
         return $this->mobile_detect;
     }
 
-    /**
-     * Checks if visitor's device is a mobile device.
-     *
-     * @return bool
-     */
-    public function isMobile()
+    /** Checks if visitor's device is a mobile device. */
+    public function isMobile(): bool
     {
         if ($this->is_mobile === null) {
             $mobileDetect = $this->getMobileDetect();
@@ -190,12 +156,8 @@ class ContextCore
         return $this->is_mobile;
     }
 
-    /**
-     * Checks if visitor's device is a tablet device.
-     *
-     * @return bool
-     */
-    public function isTablet()
+    /** Checks if visitor's device is a tablet device. */
+    public function isTablet(): bool
     {
         if ($this->is_tablet === null) {
             $mobileDetect = $this->getMobileDetect();
@@ -206,51 +168,26 @@ class ContextCore
     }
 
     /**
-     * Sets mobile_device context variable.
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
      *
-     * @return bool
+     * Sets mobile_device context variable.
      */
-    public function getMobileDevice()
+    public function getMobileDevice(): bool
     {
-        if ($this->mobile_device === null) {
-            $this->mobile_device = false;
-            if ($this->checkMobileContext()) {
-                if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false && (int) Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0) {
-                    $this->mobile_device = true;
-                } else {
-                    switch ((int) Configuration::get('PS_ALLOW_MOBILE_DEVICE')) {
-                        case 1: // Only for mobile device
-                            if ($this->isMobile() && !$this->isTablet()) {
-                                $this->mobile_device = true;
-                            }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-                            break;
-                        case 2: // Only for touchpads
-                            if ($this->isTablet() && !$this->isMobile()) {
-                                $this->mobile_device = true;
-                            }
-
-                            break;
-                        case 3: // For touchpad or mobile devices
-                            if ($this->isMobile() || $this->isTablet()) {
-                                $this->mobile_device = true;
-                            }
-
-                            break;
-                    }
-                }
-            }
-        }
-
-        return $this->mobile_device;
+        return false;
     }
 
-    /**
-     * Returns mobile device type.
-     *
-     * @return int
-     */
-    public function getDevice()
+    /** Returns mobile device type. */
+    public function getDevice(): int
     {
         static $device = null;
 
@@ -268,7 +205,7 @@ class ContextCore
     }
 
     /**
-     * @return Locale|null
+     * @return LocaleInterface|null
      */
     public function getCurrentLocale()
     {
@@ -276,36 +213,24 @@ class ContextCore
     }
 
     /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Function will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     *
      * Checks if mobile context is possible.
      *
      * @return bool
-     *
-     * @throws PrestaShopException
      */
     protected function checkMobileContext()
     {
-        // Check mobile context
-        if (Tools::isSubmit('no_mobile_theme')) {
-            Context::getContext()->cookie->no_mobile = true;
-            if (Context::getContext()->cookie->id_guest) {
-                $guest = new Guest((int) Context::getContext()->cookie->id_guest);
-                $guest->mobile_theme = false;
-                $guest->update();
-            }
-        } elseif (Tools::isSubmit('mobile_theme_ok')) {
-            Context::getContext()->cookie->no_mobile = false;
-            if (Context::getContext()->cookie->id_guest) {
-                $guest = new Guest((int) Context::getContext()->cookie->id_guest);
-                $guest->mobile_theme = true;
-                $guest->update();
-            }
-        }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0.0. There is no replacement.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-        return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
-            && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
-            && defined('_PS_THEME_MOBILE_DIR_')
-            && @filemtime(_PS_THEME_MOBILE_DIR_)
-            && !Context::getContext()->cookie->no_mobile;
+        return false;
     }
 
     /**
@@ -349,6 +274,51 @@ class ContextCore
     }
 
     /**
+     * Returns a ShopConstraint for the current legacy shop context.
+     *
+     * Mirrors Shop::getContext(): in the back office the multistore header can select a
+     * shop group or all shops, and this constraint reflects that selection. In front
+     * office the context is always one specific shop, so the single-shop constraint is
+     * returned there — a typed alternative to passing $this->shop->id as a raw integer.
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        if (Shop::getContext() === Shop::CONTEXT_ALL) {
+            return ShopConstraint::allShops();
+        }
+
+        // Shop::setContext(CONTEXT_GROUP, null) is legal and leaves the context group id
+        // at 0, which ShopGroupId rejects: only build a group constraint from a real id
+        // so this getter never throws.
+        if (Shop::getContext() === Shop::CONTEXT_GROUP && (int) Shop::getContextShopGroupID() > 0) {
+            return ShopConstraint::shopGroup((int) Shop::getContextShopGroupID());
+        }
+
+        return ShopConstraint::shop((int) $this->shop->id);
+    }
+
+    /**
+     * Returns true when the current request is a front-office one.
+     *
+     * Based on the context controller type ('front'/'modulefront'). When the controller
+     * is not (yet) available, falls back to the _PS_FRONT_DIR_ constant, which is only
+     * defined by the FO entry point.
+     *
+     * Used to decide whether extra properties must be filtered on displayFront
+     * (see ExtraPropertiesBag::createForEntity()).
+     *
+     * @return bool
+     */
+    public static function isFrontOfficeContext(): bool
+    {
+        $controllerType = static::getContext()->controller->controller_type ?? null;
+
+        return null !== $controllerType
+            ? in_array($controllerType, ['front', 'modulefront'], true)
+            : defined('_PS_FRONT_DIR_');
+    }
+
+    /**
      * Updates customer in the context, updates the cookie and writes the updated cookie.
      *
      * @param Customer $customer Created customer
@@ -377,9 +347,9 @@ class ContextCore
          *
          * We don't want to flush his cart, if he made it when logged out.
          */
-        if (Configuration::get('PS_CART_FOLLOWING') &&
-            (empty($this->cookie->id_cart) || Cart::getNbProducts((int) $this->cookie->id_cart) == 0) &&
-            $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)
+        if (Configuration::get('PS_CART_FOLLOWING')
+            && (empty($this->cookie->id_cart) || Cart::getNbProducts((int) $this->cookie->id_cart) == 0)
+            && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)
         ) {
             $this->cart = new Cart($idCart);
             $this->cart->secure_key = $customer->secure_key;
@@ -412,16 +382,15 @@ class ContextCore
 
                 // Set proper customer ID and assign addresses to the cart
                 $this->cart->id_customer = (int) $customer->id;
-                $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
-                $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
-                $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
+                $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) $customer->id));
+                $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) $customer->id);
+                $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) $customer->id);
             }
         }
 
         // If previous logic resolved to some cart to be used, save it and put this information to cookie
         if (Validate::isLoadedObject($this->cart)) {
             $this->cart->save();
-            $this->cart->autosetProductAddress();
             $this->cookie->id_cart = (int) $this->cart->id;
         }
 
@@ -452,7 +421,7 @@ class ContextCore
             // symfony's container isn't available in front office, so we load and configure the translator component
             $this->translator = $this->getTranslatorFromLocale($this->language->locale);
         } else {
-            $this->translator = $sfContainer->get('translator');
+            $this->translator = $sfContainer->get(TranslatorInterface::class);
             // We need to set the locale here because in legacy BO pages, the translator is used
             // before the TranslatorListener does its job of setting the locale according to the Request object
             $this->translator->setLocale($this->language->locale);

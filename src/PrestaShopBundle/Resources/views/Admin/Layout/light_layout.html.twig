@@ -1,0 +1,53 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# TODO: To be removed when we find a better time to fill the smarty variables. #}
+{{ ps.setupSmarty(layoutTitle ?? '', metaTitle, lightDisplay) }}
+<!DOCTYPE html>
+<html lang="{{ ps.isoUser }}">
+<head>
+  {% block header %}
+    {% block core_javascript %}
+      {{ include('@PrestaShop/Admin/Layout/core_javascript.html.twig') }}
+    {% endblock %}
+    {{ component('HeadTag', {metaTitle: metaTitle}) }}
+    {% block stylesheets %}
+      {{ include('@PrestaShop/Admin/Layout/stylesheets.html.twig') }}
+    {% endblock %}
+    {% block extra_stylesheets %}{% endblock %}
+  {% endblock %}
+</head>
+
+<body
+  class="lang-{{ ps.isoUser }}{% if ps.isRtlLanguage %} lang-rtl{% endif %} {{ ps.controllerName|escape|lower }}{% if ps.menuCollapsed %} page-sidebar-closed{% endif %}{% if ps.debugMode|default(false) %} developer-mode{% endif %} ps-bo-rebrand"
+  {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.base_url is defined %}data-base-url="{{ ps.jsRouterMetadata.base_url }}"{% endif %}
+  {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.token %}data-token="{{ ps.jsRouterMetadata.token }}"{% endif %}
+>
+
+<div id="main-div" class="light_display_layout">
+  {% if ps.installDirExists %}
+    <div class="alert alert-warning">
+      {{ 'For security reasons, you must also delete the /install folder.'|trans({}, 'Admin.Login.Notification') }}
+    </div>
+  {% else %}
+    <div class="-notoolbar">
+      {{ renderhook('displayAdminAfterHeader', {}) }}
+
+      {# Page content blocks #}
+      {% block content_header %}{% endblock %}
+      {% block content %}{% endblock %}
+      {% block content_footer %}{% endblock %}
+      {% block sidebar_right %}{% endblock %}
+
+      {{ renderhook('displayAdminEndContent', {}) }}
+    </div>
+  {% endif %}
+</div>
+
+{# Javascript blocks #}
+{% block javascripts %}{% endblock %}
+{% block extra_javascripts %}{% endblock %}
+{% block translate_javascripts %}{% endblock %}
+</body>
+</html>

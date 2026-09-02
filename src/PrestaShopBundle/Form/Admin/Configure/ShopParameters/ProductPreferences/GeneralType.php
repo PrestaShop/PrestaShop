@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
@@ -29,8 +9,10 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreference
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -71,10 +53,11 @@ class GeneralType extends TranslatorAwareType
             ->add('catalog_mode', SwitchType::class, [
                 'label' => $this->trans('Catalog mode', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
-                        'Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.',
-                        'Admin.Shopparameters.Help'
-                    ),
+                    'Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.',
+                    'Admin.Shopparameters.Help'
+                ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_CATALOG_MODE',
             ])
             ->add('catalog_mode_with_prices', SwitchType::class, [
                 'label' => $this->trans('Show prices', 'Admin.Shopparameters.Feature'),
@@ -84,18 +67,19 @@ class GeneralType extends TranslatorAwareType
                 ) . '<br />' . $this->trans(
                     'To hide prices for a specific group, go to [1]Customer Settings > Groups[/1].',
                     'Admin.Shopparameters.Help',
-                        [
-                            '[1]' => sprintf(
-                                '<a target="_blank" href="%s">',
-                                $this->legacyContext->getAdminLink('AdminGroups')
-                            ),
-                            '[/1]' => '</a>',
-                        ]
+                    [
+                        '[1]' => sprintf(
+                            '<a target="_blank" href="%s">',
+                            $this->legacyContext->getAdminLink('AdminGroups')
+                        ),
+                        '[/1]' => '</a>',
+                    ]
                 ),
                 'row_attr' => [
                     'class' => 'catalog-mode-option',
                 ],
                 'required' => false,
+                'multistore_configuration_key' => 'PS_CATALOG_MODE_WITH_PRICES',
             ])
             ->add('new_days_number', IntegerType::class, [
                 'label' => $this->trans(
@@ -103,6 +87,7 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_NB_DAYS_NEW_PRODUCT',
             ])
             ->add('short_description_limit', IntegerType::class, [
                 'label' => $this->trans(
@@ -111,6 +96,7 @@ class GeneralType extends TranslatorAwareType
                 ),
                 'required' => false,
                 'unit' => $this->trans('characters', 'Admin.Shopparameters.Help'),
+                'multistore_configuration_key' => 'PS_PRODUCT_SHORT_DESC_LIMIT',
             ])
             ->add('quantity_discount', ChoiceType::class, [
                 'label' => $this->trans(
@@ -128,6 +114,7 @@ class GeneralType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'placeholder' => false,
                 'required' => false,
+                'multistore_configuration_key' => 'PS_QTY_DISCOUNT_ON_COMBINATION',
             ])
             ->add('force_friendly_url', SwitchType::class, [
                 'label' => $this->trans(
@@ -135,10 +122,29 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'When active, friendly URL will be updated on every save.',
+                    'When enabled, friendly URL will be updated on every name change for offline products only.',
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_FORCE_FRIENDLY_PRODUCT',
+            ])
+            ->add('product_breadcrumb_category', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Category used in breadcrumbs',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'choices' => [
+                    $this->trans('Product default category', 'Admin.Shopparameters.Feature') => 'default',
+                    $this->trans('Category the product was accessed from', 'Admin.Shopparameters.Feature') => 'current',
+                ],
+                'choice_translation_domain' => 'Admin.Global',
+                'placeholder' => false,
+                'help' => $this->trans(
+                    'Select which category to display on the product page breadcrumbs. It can be the product\'s default category or the category the customer came from.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'required' => false,
+                'multistore_configuration_key' => 'PS_PRODUCT_BREADCRUMB_CATEGORY',
             ])
             ->add('default_status', SwitchType::class, [
                 'label' => $this->trans(
@@ -150,6 +156,7 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_PRODUCT_ACTIVATION_DEFAULT',
             ])
             ->add('specific_price_priorities', SpecificPricePriorityType::class, [
                 'label' => $this->trans(
@@ -181,6 +188,7 @@ class GeneralType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'placeholder' => false,
                 'required' => false,
+                'multistore_configuration_key' => 'PS_PRODUCT_REDIRECTION_DEFAULT',
             ])
         ;
     }
@@ -201,5 +209,15 @@ class GeneralType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'product_preferences_general_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

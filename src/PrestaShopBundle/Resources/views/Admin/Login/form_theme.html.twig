@@ -1,0 +1,19 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+
+{# Prevent custom rendering from bootstrap theme for submit and checkbox #}
+{% block submit_row -%}
+  <div class="form-group{{ block('widget_type_class') }}{% if force_error|default(false) and not valid %} has-error{% endif %}{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}">
+    {{- form_widget(form) -}}
+  </div>
+{% endblock %}
+
+{% block checkbox_row %}
+  <div class="form-group{{ block('widget_type_class') }}{% if force_error|default(false) and not valid %} has-error{% endif %}{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}">
+    {{- form_widget(form) -}}
+    {{- block('form_external_link') -}}
+  </div>
+{% endblock %}

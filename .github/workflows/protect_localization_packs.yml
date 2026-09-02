@@ -1,0 +1,96 @@
+name: Protect localization packs
+
+# The localization packs under localization/*.xml are synced automatically from
+# PrestaShop/LocalizationFiles (the source of truth served to shops via the
+# "download localization pack" API). To keep the two from diverging, direct
+# edits to those files in a normal PR are rejected: changes must go through
+# LocalizationFiles and be brought in by the automated sync.
+#
+# This check always runs (so it can safely be marked a required status check)
+# and only fails when a PR actually touches localization/*.xml and is not the
+# automated sync PR.
+#
+# Exemptions (any one of):
+#   - PR title is exactly "Sync localization packs from LocalizationFiles"
+#     AND the author is "ps-jarvis" (so the title alone can't be reused to bypass)
+#   - head branch starts with "chore/sync-localization-files-" (the sync branch)
+#   - PR carries the "Localization: allow direct XML edit" label (manual override)
+#
+# Note: only top-level localization/*.xml packs are protected. CLDR data under
+# localization/CLDR/ is generated from a different source and is not covered.
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened, edited, labeled, unlabeled ]
+
+permissions:
+  contents: read
+
+jobs:
+  protect-localization-packs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reject direct edits to localization packs
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+        run: |
+          set -e
+
+          # What did this PR change under localization/*.xml (top level only)?
+          changed=$(git diff --name-only "${BASE_SHA}...${HEAD_SHA}" -- 'localization/*.xml' || true)
+
+          if [ -z "$changed" ]; then
+            echo "No localization pack (.xml) changes in this PR. OK."
+            exit 0
+          fi
+
+          echo "Localization packs touched by this PR:"
+          printf '%s\n' "$changed" | sed 's/^/  - /'
+
+          # --- Exemptions ---------------------------------------------------
+          SYNC_TITLE="Sync localization packs from LocalizationFiles"
+          SYNC_AUTHOR="ps-jarvis"
+
+          case "$HEAD_REF" in
+            chore/sync-localization-files-*) is_sync_branch=1 ;;
+            *) is_sync_branch=0 ;;
+          esac
+
+          if printf '%s' "$LABELS" | grep -q '"Localization: allow direct XML edit"'; then
+            has_override_label=1
+          else
+            has_override_label=0
+          fi
+
+          if { [ "$PR_TITLE" = "$SYNC_TITLE" ] && [ "$PR_AUTHOR" = "$SYNC_AUTHOR" ]; } || [ "$is_sync_branch" = "1" ] || [ "$has_override_label" = "1" ]; then
+            echo "Exempt (automated sync PR or manual override label) — allowed."
+            exit 0
+          fi
+
+          # --- Rejection ----------------------------------------------------
+          echo "::error::This PR edits localization packs directly (localization/*.xml)."
+          cat <<'MSG'
+
+          The files under localization/*.xml are the source of truth in
+          PrestaShop/LocalizationFiles and are synced into core automatically.
+          Please do not edit them here.
+
+          To change a localization pack:
+            1. Open a PR against https://github.com/PrestaShop/LocalizationFiles
+            2. Once merged, the "Sync localization packs from LocalizationFiles"
+               workflow brings the change into core.
+
+          If a direct edit is genuinely required, a maintainer can add the
+          "Localization: allow direct XML edit" label to override this check.
+          MSG
+          exit 1

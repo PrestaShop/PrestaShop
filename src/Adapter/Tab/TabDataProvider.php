@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Tab;
@@ -89,23 +69,38 @@ class TabDataProvider
 
         foreach (Tab::getTabs($languageId, 0) as $tab) {
             if ($this->canAccessTab($profileId, $tab['id_tab'])) {
-                $viewableTabs[$tab['id_tab']] = [
-                    'id_tab' => $tab['id_tab'],
-                    'name' => $tab['name'],
-                    'children' => [],
-                ];
-
-                foreach (Tab::getTabs($languageId, $tab['id_tab']) as $children) {
-                    if ($this->canAccessTab($profileId, $children['id_tab'])) {
-                        foreach (Tab::getTabs($languageId, $children['id_tab']) as $subchild) {
-                            if ($this->canAccessTab($profileId, $subchild['id_tab'])) {
-                                $viewableTabs[$tab['id_tab']]['children'][] = [
-                                    'id_tab' => $subchild['id_tab'],
-                                    'name' => $subchild['name'],
-                                ];
+                $children = Tab::getTabs($languageId, $tab['id_tab']);
+                $viewableChildren = [];
+                foreach ($children as $child) {
+                    if ($this->canAccessTab($profileId, $child['id_tab'])) {
+                        $subChildren = Tab::getTabs($languageId, $child['id_tab']);
+                        // If child has sub children (three level menu) we only add the sub children
+                        if (!empty($subChildren)) {
+                            foreach ($subChildren as $subChild) {
+                                if ($this->canAccessTab($profileId, $subChild['id_tab']) && $subChild['active']) {
+                                    $viewableChildren[] = [
+                                        'id_tab' => $subChild['id_tab'],
+                                        'name' => $subChild['name'],
+                                    ];
+                                }
                             }
+                        } elseif ($child['active']) {
+                            // If child is a direct page without children it can be added in the list
+                            $viewableChildren[] = [
+                                'id_tab' => $child['id_tab'],
+                                'name' => $child['name'],
+                            ];
                         }
                     }
+                }
+
+                // Inactive tabs are not shown unless they have active children. "AdminDashboard" is always shown if active
+                if ($tab['active'] && (!empty($viewableChildren) || $tab['class_name'] == 'AdminDashboard')) {
+                    $viewableTabs[$tab['id_tab']] = [
+                        'id_tab' => $tab['id_tab'],
+                        'name' => $tab['name'],
+                        'children' => $viewableChildren,
+                    ];
                 }
             }
         }

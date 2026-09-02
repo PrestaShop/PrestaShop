@@ -1,39 +1,20 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Adapter\Routing\AdminLinkBuilder;
 use PrestaShop\PrestaShop\Adapter\Routing\LegacyHelperLinkBuilder;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderFactory;
 use PrestaShop\PrestaShop\Core\Routing\Exception\BuilderNotFoundException;
 
-/**
- * @since 1.5.0
- */
 class HelperListCore extends Helper
 {
+    /**
+     * @var int|null
+     */
+    public $id;
+
     /** @var int size which is used for lists image thumbnail generation. */
     public const LIST_THUMBNAIL_SIZE = 45;
 
@@ -75,6 +56,11 @@ class HelperListCore extends Helper
 
     public $position_identifier;
 
+    /**
+     * @var string|null
+     */
+    public $position_group_identifier;
+
     public $table_id;
 
     /** @var string */
@@ -112,6 +98,7 @@ class HelperListCore extends Helper
 
     public $bulk_actions = false;
     public $force_show_bulk_actions = false;
+    public $force_hide_bulk_actions_btn = false;
     public $specificConfirmDelete = null;
     public $colorOnBackground;
 
@@ -268,13 +255,13 @@ class HelperListCore extends Helper
                 if (isset($this->position_group_identifier)) {
                     $position_group_identifier = Tools::getIsset($this->position_group_identifier) ? (int) Tools::getValue($this->position_group_identifier) : $this->position_group_identifier;
                 } else {
-                    $position_group_identifier = (int) Tools::getValue('id_' . ($this->is_cms ? 'cms_' : '') . 'category', ($this->is_cms ? '1' : Category::getRootCategory()->id));
+                    $position_group_identifier = (int) Tools::getValue('id_' . ($this->is_cms ? 'cms_' : '') . 'category', $this->is_cms ? '1' : Category::getRootCategory()->id);
                 }
             } else {
                 $position_group_identifier = Category::getRootCategory()->id;
             }
 
-            $positions = array_map(function ($elem) { return (int) ($elem['position']); }, $this->_list);
+            $positions = array_map(function ($elem) { return (int) $elem['position']; }, $this->_list);
             sort($positions);
         }
 
@@ -298,7 +285,7 @@ class HelperListCore extends Helper
             $is_first = true;
             // Check all available actions to add to the current list row
             foreach ($this->actions as $action) {
-                //Check if the action is available for the current row
+                // Check if the action is available for the current row
                 if (!array_key_exists($action, $this->list_skip_actions) || !in_array($id, $this->list_skip_actions[$action])) {
                     $method_name = 'display' . ucfirst($action) . 'Link';
 
@@ -377,7 +364,7 @@ class HelperListCore extends Helper
                 } elseif (isset($params['image'])) {
                     // item_id is the product id in a product image context, else it is the image id.
                     $item_id = isset($params['image_id']) ? $tr[$params['image_id']] : $id;
-                    if ($params['image'] != 'p' || Configuration::get('PS_LEGACY_IMAGES')) {
+                    if ($params['image'] != 'p') {
                         $path_to_image = _PS_IMG_DIR_ . $params['image'] . '/' . $item_id . (isset($tr['id_image']) ? '-' . (int) $tr['id_image'] : '') . '.' . $this->imageType;
                     } else {
                         $path_to_image = _PS_IMG_DIR_ . $params['image'] . '/' . Image::getImgFolderStatic($tr['id_image']) . (int) $tr['id_image'] . '.' . $this->imageType;
@@ -598,20 +585,6 @@ class HelperListCore extends Helper
 
         $href = $this->currentIndex . '&' . $this->identifier . '=' . $id . '&delete' . $this->table . '&token=' . ($token != null ? $token : $this->token);
 
-        switch ($this->currentIndex) {
-            case 'index.php?controller=AdminProducts':
-            case 'index.php?tab=AdminProducts':
-                // New architecture modification: temporary behavior to switch between old and new controllers.
-                $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
-                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
-                if (!$redirectLegacy && $this->identifier == 'id_product') {
-                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);
-                }
-
-                break;
-            default:
-        }
-
         $data = [
             $this->identifier => $id,
             'href' => $href,
@@ -802,6 +775,7 @@ class HelperListCore extends Helper
             'toolbar_scroll' => $this->toolbar_scroll,
             'toolbar_btn' => $this->toolbar_btn,
             'has_bulk_actions' => $this->hasBulkActions($has_value),
+            'hide_bulk_actions_btn' => $this->force_hide_bulk_actions_btn,
             'filters_has_value' => (bool) $has_value,
         ]);
 

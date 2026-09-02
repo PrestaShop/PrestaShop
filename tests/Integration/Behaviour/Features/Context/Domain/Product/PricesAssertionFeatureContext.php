@@ -1,38 +1,22 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use Context;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use Product;
+use ProductAssembler;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use TaxRulesGroup;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -42,7 +26,7 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class PricesAssertionFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @Then product :productReference should have following prices information for shops :shopReference:
+     * @Then product :productReference should have following prices information for shop(s) :shopReference:
      *
      * @param string $productReference
      * @param string $shopReferences
@@ -79,11 +63,67 @@ class PricesAssertionFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then product :productReference should have following front office prices:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function assertFrontOfficePriceFields(string $productReference, TableNode $tableNode): void
+    {
+        $expectedPrices = $tableNode->getRowsHash();
+        $actualProductProperties = $this->getFrontOfficeProductProperties($productReference);
+
+        foreach ($expectedPrices as $fieldName => $expectedPrice) {
+            // Each expected field must exist in the front-office product array returned by Product::getProductProperties().
+            if (!array_key_exists($fieldName, $actualProductProperties)) {
+                throw new RuntimeException(sprintf('Front office product price field "%s" was not found', $fieldName));
+            }
+
+            $expectedNumber = new DecimalNumber((string) $expectedPrice);
+            $actualNumber = new DecimalNumber((string) $actualProductProperties[$fieldName]);
+
+            // Numeric fields are compared as DecimalNumber values to match the existing product price assertions.
+            if (!$expectedNumber->equals($actualNumber)) {
+                throw new RuntimeException(sprintf(
+                    'Front office product %s expected to be "%s", but is "%s"',
+                    $fieldName,
+                    $expectedNumber,
+                    $actualNumber
+                ));
+            }
+        }
+    }
+
+    /**
+     * Gets product properties through the legacy front-office product assembler.
+     *
+     * @param string $productReference
+     *
+     * @return array<string, mixed>
+     */
+    private function getFrontOfficeProductProperties(string $productReference): array
+    {
+        // Reset Product static caches so price changes and specific prices from previous Behat steps are read fresh.
+        Product::resetStaticCache();
+
+        $productId = $this->getSharedStorage()->get($productReference);
+        $productAssembler = new ProductAssembler(Context::getContext());
+        $productProperties = $productAssembler->assembleProduct(['id_product' => $productId]);
+
+        // The assembler should always return a front-office product array for a valid shared product reference.
+        if (!is_array($productProperties)) {
+            throw new RuntimeException(sprintf('Front office product properties for "%s" could not be loaded', $productReference));
+        }
+
+        return $productProperties;
+    }
+
+    /**
      * @param ProductPricesInformation $pricesInfo
      * @param array $data
      * @param string|null $shopReference
      */
-    protected function assertPricesInfos(ProductPricesInformation $pricesInfo, array $data, string $shopReference = null): void
+    protected function assertPricesInfos(ProductPricesInformation $pricesInfo, array $data, ?string $shopReference = null): void
     {
         $shopErrorMessage = !empty($shopReference) ? sprintf(' for shop %s', $shopReference) : '';
         if (isset($data['on_sale'])) {
@@ -143,7 +183,7 @@ class PricesAssertionFeatureContext extends AbstractProductFeatureContext
                 sprintf(
                     'Expected tax rules group "%s", but got "%s"%s',
                     $expectedName,
-                    (new \TaxRulesGroup($actualId))->name,
+                    (new TaxRulesGroup($actualId))->name,
                     $shopErrorMessage
                 )
             );

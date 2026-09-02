@@ -1,32 +1,12 @@
 <?php
-
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Translation;
 
+use PrestaShopBundle\Translation\Loader\ExtraPropertyTranslationLoader;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as BaseTranslator;
 
 /**
@@ -37,12 +17,51 @@ class Translator extends BaseTranslator implements TranslatorInterface
     use PrestaShopTranslatorTrait;
     use TranslatorLanguageTrait;
 
+    private ?ExtraPropertyTranslationLoader $extraPropertyTranslationLoader = null;
+
+    /**
+     * Injected via OverrideTranslatorServiceCompilerPass (the FrameworkBundle builds this service
+     * with a fixed constructor signature, so the dependency is set through a method call instead).
+     */
+    public function setExtraPropertyTranslationLoader(ExtraPropertyTranslationLoader $extraPropertyTranslationLoader): void
+    {
+        $this->extraPropertyTranslationLoader = $extraPropertyTranslationLoader;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function addResource($format, $resource, $locale, $domain = null)
+    public function addResource($format, $resource, $locale, $domain = null): void
     {
         parent::addResource($format, $resource, $locale, $domain);
         parent::addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Registers the extra property registry wordings as "extra_property" resources before the
+     * catalogue is built, so they are baked into the compiled (cached) catalogue like any other
+     * resource. The addResource() override above also pairs each with a "db" resource, so admin
+     * translations of those wordings are loaded alongside their source values.
+     */
+    protected function initializeCatalogue(string $locale): void
+    {
+        // Register the registry wordings (and, via the addResource() override, their paired "db"
+        // resource) so they are baked into the compiled catalogue. Only real locales are handled:
+        // - addResource() resets ALL catalogues when given a fallback locale (Symfony behaviour),
+        //   which would corrupt the catalogue being built as initializeCatalogue() recurses into
+        //   fallbacks ("en", "default");
+        // - the "default" pseudo-locale is not a database language, so its paired "db" resource would
+        //   make SqlTranslationLoader throw.
+        // This is enough: each real-locale catalogue carries the source wordings (key == value)
+        // directly, so trans() resolves them without ever needing the fallback catalogue.
+        if (null !== $this->extraPropertyTranslationLoader && !in_array($locale, $this->getFallbackLocales(), true)) {
+            foreach ($this->extraPropertyTranslationLoader->getNormalizedDomains($locale) as $domain) {
+                $this->addResource('extra_property', 'extra_property', $locale, $domain);
+            }
+        }
+
+        parent::initializeCatalogue($locale);
     }
 }

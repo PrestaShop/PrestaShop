@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Type;
@@ -41,6 +21,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DateRangeType extends AbstractType
 {
+    /**
+     * These date format constants are used for front-end part and have different format compared to php DateTime class.
+     */
+    public const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
+    public const DEFAULT_DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
     /**
      * @var TranslatorInterface
      */
@@ -67,13 +53,12 @@ class DateRangeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $now = new DateTime();
         $builder
             ->add('from', DatePickerType::class, [
                 'required' => false,
-                'label' => $this->translator->trans('Start date', [], 'Admin.Global'),
+                'label' => $options['label_from'],
                 'attr' => [
-                    'placeholder' => $this->translator->trans('YY-MM-DD', [], 'Admin.Global'),
+                    'placeholder' => $options['placeholder'],
                     'class' => 'from date-range-start-date',
                 ],
                 'date_format' => $options['date_format'],
@@ -81,11 +66,11 @@ class DateRangeType extends AbstractType
             ->add('to', DatePickerType::class, [
                 'required' => false,
                 'attr' => [
-                    'placeholder' => $this->translator->trans('YY-MM-DD', [], 'Admin.Global'),
+                    'placeholder' => $options['placeholder'],
                     'class' => 'to date-range-end-date',
-                    'data-default-value' => $now->format('Y-m-d'),
+                    'data-default-value' => $options['default_end_value'],
                 ],
-                'label' => $this->translator->trans('End date', [], 'Admin.Global'),
+                'label' => $options['label_to'],
                 'date_format' => $options['date_format'],
             ])
         ;
@@ -130,10 +115,19 @@ class DateRangeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'date_format' => 'YYYY-MM-DD',
+            'date_format' => self::DEFAULT_DATE_FORMAT,
+            'placeholder' => self::DEFAULT_DATE_FORMAT,
             'has_unlimited_checkbox' => false,
+            'default_end_value' => (new DateTime())->format('Y-m-d'),
+            'label_from' => $this->translator->trans('Start date', [], 'Admin.Global'),
+            'label_to' => $this->translator->trans('End date', [], 'Admin.Global'),
         ]);
-        $resolver->setAllowedTypes('date_format', 'string');
+        $resolver
+            ->setAllowedTypes('date_format', 'string')
+            ->setAllowedTypes('placeholder', 'string')
+            ->setAllowedTypes('label_from', 'string')
+            ->setAllowedTypes('label_to', 'string')
+        ;
     }
 
     /**

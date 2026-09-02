@@ -1,0 +1,8 @@
+imports:
+  - { resource: ../config_prod.yml }
+  - { resource: config.yml }
+
+# We use a custom error controller instead of templates override so that this is customized only for back office,
+# or it messes with Admin API default error pages
+framework:
+  error_controller: PrestaShopBundle\Controller\Admin\ErrorController::showAction

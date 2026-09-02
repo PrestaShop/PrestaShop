@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -30,6 +10,7 @@ namespace PrestaShop\PrestaShop\Core\Util;
 
 use ArrayAccess;
 use Countable;
+use ReturnTypeWillChange;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -82,7 +63,7 @@ class ArrayFinder implements ArrayAccess, Countable
      * $arrayFinder->get('a.e.9');
      * $arrayFinder->get('4');
      */
-    public function get(string $path = null, $default = null)
+    public function get(?string $path = null, $default = null)
     {
         if ($path === null) {
             return $this->array;
@@ -91,7 +72,7 @@ class ArrayFinder implements ArrayAccess, Countable
 
         try {
             $value = $this->propertyAccessor->getValue($this->array, $path);
-        } catch (UnexpectedTypeException $e) {
+        } catch (UnexpectedTypeException) {
             // If a value within the path is neither object nor array
             return null;
         }
@@ -137,8 +118,8 @@ class ArrayFinder implements ArrayAccess, Countable
         }
 
         return $this->propertyAccessor->isReadable(
-                $this->array,
-                $this->convertDotPathToArrayPath($offset))
+            $this->array,
+            $this->convertDotPathToArrayPath($offset))
             && ($this->get($offset) !== null)
         ;
     }
@@ -150,7 +131,7 @@ class ArrayFinder implements ArrayAccess, Countable
      * $arrayFinder[4];
      * $arrayFinder['a'];
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (is_int($offset)) {

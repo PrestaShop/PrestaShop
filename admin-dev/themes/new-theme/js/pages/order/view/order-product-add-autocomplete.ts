@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
@@ -46,9 +26,21 @@ export default class OrderProductAutocomplete {
 
   dropdownMenu: JQuery;
 
+  selectShipment: HTMLSelectElement;
+
+  selectCarriers: HTMLSelectElement;
+
+  addProductBtnAction: HTMLButtonElement;
+
   searchTimeoutId: undefined | number | ReturnType<typeof setTimeout>;
 
   onItemClickedCallback: (product?: Record<string, any> | undefined) => void;
+
+  isMultishipmentIsEnabled: boolean;
+
+  private boundHandleShipment: (event: Event) => void;
+
+  private boundToggleSubmitButton: (event: Event) => void;
 
   constructor(input: JQuery) {
     this.activeSearchRequest = null;
@@ -56,7 +48,19 @@ export default class OrderProductAutocomplete {
     this.input = input;
     this.results = [];
     this.searchTimeoutId = undefined;
-    this.dropdownMenu = $(OrderViewPageMap.productSearchInputAutocompleteMenu);
+    this.selectShipment = document.querySelector<HTMLSelectElement>(OrderViewPageMap.selectAddShipment)!;
+    // eslint-disable-next-line max-len
+    this.isMultishipmentIsEnabled = document.querySelector<HTMLElement>(OrderViewPageMap.productsTable)?.dataset.multishipmentEnabled === '1';
+    this.selectCarriers = document.querySelector<HTMLSelectElement>(OrderViewPageMap.productSelectCarriers)!;
+    this.addProductBtnAction = document.querySelector<HTMLButtonElement>(OrderViewPageMap.productAddActionBtn)!;
+    this.boundHandleShipment = this.handleShipment.bind(this);
+    this.boundToggleSubmitButton = this.toggleSubmitButton.bind(this);
+
+    if (this.isMultishipmentIsEnabled) {
+      this.dropdownMenu = $(OrderViewPageMap.productSearchInputAutocompleteMenuOnModale);
+    } else {
+      this.dropdownMenu = $(OrderViewPageMap.productSearchInputAutocompleteMenu);
+    }
     /**
      * Permit to link to each value of dropdown a callback after item is clicked
      */
@@ -70,13 +74,17 @@ export default class OrderProductAutocomplete {
       this.updateResults(this.results);
     });
 
+    if (this.isMultishipmentIsEnabled) {
+      this.selectShipment.addEventListener('change', this.boundHandleShipment);
+      this.selectCarriers.addEventListener('change', this.boundToggleSubmitButton);
+    }
+
     this.input.on('keyup', (event: JQueryEventObject) => this.delaySearch(<HTMLInputElement>event.currentTarget));
     $(document).on('click', () => this.dropdownMenu.hide());
   }
 
   delaySearch(input: HTMLInputElement): void {
     clearTimeout(<number> this.searchTimeoutId);
-
     // Search only if the search phrase length is greater than 2 characters
     if (input.value.length < 2) {
       return;
@@ -139,7 +147,132 @@ export default class OrderProductAutocomplete {
 
     if (selectedProduct.length !== 0) {
       this.input.val(selectedProduct[0].name);
+
+      if (this.selectShipment) {
+        this.resetShipmentAndCarrierSelects();
+        const shipmentSelectorContainer = document.querySelector<HTMLElement>(OrderViewPageMap.selectAddShipmentContainer)!;
+        shipmentSelectorContainer.classList.toggle('d-none', selectedProduct[0].virtual === true);
+
+        if (selectedProduct[0].virtual === false) {
+          this.populateShipmentSelect(id);
+        }
+      }
       this.onItemClickedCallback(selectedProduct[0]);
     }
+  }
+
+  removeListener(): void {
+    if (this.isMultishipmentIsEnabled) {
+      this.selectShipment.removeEventListener('change', this.boundHandleShipment);
+      this.selectCarriers.removeEventListener('change', this.boundToggleSubmitButton);
+    }
+  }
+
+  private resetShipmentAndCarrierSelects(): void {
+    this.selectShipment.length = 1;
+    this.selectShipment.disabled = true;
+
+    this.selectCarriers.length = 1;
+    this.selectCarriers.disabled = true;
+
+    const carrierContainer = document.querySelector<HTMLElement>(OrderViewPageMap.productSelectCarriersContainer)!;
+    carrierContainer.classList.add('d-none');
+    carrierContainer.classList.remove('d-block');
+
+    this.addProductBtnAction.disabled = true;
+  }
+
+  handleShipment(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const container = document.querySelector<HTMLElement>(OrderViewPageMap.productSelectCarriersContainer)!;
+    const {value} = select;
+
+    container.classList.toggle('d-none', value !== '0');
+    container.classList.toggle('d-block', value === '0');
+    this.addProductBtnAction.disabled = !value || value === '0';
+
+    if (value === '0') {
+      const productId = document.querySelector<HTMLInputElement>(OrderViewPageMap.productAddIdInput)?.value;
+      this.fetchCarrierFromProduct(Number(productId));
+    }
+  };
+
+  toggleSubmitButton(event: Event): void {
+    const element = event.target as HTMLSelectElement;
+    this.addProductBtnAction.disabled = !element.value;
+  };
+
+  fetchCarrierFromProduct(productId: number): void {
+    this.selectCarriers.disabled = true;
+
+    fetch(this.router.generate('admin_orders_get_carriers_for_product', {productId}), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('An error occured while fetching shipments');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        this.selectCarriers.length = 1;
+
+        data.carriers.forEach(
+          ({id, name}: { id: string; name: string }) => {
+            this.selectCarriers.append(
+              new Option(name, id),
+            );
+          },
+        );
+
+        this.selectCarriers.disabled = false;
+        this.addProductBtnAction.disabled = true;
+      })
+      .catch((error) => {
+        console.error('An error occured while fetching carriers ', error);
+      });
+  }
+
+  populateShipmentSelect(productId: number): void {
+    const orderId = Number(this.input.data('order'));
+
+    if (!orderId || !productId) {
+      throw new Error('Missing orderId or productId, cant fetch shipment for product');
+    }
+
+    this.selectShipment.disabled = true;
+
+    fetch(this.router.generate('admin_orders_get_shipments_for_product', {orderId, productId}), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('An error occured while fetching shipments');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        this.selectShipment.length = 1;
+
+        data.shipments.forEach(
+          ({id, name}: { id: string; name: string }) => {
+            this.selectShipment.append(
+              new Option(name, id),
+            );
+          },
+        );
+        this.addProductBtnAction.disabled = true;
+        this.selectShipment.disabled = false;
+      })
+      .catch((error) => {
+        console.error('An error occured while fetching shipments ', error);
+        this.selectShipment.disabled = true;
+      });
   }
 }

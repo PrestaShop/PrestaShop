@@ -1,32 +1,12 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Entity\Repository;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use PDO;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
@@ -129,6 +109,14 @@ class StockMovementRepository extends StockManagementRepository
                   CONCAT(p.reference, " ", pa.reference)
               )                                           AS product_reference,
               pl.name                                     AS product_name,
+              p.ean13                                     AS product_ean13,
+              p.isbn                                      AS product_isbn,
+              p.upc                                       AS product_upc,
+              p.mpn                                       AS product_mpn,
+              pa.ean13                                    AS combination_ean13,
+              pa.isbn                                     AS combination_isbn,
+              pa.upc                                      AS combination_upc,
+              pa.mpn                                      AS combination_mpn,
               p.id_supplier                               AS supplier_id,
               COALESCE(s.name, "N/A")                     AS supplier_name,
               COALESCE(ic.id_image, 0)                    AS product_cover_id,
@@ -245,10 +233,10 @@ class StockMovementRepository extends StockManagementRepository
 
         $statement = $this->connection->prepare($query);
         $statement->bindValue('shop_id', $this->getContextualShopId(), PDO::PARAM_INT);
-        $statement->execute();
+        $result = $statement->executeQuery();
 
-        $rows = $statement->fetchAll();
-        $statement->closeCursor();
+        $rows = $result->fetchAllAssociative();
+        $result->free();
         $employees = $this->castNumericToInt($rows);
 
         return $employees;
@@ -289,10 +277,10 @@ class StockMovementRepository extends StockManagementRepository
         $statement = $this->connection->prepare($query);
         $statement->bindValue('language_id', $this->getCurrentLanguageId(), PDO::PARAM_INT);
         $statement->bindValue('shop_id', $this->getContextualShopId(), PDO::PARAM_INT);
-        $statement->execute();
+        $result = $statement->executeQuery();
 
-        $rows = $statement->fetchAll();
-        $statement->closeCursor();
+        $rows = $result->fetchAllAssociative();
+        $result->free();
 
         if ($grouped) {
             $types = $this->castIdsToArray($rows);

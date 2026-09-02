@@ -3,80 +3,50 @@ services:
     public: true
 
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\AddProductImageHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand
+    autowire: true
+    public: false
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\UpdateProductImageHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
-      - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand
+      - '@PrestaShop\PrestaShop\Adapter\Image\ProductImageFileValidator'
 
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\DeleteProductImageHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\SetProductImagesForAllShopHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
-
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\SetProductImagesForAllShopCommand
+    autowire: true
+    public: false
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImagesHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages
+    autowire: true
+    public: false
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetShopProductImagesHandler:
     autowire: true
     public: false
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImageHandler:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage
+    autowire: true
+    public: false
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator: ~
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository:
+    autowire: true
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-
-  PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository:
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator'
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater:
     arguments:
@@ -84,7 +54,7 @@ services:
       - '@PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface'
       - '@prestashop.core.grid.image.position_definition'
       - '@PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory:
     public: true
@@ -92,6 +62,12 @@ services:
       - '@=service("prestashop.adapter.shop.url.product_image_folder_provider").getUrl()'
       - !php/const _PS_TMP_IMG_DIR_
       - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
+
+  PrestaShop\PrestaShop\Core\Domain\Product\Image\Provider\ProductImageProviderInterface: '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImageProvider'
+
+  PrestaShop\PrestaShop\Adapter\Product\Image\ProductImageProvider:
+    public: false
+    autowire: true
 
   # This is an alternative service that also generates product image path, but it returns absolute file path not urls
   prestashop.adapter.product.image.product_image_filesystem_path_factory:
@@ -102,9 +78,8 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader:
+    autowire: true
+    public: false
     arguments:
-      - '@prestashop.adapter.product.image.product_image_filesystem_path_factory'
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-      - '@PrestaShop\PrestaShop\Adapter\Image\ImageGenerator'
-      - '@PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
+      $productImagePathFactory: '@prestashop.adapter.product.image.product_image_filesystem_path_factory'
+      $contextShopId: "@=service('prestashop.adapter.legacy.context').getContext().shop.id"

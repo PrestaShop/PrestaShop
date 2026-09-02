@@ -1,0 +1,37 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shipment\QueryHandler\GetOrderShipmentsHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\QueryHandler\GetShipmentProductsHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler\SwitchShipmentCarrierHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler\MergeProductsToShipmentHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\QueryHandler\ListAvailableShipmentsHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\QueryHandler\GetShipmentForViewingHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\QueryHandler\ListAvailableShipmentsForProductHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler\SplitShipmentHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler\DeleteProductFromShipmentHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler\EditShipmentHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\QueryHandler\GetShipmentForEditingHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler\DeleteShipmentProductFromOrderHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler\AddProductToShipmentHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler\CreateShipmentHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\QueryHandler\GetShipmentsForOrderDetailHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler\FulfillShipmentCommandHandler:

@@ -1,32 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
+use SplFileInfo;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -81,7 +62,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
         $finder = new Finder();
         $finder->files()->in($outputFolder);
-        //Core files + modules files, each one in html and txt type
+        // Core files + modules files, each one in html and txt type
         $totalLayoutsNb = ($themeInfos['coreLayoutsNb'] + $themeInfos['modulesLayoutsNb']) * 2;
         $this->assertEquals($totalLayoutsNb, $finder->count());
 
@@ -123,7 +104,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
         $finder = new Finder();
         $finder->files()->in($outputFolder);
-        //Core files + modules files, each one in html and txt type
+        // Core files + modules files, each one in html and txt type
         $totalLayoutsNb = ($themeInfos['coreLayoutsNb'] + $themeInfos['modulesLayoutsNb']) * 2;
         $this->assertEquals($totalLayoutsNb, $finder->count());
 
@@ -172,7 +153,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
         $finder = new Finder();
         $finder->in($coreFolder);
-        /** @var \SplFileInfo $coreFile */
+        /** @var SplFileInfo $coreFile */
         foreach ($finder as $coreFile) {
             $themeInfos['coreLayouts'][] = $coreFile->getBasename('.html.twig');
             ++$themeInfos['coreLayoutsNb'];
@@ -180,12 +161,12 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
         $finder = new Finder();
         $finder->in($modulesFolder)->depth(0);
-        /** @var \SplFileInfo $moduleFolder */
+        /** @var SplFileInfo $moduleFolder */
         foreach ($finder as $moduleFolder) {
             $themeInfos['modulesLayouts'][$moduleFolder->getBasename()] = [];
             $moduleFinder = new Finder();
             $moduleFinder->in($moduleFolder->getRealPath());
-            /** @var \SplFileInfo $moduleFile */
+            /** @var SplFileInfo $moduleFile */
             foreach ($moduleFinder as $moduleFile) {
                 $themeInfos['modulesLayouts'][$moduleFolder->getBasename()][] = $moduleFile->getBasename('.html.twig');
                 ++$themeInfos['modulesLayoutsNb'];
@@ -206,10 +187,5 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $this->fileSystem->mkdir($outputFolder);
 
         return $outputFolder;
-    }
-
-    protected function tearDown(): void
-    {
-        self::$kernel->shutdown();
     }
 }

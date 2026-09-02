@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Adapter\Hook;
@@ -30,7 +10,7 @@ use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class HookDispatcherTest extends KernelTestCase
 {
@@ -51,9 +31,9 @@ class HookDispatcherTest extends KernelTestCase
     public function testDispatch(): void
     {
         $hookDispatcher = $this->getHookDispatcher();
-        $this->assertInstanceOf(HookEvent::class, $hookDispatcher->dispatch('unknown_hook_name'));
-        $this->assertInstanceOf(HookEvent::class, $hookDispatcher->dispatch('unknown_hook_name', new HookEvent()));
-        $this->assertInstanceOf(HookEvent::class, $hookDispatcher->dispatch('unknown_hook_name', new RenderingHookEvent()));
+        $this->assertInstanceOf(HookEvent::class, $hookDispatcher->dispatch(new HookEvent()));
+        $this->assertInstanceOf(HookEvent::class, $hookDispatcher->dispatch(new HookEvent(), 'unknown_hook_name'));
+        $this->assertInstanceOf(HookEvent::class, $hookDispatcher->dispatch(new RenderingHookEvent(), 'unknown_hook_name'));
     }
 
     /**
@@ -64,9 +44,9 @@ class HookDispatcherTest extends KernelTestCase
         $hookDispatcher = $this->getHookDispatcher();
 
         $hookDispatcher->addListener('test_test', [$this, 'listenerCallback']);
-        $hookDispatcher->dispatch('unknown_hook_name');
+        $hookDispatcher->dispatch(new HookEvent(), 'unknown_hook_name');
         $this->assertFalse($this->testedListenerCallbackCalled);
-        $hookDispatcher->dispatch('test_test');
+        $hookDispatcher->dispatch(new HookEvent(), 'test_test');
         $this->assertTrue($this->testedListenerCallbackCalled);
     }
 
@@ -80,7 +60,7 @@ class HookDispatcherTest extends KernelTestCase
         $hookDispatcher->addListener('test_test_2', [$this, 'listenerCallback2']);
         $hookDispatcher->addListener('test_test_2', [$this, 'listenerCallback2b']);
         /** @var RenderingHookEvent $event */
-        $event = $hookDispatcher->dispatch('test_test_2', new RenderingHookEvent());
+        $event = $hookDispatcher->dispatch(new RenderingHookEvent(), 'test_test_2');
 
         $subset = [
             'listenerCallback2' => ['result_test_2'],
@@ -90,7 +70,7 @@ class HookDispatcherTest extends KernelTestCase
 
         foreach ($subset as $key => $value) {
             $this->assertArrayHasKey($key, $array);
-            $this->assertEquals($value, $subset[$key]);
+            $this->assertEquals($value, $array[$key]);
         }
     }
 

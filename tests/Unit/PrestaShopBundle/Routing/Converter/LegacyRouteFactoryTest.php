@@ -1,9 +1,13 @@
 <?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 
 namespace Tests\Unit\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShopBundle\Routing\Converter\LegacyRoute;
 use PrestaShopBundle\Routing\Converter\LegacyRouteFactory;
 use Symfony\Component\Routing\Route;
@@ -17,10 +21,10 @@ class LegacyRouteFactoryTest extends TestCase
     public function testRouteEnabledWithEnabledFeatureFlags(Route $route): void
     {
         $factory = new LegacyRouteFactory(
-            $featureFlagRepository = $this->createMock(FeatureFlagRepository::class)
+            $featureFlagManager = $this->createMock(FeatureFlagManager::class)
         );
 
-        $featureFlagRepository
+        $featureFlagManager
             ->method('isEnabled')
             ->willReturn(true)
         ;
@@ -52,11 +56,11 @@ class LegacyRouteFactoryTest extends TestCase
         Route $route
     ): void {
         $factory = new LegacyRouteFactory(
-            $featureFlagRepo = $this->createMock(FeatureFlagRepository::class)
+            $featureFlagManager = $this->createMock(FeatureFlagManager::class)
         );
 
         // assert no calls to repository
-        $featureFlagRepo
+        $featureFlagManager
             ->expects(self::never())
             ->method('isEnabled')
         ;

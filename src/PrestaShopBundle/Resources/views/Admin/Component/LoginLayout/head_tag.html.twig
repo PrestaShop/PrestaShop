@@ -1,0 +1,41 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="robots" content="NOFOLLOW, NOINDEX">
+
+<link rel="icon" type="image/x-icon" href="{{ this.imgDir }}favicon.ico" />
+<link rel="apple-touch-icon" href="{{ this.imgDir }}app_icon.png" />
+<title>{{ this.shopName }}</title>
+
+{{ include('@AdminNewTheme/public/preload.html.twig') }}
+
+{% for css_uri, css_media in this.cssFiles %}
+  <link href="{{ css_uri }}" rel="stylesheet" type="text/css" media="{{ css_media }}"/>
+{% endfor %}
+
+{% if this.jsDef %}
+  <script type="text/javascript">
+    {% for k, def in this.jsDef %}
+    var {{ k }} = {{ def|json_encode|raw_purified }};
+    {% endfor %}
+  </script>
+{% endif %}
+
+{% block headJavascripts %}{% endblock %}
+
+{% for js_uri in this.jsFiles %}
+  <script type="text/javascript" src="{{ js_uri }}"></script>
+{% endfor %}
+
+{% if ps.isRtlLanguage %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme_rtl.css') }}" media="all">
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/rtl.css') }}" media="all">
+{% else %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme.css') }}" media="all">
+{% endif %}
+<link rel="stylesheet" href="{{ asset('themes/new-theme/public/login.css') }}" media="all">
+<script src="{{ asset('themes/new-theme/public/login_form.bundle.js') }}"></script>

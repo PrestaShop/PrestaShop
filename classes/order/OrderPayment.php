@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 class OrderPaymentCore extends ObjectModel
 {
@@ -52,10 +32,10 @@ class OrderPaymentCore extends ObjectModel
         'table' => 'order_payment',
         'primary' => 'id_order_payment',
         'fields' => [
-            'order_reference' => ['type' => self::TYPE_STRING, 'size' => 9],
+            'order_reference' => ['type' => self::TYPE_STRING, 'size' => 255],
             'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'amount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
-            'payment_method' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'payment_method' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
             'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'transaction_id' => ['type' => self::TYPE_STRING, 'size' => 254],
             'card_number' => ['type' => self::TYPE_STRING, 'size' => 254],
@@ -84,8 +64,6 @@ class OrderPaymentCore extends ObjectModel
      * @param string $order_reference
      *
      * @return array
-     *
-     * @since 1.5.0.13
      */
     public static function getByOrderReference($order_reference)
     {
@@ -128,8 +106,6 @@ class OrderPaymentCore extends ObjectModel
      * Return order invoice object linked to the payment.
      *
      * @param int $id_order Order Id
-     *
-     * @since 1.5.0.13
      */
     public function getOrderInvoice($id_order)
     {

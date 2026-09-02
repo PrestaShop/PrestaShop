@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 class GetFileControllerCore extends FrontController
 {
@@ -160,13 +140,18 @@ class GetFileControllerCore extends FrontController
     /** @var bool */
     protected $display_footer = false;
 
-    public function init()
+    /**
+     * Initialize the controller.
+     *
+     * @see FrontController::init()
+     */
+    public function init(): void
     {
         if (isset($this->context->employee) && $this->context->employee->isLoggedBack() && Tools::getValue('file')) {
             // Admin can directly access to file
             $filename = Tools::getValue('file');
             if (!Validate::isSha1($filename)) {
-                die(Tools::displayError());
+                throw new PrestaShopException('Filename is not a valid SHA1 checksum.');
             }
             $file = _PS_DOWNLOAD_DIR_ . (string) preg_replace('/\.{2,}/', '.', $filename);
             $filename = ProductDownload::getFilenameFromFilename(Tools::getValue('file'));
@@ -196,7 +181,7 @@ class GetFileControllerCore extends FrontController
                     if (!Validate::isLoadedObject($order)) {
                         $this->displayCustomError('Invalid key.');
                     }
-                    if ($order->secure_key != Tools::getValue('secure_key')) {
+                    if (!hash_equals((string) $order->secure_key, (string) Tools::getValue('secure_key'))) {
                         $this->displayCustomError('Invalid key.');
                     }
                 } else {
@@ -239,8 +224,8 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This file no longer exists.');
             }
 
-            if (isset($info['product_quantity_refunded'], $info['product_quantity_return']) &&
-                ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0)) {
+            if (isset($info['product_quantity_refunded'], $info['product_quantity_return'])
+                && ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0)) {
                 $this->displayCustomError('This product has been refunded.');
             }
 
@@ -251,9 +236,11 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('The product deadline is in the past.');
             }
 
-            $customer_deadline = (int) strtotime($info['date_expiration']);
-            if ($now > $customer_deadline && $info['date_expiration'] != '0000-00-00 00:00:00') {
-                $this->displayCustomError('Expiration date has passed, you cannot download this product');
+            if ($info['date_expiration'] !== '0000-00-00 00:00:00') {
+                $customer_deadline = (int) strtotime($info['date_expiration']);
+                if ($now > $customer_deadline) {
+                    $this->displayCustomError('Expiration date has passed, you cannot download this product');
+                }
             }
 
             if ($info['download_nb'] >= $info['nb_downloadable'] && $info['nb_downloadable']) {
@@ -283,7 +270,7 @@ class GetFileControllerCore extends FrontController
         if ($forceDownload) {
             header('Content-Disposition: attachment; filename="' . $filename . '"');
         }
-        //prevents max execution timeout, when reading large files
+        // prevents max execution timeout, when reading large files
         @set_time_limit(0);
         $fp = fopen($file, 'rb');
 
@@ -331,7 +318,7 @@ class GetFileControllerCore extends FrontController
      *
      * @param string $msg
      */
-    protected function displayCustomError($msg)
+    protected function displayCustomError(string $msg)
     {
         $translations = [
             'Invalid key.' => $this->trans('Invalid key.', [], 'Shop.Notifications.Error'),
@@ -351,6 +338,6 @@ class GetFileControllerCore extends FrontController
         //]]>
         </script>
         <?php
-        exit();
+        exit;
     }
 }

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\SqlManager\Configuration;
@@ -42,15 +22,9 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
     private const CUSTOM_DEFINES_FILE = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
     private const PATTERN = '/(define\(\'_PS_ALLOW_MULTI_STATEMENTS_QUERIES_\', )([a-zA-Z]+)(\);)/Ui';
 
-    /**
-     * @var CommandBusInterface
-     */
-    private $commandBus;
+    private CommandBusInterface $commandBus;
 
-    /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
+    private CommandBusInterface $queryBus;
 
     /**
      * @param CommandBusInterface $commandBus
@@ -67,13 +41,14 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration()
+    public function getConfiguration(): array
     {
         /** @var SqlRequestSettings $sqlRequestSettings */
         $sqlRequestSettings = $this->queryBus->handle(new GetSqlRequestSettings());
 
         return [
             'default_file_encoding' => $sqlRequestSettings->getFileEncoding(),
+            'default_file_separator' => $sqlRequestSettings->getFileSeparator(),
             'enable_multi_statements' => $this->getMultiStatementsStatus(),
         ];
     }
@@ -81,14 +56,15 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $configuration)
+    public function updateConfiguration(array $configuration): array
     {
         $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
             try {
                 $command = new SaveSqlRequestSettingsCommand(
-                    $configuration['default_file_encoding']
+                    $configuration['default_file_encoding'],
+                    $configuration['default_file_separator']
                 );
 
                 $this->commandBus->handle($command);
@@ -113,9 +89,9 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function validateConfiguration(array $configuration)
+    public function validateConfiguration(array $configuration): bool
     {
-        return isset($configuration['default_file_encoding']);
+        return isset($configuration['default_file_encoding'], $configuration['default_file_separator']);
     }
 
     private function getMultiStatementsStatus(): bool
@@ -147,7 +123,7 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
         $status = file_put_contents($file, preg_replace(self::PATTERN, $replacement, $content));
 
         if (function_exists('opcache_invalidate')) {
-            opcache_invalidate($file);
+            @opcache_invalidate($file);
         }
 
         return $status !== false;
@@ -160,7 +136,7 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
      *
      * @return array Array of errors
      */
-    private function handleUpdateException(SqlRequestSettingsConstraintException $e)
+    private function handleUpdateException(SqlRequestSettingsConstraintException $e): array
     {
         $code = $e->getCode();
 
@@ -168,6 +144,11 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
             SqlRequestSettingsConstraintException::INVALID_FILE_ENCODING => [
                 'key' => 'The %s field is invalid.',
                 'parameters' => ['default_file_encoding'],
+                'domain' => 'Admin.Notifications.Error',
+            ],
+            SqlRequestSettingsConstraintException::INVALID_FILE_SEPARATOR => [
+                'key' => 'The %s field is invalid.',
+                'parameters' => ['default_file_separator'],
                 'domain' => 'Admin.Notifications.Error',
             ],
             SqlRequestSettingsConstraintException::NOT_SUPPORTED_FILE_ENCODING => [

@@ -17,7 +17,8 @@ Feature: Order from Back Office (BO)
     And customer "testCustomer" has address in "US" country
     And a carrier "default_carrier" with name "My carrier" exists
     And a carrier "price_carrier" with name "My cheap carrier" exists
-    And I enable carrier "price_carrier"
+    And I edit carrier "price_carrier" with specified properties:
+      | active | true |
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Changing Product" with a price of 10.0 and 100 items in stock
     And the available stock for product "Test Changing Product" should be 100

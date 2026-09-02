@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -33,6 +13,8 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use PrestaShopException;
+use ReturnTypeWillChange;
+use Throwable;
 use Traversable;
 
 /**
@@ -42,6 +24,8 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
 {
     /** @var ModuleInterface[] */
     private $modules = [];
+
+    private $errors = [];
 
     public function __construct(array $modules = [])
     {
@@ -85,7 +69,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return ModuleInterface|null
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->modules[$offset] ?? null;
@@ -111,5 +95,20 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     public function filter(callable $callable): ModuleCollection
     {
         return static::createFrom(array_filter($this->modules, $callable));
+    }
+
+    public function add(ModuleInterface $module): void
+    {
+        $this->modules[] = $module;
+    }
+
+    public function addError(Throwable $error): void
+    {
+        $this->errors[] = $error;
+    }
+
+    public function getErrors(): array
+    {
+        return $this->errors;
     }
 }

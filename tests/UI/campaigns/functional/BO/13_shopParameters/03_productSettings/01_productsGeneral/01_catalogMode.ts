@@ -1,23 +1,18 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-// Import FO pages
-import homePage from '@pages/FO/home';
-import productPage from '@pages/FO/product';
-
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boProductSettingsPage,
+  type BrowserContext,
+  dataProducts,
+  type Page,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsGeneral_catalogMode';
 
@@ -34,30 +29,36 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Shop parameters > Product Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.productSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.productSettingsLink,
     );
-    await productSettingsPage.closeSfToolBar(page);
+    await boProductSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+    const pageTitle = await boProductSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -74,124 +75,125 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
         baseContext,
       );
 
-      const result = await productSettingsPage.changeCatalogModeStatus(page, test.args.enable);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.changeCatalogModeStatus(page, test.args.enable);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
 
     if (test.args.enable) {
-      const testShowPrices = [
+      [
         {
-          args:
-            {
-              action: 'disable', enable: false, isPriceExist: false, isAddToCartExist: false,
-            },
+          action: 'disable', enable: false, isPriceExist: false, isAddToCartExist: false,
         },
         {
-          args:
-            {
-              action: 'enable', enable: true, isPriceExist: true, isAddToCartExist: false,
-            },
+          action: 'enable', enable: true, isPriceExist: true, isAddToCartExist: false,
         },
-      ];
-
-      testShowPrices.forEach((showPrices, index) => {
-        it(`should ${showPrices.args.action} show prices`, async function () {
+      ].forEach((showPrices: {
+        action: string,
+        enable: boolean,
+        isPriceExist: boolean,
+        isAddToCartExist: boolean,
+      }, index: number) => {
+        it(`should ${showPrices.action} show prices`, async function () {
           await testContext.addContextItem(
             this,
             'testIdentifier',
-            `${showPrices.args.action}ShowPrices`,
+            `${showPrices.action}ShowPrices`,
             baseContext,
           );
 
-          const result = await productSettingsPage.setShowPricesStatus(page, showPrices.args.enable);
-          await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+          const result = await boProductSettingsPage.setShowPricesStatus(page, showPrices.enable);
+          expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
         });
 
-        it('should check product prices in the home page', async function () {
+        it('should view my shop', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
+
+          page = await boProductSettingsPage.viewMyShop(page);
+          await foHummingbirdHomePage.changeLanguage(page, 'en');
+
+          const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+          expect(isHomePage).to.eq(true);
+        });
+
+        it('should check the product price of the first product in the home page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkPricesInHomePage${index}`, baseContext);
 
-          page = await productSettingsPage.viewMyShop(page);
-          await homePage.changeLanguage(page, 'en');
-
-          const isPriceVisible = await homePage.isPriceVisible(page, 1);
-          await expect(isPriceVisible).to.equal(showPrices.args.enable);
+          const isPriceVisible = await foHummingbirdHomePage.isPriceVisible(page, 1);
+          expect(isPriceVisible).to.equal(showPrices.enable);
         });
 
         it('should go to the first product page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
 
-          await homePage.goToProductPage(page, 1);
+          await foHummingbirdHomePage.goToProductPage(page, 1);
 
-          const pageTitle = await productPage.getPageTitle(page);
-          await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+          const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
+          expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
         });
 
         it('should check the existence of product price and add to cart button', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkPrice&AddToCartButton${index}`, baseContext);
 
-          let isVisible = await productPage.isPriceDisplayed(page);
-          await expect(isVisible).to.equal(showPrices.args.isPriceExist);
+          let isVisible = await foHummingbirdProductPage.isPriceDisplayed(page);
+          expect(isVisible).to.equal(showPrices.isPriceExist);
 
-          isVisible = await productPage.isAddToCartButtonDisplayed(page);
-          await expect(isVisible).to.equal(showPrices.args.isAddToCartExist);
+          isVisible = await foHummingbirdProductPage.isAddToCartButtonDisplayed(page);
+          expect(isVisible).to.equal(showPrices.isAddToCartExist);
         });
 
         it('should close the page and go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
-          page = await productPage.closePage(browserContext, page, 0) as Page;
+          page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
-          const pageTitle = await productSettingsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+          const pageTitle = await boProductSettingsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
         });
       });
     } else {
-      it('should check product prices in the home page', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'checkPricesInHomePageVisible',
-          baseContext,
-        );
+      it('should view my shop', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
-        page = await productSettingsPage.viewMyShop(page);
-        await homePage.changeLanguage(page, 'en');
+        page = await boProductSettingsPage.viewMyShop(page);
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isPriceVisible = await homePage.isPriceVisible(page, 1);
-        await expect(isPriceVisible).to.be.true;
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+        expect(isHomePage).to.eq(true);
+      });
+
+      it('should check that the product price is visible in the home page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkPricesInHomePageVisible', baseContext);
+
+        const isPriceVisible = await foHummingbirdHomePage.isPriceVisible(page, 1);
+        expect(isPriceVisible).to.eq(true);
       });
 
       it('should go to the first product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage3', baseContext);
 
-        await homePage.goToProductPage(page, 1);
+        await foHummingbirdHomePage.goToProductPage(page, 1);
 
-        const pageTitle = await productPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
+        const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
+        expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
       });
 
       it('should check the existence of product price and add to cart button', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'checkPrice&AddToCartButtonVisible',
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', 'checkPrice&AddToCartButtonVisible', baseContext);
 
-        let isVisible = await productPage.isPriceDisplayed(page);
-        await expect(isVisible).to.be.true;
+        let isVisible = await foHummingbirdProductPage.isPriceDisplayed(page);
+        expect(isVisible).to.eq(true);
 
-        isVisible = await productPage.isAddToCartButtonDisplayed(page);
-        await expect(isVisible).to.be.true;
+        isVisible = await foHummingbirdProductPage.isAddToCartButtonDisplayed(page);
+        expect(isVisible).to.eq(true);
       });
 
       it('should close the page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-        page = await productPage.closePage(browserContext, page, 0) as Page;
+        page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        const pageTitle = await boProductSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
       });
     }
   });

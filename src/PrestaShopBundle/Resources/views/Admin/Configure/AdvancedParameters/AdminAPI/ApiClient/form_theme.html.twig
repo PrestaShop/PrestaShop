@@ -1,0 +1,27 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block accordion_widget %}
+  {% if empty_scopes is not defined or empty_scopes == false %}
+    <div class="scopes-toggle-all-container mb-2">
+      <button type="button" class="btn btn-sm btn-primary mr-2 js-toggle-all-scopes" data-action="enable">
+        <i class="material-icons">done_all</i>
+        {{ 'Enable all'|trans({}, 'Admin.Advparameters.Feature') }}
+      </button>
+      <button type="button" class="btn btn-sm btn-outline-secondary js-toggle-all-scopes" data-action="disable">
+        <i class="material-icons">remove_done</i>
+        {{ 'Disable all'|trans({}, 'Admin.Advparameters.Feature') }}
+      </button>
+    </div>
+  {% endif %}
+
+  {{ parent() }}
+
+  {% if empty_scopes == true %}
+    <p class="resource-scopes-not-available">{{ 'No scopes available'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+  {% endif %}
+{% endblock %}

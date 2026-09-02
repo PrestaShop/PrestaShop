@@ -1,87 +1,124 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
-use Context;
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkDeleteCountriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkToggleCountriesStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkUpdateCountryZoneCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\ToggleCountryStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\BulkCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotToggleCountryStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DeleteCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DuplicateCountryIsoCodeException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface as ConfigurationFormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Form\Admin\Improve\International\Locations\ChangeCountriesZoneType;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * CountryController is responsible for handling "Improve > International > Locations > Countries"
  */
-class CountryController extends FrameworkBundleAdminController
+class CountryController extends PrestaShopAdminController
 {
     /**
      * Show countries listing page
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param CountryFilters $filters
      *
      * @return Response
      */
-    public function indexAction(Request $request, CountryFilters $filters): Response
-    {
-        $countryGridFactory = $this->get('prestashop.core.grid.factory.country');
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function indexAction(
+        Request $request,
+        CountryFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.country')]
+        GridFactoryInterface $countryGridFactory,
+        #[Autowire(service: 'prestashop.admin.country.options.form_handler')]
+        ConfigurationFormHandlerInterface $countryOptionsFormHandler
+    ): Response {
         $countryGrid = $countryGridFactory->getGrid($filters);
+        $countryOptionsForm = $countryOptionsFormHandler->getForm();
+        $changeCountriesZoneForm = $this->createForm(ChangeCountriesZoneType::class);
 
         return $this->render('@PrestaShop/Admin/Improve/International/Country/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'countryGrid' => $this->presentGrid($countryGrid),
+            'countryOptionsForm' => $countryOptionsForm->createView(),
+            'changeCountriesZoneForm' => $changeCountriesZoneForm->createView(),
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getCountryToolbarButtons(),
         ]);
     }
 
     /**
+     * Persists the "Country options" block configuration.
+     */
+    #[DemoRestricted(redirectRoute: 'admin_countries_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index', message: 'You do not have permission to edit this.')]
+    public function saveOptionsAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.country.options.form_handler')]
+        ConfigurationFormHandlerInterface $countryOptionsFormHandler
+    ): Response {
+        $form = $countryOptionsFormHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $saveErrors = $countryOptionsFormHandler->save($form->getData());
+
+            if (0 === count($saveErrors)) {
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_countries_index');
+            }
+
+            $this->addFlashErrors($saveErrors);
+        }
+
+        return $this->redirectToRoute('admin_countries_index');
+    }
+
+    /**
      * Show "Add new" country form and handles its submit.
-     *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_countries_index",
-     *     message="You need permission to create new country."
-     * )
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function createAction(Request $request): Response
-    {
-        $countryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.country_form_builder');
-        $countryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.country_form_handler');
-
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index', message: 'You need permission to create new country.')]
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.country_form_builder')]
+        FormBuilderInterface $countryFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.country_form_handler')]
+        FormHandlerInterface $countryFormHandler
+    ): Response {
         $countryForm = $countryFormBuilder->getForm();
         $countryForm->handleRequest($request);
 
@@ -89,7 +126,7 @@ class CountryController extends FrameworkBundleAdminController
             $handleResult = $countryFormHandler->handle($countryForm);
 
             if (null !== $handleResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_countries_index');
             }
@@ -101,23 +138,179 @@ class CountryController extends FrameworkBundleAdminController
             'countryForm' => $countryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New country', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
-    public function editAction(int $countryId, Request $request): Response
+    /**
+     * Displays country edit form and handles its submit.
+     *
+     * @param int $countryId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index', message: 'You need permission to edit this.')]
+    public function editAction(
+        int $countryId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.country_form_builder')]
+        FormBuilderInterface $countryFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.country_form_handler')]
+        FormHandlerInterface $countryFormHandler
+    ): Response {
+        try {
+            /** @var CountryForEditing $editableCountry */
+            $editableCountry = $this->dispatchQuery(new GetCountryForEditing($countryId));
+
+            $countryForm = $countryFormBuilder->getFormFor($countryId);
+            $countryForm->handleRequest($request);
+            $result = $countryFormHandler->handleFor($countryId, $countryForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_countries_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Country/edit.html.twig', [
+            'enableSidebar' => true,
+            'countryForm' => $countryForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'countryName' => $editableCountry->getLocalizedNames()[$this->getLanguageContext()->getId()],
+        ]);
+    }
+
+    /**
+     * Deletes country.
+     *
+     * @param int $countryId
+     *
+     * @return RedirectResponse
+     */
+    #[DemoRestricted(redirectRoute: 'admin_countries_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index', message: 'You need permission to delete this.')]
+    public function deleteAction(int $countryId): RedirectResponse
     {
-        //todo: complete edit action migration to symfony
-        return $this->redirect(
-            Context::getContext()->link->getAdminLink(
-                'AdminCountries',
-                true,
-                [],
-                [
-                    'updatecountry' => '',
-                    'id_country' => $countryId,
-                ]
-            )
-        );
+        try {
+            $this->dispatchCommand(new DeleteCountryCommand($countryId));
+            $this->addFlash('success', $this->trans('Successful deletion.', [], 'Admin.Notifications.Success'));
+        } catch (CountryException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_countries_index');
+        }
+
+        return $this->redirectToRoute('admin_countries_index');
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_countries_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index')]
+    public function toggleStatusAction(int $countryId): RedirectResponse
+    {
+        try {
+            $this->dispatchCommand(new ToggleCountryStatusCommand($countryId));
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
+            );
+        } catch (CountryException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_countries_index');
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_countries_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index')]
+    public function bulkEnableAction(Request $request): RedirectResponse
+    {
+        $countryIds = $this->getBulkCountriesFromRequest($request);
+
+        try {
+            $this->dispatchCommand(new BulkToggleCountriesStatusCommand(true, $countryIds));
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
+            );
+        } catch (CountryException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_countries_index');
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_countries_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index')]
+    public function bulkDisableAction(Request $request): RedirectResponse
+    {
+        $countryIds = $this->getBulkCountriesFromRequest($request);
+
+        try {
+            $this->dispatchCommand(new BulkToggleCountriesStatusCommand(false, $countryIds));
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
+            );
+        } catch (CountryException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_countries_index');
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_countries_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index')]
+    public function bulkUpdateZoneAction(Request $request): RedirectResponse
+    {
+        $changeCountriesZoneForm = $this->createForm(ChangeCountriesZoneType::class);
+        $changeCountriesZoneForm->handleRequest($request);
+
+        $data = $changeCountriesZoneForm->getData();
+
+        try {
+            $this->dispatchCommand(
+                new BulkUpdateCountryZoneCommand($data['country_ids'], (int) $data['new_zone_id'])
+            );
+
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
+        } catch (CountryException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_countries_index');
+    }
+
+    /**
+     * Deletes countries in bulk action
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[DemoRestricted(redirectRoute: 'admin_countries_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index')]
+    public function bulkDeleteAction(Request $request): RedirectResponse
+    {
+        $countryIds = $this->getBulkCountriesFromRequest($request);
+
+        try {
+            $this->dispatchCommand(new BulkDeleteCountriesCommand($countryIds));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
+            );
+        } catch (CountryException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_countries_index');
     }
 
     /**
@@ -128,7 +321,7 @@ class CountryController extends FrameworkBundleAdminController
         return [
             'add' => [
                 'href' => $this->generateUrl('admin_countries_create'),
-                'desc' => $this->trans('Add new country', 'Admin.International.Feature'),
+                'desc' => $this->trans('Add new country', [], 'Admin.International.Feature'),
                 'icon' => 'add_circle_outline',
             ],
         ];
@@ -143,7 +336,84 @@ class CountryController extends FrameworkBundleAdminController
      */
     protected function getErrorMessages(Exception $e): array
     {
-        //todo add error messages
-        return [];
+        return [
+            BulkCountryException::class => [
+                BulkCountryException::FAILED_BULK_UPDATE_STATUS => $this->trans(
+                    'An error occurred when updating the status for one or several countries.',
+                    [],
+                    'Admin.International.Feature'
+                ),
+                BulkCountryException::FAILED_BULK_UPDATE_ZONE => $this->trans(
+                    'An error occurred when updating the zone for one or several countries.',
+                    [],
+                    'Admin.International.Feature'
+                ),
+                BulkCountryException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting one or several countries.',
+                    [],
+                    'Admin.International.Feature'
+                ),
+            ],
+            CountryException::class => $this->trans(
+                'An unexpected error occurred.',
+                [],
+                'Admin.Notifications.Error'
+            ),
+            CountryNotFoundException::class => $this->trans(
+                'This country does not exist.',
+                [],
+                'Admin.International.Feature'
+            ),
+            CannotEditCountryException::class => [
+                CannotEditCountryException::FAILED_TO_UPDATE_COUNTRY => $this->trans(
+                    'Failed to update country.',
+                    [],
+                    'Admin.International.Feature'
+                ),
+                CannotEditCountryException::UNKNOWN_EXCEPTION => $this->trans(
+                    'Failed to update country. An unexpected error occurred.',
+                    [],
+                    'Admin.International.Feature'
+                ),
+            ],
+            CannotToggleCountryStatusException::class => $this->trans(
+                'Failed to update country status.',
+                [],
+                'Admin.International.Feature'
+            ),
+            CountryConstraintException::class => $this->trans(
+                'Country contains invalid field values.',
+                [],
+                'Admin.International.Feature'
+            ),
+            DuplicateCountryIsoCodeException::class => $this->trans(
+                'This ISO code already exists. You cannot create two countries with the same ISO code.',
+                [],
+                'Admin.International.Notification'
+            ),
+            DeleteCountryException::class => $this->trans(
+                'Country cannot be deleted.',
+                [],
+                'Admin.International.Feature'
+            ),
+            ZoneNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found).',
+                [],
+                'Admin.Notifications.Error'
+            ),
+            ZoneException::class => $this->trans(
+                'The object cannot be loaded (the identifier is missing or invalid)',
+                [],
+                'Admin.Notifications.Error'
+            ),
+        ];
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getBulkCountriesFromRequest(Request $request): array
+    {
+        return array_map('intval', $request->request->all('country_bulk'));
     }
 }

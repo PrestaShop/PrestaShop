@@ -1,44 +1,42 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-import productsPage from '@pages/BO/catalog/products';
-import addProductPage from '@pages/BO/catalog/products/add';
-// Import FO pages
-import foProductPage from '@pages/FO/product';
-import cartPage from '@pages/FO/cart';
-
-// Import data
-import ProductData from '@data/faker/product';
-import {ProductAttribute} from '@data/types/product';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boLoginPage,
+  boProductsPage,
+  boProductsCreatePage,
+  boProductsCreateTabCombinationsPage,
+  boProductsCreateTabPricingPage,
+  boProductSettingsPage,
+  type BrowserContext,
+  FakerProduct,
+  foHummingbirdCartPage,
+  foHummingbirdProductPage,
+  type Page,
+  type ProductAttribute,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsGeneral_quantityDiscountsBasedOn';
 
-/*
-Choose quantity discounts based on 'Products'
-Create product with combinations and add a specific price(discount 50% for the first combination)
-Add the combinations to the cart and check the price ATI
-Choose quantity discounts based on 'Combinations'
-Check the cart price ATI
+/**
+ * Choose quantity discounts based on 'Products'
+ * Create product with combinations and add a specific price(discount 50% for the first combination)
+ * Add the combinations to the cart and check the price ATI
+ * Choose quantity discounts based on 'Combinations'
+ * Check the cart price ATI
  */
 describe('BO - Shop Parameters - Product Settings : Choose quantity discount based on', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfProducts: number = 0;
 
-  const productWithCombinations: ProductData = new ProductData({
-    type: 'Standard product',
+  const productWithCombinations: FakerProduct = new FakerProduct({
+    type: 'combinations',
     price: 20,
+    tax: 0,
+    taxRule: 'No tax',
     attributes: [
       {
         name: 'color',
@@ -51,7 +49,7 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
     ],
     quantity: 10,
     specificPrice: {
-      attributes: 'Size - S, Color - White',
+      attributes: 2,
       discount: 50,
       startingAt: 2,
       reductionType: '%',
@@ -80,155 +78,215 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
   const firstCartTotalATI: number = 30;
   const secondCartTotalATI: number = 40;
 
-  // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  describe('Choose quantity discount based on', async () => {
+    it('should login in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
 
-  it('should go to \'Shop parameters > Product Settings\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage1', baseContext);
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
 
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.productSettingsLink,
-    );
-    await productSettingsPage.closeSfToolBar(page);
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
+    });
 
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
-  });
+    it('should go to \'Shop parameters > Product Settings\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage1', baseContext);
 
-  it('should choose quantity discounts based on \'Products\'', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'chooseQuantityDiscountsBasedOnProducts', baseContext);
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.productSettingsLink,
+      );
+      await boProductSettingsPage.closeSfToolBar(page);
 
-    const result = await productSettingsPage.chooseQuantityDiscountsBasedOn(page, 'Products');
-    await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
-  });
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
+    });
 
-  it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+    it('should choose quantity discounts based on \'Products\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseQuantityDiscountsBasedOnProducts', baseContext);
 
-    await productSettingsPage.goToSubMenu(
-      page,
-      productSettingsPage.catalogParentLink,
-      productSettingsPage.productsLink,
-    );
+      const result = await boProductSettingsPage.chooseQuantityDiscountsBasedOn(page, 'Products');
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
+    });
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-  it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterProducts', baseContext);
+      await boProductSettingsPage.goToSubMenu(
+        page,
+        boProductSettingsPage.catalogParentLink,
+        boProductSettingsPage.productsLink,
+      );
+      await boProductsPage.closeSfToolBar(page);
 
-    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProducts).to.be.above(0);
-  });
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
+    });
 
-  it('should create product with combinations and add a specific price', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterProducts', baseContext);
 
-    await productsPage.goToAddProductPage(page);
-    await addProductPage.createEditBasicProduct(page, productWithCombinations);
+      numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfProducts).to.be.above(0);
+    });
 
-    const createProductMessage = await addProductPage.setAttributesInProduct(
-      page,
-      productWithCombinations,
-    );
-    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    it('should click on new product button and go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductPage', baseContext);
 
-    await addProductPage.addSpecificPrices(page, productWithCombinations.specificPrice);
-  });
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
 
-  it('should preview product and check price ATI in FO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'previewProductAndCheckPriceATI', baseContext);
+      await boProductsPage.selectProductType(page, productWithCombinations.type);
+      await boProductsPage.clickOnAddNewProduct(page);
 
-    page = await addProductPage.previewProduct(page);
-    await foProductPage.addProductToTheCart(page, 1, firstAttributeToChoose, false);
-    await foProductPage.addProductToTheCart(page, 1, secondAttributeToChoose, true);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
+    });
 
-    const priceATI = await cartPage.getATIPrice(page);
-    await expect(priceATI).to.equal(firstCartTotalATI);
+    it('should create product with combinations', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-    page = await cartPage.closePage(browserContext, page, 0);
-  });
+      const createProductMessage = await boProductsCreatePage.setProduct(page, productWithCombinations);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
+    });
 
-  it('should go to \'Shop parameters > Product Settings\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage2', baseContext);
+    it('should create combinations', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createCombination', baseContext);
 
-    await addProductPage.goToSubMenu(
-      page,
-      addProductPage.shopParametersParentLink,
-      addProductPage.productSettingsLink,
-    );
+      const createProductMessage = await boProductsCreateTabCombinationsPage.setProductAttributes(
+        page,
+        productWithCombinations.attributes,
+      );
+      expect(createProductMessage).to.equal(boProductsCreateTabCombinationsPage.generateCombinationsMessage(2));
 
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
-  });
+      const successMessage = await boProductsCreateTabCombinationsPage.generateCombinations(page);
+      expect(successMessage).to.equal(boProductsCreateTabCombinationsPage.successfulGenerateCombinationsMessage(2));
+    });
 
-  it('should choose quantity discounts based on \'Combinations\'', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'chooseQuantityDiscountsBasedOnCombinations', baseContext);
+    it('should edit the quantity', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editQuantity', baseContext);
 
-    const result = await productSettingsPage.chooseQuantityDiscountsBasedOn(page, 'Combinations');
-    await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
-  });
+      await boProductsCreateTabCombinationsPage.editCombinationRowQuantity(page, 1, 5);
+      await boProductsCreateTabCombinationsPage.editCombinationRowQuantity(page, 2, 5);
 
-  it('should view my shop and check ATI price in FO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'ViewMyShopAndCheckPriceATI', baseContext);
+      const successMessage = await boProductsCreateTabCombinationsPage.saveCombinationsForm(page);
+      expect(successMessage).to.equal(boProductsCreateTabCombinationsPage.successfulUpdateMessage);
+    });
 
-    page = await productSettingsPage.viewMyShop(page);
-    await foProductPage.goToCartPage(page);
+    it('should add specific price', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addSpecificPrice', baseContext);
 
-    const priceATI = await cartPage.getATIPrice(page);
-    await expect(priceATI).to.equal(secondCartTotalATI);
-  });
+      await boProductsCreateTabPricingPage.clickOnAddSpecificPriceButton(page);
 
-  it('should close the page and go back to BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'closePageAndBackToBO', baseContext);
+      const createProductMessage = await boProductsCreateTabPricingPage.setSpecificPrice(
+        page,
+        productWithCombinations.specificPrice,
+      );
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulCreationMessage);
+    });
 
-    page = await cartPage.closePage(browserContext, page, 0);
+    it('should save the product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'saveProduct', baseContext);
 
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
-  });
+      const updateProductMessage = await boProductsCreatePage.saveProduct(page);
+      expect(updateProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
+    });
 
-  it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDeleteProduct', baseContext);
+    it('should preview product and check price ATI in FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'previewProductAndCheckPriceATI', baseContext);
 
-    await productSettingsPage.goToSubMenu(
-      page,
-      productSettingsPage.catalogParentLink,
-      productSettingsPage.productsLink,
-    );
+      page = await boProductsCreatePage.previewProduct(page);
+      await foHummingbirdProductPage.addProductToTheCart(page, 1, firstAttributeToChoose, false);
+      await foHummingbirdProductPage.addProductToTheCart(page, 1, secondAttributeToChoose, true);
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
+      const priceATI = await foHummingbirdCartPage.getATIPrice(page);
+      expect(priceATI).to.equal(firstCartTotalATI);
 
-  it('should delete product from dropDown menu', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+      page = await foHummingbirdCartPage.closePage(browserContext, page, 0);
+    });
 
-    const deleteTextResult = await productsPage.deleteProduct(page, productWithCombinations);
-    await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+    it('should go to \'Shop parameters > Product Settings\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage2', baseContext);
 
-    const numberOfProductsAfterDelete = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProductsAfterDelete).to.equal(numberOfProducts);
-  });
+      await boProductsCreatePage.goToSubMenu(
+        page,
+        boProductsCreatePage.shopParametersParentLink,
+        boProductsCreatePage.productSettingsLink,
+      );
 
-  it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
+    });
 
-    const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProducts).to.be.above(0);
+    it('should choose quantity discounts based on \'Combinations\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseQuantityDiscountsBasedOnCombinations', baseContext);
+
+      const result = await boProductSettingsPage.chooseQuantityDiscountsBasedOn(page, 'Combinations');
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
+    });
+
+    it('should view my shop and check ATI price in FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'ViewMyShopAndCheckPriceATI', baseContext);
+
+      page = await boProductSettingsPage.viewMyShop(page);
+      await foHummingbirdProductPage.goToCartPage(page);
+
+      const priceATI = await foHummingbirdCartPage.getATIPrice(page);
+      expect(priceATI).to.equal(secondCartTotalATI);
+    });
+
+    it('should close the page and go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closePageAndBackToBO', baseContext);
+
+      page = await foHummingbirdCartPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
+    });
+
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDeleteProduct', baseContext);
+
+      await boProductSettingsPage.goToSubMenu(
+        page,
+        boProductSettingsPage.catalogParentLink,
+        boProductSettingsPage.productsLink,
+      );
+
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
+    });
+
+    it('should filter list by the created product and delete product from dropDown menu', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+
+      await boProductsPage.filterProducts(page, 'reference', productWithCombinations.reference, 'input');
+
+      const isModalVisible = await boProductsPage.clickOnDeleteProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
+
+      const textMessage = await boProductsPage.clickOnConfirmDialogButton(page);
+      expect(textMessage).to.equal(boProductsPage.successfulDeleteMessage);
+
+      const numberOfProductsAfterDelete = await boProductsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfProductsAfterDelete).to.equal(numberOfProducts);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+
+      const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfProducts).to.be.above(0);
+    });
   });
 });

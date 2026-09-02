@@ -1,0 +1,111 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% set displayName = true %}
+{% if (grid.view_options.display_name is defined) %}
+    {% set displayName = grid.view_options.display_name %}
+{% endif %}
+
+<div class="card js-grid-panel" id="{{ grid.id }}_grid_panel">
+  {% block grid_panel_header %}
+    {% if displayName is not same as(false) or grid.actions.grid|length > 0 %}
+    <div class="card-header js-grid-header">
+      {% if displayName is not same as(false) %}
+        <h3 class="d-inline-block card-header-title">
+          {{ grid.name }} ({{ grid.data.records_total }})
+        </h3>
+      {% endif %}
+      {% block grid_actions_block %}
+        <div class="d-inline-block float-right">
+          {{ include('@PrestaShop/Admin/Common/Grid/Blocks/grid_actions.html.twig', {grid: grid}) }}
+        </div>
+      {% endblock %}
+    </div>
+    {% endif %}
+  {% endblock %}
+
+  {% block grid_panel_body %}
+    <div class="card-body">
+      {% block grid_view_block %}
+        {# Override the grid template to inject our custom form action #}
+        <div class="grid js-grid" id="{{ grid.id }}_grid" data-grid-id="{{ grid.id }}">
+          {% block grid_header_row %}
+            {% block grid_bulk_actions_block %}
+              {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions.html.twig', {grid: grid}) }}
+            {% endblock %}
+          {% endblock %}
+
+          {% block grid_table_row %}
+            {# Override table.html.twig to set the form action to the search route with taxRulesGroupId #}
+            {{ renderhook('displayAdminGridTableBefore', {
+                grid: grid,
+                legacy_controller: app.request.attributes.get('_legacy_controller'),
+                controller: app.request.attributes.get('_controller'),
+              })
+            }}
+
+            {{ form_start(grid.filter_form, {
+              attr: {
+                id: grid.id ~ '_filter_form',
+                class: 'table-responsive',
+              },
+              action: path('admin_tax_rules_search', {taxRulesGroupId: taxRulesGroupId}),
+            }) }}
+
+            <table class="grid-table js-grid-table table {% if is_ordering_column(grid) %}grid-ordering-column{% endif %} {% if grid.attributes.is_empty_state %}border-0{% endif %}"
+                   id="{{ grid.id }}_grid_table"
+                   data-query="{{ grid.data.query }}"
+                   data-limit="{{ grid.pagination.limit }}"
+                   data-offset="{{ grid.pagination.offset }}"
+                   data-total="{{ grid.data.records_total }}"
+            >
+              <thead class="thead-default">
+              {% block grid_table_head %}
+                {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/headers_row.html.twig', {grid: grid}) }}
+                {% if grid.actions.bulk|length > 0 or grid.filter_form|length > 1 %}
+                  {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {grid: grid}) }}
+                {% endif %}
+              {% endblock %}
+              </thead>
+              <tbody>
+              {% block grid_table_body %}
+                {% if grid.data.records is not empty %}
+                  {% for record in grid.data.records %}
+                    <tr>
+                      {% for column in grid.columns %}
+                        <td
+                          {% if column.type == 'identifier' %}data-identifier="{{ record[column.id] }}"{% endif %}
+                          class="{{ column.type }}-type column-{{ column.id }}{% if column.options.clickable is defined and column.options.clickable %} clickable{% endif %}{% if column.options.alignment is defined and column.options.alignment %} text-{{ column.options.alignment }}{% endif %}"
+                        >
+                          {{ column_content(record, column, grid) }}
+                        </td>
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+                {% else %}
+                  {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/empty_row.html.twig', {grid: grid}) }}
+                {% endif %}
+              {% endblock %}
+              </tbody>
+            </table>
+
+            {{ form_end(grid.filter_form) }}
+
+            {{ renderhook('displayAdminGridTableAfter', {
+                  grid: grid,
+                  legacy_controller: app.request.attributes.get('_legacy_controller'),
+                  controller: app.request.attributes.get('_controller'),
+                })
+            }}
+          {% endblock %}
+
+          {% block grid_footer_row %}
+            {{ include('@PrestaShop/Admin/Common/Grid/Blocks/pagination.html.twig', {grid: grid}) }}
+          {% endblock %}
+        </div>
+      {% endblock %}
+    </div>
+  {% endblock %}
+</div>

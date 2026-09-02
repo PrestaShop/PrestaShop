@@ -1,0 +1,18 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Attribute/Blocks/form.html.twig', {
+      attributeGroupId: attributeGroupId,
+      attributeForm: attributeForm,
+    }) }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ include('@PrestaShop/Admin/Sell/Catalog/Attribute/Blocks/form_javascripts.html.twig') }}
+{% endblock %}

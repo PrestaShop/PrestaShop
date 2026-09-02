@@ -1,0 +1,9 @@
+name;reference;visibility;ean13;category;active;isbn
+Valid Product One;INV-OK-1;both;1234567890128;2;1;
+Bad Visibility;INV-BAD-VIS;everywhere;;2;1;
+Bad Gtin;INV-BAD-GTIN;both;123456789012345;2;1;
+;INV-NO-NAME;both;;2;1;
+
+Unknown Category;INV-BAD-CAT;both;;99999;1;
+Fuzzy Boolean;INV-FUZZY-BOOL;both;;2;maybe;
+Bad Isbn;INV-BAD-ISBN;both;;2;1;ABC

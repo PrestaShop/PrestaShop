@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
@@ -57,12 +37,45 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = new Customer();
         $customer->firstname = 'fake';
         $customer->lastname = 'fake';
-        $customer->passwd = $crypto->hash('Correct Horse Battery Staple');
+        $customer->passwd = $crypto->hash('Pr3st4Sh0P');
         $customer->email = $customerEmail;
         $customer->id_shop = Context::getContext()->shop->id;
         $customer->add();
         $this->customers[$customerName] = $customer;
         SharedStorage::getStorage()->set($customerName, $customer->id);
+    }
+
+    /**
+     * @Given /^there is a guest customer named "(.+)" whose email is "(.+)"$/
+     */
+    public function createGuestCustomer($customerName, $customerEmail)
+    {
+        /** @var Hashing $crypto */
+        $crypto = ServiceLocator::get(Hashing::class);
+
+        $customer = new Customer();
+        $customer->firstname = 'fake';
+        $customer->lastname = 'fake';
+        $customer->passwd = $crypto->hash('Pr3st4Sh0P');
+        $customer->email = $customerEmail;
+        $customer->is_guest = true;
+        $customer->id_shop = Context::getContext()->shop->id;
+        $customer->add();
+        $this->customers[$customerName] = $customer;
+        SharedStorage::getStorage()->set($customerName, $customer->id);
+    }
+
+    /**
+     * @Given /^customer "(.+)" belongs to group "(.+)"$/
+     */
+    public function assignCustomerToGroup(string $customerReference, string $groupReference): void
+    {
+        $customerId = SharedStorage::getStorage()->get($customerReference);
+        $groupId = SharedStorage::getStorage()->get($groupReference);
+
+        $customer = new Customer($customerId);
+        // Add the group to the customer's groups
+        $customer->addGroups([$groupId]);
     }
 
     /**

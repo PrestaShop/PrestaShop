@@ -1,0 +1,71 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/chartjs.bundle.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+  {% set toolbarContent = renderhook('displayAdminDashboardToolbar') %}
+  {% set topContent = renderhook('displayAdminDashboardTop', {date_from: dateFrom, date_to: dateTo}) %}
+  {% set bottomContent = renderhook('displayAdminDashboardBottom', {date_from: dateFrom, date_to: dateTo}) %}
+  {% set zoneOneContent = renderhook('displayAdminDashboardZoneOne', {date_from: dateFrom, date_to: dateTo}) %}
+  {% set zoneTwoContent = renderhook('displayAdminDashboardZoneTwo', {date_from: dateFrom, date_to: dateTo}) %}
+  {% set zoneThreeContent = renderhook('displayAdminDashboardZoneThree', {date_from: dateFrom, date_to: dateTo}) %}
+
+  {% set hasZoneOne = zoneOneContent|trim is not empty %}
+  {% set hasZoneTwo = zoneTwoContent|trim is not empty %}
+  {% set hasZoneThree = zoneThreeContent|trim is not empty %}
+
+  <div id="dashboard">
+    {% if toolbarContent|trim is not empty %}
+      <div class="row">
+        <div class="col-lg-12" id="displayAdminDashboardToolbar">{{ toolbarContent|raw }}</div>
+      </div>
+    {% endif %}
+
+    {% if dateRangeForm is not null %}
+      <div class="row">
+        <div class="col-lg-12">
+          <div id="dashboard-calendar" class="panel mb-3">
+            {% form_theme dateRangeForm '@PrestaShop/Admin/Dashboard/form_theme.html.twig' %}
+            {{ form_start(dateRangeForm, {attr: {class: 'form-inline'}}) }}
+              {{ form_widget(dateRangeForm) }}
+              <button type="submit" class="btn btn-primary mb-2">{{ 'Apply'|trans({}, 'Admin.Actions') }}</button>
+            {{ form_end(dateRangeForm) }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if topContent|trim is not empty %}
+      <div class="row">
+        <div class="col-lg-12" id="displayAdminDashboardTop">{{ topContent|raw }}</div>
+      </div>
+    {% endif %}
+
+    {% if hasZoneOne or hasZoneTwo or hasZoneThree %}
+      <div class="row mx-n2">
+        {% if hasZoneOne %}
+          <div class="col-12 col-xl-3 px-2" id="displayAdminDashboardZoneOne">{{ zoneOneContent|raw }}</div>
+        {% endif %}
+        {% if hasZoneTwo %}
+          <div class="col-12 col-xl-{{ hasZoneThree ? 7 : 9 }} px-2" id="displayAdminDashboardZoneTwo">{{ zoneTwoContent|raw }}</div>
+        {% endif %}
+        {% if hasZoneThree %}
+          <div class="col-12 col-xl-2 px-2" id="displayAdminDashboardZoneThree">{{ zoneThreeContent|raw }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if bottomContent|trim is not empty %}
+      <div class="row">
+        <div class="col-12" id="displayAdminDashboardBottom">{{ bottomContent|raw }}</div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

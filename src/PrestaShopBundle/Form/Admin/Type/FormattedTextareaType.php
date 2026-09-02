@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Type;
@@ -39,9 +19,32 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class FormattedTextareaType extends TranslatorAwareType
 {
     /**
-     * Max size of UTF-8 content in MySQL text column
+     * Max size of UTF-8 content in MySQL text columns
+     *
+     * To calculate these, we start from the raw byte limit of these fieds:
+     * TINYTEXT 255
+     * TEXT 65535
+     * MEDIUMTEXT 16777215
+     * LONGTEST 4294967295
      */
+    public const LIMIT_TINYTEXT_UTF8 = 84;
     public const LIMIT_TEXT_UTF8 = 21844;
+    public const LIMIT_MEDIUMTEXT_UTF8 = 5592404;
+    public const LIMIT_LONGTEXT_UTF8 = 1431655764;
+
+    /**
+     * Max size of UTF-8 MB4 content in MySQL text columns
+     *
+     * To calculate these, we start from the raw byte limit of these fieds:
+     * TINYTEXT 255
+     * TEXT 65535
+     * MEDIUMTEXT 16777215
+     * LONGTEST 4294967295
+     */
+    public const LIMIT_TINYTEXT_UTF8_MB4 = 63;
+    public const LIMIT_TEXT_UTF8_MB4 = 16383;
+    public const LIMIT_MEDIUMTEXT_UTF8_MB4 = 4194303;
+    public const LIMIT_LONGTEXT_UTF8_MB4 = 1073741823;
 
     /**
      * {@inheritdoc}

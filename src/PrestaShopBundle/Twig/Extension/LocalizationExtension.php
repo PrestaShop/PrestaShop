@@ -1,85 +1,27 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Twig\Extension;
 
-use Currency;
 use DateTime;
 use DateTimeInterface;
-use Language;
+use PrestaShop\PrestaShop\Core\Context\CurrencyContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 class LocalizationExtension extends AbstractExtension
 {
-    /**
-     * @var string
-     */
-    private $dateFormatFull;
-
-    /**
-     * @var string
-     */
-    private $dateFormatLight;
-
-    /**
-     * @var Repository
-     */
-    private $localeRepository;
-
-    /**
-     * @var Language|null
-     */
-    private $contextLanguage;
-
-    /**
-     * @var Currency|null
-     */
-    private $contextCurrency;
-
-    /**
-     * @param string $contextDateFormatFull
-     * @param string $contextDateFormatLight
-     * @param Repository $localeRepository
-     * @param Language|null $contextLanguage No strict type for this one because another Language class is used during install
-     * @param Currency|null $contextCurrency
-     */
     public function __construct(
-        string $contextDateFormatFull,
-        string $contextDateFormatLight,
-        Repository $localeRepository,
-        $contextLanguage,
-        ?Currency $contextCurrency
+        private readonly Repository $localeRepository,
+        private readonly LanguageContext $languageContext,
+        private readonly CurrencyContext $currencyContext,
     ) {
-        $this->dateFormatFull = $contextDateFormatFull;
-        $this->dateFormatLight = $contextDateFormatLight;
-        $this->localeRepository = $localeRepository;
-        $this->contextLanguage = $contextLanguage;
-        $this->contextCurrency = $contextCurrency;
     }
 
     public function getFilters(): array
@@ -91,6 +33,18 @@ class LocalizationExtension extends AbstractExtension
         ];
     }
 
+    public function getFunctions()
+    {
+        return [
+            new TwigFunction(
+                'format_date',
+                function ($date) {
+                    return (new DateTime($date))->format($this->languageContext->getDateFormat());
+                }
+            ),
+        ];
+    }
+
     /**
      * @param float $price
      * @param string|null $currencyCode
@@ -98,18 +52,15 @@ class LocalizationExtension extends AbstractExtension
      *
      * @return string
      */
-    public function priceFormat(float $price, string $currencyCode = null, string $locale = null): string
+    public function priceFormat(float $price, ?string $currencyCode = null, ?string $locale = null): string
     {
-        // If no locale is specified and the context language is not accessible we can't format, so we return the input
-        // unchanged, same thing for the currency (use getLocale getter, it is smarter ^^)
-        if ((null === $locale && (null === $this->contextLanguage || empty($this->contextLanguage->getLocale()))) ||
-            (null === $currencyCode && (null === $this->contextCurrency || empty($this->contextCurrency->iso_code)))) {
-            return (string) $price;
+        if (null !== $locale) {
+            $cldrLocale = $this->localeRepository->getLocale($locale);
+
+            return $cldrLocale->formatPrice($price, $currencyCode ?? $this->currencyContext->getIsoCode());
+        } else {
+            return $this->languageContext->formatPrice($price, $currencyCode ?? $this->currencyContext->getIsoCode());
         }
-
-        $locale = $this->localeRepository->getLocale($locale ?? $this->contextLanguage->getLocale());
-
-        return $locale->formatPrice($price, $currencyCode ?? $this->contextCurrency->iso_code);
     }
 
     /**
@@ -123,7 +74,7 @@ class LocalizationExtension extends AbstractExtension
             $date = new DateTime($date);
         }
 
-        return $date->format($this->dateFormatFull);
+        return $date->format($this->languageContext->getDateTimeFormat());
     }
 
     /**
@@ -137,6 +88,6 @@ class LocalizationExtension extends AbstractExtension
             $date = new DateTime($date);
         }
 
-        return $date->format($this->dateFormatLight);
+        return $date->format($this->languageContext->getDateFormat());
     }
 }

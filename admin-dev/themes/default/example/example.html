@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>BO default theme components / example page</title>
+    
+    <link rel="icon" type="image/png" sizes="48x48" href="https://placehold.co/32x32">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" integrity="sha512-i8+QythOYyQke6XbStjt9T4yQHhhM+9Y9yTY1fOxoDQwsQpKMEpIoSQZ8mVomtnVCf9PBvoQDnKl06gGOOD19Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Material Design Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <!-- Default theme CSS -->
+    <link id="default_stylesheet" href="http://127.0.0.1:1010/theme.css" rel="stylesheet">
+    <!-- Custom example page CSS -->
+    <link href="http://127.0.0.1:1000/example.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <button id="switch_btn_styles">Switch Stylesheet</button>
+
+    <div id="summary"></div>
+
+    <div class="bootstrap">
+      <div class="container theme-showcase" role="main">
+        <!-- Alerts -->
+        <include-html path="./components/alerts.html"></include-html>
+        
+        <!-- Labels (Badges) -->
+        <include-html path="./components/labels.html"></include-html>
+        
+        <!-- Breadcrumb -->
+        <include-html path="./components/breadcrumbs.html"></include-html>
+        
+        <!-- Buttons -->
+        <include-html path="./components/buttons.html"></include-html>
+        
+        <!-- Panel (Cards)-->
+        <include-html path="./components/panels.html"></include-html>
+        <include-html path="./components/panels-complex.html"></include-html>
+        
+        <!-- Content -->
+        <include-html path="./components/content.html"></include-html>
+
+        <!-- Dropdowns -->
+        <include-html path="./components/dropdowns.html"></include-html>
+
+        <!-- Forms -->
+        <include-html path="./components/forms.html"></include-html>
+
+        <!-- Headings -->
+        <include-html path="./components/headings.html"></include-html>
+
+        <!-- List group -->
+        <include-html path="./components/list-group.html"></include-html>
+
+        <!-- Navs -->
+        <include-html path="./components/navs.html"></include-html>
+
+        <!-- Tooltips -->
+        <include-html path="./components/tooltips.html"></include-html>
+        
+        <!-- Pagination -->
+        <include-html path="./components/pagination.html"></include-html>
+
+        <!-- Popovers -->
+        <include-html path="./components/popovers.html"></include-html>
+        
+        <!-- Progress bars -->
+        <include-html path="./components/progress-bars.html"></include-html>
+
+        <!-- Tables -->
+        <include-html path="./components/tables.html"></include-html>
+        <include-html path="./components/tables-complex.html"></include-html>
+
+        <!-- Thumbnails -->
+        <include-html path="./components/thumbnails.html"></include-html>
+        
+        <!-- Badges -->
+        <include-html path="./components/badges.html"></include-html>
+
+        <!-- Wells -->
+        <include-html path="./components/wells.html"></include-html>
+
+        <!-- Custom -->
+        <h1 class="custom">Custom</h1>
+        <include-html path="./components/custom/colors-square.html"></include-html>
+        <include-html path="./components/custom/growl.html"></include-html>
+
+      </div> <!-- /container -->
+    </div>
+
+    <!-- Add jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    
+    <!-- Add Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+    
+    <!-- Add Growl JS -->
+    <script src="http://127.0.0.1:1000/jquery.growl.js"></script>
+    
+    <!-- Add example JS -->
+    <script src="http://127.0.0.1:1000/example.js"></script>
+
+    <!-- Add theme JS -->
+    <script src="http://127.0.0.1:1000/theme.bundle.js"></script>
+  </body>
+</html>

@@ -1,20 +1,16 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import imageSettingsPage from '@pages/BO/design/imageSettings';
-import addImageTypePage from '@pages/BO/design/imageSettings/add';
-
-// Import data
-import ImageTypeData from '@data/faker/imageType';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boImageSettingsPage,
+  boImageSettingsCreatePage,
+  boLoginPage,
+  type BrowserContext,
+  FakerImageType,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_imageSettings_bulkDeleteImageTypes';
 
@@ -27,65 +23,71 @@ describe('BO - Design - Image Settings : Bulk delete image types', async () => {
   let page: Page;
   let numberOfImageTypes: number = 0;
 
-  const ImageTypesToCreate: ImageTypeData[] = [
-    new ImageTypeData({name: 'todelete1'}),
-    new ImageTypeData({name: 'todelete2'}),
+  const ImageTypesToCreate: FakerImageType[] = [
+    new FakerImageType({name: 'todelete1'}),
+    new FakerImageType({name: 'todelete2'}),
   ];
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Catalog > Image Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToImageSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.imageSettingsLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.imageSettingsLink,
     );
-    await imageSettingsPage.closeSfToolBar(page);
+    await boImageSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await imageSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(imageSettingsPage.pageTitle);
+    const pageTitle = await boImageSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boImageSettingsPage.pageTitle);
   });
 
   it('should reset all filters and get number of image types in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfImageTypes = await imageSettingsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfImageTypes).to.be.above(0);
+    numberOfImageTypes = await boImageSettingsPage.resetAndGetNumberOfLines(page);
+    expect(numberOfImageTypes).to.be.above(0);
   });
 
   describe('Create 2 image types in BO', async () => {
-    ImageTypesToCreate.forEach((ImageTypeToCreate: ImageTypeData, index: number) => {
+    ImageTypesToCreate.forEach((ImageTypeToCreate: FakerImageType, index: number) => {
       it('should go to add new image type page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewImageTypePage${index + 1}`, baseContext);
 
-        await imageSettingsPage.goToNewImageTypePage(page);
+        await boImageSettingsPage.goToNewImageTypePage(page);
 
-        const pageTitle = await addImageTypePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addImageTypePage.pageTitleCreate);
+        const pageTitle = await boImageSettingsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boImageSettingsCreatePage.pageTitleCreate);
       });
 
       it(`should create image type n° ${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createImageType${index + 1}`, baseContext);
 
-        const textResult = await addImageTypePage.createEditImageType(page, ImageTypeToCreate);
-        await expect(textResult).to.contains(imageSettingsPage.successfulCreationMessage);
+        const textResult = await boImageSettingsCreatePage.createEditImageType(page, ImageTypeToCreate);
+        expect(textResult).to.contains(boImageSettingsPage.successfulCreationMessage);
 
-        const numberOfImageTypesAfterCreation = await imageSettingsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfImageTypesAfterCreation).to.be.equal(numberOfImageTypes + index + 1);
+        const numberOfImageTypesAfterCreation = await boImageSettingsPage.getNumberOfElementInGrid(page);
+        expect(numberOfImageTypesAfterCreation).to.be.equal(numberOfImageTypes + index + 1);
       });
     });
   });
@@ -94,29 +96,29 @@ describe('BO - Design - Image Settings : Bulk delete image types', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await imageSettingsPage.filterTable(page, 'input', 'name', 'todelete');
+      await boImageSettingsPage.filterTable(page, 'input', 'name', 'todelete');
 
-      const numberOfImageTypesAfterFilter = await imageSettingsPage.getNumberOfElementInGrid(page);
-      await expect(numberOfImageTypesAfterFilter).to.be.at.most(numberOfImageTypes);
+      const numberOfImageTypesAfterFilter = await boImageSettingsPage.getNumberOfElementInGrid(page);
+      expect(numberOfImageTypesAfterFilter).to.be.at.most(numberOfImageTypes);
 
       for (let i = 1; i <= numberOfImageTypesAfterFilter; i++) {
-        const textColumn = await imageSettingsPage.getTextColumn(page, i, 'name');
-        await expect(textColumn).to.contains('todelete');
+        const textColumn = await boImageSettingsPage.getTextColumn(page, i, 'name');
+        expect(textColumn).to.contains('todelete');
       }
     });
 
     it('should delete image types with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteImageTypes', baseContext);
 
-      const deleteTextResult = await imageSettingsPage.bulkDeleteImageTypes(page);
-      await expect(deleteTextResult).to.be.contains(imageSettingsPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boImageSettingsPage.bulkDeleteImageTypes(page);
+      expect(deleteTextResult).to.be.contains(boImageSettingsPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfImageTypesAfterReset = await imageSettingsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfImageTypesAfterReset).to.be.equal(numberOfImageTypes);
+      const numberOfImageTypesAfterReset = await boImageSettingsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfImageTypesAfterReset).to.be.equal(numberOfImageTypes);
     });
   });
 });

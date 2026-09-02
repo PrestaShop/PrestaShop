@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Unit\Core\Util\String;
@@ -120,23 +100,70 @@ class StringModifierTest extends TestCase
     }
 
     /**
+     * @dataProvider htmlToTextProvider
+     */
+    public function testHtmlToText(string $input, string $expected): void
+    {
+        self::assertSame($expected, $this->stringModifier->htmlToText($input));
+    }
+
+    public function htmlToTextProvider(): Generator
+    {
+        yield 'plain text' => [
+            'Plain text',
+            'Plain text',
+        ];
+
+        yield 'paragraphs' => [
+            '<p>First sentence.</p><p>Second sentence.</p>',
+            'First sentence. Second sentence.',
+        ];
+
+        yield 'unordered list' => [
+            '<ul><li>Stainless steel</li><li>Silent run</li><li>5 year warranty</li></ul>',
+            'Stainless steel, Silent run, 5 year warranty.',
+        ];
+
+        yield 'ordered list with surrounding content' => [
+            '<p>Features:</p><ol><li>Fast</li><li>Reliable</li></ol><p>Available now.</p>',
+            'Features: Fast, Reliable. Available now.',
+        ];
+
+        yield 'line break and entities' => [
+            'One&nbsp;two<br>Three &amp; four',
+            'One two Three & four',
+        ];
+
+        yield 'empty list items' => [
+            '<ul><li>First</li><li></li><li>Second</li></ul>',
+            'First, Second.',
+        ];
+
+        yield 'list items with punctuation' => [
+            '<ul><li>First sentence.</li><li>Second sentence.</li></ul>',
+            'First sentence. Second sentence.',
+        ];
+    }
+
+    /**
      * @dataProvider str2UrlProvider
      */
-    public function testStr2url(string $input, string $expected): void
+    public function testStr2url(string $input, string $expected, bool $allow_accented_chars): void
     {
-        self::assertSame($expected, $this->stringModifier->str2url($input));
+        self::assertSame($expected, $this->stringModifier->str2url($input, $allow_accented_chars));
     }
 
     public function str2UrlProvider(): Generator
     {
-        yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-'];
-        yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text'];
-        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-'];
-        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou'];
-        yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-'];
-        yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text'];
-        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-'];
-        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou'];
+        yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-', false];
+        yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text', false];
+        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-', false];
+        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou', false];
+        yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-', false];
+        yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text', false];
+        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-', false];
+        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou', false];
+        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-áéíóú', true];
     }
 
     /**

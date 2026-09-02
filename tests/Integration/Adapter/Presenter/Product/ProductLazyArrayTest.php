@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Adapter\Presenter\Product;
@@ -37,6 +17,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -83,19 +64,25 @@ class ProductLazyArrayTest extends TestCase
      * @var array
      */
     private $baseProduct = [
+        'id_product' => 0,
         'id_product_attribute' => 0,
+        'price' => 0,
         'price_tax_exc' => 0,
         'specific_prices' => 0,
         'reduction' => 0,
         'price_without_reduction' => 0,
+        'price_without_reduction_without_tax' => 0,
         'new' => 0,
         'pack' => 0,
         'out_of_stock' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
         'customizable' => 0,
         'active' => 1,
+        'minimal_quantity' => 1,
+        'is_virtual' => 0,
+        'additional_delivery_times' => DeliveryTimeNoteType::TYPE_DEFAULT,
     ];
 
-    private const PRODUCT_DISCONTINUED = 'This product is no longer for sale';
+    private const PRODUCT_DISCONTINUED = 'This product is no longer available for sale.';
     private const PRODUCT_AVAILABLE_NOW = 'This product is available now';
     private const PRODUCT_AVAILABLE_LATER = 'This product is available on backorder';
     private const CONFIGURATION_AVAILABLE_NOW_LABEL = 'This product is available now - default';
@@ -250,6 +237,10 @@ class ProductLazyArrayTest extends TestCase
     ): void {
         $language = $this->mockLanguage;
 
+        $this->mockProductPresentationSettings
+            ->method('shouldShowPrice')
+            ->willReturn(true);
+
         $this->mockConfiguration
             ->method('get')
             ->willReturnCallback(function (string $key) use ($language) {
@@ -297,10 +288,13 @@ class ProductLazyArrayTest extends TestCase
                 'show_availability' => 1,
                 'available_date' => false,
                 'available_for_order' => 1,
+                'show_price' => 1,
             ]
         );
 
-        // Product page: in stock && out of stock not available
+        /*
+         * If the product is in stock, we should see the delivery information for available products
+         */
         yield [
             array_merge(
                 $product,
@@ -315,7 +309,9 @@ class ProductLazyArrayTest extends TestCase
             self::PRODUCT_DELIVERY_TIME_AVAILABLE,
         ];
 
-        // not enough stock, not allowed to order when out of stock, we should not see any delivery information
+        /*
+         * If the product is out of stock and backorders are not allowed, we should not see any delivery information
+         */
         yield [
             array_merge(
                 $product,
@@ -330,7 +326,9 @@ class ProductLazyArrayTest extends TestCase
             null,
         ];
 
-        // not enough stock, allowed to order when out of stock
+        /*
+         * If the product is out of stock and backorders are allowed, we should see delivery information
+         */
         yield [
             array_merge(
                 $product,
@@ -343,6 +341,74 @@ class ProductLazyArrayTest extends TestCase
                 ]
             ),
             self::PRODUCT_DELIVERY_TIME_OOSBOA,
+        ];
+
+        /*
+         * In case of virtual products, we should not display delivery information
+         */
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 11,
+                    'stock_quantity' => 10,
+                    'quantity' => 10,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+                    'is_virtual' => 1,
+                ]
+            ),
+            null,
+        ];
+
+        /*
+         * Test that we get different delivery information depending on additional_delivery_times.
+         * If it's 0, we should not get any delivery information.
+         * If it's 1, we should get the default delivery information.
+         * If it's 2, we should get the product delivery information.
+         */
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 1,
+                    'stock_quantity' => 10,
+                    'quantity' => 10,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+                    'additional_delivery_times' => DeliveryTimeNoteType::TYPE_NONE,
+                ]
+            ),
+            null,
+        ];
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 1,
+                    'stock_quantity' => 10,
+                    'quantity' => 10,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+                    'additional_delivery_times' => DeliveryTimeNoteType::TYPE_DEFAULT,
+                ]
+            ),
+            self::PRODUCT_DELIVERY_TIME_AVAILABLE,
+        ];
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 1,
+                    'stock_quantity' => 10,
+                    'quantity' => 10,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+                    'additional_delivery_times' => DeliveryTimeNoteType::TYPE_SPECIFIC,
+                    'delivery_in_stock' => 'Delivered in next century',
+                ]
+            ),
+            'Delivered in next century',
         ];
     }
 
@@ -434,8 +500,7 @@ class ProductLazyArrayTest extends TestCase
 
         // Product out stock, backorders disabled
         // Product labels filled
-        // Should return not available label from PS configuration
-        // (this label is not configurable per product or per combination)
+        // Should return available later label from product
         yield [
             array_merge(
                 $product,
@@ -448,6 +513,27 @@ class ProductLazyArrayTest extends TestCase
                     'available_date' => false,
                     'available_now' => self::PRODUCT_AVAILABLE_NOW,
                     'available_later' => self::PRODUCT_AVAILABLE_LATER,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+                ]
+            ),
+            self::PRODUCT_AVAILABLE_LATER,
+        ];
+
+        // Product out stock, backorders disabled
+        // Product labels NOT filled
+        // Should return available later label from PS configuration
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 1,
+                    'stock_quantity' => 0,
+                    'quantity' => 0,
+                    'show_availability' => 1,
+                    'available_date' => false,
+                    'available_now' => [],
+                    'available_later' => [],
                     'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
                 ]
             ),

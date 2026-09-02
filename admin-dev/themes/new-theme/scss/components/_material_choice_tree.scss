@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 .material-choice-tree-container {
   padding: 0.625rem;
   border: 1px solid $gray-light;
@@ -66,7 +70,7 @@
           position: absolute;
           top: -0.25rem;
           left: -0.1rem;
-          font-family: "Material Icons", Arial, Helvetica, sans-serif;
+          font-family: var(--#{$cdk}font-family-material-icons);
           font-size: 1.25rem;
           color: $gray-medium;
           cursor: pointer;

@@ -1,44 +1,27 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler\UpdateProductStockHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Updates product stock using legacy object model
  */
+#[AsCommandHandler]
 class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInterface
 {
     /**
@@ -47,7 +30,7 @@ class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInt
     private $productStockUpdater;
 
     /**
-     * @var ProductMultiShopRepository
+     * @var ProductRepository
      */
     private $productRepository;
 
@@ -58,12 +41,12 @@ class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInt
 
     /**
      * @param ProductStockUpdater $productStockUpdater
-     * @param ProductMultiShopRepository $productRepository
+     * @param ProductRepository $productRepository
      * @param CombinationRepository $combinationRepository
      */
     public function __construct(
         ProductStockUpdater $productStockUpdater,
-        ProductMultiShopRepository $productRepository,
+        ProductRepository $productRepository,
         CombinationRepository $combinationRepository
     ) {
         $this->productStockUpdater = $productStockUpdater;
@@ -90,29 +73,25 @@ class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInt
         // For now this will also fill some of deprecated properties in product (quantity, location, out_of_stock),
         // but in future we will remove those fields from Product,
         // and then this handler will only persist StockAvailable related fields as it is designed for.
-        // @todo: once the unification is done this should be refacto as the ProductStockProperties contains too many fields now
         $this->productStockUpdater->update(
             $productId,
             new ProductStockProperties(
-                null,
                 $stockModification,
                 $outOfStockType,
-                null,
-                $command->getLocation(),
-                null,
-                null,
-                null,
-                null,
-                null
+                $command->getLocation()
             ),
             $shopConstraint
         );
 
         if (null !== $outOfStockType) {
-            if ($shopConstraint->forAllShops()) {
-                $associatedShopIds = $this->productRepository->getAssociatedShopIds($productId);
+            if ($shopConstraint->forAllShops() || ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds())) {
+                if ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+                    $updatedShopIds = $shopConstraint->getShopIds();
+                } else {
+                    $updatedShopIds = $this->productRepository->getAssociatedShopIds($productId);
+                }
 
-                foreach ($associatedShopIds as $shopId) {
+                foreach ($updatedShopIds as $shopId) {
                     $this->combinationRepository->updateCombinationOutOfStockType(
                         $productId,
                         $outOfStockType,

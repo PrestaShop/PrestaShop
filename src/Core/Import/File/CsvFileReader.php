@@ -1,31 +1,14 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Import\File;
 
+use Generator;
+use PrestaShop\PrestaShop\Core\Import\Engine\Exception\InvalidResumeCursorException;
+use PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer;
 use PrestaShop\PrestaShop\Core\Import\Exception\UnreadableFileException;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRow;
 use SplFileInfo;
@@ -33,7 +16,7 @@ use SplFileInfo;
 /**
  * Class CsvFileReader defines a CSV file reader.
  */
-final class CsvFileReader implements FileReaderInterface
+final class CsvFileReader implements FileReaderInterface, ResumableFileReaderInterface
 {
     /**
      * @var string the data delimiter in the CSV row
@@ -83,6 +66,10 @@ final class CsvFileReader implements FileReaderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated since 9.3, kept for the legacy import preview path only —
+     *             use readFrom() on working files produced by
+     *             CsvImportFileNormalizer instead
      */
     public function read(SplFileInfo $file)
     {
@@ -95,12 +82,82 @@ final class CsvFileReader implements FileReaderInterface
 
         while ($row = fgetcsv($handle, $this->length, $this->delimiter, $this->enclosure, $this->escape)) {
             if ($convertToUtf8) {
-                $row = array_map('utf8_encode', $row);
+                $row = array_map(
+                    static function (?string $cell): string {
+                        return mb_convert_encoding((string) $cell, 'UTF-8', 'ISO-8859-1');
+                    },
+                    $row
+                );
             }
 
             yield DataRow::createFromArray($row);
         }
 
         fclose($handle);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * The cursor is a byte offset into the file (fseek, O(1) resume). This
+     * method is meant for working files produced by CsvImportFileNormalizer:
+     * it always reads the canonical CSV dialect and performs no encoding
+     * detection (normalized files are UTF-8 without BOM by construction).
+     *
+     * @throws UnreadableFileException
+     * @throws InvalidResumeCursorException
+     */
+    public function readFrom(SplFileInfo $file, ?string $cursor = null): Generator
+    {
+        $handle = $this->openForEngineRead($file);
+
+        try {
+            if (null !== $cursor) {
+                if (!ctype_digit($cursor)) {
+                    throw new InvalidResumeCursorException(sprintf('Invalid CSV resume cursor "%s", expected a byte offset', $cursor));
+                }
+                if (0 !== fseek($handle, (int) $cursor)) {
+                    throw new InvalidResumeCursorException(sprintf('Could not seek to byte offset %s in "%s"', $cursor, $file->getPathname()));
+                }
+            }
+
+            while (false !== ($row = $this->readCanonicalRecord($handle))) {
+                // fgetcsv() yields [null] for blank lines; cells must be strings
+                $row = array_map(static fn (?string $cell): string => (string) $cell, $row);
+
+                yield (string) ftell($handle) => $row;
+            }
+        } finally {
+            fclose($handle);
+        }
+    }
+
+    /**
+     * @return resource
+     *
+     * @throws UnreadableFileException
+     */
+    private function openForEngineRead(SplFileInfo $file)
+    {
+        if (!$file->isReadable()) {
+            throw new UnreadableFileException(sprintf('Import file "%s" is not readable', $file->getPathname()));
+        }
+
+        $handle = fopen($file->getPathname(), 'rb');
+        if (false === $handle) {
+            throw new UnreadableFileException(sprintf('Could not open import file "%s"', $file->getPathname()));
+        }
+
+        return $handle;
+    }
+
+    /**
+     * @param resource $handle
+     *
+     * @return array<int, string|null>|false
+     */
+    private function readCanonicalRecord($handle)
+    {
+        return fgetcsv($handle, 0, CsvImportFileNormalizer::CSV_DELIMITER, CsvImportFileNormalizer::CSV_ENCLOSURE, CsvImportFileNormalizer::CSV_ESCAPE);
     }
 }

@@ -1,19 +1,16 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import brandsPage from '@pages/BO/catalog/brands';
-import dashboardPage from '@pages/BO/dashboard';
-
-// Import data
-import BrandsAddresses from '@data/demo/brandsAddresses';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boBrandsPage,
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  dataBrandAddresses,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_brandsAndSuppliers_brands_addresses_filterAddresses';
 
@@ -27,38 +24,44 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   // Go to brands page
   it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.brandsAndSuppliersLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.brandsAndSuppliersLink,
     );
-    await brandsPage.closeSfToolBar(page);
+    await boBrandsPage.closeSfToolBar(page);
 
-    const pageTitle = await brandsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(brandsPage.pageTitle);
+    const pageTitle = await boBrandsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boBrandsPage.pageTitle);
   });
 
   it('should reset all filters and get number of addresses in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-    numberOfAddresses = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-    await expect(numberOfAddresses).to.be.above(0);
+    numberOfAddresses = await boBrandsPage.resetAndGetNumberOfLines(page, tableName);
+    expect(numberOfAddresses).to.be.above(0);
   });
 
   // 1 : Filter addresses table
@@ -70,7 +73,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_address',
-            filterValue: BrandsAddresses.first.id.toString(),
+            filterValue: dataBrandAddresses.brandAddress_4.id.toString(),
           },
       },
       {
@@ -79,7 +82,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: BrandsAddresses.first.brandName,
+            filterValue: dataBrandAddresses.brandAddress_4.brandName,
           },
       },
       {
@@ -88,7 +91,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterFirstName',
             filterType: 'input',
             filterBy: 'firstname',
-            filterValue: BrandsAddresses.first.firstName,
+            filterValue: dataBrandAddresses.brandAddress_4.firstName,
           },
       },
       {
@@ -97,7 +100,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterLastName',
             filterType: 'input',
             filterBy: 'lastname',
-            filterValue: BrandsAddresses.first.lastName,
+            filterValue: dataBrandAddresses.brandAddress_4.lastName,
           },
       },
       {
@@ -106,7 +109,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterPostCode',
             filterType: 'input',
             filterBy: 'postcode',
-            filterValue: BrandsAddresses.first.postalCode,
+            filterValue: dataBrandAddresses.brandAddress_4.postalCode,
           },
       },
       {
@@ -115,7 +118,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterCity',
             filterType: 'input',
             filterBy: 'city',
-            filterValue: BrandsAddresses.first.city,
+            filterValue: dataBrandAddresses.brandAddress_4.city,
           },
       },
       {
@@ -124,7 +127,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
             testIdentifier: 'filterCountry',
             filterType: 'select',
             filterBy: 'country',
-            filterValue: BrandsAddresses.first.country,
+            filterValue: dataBrandAddresses.brandAddress_4.country,
           },
       },
     ];
@@ -133,27 +136,27 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit Addresses ta
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await brandsPage.filterAddresses(
+        await boBrandsPage.filterAddresses(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfAddressesAfterFilter = await brandsPage.getNumberOfElementInGrid(page, tableName);
-        await expect(numberOfAddressesAfterFilter).to.be.at.most(numberOfAddresses);
+        const numberOfAddressesAfterFilter = await boBrandsPage.getNumberOfElementInGrid(page, tableName);
+        expect(numberOfAddressesAfterFilter).to.be.at.most(numberOfAddresses);
 
         for (let i = 1; i <= numberOfAddressesAfterFilter; i++) {
-          const textColumn = await brandsPage.getTextColumnFromTableAddresses(page, i, test.args.filterBy);
-          await expect(textColumn).to.contains(test.args.filterValue);
+          const textColumn = await boBrandsPage.getTextColumnFromTableAddresses(page, i, test.args.filterBy);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfAddressesAfterReset = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-        await expect(numberOfAddressesAfterReset).to.equal(numberOfAddresses);
+        const numberOfAddressesAfterReset = await boBrandsPage.resetAndGetNumberOfLines(page, tableName);
+        expect(numberOfAddressesAfterReset).to.equal(numberOfAddresses);
       });
     });
   });

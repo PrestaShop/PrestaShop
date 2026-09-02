@@ -4,7 +4,6 @@ services:
 
   prestashop.adapter.configuration.command_handler.switch_debug_mode_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Configuration\CommandHandler\SwitchDebugModeHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.debug_mode'
-    tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand }

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 class ConfigurationTestCore
 {
@@ -29,7 +9,6 @@ class ConfigurationTestCore
         '/classes/log/index.php',
         '/classes/cache/index.php',
         '/config/index.php',
-        '/controllers/admin/AdminLoginController.php',
         '/download/index.php',
         '/js/tools.js',
         '/js/jquery/plugins/fancybox/jquery.fancybox.js',
@@ -82,6 +61,7 @@ class ConfigurationTestCore
             'files' => false,
             'mails_dir' => 'mails',
             'openssl' => false,
+            'openssl_key_generation' => false,
             'simplexml' => false,
             'zip' => false,
             'fileinfo' => false,
@@ -207,7 +187,13 @@ class ConfigurationTestCore
 
     public static function test_gd()
     {
-        return function_exists('imagecreatetruecolor');
+        if (function_exists('gd_info')) {
+            $gd = gd_info();
+
+            return !empty($gd['JPEG Support']);
+        }
+
+        return false;
     }
 
     public static function test_json()
@@ -398,13 +384,23 @@ class ConfigurationTestCore
         return function_exists('openssl_encrypt');
     }
 
-    public static function test_sessions()
+    public static function test_openssl_key_generation()
     {
-        if (!$path = @ini_get('session.save_path')) {
-            return true;
+        $privateKey = openssl_pkey_new([
+            'private_key_bits' => 2048,
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+        ]);
+
+        if ($privateKey === false) {
+            return false;
         }
 
-        return is_writable($path);
+        return true;
+    }
+
+    public static function test_sessions()
+    {
+        return in_array(session_status(), [PHP_SESSION_ACTIVE, PHP_SESSION_NONE], true);
     }
 
     public static function test_dom()

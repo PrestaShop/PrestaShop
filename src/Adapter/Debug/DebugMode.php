@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Debug;
@@ -47,6 +27,16 @@ class DebugMode
      */
     public function isDebugModeEnabled()
     {
+        return 'false' !== Tools::strtolower($this->getCurrentDebugMode());
+    }
+
+    /**
+     * Get the current debug mode from the defines file.
+     *
+     * @return string|null
+     */
+    public function getCurrentDebugMode()
+    {
         $definesClean = '';
         $customDefinesPath = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
         $definesPath = _PS_ROOT_DIR_ . '/config/defines.inc.php';
@@ -55,14 +45,51 @@ class DebugMode
             $definesClean = php_strip_whitespace($customDefinesPath);
         }
 
-        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $definesClean, $debugModeValue)) {
+        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([^;]+)\);/Ui', $definesClean, $debugModeValue)) {
             $definesClean = php_strip_whitespace($definesPath);
-            if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $definesClean, $debugModeValue)) {
-                return false;
+            if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([^;]+)\);/Ui', $definesClean, $debugModeValue)) {
+                return null;
             }
         }
 
-        return 'true' === Tools::strtolower($debugModeValue[1]);
+        return $debugModeValue[1];
+    }
+
+    /**
+     * Create php code based on the debug mode configuration.
+     * Examples:
+     *  define('_PS_MODE_DEV_', true);
+     *  define('_PS_MODE_DEV_', isset($_COOKIE['debug']) && $_COOKIE['debug'] === 'debug_password');
+     *  define('_PS_MODE_DEV_', isset($_COOKIE['debug']));
+     *  define('_PS_MODE_DEV_', false);
+     *
+     * @param array $configuration {
+     *                             debug_mode: bool
+     *                             debug_cookie_name: string
+     *                             debug_cookie_value: string
+     *                             }
+     *
+     * @return string
+     */
+    public function createDebugModeFromConfiguration(array $configuration)
+    {
+        if (!$configuration['debug_mode']) {
+            return 'false';
+        }
+
+        if (empty($configuration['debug_cookie_name'])) {
+            return 'true';
+        }
+
+        $debug_cookie_name = stripslashes($configuration['debug_cookie_name']);
+
+        if (empty($configuration['debug_cookie_value'])) {
+            return "isset(\$_COOKIE['$debug_cookie_name'])";
+        }
+
+        $debug_cookie_value = stripslashes($configuration['debug_cookie_value']);
+
+        return "isset(\$_COOKIE['$debug_cookie_name']) && \$_COOKIE['$debug_cookie_name'] === '$debug_cookie_value'";
     }
 
     /**
@@ -118,17 +145,17 @@ class DebugMode
         $cleanedFileContent = php_strip_whitespace($filename);
         $fileContent = Tools::file_get_contents($filename);
 
-        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $cleanedFileContent)) {
+        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([^;]+)\);/Ui', $cleanedFileContent)) {
             return self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND;
         }
 
-        $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', ' . $value . ');', $fileContent);
+        $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([^;]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', ' . $value . ');', $fileContent);
         if (!@file_put_contents($filename, $fileContent)) {
             return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS;
         }
 
         if (function_exists('opcache_invalidate')) {
-            opcache_invalidate($filename);
+            @opcache_invalidate($filename);
         }
 
         return self::DEBUG_MODE_SUCCEEDED;
@@ -147,17 +174,17 @@ class DebugMode
         $cleanedFileContent = php_strip_whitespace($customFileName);
         $fileContent = Tools::file_get_contents($customFileName);
 
-        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $cleanedFileContent)) {
+        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([^;]+)\);/Ui', $cleanedFileContent)) {
             return self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND;
         }
-        $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', ' . $value . ');', $fileContent);
+        $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([^;]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', ' . $value . ');', $fileContent);
 
         if (!@file_put_contents($customFileName, $fileContent)) {
             return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM;
         }
 
         if (function_exists('opcache_invalidate')) {
-            opcache_invalidate($customFileName);
+            @opcache_invalidate($customFileName);
         }
 
         return self::DEBUG_MODE_SUCCEEDED;
@@ -170,11 +197,15 @@ class DebugMode
      *
      * @return int the debug mode
      */
-    private function changePsModeDevValue($value)
+    public function changePsModeDevValue($value)
     {
         // Check custom defines file first
         if ($this->isCustomDefinesReadable()) {
-            return $this->updateDebugModeValueInCustomFile($value);
+            $result = $this->updateDebugModeValueInCustomFile($value);
+            // If the constant is not found in custom file, fallback to main file
+            if ($result !== self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND) {
+                return $result;
+            }
         }
 
         if ($this->isMainDefinesReadable()) {

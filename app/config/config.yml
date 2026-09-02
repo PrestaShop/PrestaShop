@@ -3,57 +3,65 @@ imports:
   - { resource: services.yml }
   - { resource: addons/*.yml }
   - { resource: doctrine.yml }
+  - { resource: messenger.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-  env(PS_THEME_NAME): "classic"
-  AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
   translator.class: PrestaShopBundle\Translation\Translator
   translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
-  prestashop_views: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views"
+  prestashop_views: "%kernel.project_dir%/src/PrestaShopBundle/Resources/views"
   admin_page: "%prestashop_views%/Admin"
   env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
-  env(PS_LOG_MAX_FILES): 30
+  env(PS_LOG_MAX_FILES): '30'
+  env(PS_TRUSTED_PROXIES): ''
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
+  prestashop.controllers_all_shop_context:
+    - AdminAccess
+    - AdminFeatureFlag
+    - AdminLanguages
+    - AdminProfiles
+    - AdminSpecificPriceRule
+    - AdminStatuses
+    - AdminSecurity
+    - AdminSecuritySessionEmployee
+    - AdminSecuritySessionCustomer
+    - AdminTranslations
 
 # Autowires Core controllers
 services:
-  PrestaShopBundle\Controller\:
-    resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/*"
-    exclude: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Api"
-    public: true
-    tags:
-      - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
-
   logger:
     alias: monolog.logger
     public: true
 
 framework:
+  # proxies configuration, see https://symfony.com/doc/current/deployment/proxies.html
+  trusted_proxies: '%env(PS_TRUSTED_PROXIES)%'
+
   assets:
     version: !php/const PrestaShop\PrestaShop\Core\Version::VERSION
+    packages:
+      front_js:
+        base_path: '../js'
 
   # esi: ~
   secret: "%secret%"
   translator:
     fallbacks: [ "default" ]
     paths: "%modules_translation_paths%"
-  router:
-    resource: "%kernel.root_dir%/config/routing.yml"
-    strict_requirements: ~
   form: ~
   csrf_protection: ~
-  validation: { enable_annotations: true }
-  serializer: { enable_annotations: true }
+  validation: { enable_attributes: true }
+  serializer: { enable_attributes: true }
   default_locale: "%locale%"
   trusted_hosts: ~
   session:
     handler_id: ~
   fragments: ~
   http_method_override: true
+  http_client: ~
   cache:
     pools:
       '%cache.driver%':
@@ -64,7 +72,7 @@ monolog:
   handlers:
     main:
       type: rotating_file
-      max_files: '%env(PS_LOG_MAX_FILES)%'
+      max_files: '%env(int:PS_LOG_MAX_FILES)%'
       path: '%env(PS_LOG_OUTPUT)%'
       level: notice
     legacy:
@@ -82,33 +90,29 @@ twig:
   form_themes:
     - '@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_horizontal_layout.html.twig'
   paths:
-    '%admin_page%/Product': Product
     '%admin_page%/TwigTemplateForm': Twig
     '%admin_page%/Common': Common
     '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
     '%admin_page%/Configure/ShopParameters': ShopParameters
-    '%kernel.root_dir%/../modules': Modules
+    '%kernel.project_dir%/modules': Modules
     '%mail_themes_dir%': MailThemes
     '%prestashop_views%': PrestaShopCore
+    '%prestashop.admin_dir%/themes/new-theme': AdminNewTheme
   globals:
+    ps: '@PrestaShopBundle\Twig\Layout\PrestaShopLayoutGlobalVariables'
     webpack_server: false
     multistore_field_prefix: !php/const PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX
-    modify_all_shops_prefix: !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
-    disabling_switch_prefix: !php/const PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension::FIELD_PREFIX
-
-# Swiftmailer Configuration
-swiftmailer:
-  transport: "%mailer_transport%"
-  host: "%mailer_host%"
-  username: "%mailer_user%"
-  password: "%mailer_password%"
-  spool: { type: memory }
+    modify_all_shops_prefix: !php/const PrestaShopBundle\Form\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+    disabling_switch_prefix: !php/const PrestaShopBundle\Form\Extension\DisablingSwitchExtension::FIELD_PREFIX
 
 api_platform:
-  title: PrestaShop API
-  version: 1.0.0
+  # API docs is disabled in the Admin environment, it is accessible via the oauth dedicated endpoint
+  enable_docs: false
+  enable_entrypoint: false
+  enable_swagger: false
+  enable_swagger_ui: false
+  # We define mapping in this common config because even though the API routes are only accessible via the admin-api endpoint we still need
+  # to parse the Api Platform resources to extract the scopes in the back-office
   mapping:
     paths:
-      - '%kernel.project_dir%/app/config/api_platform'
-
-  metadata_backward_compatibility_layer: false
+      - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'

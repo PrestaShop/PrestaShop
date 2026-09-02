@@ -1,28 +1,7 @@
 <?php
-
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -36,9 +15,9 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShopBundle\Cache\LocalizationWarmer;
+use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Resources\Resetter\LocalizationPackResetter;
-use Tests\Resources\ResourceResetter;
 
 class RepositoryTest extends KernelTestCase
 {
@@ -68,7 +47,6 @@ class RepositoryTest extends KernelTestCase
     {
         parent::tearDownAfterClass();
         LocalizationPackResetter::resetLocalizationPacks();
-        (new ResourceResetter())->resetTestModules();
     }
 
     protected function setUp(): void
@@ -127,9 +105,9 @@ class RepositoryTest extends KernelTestCase
         $xmlContent = $localizationWarmer->warmUp($cacheDir);
 
         // Install each language associated to the country
-        $xml = @simplexml_load_string($xmlContent);
+        $xml = @simplexml_load_string($xmlContent[0]);
         foreach ($xml->languages->language as $data) {
-            /** @var \SimpleXMLElement $data */
+            /** @var SimpleXMLElement $data */
             $attributes = $data->attributes();
             $this->checkAndInstallLanguage((string) $attributes['iso_code']);
         }
@@ -350,7 +328,7 @@ class RepositoryTest extends KernelTestCase
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'CNY',
                 'formattedPrice' => '¥1,234,568.12',
-                //'nativeFormattedPrice' => '￥1,234,568.12',
+                // 'nativeFormattedPrice' => '￥1,234,568.12',
             ],
             'Australia' => [
                 'localeCode' => 'en-US',

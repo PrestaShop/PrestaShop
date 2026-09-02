@@ -1,45 +1,25 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Language\QueryHandler;
 
 use Language;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryHandler\GetLanguageForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
 
 /**
  * Gets language for editing
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetLanguageForEditingHandler implements GetLanguageForEditingHandlerInterface
 {
     /**
@@ -50,10 +30,11 @@ final class GetLanguageForEditingHandler implements GetLanguageForEditingHandler
         $language = $this->getLegacyLanguageObject($query->getLanguageId());
 
         return new EditableLanguage(
-            $query->getLanguageId(),
+            $query->getLanguageId()->getValue(),
             $language->name,
-            new IsoCode($language->iso_code),
-            new TagIETF($language->language_code),
+            $language->iso_code,
+            $language->language_code,
+            $language->locale,
             $language->date_format_lite,
             $language->date_format_full,
             (bool) $language->is_rtl,

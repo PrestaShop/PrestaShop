@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -34,14 +14,14 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 
 /**
  * This command builder builds the unified UpdateCombinationCommand which includes many sub scopes of the combination
  * edition, to clarify the configuration each sub-domain is configured separately but in the end we use one config, one
  * builder and one command for the whole Combination fields updates.
  */
-class UpdateCombinationCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
+class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * @var string
@@ -98,7 +78,7 @@ class UpdateCombinationCommandsBuilder implements MultiShopCombinationCommandsBu
             ->addField('[references][reference]', 'setReference', DataField::TYPE_STRING)
             ->addField('[references][mpn]', 'setMpn', DataField::TYPE_STRING)
             ->addField('[references][upc]', 'setUpc', DataField::TYPE_STRING)
-            ->addField('[references][ean_13]', 'setEan13', DataField::TYPE_STRING)
+            ->addField('[references][ean_13]', 'setGtin', DataField::TYPE_STRING)
             ->addField('[references][isbn]', 'setIsbn', DataField::TYPE_STRING)
         ;
 
@@ -120,8 +100,8 @@ class UpdateCombinationCommandsBuilder implements MultiShopCombinationCommandsBu
         if (
             // if low stock threshold switch is falsy, then we must set lowStockThreshold to its disabled value
             // which will end up being 0 after falsy bool to int conversion
-            isset($formData['stock']['options'][$lowStockThresholdSwitchKey]) &&
-            !$formData['stock']['options'][$lowStockThresholdSwitchKey]
+            isset($formData['stock']['options'][$lowStockThresholdSwitchKey])
+            && !$formData['stock']['options'][$lowStockThresholdSwitchKey]
         ) {
             $config->addMultiShopField(sprintf('[stock][options][%s]', $lowStockThresholdSwitchKey), 'setLowStockThreshold', DataField::TYPE_INT);
         } else {

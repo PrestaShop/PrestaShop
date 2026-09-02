@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
@@ -43,7 +23,6 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
         'disable_reordering_option',
         'purchase_minimum_value',
         'recalculate_shipping_cost',
-        'allow_multishipping',
         'allow_delayed_shipping',
         'enable_tos',
         'tos_cms_id',
@@ -63,7 +42,6 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
             'disable_reordering_option' => (bool) $this->configuration->get('PS_DISALLOW_HISTORY_REORDERING', false, $shopConstraint),
             'purchase_minimum_value' => (float) $this->configuration->get('PS_PURCHASE_MINIMUM', 0, $shopConstraint),
             'recalculate_shipping_cost' => (bool) $this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING', false, $shopConstraint),
-            'allow_multishipping' => (bool) $this->configuration->get('PS_ALLOW_MULTISHIPPING', false, $shopConstraint),
             'allow_delayed_shipping' => (bool) $this->configuration->get('PS_SHIP_WHEN_AVAILABLE', false, $shopConstraint),
             'enable_tos' => (bool) $this->configuration->get('PS_CONDITIONS', false, $shopConstraint),
             'tos_cms_id' => (int) $this->configuration->get('PS_CONDITIONS_CMS_ID', 0, $shopConstraint),
@@ -84,7 +62,6 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
             $this->updateConfigurationValue('PS_DISALLOW_HISTORY_REORDERING', 'disable_reordering_option', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_PURCHASE_MINIMUM', 'purchase_minimum_value', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_ORDER_RECALCULATE_SHIPPING', 'recalculate_shipping_cost', $configuration, $shopConstraint);
-            $this->updateConfigurationValue('PS_ALLOW_MULTISHIPPING', 'allow_multishipping', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_SHIP_WHEN_AVAILABLE', 'allow_delayed_shipping', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_CONDITIONS', 'enable_tos', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_CONDITIONS_CMS_ID', 'tos_cms_id', $configuration, $shopConstraint);
@@ -106,7 +83,6 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
             ->setAllowedTypes('disable_reordering_option', 'bool')
             ->setAllowedTypes('purchase_minimum_value', 'float')
             ->setAllowedTypes('recalculate_shipping_cost', 'bool')
-            ->setAllowedTypes('allow_multishipping', 'bool')
             ->setAllowedTypes('allow_delayed_shipping', 'bool')
             ->setAllowedTypes('enable_tos', 'bool')
             ->setAllowedTypes('tos_cms_id', 'int')

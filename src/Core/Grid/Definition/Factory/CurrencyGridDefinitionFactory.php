@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
@@ -94,77 +74,77 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add((new NameColumn('name'))
-            ->setName($this->trans('Currency', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'name',
-                'sortable' => false,
-            ])
+                ->setName($this->trans('Currency', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'name',
+                    'sortable' => false,
+                ])
             )
             ->add((new DataColumn('symbol'))
-            ->setName($this->trans('Symbol', [], 'Admin.International.Feature'))
-            ->setOptions([
-                'field' => 'symbol',
-                'sortable' => false,
-            ])
+                ->setName($this->trans('Symbol', [], 'Admin.International.Feature'))
+                ->setOptions([
+                    'field' => 'symbol',
+                    'sortable' => false,
+                ])
             )
             ->add((new DataColumn('iso_code'))
-            ->setName($this->trans('ISO code', [], 'Admin.International.Feature'))
-            ->setOptions([
-                'field' => 'iso_code',
-            ])
+                ->setName($this->trans('ISO code', [], 'Admin.International.Feature'))
+                ->setOptions([
+                    'field' => 'iso_code',
+                ])
             )
             ->add((new DataColumn('conversion_rate'))
-            ->setName($this->trans('Exchange rate', [], 'Admin.International.Feature'))
-            ->setOptions([
-                'field' => 'conversion_rate',
-            ])
+                ->setName($this->trans('Exchange rate', [], 'Admin.International.Feature'))
+                ->setOptions([
+                    'field' => 'conversion_rate',
+                ])
             )
             ->add((new ToggleColumn('active'))
-            ->setName($this->trans('Enabled', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'active',
-                'primary_field' => 'id_currency',
-                'route' => 'admin_currencies_toggle_status',
-                'route_param_name' => 'currencyId',
-            ])
+                ->setName($this->trans('Enabled', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'active',
+                    'primary_field' => 'id_currency',
+                    'route' => 'admin_currencies_toggle_status',
+                    'route_param_name' => 'currencyId',
+                ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add((new LinkRowAction('edit'))
-                    ->setIcon('edit')
-                    ->setOptions([
-                        'route' => 'admin_currencies_edit',
-                        'route_param_name' => 'currencyId',
-                        'route_param_field' => 'id_currency',
-                        'clickable_row' => true,
-                    ])
-                    )
-                    ->add((new SubmitRowAction('delete'))
-                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                    ->setIcon('delete')
-                    ->setOptions([
-                        'method' => 'DELETE',
-                        'route' => 'admin_currencies_delete',
-                        'route_param_name' => 'currencyId',
-                        'route_param_field' => 'id_currency',
-                        'confirm_message' => $this->trans(
-                            'Delete selected item?',
-                            [],
-                            'Admin.Notifications.Warning'
-                        ),
-                    ])
-                    )
-                    ->add(
-                        $this->buildDeleteAction(
-                            'admin_currencies_delete',
-                            'currencyId',
-                            'id_currency',
-                            Request::METHOD_DELETE
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('edit'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_currencies_edit',
+                                'route_param_name' => 'currencyId',
+                                'route_param_field' => 'id_currency',
+                                'clickable_row' => true,
+                            ])
                         )
-                    ),
-            ])
+                        ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'method' => 'DELETE',
+                                'route' => 'admin_currencies_delete',
+                                'route_param_name' => 'currencyId',
+                                'route_param_field' => 'id_currency',
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
+                            ])
+                        )
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_currencies_delete',
+                                'currencyId',
+                                'id_currency',
+                                Request::METHOD_DELETE
+                            )
+                        ),
+                ])
             )
         ;
     }
@@ -176,56 +156,56 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new FilterCollection())
             ->add(
-                 (new Filter('id_currency', NumberType::class))
-                     ->setTypeOptions([
-                         'required' => false,
-                         'attr' => [
-                             'placeholder' => $this->translator->trans('Search ID', [], 'Admin.Actions'),
-                         ],
-                     ])
-                     ->setAssociatedColumn('id_currency')
-             )
+                (new Filter('id_currency', NumberType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Search ID', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('id_currency')
+            )
             ->add(
-                 (new Filter('name', TextType::class))
-                     ->setTypeOptions([
-                         'required' => false,
-                         'attr' => [
-                             'placeholder' => $this->translator->trans('Currency', [], 'Admin.Global'),
-                         ],
-                     ])
-                     ->setAssociatedColumn('name')
-             )
+                (new Filter('name', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Currency', [], 'Admin.Global'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('name')
+            )
             ->add(
-                 (new Filter('symbol', TextType::class))
-                     ->setTypeOptions([
-                         'required' => false,
-                         'attr' => [
-                             'placeholder' => $this->translator->trans('Symbol', [], 'Admin.International.Feature'),
-                         ],
-                     ])
-                     ->setAssociatedColumn('symbol')
-             )
+                (new Filter('symbol', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Symbol', [], 'Admin.International.Feature'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('symbol')
+            )
             ->add((new Filter('iso_code', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('ISO code', [], 'Admin.International.Feature'),
-                ],
-            ])
-            ->setAssociatedColumn('iso_code')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('ISO code', [], 'Admin.International.Feature'),
+                    ],
+                ])
+                ->setAssociatedColumn('iso_code')
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
-            ->setAssociatedColumn('active')
+                ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-            ->setTypeOptions([
-                'reset_route' => 'admin_common_reset_search_by_filter_id',
-                'reset_route_params' => [
-                    'filterId' => self::GRID_ID,
-                ],
-                'redirect_route' => 'admin_currencies_index',
-            ])
-            ->setAssociatedColumn('actions')
+                ->setTypeOptions([
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
+                    'reset_route_params' => [
+                        'filterId' => self::GRID_ID,
+                    ],
+                    'redirect_route' => 'admin_currencies_index',
+                ])
+                ->setAssociatedColumn('actions')
             )
         ;
     }

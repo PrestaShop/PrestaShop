@@ -1,21 +1,36 @@
 <!-----------------------------------------------------------------------------
-Thank you for contributing to the PrestaShop project! 
+⚠️ SECURITY WARNING — READ BEFORE OPENING THIS PULL REQUEST ⚠️
+
+If this pull request fixes or relates to a SECURITY vulnerability, DO NOT open
+it here. Public pull requests disclose the vulnerability to everyone, including
+attackers, before a fix is released.
+
+Please report security issues privately by contacting
+security-core@prestashop.com instead.
+------------------------------------------------------------------------------>
+
+<!-----------------------------------------------------------------------------
+Thank you for contributing to the PrestaShop project!
 
 Please take the time to edit the "Answers" rows below with the necessary information.
 
 Check out our contribution guidelines to find out how to complete it:
-https://devdocs.prestashop-project.org/8/contribute/contribution-guidelines/#pull-requests
+https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/#pull-requests
+
+For type and category see:
+https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/pull-requests/#type--category
 ------------------------------------------------------------------------------>
 
 | Questions         | Answers
 | ----------------- | -------------------------------------------------------
-| Branch?           | develop / 8.0.x / 1.7.8.x
+| Branch?           | develop / 9.2.x
 | Description?      | Please be specific when describing the PR. <br> Every detail helps: versions, browser/server configuration, specific module/theme, etc. Feel free to add more information below this table.
 | Type?             | bug fix / improvement / new feature / refacto
-| Category?         | FO / BO / CO / IN / WS / TE / LO / ME / PM
+| Category?         | FO / BO / CO / IN / WS / TE / LO / ME / PM / see explanations at https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/pull-requests/#type--category
 | BC breaks?        | yes / no
 | Deprecations?     | yes / no
 | How to test?      | Indicate how to verify that this change works as expected.
-| Fixed ticket?     | Fixes #{issue number here}, Fixes #{another issue number here}
+| UI Tests          | Please run UI tests and paste here the link to the run. As we support MySQL and MariaDB in our tests, you have to launch 2 campaigns (by choosing both). [Visit the UI Tests repo and follow instructions](https://github.com/PrestaShop/ga.tests.ui.pr/).
+| Fixed issue or discussion?     | Fixes #{issue number here}, Fixes #{another issue number here}, Fixes https://github.com/PrestaShop/PrestaShop/discussions/ {discussion number here}
 | Related PRs       | If theme, autoupgrade or other module change is needed to make this change work, provide a link to related PRs here.
 | Sponsor company   | Your company or customer's name goes here (if applicable).

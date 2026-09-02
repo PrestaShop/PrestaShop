@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 abstract class ModuleGridCore extends Module
 {
@@ -72,10 +52,10 @@ abstract class ModuleGridCore extends Module
     public function create($render, $type, $width, $height, $start, $limit, $sort, $dir)
     {
         if (!Validate::isModuleName($render)) {
-            die(Tools::displayError());
+            throw new PrestaShopException('Invalid grid module name.');
         }
         if (!Tools::file_exists_cache($file = _PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php')) {
-            die(Tools::displayError());
+            throw new PrestaShopException('Main grid module file does not exist.');
         }
         require_once $file;
         $this->_render = new $render($type);
@@ -105,7 +85,7 @@ abstract class ModuleGridCore extends Module
             return Context::getContext()->getTranslator()->trans('No grid engine selected', [], 'Admin.Modules.Notification');
         }
         if (!Validate::isModuleName($render)) {
-            die(Tools::displayError());
+            throw new PrestaShopException('Invalid grid module name.');
         }
         if (!file_exists(_PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php')) {
             return Context::getContext()->getTranslator()->trans('Grid engine selected is unavailable.', [], 'Admin.Modules.Notification');

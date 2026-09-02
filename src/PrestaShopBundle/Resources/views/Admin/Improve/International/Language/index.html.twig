@@ -1,46 +1,18 @@
-{#**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-
-{% set layoutHeaderToolbarBtn = {
-  'add' : {
-    'href': path('admin_languages_create'),
-    'desc': 'Add new language'|trans({}, 'Admin.International.Feature'),
-    'icon': 'add_circle_outline'
-  }
-} %}
-{% set layoutTitle = 'Languages'|trans({}, 'Admin.Global') %}
-{% set enableSidebar = true %}
-
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% set layoutHeaderToolbarBtn = {
+  add: {
+    href: path('admin_languages_create'),
+    desc: 'Add new language'|trans({}, 'Admin.International.Feature'),
+    icon: 'add_circle_outline',
+  },
+} %}
 
 {% block content %}
-  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
-
-  <div class="alert alert-warning" role="alert">
-    <p class="alert-text">{{ 'When you delete a language, all related translations in the database will be deleted.'|trans({}, 'Admin.International.Notification') }}</p>
-  </div>
+  {{ include('@PrestaShop/Admin/Common/multistore-infotip.html.twig') }}
 
   {% if not isHtaccessFileWriter %}
     <div class="alert alert-info" role="alert">
@@ -48,10 +20,18 @@
     </div>
   {% endif %}
 
-
   {% block language_listing %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': languageGrid } %}
+    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: languageGrid}) }}
   {% endblock %}
+
+  <div class="alert alert-warning" role="alert">
+    <p><strong>{{ 'Important information regarding languages:'|trans({}, 'Admin.International.Notification') }}</strong></p>
+    <ul>
+      <li>{{ 'Only active languages are available to customers in the front office. You can still edit content in disabled languages in the back office - it just won\'t be visible to customers until the language is activated.'|trans({}, 'Admin.International.Notification') }}</li>
+      <li>{{ 'If you switch from a single-language shop to a multi-language setup, be aware that URLs may change depending on your URL settings.'|trans({}, 'Admin.International.Notification') }}</li>
+      <li>{{ 'When you delete a language, all content for all objects related to that language will be permanently removed from the database.'|trans({}, 'Admin.International.Notification') }}</li>
+    </ul>
+  </div>
 {% endblock %}
 
 {% block javascripts %}

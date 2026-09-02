@@ -4,7 +4,7 @@
 @restore-shops-after-feature
 @clear-cache-after-feature
 @product-combination
-@product-multi-shop
+@product-multishop
 @copy-combinations-to-shop
 Feature: Copy combinations from Back Office (BO) when using multi-shop feature
   As a BO user
@@ -47,9 +47,11 @@ Feature: Copy combinations from Back Office (BO) when using multi-shop feature
     And product "product1" default combination for shop "shop1" should be "product1SWhite"
 
   Scenario: I copy product from a shop to another the combinations are associated to the other shop along with the default
-    Given product "product1" should have no combinations for shops "shop2"
+    Given product product1 is not associated to shop "shop2"
     And product "product1" should not have a default combination for shop "shop2"
-    When I copy product product1 from shop shop1 to shop shop2
+    When I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then product "product1" should have the following combinations for shops "shop1,shop2":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
@@ -106,8 +108,10 @@ Feature: Copy combinations from Back Office (BO) when using multi-shop feature
       | available date             | 2021-10-10  |
     And combination "product1SWhite" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 10             |
-    When I copy product product1 from shop shop1 to shop shop2
+      | Puffin Mummy | 10             |
+    And I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
     Then combination "product1SWhite" should have following details for shops "shop1,shop2":
       | combination detail         | value             |
       | ean13                      | 978020137962      |
@@ -134,4 +138,4 @@ Feature: Copy combinations from Back Office (BO) when using multi-shop feature
       | available date             | 2021-10-10  |
     And combination "product1SWhite" last stock movements for shop "shop1,shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | 10             |

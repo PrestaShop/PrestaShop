@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter;
@@ -29,13 +9,20 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter;
 use ArrayAccess;
 use ArrayIterator;
 use ArrayObject;
+use Closure;
+use Context;
 use Countable;
 use Iterator;
 use JsonSerializable;
+use ObjectModelCore;
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertiesBag;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use ReturnTypeWillChange;
 use RuntimeException;
 
 /**
@@ -49,7 +36,7 @@ use RuntimeException;
  *
  *     @arrayAccess
  *
- *     @return array
+ * @return array
  *
  *     public function getAddresses()
  *
@@ -66,6 +53,13 @@ use RuntimeException;
  */
 abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, JsonSerializable
 {
+    /**
+     * When set by a concrete LazyArray, exposes front-office extra fields under the `extra_properties` key.
+     *
+     * @var ExtraPropertiesBag|null
+     */
+    protected $extraPropertiesBag = null;
+
     /**
      * @var ArrayObject
      */
@@ -89,21 +83,98 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     public function __construct()
     {
         $this->arrayAccessList = new ArrayObject();
-        $reflectionClass = new ReflectionClass(get_class($this));
+        $reflectionClass = new ReflectionClass(static::class);
         $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
-            $methodDoc = $method->getDocComment();
-            if (strpos($methodDoc, '@arrayAccess') !== false) {
+            $attributeInstance = $this->getAttributeInstanceFromMethod($method);
+            if ($this->isArrayAccessMethod($attributeInstance, $method)) {
                 $this->arrayAccessList->offsetSet(
-                    $this->convertMethodNameToIndex($method->getName()),
+                    $this->getIndexNameFromMethod($attributeInstance, $method),
                     [
                         'type' => 'method',
                         'value' => $method->getName(),
+                        'isRewritable' => $this->isResultRewritable($reflectionClass, $attributeInstance),
                     ]
                 );
             }
         }
+        // The extra_properties index is opt-in: it is only exposed when the concrete LazyArray
+        // initialized the bag (presenters call initExtraPropertiesBag() before this constructor),
+        // so lazy arrays without extra properties never leak a bag in loops/serialization.
+        if (null !== $this->extraPropertiesBag) {
+            $this->registerExtraPropertiesIndex();
+        }
         $this->arrayAccessIterator = $this->arrayAccessList->getIterator();
+    }
+
+    /**
+     * Initializes the extra properties bag for the wrapped entity.
+     *
+     * Concrete LazyArrays call this in their constructor. Legacy resolution
+     * (Context / ContainerFinder) is done here, in the Adapter layer, and the
+     * resolved container is passed to the Core factory.
+     *
+     * displayFront filtering is derived from the running context like in ObjectModel:
+     * filtered on front-office requests, unfiltered elsewhere (BO, CLI, API).
+     *
+     * @param class-string<ObjectModelCore> $objectModelClass
+     * @param int $entityId Entity row id (<= 0 results in an empty bag)
+     * @param int|null $langId Language id carried by the entity; null falls back to context language
+     */
+    protected function initExtraPropertiesBag(string $objectModelClass, int $entityId, ?int $langId = null): void
+    {
+        $context = Context::getContext();
+        try {
+            $container = (new ContainerFinder($context))->getContainer();
+        } catch (ContainerNotFoundException) {
+            return; // bag stays null → empty extra properties
+        }
+        $this->extraPropertiesBag = ExtraPropertiesBag::createForEntity(
+            $container,
+            $objectModelClass,
+            $entityId,
+            $langId ?? (int) $context->language->id,
+            $context->getShopConstraint(),
+            forFrontOffice: Context::isFrontOfficeContext(),
+        );
+
+        // Covers the init-after-construct ordering; presenters init before parent::__construct(),
+        // in which case the constructor performs the registration.
+        if (null !== $this->arrayAccessList) {
+            $this->registerExtraPropertiesIndex();
+        }
+    }
+
+    /**
+     * Exposes the `extra_properties` index on this lazy array.
+     *
+     * Not registered through LazyArrayAttribute on purpose: the index must only exist on
+     * lazy arrays that initialized the bag, so generic templates iterating all entries
+     * (e.g. order subtotals) never meet a non-printable ExtraPropertiesBag value.
+     */
+    private function registerExtraPropertiesIndex(): void
+    {
+        $this->arrayAccessList->offsetSet('extra_properties', [
+            'type' => 'method',
+            'value' => 'getExtraProperties',
+            'isRewritable' => false,
+        ]);
+    }
+
+    /**
+     * Returns the extra properties bag for front-office templates (`extra_properties` in Smarty
+     * and array access alike: $product['extra_properties']['module']['field']).
+     *
+     * Same API as ObjectModel::$extra_properties — both bag levels implement
+     * ArrayAccess and JsonSerializable, so Smarty chained access and json_encode work unchanged.
+     *
+     * The `extra_properties` array index only exists on lazy arrays that called
+     * initExtraPropertiesBag() (see registerExtraPropertiesIndex()); this method stays callable
+     * directly on any instance and falls back to an empty bag.
+     */
+    public function getExtraProperties(): ExtraPropertiesBag
+    {
+        return $this->extraPropertiesBag ??= new ExtraPropertiesBag(static fn (): array => []);
     }
 
     /**
@@ -113,7 +184,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $arrayResult = [];
@@ -147,9 +218,9 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
 
     /**
      * @param mixed $key
-     * @param \Closure $closure
+     * @param Closure $closure
      */
-    public function appendClosure($key, \Closure $closure)
+    public function appendClosure($key, Closure $closure)
     {
         $this->arrayAccessList->offsetSet(
             $key,
@@ -247,7 +318,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($index)
     {
         if (isset($this->arrayAccessList[$index])) {
@@ -320,7 +391,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function current()
     {
         $key = $this->arrayAccessIterator->key();
@@ -341,7 +412,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @return mixed|string
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->arrayAccessIterator->key();
@@ -391,15 +462,24 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      */
     public function offsetSet($offset, $value, $force = false): void
     {
-        if (!$force && $this->arrayAccessList->offsetExists($offset)) {
-            $result = $this->arrayAccessList->offsetGet($offset);
-            if ($result['type'] !== 'variable') {
-                throw new RuntimeException('Trying to set the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) . ' already defined by a method is not allowed');
+        // verify if the offset exists and is not rewritable, unless forced
+        if ($this->arrayAccessList->offsetExists($offset)) {
+            $offsetData = $this->arrayAccessList->offsetGet($offset);
+
+            if (!$force && $offsetData['type'] !== 'variable' && !$offsetData['isRewritable']) {
+                $errorMessage = sprintf(
+                    'Trying to set the index %s of the LazyArray %s already defined by a method is not allowed.',
+                    print_r($offset, true),
+                    static::class
+                );
+                throw new RuntimeException($errorMessage);
             }
         }
+
         $this->arrayAccessList->offsetSet($offset, [
             'type' => 'variable',
             'value' => $value,
+            'isRewritable' => $offsetData['isRewritable'] ?? false,
         ]);
     }
 
@@ -415,7 +495,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         if ($force || $result['type'] === 'variable') {
             $this->arrayAccessList->offsetUnset($offset);
         } else {
-            throw new RuntimeException('Trying to unset the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) . ' already defined by a method is not allowed');
+            throw new RuntimeException('Trying to unset the index ' . print_r($offset, true) . ' of the LazyArray ' . static::class . ' already defined by a method is not allowed');
         }
     }
 
@@ -430,5 +510,62 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         $strippedMethodName = substr($methodName, 3);
 
         return Inflector::getInflector()->tableize($strippedMethodName);
+    }
+
+    private function isResultRewritable(ReflectionClass $reflexionClass, ?LazyArrayAttribute $methodAttributeInstance): bool
+    {
+        if (!is_null($methodAttributeInstance) && !is_null($methodAttributeInstance->isRewritable)) {
+            return $methodAttributeInstance->isRewritable;
+        }
+
+        // no attribute found at method level, let's check at class level
+        $classAttributeInstance = null;
+        $classAttributes = $reflexionClass->getAttributes();
+
+        if (!empty($classAttributes)) {
+            $classAttributeInstance = $classAttributes[0]->newInstance();
+            if (isset($classAttributeInstance->isRewritable)) {
+                return $classAttributeInstance->isRewritable;
+            }
+        }
+
+        return false;
+    }
+
+    private function getAttributeInstanceFromMethod(ReflectionMethod $method): ?LazyArrayAttribute
+    {
+        $attributeInstance = null;
+        $methodAttributes = $method->getAttributes(LazyArrayAttribute::class);
+
+        if (!empty($methodAttributes)) {
+            $attributeInstance = $methodAttributes[0]->newInstance();
+        }
+
+        return $attributeInstance;
+    }
+
+    private function getIndexNameFromMethod(?LazyArrayAttribute $attributeInstance, ReflectionMethod $method): string
+    {
+        if (!is_null($attributeInstance) && !empty($attributeInstance->indexName)) {
+            return $attributeInstance->indexName;
+        }
+
+        return $this->convertMethodNameToIndex($method->getName());
+    }
+
+    private function isArrayAccessMethod($attributeInstance, $method): bool
+    {
+        if (!is_null($attributeInstance)) {
+            return $attributeInstance->arrayAccess;
+        }
+
+        @trigger_error(
+            'Configuring a method as arrayAccess through annotations is deprecated since version 9.0.0, use php attributes instead, using the LazyArrayAttribute class.',
+            E_USER_DEPRECATED
+        );
+
+        $methodDoc = $method->getDocComment();
+
+        return str_contains($methodDoc, '@arrayAccess');
     }
 }

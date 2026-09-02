@@ -1,28 +1,10 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 /**
  * Class PrestaShopLoggerCore.
@@ -32,6 +14,7 @@ class PrestaShopLoggerCore extends ObjectModel
     /**
      * List of log level types.
      */
+    public const LOG_SEVERITY_LEVEL_DEBUG = 0;
     public const LOG_SEVERITY_LEVEL_INFORMATIVE = 1;
     public const LOG_SEVERITY_LEVEL_WARNING = 2;
     public const LOG_SEVERITY_LEVEL_ERROR = 3;
@@ -76,6 +59,11 @@ class PrestaShopLoggerCore extends ObjectModel
     /** @var bool In all shops */
     public $in_all_shops;
 
+    /** @var string|null */
+    public $hash;
+
+    protected static int $minLevelInDb;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -85,14 +73,14 @@ class PrestaShopLoggerCore extends ObjectModel
         'fields' => [
             'severity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
             'error_code' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
-            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true],
+            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'object_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'allow_null' => true],
             'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'allow_null' => true],
             'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'allow_null' => true],
             'in_all_shops' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
-            'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isValidObjectClassName'],
+            'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isValidObjectClassName', 'size' => 32],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
@@ -140,6 +128,11 @@ class PrestaShopLoggerCore extends ObjectModel
      */
     public static function addLog($message, $severity = 1, $errorCode = null, $objectType = null, $objectId = null, $allowDuplicate = false, $idEmployee = null)
     {
+        // Not all logs are relevant in DB so we filter them based on the configuration PS_MIN_LOGGER_LEVEL_IN_DB
+        if ($severity < self::getMinimumLevelInDB()) {
+            return false;
+        }
+
         $log = new PrestaShopLogger();
         $log->severity = (int) $severity;
         $log->error_code = (int) $errorCode;
@@ -169,7 +162,7 @@ class PrestaShopLoggerCore extends ObjectModel
         $log->id_shop = Shop::getContext() == Shop::CONTEXT_SHOP ? (int) $context->shop->getContextualShopId() : null;
         $log->id_shop_group = Shop::getContext() == Shop::CONTEXT_GROUP ? (int) $context->shop->getContextShopGroupID() : null;
 
-        if ($objectType != 'SwiftMessage') {
+        if ($objectType != 'MailerMessage') {
             PrestaShopLogger::sendByMail($log);
         }
 
@@ -216,8 +209,6 @@ class PrestaShopLoggerCore extends ObjectModel
      * check if this log message already exists in database.
      *
      * @return bool true if exists
-     *
-     * @since 1.7.0
      */
     protected function isPresent()
     {
@@ -239,5 +230,18 @@ class PrestaShopLoggerCore extends ObjectModel
         }
 
         return self::$is_present[$this->getHash()];
+    }
+
+    protected static function getMinimumLevelInDB(): int
+    {
+        if (!isset(self::$minLevelInDb)) {
+            try {
+                self::$minLevelInDb = (int) Configuration::get('PS_MIN_LOGGER_LEVEL_IN_DB', null, null, null, self::LOG_SEVERITY_LEVEL_INFORMATIVE);
+            } catch (Throwable) {
+                self::$minLevelInDb = self::LOG_SEVERITY_LEVEL_INFORMATIVE;
+            }
+        }
+
+        return self::$minLevelInDb;
     }
 }

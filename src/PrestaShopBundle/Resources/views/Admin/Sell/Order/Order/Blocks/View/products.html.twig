@@ -1,27 +1,7 @@
-{#**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
 
 {% set isColumnLocationDisplayed = false %}
 {% set isColumnRefundedDisplayed = false %}
@@ -37,7 +17,7 @@
 <div class="card" id="orderProductsPanel">
   <div class="card-header">
     <h3 class="card-header-title">
-      {{ 'Products'|trans({}, 'Admin.Global') }} (<span id="orderProductsPanelCount">{{ orderForViewing.products.products|length }}</span>)
+      <i class="material-icons">shopping_basket</i> {{ 'Products'|trans({}, 'Admin.Global') }} (<span id="orderProductsPanelCount">{{ orderForViewing.products.products|length }}</span>)
     </h3>
   </div>
 
@@ -47,18 +27,23 @@
     </div>
 
     {% set formOptions = {
-          'attr': {
+          attr: {
             'data-order-id': orderForViewing.id,
             'data-is-delivered': orderForViewing.isDelivered,
             'data-is-tax-included': orderForViewing.isTaxIncluded,
             'data-discounts-amount': orderForViewing.prices.discountsAmountRaw,
-            'data-price-specification': priceSpecification|json_encode
-          }
+            'data-price-specification': priceSpecification|json_encode,
+          },
         } %}
     {{ form_start(cancelProductForm, formOptions) }}
 
     {# PRODUCT TABLE #}
-    <table class="table" id="orderProductsTable" data-currency-precision="{{ orderCurrency.precision }}">
+    <table
+      class="table"
+      id="orderProductsTable"
+      data-currency-precision="{{ orderCurrency.precision }}"
+      data-multishipment-enabled="{{ isImprovedShipmentFeatureFlagEnabled and orderHasShipment == true }}"
+    >
       <thead>
         <tr>
           <th>
@@ -101,18 +86,19 @@
         </tr>
       </thead>
       <tbody>
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig' %}
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig' %}
+        {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig') }}
+        {% if isImprovedShipmentFeatureFlagEnabled is defined and isImprovedShipmentFeatureFlagEnabled == false or orderHasShipment == false %}
+          {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig') }}
+          {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig') }}
+        {% endif %}
       </tbody>
     </table>
-
 
     {# PAGINATION AND ADD NEW PRODUCT/DISCOUNT #}
     <div class="row mb-3">
       <div class="col-xl-6 d-print-none order-product-pagination">
         <div class="form-group">
-          <label for="paginator_select_page_limit" class="col-form-label ml-3">{{ "Items per page:"|trans({}, 'Admin.Catalog.Feature') }}</label>
+          <label for="paginator_select_page_limit" class="col-form-label ml-3">{{ 'Items per page:'|trans({}, 'Admin.Catalog.Feature') }}</label>
           <select id="orderProductsTablePaginationNumberSelector" class="pagination-link custom-select">
             {% for numPageOption in paginationNumOptions %}
               <option value="{{ numPageOption }}" {% if numPageOption == paginationNum %} selected {% endif %}>{{ numPageOption }}</option>
@@ -130,7 +116,7 @@
               </a>
             </li>
             {% for numPage in 1..numPages %}
-              <li class="page-item{% if numPage==1 %} active{% endif %}">
+              <li class="page-item{% if numPage == 1 %} active{% endif %}">
                 <span class="page-link" data-order-id="{{ orderForViewing.id }}" data-page="{{ numPage }}">{{ numPage }}</span>
               </li>
             {% endfor %}
@@ -149,12 +135,22 @@
 
       <div class="col-xl-6 text-xl-right discount-action">
         {% if not orderForViewing.delivered %}
-          <button type="button" class="btn btn-outline-secondary js-product-action-btn mr-3" id="addProductBtn">
+          <button
+            type="button"
+            class="btn btn-outline-secondary js-product-action-btn mr-3"
+            id="addProductBtn"
+            {% if isImprovedShipmentFeatureFlagEnabled is defined and isImprovedShipmentFeatureFlagEnabled == true and orderHasShipment == true %}data-toggle="modal" data-target="#addOrderProductModal"{% endif %}
+          >
             <i class="material-icons">add_circle_outline</i>
             {{ 'Add a product'|trans({}, 'Admin.Orderscustomers.Feature') }}
           </button>
         {% endif %}
-        <button type="button" class="btn btn-outline-secondary js-product-action-btn" data-toggle="modal" data-target="#addOrderDiscountModal">
+        <button
+          type="button"
+          class="btn btn-outline-secondary js-product-action-btn"
+          data-toggle="modal"
+          data-target="#addOrderDiscountModal"
+        >
           <i class="material-icons">confirmation_number</i>
           {{ 'Add a discount'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </button>
@@ -163,11 +159,10 @@
     </div>
 
     {# DISCOUNT LIST #}
-    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig' with {
-        'discounts': orderForViewing.discounts.discounts,
-        'orderId': orderForViewing.id
-    } %}
-
+    {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig', {
+        discounts: orderForViewing.discounts.discounts,
+        orderId: orderForViewing.id,
+    }) }}
 
     {# ORDER TOTALS #}
 
@@ -217,14 +212,12 @@
           </div>
         </div>
 
-        {% if not orderForViewing.taxIncluded %}
-          <div class="col-sm text-center">
-            <p class="text-muted mb-0">
-              <strong>{{ 'Taxes'|trans({}, 'Admin.Global') }}</strong>
-            </p>
-            <strong id="orderTaxesTotal">{{ orderForViewing.prices.taxesAmountFormatted }}</strong>
-          </div>
-        {% endif %}
+        <div class="col-sm text-center">
+          <p class="text-muted mb-0">
+            <strong>{{ 'Taxes'|trans({}, 'Admin.Global') }}</strong>
+          </p>
+          <strong id="orderTaxesTotal">{{ orderForViewing.prices.taxesAmountFormatted }}</strong>
+        </div>
 
         <div class="col-sm text-center">
           <p class="text-muted mb-0">
@@ -242,8 +235,8 @@
         {{ 'For this customer group, prices are displayed as: [1]%tax_method%[/1]'|trans({
           '%tax_method%': orderForViewing.taxMethod,
           '[1]': '<strong>',
-          '[/1]': '</strong>'
-        }, 'Admin.Orderscustomers.Notification')|raw }}.
+          '[/1]': '</strong>',
+        }, 'Admin.Orderscustomers.Notification')|raw_purified }}.
 
         {% if not configuration('PS_ORDER_RETURN') %}
           <strong>{{ 'Merchandise returns are disabled'|trans({}, 'Admin.Orderscustomers.Notification') }}</strong>

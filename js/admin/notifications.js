@@ -1,28 +1,8 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-$(document).ready(function () {
+$(function () {
   if (youEditFieldFor) {
     $('.translatable span.hint').append(`<br /><span class="red">${youEditFieldFor}</span>`);
   }
@@ -62,8 +42,13 @@ function renderOrderNotification(value) {
   const carrier = value.carrier !== '' ? ` - ${value.carrier}` : '';
   return `
     <a class="notif" href="${value.order_view_url}">
-      #${value.id_order} - ${from_msg}&nbsp;<strong>${value.customer_name}</strong> (${value.iso_code})
-      <strong class="pull-right">${value.total_paid}</strong>${carrier}
+      <span class="notif__id">#${value.id_order}</span>
+      <span class="notif__customer">
+       - ${from_msg} <strong>${value.customer_name}</strong> <span class="notif__iso">(${value.iso_code})</span>
+      </span>
+      <span class="notif__order-info">
+       <span class="notif__carrier">${carrier} -</span> <strong class="notif__total">${value.total_paid}</strong>
+      </span>
     </a>
   `;
 }
@@ -72,7 +57,11 @@ function renderCustomerNotification(value) {
   const company = value.company !== '' ? ` (${value.company})` : '';
   return `
     <a class="notif" href="${value.customer_view_url}">
-      #${value.id_customer} - <strong>${value.customer_name}</strong>${company} - ${customer_name_msg} ${value.date_add};
+      <span class="notif__id">#${value.id_customer}</span>
+      <span class="notif__customer">
+       - <strong>${value.customer_name}</strong> ${company} - 
+      </span>
+      <span class="notif__registered-date">${customer_name_msg} <strong>${value.date_add}</strong></span>
     </a>
   `;
 }
@@ -81,11 +70,15 @@ function renderMessageNotification(value) {
   const company = value.company !== '' ? ` (${value.company})` : '';
   return `
     <a class="notif" href="${value.customer_thread_view_url}">
-      <span class="message-notification-status ${value.status}">
+      <span class="notif__status ${value.status}">
         <i class="material-icons">fiber_manual_record</i> ${value.status}
       </span>
-       - <strong>${value.customer_name}</strong> ${company}
-       - <i class="material-icons">access_time</i> ${value.date_add}
+      <span class="notif__customer">
+       - <strong>${value.customer_name}</strong> ${company} - 
+      </span>
+      <span class="notif__date">
+        <i class="material-icons">access_time</i> ${value.date_add}
+      </span>
     </a>
   `;
 }
@@ -116,16 +109,26 @@ function getPush() {
         return;
       }
 
-      // Add orders notifications to the list
-      renderNotifications('orders-notifications', json.order, renderOrderNotification);
+      var notifCount = 0;
 
-      // Add customers notifications to the list
-      renderNotifications('customers-notifications', json.customer, renderCustomerNotification);
+      if (json.hasOwnProperty('order')) {
+        // Add orders notifications to the list
+        renderNotifications('orders-notifications', json.order, renderOrderNotification);
+        notifCount += parseInt(json.order.total)
+      }
 
-      // Add messages notifications to the list
-      renderNotifications('messages-notifications', json.customer_message, renderMessageNotification);
+      if (json.hasOwnProperty('customer')) {
+        // Add customers notifications to the list
+        renderNotifications('customers-notifications', json.customer, renderCustomerNotification);
+        notifCount += parseInt(json.customer.total)
+      }
 
-      var notifCount = parseInt(json.order.total) + parseInt(json.customer.total) + parseInt(json.customer_message.total);
+      if (json.hasOwnProperty('customer_message')) {
+        // Add messages notifications to the list
+        renderNotifications('messages-notifications', json.customer_message, renderMessageNotification);
+        notifCount += parseInt(json.customer_message.total)
+      }
+
       if (notifCount > 0) {
         $("#total_notif_number_wrapper").removeClass('hide');
         $('#total_notif_value').text(notifCount);

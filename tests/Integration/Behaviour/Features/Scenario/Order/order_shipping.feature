@@ -26,7 +26,8 @@ Feature: Order from Back Office (BO)
   Scenario: Use a carrier that depends on price, add product to change order total the shipping price should update as well
     Given I select carrier "price_carrier" for cart "dummy_cart"
     Then I should get error that carrier is invalid
-    Given I enable carrier "price_carrier"
+    And I edit carrier "price_carrier" with specified properties:
+      | active | true |
     And I select carrier "price_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "price_carrier" as a carrier
     And I add order "bo_order1" with the following details:
@@ -121,7 +122,8 @@ Feature: Order from Back Office (BO)
   Scenario: Use a carrier that depends on weight, add product to change order total the shipping price should update as well
     Given I select carrier "weight_carrier" for cart "dummy_cart"
     Then I should get error that carrier is invalid
-    Given I enable carrier "weight_carrier"
+    And I edit carrier "weight_carrier" with specified properties:
+      | active | true |
     And I select carrier "weight_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "weight_carrier" as a carrier
     And I add order "bo_order1" with the following details:
@@ -415,7 +417,8 @@ Feature: Order from Back Office (BO)
 
   Scenario: I change the customer invoice address to another zone and check that shipping fees have been updated
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_invoice
-    Given I enable carrier "price_carrier"
+    And I edit carrier "price_carrier" with specified properties and update its reference:
+      | active | true |
     And I select carrier "price_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "price_carrier" as a carrier
     And I add order "bo_order1" with the following details:
@@ -525,7 +528,8 @@ Feature: Order from Back Office (BO)
 
   Scenario: I change the customer delivery address to another zone and check that shipping fees have been updated
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
-    Given I enable carrier "price_carrier"
+    And I edit carrier "price_carrier" with specified properties and update its reference:
+      | active | true |
     And I select carrier "price_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "price_carrier" as a carrier
     And I add order "bo_order1" with the following details:
@@ -633,7 +637,8 @@ Feature: Order from Back Office (BO)
 
   Scenario: I apply free discount shipping after it has been changed the discount should be correct
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_invoice
-    Given I enable carrier "price_carrier"
+    And I edit carrier "price_carrier" with specified properties and update its reference:
+      | active | true |
     And I select carrier "default_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "default_carrier" as a carrier
     And I add order "bo_order1" with the following details:
@@ -727,7 +732,8 @@ Feature: Order from Back Office (BO)
 
   Scenario: I use and address without taxes (no order_detail_tax created), then I change to a country with taxes all is correctly computed
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
-    And I enable carrier "price_carrier"
+    And I edit carrier "price_carrier" with specified properties and update its reference:
+      | active | true |
     And I select carrier "price_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "price_carrier" as a carrier
     Then I add new address to customer "testCustomer" with following details:
@@ -871,7 +877,8 @@ Feature: Order from Back Office (BO)
   Scenario: In rounding per item mode, I use an address without taxes (no order_detail_tax created), then I change to a country with taxes all is correctly computed
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
     Given specific shop configuration for "rounding type" is set to round each article
-    And I enable carrier "price_carrier"
+    And I edit carrier "price_carrier" with specified properties and update its reference:
+      | active | true |
     And I select carrier "price_carrier" for cart "dummy_cart"
     Then cart "dummy_cart" should have "price_carrier" as a carrier
     Then I add new address to customer "testCustomer" with following details:

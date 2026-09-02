@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Service\Grid;
@@ -33,50 +13,28 @@ use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
 
 class ResponseBuilder
 {
-    /** @var AdminFilterRepository */
-    private $adminFilterRepository;
-
-    /** @var int|null */
-    private $employeeId;
-
-    /** @var GridFilterFormFactoryInterface */
-    private $filterFormFactory;
-
-    /** @var Router */
-    private $router;
-
-    /** @var int */
-    private $shopId;
-
-    /** @var Session */
-    private $session;
-
     /**
      * @param GridFilterFormFactoryInterface $filterFormFactory
      * @param Router $router
      * @param AdminFilterRepository $adminFilterRepository
      * @param int|null $employeeId
      * @param int $shopId
+     * @param RequestStack $requestStack
      */
     public function __construct(
-        GridFilterFormFactoryInterface $filterFormFactory,
-        Router $router,
-        AdminFilterRepository $adminFilterRepository,
-        ?int $employeeId,
-        int $shopId,
-        Session $session
+        private readonly GridFilterFormFactoryInterface $filterFormFactory,
+        private readonly Router $router,
+        private readonly AdminFilterRepository $adminFilterRepository,
+        private readonly ?int $employeeId,
+        private readonly int $shopId,
+        private readonly RequestStack $requestStack
     ) {
-        $this->filterFormFactory = $filterFormFactory;
-        $this->router = $router;
-        $this->adminFilterRepository = $adminFilterRepository;
-        $this->employeeId = $employeeId;
-        $this->shopId = $shopId;
-        $this->session = $session;
     }
 
     /**
@@ -117,7 +75,9 @@ class ResponseBuilder
             } else {
                 foreach ($filtersForm->getErrors(true) as $error) {
                     $fieldLabel = $error->getOrigin()->getConfig()->getOption('label') ?: $error->getOrigin()->getName();
-                    $this->session->getFlashBag()->add('error', sprintf('%s: %s', $fieldLabel, $error->getMessage()));
+                    /** @var Session $session */
+                    $session = $this->requestStack->getSession();
+                    $session->getFlashBag()->add('error', sprintf('%s: %s', $fieldLabel, $error->getMessage()));
                 }
             }
         }
@@ -131,9 +91,7 @@ class ResponseBuilder
             }
         }
 
-        $redirectUrl = $this->router->generate($redirectRoute, $redirectParams);
-
-        return new RedirectResponse($redirectUrl, 302);
+        return new RedirectResponse($this->router->generate($redirectRoute, $redirectParams));
     }
 
     /**

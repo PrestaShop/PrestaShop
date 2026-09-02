@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -46,22 +26,33 @@
  *                                                  // it will generate random value of 16 characters
  *                                                  // for input with id of "my-input-id"
  *
+ * Or if you use '.js-generator-btn' as default selector, you can just do:
+ * new GeneratableInput();
+ *
  * You can attach as many different buttons as you like using "attachOn()" function
  * as long as 2 required data-* attributes are present at each button.
  */
 export default class GeneratableInput {
   /**
-   * Attaches event listener on button than can generate value
+   * Constructor for GeneratableInput component
+   * Attach event listeners on buttons that can generate random values, by default ".js-generator-btn".
    *
-   * @param {String} generatorBtnSelector
-   *
-   * @private
+   * @param {String} generatorButtonsSelector
    */
-  private attachOn(generatorBtnSelector: string): void {
-    const generatorBtn = document.querySelector(generatorBtnSelector);
+  public constructor(generatorButtonsSelector?: string) {
+    this.attachOn(generatorButtonsSelector ?? '.js-generator-btn');
+  }
 
-    if (generatorBtn !== null) {
-      generatorBtn.addEventListener('click', (event: Event): void => {
+  /**
+   * Attaches click event listeners on buttons than can generate random values
+   *
+   * @param {String} generatorButtonsSelector
+   */
+  public attachOn(generatorButtonsSelector: string): void {
+    const generatorButtons = document.querySelectorAll(generatorButtonsSelector);
+
+    generatorButtons.forEach((btn: Element): void => {
+      btn.addEventListener('click', (event: Event): void => {
         const {attributes} = <HTMLButtonElement>event.currentTarget;
 
         const targetInputId = attributes.getNamedItem('data-target-input-id')
@@ -75,8 +66,9 @@ export default class GeneratableInput {
           document.querySelector(`#${targetInputId}`)
         );
         targetInput.value = this.generateValue(generatedValueLength);
+        targetInput.dispatchEvent(new CustomEvent('change', {bubbles: true}));
       });
-    }
+    });
   }
 
   /**

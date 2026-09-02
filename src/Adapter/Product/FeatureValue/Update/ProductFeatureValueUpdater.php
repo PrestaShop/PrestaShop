@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,7 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\FeatureValue\Update;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use FeatureValue;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
@@ -177,21 +157,26 @@ class ProductFeatureValueUpdater
     }
 
     /**
-     * Remove custom feature values that are no longer associated to a product
+     * Remove custom feature values that are no longer associated to a product nor a combination.
+     * A custom value can be referenced either by feature_product or feature_product_attribute,
+     * so both tables must be checked before deleting (otherwise saving a product would delete
+     * custom values that are only used at combination level).
      */
     private function cleanOrphanCustomFeatureValues(): void
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'feature_value', 'fv')
-            ->select('fv.*, fp.id_product')
+            ->select('fv.id_feature_value')
             ->leftJoin('fv', $this->dbPrefix . 'feature_product', 'fp', 'fp.id_feature_value = fv.id_feature_value')
+            ->leftJoin('fv', $this->dbPrefix . 'feature_product_attribute', 'fpa', 'fpa.id_feature_value = fv.id_feature_value')
             ->where($qb->expr()->andX(
-                $qb->expr()->isNull('fp.id_product')),
+                $qb->expr()->isNull('fp.id_product'),
+                $qb->expr()->isNull('fpa.id_product_attribute'),
                 $qb->expr()->neq('fv.custom', 0)
-            )
+            ))
         ;
 
-        $orphanCustomFeatureValues = $qb->execute()->fetchAll();
+        $orphanCustomFeatureValues = $qb->executeQuery()->fetchAllAssociative();
         if (empty($orphanCustomFeatureValues)) {
             return;
         }
@@ -205,7 +190,7 @@ class ProductFeatureValueUpdater
         $qb->delete($this->dbPrefix . 'feature_value')
             ->where($qb->expr()->in('id_feature_value', $orphanIds))
         ;
-        $qb->execute();
+        $qb->executeStatement();
     }
 
     /**

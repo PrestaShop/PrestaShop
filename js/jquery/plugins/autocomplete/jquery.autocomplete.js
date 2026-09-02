@@ -80,16 +80,8 @@ $.Autocompleter = function(input, options) {
 	
 	var blockSubmit;
 	
-	// prevent form submit in opera when selecting with return key
-	$.browser.opera && $(input.form).bind("submit.autocomplete", function() {
-		if (blockSubmit) {
-			blockSubmit = false;
-			return false;
-		}
-	});
-	
 	// only opera doesn't trigger keydown multiple times while pressed, others don't work with keypress at all
-	$input.bind(($.browser.opera ? "keypress" : "keydown") + ".autocomplete", function(event) {
+	$input.bind(("keydown") + ".autocomplete", function(event) {
 		// track last key pressed
 		lastKeyPressCode = event.keyCode;
 		switch(event.keyCode) {
@@ -624,8 +616,8 @@ $.Autocompleter.Select = function (options, input, select, config) {
 	function movePosition(step) {
 		active += step;
 		if (active < 0) {
-			active = listItems.size() - 1;
-		} else if (active >= listItems.size()) {
+			active = listItems.length - 1;
+		} else if (active >= listItems.length) {
 			active = 0;
 		}
 	}
@@ -679,8 +671,8 @@ $.Autocompleter.Select = function (options, input, select, config) {
 			}
 		},
 		pageDown: function() {
-			if (active != listItems.size() - 1 && active + 8 > listItems.size()) {
-				moveSelect( listItems.size() - 1 - active );
+			if (active != listItems.length - 1 && active + 8 > listItems.length) {
+				moveSelect( listItems.length - 1 - active );
 			} else {
 				moveSelect(8);
 			}
@@ -708,20 +700,6 @@ $.Autocompleter.Select = function (options, input, select, config) {
 					maxHeight: options.scrollHeight,
 					overflow: 'auto'
 				});
-				
-                if($.browser.msie && typeof document.body.style.maxHeight === "undefined") {
-					var listHeight = 0;
-					listItems.each(function() {
-						listHeight += this.offsetHeight;
-					});
-					var scrollbarsVisible = listHeight > options.scrollHeight;
-                    list.css('height', scrollbarsVisible ? options.scrollHeight : listHeight );
-					if (!scrollbarsVisible) {
-						// IE doesn't recalculate width when scrollbar disappears
-						listItems.width( list.width() - parseInt(listItems.css("padding-left")) - parseInt(listItems.css("padding-right")) );
-					}
-                }
-                
             }
 		},
 		selected: function() {

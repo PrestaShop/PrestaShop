@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,11 +9,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler;
 
 use Module;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ControllerPermission;
-use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
+use PrestaShopBundle\Service\Form\ImprovedB2bTabsToggler;
 use Profile;
 use RuntimeException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -44,6 +28,7 @@ use Tab;
  *
  * @internal
  */
+#[AsQueryHandler]
 class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigurationHandlerInterface
 {
     /**
@@ -77,7 +62,8 @@ class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigur
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
         int $languageId,
-        array $nonConfigurableTabs
+        array $nonConfigurableTabs,
+        private readonly ?FeatureFlagStateCheckerInterface $featureFlagStateChecker = null,
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->languageId = $languageId;
@@ -96,7 +82,7 @@ class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigur
         $modulePermissionsForProfiles = $this->getModulePermissionsForProfiles($profiles);
 
         $employeeProfileId = $query->getEmployeeProfileId()->getValue();
-        $canEmployeeEditPermissions = $this->authorizationChecker->isGranted(PageVoter::UPDATE, 'AdminAccess');
+        $canEmployeeEditPermissions = $this->authorizationChecker->isGranted(Permission::UPDATE, 'AdminAccess');
 
         $bulkConfigurationPermissions = $this->getBulkConfigurationForProfiles(
             $employeeProfileId,
@@ -160,6 +146,8 @@ class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigur
         $legacyTabs = Tab::getTabs($this->languageId);
         $tabs = [];
 
+        $isImprovedB2BEnabled = $this->featureFlagStateChecker?->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_B2B) ?? false;
+
         foreach ($legacyTabs as $tab) {
             // Don't allow permissions for unnamed tabs (ie. AdminLogin)
             if (empty($tab['name'])) {
@@ -172,6 +160,10 @@ class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigur
             }
 
             if (in_array((int) $tab['id_tab'], $nonConfigurableTabs)) {
+                continue;
+            }
+
+            if (!$isImprovedB2BEnabled && in_array($tab['class_name'], ImprovedB2bTabsToggler::TAB_CLASS_NAMES, true)) {
                 continue;
             }
 

@@ -1,0 +1,31 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<div id="moduleTradLangSelect" class="modal  modal-vcenter fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4 class="modal-title module-modal-title">{{ 'Translate this module'|trans({}, 'Admin.Modules.Feature') }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+            <i class="icon-flag"></i>
+            {{ 'Manage translations'|trans({}, 'Admin.Modules.Feature') }}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            {% for language, translationLink in translationLinks %}
+            <li>
+              <a href="{{ translationLink }}">{{ language }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Category\Repository;
 
 use Category;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
@@ -36,16 +17,20 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
 
 /**
  * Provides access to Category data source
  */
 class CategoryRepository extends AbstractObjectModelRepository
 {
+    use ShopConstraintTrait;
+
     /**
      * @var Connection
      */
@@ -112,7 +97,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->setParameter('categoryIds', $categoryIds, Connection::PARAM_INT_ARRAY)
         ;
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         if (!$results) {
             return [];
@@ -178,7 +163,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->setParameter('duplicateNames', $duplicateNames, Connection::PARAM_STR_ARRAY)
         ;
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         $categoryIds = [];
         foreach ($results as $result) {
@@ -207,7 +192,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->setParameter('languageId', $languageId->getValue())
         ;
 
-        $category = $categoryQb->execute()->fetchAssociative();
+        $category = $categoryQb->executeQuery()->fetchAssociative();
 
         if (empty($category)) {
             throw new CategoryNotFoundException($categoryId, 'Cannot find breadcrumb because category does not exist');
@@ -224,14 +209,14 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->andWhere('cl.id_lang = :languageId')
             ->andWhere('c.level_depth >= 1')
             ->addGroupBy('c.id_category')
+            ->addOrderBy('c.level_depth', 'ASC')
             ->addOrderBy('c.id_category', 'ASC')
-            ->addOrderBy('c.position', 'ASC')
             ->setParameter('left', (int) $category['nleft'])
             ->setParameter('right', (int) $category['nright'])
             ->setParameter('languageId', $languageId->getValue())
         ;
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         if ($results) {
             $parentNames = array_column($results, 'name');
@@ -280,9 +265,24 @@ class CategoryRepository extends AbstractObjectModelRepository
                 ->andWhere('cs.id_shop = :shopId')
                 ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
             ;
+        } elseif ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+            $qb
+                ->innerJoin(
+                    'cp',
+                    $this->dbPrefix . 'category_shop',
+                    'cs',
+                    'cp.id_category = cs.id_category'
+                )
+                ->andWhere('cs.id_shop IN (:shopIds)')
+                ->setParameter(
+                    'shopIds',
+                    array_map(fn (ShopId $shopId) => $shopId->getValue(), $shopConstraint->getShopIds()),
+                    ArrayParameterType::INTEGER
+                )
+            ;
         }
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         $categoryIds = [];
         foreach ($results as $result) {
@@ -325,7 +325,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->andWhere('cp.id_category IN (:categories)')
             ->setParameter('categories', $categoryIds, Connection::PARAM_INT_ARRAY)
             ->groupBy('cp.id_category')
-            ->execute()->fetchAllAssociative()
+            ->executeQuery()->fetchAllAssociative()
         ;
 
         // Prepare new rows for each category if the max position was not found it's the first product associated
@@ -367,7 +367,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->andWhere('cp.id_category IN (:categories)')
             ->setParameter('productId', $productId->getValue())
             ->setParameter('categories', $categoryIds, Connection::PARAM_INT_ARRAY)
-            ->execute()->fetchAllAssociative()
+            ->executeQuery()->fetchAllAssociative()
         ;
 
         $this->connection
@@ -377,7 +377,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->andWhere('id_category IN (:categories)')
             ->setParameter('productId', $productId->getValue())
             ->setParameter('categories', $categoryIds, Connection::PARAM_INT_ARRAY)
-            ->execute()
+            ->executeQuery()
         ;
 
         // Decrement positions for each category impacted
@@ -403,7 +403,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->select('s.id_category')
             ->where('s.id_shop = :shopId')
             ->setParameter('shopId', $shopId->getValue())
-            ->execute()
+            ->executeQuery()
             ->fetchAssociative()
         ;
 
@@ -446,7 +446,7 @@ class CategoryRepository extends AbstractObjectModelRepository
                 'productId' => $productId->getValue(),
                 'shopId' => $shopId->getValue(),
             ])
-            ->execute()
+            ->executeQuery()
             ->fetchAssociative()
         ;
 
@@ -484,7 +484,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->groupBy('cl.name')
         ;
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         $names = [];
         foreach ($results as $result) {
@@ -492,5 +492,44 @@ class CategoryRepository extends AbstractObjectModelRepository
         }
 
         return $names;
+    }
+
+    /**
+     * Direct child of $parentCategoryId whose name matches in the given
+     * language (legacy Category::searchByNameAndParentCategoryId parity).
+     *
+     * category_lang rows are per shop, so the name resolution is scoped to
+     * the constraint's shops (legacy scoped it to ONE shop via
+     * Shop::addSqlRestrictionOnLang): a name translated only on another shop
+     * deliberately misses. Relies on the ShopConstraintTrait convention — the
+     * unqualified id_shop resolves to category_lang, and since that table
+     * carries no id_shop_group column a shop-group constraint is not
+     * supported here (single shop, shop list or all shops).
+     *
+     * Sibling categories may share a name, so EVERY match is returned, ordered by
+     * id ASC: callers use the first one and report the count when there is more
+     * than one, rather than silently picking the oldest homonym. The GROUP BY
+     * collapses the per-shop category_lang rows of the SAME category, so each
+     * returned id is a distinct category.
+     *
+     * @return list<int>
+     */
+    public function getChildCategoryIdsByName(int $parentCategoryId, string $name, int $languageId, ShopConstraint $shopConstraint): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('c.id_category')
+            ->from($this->dbPrefix . 'category', 'c')
+            ->innerJoin('c', $this->dbPrefix . 'category_lang', 'cl', 'cl.id_category = c.id_category AND cl.id_lang = :languageId')
+            ->where('cl.name = :name')
+            ->andWhere('c.id_parent = :parentCategoryId')
+            ->groupBy('c.id_category')
+            ->orderBy('c.id_category', 'ASC')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('name', $name)
+            ->setParameter('parentCategoryId', $parentCategoryId)
+        ;
+        $this->applyShopConstraint($qb, $shopConstraint);
+
+        return array_map('intval', $qb->executeQuery()->fetchFirstColumn());
     }
 }

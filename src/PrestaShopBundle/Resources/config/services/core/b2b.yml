@@ -1,8 +1,18 @@
 services:
   _defaults:
-    public: true
+    autowire: true
 
-  prestashop.core.b2b.b2b_feature:
-    class: 'PrestaShop\PrestaShop\Core\B2b\B2bFeature'
+  PrestaShop\PrestaShop\Core\B2b\B2bFeature:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.core.b2b.b2b_feature:
+    alias: 'PrestaShop\PrestaShop\Core\B2b\B2bFeature'
+    public: true
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShop\PrestaShop\Core\Feature\ShopModeFeature: ~
+
+  PrestaShopBundle\Service\Form\ImprovedB2bTabsToggler: ~

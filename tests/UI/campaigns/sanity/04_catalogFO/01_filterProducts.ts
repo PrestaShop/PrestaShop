@@ -1,15 +1,15 @@
 // Import utils
 import testContext from '@utils/testContext';
-import helper from '@utils/helpers';
-
-// Import FO pages
-import homePage from '@pages/FO/home';
-
-// Import data
-import Categories from '@data/demo/categories';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import {
+  type BrowserContext,
+  dataCategories,
+  foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'sanity_catalogFO_filterProducts';
 
@@ -24,50 +24,54 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
   let page: Page;
   let allProductsNumber: number = 0;
 
-  // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
-  // Steps
-  it('should open the shop page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
+  describe('Catalog FO: Filter products from catalog', async () => {
+    it('should open the shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-    await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-    const result = await homePage.isHomePage(page);
-    await expect(result).to.be.true;
-  });
+      const result = await foHummingbirdHomePage.isHomePage(page);
+      expect(result).to.eq(true);
+    });
 
-  it('should check and get the products number', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
+    it('should check and get the products number', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
-    await homePage.waitForSelectorAndClick(page, homePage.allProductLink);
+      await foHummingbirdHomePage.goToAllProductsPage(page);
 
-    allProductsNumber = await homePage.getNumberFromText(page, homePage.totalProducts);
-    await expect(allProductsNumber).to.be.above(0);
-  });
+      allProductsNumber = await foHummingbirdCategoryPage.getProductsNumber(page);
+      expect(allProductsNumber).to.be.above(0);
+    });
 
-  it('should filter products by the category \'Accessories\' and check result', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'FilterProductByCategory', baseContext);
+    it('should filter products by the category \'Accessories\' and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'FilterProductByCategory', baseContext);
 
-    await homePage.goToCategory(page, Categories.accessories.id);
+      await foHummingbirdCategoryPage.goToCategory(page, dataCategories.accessories.id);
 
-    const numberOfProducts = await homePage.getNumberFromText(page, homePage.totalProducts);
-    await expect(numberOfProducts).to.be.below(allProductsNumber);
-  });
+      const pageTitle = await foHummingbirdCategoryPage.getPageTitle(page);
+      expect(pageTitle).to.equal(dataCategories.accessories.name);
 
-  it('should filter products by the subcategory \'Stationery\' and check result', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'FilterProductBySubCategory', baseContext);
+      const numberOfProducts = await foHummingbirdCategoryPage.getProductsNumber(page);
+      expect(numberOfProducts).to.be.below(allProductsNumber);
+    });
 
-    await homePage.goToSubCategory(page, Categories.accessories.id, Categories.stationery.id);
+    it('should filter products by the subcategory \'Stationery\' and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'FilterProductBySubCategory', baseContext);
 
-    const numberOfProducts = await homePage.getNumberFromText(page, homePage.totalProducts);
-    await expect(numberOfProducts).to.be.below(allProductsNumber);
+      await foHummingbirdCategoryPage.reloadPage(page);
+      await foHummingbirdCategoryPage.goToSubCategory(page, dataCategories.accessories.id, dataCategories.stationery.id);
+
+      const numberOfProducts = await foHummingbirdCategoryPage.getProductsNumber(page);
+      expect(numberOfProducts).to.be.below(allProductsNumber);
+    });
   });
 });

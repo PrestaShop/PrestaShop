@@ -1,0 +1,69 @@
+name: Export logs from the setup env action
+description: Export logs from the setup env action, usually on failure
+
+inputs:
+  DOCKER_PREFIX:
+    required: true
+    description: Docker prefix for prestashop containers
+  ARTIFACT_NAME:
+    required: false
+    description: Artifact exported name
+    default: setup-logs
+  DB_SERVER:
+    required: false
+    description: Database Server for PrestaShop (mysql/mariadb)
+    default: mysql
+  ENABLE_SSL:
+    required: false
+    description: True to Run with SSL
+    default: 'true'
+  INSTALL_AUTO:
+    required: false
+    description: True To Auto Install
+    default: 'true'
+  PRESTASHOP_DIR:
+    required: false
+    description: Prestashop folder
+    default: '.'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: List dockers
+      run: |
+        cd ${{ inputs.PRESTASHOP_DIR }}
+        docker ps
+      shell: bash
+
+    - name: Export docker logs
+      if: always()
+      run: |
+        cd ${{ inputs.PRESTASHOP_DIR }}
+        mkdir -p ./var/docker-logs
+        docker logs ${{ inputs.DOCKER_PREFIX }}-${{ inputs.DB_SERVER }}-1 > ./var/docker-logs/${{ inputs.DB_SERVER }}.log
+        docker logs ${{ inputs.DOCKER_PREFIX }}-prestashop-git-1 > ./var/docker-logs/prestashop.log
+      shell: bash
+
+    - name: Export front output
+      if: always()
+      shell: bash
+      env:
+        URL_FO: ${{ (inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/' || 'https://localhost:8002/' }}
+        URL_PING: ${{ (inputs.INSTALL_AUTO == 'true') && 'en/' || 'install-dev/' }}
+      run: |
+        wget -O ${{ inputs.PRESTASHOP_DIR }}/var/logs/front.html ${{ env.URL_FO }}${{ env.URL_PING }} || echo FO not accessible
+
+    - name: Sanitize artifact name
+      id: sanitize-artifact-name
+      if: always()
+      run: echo "ARTIFACT_NAME=$( echo -e '${{ inputs.ARTIFACT_NAME }}' | tr ':' '-' )" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Save logs in case of error
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ${{ steps.sanitize-artifact-name.outputs.ARTIFACT_NAME }}
+        path: |
+          ${{ inputs.PRESTASHOP_DIR }}/var/logs
+          ${{ inputs.PRESTASHOP_DIR }}/var/docker-logs

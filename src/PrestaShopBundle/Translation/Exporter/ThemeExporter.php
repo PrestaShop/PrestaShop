@@ -1,31 +1,12 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Translation\Exporter;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
@@ -129,7 +110,7 @@ class ThemeExporter
 
         try {
             $themeCatalogue = $this->themeProvider->getThemeCatalogue();
-        } catch (\Exception $exception) {
+        } catch (Exception) {
             $themeCatalogue = new MessageCatalogue($locale, []);
         }
         $databaseCatalogue = $this->themeProvider->getDatabaseCatalogue($themeName);
@@ -153,6 +134,7 @@ class ThemeExporter
             'path' => $archiveParentDirectory,
             'default_locale' => $locale,
             'root_dir' => $rootDir,
+            'split_files' => false,
         ]);
 
         $this->renameCatalogues($locale, $archiveParentDirectory);
@@ -173,7 +155,7 @@ class ThemeExporter
      *
      * @return bool
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function ensureFileBelongsToExportDirectory($filePath)
     {
@@ -181,10 +163,10 @@ class ThemeExporter
             return false;
         }
 
-        $validFileLocation = substr(realpath($filePath), 0, strlen(realpath($this->exportDir))) === realpath($this->exportDir);
+        $validFileLocation = str_starts_with(realpath($filePath), realpath($this->exportDir));
 
         if (!$validFileLocation) {
-            throw new \Exception('Invalid file location. This file should belong to the export directory');
+            throw new Exception('Invalid file location. This file should belong to the export directory');
         }
 
         return $validFileLocation;
@@ -195,7 +177,7 @@ class ThemeExporter
      * @param string $locale
      * @param bool $rootDir
      *
-     * @return \Symfony\Component\Translation\MessageCatalogue
+     * @return MessageCatalogue
      */
     protected function getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir = false)
     {
@@ -309,7 +291,7 @@ class ThemeExporter
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function makeArchiveParentDirectory($themeName, $locale)
     {
@@ -351,11 +333,11 @@ class ThemeExporter
      *
      * @return bool
      */
-    protected function metadataContainNotes(array $metadata = null)
+    protected function metadataContainNotes(?array $metadata = null)
     {
-        return null !== $metadata && array_key_exists('notes', $metadata) && is_array($metadata['notes']) &&
-            array_key_exists(0, $metadata['notes']) && is_array($metadata['notes'][0]) &&
-            array_key_exists('content', $metadata['notes'][0]);
+        return null !== $metadata && array_key_exists('notes', $metadata) && is_array($metadata['notes'])
+            && array_key_exists(0, $metadata['notes']) && is_array($metadata['notes'][0])
+            && array_key_exists('content', $metadata['notes'][0]);
     }
 
     /**
@@ -363,7 +345,7 @@ class ThemeExporter
      *
      * @return bool
      */
-    protected function shouldAddFileMetadata(array $metadata = null)
+    protected function shouldAddFileMetadata(?array $metadata = null)
     {
         return null === $metadata || !array_key_exists('file', $metadata);
     }
@@ -389,7 +371,7 @@ class ThemeExporter
      *
      * @return array
      */
-    protected function parseMetadataNotes(array $metadata = null)
+    protected function parseMetadataNotes(?array $metadata = null)
     {
         $defaultMetadata = ['file' => '', 'line' => ''];
 

@@ -28,7 +28,7 @@
     <attribute id="80x120cm" id_attribute_group="Dimension" color=""/>
     <attribute id="Ruled" id_attribute_group="Paper_Type" color=""/>
     <attribute id="Plain" id_attribute_group="Paper_Type" color=""/>
-    <attribute id="Squarred" id_attribute_group="Paper_Type" color=""/>
+    <attribute id="Squared" id_attribute_group="Paper_Type" color=""/>
     <attribute id="Doted" id_attribute_group="Paper_Type" color=""/>
   </entities>
 </entity_attribute>

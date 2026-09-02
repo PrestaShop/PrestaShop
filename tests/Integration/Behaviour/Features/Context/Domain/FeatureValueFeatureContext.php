@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -30,7 +10,10 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Language;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureValueCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueException;
@@ -84,6 +67,30 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
         } catch (FeatureValueException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I delete feature value :featureValueReference
+     *
+     * @param string $featureValueReference
+     *
+     * @return void
+     */
+    public function deleteFeatureValue(string $featureValueReference): void
+    {
+        $this->getCommandBus()->handle(new DeleteFeatureValueCommand($this->getSharedStorage()->get($featureValueReference)));
+    }
+
+    /**
+     * @When I bulk delete feature values :featureValueReferences
+     *
+     * @param string $featureValueReferences
+     *
+     * @return void
+     */
+    public function bulkDeleteFeatureValues(string $featureValueReferences): void
+    {
+        $this->getCommandBus()->handle(new BulkDeleteFeatureValueCommand($this->referencesToIds($featureValueReferences)));
     }
 
     /**
@@ -201,5 +208,27 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
                 $featureValueReference
             ));
         }
+    }
+
+    /**
+     * @Then feature value :featureValueReference should exist
+     *
+     * @param string $featureValueReference
+     */
+    public function featureValueExists(string $featureValueReference): void
+    {
+        $editableFeatureValue = $this->getFeatureValue($featureValueReference);
+
+        Assert::assertEquals(
+            $this->getSharedStorage()->get($featureValueReference),
+            $editableFeatureValue->getFeatureValueId()->getValue()
+        );
+    }
+
+    private function getFeatureValue(string $featureValueReference): EditableFeatureValue
+    {
+        return $this->getQueryBus()->handle(new GetFeatureValueForEditing(
+            $this->getSharedStorage()->get($featureValueReference)
+        ));
     }
 }

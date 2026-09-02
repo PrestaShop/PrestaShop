@@ -1,0 +1,28 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Module\Command;
+
+/**
+ * Upload module
+ */
+class UploadModuleCommand
+{
+    /**
+     * @param string $source Source for module
+     */
+    public function __construct(
+        private readonly string $source
+    ) {
+    }
+
+    public function getSource(): string
+    {
+        return $this->source;
+    }
+}

@@ -1,32 +1,14 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -51,6 +33,7 @@ class PaginationType extends TranslatorAwareType
                 ),
                 'help' => $this->trans('Number of products displayed per page. Default is 12', 'Admin.Shopparameters.Help'),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_PRODUCTS_PER_PAGE',
             ])
             ->add('default_order_by', ChoiceType::class, [
                 'label' => $this->trans(
@@ -58,7 +41,7 @@ class PaginationType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'The order in which products are displayed in the product list.',
+                    'The default order in which products are displayed in listings. The available sorting methods differ based on the page type.',
                     'Admin.Shopparameters.Help'
                 ),
                 'choices' => [
@@ -70,9 +53,11 @@ class PaginationType extends TranslatorAwareType
                     'Brand' => 5,
                     'Product quantity' => 6,
                     'Product reference' => 7,
+                    'Product sales' => 8,
                 ],
                 'required' => false,
                 'placeholder' => false,
+                'multistore_configuration_key' => 'PS_PRODUCTS_ORDER_BY',
             ])
             ->add('default_order_way', ChoiceType::class, [
                 'label' => $this->trans(
@@ -86,6 +71,7 @@ class PaginationType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => false,
                 'placeholder' => false,
+                'multistore_configuration_key' => 'PS_PRODUCTS_ORDER_WAY',
             ]);
     }
 
@@ -105,5 +91,15 @@ class PaginationType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'product_preferences_pagination_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

@@ -1,0 +1,490 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+// Extra property definition form — row builders of the Validation and Placement cards (the rows
+// are the mapped form data). Form controls keep the UI kit look; this file only styles the
+// builder chrome (subsections, rows, badges, tags, ghost empty states, per-language zone).
+
+.extra-property-subsection {
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ececec;
+  border-radius: 8px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  &__icon {
+    margin-right: 0.375rem;
+    font-size: 1.25rem;
+    color: var(--#{$cdk}primary-600, #5e5e5e);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--#{$cdk}size-14);
+    font-weight: 600;
+  }
+
+  &__builder > [data-role="rows"] > .extra-property-row + .extra-property-row {
+    margin-top: 0.5rem;
+  }
+}
+
+.extra-property-count-badge {
+  padding: 0.125rem 0.5rem;
+  margin-left: 0.5rem;
+  color: var(--#{$cdk}blue-700, #2942cc);
+  background: var(--#{$cdk}blue-50, #e8edfd);
+  border-radius: 10px;
+}
+
+.extra-property-row {
+  display: flex;
+  // wrap: the error strip (when present) takes its own full-width line below the fields.
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #dfe1e3;
+  border-radius: 6px;
+
+  &__fields {
+    display: flex;
+    flex: 1 1 auto;
+    gap: 0.5rem;
+    align-items: center;
+
+    // Fields pack to the left (the remove button stays alone on the right): the wraps carry a
+    // fixed flex basis and the inputs fill them, so no stretched wrap leaves a hole in the row.
+    .extra-property-anchor-wrap {
+      flex: 0 1 22rem;
+    }
+
+    .extra-property-row__id-wrap {
+      flex: 0 1 18rem;
+    }
+  }
+
+  &__mode {
+    // Intrinsic width: the select sizes itself to its longest option label, with enough right
+    // padding to keep the arrow glyph clear of the text.
+    width: auto;
+    padding-right: 1.75rem;
+  }
+
+  &__methods {
+    max-width: 12rem;
+  }
+
+  &__uri {
+    // The URI input takes whatever the fixed-width chip column leaves.
+    flex: 1 1 auto;
+    font-family: var(--#{$cdk}font-family-monospace, ui-monospace, monospace);
+    font-size: var(--#{$cdk}size-13, 13px);
+  }
+
+  &__options {
+    font-size: var(--#{$cdk}size-13, 13px);
+
+    code {
+      color: var(--#{$cdk}primary-800, #1d1d1b);
+      word-break: break-all;
+    }
+  }
+
+  &__remove {
+    padding: 0.125rem;
+    margin-left: auto;
+    line-height: 1;
+    color: var(--#{$cdk}primary-600, #5e5e5e);
+
+    .material-icons {
+      font-size: 1.125rem;
+    }
+  }
+
+  &--error {
+    background: #fff8f8;
+    border-color: #d63f3c;
+  }
+
+  &__errors {
+    flex-basis: 100%;
+
+    .alert {
+      padding: 0.375rem 0.75rem;
+      margin-bottom: 0.25rem;
+      font-size: var(--#{$cdk}size-13, 13px);
+    }
+  }
+}
+
+.extra-property-tag {
+  padding: 0.125rem 0.5rem;
+  font-size: var(--#{$cdk}size-12, 12px);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  border-radius: 4px;
+
+  &--warning {
+    color: #8a5b00;
+    background: var(--#{$cdk}yellow-50, #fff5e5);
+  }
+
+  &--info {
+    color: var(--#{$cdk}blue-700, #2942cc);
+    background: var(--#{$cdk}blue-50, #e8edfd);
+  }
+}
+
+.extra-property-empty {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--#{$cdk}primary-500, #8f9294);
+  border: 1px dashed #dfe1e3;
+  border-radius: 6px;
+
+  .material-icons {
+    font-size: 1.25rem;
+  }
+}
+
+.extra-property-lang-zone {
+  padding: 0.75rem;
+  margin-top: 0.75rem;
+  background: #f6f8fe;
+  border: 1px solid #d1dcfc;
+  border-radius: 6px;
+
+  &__header {
+    display: flex;
+    gap: 0.375rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    .material-icons {
+      font-size: 1.125rem;
+      color: var(--#{$cdk}blue-700, #2942cc);
+    }
+  }
+
+  &__title {
+    font-size: var(--#{$cdk}size-13, 13px);
+    font-weight: 600;
+  }
+
+  [data-role="lang-rows"] > .extra-property-row {
+    background: var(--#{$cdk}white, #fff);
+  }
+
+  [data-role="lang-rows"] > .extra-property-row + .extra-property-row {
+    margin-top: 0.5rem;
+  }
+}
+
+.extra-property-lang-zone--inactive {
+  opacity: 0.75;
+}
+
+.extra-property-options-editor {
+  display: inline-flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  align-items: center;
+
+  &__field {
+    display: inline-flex;
+    gap: 0.25rem;
+    align-items: center;
+  }
+
+  &__label {
+    font-family: var(--#{$cdk}font-family-monospace, ui-monospace, monospace);
+    font-size: var(--#{$cdk}size-12, 12px);
+    color: var(--#{$cdk}primary-600, #5e5e5e);
+  }
+
+  &__input {
+    max-width: 9rem;
+    min-height: 30px;
+    padding: 0.125rem 0.5rem;
+    font-size: var(--#{$cdk}size-13, 13px);
+    border: 1px solid #b6b9bc;
+    border-radius: 4px;
+
+    &--raw {
+      flex: 1 1 auto;
+      max-width: none;
+    }
+  }
+
+  &__add {
+    min-height: 30px;
+    font-size: var(--#{$cdk}size-12, 12px);
+    color: var(--#{$cdk}blue-700, #2942cc);
+    background: none;
+    border: 1px dashed #b6b9bc;
+    border-radius: 4px;
+  }
+
+  &__remove {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.125rem;
+    line-height: 1;
+    color: var(--#{$cdk}primary-500, #8f9294);
+    background: none;
+    border: 0;
+
+    .material-icons {
+      font-size: 0.875rem;
+    }
+
+    &:hover {
+      color: var(--#{$cdk}primary-800, #1d1d1b);
+    }
+  }
+}
+
+.extra-property-add-row {
+  display: inline-flex;
+  gap: 0.375rem;
+  align-items: center;
+  margin-top: 0.75rem;
+
+  .material-icons {
+    font-size: 1.125rem;
+  }
+}
+
+.extra-property-add-lang-row {
+  padding: 0;
+  margin-top: 0.5rem;
+  font-size: var(--#{$cdk}size-13, 13px);
+}
+
+.extra-property-anchor-wrap {
+  position: relative;
+  flex: 1 1 auto;
+}
+
+.extra-property-anchor-dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  z-index: 1050;
+  // Sized by content so suggestions stay readable over narrow inputs (never narrower than the
+  // input, bounded so long labels don't span the page).
+  width: max-content;
+  min-width: 100%;
+  max-width: 28rem;
+  max-height: 16rem;
+  overflow-y: auto;
+  background: var(--#{$cdk}white, #fff);
+  border: 1px solid #b6b9bc;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.extra-property-anchor-option {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: var(--#{$cdk}size-13, 13px);
+  text-align: left;
+  background: none;
+  border: 0;
+
+  &:hover,
+  &.active {
+    background: var(--#{$cdk}blue-50, #e8edfd);
+  }
+
+  &--group &__label {
+    font-weight: 600;
+  }
+
+  // Tree indentation of the form field anchor picker — one class per nesting level (deeper
+  // nodes clamp to the last one, see MAX_DEPTH_CLASS in anchor-tree.ts).
+  @for $depth from 1 through 6 {
+    &--depth-#{$depth} {
+      padding-left: #{0.75 + $depth * 0.9}rem;
+    }
+  }
+
+  &__path {
+    font-family: var(--#{$cdk}font-family-monospace, ui-monospace, monospace);
+    font-size: var(--#{$cdk}size-12, 12px);
+    color: var(--#{$cdk}primary-500, #8f9294);
+  }
+
+  &--custom &__label {
+    color: var(--#{$cdk}blue-700, #2942cc);
+  }
+}
+
+.extra-property-anchor-loading {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--#{$cdk}size-13, 13px);
+  color: var(--#{$cdk}primary-500, #8f9294);
+}
+
+.extra-property-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #dfe1e3;
+  border-top-color: var(--#{$cdk}blue-700, #2942cc);
+  border-radius: 50%;
+  animation: extra-property-spin 0.7s linear infinite;
+}
+
+@keyframes extra-property-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.extra-property-anchor-heading {
+  padding: 0.375rem 0.75rem 0.125rem;
+  font-size: var(--#{$cdk}size-12, 12px);
+  font-weight: 600;
+  color: var(--#{$cdk}primary-500, #8f9294);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.extra-property-method-chips {
+  display: inline-flex;
+  // Fixed-width column sized for the full chip set (All methods + the 5 HTTP methods) so rows
+  // stay aligned whatever their endpoint exposes; the URI input yields the space.
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 24rem;
+}
+
+.extra-property-method-chip {
+  padding: 0.125rem 0.5rem;
+  font-size: var(--#{$cdk}size-12, 12px);
+  font-weight: 600;
+  color: var(--#{$cdk}primary-600, #5e5e5e);
+  background: var(--#{$cdk}white, #fff);
+  border: 1px solid #dfe1e3;
+  border-radius: 4px;
+
+  &.active {
+    color: var(--#{$cdk}blue-700, #2942cc);
+    background: var(--#{$cdk}blue-50, #e8edfd);
+    border-color: var(--#{$cdk}blue-700, #2942cc);
+  }
+}
+
+.extra-property-endpoint-search {
+  position: relative;
+  margin-top: 0.75rem;
+
+  .material-icons {
+    position: absolute;
+    top: 50%;
+    left: 0.5rem;
+    font-size: 1.125rem;
+    color: var(--#{$cdk}primary-500, #8f9294);
+    transform: translateY(-50%);
+  }
+
+  input {
+    padding-left: 2rem;
+  }
+}
+
+.extra-property-ownership-banner {
+  .alert-text {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .material-icons {
+    font-size: 1.25rem;
+  }
+}
+
+.extra-property-dev-fields {
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid #ececec;
+
+  &__summary {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: var(--#{$cdk}size-14);
+    font-weight: 600;
+    // The flex display suppresses the native disclosure marker: the chevron icon replaces it.
+    list-style: none;
+    cursor: pointer;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  &__chevron {
+    font-size: 1.25rem;
+    color: var(--#{$cdk}primary-600, #5e5e5e);
+    transition: transform 0.15s ease;
+  }
+
+  &[open] &__chevron {
+    transform: rotate(90deg);
+  }
+
+  &__body {
+    padding-top: 1rem;
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .extra-property-anchor-wrap {
+    display: block;
+  }
+}
+
+.extra-property-json-status {
+  margin-top: 0.25rem;
+  font-size: var(--#{$cdk}size-12, 12px);
+
+  &--ok {
+    color: #207f4b;
+  }
+
+  &--warn {
+    color: #8a5b00;
+  }
+}
+
+.extra-property-format-json {
+  padding: 0;
+  margin-top: 0.25rem;
+  font-size: var(--#{$cdk}size-12, 12px);
+}

@@ -1,33 +1,29 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
 import {psGetRequestParameter} from './common';
 
+const {addressForm} = prestashop.selectors.checkout;
 const editAddress = psGetRequestParameter('editAddress');
 const useSameAddress = psGetRequestParameter('use_same_address');
+
+function updateAddressForm() {
+  const $addressForm = $(`${addressForm} form`);
+  const requestData = $addressForm.serialize();
+  const confirmedRequestData = new URLSearchParams(requestData);
+  confirmedRequestData.append('confirm-addresses', 1);
+
+  $.post($addressForm.data('refresh-url'), confirmedRequestData.toString())
+    .fail((resp) => {
+      prestashop.emit('handleError', {
+        eventType: 'updatedAddressForm',
+        resp,
+      });
+    });
+}
 
 export default function () {
   $(prestashop.selectors.checkout.editAddresses).on('click', (event) => {
@@ -41,6 +37,7 @@ export default function () {
     function () {
       $(prestashop.selectors.checkout.addressItem).removeClass('selected');
       $(prestashop.selectors.checkout.addressItemChecked).addClass('selected');
+      updateAddressForm();
 
       const idFailureAddress = $(prestashop.selectors.checkout.addressError)
         .prop('id')

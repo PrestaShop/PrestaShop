@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
@@ -29,12 +9,13 @@ namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 use Context;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteWarehouseManagerException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeCannotChangeItselfException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
-use Warehouse;
+use Profile;
 
 /**
  * Class AbstractEmployeeStatusHandler.
@@ -79,20 +60,19 @@ abstract class AbstractEmployeeHandler extends AbstractObjectModelHandler
     }
 
     /**
-     * Make sure that given employee does not manage any warehouse.
-     *
-     * Even though Warehouse feature was removed in 1.7
-     * but the code related to it still exists
-     * thus assertion is kept for BC i guess.
-     *
-     * @param Employee $employee
+     * @throws EmployeeConstraintException
      */
-    protected function assertEmployeeDoesNotManageWarehouse(Employee $employee)
+    protected function assertHomepageIsAccessible(int $tabId, int $profileId): void
     {
-        $warehouses = Warehouse::getWarehousesByEmployee($employee->id);
-
-        if (count($warehouses) > 0) {
-            throw new CannotDeleteWarehouseManagerException(sprintf('Employee with id %s is warehouse manager and cannot be deleted.', $employee->id));
+        if (empty($tabId) || empty($profileId) || $profileId === EmployeeContext::SUPER_ADMIN_PROFILE_ID) {
+            return;
         }
+
+        $tabAccess = Profile::getProfileAccesses($profileId);
+        if ($tabAccess[$tabId]['view'] === '1') {
+            return;
+        }
+
+        throw new EmployeeConstraintException('Selected homepage is not accessible for this profile', EmployeeConstraintException::INVALID_HOMEPAGE);
     }
 }

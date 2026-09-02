@@ -1,0 +1,20 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+.popover {
+  padding: var(--#{$cdk}size-8);
+  color: var(--#{$cdk}white);
+  box-shadow: var(--#{$cdk}box-shadow-md);
+
+  &-title {
+    padding: 0;
+    font-weight: 700;
+    color: var(--#{$cdk}white);
+  }
+
+  &-content {
+    padding: 0;
+    color: var(--#{$cdk}white);
+  }
+}

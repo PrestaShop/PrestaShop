@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -172,6 +152,169 @@ class CartRuleTest extends TestCase
         $this->assertEquals(2, count($customerCartRules));
     }
 
+    /*
+     * Tests if the customer sees only his specific vouchers in my account zone
+     * in front office.
+     */
+    public function testGetAllCustomersCartRulesInMyAccountZone(): void
+    {
+        // Reset table
+        self::setUpBeforeClass();
+
+        // Code, highlight, for everyone
+        $CodeHighlightEveryone = $this->createDummyCartRule(true, 0, true, true);
+        // Code, highlight, specific customer
+        $CodeHighlightSpecific = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, true, true);
+        // Code, no highlight, for everyone
+        $CodeNohighlightEveryone = $this->createDummyCartRule(true, 0, true);
+        // Code, no highlight, specific customer
+        $CodeNohighlightSpecific = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, true);
+        // No code, highlight, for everyone
+        $NocodeHighlightEveryone = $this->createDummyCartRule(true, 0, false, true);
+        // No code, highlight, specific customer
+        $NocodeHighlightSpecific = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, false, true);
+        // No code, no highlight, for everyone
+        $NocodeNohighlightEveryone = $this->createDummyCartRule(true, 0, false);
+        // No code, no highlight, specific customer
+        $NocodeNohighlightSpecific = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, false);
+        // Code, highlight, specific customer, disabled
+        $CodeHighlightSpecificDisabled = $this->createDummyCartRule(false, (int) $this->dummyCustomer->id, true, true);
+        // Code, highlight, specific customer, disabled
+        $CodeHighlightSpecificDisabled = $this->createDummyCartRule(false, (int) $this->dummyCustomer->id, true, true);
+
+        // Get customer's vouchers in frontoffice
+        $customerCartRules = CartRule::getCustomerCartRules(
+            $this->defaultLanguageId,
+            (int) $this->dummyCustomer->id,
+            true,
+            false
+        );
+
+        $this->assertEquals(
+            [
+                $CodeNohighlightSpecific->id,
+                $NocodeNohighlightSpecific->id,
+                $CodeHighlightSpecific->id,
+                $NocodeHighlightSpecific->id,
+            ],
+            array_column($customerCartRules, 'id_cart_rule')
+        );
+    }
+
+    /*
+     * Tests customer's voucher in backoffice. We should see even the disabled vouchers here.
+     */
+    public function testGetAllCustomersCartRulesInBackoffice(): void
+    {
+        // Reset table
+        self::setUpBeforeClass();
+
+        // Code, highlight, for everyone
+        $CodeHighlightEveryone = $this->createDummyCartRule(true, 0, true, true);
+        // Code, highlight, specific customer
+        $CodeHighlightSpecific = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, true, true);
+        // Code, no highlight, for everyone
+        $CodeNohighlightEveryone = $this->createDummyCartRule(true, 0, true);
+        // Code, no highlight, specific customer
+        $CodeNohighlightSpecific = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, true);
+        // No code, highlight, for everyone
+        $NocodeHighlightEveryone = $this->createDummyCartRule(true, 0, false, true);
+        // No code, highlight, specific customer
+        $NocodeHighlightSpecific = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, false, true);
+        // No code, no highlight, for everyone
+        $NocodeNohighlightEveryone = $this->createDummyCartRule(true, 0, false);
+        // No code, no highlight, specific customer
+        $NocodeNohighlightSpecific = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, false);
+        // Code, highlight, specific customer, disabled
+        $CodeHighlightSpecificDisabled = $this->createDummyCartRule(false, (int) $this->dummyCustomer->id, true, true);
+
+        $customerCartRules = CartRule::getAllCustomerCartRules(
+            (int) $this->dummyCustomer->id
+        );
+
+        $this->assertEquals(
+            [
+                $NocodeNohighlightSpecific->id,
+                $NocodeHighlightSpecific->id,
+                $CodeNohighlightSpecific->id,
+                $CodeHighlightSpecific->id,
+                $CodeHighlightSpecificDisabled->id,
+            ],
+            array_column($customerCartRules, 'id_cart_rule')
+        );
+    }
+
+    /*
+     * Tests if both logged in and logged out customer gets offered
+     * proper highlighted vouchers in cart.
+     */
+    public function testGetHighlightedVouchersInCart(): void
+    {
+        // Reset table
+        self::setUpBeforeClass();
+
+        // Code, highlight, for everyone
+        $CodeHighlightEveryone = $this->createDummyCartRule(true, 0, true, true);
+        // Code, highlight, specific customer
+        $CodeHighlightSpecific = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, true, true);
+        // Code, no highlight, for everyone
+        $CodeNohighlightEveryone = $this->createDummyCartRule(true, 0, true);
+        // Code, no highlight, specific customer
+        $CodeNohighlightSpecific = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, true);
+        // No code, highlight, for everyone
+        $NocodeHighlightEveryone = $this->createDummyCartRule(true, 0, false, true);
+        // No code, highlight, specific customer
+        $NocodeHighlightSpecific = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, false, true);
+        // No code, no highlight, for everyone
+        $NocodeNohighlightEveryone = $this->createDummyCartRule(true, 0, false);
+        // No code, no highlight, specific customer
+        $NocodeNohighlightSpecific = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id, false);
+        // Code, highlight, specific customer, disabled
+        $CodeHighlightSpecificDisabled = $this->createDummyCartRule(false, (int) $this->dummyCustomer->id, true, true);
+        // Code, highlight, specific customer, disabled
+        $CodeHighlightSpecificDisabled = $this->createDummyCartRule(false, (int) $this->dummyCustomer->id, true, true);
+
+        // Get logged in customer's vouchers, we simulate getCustomerHighlightedDiscounts with no cart
+        $customerCartRules = CartRule::getCustomerCartRules(
+            $this->defaultLanguageId,
+            (int) $this->dummyCustomer->id,
+            true,
+            true,
+            true,
+            null,
+            false,
+            true
+        );
+        $this->assertEquals(
+            [
+                $CodeHighlightEveryone->id,
+                $NocodeHighlightEveryone->id,
+                $CodeHighlightSpecific->id,
+                $NocodeHighlightSpecific->id,
+            ],
+            array_column($customerCartRules, 'id_cart_rule')
+        );
+
+        // Get guest customer's vouchers, we simulate getCustomerHighlightedDiscounts with no cart
+        $customerCartRules = CartRule::getCustomerCartRules(
+            $this->defaultLanguageId,
+            0,
+            true,
+            true,
+            true,
+            null,
+            false,
+            true
+        );
+        $this->assertEquals(
+            [
+                $CodeHighlightEveryone->id,
+                $NocodeHighlightEveryone->id,
+            ],
+            array_column($customerCartRules, 'id_cart_rule')
+        );
+    }
+
     /**
      * Test sorting of the CartRules
      *
@@ -202,9 +345,7 @@ class CartRuleTest extends TestCase
         $this->assertEquals(
             [
                 $activeCustomerRule->id,
-                $activeGlobalRule->id,
                 $inactiveCustomerRule->id,
-                $inactiveGlobalRule->id,
             ],
             array_column($customerCartRules, 'id_cart_rule')
         );
@@ -220,7 +361,8 @@ class CartRuleTest extends TestCase
     public function createDummyCartRule(
         bool $active,
         int $customerId,
-        bool $code = true
+        bool $code = true,
+        bool $highlight = false
     ): CartRule {
         $randomNumber = rand(999, 9999);
         $cart_rule = new CartRule();
@@ -237,6 +379,7 @@ class CartRuleTest extends TestCase
         $cart_rule->date_from = date('Y-m-d H:i:s', time());
         $cart_rule->date_to = date('Y-m-d H:i:s', time() + 24 * 36000);
         $cart_rule->active = $active;
+        $cart_rule->highlight = $highlight;
         $cart_rule->add();
 
         return $cart_rule;

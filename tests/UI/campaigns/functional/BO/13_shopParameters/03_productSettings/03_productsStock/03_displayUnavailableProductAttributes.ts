@@ -1,26 +1,21 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-import productsPage from '@pages/BO/catalog/products';
-import addProductPage from '@pages/BO/catalog/products/add';
-// Import FO pages
-import productPage from '@pages/FO/product';
-import homePage from '@pages/FO/home';
-import searchResultsPage from '@pages/FO/searchResults';
-
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boLoginPage,
+  boProductsPage,
+  boProductsCreatePage,
+  boProductsCreateTabCombinationsPage,
+  boProductSettingsPage,
+  type BrowserContext,
+  FakerProduct,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsStock_displayUnavailableProductAttributes';
 
@@ -29,8 +24,8 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductData = new ProductData({
-    type: 'Standard product',
+  const productData: FakerProduct = new FakerProduct({
+    type: 'combinations',
     attributes: [
       {
         name: 'color',
@@ -46,134 +41,199 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  describe('Display unavailable product attributes on the product page', async () => {
+    it('should login in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
 
-  it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
 
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.productsLink,
-    );
-    await productsPage.closeSfToolBar(page);
-
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
-
-  it('should go to create product page and create a product', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
-
-    await productsPage.goToAddProductPage(page);
-    await addProductPage.createEditBasicProduct(page, productData);
-
-    const validationMessage = await addProductPage.setAttributesInProduct(page, productData);
-    await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
-  });
-
-  it('should go to \'Shop parameters > Product Settings\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
-
-    await addProductPage.goToSubMenu(
-      page,
-      addProductPage.shopParametersParentLink,
-      addProductPage.productSettingsLink,
-    );
-
-    const pageTitle = await productSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
-  });
-
-  const tests = [
-    {args: {action: 'disable', enable: false}},
-    {args: {action: 'enable', enable: true}},
-  ];
-  tests.forEach((test, index) => {
-    it(`should ${test.args.action} Display unavailable product attributes on the product page`, async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `${test.args.action}DisplayUnavailableProductAttributes`,
-        baseContext,
-      );
-
-      const result = await productSettingsPage.setDisplayUnavailableProductAttributesStatus(
-        page,
-        test.args.enable,
-      );
-
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
-    it('should check the unavailable product attributes in FO product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkUnavailableAttribute${index}`, baseContext);
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      page = await productSettingsPage.viewMyShop(page);
-
-      await homePage.changeLanguage(page, 'en');
-      await homePage.searchProduct(page, productData.name);
-      await searchResultsPage.goToProductPage(page, 1);
-
-      const sizeIsVisible = await productPage.isUnavailableProductSizeDisplayed(
+      await boDashboardPage.goToSubMenu(
         page,
-        productData.attributes[1].values[0],
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
-      await expect(sizeIsVisible).to.be.equal(test.args.enable);
+      await boProductsPage.closeSfToolBar(page);
 
-      const colorIsVisible = await productPage.isUnavailableProductColorDisplayed(
-        page,
-        productData.attributes[0].values[0],
-      );
-      await expect(colorIsVisible).to.be.equal(test.args.enable);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
-    it('should close the page and go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
+    it('should click on \'New product\' button and check new product modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      page = await productPage.closePage(browserContext, page, 0);
-
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
     });
-  });
 
-  it('should go to \'Catalog > Products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDeleteProduct', baseContext);
+    it('should choose product with combinations type', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseTypeOfProduct', baseContext);
 
-    await productSettingsPage.goToSubMenu(
-      page,
-      productSettingsPage.catalogParentLink,
-      productSettingsPage.productsLink,
-    );
+      await boProductsPage.selectProductType(page, productData.type);
 
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
+    });
 
-  it('should delete product', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+    it('should go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
 
-    const deleteTextResult = await productsPage.deleteProduct(page, productData);
-    await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
-  });
+      await boProductsPage.clickOnAddNewProduct(page);
 
-  it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
+    });
 
-    await productsPage.resetFilterCategory(page);
+    it('should create product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
-    const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProducts).to.be.above(0);
+      await boProductsCreatePage.closeSfToolBar(page);
+
+      const createProductMessage = await boProductsCreatePage.setProduct(page, productData);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
+    });
+
+    it('should create combinations and click on generate combinations button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createCombinations', baseContext);
+
+      await boProductsCreateTabCombinationsPage.setProductAttributes(page, productData.attributes);
+
+      const successMessage = await boProductsCreateTabCombinationsPage.generateCombinations(page);
+      expect(successMessage).to.equal(boProductsCreateTabCombinationsPage.successfulGenerateCombinationsMessage(1));
+    });
+
+    it('should close combinations generation modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
+
+      const isModalClosed = await boProductsCreateTabCombinationsPage.generateCombinationModalIsClosed(page);
+      expect(isModalClosed).to.be.equal(true);
+    });
+
+    it('should go to \'Shop parameters > Product Settings\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
+
+      await boProductsCreatePage.goToSubMenu(
+        page,
+        boProductsCreatePage.shopParametersParentLink,
+        boProductsCreatePage.productSettingsLink,
+      );
+
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
+    });
+
+    const tests = [
+      {args: {action: 'disable', enable: false}},
+      {args: {action: 'enable', enable: true}},
+    ];
+    tests.forEach((test, index: number) => {
+      it(`should ${test.args.action} Display unavailable product attributes on the product page`, async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `${test.args.action}DisplayUnavailableProductAttributes`,
+          baseContext,
+        );
+
+        const result = await boProductSettingsPage.setDisplayUnavailableProductAttributesStatus(page, test.args.enable);
+        expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
+      });
+
+      it('should view my shop', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
+
+        page = await boProductSettingsPage.viewMyShop(page);
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
+
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+        expect(isHomePage, 'Home page was not opened').to.eq(true);
+      });
+
+      it('should search for the created product and go to product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToCreatedProductPage${index}`, baseContext);
+
+        await foHummingbirdHomePage.searchProduct(page, productData.name);
+        await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
+
+        const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
+        expect(pageTitle.toUpperCase()).to.contains(productData.name.toUpperCase());
+      });
+
+      it('should check the unavailable product attributes in FO product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkUnavailableAttribute${index}`, baseContext);
+
+        const sizeIsVisible = await foHummingbirdProductPage.isUnavailableProductSizeDisplayed(
+          page,
+          productData.attributes[1].values[0],
+        );
+        expect(sizeIsVisible).to.be.equal(test.args.enable);
+
+        const colorIsVisible = await foHummingbirdProductPage.isUnavailableProductColorDisplayed(
+          page,
+          productData.attributes[0].values[0],
+        );
+        expect(colorIsVisible).to.be.equal(test.args.enable);
+      });
+
+      it('should close the page and go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
+
+        page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
+
+        const pageTitle = await boProductSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
+      });
+    });
+
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDeleteProduct', baseContext);
+
+      await boProductSettingsPage.goToSubMenu(
+        page,
+        boProductSettingsPage.catalogParentLink,
+        boProductSettingsPage.productsLink,
+      );
+
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
+    });
+
+    it('should click on delete product button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
+
+      const isModalVisible = await boProductsPage.clickOnDeleteProductButton(page);
+      expect(isModalVisible).to.be.equal(true);
+    });
+
+    it('should delete product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+
+      const textMessage = await boProductsPage.clickOnConfirmDialogButton(page);
+      expect(textMessage).to.equal(boProductsPage.successfulDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+
+      await boProductsPage.resetFilter(page);
+
+      const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfProducts).to.be.above(0);
+    });
   });
 });

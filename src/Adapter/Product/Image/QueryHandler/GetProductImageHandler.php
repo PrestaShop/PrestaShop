@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -31,15 +11,18 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Handles @see GetProductImage query
  */
+#[AsQueryHandler]
 class GetProductImageHandler implements GetProductImageHandlerInterface
 {
     /**
@@ -69,27 +52,23 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
      */
     public function handle(GetProductImage $query): ProductImage
     {
-        $image = $this->productImageRepository->get($query->getImageId());
+        $imageId = $query->getImageId();
 
-        return $this->formatImage(
-            $image,
-            $this->productImageRepository->getAssociatedShopIds(new ImageId($image->id))
-        );
-    }
-
-    /**
-     * @param Image $image
-     * @param ShopId[] $shopIds
-     *
-     * @return ProductImage
-     */
-    private function formatImage(Image $image, array $shopIds): ProductImage
-    {
-        $imageId = new ImageId((int) $image->id);
+        // Sometimes we need to show the image for shop even when it is not associated, but then the "cover" field is hidden,
+        // so in that case remaining info can be loaded from any other shop (only cover differs between shops)
+        try {
+            $image = $this->productImageRepository->getByShopConstraint($imageId, $query->getShopConstraint());
+            $isCover = (bool) $image->cover;
+        } catch (ShopAssociationNotFound) {
+            // If image is not associated with certain shop, then fall back to any other shop image (by using all shops constraint).
+            $image = $this->productImageRepository->getByShopConstraint($imageId, ShopConstraint::allShops());
+            // hardcode cover to false, because image cannot be a cover if it is not associated to this shop.
+            $isCover = false;
+        }
 
         return new ProductImage(
             (int) $image->id,
-            (bool) $image->cover,
+            $isCover,
             (int) $image->position,
             $image->legend,
             $this->productImageUrlFactory->getPath($imageId),
@@ -98,7 +77,7 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
                 static function (ShopId $shopId): int {
                     return $shopId->getValue();
                 },
-                $shopIds
+                $this->productImageRepository->getAssociatedShopIds($imageId)
             )
         );
     }

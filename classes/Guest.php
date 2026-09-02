@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -43,7 +23,13 @@ class GuestCore extends ObjectModel
     public $real_player;
     public $windows_media;
     public $accept_language;
-    public $mobile_theme;
+
+    /**
+     * @deprecated since 9.0.0 - This functionality was disabled. Attribute will be completely removed
+     * in the next major. There is no replacement, all clients should have the same experience.
+     *
+     * @var bool Mobile Theme */
+    public $mobile_theme = false;
 
     /**
      * @see ObjectModel::$definition
@@ -86,7 +72,6 @@ class GuestCore extends ObjectModel
         $this->accept_language = $this->getLanguage($acceptLanguage);
         $this->id_operating_system = $this->getOs($userAgent);
         $this->id_web_browser = $this->getBrowser($userAgent);
-        $this->mobile_theme = Context::getContext()->getMobileDevice();
     }
 
     /**
@@ -142,7 +127,7 @@ class GuestCore extends ObjectModel
 				FROM `' . _DB_PREFIX_ . 'web_browser` wb
 				WHERE wb.`name` = \'' . pSQL($k) . '\'');
 
-                return $result['id_web_browser'];
+                return $result['id_web_browser'] ?? null;
             }
         }
 
@@ -175,7 +160,7 @@ class GuestCore extends ObjectModel
 				FROM `' . _DB_PREFIX_ . 'operating_system` os
 				WHERE os.`name` = \'' . pSQL($k) . '\'');
 
-                return $result['id_operating_system'];
+                return $result['id_operating_system'] ?? null;
             }
         }
 
@@ -197,7 +182,7 @@ class GuestCore extends ObjectModel
         $result = Db::getInstance()->getRow('
 		SELECT `id_guest`
 		FROM `' . _DB_PREFIX_ . 'guest`
-		WHERE `id_customer` = ' . (int) ($idCustomer));
+		WHERE `id_customer` = ' . (int) $idCustomer);
 
         return $result['id_guest'] ?? false;
     }
@@ -246,9 +231,9 @@ class GuestCore extends ObjectModel
      */
     public static function setNewGuest($cookie)
     {
-        $guest = new Guest(isset($cookie->id_customer) ? (int) Guest::getFromCustomer((int) ($cookie->id_customer)) : null);
+        $guest = new Guest(isset($cookie->id_customer) ? (int) Guest::getFromCustomer((int) $cookie->id_customer) : null);
         $guest->userAgent();
         $guest->save();
-        $cookie->id_guest = (int) ($guest->id);
+        $cookie->id_guest = (int) $guest->id;
     }
 }

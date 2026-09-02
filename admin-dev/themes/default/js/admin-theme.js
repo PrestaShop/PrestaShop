@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 // build confirmation modal
@@ -52,11 +32,11 @@ function confirm_modal(
       + '</div>'
       + '</div>',
   );
-  confirmModal.find('#confirm-modal-left-button').click(() => {
+  confirmModal.find('#confirm-modal-left-button').on('click', () => {
     leftButtonCallback();
     confirmModal.modal('hide');
   });
-  confirmModal.find('#confirm-modal-right-button').click(() => {
+  confirmModal.find('#confirm-modal-right-button').on('click', () => {
     rightButtonCallback();
     confirmModal.modal('hide');
   });
@@ -85,7 +65,7 @@ function error_modal(heading, msg) {
       + '</div>'
       + '</div>',
   );
-  errorModal.find('#error_modal_right_button').click(() => {
+  errorModal.find('#error_modal_right_button').on('click', () => {
     errorModal.modal('hide');
   });
   errorModal.modal('show');
@@ -110,7 +90,7 @@ function scroll_if_anchor(href) {
     }
   }
 }
-$(document).ready(() => {
+$(() => {
   const $mainMenu = $('.main-menu');
   const $navBar = $('.nav-bar');
   const $body = $('body');
@@ -135,16 +115,19 @@ $(document).ready(() => {
 
   $('.nav-bar')
     .find('.link-levelone')
-    .hover(
+    .on(
+      'mouseenter',
       function () {
         $(this).addClass('-hover');
       },
+    ).on(
+      'mouseleave',
       function () {
         $(this).removeClass('-hover');
       },
     );
 
-  $('.nav-bar li.link-levelone.has_submenu > a').on('click', function (e) {
+  $('.nav-bar li.link-levelone.has_submenu > a').off('click').on('click', function (e) {
     e.preventDefault();
     e.stopPropagation();
 
@@ -192,7 +175,7 @@ $(document).ready(() => {
     $submenu.find('.submenu').css('top', itemOffsetTop);
   });
 
-  $('.nav-bar').on('click', '.menu-collapse', function () {
+  $('.nav-bar').off('click', '.menu-collapse').on('click', '.menu-collapse', function () {
     $('body').toggleClass('page-sidebar-closed');
     $('.main-menu').toggleClass('sidebar-closed');
 
@@ -219,6 +202,161 @@ $(document).ready(() => {
       },
     });
   });
+  const doQuickLinkAjax = ($link, method, name, newWindow, callbacks = {}) => {
+    const reportErrors = (messages) => {
+      if (callbacks.onError) {
+        callbacks.onError(messages);
+        return;
+      }
+
+      messages.forEach((message) => {
+        $.growl.error({title: '', message});
+      });
+    };
+
+    $.ajax({
+      type: 'POST',
+      headers: {'cache-control': 'no-cache'},
+      async: true,
+      url: $link.data('post-link'),
+      data: {
+        method,
+        url: $link.data('url'),
+        name,
+        icon: $link.data('icon'),
+        id_quick_access: $link.data('quicklink-id'),
+        new_window: newWindow ? 1 : 0,
+      },
+      dataType: 'json',
+      success: (data) => {
+        if (typeof data.has_errors !== 'undefined' && data.has_errors) {
+          const messages = [];
+          $.each(data, (index) => {
+            if (typeof data[index] === 'string') {
+              messages.push(data[index]);
+            }
+          });
+          reportErrors(messages);
+        } else if (Array.isArray(data)) {
+          let quicklinkList = '';
+          $.each(data, (index, item) => {
+            if (typeof item.name !== 'undefined') {
+              const activeClass = item.active ? ' active' : '';
+              const classAttr = item.class ? ` class="${item.class}"` : '';
+              quicklinkList += `<li class="quick-row-link${activeClass}">`
+                + `<a${classAttr} href="${item.link}" data-item="${item.name}">${item.name}</a></li>`;
+            }
+          });
+          if (quicklinkList) {
+            $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
+            $('#header_quick ul.dropdown-menu').prepend(quicklinkList);
+            $link.closest('li').remove();
+            if (callbacks.onSuccess) {
+              callbacks.onSuccess();
+            }
+            window.showSuccessMessage(window.update_success_msg);
+          }
+        }
+      },
+      error: (xhr, textStatus) => {
+        const message = textStatus === 'parsererror'
+          ? `Server returned non-JSON (status ${xhr.status})`
+          : `${xhr.status} ${xhr.statusText}`;
+
+        if (callbacks.onError) {
+          callbacks.onError([message]);
+          return;
+        }
+
+        $.growl.error({title: 'Quick access error', message});
+      },
+    });
+  };
+
+  $(document).on('click', '.js-quick-link', (e) => {
+    e.preventDefault();
+
+    const $link = $(e.target).closest('.js-quick-link');
+    const method = $link.data('method');
+
+    if (method === 'remove') {
+      doQuickLinkAjax($link, method, null, false);
+      return;
+    }
+
+    if (method === 'add') {
+      const $modal = $('#quick-access-add-modal');
+      document.body.appendChild($modal[0]);
+      const defaultName = ($link.data('link') || '').substring(0, 32);
+
+      $modal.find('#quick-access-name').val(defaultName);
+      $modal.find('input[name="quick_access_new_window"][value="0"]').prop('checked', true);
+
+      $modal.one('shown.bs.modal', () => {
+        $modal.find('#quick-access-name').trigger('focus');
+      });
+
+      $modal.find('#quick-access-name').off('keypress').on('keypress', (keyEvent) => {
+        if (keyEvent.key === 'Enter') {
+          $modal.find('#quick-access-save-btn').trigger('click');
+        }
+      });
+
+      const $nameInput = $modal.find('#quick-access-name');
+      const $nameGroup = $modal.find('#quick-access-name-group');
+      const $nameError = $modal.find('#quick-access-name-error');
+      const $modalError = $modal.find('#quick-access-add-error');
+
+      const resetErrors = () => {
+        $nameGroup.removeClass('has-error');
+        $nameError.addClass('hidden').find('.js-error-text').text('');
+        $modalError.removeClass('alert alert-danger').addClass('hidden').find('.alert-text').text('');
+      };
+
+      $modal.one('hidden.bs.modal', resetErrors);
+      $nameInput.off('input').on('input', resetErrors);
+
+      // Only dismiss on backdrop click when the press also started on the backdrop.
+      // Without this, a mousedown inside the modal released outside (e.g. text selection)
+      // bubbles a click whose target is the modal itself, which Bootstrap 3.1 treats as a
+      // backdrop click and closes the modal. These guards run before Bootstrap's own
+      // click.dismiss handler (bound during .modal('show') below) so they can stop it.
+      let mouseDownOnBackdrop = false;
+      $modal.off('mousedown.qaBackdrop').on('mousedown.qaBackdrop', (downEvent) => {
+        mouseDownOnBackdrop = downEvent.target === downEvent.currentTarget;
+      });
+      $modal.off('click.qaBackdrop').on('click.qaBackdrop', (clickEvent) => {
+        if (clickEvent.target === clickEvent.currentTarget && !mouseDownOnBackdrop) {
+          clickEvent.stopImmediatePropagation();
+        }
+      });
+
+      $modal.find('#quick-access-save-btn').off('click').on('click', () => {
+        resetErrors();
+
+        const name = String($nameInput.val()).trim();
+
+        if (!name) {
+          $nameGroup.addClass('has-error');
+          $nameError.removeClass('hidden').find('.js-error-text').text($nameInput.data('required-message'));
+          $nameInput.trigger('focus');
+          return;
+        }
+
+        const newWindow = $modal.find('input[name="quick_access_new_window"]:checked').val() === '1';
+        doQuickLinkAjax($link, method, name, newWindow, {
+          onSuccess: () => $modal.modal('hide'),
+          onError: (messages) => {
+            $modalError.addClass('alert alert-danger').removeClass('hidden')
+              .find('.alert-text').text(messages.join(' '));
+          },
+        });
+      });
+
+      $modal.modal('show');
+    }
+  });
+
   addMobileBodyClickListener();
   const MAX_MOBILE_WIDTH = 1023;
 
@@ -335,7 +473,6 @@ $(document).ready(() => {
       .removeClass('collapse')
       .addClass('submenu');
     $('.shop-list-title').remove();
-    $('.js-non-responsive').hide();
     $('.mobile-layer')
       .addClass('d-none')
       .removeClass('expanded');
@@ -378,7 +515,7 @@ $(document).ready(() => {
   });
 
   let timer;
-  $(window).scroll(() => {
+  $(window).on('scroll', () => {
     if (timer) {
       window.clearTimeout(timer);
     }
@@ -395,7 +532,7 @@ $(document).ready(() => {
       .focus();
   });
 
-  $('.page-sidebar-closed').click(() => {
+  $('.page-sidebar-closed').on('click', () => {
     $('.searchtab').removeClass('search-expanded');
   });
 
@@ -426,7 +563,7 @@ $(document).ready(() => {
   });
 
   // search with nav sidebar opened
-  $('.page-sidebar').click(() => {
+  $('.page-sidebar').on('click', () => {
     $('#header_search .form-group').removeClass('focus-search');
   });
 
@@ -453,30 +590,11 @@ $(document).ready(() => {
     $('#bo_query').focus();
   });
 
-  // reset form
-  /* global header_confirm_reset, body_confirm_reset, left_button_confirm_reset, right_button_confirm_reset */
-  $('.reset_ready').click(function () {
-    const href = $(this).attr('href');
-    confirm_modal(
-      header_confirm_reset,
-      body_confirm_reset,
-      left_button_confirm_reset,
-      right_button_confirm_reset,
-      () => {
-        window.location.href = `${href}&keep_data=1`;
-      },
-      () => {
-        window.location.href = `${href}&keep_data=0`;
-      },
-    );
-    return false;
-  });
-
   // scroll_if_anchor(window.location.hash);
   $('body').on('click', 'a.anchor', scroll_if_anchor);
 
   // manage curency status switcher
-  $('#currencyStatus input').change(function () {
+  $('#currencyStatus input').on('change', function () {
     const parentZone = $(this)
       .parent()
       .parent()
@@ -493,7 +611,7 @@ $(document).ready(() => {
     }
   });
 
-  $('#currencyCronjobLiveExchangeRate input').change(function () {
+  $('#currencyCronjobLiveExchangeRate input').on('change', function () {
     let enable = 0;
     const parentZone = $(this)
       .parent()
@@ -513,7 +631,7 @@ $(document).ready(() => {
     $.ajax({
       url: `index.php?controller=AdminCurrencies&token=${token}`,
       cache: false,
-      data: `ajax=1&action=cronjobLiveExchangeRate&tab=AdminCurrencies&enable=${enable}`,
+      data: `ajax=1&action=cronjobLiveExchangeRate&controller=AdminCurrencies&enable=${enable}`,
     });
   });
 
@@ -527,4 +645,41 @@ $(document).ready(() => {
 
     $('#modal-shipping').modal();
   });
+
+  // Function to debounce
+  function debounce(func, wait) {
+    let timeout;
+
+    return function (...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  }
+
+  // Function to update page head CSS properties
+  const prefixName = 'cdk';
+
+  function updatePadding() {
+    const offset = 16;
+    const targetElement = document.querySelector('#content.bootstrap');
+    const referenceElement = document.querySelector('#content.bootstrap .page-head');
+
+    if (!targetElement || !referenceElement) return;
+
+    const referenceHeight = referenceElement.offsetHeight + offset;
+
+    const pageHead = `--${prefixName}-page-head-height`;
+    const pageHeadWithTabs = `--${prefixName}-page-head-with-tabs-height`;
+    document.documentElement.style.setProperty(pageHead, `${referenceHeight}px`);
+    document.documentElement.style.setProperty(pageHeadWithTabs, `${referenceHeight}px`);
+  }
+
+  // Initial padding update
+  updatePadding();
+
+  // Create a debounced version of the updatePadding function
+  const debouncedUpdatePadding = debounce(updatePadding, 100);
+
+  // Update padding when the window is resized
+  window.addEventListener('resize', debouncedUpdatePadding);
 });

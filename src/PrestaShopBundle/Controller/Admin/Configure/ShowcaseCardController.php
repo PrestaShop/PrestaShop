@@ -1,46 +1,23 @@
 <?php
-
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Controller\Admin\Configure;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception\InvalidShowcaseCardNameException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @todo Move this to API
- */
-class ShowcaseCardController extends FrameworkBundleAdminController
+class ShowcaseCardController extends PrestaShopAdminController
 {
     /**
      * Saves the user preference of closing the showcase card.
@@ -51,14 +28,11 @@ class ShowcaseCardController extends FrameworkBundleAdminController
      *
      * @see ShowcaseCard
      *
-     * @AdminSecurity(
-     *     "is_granted('create', 'CONFIGURE') && is_granted('update', 'CONFIGURE')"
-     * )
-     * @DemoRestricted(redirectRoute="admin_metas_index")
-     *
      * @return JsonResponse
      */
-    public function closeShowcaseCardAction(Request $request)
+    #[DemoRestricted(redirectRoute: 'admin_metas_index')]
+    #[AdminSecurity("is_granted('create', 'CONFIGURE') && is_granted('update', 'CONFIGURE')")]
+    public function closeShowcaseCardAction(Request $request): JsonResponse
     {
         // check prerequisites
         if (!$request->isMethod('post') || !$request->request->get('close')) {
@@ -72,9 +46,8 @@ class ShowcaseCardController extends FrameworkBundleAdminController
         }
 
         try {
-            $employeeId = $this->getContext()->employee->id;
-            $closeShowcaseCard = new CloseShowcaseCardCommand($employeeId, $request->request->get('name'));
-            $this->getCommandBus()->handle($closeShowcaseCard);
+            $closeShowcaseCard = new CloseShowcaseCardCommand($this->getEmployeeContext()->getEmployee()->getId(), $request->request->get('name'));
+            $this->dispatchCommand($closeShowcaseCard);
 
             return $this->json(
                 [
@@ -82,7 +55,7 @@ class ShowcaseCardController extends FrameworkBundleAdminController
                     'message' => '',
                 ]
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->json(
                 [
                     'success' => false,

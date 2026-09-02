@@ -1,28 +1,7 @@
 <?php
-
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Resources;
@@ -136,8 +115,8 @@ class DatabaseDump
     {
         $this->checkDumpFile();
 
-        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
-        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+        $restoreCommand = $this->buildMySQLCommand([$this->databaseName]);
+        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2>&1';
         $this->exec($restoreCommand);
 
         // Clean EntityManager cache
@@ -164,8 +143,8 @@ class DatabaseDump
         }
 
         $dumpFile = $this->getTableDumpPath($tableName);
-        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
-        $restoreCommand .= ' < ' . escapeshellarg($dumpFile) . ' 2> /dev/null';
+        $restoreCommand = $this->buildMySQLCommand([$this->databaseName]);
+        $restoreCommand .= ' < ' . escapeshellarg($dumpFile) . ' 2>&1';
         $this->exec($restoreCommand);
     }
 
@@ -206,15 +185,40 @@ class DatabaseDump
     /**
      * Wrapper to easily build mysql commands: sets password, port, user.
      *
-     * @param string $executable
      * @param array $arguments
      *
      * @return string
      */
-    private function buildMySQLCommand($executable, array $arguments = []): string
+    private function buildMySQLCommand(array $arguments = []): string
+    {
+        $parts = array_merge($this->getDefaultParameters('mysql'), array_map('escapeshellarg', $arguments));
+
+        return implode(' ', $parts);
+    }
+
+    /**
+     * Wrapper to easily build mysql commands: sets password, port, user.
+     *
+     * @param array $arguments
+     *
+     * @return string
+     */
+    private function buildMySQLCommandDumpFile(string $dumpfile, array $arguments = []): string
+    {
+        $parts = array_merge($this->getDefaultParameters('mysqldump'), ['-r', escapeshellarg($dumpfile)]);
+
+        $parts = array_merge($parts, array_map('escapeshellarg', $arguments));
+
+        return implode(' ', $parts);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getDefaultParameters(string $executable): array
     {
         $parts = [
-            escapeshellarg($executable),
+            $executable,
             '-u', escapeshellarg($this->user),
             '-P', escapeshellarg($this->port),
             '-h', escapeshellarg($this->host),
@@ -224,9 +228,7 @@ class DatabaseDump
             $parts[] = '-p' . escapeshellarg($this->password);
         }
 
-        $parts = array_merge($parts, array_map('escapeshellarg', $arguments));
-
-        return implode(' ', $parts);
+        return $parts;
     }
 
     /**
@@ -245,7 +247,7 @@ class DatabaseDump
         exec($command, $output, $ret);
 
         if ($ret !== 0) {
-            throw new Exception(sprintf('Unable to exec command: `%s`, missing a binary?', $command));
+            throw new Exception(sprintf('Unable to exec command: `%s`, output : %s', $command, implode($output)));
         }
 
         return $output;
@@ -256,8 +258,8 @@ class DatabaseDump
      */
     private function dump(): void
     {
-        $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
-        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+        $dumpCommand = $this->buildMySQLCommandDumpFile($this->dumpFile, [$this->databaseName, '--complete-insert']);
+        $dumpCommand .= ' 2>&1';
         $this->exec($dumpCommand);
     }
 
@@ -272,9 +274,9 @@ class DatabaseDump
 
     private function dumpTable(string $table): void
     {
-        $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName, $table]);
         $tableDumpFile = $this->getTableDumpPath($table);
-        $dumpCommand .= ' > ' . escapeshellarg($tableDumpFile) . ' 2> /dev/null';
+        $dumpCommand = $this->buildMySQLCommandDumpFile($tableDumpFile, [$this->databaseName, $table, '--complete-insert']);
+        $dumpCommand .= ' 2>&1';
         $this->exec($dumpCommand);
 
         $checksum = $this->getTableChecksum($table);
@@ -315,7 +317,7 @@ class DatabaseDump
      */
     private function getTableChecksum(string $table): string
     {
-        $checksum = $this->db->executeS(sprintf('CHECKSUM TABLE %s;', $table));
+        $checksum = $this->db->executeS(sprintf('CHECKSUM TABLE `%s`;', $table));
         $checksum = $checksum[0]['Checksum'];
 
         // The content only is not enough we must make sure that the auto increment index is the same
@@ -436,6 +438,23 @@ class DatabaseDump
             $tableName = substr($tableName, strlen($dump->dbPrefix));
             if (preg_match($regexp, $tableName)) {
                 $dump->restoreTable($tableName);
+            }
+        }
+    }
+
+    public static function removeExtraTables(): void
+    {
+        $dump = new static();
+
+        $tables = $dump->db->executeS('SHOW TABLES;');
+        foreach ($tables as $table) {
+            // $table is an array looking like this [Tables_in_database_name => 'ps_access']
+            $tableName = reset($table);
+            // Remove all tables that contain _extra, they are the dynamically created tables used
+            // by extra property feature, except extra_property_definition which is in the default structure
+            // and must be kept
+            if ($tableName !== $dump->dbPrefix . 'extra_property_definition' && str_contains($tableName, '_extra')) {
+                $dump->db->execute('DROP TABLE `' . $tableName . '`;');
             }
         }
     }

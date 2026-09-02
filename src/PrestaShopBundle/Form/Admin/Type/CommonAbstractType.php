@@ -1,61 +1,30 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\AbstractType;
 
 /**
  * This subclass contains common functions for specific Form types needs.
+ *
+ * @deprecated since 9.0 use \Symfony\Component\Form\AbstractType instead
  */
 abstract class CommonAbstractType extends AbstractType
 {
-    public const PRESTASHOP_DECIMALS = 6;
-    public const PRESTASHOP_WEIGHT_DECIMALS = 6;
+    /**
+     * @deprecated since 9.0
+     */
+    public const PRESTASHOP_DECIMALS = FormHelper::DEFAULT_PRICE_PRECISION;
 
     /**
-     * Get the configuration adapter.
-     *
-     * @deprecated Since 8.1 Use dependency injection in your form type instead.
-     *
-     * @return Configuration Configuration adapter
+     * @deprecated since 9.0
      */
-    protected function getConfiguration()
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0 and will be removed in the next major version.',
-                __FUNCTION__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return new Configuration();
-    }
+    public const PRESTASHOP_WEIGHT_DECIMALS = FormHelper::DEFAULT_WEIGHT_PRECISION;
 
     /**
      * Format legacy data list to mapping SF2 form field choice.
@@ -68,16 +37,17 @@ abstract class CommonAbstractType extends AbstractType
      */
     protected function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
     {
-        $new_list = [];
-        foreach ($list as $item) {
-            if (array_key_exists($item[$mapping_name], $new_list)) {
-                return $this->formatDataDuplicateChoicesList($list, $mapping_value, $mapping_name);
-            } else {
-                $new_list[$item[$mapping_name]] = $item[$mapping_value];
-            }
-        }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0 and will be removed in the next major version. Use %s::%s instead.',
+                __METHOD__,
+                FormHelper::class,
+                'formatDataChoicesList()'
+            ),
+            E_USER_DEPRECATED
+        );
 
-        return $new_list;
+        return FormHelper::formatDataChoicesList($list, $mapping_value, $mapping_name);
     }
 
     /**
@@ -91,6 +61,14 @@ abstract class CommonAbstractType extends AbstractType
      */
     protected function formatDataDuplicateChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.0 and will be removed in the next major version. There is no replacement for this method.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         $new_list = [];
         foreach ($list as $item) {
             $new_list[$item[$mapping_value] . ' - ' . $item[$mapping_name]] = $item[$mapping_value];

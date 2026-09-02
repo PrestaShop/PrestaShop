@@ -1,0 +1,8 @@
+---
+description: "PrestaShop project-wide conventions and architecture"
+alwaysApply: true
+---
+
+Read and follow all instructions in `.ai/CONTEXT.md` at the project root.
+For the full structure of AI context files, see `.ai/STRUCTURE.md`.
+When working on a specific domain or component, also read the corresponding CONTEXT.md file from the `.ai/` folder — the full index is in `.ai/CONTEXT.md`.

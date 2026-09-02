@@ -1,0 +1,27 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% set class = 'btn tooltip-link js-delete-image-type-row-action' %}
+
+{% if attributes.class is defined %}
+  {% set class = class ~ ' ' ~ attributes.class %}
+{% endif %}
+
+<a class="{{ class }} grid-{{ action.name|lower }}-row-link"
+   href="#"
+   data-delete-url="{{ path(action.options.route, {imageTypeId: record[action.options.id_field]}) }}"
+  {% if attributes.tooltip_name %}
+    data-toggle="pstooltip"
+    data-placement="top"
+    data-original-title="{{ action.name }}"
+  {% endif %}
+>
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
+  {% if not attributes.tooltip_name %}
+    {{ action.name }}
+  {% endif %}
+</a>

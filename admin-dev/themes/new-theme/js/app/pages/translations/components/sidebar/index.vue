@@ -1,40 +1,18 @@
-<!--**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+<!--*
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *-->
 <template>
-  <div class="col-sm-3">
-    <div class="card p-3">
-      <PSTree
-        ref="domainsTree"
-        :model="$store.getters.domainsTree"
-        class-name="translationTree"
-        :translations="translations"
-        :current-item="currentItem"
-        v-if="treeReady"
-      />
-      <PSSpinner v-else />
-    </div>
+  <div class="card p-3">
+    <PSTree
+      ref="domainsTree"
+      :model="$store.getters.domainsTree"
+      class-name="translationTree"
+      :translations="translations"
+      :current-item="currentItem"
+      v-if="treeReady"
+    />
+    <PSSpinner v-else />
   </div>
 </template>
 
@@ -160,36 +138,36 @@
 
   .translationTree {
     .tree-name {
-      margin-bottom: .9375rem;
+      margin-bottom: var(--#{$cdk}size-16);
 
       &.active {
         font-weight: bold;
       }
 
       &.extra {
-        color: $danger;
+        color: var(--#{$cdk}red-500);
       }
     }
 
     .tree-extra-label {
-      color: $danger;
+      color: var(--#{$cdk}red-500);
       text-transform: uppercase;
-      font-size: .65rem;
+      font-size: var(--#{$cdk}size-10);
       margin-left: auto;
     }
     .tree-extra-label-mini {
-      background-color: $danger;
-      color: #ffffff;
-      padding: 0 0.5rem;
-      border-radius: 0.75rem;
+      background-color: var(--#{$cdk}red-500);
+      color: var(--#{$cdk}white);
+      padding: 0 var(--#{$cdk}size-8);
+      border-radius: var(--#{$cdk}size-12);
       display: inline-block;
-      font-size: .75rem;
-      height: 1.5rem;
+      font-size: var(--#{$cdk}size-12);
+      height: var(--#{$cdk}size-24);
       margin-left: auto;
     }
     .tree-label {
       &:hover {
-        color: $primary;
+        text-decoration: underline;
       }
     }
   }

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 
@@ -50,7 +30,7 @@ class AddressFormatCore extends ObjectModel
         'table' => 'address_format',
         'primary' => 'id_country',
         'fields' => [
-            'format' => ['type' => self::TYPE_HTML, 'validate' => 'isGenericName', 'required' => true],
+            'format' => ['type' => self::TYPE_HTML, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
             'id_country' => ['type' => self::TYPE_INT],
         ],
     ];
@@ -89,7 +69,6 @@ class AddressFormatCore extends ObjectModel
         'short_description',
         'link_rewrite',
         'meta_title',
-        'meta_keywords',
         'display_tax_label',
         'need_zip_code',
         'contains_states',
@@ -142,8 +121,8 @@ class AddressFormatCore extends ObjectModel
             $publicProperties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
             foreach ($publicProperties as $property) {
                 $propertyName = $property->getName();
-                if (($propertyName == $fieldName) && ($isIdField ||
-                        (!preg_match('/\bid\b|id_\w+|\bid[A-Z]\w+/', $propertyName)))) {
+                if (($propertyName == $fieldName) && ($isIdField
+                        || (!preg_match('/\bid\b|id_\w+|\bid[A-Z]\w+/', $propertyName)))) {
                     $isValid = true;
                 }
             }
@@ -179,8 +158,8 @@ class AddressFormatCore extends ObjectModel
             $this->_errorFormatList[] = $this->trans('This association has too many elements.', [], 'Admin.Notifications.Error');
         } elseif ($totalNameUsed == 1) {
             $associationName[0] = strtolower($associationName[0]);
-            if (in_array($associationName[0], self::$forbiddenPropertyList) ||
-                !$this->_checkValidateClassField('Address', $associationName[0], false)) {
+            if (in_array($associationName[0], self::$forbiddenPropertyList)
+                || !$this->_checkValidateClassField('Address', $associationName[0], false)) {
                 $this->_errorFormatList[] = $this->trans('This name is not allowed.', [], 'Admin.Notifications.Error') . ': ' .
                 $associationName[0];
             }
@@ -214,12 +193,11 @@ class AddressFormatCore extends ObjectModel
     public function checkFormatFields()
     {
         $this->_errorFormatList = [];
-        $fieldsValidate = Address::getFieldsValidate();
         $usedKeyList = [];
 
         $multipleLineFields = explode(self::FORMAT_NEW_LINE, $this->format);
         foreach ($multipleLineFields as $lineField) {
-            if (($patternsName = preg_split(self::_CLEANING_REGEX_, $lineField, -1, PREG_SPLIT_NO_EMPTY))) {
+            if ($patternsName = preg_split(self::_CLEANING_REGEX_, $lineField, -1, PREG_SPLIT_NO_EMPTY)) {
                 if (is_array($patternsName)) {
                     foreach ($patternsName as $patternName) {
                         if (!in_array($patternName, $usedKeyList)) {
@@ -250,7 +228,7 @@ class AddressFormatCore extends ObjectModel
             if (!in_array($requiredField, $fieldList)) {
                 $this->_errorFormatList[] = $this->trans(
                     'The %s field (in tab %s) is required.',
-                    [$requiredField, $this->getFieldTabName($requiredField)],
+                    [htmlspecialchars($requiredField), htmlspecialchars($this->getFieldTabName($requiredField))],
                     'Admin.Notifications.Error');
             }
         }
@@ -354,7 +332,7 @@ class AddressFormatCore extends ObjectModel
     {
         foreach ($orderedAddressField as &$line) {
             $cleanedLine = '';
-            if (($keyList = preg_split(self::_CLEANING_REGEX_, $line, -1, PREG_SPLIT_NO_EMPTY))) {
+            if ($keyList = preg_split(self::_CLEANING_REGEX_, $line, -1, PREG_SPLIT_NO_EMPTY)) {
                 foreach ($keyList as $key) {
                     $cleanedLine .= $key . ' ';
                 }
@@ -395,9 +373,9 @@ class AddressFormatCore extends ObjectModel
                             $tab[$pattern] = '';
 
                             // Check if the property exist in both classes
-                            if (($totalName == 2) && class_exists($associateName[0]) &&
-                                property_exists($associateName[0], $associateName[1]) &&
-                                property_exists($address, 'id_' . strtolower($associateName[0]))) {
+                            if (($totalName == 2) && class_exists($associateName[0])
+                                && property_exists($associateName[0], $associateName[1])
+                                && property_exists($address, 'id_' . strtolower($associateName[0]))) {
                                 $idFieldName = 'id_' . strtolower($associateName[0]);
 
                                 if (!isset($temporyObject[$associateName[0]])) {
@@ -440,7 +418,7 @@ class AddressFormatCore extends ObjectModel
 
         $addressText = '';
         foreach ($addressFields as $line) {
-            if (($patternsList = preg_split(self::_CLEANING_REGEX_, $line, -1, PREG_SPLIT_NO_EMPTY))) {
+            if ($patternsList = preg_split(self::_CLEANING_REGEX_, $line, -1, PREG_SPLIT_NO_EMPTY)) {
                 $tmpText = '';
                 foreach ($patternsList as $pattern) {
                     if (!array_key_exists('avoid', $patternRules) || !in_array($pattern, $patternRules['avoid'])) {
@@ -473,10 +451,10 @@ class AddressFormatCore extends ObjectModel
     {
         return AddressFormat::generateAddress(
             $params['address'],
-            (isset($params['patternRules']) ? $params['patternRules'] : []),
-            (isset($params['newLine']) ? $params['newLine'] : self::FORMAT_NEW_LINE),
-            (isset($params['separator']) ? $params['separator'] : ' '),
-            (isset($params['style']) ? $params['style'] : [])
+            isset($params['patternRules']) ? $params['patternRules'] : [],
+            isset($params['newLine']) ? $params['newLine'] : self::FORMAT_NEW_LINE,
+            isset($params['separator']) ? $params['separator'] : ' ',
+            isset($params['style']) ? $params['style'] : []
         );
     }
 
@@ -497,8 +475,8 @@ class AddressFormatCore extends ObjectModel
             $publicProperties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
             foreach ($publicProperties as $property) {
                 $propertyName = $property->getName();
-                if ((!in_array($propertyName, AddressFormat::$forbiddenPropertyList)) &&
-                        (!preg_match('#id|id_\w#', $propertyName))) {
+                if ((!in_array($propertyName, AddressFormat::$forbiddenPropertyList))
+                        && (!preg_match('#id|id_\w#', $propertyName))) {
                     $propertyList[] = $propertyName;
                 }
             }
@@ -532,8 +510,8 @@ class AddressFormatCore extends ObjectModel
                 $propertyName = $property->getName();
                 if (preg_match('#id_\w#', $propertyName) && strlen($propertyName) > 3) {
                     $nameObject = ucfirst(substr($propertyName, 3));
-                    if (!in_array($nameObject, self::$forbiddenClassList) &&
-                            class_exists($nameObject)) {
+                    if (!in_array($nameObject, self::$forbiddenClassList)
+                            && class_exists($nameObject)) {
                         $objectList[$nameObject] = new $nameObject();
                     }
                 }
@@ -644,8 +622,6 @@ class AddressFormatCore extends ObjectModel
      * @param int $idCountry Country ID
      *
      * @return false|string|null Address format
-     *
-     * @since 1.7.0
      */
     protected function getFormatDB($idCountry)
     {

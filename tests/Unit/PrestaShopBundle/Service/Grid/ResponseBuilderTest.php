@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -38,9 +18,10 @@ use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
@@ -203,14 +184,16 @@ class ResponseBuilderTest extends TestCase
 
         $mockRequest = $this->createMock(Request::class);
         $mockRequest->setMethod('POST');
-        $mockRequest->request = $this->createMock(ParameterBag::class);
+        $mockRequest->request = new InputBag();
 
+        $requestStack = $this->createMock(RequestStack::class);
         $session = $this->createMock(Session::class);
         if (!$isValid) {
             $mockFlashBag = $this->createMock(FlashBagInterface::class);
             $mockFlashBag->method('add')->with('error', sprintf('%s: %s', self::ERROR_LABEL, self::ERROR_MESSAGE));
             $session->method('getFlashBag')->willReturn($mockFlashBag);
         }
+        $requestStack->method('getSession')->willReturn($session);
 
         $responseBuilder = new ResponseBuilder(
             $mockFilterFormFactory,
@@ -218,7 +201,7 @@ class ResponseBuilderTest extends TestCase
             $this->createMock(AdminFilterRepository::class),
             1,
             1,
-            $session
+            $requestStack
         );
 
         return $responseBuilder->buildSearchResponse(
