@@ -1020,6 +1020,12 @@ class ShopCore extends ObjectModel
         static::$shopGroupIds = null;
         static::$feature_active = null;
         static::$context_shop_group = null;
+        // Also reset the table associations: entries registered at runtime through
+        // addTableAssociation() (by modules, or test object models) may reference tables
+        // that no longer exist — a stale entry makes the delete()/copyShopData() loops
+        // fail on a missing table. init() re-registers the core list on the next access.
+        static::$asso_tables = [];
+        static::$initialized = false;
         Cache::clean('Shop::*');
     }
 
