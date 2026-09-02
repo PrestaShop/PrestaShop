@@ -9,12 +9,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DiscountGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Search\ShopFilters;
 
 /**
  * Responsible for providing default filters for discount grid.
  */
-final class DiscountFilters extends Filters
+final class DiscountFilters extends ShopFilters
 {
     /** @var string */
     protected $filterId = DiscountGridDefinitionFactory::GRID_ID;
