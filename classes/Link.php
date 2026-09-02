@@ -1239,9 +1239,11 @@ class LinkCore
             $controller = $context->controller->php_self;
         }
 
-        if ($controller == 'product' && isset($params['id_product'])) {
+        // The ids come from the query string. getProductLink() and getCategoryLink() throw on an id that casts
+        // to 0 ('0', '', 'abc'), and this runs while a 404 page builds its hreflang links, turning it into a 500.
+        if ($controller == 'product' && (int) ($params['id_product'] ?? 0) > 0) {
             return $this->getProductLink((int) $params['id_product'], null, null, null, (int) $idLang);
-        } elseif ($controller == 'category' && isset($params['id_category'])) {
+        } elseif ($controller == 'category' && (int) ($params['id_category'] ?? 0) > 0) {
             return $this->getCategoryLink((int) $params['id_category'], null, (int) $idLang);
         } elseif ($controller == 'supplier' && isset($params['id_supplier'])) {
             return $this->getSupplierLink((int) $params['id_supplier'], null, (int) $idLang);
