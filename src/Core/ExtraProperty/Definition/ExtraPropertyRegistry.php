@@ -146,6 +146,13 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         //    the definition invisible on every real shop. Being the single write choke point,
         //    this covers the BO form, the CQRS commands and Module::registerExtraProperty().
         //    null (untouched) and [] (revert to fallback) carry no id to check.
+        //    Deliberately validated against EVERY existing shop (getAllShopIds(), no
+        //    active/deleted filter): an inactive shop is a legitimate restriction target —
+        //    the association is configuration and must survive deactivation/reactivation
+        //    cycles. A definition restricted to inactive shops only is simply dormant:
+        //    group/all-shops resolution covers usable shops only (ShopListResolver), so it
+        //    surfaces nowhere at runtime, while the registry grid's all-shops management
+        //    view still lists it for editing.
         $associatedShopIds = $definition->getAssociatedShopIds();
         if (!empty($associatedShopIds)) {
             $unknownShopIds = array_diff($associatedShopIds, $this->shopRepository->getAllShopIds());

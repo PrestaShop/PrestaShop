@@ -386,6 +386,13 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
         $temporaryShopId = (int) $temporaryShop->id;
         Shop::resetStaticCache();
 
+        // Shop::delete() refuses shops carrying customers or orders (hasDependency()), and
+        // this id is recycled: ShopResetter restores ps_shop (AUTO_INCREMENT included) but
+        // never touches customer/orders, so other tests of a full-suite run may have left
+        // rows on it. Clear them so the assertion below only guards the purge under test.
+        Db::getInstance()->delete('customer', 'id_shop = ' . $temporaryShopId);
+        Db::getInstance()->delete('orders', 'id_shop = ' . $temporaryShopId);
+
         $this->restrictDefinition('sa_shop', [self::$thirdShopId, $temporaryShopId]);
 
         // Cast: Shop::delete() accumulates through `&=`, so it returns int(1) on success.
@@ -475,7 +482,13 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
         );
 
         $rows = $queryBuilder->getSearchQueryBuilder($filters)->executeQuery()->fetchAllAssociative();
-        $names = array_map(static fn (array $row): string => (string) $row['property_name'], $rows);
+        // The grid filter only narrows (LIKE '%sa_%', where _ is a single-char SQL
+        // wildcard, so e.g. 'usage' would match): scope strictly in PHP so definitions
+        // left in the shared test DB by other suites can never leak into the expected sets.
+        $names = array_values(array_filter(
+            array_map(static fn (array $row): string => (string) $row['property_name'], $rows),
+            static fn (string $name): bool => str_starts_with($name, 'sa_')
+        ));
         sort($names);
 
         return $names;

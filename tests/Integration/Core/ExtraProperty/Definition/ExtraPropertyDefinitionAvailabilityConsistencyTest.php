@@ -347,7 +347,15 @@ class ExtraPropertyDefinitionAvailabilityConsistencyTest extends KernelTestCase
         );
 
         $rows = $queryBuilder->getSearchQueryBuilder($filters)->executeQuery()->fetchAllAssociative();
-        $names = array_map(static fn (array $row): string => (string) $row['property_name'], $rows);
+        // The grid filter only narrows (LIKE '%cons_%', where _ is a single-char SQL
+        // wildcard): the authoritative scoping is the same str_starts_with() as
+        // testDefinitions(), so both sides of the comparison share one definition of
+        // "this test's fixtures" and an unrelated definition in the shared test DB can
+        // never leak into the SQL side only and report a false drift.
+        $names = array_values(array_filter(
+            array_map(static fn (array $row): string => (string) $row['property_name'], $rows),
+            static fn (string $name): bool => str_starts_with($name, self::PROPERTY_PREFIX)
+        ));
         sort($names);
 
         return $names;
