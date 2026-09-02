@@ -182,6 +182,22 @@ class TinyMCEEditor {
 
       $(textareaLinkSelector).click();
     });
+
+    // The autoresize plugin sizes an editor when it initializes and whenever its content
+    // changes. Both can happen while the editor sits in a hidden tab, where it measures as
+    // empty and collapses to the minimum height, and nothing sizes it again once the tab is
+    // shown. So ask for a size again on every tab change, for the editors visible by then.
+    // 'setcontent' is one of the events the plugin sizes on, and firing it without changing
+    // the content leaves the content, the undo stack and the dirty flag alone.
+    $(document).on('shown.bs.tab', () => {
+      window.tinyMCE.editors.forEach((editor) => {
+        const container = editor.getContainer();
+
+        if (container && $(container).is(':visible')) {
+          editor.fire('setcontent', {});
+        }
+      });
+    });
   }
 
   /**
