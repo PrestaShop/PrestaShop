@@ -95,6 +95,7 @@ trans('Referrers', 'Admin.Navigation.Menu');
 trans('Search', 'Admin.Navigation.Menu');
 trans('Search Engines', 'Admin.Navigation.Menu');
 trans('SEO & URLs', 'Admin.Navigation.Menu');
+trans('Shipments', 'Admin.Navigation.Menu');
 trans('Shipping', 'Admin.Navigation.Menu');
 trans('Shop Parameters', 'Admin.Navigation.Menu');
 trans('Shop URLs', 'Admin.Navigation.Menu');

@@ -553,11 +553,18 @@ services:
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
 
+  PrestaShop\PrestaShop\Core\Grid\Query\OrderShipmentQueryBuilder:
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: false
+    arguments:
+      $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
+
   PrestaShop\PrestaShop\Core\Grid\Query\ShipmentQueryBuilder:
     parent: 'prestashop.core.grid.abstract_query_builder'
     public: false
     arguments:
       $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
+      $shopContext: '@PrestaShop\PrestaShop\Core\Context\ShopContext'
 
   PrestaShop\PrestaShop\Core\Grid\Query\TagQueryBuilder:
     parent: 'prestashop.core.grid.abstract_query_builder'

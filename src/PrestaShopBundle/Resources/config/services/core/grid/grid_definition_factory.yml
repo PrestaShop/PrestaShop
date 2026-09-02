@@ -494,10 +494,19 @@ services:
     autowire: true
     public: true
 
-  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ShipmentGridDefinitionFactory:
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderShipmentGridDefinitionFactory:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     autowire: true
     public: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ShipmentGridDefinitionFactory:
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    public: true
+    arguments:
+      $languageContext: '@PrestaShop\PrestaShop\Core\Context\LanguageContext'
+      $multistoreFeature: '@prestashop.adapter.feature.multistore'
+      $shipmentStatusChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShipmentStatusChoiceProvider'
+      $shipmentCarrierChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShipmentCarrierChoiceProvider'
 
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TagGridDefinitionFactory:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
