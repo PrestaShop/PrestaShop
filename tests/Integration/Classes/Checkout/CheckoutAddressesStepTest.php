@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Classes\Checkout;
 
+use Cart;
 use CheckoutAddressesStep;
 use CheckoutProcess;
 use CheckoutSession;
@@ -38,6 +39,8 @@ class CheckoutAddressesStepTest extends TestCase
         $context = $this->createMock(Context::class);
         $context->language = $this->createMock(Language::class);
         $context->customer = $this->createMock(Customer::class);
+        $context->cart = $this->createMock(Cart::class);
+        $context->cart->id_customer = 0;
         $context->link = $this->createMock(Link::class);
         $context->link->method('getPageLink')->withAnyParameters()->willReturn('http://addresses-actions.url');
 
