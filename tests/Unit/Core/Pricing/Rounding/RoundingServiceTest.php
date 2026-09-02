@@ -14,56 +14,52 @@ use PrestaShop\PrestaShop\Core\Pricing\Rounding\RoundingService;
 
 class RoundingServiceTest extends TestCase
 {
-    public function testRoundHalfUp(): void
+    /**
+     * The keys of the map are the PS_ROUND_* constants from config/defines.inc.php, which is what
+     * the Shop Parameters form stores in PS_PRICE_ROUND_MODE. Each expectation below is the value
+     * Tools::ps_round() produces for the same input and mode.
+     *
+     * @dataProvider getLegacyRoundModes
+     */
+    public function testModeMatchesTheLegacyConstant(int $legacyRoundMode, string $input, string $expected): void
     {
-        $service = new RoundingService(0); // PS_PRICE_ROUND_MODE = 0 → ROUND_HALF_UP
-        $result = $service->round(new DecimalNumber('29.5'));
+        $service = new RoundingService($legacyRoundMode);
 
-        $this->assertTrue($result->equals(new DecimalNumber('30')));
+        $this->assertTrue(
+            $service->round(new DecimalNumber($input))->equals(new DecimalNumber($expected)),
+            sprintf('mode %d applied to %s', $legacyRoundMode, $input)
+        );
     }
 
-    public function testRoundHalfDown(): void
+    public static function getLegacyRoundModes(): iterable
     {
-        $service = new RoundingService(1); // PS_PRICE_ROUND_MODE = 1 → ROUND_HALF_DOWN
-        $result = $service->round(new DecimalNumber('29.5'));
-
-        $this->assertTrue($result->equals(new DecimalNumber('29')));
+        // PS_ROUND_UP = 0, away from zero
+        yield 'PS_ROUND_UP 29.01' => [PS_ROUND_UP, '29.01', '30'];
+        yield 'PS_ROUND_UP 29.5' => [PS_ROUND_UP, '29.5', '30'];
+        // PS_ROUND_DOWN = 1, towards zero
+        yield 'PS_ROUND_DOWN 29.99' => [PS_ROUND_DOWN, '29.99', '29'];
+        yield 'PS_ROUND_DOWN 29.5' => [PS_ROUND_DOWN, '29.5', '29'];
+        // PS_ROUND_HALF_UP = 2
+        yield 'PS_ROUND_HALF_UP 29.5' => [PS_ROUND_HALF_UP, '29.5', '30'];
+        yield 'PS_ROUND_HALF_UP 29.4' => [PS_ROUND_HALF_UP, '29.4', '29'];
+        // PS_ROUND_HALF_DOWN = 3
+        yield 'PS_ROUND_HALF_DOWN 29.5' => [PS_ROUND_HALF_DOWN, '29.5', '29'];
+        yield 'PS_ROUND_HALF_DOWN 29.6' => [PS_ROUND_HALF_DOWN, '29.6', '30'];
+        // PS_ROUND_HALF_EVEN = 4
+        yield 'PS_ROUND_HALF_EVEN 29.5' => [PS_ROUND_HALF_EVEN, '29.5', '30'];
+        yield 'PS_ROUND_HALF_EVEN 30.5' => [PS_ROUND_HALF_EVEN, '30.5', '30'];
     }
 
-    public function testRoundHalfEven(): void
+    /**
+     * PS_ROUND_HALF_ODD has no equivalent in the Decimal library, so it falls through to the
+     * constructor default instead of throwing. See issue #30441 for the open question of what it
+     * should do; this only pins that it does not blow up.
+     */
+    public function testHalfOddFallsBackInsteadOfFailing(): void
     {
-        $service = new RoundingService(2); // PS_PRICE_ROUND_MODE = 2 → ROUND_HALF_EVEN
-        // 29.5 → rounds to 30 (nearest even)
-        $result = $service->round(new DecimalNumber('29.5'));
-        $this->assertTrue($result->equals(new DecimalNumber('30')));
+        $service = new RoundingService(PS_ROUND_HALF_ODD);
 
-        // 30.5 → rounds to 30 (nearest even)
-        $result2 = $service->round(new DecimalNumber('30.5'));
-        $this->assertTrue($result2->equals(new DecimalNumber('30')));
-    }
-
-    public function testRoundCeil(): void
-    {
-        $service = new RoundingService(3); // PS_PRICE_ROUND_MODE = 3 → ROUND_CEIL
-        $result = $service->round(new DecimalNumber('29.01'));
-
-        $this->assertTrue($result->equals(new DecimalNumber('30')));
-    }
-
-    public function testRoundFloor(): void
-    {
-        $service = new RoundingService(4); // PS_PRICE_ROUND_MODE = 4 → ROUND_FLOOR
-        $result = $service->round(new DecimalNumber('29.99'));
-
-        $this->assertTrue($result->equals(new DecimalNumber('29')));
-    }
-
-    public function testRoundTruncate(): void
-    {
-        $service = new RoundingService(5); // PS_PRICE_ROUND_MODE = 5 → ROUND_TRUNCATE
-        $result = $service->round(new DecimalNumber('29.99'));
-
-        $this->assertTrue($result->equals(new DecimalNumber('29')));
+        $this->assertTrue($service->round(new DecimalNumber('29.5'))->equals(new DecimalNumber('30')));
     }
 
     public function testRoundWithCustomPrecision(): void
