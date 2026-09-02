@@ -16,7 +16,9 @@ use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\CannotUpdateTagException;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\TagConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\TagNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tag\ValueObject\TagId;
+use Language;
 use Tag;
+use Validate;
 
 #[AsCommandHandler]
 class EditTagHandler implements EditTagCommandHandlerInterface
@@ -52,6 +54,13 @@ class EditTagHandler implements EditTagCommandHandlerInterface
         EditTagCommand $command
     ): void {
         if (null !== $command->getName()) {
+            $idLang = null !== $command->getLanguageId() ? (int) $command->getLanguageId() : (int) $tag->id_lang;
+            if (!Validate::isSearchableName($command->getName(), $idLang, (string) Language::getIsoById($idLang))) {
+                throw new TagConstraintException(
+                    sprintf('Tag "%s" cannot be found by the search engine', $command->getName()),
+                    TagConstraintException::INVALID_NAME
+                );
+            }
             $tag->name = $command->getName();
         }
 

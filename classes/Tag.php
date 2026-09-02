@@ -100,7 +100,7 @@ class TagCore extends ObjectModel
         $list = [];
         if (is_array($tagList)) {
             foreach ($tagList as $tag) {
-                if (!Validate::isGenericName($tag)) {
+                if (!Validate::isGenericName($tag) || !Validate::isSearchableName($tag, (int) $idLang, (string) Language::getIsoById((int) $idLang))) {
                     return false;
                 }
                 $tagMaxLength = self::$definition['fields']['name']['size'];
