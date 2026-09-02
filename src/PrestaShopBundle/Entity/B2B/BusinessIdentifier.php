@@ -68,6 +68,8 @@ class BusinessIdentifier
 
     /**
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\B2B\BusinessEntityIdentifier", mappedBy="businessIdentifier")
+     *
+     * @var Collection<BusinessEntityIdentifier>
      */
     private Collection $businessEntityIdentifiers;
 

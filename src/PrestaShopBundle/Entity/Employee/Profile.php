@@ -36,6 +36,8 @@ class Profile
      *     joinColumns={@ORM\JoinColumn(name="id_profile", referencedColumnName="id_profile")},
      *     inverseJoinColumns={@ORM\JoinColumn(name="id_authorization_role", referencedColumnName="id_authorization_role")}
      *  )
+     *
+     * @var Collection<AuthorizationRole>
      */
     private Collection $authorizationRoles;
 

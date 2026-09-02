@@ -46,6 +46,8 @@ class AttributeGroup
 
     /**
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\Attribute", mappedBy="attributeGroup", orphanRemoval=true)
+     *
+     * @var Collection<Attribute>
      */
     private Collection $attributes;
 
@@ -56,6 +58,8 @@ class AttributeGroup
      *      joinColumns={@ORM\JoinColumn(name="id_attribute_group", referencedColumnName="id_attribute_group")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", onDelete="CASCADE")}
      * )
+     *
+     * @var Collection<Shop>
      */
     private Collection $shops;
 

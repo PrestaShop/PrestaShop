@@ -94,11 +94,15 @@ class BusinessEntity
 
     /**
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\B2B\BusinessEntityAddress", mappedBy="businessEntity", cascade={"persist"})
+     *
+     * @var Collection<BusinessEntityAddress>
      */
     private Collection $businessEntityAddresses;
 
     /**
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\B2B\BusinessEntityIdentifier", mappedBy="businessEntity")
+     *
+     * @var Collection<BusinessEntityIdentifier>
      */
     private Collection $businessEntityIdentifiers;
 
@@ -109,6 +113,8 @@ class BusinessEntity
      *     orphanRemoval=true,
      *     cascade={"persist","remove"}
      * )
+     *
+     * @var Collection<BusinessEntityCustomerB2b>
      */
     private Collection $businessEntityCustomerB2bs;
 

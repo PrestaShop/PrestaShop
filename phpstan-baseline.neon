@@ -1579,88 +1579,10 @@ parameters:
 			path: src/PrestaShopBundle/DependencyInjection/AddOnsConfiguration.php
 
 		-
-			message: '#^Property PrestaShopBundle\\Entity\\Attribute\:\:\$attributeLangs type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\AttributeLang\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/Attribute.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\Attribute\:\:\$shops type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\Shop\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/Attribute.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\AttributeGroup\:\:\$attributes type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\Attribute\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/AttributeGroup.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\AttributeGroup\:\:\$shops type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\Shop\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/AttributeGroup.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\B2B\\B2bRole\:\:\$b2bRoleAuthorizationRoles type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\B2B\\B2bRoleAuthorizationRole\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/B2B/B2bRole.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\B2B\\B2bRole\:\:\$businessEntityCustomerB2bs type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\B2B\\BusinessEntityCustomerB2b\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/B2B/B2bRole.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\B2B\\BusinessEntity\:\:\$businessEntityAddresses type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\B2B\\BusinessEntityAddress\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/B2B/BusinessEntity.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\B2B\\BusinessEntity\:\:\$businessEntityCustomerB2bs type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\B2B\\BusinessEntityCustomerB2b\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/B2B/BusinessEntity.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\B2B\\BusinessEntity\:\:\$businessEntityIdentifiers type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\B2B\\BusinessEntityIdentifier\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/B2B/BusinessEntity.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\B2B\\BusinessIdentifier\:\:\$businessEntityIdentifiers type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\B2B\\BusinessEntityIdentifier\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/B2B/BusinessIdentifier.php
-
-		-
 			message: '#^Property PrestaShopBundle\\Entity\\Employee\\EmployeeSession\:\:\$token type mapping mismatch\: database can contain string\|null but property expects string\.$#'
 			identifier: doctrine.columnType
 			count: 1
 			path: src/PrestaShopBundle/Entity/Employee/EmployeeSession.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\Employee\\Profile\:\:\$authorizationRoles type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\Employee\\AuthorizationRole\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/Employee/Profile.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\Lang\:\:\$shops type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\Shop\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/Lang.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\Lang\:\:\$translations type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\Translation\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/Lang.php
 
 		-
 			message: '#^Property PrestaShopBundle\\Entity\\Mutation\:\:\$mutationRowId type mapping mismatch\: database can contain string but property expects int\.$#'
@@ -1757,18 +1679,6 @@ parameters:
 			identifier: disallowed.namespace
 			count: 1
 			path: src/PrestaShopBundle/Entity/Repository/SupplierRepository.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\ShipmentProduct\:\:\$shipment type mapping mismatch\: property can contain PrestaShopBundle\\Entity\\Shipment\|null but database expects PrestaShopBundle\\Entity\\Shipment\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/ShipmentProduct.php
-
-		-
-			message: '#^Property PrestaShopBundle\\Entity\\Shop\:\:\$shopUrls type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<PrestaShopBundle\\Entity\\ShopUrl\>\.$#'
-			identifier: doctrine.associationType
-			count: 1
-			path: src/PrestaShopBundle/Entity/Shop.php
 
 		-
 			message: '#^Property PrestaShopBundle\\Entity\\StockMvt\:\:\$idStockMvt type mapping mismatch\: database can contain string but property expects int\.$#'

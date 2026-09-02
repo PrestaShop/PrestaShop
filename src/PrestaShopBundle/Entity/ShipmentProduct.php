@@ -29,7 +29,7 @@ class ShipmentProduct
      *
      * @ORM\JoinColumn(name="id_shipment", referencedColumnName="id_shipment", nullable=false, onDelete="CASCADE")
      */
-    private ?Shipment $shipment = null;
+    private Shipment $shipment;
 
     /**
      * @ORM\Column(name="id_order_detail", type="integer")
@@ -46,7 +46,7 @@ class ShipmentProduct
         return $this->id;
     }
 
-    public function getShipment(): ?Shipment
+    public function getShipment(): Shipment
     {
         return $this->shipment;
     }
@@ -61,7 +61,7 @@ class ShipmentProduct
         return $this->quantity;
     }
 
-    public function setShipment(?Shipment $shipment): self
+    public function setShipment(Shipment $shipment): self
     {
         $this->shipment = $shipment;
 
