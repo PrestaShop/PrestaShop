@@ -118,13 +118,6 @@ jobs:
             CAMPAIGN: 'modules:20-29'
           - BRANCH: 8.2.x
             CAMPAIGN: 'modules:30-39'
-          ## 9.1.x
-          - BRANCH: 9.1.x
-            CAMPAIGN: 'sanity:productV2'
-          - BRANCH: 9.1.x
-            CAMPAIGN: 'functional:productV2'
-          - BRANCH: 9.1.x
-            CAMPAIGN: 'modules'
           ## 9.2.x
           - BRANCH: 9.2.x
             CAMPAIGN: 'sanity:productV2'
@@ -212,6 +205,9 @@ jobs:
         with:
           name: reports_${{ env.GH_BRANCH }}_${{ env.TEST_CAMPAIGN_ARTIFACT }}
           path: ${{ env.REPORTS_DIR }}
+          # A retried job must be able to replace the artifact uploaded by a
+          # previous attempt of the same run (auto_retry_failed_nightly_jobs.yml)
+          overwrite: true
 
   # Second job: Merge Mochawesome reports and upload them on GCP
   ## Always executed even if tests are in error

@@ -70,6 +70,16 @@ for db in mysql mariadb; do
   fi
 done
 
+# 6b) auto_retry_failed_nightly_jobs.yml: watch the NEW branch nightly test
+#     workflows, placed right after the develop entries (anchored on the
+#     develop mariadb entry — develop is always present).
+insert_block_after "${WF}/auto_retry_failed_nightly_jobs.yml" \
+  "- 'Nightly tests and report - develop (mariadb)'" \
+  "Nightly tests and report - ${NEW} (mysql)" <<EOF
+      - 'Nightly tests and report - ${NEW} (mysql)'
+      - 'Nightly tests and report - ${NEW} (mariadb)'
+EOF
+
 # 7) cron_create_merge_prs.yml: insert NEW into the merge-up CHAIN. Each stable
 #    branch merges into the one just above it, not straight into develop:
 #    the pair that currently targets develop is retargeted to NEW, then a new

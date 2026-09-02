@@ -16,7 +16,6 @@ jobs:
         BRANCH:
           - develop
           - 9.2.x
-          - 9.1.x
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}
       IGNORE_PRESTASHOP_PACKAGES: "prestashop/psgdpr prestashop/ps_apiresources"

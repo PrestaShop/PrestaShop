@@ -49,5 +49,5 @@ jobs:
           exempt-issue-labels: "Critical, Security, Major, Good first issue, EPIC,
             Topwatchers, Blocked, Must-have, Waiting for dev, Waiting for QA,
             Waiting for QA by Community, Waiting for PM, Waiting for UX, Waiting
-            for rebase, Waiting for wording, Release, Detected by TE, 9.1.x"
+            for rebase, Waiting for wording, Release, Detected by TE"
           debug-only: ${{ github.event.inputs.debug-only || 'false' }}
