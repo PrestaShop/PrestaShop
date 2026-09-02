@@ -40,11 +40,15 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     /** @var bool */
     private $hasGiftWrapping;
 
+    /** @var string */
+    private $moduleDirectory;
+
     /**
      * @param Environment $twig
      * @param LayoutVariablesBuilderInterface $variablesBuilder
      * @param HookDispatcherInterface $hookDispatcher
      * @param bool $hasGiftWrapping
+     * @param string $moduleDirectory Absolute path of the modules folder, used to resolve layouts declared by modules
      *
      * @throws TypeException
      */
@@ -52,13 +56,15 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         Environment $twig,
         LayoutVariablesBuilderInterface $variablesBuilder,
         HookDispatcherInterface $hookDispatcher,
-        bool $hasGiftWrapping
+        bool $hasGiftWrapping,
+        string $moduleDirectory = ''
     ) {
         $this->twig = $twig;
         $this->variablesBuilder = $variablesBuilder;
         $this->hookDispatcher = $hookDispatcher;
         $this->transformations = new TransformationCollection();
         $this->hasGiftWrapping = $hasGiftWrapping;
+        $this->moduleDirectory = $moduleDirectory;
     }
 
     /**
@@ -115,7 +121,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         }
 
         try {
-            $renderedTemplate = $this->twig->render($layoutPath, $layoutVariables);
+            $renderedTemplate = $this->twig->render($this->getTwigPath($layoutPath), $layoutVariables);
         } catch (LoaderError) {
             throw new FileNotFoundException(sprintf('Could not find layout file: %s', $layoutPath));
         }
@@ -181,5 +187,24 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         $this->transformations[] = $transformation;
 
         return $this;
+    }
+
+    /**
+     * Layouts added by a module through the actionListMailThemes hook are usually declared with the
+     * absolute file path documented on Layout::__construct, but Twig only resolves namespaced paths,
+     * so such a layout is reported as missing. Convert an absolute path inside the modules folder to
+     * the @Modules namespace, which is what FolderThemeScanner already builds for module themes.
+     *
+     * @param string $layoutPath
+     *
+     * @return string
+     */
+    private function getTwigPath(string $layoutPath): string
+    {
+        if ('' === $this->moduleDirectory || !str_starts_with($layoutPath, $this->moduleDirectory)) {
+            return $layoutPath;
+        }
+
+        return '@Modules/' . ltrim(substr($layoutPath, strlen($this->moduleDirectory)), '/');
     }
 }
