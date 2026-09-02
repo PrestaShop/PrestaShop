@@ -132,6 +132,17 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given I define an uncreated shop :reference
+     */
+    public function defineUncreatedShop(string $reference): void
+    {
+        // Same trick as the uncreated definition above, for the shop existence assertion of
+        // the registry: no ps_shop row will ever have this id, so an association naming it
+        // must be rejected (UNKNOWN_SHOP) by the single definition write endpoint.
+        SharedStorage::getStorage()->set($reference, 999999999);
+    }
+
+    /**
      * @When I edit extra property definition :reference with following properties:
      */
     public function editExtraPropertyDefinition(string $reference, TableNode $table): void
@@ -370,6 +381,14 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsRegistrationFailureForDestructiveChange(): void
     {
         $this->assertLastErrorIs(ExtraPropertyRegistrationFailureException::class, ExtraPropertyRegistrationFailureException::DESTRUCTIVE_CHANGE);
+    }
+
+    /**
+     * @Then I should get an error that the shop association contains an unknown shop
+     */
+    public function assertLastErrorIsRegistrationFailureForUnknownShop(): void
+    {
+        $this->assertLastErrorIs(ExtraPropertyRegistrationFailureException::class, ExtraPropertyRegistrationFailureException::UNKNOWN_SHOP);
     }
 
     /**

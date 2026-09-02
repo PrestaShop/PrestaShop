@@ -32,6 +32,8 @@ services:
       $schemaManager: '@PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManagerInterface'
       $logger: '@logger'
       $formOptionsValidator: '@PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator'
+      # Existence check on the shop association ids (the *_shop rows carry no foreign key).
+      $shopRepository: '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface:
     alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistry'

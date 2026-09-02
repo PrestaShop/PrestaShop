@@ -46,7 +46,9 @@ use Tests\Resources\Resetter\ShopResetter;
  *  - the BO commands: Add with an association, Update reverting via [], and the
  *    module-owned carve-out (shops-only edits allowed, anything else rejected);
  *  - the registry grid query builder's shop-context restriction (all shops / single
- *    shop / group, explicit and fallback rows).
+ *    shop / group, explicit and fallback rows);
+ *  - shop deletion purging the association rows (extra_property_definition is declared
+ *    in Shop::$asso_tables).
  */
 class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
 {
@@ -367,6 +369,44 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
             (new UpdateExtraPropertyDefinitionCommand($moduleDefinitionId))
                 ->setAssociatedShopIds([self::$thirdShopId])
                 ->setDisplayFront(true)
+        );
+    }
+
+    public function testDeletingAShopPurgesItsAssociationRows(): void
+    {
+        // extra_property_definition is declared in Shop::$asso_tables, so the generic
+        // Shop::delete() loop wipes its *_shop rows — no orphan restriction can survive
+        // a shop deletion and silently hide the definition everywhere.
+        $temporaryShop = new Shop();
+        $temporaryShop->name = 'Definition Assoc Temp Shop';
+        $temporaryShop->id_shop_group = self::$defaultGroupId;
+        $temporaryShop->id_category = 2;
+        $temporaryShop->active = true;
+        $temporaryShop->save();
+        $temporaryShopId = (int) $temporaryShop->id;
+        Shop::resetStaticCache();
+
+        $this->restrictDefinition('sa_shop', [self::$thirdShopId, $temporaryShopId]);
+
+        // Cast: Shop::delete() accumulates through `&=`, so it returns int(1) on success.
+        $this->assertTrue((bool) $temporaryShop->delete());
+        Shop::resetStaticCache();
+        Shop::resetContext();
+        Shop::setContext(Shop::CONTEXT_ALL);
+
+        $remainingShopIds = Db::getInstance()->executeS(sprintf(
+            'SELECT epds.id_shop FROM `%sextra_property_definition_shop` epds
+             INNER JOIN `%sextra_property_definition` epd
+                ON epd.id_extra_property_definition = epds.id_extra_property_definition
+             WHERE epd.property_name = "sa_shop"',
+            _DB_PREFIX_,
+            _DB_PREFIX_
+        ));
+        // The deleted shop's row is gone, the third shop's row survives: the definition
+        // keeps its (still meaningful) restriction instead of vanishing everywhere.
+        $this->assertSame(
+            [self::$thirdShopId],
+            array_map(static fn (array $row): int => (int) $row['id_shop'], $remainingShopIds)
         );
     }
 

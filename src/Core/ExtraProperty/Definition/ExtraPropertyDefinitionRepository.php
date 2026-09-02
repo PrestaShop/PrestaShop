@@ -197,6 +197,10 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
      * its definition without shop data cannot clobber a BO-configured restriction;
      * [] or a list = the stored extra_property_definition_shop rows are replaced
      * ([] deletes them all, reverting to the fallback behavior).
+     *
+     * The ids are written as-is (no FK on the table): their existence is validated
+     * upstream by ExtraPropertyRegistry::register(), the single definition write
+     * choke point, before any DDL or row write.
      */
     protected function persistShopAssociation(int $definitionId, ExtraPropertyDefinition $definition): void
     {

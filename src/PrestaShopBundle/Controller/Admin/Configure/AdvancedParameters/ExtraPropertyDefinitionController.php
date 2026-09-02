@@ -480,6 +480,11 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
                     [],
                     'Admin.Advparameters.Notification'
                 ),
+                ExtraPropertyRegistrationFailureException::UNKNOWN_SHOP => $this->trans(
+                    'The store association contains a store that does not exist. Refresh the page and try again.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
             ],
             InvalidExtraPropertyDefinitionException::class => $this->trans(
                 'The submitted extra property definition is invalid. Check the form values and try again.',

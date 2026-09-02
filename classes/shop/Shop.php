@@ -153,6 +153,7 @@ class ShopCore extends ObjectModel
             'country' => ['type' => 'shop'],
             'currency' => ['type' => 'shop'],
             'employee' => ['type' => 'shop'],
+            'extra_property_definition' => ['type' => 'shop'],
             'hook_module' => ['type' => 'fk_shop'],
             'hook_module_exceptions' => ['type' => 'fk_shop', 'primary' => 'id_hook_module_exceptions'],
             'image' => ['type' => 'shop'],

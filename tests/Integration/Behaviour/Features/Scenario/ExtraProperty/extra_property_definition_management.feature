@@ -296,3 +296,29 @@ Feature: Extra property definition management
     And extra property definition "ep22" should have the following parameters:
       | associated_shop_ids | shop1 |
       | display_front       | false |
+
+  Scenario: Associating an extra property definition with a shop that does not exist is rejected
+    Given shop "shop1" with name "test_shop" exists
+    And I define an uncreated shop "ghostShop"
+    # The association rows carry no foreign key, so the registry refuses unknown ids
+    # before any write — otherwise the definition would silently vanish from every shop
+    When I add an extra property definition "ep23" with following properties:
+      | entity_name         | product         |
+      | property_name       | ghost_shop_prop |
+      | type                | string          |
+      | scope               | common          |
+      | associated_shop_ids | shop1,ghostShop |
+    Then I should get an error that the shop association contains an unknown shop
+    And no extra property definition should exist for entity "product" and property "ghost_shop_prop"
+    # The guard sits on the single write endpoint, so edits are covered too
+    When I add an extra property definition "ep23" with following properties:
+      | entity_name         | product         |
+      | property_name       | ghost_shop_prop |
+      | type                | string          |
+      | scope               | common          |
+      | associated_shop_ids | shop1           |
+    And I edit extra property definition "ep23" with following properties:
+      | associated_shop_ids | ghostShop |
+    Then I should get an error that the shop association contains an unknown shop
+    And extra property definition "ep23" should have the following parameters:
+      | associated_shop_ids | shop1 |
