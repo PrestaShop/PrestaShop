@@ -13,8 +13,11 @@ use Exception;
 use Order;
 use OrderDetail;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\CreateShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\DeleteProductFromShipment;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\EditShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\FulfillShipmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\MergeProductsToShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\SplitShipment;
@@ -22,12 +25,16 @@ use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\SwitchShipmentCarrierComm
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\InvalidShipmentTrackingNumberException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetOrderShipments;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentProducts;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentsForOrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\ListAvailableShipments;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\ListAvailableShipmentsForProduct;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForOrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentsForProduct;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -135,6 +142,142 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
             Assert::assertEquals($shipmentProducts[$i]->getQuantity(), (int) $data[$i]['quantity']);
             Assert::assertEquals($shipmentProducts[$i]->getProductName(), $data[$i]['product_name']);
         }
+    }
+
+    /**
+     * @Then the shipment :shipmentReference of order :orderReference should be editable with the following products:
+     *
+     * @param string $shipmentReference
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function assertShipmentForEditing(string $shipmentReference, string $orderReference, TableNode $table): void
+    {
+        /** @var ShipmentForEditing $shipment */
+        $shipment = $this->getQueryBus()->handle(
+            new GetShipmentForEditing($this->referenceToId($orderReference), $this->referenceToId($shipmentReference))
+        );
+
+        $selectedQuantities = $shipment->getProductsIds();
+
+        $expectedQuantities = [];
+        foreach ($table->getColumnsHash() as $row) {
+            $expectedQuantities[$this->referenceToId($row['product'])] = (int) $row['quantity'];
+        }
+
+        ksort($expectedQuantities);
+        ksort($selectedQuantities);
+
+        Assert::assertSame(
+            $expectedQuantities,
+            $selectedQuantities,
+            sprintf('Wrong selected products reported by the edit view of shipment "%s"', $shipmentReference)
+        );
+    }
+
+    /**
+     * @When I try to switch the carrier for shipment :shipmentReference to a carrier that does not exist
+     */
+    public function switchShipmentCarrierToUnknownCarrier(string $shipmentReference): void
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new SwitchShipmentCarrierCommand($this->referenceToId($shipmentReference), 999999)
+            );
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I try to edit the shipment :shipmentReference with a carrier that does not exist
+     */
+    public function editShipmentWithUnknownCarrier(string $shipmentReference): void
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new EditShipment($this->referenceToId($shipmentReference), 999999)
+            );
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get an error that the carrier was not found
+     */
+    public function assertCarrierNotFoundException(): void
+    {
+        $this->assertLastErrorIs(CarrierNotFoundException::class);
+    }
+
+    /**
+     * @Then the available shipments of order :orderReference for product :productReference should be:
+     *
+     * @param string $orderReference
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertAvailableShipmentsForProduct(
+        string $orderReference,
+        string $productReference,
+        TableNode $table
+    ): void {
+        $expected = [];
+        foreach ($table->getColumnsHash() as $row) {
+            $shipmentId = $this->referenceToId($row['shipment']);
+            $expected[] = [
+                'id' => $shipmentId,
+                // the shipment id is assigned by the database, so the expected name carries a
+                // placeholder rather than a literal that would only hold for one fixture state
+                'name' => str_replace('{shipmentId}', (string) $shipmentId, $row['name']),
+            ];
+        }
+
+        $actual = array_map(
+            static fn (ShipmentsForProduct $shipment) => [
+                'id' => $shipment->getId(),
+                'name' => $shipment->getName(),
+            ],
+            $this->getAvailableShipmentsForProduct($orderReference, $productReference)
+        );
+
+        Assert::assertSame(
+            $expected,
+            $actual,
+            sprintf('Wrong available shipments listed for product "%s" of order "%s"', $productReference, $orderReference)
+        );
+    }
+
+    /**
+     * @When I try to list the available shipments of order :orderReference for product :productReference
+     */
+    public function tryToListAvailableShipmentsForProduct(string $orderReference, string $productReference): void
+    {
+        try {
+            $this->getAvailableShipmentsForProduct($orderReference, $productReference);
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @return ShipmentsForProduct[]
+     */
+    private function getAvailableShipmentsForProduct(string $orderReference, string $productReference): array
+    {
+        return $this->getQueryBus()->handle(new ListAvailableShipmentsForProduct(
+            $this->referenceToId($orderReference),
+            $this->referenceToId($productReference)
+        ));
+    }
+
+    /**
+     * @Then I should get an error that the product was not found in the order
+     */
+    public function assertCannotFindProductInOrderException(): void
+    {
+        $this->assertLastErrorIs(CannotFindProductInOrderException::class);
     }
 
     /**

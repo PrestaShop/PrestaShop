@@ -32,7 +32,7 @@ class ShipmentForEditing
     }
 
     /**
-     * @return int[]
+     * @return array<int, int> Map of productId to quantity
      */
     public function getProductsIds()
     {
