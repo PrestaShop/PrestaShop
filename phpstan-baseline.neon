@@ -1783,18 +1783,6 @@ parameters:
 			path: src/PrestaShopBundle/Form/Admin/Type/LogSeverityChoiceType.php
 
 		-
-			message: '#^Call to method getMessage\(\) on an unknown class Symfony\\Component\\Form\\T\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/PrestaShopBundle/Form/Admin/Type/TranslatableType.php
-
-		-
-			message: '#^Call to method getOrigin\(\) on an unknown class Symfony\\Component\\Form\\T\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/PrestaShopBundle/Form/Admin/Type/TranslatableType.php
-
-		-
 			message: '#^Class Dispatcher is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
 			identifier: disallowed.class
 			count: 1
