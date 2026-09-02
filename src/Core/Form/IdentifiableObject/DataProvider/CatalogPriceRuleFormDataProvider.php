@@ -43,7 +43,10 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
         $from = $editableCatalogPriceRule->getFrom();
         $to = $editableCatalogPriceRule->getTo();
 
-        if ($price->isLowerOrEqualThanZero()) {
+        // Only a negative price is the "no price of its own" sentinel. A price of 0 is a real
+        // price - the rule makes the products free - so it must stay visible in the field and
+        // leave the checkbox clear, otherwise the form claims the initial price is kept.
+        if ($price->isLowerThanZero()) {
             $price = null;
             $leaveInitialPrice = true;
         }
