@@ -105,7 +105,10 @@ export default class ProductSuppliersCollection {
       const symbol = $(e.target).find(':selected')?.attr('symbol');
       $(e.target)
         .parents(this.map.productsSupplierRowSelector)
-        .find('.money-type .input-group-prepend .input-group-text')
+        // The money widget renders the symbol before or after the input depending on the
+        // locale's money pattern, so it can sit in either group. Matching only the prepend
+        // one left the symbol stale for every locale that puts it after the amount.
+        .find('.money-type .input-group-text')
         // @ts-ignore
         .html(symbol);
     });
