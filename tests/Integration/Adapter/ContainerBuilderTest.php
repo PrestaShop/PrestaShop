@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Module\Banner\Repository\FrontRepository;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShopBundle\Exception\ServiceContainerException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -30,6 +31,14 @@ class ContainerBuilderTest extends TestCase
         $entityManager = $container->get('doctrine.orm.entity_manager');
         $this->assertNotNull($entityManager);
         $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
+    }
+
+    public function testFrontContainerContainsExtraPropertyRepository(): void
+    {
+        $container = ContainerBuilder::getContainer('front', true);
+        $repository = $container->get(ExtraPropertyDefinitionRepositoryInterface::class);
+
+        $this->assertInstanceOf(ExtraPropertyDefinitionRepositoryInterface::class, $repository);
     }
 
     public function testContainerLoadsModuleAutoload()

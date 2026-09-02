@@ -45,7 +45,7 @@ interface ExtraPropertyRegistryInterface
      * @return int The registry row id (insert or update)
      *
      * @throws ExtraPropertyRegistryException the failure reason is carried by the exception code:
-     *                                        SCOPE_CONFLICT, DESTRUCTIVE_SCHEMA_CHANGE, INVALID_FORM_OPTIONS,
+     *                                        SCOPE_CONFLICT, DESTRUCTIVE_SCHEMA_CHANGE, INVALID_FORM_OPTIONS, INVALID_CONSTRAINTS,
      *                                        BASE_TABLE_NOT_FOUND, SCHEMA_FAILURE or PERSISTENCE_FAILURE
      */
     public function register(ExtraPropertyDefinition $definition): int;

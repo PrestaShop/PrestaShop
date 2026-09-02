@@ -25,6 +25,7 @@ use Psr\Log\NullLogger;
 use RuntimeException;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Forms;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Validation;
 use Throwable;
 
@@ -45,6 +46,40 @@ class ExtraPropertyRegistryTest extends TestCase
         $registry = $this->buildRegistry(existing: null, expectSave: true);
 
         $this->assertSame(1, $registry->register($incoming));
+    }
+
+    public function testUnsupportedConstraintIsRejectedBeforeAnyLookupOrDdl(): void
+    {
+        $readRepository = $this->createMock(ExtraPropertyDefinitionRepositoryInterface::class);
+        $readRepository->expects($this->never())->method('findDefinitionByModuleAndField');
+
+        $writeRepository = $this->createMock(ExtraPropertyDefinitionWriterInterface::class);
+        $writeRepository->expects($this->never())->method('save');
+
+        $schemaManager = $this->createMock(ExtraPropertySchemaManagerInterface::class);
+        $schemaManager->expects($this->never())->method('ensureExtraTableAndColumn');
+
+        $shopRepository = $this->createMock(ShopRepository::class);
+        $shopRepository->expects($this->never())->method('getAllShopIds');
+
+        $registry = new ExtraPropertyRegistry(
+            $readRepository,
+            $writeRepository,
+            $schemaManager,
+            new NullLogger(),
+            new FormOptionsValidator(
+                Forms::createFormFactoryBuilder()
+                    ->addExtension(new ValidatorExtension(Validation::createValidator()))
+                    ->getFormFactory(),
+                new ExtraPropertyFormTypeMap()
+            ),
+            $shopRepository,
+        );
+
+        $this->expectException(ExtraPropertyRegistryException::class);
+        $this->expectExceptionCode(ExtraPropertyRegistryException::INVALID_CONSTRAINTS);
+
+        $registry->register($this->definition(constraints: [new RegistryUnsupportedConstraint()]));
     }
 
     public function testIdenticalReRegistrationIsAccepted(): void
@@ -540,6 +575,7 @@ class ExtraPropertyRegistryTest extends TestCase
         int|float|string|bool|null $defaultValue = null,
         ?string $formType = null,
         ?array $formOptions = null,
+        ?array $constraints = null,
         ?array $associatedShopIds = null,
     ): ExtraPropertyDefinition {
         return new ExtraPropertyDefinition(
@@ -554,7 +590,12 @@ class ExtraPropertyRegistryTest extends TestCase
             size: $size,
             formType: $formType,
             formOptions: $formOptions,
+            constraints: $constraints,
             associatedShopIds: $associatedShopIds,
         );
     }
+}
+
+final class RegistryUnsupportedConstraint extends Constraint
+{
 }
