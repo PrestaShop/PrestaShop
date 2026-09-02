@@ -35,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
  *   PhaseBatchResult coalesces them per batch. A throw fails the row: the
  *   orchestrator catch-all converts it into a row ERROR, remaining steps are
  *   skipped, and the throwing step's own earlier messages are lost with it.
+ *   For an auto-creation NOTICE that loss is batch-wide rather than per row:
+ *   the resolvers report wasCreated on the FIRST resolution only, so when the
+ *   row that created the entity throws, no later row announces it either.
  * - Step services must hold NO per-row state: one batch request may process
  *   many rows, and the PR2 sequencer may run several batches in one request.
  *   Per-batch memoization of run-invariant lookups is fine.

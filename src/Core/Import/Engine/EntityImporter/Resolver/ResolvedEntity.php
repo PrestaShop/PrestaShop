@@ -18,7 +18,7 @@ class ResolvedEntity
 {
     /**
      * @param bool $wasCreated the entity did not exist and was auto-created — the caller
-     *                         reports it (ProductRowImporter::autoCreationNotice()), because an
+     *                         reports it (AbstractProductRowStep::autoCreationNotice()), because an
      *                         import that adds brands, categories or features has changed more
      *                         than the products it was handed. QuietResolutionTrait sets it on
      *                         the FIRST resolution only, so it announces each entity once per

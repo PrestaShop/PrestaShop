@@ -36,7 +36,10 @@ class ProductFieldsStep extends AbstractProductRowStep
     use LocalizedValueTrait;
 
     /**
-     * @var array<int, DecimalNumber> memoized (1 + rate/100) per tax rules group
+     * @var array<int, DecimalNumber> memoized (1 + rate/100) per tax rules group.
+     *                                Keyed on the group alone: the rate also depends
+     *                                on getShopCountryId(), which is invariant as long
+     *                                as a request stays on a single shop's run
      */
     protected array $taxDivisors = [];
 

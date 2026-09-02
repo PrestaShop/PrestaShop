@@ -48,7 +48,7 @@ class ImagesStep extends AbstractProductRowStep
         // the delete branch runs even when the image cell is empty, so the
         // delete flag alone is enough to make the step relevant
         return true === $this->valueParser->parseBoolean($row['delete_existing_images'] ?? '')
-            || '' !== ($row['image'] ?? '');
+            || $this->hasValue($row, 'image');
     }
 
     public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context): array
