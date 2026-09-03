@@ -643,6 +643,20 @@ class ShopCore extends ObjectModel
     }
 
     /**
+     * Remove a table registered through addTableAssociation().
+     *
+     * Counterpart of addTableAssociation() for callers that drop the table they
+     * registered (a module uninstall, a test object model): a stale entry pointing at a
+     * missing table makes the association loops of delete() and copyShopData() fail.
+     *
+     * @param string $table_name
+     */
+    public static function removeTableAssociation($table_name)
+    {
+        unset(Shop::$asso_tables[$table_name]);
+    }
+
+    /**
      * Check if given table is associated to shop.
      *
      * @param string $table
@@ -1020,12 +1034,6 @@ class ShopCore extends ObjectModel
         static::$shopGroupIds = null;
         static::$feature_active = null;
         static::$context_shop_group = null;
-        // Also reset the table associations: entries registered at runtime through
-        // addTableAssociation() (by modules, or test object models) may reference tables
-        // that no longer exist — a stale entry makes the delete()/copyShopData() loops
-        // fail on a missing table. init() re-registers the core list on the next access.
-        static::$asso_tables = [];
-        static::$initialized = false;
         Cache::clean('Shop::*');
     }
 
