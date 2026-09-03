@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowPresenter;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowPresenter;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 
 /**
  * Provides form data for the extra property definition create / edit form.
@@ -58,7 +59,9 @@ final class ExtraPropertyDefinitionFormDataProvider implements FormDataProviderI
                 'sql_index' => $definition->getSqlIndex()->value,
                 'nullable' => $definition->isNullable(),
                 'size' => $definition->getSize(),
-                'default_value' => $definition->getDefaultValue(),
+                // The BO field is a TextType: stringify with the shared canonical mapping
+                // (BOOL false → '0', never the empty string a naive cast would produce).
+                'default_value' => ExtraPropertyValueCaster::castDefaultValueForDb($definition->getFieldType(), $definition->getDefaultValue()),
                 'enum_values' => null !== $definition->getEnumValues() ? implode("\n", $definition->getEnumValues()) : null,
             ],
             'visibility' => [

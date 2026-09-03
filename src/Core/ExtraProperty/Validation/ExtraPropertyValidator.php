@@ -12,6 +12,7 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Validation;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -74,6 +75,15 @@ class ExtraPropertyValidator implements ExtraPropertyValidatorInterface
         $constraints = $definition->getConstraints() ?? [];
         if ([] === $constraints) {
             return new ConstraintViolationList();
+        }
+
+        // JSON values may legitimately arrive as decoded structures (API payloads, module
+        // code writing arrays): constraints like Assert\Json expect the ENCODED string —
+        // the storage form — so normalize that one case before validating. Other types are
+        // validated as submitted (a bool stays a bool for Assert\Type('bool'); the writer
+        // applies its own storage coercion after validation).
+        if (ExtraPropertyType::JSON === $definition->getType() && !is_string($value) && null !== $value) {
+            $value = json_encode($value);
         }
 
         // Edge case: an ObjectModel loaded WITH a langId exposes a LANG value as a single scalar (one language),

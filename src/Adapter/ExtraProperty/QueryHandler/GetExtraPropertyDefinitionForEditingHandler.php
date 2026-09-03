@@ -53,7 +53,9 @@ final class GetExtraPropertyDefinitionForEditingHandler implements GetExtraPrope
             sqlIndex: $definition->getSqlIndex(),
             nullable: $definition->isNullable(),
             size: $definition->getSize(),
-            defaultValue: null !== $definition->getDefaultValue() ? (string) $definition->getDefaultValue() : null,
+            // Carried with its scalar type — a (string) cast here would be lossy (false → '',
+            // 0.0 → '0'); the BO form boundary stringifies where its TextType needs it.
+            defaultValue: $definition->getDefaultValue(),
             enumValues: $definition->getEnumValues(),
             displayFront: $definition->isDisplayFront(),
             required: $definition->isRequired(),

@@ -34,7 +34,7 @@ class EditableExtraPropertyDefinition
      * @param ExtraPropertySqlIndex $sqlIndex
      * @param bool $nullable
      * @param int|null $size Varchar size for string fields
-     * @param string|null $defaultValue
+     * @param int|float|string|bool|null $defaultValue
      * @param list<string>|null $enumValues Allowed values for CHOICE type
      * @param bool $displayFront
      * @param bool $required
@@ -60,7 +60,7 @@ class EditableExtraPropertyDefinition
         protected readonly ExtraPropertySqlIndex $sqlIndex,
         protected readonly bool $nullable,
         protected readonly ?int $size,
-        protected readonly ?string $defaultValue,
+        protected readonly int|float|string|bool|null $defaultValue,
         protected readonly ?array $enumValues,
         protected readonly bool $displayFront,
         protected readonly bool $required,
@@ -126,7 +126,7 @@ class EditableExtraPropertyDefinition
         return $this->size;
     }
 
-    public function getDefaultValue(): ?string
+    public function getDefaultValue(): int|float|string|bool|null
     {
         return $this->defaultValue;
     }

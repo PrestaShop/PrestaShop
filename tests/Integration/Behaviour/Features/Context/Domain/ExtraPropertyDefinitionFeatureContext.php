@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -295,7 +296,9 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
             'sql_index' => $definition->getSqlIndex()->value,
             'nullable' => $definition->isNullable() ? 'true' : 'false',
             'size' => null !== $definition->getSize() ? (string) $definition->getSize() : '',
-            'default_value' => $definition->getDefaultValue() ?? '',
+            // Typed scalar since the CQRS widening — stringified with the same canonical
+            // mapping as the registry ('1'/'0' for booleans) for Gherkin cell comparison.
+            'default_value' => ExtraPropertyValueCaster::castDefaultValueForDb($definition->getFieldType(), $definition->getDefaultValue()) ?? '',
             'enum_values' => implode(',', $definition->getEnumValues() ?? []),
             'display_front' => $definition->isDisplayFront() ? 'true' : 'false',
             'required' => $definition->isRequired() ? 'true' : 'false',
@@ -389,6 +392,14 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsRegistrationFailureForUnknownShop(): void
     {
         $this->assertLastErrorIs(ExtraPropertyRegistrationFailureException::class, ExtraPropertyRegistrationFailureException::UNKNOWN_SHOP);
+    }
+
+    /**
+     * @Then I should get an error that the default value is invalid
+     */
+    public function assertLastErrorIsRegistrationFailureForInvalidDefaultValue(): void
+    {
+        $this->assertLastErrorIs(ExtraPropertyRegistrationFailureException::class, ExtraPropertyRegistrationFailureException::INVALID_DEFAULT_VALUE);
     }
 
     /**
