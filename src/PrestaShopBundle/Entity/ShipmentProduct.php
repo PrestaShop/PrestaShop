@@ -25,7 +25,7 @@ class ShipmentProduct
     private int $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Shipment", inversedBy="products", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Shipment", inversedBy="products")
      *
      * @ORM\JoinColumn(name="id_shipment", referencedColumnName="id_shipment", nullable=false, onDelete="CASCADE")
      */
