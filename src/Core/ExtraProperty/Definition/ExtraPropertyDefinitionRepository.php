@@ -138,9 +138,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
         $data = [
             // getModuleName() is already normalized: null for core fields ('' / '_core' inputs included).
             'module_name' => $definition->getModuleName(),
-            // Physical table, resolved by the VO at construction and frozen here: hydration
-            // (fromRow) passes it back as the explicit value, so a class disappearing later
-            // can never repoint a definition's storage.
+            // Stored resolved: fromRow() passes it back as the explicit value, so hydration never re-resolves.
             'table_name' => $definition->getTableName(),
             'scope' => $definition->getScope()->value,
             'type' => $definition->getType()->value,

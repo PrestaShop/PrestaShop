@@ -56,7 +56,7 @@ class ExtraPropertyDefinitionFieldDefinitionType extends TranslatorAwareType
         $builder
             ->add('entity_name', TextType::class, [
                 'label' => $this->trans('Entity name', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Entity or ObjectModel table name (e.g. product, customer, order, combination).', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('Entity or ObjectModel table name (e.g. product, customer, order, combination, attribute).', 'Admin.Advparameters.Help'),
                 'required' => !$isEdit,
                 'disabled' => $isEdit,
                 'attr' => $disabledAttr,

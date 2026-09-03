@@ -117,12 +117,12 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
         }
 
         $resourceClass = (string) $operation->getClass();
-        $entityName = $definitions->first()->getTableName();
+        $tableName = $definitions->first()->getTableName();
         $langScopedFields = $this->langScopedFields($definitions);
 
         if ($this->isCollection($operation, $decoded)) {
             if (isset($decoded['items']) && is_array($decoded['items'])) {
-                $decoded['items'] = $this->enrichListItems($decoded['items'], $operation, $definitions, $entityName, $resourceClass);
+                $decoded['items'] = $this->enrichListItems($decoded['items'], $operation, $definitions, $tableName, $resourceClass);
             }
         } else {
             $entityId = $this->resolveId($decoded, $definitions->first(), $resourceClass);
@@ -136,7 +136,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
                         // comes from the ShopContext, built by the Admin API kernel's shop-context listener — a
                         // multi-shop value is a single value identified by that context, like the form integration.
                         $this->writer->writeAll(
-                            $entityName,
+                            $tableName,
                             $definitions->first()->getPrimaryKeyName(),
                             $entityId,
                             $this->localesToIds($payload, $langScopedFields),
@@ -147,7 +147,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
 
                 $values = $this->idsToLocales(
                     $this->reader->getExtraProperties(
-                        $entityName,
+                        $tableName,
                         $definitions->first()->getPrimaryKeyName(),
                         $entityId,
                         null,
@@ -183,7 +183,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
      *
      * @return array<int, mixed>
      */
-    protected function enrichListItems(array $items, HttpOperation $operation, ExtraPropertyDefinitionCollection $definitions, string $entityName, string $resourceClass): array
+    protected function enrichListItems(array $items, HttpOperation $operation, ExtraPropertyDefinitionCollection $definitions, string $tableName, string $resourceClass): array
     {
         $gridBacked = $this->isGridBackedCollection($operation);
 
@@ -211,7 +211,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
         $valuesByEntity = [];
         if (!$readerDefinitions->isEmpty()) {
             $valuesByEntity = $this->reader->getMultipleExtraProperties(
-                $entityName,
+                $tableName,
                 $readerDefinitions->first()->getPrimaryKeyName(),
                 array_values($entityIdByIndex),
                 $this->languageContext->getId(),
@@ -225,7 +225,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
 
             if ($gridBacked) {
                 // Grid-associated properties: reuse exactly the (single context-locale) values the grid fetched.
-                $captured = $this->listRecordCollector->find($entityName, $entityId);
+                $captured = $this->listRecordCollector->find($tableName, $entityId);
                 if (null !== $captured) {
                     $item = array_merge($item, $captured);
                 }

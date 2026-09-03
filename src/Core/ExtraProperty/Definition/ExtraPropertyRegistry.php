@@ -338,7 +338,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         $defaultValue = $definition->getDefaultValue();
 
         return match ($definition->getType()) {
-            ExtraPropertyType::INT => is_int($defaultValue) || is_bool($defaultValue)
+            ExtraPropertyType::INT => is_int($defaultValue)
                 || (is_string($defaultValue) && 1 === preg_match('/^-?\d+$/', $defaultValue)),
             ExtraPropertyType::FLOAT => is_int($defaultValue) || is_float($defaultValue)
                 || (is_string($defaultValue) && is_numeric($defaultValue)),

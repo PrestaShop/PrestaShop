@@ -44,7 +44,7 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
      * {@inheritdoc}
      */
     public function getExtraProperties(
-        string $entityName,
+        string $tableName,
         string $primaryKeyName,
         int $entityId,
         ?int $langId,
@@ -56,7 +56,7 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
         }
 
         return $this->getMultipleExtraProperties(
-            $entityName,
+            $tableName,
             $primaryKeyName,
             [$entityId],
             $langId,
@@ -69,7 +69,7 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
      * {@inheritdoc}
      */
     public function getMultipleExtraProperties(
-        string $entityName,
+        string $tableName,
         string $primaryKeyName,
         array $entityIds,
         ?int $langId,
@@ -84,7 +84,7 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
             return [];
         }
 
-        $allDefinitions = $definitions ?? $this->repository->getAllDefinitions()->filterByTableName($entityName);
+        $allDefinitions = $definitions ?? $this->repository->getAllDefinitions()->filterByTableName($tableName);
         // Shop availability is enforced here unconditionally — injected collections included:
         // the filter is idempotent, and a definition not associated to the requested scope
         // must never surface a value, whatever the caller forgot.

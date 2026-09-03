@@ -37,16 +37,6 @@ use Throwable;
  */
 class CommonController extends PrestaShopAdminController
 {
-    /**
-     * Legacy controller (permission subject) per entity whose BO controller does not
-     * follow the Admin + pluralized-entity naming convention — the extension point for
-     * future irregular entities. 'order' would pluralize fine, but is pinned here since
-     * it is the known irregular entity and the mapping is security-relevant.
-     */
-    private const LEGACY_CONTROLLER_BY_ENTITY = [
-        'order' => 'AdminOrders',
-    ];
-
     public static function getSubscribedServices(): array
     {
         return parent::getSubscribedServices() + [
@@ -410,12 +400,10 @@ class CommonController extends PrestaShopAdminController
     }
 
     /**
-     * Derives the BO legacy controller name (the permission subject) for a given entity name.
-     *
-     * A const override map handles the entities whose controller does not follow the naming
-     * convention; every other name goes through the inflector: classify() (snake_case →
-     * CamelCase, so manufacturer_address → ManufacturerAddress) then pluralize()
-     * (category → Categories, address → Addresses, product → Products).
+     * Derives the BO legacy controller name (the permission subject) for a given entity name
+     * through the inflector: classify() (snake_case → CamelCase, so manufacturer_address →
+     * ManufacturerAddress) then pluralize() (order → AdminOrders, category → AdminCategories,
+     * address → AdminAddresses, product → AdminProducts).
      *
      * Used server-side to verify employee permissions without trusting any client-supplied
      * value (e.g. for the extra-property toggle endpoint). A derived name matching no
@@ -425,10 +413,6 @@ class CommonController extends PrestaShopAdminController
      */
     public static function legacyControllerFromEntityName(string $entityName): string
     {
-        if (isset(self::LEGACY_CONTROLLER_BY_ENTITY[$entityName])) {
-            return self::LEGACY_CONTROLLER_BY_ENTITY[$entityName];
-        }
-
         $inflector = Inflector::getInflector();
 
         return 'Admin' . $inflector->pluralize($inflector->classify($entityName));

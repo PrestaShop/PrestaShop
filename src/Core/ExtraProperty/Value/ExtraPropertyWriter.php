@@ -65,7 +65,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
      * {@inheritdoc}
      */
     public function writeAll(
-        string $entityName,
+        string $tableName,
         string $primaryKeyName,
         int $entityId,
         array $valuesByModule,
@@ -76,7 +76,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
             return;
         }
 
-        $definitions = $this->definitionRepository->getAllDefinitions()->filterByTableName($entityName);
+        $definitions = $this->definitionRepository->getAllDefinitions()->filterByTableName($tableName);
         if ($definitions->isEmpty()) {
             return;
         }
@@ -183,7 +183,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
                 // shops) only refresh the shops the entity is associated with, while an
                 // explicitly named shop (single-shop constraint, ShopCollection) always gets
                 // its row, like native CONTEXT_SHOP / $id_shop_list inserts.
-                $shopScopeIds = $this->filterShopScopeByAssociations($entityName, $primaryKeyName, $entityId, $shopConstraint, $bucket['shopIds']);
+                $shopScopeIds = $this->filterShopScopeByAssociations($tableName, $primaryKeyName, $entityId, $shopConstraint, $bucket['shopIds']);
                 if (!empty($shopScopeIds)) {
                     $this->writeShop($shopTableName, $primaryKeyName, $entityId, $shopScopeIds, $bucket['values']);
                 }
@@ -312,7 +312,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
      *
      * @return int[]
      */
-    protected function filterShopScopeByAssociations(string $entityName, string $primaryKeyName, int $entityId, ShopConstraint $shopConstraint, array $shopIds): array
+    protected function filterShopScopeByAssociations(string $tableName, string $primaryKeyName, int $entityId, ShopConstraint $shopConstraint, array $shopIds): array
     {
         if (null !== $shopConstraint->getShopId()
             || ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds())
@@ -322,7 +322,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
 
         $qb = $this->connection->createQueryBuilder()
             ->select('a.id_shop')
-            ->from($this->prefix . $entityName . '_shop', 'a')
+            ->from($this->prefix . $tableName . '_shop', 'a')
             ->andWhere('a.' . $this->connection->quoteIdentifier($primaryKeyName) . ' = :entityId')
             ->setParameter('entityId', $entityId);
 
@@ -342,7 +342,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteAll(string $entityName, string $primaryKeyName, int $entityId): void
+    public function deleteAll(string $tableName, string $primaryKeyName, int $entityId): void
     {
         if ($entityId <= 0) {
             return;
@@ -352,7 +352,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
 
         foreach (ExtraPropertyScope::cases() as $scope) {
             $fullTable = $this->connection->quoteIdentifier(
-                $this->prefix . ExtraPropertyDefinition::buildExtraTableName($entityName, $scope)
+                $this->prefix . ExtraPropertyDefinition::buildExtraTableName($tableName, $scope)
             );
 
             try {
@@ -369,7 +369,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteForShops(string $entityName, string $primaryKeyName, int $entityId, array $shopIds): void
+    public function deleteForShops(string $tableName, string $primaryKeyName, int $entityId, array $shopIds): void
     {
         if ($entityId <= 0) {
             return;
@@ -382,7 +382,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
             return;
         }
 
-        $definitions = $this->definitionRepository->getAllDefinitions()->filterByTableName($entityName);
+        $definitions = $this->definitionRepository->getAllDefinitions()->filterByTableName($tableName);
         if ($definitions->isEmpty()) {
             return;
         }
