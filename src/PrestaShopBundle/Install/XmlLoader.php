@@ -540,7 +540,7 @@ class XmlLoader
                 }
 
                 foreach ($real_data_lang as $id_lang => $insert_data_lang) {
-                    $insert_data_lang['id_' . $entity] = $entity_id;
+                    $insert_data_lang[$primary] = $entity_id;
                     $insert_data_lang['id_lang'] = $id_lang;
                     $this->delayed_inserts[$entity . '_lang'][] = array_map('pSQL', $insert_data_lang);
                 }
