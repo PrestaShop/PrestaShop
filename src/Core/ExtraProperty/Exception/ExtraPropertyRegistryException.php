@@ -58,6 +58,13 @@ class ExtraPropertyRegistryException extends ExtraPropertyException
     public const INVALID_FORM_OPTIONS = 6;
 
     /**
+     * The shop association names at least one shop id that does not exist. The
+     * association rows are written without a foreign key, so an unknown id would be
+     * stored silently and make the definition invisible on every real shop.
+     */
+    public const UNKNOWN_SHOP = 7;
+
+    /**
      * @param list<string> $errors individual human-readable errors when the failure
      *                             aggregates several (only INVALID_FORM_OPTIONS provides
      *                             them so far — one entry per invalid form option)

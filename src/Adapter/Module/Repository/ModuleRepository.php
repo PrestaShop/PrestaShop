@@ -75,6 +75,26 @@ class ModuleRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Shops one module is enabled on (a module_shop row means "enabled on that shop"),
+     * empty when it has no row at all. The module is identified by its technical name
+     * (the module's primary identity), resolved through the module table.
+     *
+     * @return list<int>
+     */
+    public function getEnabledShopIds(string $technicalName): array
+    {
+        $rows = Db::getInstance()->executeS(
+            'SELECT ms.`id_shop`
+            FROM `' . _DB_PREFIX_ . 'module_shop` ms
+            INNER JOIN `' . _DB_PREFIX_ . 'module` m ON m.`id_module` = ms.`id_module`
+            WHERE m.`name` = "' . pSQL($technicalName) . '"
+            ORDER BY ms.`id_shop` ASC'
+        );
+
+        return is_array($rows) ? array_map(static fn (array $row): int => (int) $row['id_shop'], $rows) : [];
+    }
+
+    /**
      * Return active modules (active in DB and present on the disk).
      *
      * This method must not trigger any exception because it is called during install and/or on kernel initialisation,

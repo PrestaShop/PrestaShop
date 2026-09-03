@@ -13,7 +13,9 @@ use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Validator\Exception\ValidationException;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidatorInterface;
 use PrestaShopBundle\ApiPlatform\Exception\LocaleNotFoundException;
@@ -43,6 +45,8 @@ class ExtraPropertyCQRSApiValidator implements CQRSApiValidatorInterface
         protected readonly RequestStack $requestStack,
         protected readonly ExtraPropertyValidatorInterface $validatorAdapter,
         protected readonly LocalizedValueUpdater $localizedValueUpdater,
+        protected readonly ShopContext $shopContext,
+        protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
     ) {
     }
 
@@ -130,7 +134,13 @@ class ExtraPropertyCQRSApiValidator implements CQRSApiValidatorInterface
             return $violations;
         }
 
-        $definitions = $this->repository->getAllDefinitions()->filterByApi($uriTemplate, $method);
+        // Same shop filter as ExtraPropertyApiSubscriber's write path: a definition not
+        // available for the request's shop scope is not written, so it must not be
+        // validated either (its payload entry is silently ignored, like any unknown key).
+        $definitions = $this->definitionShopFilter->filterByShopConstraint(
+            $this->repository->getAllDefinitions()->filterByApi($uriTemplate, $method),
+            $this->shopContext->getShopConstraint()
+        );
 
         // The payload is already grouped [module => [property => value]] — exactly the shape
         // ExtraPropertyValidator::validate() expects. Run it once, then re-base each "<module>.<property>[.<locale>]"

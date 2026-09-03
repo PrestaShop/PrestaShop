@@ -48,6 +48,7 @@ class EditableExtraPropertyDefinition
      * @param list<string>|null $associatedForms
      * @param list<string>|null $associatedGrids
      * @param list<string>|null $associatedApis
+     * @param list<int>|null $associatedShopIds Explicit shop restriction; null = fallback behavior (core-owned: all shops, module-owned: the module's enabled shops)
      */
     public function __construct(
         protected readonly int $id,
@@ -73,6 +74,7 @@ class EditableExtraPropertyDefinition
         protected readonly ?array $associatedForms,
         protected readonly ?array $associatedGrids,
         protected readonly ?array $associatedApis,
+        protected readonly ?array $associatedShopIds = null,
     ) {
     }
 
@@ -213,7 +215,19 @@ class EditableExtraPropertyDefinition
     }
 
     /**
-     * Returns true when the definition is owned by a module and cannot be modified via the BO UI.
+     * Explicit shop restriction; null = fallback behavior (core-owned: all shops,
+     * module-owned: the module's enabled shops).
+     *
+     * @return list<int>|null
+     */
+    public function getAssociatedShopIds(): ?array
+    {
+        return $this->associatedShopIds;
+    }
+
+    /**
+     * Returns true when the definition is owned by a module and cannot be modified via the BO UI
+     * — except for its shop association, the single field the Update command accepts on it.
      */
     public function isModuleOwned(): bool
     {

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator;
@@ -38,6 +39,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         // Required: the registry is only defined in Symfony kernels (services/extra_property/backend.yml),
         // where the form factory is always available — never in the FO legacy container.
         protected readonly FormOptionsValidator $formOptionsValidator,
+        protected readonly ShopRepository $shopRepository,
     ) {
     }
 
@@ -52,6 +54,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
      * - destructive schema changes on already-registered definitions are refused (see hasStorageChanges())
      * - formType/formOptions must build a working form field (see FormOptionsValidator) — being the single
      *   write choke point, this covers every path: BO form, CQRS commands and Module::registerExtraProperty()
+     * - every shop id in the shop association must exist (the association rows carry no foreign key)
      *
      * Non-destructive schema changes (defaultValue change, STRING size increase, nullable
      * relaxing, CHOICE enum value addition) are applied to the live column by the schema
@@ -74,7 +77,8 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
      *
      * @throws ExtraPropertyRegistryException the failure reason is carried by the exception code:
      *                                        SCOPE_CONFLICT, DESTRUCTIVE_SCHEMA_CHANGE, INVALID_FORM_OPTIONS,
-     *                                        BASE_TABLE_NOT_FOUND, SCHEMA_FAILURE or PERSISTENCE_FAILURE
+     *                                        UNKNOWN_SHOP, BASE_TABLE_NOT_FOUND, SCHEMA_FAILURE or
+     *                                        PERSISTENCE_FAILURE
      */
     public function register(ExtraPropertyDefinition $definition): int
     {
@@ -136,7 +140,36 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::INVALID_FORM_OPTIONS, errors: $formOptionErrors);
         }
 
-        // 4. Ensure the *_extra table and column exist and match the definition: the schema
+        // 4. Refuse unknown shop ids in the association, BEFORE any DDL or row write: the
+        //    association rows carry no foreign key, so an unknown id (e.g. a module calling
+        //    registerExtraProperty() with a wrong shop id) would be stored silently and make
+        //    the definition invisible on every real shop. Being the single write choke point,
+        //    this covers the BO form, the CQRS commands and Module::registerExtraProperty().
+        //    null (untouched) and [] (revert to fallback) carry no id to check.
+        //    Deliberately validated against EVERY existing shop (getAllShopIds(), no
+        //    active/deleted filter): an inactive shop is a legitimate restriction target —
+        //    the association is configuration and must survive deactivation/reactivation
+        //    cycles. A definition restricted to inactive shops only is simply dormant:
+        //    group/all-shops resolution covers usable shops only (ShopListResolver), so it
+        //    surfaces nowhere at runtime, while the registry grid's all-shops management
+        //    view still lists it for editing.
+        $associatedShopIds = $definition->getAssociatedShopIds();
+        if (!empty($associatedShopIds)) {
+            $unknownShopIds = array_diff($associatedShopIds, $this->shopRepository->getAllShopIds());
+            if ([] !== $unknownShopIds) {
+                $message = sprintf(
+                    'Cannot register extra property %s.%s: unknown shop id(s) %s in the shop association.',
+                    $entityName,
+                    $propertyName,
+                    implode(', ', $unknownShopIds)
+                );
+                $this->logger->error($message);
+
+                throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::UNKNOWN_SHOP);
+            }
+        }
+
+        // 5. Ensure the *_extra table and column exist and match the definition: the schema
         //    manager also syncs remaining non-destructive changes on the live column.
         //    DDL runs BEFORE the row write (see the method docblock): a DDL failure here
         //    persists nothing on a creation and leaves the previous row intact on an update.
@@ -156,7 +189,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::SCHEMA_FAILURE, $exception);
         }
 
-        // 5. Insert or update the registry row.
+        // 6. Insert or update the registry row.
         $savedId = $this->writeRepository->save($definition);
 
         if (false === $savedId) {

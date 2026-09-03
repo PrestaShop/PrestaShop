@@ -12,6 +12,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\BulkDeleteExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\DeleteExtraPropertyDefinitionCommand;
+use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\UpdateExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\BulkExtraPropertyException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefinitionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyRegistrationFailureException;
@@ -25,6 +26,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ExtraPropertyDefinitionFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyDefinitionShopsType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -215,10 +217,14 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      * Displays a module-owned extra property definition in read-only mode.
      *
      * Reuses the same form builder/type as createAction()/editAction() purely for display: no
-     * FormHandlerInterface is involved and the request is never bound to the form, since nothing
-     * here is ever submitted.
+     * FormHandlerInterface is involved and the request is never bound to that form.
+     *
+     * One exception to read-only: the shop association — the single field the Update command
+     * accepts on module-owned definitions — is editable through a small standalone form
+     * (multistore only), submitted back to this action (POST).
      *
      * @param int $extraPropertyDefinitionId
+     * @param Request $request
      * @param FormBuilderInterface $formBuilder
      *
      * @return Response|RedirectResponse
@@ -226,6 +232,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_extra_property_definitions_index')]
     public function viewAction(
         int $extraPropertyDefinitionId,
+        Request $request,
         #[Autowire(service: 'prestashop.core.form.builder.extra_property_definition_form_builder')]
         FormBuilderInterface $formBuilder,
     ): Response|RedirectResponse {
@@ -240,10 +247,42 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
             return $this->redirectToRoute('admin_extra_property_definitions_index');
         }
 
+        $shopAssociationForm = null;
+        if ($this->getShopContext()->isMultiShopUsed()) {
+            // No FormDataProvider/FormDataHandler pair for this single field: the current
+            // value comes from the loaded definition form and the command is dispatched
+            // directly, exceptionally.
+            $moduleName = (string) $form->get('field_definition')->get('module_name')->getData();
+            $shopAssociationForm = $this->createForm(
+                ExtraPropertyDefinitionShopsType::class,
+                ['shop_association' => (array) $form->get('visibility')->get('shop_association')->getData()],
+                ['module_name' => '' !== $moduleName ? $moduleName : null]
+            );
+            $shopAssociationForm->handleRequest($request);
+
+            if ($shopAssociationForm->isSubmitted() && $shopAssociationForm->isValid()) {
+                try {
+                    // Empty selection = revert to the fallback (module's stores / all stores).
+                    $shopIds = array_map('intval', (array) $shopAssociationForm->get('shop_association')->getData());
+                    $this->dispatchCommand(
+                        (new UpdateExtraPropertyDefinitionCommand($extraPropertyDefinitionId))->setAssociatedShopIds($shopIds)
+                    );
+                    $this->addFlash('success', $this->trans('Successful update.', [], 'Admin.Notifications.Success'));
+
+                    return $this->redirectToRoute('admin_extra_property_definitions_view', [
+                        'extraPropertyDefinitionId' => $extraPropertyDefinitionId,
+                    ]);
+                } catch (Exception $e) {
+                    $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+                }
+            }
+        }
+
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/view.html.twig',
             [
                 'extraPropertyDefinitionForm' => $form->createView(),
+                'shopAssociationForm' => $shopAssociationForm?->createView(),
                 'layoutTitle' => $this->trans(
                     'Viewing extra property "%name%"',
                     ['%name%' => $form->get('field_definition')->get('property_name')->getData()],
@@ -438,6 +477,11 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
                 ),
                 ExtraPropertyRegistrationFailureException::INVALID_FORM_OPTIONS => $this->trans(
                     'The form options are not compatible with the form field type: the field could not be built. Fix the "Advanced form integration" card and try again.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
+                ExtraPropertyRegistrationFailureException::UNKNOWN_SHOP => $this->trans(
+                    'The store association contains a store that does not exist. Refresh the page and try again.',
                     [],
                     'Admin.Advparameters.Notification'
                 ),

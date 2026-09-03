@@ -56,6 +56,11 @@ class ExtraPropertyRegistrationFailureException extends ExtraPropertyException
     public const INVALID_FORM_OPTIONS = 6;
 
     /**
+     * The shop association names at least one shop id that does not exist.
+     */
+    public const UNKNOWN_SHOP = 7;
+
+    /**
      * Builds the domain exception from the core exception thrown by the registry,
      * mapping the core reason code to the matching domain code and keeping the
      * core exception as the previous one.
@@ -69,6 +74,7 @@ class ExtraPropertyRegistrationFailureException extends ExtraPropertyException
             ExtraPropertyRegistryException::PERSISTENCE_FAILURE => self::PERSISTENCE_FAILURE,
             ExtraPropertyRegistryException::SCHEMA_FAILURE => self::SCHEMA_FAILURE,
             ExtraPropertyRegistryException::INVALID_FORM_OPTIONS => self::INVALID_FORM_OPTIONS,
+            ExtraPropertyRegistryException::UNKNOWN_SHOP => self::UNKNOWN_SHOP,
             default => self::UNKNOWN,
         };
 

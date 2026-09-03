@@ -9,11 +9,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Shop;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
-use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolver;
@@ -94,12 +92,9 @@ class ShopListResolverTest extends TestCase
     {
         $this->repositoryCallCount = 0;
 
-        $connection = $this->createMock(Connection::class);
-        $connection->method('getDatabasePlatform')->willReturn(new MySQLPlatform());
-        $connection->method('createQueryBuilder')->willReturnCallback(
-            fn (): QueryBuilder => new QueryBuilder($connection)
-        );
-        $connection->method('fetchOne')->willReturn((string) self::DEFAULT_SHOP_ID);
+        $configuration = $this->createMock(ShopConfigurationInterface::class);
+        // PS_SHOP_DEFAULT global read (the only configuration value the resolver needs).
+        $configuration->method('get')->willReturn((string) self::DEFAULT_SHOP_ID);
 
         $shopRepository = $this->createMock(ShopRepository::class);
         $shopRepository->method('getAssociatedShopIds')->willReturnCallback(
@@ -113,6 +108,6 @@ class ShopListResolverTest extends TestCase
             }
         );
 
-        return new ShopListResolver($connection, 'ps_', $shopRepository);
+        return new ShopListResolver($shopRepository, $configuration);
     }
 }

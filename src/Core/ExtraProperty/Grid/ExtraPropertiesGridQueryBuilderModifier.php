@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -55,6 +56,7 @@ class ExtraPropertiesGridQueryBuilderModifier
         protected readonly string $dbPrefix,
         protected readonly LanguageContext $languageContext,
         protected readonly ShopContext $shopContext,
+        protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
     ) {
     }
 
@@ -64,7 +66,7 @@ class ExtraPropertiesGridQueryBuilderModifier
         SearchCriteriaInterface $searchCriteria,
         string $gridId,
     ): void {
-        $definitions = $this->repository->getAllDefinitions()->filterByGrid($gridId);
+        $definitions = $this->getShopFilteredDefinitions($gridId);
         if ($definitions->isEmpty()) {
             return;
         }
@@ -107,7 +109,7 @@ class ExtraPropertiesGridQueryBuilderModifier
      */
     public function castExtraProperties(array $records, string $gridId): array
     {
-        $definitions = $this->repository->getAllDefinitions()->filterByGrid($gridId);
+        $definitions = $this->getShopFilteredDefinitions($gridId);
         if ($definitions->isEmpty()) {
             return $records;
         }
@@ -126,6 +128,20 @@ class ExtraPropertiesGridQueryBuilderModifier
         }
 
         return $records;
+    }
+
+    /**
+     * Grid definitions restricted to the current shop context — the shared lookup of
+     * apply(), castExtraProperties() and ExtraPropertiesGridDefinitionModifier, which MUST
+     * all stay in lockstep (same service, same constraint source): a column without its
+     * SELECT — or the reverse — breaks the grid.
+     */
+    protected function getShopFilteredDefinitions(string $gridId): ExtraPropertyDefinitionCollection
+    {
+        return $this->definitionShopFilter->filterByShopConstraint(
+            $this->repository->getAllDefinitions()->filterByGrid($gridId),
+            $this->shopContext->getShopConstraint()
+        );
     }
 
     /**

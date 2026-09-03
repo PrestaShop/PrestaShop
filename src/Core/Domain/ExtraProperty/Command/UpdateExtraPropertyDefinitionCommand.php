@@ -115,6 +115,13 @@ class UpdateExtraPropertyDefinitionCommand
     protected ?array $associatedApis = null;
 
     /**
+     * Null = never set; [] = explicit revert to fallback (see setAssociatedShopIds()).
+     *
+     * @var list<int>|null
+     */
+    protected ?array $associatedShopIds = null;
+
+    /**
      * @param int $id
      */
     public function __construct(int $id)
@@ -446,6 +453,33 @@ class UpdateExtraPropertyDefinitionCommand
     public function setAssociatedApis(?array $associatedApis): self
     {
         $this->associatedApis = $associatedApis;
+
+        return $this;
+    }
+
+    /**
+     * Null = never set (association untouched); [] = explicit revert to the fallback
+     * behavior (core-owned: all shops, module-owned: the module's enabled shops).
+     *
+     * @return list<int>|null
+     */
+    public function getAssociatedShopIds(): ?array
+    {
+        return $this->associatedShopIds;
+    }
+
+    /**
+     * The only modification accepted on a module-owned definition — every other setter
+     * used together with a module-owned id makes the handler throw
+     * ProtectedModuleExtraPropertyDefinitionException.
+     *
+     * @param list<int> $associatedShopIds Empty = revert to the fallback behavior
+     *
+     * @return self
+     */
+    public function setAssociatedShopIds(array $associatedShopIds): self
+    {
+        $this->associatedShopIds = $associatedShopIds;
 
         return $this;
     }

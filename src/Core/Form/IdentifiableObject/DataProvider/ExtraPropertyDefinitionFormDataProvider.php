@@ -64,6 +64,9 @@ final class ExtraPropertyDefinitionFormDataProvider implements FormDataProviderI
             'visibility' => [
                 'display_front' => $definition->isDisplayFront(),
                 'required' => $definition->isRequired(),
+                // Null (no explicit restriction) renders as an empty selection: the field's
+                // help text explains the fallback ("all stores" / the module's stores).
+                'shop_association' => $definition->getAssociatedShopIds() ?? [],
             ],
             'labels' => [
                 'label_wording' => $definition->getLabelWording(),
@@ -101,6 +104,9 @@ final class ExtraPropertyDefinitionFormDataProvider implements FormDataProviderI
             'visibility' => [
                 'display_front' => false,
                 'required' => false,
+                // Deliberately empty (= no restriction), NOT the context shop ids: a new
+                // definition must not be silently restricted to the creating context.
+                'shop_association' => [],
             ],
         ];
     }

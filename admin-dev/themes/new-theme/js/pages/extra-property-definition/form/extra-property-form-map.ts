@@ -14,6 +14,11 @@ export default {
   constraintCatalogPayload: '[data-role="extra-property-constraint-catalog"]',
   placementList: '[data-role="placement-list"]',
   constraintBuilder: '[data-role="constraint-builder"]',
+  /** Store association trees: the Visibility card field and the view page's standalone form. */
+  shopAssociationTrees: [
+    '#extra_property_definition_visibility_shop_association',
+    '#extra_property_definition_shops_shop_association',
+  ].join(', '),
   developerFields: '[data-role="developer-fields"]',
   // Field-definition card inputs observed by the builders (scope drives the per-language zone,
   // type drives the default form type placeholder).

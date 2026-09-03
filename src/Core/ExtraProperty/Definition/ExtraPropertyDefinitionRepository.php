@@ -44,7 +44,9 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             ->from($table, 'eef')
             ->orderBy('eef.id_extra_property_definition', 'ASC');
 
-        $rows = $this->enrichRowsWithColumnMetadata($qb->executeQuery()->fetchAllAssociative() ?: []);
+        $rows = $this->enrichRowsWithShopAssociations(
+            $this->enrichRowsWithColumnMetadata($qb->executeQuery()->fetchAllAssociative() ?: [])
+        );
 
         return new ExtraPropertyDefinitionCollection(array_values(array_map(
             static fn (array $row): ExtraPropertyDefinition => ExtraPropertyDefinition::fromRow($row),
@@ -74,7 +76,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             return null;
         }
 
-        return ExtraPropertyDefinition::fromRow($this->enrichRowsWithColumnMetadata([$row])[0]);
+        return ExtraPropertyDefinition::fromRow($this->enrichRowsWithShopAssociations($this->enrichRowsWithColumnMetadata([$row]))[0]);
     }
 
     /**
@@ -95,7 +97,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             return null;
         }
 
-        return ExtraPropertyDefinition::fromRow($this->enrichRowsWithColumnMetadata([$row])[0]);
+        return ExtraPropertyDefinition::fromRow($this->enrichRowsWithShopAssociations($this->enrichRowsWithColumnMetadata([$row]))[0]);
     }
 
     /**
@@ -168,6 +170,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             // docblock). $existingId is already known to exist (just resolved above), so the
             // update is considered successful as long as it does not throw.
             $this->connection->update($table, $data, ['id_extra_property_definition' => $existingId]);
+            $this->persistShopAssociation($existingId, $definition);
 
             return $existingId;
         }
@@ -180,7 +183,44 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             return false;
         }
 
-        return (int) $this->connection->lastInsertId();
+        $definitionId = (int) $this->connection->lastInsertId();
+        $this->persistShopAssociation($definitionId, $definition);
+
+        return $definitionId;
+    }
+
+    /**
+     * Persists the definition's shop association as part of save() — the definition is
+     * the single write path for the association — honoring the associatedShopIds
+     * tri-state (see the ExtraPropertyDefinition property docblock): null = no
+     * information, the stored association is left untouched — so a module re-registering
+     * its definition without shop data cannot clobber a BO-configured restriction;
+     * [] or a list = the stored extra_property_definition_shop rows are replaced
+     * ([] deletes them all, reverting to the fallback behavior).
+     *
+     * The ids are written as-is (no FK on the table): their existence is validated
+     * upstream by ExtraPropertyRegistry::register(), the single definition write
+     * choke point, before any DDL or row write.
+     */
+    protected function persistShopAssociation(int $definitionId, ExtraPropertyDefinition $definition): void
+    {
+        // Already normalized by the ExtraPropertyDefinition constructor (int cast, deduplicated).
+        $shopIds = $definition->getAssociatedShopIds();
+        if (null === $shopIds) {
+            return;
+        }
+
+        $table = $this->prefix . 'extra_property_definition_shop';
+
+        $this->connection->transactional(function () use ($table, $definitionId, $shopIds): void {
+            $this->connection->delete($table, ['id_extra_property_definition' => $definitionId]);
+            foreach ($shopIds as $shopId) {
+                $this->connection->insert($table, [
+                    'id_extra_property_definition' => $definitionId,
+                    'id_shop' => $shopId,
+                ]);
+            }
+        });
     }
 
     /**
@@ -190,7 +230,16 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
     {
         $table = $this->prefix . 'extra_property_definition';
 
-        return (bool) $this->connection->delete($table, ['id_extra_property_definition' => $id]);
+        $deleted = (bool) $this->connection->delete($table, ['id_extra_property_definition' => $id]);
+        if ($deleted) {
+            // The core schema has no FK constraints: purge the shop association rows explicitly.
+            // Done after the registry row so a failure here leaves harmless unreferenced rows
+            // instead of a definition without its restriction (same ordering rationale as
+            // ExtraPropertyRegistry::unregister()).
+            $this->connection->delete($this->prefix . 'extra_property_definition_shop', ['id_extra_property_definition' => $id]);
+        }
+
+        return $deleted;
     }
 
     /**
@@ -299,6 +348,52 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
 
             $row['nullable'] = $columnMetadata['nullable'];
             $row['enum_values'] = $columnMetadata['enum_values'];
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Enriches registry rows with the synthetic 'associated_shop_ids' key, loaded from the
+     * extra_property_definition_shop association table. Like 'multi_shop', it is not a registry
+     * column — fromRow() consumes it to expose ExtraPropertyDefinition::getAssociatedShopIds().
+     * Rows without association rows are left untouched (null = no explicit restriction, see
+     * ExtraPropertyDefinition::isAvailableForShops()).
+     *
+     * One query for the whole batch, keyed on the rows' primary keys.
+     *
+     * @param array<int, array<string, mixed>> $rows
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function enrichRowsWithShopAssociations(array $rows): array
+    {
+        $definitionIds = array_values(array_filter(array_map(
+            static fn (array $row): int => (int) ($row['id_extra_property_definition'] ?? 0),
+            $rows
+        )));
+        if ([] === $definitionIds) {
+            return $rows;
+        }
+
+        $associations = $this->connection->createQueryBuilder()
+            ->select('eps.id_extra_property_definition, eps.id_shop')
+            ->from($this->prefix . 'extra_property_definition_shop', 'eps')
+            ->where('eps.id_extra_property_definition IN (:definitionIds)')
+            ->setParameter('definitionIds', $definitionIds, Connection::PARAM_INT_ARRAY)
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $shopIdsByDefinition = [];
+        foreach ($associations as $association) {
+            $shopIdsByDefinition[(int) $association['id_extra_property_definition']][] = (int) $association['id_shop'];
+        }
+
+        foreach ($rows as &$row) {
+            $definitionId = (int) ($row['id_extra_property_definition'] ?? 0);
+            if (isset($shopIdsByDefinition[$definitionId])) {
+                $row['associated_shop_ids'] = $shopIdsByDefinition[$definitionId];
+            }
         }
 
         return $rows;

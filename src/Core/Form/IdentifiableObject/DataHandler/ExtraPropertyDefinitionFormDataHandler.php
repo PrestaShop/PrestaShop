@@ -89,6 +89,11 @@ class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInterface
             associatedForms: AssociationRowSerializer::formEntries($advanced['associated_forms'] ?? []),
             associatedGrids: AssociationRowSerializer::gridEntries($advanced['associated_grids'] ?? []),
             associatedApis: AssociationRowSerializer::apiEntries($advanced['associated_apis'] ?? []),
+            // Absent key (multistore disabled → field not built) and empty selection both
+            // mean "no restriction" on creation.
+            associatedShopIds: !empty($visibility['shop_association'])
+                ? array_map('intval', $visibility['shop_association'])
+                : null,
         ));
 
         return $id->getValue();
@@ -131,6 +136,13 @@ class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInterface
         $enumValues = EnumValuesParser::parse($fieldDefinition['enum_values'] ?? null);
         if (null !== $enumValues) {
             $command->setEnumValues($enumValues);
+        }
+
+        // Only when the field was actually built and submitted (multistore enabled): an
+        // absent key must leave the association untouched, never clear it. An empty
+        // selection IS meaningful — it reverts to the fallback (no restriction).
+        if (array_key_exists('shop_association', $visibility)) {
+            $command->setAssociatedShopIds(array_map('intval', (array) $visibility['shop_association']));
         }
 
         $this->commandBus->handle($command);

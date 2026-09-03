@@ -668,6 +668,7 @@ default:
       contexts:
         - Tests\Integration\Behaviour\Features\Context\Domain\ExtraPropertyDefinitionFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
     api-client:
       paths:
         - "%paths.base%/Features/Scenario/ApiClient"

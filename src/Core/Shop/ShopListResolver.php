@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Shop;
 
-use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -32,12 +32,9 @@ class ShopListResolver implements ShopListResolverInterface
      */
     protected array $shopIdsCache = [];
 
-    protected ?int $defaultShopId = null;
-
     public function __construct(
-        protected readonly Connection $connection,
-        protected readonly string $prefix,
         protected readonly ShopRepository $shopRepository,
+        protected readonly ShopConfigurationInterface $configuration,
     ) {
     }
 
@@ -87,25 +84,20 @@ class ShopListResolver implements ShopListResolverInterface
     }
 
     /**
-     * PS_SHOP_DEFAULT is a global-only configuration value, read with a direct query so
-     * this service has no dependency on a configuration service (which is not available
-     * in every container). Global rows use NULL shop/group columns (0 on legacy installs).
+     * PS_SHOP_DEFAULT is a global-only configuration value, hence the explicit all-shops
+     * constraint (same pattern as the shop context listeners).
+     *
+     * Configuration is always read through the configuration abstraction, never straight
+     * from the DB: configuration is not bound to the DB persistence layer and may gain
+     * other sources (environment variables, static parameter files), so a direct query
+     * would silently bypass them. An earlier revision queried the DB directly under the
+     * mistaken belief that the configuration service was unavailable in some containers —
+     * the Adapter\Configuration service is wired in every container, including the
+     * hand-built FO legacy one. No memoization here: Configuration keeps its own
+     * static cache, a second lookup never hits the DB.
      */
     protected function getDefaultShopId(): int
     {
-        if (null === $this->defaultShopId) {
-            $qb = $this->connection->createQueryBuilder()
-                ->select('c.value')
-                ->from($this->prefix . 'configuration', 'c')
-                ->andWhere('c.name = :name')
-                ->andWhere('c.id_shop IS NULL OR c.id_shop = 0')
-                ->andWhere('c.id_shop_group IS NULL OR c.id_shop_group = 0')
-                ->setParameter('name', 'PS_SHOP_DEFAULT')
-                ->setMaxResults(1);
-
-            $this->defaultShopId = (int) $this->connection->fetchOne($qb->getSQL(), $qb->getParameters());
-        }
-
-        return $this->defaultShopId;
+        return (int) $this->configuration->get('PS_SHOP_DEFAULT', null, ShopConstraint::allShops());
     }
 }

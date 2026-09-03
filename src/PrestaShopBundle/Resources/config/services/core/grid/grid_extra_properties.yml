@@ -7,6 +7,8 @@ services:
     arguments:
       $repository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
       $translator: '@translator'
+      $shopContext: '@PrestaShop\PrestaShop\Core\Context\ShopContext'
+      $definitionShopFilter: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridQueryBuilderModifier:
     arguments:
@@ -14,3 +16,4 @@ services:
       $dbPrefix: '%database_prefix%'
       $languageContext: '@PrestaShop\PrestaShop\Core\Context\LanguageContext'
       $shopContext: '@PrestaShop\PrestaShop\Core\Context\ShopContext'
+      $definitionShopFilter: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface'

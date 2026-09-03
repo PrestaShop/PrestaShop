@@ -89,6 +89,7 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
             associatedForms: isset($data['associated_forms']) ? explode(',', $data['associated_forms']) : null,
             associatedGrids: isset($data['associated_grids']) ? explode(',', $data['associated_grids']) : null,
             associatedApis: isset($data['associated_apis']) ? explode(',', $data['associated_apis']) : null,
+            associatedShopIds: isset($data['associated_shop_ids']) ? $this->referencesToIds($data['associated_shop_ids']) : null,
         );
 
         try {
@@ -127,6 +128,17 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
         // No row in extra_property_definition will ever have this id: used to exercise the
         // "not found" path for real (a SharedStorage lookup miss would throw a different,
         // unrelated RuntimeException before the command/query is even dispatched).
+        SharedStorage::getStorage()->set($reference, 999999999);
+    }
+
+    /**
+     * @Given I define an uncreated shop :reference
+     */
+    public function defineUncreatedShop(string $reference): void
+    {
+        // Same trick as the uncreated definition above, for the shop existence assertion of
+        // the registry: no ps_shop row will ever have this id, so an association naming it
+        // must be rejected (UNKNOWN_SHOP) by the single definition write endpoint.
         SharedStorage::getStorage()->set($reference, 999999999);
     }
 
@@ -170,6 +182,11 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['associated_apis'])) {
             $command->setAssociatedApis(explode(',', $data['associated_apis']));
+        }
+        if (isset($data['associated_shop_ids'])) {
+            // An empty cell means "revert to the fallback" ([]); an absent row leaves the
+            // stored association untouched (the setter is simply never called).
+            $command->setAssociatedShopIds($this->referencesToIds($data['associated_shop_ids']));
         }
 
         try {
@@ -247,6 +264,10 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
             if (in_array($field, ['nullable', 'display_front', 'required'], true)) {
                 $expected = filter_var($expected, FILTER_VALIDATE_BOOL) ? 'true' : 'false';
             }
+            if ('associated_shop_ids' === $field) {
+                // Cells hold shop references, resolved to the ids the definition stores.
+                $expected = implode(',', $this->referencesToIds($expected));
+            }
 
             if ($actual !== $expected) {
                 throw new RuntimeException(sprintf(
@@ -283,6 +304,7 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
             'associated_forms' => implode(',', $definition->getAssociatedForms() ?? []),
             'associated_grids' => implode(',', $definition->getAssociatedGrids() ?? []),
             'associated_apis' => implode(',', $definition->getAssociatedApis() ?? []),
+            'associated_shop_ids' => implode(',', $definition->getAssociatedShopIds() ?? []),
             default => throw new RuntimeException(sprintf('Unknown extra property definition parameter "%s".', $field)),
         };
     }
@@ -359,6 +381,14 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsRegistrationFailureForDestructiveChange(): void
     {
         $this->assertLastErrorIs(ExtraPropertyRegistrationFailureException::class, ExtraPropertyRegistrationFailureException::DESTRUCTIVE_CHANGE);
+    }
+
+    /**
+     * @Then I should get an error that the shop association contains an unknown shop
+     */
+    public function assertLastErrorIsRegistrationFailureForUnknownShop(): void
+    {
+        $this->assertLastErrorIs(ExtraPropertyRegistrationFailureException::class, ExtraPropertyRegistrationFailureException::UNKNOWN_SHOP);
     }
 
     /**
