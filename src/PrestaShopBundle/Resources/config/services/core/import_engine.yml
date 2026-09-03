@@ -63,5 +63,61 @@ services:
   # Product importer and its internals (persistence goes through CQRS
   # commands and the existing Adapter repositories)
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowValidator: ~
-  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter: ~
+
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter:
+    arguments:
+      $steps: !tagged_iterator { tag: 'core.import.product_row_step' }
+
+  # Row steps, collected by priority (highest first). The tag is applied
+  # automatically to any autoconfigured service implementing
+  # ProductRowStepInterface (registerForAutoconfiguration in
+  # PrestaShopExtension); core priorities are spaced by 100 so a module step
+  # can slot between two core steps with an explicit tag priority (an
+  # autoconfigured step without one runs at priority 0, after every core
+  # step). Some orderings are load-bearing: the product target is resolved
+  # by the orchestrator before any step runs; the type switch must precede
+  # the virtual product file (AddVirtualProductFileCommand requires a
+  # virtual product); shops must run after every write scoped to the run's
+  # shop (SetProductShopsCommand propagates that shop's row); date_add runs
+  # last (direct repository write, nothing may write after it).
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\ProductTypeStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 1300 }
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\ProductFieldsStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 1200 }
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\StockStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 1100 }
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\CategoriesStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 1000 }
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\SuppliersStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 900 }
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\TagsStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 800 }
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\FeaturesStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 700 }
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\ImagesStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 600 }
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\VirtualProductFileStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 500 }
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\CustomizationFieldsStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 400 }
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\SpecificPriceStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 300 }
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\ShopsStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 200 }
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\DateAddStep:
+    tags:
+      - { name: 'core.import.product_row_step', priority: 100 }
+
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ProductImporter: ~
