@@ -147,7 +147,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         $combination = $this->combinationRepository->getByShopConstraint($query->getCombinationId(), $shopConstraint);
         $productId = new ProductId((int) $combination->id_product);
         $product = $this->productRepository->getByShopConstraint($productId, $query->getShopConstraint());
-        $images = $this->getImages($combination);
+        $images = $this->getImages($combination, $shopConstraint);
 
         return new CombinationForEditing(
             $query->getCombinationId()->getValue(),
@@ -279,14 +279,18 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
 
     /**
      * @param Combination $combination
+     * @param ShopConstraint $shopConstraint
      *
      * @return int[]
      */
-    private function getImages(Combination $combination): array
+    private function getImages(Combination $combination, ShopConstraint $shopConstraint): array
     {
         $combinationIdValue = (int) $combination->id;
         $combinationId = new CombinationId($combinationIdValue);
-        $combinationImageIds = $this->productImageRepository->getImageIdsForCombinations([$combinationId]);
+        $combinationImageIds = $this->productImageRepository->getImageIdsForCombinations(
+            [$combinationId],
+            $shopConstraint
+        );
 
         if (empty($combinationImageIds[$combinationIdValue])) {
             return [];
