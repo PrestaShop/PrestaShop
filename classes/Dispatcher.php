@@ -389,16 +389,22 @@ class DispatcherCore
                 // Only proceed if module exists and is active
                 if (Validate::isLoadedObject($module) && $module->active) {
                     $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . $module_name . '/controllers/front/');
-                    if ($controller_name = $controllers[strtolower($this->controller)] ?? null) {
+                    $controller_name = $controllers[strtolower($this->controller)] ?? null;
+
+                    if ($controller_name !== null) {
                         $controller_file = $module_name . '/controllers/front/' . $controller_name . '.php';
-                        include_once(_PS_MODULE_DIR_ . $controller_file);
+                        include_once _PS_MODULE_DIR_ . $controller_file;
                         $controller_class = $module_name . $controller_name . 'ModuleFrontController';
+
                         if (file_exists(_PS_OVERRIDE_DIR_ . 'modules/' . $controller_file)) {
-                            include_once(_PS_OVERRIDE_DIR_ . 'modules/' . $controller_file);
+                            include_once _PS_OVERRIDE_DIR_ . 'modules/' . $controller_file;
                             $controller_class = $module_name . $controller_name . 'ModuleFrontControllerOverride';
                         }
+
+                        return $controller_class;
                     }
                 }
+
                 $params_hook_action_dispatcher = [
                     'controller_type' => self::FC_FRONT,
                     'controller_class' => $controller_class,
