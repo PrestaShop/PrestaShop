@@ -151,7 +151,7 @@ class UploaderCore
     }
 
     /**
-     * @return int|null
+     * @return int
      */
     public function getPostMaxSizeBytes()
     {
