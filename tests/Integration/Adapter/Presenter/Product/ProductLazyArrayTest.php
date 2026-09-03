@@ -6,6 +6,7 @@
 
 namespace Tests\Integration\Adapter\Presenter\Product;
 
+use Db;
 use Language;
 use Link;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -20,6 +21,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tag;
 
 class ProductLazyArrayTest extends TestCase
 {
@@ -143,6 +145,56 @@ class ProductLazyArrayTest extends TestCase
                 return $id;
             })
         ;
+    }
+
+    /**
+     * Tags are not part of the product's ObjectModel definition, so ObjectPresenter drops them before the
+     * array reaches the lazy array. They have to be resolved here instead.
+     *
+     * A product id that does not exist is used on purpose: ps_product_tag carries no foreign key, so the
+     * fixture stays out of the real catalogue.
+     */
+    public function testItExposesTagsOfTheCurrentLanguage(): void
+    {
+        $productId = 9999901;
+        Tag::addTags(1, $productId, 'qa-lazy-alpha,qa-lazy-beta');
+
+        try {
+            $productLazyArray = $this->buildLazyArrayForProduct($productId);
+            $tags = $productLazyArray['tags'];
+            sort($tags);
+
+            $this->assertSame(['qa-lazy-alpha', 'qa-lazy-beta'], $tags);
+        } finally {
+            $this->removeTagsOfProduct($productId);
+        }
+    }
+
+    public function testItExposesAnEmptyArrayWhenTheProductHasNoTag(): void
+    {
+        $this->assertSame([], $this->buildLazyArrayForProduct(9999902)['tags']);
+    }
+
+    private function buildLazyArrayForProduct(int $productId): ProductLazyArray
+    {
+        return new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            array_merge($this->baseProduct, ['id_product' => $productId]),
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+    }
+
+    private function removeTagsOfProduct(int $productId): void
+    {
+        Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'product_tag WHERE id_product = ' . $productId);
+        Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . "tag WHERE name LIKE 'qa-lazy-%'");
     }
 
     public function testConstructor(): void
