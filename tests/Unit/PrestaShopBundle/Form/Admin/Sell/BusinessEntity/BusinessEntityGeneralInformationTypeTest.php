@@ -14,8 +14,13 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityGeneralInformationType;
+use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityIdentityType;
+use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntitySettingsType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Extension\ColumnsNumberExtension;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Validator\Constraint;
@@ -53,9 +58,15 @@ class BusinessEntityGeneralInformationTypeTest extends TypeTestCase
 
         return [
             new PreloadedExtension([
-                new BusinessEntityGeneralInformationType($translator, [], $groupByIdChoiceProvider),
+                new BusinessEntityGeneralInformationType($translator, []),
+                new BusinessEntityIdentityType($translator, []),
+                new BusinessEntitySettingsType($translator, [], $groupByIdChoiceProvider),
                 new SwitchType(),
-            ], []),
+            ], [
+                // The two sections declare columns_number and two fields declare column_breaker;
+                // both options come from this extension, which a standalone TypeTestCase does not load.
+                FormType::class => [new ColumnsNumberExtension()],
+            ]),
             // Registers the "constraints" option; the custom PrestaShop validators behind
             // TypedRegex/CleanHtml are not exercised here, only the wiring is asserted.
             new ValidatorExtension($this->buildValidator()),
@@ -92,7 +103,7 @@ class BusinessEntityGeneralInformationTypeTest extends TypeTestCase
         $form = $this->factory->create(BusinessEntityGeneralInformationType::class);
 
         foreach ([BusinessEntityGeneralInformationType::FIELD_NAME, BusinessEntityGeneralInformationType::FIELD_LEGAL_NAME] as $field) {
-            $config = $form->get($field)->getConfig();
+            $config = $this->field($form, $field)->getConfig();
 
             $this->assertTrue($config->getOption('required'), sprintf('"%s" must be mandatory.', $field));
 
@@ -118,12 +129,12 @@ class BusinessEntityGeneralInformationTypeTest extends TypeTestCase
     public function testStatusAndCustomerGroupAreRejectedWhenMissing(): void
     {
         $form = $this->factory->create(BusinessEntityGeneralInformationType::class);
-        $form->submit([
+        $form->submit($this->submission([
             BusinessEntityGeneralInformationType::FIELD_NAME => 'Probe',
             BusinessEntityGeneralInformationType::FIELD_LEGAL_NAME => 'Probe Legal',
             BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF => 'REF',
             BusinessEntityGeneralInformationType::FIELD_DELIVERY_AUTHORIZED => '1',
-        ]);
+        ]));
 
         $this->assertTrue($form->isSynchronized());
         $this->assertFalse($form->isValid(), 'A submission without status nor customer group must be rejected.');
@@ -140,7 +151,7 @@ class BusinessEntityGeneralInformationTypeTest extends TypeTestCase
     public function testExternalRefIsOptionalSoItCanBeCleared(): void
     {
         $form = $this->factory->create(BusinessEntityGeneralInformationType::class);
-        $config = $form->get(BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF)->getConfig();
+        $config = $this->field($form, BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF)->getConfig();
 
         $this->assertFalse($config->getOption('required'));
         $this->assertEmpty($config->getOption('constraints'));
@@ -162,14 +173,14 @@ class BusinessEntityGeneralInformationTypeTest extends TypeTestCase
             BusinessEntityGeneralInformationType::FIELD_CUSTOMER_GROUP_ID => 3,
         ]);
 
-        $form->submit([
+        $form->submit($this->submission([
             BusinessEntityGeneralInformationType::FIELD_NAME => 'Stored Entity',
             BusinessEntityGeneralInformationType::FIELD_LEGAL_NAME => 'Stored Legal',
             BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF => '',
             BusinessEntityGeneralInformationType::FIELD_DELIVERY_AUTHORIZED => '0',
             BusinessEntityGeneralInformationType::FIELD_STATUS => BusinessEntityStatus::PENDING->value,
             BusinessEntityGeneralInformationType::FIELD_CUSTOMER_GROUP_ID => 3,
-        ]);
+        ]));
 
         $this->assertNull(
             $form->getData()[BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF],
@@ -181,14 +192,14 @@ class BusinessEntityGeneralInformationTypeTest extends TypeTestCase
     {
         $form = $this->factory->create(BusinessEntityGeneralInformationType::class);
 
-        $form->submit([
+        $form->submit($this->submission([
             BusinessEntityGeneralInformationType::FIELD_NAME => 'Edited Entity',
             BusinessEntityGeneralInformationType::FIELD_LEGAL_NAME => 'Edited Legal',
             BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF => '',
             BusinessEntityGeneralInformationType::FIELD_DELIVERY_AUTHORIZED => '1',
             BusinessEntityGeneralInformationType::FIELD_STATUS => BusinessEntityStatus::ACTIVE->value,
             BusinessEntityGeneralInformationType::FIELD_CUSTOMER_GROUP_ID => 3,
-        ]);
+        ]));
 
         $this->assertTrue($form->isSynchronized());
 
@@ -200,5 +211,43 @@ class BusinessEntityGeneralInformationTypeTest extends TypeTestCase
         $this->assertTrue($data[BusinessEntityGeneralInformationType::FIELD_DELIVERY_AUTHORIZED]);
         $this->assertSame(BusinessEntityStatus::ACTIVE, $data[BusinessEntityGeneralInformationType::FIELD_STATUS]);
         $this->assertSame(3, $data[BusinessEntityGeneralInformationType::FIELD_CUSTOMER_GROUP_ID]);
+    }
+
+    /**
+     * The two sections exist to lay the fields out and carry inherit_data, so the submitted payload
+     * is nested while the resulting data stays flat — which is what the assertions above rely on.
+     */
+    private function sectionOf(string $field): string
+    {
+        return in_array($field, [
+            BusinessEntityGeneralInformationType::FIELD_NAME,
+            BusinessEntityGeneralInformationType::FIELD_LEGAL_NAME,
+        ], true)
+            ? BusinessEntityGeneralInformationType::SECTION_IDENTITY
+            : BusinessEntityGeneralInformationType::SECTION_SETTINGS;
+    }
+
+    private function field(FormInterface $form, string $field): FormInterface
+    {
+        return $form->get($this->sectionOf($field))->get($field);
+    }
+
+    /**
+     * @param array<string, mixed> $values
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    private function submission(array $values): array
+    {
+        $submission = [
+            BusinessEntityGeneralInformationType::SECTION_IDENTITY => [],
+            BusinessEntityGeneralInformationType::SECTION_SETTINGS => [],
+        ];
+
+        foreach ($values as $field => $value) {
+            $submission[$this->sectionOf($field)][$field] = $value;
+        }
+
+        return $submission;
     }
 }

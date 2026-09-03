@@ -19,10 +19,7 @@
         </h3>
         <div class="card-body">
           <div class="form-wrapper">
-            <div class="row">
-              <div class="col-md-6">{{ form_row(businessEntityForm.general_information.name) }}</div>
-              <div class="col-md-6">{{ form_row(businessEntityForm.general_information.legal_name) }}</div>
-            </div>
+            {{ form_widget(businessEntityForm.general_information.identity) }}
 
             {# Business identifiers are read-only here; their management is handled in US2.1.6 / US2.1.7. #}
             {% set identifiers = businessEntity.identifiers %}
@@ -41,14 +38,7 @@
             {% endif %}
 
             <hr>
-            <div class="row">
-              <div class="col-md-6">{{ form_row(businessEntityForm.general_information.external_ref) }}</div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">{{ form_row(businessEntityForm.general_information.status) }}</div>
-              <div class="col-md-6">{{ form_row(businessEntityForm.general_information.customer_group_id) }}</div>
-            </div>
-            {{ form_row(businessEntityForm.general_information.delivery_authorized) }}
+            {{ form_widget(businessEntityForm.general_information.settings) }}
           </div>
         </div>
       </div>
