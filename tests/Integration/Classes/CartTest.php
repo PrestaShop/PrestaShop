@@ -401,6 +401,39 @@ class CartTest extends KernelTestCase
     }
 
     /**
+     * The enrichment block below the base totals must still run when a rule is applied.
+     */
+    public function testGetCartRulesEnrichesRulesAppliedToTheCart(): void
+    {
+        $product = self::makeProduct('Guarded Product', 10, self::getIdTaxRulesGroup(20));
+
+        self::makeCartRule(5, 'before tax');
+        $cart = self::makeCart();
+
+        $cart->updateQty(1, $product->id);
+
+        $rules = $cart->getCartRules();
+
+        $this->assertCount(1, $rules);
+        $this->assertArrayHasKey('obj', $rules[0]);
+        $this->assertEquals(5, $rules[0]['value_tax_exc']);
+        $this->assertEquals(6, $rules[0]['value_real']);
+    }
+
+    /**
+     * And a cart carrying no rule has nothing to enrich, which is what lets the totals be skipped.
+     */
+    public function testGetCartRulesReturnsNoRowsForACartWithoutAnyRule(): void
+    {
+        $product = self::makeProduct('Ruleless Product', 10, self::getIdTaxRulesGroup(20));
+        $cart = self::makeCart();
+
+        $cart->updateQty(1, $product->id);
+
+        $this->assertSame([], $cart->getCartRules());
+    }
+
+    /**
      * This test checks that if PS_ATCP_SHIPWRAP is set to true then:
      * - the shipping cost of the carrier is understood as tax included instead of tax excluded
      * - the tax excluded shipping cost is deduced from the tax included shipping cost
