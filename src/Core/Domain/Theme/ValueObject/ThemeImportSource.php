@@ -60,6 +60,31 @@ class ThemeImportSource
     }
 
     /**
+     * Builds the appropriate ThemeImportSource from its scalar source type and source, dispatching
+     * to the matching named factory.
+     *
+     * @param string $sourceType
+     * @param UploadedFile|string $source
+     *
+     * @return ThemeImportSource
+     *
+     * @throws NotSupportedThemeImportSourceException
+     */
+    public static function fromSourceTypeAndSource(string $sourceType, UploadedFile|string $source): ThemeImportSource
+    {
+        switch ($sourceType) {
+            case self::FROM_ARCHIVE:
+                return self::fromArchive($source);
+            case self::FROM_WEB:
+                return self::fromWeb($source);
+            case self::FROM_FTP:
+                return self::fromFtp($source);
+            default:
+                throw new NotSupportedThemeImportSourceException(sprintf('Not supported %s theme import source type supplied. Supported sources are: "%s"', var_export($sourceType, true), implode(',', [self::FROM_ARCHIVE, self::FROM_WEB, self::FROM_FTP])));
+        }
+    }
+
+    /**
      * @param string $sourceType
      * @param UploadedFile|string $source
      *
