@@ -162,7 +162,8 @@ class ProductStockUpdater
             $this->stockAvailableRepository->updatePhysicalProductQuantity(
                 new StockId((int) $stockAvailable->id),
                 new OrderStateId((int) $this->configuration->get('PS_OS_ERROR', null, $shopConstraint)),
-                new OrderStateId((int) $this->configuration->get('PS_OS_CANCELED', null, $shopConstraint))
+                new OrderStateId((int) $this->configuration->get('PS_OS_CANCELED', null, $shopConstraint)),
+                new OrderStateId((int) $this->configuration->get('PS_OS_REFUND', null, $shopConstraint))
             );
         }
     }
@@ -263,7 +264,8 @@ class ProductStockUpdater
             $this->stockAvailableRepository->updatePhysicalProductQuantity(
                 new StockId((int) $stockAvailable->id),
                 new OrderStateId((int) $this->configuration->get('PS_OS_ERROR', null, $shopConstraint)),
-                new OrderStateId((int) $this->configuration->get('PS_OS_CANCELED', null, $shopConstraint))
+                new OrderStateId((int) $this->configuration->get('PS_OS_CANCELED', null, $shopConstraint)),
+                new OrderStateId((int) $this->configuration->get('PS_OS_REFUND', null, $shopConstraint))
             );
         }
     }
