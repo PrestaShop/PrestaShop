@@ -14,8 +14,11 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteria;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Search\Pagination;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -62,8 +65,20 @@ class DoctrineGridDataFactory implements GridDataFactoryInterface
             'search_criteria' => $searchCriteria,
         ]);
 
-        $records = $searchQueryBuilder->executeQuery()->fetchAllAssociative();
         $recordsTotal = (int) $countQueryBuilder->executeQuery()->fetchOne();
+
+        // The offset lives in the URL and in the employee's saved filters, so removing the last rows of
+        // the page being viewed leaves it pointing past the end of the result set. Running the search with
+        // it returns nothing and the grid says there is no record at all, while the earlier pages still
+        // hold some. Fall back to the last page that does, and rebuild the data from there.
+        if (Pagination::isOffsetOutOfRange($recordsTotal, (int) $searchCriteria->getOffset())) {
+            return $this->getData($this->withOffset(
+                $searchCriteria,
+                Pagination::computeValidOffset($recordsTotal, (int) $searchCriteria->getLimit())
+            ));
+        }
+
+        $records = $searchQueryBuilder->executeQuery()->fetchAllAssociative();
 
         if ($this->extraPropertiesGridQueryBuilderModifier) {
             $records = $this->extraPropertiesGridQueryBuilderModifier->castExtraProperties($records, $this->gridId);
@@ -98,5 +113,29 @@ class DoctrineGridDataFactory implements GridDataFactoryInterface
         $sqlFormatter = new SqlFormatter(new NullHighlighter());
 
         return $sqlFormatter->format($query);
+    }
+
+    /**
+     * Returns the same search criteria carrying a different offset.
+     *
+     * Filters keep extra state the grid relies on, so those are cloned rather than rebuilt; anything else
+     * only exposes the SearchCriteriaInterface getters, which is all a plain SearchCriteria needs.
+     */
+    private function withOffset(SearchCriteriaInterface $searchCriteria, int $offset): SearchCriteriaInterface
+    {
+        if ($searchCriteria instanceof Filters) {
+            $newSearchCriteria = clone $searchCriteria;
+            $newSearchCriteria->add(['offset' => $offset]);
+
+            return $newSearchCriteria;
+        }
+
+        return new SearchCriteria(
+            $searchCriteria->getFilters(),
+            $searchCriteria->getOrderBy(),
+            $searchCriteria->getOrderWay(),
+            $offset,
+            $searchCriteria->getLimit()
+        );
     }
 }
