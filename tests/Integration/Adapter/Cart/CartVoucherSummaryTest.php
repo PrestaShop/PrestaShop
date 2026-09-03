@@ -14,6 +14,7 @@ use CartRule;
 use Configuration;
 use Context;
 use Currency;
+use Customer;
 use DateTime;
 use Db;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
@@ -30,6 +31,10 @@ class CartVoucherSummaryTest extends KernelTestCase
         global $kernel;
         $kernel = self::$kernel;
         Context::getContext()->currency = Currency::getDefaultCurrency();
+        // Presenting a cart builds the voucher delete URLs, whose CSRF token hashes the
+        // context customer (Tools::getToken) — a FO context always has one. Without it the
+        // null access is a PHP warning that stricter error handlers turn into a failure.
+        Context::getContext()->customer = new Customer(1);
         Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', true);
         Configuration::updateValue('PS_TAX_ADDRESS_TYPE', 'id_address_invoice');
         // Pre-existing (auto-applied) cart rules would pollute the cart summary.
