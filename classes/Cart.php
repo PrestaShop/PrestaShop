@@ -2755,8 +2755,19 @@ class CartCore extends ObjectModel
                 $this
             );
 
-            // Apply fallback if no carrier is found
             if (empty($product['carrier_list'])) {
+                if (empty($product['is_virtual'])) {
+                    /*
+                     * Nothing can deliver this product to this address. The placeholder below used to be
+                     * applied here too, which put the product in a package of its own because no other
+                     * product shares that carrier list - and one package is one order, so the cart was
+                     * paid for as two. There is no set of packages that delivers this cart, so there is
+                     * none to return, and the delivery step has nothing to offer.
+                     */
+                    return [];
+                }
+
+                // A virtual product has no carrier by nature and still belongs in a package.
                 $product['carrier_list'] = [0 => 0];
             }
 
