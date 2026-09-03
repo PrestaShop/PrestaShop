@@ -353,6 +353,20 @@ table {
         }
       }
 
+      // The min/max filters render two number inputs side by side in cells that are capped at 6-8rem
+      // below, so the browser's native spinners have nowhere to go: they overlap the value on Chrome
+      // and permanently reserve their width on Firefox. Suppressed the same way, and for the same
+      // reason, as the .ps-number component does.
+      input[type="number"] {
+        appearance: textfield;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          margin: 0;
+          appearance: none;
+        }
+      }
+
       td[data-column-id^="id_"] {
         max-width: 8rem;
       }
