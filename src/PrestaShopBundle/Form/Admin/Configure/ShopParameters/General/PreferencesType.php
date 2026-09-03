@@ -16,6 +16,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -204,6 +205,14 @@ class PreferencesType extends TranslatorAwareType
                     'label' => $this->trans('Display best sellers', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'Enables or disables the best sellers page in your shop. When disabled, the page and related links are also removed from the sitemap and other sections.',
+                        'Admin.Shopparameters.Help'
+                    ),
+                ])
+            ->add(
+                'best_sellers_days', TextType::class, [
+                    'label' => $this->trans('Display best sellers from last X Days', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'Set the value to 0 to display all bestsellers',
                         'Admin.Shopparameters.Help'
                     ),
                 ])
