@@ -795,7 +795,8 @@ abstract class PaymentModuleCore extends Module
                 (int) Configuration::get('PS_OS_ERROR'),
                 (int) Configuration::get('PS_OS_CANCELED'),
                 null,
-                (int) $order->id
+                (int) $order->id,
+                (int) Configuration::get('PS_OS_REFUND')
             );
         } // End foreach $order_detail_list
 
