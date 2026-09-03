@@ -310,7 +310,16 @@ class BusinessEntityControllerTest extends GridControllerTestCase
 
     private function fieldName(string $field): string
     {
-        return sprintf('business_entity[general_information][%s]', $field);
+        $sections = [
+            'name' => 'identity',
+            'legal_name' => 'identity',
+            'external_ref' => 'settings',
+            'status' => 'settings',
+            'customer_group_id' => 'settings',
+            'delivery_authorized' => 'settings',
+        ];
+
+        return sprintf('business_entity[general_information][%s][%s]', $sections[$field], $field);
     }
 
     private static function createBusinessEntity(
