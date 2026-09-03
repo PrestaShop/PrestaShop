@@ -271,7 +271,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 SELECT `image_shop`.id_image
                 FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai' .
                 Shop::addSqlAssociation('image', 'pai', true) . '
-                WHERE id_product_attribute = ' . (int) $pack_item['id_product_attribute']);
+                WHERE id_product_attribute = ' . (int) $pack_item['id_product_attribute'] . '
+                AND pai.id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ')');
         }
 
         if (!isset($id_image) || !$id_image) {

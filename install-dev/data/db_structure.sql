@@ -1859,8 +1859,10 @@ CREATE TABLE `PREFIX_product_attribute_combination` (
 CREATE TABLE `PREFIX_product_attribute_image` (
   `id_product_attribute` int(10) unsigned NOT NULL,
   `id_image` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL,
   PRIMARY KEY (
-    `id_product_attribute`, `id_image`
+    `id_product_attribute`, `id_image`,
+    `id_shop`
   ),
   KEY `id_image` (`id_image`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;

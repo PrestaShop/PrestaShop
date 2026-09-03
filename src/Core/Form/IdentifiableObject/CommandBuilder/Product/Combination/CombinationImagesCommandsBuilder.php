@@ -28,11 +28,11 @@ class CombinationImagesCommandsBuilder implements CombinationCommandsBuilderInte
         }
 
         if (empty($formData['images'])) {
-            return [new RemoveAllCombinationImagesCommand($combinationId->getValue())];
+            return [new RemoveAllCombinationImagesCommand($combinationId->getValue(), $singleShopConstraint)];
         }
 
         $imageIds = array_map('intval', $formData['images']);
-        $command = new SetCombinationImagesCommand($combinationId->getValue(), $imageIds);
+        $command = new SetCombinationImagesCommand($combinationId->getValue(), $imageIds, $singleShopConstraint);
 
         return [$command];
     }

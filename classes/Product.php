@@ -2678,7 +2678,8 @@ class ProductCore extends ObjectModel
             FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
             LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (il.`id_image` = pai.`id_image`)
             INNER JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
-            WHERE i.`id_product` = ' . (int) $this->id . ' AND il.`id_lang` = ' . (int) $id_lang . ' ORDER by i.`position`'
+            WHERE i.`id_product` = ' . (int) $this->id . ' AND il.`id_lang` = ' . (int) $id_lang . '
+            AND pai.`id_shop` IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ') ORDER by i.`position`'
         );
 
         if (!$result) {
@@ -2712,7 +2713,8 @@ class ProductCore extends ObjectModel
             FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
             LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (il.`id_image` = pai.`id_image`)
             LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
-            WHERE pai.`id_product_attribute` = ' . (int) $id_product_attribute . ' AND il.`id_lang` = ' . (int) $id_lang . ' ORDER by i.`position` LIMIT 1'
+            WHERE pai.`id_product_attribute` = ' . (int) $id_product_attribute . ' AND il.`id_lang` = ' . (int) $id_lang . '
+            AND pai.`id_shop` IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ') ORDER by i.`position` LIMIT 1'
         );
 
         if (!$result) {
@@ -4926,9 +4928,10 @@ class ProductCore extends ObjectModel
     {
         $combination_images = [];
         $data = Db::getInstance()->executeS('
-            SELECT `id_image`
+            SELECT DISTINCT `id_image`
             FROM `' . _DB_PREFIX_ . 'product_attribute_image`
-            WHERE `id_product_attribute` = ' . (int) $id_product_attribute);
+            WHERE `id_product_attribute` = ' . (int) $id_product_attribute . '
+            AND `id_shop` IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ')');
         foreach ($data as $row) {
             $combination_images[] = (int) $row['id_image'];
         }

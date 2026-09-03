@@ -42,7 +42,8 @@ class CombinationImagesCommandsBuilderTest extends AbstractCombinationCommandBui
 
         $command = new SetCombinationImagesCommand(
             $this->getCombinationId()->getValue(),
-            [42, 51]
+            [42, 51],
+            $this->getSingleShopConstraint()
         );
         yield [
             [
@@ -54,7 +55,10 @@ class CombinationImagesCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
-        $command = new RemoveAllCombinationImagesCommand($this->getCombinationId()->getValue());
+        $command = new RemoveAllCombinationImagesCommand(
+            $this->getCombinationId()->getValue(),
+            $this->getSingleShopConstraint()
+        );
         yield [
             [
                 'images' => [],
