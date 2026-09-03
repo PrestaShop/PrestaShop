@@ -134,17 +134,37 @@ final class ExtraPropertyDefinitionCollection implements Countable, IteratorAggr
     }
 
     /**
-     * Returns a new collection filtered to the given entity.
+     * Returns a new collection filtered to the given LOGICAL entity name.
      *
-     * Useful when a collection groups definitions from multiple entities.
+     * Useful when a collection groups definitions from multiple entities. Callers
+     * holding an ObjectModel table name ($definition['table']) must use
+     * filterByTableName() instead — the two differ for irregular entities
+     * ('combination' vs 'product_attribute').
      *
-     * @param string $entityName Entity table name (e.g. 'product')
+     * @param string $entityName Logical entity name (e.g. 'product', 'combination')
      */
     public function filterByEntity(string $entityName): self
     {
         return new self(array_values(array_filter(
             $this->definitions,
             static fn (ExtraPropertyDefinition $d): bool => $d->getEntityName() === $entityName
+        )));
+    }
+
+    /**
+     * Returns a new collection filtered to the given PHYSICAL entity table.
+     *
+     * The ObjectModel/FO path identifies an entity by its table
+     * (ObjectModel::$definition['table'], e.g. 'product_attribute' for Combination):
+     * this filter matches it against the definitions' resolved table name.
+     *
+     * @param string $tableName Entity table name without prefix (e.g. 'product_attribute')
+     */
+    public function filterByTableName(string $tableName): self
+    {
+        return new self(array_values(array_filter(
+            $this->definitions,
+            static fn (ExtraPropertyDefinition $d): bool => $d->getTableName() === $tableName
         )));
     }
 

@@ -76,7 +76,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
             return;
         }
 
-        $definitions = $this->definitionRepository->getAllDefinitions()->filterByEntity($entityName);
+        $definitions = $this->definitionRepository->getAllDefinitions()->filterByTableName($entityName);
         if ($definitions->isEmpty()) {
             return;
         }
@@ -114,7 +114,10 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
                 continue;
             }
 
-            $value = $valuesByModule[$moduleKey][$propertyName];
+            // Single write choke point: every path (BO entity form, ObjectModel bag,
+            // Admin API payload, module code) gets the same declared-type coercion —
+            // notably JSON structures json_encode'd before PDO binding.
+            $value = ExtraPropertyValueCaster::castForDb($definition, $valuesByModule[$moduleKey][$propertyName]);
             $isNullable = $definition->isNullable();
             // NULL is a legitimate value for nullable columns; for NOT NULL columns it is
             // skipped so the SQL default applies on first insert.
@@ -379,7 +382,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
             return;
         }
 
-        $definitions = $this->definitionRepository->getAllDefinitions()->filterByEntity($entityName);
+        $definitions = $this->definitionRepository->getAllDefinitions()->filterByTableName($entityName);
         if ($definitions->isEmpty()) {
             return;
         }

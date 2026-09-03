@@ -111,6 +111,32 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::SCOPE_CONFLICT);
         }
 
+        // 1b. Refuse a different entity name resolving to the SAME storage (table + column):
+        // the DB unique key on (entity_name, module_name, property_name) cannot see across
+        // entity spellings, but two definitions writing the same physical column would
+        // corrupt each other (an explicit tableName pointing at another entity's table is
+        // the reachable case — canonical entity names already converge the known spellings).
+        if (null === $existingDefinition) {
+            foreach ($this->readRepository->getAllDefinitions()->filterByTableName($definition->getTableName()) as $sibling) {
+                if ($sibling->getStorageColumnName() === $definition->getStorageColumnName()
+                    && $sibling->getEntityName() !== $entityName
+                ) {
+                    $message = sprintf(
+                        'Cannot register extra property %s.%s: the definition %s.%s already stores its values in the same column ("%s" on the "%s" table). Use one entity name consistently.',
+                        $entityName,
+                        $propertyName,
+                        $sibling->getEntityName(),
+                        $sibling->getPropertyName(),
+                        $definition->getStorageColumnName(),
+                        $definition->getTableName()
+                    );
+                    $this->logger->error($message);
+
+                    throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::STORAGE_CONFLICT);
+                }
+            }
+        }
+
         // 2. Refuse destructive schema changes on an existing definition.
         if (null !== $existingDefinition && $this->hasStorageChanges($definition, $existingDefinition)) {
             $message = sprintf(
@@ -138,6 +164,26 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             $this->logger->error($message);
 
             throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::INVALID_FORM_OPTIONS, errors: $formOptionErrors);
+        }
+
+        // 3b. Refuse a defaultValue that does not fit the declared type, BEFORE any DDL: a
+        //     malformed DATE default would otherwise be silently erased on hydration, a
+        //     non-numeric INT/FLOAT default silently coerced, and a CHOICE default outside
+        //     the enum would produce a DDL DEFAULT the column itself refuses.
+        if (null !== $definition->getDefaultValue() && !$this->isDefaultValueCompatible($definition)) {
+            $message = sprintf(
+                'Cannot register extra property %s.%s: default value "%s" is not a valid %s value%s.',
+                $entityName,
+                $propertyName,
+                is_bool($definition->getDefaultValue()) ? var_export($definition->getDefaultValue(), true) : (string) $definition->getDefaultValue(),
+                $definition->getType()->value,
+                ExtraPropertyType::CHOICE === $definition->getType() && null !== $definition->getEnumValues()
+                    ? ' (allowed: ' . implode(', ', $definition->getEnumValues()) . ')'
+                    : ''
+            );
+            $this->logger->error($message);
+
+            throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::INVALID_DEFAULT_VALUE);
         }
 
         // 4. Refuse unknown shop ids in the association, BEFORE any DDL or row write: the
@@ -280,6 +326,30 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
                 throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::SCHEMA_FAILURE, $exception);
             }
         }
+    }
+
+    /**
+     * Whether the declared defaultValue can actually serve as a default of the declared
+     * type. Values may arrive as native scalars (module code, Admin API JSON) or as
+     * strings (BO form TextType) — both spellings of a valid value are accepted.
+     */
+    protected function isDefaultValueCompatible(ExtraPropertyDefinition $definition): bool
+    {
+        $defaultValue = $definition->getDefaultValue();
+
+        return match ($definition->getType()) {
+            ExtraPropertyType::INT => is_int($defaultValue) || is_bool($defaultValue)
+                || (is_string($defaultValue) && 1 === preg_match('/^-?\d+$/', $defaultValue)),
+            ExtraPropertyType::FLOAT => is_int($defaultValue) || is_float($defaultValue)
+                || (is_string($defaultValue) && is_numeric($defaultValue)),
+            ExtraPropertyType::BOOL => is_bool($defaultValue) || in_array($defaultValue, [0, 1, '0', '1'], true),
+            ExtraPropertyType::DATE => false !== strtotime((string) $defaultValue),
+            ExtraPropertyType::CHOICE => null === $definition->getEnumValues()
+                || in_array((string) $defaultValue, $definition->getEnumValues(), true),
+            ExtraPropertyType::JSON => is_string($defaultValue)
+                && (null !== json_decode($defaultValue) || 'null' === trim($defaultValue)),
+            default => true,
+        };
     }
 
     /**

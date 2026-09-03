@@ -15,8 +15,10 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionC
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 /**
@@ -57,6 +59,7 @@ class ExtraPropertiesGridQueryBuilderModifier
         protected readonly LanguageContext $languageContext,
         protected readonly ShopContext $shopContext,
         protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
+        protected readonly ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -71,7 +74,7 @@ class ExtraPropertiesGridQueryBuilderModifier
             return;
         }
 
-        $entityName = $definitions->first()->getEntityName();
+        $entityName = $definitions->first()->getTableName();
         $primaryKey = $definitions->first()->getPrimaryKeyName();
 
         // Resolve the main table alias in EACH builder: filters apply to both builders, so
@@ -80,6 +83,15 @@ class ExtraPropertiesGridQueryBuilderModifier
         $searchMainAlias = $this->resolveMainAlias($searchQueryBuilder, $gridId, $entityName);
         $countMainAlias = $this->resolveMainAlias($countQueryBuilder, $gridId, $entityName);
         if (null === $searchMainAlias || null === $countMainAlias) {
+            // Typical cause: the grid paginates by id first, so its FROM clause holds a
+            // derived table instead of the entity table (e.g. the order grid) — the grid
+            // definition still declares the extra columns, which will render empty. See
+            // issue #42536 for proper id-first-pagination support.
+            $this->logger?->warning(
+                'Extra property columns skipped on grid "{gridId}": the "{table}" entity table was not found in the FROM clause of the search or count query (derived-table pagination?). The declared columns will render empty and their filters are inoperative.',
+                ['gridId' => $gridId, 'table' => $entityName]
+            );
+
             return;
         }
 
@@ -118,11 +130,20 @@ class ExtraPropertiesGridQueryBuilderModifier
             foreach ($definitions as $definition) {
                 $selectAlias = $definition->getFieldName();
                 if (array_key_exists($selectAlias, $record)) {
-                    $record[$selectAlias] = ExtraPropertyValueCaster::castFromDb(
+                    $value = ExtraPropertyValueCaster::castFromDb(
                         $definition->getType(),
                         $record[$selectAlias],
                         $definition->isNullable()
                     );
+                    // A LEFT-JOIN miss (no value row yet) shows the declared default, like
+                    // the reader; JSON structures are re-encoded — the grid cell renders text.
+                    if (null === $record[$selectAlias] && null !== $definition->getDefaultValue()) {
+                        $value = $definition->getDefaultValue();
+                    }
+                    if (ExtraPropertyType::JSON === $definition->getType() && is_array($value)) {
+                        $value = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                    }
+                    $record[$selectAlias] = $value;
                 }
             }
         }

@@ -14,6 +14,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefinitionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ColumnDefinitionMapper;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use Throwable;
 
 /**
@@ -137,11 +138,17 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
         $data = [
             // getModuleName() is already normalized: null for core fields ('' / '_core' inputs included).
             'module_name' => $definition->getModuleName(),
+            // Physical table, resolved by the VO at construction and frozen here: hydration
+            // (fromRow) passes it back as the explicit value, so a class disappearing later
+            // can never repoint a definition's storage.
+            'table_name' => $definition->getTableName(),
             'scope' => $definition->getScope()->value,
             'type' => $definition->getType()->value,
             'size' => $definition->getSize(),
             'required' => (int) $definition->isRequired(),
-            'default_value' => null !== $definition->getDefaultValue() ? (string) $definition->getDefaultValue() : null,
+            // Shared canonical stringification (BOOL → '1'/'0'): a naive (string) cast would
+            // turn false into '', which fromRow() reads back as "no default".
+            'default_value' => ExtraPropertyValueCaster::castDefaultValueForDb($definition->getType(), $definition->getDefaultValue()),
             'form_type' => $definition->getFormType(),
             'form_options' => null !== $definition->getFormOptions() ? json_encode($definition->getFormOptions()) : null,
             'sql_index' => $definition->getSqlIndex()->value,
@@ -325,7 +332,12 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
 
         foreach ($rows as &$row) {
             $scope = ExtraPropertyScope::tryFrom((string) ($row['scope'] ?? '')) ?? ExtraPropertyScope::COMMON;
-            $tableName = $this->prefix . ExtraPropertyDefinition::buildExtraTableName((string) ($row['entity_name'] ?? ''), $scope);
+            // The stored physical table (table_name), never the logical entity name — rows
+            // predating the column fall back to entity_name, correct for conventional naming.
+            $entityTable = isset($row['table_name']) && '' !== $row['table_name']
+                ? (string) $row['table_name']
+                : (string) ($row['entity_name'] ?? '');
+            $tableName = $this->prefix . ExtraPropertyDefinition::buildExtraTableName($entityTable, $scope);
             $columnName = ExtraPropertyDefinition::buildStorageColumnName(
                 isset($row['module_name']) && '' !== $row['module_name'] ? (string) $row['module_name'] : null,
                 (string) ($row['property_name'] ?? '')
@@ -339,6 +351,20 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             // inject it whenever the table exists, even if the storage column is missing.
             if ([] !== $columnsByTable[$tableName]) {
                 $row['multi_shop'] = array_key_exists('id_shop', $columnsByTable[$tableName]);
+
+                // The live extra-table PK is the source of truth for the entity id column
+                // (the schema manager mirrored it from the base table at creation): among
+                // the PRI columns, the single one that is not the lang/shop dimension.
+                // Ambiguity (composite base PKs) injects nothing — the VO then falls back
+                // to its own resolution (ObjectModel class, then naming convention).
+                $primaryColumns = array_keys(array_filter(
+                    $columnsByTable[$tableName],
+                    static fn (array $columnMetadata, string $column): bool => $columnMetadata['primary'] && !in_array($column, ['id_lang', 'id_shop'], true),
+                    ARRAY_FILTER_USE_BOTH
+                ));
+                if (1 === count($primaryColumns)) {
+                    $row['primary_key_name'] = $primaryColumns[0];
+                }
             }
 
             $columnMetadata = $columnsByTable[$tableName][$columnName] ?? null;
@@ -407,7 +433,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
      *
      * @param string $tableName Full table name (with prefix)
      *
-     * @return array<string, array{nullable: bool, enum_values: list<string>|null}> keyed by column name
+     * @return array<string, array{nullable: bool, enum_values: list<string>|null, primary: bool}> keyed by column name
      */
     protected function fetchColumnMetadata(string $tableName): array
     {
@@ -424,6 +450,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             $metadata[(string) $column['Field']] = [
                 'nullable' => 'YES' === strtoupper((string) ($column['Null'] ?? 'YES')),
                 'enum_values' => ColumnDefinitionMapper::parseEnumValues((string) ($column['Type'] ?? '')),
+                'primary' => 'PRI' === strtoupper((string) ($column['Key'] ?? '')),
             ];
         }
 

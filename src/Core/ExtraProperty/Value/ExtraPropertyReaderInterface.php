@@ -45,7 +45,7 @@ interface ExtraPropertyReaderInterface
      * the lowest shop id of the scope otherwise). Whether the lang table is shop-aware is
      * detected internally from the storage schema — never passed by the caller.
      *
-     * @param string $entityName Entity table name (e.g. "product")
+     * @param string $entityName PHYSICAL entity table name without prefix (ObjectModel $definition['table'] / ExtraPropertyDefinition::getTableName(), e.g. "product", "product_attribute") — never the logical entity name, which differs for irregular entities
      * @param string $primaryKeyName PK column name (e.g. "id_product")
      * @param int $entityId
      * @param int|null $langId Null fetches all languages (returns array keyed by id_lang)

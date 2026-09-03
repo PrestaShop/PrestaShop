@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -53,7 +54,10 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
 
         if (!$this->tableExists($baseTableName)) {
             throw new ExtraPropertyRegistryException(
-                sprintf('The base table "%s" does not exist.', $baseTableName),
+                sprintf(
+                    'The base table "%s" does not exist. The entity name must be an ObjectModel entity (e.g. product, order, combination) or an existing table name; LANG/SHOP scopes additionally require a {table}_lang/{table}_shop base table.',
+                    $baseTableName
+                ),
                 ExtraPropertyRegistryException::BASE_TABLE_NOT_FOUND
             );
         }
@@ -262,6 +266,12 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
      */
     protected function defaultMatches(mixed $liveDefault, ExtraPropertyDefinition $definition): bool
     {
+        // TEXT-backed columns never carry a DDL DEFAULT (see ColumnDefinitionMapper):
+        // the declared default is registry-only, nothing to compare on the live column.
+        if (in_array($definition->getType(), [ExtraPropertyType::HTML, ExtraPropertyType::JSON], true)) {
+            return true;
+        }
+
         $desired = $definition->getDefaultValue();
         if (null === $desired || null === $liveDefault) {
             return (null === $desired) === (null === $liveDefault);
@@ -272,10 +282,8 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
             $live = str_replace("''", "'", substr($live, 1, -1));
         }
 
-        $desiredString = match ($definition->getType()) {
-            ExtraPropertyType::BOOL => $desired ? '1' : '0',
-            default => (string) $desired,
-        };
+        // Same canonical stringification as the registry row write and the DDL clause.
+        $desiredString = (string) ExtraPropertyValueCaster::castDefaultValueForDb($definition->getType(), $desired);
 
         if (is_numeric($live) && is_numeric($desiredString)) {
             return (float) $live === (float) $desiredString;

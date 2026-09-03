@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Schema;
 
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 
 /**
  * Maps an ExtraPropertyDefinition VO to a complete SQL column definition fragment.
@@ -39,8 +40,11 @@ class ColumnDefinitionMapper
 
         $parts = [$baseDefinition, $nullClause];
 
+        // TEXT-backed columns (HTML → TEXT, JSON → LONGTEXT) cannot carry a DDL DEFAULT
+        // clause in MySQL: their declared default lives in the registry only and is served
+        // at read time by the reader's default injection.
         $defaultValue = $options->getDefaultValue();
-        if (null !== $defaultValue) {
+        if (null !== $defaultValue && !in_array($options->getType(), [ExtraPropertyType::HTML, ExtraPropertyType::JSON], true)) {
             $parts[] = 'DEFAULT ' . self::quoteDefaultValue($options->getType(), $defaultValue);
         }
 
@@ -124,15 +128,19 @@ class ColumnDefinitionMapper
      */
     private static function quoteDefaultValue(ExtraPropertyType $type, mixed $defaultValue): string
     {
+        // The canonical stringification is shared with the registry row write and the
+        // live-schema comparison; only the SQL quoting is added here.
+        $stringValue = (string) ExtraPropertyValueCaster::castDefaultValueForDb($type, $defaultValue);
+
         return match ($type) {
             ExtraPropertyType::INT,
-            ExtraPropertyType::FLOAT => (string) $defaultValue,
-            ExtraPropertyType::BOOL => $defaultValue ? '1' : '0',
+            ExtraPropertyType::FLOAT,
+            ExtraPropertyType::BOOL => $stringValue,
             ExtraPropertyType::STRING,
             ExtraPropertyType::DATE,
             ExtraPropertyType::HTML,
             ExtraPropertyType::JSON,
-            ExtraPropertyType::CHOICE => "'" . str_replace("'", "''", (string) $defaultValue) . "'",
+            ExtraPropertyType::CHOICE => "'" . str_replace("'", "''", $stringValue) . "'",
         };
     }
 }

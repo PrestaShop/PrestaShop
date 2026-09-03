@@ -21,6 +21,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionProvider;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenter;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
@@ -36,6 +37,16 @@ use Throwable;
  */
 class CommonController extends PrestaShopAdminController
 {
+    /**
+     * Legacy controller (permission subject) per entity whose BO controller does not
+     * follow the Admin + pluralized-entity naming convention — the extension point for
+     * future irregular entities. 'order' would pluralize fine, but is pinned here since
+     * it is the known irregular entity and the mapping is security-relevant.
+     */
+    private const LEGACY_CONTROLLER_BY_ENTITY = [
+        'order' => 'AdminOrders',
+    ];
+
     public static function getSubscribedServices(): array
     {
         return parent::getSubscribedServices() + [
@@ -399,36 +410,28 @@ class CommonController extends PrestaShopAdminController
     }
 
     /**
-     * Derives the BO legacy controller name for a given entity name.
+     * Derives the BO legacy controller name (the permission subject) for a given entity name.
      *
-     * Applies standard English pluralization rules to match PS controller naming conventions:
-     * - consonant + 'y' → 'ies'  (category → AdminCategories)
-     * - 's', 'x', 'z', 'sh', 'ch' → append 'es'  (address → AdminAddresses)
-     * - everything else → append 's'  (product → AdminProducts)
+     * A const override map handles the entities whose controller does not follow the naming
+     * convention; every other name goes through the inflector: classify() (snake_case →
+     * CamelCase, so manufacturer_address → ManufacturerAddress) then pluralize()
+     * (category → Categories, address → Addresses, product → Products).
      *
-     * Used server-side to verify employee permissions without trusting any
-     * client-supplied value (e.g. for the extra-property toggle endpoint).
+     * Used server-side to verify employee permissions without trusting any client-supplied
+     * value (e.g. for the extra-property toggle endpoint). A derived name matching no
+     * existing tab is DENY-safe: Access::isGranted() grants nothing for unknown subjects.
+     *
+     * @internal exposed for unit testing only
      */
-    private static function legacyControllerFromEntityName(string $entityName): string
+    public static function legacyControllerFromEntityName(string $entityName): string
     {
-        $length = strlen($entityName);
-        if ($length > 1) {
-            $last = strtolower($entityName[$length - 1]);
-            $prev = strtolower($entityName[$length - 2]);
-
-            // consonant + 'y' → 'ies'
-            if ('y' === $last && !in_array($prev, ['a', 'e', 'i', 'o', 'u'], true)) {
-                return 'Admin' . ucfirst(substr($entityName, 0, -1)) . 'ies';
-            }
-
-            // 's', 'x', 'z', 'sh', 'ch' → 'es'
-            if ('s' === $last || 'x' === $last || 'z' === $last
-                || ('h' === $last && in_array($prev, ['s', 'c'], true))) {
-                return 'Admin' . ucfirst($entityName) . 'es';
-            }
+        if (isset(self::LEGACY_CONTROLLER_BY_ENTITY[$entityName])) {
+            return self::LEGACY_CONTROLLER_BY_ENTITY[$entityName];
         }
 
-        return 'Admin' . ucfirst($entityName) . 's';
+        $inflector = Inflector::getInflector();
+
+        return 'Admin' . $inflector->pluralize($inflector->classify($entityName));
     }
 
     /**

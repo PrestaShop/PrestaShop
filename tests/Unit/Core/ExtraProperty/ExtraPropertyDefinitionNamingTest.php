@@ -11,6 +11,7 @@ namespace Tests\Unit\Core\ExtraProperty;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
 
 class ExtraPropertyDefinitionNamingTest extends TestCase
 {
@@ -151,8 +152,10 @@ class ExtraPropertyDefinitionNamingTest extends TestCase
     }
 
     /**
-     * Rule: getPrimaryKeyName() is always 'id_' + the normalized entity name — the
-     * PrestaShop primary key convention, centralized so callers never build it manually.
+     * Rule: getPrimaryKeyName() prefers the explicit/introspected value, then the entity's
+     * own ObjectModel $definition['primary'], then falls back to 'id_' + the normalized
+     * entity name — the PrestaShop primary key convention, centralized so callers never
+     * build it manually.
      *
      * @dataProvider primaryKeyNameProvider
      */
@@ -167,11 +170,114 @@ class ExtraPropertyDefinitionNamingTest extends TestCase
     {
         return [
             'simple entity' => ['product', 'id_product'],
-            'compound entity' => ['manufacturer_address', 'id_manufacturer_address'],
+            // ManufacturerAddress only INHERITS Address::$definition — resolution must
+            // ignore inherited definitions and fall back to the naming convention.
+            'compound entity with an inheriting class' => ['manufacturer_address', 'id_manufacturer_address'],
             'uppercase entity is normalized first' => ['Product', 'id_product'],
-            'CamelCase entity is tableized first' => ['ProductAttribute', 'id_product_attribute'],
+            // Canonicalized to 'combination'; the Combination class declares id_product_attribute.
+            'CamelCase irregular entity resolves through its class' => ['ProductAttribute', 'id_product_attribute'],
+            'irregular entity resolves through its class' => ['order', 'id_order'],
+            'irregular table spelling is canonicalized first' => ['orders', 'id_order'],
             'hyphenated entity is normalized first' => ['my-entity', 'id_my_entity'],
         ];
+    }
+
+    /**
+     * The full entity resolution matrix: every accepted spelling of an entity converges
+     * onto ONE canonical (entityName, tableName) pair — the canonical map handles the two
+     * known irregular families before class resolution ever runs (which is what keeps the
+     * modern ProductAttribute class, the renamed Attribute entity with table `attribute`,
+     * from hijacking the combination spellings), the ObjectModel class resolves the rest,
+     * and a bare table name stays itself.
+     *
+     * @dataProvider entityResolutionProvider
+     */
+    public function testEntityNameAndTableNameResolution(string $input, string $expectedEntityName, string $expectedTableName): void
+    {
+        $definition = new ExtraPropertyDefinition(entityName: $input, propertyName: 'field');
+
+        $this->assertSame($expectedEntityName, $definition->getEntityName());
+        $this->assertSame($expectedTableName, $definition->getTableName());
+    }
+
+    public static function entityResolutionProvider(): iterable
+    {
+        // The combination family — four spellings, one definition.
+        yield 'combination' => ['combination', 'combination', 'product_attribute'];
+        yield 'Combination class spelling' => ['Combination', 'combination', 'product_attribute'];
+        yield 'product_attribute table spelling' => ['product_attribute', 'combination', 'product_attribute'];
+        yield 'ProductAttribute class spelling (never class-resolved to the attribute table)' => ['ProductAttribute', 'combination', 'product_attribute'];
+
+        // The order family — three spellings, one definition.
+        yield 'order' => ['order', 'order', 'orders'];
+        yield 'Order class spelling' => ['Order', 'order', 'orders'];
+        yield 'orders table spelling' => ['orders', 'order', 'orders'];
+
+        // Conventional entities: resolution is a no-op.
+        yield 'cart' => ['cart', 'cart', 'cart'];
+        yield 'product' => ['product', 'product', 'product'];
+
+        // The genuine attribute entity stays reachable under its own table name.
+        yield 'attribute' => ['attribute', 'attribute', 'attribute'];
+
+        // No matching ObjectModel class: bare-table registration, the name is the table.
+        yield 'unknown table' => ['my_custom_table', 'my_custom_table', 'my_custom_table'];
+
+        // Class-name collision guards: Link exists but is not an ObjectModel; the
+        // ManufacturerAddress class only INHERITS Address::$definition — neither may
+        // repoint the table.
+        yield 'non-ObjectModel class name' => ['link', 'link', 'link'];
+        yield 'class with inherited definition' => ['manufacturer_address', 'manufacturer_address', 'manufacturer_address'];
+    }
+
+    /**
+     * Explicit tableName / primaryKeyName constructor values (the third-party escape
+     * hatch for ObjectModels whose entity name differs from their table) win over any
+     * resolution, and both survive the copy-with methods.
+     */
+    public function testExplicitTableNameAndPrimaryKeyNameAreRespectedAndPreserved(): void
+    {
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'my_entity',
+            propertyName: 'field',
+            tableName: 'my_actual_table',
+            primaryKeyName: 'id_my_actual',
+        );
+
+        $this->assertSame('my_entity', $definition->getEntityName());
+        $this->assertSame('my_actual_table', $definition->getTableName());
+        $this->assertSame('id_my_actual', $definition->getPrimaryKeyName());
+
+        $withModule = $definition->withModuleName('ps_mymodule');
+        $this->assertSame('my_actual_table', $withModule->getTableName());
+        $this->assertSame('id_my_actual', $withModule->getPrimaryKeyName());
+
+        $withOverrides = $definition->withOverrides(['displayFront' => true]);
+        $this->assertSame('my_actual_table', $withOverrides->getTableName());
+        $this->assertSame('id_my_actual', $withOverrides->getPrimaryKeyName());
+    }
+
+    /**
+     * @dataProvider invalidExplicitIdentifierProvider
+     */
+    public function testInvalidExplicitTableNameOrPrimaryKeyNameIsRejected(?string $tableName, ?string $primaryKeyName): void
+    {
+        $this->expectException(InvalidExtraPropertyDefinitionException::class);
+
+        new ExtraPropertyDefinition(
+            entityName: 'my_entity',
+            propertyName: 'field',
+            tableName: $tableName,
+            primaryKeyName: $primaryKeyName,
+        );
+    }
+
+    public static function invalidExplicitIdentifierProvider(): iterable
+    {
+        yield 'sql injection in tableName' => ["orders'; DROP TABLE x; --", null];
+        yield 'space in tableName' => ['my table', null];
+        yield 'sql injection in primaryKeyName' => [null, "id'; --"];
+        yield 'overlong primaryKeyName' => [null, str_repeat('a', 65)];
     }
 
     public function testCoreModuleKeyConstant(): void

@@ -52,7 +52,7 @@ interface ExtraPropertyWriterInterface
      * from the storage schema. The constraint's strict flag is ignored — extra property
      * storage has no group/global rows, so there is no fallback level to target.
      *
-     * @param string $entityName Entity table name (e.g. "product")
+     * @param string $entityName PHYSICAL entity table name without prefix (ObjectModel $definition['table'] / ExtraPropertyDefinition::getTableName(), e.g. "product", "product_attribute") — never the logical entity name, which differs for irregular entities
      * @param string $primaryKeyName PK column name (e.g. "id_product")
      * @param int $entityId
      * @param array<string, array<string, mixed>> $valuesByModule [moduleKey => [propertyName => value]]
@@ -100,7 +100,7 @@ interface ExtraPropertyWriterInterface
      * Safe to call even if no extra properties are registered: tables that do not
      * exist yet are silently skipped.
      *
-     * @param string $entityName Entity table name (e.g. "product")
+     * @param string $entityName PHYSICAL entity table name without prefix (ObjectModel $definition['table'] / ExtraPropertyDefinition::getTableName(), e.g. "product", "product_attribute") — never the logical entity name, which differs for irregular entities
      * @param string $primaryKeyName PK column name (e.g. "id_product")
      * @param int $entityId
      */
@@ -116,7 +116,7 @@ interface ExtraPropertyWriterInterface
      * {entity}_extra_lang rows when the entity's lang table is shop-aware. COMMON values
      * and non-multishop lang rows are shared with the surviving shops and are kept.
      *
-     * @param string $entityName Entity table name (e.g. "product")
+     * @param string $entityName PHYSICAL entity table name without prefix (ObjectModel $definition['table'] / ExtraPropertyDefinition::getTableName(), e.g. "product", "product_attribute") — never the logical entity name, which differs for irregular entities
      * @param string $primaryKeyName PK column name (e.g. "id_product")
      * @param int $entityId
      * @param int[] $shopIds Shops whose rows must be removed (non-positive ids are ignored)

@@ -71,7 +71,9 @@ class ExtraPropertyWriterTest extends TestCase
         $this->assertStringContainsString('ps_product_extra`', $common['sql']);
         $this->assertStringContainsString('demoextrafield_reference_code', $common['sql']);
         $this->assertStringContainsString('demoextrafield_is_dangerous', $common['sql']);
-        $this->assertSame([7, 'REF-1', true], $common['params']);
+        // The writer is the castForDb() choke point: the submitted PHP true is bound as
+        // the TINYINT-compatible 1, whatever the caller (form, ObjectModel, API).
+        $this->assertSame([7, 'REF-1', 1], $common['params']);
 
         // Lang scope: ONE multi-row UPSERT, one row per language (entityId, shopId, idLang, value).
         $this->assertStringContainsString('ps_product_extra_lang', $this->statements[1]['sql']);

@@ -61,6 +61,16 @@ class ExtraPropertyRegistrationFailureException extends ExtraPropertyException
     public const UNKNOWN_SHOP = 7;
 
     /**
+     * Another definition under a different entity name already uses the same storage column.
+     */
+    public const STORAGE_CONFLICT = 8;
+
+    /**
+     * The declared defaultValue does not fit the declared type.
+     */
+    public const INVALID_DEFAULT_VALUE = 9;
+
+    /**
      * Builds the domain exception from the core exception thrown by the registry,
      * mapping the core reason code to the matching domain code and keeping the
      * core exception as the previous one.
@@ -75,6 +85,8 @@ class ExtraPropertyRegistrationFailureException extends ExtraPropertyException
             ExtraPropertyRegistryException::SCHEMA_FAILURE => self::SCHEMA_FAILURE,
             ExtraPropertyRegistryException::INVALID_FORM_OPTIONS => self::INVALID_FORM_OPTIONS,
             ExtraPropertyRegistryException::UNKNOWN_SHOP => self::UNKNOWN_SHOP,
+            ExtraPropertyRegistryException::STORAGE_CONFLICT => self::STORAGE_CONFLICT,
+            ExtraPropertyRegistryException::INVALID_DEFAULT_VALUE => self::INVALID_DEFAULT_VALUE,
             default => self::UNKNOWN,
         };
 

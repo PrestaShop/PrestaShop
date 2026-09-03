@@ -84,7 +84,7 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
             return [];
         }
 
-        $allDefinitions = $definitions ?? $this->repository->getAllDefinitions()->filterByEntity($entityName);
+        $allDefinitions = $definitions ?? $this->repository->getAllDefinitions()->filterByTableName($entityName);
         // Shop availability is enforced here unconditionally — injected collections included:
         // the filter is idempotent, and a definition not associated to the requested scope
         // must never surface a value, whatever the caller forgot.
@@ -148,9 +148,19 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
         foreach ($definitions as $definition) {
             $propertyName = $definition->getPropertyName();
             $moduleName = $definition->getNormalizedModuleKey();
+            // A missing value row surfaces the definition's declared default — "default"
+            // means what you get until a value is stored, on every read surface (FO, BO
+            // entity form/grid, Admin API). Without a declared default: null, or false
+            // for a NOT NULL BOOL. LANG grouping stays [] (a single scalar default has
+            // no per-language meaning). JSON defaults are stored as strings — decode so
+            // the shape matches stored-value reads.
             $defaultsByModule[$moduleName][$propertyName] = $groupByLang
                 ? []
-                : ExtraPropertyValueCaster::castFromDb($definition->getType(), null, $definition->isNullable());
+                : ExtraPropertyValueCaster::castFromDb(
+                    $definition->getType(),
+                    ExtraPropertyValueCaster::castDefaultValueForDb($definition->getType(), $definition->getDefaultValue()),
+                    $definition->isNullable()
+                );
 
             $columnName = $definition->getStorageColumnName();
             $columnToPropertyMap[$columnName] = [
