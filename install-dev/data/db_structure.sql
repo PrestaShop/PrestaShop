@@ -2296,9 +2296,11 @@ CREATE TABLE `PREFIX_log` (
   `id_lang` int(10) unsigned DEFAULT NULL,
   `in_all_shops` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `id_employee` int(10) unsigned DEFAULT NULL,
+  `hash` char(32) DEFAULT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
-  PRIMARY KEY (`id_log`)
+  PRIMARY KEY (`id_log`),
+  INDEX `hash` (`hash`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_import_match` (
