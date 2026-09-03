@@ -476,7 +476,7 @@ class AddressFormatCore extends ObjectModel
             foreach ($publicProperties as $property) {
                 $propertyName = $property->getName();
                 if ((!in_array($propertyName, AddressFormat::$forbiddenPropertyList))
-                        && (!preg_match('#id|id_\w#', $propertyName))) {
+                        && (!preg_match('#^id$|^id_.*$|^.*_id$#', $propertyName))) {
                     $propertyList[] = $propertyName;
                 }
             }
