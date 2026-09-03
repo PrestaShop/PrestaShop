@@ -400,8 +400,6 @@ class DispatcherCore
                             include_once _PS_OVERRIDE_DIR_ . 'modules/' . $controller_file;
                             $controller_class = $module_name . $controller_name . 'ModuleFrontControllerOverride';
                         }
-
-                        return $controller_class;
                     }
                 }
 
