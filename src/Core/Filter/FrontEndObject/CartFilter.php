@@ -17,6 +17,10 @@ class CartFilter extends HashMapWhitelistFilter
     {
         $whitelist = [
             'discounts',
+            // FO-visible extra properties of the cart entity (display_front gating already
+            // applied by the lazy array): the cart-AJAX-update JSON carries them, so the
+            // initial prestashop.cart object must too — the two JS surfaces stay consistent.
+            'extra_properties',
             'minimalPurchase',
             'minimalPurchaseRequired',
             'products' => $productsFilter,
