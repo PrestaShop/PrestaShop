@@ -117,7 +117,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     {
         $order = $this->getOrder($command->getOrderId());
 
-        $this->assertOrderWasNotShipped($order);
         $this->assertProductNotDuplicate($order, $command);
 
         $cart = Cart::getCartByOrderId($order->id);
@@ -228,18 +227,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } finally {
             $this->contextStateManager->restorePreviousContext();
-        }
-    }
-
-    /**
-     * @param Order $order
-     *
-     * @throws OrderException
-     */
-    private function assertOrderWasNotShipped(Order $order)
-    {
-        if ($order->hasBeenShipped()) {
-            throw new OrderException('Cannot add product to shipped order.');
         }
     }
 
