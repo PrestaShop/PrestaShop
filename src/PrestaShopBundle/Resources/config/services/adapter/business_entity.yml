@@ -4,11 +4,15 @@ services:
     autowire: true
   PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\AddBusinessEntityHandler: ~
 
+  PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\EditBusinessEntityHandler: ~
+
   PrestaShop\PrestaShop\Adapter\BusinessEntity\Address\BusinessEntityAddressFormatter: ~
 
   PrestaShop\PrestaShop\Adapter\BusinessEntity\QueryHandler\GetBusinessEntityForViewingHandler:
     arguments:
       $addressFormatter: '@PrestaShop\PrestaShop\Adapter\BusinessEntity\Address\BusinessEntityAddressFormatter'
+
+  PrestaShop\PrestaShop\Adapter\BusinessEntity\QueryHandler\GetBusinessEntityForEditingHandler: ~
 
   PrestaShop\PrestaShop\Adapter\BusinessEntity\QueryHandler\GetPendingBusinessEntitiesCountHandler: ~
 
