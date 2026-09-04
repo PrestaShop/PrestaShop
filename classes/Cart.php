@@ -90,8 +90,12 @@ class CartCore extends ObjectModel
     protected static $_nbProducts = [];
     protected static $_isVirtualCart = [];
 
-    protected $_products = null;
-    protected $_products_with_separated_gifts = null;
+    /**
+     * Cache of getProducts() results, indexed by a key built from every argument that affects the result.
+     *
+     * @var array<string, array>
+     */
+    protected $_products = [];
     protected static $_totalWeight = [];
     protected $_taxCalculationMethod = PS_TAX_EXC;
     protected static $_carriers = null;
@@ -250,8 +254,7 @@ class CartCore extends ObjectModel
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
         }
-        $this->_products = null;
-        $this->_products_with_separated_gifts = null;
+        $this->_products = [];
     }
 
     /**
@@ -689,28 +692,33 @@ class CartCore extends ObjectModel
             return [];
         }
 
-        // Get cache key we will use, depending on whether we want to split gift products quantity or not
-        if ($shouldSplitGiftProductsQuantity) {
-            $cacheKey = '_products_with_separated_gifts';
-        } else {
-            $cacheKey = '_products';
+        // Refreshing means the underlying data changed, so none of the cached results can be trusted anymore
+        if ($refresh) {
+            $this->_products = [];
         }
 
-        // Product cache must be strictly compared to NULL, or else an empty cart will add dozens of queries
-        if ($this->{$cacheKey} !== null && !$refresh) {
-            // If a specific product ID is requested, we will search for it in the cache.
-            if (is_int($id_product)) {
-                foreach ($this->{$cacheKey} as $product) {
-                    if ($product['id_product'] == $id_product) {
-                        return [$product];
+        // Every argument that affects the result is part of the cache key, otherwise a call would be served
+        // the result computed for different arguments (e.g. rows without full infos, or a single product)
+        $cacheKeySuffix = '-' . (int) $id_country . '-' . (int) $fullInfos . '-' . (int) $keepOrderPrices . '-' . (int) $shouldSplitGiftProductsQuantity;
+        $cacheKey = (int) $id_product . $cacheKeySuffix;
+        if (isset($this->_products[$cacheKey])) {
+            return $this->_products[$cacheKey];
+        }
+
+        // If a specific product is requested and the whole cart is already cached for the same arguments,
+        // filter the cached rows instead of running a new query
+        if ($id_product) {
+            $allProductsCacheKey = '0' . $cacheKeySuffix;
+            if (isset($this->_products[$allProductsCacheKey])) {
+                $matchingProducts = [];
+                foreach ($this->_products[$allProductsCacheKey] as $product) {
+                    if ((int) $product['id_product'] === (int) $id_product) {
+                        $matchingProducts[] = $product;
                     }
                 }
 
-                return [];
+                return $matchingProducts;
             }
-
-            // Otherwise, we return the whole cache
-            return $this->{$cacheKey};
         }
 
         // Build query
@@ -864,7 +872,7 @@ class CartCore extends ObjectModel
         Cart::cacheSomeAttributesLists($pa_ids, (int) $this->getAssociatedLanguage()->getId());
 
         if (empty($products)) {
-            $this->{$cacheKey} = [];
+            $this->_products[$cacheKey] = [];
 
             return [];
         }
@@ -903,7 +911,7 @@ class CartCore extends ObjectModel
                 }
             }
 
-            $this->{$cacheKey} = [];
+            $this->_products[$cacheKey] = [];
 
             foreach ($products as &$product) {
                 if (!array_key_exists('is_gift', $product)) {
@@ -931,7 +939,7 @@ class CartCore extends ObjectModel
                     $product = $this->applyProductCalculations($product, $cart_shop_context, null, $keepOrderPrices);
                 } else {
                     // Separate products given away from those manually added to cart
-                    $this->{$cacheKey}[] = $this->applyProductCalculations($product, $cart_shop_context, $givenAwayQuantity, $keepOrderPrices);
+                    $this->_products[$cacheKey][] = $this->applyProductCalculations($product, $cart_shop_context, $givenAwayQuantity, $keepOrderPrices);
                     unset($product['is_gift']);
                     $product = $this->applyProductCalculations(
                         $product,
@@ -941,13 +949,13 @@ class CartCore extends ObjectModel
                     );
                 }
 
-                $this->{$cacheKey}[] = $product;
+                $this->_products[$cacheKey][] = $product;
             }
         } else {
-            $this->{$cacheKey} = $products;
+            $this->_products[$cacheKey] = $products;
         }
 
-        return $this->{$cacheKey};
+        return $this->_products[$cacheKey];
     }
 
     /**
