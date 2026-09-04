@@ -234,7 +234,7 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
                 } else {
                     $shopId = new ShopId((int) $products[$i]['id_shop_default']);
                 }
-                $packQuantity = $this->productPackRepository->getDynamicPackQuantity(new ProductId($products[$i]['id_product']), $shopId);
+                $packQuantity = $this->productPackRepository->getDynamicPackQuantity(new ProductId((int) $products[$i]['id_product']), $shopId);
                 if (null !== $packQuantity) {
                     $products[$i]['quantity'] = $packQuantity;
                 }
