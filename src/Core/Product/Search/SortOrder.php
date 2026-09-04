@@ -6,8 +6,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException;
+use PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderException;
 
 /**
  * This class define in which order the list of products will be sorted.
@@ -97,14 +97,14 @@ class SortOrder
      *
      * @return SortOrder
      *
-     * @throws InvalidSortOrderDirectionException
+     * @throws InvalidSortOrderException|InvalidSortOrderDirectionException
      */
     public static function newFromString($sortOrderConfiguration)
     {
         $sortParams = explode('.', $sortOrderConfiguration);
 
         if (count($sortParams) < 3) {
-            throw new CoreException('Invalid argument');
+            throw new InvalidSortOrderException();
         }
 
         [$entity, $field, $direction] = $sortParams;
