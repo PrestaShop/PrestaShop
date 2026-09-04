@@ -1106,7 +1106,12 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         $image->id_product = (int) $product->id;
                         $image->position = Image::getHighestPosition($product->id) + 1;
 
-                        if (!Image::getCover((int) $product->id)) {
+                        // The unique key this writes into, `id_product_cover` on the image table, is not
+                        // scoped to a shop, so the question "does a cover already exist" has to be asked
+                        // globally too. Image::getCover() reads image_shop for the current shop, and
+                        // answers no for a product whose cover belongs to another shop, which made this
+                        // insert collide with that cover.
+                        if (!Image::getGlobalCover((int) $product->id)) {
                             $image->cover = true;
                         } else {
                             $image->cover = false;
