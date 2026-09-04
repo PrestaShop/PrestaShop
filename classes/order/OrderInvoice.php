@@ -349,14 +349,20 @@ class OrderInvoiceCore extends ObjectModel
         // 	- 'total_amount'
         $breakdown = [];
 
-        $details = $order->getProductTaxesDetails();
+        // An order can carry several invoices, and getProductTaxesDetails() returns the rows of all of
+        // them, so keep only the ones belonging to this invoice. This has to happen before the branch
+        // below: the grouping path used to filter on its own, which left the rows of every other
+        // invoice in the breakdown whenever taxes are applied one after another.
+        $details = array_filter(
+            $order->getProductTaxesDetails(),
+            function (array $row): bool {
+                return $this->id === (int) $row['id_order_invoice'];
+            }
+        );
 
         if ($sum_composite_taxes) {
             $grouped_details = [];
             foreach ($details as $row) {
-                if ($this->id !== (int) $row['id_order_invoice']) {
-                    continue;
-                }
                 if (!isset($grouped_details[$row['id_order_detail']])) {
                     $grouped_details[$row['id_order_detail']] = [
                         'tax_rate' => 0,
