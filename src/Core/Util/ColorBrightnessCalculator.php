@@ -33,6 +33,8 @@ final class ColorBrightnessCalculator
      */
     private function calculate($hexColor)
     {
+        $hexColor = (string) $hexColor;
+
         if (strtolower($hexColor) === 'transparent') {
             return self::BRIGHT_COLOR_MIN;
         }
@@ -41,6 +43,15 @@ final class ColorBrightnessCalculator
 
         if (strlen($hexColor) === 3) {
             $hexColor = $hexColor[0] . $hexColor[0] . $hexColor[1] . $hexColor[1] . $hexColor[2] . $hexColor[2];
+        }
+
+        // Anything that is not a six digit hexadecimal value - a CSS colour name, an rgb() call, an
+        // empty string - has no brightness to derive. Without this guard hexdec() raises a
+        // deprecation for every invalid character and then computes from whichever letters happen
+        // to be hex digits, which is why 'red' reads as bright while 'orange' and 'LimeGreen' do
+        // not. Treat an unusable value the same way as 'transparent'.
+        if (!preg_match('/^[0-9a-fA-F]{6}$/', $hexColor)) {
+            return self::BRIGHT_COLOR_MIN;
         }
 
         $r = hexdec(substr($hexColor, 0, 2));
