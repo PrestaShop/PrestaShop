@@ -1557,25 +1557,49 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * The combination (reference, email) should be unique, of multiple entries are found, then we take the first one.
+     * A cart split over several carriers produces one order per package, all sharing the same reference,
+     * so (reference, email) is not unique. getUniqReference() tells those apart with a #N suffix, and
+     * passing that number back here selects the matching one. Without it the first order is returned.
      *
      * @param string $reference Order reference
      * @param string $email customer email address
+     * @param int|null $uniqueReferenceNumber The number behind the # in a unique reference, if any
      *
-     * @return Order The first order found
+     * @return Order The matching order, or the first one found
      */
-    public static function getByReferenceAndEmail($reference, $email)
+    public static function getByReferenceAndEmail($reference, $email, ?int $uniqueReferenceNumber = null)
     {
         $sql = '
-          SELECT id_order
+          SELECT o.`id_order`
             FROM `' . _DB_PREFIX_ . 'orders` o
             LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (o.`id_customer` = c.`id_customer`)
                 WHERE o.`reference` = \'' . pSQL($reference) . '\' AND c.`email` = \'' . pSQL($email) . '\'
+                ORDER BY o.`id_order` ASC
         ';
 
-        $id = (int) Db::getInstance()->getValue($sql);
+        $rows = Db::getInstance()->executeS($sql);
+        if (empty($rows)) {
+            return new Order(0);
+        }
 
-        return new Order($id);
+        $orderIds = array_map('intval', array_column($rows, 'id_order'));
+
+        if (null === $uniqueReferenceNumber || $uniqueReferenceNumber < 1) {
+            return new Order($orderIds[0]);
+        }
+
+        // Ask getUniqReference() itself which order carries that number rather than recomputing its
+        // arithmetic here. It counts from the lowest id_order of the order's own cart, so the suffix is
+        // an offset and not a position, and a concurrent checkout in between makes the numbers skip.
+        $wantedReference = $reference . '#' . $uniqueReferenceNumber;
+        foreach ($orderIds as $orderId) {
+            $order = new Order($orderId);
+            if ($order->getUniqReference() === $wantedReference) {
+                return $order;
+            }
+        }
+
+        return new Order(0);
     }
 
     public function getTotalWeight()

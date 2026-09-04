@@ -37,7 +37,13 @@ class GuestTrackingControllerCore extends FrontController
      */
     public function postProcess(): void
     {
-        $order_reference = current(explode('#', Tools::getValue('order_reference')));
+        // A split cart produces several orders sharing one reference, told apart in the emails by a
+        // #N suffix, so keep that number instead of dropping it with the rest of the string.
+        $reference_parts = explode('#', (string) Tools::getValue('order_reference'));
+        $order_reference = current($reference_parts);
+        $unique_reference_number = isset($reference_parts[1]) && ctype_digit(trim($reference_parts[1]))
+            ? (int) trim($reference_parts[1])
+            : null;
         $email = Tools::getValue('email');
 
         if (!$email && !$order_reference) {
@@ -52,7 +58,7 @@ class GuestTrackingControllerCore extends FrontController
             return;
         }
 
-        $this->order = Order::getByReferenceAndEmail($order_reference, $email);
+        $this->order = Order::getByReferenceAndEmail($order_reference, $email, $unique_reference_number);
         if (!Validate::isLoadedObject($this->order)) {
             $this->errors[] = $this->getTranslator()->trans(
                 'We couldn\'t find your order with the information provided, please try again',
