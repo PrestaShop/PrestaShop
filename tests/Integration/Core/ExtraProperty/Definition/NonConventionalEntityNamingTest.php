@@ -32,6 +32,8 @@ use Tests\Resources\DatabaseDump;
  *    scopes work against product_attribute_lang / product_attribute_shop;
  *  - the genuine attribute entity stays reachable: its registration is NOT hijacked by
  *    the product_attribute → combination canonicalization;
+ *  - the discount entity is canonical over its legacy cart_rule storage (a cart_rule
+ *    registration converges on 'discount', stored in cart_rule_extra);
  *  - LANG/SHOP on order are cleanly rejected (no orders_lang / orders_shop base table);
  *  - the cross-entity storage guard refuses a second definition writing the same
  *    physical column under another entity name.
@@ -239,6 +241,36 @@ class NonConventionalEntityNamingTest extends KernelTestCase
                 $combinationColumns = array_column(Db::getInstance()->executeS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'product_attribute_extra`'), 'Field');
                 $this->assertNotContains($columnName, $combinationColumns);
             }
+        } finally {
+            self::$registry->unregister($definition, true);
+        }
+    }
+
+    public function testDiscountIsTheCanonicalEntityOverTheCartRuleStorage(): void
+    {
+        // The whole Discount CQRS domain already carries the new name, so 'discount' is
+        // the canonical entity (a cart_rule registration converges on it) while the
+        // physical storage stays next to the cart_rule table it still lives in.
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'cart_rule',
+            propertyName: 'naming_discount_note',
+            type: ExtraPropertyType::STRING,
+            scope: ExtraPropertyScope::COMMON,
+            moduleName: self::MODULE,
+        );
+
+        try {
+            self::$registry->register($definition);
+
+            $hydrated = self::$definitionRepository->findDefinitionByModuleAndField('discount', self::MODULE, 'naming_discount_note');
+            $this->assertNotNull($hydrated);
+            $this->assertSame('discount', $hydrated->getEntityName());
+            $this->assertSame('cart_rule', $hydrated->getTableName());
+            $this->assertSame('cart_rule_extra', $hydrated->getExtraTableName());
+            $this->assertSame('id_cart_rule', $hydrated->getPrimaryKeyName());
+            // The toggle permission subject matches the _legacy_controller the discount
+            // page itself declares.
+            $this->assertSame('AdminCartRules', $hydrated->getControllerName());
         } finally {
             self::$registry->unregister($definition, true);
         }

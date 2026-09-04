@@ -21,7 +21,6 @@ use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionProvider;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenter;
-use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
@@ -105,16 +104,6 @@ class CommonController extends PrestaShopAdminController
         string $moduleName,
         string $propertyName,
     ): JsonResponse {
-        // Derive the legacy controller from the entityName URL path param (trusted, non-forgeable).
-        // Never trust a _legacy_controller value coming from the request body/query string.
-        $legacyController = $this->legacyControllerFromEntityName($entityName);
-        if (!$this->isGranted('update', $legacyController)) {
-            return new JsonResponse([
-                'status' => false,
-                'message' => 'Access denied.',
-            ], 403);
-        }
-
         /** @var ExtraPropertyDefinitionRepositoryInterface $repository */
         $repository = $this->container->get(ExtraPropertyDefinitionRepositoryInterface::class);
 
@@ -128,6 +117,16 @@ class CommonController extends PrestaShopAdminController
                 'status' => false,
                 'message' => $this->trans('Field not found.', [], 'Admin.Notifications.Error'),
             ], 404);
+        }
+
+        // The permission subject comes from the registry-hydrated definition (its stored
+        // override, or the map/convention deduction) — never from any client-supplied
+        // _legacy_controller value, which would allow privilege escalation.
+        if (!$this->isGranted('update', $matched->getControllerName())) {
+            return new JsonResponse([
+                'status' => false,
+                'message' => 'Access denied.',
+            ], 403);
         }
 
         /** @var ExtraPropertyWriterInterface $writer */
@@ -397,54 +396,6 @@ class CommonController extends PrestaShopAdminController
             $redirectRoute,
             $redirectQueryParamsToKeep
         );
-    }
-
-    /**
-     * Entities whose BO page tab does not follow the 'Admin' + pluralized entity name
-     * convention. Each value is the exact _legacy_controller the entity's own grid page
-     * declares in routing (and a real install-dev/data/xml/tab.xml tab), so the toggle
-     * permission matches the page the toggle renders on. Every gridded entity absent from
-     * this map follows the convention (product → AdminProducts, order → AdminOrders…).
-     */
-    private const ENTITY_LEGACY_CONTROLLERS = [
-        'api_client' => 'AdminAdminAPI',
-        'attribute' => 'AdminAttributesGroups',
-        'attribute_group' => 'AdminAttributesGroups',
-        'catalog_price_rule' => 'AdminSpecificPriceRule',
-        'cms_page' => 'AdminCmsContent',
-        'cms_page_category' => 'AdminCmsContent',
-        'credit_slip' => 'AdminSlip',
-        'discount' => 'AdminCartRules',
-        'feature_value' => 'AdminFeatures',
-        'image_type' => 'AdminImages',
-        'meta' => 'AdminMeta',
-        'order_message' => 'AdminOrderMessage',
-        'shipment' => 'AdminOrders',
-        'tax_rules_group' => 'AdminTaxRulesGroup',
-        'title' => 'AdminGenders',
-        'webservice_key' => 'AdminWebservice',
-    ];
-
-    /**
-     * Derives the BO legacy controller name (the permission subject) for a given entity name:
-     * the ENTITY_LEGACY_CONTROLLERS map for entities whose real tab is irregular, otherwise
-     * the inflector convention — classify() (snake_case → CamelCase, so manufacturer_address
-     * → ManufacturerAddress) then pluralize() (order → AdminOrders, category →
-     * AdminCategories, address → AdminAddresses, product → AdminProducts).
-     *
-     * Used server-side to verify employee permissions without trusting any client-supplied
-     * value (e.g. for the extra-property toggle endpoint). A derived name matching no
-     * existing tab is DENY-safe: Access::isGranted() grants nothing for unknown subjects.
-     */
-    protected function legacyControllerFromEntityName(string $entityName): string
-    {
-        if (isset(self::ENTITY_LEGACY_CONTROLLERS[$entityName])) {
-            return self::ENTITY_LEGACY_CONTROLLERS[$entityName];
-        }
-
-        $inflector = Inflector::getInflector();
-
-        return 'Admin' . $inflector->pluralize($inflector->classify($entityName));
     }
 
     /**

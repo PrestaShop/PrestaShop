@@ -72,10 +72,86 @@ final class ExtraPropertyDefinition
      * renamed Attribute entity and maps to the `attribute` table, so letting classify()
      * win would silently store combination properties on the attribute table. The
      * genuine attribute entity stays reachable as 'attribute').
+     *
+     * Most other entries follow the same rule as combination: the modern CQRS domain
+     * name is the canonical entity — those entities are headed for that rename — while
+     * their physical storage stays on the legacy table (mapped in
+     * CANONICAL_ENTITY_TABLES, since no ObjectModel class carries the modern name yet):
+     * 'cart_rule' → 'discount', 'specific_price_rule' → 'catalog_price_rule', 'cms' →
+     * 'cms_page', 'cms_category' → 'cms_page_category', 'gender' → 'title',
+     * 'order_slip' → 'credit_slip', 'request_sql' → 'sql_request'.
+     *
+     * Finally, table spellings of entities whose class and table names differ converge
+     * like 'orders' does ('connections'/'lang'/'webservice_account' are real base tables,
+     * so without an entry each would register as a second entity name on the same
+     * storage table as its class-named sibling), and so does the BO grid/menu spelling
+     * 'merchandise_return' (the order_return grid id).
      */
     protected const CANONICAL_ENTITY_NAMES = [
+        'cart_rule' => 'discount',
+        'cms' => 'cms_page',
+        'cms_category' => 'cms_page_category',
+        'connections' => 'connection',
+        'gender' => 'title',
+        'lang' => 'language',
+        'merchandise_return' => 'order_return',
+        'order_slip' => 'credit_slip',
         'orders' => 'order',
         'product_attribute' => 'combination',
+        'request_sql' => 'sql_request',
+        'specific_price_rule' => 'catalog_price_rule',
+        'webservice_account' => 'webservice_key',
+    ];
+
+    /**
+     * Physical table per canonical entity that has neither a table of its own nor an
+     * ObjectModel class to resolve one through ('combination' needs no entry — it
+     * resolves product_attribute through the Combination class; these modern names have
+     * no class yet). Consulted after the explicit tableName parameter and before class
+     * resolution. An entry must be dropped in the version that gives its entity real
+     * storage.
+     */
+    protected const CANONICAL_ENTITY_TABLES = [
+        'catalog_price_rule' => 'specific_price_rule',
+        'cms_page' => 'cms',
+        'cms_page_category' => 'cms_category',
+        'credit_slip' => 'order_slip',
+        'discount' => 'cart_rule',
+        'sql_request' => 'request_sql',
+        'title' => 'gender',
+    ];
+
+    /**
+     * BO controller name (the permission subject) per entity whose real tab does not
+     * follow the 'Admin' + pluralized entity name convention. Each value is the exact
+     * _legacy_controller the entity's own grid page declares in routing (and a real
+     * install-dev/data/xml/tab.xml tab), so the toggle permission matches the page the
+     * toggle renders on. Every gridded entity absent from this map follows the
+     * convention (product → AdminProducts, order → AdminOrders, cart_rule →
+     * AdminCartRules…) — see getControllerName().
+     */
+    protected const ENTITY_CONTROLLER_NAMES = [
+        'api_client' => 'AdminAdminAPI',
+        'attribute' => 'AdminAttributesGroups',
+        'attribute_group' => 'AdminAttributesGroups',
+        'catalog_price_rule' => 'AdminSpecificPriceRule',
+        'cms_page' => 'AdminCmsContent',
+        'cms_page_category' => 'AdminCmsContent',
+        'credit_slip' => 'AdminSlip',
+        'discount' => 'AdminCartRules',
+        'feature_value' => 'AdminFeatures',
+        'image_type' => 'AdminImages',
+        'mail' => 'AdminEmails',
+        'meta' => 'AdminMeta',
+        'order_message' => 'AdminOrderMessage',
+        'order_return' => 'AdminReturn',
+        'order_return_state' => 'AdminStatuses',
+        'order_state' => 'AdminStatuses',
+        'shipment' => 'AdminOrders',
+        'sql_request' => 'AdminRequestSql',
+        'tax_rules_group' => 'AdminTaxRulesGroup',
+        'title' => 'AdminGenders',
+        'webservice_key' => 'AdminWebservice',
     ];
 
     /**
@@ -107,6 +183,18 @@ final class ExtraPropertyDefinition
      * nullable/enumValues, the live schema is the source of truth.
      */
     protected readonly ?string $primaryKeyName;
+
+    /**
+     * BO controller name OVERRIDE (the permission subject, e.g. for the grid toggle) —
+     * escape hatch for third-party entities whose BO page tab breaks the naming
+     * convention. Unlike $tableName this holds only the override, never the resolved
+     * value: an explicit value equal to the resolved default collapses to null at
+     * construction, and only the override is persisted (controller_name column). Core
+     * deductions (ENTITY_CONTROLLER_NAMES map, then the inflector convention) therefore
+     * run at read time and follow core code as BO tabs evolve — a permission subject
+     * must never be frozen, unlike a storage location. See getControllerName().
+     */
+    protected readonly ?string $controllerName;
 
     /**
      * Shops this definition is explicitly restricted to (values cast to int, deduplicated
@@ -149,6 +237,7 @@ final class ExtraPropertyDefinition
      * @param list<int>|null $associatedShopIds Shops this definition is restricted to, persisted in the extra_property_definition_shop association table by the repository's save(). Null = no information — the stored association is left untouched on save, so a module re-registering without shop data cannot clobber a BO-configured restriction; [] = clear the stored association (revert to fallback); non-empty = explicit restriction. Without explicit rows, core-owned definitions apply to all shops and module-owned definitions follow their module's enabled shops (see isAvailableForShops()).
      * @param string|null $tableName Physical entity table (without DB prefix). Usually omitted — deduced from the entity name (see the $tableName property docblock). Explicit value = escape hatch for third-party ObjectModels whose entity name differs from their table.
      * @param string|null $primaryKeyName Entity primary key column. Usually omitted — deduced from the ObjectModel class or the 'id_' + entityName convention; the repository injects the introspected live value at hydration.
+     * @param string|null $controllerName BO controller name used as the permission subject (e.g. grid toggle). Usually omitted — deduced from the entity name (irregular-tab map, then 'Admin' + pluralized entity). Explicit value = escape hatch for third-party entities whose BO tab breaks the convention; a value equal to the deduction collapses to null (only genuine overrides are kept and persisted).
      *
      * @throws InvalidExtraPropertyDefinitionException when entityName or propertyName is empty or not a valid SQL identifier, when tableName/primaryKeyName is given but not a valid SQL identifier, when associatedForms/associatedGrids have invalid format or duplicates, when labelWording is missing despite being required, or when the computed storage column name exceeds 64 characters
      */
@@ -179,6 +268,7 @@ final class ExtraPropertyDefinition
         ?array $associatedShopIds = null,
         ?string $tableName = null,
         ?string $primaryKeyName = null,
+        ?string $controllerName = null,
     ) {
         // Normalize the explicit shop restriction values (int cast, deduplicated). The
         // null / [] distinction is deliberately preserved: null means "no information"
@@ -208,7 +298,7 @@ final class ExtraPropertyDefinition
         // identifiers embedded in every storage query); otherwise deduced from the
         // entity's ObjectModel class definition; the table finally falls back to the
         // entity name itself (bare-table registrations, today's behavior).
-        foreach (['tableName' => $tableName, 'primaryKeyName' => $primaryKeyName] as $parameterName => $identifier) {
+        foreach (['tableName' => $tableName, 'primaryKeyName' => $primaryKeyName, 'controllerName' => $controllerName] as $parameterName => $identifier) {
             if (null !== $identifier && !ExtraPropertyValidator::isTableOrIdentifier($identifier)) {
                 throw new InvalidExtraPropertyDefinitionException(sprintf(
                     'ExtraPropertyDefinition: %s "%s" must be a valid SQL identifier ([a-zA-Z0-9_-]+).',
@@ -223,8 +313,11 @@ final class ExtraPropertyDefinition
         $objectModelDefinition = (null === $tableName || null === $primaryKeyName)
             ? $this->resolveObjectModelDefinition()
             : [];
-        $this->tableName = $tableName ?? $objectModelDefinition['table'] ?? $this->entityName;
+        $this->tableName = $tableName ?? self::CANONICAL_ENTITY_TABLES[$this->entityName] ?? $objectModelDefinition['table'] ?? $this->entityName;
         $this->primaryKeyName = $primaryKeyName ?? $objectModelDefinition['primary'] ?? null;
+        // Only a genuine override is kept: a value matching the deduction collapses to
+        // null, so re-registering with the conventional name also cleans a stored override.
+        $this->controllerName = $controllerName === $this->resolveDefaultControllerName() ? null : $controllerName;
         if (!ExtraPropertyValidator::isTableOrIdentifier($propertyName)) {
             throw new InvalidExtraPropertyDefinitionException(sprintf(
                 'ExtraPropertyDefinition: propertyName "%s" must be a valid SQL identifier ([a-zA-Z0-9_-]+).',
@@ -438,6 +531,8 @@ final class ExtraPropertyDefinition
             // Synthetic key — the introspected live extra-table PK, injected by
             // ExtraPropertyDefinitionRepository::enrichRowsWithColumnMetadata().
             primaryKeyName: isset($row['primary_key_name']) && '' !== $row['primary_key_name'] ? (string) $row['primary_key_name'] : null,
+            // Stored override only — null rows resolve through the map/convention at read.
+            controllerName: isset($row['controller_name']) && '' !== $row['controller_name'] ? (string) $row['controller_name'] : null,
         );
     }
 
@@ -523,6 +618,7 @@ final class ExtraPropertyDefinition
             associatedShopIds: $this->associatedShopIds,
             tableName: $this->tableName,
             primaryKeyName: $this->primaryKeyName,
+            controllerName: $this->controllerName,
         );
     }
 
@@ -565,6 +661,7 @@ final class ExtraPropertyDefinition
             associatedShopIds: array_key_exists('associatedShopIds', $overrides) ? $overrides['associatedShopIds'] : $this->associatedShopIds,
             tableName: array_key_exists('tableName', $overrides) ? $overrides['tableName'] : $this->tableName,
             primaryKeyName: array_key_exists('primaryKeyName', $overrides) ? $overrides['primaryKeyName'] : $this->primaryKeyName,
+            controllerName: array_key_exists('controllerName', $overrides) ? $overrides['controllerName'] : $this->controllerName,
         );
     }
 
@@ -600,6 +697,39 @@ final class ExtraPropertyDefinition
     public function getPrimaryKeyName(): string
     {
         return $this->primaryKeyName ?? 'id_' . $this->entityName;
+    }
+
+    /**
+     * BO controller name of the entity — the permission subject for any employee-permission
+     * check tied to this definition (e.g. the grid toggle endpoint). Resolution: explicit
+     * override (see the $controllerName property docblock) → ENTITY_CONTROLLER_NAMES map for
+     * irregular tabs → 'Admin' + pluralized classified entity name. A resolved name matching
+     * no existing tab is DENY-safe: Access::isGranted() grants nothing for unknown subjects.
+     */
+    public function getControllerName(): string
+    {
+        return $this->controllerName ?? $this->resolveDefaultControllerName();
+    }
+
+    /**
+     * The raw controller name OVERRIDE — null for every definition following the deduction
+     * (the constructor collapses a matching explicit value). This is what the repository
+     * persists in the controller_name column; use getControllerName() for the resolved value.
+     */
+    public function getControllerNameOverride(): ?string
+    {
+        return $this->controllerName;
+    }
+
+    private function resolveDefaultControllerName(): string
+    {
+        if (isset(self::ENTITY_CONTROLLER_NAMES[$this->entityName])) {
+            return self::ENTITY_CONTROLLER_NAMES[$this->entityName];
+        }
+
+        $inflector = Inflector::getInflector();
+
+        return 'Admin' . $inflector->pluralize($inflector->classify($this->entityName));
     }
 
     /**

@@ -140,6 +140,9 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             'module_name' => $definition->getModuleName(),
             // Stored resolved: fromRow() passes it back as the explicit value, so hydration never re-resolves.
             'table_name' => $definition->getTableName(),
+            // Stored as override only (null for deduced values): the permission subject must
+            // follow core code as BO tabs evolve, unlike the frozen storage location above.
+            'controller_name' => $definition->getControllerNameOverride(),
             'scope' => $definition->getScope()->value,
             'type' => $definition->getType()->value,
             'size' => $definition->getSize(),
