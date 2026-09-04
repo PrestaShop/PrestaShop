@@ -7,6 +7,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Discount\DiscountSettings;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CartRuleNameTooLongException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\ValueObject\OrderInvoiceId;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
@@ -113,6 +115,13 @@ class AddCartRuleToOrderCommand
     {
         if (!is_string($cartRuleName) || empty($cartRuleName)) {
             throw new OrderConstraintException('Cart rule name cannot be empty');
+        }
+
+        // Without this the name reaches CartRule::add(), which fails on the column length and is
+        // reported as "An error occurred during the CartRule creation", saying nothing about the name.
+        $length = mb_strlen($cartRuleName, 'UTF-8');
+        if ($length > DiscountSettings::MAX_NAME_LENGTH) {
+            throw new CartRuleNameTooLongException($length, DiscountSettings::MAX_NAME_LENGTH);
         }
     }
 
