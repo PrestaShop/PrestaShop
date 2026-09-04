@@ -314,3 +314,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\BusinessEntityFormDataHandler:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\StoreFormDataHandler:
+    autowire: true
+    public: false

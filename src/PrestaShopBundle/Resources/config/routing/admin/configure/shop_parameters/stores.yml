@@ -18,6 +18,37 @@ admin_stores_search:
     gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StoreGridDefinitionFactory
     redirectRoute: admin_stores_index
 
+admin_stores_add:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::createAction'
+    _legacy_controller: AdminStores
+    _legacy_link: AdminStores:addstore
+    _legacy_feature_flag: store
+
+admin_stores_edit:
+  path: /{storeId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::editAction'
+    _legacy_controller: AdminStores
+    _legacy_link: AdminStores:editstore
+    _legacy_feature_flag: store
+    _legacy_parameters:
+      id_store: storeId
+  requirements:
+    storeId: \d+
+
+admin_stores_save_contact_details:
+  path: /contact-details/save
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::saveContactDetailsAction'
+    _legacy_controller: AdminStores
+    _legacy_link: AdminStores:submitoptionsstore
+    _legacy_feature_flag: store
+
 admin_stores_toggle_status:
   path: /{storeId}/toggle-status
   methods: [ POST ]

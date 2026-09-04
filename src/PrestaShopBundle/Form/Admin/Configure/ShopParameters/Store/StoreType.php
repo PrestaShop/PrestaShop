@@ -1,0 +1,275 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\Store;
+
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressZipCode;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Store\Configuration\StoreConstraint;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
+use PrestaShopBundle\Form\Admin\Type\EmailType;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
+use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface as FormFormInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+class StoreType extends TranslatorAwareType
+{
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        private readonly ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
+        private readonly int $contextCountryId,
+        private readonly bool $isMultistoreEnabled,
+        private readonly UrlGeneratorInterface $router,
+    ) {
+        parent::__construct($translator, $locales);
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $data = $builder->getData();
+        $countryId = !empty($data['id_country']) ? (int) $data['id_country'] : $this->contextCountryId;
+
+        $builder
+            ->add('name', TranslatableType::class, [
+                'label' => $this->trans('Name', 'Admin.Global'),
+                'required' => true,
+                'constraints' => [new DefaultLanguage()],
+            ])
+            ->add('address1', TranslatableType::class, [
+                'label' => $this->trans('Address', 'Admin.Global'),
+                'required' => true,
+                'constraints' => [new DefaultLanguage()],
+            ])
+            ->add('address2', TranslatableType::class, [
+                'label' => $this->trans('Address (2)', 'Admin.Global'),
+                'required' => false,
+            ])
+        ;
+
+        // Added here so it keeps its position between "Address (2)" and "City"; the
+        // country-dependent constraints are (re)applied by rebuildPostcodeField().
+        $this->rebuildPostcodeField($builder, $countryId);
+
+        $builder
+            ->add('city', TextType::class, [
+                'label' => $this->trans('City', 'Admin.Global'),
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'The %s field is required.',
+                            'Admin.Notifications.Error',
+                            [sprintf('"%s"', $this->trans('City', 'Admin.Global'))]
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('id_country', CountryChoiceType::class, [
+                'label' => $this->trans('Country', 'Admin.Global'),
+                'required' => true,
+                'autocomplete' => true,
+                'attr' => [
+                    'data-states-url' => $this->router->generate('admin_country_states'),
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'The %s field is required.',
+                            'Admin.Notifications.Error',
+                            [sprintf('"%s"', $this->trans('Country', 'Admin.Global'))]
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('latitude', TextType::class, [
+                'label' => $this->trans('Latitude', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Store coordinates (e.g. 45.265469 or -0.265469)', 'Admin.Shopparameters.Help'),
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'The %s field is required.',
+                            'Admin.Notifications.Error',
+                            [sprintf('"%s"', $this->trans('Latitude', 'Admin.Shopparameters.Feature'))]
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('longitude', TextType::class, [
+                'label' => $this->trans('Longitude', 'Admin.Shopparameters.Feature'),
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'The %s field is required.',
+                            'Admin.Notifications.Error',
+                            [sprintf('"%s"', $this->trans('Longitude', 'Admin.Shopparameters.Feature'))]
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('phone', TextType::class, [
+                'label' => $this->trans('Phone', 'Admin.Global'),
+                'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => StoreConstraint::MAX_PHONE_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => StoreConstraint::MAX_PHONE_LENGTH]
+                        ),
+                    ]),
+                    new TypedRegex(['type' => TypedRegex::TYPE_PHONE_NUMBER]),
+                ],
+            ])
+            ->add('fax', TextType::class, [
+                'label' => $this->trans('Fax', 'Admin.Global'),
+                'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => StoreConstraint::MAX_PHONE_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => StoreConstraint::MAX_PHONE_LENGTH]
+                        ),
+                    ]),
+                    new TypedRegex(['type' => TypedRegex::TYPE_PHONE_NUMBER]),
+                ],
+            ])
+            ->add('email', EmailType::class, [
+                'label' => $this->trans('Email address', 'Admin.Global'),
+                'required' => false,
+                'constraints' => [
+                    new Email([
+                        'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                    ]),
+                ],
+            ])
+            ->add('note', TranslatableType::class, [
+                'label' => $this->trans('Note', 'Admin.Shopparameters.Feature'),
+                'type' => FormattedTextareaType::class,
+                'required' => false,
+            ])
+            ->add('active', SwitchType::class, [
+                'label' => $this->trans('Active', 'Admin.Global'),
+                'required' => false,
+            ])
+            ->add('image_preview', ImagePreviewType::class, [
+                'label' => $this->trans('Picture', 'Admin.Global'),
+                'required' => false,
+            ])
+            ->add('image', FileType::class, [
+                'label' => null,
+                'required' => false,
+            ])
+            ->add('hours', TranslatableType::class, [
+                'label' => $this->trans('Hours', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans(
+                    'Enter opening/closing hours for each day. Format: HH:MM | HH:MM (e.g. 09:00 | 18:00). Leave blank for closed.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'type' => StoreHoursType::class,
+                'required' => false,
+            ])
+        ;
+
+        if ($this->isMultistoreEnabled) {
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans('Store association', 'Admin.Global'),
+                'required' => false,
+            ]);
+        }
+
+        $this->rebuildStateField($builder, $countryId);
+
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
+            $data = $event->getData() ?? [];
+            $this->rebuildCountryDependentFields($event->getForm(), (int) ($data['id_country'] ?? 0));
+        });
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
+            $submittedCountryId = (int) ($event->getData()['id_country'] ?? 0);
+            $this->rebuildCountryDependentFields($event->getForm(), $submittedCountryId > 0 ? $submittedCountryId : $this->contextCountryId);
+        });
+    }
+
+    /**
+     * Postcode and state both depend on the selected country, so they are (re)built whenever
+     * the country is known: at build time, when data is set, and again with the submitted
+     * country so the zip code is validated against the country the user actually chose.
+     *
+     * @param FormFormInterface|FormBuilderInterface $form
+     */
+    private function rebuildCountryDependentFields($form, int $countryId): void
+    {
+        $this->rebuildPostcodeField($form, $countryId);
+        $this->rebuildStateField($form, $countryId);
+    }
+
+    /**
+     * @param FormFormInterface|FormBuilderInterface $form
+     */
+    private function rebuildPostcodeField($form, int $countryId): void
+    {
+        $form->add('postcode', TextType::class, [
+            'label' => $this->trans('Zip/Postal code', 'Admin.Global'),
+            'required' => false,
+            'empty_data' => '',
+            'constraints' => [
+                new TypedRegex(['type' => TypedRegex::TYPE_POST_CODE]),
+                new Length([
+                    'max' => StoreConstraint::MAX_POSTCODE_LENGTH,
+                    'maxMessage' => $this->trans(
+                        'This field cannot be longer than %limit% characters',
+                        'Admin.Notifications.Error',
+                        ['%limit%' => StoreConstraint::MAX_POSTCODE_LENGTH]
+                    ),
+                ]),
+                new AddressZipCode([
+                    'id_country' => $countryId,
+                    'required' => false,
+                ]),
+            ],
+        ]);
+    }
+
+    /**
+     * @param FormFormInterface|FormBuilderInterface $form
+     */
+    private function rebuildStateField($form, int $countryId): void
+    {
+        $stateChoices = $countryId > 0 ? $this->statesChoiceProvider->getChoices(['id_country' => $countryId]) : [];
+        $form->add('id_state', ChoiceType::class, [
+            'label' => $this->trans('State', 'Admin.Global'),
+            'required' => false,
+            'choices' => $stateChoices,
+            'row_attr' => ['class' => 'js-store-state-row'],
+            'autocomplete' => true,
+            'attr' => [
+                'visible' => !empty($stateChoices),
+            ],
+        ]);
+    }
+}
