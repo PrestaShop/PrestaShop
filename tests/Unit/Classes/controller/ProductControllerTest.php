@@ -133,14 +133,31 @@ class ProductControllerTest extends TestCase
             [],
         ];
 
-        yield 'empty-compatible scalar values' => [
+        yield 'false values' => [
             [
                 ['name' => false, 'value' => 'Value'],
                 ['name' => 'Name', 'value' => false],
-                ['name' => '0', 'value' => 'Value'],
-                ['name' => 'Name', 'value' => 0],
             ],
             [],
+        ];
+
+        yield 'zero values' => [
+            [
+                ['name' => 'Numeric zero', 'value' => 0],
+                ['name' => 'String zero', 'value' => '0'],
+            ],
+            [
+                [
+                    '@type' => 'PropertyValue',
+                    'name' => 'Numeric zero',
+                    'value' => '0',
+                ],
+                [
+                    '@type' => 'PropertyValue',
+                    'name' => 'String zero',
+                    'value' => '0',
+                ],
+            ],
         ];
 
         yield 'mixed complete and incomplete features' => [

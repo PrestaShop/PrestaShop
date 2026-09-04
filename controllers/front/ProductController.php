@@ -1579,14 +1579,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         foreach ($features as $feature) {
             // Ignore incomplete features that cannot form a valid property-value pair
-            if (empty($feature['name']) || empty($feature['value'])) {
+            if (!isset($feature['name'], $feature['value'])) {
                 continue;
             }
 
             // Normalize grouped values into one human-readable schema value
             $featureName = trim((string) $feature['name']);
             $featureValue = preg_replace('/\R+/', ', ', trim((string) $feature['value']));
-            if (empty($featureName) || empty($featureValue)) {
+            if ($featureName === '' || $featureValue === '') {
                 continue;
             }
 
