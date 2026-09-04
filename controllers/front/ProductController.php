@@ -1483,6 +1483,34 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'category' => $product['category_name'] ?? '',
         ];
 
+        // Add product features as additional properties
+        if (!empty($product['grouped_features'])) {
+            foreach ($product['grouped_features'] as $feature) {
+                // Ignore incomplete features that cannot form a valid property-value pair
+                if (empty($feature['name']) || empty($feature['value'])) {
+                    continue;
+                }
+
+                // Normalize grouped values into one human-readable schema value
+                $featureName = trim((string) $feature['name']);
+                $featureValue = preg_replace('/\R+/', ', ', trim((string) $feature['value']));
+                if (empty($featureName) || empty($featureValue)) {
+                    continue;
+                }
+
+                // Initialize the property collection when the first complete feature is found
+                if (!isset($structuredData['product']['additionalProperty'])) {
+                    $structuredData['product']['additionalProperty'] = [];
+                }
+
+                $structuredData['product']['additionalProperty'][] = [
+                    '@type' => 'PropertyValue',
+                    'name' => $featureName,
+                    'value' => $featureValue,
+                ];
+            }
+        }
+
         // Images, with cover first
         if (!empty($product['images'])) {
             $structuredData['product']['image'] = [];
