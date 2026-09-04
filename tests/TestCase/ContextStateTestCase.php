@@ -79,7 +79,7 @@ abstract class ContextStateTestCase extends TestCase
     {
         $contextFieldMockBuilder = $this->getMockBuilder($className)->disableOriginalConstructor();
 
-        /** @var Cart|Country|Currency|Customer|Language|Shop $contextField */
+        /** @var MockObject&(Cart|Country|Currency|Customer|Language|Shop) $contextField */
         $contextField = $contextFieldMockBuilder->getMock();
 
         $contextField->id = $objectId;
@@ -116,7 +116,7 @@ abstract class ContextStateTestCase extends TestCase
             ])
         ;
 
-        /** @var LegacyControllerContext $legacyControllerContext */
+        /** @var LegacyControllerContext&MockObject $legacyControllerContext */
         $legacyControllerContext = $legacyControllerContextBuilder->getMock();
 
         return $legacyControllerContext;

@@ -7,7 +7,6 @@
 namespace Tests\Integration\PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
-use SplFileInfo;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -35,7 +34,6 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $application = new Application(static::$kernel);
 
         $command = $application->find('prestashop:mail:generate');
-        $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command' => $command->getName(),
@@ -50,7 +48,6 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $application = new Application(static::$kernel);
 
         $command = $application->find('prestashop:mail:generate');
-        $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command' => $command->getName(),
@@ -91,7 +88,6 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $application = new Application(static::$kernel);
 
         $command = $application->find('prestashop:mail:generate');
-        $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command' => $command->getName(),
@@ -153,7 +149,6 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
         $finder = new Finder();
         $finder->in($coreFolder);
-        /** @var SplFileInfo $coreFile */
         foreach ($finder as $coreFile) {
             $themeInfos['coreLayouts'][] = $coreFile->getBasename('.html.twig');
             ++$themeInfos['coreLayoutsNb'];
@@ -161,12 +156,10 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
         $finder = new Finder();
         $finder->in($modulesFolder)->depth(0);
-        /** @var SplFileInfo $moduleFolder */
         foreach ($finder as $moduleFolder) {
             $themeInfos['modulesLayouts'][$moduleFolder->getBasename()] = [];
             $moduleFinder = new Finder();
             $moduleFinder->in($moduleFolder->getRealPath());
-            /** @var SplFileInfo $moduleFile */
             foreach ($moduleFinder as $moduleFile) {
                 $themeInfos['modulesLayouts'][$moduleFolder->getBasename()][] = $moduleFile->getBasename('.html.twig');
                 ++$themeInfos['modulesLayoutsNb'];

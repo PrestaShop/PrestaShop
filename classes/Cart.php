@@ -1381,8 +1381,8 @@ class CartCore extends ObjectModel
      */
     public static function getNbProducts($id)
     {
-        // Must be strictly compared to NULL, or else an empty cart will bypass the cache and add dozens of queries
-        if (isset(self::$_nbProducts[$id]) && self::$_nbProducts[$id] !== null) {
+        // Must be strictly compared to NULL (done by isset()), or else an empty cart will bypass the cache and add dozens of queries
+        if (isset(self::$_nbProducts[$id])) {
             return self::$_nbProducts[$id];
         }
 

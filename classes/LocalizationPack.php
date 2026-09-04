@@ -259,7 +259,7 @@ class LocalizationPackCore
                     }
 
                     // Default values
-                    $id_state = (int) isset($rule_attributes['iso_code_state']) ? State::getIdByIso(strtoupper($rule_attributes['iso_code_state'])) : 0;
+                    $id_state = (int) isset($rule_attributes['iso_code_state']) ? State::getIdByIso(strtoupper((string) $rule_attributes['iso_code_state'])) : 0;
                     $zipcode_from = 0;
                     $zipcode_to = 0;
                     $behavior = $rule_attributes['behavior'];
@@ -470,7 +470,7 @@ class LocalizationPackCore
                 $attributes = $data->attributes();
                 $name = (string) $attributes['name'];
                 if ($module = Module::getInstanceByName($name)) {
-                    $install = ($attributes['install'] == 1) ? true : false;
+                    $install = ((int) $attributes['install'] === 1) ? true : false;
                     $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                     $moduleManager = $moduleManagerBuilder->build();
 

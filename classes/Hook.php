@@ -1587,9 +1587,7 @@ class HookCore extends ObjectModel
             $active_hooks = Db::getInstance()->executeS($sql);
             if (is_array($active_hooks) && !empty($active_hooks)) {
                 $hook_names = array_column($active_hooks, 'name');
-                if (is_array($hook_names)) {
-                    Cache::store('active_hooks', $hook_names);
-                }
+                Cache::store('active_hooks', $hook_names);
             }
         }
 

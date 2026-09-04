@@ -140,6 +140,8 @@ abstract class AbstractProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            // Last possible case
+            // @phpstan-ignore identical.alwaysTrue
             if ('active' === $filterName) {
                 $qb->andWhere("p.active = :$filterName");
                 $qb->setParameter($filterName, $filterValue);

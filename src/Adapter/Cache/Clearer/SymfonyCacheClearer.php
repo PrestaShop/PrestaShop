@@ -104,7 +104,6 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                     // to an environment, not a particular App, it is potentially shared by these applications. So we lock
                     // them all, clear them all, clear the common legacy cache And only then can we unlock them all
                     foreach ($applicationKernelClasses as $applicationKernelClass) {
-                        /** @var AppKernel $applicationKernel */
                         $applicationKernel = new $applicationKernelClass($environment, false);
                         // Lock the app for this particular environment and app
                         CacheClearLocker::lock($applicationKernel->getEnvironment(), $applicationKernel->getAppId());

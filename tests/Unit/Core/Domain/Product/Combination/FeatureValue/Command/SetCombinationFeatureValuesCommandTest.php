@@ -23,8 +23,8 @@ class SetCombinationFeatureValuesCommandTest extends TestCase
      */
     public function testValidInput(int $combinationId, array $featureValues)
     {
-        $command = new SetCombinationFeatureValuesCommand($combinationId, $featureValues);
-        $this->assertNotNull($command);
+        $this->expectNotToPerformAssertions();
+        new SetCombinationFeatureValuesCommand($combinationId, $featureValues);
     }
 
     /**

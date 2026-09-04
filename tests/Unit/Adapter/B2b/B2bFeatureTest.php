@@ -27,7 +27,7 @@ class B2bFeatureTest extends TestCase
             ->willReturn(0)
         ;
 
-        /** @var Configuration $configurationMock */
+        /** @var Configuration&MockObject $configurationMock */
         $feature = new B2bFeature($configurationMock);
 
         $this->assertFalse($feature->isUsed());
@@ -44,7 +44,7 @@ class B2bFeatureTest extends TestCase
             ->willReturn(1)
         ;
 
-        /** @var Configuration $configurationMock */
+        /** @var Configuration&MockObject $configurationMock */
         $feature = new B2bFeature($configurationMock);
 
         $this->assertTrue($feature->isUsed());
@@ -60,7 +60,7 @@ class B2bFeatureTest extends TestCase
             ->with(self::CONFIGURATION_FEATURE, 1)
         ;
 
-        /** @var Configuration $configurationMock */
+        /** @var Configuration&MockObject $configurationMock */
         $feature = new B2bFeature($configurationMock);
 
         $feature->enable();
@@ -75,7 +75,7 @@ class B2bFeatureTest extends TestCase
             ->with(self::CONFIGURATION_FEATURE, 0)
         ;
 
-        /** @var Configuration $configurationMock */
+        /** @var Configuration&MockObject $configurationMock */
         $feature = new B2bFeature($configurationMock);
 
         $feature->disable();
@@ -90,7 +90,7 @@ class B2bFeatureTest extends TestCase
             ->with(self::CONFIGURATION_FEATURE, 1)
         ;
 
-        /** @var Configuration $configurationMock */
+        /** @var Configuration&MockObject $configurationMock */
         $feature = new B2bFeature($configurationMock);
 
         $feature->update(true);
@@ -105,7 +105,7 @@ class B2bFeatureTest extends TestCase
             ->with(self::CONFIGURATION_FEATURE, 0)
         ;
 
-        /** @var Configuration $configurationMock */
+        /** @var Configuration&MockObject $configurationMock */
         $feature = new B2bFeature($configurationMock);
 
         $feature->update(false);

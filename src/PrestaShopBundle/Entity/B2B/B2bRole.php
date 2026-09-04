@@ -37,11 +37,15 @@ class B2bRole
 
     /**
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\B2B\BusinessEntityCustomerB2b", mappedBy="b2bRole")
+     *
+     * @var Collection<BusinessEntityCustomerB2b>
      */
     private Collection $businessEntityCustomerB2bs;
 
     /**
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\B2B\B2bRoleAuthorizationRole", mappedBy="role")
+     *
+     * @var Collection<B2bRoleAuthorizationRole>
      */
     private Collection $b2bRoleAuthorizationRoles;
 

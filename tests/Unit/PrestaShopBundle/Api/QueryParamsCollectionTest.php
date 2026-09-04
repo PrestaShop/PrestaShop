@@ -106,8 +106,6 @@ class QueryParamsCollectionTest extends TestCase
 
         $expectedSqlClauses[2] = [QueryParamsCollection::SQL_CLAUSE_WHERE => ''];
 
-        $this->assertIsArray($sqlParts);
-
         $this->assertEquals($expectedSqlClauses, $sqlParts);
     }
 
@@ -144,8 +142,6 @@ class QueryParamsCollectionTest extends TestCase
 
         $expectedSqlClauses[1]['product_id'] = 1;
         $expectedSqlClauses[2] = [QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {product_id} = :product_id'];
-
-        $this->assertIsArray($sqlParts);
 
         $this->assertEquals($expectedSqlClauses, $sqlParts);
     }

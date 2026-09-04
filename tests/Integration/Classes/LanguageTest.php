@@ -21,11 +21,14 @@ class LanguageTest extends TestCase
         DatabaseDump::restoreAllTables();
     }
 
-    public function testGetIdByIso()
+    public function testGetIdByIsoWithUnknownIsoCode()
     {
         $this->assertNull(Language::getIdByIso('zz', false));
         $this->assertNull(Language::getIdByIso('zz', true));
+    }
 
+    public function testGetIdByIso()
+    {
         $language = new Language();
         $language->name = 'zz';
         $language->iso_code = 'zz';

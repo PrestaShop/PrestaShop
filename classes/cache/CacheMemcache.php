@@ -185,7 +185,7 @@ class CacheMemcacheCore extends Cache
             // Get keys (this code comes from Doctrine 2 project)
             $pattern = str_replace('\\*', '.*', preg_quote($key));
             $servers = $this->getMemcachedServers();
-            if (is_array($servers) && count($servers) > 0 && method_exists('Memcache', 'getStats')) {
+            if (is_array($servers) && count($servers) > 0 && $this->is_connected) {
                 $all_slabs = $this->memcache->getStats('slabs');
             }
 
@@ -195,15 +195,13 @@ class CacheMemcacheCore extends Cache
                         foreach (array_keys($slabs) as $i => $slab_id) {
                             // $slab_id is not an int but a string, using the key instead ?
 
-                            if (is_int($i)) {
-                                $dump = $this->memcache->getStats('cachedump', (int) $i);
-                                if ($dump) {
-                                    foreach ($dump as $entries) {
-                                        if ($entries) {
-                                            foreach ($entries as $key => $data) {
-                                                if (preg_match('#^' . $pattern . '$#', $key)) {
-                                                    $this->_delete($key);
-                                                }
+                            $dump = $this->memcache->getStats('cachedump', (int) $i);
+                            if ($dump) {
+                                foreach ($dump as $entries) {
+                                    if ($entries) {
+                                        foreach ($entries as $key => $data) {
+                                            if (preg_match('#^' . $pattern . '$#', $key)) {
+                                                $this->_delete($key);
                                             }
                                         }
                                     }

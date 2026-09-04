@@ -32,7 +32,7 @@ class FeatureControllerTest extends FormGridControllerTestCase
     public function testIndex(): int
     {
         $features = $this->getEntitiesFromGrid();
-        $this->assertNotEmpty($features);
+        $this->assertGreaterThan(0, $features->count());
 
         return $features->count();
     }
@@ -53,7 +53,7 @@ class FeatureControllerTest extends FormGridControllerTestCase
             'feature[name][1]' => self::TEST_NAME,
         ];
         $createdFeatureId = $this->createEntityFromPage($formData);
-        $this->assertNotNull($createdFeatureId);
+        $this->assertGreaterThan(0, $createdFeatureId);
 
         // Check that there is one more product in the list
         $newFeatures = $this->getEntitiesFromGrid();

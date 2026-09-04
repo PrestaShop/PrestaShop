@@ -183,7 +183,7 @@ class ModuleTabRegisterTest extends TestCase
     public function testWorkingTabsAreOk(string $moduleName, array $tabs): void
     {
         foreach ($tabs as $tab) {
-            // If exception exception, do not test it here
+            // If exception, do not test it here
             if (array_key_exists('exception', $tab)) {
                 continue;
             }
@@ -197,12 +197,12 @@ class ModuleTabRegisterTest extends TestCase
      */
     public function testNonWorkingTabsThrowException(string $moduleName, array $tabs): void
     {
-        foreach ($tabs as $tab) {
-            // If an exception is expected, test it here
-            if (!array_key_exists('exception', $tab)) {
-                $this->assertTrue(!array_key_exists('exception', $tab));
-                continue;
-            }
+        $filteredTabs = array_filter($tabs, function ($tab) {return array_key_exists('exception', $tab); });
+        if (empty($filteredTabs)) {
+            $this->expectNotToPerformAssertions();
+        }
+
+        foreach ($filteredTabs as $tab) {
             $data = new ParameterBag($tab);
 
             try {

@@ -6,7 +6,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Employee;
 
-use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Employee\EmployeeDataProviderInterface;
@@ -43,10 +42,6 @@ final class EmployeeFormAccessChecker implements EmployeeFormAccessCheckerInterf
      */
     public function isRestrictedAccess(int $employeeId): bool
     {
-        if (!is_int($employeeId)) {
-            throw new InvalidArgumentException(sprintf('Employee ID must be an integer, %s given', gettype($employeeId)));
-        }
-
         return $employeeId === $this->contextEmployeeProvider->getId();
     }
 

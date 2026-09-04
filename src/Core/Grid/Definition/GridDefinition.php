@@ -12,7 +12,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
-use PrestaShop\PrestaShop\Core\Grid\Exception\InvalidDataException;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 
 /**
@@ -153,15 +152,8 @@ final class GridDefinition implements GridDefinitionInterface
         return $this->filters;
     }
 
-    /**
-     * @param string $name
-     */
     public function setName(string $name)
     {
-        if (!is_string($name)) {
-            throw new InvalidDataException('Definition name should be a string.');
-        }
-
         $this->name = $name;
     }
 

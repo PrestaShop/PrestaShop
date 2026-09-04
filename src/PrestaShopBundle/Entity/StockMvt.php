@@ -25,8 +25,10 @@ class StockMvt
      * @ORM\Id
      *
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var string|int
      */
-    private int $idStockMvt;
+    private mixed $idStockMvt;
 
     /**
      * @ORM\Column(name="id_stock", type="integer", nullable=false)
@@ -97,8 +99,10 @@ class StockMvt
 
     /**
      * @ORM\Column(name="referer", type="bigint", nullable=true)
+     *
+     * @var string|int|null
      */
-    private ?int $referer;
+    private mixed $referer;
 
     public function __construct()
     {
@@ -106,19 +110,28 @@ class StockMvt
         $this->setIdStockMvtReason($this->getSign() >= 1 ? $configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION'));
     }
 
-    public function getIdStockMvt(): int
+    /**
+     * @return string|int
+     */
+    public function getIdStockMvt(): mixed
     {
         return $this->idStockMvt;
     }
 
-    public function setIdStock(int $idStock): static
+    /**
+     * @param string|int $idStock
+     */
+    public function setIdStock(mixed $idStock): static
     {
         $this->idStock = $idStock;
 
         return $this;
     }
 
-    public function getIdStock(): int
+    /**
+     * @return string|int
+     */
+    public function getIdStock(): mixed
     {
         return $this->idStock;
     }
@@ -267,14 +280,20 @@ class StockMvt
         return $this->currentWa;
     }
 
-    public function setReferer(?int $referer): static
+    /**
+     * @param string|int|null $referer
+     */
+    public function setReferer(mixed $referer): static
     {
         $this->referer = $referer;
 
         return $this;
     }
 
-    public function getReferer(): ?int
+    /**
+     * @return string|int|null
+     */
+    public function getReferer(): mixed
     {
         return $this->referer;
     }

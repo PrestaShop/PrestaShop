@@ -3,10 +3,6 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-
-/**
- * @property QuickAccess $object
- */
 class AdminQuickAccessesControllerCore extends AdminController
 {
     public function __construct()
@@ -160,7 +156,7 @@ class AdminQuickAccessesControllerCore extends AdminController
             }
             $this->beforeAdd($this->object);
 
-            if (method_exists($this->object, 'add') && !$this->object->add()) {
+            if (!$this->object->add()) {
                 $this->errors[] = $this->trans('An error occurred while creating an object.', [], 'Admin.Notifications.Error') .
                     ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
             } elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && empty($this->errors) && $this->_redirect) {

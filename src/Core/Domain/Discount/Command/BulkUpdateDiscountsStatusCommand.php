@@ -66,15 +66,8 @@ class BulkUpdateDiscountsStatusCommand
         return $this;
     }
 
-    /**
-     * @throws DiscountConstraintException
-     */
     private function setNewStatus(bool $newStatus): self
     {
-        if (!is_bool($newStatus)) {
-            throw new DiscountConstraintException(sprintf('Discount status %s is invalid. Status must be of type "bool".', var_export($newStatus, true)), DiscountConstraintException::INVALID_STATUS);
-        }
-
         $this->newStatus = $newStatus;
 
         return $this;

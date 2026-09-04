@@ -73,6 +73,8 @@ class Lang implements LanguageInterface
 
     /**
      * @ORM\OneToMany(targetEntity="Translation", mappedBy="lang")
+     *
+     * @var Collection<Translation>
      */
     private Collection $translations;
 
@@ -83,6 +85,8 @@ class Lang implements LanguageInterface
      *      joinColumns={@ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", onDelete="CASCADE")}
      * )
+     *
+     * @var Collection<Shop>
      */
     private Collection $shops;
 

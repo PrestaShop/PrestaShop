@@ -16,7 +16,7 @@ use Traversable;
 /**
  * @template T
  *
- * @template-implements  IteratorAggregate<T>
+ * @implements  IteratorAggregate<int, T>
  */
 abstract class ImmutableCollection implements IteratorAggregate, Countable
 {
@@ -37,7 +37,7 @@ abstract class ImmutableCollection implements IteratorAggregate, Countable
     }
 
     /**
-     * @return ArrayIterator<string|int, T>|T[]
+     * {@inheritdoc}
      */
     public function getIterator(): Traversable
     {
@@ -57,9 +57,6 @@ abstract class ImmutableCollection implements IteratorAggregate, Countable
         return reset($this->values);
     }
 
-    /**
-     * @return static
-     */
     public function filter(callable $callback): self
     {
         return new static(array_filter($this->values, $callback));

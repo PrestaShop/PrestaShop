@@ -79,15 +79,10 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      */
     public function IShouldGetAnInvalidFieldError(string $fieldName): void
     {
-        $code = match ($fieldName) {
-            'name' => AttributeGroupConstraintException::INVALID_NAME,
-            'public_name' => AttributeGroupConstraintException::INVALID_PUBLIC_NAME,
-            'type' => AttributeGroupConstraintException::INVALID_TYPE,
-            default => throw new RuntimeException('Unknown field ' . $fieldName),
-        };
-        $exception = match ($fieldName) {
-            'name', 'public_name' => AttributeGroupConstraintException::class,
-            'type' => InvalidAttributeGroupTypeException::class,
+        [$exception, $code] = match ($fieldName) {
+            'name' => [AttributeGroupConstraintException::class, AttributeGroupConstraintException::INVALID_NAME],
+            'public_name' => [AttributeGroupConstraintException::class, AttributeGroupConstraintException::INVALID_PUBLIC_NAME],
+            'type' => [InvalidAttributeGroupTypeException::class, AttributeGroupConstraintException::INVALID_TYPE],
             default => throw new RuntimeException('Unknown field ' . $fieldName),
         };
 

@@ -125,6 +125,8 @@ final class CreditSlipQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            // Last possible case
+            // @phpstan-ignore identical.alwaysTrue
             if ('date_issued' === $filterName) {
                 if (isset($value['from'])) {
                     $qb->andWhere($availableFiltersMap[$filterName] . ' >= :date_from');

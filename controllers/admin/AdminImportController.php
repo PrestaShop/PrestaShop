@@ -638,10 +638,6 @@ class AdminImportControllerCore extends AdminController
                 $bytes *= 1024;
         }
 
-        if ($bytes == '') {
-            $bytes = 20971520;
-        } // 20Mb
-
         $this->tpl_form_vars = [
             'post_max_size' => (int) $bytes,
             'module_confirmation' => Tools::isSubmit('import') && !count($this->warnings),
@@ -901,7 +897,7 @@ class AdminImportControllerCore extends AdminController
             @unlink($uniqid_path);
         }
 
-        if (empty($tab) || (!is_array($tab))) {
+        if (empty($tab)) {
             return [];
         }
 
@@ -2719,7 +2715,7 @@ class AdminImportControllerCore extends AdminController
         $customers_shop = [];
         $customers_shop['shared'] = [];
         $default_shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
-        if ($shop_is_feature_active && is_array($id_shop_list)) {
+        if ($shop_is_feature_active) {
             foreach ($id_shop_list as $id_shop) {
                 if (empty($id_shop)) {
                     continue;

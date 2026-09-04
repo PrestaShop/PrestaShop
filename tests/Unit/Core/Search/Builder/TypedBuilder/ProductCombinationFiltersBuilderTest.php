@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ProductCombinationFil
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Symfony\Component\HttpFoundation\InputBag;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProductCombinationFiltersBuilderTest extends TestCase
@@ -95,14 +96,14 @@ class ProductCombinationFiltersBuilderTest extends TestCase
             ->getMock()
         ;
 
-        $parameterBagMock = new InputBag();
-        $parameterBagMock->replace([
+        $requestMock->attributes = new ParameterBag([
             'shopId' => $shopId,
             'productId' => $productId,
         ]);
-
-        $requestMock->attributes = $parameterBagMock;
-        $requestMock->query = $parameterBagMock;
+        $requestMock->query = new InputBag([
+            'shopId' => (string) $shopId,
+            'productId' => (string) $productId,
+        ]);
 
         return $requestMock;
     }

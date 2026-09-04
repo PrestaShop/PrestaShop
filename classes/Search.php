@@ -459,7 +459,7 @@ class SearchCore
          * This is used as "relevance" sort order.
          */
         $sqlScore = '';
-        if (!empty($scoreArray) && is_array($scoreArray)) {
+        if (!empty($scoreArray)) {
             $sqlScore = ',( ' .
                 'SELECT SUM(weight) ' .
                 'FROM ' . _DB_PREFIX_ . 'search_word sw ' .
@@ -953,7 +953,7 @@ class SearchCore
                 }
 
                 // If we find words that need to be indexed, they're added to the word table in the database
-                if (is_array($product_array) && !empty($product_array)) {
+                if (!empty($product_array)) {
                     $query_array = $query_array2 = [];
                     foreach ($product_array as $word => $weight) {
                         if ($weight) {
@@ -962,14 +962,14 @@ class SearchCore
                         }
                     }
 
-                    if (is_array($query_array) && !empty($query_array)) {
+                    if (!empty($query_array)) {
                         // The words are inserted...
                         $db->execute('
 						INSERT IGNORE INTO ' . _DB_PREFIX_ . 'search_word (id_lang, id_shop, word)
 						VALUES ' . implode(',', $query_array), false);
                     }
                     $word_ids_by_word = [];
-                    if (is_array($query_array2) && !empty($query_array2)) {
+                    if (!empty($query_array2)) {
                         // ...then their IDs are retrieved
                         $added_words = $db->executeS('
 						SELECT sw.id_word, sw.word

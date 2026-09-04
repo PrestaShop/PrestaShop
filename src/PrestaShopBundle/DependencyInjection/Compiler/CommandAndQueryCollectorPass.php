@@ -35,6 +35,7 @@ class CommandAndQueryCollectorPass implements CompilerPassInterface
     private function findCommandsAndQueries(ContainerBuilder $container): array
     {
         $handlers = $container->findTaggedServiceIds('messenger.message_handler');
+        /** @var string[] $commands */
         $commands = [];
         foreach ($handlers as $key => $value) {
             if (count(current($value)) == 0) {
@@ -65,7 +66,7 @@ class CommandAndQueryCollectorPass implements CompilerPassInterface
      * Process the handler attributes and add commands and queries to the result.
      *
      * @param ReflectionAttribute[] $handlerAttributes
-     * @param array $value
+     * @param array{0: array{'method': string, 'handles': string}} $value
      * @param string[] $commands
      *
      * @return void

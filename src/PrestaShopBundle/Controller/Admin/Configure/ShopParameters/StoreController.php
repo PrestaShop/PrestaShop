@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotDeleteStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotToggleStoreStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\StoreFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
@@ -136,7 +137,7 @@ class StoreController extends PrestaShopAdminController
     }
 
     /**
-     * @return array<string, string>
+     * @return array<class-string<StoreException>, string|array<CannotDeleteStoreException::FAILED_*, string>>
      */
     private function getErrorMessages(): array
     {

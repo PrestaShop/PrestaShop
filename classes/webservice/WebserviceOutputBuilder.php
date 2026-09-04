@@ -66,10 +66,6 @@ class WebserviceOutputBuilderCore
      */
     public function setObjectRender(WebserviceOutputInterface $obj_render)
     {
-        if (!$obj_render instanceof WebserviceOutputInterface) {
-            throw new WebserviceException('Obj_render param must be an WebserviceOutputInterface object type', [83, 500]);
-        }
-
         $this->objectRender = $obj_render;
         $this->objectRender->setWsUrl($this->wsUrl);
         if ($this->objectRender->getContentType()) {
@@ -653,10 +649,8 @@ class WebserviceOutputBuilderCore
                         $output_details .= $this->renderFlatAssociation($object, $depth, $assoc_name, $association['resource'], $fields_assoc, $value, $parent_details);
                     } else {
                         foreach ($object_assoc as $id) {
-                            if ($class_name !== null) {
-                                $child_object = new $class_name($id);
-                                $output_details .= $this->renderEntity($child_object, $depth - 2 ? 0 : $depth - 2);
-                            }
+                            $child_object = new $class_name($id);
+                            $output_details .= $this->renderEntity($child_object, $depth - 2 ? 0 : $depth - 2);
                         }
                     }
                 }

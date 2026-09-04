@@ -44,9 +44,6 @@ class EditAttributeCommand
         $this->attributeId = new AttributeId($attributeId);
     }
 
-    /**
-     * @return AttributeId
-     */
     public function getAttributeId(): AttributeId
     {
         return $this->attributeId;
@@ -77,9 +74,6 @@ class EditAttributeCommand
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getColor(): ?string
     {
         return $this->color ?? null;
@@ -92,9 +86,6 @@ class EditAttributeCommand
         return $this;
     }
 
-    /**
-     * @return int[]
-     */
     public function getAssociatedShopIds(): ?array
     {
         return $this->associatedShopIds ?? null;
@@ -107,9 +98,6 @@ class EditAttributeCommand
         return $this;
     }
 
-    /**
-     * @param string $pathName
-     */
     public function setTextureFilePath(
         string $pathName,
     ): void {

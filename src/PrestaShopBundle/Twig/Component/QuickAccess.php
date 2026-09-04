@@ -184,7 +184,7 @@ class QuickAccess
             $this->currentPageTitle = '';
         }
         if (isset($breadcrumbLinks['container'])) {
-            $this->currentPageIcon = $breadcrumbLinks['container']->icon ?? '';
+            $this->currentPageIcon = $breadcrumbLinks['container']->icon;
         } else {
             $this->currentPageIcon = '';
         }

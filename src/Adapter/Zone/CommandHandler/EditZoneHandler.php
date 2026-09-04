@@ -38,10 +38,14 @@ final class EditZoneHandler extends AbstractObjectModelHandler implements EditZo
             throw new ZoneNotFoundException(sprintf('Zone with id "%d" was not found', $command->getZoneId()->getValue()));
         }
 
+        // To be fixed with https://github.com/PrestaShop/PrestaShop/pull/41470
+        // @phpstan-ignore notIdentical.alwaysTrue
         if (null !== $command->getName()) {
             $zone->name = $command->getName();
         }
 
+        // To be fixed with https://github.com/PrestaShop/PrestaShop/pull/41470
+        // @phpstan-ignore notIdentical.alwaysTrue
         if (null !== $command->isEnabled()) {
             $zone->active = $command->isEnabled();
         }

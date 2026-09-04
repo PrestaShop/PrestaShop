@@ -275,9 +275,7 @@ class Shipment
             throw new ShipmentException('Trying to remove a product that does not belong to the shipment');
         }
 
-        if ($this->products->removeElement($product)) {
-            $product->setShipment(null);
-        }
+        $this->products->removeElement($product);
 
         return $this;
     }

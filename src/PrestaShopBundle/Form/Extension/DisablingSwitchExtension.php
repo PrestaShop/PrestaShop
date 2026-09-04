@@ -155,7 +155,7 @@ class DisablingSwitchExtension extends AbstractTypeExtension
     private function isRenderingPrototype(FormInterface $form): bool
     {
         $checkedForm = $form;
-        while ($checkedForm !== null && $checkedForm->getParent() !== null) {
+        while ($checkedForm->getParent() !== null) {
             $prototypeName = $checkedForm->getParent()->getConfig()->getOption('prototype_name');
             if ($checkedForm->getName() === $prototypeName) {
                 return true;

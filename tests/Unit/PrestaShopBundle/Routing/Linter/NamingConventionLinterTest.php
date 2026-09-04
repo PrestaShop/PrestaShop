@@ -31,9 +31,9 @@ class NamingConventionLinterTest extends TestCase
      */
     public function testLinterPassesWhenRouteAndControllerFollowNamingConventions($routeName, Route $route)
     {
-        $this->namingConventionLinter->lint($routeName, $route);
+        $this->expectNotToPerformAssertions();
 
-        $this->assertTrue($exceptionWasNotThrown = true);
+        $this->namingConventionLinter->lint($routeName, $route);
     }
 
     /**

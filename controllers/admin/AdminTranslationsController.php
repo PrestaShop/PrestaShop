@@ -414,14 +414,13 @@ class AdminTranslationsControllerCore extends AdminController
             return;
         }
 
-        $bool = true;
         $items = Language::getFilesList($from_lang, $from_theme, $to_lang, $to_theme, false, false, true);
         foreach ($items as $source => $dest) {
             if (!$this->checkDirAndCreate($dest)) {
                 $this->errors[] = $this->trans('Impossible to create the directory "%folder%".', ['%folder%' => $dest], 'Admin.International.Notification');
             } elseif (!copy($source, $dest)) {
                 $this->errors[] = $this->trans('Impossible to copy "%source%" to "%dest%".', ['%source%' => $source, '%dest%' => $dest], 'Admin.International.Notification');
-            } elseif (strpos($dest, 'modules') && basename($source) === $from_lang . '.php' && $bool !== false) {
+            } elseif (strpos($dest, 'modules') && basename($source) === $from_lang . '.php') {
                 if (!$this->changeModulesKeyTranslation($dest, $from_theme, $to_theme)) {
                     $this->errors[] = $this->trans('Impossible to translate "%dest%".', ['%dest%' => $dest], 'Admin.International.Notification');
                 }
@@ -659,7 +658,8 @@ class AdminTranslationsControllerCore extends AdminController
                     include_once _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $file['filename'];
                 }
 
-                /** @var mixed $_TABS */
+                // $_TABS is redefined by the file just included. We must check the type before proceeding.
+                // @phpstan-ignore function.alreadyNarrowedType
                 if (is_array($_TABS) && count($_TABS)) {
                     foreach ($_TABS as $class_name => $translations) {
                         // Get instance of this tab by class name
@@ -2663,7 +2663,7 @@ class AdminTranslationsControllerCore extends AdminController
             if (preg_match_all('/Mail::Send([^;]*);/si', $content, $tab)) {
                 for ($i = 0; isset($tab[1][$i]); ++$i) {
                     $tab2 = explode(',', $tab[1][$i]);
-                    if (is_array($tab2) && isset($tab2[1])) {
+                    if (isset($tab2[1])) {
                         $template = trim(str_replace('\'', '', $tab2[1]));
                         foreach ($tab2 as $tab3) {
                             if (preg_match('/Mail::l\(\'' . _PS_TRANS_PATTERN_ . '\'\)/Us', $tab3 . ')', $matches)) {

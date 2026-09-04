@@ -8,6 +8,7 @@ namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLToTextTransformation;
 
 class HTMLToTextTransformationTest extends TestCase
@@ -15,7 +16,7 @@ class HTMLToTextTransformationTest extends TestCase
     public function testConstructor()
     {
         $transformation = new HTMLToTextTransformation();
-        $this->assertNotNull($transformation);
+        $this->assertEquals(MailTemplateInterface::TXT_TYPE, $transformation->getType());
     }
 
     public function testSetters()

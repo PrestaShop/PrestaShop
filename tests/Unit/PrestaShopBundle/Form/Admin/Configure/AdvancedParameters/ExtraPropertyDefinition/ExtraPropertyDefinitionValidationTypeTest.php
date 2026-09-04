@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintC
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyConstraintRowType;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyDefinitionValidationType;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Validator\Validation;
@@ -95,6 +96,7 @@ class ExtraPropertyDefinitionValidationTypeTest extends TypeTestCase
         ]);
 
         $this->assertFalse($form->isValid());
+        /** @var FormError[] $errors */
         $errors = iterator_to_array($form->get('constraints')->getErrors(true), false);
         $this->assertCount(1, $errors);
         $this->assertStringContainsString('Lenght', $errors[0]->getMessage());

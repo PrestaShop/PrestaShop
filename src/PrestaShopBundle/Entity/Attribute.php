@@ -54,11 +54,15 @@ class Attribute
      *      joinColumns={@ORM\JoinColumn(name="id_attribute", referencedColumnName="id_attribute")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", onDelete="CASCADE")}
      * )
+     *
+     * @var Collection<Shop>
      */
     private Collection $shops;
 
     /**
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\AttributeLang", mappedBy="attribute")
+     *
+     * @var Collection<AttributeLang>
      */
     private Collection $attributeLangs;
 

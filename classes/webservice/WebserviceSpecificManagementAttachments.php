@@ -154,7 +154,6 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         }
 
         if ($this->getWsObject()->urlSegment[0] != '') {
-            /** @var ObjectModel */
             $object = new Attachment();
             $this->getWsObject()->resourceConfiguration = $object->getWebserviceParameters();
         }

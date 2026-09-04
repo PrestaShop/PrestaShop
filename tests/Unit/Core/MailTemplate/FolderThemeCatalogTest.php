@@ -61,14 +61,14 @@ class FolderThemeCatalogTest extends TestCase
 
     public function testConstructor()
     {
-        /** @var HookDispatcherInterface $dispatcherMock */
+        /** @var HookDispatcherInterface&MockObject $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $dispatcherMock);
-        $this->assertNotNull($catalog);
+        $this->assertInstanceOf(FolderThemeCatalog::class, $catalog);
     }
 
     public function testListThemes()
@@ -126,14 +126,13 @@ class FolderThemeCatalogTest extends TestCase
 
     public function testGetByName()
     {
-        /** @var HookDispatcherInterface $dispatcherMock */
+        /** @var HookDispatcherInterface&MockObject $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $dispatcherMock);
-        $this->assertNotNull($catalog);
 
         $theme = $catalog->getByName('classic');
         $this->assertNotNull($theme);
@@ -149,21 +148,20 @@ class FolderThemeCatalogTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid requested theme "unknown", only available themes are: classic, modern');
 
-        /** @var HookDispatcherInterface $dispatcherMock */
+        /** @var HookDispatcherInterface&MockObject $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $dispatcherMock);
-        $this->assertNotNull($catalog);
 
         $catalog->getByName('unknown');
     }
 
     public function testListThemesWithoutThemesFolder()
     {
-        /** @var HookDispatcherInterface $dispatcherMock */
+        /** @var HookDispatcherInterface&MockObject $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
@@ -174,7 +172,6 @@ class FolderThemeCatalogTest extends TestCase
             [$this->tempDir, 'invisible']
         );
         $catalog = new FolderThemeCatalog($fakeFolder, new FolderThemeScanner(), $dispatcherMock);
-        $this->assertNotNull($catalog);
 
         $caughtException = null;
         try {

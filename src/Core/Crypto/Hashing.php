@@ -22,6 +22,8 @@ class Hashing
      * @param string $staticSalt A static salt
      *
      * @return bool Result of the verify function
+     *
+     * @phpstan-ignore disallowed.constant
      */
     public function isFirstHash($passwd, $hash, $staticSalt = _COOKIE_KEY_)
     {
@@ -42,6 +44,8 @@ class Hashing
      * @param string $staticSalt A static salt
      *
      * @return bool `true` is returned if the function find a match else false
+     *
+     * @phpstan-ignore disallowed.constant
      */
     public function checkHash($passwd, $hash, $staticSalt = _COOKIE_KEY_)
     {
@@ -66,6 +70,8 @@ class Hashing
      * @param string $staticSalt The static salt
      *
      * @return string
+     *
+     * @phpstan-ignore disallowed.constant
      */
     public function hash($plaintextPassword, $staticSalt = _COOKIE_KEY_)
     {

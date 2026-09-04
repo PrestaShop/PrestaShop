@@ -20,6 +20,7 @@ class SimplexmlElement extends \SimpleXMLElement
      *
      * @return \SimpleXMLElement|void
      */
+    #[ReturnTypeWillChange]
     public function addChild($name, $value = null, $namespace = null)
     {
         if ($value instanceof static) {
@@ -36,6 +37,8 @@ class SimplexmlElement extends \SimpleXMLElement
             foreach ($value->children() as $child) {
                 $new_element->addChild($child->getName(), $child);
             }
+
+            return $new_element;
         } else {
             return parent::addChild($name, str_replace('&', '&amp;', $value), $namespace);
         }

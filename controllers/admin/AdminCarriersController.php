@@ -441,7 +441,6 @@ class AdminCarriersControllerCore extends AdminController
                                 throw new PrestaShopException('Cannot load Carrier object');
                             }
 
-                            /** @var Carrier $new_carrier */
                             // Duplicate current Carrier
                             $new_carrier = $current_carrier->duplicateObject();
                             if (Validate::isLoadedObject($new_carrier)) {

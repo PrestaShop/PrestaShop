@@ -23,7 +23,6 @@ use PrestaShop\PrestaShop\Core\Domain\Discount\ProductRuleType;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountId;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShopBundle\Form\Admin\Sell\Discount\CartConditionsType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DeliveryConditionsType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountConditionsType;
@@ -193,7 +192,7 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
             $productRuleGroups = [];
 
             foreach ($specificProducts as $specificProduct) {
-                if (!empty($specificProduct['combination_id']) && $specificProduct['combination_id'] !== NoCombinationId::NO_COMBINATION_ID) {
+                if (!empty($specificProduct['combination_id'])) {
                     $productRuleGroups[] = new ProductRuleGroup(
                         $specificProduct['quantity'],
                         [

@@ -124,7 +124,7 @@ class Toolbar
 
     /**
      * @param MenuLink[] $breadcrumbs
-     * @param Tab[] $tabs
+     * @param list<Tab|Tab[]> $tabs
      *
      * @return void
      */

@@ -98,24 +98,22 @@ class TagCore extends ObjectModel
         }
 
         $list = [];
-        if (is_array($tagList)) {
-            foreach ($tagList as $tag) {
-                if (!Validate::isGenericName($tag)) {
-                    return false;
-                }
-                $tagMaxLength = self::$definition['fields']['name']['size'];
-                $tag = trim(Tools::substr(trim($tag), 0, $tagMaxLength));
-                $tagObj = new Tag(null, $tag, (int) $idLang);
+        foreach ($tagList as $tag) {
+            if (!Validate::isGenericName($tag)) {
+                return false;
+            }
+            $tagMaxLength = self::$definition['fields']['name']['size'];
+            $tag = trim(Tools::substr(trim($tag), 0, $tagMaxLength));
+            $tagObj = new Tag(null, $tag, (int) $idLang);
 
-                /* Tag does not exist in database */
-                if (!Validate::isLoadedObject($tagObj)) {
-                    $tagObj->name = $tag;
-                    $tagObj->id_lang = (int) $idLang;
-                    $tagObj->add();
-                }
-                if (!in_array($tagObj->id, $list)) {
-                    $list[] = $tagObj->id;
-                }
+            /* Tag does not exist in database */
+            if (!Validate::isLoadedObject($tagObj)) {
+                $tagObj->name = $tag;
+                $tagObj->id_lang = (int) $idLang;
+                $tagObj->add();
+            }
+            if (!in_array($tagObj->id, $list)) {
+                $list[] = $tagObj->id;
             }
         }
 

@@ -19,7 +19,7 @@ final class KpiRow implements KpiRowInterface
     private $allowRefresh = true;
 
     /**
-     * @var array[KpiInterface]
+     * @var KpiInterface[]
      */
     private $kpis = [];
 
@@ -50,7 +50,7 @@ final class KpiRow implements KpiRowInterface
     }
 
     /**
-     * @return array[KpiInterface]
+     * @return KpiInterface[]
      */
     public function getKpis()
     {

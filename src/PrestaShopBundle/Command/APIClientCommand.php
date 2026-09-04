@@ -52,7 +52,7 @@ class APIClientCommand extends Command
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Client Name')
             ->addOption('description', null, InputOption::VALUE_REQUIRED, 'Client Description', 'Created by CLI command.')
             ->addOption('all-scopes', null, InputOption::VALUE_NONE, 'Automatically assign all available scopes')
-            ->addOption('scopes', null, InputOption::VALUE_REQUIRED, 'Client list of scopes separated by commas', [])
+            ->addOption('scopes', null, InputOption::VALUE_REQUIRED, 'Client list of scopes separated by commas', null)
             ->addOption('secret-only', null, InputOption::VALUE_NONE, 'Only output secret value after creation')
             ->addOption('timeout', null, InputOption::VALUE_REQUIRED, 'Timeout in seconds (default: 3600)', 3600)
             ->addOption('secret', null, InputOption::VALUE_OPTIONAL, 'Force secret value (default: auto generated)', null)

@@ -198,15 +198,13 @@ class AddressFormatCore extends ObjectModel
         $multipleLineFields = explode(self::FORMAT_NEW_LINE, $this->format);
         foreach ($multipleLineFields as $lineField) {
             if ($patternsName = preg_split(self::_CLEANING_REGEX_, $lineField, -1, PREG_SPLIT_NO_EMPTY)) {
-                if (is_array($patternsName)) {
-                    foreach ($patternsName as $patternName) {
-                        if (!in_array($patternName, $usedKeyList)) {
-                            $this->_checkLiableAssociation($patternName);
-                            $usedKeyList[] = $patternName;
-                        } else {
-                            $this->_errorFormatList[] = $this->trans('This key has already been used.', [], 'Admin.Notifications.Error') .
-                                ': ' . $patternName;
-                        }
+                foreach ($patternsName as $patternName) {
+                    if (!in_array($patternName, $usedKeyList)) {
+                        $this->_checkLiableAssociation($patternName);
+                        $usedKeyList[] = $patternName;
+                    } else {
+                        $this->_errorFormatList[] = $this->trans('This key has already been used.', [], 'Admin.Notifications.Error') .
+                            ': ' . $patternName;
                     }
                 }
             }
@@ -362,7 +360,7 @@ class AddressFormatCore extends ObjectModel
         // Check if $address exist and it's an instanciate object of Address
         if ($address instanceof Address) {
             foreach ($addressFormat as $line) {
-                if (($keyList = preg_split(self::_CLEANING_REGEX_, $line, -1, PREG_SPLIT_NO_EMPTY)) && is_array($keyList)) {
+                if ($keyList = preg_split(self::_CLEANING_REGEX_, $line, -1, PREG_SPLIT_NO_EMPTY)) {
                     foreach ($keyList as $pattern) {
                         $associateName = explode(':', $pattern);
 

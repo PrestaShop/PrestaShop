@@ -17,7 +17,7 @@ class FeatureValueIdTest extends TestCase
     public function testValidInput()
     {
         $vo = new FeatureValueId(42);
-        $this->assertNotNull($vo);
+        $this->assertSame(42, $vo->getValue());
     }
 
     /**

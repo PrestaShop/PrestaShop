@@ -961,9 +961,7 @@ class LinkCore
                 'ids' => $idImage,
                 'type' => $type,
                 'extension' => $extension,
-            ],
-            null,
-            true
+            ]
         );
 
         if (!empty($overrideUrl)) {

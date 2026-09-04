@@ -3099,7 +3099,7 @@ class ProductCore extends ObjectModel
             WHERE product_shop.`active` = 1
             AND product_shop.`show_price` = 1
             ' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
-            ' . ((!$beginning && !$ending) ? 'AND p.`id_product` IN(' . ((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
+            ' . ((!$beginning && !$ending) ? 'AND p.`id_product` IN(' . implode(', ', $tab_id_product) . ')' : '') . '
             ' . $sql_groups);
 
             return $count === false ? $count : (int) $count;
@@ -3139,7 +3139,7 @@ class ProductCore extends ObjectModel
         WHERE product_shop.`active` = 1
         AND product_shop.`show_price` = 1
         ' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
-        ' . ((!$beginning && !$ending) ? ' AND p.`id_product` IN (' . ((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
+        ' . ((!$beginning && !$ending) ? ' AND p.`id_product` IN (' . (count($tab_id_product) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
         ' . $sql_groups;
 
         if ($order_by != 'price') {
@@ -5476,10 +5476,7 @@ class ProductCore extends ObjectModel
         if (
             Combination::isFeatureActive()
             && $id_product_attribute === null
-            && (
-                (isset($row['cache_default_attribute']) && ($ipa_default = $row['cache_default_attribute']) !== null)
-                || ($ipa_default = Product::getDefaultAttribute($row['id_product'], (int) !$row['allow_oosp']))
-            )
+            && ($ipa_default = isset($row['cache_default_attribute']) ? $row['cache_default_attribute'] : Product::getDefaultAttribute($row['id_product'], (int) !$row['allow_oosp']))
         ) {
             $id_product_attribute = $row['id_product_attribute'] = $ipa_default;
         }
@@ -7457,7 +7454,7 @@ class ProductCore extends ObjectModel
             $idAttributes = [(int) $idAttributes];
         }
 
-        if (!is_array($idAttributes) || empty($idAttributes)) {
+        if (empty($idAttributes)) {
             throw new PrestaShopException(sprintf('Invalid parameter $idAttributes with value: "%s"', print_r($idAttributes, true)));
         }
 

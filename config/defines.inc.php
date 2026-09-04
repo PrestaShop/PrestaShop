@@ -95,6 +95,7 @@ if (_PS_ENV_FILE_PATH_ !== _PS_ROOT_DIR_.'/.env') {
 
 // Find if we are running under a Symfony command
 $cliEnvValue = null;
+// @phpstan-ignore function.alreadyNarrowedType
 if (isset($argv) && is_array($argv)) {
     if (in_array('--env', $argv)) {
         $cliEnvValue = $argv[array_search('--env', $argv) + 1];

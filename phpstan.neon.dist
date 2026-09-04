@@ -56,6 +56,9 @@ parameters:
     -
       message: '#Constructor of class [a-zA-Z0-9\\_]+ has an unused parameter \$[a-zA-Z0-9_]+.$#'
       path: src/PrestaShopBundle/ApiPlatform/Metadata/
+    -
+      message: '#is never assigned null so it can be removed from the property type.$#'
+      path: src/Core/Domain/*Command.php
   reportUnmatchedIgnoredErrors: false
   universalObjectCratesClasses:
     - Cookie

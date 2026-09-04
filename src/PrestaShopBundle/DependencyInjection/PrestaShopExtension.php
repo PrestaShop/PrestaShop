@@ -7,7 +7,6 @@
 namespace PrestaShopBundle\DependencyInjection;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\ProductRowStepInterface;
@@ -93,7 +92,6 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
     protected function getCookieSameSite(): string
     {
         try {
-            /** @var ConfigurationInterface $configuration */
             $configuration = new Configuration();
             $cookieSamesite = $configuration->get('PS_COOKIE_SAMESITE');
             $cookieSamesite = match ($cookieSamesite) {
@@ -111,7 +109,6 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
     protected function getAdminCookieLifetime(): int
     {
         try {
-            /** @var ConfigurationInterface $configuration */
             $configuration = new Configuration();
             $cookieLifetimeBo = (int) $configuration->get('PS_COOKIE_LIFETIME_BO');
             if (empty($cookieLifetimeBo) || $cookieLifetimeBo <= 0) {

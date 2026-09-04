@@ -29,6 +29,8 @@ class AddBusinessEntityCommandTest extends TestCase
 
     public function testItWorksWhenBillingAddressIsShippingAddress(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $billingAddress = new BusinessEntityBillingAddress(
             self::DEFAULT_BUSINESS_ENTITY_ALIAS_BILLING,
             self::DEFAULT_BUSINESS_ENTITY_ADDRESS1,
@@ -51,8 +53,6 @@ class AddBusinessEntityCommandTest extends TestCase
             true,
             [$billingAddress]
         );
-
-        $this->assertTrue(true);
     }
 
     public function testItExposesAllConstructorParamsViaGetters(): void
@@ -105,6 +105,8 @@ class AddBusinessEntityCommandTest extends TestCase
 
     public function testItWorksWithSeparateAddresses(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $billingAddress = new BusinessEntityBillingAddress(
             self::DEFAULT_BUSINESS_ENTITY_ALIAS_BILLING,
             self::DEFAULT_BUSINESS_ENTITY_ADDRESS1,
@@ -139,8 +141,6 @@ class AddBusinessEntityCommandTest extends TestCase
             [$billingAddress],
             [$shippingAddress]
         );
-
-        $this->assertTrue(true);
     }
 
     public function testItThrowsExceptionWhenBillingAddressIsMissing(): void

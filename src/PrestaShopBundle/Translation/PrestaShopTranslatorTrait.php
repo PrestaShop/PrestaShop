@@ -154,8 +154,14 @@ trait PrestaShopTranslatorTrait
         return
             str_starts_with($domain ?? '', 'Modules.')
             && (
-                !method_exists($this, 'getCatalogue')
-                || !$this->getCatalogue($locale)->has($message, $this->normalizeDomain($domain))
+                /*
+                 * All the classes that uses this trait have the method getCatalog(),
+                 * So the call to method_exists is flagged as useless.
+                 * @see https://github.com/phpstan/phpstan-src/pull/5309
+                 * I can't ignore the error on PHPStan, hence the commented line.
+                 */
+                // !method_exists($this, 'getCatalogue') ||
+                !$this->getCatalogue($locale)->has($message, $this->normalizeDomain($domain))
             )
         ;
     }

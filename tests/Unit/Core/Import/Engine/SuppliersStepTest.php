@@ -120,6 +120,8 @@ class SuppliersStepTest extends TestCase
     /**
      * @param list<object>|null $commands captured dispatched commands, by reference
      * @param list<array<string, mixed>> $existingAssociations
+     *
+     * @param-out list<object> $commands
      */
     private function buildStep(?array &$commands, array $existingAssociations, ?FoundEntity $match = null): SuppliersStep
     {

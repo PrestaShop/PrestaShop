@@ -485,7 +485,7 @@ class MailThemeController extends PrestaShopAdminController
         /** @var ThemeInterface $theme */
         $theme = $themeCatalog->getByName($themeName);
 
-        /** @var LayoutInterface $layout */
+        /** @var ?LayoutInterface $layout */
         $layout = null;
         /* @var LayoutInterface $layoutInterface */
         foreach ($theme->getLayouts() as $layoutInterface) {

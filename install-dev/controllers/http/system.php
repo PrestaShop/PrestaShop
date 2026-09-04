@@ -57,7 +57,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
         $testsRequiredsf2 = $this->model_system->checkSf2Requirements();
         $testsOptionalsf2 = $this->model_system->checkSf2Recommendations();
 
-        if (!is_callable('getenv') || !($user = @getenv('APACHE_RUN_USER'))) {
+        if (!function_exists('getenv') || !($user = @getenv('APACHE_RUN_USER'))) {
             $user = 'Apache';
         }
 

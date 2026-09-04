@@ -76,26 +76,25 @@ class MailTemplateGeneratorTest extends TestCase
 
     public function testConstructor()
     {
-        /** @var MailTemplateRendererInterface $mailRenderer */
+        /** @var MailTemplateRendererInterface&MockObject $mailRenderer */
         $mailRenderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         $generator = new MailTemplateGenerator($mailRenderer);
-        $this->assertNotNull($generator);
+        $this->assertInstanceOf(MailTemplateGenerator::class, $generator);
     }
 
     public function testInvalidCoreOutputFolders()
     {
-        /** @var MailTemplateRendererInterface $mailRenderer */
+        /** @var MailTemplateRendererInterface&MockObject $mailRenderer */
         $mailRenderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         $generator = new MailTemplateGenerator($mailRenderer);
-        $this->assertNotNull($generator);
 
         $fakeFolder = $this->tempDir . DIRECTORY_SEPARATOR . 'invisible';
         $caughtException = null;
@@ -115,14 +114,13 @@ class MailTemplateGeneratorTest extends TestCase
 
     public function testInvalidModulesOutputFolders()
     {
-        /** @var MailTemplateRendererInterface $mailRenderer */
+        /** @var MailTemplateRendererInterface&MockObject $mailRenderer */
         $mailRenderer = $this->getMockBuilder(MailTemplateRendererInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         $generator = new MailTemplateGenerator($mailRenderer);
-        $this->assertNotNull($generator);
 
         $fakeFolder = $this->tempDir . DIRECTORY_SEPARATOR . 'invisible';
         $caughtException = null;
@@ -143,7 +141,6 @@ class MailTemplateGeneratorTest extends TestCase
     public function testGenerateTemplates()
     {
         $generator = new MailTemplateGenerator($this->createRendererMock());
-        $this->assertNotNull($generator);
 
         $generator->generateTemplates($this->theme, $this->createLanguageMock('en'), $this->coreTempDir, $this->modulesTempDir);
         $expectedFiles = [
@@ -160,7 +157,6 @@ class MailTemplateGeneratorTest extends TestCase
     public function testGenerateTemplatesWithLocale()
     {
         $generator = new MailTemplateGenerator($this->createRendererMock());
-        $this->assertNotNull($generator);
 
         $generator->generateTemplates($this->theme, $this->createLanguageMock('fr'), $this->coreTempDir, $this->modulesTempDir);
         $expectedFiles = [
@@ -197,14 +193,12 @@ class MailTemplateGeneratorTest extends TestCase
         }
         $this->checkExpectedFiles($previousFiles);
         $generator = new MailTemplateGenerator($this->createRendererMock(1, 2));
-        $this->assertNotNull($generator);
 
         $generator->generateTemplates($this->theme, $this->createLanguageMock('fr'), $this->coreTempDir, $this->modulesTempDir);
         $this->checkExpectedFiles(array_merge($expectedFiles, $previousFiles));
 
         // Now check overwriting
         $generator = new MailTemplateGenerator($this->createRendererMock(3, 3));
-        $this->assertNotNull($generator);
 
         $generator->generateTemplates($this->theme, $this->createLanguageMock('fr'), $this->coreTempDir, $this->modulesTempDir, true);
         $this->checkExpectedFiles($expectedFiles);

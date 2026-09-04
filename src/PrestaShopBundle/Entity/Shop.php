@@ -69,6 +69,8 @@ class Shop
      * One group shop has many shops. This is the inverse side.
      *
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\ShopUrl", mappedBy="shop")
+     *
+     * @var Collection<ShopUrl>
      */
     private Collection $shopUrls;
 

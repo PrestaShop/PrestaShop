@@ -35,7 +35,7 @@ class CsvResponse extends StreamedResponse
     private $headersData = [];
 
     /**
-     * @var int, self::MODE_PAGINATION by default
+     * @var self::MODE_*
      */
     private $modeType = self::MODE_PAGINATION;
 
@@ -108,7 +108,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param int $modeType
+     * @param self::MODE_* $modeType
      *
      * @return $this
      */

@@ -435,20 +435,18 @@ final class ProductImportHandler extends AbstractImportHandler
         }
         $productShops = explode($multipleValueSeparator, $product->shop);
 
-        if (is_array($productShops)) {
-            foreach ($productShops as $shop) {
-                if (!empty($shop)) {
-                    $shop = is_numeric($shop) ? $shop : Shop::getIdByName($shop);
+        foreach ($productShops as $shop) {
+            if (!empty($shop)) {
+                $shop = is_numeric($shop) ? $shop : Shop::getIdByName($shop);
 
-                    if (!in_array($shop, $this->allShopIds)) {
-                        $this->addEntityWarning(
-                            $this->translator->trans('Shop is not valid', [], 'Admin.Advparameters.Notification'),
-                            $productName,
-                            $product->id
-                        );
-                    } else {
-                        $product->id_shop_list[] = $shop;
-                    }
+                if (!in_array($shop, $this->allShopIds)) {
+                    $this->addEntityWarning(
+                        $this->translator->trans('Shop is not valid', [], 'Admin.Advparameters.Notification'),
+                        $productName,
+                        $product->id
+                    );
+                } else {
+                    $product->id_shop_list[] = $shop;
                 }
             }
         }
@@ -880,7 +878,7 @@ final class ProductImportHandler extends AbstractImportHandler
      */
     private function saveProductSupplier(Product $product)
     {
-        if ($product->id && property_exists($product, 'supplier_reference')) {
+        if ($product->id) {
             $productSupplierId = (int) ProductSupplier::getIdByProductAndSupplier(
                 (int) $product->id,
                 0,

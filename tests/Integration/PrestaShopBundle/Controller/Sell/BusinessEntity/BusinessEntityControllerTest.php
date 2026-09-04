@@ -100,9 +100,9 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         }
 
         $this->resetGridFilters();
-        $this->assertEmpty($this->getFilteredEntitiesFromGrid([
+        $this->assertTrue($this->getFilteredEntitiesFromGrid([
             'business_entity[name]' => 'No business entity bears this name',
-        ]));
+        ])->isEmpty());
 
         $this->resetGridFilters();
     }

@@ -6,10 +6,8 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use AdminController;
 use Behat\Gherkin\Node\TableNode;
 use Context;
-use FrontController;
 use Manufacturer;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
@@ -40,10 +38,11 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     public function before()
     {
         // needed because if no controller defined then CONTEXT_ALL is selected and exception is thrown
-        /** @var AdminController|FrontController $adminControllerTestDouble */
         $adminControllerTestDouble = new stdClass();
         $adminControllerTestDouble->controller_type = 'admin';
         $adminControllerTestDouble->php_self = 'dummyTestDouble';
+        // a duck-typed stdClass double is enough for the legacy context here
+        // @phpstan-ignore assign.propertyType
         Context::getContext()->controller = $adminControllerTestDouble;
     }
 

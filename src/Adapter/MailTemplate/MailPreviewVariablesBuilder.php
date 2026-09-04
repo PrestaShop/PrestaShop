@@ -278,11 +278,7 @@ final class MailPreviewVariablesBuilder
 
                     $customizationText .= '---<br />';
                 }
-                if (method_exists('Tools', 'rtrimString')) {
-                    $customizationText = Tools::rtrimString($customizationText, '---<br />');
-                } else {
-                    $customizationText = preg_replace('/---<br \/>$/', '', $customizationText);
-                }
+                $customizationText = Tools::rtrimString($customizationText, '---<br />');
             }
 
             $url = $this->context->link->getProductLink($product['product_id']);

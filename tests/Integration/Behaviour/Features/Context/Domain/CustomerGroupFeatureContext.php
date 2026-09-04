@@ -102,8 +102,13 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCustomerGroupExists(string $customerGroupReference): void
     {
-        $customerGroup = $this->getCustomerGroupForEditing($customerGroupReference);
-        Assert::assertNotNull($customerGroup, sprintf('Customer group %s as not found', $customerGroupReference));
+        $caughtException = null;
+        try {
+            $this->getCustomerGroupForEditing($customerGroupReference);
+        } catch (GroupNotFoundException $e) {
+            $caughtException = $e;
+        }
+        Assert::assertNull($caughtException, sprintf('Customer group %s was not found', $customerGroupReference));
     }
 
     /**

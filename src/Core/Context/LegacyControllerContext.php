@@ -153,7 +153,7 @@ class LegacyControllerContext
             $key = is_array($css_path) ? key($css_path) : $css_path;
             if ($css_path && (!isset($this->css_files[$key]) || ($this->css_files[$key] != reset($css_path)))) {
                 $size = count($this->css_files);
-                if ($offset === null || $offset > $size || $offset < 0 || !is_numeric($offset)) {
+                if ($offset === null || $offset > $size || $offset < 0) {
                     $offset = $size;
                 }
 

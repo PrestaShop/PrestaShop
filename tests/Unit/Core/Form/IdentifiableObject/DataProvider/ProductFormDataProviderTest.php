@@ -105,7 +105,7 @@ class ProductFormDataProviderTest extends TestCase
         );
 
         $formData = $provider->getData(self::PRODUCT_ID);
-        $this->assertNotNull($formData);
+        $this->assertSame(self::PRODUCT_ID, $formData['id']);
         $contextShopId = 51;
         $queryBusMock = $this->createQueryBusCheckingShopMock($contextShopId);
         $provider = new ProductFormDataProvider(
@@ -118,7 +118,7 @@ class ProductFormDataProviderTest extends TestCase
         );
 
         $formData = $provider->getData(self::PRODUCT_ID);
-        $this->assertNotNull($formData);
+        $this->assertSame(self::PRODUCT_ID, $formData['id']);
     }
 
     /**

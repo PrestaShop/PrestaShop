@@ -18,6 +18,7 @@ class CountryControllerTest extends FormGridControllerTestCase
     public function testIndex(): int
     {
         $countries = $this->getEntitiesFromGrid();
+        // @phpstan-ignore-next-line
         $this->assertNotEmpty($countries);
 
         return $countries->count();

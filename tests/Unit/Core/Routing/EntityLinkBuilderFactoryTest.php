@@ -15,8 +15,10 @@ class EntityLinkBuilderFactoryTest extends TestCase
 {
     public function testConstructor()
     {
-        $factory = new EntityLinkBuilderFactory([$this->getEntityLinkBuilderMock(['product'])]);
-        $this->assertNotNull($factory);
+        $builder = $this->getEntityLinkBuilderMock(['product']);
+
+        $factory = new EntityLinkBuilderFactory([$builder]);
+        $this->assertEquals($builder, $factory->getBuilderFor('product'));
     }
 
     public function testGetBuilder()

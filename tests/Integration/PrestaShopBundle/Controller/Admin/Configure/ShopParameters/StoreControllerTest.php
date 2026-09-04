@@ -43,6 +43,7 @@ class StoreControllerTest extends GridControllerTestCase
     public function testIndex(): void
     {
         $stores = $this->getEntitiesFromGrid();
+        // @phpstan-ignore-next-line
         $this->assertNotEmpty($stores);
     }
 
@@ -90,7 +91,8 @@ class StoreControllerTest extends GridControllerTestCase
         }
 
         // additional assertion to make sure it doesn't find random entities all the time
-        $this->assertEmpty(
+        $this->assertCount(
+            0,
             $this->getFilteredEntitiesFromGrid(
                 [
                     // this id doesn't exist, so no entities should be found
@@ -167,7 +169,7 @@ class StoreControllerTest extends GridControllerTestCase
             $this->getFilteredEntitiesFromGrid(['store[active]' => 0])->count()
         );
         // and none left active
-        Assert::assertEmpty($this->getFilteredEntitiesFromGrid(['store[active]' => 1]));
+        Assert::assertCount(0, $this->getFilteredEntitiesFromGrid(['store[active]' => 1]));
 
         // then enable all of them again
         $this->client->request(
@@ -182,7 +184,7 @@ class StoreControllerTest extends GridControllerTestCase
             $this->getFilteredEntitiesFromGrid(['store[active]' => 1])->count()
         );
         // and none left disabled
-        Assert::assertEmpty($this->getFilteredEntitiesFromGrid(['store[active]' => 0]));
+        Assert::assertCount(0, $this->getFilteredEntitiesFromGrid(['store[active]' => 0]));
 
         // and reset grid filters, so it doesn't impact further steps
         $this->resetGridFilters();

@@ -37,7 +37,7 @@ class EmployeeSession
     /**
      * @ORM\Column(name="token", type="string", length=40, nullable=true)
      */
-    private string $token;
+    private ?string $token;
 
     /**
      * @var DateTime
@@ -70,12 +70,12 @@ class EmployeeSession
         return $this;
     }
 
-    public function getToken(): string
+    public function getToken(): ?string
     {
         return $this->token;
     }
 
-    public function setToken(string $token): EmployeeSession
+    public function setToken(?string $token): EmployeeSession
     {
         $this->token = $token;
 

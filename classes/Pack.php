@@ -291,7 +291,7 @@ class PackCore extends Product
 
         // If no pack stock or shop default, set it from configuration
         // Avoid using empty(), because it would treat STOCK_TYPE_PACK_ONLY (0) as STOCK_TYPE_DEFAULT
-        if ($packStockType === null || $packStockType === '' || (int) $packStockType == self::STOCK_TYPE_DEFAULT) {
+        if ((int) $packStockType == self::STOCK_TYPE_DEFAULT) {
             $packStockType = Configuration::get('PS_PACK_STOCK_TYPE');
         }
 
@@ -578,7 +578,7 @@ class PackCore extends Product
      * @param int $id_attribute_item The combination of the product
      * @param int $id_lang
      *
-     * @return array[Product] Packs that contains the given product
+     * @return Pack[] Packs that contains the given product
      */
     public static function getPacksContainingItem($id_item, $id_attribute_item, $id_lang)
     {
@@ -594,7 +594,7 @@ class PackCore extends Product
         $result = Db::getInstance()->executeS($query);
         $array_result = [];
         foreach ($result as $row) {
-            $p = new Product($row['id_product_pack'], true, $id_lang);
+            $p = new Pack($row['id_product_pack'], true, $id_lang);
             $p->loadStockData();
             $p->pack_item_quantity = $row['quantity']; // Specific need from StockAvailable::updateQuantity()
             $array_result[] = $p;

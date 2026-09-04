@@ -35,7 +35,7 @@ final class FolderThemeScanner
     /**
      * @param string $mailThemeFolder
      *
-     * @return ThemeInterface|null
+     * @return ThemeInterface
      *
      * @throws FileNotFoundException
      * @throws TypeException

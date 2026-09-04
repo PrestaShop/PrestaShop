@@ -12,7 +12,6 @@ use Group;
 use PrestaShop\PrestaShop\Adapter\Feature\GroupFeature;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tools;
 
 class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureContext
@@ -79,11 +78,12 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     /**
      * @Given /^customization feature is (enabled|disabled)$/
      *
-     * @Transform(enabled|disabled)
+     * Status transformation handled by @see StringToBoolTransformContext
+     *
+     * @param bool $status
      */
-    public function toggleCustomizationFeature(string $status)
+    public function toggleCustomizationFeature(bool $status)
     {
-        $status = PrimitiveUtils::castStringBooleanIntoBoolean($status);
         Configuration::set(
             'PS_CUSTOMIZATION_FEATURE_ACTIVE',
             $status
@@ -93,13 +93,12 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     /**
      * @Given /^search indexation feature is (enabled|disabled)$/
      *
-     * @Transform(enabled|disabled)
+     * Status transformation handled by @see StringToBoolTransformContext
      *
-     * @param string $status
+     * @param bool $status
      */
-    public function toggleSearchIndexation(string $status): void
+    public function toggleSearchIndexation(bool $status): void
     {
-        $status = PrimitiveUtils::castStringBooleanIntoBoolean($status);
         Configuration::set(
             'PS_SEARCH_INDEXATION',
             $status

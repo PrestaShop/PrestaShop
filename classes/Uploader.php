@@ -151,7 +151,7 @@ class UploaderCore
     }
 
     /**
-     * @return int|null
+     * @return int
      */
     public function getPostMaxSizeBytes()
     {
@@ -168,10 +168,6 @@ class UploaderCore
                 // no break
             case 'k':
                 $bytes *= 1024;
-        }
-
-        if ($bytes == '') {
-            $bytes = null;
         }
 
         return $bytes;

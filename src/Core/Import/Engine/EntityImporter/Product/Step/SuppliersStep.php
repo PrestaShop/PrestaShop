@@ -87,7 +87,7 @@ class SuppliersStep extends AbstractProductRowStep
         if (!in_array($supplierId, $supplierIds, true)) {
             $supplierIds[] = $supplierId;
         }
-        $this->commandBus->handle(new SetSuppliersCommand($productId, array_values($supplierIds)));
+        $this->commandBus->handle(new SetSuppliersCommand($productId, $supplierIds));
 
         // same reasoning per FIELD: UpdateProductSuppliersCommand replaces the
         // association, so an unmapped/empty cell must re-send the CURRENT value

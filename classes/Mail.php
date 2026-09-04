@@ -662,15 +662,6 @@ class MailCore extends ObjectModel
                 $recipientsCc = self::convertAdressesToArray($email->getCc());
                 $recipientsBcc = self::convertAdressesToArray($email->getBcc());
 
-                if (!is_array($recipientsTo)) {
-                    $recipientsTo = [];
-                }
-                if (!is_array($recipientsCc)) {
-                    $recipientsCc = [];
-                }
-                if (!is_array($recipientsBcc)) {
-                    $recipientsBcc = [];
-                }
                 foreach (array_merge($recipientsTo, $recipientsCc, $recipientsBcc) as $emailAlias => $recipient_name) {
                     $mail->id = null;
                     $mail->recipient = Tools::substr($emailAlias, 0, 255);
@@ -954,7 +945,7 @@ class MailCore extends ObjectModel
             $string = implode($sep, $parts);
         } else {
             $string = chunk_split(base64_encode($string), $length, $sep);
-            $string = preg_replace('/' . preg_quote($sep) . '$/', '', $string);
+            $string = preg_replace('/' . preg_quote($sep, '/') . '$/', '', $string);
         }
 
         return $start . $string . $end;

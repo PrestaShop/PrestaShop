@@ -76,7 +76,7 @@ class PositionsController extends PrestaShopAdminController
             $this->selectedModule = (int) $selectedModule;
         }
 
-        $this->manageLegacyFlashes($request->query->get('conf'));
+        $this->manageLegacyFlashes($request->query->getInt('conf'));
 
         $modules = [];
         foreach ($installedModules as $installedModule) {
@@ -342,8 +342,8 @@ class PositionsController extends PrestaShopAdminController
         $errors = [];
         foreach ($unhooks as $unhook) {
             $explode = explode('_', $unhook);
-            $hookId = (int) isset($explode[0]) ? $explode[0] : 0;
-            $moduleId = (int) isset($explode[1]) ? $explode[1] : 0;
+            $hookId = isset($explode[0]) ? (int) $explode[0] : 0;
+            $moduleId = isset($explode[1]) ? (int) $explode[1] : 0;
             /** @var LegacyModule|false $module */
             $module = $moduleAdapter->getInstanceById($moduleId);
             $hook = new Hook($hookId);
@@ -434,7 +434,7 @@ class PositionsController extends PrestaShopAdminController
      *
      * @param int $messageId The message id from legacy context
      */
-    private function manageLegacyFlashes($messageId)
+    private function manageLegacyFlashes(int $messageId)
     {
         if (empty($messageId)) {
             return;
