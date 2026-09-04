@@ -47,6 +47,11 @@ class ExtraPropertyConstraintRowType extends TranslatorAwareType
             ->add('options', HiddenType::class, [
                 'required' => false,
             ])
+            // Options a composite carries ahead of its children
+            // ("Collection(allowExtraFields: true)[ ... ]"); empty for every other shape.
+            ->add('composite_options', HiddenType::class, [
+                'required' => false,
+            ])
             ->add('per_language', HiddenType::class, [
                 'required' => false,
             ]);
@@ -64,7 +69,7 @@ class ExtraPropertyConstraintRowType extends TranslatorAwareType
         $token = ConstraintRowSerializer::token($row);
 
         if ('' === $token) {
-            if ('' !== trim((string) ($row['options'] ?? ''))) {
+            if ('' !== trim((string) ($row['options'] ?? '')) || '' !== trim((string) ($row['composite_options'] ?? ''))) {
                 $context->buildViolation(
                     $this->trans('The constraint name is required.', 'Admin.Advparameters.Notification')
                 )->atPath('[name]')->addViolation();

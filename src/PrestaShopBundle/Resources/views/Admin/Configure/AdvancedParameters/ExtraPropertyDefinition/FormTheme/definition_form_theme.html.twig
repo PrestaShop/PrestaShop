@@ -341,9 +341,12 @@
         {{ form_widget(form.name, {attr: {'data-role': 'name-input', class: 'extra-property-row__name', placeholder: 'Constraint'|trans, 'aria-label': 'Constraint'|trans, autocomplete: 'off'}}) }}
       </span>
       <span class="extra-property-row__options" data-role="options-display">
+        {%- if form.composite_options.vars.value is not empty -%}
+          <code>({{ form.composite_options.vars.value }})</code>
+        {%- endif -%}
         {%- if form.options.vars.value is not empty -%}
           <code>{{ form.options.vars.value }}</code>
-        {%- else -%}
+        {%- elseif form.composite_options.vars.value is empty -%}
           <span class="text-muted">{{ 'no options'|trans({}, 'Admin.Advparameters.Help') }}</span>
         {%- endif -%}
       </span>
@@ -351,6 +354,9 @@
          server-rendered display above is then removed. #}
       <span class="extra-property-options-editor" data-role="options-editor"></span>
       {{ form_widget(form.options, {attr: {'data-role': 'options-input'}}) }}
+      {# A composite's own options ("Collection(allowExtraFields: true)[ ... ]"), kept apart from
+         the nested constraints the options input carries. #}
+      {{ form_widget(form.composite_options, {attr: {'data-role': 'composite-options-input'}}) }}
     </div>
     {{ form_widget(form.per_language, {attr: {'data-role': 'per-language-input'}}) }}
     {{ block('extra_property_row_remove') }}

@@ -66,9 +66,10 @@ class ExtraPropertyDefinitionFromRowTest extends TestCase
         $this->assertNull($invalid->getEnumValues());
     }
 
-    public function testConstraintsRoundTripFromSerializedRow(): void
+    public function testConstraintsRoundTripFromStoredRow(): void
     {
-        $row = self::BASE_ROW + ['constraints' => serialize([new Assert\Url(), new Assert\Length(['max' => 50])])];
+        // The registry stores the constraint DSL itself — no serialized PHP object graph.
+        $row = self::BASE_ROW + ['constraints' => "Url\nLength(max: 50)"];
 
         $constraints = ExtraPropertyDefinition::fromRow($row)->getConstraints();
 
@@ -76,14 +77,31 @@ class ExtraPropertyDefinitionFromRowTest extends TestCase
         $this->assertCount(2, $constraints);
         $this->assertInstanceOf(Assert\Url::class, $constraints[0]);
         $this->assertInstanceOf(Assert\Length::class, $constraints[1]);
+        $this->assertSame(50, $constraints[1]->max);
     }
 
     public function testConstraintsAbsentOrUnusableFallBackToNull(): void
     {
         $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW)->getConstraints(), 'No constraints key → null.');
         $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => ''])->getConstraints(), 'Empty string → null.');
-        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => 'not-serialized'])->getConstraints(), 'Unserializable garbage → null.');
-        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => serialize(['x', 123])])->getConstraints(), 'Non-Constraint entries are filtered out → null.');
+        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => 'NotAConstraintName'])->getConstraints(), 'Unknown constraint name → null.');
+        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => '}{ garbage'])->getConstraints(), 'Malformed definition → null.');
+        $this->assertNull(
+            ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => serialize([new Assert\Url()])])->getConstraints(),
+            'A legacy PHP-serialized blob is no longer a supported format and decodes to nothing.'
+        );
+    }
+
+    public function testValidConstraintsSurviveACorruptSibling(): void
+    {
+        $row = self::BASE_ROW + ['constraints' => "Url\nLength(max: 5, normalizer: 'system')\nNotBlank"];
+
+        $constraints = ExtraPropertyDefinition::fromRow($row)->getConstraints();
+
+        $this->assertIsArray($constraints);
+        $this->assertCount(2, $constraints, 'The tampered constraint is dropped, its neighbours stay active.');
+        $this->assertInstanceOf(Assert\Url::class, $constraints[0]);
+        $this->assertInstanceOf(Assert\NotBlank::class, $constraints[1]);
     }
 
     /**

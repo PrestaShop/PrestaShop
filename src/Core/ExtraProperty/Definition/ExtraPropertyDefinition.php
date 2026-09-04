@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
 
 use ObjectModelCore;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCodec;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
@@ -547,43 +548,19 @@ final class ExtraPropertyDefinition
      * Normalizes the registry "constraints" cell into a list of Constraint objects.
      *
      * Accepts both shapes so fromRow() works for an in-memory row (constraints already given as
-     * Constraint objects) and a DB row (constraints serialized to a string):
-     *  - array  → already-decoded constraints; filtered and returned as-is (no unserialize).
-     *  - string → a serialized blob written by trusted module install code (registerExtraProperty);
-     *             unserialized then filtered.
-     * Anything that is not a Symfony Constraint is discarded. Returns null when nothing usable
-     * remains, mirroring the "no validation" default.
+     * Constraint objects) and a registry row (constraints stored as their DSL text):
+     *  - array  → already-decoded constraints, returned as-is.
+     *  - string → the constraint DSL, parsed against the core-owned grammar. No PHP deserialization
+     *             is involved: class names are resolved from the allowlist, never from the value.
+     *
+     * The repository decodes rows itself so it can log a rejection with its registry context; this
+     * fallback keeps fromRow() usable on a raw row, dropping what it cannot read.
      *
      * @return list<Constraint>|null
      */
     private static function decodeConstraints(mixed $raw): ?array
     {
-        if (is_array($raw)) {
-            return self::filterConstraints($raw);
-        }
-
-        if (!is_string($raw) || '' === $raw) {
-            return null;
-        }
-
-        $decoded = @unserialize($raw, ['allowed_classes' => true]);
-
-        return is_array($decoded) ? self::filterConstraints($decoded) : null;
-    }
-
-    /**
-     * @param array<mixed> $candidates
-     *
-     * @return list<Constraint>|null
-     */
-    private static function filterConstraints(array $candidates): ?array
-    {
-        $constraints = array_values(array_filter(
-            $candidates,
-            static fn (mixed $constraint): bool => $constraint instanceof Constraint
-        ));
-
-        return [] !== $constraints ? $constraints : null;
+        return ExtraPropertyConstraintCodec::decodeTolerant($raw);
     }
 
     // -------------------------------------------------------------------------

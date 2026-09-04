@@ -12,8 +12,10 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyConstraintException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManagerInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCodec;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -77,7 +79,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
      * removal) require unregister() + register() — automatic data migration is not supported.
      *
      * @throws ExtraPropertyRegistryException the failure reason is carried by the exception code:
-     *                                        SCOPE_CONFLICT, DESTRUCTIVE_SCHEMA_CHANGE, INVALID_FORM_OPTIONS,
+     *                                        SCOPE_CONFLICT, DESTRUCTIVE_SCHEMA_CHANGE, INVALID_FORM_OPTIONS, INVALID_CONSTRAINTS,
      *                                        UNKNOWN_SHOP, BASE_TABLE_NOT_FOUND, SCHEMA_FAILURE or
      *                                        PERSISTENCE_FAILURE
      */
@@ -91,7 +93,23 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         $scope = $definition->getScope();
         $normalizedScope = $scope->value;
 
-        // 1. (entity, module, property) is unique across scopes — a single lookup covers both
+        // 1. Refuse constraints that cannot be stored, before any DDL runs: a definition rejected
+        // later would otherwise leave an orphan storage column behind.
+        try {
+            ExtraPropertyConstraintCodec::assertEncodable($definition->getConstraints());
+        } catch (InvalidExtraPropertyConstraintException $exception) {
+            $message = sprintf(
+                'Invalid constraints for extra property %s.%s: %s',
+                $entityName,
+                $propertyName,
+                $exception->getMessage()
+            );
+            $this->logger->error($message, ['exception' => $exception]);
+
+            throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::INVALID_CONSTRAINTS, $exception);
+        }
+
+        // 2. (entity, module, property) is unique across scopes — a single lookup covers both
         // the scope-uniqueness rule and the immutability check on an existing definition.
         $existingDefinition = $this->readRepository->findDefinitionByModuleAndField(
             $entityName,
@@ -112,7 +130,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::SCOPE_CONFLICT);
         }
 
-        // 1b. Refuse a different entity name resolving to the SAME storage (table + column):
+        // 3. Refuse a different entity name resolving to the SAME storage (table + column):
         // the DB unique key on (entity_name, module_name, property_name) cannot see across
         // entity spellings, but two definitions writing the same physical column would
         // corrupt each other (an explicit tableName pointing at another entity's table is
@@ -138,7 +156,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             }
         }
 
-        // 2. Refuse destructive schema changes on an existing definition.
+        // 4. Refuse destructive schema changes on an existing definition.
         if (null !== $existingDefinition && $this->hasStorageChanges($definition, $existingDefinition)) {
             $message = sprintf(
                 'Refusing destructive schema change (type/scope/table change, size decrease, nullable tightening, enum value removal) for existing extra property %s.%s.',
@@ -150,7 +168,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::DESTRUCTIVE_SCHEMA_CHANGE);
         }
 
-        // 3. Refuse a definition whose form field could not be built at render time — being the
+        // 5. Refuse a definition whose form field could not be built at render time — being the
         // single write choke point, this covers every path: BO form, CQRS commands and
         // Module::registerExtraProperty(). The errors must reach the human who typed the options.
         $formOptionErrors = $this->formOptionsValidator->validate(
@@ -187,7 +205,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::INVALID_DEFAULT_VALUE);
         }
 
-        // 4. Refuse unknown shop ids in the association, BEFORE any DDL or row write: the
+        // 6. Refuse unknown shop ids in the association, BEFORE any DDL or row write: the
         //    association rows carry no foreign key, so an unknown id (e.g. a module calling
         //    registerExtraProperty() with a wrong shop id) would be stored silently and make
         //    the definition invisible on every real shop. Being the single write choke point,
@@ -216,7 +234,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             }
         }
 
-        // 5. Ensure the *_extra table and column exist and match the definition: the schema
+        // 7. Ensure the *_extra table and column exist and match the definition: the schema
         //    manager also syncs remaining non-destructive changes on the live column.
         //    DDL runs BEFORE the row write (see the method docblock): a DDL failure here
         //    persists nothing on a creation and leaves the previous row intact on an update.
@@ -236,7 +254,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::SCHEMA_FAILURE, $exception);
         }
 
-        // 6. Insert or update the registry row.
+        // 8. Insert or update the registry row.
         $savedId = $this->writeRepository->save($definition);
 
         if (false === $savedId) {

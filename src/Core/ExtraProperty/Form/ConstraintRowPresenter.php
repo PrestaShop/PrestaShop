@@ -37,7 +37,7 @@ class ConstraintRowPresenter
     }
 
     /**
-     * @return list<array{name: string, options: string, per_language: string}>
+     * @return list<array{name: string, options: string, composite_options: string, per_language: string}>
      */
     public static function rows(?string $raw): array
     {
@@ -65,22 +65,36 @@ class ConstraintRowPresenter
     }
 
     /**
-     * @param list<array{name: string, options: string, per_language: string}> $rows
+     * @param list<array{name: string, options: string, composite_options: string, per_language: string}> $rows
      */
     private static function appendTokenRow(array &$rows, string $token, string $perLanguage): void
     {
-        // Composite shape: Name[ nested, constraints ]
-        if (1 === preg_match('/^(\w+)\s*\[(.*)\]$/s', $token, $matches)) {
-            $rows[] = ['name' => $matches[1], 'options' => trim($matches[2]), 'per_language' => $perLanguage];
+        // The mapper owns the grammar: it splits the token with the same quote and delimiter rules
+        // the parser applies, so the builder never drifts from what the server will accept.
+        $parts = ExtraPropertyConstraintMapper::splitToken($token);
+        if (null === $parts) {
+            // Any other shape is unrepresentable without the raw edition — dropped (see class docblock).
+            return;
+        }
+
+        if (null !== $parts['children']) {
+            // Composite, with or without its own options tail:
+            // "All[ Url ]" or "Collection(allowExtraFields: true)[ name: NotBlank ]".
+            $rows[] = [
+                'name' => $parts['name'],
+                'options' => trim($parts['children']),
+                'composite_options' => trim($parts['options'] ?? ''),
+                'per_language' => $perLanguage,
+            ];
 
             return;
         }
 
-        // Regular shape: Name or Name(argument)
-        if (1 === preg_match('/^(\w+)\s*(?:\((.*)\))?$/s', $token, $matches)) {
-            $rows[] = ['name' => $matches[1], 'options' => trim($matches[2] ?? ''), 'per_language' => $perLanguage];
-        }
-
-        // Any other shape is unrepresentable without the raw edition — dropped (see class docblock).
+        $rows[] = [
+            'name' => $parts['name'],
+            'options' => trim($parts['options'] ?? ''),
+            'composite_options' => '',
+            'per_language' => $perLanguage,
+        ];
     }
 }

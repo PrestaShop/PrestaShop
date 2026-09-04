@@ -44,24 +44,24 @@ class ExtraPropertyDefinitionValidationTypeTest extends TypeTestCase
     {
         $form = $this->factory->create(ExtraPropertyDefinitionValidationType::class, [
             'constraints' => [
-                ['name' => 'NotBlank', 'options' => '', 'per_language' => '0'],
+                ['name' => 'NotBlank', 'options' => '', 'composite_options' => '', 'per_language' => '0'],
             ],
         ]);
 
         $form->submit([
             'constraints' => [
-                ['name' => 'DefaultLanguage', 'options' => "'Video link'", 'per_language' => '0'],
-                ['name' => 'Url', 'options' => '', 'per_language' => '1'],
-                ['name' => 'Length', 'options' => 'max: 255', 'per_language' => '1'],
+                ['name' => 'DefaultLanguage', 'options' => "'Video link'", 'composite_options' => '', 'per_language' => '0'],
+                ['name' => 'Url', 'options' => '', 'composite_options' => '', 'per_language' => '1'],
+                ['name' => 'Length', 'options' => 'max: 255', 'composite_options' => '', 'per_language' => '1'],
             ],
         ]);
 
         $this->assertTrue($form->isValid());
         // TextType/HiddenType normalize empty submitted values to null on rebind.
         $this->assertSame([
-            ['name' => 'DefaultLanguage', 'options' => "'Video link'", 'per_language' => '0'],
-            ['name' => 'Url', 'options' => null, 'per_language' => '1'],
-            ['name' => 'Length', 'options' => 'max: 255', 'per_language' => '1'],
+            ['name' => 'DefaultLanguage', 'options' => "'Video link'", 'composite_options' => null, 'per_language' => '0'],
+            ['name' => 'Url', 'options' => null, 'composite_options' => null, 'per_language' => '1'],
+            ['name' => 'Length', 'options' => 'max: 255', 'composite_options' => null, 'per_language' => '1'],
         ], $form->getData()['constraints']);
     }
 
@@ -71,15 +71,15 @@ class ExtraPropertyDefinitionValidationTypeTest extends TypeTestCase
 
         $form->submit([
             'constraints' => [
-                ['name' => 'NotBlank', 'options' => '', 'per_language' => '0'],
+                ['name' => 'NotBlank', 'options' => '', 'composite_options' => '', 'per_language' => '0'],
                 // Zone bookkeeping alone (per_language) does not make a row worth keeping.
-                ['name' => '', 'options' => '', 'per_language' => '1'],
+                ['name' => '', 'options' => '', 'composite_options' => '', 'per_language' => '1'],
             ],
         ]);
 
         $this->assertTrue($form->isValid());
         $this->assertSame(
-            [['name' => 'NotBlank', 'options' => null, 'per_language' => '0']],
+            [['name' => 'NotBlank', 'options' => null, 'composite_options' => null, 'per_language' => '0']],
             $form->getData()['constraints']
         );
     }

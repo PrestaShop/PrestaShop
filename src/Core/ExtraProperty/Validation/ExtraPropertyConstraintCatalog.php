@@ -14,6 +14,7 @@ use ReflectionNamedType;
 use ReflectionProperty;
 use ReflectionUnionType;
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Composite;
 
 /**
@@ -89,9 +90,24 @@ class ExtraPropertyConstraintCatalog
             ? array_map(static fn (string $type): array => ['type' => $type], self::OPTION_OVERRIDES[$name])
             : $this->reflectOptions($reflection);
 
+        $isComposite = is_subclass_of($fqcn, Composite::class);
+        if ($isComposite) {
+            // The nested constraints travel in the composite's "[...]" tail and have their own
+            // editor, so the option carrying them must not be offered as a regular option.
+            unset($options[Assert\Collection::class === $fqcn ? 'fields' : ($prototype->getDefaultOption() ?? 'constraints')]);
+        }
+
+        // Options the persisted format refuses are not offered either — the builder must not let a
+        // merchant compose a constraint the registry will then reject.
+        $options = array_filter(
+            $options,
+            static fn (string $option): bool => !ExtraPropertyConstraintMapper::isForbiddenOption($option),
+            ARRAY_FILTER_USE_KEY
+        );
+
         return [
             'defaultOption' => $prototype->getDefaultOption(),
-            'composite' => is_subclass_of($fqcn, Composite::class),
+            'composite' => $isComposite,
             'required' => array_values(array_map(strval(...), $prototype->getRequiredOptions())),
             'options' => $options,
         ];

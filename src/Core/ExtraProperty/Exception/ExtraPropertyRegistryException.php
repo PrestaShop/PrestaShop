@@ -78,6 +78,12 @@ class ExtraPropertyRegistryException extends ExtraPropertyException
     public const INVALID_DEFAULT_VALUE = 9;
 
     /**
+     * The declared constraints contain a class, an option or a value the extra property
+     * constraint format cannot carry safely.
+     */
+    public const INVALID_CONSTRAINTS = 10;
+
+    /**
      * @param list<string> $errors individual human-readable errors when the failure
      *                             aggregates several (only INVALID_FORM_OPTIONS provides
      *                             them so far — one entry per invalid form option)
