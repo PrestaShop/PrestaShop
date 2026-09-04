@@ -466,7 +466,14 @@ class HookCore extends ObjectModel
                 '\\PrestaShop\\PrestaShop\\Adapter\\Environment'
             );
             if ($environment->isDebug()) {
-                throw new CoreException($e->getMessage(), $e->getCode(), $e);
+                // WHY: this wrapper is thrown from Hook.php, so that is the location the debug page
+                // reports. Naming the hook and the module here is what tells the reader which module
+                // to look at; the original exception stays reachable as the previous one.
+                throw new CoreException(
+                    sprintf('Hook "%s" failed in module "%s": %s', $hookName, $module->name, $e->getMessage()),
+                    $e->getCode(),
+                    $e
+                );
             }
         }
 
@@ -1226,7 +1233,12 @@ class HookCore extends ObjectModel
                 '\\PrestaShop\\PrestaShop\\Adapter\\Environment'
             );
             if ($environment->isDebug()) {
-                throw new CoreException($e->getMessage(), $e->getCode(), $e);
+                // Same reason as in callHookOn(): identify the widget's hook and module.
+                throw new CoreException(
+                    sprintf('Widget hook "%s" failed in module "%s": %s', $hook_name, $module->name, $e->getMessage()),
+                    $e->getCode(),
+                    $e
+                );
             }
         }
 
