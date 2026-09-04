@@ -7883,12 +7883,14 @@ class ProductCore extends ObjectModel
         Pack::deleteItems($this->id);
 
         foreach ($items as $item) {
-            // Combination of a product is optional, and can be omitted.
-            if (!isset($item['product_attribute_id'])) {
-                $item['product_attribute_id'] = 0;
-            }
+            // Combination of a product is optional, and can be omitted. The webservice declares this
+            // field as id_product_attribute, which is also the name getWsProductBundle returns, so a
+            // payload built from a GET response uses it. product_attribute_id was only ever read here,
+            // it is kept so that clients written against this method keep working.
+            $idProductAttribute = $item['id_product_attribute'] ?? $item['product_attribute_id'] ?? 0;
+
             if ((int) $item['id'] > 0) {
-                Pack::addItem($this->id, (int) $item['id'], (int) $item['quantity'], (int) $item['product_attribute_id']);
+                Pack::addItem($this->id, (int) $item['id'], (int) $item['quantity'], (int) $idProductAttribute);
             }
         }
 
