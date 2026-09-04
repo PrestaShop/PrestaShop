@@ -2024,6 +2024,15 @@ class CartRuleCore extends ObjectModel
      */
     public static function autoAddToCart(?Context $context = null, bool $useOrderPrices = false)
     {
+        // WHY: this method is reached re-entrantly while the cart rules are being mutated
+        // (addCartRule/removeCartRule -> updateQty/deleteProduct -> autoRemoveFromCart/autoAddToCart,
+        // and autoRemoveFromCart -> getCartRules(autoAdd: true) -> autoAddToCart). When two automatic
+        // discounts are mutually incompatible (e.g. a free-gift and a cart-level discount), removing
+        // one to satisfy the compatibility rules deletes its gift product, which re-triggers the
+        // auto-add of the other, which removes the first again — an infinite loop on add-to-cart.
+        // Re-entrant invocations are redundant (the outermost call already iterates the whole
+        // candidate set), so guard against re-entrancy to keep the cart-rule resolution stable.
+        // @see https://github.com/PrestaShop/PrestaShop/issues/41671
         if ($context === null) {
             $context = Context::getContext();
         }
@@ -2031,7 +2040,19 @@ class CartRuleCore extends ObjectModel
             return;
         }
 
-        $sql = '
+        // The guard is keyed by cart id: the recursion is always on the same cart, so this stops
+        // the loop without ever silently skipping the auto-add of a different cart processed in the
+        // same request (e.g. several carts rendered or handled in one BO flow).
+        $cartId = (int) $context->cart->id;
+        static $isProcessing = [];
+        if (!empty($isProcessing[$cartId])) {
+            return;
+        }
+
+        $isProcessing[$cartId] = true;
+
+        try {
+            $sql = '
 		SELECT SQL_NO_CACHE cr.*
 		FROM ' . _DB_PREFIX_ . 'cart_rule cr
 		LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_shop crs ON cr.id_cart_rule = crs.id_cart_rule
@@ -2077,17 +2098,20 @@ class CartRuleCore extends ObjectModel
 		AND NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'cart_cart_rule WHERE cr.id_cart_rule = ' . _DB_PREFIX_ . 'cart_cart_rule.id_cart_rule
 																			AND id_cart = ' . (int) $context->cart->id . ')
 		ORDER BY priority';
-        $result = Db::getInstance()->executeS($sql, true, false);
-        if ($result) {
-            $cart_rules = ObjectModel::hydrateCollection('CartRule', $result);
-            if ($cart_rules) {
-                foreach ($cart_rules as $cart_rule) {
-                    /** @var CartRule $cart_rule */
-                    if ($cart_rule->checkValidity($context, false, false, true, $useOrderPrices)) {
-                        $context->cart->addCartRule($cart_rule->id, $useOrderPrices);
+            $result = Db::getInstance()->executeS($sql, true, false);
+            if ($result) {
+                $cart_rules = ObjectModel::hydrateCollection('CartRule', $result);
+                if ($cart_rules) {
+                    foreach ($cart_rules as $cart_rule) {
+                        /** @var CartRule $cart_rule */
+                        if ($cart_rule->checkValidity($context, false, false, true, $useOrderPrices)) {
+                            $context->cart->addCartRule($cart_rule->id, $useOrderPrices);
+                        }
                     }
                 }
             }
+        } finally {
+            unset($isProcessing[$cartId]);
         }
     }
 
