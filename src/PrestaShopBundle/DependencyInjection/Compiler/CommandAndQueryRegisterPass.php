@@ -64,14 +64,21 @@ class CommandAndQueryRegisterPass implements CompilerPassInterface
             if (!$reflector instanceof ReflectionClass) {
                 throw new RuntimeException(sprintf('AsCommandHandler must be a class attribute, "%s" given.', $reflector::class));
             }
-            $definition->addTag('messenger.message_handler', ['method' => $attribute->method, 'handles' => self::guessHandledClasses($reflector, $attribute->method)]);
+            $definition->addTag('messenger.message_handler', [
+                'method' => $attribute->method,
+                'handles' => self::guessHandledClasses($reflector, $attribute->method),
+                'transactional' => $attribute->transactional,
+            ]);
         });
 
         $container->registerAttributeForAutoconfiguration(AsQueryHandler::class, static function (ChildDefinition $definition, AsQueryHandler $attribute, Reflector $reflector): void {
             if (!$reflector instanceof ReflectionClass) {
                 throw new RuntimeException(sprintf('AsQueryHandler must be a class attribute, "%s" given.', $reflector::class));
             }
-            $definition->addTag('messenger.message_handler', ['method' => $attribute->method, 'handles' => self::guessHandledClasses($reflector, $attribute->method)]);
+            $definition->addTag('messenger.message_handler', [
+                'method' => $attribute->method,
+                'handles' => self::guessHandledClasses($reflector, $attribute->method),
+            ]);
         });
     }
 

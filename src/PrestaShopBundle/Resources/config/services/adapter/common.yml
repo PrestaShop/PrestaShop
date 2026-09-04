@@ -77,3 +77,10 @@ services:
       - '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository: ~
+
+  prestashop.adapter.database:
+    class: 'PrestaShop\PrestaShop\Adapter\Database'
+
+  PrestaShop\PrestaShop\Adapter\ConnectionSwitcher:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'

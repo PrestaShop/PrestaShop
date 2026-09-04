@@ -68,7 +68,7 @@ class DbMySQLiCore extends Db
             ));
         }
 
-        $this->link->query('SET SESSION sql_mode = \'\'');
+        $this->setSqlMode();
         $this->setTimeZone();
 
         return $this->link;
