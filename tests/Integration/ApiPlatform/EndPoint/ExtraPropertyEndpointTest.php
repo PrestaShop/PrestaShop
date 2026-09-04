@@ -300,7 +300,10 @@ final class ExtraPropertyEndpointTest extends ApiTestCase
      * A CQRS-paginated list (combinations — no grid behind it) is enriched too: every API-associated property is
      * batch-read from the database and injected inline at the item root. The definition is registered with the
      * natural 'combination' entity name (resolved to the product_attribute table / id_product_attribute primary
-     * key), and the item id is resolved through the resource's #[ApiProperty(identifier: true)] combinationId.
+     * key). Like the real CombinationList resource, ExtraPropertyCombinationList declares no
+     * #[ApiProperty(identifier: true)] (flagging combinationId would break the {productId} URI-variable mapping):
+     * the item id is resolved by the heuristic from the LOGICAL entity name ('combination' → combinationId) —
+     * the core mechanism this test pins.
      */
     public function testCqrsPaginatedCombinationListIsEnriched(): void
     {

@@ -107,7 +107,7 @@ class CommonController extends PrestaShopAdminController
     ): JsonResponse {
         // Derive the legacy controller from the entityName URL path param (trusted, non-forgeable).
         // Never trust a _legacy_controller value coming from the request body/query string.
-        $legacyController = self::legacyControllerFromEntityName($entityName);
+        $legacyController = $this->legacyControllerFromEntityName($entityName);
         if (!$this->isGranted('update', $legacyController)) {
             return new JsonResponse([
                 'status' => false,
@@ -408,10 +408,8 @@ class CommonController extends PrestaShopAdminController
      * Used server-side to verify employee permissions without trusting any client-supplied
      * value (e.g. for the extra-property toggle endpoint). A derived name matching no
      * existing tab is DENY-safe: Access::isGranted() grants nothing for unknown subjects.
-     *
-     * @internal exposed for unit testing only
      */
-    public static function legacyControllerFromEntityName(string $entityName): string
+    protected function legacyControllerFromEntityName(string $entityName): string
     {
         $inflector = Inflector::getInflector();
 

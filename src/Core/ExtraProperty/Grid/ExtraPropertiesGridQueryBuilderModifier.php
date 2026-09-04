@@ -59,7 +59,7 @@ class ExtraPropertiesGridQueryBuilderModifier
         protected readonly LanguageContext $languageContext,
         protected readonly ShopContext $shopContext,
         protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
-        protected readonly ?LoggerInterface $logger = null,
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
@@ -87,7 +87,7 @@ class ExtraPropertiesGridQueryBuilderModifier
             // derived table instead of the entity table (e.g. the order grid) — the grid
             // definition still declares the extra columns, which will render empty. See
             // issue #42536 for proper id-first-pagination support.
-            $this->logger?->warning(
+            $this->logger->warning(
                 'Extra property columns skipped on grid "{gridId}": the "{table}" entity table was not found in the FROM clause of the search or count query (derived-table pagination?). The declared columns will render empty and their filters are inoperative.',
                 ['gridId' => $gridId, 'table' => $tableName]
             );

@@ -30,6 +30,8 @@ use Tests\Resources\DatabaseDump;
  *    (unknown column: silent defaults on read, exception on write, toggle 403);
  *  - Combination: 'combination' resolves the product_attribute table; LANG and SHOP
  *    scopes work against product_attribute_lang / product_attribute_shop;
+ *  - the genuine attribute entity stays reachable: its registration is NOT hijacked by
+ *    the product_attribute → combination canonicalization;
  *  - LANG/SHOP on order are cleanly rejected (no orders_lang / orders_shop base table);
  *  - the cross-entity storage guard refuses a second definition writing the same
  *    physical column under another entity name.
@@ -203,6 +205,43 @@ class NonConventionalEntityNamingTest extends KernelTestCase
         $definition = self::$definitionRepository->findDefinitionByModuleAndField('combination', self::MODULE, 'naming_lang_note');
         $this->assertSame('product_attribute_extra_lang', $definition->getExtraTableName());
         $this->assertSame('id_product_attribute', $definition->getPrimaryKeyName());
+    }
+
+    public function testAttributeEntityIsNotHijackedByTheCombinationCanonicalization(): void
+    {
+        // 'product_attribute' canonicalizes to 'combination' — but the genuine attribute
+        // entity (whose modern class is the confusingly named ProductAttribute, table
+        // `attribute`) must keep its own name and storage tables.
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'attribute',
+            propertyName: 'naming_attribute_note',
+            type: ExtraPropertyType::STRING,
+            scope: ExtraPropertyScope::COMMON,
+            moduleName: self::MODULE,
+        );
+
+        try {
+            self::$registry->register($definition);
+
+            $hydrated = self::$definitionRepository->findDefinitionByModuleAndField('attribute', self::MODULE, 'naming_attribute_note');
+            $this->assertNotNull($hydrated);
+            $this->assertSame('attribute', $hydrated->getEntityName());
+            $this->assertSame('attribute', $hydrated->getTableName());
+            $this->assertSame('attribute_extra', $hydrated->getExtraTableName());
+            $this->assertSame('id_attribute', $hydrated->getPrimaryKeyName());
+
+            // The column landed on attribute_extra, never on the combination COMMON storage
+            // table (which this class's fixtures don't even create — a hijack would have).
+            $columnName = self::MODULE . '_naming_attribute_note';
+            $attributeColumns = array_column(Db::getInstance()->executeS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'attribute_extra`'), 'Field');
+            $this->assertContains($columnName, $attributeColumns);
+            if (Db::getInstance()->executeS("SHOW TABLES LIKE '" . _DB_PREFIX_ . "product_attribute_extra'")) {
+                $combinationColumns = array_column(Db::getInstance()->executeS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'product_attribute_extra`'), 'Field');
+                $this->assertNotContains($columnName, $combinationColumns);
+            }
+        } finally {
+            self::$registry->unregister($definition, true);
+        }
     }
 
     public function testAnotherEntityNameCannotClaimTheSameStorageColumn(): void
