@@ -1146,28 +1146,46 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         }
                     );
                     if (count($checkProductAttribute)) {
-                        // now lets find other combinations for the selected attributes.
+                        // now lets find other combinations for the selected attributes. The dropdowns are
+                        // washed from left to right, each group only offering values that still combine,
+                        // in stock, with the groups before it, so an unavailable combination means an
+                        // earlier group was just changed and the groups after it hold stale values. Keep
+                        // the longest leading run of requested attributes that an available combination
+                        // still satisfies, and let the stale ones be picked again.
+                        $availableCombinations = [];
+                        foreach ($availableProductAttributes as $elem) {
+                            $idProductAttribute = (int) $elem['id_product_attribute'];
+                            if (!isset($availableCombinations[$idProductAttribute])) {
+                                $availableCombinations[$idProductAttribute] = [
+                                    'id_product_attribute' => $idProductAttribute,
+                                    'quantity' => $elem['quantity'],
+                                    'id_attributes' => [],
+                                ];
+                            }
+                            $availableCombinations[$idProductAttribute]['id_attributes'][] = $elem['id_attribute'];
+                        }
+
+                        // getAttributeCombinations() orders its rows by attribute group position, the same
+                        // order the dropdowns are washed in, so the requested attributes come out in the
+                        // order the groups constrain each other.
                         $alternativeProductAttribute = [];
-                        foreach ($checkProductAttribute as $key => $attribute) {
-                            $alternativeAttribute = array_filter(
-                                $availableProductAttributes,
-                                function ($elem) use ($attribute) {
-                                    return $elem['id_attribute'] == $attribute['id_attribute'] && !$elem['is_color_group'];
+                        foreach (array_column($checkProductAttribute, 'id_attribute') as $idAttribute) {
+                            $availableCombinations = array_filter(
+                                $availableCombinations,
+                                function ($combination) use ($idAttribute) {
+                                    return in_array($idAttribute, $combination['id_attributes']);
                                 }
                             );
-                            foreach ($alternativeAttribute as $key => $value) {
-                                $alternativeProductAttribute[$key] = $value;
+                            if (empty($availableCombinations)) {
+                                break;
                             }
+                            $alternativeProductAttribute = $availableCombinations;
                         }
 
                         if (count($alternativeProductAttribute)) {
-                            // if alternative combination is found, order the list by quantity to use the one with more stock.
+                            // among the combinations that keep as much of the request as possible, use the one with more stock.
                             usort($alternativeProductAttribute, function ($a, $b) {
-                                if ($a['quantity'] == $b['quantity']) {
-                                    return 0;
-                                }
-
-                                return ($a['quantity'] > $b['quantity']) ? -1 : 1;
+                                return $b['quantity'] <=> $a['quantity'];
                             });
 
                             return (int) array_shift($alternativeProductAttribute)['id_product_attribute'];
