@@ -56,7 +56,7 @@ export default function () {
         });
       })
       .fail((resp) => {
-        prestashop.trigger('handleError', {
+        prestashop.emit('handleError', {
           eventType: 'updateDeliveryOptions',
           resp,
         });
