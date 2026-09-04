@@ -10,9 +10,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Exception;
 
 /**
- * Thrown when a BO "Validation" textarea entry is recognized by name but malformed or carries an
- * invalid argument (e.g. a required value is missing, or a value is supplied to a constraint that
- * takes none).
+ * Thrown when an extra property constraint is malformed, carries an invalid argument, or cannot be
+ * serialized safely (unsupported class, object graph or executable option).
  *
  * Distinct from UnknownExtraPropertyConstraintException, which covers an unrecognized name.
  */

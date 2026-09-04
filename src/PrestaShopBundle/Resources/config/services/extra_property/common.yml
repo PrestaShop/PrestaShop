@@ -18,6 +18,11 @@ services:
     arguments:
       $connection: '@doctrine.dbal.default_connection'
       $prefix: '%database_prefix%'
+      # LegacyLogger is available in Symfony kernels and the hand-built legacy FO container.
+      $logger: '@prestashop.extra_property.constraint_decode_logger'
+
+  prestashop.extra_property.constraint_decode_logger:
+    class: PrestaShop\PrestaShop\Adapter\LegacyLogger
 
   # Note: the definition WRITER interface (ExtraPropertyDefinitionWriterInterface) is intentionally NOT aliased
   # here. Writing definitions (register/unregister) is a back-office-only concern, so the alias lives in

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
 
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintSerializer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
@@ -99,7 +100,7 @@ final class ExtraPropertyDefinition
      * @param list<string>|null $associatedApis Admin API placement entries: "uriPath[:METHOD[,METHOD...]]", matched against the operation URI template (+ optional HTTP methods). No method modifier matches every method.
      * @param string|null $formType fully-qualified Symfony Form type FQCN override for BO forms
      * @param array<string, mixed>|null $formOptions extra options passed verbatim to the Symfony form type constructor
-     * @param list<Constraint>|null $constraints Symfony validation constraints applied to each value before persistence. Null/empty means no validation. Must be serializable (no Callback with a closure).
+     * @param list<Constraint>|null $constraints Symfony validation constraints applied to each value before persistence. Null/empty means no validation. Only constraints supported by ExtraPropertyConstraintMapper are accepted; callback/normalizer, property-path options and custom module constraint classes are not supported.
      * @param string|null $labelWording Translation wording key shown in BO. Required when associatedForms or associatedGrids is set.
      * @param string|null $labelDomain translation domain for label wording
      * @param string|null $descriptionWording translation wording key shown as BO help text
@@ -317,44 +318,15 @@ final class ExtraPropertyDefinition
     /**
      * Normalizes the registry "constraints" cell into a list of Constraint objects.
      *
-     * Accepts both shapes so fromRow() works for an in-memory row (constraints already given as
-     * Constraint objects) and a DB row (constraints serialized to a string):
-     *  - array  → already-decoded constraints; filtered and returned as-is (no unserialize).
-     *  - string → a serialized blob written by trusted module install code (registerExtraProperty);
-     *             unserialized then filtered.
-     * Anything that is not a Symfony Constraint is discarded. Returns null when nothing usable
-     * remains, mirroring the "no validation" default.
+     * Accepts both already-decoded in-memory lists and serialized DB values. The safe serializer
+     * applies the same fixed class allowlist and complete graph validation to both shapes.
+     * Unsupported roots are discarded; valid sibling constraints remain active.
      *
      * @return list<Constraint>|null
      */
     private static function decodeConstraints(mixed $raw): ?array
     {
-        if (is_array($raw)) {
-            return self::filterConstraints($raw);
-        }
-
-        if (!is_string($raw) || '' === $raw) {
-            return null;
-        }
-
-        $decoded = @unserialize($raw, ['allowed_classes' => true]);
-
-        return is_array($decoded) ? self::filterConstraints($decoded) : null;
-    }
-
-    /**
-     * @param array<mixed> $candidates
-     *
-     * @return list<Constraint>|null
-     */
-    private static function filterConstraints(array $candidates): ?array
-    {
-        $constraints = array_values(array_filter(
-            $candidates,
-            static fn (mixed $constraint): bool => $constraint instanceof Constraint
-        ));
-
-        return [] !== $constraints ? $constraints : null;
+        return ExtraPropertyConstraintSerializer::unserialize($raw);
     }
 
     // -------------------------------------------------------------------------

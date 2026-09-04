@@ -65,6 +65,11 @@ class ExtraPropertyRegistryException extends ExtraPropertyException
     public const UNKNOWN_SHOP = 7;
 
     /**
+     * The declared constraint graph contains an unsupported class or executable option.
+     */
+    public const INVALID_CONSTRAINTS = 8;
+
+    /**
      * @param list<string> $errors individual human-readable errors when the failure
      *                             aggregates several (only INVALID_FORM_OPTIONS provides
      *                             them so far — one entry per invalid form option)

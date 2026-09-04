@@ -485,6 +485,11 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
                     [],
                     'Admin.Advparameters.Notification'
                 ),
+                ExtraPropertyRegistrationFailureException::INVALID_CONSTRAINTS => $this->trans(
+                    'The validation constraints contain an unsupported class or executable option. Use only the constraints and options supported by the extra property feature.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
             ],
             InvalidExtraPropertyDefinitionException::class => $this->trans(
                 'The submitted extra property definition is invalid. Check the form values and try again.',

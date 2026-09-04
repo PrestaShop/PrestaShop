@@ -1232,6 +1232,8 @@ abstract class ModuleCore implements ModuleInterface
      *
      * The definition must have entityName and propertyName set.
      * The module name is automatically filled in from $this->name when $definition->getModuleName() is null.
+     * Validation constraints are limited to the classes exposed by ExtraPropertyConstraintMapper;
+     * custom module constraints, callback/normalizer and property-path options are not supported.
      *
      * About BO label translations: store wording/domain pairs in the definition, and also call
      * $this->trans() in the module code so strings are discoverable by the BO translation UI.
@@ -1245,7 +1247,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @return bool always true — failures throw
      *
-     * @throws PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException on any failure: scope conflict, destructive schema change, invalid form options, missing base table, DDL or persistence failure (see the reason-code constants on ExtraPropertyRegistryException)
+     * @throws PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException on any failure: scope conflict, destructive schema change, invalid constraints or form options, missing base table, DDL or persistence failure (see the reason-code constants on ExtraPropertyRegistryException)
      */
     public function registerExtraProperty(ExtraPropertyDefinition $definition): bool
     {

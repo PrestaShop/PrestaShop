@@ -61,6 +61,11 @@ class ExtraPropertyRegistrationFailureException extends ExtraPropertyException
     public const UNKNOWN_SHOP = 7;
 
     /**
+     * The declared constraint graph contains an unsupported class or executable option.
+     */
+    public const INVALID_CONSTRAINTS = 8;
+
+    /**
      * Builds the domain exception from the core exception thrown by the registry,
      * mapping the core reason code to the matching domain code and keeping the
      * core exception as the previous one.
@@ -75,6 +80,7 @@ class ExtraPropertyRegistrationFailureException extends ExtraPropertyException
             ExtraPropertyRegistryException::SCHEMA_FAILURE => self::SCHEMA_FAILURE,
             ExtraPropertyRegistryException::INVALID_FORM_OPTIONS => self::INVALID_FORM_OPTIONS,
             ExtraPropertyRegistryException::UNKNOWN_SHOP => self::UNKNOWN_SHOP,
+            ExtraPropertyRegistryException::INVALID_CONSTRAINTS => self::INVALID_CONSTRAINTS,
             default => self::UNKNOWN,
         };
 

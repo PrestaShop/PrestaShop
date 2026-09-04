@@ -14,6 +14,8 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefinitionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ColumnDefinitionMapper;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintSerializer;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 /**
@@ -29,6 +31,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
     public function __construct(
         protected readonly Connection $connection,
         protected readonly string $prefix,
+        protected readonly ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -49,7 +52,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
         );
 
         return new ExtraPropertyDefinitionCollection(array_values(array_map(
-            static fn (array $row): ExtraPropertyDefinition => ExtraPropertyDefinition::fromRow($row),
+            $this->hydrateDefinition(...),
             $rows
         )));
     }
@@ -76,7 +79,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             return null;
         }
 
-        return ExtraPropertyDefinition::fromRow($this->enrichRowsWithShopAssociations($this->enrichRowsWithColumnMetadata([$row]))[0]);
+        return $this->hydrateDefinition($this->enrichRowsWithShopAssociations($this->enrichRowsWithColumnMetadata([$row]))[0]);
     }
 
     /**
@@ -97,7 +100,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             return null;
         }
 
-        return ExtraPropertyDefinition::fromRow($this->enrichRowsWithShopAssociations($this->enrichRowsWithColumnMetadata([$row]))[0]);
+        return $this->hydrateDefinition($this->enrichRowsWithShopAssociations($this->enrichRowsWithColumnMetadata([$row]))[0]);
     }
 
     /**
@@ -145,7 +148,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             'form_type' => $definition->getFormType(),
             'form_options' => null !== $definition->getFormOptions() ? json_encode($definition->getFormOptions()) : null,
             'sql_index' => $definition->getSqlIndex()->value,
-            'constraints' => !empty($definition->getConstraints()) ? serialize($definition->getConstraints()) : null,
+            'constraints' => ExtraPropertyConstraintSerializer::serialize($definition->getConstraints()),
             'associated_forms' => !empty($definition->getAssociatedForms()) ? json_encode(array_values($definition->getAssociatedForms())) : null,
             'associated_grids' => !empty($definition->getAssociatedGrids()) ? json_encode(array_values($definition->getAssociatedGrids())) : null,
             'associated_apis' => !empty($definition->getAssociatedApis()) ? json_encode(array_values($definition->getAssociatedApis())) : null,
@@ -301,6 +304,44 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
         } else {
             $qb->andWhere($column . ' IS NULL');
         }
+    }
+
+    /**
+     * Decodes constraints before hydration so rejected data can be logged with its registry context.
+     *
+     * @param array<string, mixed> $row
+     */
+    protected function hydrateDefinition(array $row): ExtraPropertyDefinition
+    {
+        $row['constraints'] = ExtraPropertyConstraintSerializer::unserialize(
+            $row['constraints'] ?? null,
+            function (int|string|null $index, string $reason) use ($row): void {
+                $definitionId = isset($row['id_extra_property_definition'])
+                    ? (int) $row['id_extra_property_definition']
+                    : null;
+                $constraintLabel = null === $index ? 'serialized blob' : sprintf('index %s', (string) $index);
+                $message = sprintf(
+                    'Rejected extra property constraint %s for definition #%s (%s/%s/%s): %s',
+                    $constraintLabel,
+                    null !== $definitionId ? (string) $definitionId : 'unknown',
+                    (string) ($row['entity_name'] ?? 'unknown'),
+                    (string) ($row['module_name'] ?? ExtraPropertyDefinition::CORE_MODULE_KEY),
+                    (string) ($row['property_name'] ?? 'unknown'),
+                    $reason
+                );
+
+                try {
+                    $this->logger?->error($message, [
+                        'object_type' => 'extra_property_definition',
+                        'object_id' => $definitionId,
+                    ]);
+                } catch (Throwable) {
+                    // A logging failure must not make a corrupt definition crash a read request.
+                }
+            }
+        );
+
+        return ExtraPropertyDefinition::fromRow($row);
     }
 
     /**
