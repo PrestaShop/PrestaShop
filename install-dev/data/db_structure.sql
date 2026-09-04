@@ -2435,7 +2435,7 @@ CREATE TABLE `PREFIX_stock_mvt_reason` (
 CREATE TABLE `PREFIX_stock_mvt_reason_lang` (
   `id_stock_mvt_reason` INT(11) UNSIGNED NOT NULL,
   `id_lang` INT(11) UNSIGNED NOT NULL,
-  `name` VARCHAR(255) CHARACTER SET utf8 NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
   PRIMARY KEY (
     `id_stock_mvt_reason`, `id_lang`
   )
