@@ -44,6 +44,7 @@ class SearchAliasController extends PrestaShopAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/index.html.twig', [
             'aliasGrid' => $this->presentGrid($aliasGrid),
+            'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminSearchConf'),
             'layoutHeaderToolbarBtn' => [
                 'add' => [
