@@ -126,7 +126,7 @@
     "@types/mocha": "^10.0.10",
     "@types/mochawesome": "^6.2.5",
     "@types/node": "^26.4.0",
-    "@typescript-eslint/eslint-plugin": "^8.67.0",
+    "@typescript-eslint/eslint-plugin": "^8.69.0",
     "@typescript-eslint/parser": "^8.69.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.57.1",
