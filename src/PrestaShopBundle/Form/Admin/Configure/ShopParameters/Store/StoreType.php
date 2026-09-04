@@ -210,7 +210,8 @@ class StoreType extends TranslatorAwareType
         });
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
-            $this->rebuildCountryDependentFields($event->getForm(), (int) ($event->getData()['id_country'] ?? 0));
+            $submittedCountryId = (int) ($event->getData()['id_country'] ?? 0);
+            $this->rebuildCountryDependentFields($event->getForm(), $submittedCountryId > 0 ? $submittedCountryId : $this->contextCountryId);
         });
     }
 

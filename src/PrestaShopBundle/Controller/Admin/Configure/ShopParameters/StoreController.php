@@ -277,6 +277,11 @@ class StoreController extends PrestaShopAdminController
                     [],
                     'Admin.Advparameters.Notification'
                 ),
+                StoreConstraintException::INVALID_STATE => $this->trans(
+                    'An address located in a country containing states must have a state selected.',
+                    [],
+                    'Admin.Shopparameters.Notification'
+                ),
                 StoreConstraintException::MISSING_COORDINATE => $this->trans(
                     'Latitude and longitude are required.',
                     [],
