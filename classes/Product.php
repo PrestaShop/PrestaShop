@@ -6870,6 +6870,10 @@ class ProductCore extends ObjectModel
         // No hook exec
         $ids_new = [];
         foreach ($combinations as $combination) {
+            // An empty <id/> - which is what `products?schema=blank` hands back - is not a combination.
+            if (empty($combination['id'])) {
+                continue;
+            }
             $ids_new[] = (int) $combination['id'];
         }
 
@@ -6922,12 +6926,17 @@ class ProductCore extends ObjectModel
         }
 
         foreach ($to_add as $id) {
-            // Update id_product if exists else create
-            if (in_array($id, $all_ids)) {
-                Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'product_attribute` SET id_product = ' . (int) $this->id . ' WHERE id_product_attribute=' . $id);
-            } else {
-                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attribute` (`id_product`) VALUES (' . (int) $this->id . ')');
+            /*
+             * Only an existing combination can be moved onto this product. An id matching nothing used to
+             * insert a bare product_attribute row here instead - with a different id from the one asked
+             * for, and with no product_attribute_shop companion - so the product gained a combination no
+             * shop-scoped query can see, and its stock stopped behaving like a simple product's.
+             */
+            if (!in_array($id, $all_ids)) {
+                continue;
             }
+
+            Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'product_attribute` SET id_product = ' . (int) $this->id . ' WHERE id_product_attribute=' . $id);
         }
 
         return true;
