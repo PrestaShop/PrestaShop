@@ -1238,7 +1238,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
 
             // isRequiredWhenActive and defaultLanguageRequiredWhenActive validators must be called especially when the value is empty
             $isEmptyValidationMethod = Tools::strtolower($data['validate']) === 'isrequiredwhenactive' || Tools::strtolower($data['validate']) === 'defaultlanguagerequiredwhenactive';
-            if (!empty($value) || $isEmptyValidationMethod) {
+            if (!empty($value) || $value === '0' || $isEmptyValidationMethod) {
                 $res = $this->callValidateMethod($data['validate'], $value, isset($id_lang) ? (int) $id_lang : null);
                 if (!$res) {
                     if ($human_errors) {
