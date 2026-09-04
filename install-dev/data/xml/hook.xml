@@ -138,8 +138,8 @@
     </hook>
     <hook id="actionProductAdd">
       <name>actionProductAdd</name>
-      <title>Product creation</title>
-      <description>This hook is displayed after a product is created</description>
+      <title>Product duplication</title>
+      <description>This hook is called after a product is duplicated. Despite its name it is not called when a product is created: use actionObjectProductAddAfter for that</description>
     </hook>
     <hook id="actionProductUpdate">
       <name>actionProductUpdate</name>
@@ -5385,8 +5385,8 @@
     </hook>
     <hook id="actionAdminDuplicateAfter">
       <name>actionAdminDuplicateAfter</name>
-      <title/>
-      <description/>
+      <title>Product duplication</title>
+      <description>This hook is called after a product is duplicated, with the ids of the original and of the copy</description>
     </hook>
     <hook id="actionSearch">
       <name>actionSearch</name>
