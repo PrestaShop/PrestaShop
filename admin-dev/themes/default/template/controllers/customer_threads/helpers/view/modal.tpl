@@ -46,7 +46,7 @@
 	</div>
 </div>
 </form>
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	$("select[name='id_employee_forward']").on('change', function() {
 		if ($(this).val() != '-1')
 			$("button[name='submitForward']").prop('disabled', false);

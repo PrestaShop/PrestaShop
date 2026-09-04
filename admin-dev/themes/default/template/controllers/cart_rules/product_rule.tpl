@@ -30,7 +30,7 @@
 	</td>
 </tr>
 
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	$('#product_rule_{$product_rule_group_id|intval}_{$product_rule_id|intval}_choose_content').parent().hide();
   $("#product_rule_{$product_rule_group_id|intval}_{$product_rule_id|intval}_choose_link").fancybox({
     autoDimensions: false,

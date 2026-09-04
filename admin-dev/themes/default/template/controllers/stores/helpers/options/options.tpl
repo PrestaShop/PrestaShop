@@ -6,7 +6,7 @@
 {extends file="helpers/options/options.tpl"}
 
 {block name="after"}
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
     function ajaxStoreStates(id_state_selected)
 {
     $.ajax({

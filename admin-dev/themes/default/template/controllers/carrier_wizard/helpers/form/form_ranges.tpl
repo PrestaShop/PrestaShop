@@ -2,7 +2,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
-		<script>var zones_nbr = {$zones|count +3} ; /*corresponds to the third input text (max, min and all)*/</script>
+		<script nonce="{$cspNonce}">var zones_nbr = {$zones|count +3} ; /*corresponds to the third input text (max, min and all)*/</script>
 		<div id="zone_ranges" style="overflow:auto">
 			<h4>{l s='Ranges' d='Admin.Shipping.Feature'}</h4>
 			<table id="zones_table" class="table" style="max-width:100%">

@@ -58,7 +58,7 @@
 			<input id="bo_query" name="bo_query" type="text" class="form-control" value="{$bo_query}" placeholder="{l s='Search' d='Admin.Actions'}" aria-label="{l s='Search' d='Admin.Actions'}" />
 		</div>
 	</div>
-	<script>
+	<script nonce="{$cspNonce}">
 		{if isset($search_type) && $search_type}
 			$(function() {
 				$('.search-option a[data-value='+{$search_type|intval}+']').click();

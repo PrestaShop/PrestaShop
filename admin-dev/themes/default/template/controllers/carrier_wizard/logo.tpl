@@ -15,7 +15,7 @@
 	<img id="carrier_logo_img" src="{if $carrier_logo}{$carrier_logo}{else}../img/admin/carrier-default.jpg{/if}" class="img-thumbnail" alt=""/>
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	var carrier_translation_undefined = '{l s='undefined' js=1 d='Admin.Shipping.Help'}';
 
 	function removeCarrierLogo()

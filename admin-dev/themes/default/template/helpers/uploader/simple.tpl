@@ -56,7 +56,7 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 {if isset($multiple) && isset($max_files)}
 	var {$id|escape:'html':'UTF-8'}_max_files = {$max_files - ($files|count)};
 {/if}

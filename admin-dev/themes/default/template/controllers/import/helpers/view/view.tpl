@@ -4,7 +4,7 @@
  *}
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
-	<script type="text/javascript">
+	<script type="text/javascript" nonce="{$cspNonce}">
 		var errorEmpty = '{l s='Please name your data matching configuration in order to save it.' js=1}';
 		var current = 0;
 		function showTable(nb) {

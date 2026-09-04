@@ -29,7 +29,7 @@
 	{$active_form}
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	var summary_translation_undefined = '{l s='[undefined]' js=1}';
 	var summary_translation_meta_informations = '{l s='This carrier is %1$s and the transit time is %2$s.' js=1 d='Admin.Shipping.Feature'}';
 	var summary_translation_free = '{l s='free' js=1 d='Admin.Shipping.Feature'}';

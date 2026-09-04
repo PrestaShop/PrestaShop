@@ -55,7 +55,7 @@
 			/ {$list_total} {l s='result(s)' d='Admin.Global'}
 			<input type="hidden" id="{$list_id}-pagination-items-page" name="{$list_id}_pagination" value="{$selected_pagination|intval}" />
 		</div>
-		<script type="text/javascript">
+		<script type="text/javascript" nonce="{$cspNonce}">
 			$('.pagination-items-page').on('click',function(e){
 				e.preventDefault();
 				$('#'+$(this).data("list-id")+'-pagination-items-page').val($(this).data("items")).closest("form").submit();
@@ -101,7 +101,7 @@
 				</a>
 			</li>
 		</ul>
-		<script type="text/javascript">
+		<script type="text/javascript" nonce="{$cspNonce}">
 			$('.pagination-link').on('click',function(e){
 				e.preventDefault();
 

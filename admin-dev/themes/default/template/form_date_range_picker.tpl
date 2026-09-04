@@ -31,7 +31,7 @@
 
 	</form>
 </div>
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	$(function() {
 		if ($("form#calendar_form .datepicker").length > 0)
 			$("form#calendar_form .datepicker").datepicker({

@@ -22,7 +22,7 @@
 {block name="field"}
 	{if $input['type'] == 'group_discount_category'}
 	<div {if !$form_id}class="hide"{/if}>
-		<script type="text/javascript">
+		<script type="text/javascript" nonce="{$cspNonce}">
 		$(function() {
 			$("#group_discount_category").fancybox({
 				beforeLoad: function () {
@@ -150,7 +150,7 @@
 	</div>
 	{elseif $input['type'] == 'modules'}
 	<div {if !$form_id}class="hide"{/if}>
-		<script type="text/javascript">
+		<script type="text/javascript" nonce="{$cspNonce}">
 			$(function() {
 				$('#authorized-modules').find('[value="0"]').on('click', function() {
 					$(this).parent().parent().find('input[type=hidden]').attr('name', 'modulesBoxUnauth[]');
