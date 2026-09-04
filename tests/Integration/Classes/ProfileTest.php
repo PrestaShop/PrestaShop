@@ -8,11 +8,72 @@ declare(strict_types=1);
 
 namespace Test\Integration\Classes;
 
+use Access;
+use Language;
 use PHPUnit\Framework\TestCase;
 use Profile;
+use Tab;
+use Tests\Resources\DatabaseDump;
 
 class ProfileTest extends TestCase
 {
+    private const TOUCHED_TABLES = ['tab', 'tab_lang', 'authorization_role', 'access'];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        DatabaseDump::restoreTables(self::TOUCHED_TABLES);
+        Profile::resetStaticCache();
+    }
+
+    protected function tearDown(): void
+    {
+        DatabaseDump::restoreTables(self::TOUCHED_TABLES);
+        Profile::resetStaticCache();
+
+        parent::tearDown();
+    }
+
+    /**
+     * ModuleTabRegister duplicates a lone parent tab under <ParentClass>_MTR, so a class name with an
+     * underscore is something PrestaShop produces by itself. The permission slugs of such a tab must be
+     * reported against that tab and not against the class name that precedes the underscore.
+     *
+     * @see https://github.com/PrestaShop/PrestaShop/issues/28308
+     */
+    public function testAccessesOfATabWhoseClassNameCarriesAnUnderscoreAreReportedAgainstThatTab(): void
+    {
+        $idProfile = 2;
+        $className = 'AdminProbeParent_MTR';
+
+        $names = [];
+        foreach (Language::getIDs(false) as $idLang) {
+            $names[(int) $idLang] = 'Probe parent MTR';
+        }
+
+        $tab = new Tab();
+        $tab->class_name = $className;
+        $tab->id_parent = 0;
+        $tab->module = '';
+        $tab->active = true;
+        $tab->name = $names;
+        $this->assertTrue($tab->add());
+
+        $access = new Access();
+        foreach (['view', 'add', 'edit', 'delete'] as $action) {
+            $access->updateLgcAccess($idProfile, (int) $tab->id, $action, true);
+        }
+
+        Profile::resetStaticCache();
+        $accesses = Profile::getProfileAccesses($idProfile, 'class_name');
+
+        $this->assertArrayHasKey($className, $accesses);
+        foreach (['view', 'add', 'edit', 'delete'] as $action) {
+            $this->assertSame('1', $accesses[$className][$action], sprintf('%s on %s', $action, $className));
+        }
+    }
+
     public function testGetAccess(): void
     {
         $idProfile = 2;
