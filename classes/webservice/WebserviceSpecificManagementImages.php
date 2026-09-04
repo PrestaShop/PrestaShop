@@ -891,6 +891,16 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         if (!$source_width) {
             throw new WebserviceException('Image width was null', [68, 400]);
         }
+
+        // ImageManager::resize() honours the EXIF orientation and the POST path goes through it, but
+        // this method builds the image itself, so a photo taken in portrait arrived sideways when it
+        // was sent with PUT. The dimensions are swapped here, before they are used as the defaults for
+        // the destination, and the pixels are rotated once the source image exists.
+        $exifRotation = ImageManager::getExifRotationDegrees($base_path);
+        if (90 === abs($exifRotation)) {
+            [$source_width, $source_height] = [$source_height, $source_width];
+        }
+
         if ($dest_width == null) {
             $dest_width = $source_width;
         }
@@ -917,6 +927,14 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             default:
                 $source_image = imagecreatefromjpeg($base_path);
                 break;
+        }
+
+        if (0 !== $exifRotation && $source_image) {
+            $rotated = imagerotate($source_image, $exifRotation, 0);
+            if (false !== $rotated) {
+                imagedestroy($source_image);
+                $source_image = $rotated;
+            }
         }
 
         $width_diff = $dest_width / $source_width;
