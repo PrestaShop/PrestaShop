@@ -9,13 +9,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use Employee;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PrestaShop\PrestaShop\Core\Domain\Employee\EmployeeImageUploaderInterface;
 
 /**
  * Uploads employee logo image
  */
-final class EmployeeImageUploader extends AbstractImageUploader implements ImageUploaderInterface
+final class EmployeeImageUploader extends AbstractImageUploader implements EmployeeImageUploaderInterface
 {
     /**
      * @var string
@@ -42,14 +41,12 @@ final class EmployeeImageUploader extends AbstractImageUploader implements Image
     /**
      * {@inheritdoc}
      */
-    public function upload($employeeId, UploadedFile $image)
+    public function upload(int $employeeId, string $imagePath): void
     {
-        $this->checkImageIsAllowedForUpload($image);
-        $tempImageName = $this->createTemporaryImage($image);
         $this->deleteOldImage($employeeId);
 
         $destination = $this->employeeImageDir . $employeeId . '.jpg';
-        $this->uploadFromTemp($tempImageName, $destination);
+        $this->uploadFromTemp($imagePath, $destination);
     }
 
     /**

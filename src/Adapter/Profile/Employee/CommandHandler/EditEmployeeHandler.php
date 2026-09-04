@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\EditEmployeeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\EmployeeImageUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
@@ -49,21 +50,29 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
     private $legacyContext;
 
     /**
+     * @var EmployeeImageUploaderInterface
+     */
+    private $imageUploader;
+
+    /**
      * @param Hashing $hashing
      * @param ProfileAccessCheckerInterface $profileAccessChecker
      * @param ContextEmployeeProviderInterface $contextEmployeeProvider
      * @param LegacyContext $legacyContext
+     * @param EmployeeImageUploaderInterface $imageUploader
      */
     public function __construct(
         Hashing $hashing,
         ProfileAccessCheckerInterface $profileAccessChecker,
         ContextEmployeeProviderInterface $contextEmployeeProvider,
-        LegacyContext $legacyContext
+        LegacyContext $legacyContext,
+        EmployeeImageUploaderInterface $imageUploader
     ) {
         $this->hashing = $hashing;
         $this->profileAccessChecker = $profileAccessChecker;
         $this->contextEmployeeProvider = $contextEmployeeProvider;
         $this->legacyContext = $legacyContext;
+        $this->imageUploader = $imageUploader;
     }
 
     /**
@@ -86,6 +95,10 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $this->assertHomepageIsAccessible($command->getDefaultPageId() ?: ((int) $employee->default_tab), $command->getProfileId() ?: ((int) $employee->id_profile));
 
         $this->updateEmployeeWithCommandData($employee, $command);
+
+        if (null !== $command->getUploadedAvatarPath()) {
+            $this->imageUploader->upload((int) $employee->id, $command->getUploadedAvatarPath());
+        }
 
         if (null !== $command->getPlainPassword() && $employee->id == $this->contextEmployeeProvider->getId()) {
             $this->updatePasswordInCookie($employee);
