@@ -140,7 +140,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         // 2. Refuse destructive schema changes on an existing definition.
         if (null !== $existingDefinition && $this->hasStorageChanges($definition, $existingDefinition)) {
             $message = sprintf(
-                'Refusing destructive schema change (type/scope change, size decrease, nullable tightening, enum value removal) for existing extra property %s.%s.',
+                'Refusing destructive schema change (type/scope/table change, size decrease, nullable tightening, enum value removal) for existing extra property %s.%s.',
                 $entityName,
                 $propertyName
             );
@@ -356,6 +356,8 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
      * Returns true when $incoming would change the column schema in a DESTRUCTIVE way,
      * i.e. a change that risks data already stored in the extra column:
      *   - type or scope change (data conversion / storage table move)
+     *   - physical table change (a different explicit tableName): the definition would
+     *     silently relocate to another {table}_extra, orphaning every stored value
      *   - STRING size decrease — truncation risk; effective lengths compared (null ≡ 255)
      *   - nullable tightening (NULL → NOT NULL): existing NULL rows would break the ALTER
      *   - CHOICE enum value removal, or switching between ENUM and the VARCHAR fallback:
@@ -372,6 +374,10 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
     protected function hasStorageChanges(ExtraPropertyDefinition $incoming, ExtraPropertyDefinition $existing): bool
     {
         if ($incoming->getType() !== $existing->getType() || $incoming->getScope() !== $existing->getScope()) {
+            return true;
+        }
+
+        if ($incoming->getTableName() !== $existing->getTableName()) {
             return true;
         }
 

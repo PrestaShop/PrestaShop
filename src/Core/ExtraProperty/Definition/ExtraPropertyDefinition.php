@@ -93,7 +93,8 @@ final class ExtraPropertyDefinition
      * ObjectModels whose entity name differs from their table) → the entity's ObjectModel
      * class $definition['table'] ('combination' → 'product_attribute', 'order' → 'orders')
      * → the entity name itself (bare-table registrations). Persisted in the registry
-     * (table_name column) so hydration never re-resolves — see fromRow().
+     * (table_name column): the stored value always wins at hydration — fromRow() passes it
+     * back explicitly, freezing the storage location against later class changes.
      */
     protected readonly string $tableName;
 
@@ -216,7 +217,12 @@ final class ExtraPropertyDefinition
                 ));
             }
         }
-        $objectModelDefinition = $this->resolveObjectModelDefinition();
+        // Class resolution only fills the gaps: when both explicit values are provided
+        // (notably fromRow() hydration passing the stored table_name and the introspected
+        // PK) no re-resolution happens at all.
+        $objectModelDefinition = (null === $tableName || null === $primaryKeyName)
+            ? $this->resolveObjectModelDefinition()
+            : [];
         $this->tableName = $tableName ?? $objectModelDefinition['table'] ?? $this->entityName;
         $this->primaryKeyName = $primaryKeyName ?? $objectModelDefinition['primary'] ?? null;
         if (!ExtraPropertyValidator::isTableOrIdentifier($propertyName)) {

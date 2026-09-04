@@ -100,6 +100,12 @@ class ExtraPropertyRegistryTest extends TestCase
                 self::definition(type: ExtraPropertyType::CHOICE, enumValues: ['a']),
                 self::definition(type: ExtraPropertyType::CHOICE, enumValues: null),
             ],
+            // A different explicit tableName would silently relocate storage to another
+            // {table}_extra, orphaning every stored value.
+            'physical table relocation' => [
+                self::definition(),
+                self::definition(tableName: 'supplier'),
+            ],
         ];
     }
 
@@ -544,6 +550,7 @@ class ExtraPropertyRegistryTest extends TestCase
         ?string $formType = null,
         ?array $formOptions = null,
         ?array $associatedShopIds = null,
+        ?string $tableName = null,
     ): ExtraPropertyDefinition {
         return new ExtraPropertyDefinition(
             entityName: 'product',
@@ -558,6 +565,7 @@ class ExtraPropertyRegistryTest extends TestCase
             formType: $formType,
             formOptions: $formOptions,
             associatedShopIds: $associatedShopIds,
+            tableName: $tableName,
         );
     }
 }

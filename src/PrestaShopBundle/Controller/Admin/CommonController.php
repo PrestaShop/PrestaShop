@@ -400,10 +400,37 @@ class CommonController extends PrestaShopAdminController
     }
 
     /**
-     * Derives the BO legacy controller name (the permission subject) for a given entity name
-     * through the inflector: classify() (snake_case → CamelCase, so manufacturer_address →
-     * ManufacturerAddress) then pluralize() (order → AdminOrders, category → AdminCategories,
-     * address → AdminAddresses, product → AdminProducts).
+     * Entities whose BO page tab does not follow the 'Admin' + pluralized entity name
+     * convention. Each value is the exact _legacy_controller the entity's own grid page
+     * declares in routing (and a real install-dev/data/xml/tab.xml tab), so the toggle
+     * permission matches the page the toggle renders on. Every gridded entity absent from
+     * this map follows the convention (product → AdminProducts, order → AdminOrders…).
+     */
+    private const ENTITY_LEGACY_CONTROLLERS = [
+        'api_client' => 'AdminAdminAPI',
+        'attribute' => 'AdminAttributesGroups',
+        'attribute_group' => 'AdminAttributesGroups',
+        'catalog_price_rule' => 'AdminSpecificPriceRule',
+        'cms_page' => 'AdminCmsContent',
+        'cms_page_category' => 'AdminCmsContent',
+        'credit_slip' => 'AdminSlip',
+        'discount' => 'AdminCartRules',
+        'feature_value' => 'AdminFeatures',
+        'image_type' => 'AdminImages',
+        'meta' => 'AdminMeta',
+        'order_message' => 'AdminOrderMessage',
+        'shipment' => 'AdminOrders',
+        'tax_rules_group' => 'AdminTaxRulesGroup',
+        'title' => 'AdminGenders',
+        'webservice_key' => 'AdminWebservice',
+    ];
+
+    /**
+     * Derives the BO legacy controller name (the permission subject) for a given entity name:
+     * the ENTITY_LEGACY_CONTROLLERS map for entities whose real tab is irregular, otherwise
+     * the inflector convention — classify() (snake_case → CamelCase, so manufacturer_address
+     * → ManufacturerAddress) then pluralize() (order → AdminOrders, category →
+     * AdminCategories, address → AdminAddresses, product → AdminProducts).
      *
      * Used server-side to verify employee permissions without trusting any client-supplied
      * value (e.g. for the extra-property toggle endpoint). A derived name matching no
@@ -411,6 +438,10 @@ class CommonController extends PrestaShopAdminController
      */
     protected function legacyControllerFromEntityName(string $entityName): string
     {
+        if (isset(self::ENTITY_LEGACY_CONTROLLERS[$entityName])) {
+            return self::ENTITY_LEGACY_CONTROLLERS[$entityName];
+        }
+
         $inflector = Inflector::getInflector();
 
         return 'Admin' . $inflector->pluralize($inflector->classify($entityName));
