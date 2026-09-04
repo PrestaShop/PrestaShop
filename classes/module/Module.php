@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInt
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleOverrideChecker;
+use PrestaShop\PrestaShop\Core\Module\ModuleOverrideDeclarationPattern;
 use PrestaShop\PrestaShop\Core\Module\Parser\ModuleParser;
 use PrestaShop\PrestaShop\Core\Module\Parser\ModuleParserException;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
@@ -2993,23 +2994,77 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Uninstall overrides files for the module.
      *
+     * The installed override files are the reference: every member a module adds to an override is
+     * preceded by a `module: <name>` marker comment, so it is cleaned even if the module override
+     * sources changed or disappeared since the installation (e.g. after an upgrade of the module).
+     * Overrides of module classes are the exception, see getOverriddenClasses().
+     *
      * @return bool
      */
     public function uninstallOverrides()
     {
-        if (!is_dir($this->getLocalPath() . 'override')) {
-            return true;
+        $result = true;
+        foreach ($this->getOverriddenClasses() as $class) {
+            $result &= $this->removeOverride($class);
         }
 
-        $result = true;
-        foreach (Tools::scandir($this->getLocalPath() . 'override', 'php', '', true) as $file) {
-            $class = basename($file, '.php');
-            if (PrestashopAutoload::getInstance()->getClassPath($class . 'Core') || Module::getModuleIdByName($class)) {
-                $result &= $this->removeOverride($class);
+        return (bool) $result;
+    }
+
+    /**
+     * Lists the classes whose override must be cleaned when this module is uninstalled.
+     *
+     * Core classes and controllers are found from the installed override files, which carry a marker of
+     * the module above every member it added. Overrides of module classes carry no marker (their file is
+     * copied as is, see addOverride()), so they are found from the module override directory instead.
+     *
+     * @return string[]
+     */
+    private function getOverriddenClasses(): array
+    {
+        $classes = [];
+        $override_dir = rtrim(_PS_OVERRIDE_DIR_, '/\\') . DIRECTORY_SEPARATOR;
+        if (is_dir($override_dir)) {
+            foreach (Tools::scandir($override_dir, 'php', '', true) as $file) {
+                $class = basename($file, '.php');
+                if (!PrestashopAutoload::getInstance()->getClassPath($class . 'Core')) {
+                    continue;
+                }
+                $content = file_get_contents($override_dir . $file);
+                if ($content !== false && $this->hasOverrideMarker($content)) {
+                    $classes[] = $class;
+                }
             }
         }
 
-        return $result;
+        foreach ($this->getOverrides() ?? [] as $class) {
+            if (!PrestashopAutoload::getInstance()->getClassPath($class . 'Core')) {
+                $classes[] = $class;
+            }
+        }
+
+        return $classes;
+    }
+
+    /**
+     * Whether the given override content (a whole file or a single line) holds the
+     * `* module: <name>` line of a marker comment written by this module.
+     */
+    private function hasOverrideMarker(string $content): bool
+    {
+        return (bool) preg_match('/^\s*\*\s*module:\s*' . preg_quote((string) $this->name, '/') . '\s*$/m', $content);
+    }
+
+    /**
+     * Comment injected in front of each declaration copied to an override file, so the member can be
+     * attributed to this module and removed when it is uninstalled.
+     *
+     * Meant as replacement for a ModuleOverrideDeclarationPattern match: group 1 (indentation and
+     * attributes) is kept in front of the comment, group 2 (the declaration head) follows it.
+     */
+    private function getOverrideMarkerReplacement(): string
+    {
+        return "$1/*\n    * module: " . $this->name . "\n    * date: " . date('Y-m-d H:i:s') . "\n    * version: " . $this->version . "\n    */\n    $2";
     }
 
     /**
@@ -3100,7 +3155,7 @@ abstract class ModuleCore implements ModuleInterface
                     throw new Exception(Context::getContext()->getTranslator()->trans('The method %1$s in the class %2$s is already overridden.', [$method->getName(), $classname], 'Admin.Modules.Notification'));
                 }
 
-                $module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b' . $method->getName() . '\b))/ism', "/*\n    * module: " . $this->name . "\n    * date: " . date('Y-m-d H:i:s') . "\n    * version: " . $this->version . "\n    */\n    $1", $module_file);
+                $module_file = preg_replace(ModuleOverrideDeclarationPattern::forMethod($method->getName()), $this->getOverrideMarkerReplacement(), $module_file);
                 if ($module_file === null) {
                     throw new Exception(Context::getContext()->getTranslator()->trans('Failed to override method %1$s in class %2$s.', [$method->getName(), $classname], 'Admin.Modules.Notification'));
                 }
@@ -3112,7 +3167,7 @@ abstract class ModuleCore implements ModuleInterface
                     throw new Exception(Context::getContext()->getTranslator()->trans('The property %1$s in the class %2$s is already defined.', [$property->getName(), $classname], 'Admin.Modules.Notification'));
                 }
 
-                $module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\w+\s)?\s*(\$\b' . $property->getName() . '\b)/ism', "/*\n    * module: " . $this->name . "\n    * date: " . date('Y-m-d H:i:s') . "\n    * version: " . $this->version . "\n    */\n    $1$2$3$4", $module_file);
+                $module_file = preg_replace(ModuleOverrideDeclarationPattern::forProperty($property->getName()), $this->getOverrideMarkerReplacement(), $module_file);
                 if ($module_file === null) {
                     throw new Exception(Context::getContext()->getTranslator()->trans('Failed to override property %1$s in class %2$s.', [$property->getName(), $classname], 'Admin.Modules.Notification'));
                 }
@@ -3124,7 +3179,7 @@ abstract class ModuleCore implements ModuleInterface
                     throw new Exception(Context::getContext()->getTranslator()->trans('The constant %1$s in the class %2$s is already defined.', [$constant, $classname], 'Admin.Modules.Notification'));
                 }
 
-                $module_file = preg_replace('/((?:public|private|protected)\s+)?(?:static\s+)?(const\s)\s*(\b' . $constant . '\b)/ism', "/*\n    * module: " . $this->name . "\n    * date: " . date('Y-m-d H:i:s') . "\n    * version: " . $this->version . "\n    */\n    $1$2$3", $module_file);
+                $module_file = preg_replace(ModuleOverrideDeclarationPattern::forConstant($constant), $this->getOverrideMarkerReplacement(), $module_file);
                 if ($module_file === null) {
                     throw new Exception(Context::getContext()->getTranslator()->trans('Failed to override constant %1$s in class %2$s.', [$constant, $classname], 'Admin.Modules.Notification'));
                 }
@@ -3172,7 +3227,7 @@ abstract class ModuleCore implements ModuleInterface
 
                 // For each method found in the override, prepend a comment with the module name and version
                 foreach ($module_class->getMethods() as $method) {
-                    $module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b' . $method->getName() . '\b))/ism', "/*\n    * module: " . $this->name . "\n    * date: " . date('Y-m-d H:i:s') . "\n    * version: " . $this->version . "\n    */\n    $1", $module_file);
+                    $module_file = preg_replace(ModuleOverrideDeclarationPattern::forMethod($method->getName()), $this->getOverrideMarkerReplacement(), $module_file);
                     if ($module_file === null) {
                         throw new Exception(Context::getContext()->getTranslator()->trans('Failed to override method %1$s in class %2$s.', [$method->getName(), $classname], 'Admin.Modules.Notification'));
                     }
@@ -3180,7 +3235,7 @@ abstract class ModuleCore implements ModuleInterface
 
                 // Same loop for properties
                 foreach ($module_class->getProperties() as $property) {
-                    $module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\w+\s)?\s*(\$\b' . $property->getName() . '\b)/ism', "/*\n    * module: " . $this->name . "\n    * date: " . date('Y-m-d H:i:s') . "\n    * version: " . $this->version . "\n    */\n    $1$2$3$4", $module_file);
+                    $module_file = preg_replace(ModuleOverrideDeclarationPattern::forProperty($property->getName()), $this->getOverrideMarkerReplacement(), $module_file);
                     if ($module_file === null) {
                         throw new Exception(Context::getContext()->getTranslator()->trans('Failed to override property %1$s in class %2$s.', [$property->getName(), $classname], 'Admin.Modules.Notification'));
                     }
@@ -3188,7 +3243,7 @@ abstract class ModuleCore implements ModuleInterface
 
                 // Same loop for constants
                 foreach ($module_class->getConstants() as $constant => $value) {
-                    $module_file = preg_replace('/((?:public|private|protected)\s+)?(?:static\s+)?(const\s)\s*(\b' . $constant . '\b)/ism', "/*\n    * module: " . $this->name . "\n    * date: " . date('Y-m-d H:i:s') . "\n    * version: " . $this->version . "\n    */\n    $1$2$3", $module_file);
+                    $module_file = preg_replace(ModuleOverrideDeclarationPattern::forConstant($constant), $this->getOverrideMarkerReplacement(), $module_file);
                     if ($module_file === null) {
                         throw new Exception(Context::getContext()->getTranslator()->trans('Failed to override constant %1$s in class %2$s.', [$constant, $classname], 'Admin.Modules.Notification'));
                     }
@@ -3237,7 +3292,9 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Remove all methods in a module override from the override class.
+     * Remove from an override class the members (methods, properties and constants) added by this
+     * module, identified by the marker comment written above each of them when they were installed.
+     * The override file is deleted once no valuable code remains in it.
      *
      * @param string $classname
      *
@@ -3278,7 +3335,8 @@ abstract class ModuleCore implements ModuleInterface
                 $uniq = uniqid();
             } while (class_exists($classname . 'OverrideOriginal_remove', false));
 
-            // Make a reflection of the override class and the module override class
+            // Make a reflection of the installed override class: its members are the reference of what has
+            // to be removed, whatever the module override sources look like now
             $override_file = file($override_path);
 
             eval(
@@ -3295,116 +3353,39 @@ abstract class ModuleCore implements ModuleInterface
                 )
             );
             $override_class = new ReflectionClass($classname . 'OverrideOriginal_remove' . $uniq);
+            $removed = false;
 
-            $module_file = file($this->getLocalPath() . 'override/' . $path);
-            eval(
-                preg_replace(
-                    [
-                        '#^\s*<\?(?:php)?#',
-                        '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i',
-                    ],
-                    [
-                        ' ',
-                        'class ' . $classname . 'Override_remove' . $uniq . ' extends \stdClass',
-                    ],
-                    implode('', $module_file)
-                )
-            );
-            $module_class = new ReflectionClass($classname . 'Override_remove' . $uniq);
-
-            // Remove methods from override file
-            foreach ($module_class->getMethods() as $method) {
-                if (!$override_class->hasMethod($method->getName())) {
-                    continue;
-                }
-
-                $method = $override_class->getMethod($method->getName());
-                $length = $method->getEndLine() - $method->getStartLine() + 1;
-
-                $module_method = $module_class->getMethod($method->getName());
-
-                $override_file_orig = $override_file;
-
-                $orig_content = preg_replace('/\s/', '', implode('', array_splice($override_file, $method->getStartLine() - 1, $length, array_pad([], $length, '#--remove--#'))));
-                $module_content = preg_replace('/\s/', '', implode('', array_splice($module_file, $module_method->getStartLine() - 1, $length, array_pad([], $length, '#--remove--#'))));
-
-                $replace = true;
-                if (preg_match('/\* module: (' . $this->name . ')/ism', $override_file[$method->getStartLine() - 5])) {
-                    $override_file[$method->getStartLine() - 6] = $override_file[$method->getStartLine() - 5] = $override_file[$method->getStartLine() - 4] = $override_file[$method->getStartLine() - 3] = $override_file[$method->getStartLine() - 2] = '#--remove--#';
-                    $replace = false;
-                }
-
-                if (md5($module_content) != md5($orig_content) && $replace) {
-                    $override_file = $override_file_orig;
+            // Remove the methods added by this module: the marker comment, then the whole body
+            foreach ($override_class->getMethods() as $method) {
+                $declaration_index = $method->getStartLine() - 1;
+                if ($this->isOverrideMemberOfModule($override_file, $declaration_index)) {
+                    $this->removeOverrideLines($override_file, $declaration_index, $method->getEndLine() - 1);
+                    $removed = true;
                 }
             }
 
-            // Remove properties from override file
-            foreach ($module_class->getProperties() as $property) {
-                if (!$override_class->hasProperty($property->getName())) {
-                    continue;
-                }
-
-                // Replace all declaration lines by #--remove--#, tracking bracket depth
-                // to handle multi-line property values (e.g. arrays spanning multiple lines)
-                $inside_property = false;
-                $bracket_depth = 0;
-                foreach ($override_file as $line_number => &$line_content) {
-                    if (!$inside_property) {
-                        if (preg_match('/(public|private|protected)\s+(static\s+)?\s*(\w+\s+)?(\$)?' . $property->getName() . '/i', $line_content)) {
-                            if (preg_match('/\* module: (' . $this->name . ')/ism', $override_file[$line_number - 4])) {
-                                $override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] = $override_file[$line_number - 1] = '#--remove--#';
-                            }
-                            $inside_property = true;
-                            $bracket_depth = 0;
-                        }
-                    }
-
-                    if ($inside_property) {
-                        $bracket_depth += substr_count($line_content, '(') - substr_count($line_content, ')');
-                        $bracket_depth += substr_count($line_content, '[') - substr_count($line_content, ']');
-                        $is_end = ($bracket_depth <= 0 && false !== strpos($line_content, ';'));
-                        $line_content = '#--remove--#';
-
-                        if ($is_end) {
-                            break;
-                        }
-                    }
+            // Remove the properties added by this module: the marker comment, then the declaration up to the
+            // end of its statement (a default value may span several lines)
+            foreach ($override_class->getProperties() as $property) {
+                $declaration_index = $this->findOverrideDeclaration($override_file, ModuleOverrideDeclarationPattern::forProperty($property->getName()));
+                if ($declaration_index !== null && $this->isOverrideMemberOfModule($override_file, $declaration_index)) {
+                    $this->removeOverrideLines($override_file, $declaration_index, $this->findOverrideStatementEnd($override_file, $declaration_index));
+                    $removed = true;
                 }
             }
 
-            // Remove constants from override file
-            foreach ($module_class->getConstants() as $constant => $value) {
-                if (!$override_class->hasConstant($constant)) {
-                    continue;
+            // Same for the constants
+            foreach ($override_class->getConstants() as $constant => $value) {
+                $declaration_index = $this->findOverrideDeclaration($override_file, ModuleOverrideDeclarationPattern::forConstant($constant));
+                if ($declaration_index !== null && $this->isOverrideMemberOfModule($override_file, $declaration_index)) {
+                    $this->removeOverrideLines($override_file, $declaration_index, $this->findOverrideStatementEnd($override_file, $declaration_index));
+                    $removed = true;
                 }
+            }
 
-                // Replace all declaration lines by #--remove--#, tracking bracket depth
-                // to handle multi-line constant values (e.g. arrays spanning multiple lines)
-                $inside_constant = false;
-                $bracket_depth = 0;
-                foreach ($override_file as $line_number => &$line_content) {
-                    if (!$inside_constant) {
-                        if (preg_match('/(const)\s+(static\s+)?(\$)?' . $constant . '/i', $line_content)) {
-                            if (preg_match('/\* module: (' . $this->name . ')/ism', $override_file[$line_number - 4])) {
-                                $override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] = $override_file[$line_number - 1] = '#--remove--#';
-                            }
-                            $inside_constant = true;
-                            $bracket_depth = 0;
-                        }
-                    }
-
-                    if ($inside_constant) {
-                        $bracket_depth += substr_count($line_content, '(') - substr_count($line_content, ')');
-                        $bracket_depth += substr_count($line_content, '[') - substr_count($line_content, ']');
-                        $is_end = ($bracket_depth <= 0 && false !== strpos($line_content, ';'));
-                        $line_content = '#--remove--#';
-
-                        if ($is_end) {
-                            break;
-                        }
-                    }
-                }
+            // Nothing in this file belongs to the module: leave it untouched
+            if (!$removed) {
+                return true;
             }
 
             $count = count($override_file);
@@ -3478,6 +3459,72 @@ abstract class ModuleCore implements ModuleInterface
         PrestashopAutoload::getInstance()->generateIndex();
 
         return true;
+    }
+
+    /**
+     * Whether the member declared at $declaration_index of an override file was added by this module,
+     * i.e. is preceded by the marker comment written when it was installed. The comment spans the five
+     * lines above the declaration, the module name being on its second line.
+     *
+     * @param string[] $lines
+     */
+    private function isOverrideMemberOfModule(array $lines, int $declaration_index): bool
+    {
+        return isset($lines[$declaration_index - 4]) && $this->hasOverrideMarker($lines[$declaration_index - 4]);
+    }
+
+    /**
+     * Index of the first line of an override file matching a declaration pattern, null when there is none.
+     *
+     * @param string[] $lines
+     */
+    private function findOverrideDeclaration(array $lines, string $pattern): ?int
+    {
+        foreach ($lines as $index => $line) {
+            if (preg_match($pattern, $line)) {
+                return $index;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Index of the line ending the statement declared at $declaration_index: the first line holding a
+     * semicolon once every parenthesis and bracket opened by the statement is closed.
+     *
+     * @param string[] $lines
+     */
+    private function findOverrideStatementEnd(array $lines, int $declaration_index): int
+    {
+        $depth = 0;
+        $last_index = count($lines) - 1;
+        for ($i = $declaration_index; $i <= $last_index; ++$i) {
+            $depth += substr_count($lines[$i], '(') - substr_count($lines[$i], ')');
+            $depth += substr_count($lines[$i], '[') - substr_count($lines[$i], ']');
+            if ($depth <= 0 && str_contains($lines[$i], ';')) {
+                return $i;
+            }
+        }
+
+        return $last_index;
+    }
+
+    /**
+     * Marks for removal the member declared from $declaration_index to $end_index (both included), along
+     * with the marker comment and the attributes written above it.
+     *
+     * @param string[] $lines
+     */
+    private function removeOverrideLines(array &$lines, int $declaration_index, int $end_index): void
+    {
+        $from = max(0, $declaration_index - 5);
+        while ($from > 0 && preg_match('/^\s*#\[/', $lines[$from - 1])) {
+            --$from;
+        }
+        for ($i = $from; $i <= $end_index; ++$i) {
+            $lines[$i] = '#--remove--#';
+        }
     }
 
     /**
