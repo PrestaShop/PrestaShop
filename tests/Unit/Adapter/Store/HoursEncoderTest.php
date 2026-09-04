@@ -131,6 +131,11 @@ class HoursEncoderTest extends TestCase
             [1 => json_encode(['unexpected'])],
             [1 => ['']],
         ];
+
+        yield 'legacy day with more than two slots is joined rather than dropped' => [
+            [1 => json_encode([['09:00', '12:00', '14:00', '18:00']])],
+            [1 => ['09:00 | 12:00 | 14:00 | 18:00']],
+        ];
     }
 
     /**

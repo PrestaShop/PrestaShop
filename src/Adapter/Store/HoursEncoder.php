@@ -59,9 +59,11 @@ final class HoursEncoder
                     $open = trim($day[0]);
                     $close = trim($day[1]);
                     $days[] = ($open !== '' && $close !== '') ? $open . ' | ' . $close : $open;
-                } elseif (is_array($day) && 1 === count($day)) {
-                    // Legacy format: ["09:00AM - 07:00PM"] → use as-is
-                    $days[] = trim($day[0]);
+                } elseif (is_array($day) && count($day) > 0) {
+                    // Legacy format: ["09:00AM - 07:00PM"] → use as-is, and legacy days can
+                    // also carry more than two slots (["09:00","12:00","14:00","18:00"]):
+                    // join whatever is there rather than assuming at most 2.
+                    $days[] = implode(' | ', array_map('trim', $day));
                 } else {
                     $days[] = '';
                 }
