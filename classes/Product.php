@@ -7372,33 +7372,20 @@ class ProductCore extends ObjectModel
         );
 
         if ($idProductAttribute === false && $findBest) {
-            // find the best possible combination
-            // first we order $idAttributes by the group position
-            $orderred = [];
-            $result = Db::getInstance()->executeS(
-                'SELECT a.`id_attribute`
-                FROM `' . _DB_PREFIX_ . 'attribute` a
-                INNER JOIN `' . _DB_PREFIX_ . 'attribute_group` g ON a.`id_attribute_group` = g.`id_attribute_group`
-                WHERE a.`id_attribute` IN (' . $idAttributesImploded . ')
-                ORDER BY g.`position` ASC'
+            // No combination uses exactly the requested attributes, which happens when the combinations of
+            // a product do not all use the same attribute groups. Fall back to the most specific combination
+            // whose attributes are all part of the request, so nothing the visitor did not ask for is added.
+            // Discarding attributes by group position instead would only ever recover combinations that omit
+            // a late group, and would silently answer with an unrelated combination otherwise.
+            $idProductAttribute = Db::getInstance()->getValue(
+                'SELECT pac.`id_product_attribute`
+                FROM `' . _DB_PREFIX_ . 'product_attribute_combination` pac
+                INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+                WHERE pa.id_product = ' . $idProduct . '
+                GROUP BY pac.`id_product_attribute`
+                HAVING SUM(pac.`id_attribute` NOT IN (' . $idAttributesImploded . ')) = 0
+                ORDER BY COUNT(*) DESC, pac.`id_product_attribute` ASC'
             );
-
-            foreach ($result as $row) {
-                $orderred[] = $row['id_attribute'];
-            }
-
-            while ($idProductAttribute === false && count($orderred) > 1) {
-                array_pop($orderred);
-                $idProductAttribute = Db::getInstance()->getValue(
-                    'SELECT pac.`id_product_attribute`
-                    FROM `' . _DB_PREFIX_ . 'product_attribute_combination` pac
-                    INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-                    WHERE pa.id_product = ' . (int) $idProduct . '
-                    AND pac.id_attribute IN (' . implode(',', array_map('intval', $orderred)) . ')
-                    GROUP BY pac.id_product_attribute
-                    HAVING COUNT(pa.id_product) = ' . count($orderred)
-                );
-            }
         }
 
         if (empty($idProductAttribute)) {
