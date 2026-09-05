@@ -128,7 +128,12 @@ abstract class HTMLTemplateCore
         }
 
         $this->smarty->assign([
-            'logo_path' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_ . $logo,
+            // The PDF is rendered by the server, so the logo is read straight off the filesystem instead of
+            // being fetched over HTTP from the shop's own public URL. That request often cannot succeed from
+            // the server itself: a container published on another port, a firewall, or split horizon DNS all
+            // break it, and the invoice then carries no logo at all. HTMLTemplateSupplyOrderForm already
+            // passes a filesystem path here.
+            'logo_path' => !empty($logo) ? _PS_IMG_DIR_ . $logo : '',
             'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'date' => $this->date,
