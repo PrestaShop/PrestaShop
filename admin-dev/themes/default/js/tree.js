@@ -3,6 +3,18 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+/**
+ * The tree's AJAX calls used a bare 'index.php', which the browser resolves against the CURRENT path.
+ * That is the admin dispatcher only on a legacy page; from a Symfony route such as
+ * /<admin>/improve/modules/manage/action/configure/ it resolves to
+ * /<admin>/improve/modules/manage/action/configure/index.php, which does not exist.
+ * baseAdminDir is published by both back office layouts - AdminController::setMedia() for the legacy one
+ * and the HeadTag Twig component for the Symfony one - and already ends with a slash.
+ */
+function adminDispatcherUrl() {
+  return (typeof window.baseAdminDir !== 'undefined' ? window.baseAdminDir : '') + 'index.php';
+}
+
 window.Tree = function (element, options) {
   this.$element = $(element);
   this.options = $.extend({}, $.fn.tree.defaults, options);
@@ -47,7 +59,7 @@ Tree.prototype = {
             const useCheckBox = inputType === 'checkbox' ? 1 : 0;
 
             $.get(
-              'index.php',
+              adminDispatcherUrl(),
               {
                 ajax: 1,
                 controller: 'AdminProducts',
@@ -174,7 +186,7 @@ Tree.prototype = {
       }
 
       $.get(
-        'index.php',
+        adminDispatcherUrl(),
         data,
         (content) => {
           targetTree.html(content);
