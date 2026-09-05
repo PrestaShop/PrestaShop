@@ -71,7 +71,7 @@ class SetSuppliersCommand
 
         $this->supplierIds = [];
         foreach ($supplierIds as $supplierId) {
-            $this->supplierIds[] = new SupplierId($supplierId);
+            $this->supplierIds[] = new SupplierId((int) $supplierId);
         }
     }
 }
