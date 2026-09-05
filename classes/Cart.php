@@ -2465,6 +2465,24 @@ class CartCore extends ObjectModel
                     $cartRules[] = $cartRuleCandidate;
                 }
             }
+
+            // WHY: the Calculator applies these rules in the order it receives them and a percentage
+            // reduction is computed against the running total, so the order decides the amount. Merging
+            // a reduction query with a gift query puts every reduction ahead of every gift, while the
+            // branch above hands over one FILTER_ACTION_ALL result in priority order - so BOTH and
+            // BOTH_WITHOUT_SHIPPING disagreed on a cart holding both kinds, even with free shipping.
+            // getOrderedCartRulesIds() answers "in what order does this cart apply its rules" and
+            // computes no contextual value, so reordering against it cannot re-enter the
+            // getCartRules() -> getOrderTotal() -> getCartRules() loop that asking FILTER_ACTION_ALL
+            // for the values here would.
+            $canonicalOrder = array_flip(array_column(
+                $this->getOrderedCartRulesIds(CartRule::FILTER_ACTION_ALL),
+                'id_cart_rule'
+            ));
+            usort($cartRules, static function (array $a, array $b) use ($canonicalOrder): int {
+                return ($canonicalOrder[$a['id_cart_rule']] ?? PHP_INT_MAX)
+                    <=> ($canonicalOrder[$b['id_cart_rule']] ?? PHP_INT_MAX);
+            });
         }
 
         return $cartRules;
