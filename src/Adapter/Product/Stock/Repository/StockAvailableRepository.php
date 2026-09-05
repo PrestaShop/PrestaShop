@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -312,10 +313,11 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
      * @param StockId $stockId
      * @param OrderStateId $errorStateId
      * @param OrderStateId $canceledStateId
+     * @param OrderStateId|null $refundedStateId
      */
-    public function updatePhysicalProductQuantity(StockId $stockId, OrderStateId $errorStateId, OrderStateId $canceledStateId): void
+    public function updatePhysicalProductQuantity(StockId $stockId, OrderStateId $errorStateId, OrderStateId $canceledStateId, ?OrderStateId $refundedStateId = null): void
     {
-        $this->updateReservedProductQuantity($stockId, $errorStateId, $canceledStateId);
+        $this->updateReservedProductQuantity($stockId, $errorStateId, $canceledStateId, $refundedStateId);
 
         // Now update the physical_quantity
         $updateQb = $this->connection->createQueryBuilder();
@@ -328,8 +330,14 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
         $updateQb->executeStatement();
     }
 
-    protected function updateReservedProductQuantity(StockId $stockId, OrderStateId $errorStateId, OrderStateId $canceledStateId): void
+    protected function updateReservedProductQuantity(StockId $stockId, OrderStateId $errorStateId, OrderStateId $canceledStateId, ?OrderStateId $refundedStateId = null): void
     {
+        $nonReservingStates = [$errorStateId->getValue(), $canceledStateId->getValue()];
+
+        if (null !== $refundedStateId) {
+            $nonReservingStates[] = $refundedStateId->getValue();
+        }
+
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->addSelect('SUM(od.product_quantity - od.product_quantity_refunded) AS reserved_quantity')
@@ -345,19 +353,15 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
                 $qb->expr()->neq('os.shipped', 1),
                 $qb->expr()->or(
                     $qb->expr()->eq('o.valid', 1),
-                    $qb->expr()->and(
-                        $qb->expr()->neq('os.id_order_state', ':errorStateId'),
-                        $qb->expr()->neq('os.id_order_state', ':canceledStateId')
-                    )
+                    $qb->expr()->notIn('os.id_order_state', ':nonReservingStates')
                 ),
                 $qb->expr()->eq('sa.id_stock_available', ':stockId')
             ))
             ->groupBy('od.product_id', 'od.product_attribute_id')
             ->setParameters([
                 'stockId' => $stockId->getValue(),
-                'errorStateId' => $errorStateId->getValue(),
-                'canceledStateId' => $canceledStateId->getValue(),
             ])
+            ->setParameter('nonReservingStates', array_values(array_unique($nonReservingStates)), ArrayParameterType::INTEGER)
         ;
 
         $result = $qb->executeQuery()->fetchAssociative();

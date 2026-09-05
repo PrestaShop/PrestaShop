@@ -80,3 +80,21 @@ Feature: Order from Back Office (BO)
       | Delivered                  |                     |                    |               |
       | Payment accepted           |                     |                    | api_client    |
       | Awaiting bank wire payment |                     |                    |               |
+
+  Scenario: Reserved stock is released when the order is refunded
+    Given I am logged in as "test@prestashop.com" employee
+    And I create an empty cart "refund_cart" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "refund_cart"
+    And I add 2 products "Mug The best is yet to come" to the cart "refund_cart"
+    And I add order "refund_order" with the following details:
+      | cart                | refund_cart      |
+      | message             | test             |
+      | payment module name | dummy_payment    |
+      | status              | Payment accepted |
+    Then the reserved stock for product "Mug The best is yet to come" should be 2
+    # Refunded is a final state, it must release the reservation exactly like Canceled does
+    When I update order "refund_order" status to "Refunded"
+    Then the reserved stock for product "Mug The best is yet to come" should be 0
+    # and returning the order to a live state must reserve it again, the release is not one way
+    When I update order "refund_order" status to "Payment accepted"
+    Then the reserved stock for product "Mug The best is yet to come" should be 2
