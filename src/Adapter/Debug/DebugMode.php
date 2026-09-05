@@ -27,7 +27,29 @@ class DebugMode
      */
     public function isDebugModeEnabled()
     {
+        // The constant actually in effect is the ground truth. Reading it back out of the defines files
+        // cannot tell that a define() is guarded: config/defines_custom.inc.php is an supported override
+        // and the official Docker image writes it as
+        //     if ((bool) getenv('PS_DEV_MODE')) { define('_PS_MODE_DEV_', (bool) getenv('PS_DEV_MODE')); }
+        // The parser matches that define wherever it sits and compares the expression text against the
+        // literal 'false', so with PS_DEV_MODE unset an inactive define was reported as ENABLED and
+        // SwitchDebugModeHandler::handle() then had nothing to do when asked to turn debug mode on.
+        $runtimeDebugMode = $this->getRuntimeDebugMode();
+        if (null !== $runtimeDebugMode) {
+            return $runtimeDebugMode;
+        }
+
         return 'false' !== Tools::strtolower($this->getCurrentDebugMode());
+    }
+
+    /**
+     * The value of _PS_MODE_DEV_ as the running process sees it.
+     *
+     * @return bool|null null when the constant is not defined, which happens outside a booted shop
+     */
+    protected function getRuntimeDebugMode(): ?bool
+    {
+        return defined('_PS_MODE_DEV_') ? (bool) _PS_MODE_DEV_ : null;
     }
 
     /**
