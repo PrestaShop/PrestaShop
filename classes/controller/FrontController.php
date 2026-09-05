@@ -773,6 +773,57 @@ class FrontControllerCore extends Controller
 
         Hook::exec('actionOutputHTMLBefore', ['html' => &$html]);
         Hook::exec('actionOutput' . $this->getControllerName() . 'HTMLBefore', ['html' => &$html]);
+
+        // =======================================================================================
+        // TODO <cnc> ===== Front admin bar ===== FrontController::smartyOutputContent() - temp code
+        // It is used to print the bar, but it will need to be inserted into the templates.
+        $featureFlagEnabled = false;
+        try {
+            $featureFlagStateChecker = $this->get(PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface::class);
+            $featureFlagEnabled = $featureFlagStateChecker->isEnabled(PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings::FEATURE_FLAG_FRONT_OFFICE_ADMIN_BAR);
+        } catch (Throwable) {
+            // A missing or unreadable experimental flag must not affect Front Office output.
+        }
+
+        if ($featureFlagEnabled) {
+            $adminEmployeeContextProvider = $this->get(PrestaShop\PrestaShop\Adapter\Security\AdminEmployeeContextProvider::class);
+            $adminEmployeeContext = $adminEmployeeContextProvider->getContext();
+            if ($adminEmployeeContext !== null) {
+                $pageContextFactory = $this->get(PrestaShop\PrestaShop\Adapter\AdminBar\AdminBarPageContextFactory::class);
+                $pageContext = $pageContextFactory->create($this);
+                $pageName = $pageContext === null ? '' : $pageContext->getPageName();
+                $resourceType = $pageContext === null ? '' : $pageContext->getResourceType();
+                $resourceId = $pageContext === null ? '' : (string) ($pageContext->getResourceId() ?? '');
+                $actionsHtml = '';
+                if ($pageContext !== null) {
+                    $actionResolver = $this->get(PrestaShop\PrestaShop\Adapter\AdminBar\AdminBarActionResolver::class);
+                    $actionUrlProvider = $this->get(PrestaShop\PrestaShop\Adapter\AdminBar\AdminBarActionUrlProvider::class);
+                    foreach ($actionResolver->getActions($pageContext, $adminEmployeeContext) as $action) {
+                        $url = $actionUrlProvider->getUrl($action);
+                        if ($url === null) {
+                            continue;
+                        }
+
+                        $actionsHtml .= sprintf(
+                            ' <a href="%s" style="margin-left:12px;color:#fff;text-decoration:underline" target="_blank">%s</a>',
+                            htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                            htmlspecialchars($action->getLabel(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+                        );
+                    }
+                }
+                $adminBar = sprintf(
+                    '<div data-admin-bar-page="%s" data-admin-bar-resource-type="%s" data-admin-bar-resource-id="%s" style="position:fixed;right:0;bottom:0;left:0;z-index:2147483647;padding:8px 16px;background:#2b2b2b;color:#fff;font:14px/20px Arial,sans-serif;text-align:center">PrestaShop Admin%s</div>',
+                    htmlspecialchars($pageName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                    htmlspecialchars($resourceType ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                    htmlspecialchars($resourceId, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                    $actionsHtml
+                );
+
+                $html = preg_replace('~</body\s*>~i', $adminBar . '$0', $html, 1) ?? $html;
+            }
+        }
+        // =======================================================================================
+
         echo trim($html);
     }
 
