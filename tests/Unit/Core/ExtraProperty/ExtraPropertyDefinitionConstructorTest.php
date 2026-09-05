@@ -217,7 +217,10 @@ class ExtraPropertyDefinitionConstructorTest extends TestCase
         return [
             'simple lowercase' => ['product', 'video_link', 'product'],
             'uppercase entity is lowercased' => ['Product', 'VideoLink', 'product'],
-            'CamelCase entity is tableized' => ['ProductAttribute', 'field', 'product_attribute'],
+            // ProductAttribute tableizes to product_attribute, which the canonical map
+            // then converges onto the combination entity (see CANONICAL_ENTITY_NAMES).
+            'CamelCase entity is tableized then canonicalized' => ['ProductAttribute', 'field', 'combination'],
+            'CamelCase entity is tableized' => ['TaxRulesGroup', 'field', 'tax_rules_group'],
             'hyphen in entity becomes underscore' => ['my-entity', 'field', 'my_entity'],
             'hyphen in property' => ['product', 'my-field', 'product'],
             'alphanumeric with digits' => ['entity123', 'field456', 'entity123'],

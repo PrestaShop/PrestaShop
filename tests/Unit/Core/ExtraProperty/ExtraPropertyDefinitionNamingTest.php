@@ -11,6 +11,7 @@ namespace Tests\Unit\Core\ExtraProperty;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
 
 class ExtraPropertyDefinitionNamingTest extends TestCase
 {
@@ -151,8 +152,10 @@ class ExtraPropertyDefinitionNamingTest extends TestCase
     }
 
     /**
-     * Rule: getPrimaryKeyName() is always 'id_' + the normalized entity name — the
-     * PrestaShop primary key convention, centralized so callers never build it manually.
+     * Rule: getPrimaryKeyName() prefers the explicit/introspected value, then the entity's
+     * own ObjectModel $definition['primary'], then falls back to 'id_' + the normalized
+     * entity name — the PrestaShop primary key convention, centralized so callers never
+     * build it manually.
      *
      * @dataProvider primaryKeyNameProvider
      */
@@ -167,11 +170,258 @@ class ExtraPropertyDefinitionNamingTest extends TestCase
     {
         return [
             'simple entity' => ['product', 'id_product'],
-            'compound entity' => ['manufacturer_address', 'id_manufacturer_address'],
+            // ManufacturerAddress only INHERITS Address::$definition — resolution must
+            // ignore inherited definitions and fall back to the naming convention.
+            'compound entity with an inheriting class' => ['manufacturer_address', 'id_manufacturer_address'],
             'uppercase entity is normalized first' => ['Product', 'id_product'],
-            'CamelCase entity is tableized first' => ['ProductAttribute', 'id_product_attribute'],
+            // Canonicalized to 'combination'; the Combination class declares id_product_attribute.
+            'CamelCase irregular entity resolves through its class' => ['ProductAttribute', 'id_product_attribute'],
+            'irregular entity resolves through its class' => ['order', 'id_order'],
+            'irregular table spelling is canonicalized first' => ['orders', 'id_order'],
             'hyphenated entity is normalized first' => ['my-entity', 'id_my_entity'],
         ];
+    }
+
+    /**
+     * The full entity resolution matrix: every accepted spelling of an entity converges
+     * onto ONE canonical (entityName, tableName) pair — the canonical map handles the two
+     * known irregular families before class resolution ever runs (which is what keeps the
+     * modern ProductAttribute class, the renamed Attribute entity with table `attribute`,
+     * from hijacking the combination spellings), the ObjectModel class resolves the rest,
+     * and a bare table name stays itself.
+     *
+     * @dataProvider entityResolutionProvider
+     */
+    public function testEntityNameAndTableNameResolution(string $input, string $expectedEntityName, string $expectedTableName): void
+    {
+        $definition = new ExtraPropertyDefinition(entityName: $input, propertyName: 'field');
+
+        $this->assertSame($expectedEntityName, $definition->getEntityName());
+        $this->assertSame($expectedTableName, $definition->getTableName());
+    }
+
+    public static function entityResolutionProvider(): iterable
+    {
+        // The combination family — four spellings, one definition.
+        yield 'combination' => ['combination', 'combination', 'product_attribute'];
+        yield 'Combination class spelling' => ['Combination', 'combination', 'product_attribute'];
+        yield 'product_attribute table spelling' => ['product_attribute', 'combination', 'product_attribute'];
+        yield 'ProductAttribute class spelling (never class-resolved to the attribute table)' => ['ProductAttribute', 'combination', 'product_attribute'];
+
+        // The order family — three spellings, one definition.
+        yield 'order' => ['order', 'order', 'orders'];
+        yield 'Order class spelling' => ['Order', 'order', 'orders'];
+        yield 'orders table spelling' => ['orders', 'order', 'orders'];
+
+        // Conventional entities: resolution is a no-op.
+        yield 'cart' => ['cart', 'cart', 'cart'];
+        yield 'product' => ['product', 'product', 'product'];
+
+        // The genuine attribute entity stays reachable under its own table name.
+        yield 'attribute' => ['attribute', 'attribute', 'attribute'];
+
+        // Modern CQRS domain names are canonical (like combination — those entities are
+        // headed for that rename), while the physical table stays the legacy one, mapped
+        // explicitly since no ObjectModel class carries the modern name yet.
+        yield 'discount' => ['discount', 'discount', 'cart_rule'];
+        yield 'Discount domain spelling' => ['Discount', 'discount', 'cart_rule'];
+        yield 'cart_rule legacy spelling' => ['cart_rule', 'discount', 'cart_rule'];
+        yield 'cms_page' => ['cms_page', 'cms_page', 'cms'];
+        yield 'cms legacy spelling' => ['cms', 'cms_page', 'cms'];
+        yield 'cms_page_category' => ['cms_page_category', 'cms_page_category', 'cms_category'];
+        yield 'cms_category legacy spelling' => ['cms_category', 'cms_page_category', 'cms_category'];
+        yield 'credit_slip' => ['credit_slip', 'credit_slip', 'order_slip'];
+        yield 'order_slip legacy spelling' => ['order_slip', 'credit_slip', 'order_slip'];
+        yield 'catalog_price_rule' => ['catalog_price_rule', 'catalog_price_rule', 'specific_price_rule'];
+        yield 'specific_price_rule legacy spelling' => ['specific_price_rule', 'catalog_price_rule', 'specific_price_rule'];
+        yield 'sql_request' => ['sql_request', 'sql_request', 'request_sql'];
+        yield 'request_sql legacy spelling' => ['request_sql', 'sql_request', 'request_sql'];
+        yield 'title' => ['title', 'title', 'gender'];
+        yield 'gender legacy spelling' => ['gender', 'title', 'gender'];
+
+        // Table spellings of class↔table disparities converge like 'orders' does —
+        // otherwise each would register a second entity name on the same storage table.
+        yield 'lang table spelling' => ['lang', 'language', 'lang'];
+        yield 'language' => ['language', 'language', 'lang'];
+        yield 'connections table spelling' => ['connections', 'connection', 'connections'];
+        yield 'webservice_account table spelling' => ['webservice_account', 'webservice_key', 'webservice_account'];
+
+        // BO grid/menu spelling converges on the entity behind the grid.
+        yield 'merchandise_return grid spelling' => ['merchandise_return', 'order_return', 'order_return'];
+
+        // No matching ObjectModel class: bare-table registration, the name is the table.
+        yield 'unknown table' => ['my_custom_table', 'my_custom_table', 'my_custom_table'];
+
+        // Class-name collision guards: Link exists but is not an ObjectModel; the
+        // ManufacturerAddress class only INHERITS Address::$definition — neither may
+        // repoint the table.
+        yield 'non-ObjectModel class name' => ['link', 'link', 'link'];
+        yield 'class with inherited definition' => ['manufacturer_address', 'manufacturer_address', 'manufacturer_address'];
+    }
+
+    /**
+     * Explicit tableName / primaryKeyName constructor values (the third-party escape
+     * hatch for ObjectModels whose entity name differs from their table) win over any
+     * resolution, and both survive the copy-with methods.
+     */
+    public function testExplicitTableNameAndPrimaryKeyNameAreRespectedAndPreserved(): void
+    {
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'my_entity',
+            propertyName: 'field',
+            tableName: 'my_actual_table',
+            primaryKeyName: 'id_my_actual',
+        );
+
+        $this->assertSame('my_entity', $definition->getEntityName());
+        $this->assertSame('my_actual_table', $definition->getTableName());
+        $this->assertSame('id_my_actual', $definition->getPrimaryKeyName());
+
+        $withModule = $definition->withModuleName('ps_mymodule');
+        $this->assertSame('my_actual_table', $withModule->getTableName());
+        $this->assertSame('id_my_actual', $withModule->getPrimaryKeyName());
+
+        $withOverrides = $definition->withOverrides(['displayFront' => true]);
+        $this->assertSame('my_actual_table', $withOverrides->getTableName());
+        $this->assertSame('id_my_actual', $withOverrides->getPrimaryKeyName());
+    }
+
+    /**
+     * @dataProvider invalidExplicitIdentifierProvider
+     */
+    public function testInvalidExplicitTableNameOrPrimaryKeyNameIsRejected(?string $tableName, ?string $primaryKeyName): void
+    {
+        $this->expectException(InvalidExtraPropertyDefinitionException::class);
+
+        new ExtraPropertyDefinition(
+            entityName: 'my_entity',
+            propertyName: 'field',
+            tableName: $tableName,
+            primaryKeyName: $primaryKeyName,
+        );
+    }
+
+    public static function invalidExplicitIdentifierProvider(): iterable
+    {
+        yield 'sql injection in tableName' => ["orders'; DROP TABLE x; --", null];
+        yield 'space in tableName' => ['my table', null];
+        yield 'sql injection in primaryKeyName' => [null, "id'; --"];
+        yield 'overlong primaryKeyName' => [null, str_repeat('a', 65)];
+    }
+
+    /**
+     * getControllerName() is the BO permission subject used by any employee-permission
+     * check tied to a definition (e.g. the grid toggle). The mapping is security-relevant:
+     * the irregular-tab map covers entities whose real tab breaks the 'Admin' + pluralized
+     * entity convention, the inflector convention covers the rest, and a resolved name
+     * matching no existing tab is deny-safe (Access::isGranted() grants nothing for
+     * unknown subjects).
+     *
+     * @dataProvider controllerNameProvider
+     */
+    public function testControllerNameResolution(string $entityName, string $expected): void
+    {
+        $definition = new ExtraPropertyDefinition(entityName: $entityName, propertyName: 'field');
+
+        $this->assertSame($expected, $definition->getControllerName());
+        // No override was given: nothing must be persisted, the deduction stays live.
+        $this->assertNull($definition->getControllerNameOverride());
+    }
+
+    public static function controllerNameProvider(): iterable
+    {
+        // The convention: 'Admin' + pluralize(classify(entity)).
+        yield 'product' => ['product', 'AdminProducts'];
+        yield 'order' => ['order', 'AdminOrders'];
+        yield 'category (ies pluralization)' => ['category', 'AdminCategories'];
+        yield 'manufacturer_address (snake_case classified)' => ['manufacturer_address', 'AdminManufacturerAddresses'];
+
+        // The irregular-tab map.
+        yield 'attribute' => ['attribute', 'AdminAttributesGroups'];
+        yield 'attribute_group' => ['attribute_group', 'AdminAttributesGroups'];
+        yield 'shipment (grid embedded in the order page)' => ['shipment', 'AdminOrders'];
+
+        // Canonicalized entity names resolve through their canonical spelling: the map or
+        // the convention applies AFTER the entity alias — whatever spelling the
+        // definition was registered with.
+        yield 'cms_page' => ['cms_page', 'AdminCmsContent'];
+        yield 'cms legacy spelling' => ['cms', 'AdminCmsContent'];
+        yield 'credit_slip' => ['credit_slip', 'AdminSlip'];
+        yield 'discount' => ['discount', 'AdminCartRules'];
+        yield 'cart_rule legacy spelling' => ['cart_rule', 'AdminCartRules'];
+        yield 'title' => ['title', 'AdminGenders'];
+        yield 'gender legacy spelling' => ['gender', 'AdminGenders'];
+        yield 'merchandise_return grid spelling' => ['merchandise_return', 'AdminReturn'];
+        yield 'mail (email logs entity)' => ['mail', 'AdminEmails'];
+
+        // No AdminCombinations tab exists: deny-safe unknown subject (and moot — the
+        // combination list is Vue-based, no grid toggle can target it).
+        yield 'combination (deny-safe unknown tab)' => ['combination', 'AdminCombinations'];
+    }
+
+    public function testExplicitControllerNameOverrideWinsAndIsExposedForPersistence(): void
+    {
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'my_module_entity',
+            propertyName: 'field',
+            controllerName: 'AdminMyModuleThings',
+        );
+
+        $this->assertSame('AdminMyModuleThings', $definition->getControllerName());
+        $this->assertSame('AdminMyModuleThings', $definition->getControllerNameOverride());
+    }
+
+    /**
+     * An explicit value equal to the deduction is NOT an override: it collapses to null at
+     * construction, so re-registering with the conventional name also cleans a previously
+     * stored override, and the deduction keeps following core code as BO tabs evolve.
+     */
+    public function testControllerNameOverrideMatchingTheDeductionCollapsesToNull(): void
+    {
+        $conventional = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'field',
+            controllerName: 'AdminProducts',
+        );
+        $mapped = new ExtraPropertyDefinition(
+            entityName: 'attribute',
+            propertyName: 'field',
+            controllerName: 'AdminAttributesGroups',
+        );
+
+        $this->assertNull($conventional->getControllerNameOverride());
+        $this->assertSame('AdminProducts', $conventional->getControllerName());
+        $this->assertNull($mapped->getControllerNameOverride());
+        $this->assertSame('AdminAttributesGroups', $mapped->getControllerName());
+    }
+
+    public function testControllerNameOverrideSurvivesHydrationAndCopyWithMethods(): void
+    {
+        $hydrated = ExtraPropertyDefinition::fromRow([
+            'entity_name' => 'my_module_entity',
+            'property_name' => 'field',
+            'controller_name' => 'AdminMyModuleThings',
+        ]);
+
+        $this->assertSame('AdminMyModuleThings', $hydrated->getControllerName());
+        $this->assertSame('AdminMyModuleThings', $hydrated->withModuleName('mymodule')->getControllerNameOverride());
+        $this->assertSame('AdminMyModuleThings', $hydrated->withOverrides([])->getControllerNameOverride());
+        // A row without the column (or predating it) simply resolves the deduction.
+        $this->assertNull(ExtraPropertyDefinition::fromRow([
+            'entity_name' => 'product',
+            'property_name' => 'field',
+        ])->getControllerNameOverride());
+    }
+
+    public function testInvalidControllerNameIsRejected(): void
+    {
+        $this->expectException(InvalidExtraPropertyDefinitionException::class);
+
+        new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'field',
+            controllerName: 'Admin Products; DROP',
+        );
     }
 
     public function testCoreModuleKeyConstant(): void

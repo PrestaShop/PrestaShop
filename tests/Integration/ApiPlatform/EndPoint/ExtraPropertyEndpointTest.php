@@ -48,7 +48,7 @@ final class ExtraPropertyEndpointTest extends ApiTestCase
     /**
      * Extra-property value tables created by the test modules, cleared before each test for deterministic content.
      */
-    private const EXTRA_VALUE_TABLES = ['product_extra', 'product_extra_lang', 'customer_extra'];
+    private const EXTRA_VALUE_TABLES = ['product_extra', 'product_extra_lang', 'customer_extra', 'product_attribute_extra'];
 
     public static function setUpBeforeClass(): void
     {
@@ -294,6 +294,47 @@ final class ExtraPropertyEndpointTest extends ApiTestCase
             ],
             $response
         );
+    }
+
+    /**
+     * A CQRS-paginated list (combinations — no grid behind it) is enriched too: every API-associated property is
+     * batch-read from the database and injected inline at the item root. The definition is registered with the
+     * natural 'combination' entity name (resolved to the product_attribute table / id_product_attribute primary
+     * key). Like the real CombinationList resource, ExtraPropertyCombinationList declares no
+     * #[ApiProperty(identifier: true)] (flagging combinationId would break the {productId} URI-variable mapping):
+     * the item id is resolved by the heuristic from the LOGICAL entity name ('combination' → combinationId) —
+     * the core mechanism this test pins.
+     */
+    public function testCqrsPaginatedCombinationListIsEnriched(): void
+    {
+        $combinationRows = Db::getInstance()->executeS(
+            'SELECT `id_product_attribute` FROM `' . _DB_PREFIX_ . 'product_attribute`
+             WHERE `id_product` = ' . self::PRODUCT_ID . ' ORDER BY `id_product_attribute` ASC'
+        );
+        $combinationIds = array_map(static fn (array $row): int => (int) $row['id_product_attribute'], $combinationRows);
+        $this->assertNotEmpty($combinationIds, 'The product fixture should have combinations');
+
+        // Seed one distinct value per combination, straight into the storage table the
+        // 'combination' registration created next to the base table.
+        foreach ($combinationIds as $combinationId) {
+            Db::getInstance()->execute(sprintf(
+                'INSERT INTO `%sproduct_attribute_extra` (`id_product_attribute`, `%s_api_combo_note`) VALUES (%d, "note-%d")',
+                _DB_PREFIX_,
+                self::MODULE_NAME,
+                $combinationId,
+                $combinationId
+            ));
+        }
+
+        $list = $this->listItems('/test/extra-property/products/' . self::PRODUCT_ID . '/combinations', [self::PRODUCT_READ]);
+        $this->assertNotEmpty($list['items']);
+
+        $noteKey = 'extra_' . self::MODULE_NAME . '_api_combo_note';
+        foreach ($list['items'] as $item) {
+            // Inline at the item root (single context locale), never a nested extraProperties object.
+            $this->assertArrayNotHasKey('extraProperties', $item);
+            $this->assertSame('note-' . $item['combinationId'], $item[$noteKey]);
+        }
     }
 
     /**

@@ -12,6 +12,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionWriterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistry;
@@ -98,6 +99,12 @@ class ExtraPropertyRegistryTest extends TestCase
             'enum to varchar fallback switch' => [
                 self::definition(type: ExtraPropertyType::CHOICE, enumValues: ['a']),
                 self::definition(type: ExtraPropertyType::CHOICE, enumValues: null),
+            ],
+            // A different explicit tableName would silently relocate storage to another
+            // {table}_extra, orphaning every stored value.
+            'physical table relocation' => [
+                self::definition(),
+                self::definition(tableName: 'supplier'),
             ],
         ];
     }
@@ -483,6 +490,8 @@ class ExtraPropertyRegistryTest extends TestCase
     ): ExtraPropertyRegistry {
         $readRepository = $this->createMock(ExtraPropertyDefinitionRepositoryInterface::class);
         $readRepository->method('findDefinitionByModuleAndField')->willReturn($existing);
+        // The cross-entity storage guard scans the whole registry on new registrations.
+        $readRepository->method('getAllDefinitions')->willReturn(new ExtraPropertyDefinitionCollection(array_filter([$existing])));
 
         // The stubbed installation has shops 1 to 4 (shop association existence check).
         $shopRepository = $this->createMock(ShopRepository::class);
@@ -541,6 +550,7 @@ class ExtraPropertyRegistryTest extends TestCase
         ?string $formType = null,
         ?array $formOptions = null,
         ?array $associatedShopIds = null,
+        ?string $tableName = null,
     ): ExtraPropertyDefinition {
         return new ExtraPropertyDefinition(
             entityName: 'product',
@@ -555,6 +565,7 @@ class ExtraPropertyRegistryTest extends TestCase
             formType: $formType,
             formOptions: $formOptions,
             associatedShopIds: $associatedShopIds,
+            tableName: $tableName,
         );
     }
 }

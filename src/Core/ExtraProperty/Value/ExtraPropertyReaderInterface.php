@@ -45,17 +45,17 @@ interface ExtraPropertyReaderInterface
      * the lowest shop id of the scope otherwise). Whether the lang table is shop-aware is
      * detected internally from the storage schema — never passed by the caller.
      *
-     * @param string $entityName Entity table name (e.g. "product")
+     * @param string $tableName Physical entity table name without prefix (ExtraPropertyDefinition::getTableName(), e.g. "product", "product_attribute")
      * @param string $primaryKeyName PK column name (e.g. "id_product")
      * @param int $entityId
      * @param int|null $langId Null fetches all languages (returns array keyed by id_lang)
      * @param ShopConstraint $shopConstraint Shop context — determines which row to read
-     * @param ExtraPropertyDefinitionCollection|null $definitions Pre-filtered definitions; when null, all definitions for $entityName are loaded from the repository
+     * @param ExtraPropertyDefinitionCollection|null $definitions Pre-filtered definitions; when null, all definitions for $tableName are loaded from the repository
      *
      * @return array<string, array<string, mixed>>
      */
     public function getExtraProperties(
-        string $entityName,
+        string $tableName,
         string $primaryKeyName,
         int $entityId,
         ?int $langId,
@@ -74,7 +74,7 @@ interface ExtraPropertyReaderInterface
      *                                                         appear, seeded with each property's default value.
      */
     public function getMultipleExtraProperties(
-        string $entityName,
+        string $tableName,
         string $primaryKeyName,
         array $entityIds,
         ?int $langId,

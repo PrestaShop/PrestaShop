@@ -104,16 +104,6 @@ class CommonController extends PrestaShopAdminController
         string $moduleName,
         string $propertyName,
     ): JsonResponse {
-        // Derive the legacy controller from the entityName URL path param (trusted, non-forgeable).
-        // Never trust a _legacy_controller value coming from the request body/query string.
-        $legacyController = self::legacyControllerFromEntityName($entityName);
-        if (!$this->isGranted('update', $legacyController)) {
-            return new JsonResponse([
-                'status' => false,
-                'message' => 'Access denied.',
-            ], 403);
-        }
-
         /** @var ExtraPropertyDefinitionRepositoryInterface $repository */
         $repository = $this->container->get(ExtraPropertyDefinitionRepositoryInterface::class);
 
@@ -127,6 +117,16 @@ class CommonController extends PrestaShopAdminController
                 'status' => false,
                 'message' => $this->trans('Field not found.', [], 'Admin.Notifications.Error'),
             ], 404);
+        }
+
+        // The permission subject comes from the registry-hydrated definition (its stored
+        // override, or the map/convention deduction) — never from any client-supplied
+        // _legacy_controller value, which would allow privilege escalation.
+        if (!$this->isGranted('update', $matched->getControllerName())) {
+            return new JsonResponse([
+                'status' => false,
+                'message' => 'Access denied.',
+            ], 403);
         }
 
         /** @var ExtraPropertyWriterInterface $writer */
@@ -396,39 +396,6 @@ class CommonController extends PrestaShopAdminController
             $redirectRoute,
             $redirectQueryParamsToKeep
         );
-    }
-
-    /**
-     * Derives the BO legacy controller name for a given entity name.
-     *
-     * Applies standard English pluralization rules to match PS controller naming conventions:
-     * - consonant + 'y' → 'ies'  (category → AdminCategories)
-     * - 's', 'x', 'z', 'sh', 'ch' → append 'es'  (address → AdminAddresses)
-     * - everything else → append 's'  (product → AdminProducts)
-     *
-     * Used server-side to verify employee permissions without trusting any
-     * client-supplied value (e.g. for the extra-property toggle endpoint).
-     */
-    private static function legacyControllerFromEntityName(string $entityName): string
-    {
-        $length = strlen($entityName);
-        if ($length > 1) {
-            $last = strtolower($entityName[$length - 1]);
-            $prev = strtolower($entityName[$length - 2]);
-
-            // consonant + 'y' → 'ies'
-            if ('y' === $last && !in_array($prev, ['a', 'e', 'i', 'o', 'u'], true)) {
-                return 'Admin' . ucfirst(substr($entityName, 0, -1)) . 'ies';
-            }
-
-            // 's', 'x', 'z', 'sh', 'ch' → 'es'
-            if ('s' === $last || 'x' === $last || 'z' === $last
-                || ('h' === $last && in_array($prev, ['s', 'c'], true))) {
-                return 'Admin' . ucfirst($entityName) . 'es';
-            }
-        }
-
-        return 'Admin' . ucfirst($entityName) . 's';
     }
 
     /**

@@ -160,7 +160,7 @@ class ExtraPropertiesSchemaAdapter implements OpenApiSchemaAdapterInterface
             ];
         }
 
-        return match ($definition->getType()) {
+        $schema = match ($definition->getType()) {
             ExtraPropertyType::INT => ['type' => 'integer'],
             ExtraPropertyType::BOOL => ['type' => 'boolean'],
             ExtraPropertyType::FLOAT => ['type' => 'number'],
@@ -169,6 +169,18 @@ class ExtraPropertiesSchemaAdapter implements OpenApiSchemaAdapterInterface
             ExtraPropertyType::CHOICE => $this->buildChoiceSchema($definition),
             default => ['type' => 'string'],
         };
+
+        // The declared default is part of the contract — a missing value row reads back
+        // as this value (see ExtraPropertyReader). JSON defaults are stored as strings:
+        // decode so the documented default matches the object shape the API returns.
+        $defaultValue = $definition->getDefaultValue();
+        if (null !== $defaultValue) {
+            $schema['default'] = ExtraPropertyType::JSON === $definition->getType() && is_string($defaultValue)
+                ? json_decode($defaultValue, true)
+                : $defaultValue;
+        }
+
+        return $schema;
     }
 
     /**

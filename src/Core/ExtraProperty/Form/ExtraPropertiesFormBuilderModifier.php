@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface;
 use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -80,7 +81,7 @@ class ExtraPropertiesFormBuilderModifier
         $existingValues = null;
         if (null !== $entityId && $entityId > 0) {
             $existingValues = $this->reader->getExtraProperties(
-                $formDefinitions->first()->getEntityName(),
+                $formDefinitions->first()->getTableName(),
                 $formDefinitions->first()->getPrimaryKeyName(),
                 $entityId,
                 null,
@@ -97,8 +98,14 @@ class ExtraPropertiesFormBuilderModifier
             [$type, $typeOptions] = $this->resolveFieldTypeAndOptions($definition);
 
             if (null !== $existingValues) {
-                // The reader returns typed values (ExtraPropertyValueCaster applied on read).
+                // The reader returns typed values (ExtraPropertyValueCaster applied on read),
+                // seeding the definition default when no value row exists yet.
                 $typeOptions['data'] = $this->resolveExistingValue($existingValues, $definition);
+            } elseif (null !== $definition->getDefaultValue() && ExtraPropertyScope::LANG !== $definition->getScope()) {
+                // Create form: prefill with the declared default, consistent with what the
+                // entity will read back if saved untouched. LANG stays empty — a single
+                // scalar default has no per-language meaning.
+                $typeOptions['data'] = $definition->getDefaultValue();
             }
 
             if (null === $formEntry || null === $formEntry['path']) {
@@ -181,6 +188,12 @@ class ExtraPropertiesFormBuilderModifier
 
         if (ExtraPropertyScope::LANG === $definition->getScope()) {
             return is_array($value) ? $value : [];
+        }
+
+        // JSON values are decoded structures on the read side; the BO widget is a plain
+        // TextareaType, so re-encode at this presentation boundary (pretty, for editing).
+        if (ExtraPropertyType::JSON === $definition->getType() && is_array($value)) {
+            return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
 
         return $value;

@@ -77,7 +77,8 @@ class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInterface
             required: (bool) $visibility['required'],
             nullable: (bool) ($fieldDefinition['nullable'] ?? true),
             size: $fieldDefinition['size'] ?: null,
-            defaultValue: $fieldDefinition['default_value'] ?: null,
+            // Explicit empty-string check: '?:' would also drop a legitimate '0' default.
+            defaultValue: null !== $fieldDefinition['default_value'] && '' !== $fieldDefinition['default_value'] ? $fieldDefinition['default_value'] : null,
             enumValues: EnumValuesParser::parse($fieldDefinition['enum_values'] ?? null),
             labelWording: $labels['label_wording'] ?: null,
             labelDomain: $labels['label_domain'] ?: null,

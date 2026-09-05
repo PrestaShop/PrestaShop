@@ -2290,7 +2290,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             return $this->extra_property_definitions;
         }
 
-        $this->extra_property_definitions = $repository->getAllDefinitions()->filterByEntity($this->def['table']);
+        $this->extra_property_definitions = $repository->getAllDefinitions()->filterByTableName($this->def['table']);
 
         return $this->extra_property_definitions;
     }

@@ -22,6 +22,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionS
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridQueryBuilderModifier;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Covers the JOIN cardinality invariant of ExtraPropertiesGridQueryBuilderModifier:
@@ -253,7 +254,7 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         $definitionShopFilter = $this->createMock(ExtraPropertyDefinitionShopFilterInterface::class);
         $definitionShopFilter->method('filterByShopConstraint')->willReturnArgument(0);
 
-        return new ExtraPropertiesGridQueryBuilderModifier($repository, 'ps_', $languageContext, $shopContext, $definitionShopFilter);
+        return new ExtraPropertiesGridQueryBuilderModifier($repository, 'ps_', $languageContext, $shopContext, $definitionShopFilter, new NullLogger());
     }
 
     /**

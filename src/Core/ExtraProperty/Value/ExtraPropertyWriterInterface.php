@@ -52,7 +52,7 @@ interface ExtraPropertyWriterInterface
      * from the storage schema. The constraint's strict flag is ignored — extra property
      * storage has no group/global rows, so there is no fallback level to target.
      *
-     * @param string $entityName Entity table name (e.g. "product")
+     * @param string $tableName Physical entity table name without prefix (ExtraPropertyDefinition::getTableName(), e.g. "product", "product_attribute")
      * @param string $primaryKeyName PK column name (e.g. "id_product")
      * @param int $entityId
      * @param array<string, array<string, mixed>> $valuesByModule [moduleKey => [propertyName => value]]
@@ -60,7 +60,7 @@ interface ExtraPropertyWriterInterface
      * @param int|null $defaultLangId Language used when a lang-scoped value is a scalar; null skips scalar lang values
      */
     public function writeAll(
-        string $entityName,
+        string $tableName,
         string $primaryKeyName,
         int $entityId,
         array $valuesByModule,
@@ -75,8 +75,8 @@ interface ExtraPropertyWriterInterface
      * representative shop (a missing row or NULL toggles to enabled); per-shop
      * properties then get that target UPSERTed for every shop in the constraint's
      * scope, so a group / all-shops toggle uniformizes shops that diverged.
-     * The storage primary key column is deduced from the definition's entity name
-     * ('id_' + entityName) — callers never carry storage details.
+     * The storage table and primary key column come from the definition itself
+     * (getExtraTableName() / getPrimaryKeyName()) — callers never carry storage details.
      *
      * @param ExtraPropertyDefinition $definition The boolean property to toggle
      * @param int $entityId
@@ -100,11 +100,11 @@ interface ExtraPropertyWriterInterface
      * Safe to call even if no extra properties are registered: tables that do not
      * exist yet are silently skipped.
      *
-     * @param string $entityName Entity table name (e.g. "product")
+     * @param string $tableName Physical entity table name without prefix (ExtraPropertyDefinition::getTableName(), e.g. "product", "product_attribute")
      * @param string $primaryKeyName PK column name (e.g. "id_product")
      * @param int $entityId
      */
-    public function deleteAll(string $entityName, string $primaryKeyName, int $entityId): void;
+    public function deleteAll(string $tableName, string $primaryKeyName, int $entityId): void;
 
     /**
      * Deletes the extra property rows belonging to the given shops for one entity
@@ -116,10 +116,10 @@ interface ExtraPropertyWriterInterface
      * {entity}_extra_lang rows when the entity's lang table is shop-aware. COMMON values
      * and non-multishop lang rows are shared with the surviving shops and are kept.
      *
-     * @param string $entityName Entity table name (e.g. "product")
+     * @param string $tableName Physical entity table name without prefix (ExtraPropertyDefinition::getTableName(), e.g. "product", "product_attribute")
      * @param string $primaryKeyName PK column name (e.g. "id_product")
      * @param int $entityId
      * @param int[] $shopIds Shops whose rows must be removed (non-positive ids are ignored)
      */
-    public function deleteForShops(string $entityName, string $primaryKeyName, int $entityId, array $shopIds): void;
+    public function deleteForShops(string $tableName, string $primaryKeyName, int $entityId, array $shopIds): void;
 }

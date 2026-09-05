@@ -96,6 +96,21 @@ class extrapropertytest extends Module
             return false;
         }
 
+        // combination / api_combo_note — STRING, COMMON scope, registered with the natural
+        // 'combination' entity name (resolved to the product_attribute table / id_product_attribute
+        // primary key) and exposed on a CQRS-paginated list endpoint (no grid behind it: the
+        // enrichment batch-reads every associated property).
+        if (!$this->registerExtraProperty(new ExtraPropertyDefinition(
+            entityName: 'combination',
+            propertyName: 'api_combo_note',
+            type: ExtraPropertyType::STRING,
+            scope: ExtraPropertyScope::COMMON,
+            associatedApis: ['/test/extra-property/products/{productId}/combinations'],
+            labelWording: 'API combination note',
+        ))) {
+            return false;
+        }
+
         return true;
     }
 
@@ -104,6 +119,7 @@ class extrapropertytest extends Module
         $this->unregisterExtraProperty(new ExtraPropertyDefinition('product', 'api_flag'), true);
         $this->unregisterExtraProperty(new ExtraPropertyDefinition('product', 'api_note'), true);
         $this->unregisterExtraProperty(new ExtraPropertyDefinition('customer', 'api_score'), true);
+        $this->unregisterExtraProperty(new ExtraPropertyDefinition('combination', 'api_combo_note'), true);
 
         return parent::uninstall();
     }
