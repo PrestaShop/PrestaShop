@@ -472,6 +472,20 @@ abstract class PaymentModuleCore extends Module
                 $price = Product::getPriceStatic((int) $product['id_product'], false, $product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null, 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
                 $price_wt = Product::getPriceStatic((int) $product['id_product'], true, $product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null, 2, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
 
+                /*
+                 * getPriceStatic() resolves the price in the current shop context and returns null for a
+                 * product belonging to another shop of the group, which happens when the group shares
+                 * orders and the cart was filled across two shops. The order line already holds the amount
+                 * the customer is charged, and the order total was computed from it, so fall back to it
+                 * instead of formatting null further down.
+                 */
+                if (null === $price) {
+                    $price = $product['price'] ?? 0;
+                }
+                if (null === $price_wt) {
+                    $price_wt = $product['price_wt'] ?? 0;
+                }
+
                 $product_price = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, Context::getContext()->getComputingPrecision()) : $price_wt;
 
                 $carrierName = null;
