@@ -65,9 +65,14 @@
 {/if}
 {$admin_path = "{__PS_BASE_URI__}{basename(_PS_ADMIN_DIR_)}/themes/default/public/"}
 
-{$preloadFilePath = "../public/preload.tpl"}
+{* preload.tpl is written by webpack into the gitignored public/ directory, so an install whose
+   admin assets were never built does not have it. The preload hints are an optimisation - without this
+   guard their absence takes the whole back office down with "Unable to load template". *}
+{$preloadFilePath = _PS_ADMIN_DIR_|cat:"/themes/default/public/preload.tpl"}
 
-{include file=$preloadFilePath admin_dir=$admin_path}
+{if file_exists($preloadFilePath)}
+	{include file=$preloadFilePath admin_dir=$admin_path}
+{/if}
 
 {if isset($css_files)}
 {foreach from=$css_files key=css_uri item=media}
