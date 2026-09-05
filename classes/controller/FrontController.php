@@ -1954,6 +1954,38 @@ class FrontControllerCore extends Controller
             ],
         ];
 
+        // Add configured contact details to the organization
+        $phone = Configuration::get('PS_SHOP_PHONE');
+        if (!empty($phone)) {
+            $structuredData['organization']['telephone'] = $phone;
+        }
+        $email = Configuration::get('PS_SHOP_EMAIL');
+        if (!empty($email)) {
+            $structuredData['organization']['email'] = $email;
+        }
+
+        // Add the configured address to the organization
+        $shopAddress = $this->context->shop->getAddress();
+        $address = [];
+        if (!empty($shopAddress->address1) || !empty($shopAddress->address2)) {
+            $address['streetAddress'] = implode(', ', array_filter([$shopAddress->address1, $shopAddress->address2]));
+        }
+        if (!empty($shopAddress->city)) {
+            $address['addressLocality'] = $shopAddress->city;
+        }
+        if (!empty($shopAddress->id_state)) {
+            $address['addressRegion'] = (new State($shopAddress->id_state))->name;
+        }
+        if (!empty($shopAddress->postcode)) {
+            $address['postalCode'] = $shopAddress->postcode;
+        }
+        if (!empty($shopAddress->id_country)) {
+            $address['addressCountry'] = (new Country($shopAddress->id_country))->iso_code;
+        }
+        if (!empty($address)) {
+            $structuredData['organization']['address'] = array_merge(['@type' => 'PostalAddress'], $address);
+        }
+
         // Add logo to organization if available
         $logo = $this->getShopLogo();
         if (!empty($logo['src'])) {
