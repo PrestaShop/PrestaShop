@@ -72,6 +72,12 @@ class MemcacheServerManager
             return is_array($version) && false === in_array('255.255.255', $version, true);
         }
 
+        // Neither extension is a supported configuration, but reaching for the class anyway turns
+        // "this server does not work" into a fatal Error on the page that exists to report it.
+        if (!extension_loaded('memcache')) {
+            return false;
+        }
+
         $memcache = new Memcache();
 
         return true === $memcache->connect($serverIp, (int) $serverPort);
