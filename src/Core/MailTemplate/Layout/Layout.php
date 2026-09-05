@@ -27,8 +27,9 @@ class Layout implements LayoutInterface
 
     /**
      * @param string $name Name of the layout to describe its purpose
-     * @param string $htmlPath Absolute path of the html layout file
-     * @param string $txtPath Absolute path of the txt layout file
+     * @param string $htmlPath Path of the html layout file, either a Twig namespaced path
+     *                         (@MailThemes/... or @Modules/...) or an absolute path inside the modules folder
+     * @param string $txtPath Path of the txt layout file, same accepted formats as $htmlPath
      * @param string $moduleName Which module this layout is associated to (if any)
      */
     public function __construct(
