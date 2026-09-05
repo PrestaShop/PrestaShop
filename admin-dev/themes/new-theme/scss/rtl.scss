@@ -207,6 +207,34 @@ ul {
 .material-choice-tree-container {
   ul {
     &.choice-tree {
+      // The glyphs were already mirrored here, but none of the directional properties that place
+      // them were: the arrow is positioned with `left` and the nesting indents with `padding-left`,
+      // so in RTL the arrow stayed pinned to the left edge of a right-aligned label and every level
+      // indented away from the text. This theme has no automatic RTL flip, so each one needs saying.
+      li {
+        .checkbox,
+        .radio {
+          padding-right: 20px;
+          padding-left: 0;
+        }
+
+        ul {
+          padding-right: 1rem;
+          padding-left: 0;
+        }
+      }
+
+      .collapsed,
+      .expanded {
+        >.checkbox,
+        >.radio {
+          &::before {
+            right: -0.1rem;
+            left: auto;
+          }
+        }
+      }
+
       .collapsed {
         >.checkbox {
           &::before {
