@@ -3877,6 +3877,8 @@ class CartCore extends ObjectModel
          * If the order total WITHOUT discounts is greater than or equal to the free shipping price, we return 0.
          *
          * Watch out, this is different from the other calculations which use the order total WITH discounts.
+         * The back office states the same contract next to the setting: "Coupons are not taken into account
+         * when calculating free shipping."
          */
         // Get the configuration value and convert it to the current currency
         $shippingFreePrice = (float) Configuration::get('PS_SHIPPING_FREE_PRICE');
@@ -3890,8 +3892,8 @@ class CartCore extends ObjectModel
          */
         Hook::exec('actionOverrideShippingFreePrice', ['shippingFreePrice' => &$shippingFreePrice, 'id_zone' => $id_zone, 'id_currency' => $this->id_currency]);
 
-        $orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
-        if ($orderTotalwithDiscounts >= (float) $shippingFreePrice && (float) $shippingFreePrice > 0) {
+        $orderTotalWithoutDiscounts = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS, null, null, false);
+        if ($orderTotalWithoutDiscounts >= (float) $shippingFreePrice && (float) $shippingFreePrice > 0) {
             // Allow module to override the shipping cost and return their custom value
             $shipping_cost = $this->getPackageShippingCostFromModule($carrier, $shipping_cost, $products);
 
