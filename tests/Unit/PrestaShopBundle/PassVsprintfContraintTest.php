@@ -51,4 +51,43 @@ class PassVsprintfContraintTest extends ConstraintValidatorTestCase
 
         $this->buildViolation($constraint->message)->assertRaised();
     }
+
+    /**
+     * Translating a string to a blank removes it, which is the documented way of hiding an unwanted
+     * wording. There is nothing left for vsprintf to format, so the placeholders the blank no longer
+     * carries must not be counted against it.
+     *
+     * @dataProvider getBlankTranslations
+     */
+    public function testABlankTranslationOfAStringWithParametersIsAccepted(string $blank): void
+    {
+        $translation = (new Translation())
+            ->setKey('Your order with the reference %order_name% has been shipped.')
+            ->setTranslation($blank);
+
+        $this->validator->validate($translation, new PassVsprintf());
+
+        $this->assertNoViolation();
+    }
+
+    public function getBlankTranslations(): array
+    {
+        return [
+            'a single space' => [' '],
+            'several spaces' => ['   '],
+            'empty' => [''],
+        ];
+    }
+
+    public function testAWordingThatSimplyDropsAParameterIsStillRefused(): void
+    {
+        $translation = (new Translation())
+            ->setKey('Your order with the reference %order_name% has been shipped.')
+            ->setTranslation('Your order has been shipped.');
+        $constraint = new PassVsprintf();
+
+        $this->validator->validate($translation, $constraint);
+
+        $this->buildViolation($constraint->message)->assertRaised();
+    }
 }
