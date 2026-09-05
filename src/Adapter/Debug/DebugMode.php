@@ -27,7 +27,44 @@ class DebugMode
      */
     public function isDebugModeEnabled()
     {
-        return 'false' !== Tools::strtolower($this->getCurrentDebugMode());
+        $currentDebugMode = $this->getCurrentDebugMode();
+
+        // WHY: the defines files hold the configuration this class writes, so a value it writes is the
+        // answer - also right after a switch, when the running process still has the previous constant.
+        // Any other expression cannot be evaluated from its text: config/defines_custom.inc.php is a
+        // supported override and the official Docker image writes it as
+        //     if ((bool) getenv('PS_DEV_MODE')) { define('_PS_MODE_DEV_', (bool) getenv('PS_DEV_MODE')); }
+        // which compared against the literal 'false' was reported as ENABLED with PS_DEV_MODE unset, and
+        // SwitchDebugModeHandler::handle() then had nothing to do when asked to turn debug mode on. Only
+        // the constant in effect tells that case apart.
+        if (null !== $currentDebugMode && !$this->isWrittenByThisClass($currentDebugMode)) {
+            $runtimeDebugMode = $this->getRuntimeDebugMode();
+            if (null !== $runtimeDebugMode) {
+                return $runtimeDebugMode;
+            }
+        }
+
+        return 'false' !== Tools::strtolower($currentDebugMode);
+    }
+
+    /**
+     * Whether the expression is one createDebugModeFromConfiguration() produces.
+     */
+    private function isWrittenByThisClass(string $expression): bool
+    {
+        $expression = Tools::strtolower(trim($expression));
+
+        return in_array($expression, ['true', 'false'], true) || str_starts_with($expression, 'isset($_cookie[');
+    }
+
+    /**
+     * The value of _PS_MODE_DEV_ as the running process sees it.
+     *
+     * @return bool|null null when the constant is not defined, which happens outside a booted shop
+     */
+    protected function getRuntimeDebugMode(): ?bool
+    {
+        return defined('_PS_MODE_DEV_') ? (bool) _PS_MODE_DEV_ : null;
     }
 
     /**
