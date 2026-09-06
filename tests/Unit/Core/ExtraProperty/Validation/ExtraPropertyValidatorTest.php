@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\ExtraProperty\Validation;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
@@ -154,5 +155,110 @@ class ExtraPropertyValidatorTest extends TestCase
 
         // The property is not in the payload at all → it must not be validated (no spurious NotBlank violation).
         $this->assertCount(0, $this->validator()->validate(['demoextrafield' => []], $collection));
+    }
+
+    /**
+     * The single rule-set shared with the registry's default-value check: what cannot be a
+     * default cannot be a stored value either. Null and '' always pass ("no value" is the
+     * column's or a declared constraint's concern); runtime-only shapes (DateTimeInterface,
+     * decoded JSON structures) are accepted on top of the scalar spellings.
+     *
+     * @dataProvider valueCompatibilityProvider
+     */
+    public function testIsValueCompatible(ExtraPropertyType $type, mixed $value, bool $expected, ?array $enumValues = null): void
+    {
+        $this->assertSame($expected, ExtraPropertyValidator::isValueCompatible($type, $value, $enumValues));
+    }
+
+    public static function valueCompatibilityProvider(): iterable
+    {
+        yield 'null always passes' => [ExtraPropertyType::INT, null, true];
+        yield 'empty string always passes' => [ExtraPropertyType::DATE, '', true];
+
+        yield 'int native' => [ExtraPropertyType::INT, 42, true];
+        yield 'int string' => [ExtraPropertyType::INT, '-7', true];
+        yield 'int refuses letters' => [ExtraPropertyType::INT, 'abc', false];
+        yield 'int refuses float string' => [ExtraPropertyType::INT, '1.5', false];
+
+        yield 'float native' => [ExtraPropertyType::FLOAT, 1.5, true];
+        yield 'float numeric string' => [ExtraPropertyType::FLOAT, '1.5', true];
+        yield 'float refuses letters' => [ExtraPropertyType::FLOAT, 'abc', false];
+
+        yield 'bool native' => [ExtraPropertyType::BOOL, false, true];
+        yield 'bool 0/1 spellings' => [ExtraPropertyType::BOOL, '1', true];
+        yield 'bool refuses other ints' => [ExtraPropertyType::BOOL, 2, false];
+
+        yield 'date literal date' => [ExtraPropertyType::DATE, '2026-12-24', true];
+        yield 'date literal datetime' => [ExtraPropertyType::DATE, '2026-12-24 10:30:00', true];
+        yield 'date DateTimeInterface' => [ExtraPropertyType::DATE, new DateTimeImmutable(), true];
+        yield 'date refuses relative wording' => [ExtraPropertyType::DATE, 'tomorrow', false];
+        yield 'date refuses rolled-over date' => [ExtraPropertyType::DATE, '2026-02-31', false];
+        yield 'date refuses garbage' => [ExtraPropertyType::DATE, 'not-a-date', false];
+
+        yield 'choice member' => [ExtraPropertyType::CHOICE, 'a', true, ['a', 'b']];
+        yield 'choice refuses outsider' => [ExtraPropertyType::CHOICE, 'z', false, ['a', 'b']];
+        yield 'choice without enum passes' => [ExtraPropertyType::CHOICE, 'anything', true];
+
+        yield 'json encoded string' => [ExtraPropertyType::JSON, '{"a":1}', true];
+        yield 'json decoded structure' => [ExtraPropertyType::JSON, ['a' => 1], true];
+        yield 'json refuses invalid string' => [ExtraPropertyType::JSON, '{invalid', false];
+
+        yield 'string accepts anything scalar' => [ExtraPropertyType::STRING, 'free text', true];
+    }
+
+    /**
+     * The type rules apply implicitly on every write, even with ZERO declared constraints —
+     * previously 'abc' on an INT was silently stored as 0 and 'tomorrow' on a DATE was
+     * interpreted. The LANG/SHOP array shape is checked leaf by leaf with the offending
+     * key in the violation path.
+     */
+    public function testImplicitTypeValidationRunsWithoutDeclaredConstraints(): void
+    {
+        $intDefinition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'stock_alert',
+            type: ExtraPropertyType::INT,
+            scope: ExtraPropertyScope::COMMON,
+            moduleName: 'demoextrafield',
+        );
+
+        $violations = $this->validator()->validateValue($intDefinition, 'abc');
+        $this->assertCount(1, $violations);
+        $this->assertStringContainsString('"int" field type', $violations->get(0)->getMessage());
+        $this->assertCount(0, $this->validator()->validateValue($intDefinition, '42'));
+
+        $langDateDefinition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'seen_at',
+            type: ExtraPropertyType::DATE,
+            scope: ExtraPropertyScope::LANG,
+            moduleName: 'demoextrafield',
+        );
+
+        $violations = $this->validator()->validateValue($langDateDefinition, ['en-US' => '2026-12-24', 'fr-FR' => 'tomorrow']);
+        $this->assertCount(1, $violations);
+        $this->assertSame('[fr-FR]', $violations->get(0)->getPropertyPath());
+    }
+
+    /**
+     * Declared constraints keep message priority: when a module declares Assert\Type('bool')
+     * and the value fails both it and the implicit type rule, the module's constraint
+     * message is reported — the implicit check is a safety net, not a replacement.
+     */
+    public function testDeclaredConstraintMessageWinsOverTheImplicitTypeCheck(): void
+    {
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'api_flag',
+            type: ExtraPropertyType::BOOL,
+            scope: ExtraPropertyScope::COMMON,
+            moduleName: 'demoextrafield',
+            constraints: [new Assert\Type('bool')],
+        );
+
+        $violations = $this->validator()->validateValue($definition, 'not-a-bool');
+
+        $this->assertCount(1, $violations);
+        $this->assertStringNotContainsString('field type', $violations->get(0)->getMessage());
     }
 }

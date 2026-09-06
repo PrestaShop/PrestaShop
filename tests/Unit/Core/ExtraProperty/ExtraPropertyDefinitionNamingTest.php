@@ -340,6 +340,12 @@ class ExtraPropertyDefinitionNamingTest extends TestCase
         yield 'attribute' => ['attribute', 'AdminAttributesGroups'];
         yield 'attribute_group' => ['attribute_group', 'AdminAttributesGroups'];
         yield 'shipment (grid embedded in the order page)' => ['shipment', 'AdminOrders'];
+        yield 'combination (managed on the product page)' => ['combination', 'AdminProducts'];
+        yield 'tax_rule (grid on the tax rules group page)' => ['tax_rule', 'AdminTaxRulesGroup'];
+        // Singular tabs — no migrated grid today, mapped so a future one cannot 403.
+        yield 'shop_group (singular tab)' => ['shop_group', 'AdminShopGroup'];
+        yield 'shop_url (singular tab)' => ['shop_url', 'AdminShopUrl'];
+        yield 'feature_flag (singular tab)' => ['feature_flag', 'AdminFeatureFlag'];
 
         // Canonicalized entity names resolve through their canonical spelling: the map or
         // the convention applies AFTER the entity alias — whatever spelling the
@@ -353,10 +359,6 @@ class ExtraPropertyDefinitionNamingTest extends TestCase
         yield 'gender legacy spelling' => ['gender', 'AdminGenders'];
         yield 'merchandise_return grid spelling' => ['merchandise_return', 'AdminReturn'];
         yield 'mail (email logs entity)' => ['mail', 'AdminEmails'];
-
-        // No AdminCombinations tab exists: deny-safe unknown subject (and moot — the
-        // combination list is Vue-based, no grid toggle can target it).
-        yield 'combination (deny-safe unknown tab)' => ['combination', 'AdminCombinations'];
     }
 
     public function testExplicitControllerNameOverrideWinsAndIsExposedForPersistence(): void

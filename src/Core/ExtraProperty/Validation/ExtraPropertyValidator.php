@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Validation;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
@@ -68,9 +70,83 @@ class ExtraPropertyValidator implements ExtraPropertyValidatorInterface
     }
 
     /**
+     * The single rule-set for "can this value be stored under the declared type" — shared
+     * by the registry (default values, ExtraPropertyRegistry::isDefaultValueCompatible())
+     * and by validateValue() (every regular write), so what is refused as a default is
+     * refused as a value and vice versa. Values may arrive as native scalars (module code,
+     * Admin API JSON) or as strings (BO form fields) — both spellings of a valid value are
+     * accepted, plus the runtime-only shapes (DateTimeInterface for DATE, an already
+     * decoded structure for JSON). Null and '' always pass: "no value" is the storage
+     * column's concern (nullability) or a declared constraint's (requiredness).
+     *
+     * Static (not part of the interface): also called by the registry, which validates
+     * defaults with its own dedicated exception.
+     */
+    public static function isValueCompatible(ExtraPropertyType $type, mixed $value, ?array $enumValues = null): bool
+    {
+        if (null === $value || '' === $value) {
+            return true;
+        }
+
+        return match ($type) {
+            ExtraPropertyType::INT => is_int($value)
+                || (is_string($value) && 1 === preg_match('/^-?\d+$/', $value)),
+            ExtraPropertyType::FLOAT => is_int($value) || is_float($value)
+                || (is_string($value) && is_numeric($value)),
+            ExtraPropertyType::BOOL => is_bool($value) || in_array($value, [0, 1, '0', '1'], true),
+            // Only literal datetimes: relative wordings ('tomorrow') are never interpreted,
+            // neither as defaults nor as stored values.
+            ExtraPropertyType::DATE => $value instanceof DateTimeInterface
+                || (is_string($value) && self::isLiteralDateTime($value)),
+            ExtraPropertyType::CHOICE => null === $enumValues
+                || (is_scalar($value) && in_array((string) $value, $enumValues, true)),
+            ExtraPropertyType::JSON => is_array($value)
+                || (is_string($value) && (null !== json_decode($value) || 'null' === trim($value))),
+            default => true,
+        };
+    }
+
+    /**
+     * A literal 'Y-m-d' or 'Y-m-d H:i:s' datetime. The round-trip format comparison also
+     * rejects impossible dates that createFromFormat() would silently roll over
+     * ('2026-02-31' parses as March 3rd).
+     */
+    protected static function isLiteralDateTime(string $value): bool
+    {
+        foreach (['Y-m-d H:i:s', 'Y-m-d'] as $format) {
+            $date = DateTimeImmutable::createFromFormat($format, $value);
+            if (false !== $date && $date->format($format) === $value) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function validateValue(ExtraPropertyDefinition $definition, mixed $value): ConstraintViolationListInterface
+    {
+        $declaredViolations = $this->validateDeclaredConstraints($definition, $value);
+        if (0 !== $declaredViolations->count()) {
+            return $declaredViolations;
+        }
+
+        // Implicit minimal type validation, applied even when no constraint is declared:
+        // the same isValueCompatible() rules the registry applies to default values, so a
+        // value that could not be a default is not storable either (no silent coercion —
+        // 'abc' on an INT used to be stored as 0, 'tomorrow' on a DATE was interpreted).
+        // Runs AFTER the declared constraints so their messages keep priority (a module's
+        // Assert\Type('bool') reports its own wording, not the generic type message).
+        return $this->validateTypeCompatibility($definition, $value);
+    }
+
+    /**
+     * Validates the value against the definition's DECLARED Symfony constraints only —
+     * the historical opt-in behaviour; validateValue() adds the implicit type safety net.
+     */
+    protected function validateDeclaredConstraints(ExtraPropertyDefinition $definition, mixed $value): ConstraintViolationListInterface
     {
         $constraints = $definition->getConstraints() ?? [];
         if ([] === $constraints) {
@@ -131,6 +207,49 @@ class ExtraPropertyValidator implements ExtraPropertyValidatorInterface
         }
 
         return $violations;
+    }
+
+    /**
+     * Applies isValueCompatible() to the submitted value. The LANG/SHOP array shape
+     * ([id_lang|locale => value] / [id_shop => value]) is checked leaf by leaf, each
+     * violation tagged with its "[<key>]" sub-path — except for JSON, whose array shape IS
+     * the (decoded) value. A scalar (COMMON/SHOP scalar, or the single-language value an
+     * ObjectModel loaded with a langId exposes) is checked directly.
+     */
+    protected function validateTypeCompatibility(ExtraPropertyDefinition $definition, mixed $value): ConstraintViolationList
+    {
+        $violations = new ConstraintViolationList();
+        $type = $definition->getType();
+
+        if (is_array($value) && ExtraPropertyType::JSON !== $type) {
+            foreach ($value as $key => $leaf) {
+                if (!self::isValueCompatible($type, $leaf, $definition->getEnumValues())) {
+                    $violations->add($this->buildTypeViolation($type, $leaf, sprintf('[%s]', $key)));
+                }
+            }
+
+            return $violations;
+        }
+
+        if (!self::isValueCompatible($type, $value, $definition->getEnumValues())) {
+            $violations->add($this->buildTypeViolation($type, $value, ''));
+        }
+
+        return $violations;
+    }
+
+    protected function buildTypeViolation(ExtraPropertyType $type, mixed $invalidValue, string $path): ConstraintViolation
+    {
+        $template = 'The value is not compatible with the declared "{{ type }}" field type.';
+
+        return new ConstraintViolation(
+            str_replace('{{ type }}', $type->value, $template),
+            $template,
+            ['{{ type }}' => $type->value],
+            $invalidValue,
+            $path,
+            $invalidValue
+        );
     }
 
     /**

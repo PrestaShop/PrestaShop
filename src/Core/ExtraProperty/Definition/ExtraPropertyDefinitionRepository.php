@@ -27,6 +27,18 @@ use Throwable;
  */
 class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionRepositoryInterface, ExtraPropertyDefinitionWriterInterface
 {
+    /** Registry table name (without DB prefix). */
+    private const DEFINITION_TABLE = 'extra_property_definition';
+
+    /** Definition ↔ shop association table name (without DB prefix). */
+    private const DEFINITION_SHOP_TABLE = 'extra_property_definition_shop';
+
+    /** SHOW COLUMNS "Null" flag marking a nullable column. */
+    private const NULLABLE_COLUMN_FLAG = 'YES';
+
+    /** SHOW COLUMNS "Key" flag marking a primary key column. */
+    private const PRIMARY_KEY_COLUMN_FLAG = 'PRI';
+
     public function __construct(
         protected readonly Connection $connection,
         protected readonly string $prefix,
@@ -38,7 +50,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
      */
     public function getAllDefinitions(): ExtraPropertyDefinitionCollection
     {
-        $table = $this->prefix . 'extra_property_definition';
+        $table = $this->prefix . self::DEFINITION_TABLE;
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select('eef.*')
@@ -60,7 +72,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
      */
     public function findDefinitionByModuleAndField(string $entityName, ?string $moduleName, string $fieldName): ?ExtraPropertyDefinition
     {
-        $table = $this->prefix . 'extra_property_definition';
+        $table = $this->prefix . self::DEFINITION_TABLE;
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select('eef.*')
@@ -85,7 +97,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
      */
     public function getDefinitionById(int $id): ?ExtraPropertyDefinition
     {
-        $table = $this->prefix . 'extra_property_definition';
+        $table = $this->prefix . self::DEFINITION_TABLE;
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select('eef.*')
@@ -133,7 +145,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
      */
     public function save(ExtraPropertyDefinition $definition): int|false
     {
-        $table = $this->prefix . 'extra_property_definition';
+        $table = $this->prefix . self::DEFINITION_TABLE;
 
         $data = [
             // getModuleName() is already normalized: null for core fields ('' / '_core' inputs included).
@@ -218,7 +230,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             return;
         }
 
-        $table = $this->prefix . 'extra_property_definition_shop';
+        $table = $this->prefix . self::DEFINITION_SHOP_TABLE;
 
         $this->connection->transactional(function () use ($table, $definitionId, $shopIds): void {
             $this->connection->delete($table, ['id_extra_property_definition' => $definitionId]);
@@ -236,7 +248,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
      */
     public function delete(int $id): bool
     {
-        $table = $this->prefix . 'extra_property_definition';
+        $table = $this->prefix . self::DEFINITION_TABLE;
 
         $deleted = (bool) $this->connection->delete($table, ['id_extra_property_definition' => $id]);
         if ($deleted) {
@@ -244,7 +256,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             // Done after the registry row so a failure here leaves harmless unreferenced rows
             // instead of a definition without its restriction (same ordering rationale as
             // ExtraPropertyRegistry::unregister()).
-            $this->connection->delete($this->prefix . 'extra_property_definition_shop', ['id_extra_property_definition' => $id]);
+            $this->connection->delete($this->prefix . self::DEFINITION_SHOP_TABLE, ['id_extra_property_definition' => $id]);
         }
 
         return $deleted;
@@ -275,7 +287,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
      */
     protected function findIdByUniqueKey(string $entityName, ?string $moduleName, string $propertyName): ?int
     {
-        $table = $this->prefix . 'extra_property_definition';
+        $table = $this->prefix . self::DEFINITION_TABLE;
         $qb = $this->connection->createQueryBuilder();
         $qb->select('id_extra_property_definition')
             ->from($table)
@@ -405,7 +417,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
 
         $associations = $this->connection->createQueryBuilder()
             ->select('eps.id_extra_property_definition, eps.id_shop')
-            ->from($this->prefix . 'extra_property_definition_shop', 'eps')
+            ->from($this->prefix . self::DEFINITION_SHOP_TABLE, 'eps')
             ->where('eps.id_extra_property_definition IN (:definitionIds)')
             ->setParameter('definitionIds', $definitionIds, Connection::PARAM_INT_ARRAY)
             ->executeQuery()
@@ -449,9 +461,9 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
         $metadata = [];
         foreach ($columns as $column) {
             $metadata[(string) $column['Field']] = [
-                'nullable' => 'YES' === strtoupper((string) ($column['Null'] ?? 'YES')),
+                'nullable' => self::NULLABLE_COLUMN_FLAG === strtoupper((string) ($column['Null'] ?? self::NULLABLE_COLUMN_FLAG)),
                 'enum_values' => ColumnDefinitionMapper::parseEnumValues((string) ($column['Type'] ?? '')),
-                'primary' => 'PRI' === strtoupper((string) ($column['Key'] ?? '')),
+                'primary' => self::PRIMARY_KEY_COLUMN_FLAG === strtoupper((string) ($column['Key'] ?? '')),
             ];
         }
 

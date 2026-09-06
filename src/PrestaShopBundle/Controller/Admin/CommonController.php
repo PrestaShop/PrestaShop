@@ -84,10 +84,12 @@ class CommonController extends PrestaShopAdminController
      * This endpoint is designed for ToggleColumn async usage in BO grids.
      * It performs an UPSERT and toggles the value in SQL without doing a preliminary SELECT.
      *
-     * Security: the legacy controller name is derived server-side from the entityName URL path
-     * parameter (non-forgeable), NOT from any client-supplied value. This prevents privilege
-     * escalation where an authenticated admin could bypass per-entity permission checks by
-     * forging a _legacy_controller value they hold rights on.
+     * Security: the permission subject is the registry-hydrated definition's controller name
+     * (ExtraPropertyDefinition::getControllerName()), NOT any client-supplied value. This
+     * prevents privilege escalation where an authenticated admin could bypass per-entity
+     * permission checks by forging a _legacy_controller value they hold rights on. An unknown
+     * definition returns the same 403 as a denied one, so the endpoint never discloses whether
+     * a definition exists.
      *
      * The shop context of shop-scoped properties is resolved from ShopContext (not from the
      * route): the writer receives the current ShopConstraint and toggles the matching row.
@@ -111,18 +113,13 @@ class CommonController extends PrestaShopAdminController
         $resolvedModuleName = ExtraPropertyDefinition::CORE_MODULE_KEY === $moduleName ? null : $moduleName;
 
         // (entity, module, property) is unique across scopes — the definition carries its own scope.
-        $matched = $repository->findDefinitionByModuleAndField($entityName, $resolvedModuleName, $propertyName);
-        if (null === $matched) {
-            return new JsonResponse([
-                'status' => false,
-                'message' => $this->trans('Field not found.', [], 'Admin.Notifications.Error'),
-            ], 404);
-        }
-
         // The permission subject comes from the registry-hydrated definition (its stored
         // override, or the map/convention deduction) — never from any client-supplied
-        // _legacy_controller value, which would allow privilege escalation.
-        if (!$this->isGranted('update', $matched->getControllerName())) {
+        // _legacy_controller value, which would allow privilege escalation. An unknown
+        // definition gets the same 403 as a denied one: the response never discloses
+        // whether a definition exists.
+        $matched = $repository->findDefinitionByModuleAndField($entityName, $resolvedModuleName, $propertyName);
+        if (null === $matched || !$this->isGranted('update', $matched->getControllerName())) {
             return new JsonResponse([
                 'status' => false,
                 'message' => 'Access denied.',

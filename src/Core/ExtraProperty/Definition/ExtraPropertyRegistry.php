@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManagerInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -330,26 +331,19 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
 
     /**
      * Whether the declared defaultValue can actually serve as a default of the declared
-     * type. Values may arrive as native scalars (module code, Admin API JSON) or as
-     * strings (BO form TextType) — both spellings of a valid value are accepted.
+     * type — the SAME isValueCompatible() rule-set the validator applies to every regular
+     * write, so what is refused as a value is refused as a default and vice versa (only
+     * literal datetimes for DATE, no 'tomorrow'; numeric strings for INT/FLOAT; enum
+     * membership for CHOICE; valid JSON…). Only the failure handling differs: here it is
+     * the INVALID_DEFAULT_VALUE registration error.
      */
     protected function isDefaultValueCompatible(ExtraPropertyDefinition $definition): bool
     {
-        $defaultValue = $definition->getDefaultValue();
-
-        return match ($definition->getType()) {
-            ExtraPropertyType::INT => is_int($defaultValue)
-                || (is_string($defaultValue) && 1 === preg_match('/^-?\d+$/', $defaultValue)),
-            ExtraPropertyType::FLOAT => is_int($defaultValue) || is_float($defaultValue)
-                || (is_string($defaultValue) && is_numeric($defaultValue)),
-            ExtraPropertyType::BOOL => is_bool($defaultValue) || in_array($defaultValue, [0, 1, '0', '1'], true),
-            ExtraPropertyType::DATE => false !== strtotime((string) $defaultValue),
-            ExtraPropertyType::CHOICE => null === $definition->getEnumValues()
-                || in_array((string) $defaultValue, $definition->getEnumValues(), true),
-            ExtraPropertyType::JSON => is_string($defaultValue)
-                && (null !== json_decode($defaultValue) || 'null' === trim($defaultValue)),
-            default => true,
-        };
+        return ExtraPropertyValidator::isValueCompatible(
+            $definition->getType(),
+            $definition->getDefaultValue(),
+            $definition->getEnumValues()
+        );
     }
 
     /**

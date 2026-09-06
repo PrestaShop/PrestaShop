@@ -124,11 +124,13 @@ final class ExtraPropertyDefinition
     /**
      * BO controller name (the permission subject) per entity whose real tab does not
      * follow the 'Admin' + pluralized entity name convention. Each value is the exact
-     * _legacy_controller the entity's own grid page declares in routing (and a real
-     * install-dev/data/xml/tab.xml tab), so the toggle permission matches the page the
-     * toggle renders on. Every gridded entity absent from this map follows the
-     * convention (product → AdminProducts, order → AdminOrders, cart_rule →
-     * AdminCartRules…) — see getControllerName().
+     * _legacy_controller the entity's page declares in routing (and a real
+     * install-dev/data/xml/tab.xml tab) — for entities managed inside another entity's
+     * page (shipment and combination live on the order and product pages) or without a
+     * migrated page of their own (shop_group, shop_url, feature_flag), the page that
+     * manages them. Every entity absent from this map follows the convention (product →
+     * AdminProducts, order → AdminOrders, cart_rule → AdminCartRules…) — see
+     * getControllerName().
      */
     protected const ENTITY_CONTROLLER_NAMES = [
         'api_client' => 'AdminAdminAPI',
@@ -137,8 +139,10 @@ final class ExtraPropertyDefinition
         'catalog_price_rule' => 'AdminSpecificPriceRule',
         'cms_page' => 'AdminCmsContent',
         'cms_page_category' => 'AdminCmsContent',
+        'combination' => 'AdminProducts',
         'credit_slip' => 'AdminSlip',
         'discount' => 'AdminCartRules',
+        'feature_flag' => 'AdminFeatureFlag',
         'feature_value' => 'AdminFeatures',
         'image_type' => 'AdminImages',
         'mail' => 'AdminEmails',
@@ -148,7 +152,10 @@ final class ExtraPropertyDefinition
         'order_return_state' => 'AdminStatuses',
         'order_state' => 'AdminStatuses',
         'shipment' => 'AdminOrders',
+        'shop_group' => 'AdminShopGroup',
+        'shop_url' => 'AdminShopUrl',
         'sql_request' => 'AdminRequestSql',
+        'tax_rule' => 'AdminTaxRulesGroup',
         'tax_rules_group' => 'AdminTaxRulesGroup',
         'title' => 'AdminGenders',
         'webservice_key' => 'AdminWebservice',

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\ExtraProperty\Value;
 
+use DateTimeImmutable;
 use Db;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
@@ -146,12 +147,45 @@ class ExtraPropertyDefaultValueTest extends KernelTestCase
         $this->assertSame($structure, $values[self::MODULE]['dv_json']);
     }
 
+    public function testLiteralDateDefaultsAreAccepted(): void
+    {
+        foreach (['2026-12-24', '2026-12-24 10:30:00'] as $literal) {
+            $definition = new ExtraPropertyDefinition(
+                entityName: 'product',
+                propertyName: 'dv_literal_date',
+                type: ExtraPropertyType::DATE,
+                scope: ExtraPropertyScope::COMMON,
+                moduleName: self::MODULE,
+                defaultValue: $literal,
+            );
+
+            try {
+                self::$registry->register($definition);
+                $hydrated = self::$definitionRepository->findDefinitionByModuleAndField('product', self::MODULE, 'dv_literal_date');
+                $this->assertNotNull($hydrated, $literal);
+                // Read back normalized to the canonical datetime stringification.
+                $this->assertSame(
+                    (new DateTimeImmutable($literal))->format('Y-m-d H:i:s'),
+                    $hydrated->getDefaultValue(),
+                    $literal
+                );
+            } finally {
+                self::$registry->unregister($definition, true);
+            }
+        }
+    }
+
     public function testIncompatibleDefaultValueIsRefusedAtRegistration(): void
     {
         $incompatibles = [
             [ExtraPropertyType::INT, 'not-a-number', null],
             [ExtraPropertyType::FLOAT, 'abc', null],
             [ExtraPropertyType::DATE, 'not-a-date', null],
+            // Relative wordings are rejected: defaults are constants (they end up in DDL
+            // and row-less reads), and regular DATE values don't interpret them either.
+            [ExtraPropertyType::DATE, 'tomorrow', null],
+            // createFromFormat() would silently roll this over to March 3rd.
+            [ExtraPropertyType::DATE, '2026-02-31', null],
             [ExtraPropertyType::CHOICE, 'unknown', ['a', 'b']],
             [ExtraPropertyType::JSON, '{invalid', null],
         ];
