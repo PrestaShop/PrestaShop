@@ -13,6 +13,7 @@ use Cache;
 use Carrier;
 use Cart;
 use CartRule;
+use Combination;
 use Currency;
 use Customer;
 use Order;
@@ -352,11 +353,11 @@ class OrderAmountUpdater
         foreach ($order->getCartProducts() as $orderProduct) {
             $orderDetail = new OrderDetail($orderProduct['id_order_detail'], null, $this->contextStateManager->getContext());
 
-            // A product deleted from the catalogue is gone from the cart as well, so there is no
-            // current price to sync this line to. Its order detail keeps the amounts it was invoiced
-            // at, which are the only meaningful ones left. Any other absence is still a desync and
-            // is reported by getProductFromCart() below.
-            if (!Product::existsInDatabase((int) $orderDetail->product_id)) {
+            // Deleted products and combinations are no longer in the cart: keep the invoiced amounts
+            if (!Product::existsInDatabase((int) $orderDetail->product_id)
+                || (0 !== (int) $orderDetail->product_attribute_id
+                    && !Combination::existsInDatabase((int) $orderDetail->product_attribute_id))
+            ) {
                 continue;
             }
 
