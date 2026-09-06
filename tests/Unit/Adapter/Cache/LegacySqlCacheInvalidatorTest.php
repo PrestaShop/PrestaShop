@@ -61,4 +61,33 @@ class LegacySqlCacheInvalidatorTest extends TestCase
         $invalidator->invalidate('UPDATE ps_link_block SET id_hook = 2');
         $this->addToAssertionCount(1);
     }
+
+    /**
+     * The container feeds this from %ps_cache_enable%, which the installer writes into
+     * app/config/parameters.yml. It arrives as a bool, as 0/1, or as null when the key is present but
+     * empty - a strict bool parameter made the kernel fail to boot on a fresh CI install.
+     *
+     * @dataProvider provideConfiguredValues
+     *
+     * @param bool|int|string|null $configured
+     */
+    public function testItAcceptsEveryShapeTheConfigurationCanProduce($configured, bool $expected): void
+    {
+        $this->assertSame(
+            $expected,
+            (new LegacySqlCacheInvalidator($configured))->shouldInvalidate('UPDATE ps_product SET id_product = 1')
+        );
+    }
+
+    public function provideConfiguredValues(): iterable
+    {
+        yield 'missing key resolves to null' => [null, false];
+        yield 'disabled as bool' => [false, false];
+        yield 'disabled as int' => [0, false];
+        yield 'disabled as string' => ['0', false];
+        yield 'empty string' => ['', false];
+        yield 'enabled as bool' => [true, true];
+        yield 'enabled as int' => [1, true];
+        yield 'enabled as string' => ['1', true];
+    }
 }
