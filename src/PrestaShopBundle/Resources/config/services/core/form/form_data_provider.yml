@@ -310,3 +310,11 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\BusinessEntityFormDataProvider:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\GridViewFormDataProvider:
+    public: false
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\GridConfigurationFormDataProvider:
+    public: false

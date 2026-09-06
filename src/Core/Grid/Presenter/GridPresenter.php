@@ -11,6 +11,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Grid\View\GridViewsPanelPresenter;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use Symfony\Component\DependencyInjection\Container;
@@ -26,8 +27,10 @@ final class GridPresenter implements GridPresenterInterface
      */
     private $hookDispatcher;
 
-    public function __construct(HookDispatcherInterface $hookDispatcher)
-    {
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        private readonly ?GridViewsPanelPresenter $gridViewsPanelPresenter = null,
+    ) {
         $this->hookDispatcher = $hookDispatcher;
     }
 
@@ -68,6 +71,7 @@ final class GridPresenter implements GridPresenterInterface
                 'is_empty_state' => $this->isEmptyState($grid),
             ],
             'view_options' => $definition->getViewOptions()->all(),
+            'grid_views' => $this->gridViewsPanelPresenter?->present($grid),
         ];
 
         if ($searchCriteria instanceof Filters) {

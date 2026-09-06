@@ -3001,6 +3001,35 @@ CREATE TABLE `PREFIX_admin_filter` (
   PRIMARY KEY (`id`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
+CREATE TABLE `PREFIX_admin_grid_configuration` (
+  `id`                     INT AUTO_INCREMENT NOT NULL,
+  `id_employee`            INT          NOT NULL,
+  `id_shop`                INT          NOT NULL,
+  `grid_id`                VARCHAR(191) NOT NULL,
+  `filter_id`              VARCHAR(191) NOT NULL,
+  `controller_route`       VARCHAR(255) NOT NULL,
+  `display_shared_filters` TINYINT(1)   NOT NULL DEFAULT 1,
+  `display_totals`         TINYINT(1)   NOT NULL DEFAULT 1,
+  `date_add`               DATETIME     NOT NULL,
+  `date_upd`               DATETIME     NOT NULL,
+  UNIQUE KEY `admin_grid_configuration_idx` (`id_employee`, `id_shop`, `grid_id`, `controller_route`),
+  KEY `admin_grid_configuration_shop_grid_idx` (`id_shop`, `grid_id`, `controller_route`),
+  PRIMARY KEY (`id`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_admin_grid_view` (
+  `id`                          INT AUTO_INCREMENT NOT NULL,
+  `id_admin_grid_configuration` INT          NOT NULL,
+  `name`                        VARCHAR(255) NOT NULL,
+  `filter_id`                   VARCHAR(191) NOT NULL,
+  `filters`                     LONGTEXT     NOT NULL,
+  `dynamic_date_rules`          JSON         DEFAULT NULL,
+  `grid_state`                  JSON         DEFAULT NULL,
+  `shared`                      TINYINT(1)   NOT NULL DEFAULT 0,
+  KEY `admin_grid_view_configuration_idx` (`id_admin_grid_configuration`),
+  PRIMARY KEY (`id`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 CREATE TABLE `PREFIX_shop` (
   `id_shop`       INT AUTO_INCREMENT NOT NULL,
   `id_shop_group` INT          NOT NULL,

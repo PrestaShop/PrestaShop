@@ -1,0 +1,24 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\Grid\View\DynamicDateRangeComputer: ~
+
+  PrestaShop\PrestaShop\Core\Grid\View\GridViewSearchCriteriaFactory: ~
+
+  PrestaShop\PrestaShop\Core\Grid\View\GridViewCounter: ~
+
+  PrestaShop\PrestaShop\Core\Grid\View\DynamicDateRuleApplier: ~
+
+  PrestaShop\PrestaShop\Core\Grid\View\GridViewUrlGenerator: ~
+
+  PrestaShop\PrestaShop\Core\Grid\View\GridViewDataSanitizer: ~
+
+  PrestaShop\PrestaShop\Core\Grid\View\GridViewsPresenter: ~
+
+  PrestaShop\PrestaShop\Core\Grid\View\GridViewsPanelPresenter:
+    arguments:
+      $gridViewFormBuilder: '@prestashop.core.form.identifiable_object.builder.grid_view_form_builder'
+      $gridConfigurationFormBuilder: '@prestashop.core.form.identifiable_object.builder.grid_configuration_form_builder'
