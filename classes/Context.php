@@ -101,7 +101,7 @@ class ContextCore
     /** @var float */
     public $virtualTotalTaxIncluded = 0;
 
-    /** @var Translator */
+    /** @var TranslatorInterface */
     protected $translator = null;
 
     /** @var int */
@@ -407,7 +407,7 @@ class ContextCore
      *
      * @param bool $isInstaller Set to true if the method is called by the installer
      *
-     * @return Translator
+     * @return TranslatorInterface
      */
     public function getTranslator($isInstaller = false)
     {
