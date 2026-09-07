@@ -117,9 +117,14 @@ class HoursEncoderTest extends TestCase
             [1 => ['09:00 | 18:00']],
         ];
 
-        yield 'new format with empty bound uses open value only' => [
+        yield 'new format with empty close bound uses open value only' => [
             [1 => json_encode([['09:00', '']])],
             [1 => ['09:00']],
+        ];
+
+        yield 'new format with empty open bound keeps the close value instead of dropping it' => [
+            [1 => json_encode([['', '18:00']])],
+            [1 => ['| 18:00']],
         ];
 
         yield 'legacy single-element format kept as-is' => [
