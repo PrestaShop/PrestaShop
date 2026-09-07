@@ -86,6 +86,28 @@ Feature: Refund Order from Back Office (BO)
 
   @order-refund
   @order-partial-refund
+  Scenario: The credit slip document lists only the refunded lines, at the refunded amount
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug Today is a good day     | 1                        | 3.5    |
+    Then "bo_order_refund" has 1 credit slips
+    # The order also holds 2 "Mug The best is yet to come", which was not refunded and must not appear.
+    # The amount is the 3.5 that was refunded, not the 11.9 the line is worth.
+    Then "bo_order_refund" last credit slip lists these refunded products:
+      | product_name            | product_quantity | total_price_tax_excl |
+      | Mug Today is a good day | 1                | 3.5                  |
+
+  @order-refund
+  @order-partial-refund
   Scenario: Partial refund of products with restock
     Given I add order "bo_order_refund" with the following details:
       | cart                | dummy_cart                 |

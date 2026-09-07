@@ -192,6 +192,67 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * The credit slip document builds its product list through OrderSlip::getOrdersSlipProducts(), which
+     * HTMLTemplateOrderSlip::__construct() assigns over $order->products. It must contain only the lines
+     * that were refunded, at the refunded quantity and the refunded amount rather than the list price.
+     *
+     * @Then :orderReference last credit slip lists these refunded products:
+     *
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function checkOrderSlipProducts(string $orderReference, TableNode $table): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        $order = new Order($orderId);
+        $orderSlips = $order->getOrderSlipsCollection();
+        /** @var OrderSlip $orderSlip */
+        $orderSlip = $orderSlips->offsetGet($orderSlips->count() - 1);
+
+        $slipProducts = array_values(OrderSlip::getOrdersSlipProducts((int) $orderSlip->id, $order));
+        $expectedRows = $table->getColumnsHash();
+
+        Assert::assertCount(
+            count($expectedRows),
+            $slipProducts,
+            sprintf(
+                'The credit slip should list %d product line(s), got %d: %s',
+                count($expectedRows),
+                count($slipProducts),
+                implode(', ', array_column($slipProducts, 'product_name'))
+            )
+        );
+
+        foreach ($expectedRows as $index => $expectedRow) {
+            $actual = $slipProducts[$index];
+            foreach ($expectedRow as $field => $expectedValue) {
+                if ('product_name' === $field) {
+                    Assert::assertSame(
+                        $expectedValue,
+                        $actual['product_name'],
+                        sprintf('Credit slip line %d is not the expected product', $index)
+                    );
+
+                    continue;
+                }
+
+                Assert::assertEquals(
+                    (float) $expectedValue,
+                    (float) $actual[$field],
+                    sprintf(
+                        'Invalid %s on credit slip line %d, expected %s instead of %s',
+                        $field,
+                        $index,
+                        $expectedValue,
+                        $actual[$field]
+                    )
+                );
+            }
+        }
+    }
+
+    /**
      * @Given return product is enabled
      */
     public function enabledReturnProduct(): void
