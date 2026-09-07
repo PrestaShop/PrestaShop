@@ -55,10 +55,18 @@ final class HoursEncoder
             $days = [];
             foreach ($decoded as $day) {
                 if (is_array($day) && 2 === count($day)) {
-                    // New format: ["09:00", "18:00"] → "09:00 | 18:00"
+                    // New format: ["09:00", "18:00"] → "09:00 | 18:00". Either side can be
+                    // empty on its own (e.g. a user typed "09:00|" or "|18:00"): keep whichever
+                    // one was actually filled in rather than only ever keeping the open time,
+                    // which used to silently drop a close-only value.
                     $open = trim($day[0]);
                     $close = trim($day[1]);
-                    $days[] = ($open !== '' && $close !== '') ? $open . ' | ' . $close : $open;
+                    $days[] = match (true) {
+                        '' !== $open && '' !== $close => $open . ' | ' . $close,
+                        '' !== $open => $open,
+                        '' !== $close => '| ' . $close,
+                        default => '',
+                    };
                 } elseif (is_array($day) && count($day) > 0) {
                     // Legacy format: ["09:00AM - 07:00PM"] → use as-is, and legacy days can
                     // also carry more than two slots (["09:00","12:00","14:00","18:00"]):

@@ -8,9 +8,12 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\Store;
 
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressZipCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Store\Configuration\StoreConstraint;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
@@ -32,6 +35,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StoreType extends TranslatorAwareType
@@ -43,6 +47,7 @@ class StoreType extends TranslatorAwareType
         private readonly int $contextCountryId,
         private readonly bool $isMultistoreEnabled,
         private readonly UrlGeneratorInterface $router,
+        private readonly CountryRepositoryInterface $countryRepository,
     ) {
         parent::__construct($translator, $locales);
     }
@@ -57,15 +62,34 @@ class StoreType extends TranslatorAwareType
                 'label' => $this->trans('Name', 'Admin.Global'),
                 'required' => true,
                 'constraints' => [new DefaultLanguage()],
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME]),
+                        new Length([
+                            'max' => StoreConstraint::MAX_NAME_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                ['%limit%' => StoreConstraint::MAX_NAME_LENGTH]
+                            ),
+                        ]),
+                    ],
+                ],
             ])
             ->add('address1', TranslatableType::class, [
                 'label' => $this->trans('Address', 'Admin.Global'),
                 'required' => true,
                 'constraints' => [new DefaultLanguage()],
+                'options' => [
+                    'constraints' => $this->getAddressCommonConstraints(),
+                ],
             ])
             ->add('address2', TranslatableType::class, [
                 'label' => $this->trans('Address (2)', 'Admin.Global'),
                 'required' => false,
+                'options' => [
+                    'constraints' => $this->getAddressCommonConstraints(),
+                ],
             ])
         ;
 
@@ -82,6 +106,15 @@ class StoreType extends TranslatorAwareType
                             'The %s field is required.',
                             'Admin.Notifications.Error',
                             [sprintf('"%s"', $this->trans('City', 'Admin.Global'))]
+                        ),
+                    ]),
+                    new TypedRegex(['type' => TypedRegex::TYPE_CITY_NAME]),
+                    new Length([
+                        'max' => StoreConstraint::MAX_CITY_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => StoreConstraint::MAX_CITY_LENGTH]
                         ),
                     ]),
                 ],
@@ -106,27 +139,33 @@ class StoreType extends TranslatorAwareType
             ->add('latitude', TextType::class, [
                 'label' => $this->trans('Latitude', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Store coordinates (e.g. 45.265469 or -0.265469)', 'Admin.Shopparameters.Help'),
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans(
-                            'The %s field is required.',
-                            'Admin.Notifications.Error',
-                            [sprintf('"%s"', $this->trans('Latitude', 'Admin.Shopparameters.Feature'))]
-                        ),
-                    ]),
-                ],
+                'constraints' => array_merge(
+                    [
+                        new NotBlank([
+                            'message' => $this->trans(
+                                'The %s field is required.',
+                                'Admin.Notifications.Error',
+                                [sprintf('"%s"', $this->trans('Latitude', 'Admin.Shopparameters.Feature'))]
+                            ),
+                        ]),
+                    ],
+                    $this->getCoordinateCommonConstraints()
+                ),
             ])
             ->add('longitude', TextType::class, [
                 'label' => $this->trans('Longitude', 'Admin.Shopparameters.Feature'),
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans(
-                            'The %s field is required.',
-                            'Admin.Notifications.Error',
-                            [sprintf('"%s"', $this->trans('Longitude', 'Admin.Shopparameters.Feature'))]
-                        ),
-                    ]),
-                ],
+                'constraints' => array_merge(
+                    [
+                        new NotBlank([
+                            'message' => $this->trans(
+                                'The %s field is required.',
+                                'Admin.Notifications.Error',
+                                [sprintf('"%s"', $this->trans('Longitude', 'Admin.Shopparameters.Feature'))]
+                            ),
+                        ]),
+                    ],
+                    $this->getCoordinateCommonConstraints()
+                ),
             ])
             ->add('phone', TextType::class, [
                 'label' => $this->trans('Phone', 'Admin.Global'),
@@ -164,6 +203,15 @@ class StoreType extends TranslatorAwareType
                 'constraints' => [
                     new Email([
                         'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        'mode' => Email::VALIDATION_MODE_STRICT,
+                    ]),
+                    new Length([
+                        'max' => StoreConstraint::MAX_EMAIL_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => StoreConstraint::MAX_EMAIL_LENGTH]
+                        ),
                     ]),
                 ],
             ])
@@ -211,8 +259,72 @@ class StoreType extends TranslatorAwareType
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
             $submittedCountryId = (int) ($event->getData()['id_country'] ?? 0);
-            $this->rebuildCountryDependentFields($event->getForm(), $submittedCountryId > 0 ? $submittedCountryId : $this->contextCountryId);
+            // A submitted id that isn't a real country (0, negative, or simply absent from
+            // ps_country) must not reach the postcode/state constraints below: building an
+            // AddressZipCode constraint for a non-existent country throws CountryNotFoundException
+            // from inside the validator, which runs during handleRequest(), outside the
+            // controller's try/catch. The bogus id_country value itself is still submitted and
+            // still correctly rejected afterwards by the field's own ChoiceType validation.
+            if ($submittedCountryId <= 0 || !$this->countryExists($submittedCountryId)) {
+                $submittedCountryId = $this->contextCountryId;
+            }
+            $this->rebuildCountryDependentFields($event->getForm(), $submittedCountryId);
         });
+    }
+
+    private function countryExists(int $countryId): bool
+    {
+        try {
+            $this->countryRepository->assertCountryExists(new CountryId($countryId));
+
+            return true;
+        } catch (CountryNotFoundException) {
+            return false;
+        }
+    }
+
+    /**
+     * @return array<int, object>
+     */
+    private function getAddressCommonConstraints(): array
+    {
+        return [
+            new TypedRegex(['type' => TypedRegex::TYPE_ADDRESS]),
+            new Length([
+                'max' => StoreConstraint::MAX_ADDRESS_LENGTH,
+                'maxMessage' => $this->trans(
+                    'This field cannot be longer than %limit% characters',
+                    'Admin.Notifications.Error',
+                    ['%limit%' => StoreConstraint::MAX_ADDRESS_LENGTH]
+                ),
+            ]),
+        ];
+    }
+
+    /**
+     * Latitude/longitude reach DecimalNumber unguarded once they pass here (in
+     * StoreFormDataHandler), which throws a raw InvalidArgumentException for anything it can't
+     * parse as a number; matching its own accepted grammar here turns that into a normal field
+     * error instead. The legacy Store ObjectModel column is 13 chars wide, hence the Length.
+     *
+     * @return array<int, object>
+     */
+    private function getCoordinateCommonConstraints(): array
+    {
+        return [
+            new Regex([
+                'pattern' => '/^[-+]?\d+(?:\.\d+(?:[eE][-+]\d+)?)?$|^[-+]?\d+[eE][-+]\d+$/',
+                'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+            ]),
+            new Length([
+                'max' => 13,
+                'maxMessage' => $this->trans(
+                    'This field cannot be longer than %limit% characters',
+                    'Admin.Notifications.Error',
+                    ['%limit%' => 13]
+                ),
+            ]),
+        ];
     }
 
     /**
