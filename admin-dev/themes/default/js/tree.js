@@ -12,7 +12,7 @@
  * and the HeadTag Twig component for the Symfony one - and already ends with a slash.
  */
 function adminDispatcherUrl() {
-  return (typeof window.baseAdminDir !== 'undefined' ? window.baseAdminDir : '') + 'index.php';
+  return `${typeof window.baseAdminDir !== 'undefined' ? window.baseAdminDir : ''}index.php`;
 }
 
 window.Tree = function (element, options) {
