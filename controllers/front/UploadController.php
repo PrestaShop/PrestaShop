@@ -8,6 +8,10 @@ declare(strict_types=1);
 
 class UploadControllerCore extends GetFileController
 {
+    // Reset the "get-file" value inherited from GetFileController. This controller has its own "upload" route and
+    // must keep an empty php_self so FrontController::init() does not attempt a canonical redirection on download.
+    public $php_self = null;
+
     private $filename;
 
     /**
