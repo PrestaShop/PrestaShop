@@ -1687,7 +1687,18 @@ class OrderCore extends ObjectModel
             false,
             $customer->secure_key
         );
-        $this->id = $payment_module->currentOrder;
+        $this->id = (int) $payment_module->currentOrder;
+
+        // validateOrder() builds the order from the cart, so the addresses, the totals and everything
+        // else it derives there can differ from what arrived in the payload. Without reloading them the
+        // object still holds the submitted values, and the response describes the request rather than
+        // the order that was created, which is why a GET straight afterwards disagrees with it.
+        $createdOrder = Db::getInstance()->getRow(
+            'SELECT * FROM `' . _DB_PREFIX_ . 'orders` WHERE `id_order` = ' . (int) $this->id
+        );
+        if (!empty($createdOrder)) {
+            $this->hydrate($createdOrder);
+        }
 
         return true;
     }
