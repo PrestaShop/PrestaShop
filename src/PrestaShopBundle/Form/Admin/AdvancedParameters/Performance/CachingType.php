@@ -8,6 +8,8 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Cache\Adapter\ApcuAdapter;
+use Symfony\Component\Cache\Adapter\MemcachedAdapter;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -21,6 +23,19 @@ class CachingType extends TranslatorAwareType
         'CacheMemcached' => ['memcached'],
         'CacheApc' => ['apc', 'apcu'],
         'CacheXcache' => ['xcache'],
+    ];
+
+    /**
+     * Extensions the Symfony container caches through, mapped to the adapter that uses them.
+     *
+     * WHY: a loaded extension is not a usable one - these adapters also require
+     * memcached >= 3.1.6 and apc.enabled=1, and throw when that is not met. Offering such an
+     * option enabled lets a merchant select a caching system that then breaks every page.
+     * Extensions with no entry here back no Symfony adapter, so loading them is all we can test.
+     */
+    private $adapters = [
+        'memcached' => MemcachedAdapter::class,
+        'apcu' => ApcuAdapter::class,
     ];
 
     /**
@@ -41,30 +56,10 @@ class CachingType extends TranslatorAwareType
                     'Xcache' => 'CacheXcache',
                 ],
                 'choice_label' => function ($value, $key, $index) {
-                    $disabled = false;
-                    foreach ($this->extensionsList[$index] as $extensionName) {
-                        if (extension_loaded($extensionName)) {
-                            $disabled = false;
-
-                            break;
-                        }
-                        $disabled = true;
-                    }
-
-                    return $disabled === true ? $this->getErrorsMessages()[$index] : $value;
+                    return $this->isAvailable($index) ? $value : $this->getErrorsMessages()[$index];
                 },
                 'choice_attr' => function ($value, $key, $index) {
-                    $disabled = false;
-                    foreach ($this->extensionsList[$index] as $extensionName) {
-                        if (extension_loaded($extensionName)) {
-                            $disabled = false;
-
-                            break;
-                        }
-                        $disabled = true;
-                    }
-
-                    return $disabled === true ? ['disabled' => $disabled] : [];
+                    return $this->isAvailable($index) ? [] : ['disabled' => true];
                 },
                 'expanded' => true,
                 'required' => false,
@@ -82,6 +77,25 @@ class CachingType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'performance_caching_block';
+    }
+
+    /**
+     * @param string $cachingSystem one of the keys of $extensionsList
+     *
+     * @return bool whether the shop can actually cache through that system
+     */
+    private function isAvailable($cachingSystem)
+    {
+        foreach ($this->extensionsList[$cachingSystem] as $extensionName) {
+            $adapter = $this->adapters[$extensionName] ?? null;
+            $available = null === $adapter ? extension_loaded($extensionName) : $adapter::isSupported();
+
+            if ($available) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
