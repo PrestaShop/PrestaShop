@@ -37,7 +37,6 @@ class CartVirtualLineTest extends KernelTestCase
     {
         parent::setUpBeforeClass();
 
-        // Boot the Symfony kernel so ContainerFinder resolves inside Cart internals.
         self::bootKernel();
         global $kernel;
         $kernel = self::$kernel;
@@ -47,6 +46,18 @@ class CartVirtualLineTest extends KernelTestCase
         Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', true);
 
         self::$idAddress = self::makeAddress()->id;
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // KernelTestCase::tearDown() shuts the kernel down between tests, so re-boot
+        // it each time to keep ContainerFinder happy inside Cart internals.
+        self::ensureKernelShutdown();
+        self::bootKernel();
+        global $kernel;
+        $kernel = self::$kernel;
     }
 
     /**

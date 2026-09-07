@@ -250,6 +250,9 @@ class CartCore extends ObjectModel
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
         }
+        if (isset(self::$_isVirtualCart[$this->id])) {
+            unset(self::$_isVirtualCart[$this->id]);
+        }
         $this->_products = null;
         $this->_products_with_separated_gifts = null;
     }
