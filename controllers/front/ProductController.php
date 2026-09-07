@@ -1253,6 +1253,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         // @todo - a centralized version of this method is implemented in ProductLazyArray - migrate to it when migrating this code
         $product['quantity_required'] = $this->getRequiredQuantity($product);
 
+        // Quantity the price must be computed for. The input above is incremental - it says how many
+        // more to add - so what decides the price is the quantity the cart line will hold once they
+        // are added, which is also the quantity the cart itself prices against. getRequiredQuantity()
+        // already reads the input this way when it subtracts what the cart holds from the minimum.
+        // Kept separate from quantity_wanted, which is the value shown in the input.
+        $product['quantity_to_price'] = (int) $product['quantity_wanted'] + (int) $product['cart_quantity'];
+
         // Render hook displayProductExtraContent
         $product['extraContent'] = (new ProductExtraContentFinder())->addParams(['product' => $this->product])->present();
         $product['ecotax_tax_inc'] = $this->product->getEcotax(null, true, true);
