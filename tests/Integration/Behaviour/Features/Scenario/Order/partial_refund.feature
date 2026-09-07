@@ -860,3 +860,28 @@ Feature: Refund Order from Back Office (BO)
       | total_refunded_tax_excl     | 11.9   |
       | total_refunded_tax_incl     | 12.610000 |
     And there is 1 more "Mug The best is yet to come" in stock
+
+  @order-refund
+  @order-partial-refund
+  @order-cancel-after-refund
+  Scenario: Cancelling an order does not restock units a refund already put back
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart             |
+      | message             | test                   |
+      | payment module name | dummy_payment          |
+      | status              | Processing in progress |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there is 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
+      | product_name                | quantity | amount |
+      | Mug The best is yet to come | 1        | 10.5   |
+    Then product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+      | product_quantity_refunded   | 1 |
+      | product_quantity_reinjected | 1 |
+    And there is 1 more "Mug The best is yet to come" in stock
+    When I update order "bo_order_refund" status to "Canceled"
+    Then there is 1 more "Mug The best is yet to come" in stock
+    And there is 1 more "Mug Today is a good day" in stock
