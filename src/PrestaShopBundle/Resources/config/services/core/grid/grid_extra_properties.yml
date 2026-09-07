@@ -17,3 +17,5 @@ services:
       $languageContext: '@PrestaShop\PrestaShop\Core\Context\LanguageContext'
       $shopContext: '@PrestaShop\PrestaShop\Core\Context\ShopContext'
       $definitionShopFilter: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface'
+      # Diagnoses grids the modifier must skip (derived-table pagination, see issue #42536).
+      $logger: '@logger'

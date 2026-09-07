@@ -97,7 +97,9 @@ class ExtraPropertyApiListRecordCollector implements ResetInterface
     {
         $byEntity = [];
         foreach ($definitions as $definition) {
-            $byEntity[$definition->getEntityName()][] = $definition;
+            // Keyed by the PHYSICAL table: find() is queried by the API subscriber with the
+            // same table-based identifier it feeds the reader/writer with.
+            $byEntity[$definition->getTableName()][] = $definition;
         }
 
         return array_map(

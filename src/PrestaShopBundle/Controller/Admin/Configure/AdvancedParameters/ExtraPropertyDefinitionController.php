@@ -485,6 +485,16 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
                     [],
                     'Admin.Advparameters.Notification'
                 ),
+                ExtraPropertyRegistrationFailureException::STORAGE_CONFLICT => $this->trans(
+                    'Another extra property already stores its values in the same database column. Use the same entity name as the existing property, or a different property name.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
+                ExtraPropertyRegistrationFailureException::INVALID_DEFAULT_VALUE => $this->trans(
+                    'The default value does not match the field type (or is not one of the allowed choice values).',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
             ],
             InvalidExtraPropertyDefinitionException::class => $this->trans(
                 'The submitted extra property definition is invalid. Check the form values and try again.',

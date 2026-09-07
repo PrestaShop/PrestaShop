@@ -15,6 +15,8 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyTypeCompatibility;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface;
 use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -23,6 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -80,7 +83,7 @@ class ExtraPropertiesFormBuilderModifier
         $existingValues = null;
         if (null !== $entityId && $entityId > 0) {
             $existingValues = $this->reader->getExtraProperties(
-                $formDefinitions->first()->getEntityName(),
+                $formDefinitions->first()->getTableName(),
                 $formDefinitions->first()->getPrimaryKeyName(),
                 $entityId,
                 null,
@@ -97,8 +100,14 @@ class ExtraPropertiesFormBuilderModifier
             [$type, $typeOptions] = $this->resolveFieldTypeAndOptions($definition);
 
             if (null !== $existingValues) {
-                // The reader returns typed values (ExtraPropertyValueCaster applied on read).
+                // The reader returns typed values (ExtraPropertyValueCaster applied on read),
+                // seeding the definition default when no value row exists yet.
                 $typeOptions['data'] = $this->resolveExistingValue($existingValues, $definition);
+            } elseif (null !== $definition->getDefaultValue() && ExtraPropertyScope::LANG !== $definition->getScope()) {
+                // Create form: prefill with the declared default, consistent with what the
+                // entity will read back if saved untouched. LANG stays empty — a single
+                // scalar default has no per-language meaning.
+                $typeOptions['data'] = $definition->getDefaultValue();
             }
 
             if (null === $formEntry || null === $formEntry['path']) {
@@ -131,6 +140,16 @@ class ExtraPropertiesFormBuilderModifier
         // form's own validation runs them and surfaces one error per failing constraint. Requiredness is the
         // module's responsibility — it passes Assert\NotBlank when a value must be provided (no auto NotBlank).
         $constraints = $definition->getConstraints() ?? [];
+        // Implicit type-compatibility safety net, ALWAYS attached: the same
+        // isValueCompatible() rule-set the registry applies to defaults and
+        // validateValue() to the ObjectModel/Admin API writes — so the BO form refuses
+        // the same values inline (mostly relevant for free-typed widgets: a JSON
+        // textarea, a module formType override). Wrapped in Assert\All for localized
+        // fields so each language leaf is checked like everywhere else.
+        $typeCompatibility = new ExtraPropertyTypeCompatibility($definition->getType(), $definition->getEnumValues());
+        $constraints[] = ExtraPropertyScope::LANG === $definition->getScope()
+            ? new All([$typeCompatibility])
+            : $typeCompatibility;
 
         $label = $this->translateLabel($definition->getLabelWording(), $definition->getLabelDomain());
         $help = $this->translateLabel($definition->getDescriptionWording(), $definition->getDescriptionDomain());
@@ -181,6 +200,12 @@ class ExtraPropertiesFormBuilderModifier
 
         if (ExtraPropertyScope::LANG === $definition->getScope()) {
             return is_array($value) ? $value : [];
+        }
+
+        // JSON values are decoded structures on the read side; the BO widget is a plain
+        // TextareaType, so re-encode at this presentation boundary (pretty, for editing).
+        if (ExtraPropertyType::JSON === $definition->getType() && is_array($value)) {
+            return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
 
         return $value;

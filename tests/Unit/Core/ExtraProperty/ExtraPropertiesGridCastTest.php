@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionS
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridQueryBuilderModifier;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
+use Psr\Log\NullLogger;
 
 /**
  * Covers ExtraPropertiesGridQueryBuilderModifier::castExtraProperties() (post-fetch grid cast)
@@ -113,7 +114,8 @@ class ExtraPropertiesGridCastTest extends TestCase
             'ps_',
             $this->createMock(LanguageContext::class),
             $this->createMock(ShopContext::class),
-            $definitionShopFilter
+            $definitionShopFilter,
+            new NullLogger()
         );
     }
 
