@@ -46,12 +46,18 @@ class VirtualProductFileForEditing
     private $expirationDate;
 
     /**
+     * @var int
+     */
+    private $combinationId;
+
+    /**
      * @param int $id
      * @param string $fileName
      * @param string $displayName
      * @param int $accessDays
      * @param int $downloadTimesLimit
      * @param DateTimeInterface|null $expirationDate
+     * @param int $combinationId
      */
     public function __construct(
         int $id,
@@ -59,7 +65,8 @@ class VirtualProductFileForEditing
         string $displayName,
         int $accessDays,
         int $downloadTimesLimit,
-        ?DateTimeInterface $expirationDate
+        ?DateTimeInterface $expirationDate,
+        int $combinationId = 0
     ) {
         $this->id = $id;
         $this->fileName = $fileName;
@@ -67,6 +74,7 @@ class VirtualProductFileForEditing
         $this->accessDays = $accessDays;
         $this->downloadTimesLimit = $downloadTimesLimit;
         $this->expirationDate = $expirationDate;
+        $this->combinationId = $combinationId;
     }
 
     /**
@@ -115,5 +123,13 @@ class VirtualProductFileForEditing
     public function getExpirationDate(): ?DateTimeInterface
     {
         return $this->expirationDate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCombinationId(): int
+    {
+        return $this->combinationId;
     }
 }

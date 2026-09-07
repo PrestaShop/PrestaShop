@@ -2673,7 +2673,7 @@ class ProductCore extends ObjectModel
         }
 
         // If this product does not have any combinations, no need to do any queries
-        if ($this->getProductType() != ProductType::TYPE_COMBINATIONS) {
+        if (!ProductType::hasCombinations($this->getProductType())) {
             return false;
         }
 

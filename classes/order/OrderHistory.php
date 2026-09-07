@@ -101,7 +101,9 @@ class OrderHistoryCore extends ObjectModel
             if ($virtual_products && !$old_os->logable && $new_os->logable) {
                 $assign = [];
                 foreach ($virtual_products as $key => $virtual_product) {
-                    $id_product_download = ProductDownload::getIdFromIdProduct($virtual_product['product_id']);
+                    $id_product_download = (int) $virtual_product['product_attribute_id'] > 0
+                        ? ProductDownload::getIdFromCombination((int) $virtual_product['product_id'], (int) $virtual_product['product_attribute_id'])
+                        : ProductDownload::getIdFromIdProduct((int) $virtual_product['product_id']);
                     $product_download = new ProductDownload($id_product_download);
                     // If this virtual item has an associated file, we'll provide the link to download the file in the email
                     if ($product_download->display_filename != '') {

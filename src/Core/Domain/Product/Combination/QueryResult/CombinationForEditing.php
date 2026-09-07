@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+
 /**
  * Transfers combination data for editing
  */
@@ -59,6 +61,21 @@ class CombinationForEditing
     private $isDefault;
 
     /**
+     * @var string
+     */
+    private $productType;
+
+    /**
+     * @var VirtualProductFileForEditing|null
+     */
+    private $file;
+
+    /**
+     * @var bool
+     */
+    private $isVirtual;
+
+    /**
      * @param int $combinationId
      * @param int $productId
      * @param string $name
@@ -68,6 +85,9 @@ class CombinationForEditing
      * @param int[] $imageIds
      * @param string $coverThumbnailUrl
      * @param bool $isDefault
+     * @param string $productType
+     * @param VirtualProductFileForEditing|null $file
+     * @param bool $isVirtual
      */
     public function __construct(
         int $combinationId,
@@ -78,7 +98,10 @@ class CombinationForEditing
         CombinationStock $stock,
         array $imageIds,
         string $coverThumbnailUrl,
-        bool $isDefault
+        bool $isDefault,
+        string $productType = '',
+        ?VirtualProductFileForEditing $file = null,
+        bool $isVirtual = false
     ) {
         $this->combinationId = $combinationId;
         $this->productId = $productId;
@@ -89,6 +112,9 @@ class CombinationForEditing
         $this->imageIds = $imageIds;
         $this->coverThumbnailUrl = $coverThumbnailUrl;
         $this->isDefault = $isDefault;
+        $this->productType = $productType;
+        $this->file = $file;
+        $this->isVirtual = $isVirtual;
     }
 
     /**
@@ -161,5 +187,29 @@ class CombinationForEditing
     public function isDefault(): bool
     {
         return $this->isDefault;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductType(): string
+    {
+        return $this->productType;
+    }
+
+    /**
+     * @return VirtualProductFileForEditing|null
+     */
+    public function getFile(): ?VirtualProductFileForEditing
+    {
+        return $this->file;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVirtual(): bool
+    {
+        return $this->isVirtual;
     }
 }

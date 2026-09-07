@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
@@ -30,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -100,6 +103,11 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private $productImageUrlFactory;
 
     /**
+     * @var VirtualProductFileRepository
+     */
+    private $virtualProductFileRepository;
+
+    /**
      * @param CombinationRepository $combinationRepository
      * @param CombinationNameBuilderInterface $combinationNameBuilder
      * @param StockAvailableRepository $stockAvailableRepository
@@ -123,7 +131,8 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         TaxComputer $taxComputer,
         int $contextLanguageId,
         ShopConfigurationInterface $configuration,
-        ProductImagePathFactory $productImageUrlFactory
+        ProductImagePathFactory $productImageUrlFactory,
+        VirtualProductFileRepository $virtualProductFileRepository
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->combinationNameBuilder = $combinationNameBuilder;
@@ -136,6 +145,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         $this->contextLanguageId = $contextLanguageId;
         $this->configuration = $configuration;
         $this->productImageUrlFactory = $productImageUrlFactory;
+        $this->virtualProductFileRepository = $virtualProductFileRepository;
     }
 
     /**
@@ -158,7 +168,35 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             $this->getStock($combination),
             $images,
             $this->getCoverUrl($images, $productId, $shopConstraint),
-            (bool) $combination->default_on
+            (bool) $combination->default_on,
+            $product->getProductType(),
+            $this->getVirtualProductFile($productId, $query->getCombinationId()),
+            (bool) $combination->is_virtual
+        );
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param CombinationId $combinationId
+     *
+     * @return VirtualProductFileForEditing|null
+     */
+    private function getVirtualProductFile(ProductId $productId, CombinationId $combinationId): ?VirtualProductFileForEditing
+    {
+        try {
+            $virtualProductFile = $this->virtualProductFileRepository->findByCombinationId($productId, $combinationId->getValue());
+        } catch (VirtualProductFileNotFoundException) {
+            return null;
+        }
+
+        return new VirtualProductFileForEditing(
+            (int) $virtualProductFile->id,
+            $virtualProductFile->filename,
+            $virtualProductFile->display_filename,
+            (int) $virtualProductFile->nb_days_accessible,
+            (int) $virtualProductFile->nb_downloadable,
+            DateTimeUtil::buildDateTimeOrNull($virtualProductFile->date_expiration),
+            $combinationId->getValue()
         );
     }
 

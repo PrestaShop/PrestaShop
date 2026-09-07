@@ -53,6 +53,9 @@ class CombinationCore extends ObjectModel
     /** @var bool|null */
     public $default_on;
 
+    /** @var bool Whether this combination is a virtual (dematerialized) product */
+    public $is_virtual = false;
+
     public $available_date = '0000-00-00';
 
     /** @var string|array Text when in stock or array of text by id_lang */
@@ -87,6 +90,7 @@ class CombinationCore extends ObjectModel
             'low_stock_threshold' => ['type' => self::TYPE_INT, 'shop' => true, 'allow_null' => true, 'validate' => 'isInt'],
             'low_stock_alert' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'default_on' => ['type' => self::TYPE_BOOL, 'allow_null' => true, 'shop' => true, 'validate' => 'isBool'],
+            'is_virtual' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'available_date' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'],
 
             /* Lang fields */
