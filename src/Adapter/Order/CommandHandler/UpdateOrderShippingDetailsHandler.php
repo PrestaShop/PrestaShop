@@ -20,6 +20,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCo
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderShippingDetailsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
+use PrestaShopLogger;
 use Validate;
 
 /**
@@ -85,6 +86,8 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
 
                 $order->id_carrier = $carrierId;
                 $this->orderAmountUpdater->update($order, $cart);
+
+                $this->logCarrierChange((int) $order->id, $oldCarrierId, $carrierId);
             }
 
             // load fresh order carrier because updated just before
@@ -115,5 +118,30 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         } finally {
             $this->contextStateManager->restorePreviousContext();
         }
+    }
+
+    /**
+     * Changing the carrier of an order changes what the customer is charged for shipping, but
+     * nothing recorded who did it. Keep a trace of it next to the other employee actions.
+     */
+    private function logCarrierChange(int $orderId, int $oldCarrierId, int $newCarrierId): void
+    {
+        $oldCarrier = new Carrier($oldCarrierId);
+        $newCarrier = new Carrier($newCarrierId);
+
+        PrestaShopLogger::addLog(
+            sprintf(
+                'Order carrier updated: from "%s" (#%d) to "%s" (#%d)',
+                $oldCarrier->name,
+                $oldCarrierId,
+                $newCarrier->name,
+                $newCarrierId
+            ),
+            PrestaShopLogger::LOG_SEVERITY_LEVEL_INFORMATIVE,
+            null,
+            'Order',
+            $orderId,
+            true
+        );
     }
 }
