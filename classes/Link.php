@@ -175,7 +175,12 @@ class LinkCore
         if (empty($idProductAttribute)) {
             $idProductAttribute = null;
         }
-        $params['id_product_attribute'] = $idProductAttribute;
+
+        // Only pass the combination parameter when the active product route uses it
+        if ($dispatcher->hasKeyword('product_rule', $idLang, 'id_product_attribute', $idShop)) {
+            $params['id_product_attribute'] = $idProductAttribute;
+        }
+
         if (!$alias) {
             $product = $this->getProductObject($product, $idLang, $idShop);
         }

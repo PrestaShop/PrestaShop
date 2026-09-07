@@ -43,24 +43,24 @@ class DispatcherTest extends TestCase
     public static function createUrlProvider(): array
     {
         return [
-            // Keywords omitted from custom rules must not become query parameters
+            // Parameters absent from the active rule remain query parameters
             'omitted product ID' => [
-                'product_rule', '{rewrite}', ['id' => 3, 'rewrite' => 'item'], true, 'item',
+                'product_rule', '{rewrite}', ['id' => 3, 'rewrite' => 'item'], true, 'item?id=3',
             ],
             'omitted null combination' => [
                 'product_rule', '{rewrite}-p-{id}', ['id' => 3, 'rewrite' => 'item', 'id_product_attribute' => null], true, 'item-p-3',
             ],
             'omitted non-null combination' => [
-                'product_rule', '{rewrite}-p-{id}', ['id' => 3, 'rewrite' => 'item', 'id_product_attribute' => 7], true, 'item-p-3',
+                'product_rule', '{rewrite}-p-{id}', ['id' => 3, 'rewrite' => 'item', 'id_product_attribute' => 7], true, 'item-p-3?id_product_attribute=7',
             ],
             'omitted optional keyword' => [
-                'product_rule', '{rewrite}-p-{id}', ['id' => 3, 'rewrite' => 'item', 'ean13' => '1234567890123'], true, 'item-p-3',
+                'product_rule', '{rewrite}-p-{id}', ['id' => 3, 'rewrite' => 'item', 'ean13' => '1234567890123'], true, 'item-p-3?ean13=1234567890123',
             ],
 
-            // Required keywords still populate classic URLs while unused keywords are excluded
+            // Classic URLs retain required keywords and additional parameters
             'classic URL' => [
                 'product_rule', '{rewrite}-p-{id}', ['id' => 3, 'rewrite' => 'item', 'id_product_attribute' => 7, 'page' => 2], false,
-                'index.php?page=2&rewrite=item&id_product=3&controller=product',
+                'index.php?id_product_attribute=7&page=2&rewrite=item&id_product=3&controller=product',
             ],
 
             // Encoding empty extra parameters must not append a question mark

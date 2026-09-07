@@ -1090,10 +1090,7 @@ class DispatcherCore
 
             foreach ($params as $key => $value) {
                 if (!isset($routeDefinition['keywords'][$key])) {
-                    // Only pass parameters that are not keywords of the default route
-                    if (!isset($this->default_routes[$routeName]['keywords'][$key])) {
-                        $add_param[$key] = $value;
-                    }
+                    $add_param[$key] = $value;
                 } else {
                     if ($params[$key]) {
                         $parameter = $params[$key];
@@ -1123,8 +1120,7 @@ class DispatcherCore
             // Build a classic url index.php?controller=foo&...
             $add_params = [];
             foreach ($params as $key => $value) {
-                // Only pass parameters that are not keywords of either route definition
-                if (!isset($routeDefinition['keywords'][$key]) && !isset($this->default_routes[$routeName]['keywords'][$key])) {
+                if (!isset($routeDefinition['keywords'][$key])) {
                     $add_params[$key] = $value;
                 }
             }
