@@ -150,7 +150,7 @@ admin_products_download_virtual_product_file:
     virtualProductFileId: \d+
 
 admin_products_delete_from_all_shops:
-  path: /{productId}/delete-from-all-shops
+  path: /{productId}/remove-from-all-shops
   methods: [ POST, DELETE ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteFromAllShopsAction
@@ -163,7 +163,7 @@ admin_products_delete_from_all_shops:
     productId: \d+
 
 admin_products_delete_from_shop_group:
-  path: /{productId}/delete-from-shop-group/{shopGroupId}
+  path: /{productId}/remove-from-shop-group/{shopGroupId}
   methods: [ POST, DELETE ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteFromShopGroupAction
@@ -173,7 +173,7 @@ admin_products_delete_from_shop_group:
     shopGroupId: \d+
 
 admin_products_delete_from_shop:
-  path: /{productId}/delete-from-shop/{shopId}
+  path: /{productId}/remove-from-shop/{shopId}
   methods: [ POST, DELETE ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteFromShopAction
@@ -430,7 +430,7 @@ admin_products_bulk_duplicate_shop_group:
     expose: true
 
 admin_products_bulk_delete_from_all_shops:
-  path: /bulk-delete-from-all-shops
+  path: /bulk-remove-from-all-shops
   methods: [ POST, DELETE ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteFromAllShopsAction
@@ -445,7 +445,7 @@ admin_products_bulk_delete_from_all_shops:
     expose: true
 
 admin_products_bulk_delete_from_shop:
-  path: /bulk-delete-from-shop/{shopId}
+  path: /bulk-remove-from-shop/{shopId}
   methods: [ POST, DELETE ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteFromShopAction
@@ -461,7 +461,7 @@ admin_products_bulk_delete_from_shop:
     expose: true
 
 admin_products_bulk_delete_from_shop_group:
-  path: /bulk-delete-from-shop-group/{shopGroupId}
+  path: /bulk-remove-from-shop-group/{shopGroupId}
   methods: [ POST, DELETE ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteFromShopGroupAction
