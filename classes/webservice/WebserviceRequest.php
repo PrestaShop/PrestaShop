@@ -210,7 +210,11 @@ class WebserviceRequestCore
     public static function getInstance()
     {
         if (!isset(self::$_instance)) {
-            self::$_instance = new WebserviceRequest::$ws_current_classname();
+            // WHY: the concrete class is picked by the dispatcher, which only runs while a webservice
+            // request is being served. Falling back to this one keeps the accessor callable outside
+            // that script, where an unset class name used to make it fail rather than answer.
+            $classname = self::$ws_current_classname ?: static::class;
+            self::$_instance = new $classname();
         }
 
         return self::$_instance;
@@ -1634,6 +1638,7 @@ class WebserviceRequestCore
                     if (isset($this->resourceConfiguration['objectMethods']) && array_key_exists($objectMethod, $this->resourceConfiguration['objectMethods'])) {
                         $objectMethod = $this->resourceConfiguration['objectMethods'][$objectMethod];
                     }
+                    $reportedErrors = count($this->errors);
                     $result = $object->{$objectMethod}();
                     if ($result) {
                         if (isset($attributes->associations)) {
@@ -1677,7 +1682,10 @@ class WebserviceRequestCore
                             }
                             Db::getInstance()->execute($sql);
                         }
-                    } else {
+                    } elseif (count($this->errors) === $reportedErrors) {
+                        // WHY: the entity's own save method may already have reported precisely why it
+                        // refused, and setStatus() keeps the last status it is handed, so reporting the
+                        // generic failure on top of that would replace the answer with a 500.
                         $this->setError(500, 'Unable to save resource', 46);
                     }
                 }

@@ -1673,6 +1673,42 @@ class OrderCore extends ObjectModel
 
     public function addWs($autodate = true, $null_values = false)
     {
+        $cart = new Cart((int) $this->id_cart);
+        if (Validate::isLoadedObject($cart)) {
+            $unavailableProduct = $cart->checkQuantities(true);
+            // WHY: refusing to sell what is not in stock is a merchant setting, and Cart::checkQuantities()
+            // is where it is decided, but the front office cart controller is its only caller. An order
+            // created here was therefore accepted whatever the stock was, and drove the quantity negative
+            // on the very shops that had asked for out-of-stock ordering to be refused. Only a returned
+            // product rejects the order: checkQuantities() also answers false in catalog mode, which says
+            // nothing about this cart. A shop that allows out-of-stock ordering never reaches this branch,
+            // because the method skips every product whose allow_oosp is set.
+            if (is_array($unavailableProduct)) {
+                $productId = (int) $unavailableProduct['id_product'];
+                $combinationId = (int) $unavailableProduct['id_product_attribute'];
+                $named = sprintf('product %d%s', $productId, $combinationId ? ' combination ' . $combinationId : '');
+                // The same call refuses a product that is simply not on sale, and quoting a stock figure
+                // for that would explain the refusal with a number that has nothing to do with it.
+                if (!$unavailableProduct['active'] || !$unavailableProduct['available_for_order']) {
+                    $reason = $named . ' is not available for order';
+                } else {
+                    $reason = sprintf(
+                        '%s is not in stock for the quantity asked for (%d requested, %d in stock)',
+                        $named,
+                        (int) $unavailableProduct['cart_quantity'],
+                        Product::getQuantity($productId, $combinationId)
+                    );
+                }
+                WebserviceRequest::getInstance()->setError(
+                    400,
+                    sprintf('Cart %d cannot be turned into an order: %s', (int) $this->id_cart, $reason),
+                    133
+                );
+
+                return false;
+            }
+        }
+
         /** @var PaymentModule $payment_module */
         $payment_module = Module::getInstanceByName($this->module);
         $customer = new Customer($this->id_customer);
