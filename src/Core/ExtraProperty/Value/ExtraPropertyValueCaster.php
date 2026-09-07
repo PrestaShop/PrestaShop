@@ -38,23 +38,22 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 class ExtraPropertyValueCaster
 {
     /**
-     * Converts a PHP value (from a Symfony form widget) to a DB-compatible scalar.
+     * Converts a PHP value (form widget, ObjectModel bag or Admin API payload) to a
+     * DB-compatible scalar — called by the writer itself (the single write choke point),
+     * so every write path gets the same typing regardless of its origin.
      *
-     * For lang-scoped fields, $value should be an array [id_lang => mixed];
-     * each entry is cast individually.
+     * For lang-scoped fields, an array [id_lang => mixed] is cast entry by entry; a
+     * scalar lang value passes through the scalar cast (the writer targets the caller's
+     * single language in that shape).
      *
      * @param ExtraPropertyDefinition $definition
-     * @param mixed $value PHP value as submitted by a form widget
+     * @param mixed $value
      *
      * @return mixed DB-compatible scalar or array
      */
     public static function castForDb(ExtraPropertyDefinition $definition, mixed $value): mixed
     {
-        if (ExtraPropertyScope::LANG === $definition->getScope()) {
-            if (!is_array($value)) {
-                return [];
-            }
-
+        if (ExtraPropertyScope::LANG === $definition->getScope() && is_array($value)) {
             $cast = [];
             foreach ($value as $idLang => $langVal) {
                 $cast[$idLang] = static::castScalarForDb($definition->getType(), $langVal);
@@ -93,7 +92,52 @@ class ExtraPropertyValueCaster
             ExtraPropertyType::INT => (int) $rawValue,
             ExtraPropertyType::FLOAT => (float) $rawValue,
             ExtraPropertyType::DATE => static::toFormattedDateOrNull($rawValue),
+            // Stored as a JSON string, exposed as a decoded structure (the Admin API
+            // documents type: object; FO templates iterate it). Invalid stored JSON
+            // yields null, like an invalid DATE. Already-decoded values pass through
+            // (idempotence for callers casting reader output a second time).
+            ExtraPropertyType::JSON => is_string($rawValue) ? json_decode($rawValue, true) : $rawValue,
             default => $rawValue,
+        };
+    }
+
+    /**
+     * Casts a registry default_value string (varchar cell, always string|null in the DB)
+     * to the definition's declared scalar type.
+     *
+     * Differs from castFromDb() on JSON: a JSON default stays the raw JSON STRING —
+     * ExtraPropertyDefinition::$defaultValue is scalar-typed and the value feeds the DDL
+     * DEFAULT clause, not a read surface.
+     */
+    public static function castDefaultValueFromDb(ExtraPropertyType $type, string $rawValue): int|float|string|bool
+    {
+        return match ($type) {
+            ExtraPropertyType::BOOL => (bool) (int) $rawValue,
+            ExtraPropertyType::INT => (int) $rawValue,
+            ExtraPropertyType::FLOAT => (float) $rawValue,
+            ExtraPropertyType::DATE => static::toFormattedDateOrNull($rawValue) ?? $rawValue,
+            default => $rawValue,
+        };
+    }
+
+    /**
+     * Converts a typed defaultValue to its canonical registry/DDL string form — the ONE
+     * stringification shared by the registry row write (ExtraPropertyDefinitionRepository),
+     * the DDL DEFAULT clause (ColumnDefinitionMapper::quoteDefaultValue, which adds SQL
+     * quoting on top) and the live-schema comparison (ExtraPropertySchemaManager
+     * ::defaultMatches). BOOL maps to '1'/'0' — a naive (string) cast would turn false
+     * into '', which reads back as "no default".
+     */
+    public static function castDefaultValueForDb(ExtraPropertyType $type, int|float|string|bool|null $value): ?string
+    {
+        if (null === $value) {
+            return null;
+        }
+
+        return match ($type) {
+            ExtraPropertyType::BOOL => $value ? '1' : '0',
+            ExtraPropertyType::DATE => static::toFormattedDateOrNull($value) ?? (string) $value,
+            default => (string) $value,
         };
     }
 
@@ -112,17 +156,29 @@ class ExtraPropertyValueCaster
     /**
      * Casts a single PHP value to a DB-compatible scalar.
      *
+     * NULL is preserved for every type (nullable columns / "no value"). JSON accepts both
+     * shapes: an already-encoded string passes through, anything else (the decoded
+     * structure an API payload or a module hands over) is json_encode'd — binding a PHP
+     * array as a PDO parameter would otherwise fail in DBAL.
+     *
      * @param mixed $value
      *
      * @return mixed
      */
     protected static function castScalarForDb(ExtraPropertyType $type, mixed $value): mixed
     {
+        if (null === $value) {
+            return null;
+        }
+
         return match ($type) {
             ExtraPropertyType::BOOL => (int) (bool) $value,
+            ExtraPropertyType::INT => (int) $value,
+            ExtraPropertyType::FLOAT => (float) $value,
             ExtraPropertyType::DATE => $value instanceof DateTimeInterface
                 ? $value->format('Y-m-d H:i:s')
                 : $value,
+            ExtraPropertyType::JSON => is_string($value) ? $value : json_encode($value),
             default => $value,
         };
     }

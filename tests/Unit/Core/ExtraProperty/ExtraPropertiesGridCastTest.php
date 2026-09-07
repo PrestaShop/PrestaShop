@@ -15,9 +15,11 @@ use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridQueryBuilderModifier;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
+use Psr\Log\NullLogger;
 
 /**
  * Covers ExtraPropertiesGridQueryBuilderModifier::castExtraProperties() (post-fetch grid cast)
@@ -104,11 +106,16 @@ class ExtraPropertiesGridCastTest extends TestCase
         $repository = $this->createMock(ExtraPropertyDefinitionRepositoryInterface::class);
         $repository->method('getAllDefinitions')->willReturn(new ExtraPropertyDefinitionCollection($definitions));
 
+        $definitionShopFilter = $this->createMock(ExtraPropertyDefinitionShopFilterInterface::class);
+        $definitionShopFilter->method('filterByShopConstraint')->willReturnArgument(0);
+
         return new ExtraPropertiesGridQueryBuilderModifier(
             $repository,
             'ps_',
             $this->createMock(LanguageContext::class),
-            $this->createMock(ShopContext::class)
+            $this->createMock(ShopContext::class),
+            $definitionShopFilter,
+            new NullLogger()
         );
     }
 

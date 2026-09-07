@@ -1,6 +1,8 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s extra-property-definition
 @restore-extra-property-definition-before-feature
 @remove-extra-tables-after-feature
+@restore-shops-before-feature
+@restore-shops-after-feature
 @clear-cache-before-feature
 @clear-cache-after-feature
 Feature: Extra property definition management
@@ -250,3 +252,100 @@ Feature: Extra property definition management
       | constraints | NotBlank,Choice(['x', 'y']) |
     Then extra property definition "ep20" should have the following parameters:
       | constraints | NotBlank,Choice(['x', 'y']) |
+
+  Scenario: Create an extra property definition restricted to some shops, edit and revert its association
+    Given I enable multishop feature
+    And shop "shop1" with name "test_shop" exists
+    And I add a shop group "epShopGroup" with name "Extra property shop group" and color "red"
+    And I add a shop "epShop2" with name "Extra property shop 2" and color "green" for the group "epShopGroup"
+    When I add an extra property definition "ep21" with following properties:
+      | entity_name         | product         |
+      | property_name       | shop_restricted |
+      | type                | string          |
+      | scope               | common          |
+      | associated_shop_ids | shop1           |
+    Then extra property definition "ep21" should have the following parameters:
+      | associated_shop_ids | shop1 |
+    When I edit extra property definition "ep21" with following properties:
+      | associated_shop_ids | shop1,epShop2 |
+    Then extra property definition "ep21" should have the following parameters:
+      | associated_shop_ids | shop1,epShop2 |
+    # Editing other fields without providing the association leaves the stored association untouched
+    When I edit extra property definition "ep21" with following properties:
+      | display_front | true |
+    Then extra property definition "ep21" should have the following parameters:
+      | display_front       | true          |
+      | associated_shop_ids | shop1,epShop2 |
+    # An empty cell reverts to the fallback behavior (no explicit restriction)
+    When I edit extra property definition "ep21" with following properties:
+      | associated_shop_ids |  |
+    Then extra property definition "ep21" should have the following parameters:
+      | associated_shop_ids |  |
+
+  Scenario: The shop association is the only editable field of a module-owned extra property definition
+    Given shop "shop1" with name "test_shop" exists
+    And a module-owned extra property definition "ep22" exists for entity "product" named "module_shop_field" owned by module "demotestmodule"
+    When I edit extra property definition "ep22" with following properties:
+      | associated_shop_ids | shop1 |
+    Then extra property definition "ep22" should have the following parameters:
+      | associated_shop_ids | shop1 |
+    When I edit extra property definition "ep22" with following properties:
+      | associated_shop_ids | shop1 |
+      | display_front       | true  |
+    Then I should get an error that the extra property definition is protected by a module
+    And extra property definition "ep22" should have the following parameters:
+      | associated_shop_ids | shop1 |
+      | display_front       | false |
+
+  Scenario: Default values keep their type through the whole round-trip
+    # BOOL false used to be lost on reload (naive string cast turned it into "no default"),
+    # and a falsy '0' default was dropped by the BO form handler
+    When I add an extra property definition "ep30" with following properties:
+      | entity_name   | product     |
+      | property_name | default_off |
+      | type          | bool        |
+      | nullable      | false       |
+      | default_value | 0           |
+    Then extra property definition "ep30" should have the following parameters:
+      | default_value | 0 |
+    When I add an extra property definition "ep31" with following properties:
+      | entity_name   | product      |
+      | property_name | default_zero |
+      | type          | int          |
+      | default_value | 0            |
+    Then extra property definition "ep31" should have the following parameters:
+      | default_value | 0 |
+    # A default that does not fit the declared type is refused before anything is written
+    When I add an extra property definition "ep32" with following properties:
+      | entity_name   | product      |
+      | property_name | default_bad  |
+      | type          | int          |
+      | default_value | not-a-number |
+    Then I should get an error that the default value is invalid
+    And no extra property definition should exist for entity "product" and property "default_bad"
+
+  Scenario: Associating an extra property definition with a shop that does not exist is rejected
+    Given shop "shop1" with name "test_shop" exists
+    And I define an uncreated shop "ghostShop"
+    # The association rows carry no foreign key, so the registry refuses unknown ids
+    # before any write — otherwise the definition would silently vanish from every shop
+    When I add an extra property definition "ep23" with following properties:
+      | entity_name         | product         |
+      | property_name       | ghost_shop_prop |
+      | type                | string          |
+      | scope               | common          |
+      | associated_shop_ids | shop1,ghostShop |
+    Then I should get an error that the shop association contains an unknown shop
+    And no extra property definition should exist for entity "product" and property "ghost_shop_prop"
+    # The guard sits on the single write endpoint, so edits are covered too
+    When I add an extra property definition "ep23" with following properties:
+      | entity_name         | product         |
+      | property_name       | ghost_shop_prop |
+      | type                | string          |
+      | scope               | common          |
+      | associated_shop_ids | shop1           |
+    And I edit extra property definition "ep23" with following properties:
+      | associated_shop_ids | ghostShop |
+    Then I should get an error that the shop association contains an unknown shop
+    And extra property definition "ep23" should have the following parameters:
+      | associated_shop_ids | shop1 |

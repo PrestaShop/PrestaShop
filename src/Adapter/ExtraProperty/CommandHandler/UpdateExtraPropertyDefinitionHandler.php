@@ -26,6 +26,12 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException as
  * existing row. nullable, size, enumValues and sql_index may be overridden, but only
  * non-destructive changes are accepted — the registry refuses the write otherwise
  * (see ExtraPropertyRegistry::hasStorageChanges()).
+ *
+ * Module-owned definitions are a deliberate carve-out: they accept exactly one
+ * modification — the shop association (setAssociatedShopIds()) — because the module is
+ * the source of truth for everything else while the merchant remains in charge of which
+ * of their shops the property applies to. Any other setter used together with a
+ * module-owned id throws ProtectedModuleExtraPropertyDefinitionException.
  */
 #[AsCommandHandler]
 final class UpdateExtraPropertyDefinitionHandler implements UpdateExtraPropertyDefinitionHandlerInterface
@@ -47,7 +53,12 @@ final class UpdateExtraPropertyDefinitionHandler implements UpdateExtraPropertyD
     public function handle(UpdateExtraPropertyDefinitionCommand $command): void
     {
         $id = $command->getId()->getValue();
-        $definition = $this->repository->getUnprotectedDefinitionById($id);
+        $definition = $this->repository->getDefinitionById($id);
+        if (null === $definition) {
+            throw new ExtraPropertyDefinitionNotFoundException(
+                sprintf('Extra property definition with id %d was not found.', $id)
+            );
+        }
 
         // Build the overrides map from non-null setters in the command.
         $overrides = [];
@@ -100,11 +111,31 @@ final class UpdateExtraPropertyDefinitionHandler implements UpdateExtraPropertyD
         if (null !== $command->getAssociatedApis()) {
             $overrides['associatedApis'] = $command->getAssociatedApis();
         }
+        // Null = setter never used (association untouched — the loaded value is kept and
+        // save() re-persists it identically); [] = explicit revert to the fallback.
+        if (null !== $command->getAssociatedShopIds()) {
+            $overrides['associatedShopIds'] = $command->getAssociatedShopIds();
+        }
 
-        $updated = $definition->withOverrides($overrides);
+        // The shop-association carve-out: the ONLY field a module-owned definition accepts.
+        // Any other modification requested together with a module-owned id is rejected.
+        if ($definition->isModuleOwned() && [] !== array_diff_key($overrides, ['associatedShopIds' => null])) {
+            throw new ProtectedModuleExtraPropertyDefinitionException(
+                sprintf(
+                    'Extra property definition "%s.%s" is owned by module "%s": only its shop association can be modified from the BO.',
+                    $definition->getEntityName(),
+                    $definition->getPropertyName(),
+                    $definition->getModuleName()
+                )
+            );
+        }
+
+        if ([] === $overrides) {
+            return;
+        }
 
         try {
-            $this->registry->register($updated);
+            $this->registry->register($definition->withOverrides($overrides));
         } catch (CoreExtraPropertyException $exception) {
             throw ExtraPropertyRegistrationFailureException::fromCoreException(
                 $exception,

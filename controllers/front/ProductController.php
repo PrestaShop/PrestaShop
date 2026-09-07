@@ -1513,6 +1513,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'category' => $product['category_name'] ?? '',
         ];
 
+        // Add product features as additional properties
+        $this->addProductFeaturesToStructuredData($structuredData['product'], $product['grouped_features']);
+
         // Images, with cover first
         if (!empty($product['images'])) {
             $structuredData['product']['image'] = [];
@@ -1594,6 +1597,40 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         return $structuredData;
+    }
+
+    /**
+     * Adds complete product features to the structured product data.
+     *
+     * @param array $structuredProductData
+     * @param array $features
+     */
+    protected function addProductFeaturesToStructuredData(array &$structuredProductData, array $features): void
+    {
+        foreach ($features as $feature) {
+            // Ignore incomplete features that cannot form a valid property-value pair
+            if (!isset($feature['name'], $feature['value'])) {
+                continue;
+            }
+
+            // Normalize grouped values into one human-readable schema value
+            $featureName = trim((string) $feature['name']);
+            $featureValue = preg_replace('/\R+/', ', ', trim((string) $feature['value']));
+            if ($featureName === '' || $featureValue === '') {
+                continue;
+            }
+
+            // Initialize the property collection when the first complete feature is found
+            if (!isset($structuredProductData['additionalProperty'])) {
+                $structuredProductData['additionalProperty'] = [];
+            }
+
+            $structuredProductData['additionalProperty'][] = [
+                '@type' => 'PropertyValue',
+                'name' => $featureName,
+                'value' => $featureValue,
+            ];
+        }
     }
 
     protected function addProductCustomizationData(array $product_full)

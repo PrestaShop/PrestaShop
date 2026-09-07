@@ -22,7 +22,8 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException as
  * Creates a new core extra property definition via the registry.
  *
  * Delegates to ExtraPropertyRegistryInterface::register() which creates the definition
- * row and the physical SQL column, returning the new row id directly.
+ * row (shop association included — the definition is the single input carrying it) and
+ * the physical SQL column, returning the new row id directly.
  */
 #[AsCommandHandler]
 final class AddExtraPropertyDefinitionHandler implements AddExtraPropertyDefinitionHandlerInterface
@@ -63,6 +64,7 @@ final class AddExtraPropertyDefinitionHandler implements AddExtraPropertyDefinit
             labelDomain: $command->getLabelDomain() ?: null,
             descriptionWording: $command->getDescriptionWording() ?: null,
             descriptionDomain: $command->getDescriptionDomain() ?: null,
+            associatedShopIds: $command->getAssociatedShopIds(),
         );
 
         try {

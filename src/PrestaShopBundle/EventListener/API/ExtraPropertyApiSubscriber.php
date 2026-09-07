@@ -16,8 +16,10 @@ use ApiPlatform\Metadata\Property\Factory\PropertyNameCollectionFactoryInterface
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Api\ExtraPropertyApiListRecordCollector;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
@@ -56,6 +58,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
         protected readonly ShopContext $shopContext,
         protected readonly LanguageContext $languageContext,
         protected readonly LocalizedValueUpdater $localizedValueUpdater,
+        protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
         protected readonly ?PropertyNameCollectionFactoryInterface $propertyNameCollectionFactory = null,
         protected readonly ?PropertyMetadataFactoryInterface $propertyMetadataFactory = null,
     ) {
@@ -101,22 +104,28 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
         $uriTemplate = (string) $operation->getUriTemplate();
         $method = (string) $operation->getMethod();
 
-        // Single match: the definitions targeting this operation. When none match there is nothing to do.
-        $definitions = $this->repository->getAllDefinitions()->filterByApi($uriTemplate, $method);
+        // Single match: the definitions targeting this operation, restricted to the request's shop
+        // scope (?shopId= / ?shopGroupId= / ?shopIds / ?allShops → ShopContext) — a definition not
+        // available there is neither exposed in the response nor written from the payload.
+        // When none match there is nothing to do.
+        $definitions = $this->definitionShopFilter->filterByShopConstraint(
+            $this->repository->getAllDefinitions()->filterByApi($uriTemplate, $method),
+            $this->shopContext->getShopConstraint()
+        );
         if ($definitions->isEmpty()) {
             return;
         }
 
         $resourceClass = (string) $operation->getClass();
-        $entityName = $definitions->first()->getEntityName();
+        $tableName = $definitions->first()->getTableName();
         $langScopedFields = $this->langScopedFields($definitions);
 
         if ($this->isCollection($operation, $decoded)) {
             if (isset($decoded['items']) && is_array($decoded['items'])) {
-                $decoded['items'] = $this->enrichListItems($decoded['items'], $operation, $definitions, $entityName, $resourceClass);
+                $decoded['items'] = $this->enrichListItems($decoded['items'], $operation, $definitions, $tableName, $resourceClass);
             }
         } else {
-            $entityId = $this->resolveId($decoded, $entityName, $resourceClass);
+            $entityId = $this->resolveId($decoded, $definitions->first(), $resourceClass);
             if ($entityId > 0) {
                 // Persist the submitted payload first (write operations), so the read-back below reflects it. A 2xx
                 // response means the merging validator already accepted the payload.
@@ -127,7 +136,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
                         // comes from the ShopContext, built by the Admin API kernel's shop-context listener — a
                         // multi-shop value is a single value identified by that context, like the form integration.
                         $this->writer->writeAll(
-                            $entityName,
+                            $tableName,
                             $definitions->first()->getPrimaryKeyName(),
                             $entityId,
                             $this->localesToIds($payload, $langScopedFields),
@@ -138,7 +147,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
 
                 $values = $this->idsToLocales(
                     $this->reader->getExtraProperties(
-                        $entityName,
+                        $tableName,
                         $definitions->first()->getPrimaryKeyName(),
                         $entityId,
                         null,
@@ -174,7 +183,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
      *
      * @return array<int, mixed>
      */
-    protected function enrichListItems(array $items, HttpOperation $operation, ExtraPropertyDefinitionCollection $definitions, string $entityName, string $resourceClass): array
+    protected function enrichListItems(array $items, HttpOperation $operation, ExtraPropertyDefinitionCollection $definitions, string $tableName, string $resourceClass): array
     {
         $gridBacked = $this->isGridBackedCollection($operation);
 
@@ -189,7 +198,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
             if (!is_array($item)) {
                 continue;
             }
-            $entityId = $this->resolveId($item, $entityName, $resourceClass);
+            $entityId = $this->resolveId($item, $definitions->first(), $resourceClass);
             if ($entityId > 0) {
                 $entityIdByIndex[$index] = $entityId;
             }
@@ -202,7 +211,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
         $valuesByEntity = [];
         if (!$readerDefinitions->isEmpty()) {
             $valuesByEntity = $this->reader->getMultipleExtraProperties(
-                $entityName,
+                $tableName,
                 $readerDefinitions->first()->getPrimaryKeyName(),
                 array_values($entityIdByIndex),
                 $this->languageContext->getId(),
@@ -216,7 +225,7 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
 
             if ($gridBacked) {
                 // Grid-associated properties: reuse exactly the (single context-locale) values the grid fetched.
-                $captured = $this->listRecordCollector->find($entityName, $entityId);
+                $captured = $this->listRecordCollector->find($tableName, $entityId);
                 if (null !== $captured) {
                     $item = array_merge($item, $captured);
                 }
@@ -291,11 +300,15 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
     /**
      * Resolves the integer entity identifier from a normalized API item. Resolution order: the
      * #[ApiProperty(identifier: true)] property (via metadata) → the generic 'id' field → the camelCase
-     * "{entity}Id" pattern (e.g. product → productId). Returns 0 when none is found.
+     * "{entity}Id" pattern built from the LOGICAL entity name (combination → combinationId,
+     * order → orderId — this is why the heuristic must never use the physical table name,
+     * which would give productAttributeId/ordersId) → the same pattern built from the primary
+     * key column with its id_ prefix stripped (covers bare-table registrations whose entity
+     * name is not the resource's noun). Returns 0 when none is found.
      *
      * @param array<string, mixed> $normalizedData
      */
-    protected function resolveId(array $normalizedData, string $entityName, string $resourceClass): int
+    protected function resolveId(array $normalizedData, ExtraPropertyDefinition $definition, string $resourceClass): int
     {
         if (null !== $this->propertyNameCollectionFactory && null !== $this->propertyMetadataFactory) {
             try {
@@ -314,9 +327,15 @@ class ExtraPropertyApiSubscriber implements EventSubscriberInterface
             return $normalizedData['id'];
         }
 
-        $idPropertyName = lcfirst(Container::camelize($entityName)) . 'Id';
-        if (isset($normalizedData[$idPropertyName]) && is_int($normalizedData[$idPropertyName])) {
-            return $normalizedData[$idPropertyName];
+        $candidates = [lcfirst(Container::camelize($definition->getEntityName())) . 'Id'];
+        $primaryKeyName = $definition->getPrimaryKeyName();
+        if (str_starts_with($primaryKeyName, 'id_')) {
+            $candidates[] = lcfirst(Container::camelize(substr($primaryKeyName, 3))) . 'Id';
+        }
+        foreach ($candidates as $idPropertyName) {
+            if (isset($normalizedData[$idPropertyName]) && is_int($normalizedData[$idPropertyName])) {
+                return $normalizedData[$idPropertyName];
+            }
         }
 
         return 0;

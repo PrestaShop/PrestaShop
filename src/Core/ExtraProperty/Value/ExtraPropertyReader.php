@@ -13,6 +13,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use Psr\Log\LoggerInterface;
@@ -33,6 +34,7 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
         protected readonly Connection $connection,
         protected readonly string $prefix,
         protected readonly ShopListResolverInterface $shopListResolver,
+        protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
         // Optional: the hand-built FO legacy container has no logger service.
         protected readonly ?LoggerInterface $logger = null,
     ) {
@@ -42,7 +44,7 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
      * {@inheritdoc}
      */
     public function getExtraProperties(
-        string $entityName,
+        string $tableName,
         string $primaryKeyName,
         int $entityId,
         ?int $langId,
@@ -54,7 +56,7 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
         }
 
         return $this->getMultipleExtraProperties(
-            $entityName,
+            $tableName,
             $primaryKeyName,
             [$entityId],
             $langId,
@@ -67,7 +69,7 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
      * {@inheritdoc}
      */
     public function getMultipleExtraProperties(
-        string $entityName,
+        string $tableName,
         string $primaryKeyName,
         array $entityIds,
         ?int $langId,
@@ -82,7 +84,11 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
             return [];
         }
 
-        $allDefinitions = $definitions ?? $this->repository->getAllDefinitions()->filterByEntity($entityName);
+        $allDefinitions = $definitions ?? $this->repository->getAllDefinitions()->filterByTableName($tableName);
+        // Shop availability is enforced here unconditionally — injected collections included:
+        // the filter is idempotent, and a definition not associated to the requested scope
+        // must never surface a value, whatever the caller forgot.
+        $allDefinitions = $this->definitionShopFilter->filterByShopConstraint($allDefinitions, $shopConstraint);
         if ($allDefinitions->isEmpty()) {
             return [];
         }
@@ -142,9 +148,19 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
         foreach ($definitions as $definition) {
             $propertyName = $definition->getPropertyName();
             $moduleName = $definition->getNormalizedModuleKey();
+            // A missing value row surfaces the definition's declared default — "default"
+            // means what you get until a value is stored, on every read surface (FO, BO
+            // entity form/grid, Admin API). Without a declared default: null, or false
+            // for a NOT NULL BOOL. LANG grouping stays [] (a single scalar default has
+            // no per-language meaning). JSON defaults are stored as strings — decode so
+            // the shape matches stored-value reads.
             $defaultsByModule[$moduleName][$propertyName] = $groupByLang
                 ? []
-                : ExtraPropertyValueCaster::castFromDb($definition->getType(), null, $definition->isNullable());
+                : ExtraPropertyValueCaster::castFromDb(
+                    $definition->getType(),
+                    ExtraPropertyValueCaster::castDefaultValueForDb($definition->getType(), $definition->getDefaultValue()),
+                    $definition->isNullable()
+                );
 
             $columnName = $definition->getStorageColumnName();
             $columnToPropertyMap[$columnName] = [

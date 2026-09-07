@@ -881,6 +881,8 @@ CREATE TABLE `PREFIX_employee_shop` (
 CREATE TABLE `PREFIX_extra_property_definition` (
   `id_extra_property_definition` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `entity_name` varchar(64) NOT NULL,
+  `table_name` varchar(64) DEFAULT NULL,
+  `controller_name` varchar(64) DEFAULT NULL,
   `module_name` varchar(64) DEFAULT NULL,
   `property_name` varchar(64) NOT NULL,
   `type` ENUM ('int','bool','string','float','date','html','json','choice') NOT NULL DEFAULT 'string',
@@ -904,6 +906,14 @@ CREATE TABLE `PREFIX_extra_property_definition` (
   UNIQUE KEY `extra_property_definition_unique` (`entity_name`, `module_name`, `property_name`),
   KEY `entity_name` (`entity_name`, `scope`),
   KEY `module_name` (`module_name`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+/* Shops an extra property definition is restricted to (no row = no explicit restriction) */
+CREATE TABLE `PREFIX_extra_property_definition_shop` (
+  `id_extra_property_definition` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id_extra_property_definition`, `id_shop`),
+  KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* Position of each feature */

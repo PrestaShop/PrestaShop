@@ -89,7 +89,7 @@ final class ExtraPropertiesBag implements ArrayAccess, IteratorAggregate, JsonSe
                 return [];
             }
 
-            $definitions = $repository->getAllDefinitions()->filterByEntity((string) $def['table']);
+            $definitions = $repository->getAllDefinitions()->filterByTableName((string) $def['table']);
             if ($forFrontOffice) {
                 $definitions = $definitions->filterForFrontOffice();
             }
