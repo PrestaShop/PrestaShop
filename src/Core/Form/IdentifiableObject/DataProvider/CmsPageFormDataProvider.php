@@ -71,7 +71,7 @@ class CmsPageFormDataProvider implements FormDataProviderInterface
             'page_category_id' => CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
             'shop_association' => $this->contextShopIds,
             'is_indexed_for_search' => true,
-            'is_displayed' => true,
+            'is_displayed' => false,
         ];
     }
 }

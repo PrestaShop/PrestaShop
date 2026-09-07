@@ -20,7 +20,7 @@ class CMSCore extends ObjectModel
     public $id_cms_category;
     public $position;
     public $indexation = true;
-    public $active = true;
+    public $active;
 
     /**
      * @see ObjectModel::$definition
