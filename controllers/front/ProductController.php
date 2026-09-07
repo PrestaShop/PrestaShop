@@ -203,6 +203,22 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
             }
 
+            // A redirect that names no target cannot be performed. Both Link::getProductLink() and
+            // Link::getCategoryLink() throw on an empty id, which surfaced as a 500 on an ordinary product
+            // page. The state is reachable without anything exotic: the webservice accepts a redirect type
+            // without a target, and deleting the target product leaves one behind. It also covers a
+            // category redirect whose fallback above found no default category. Answer "not found", which
+            // is what a redirect to nowhere means and what the same branch already does when a product
+            // redirects to itself.
+            if (!$this->product->id_type_redirected && in_array($this->product->redirect_type, [
+                RedirectType::TYPE_PRODUCT_PERMANENT,
+                RedirectType::TYPE_PRODUCT_TEMPORARY,
+                RedirectType::TYPE_CATEGORY_PERMANENT,
+                RedirectType::TYPE_CATEGORY_TEMPORARY,
+            ])) {
+                $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
+            }
+
             $redirect_type = $this->product->redirect_type;
             // If product has no specified redirect settings, we get default from configuration
             if (empty($redirect_type) || $redirect_type == RedirectType::TYPE_DEFAULT) {
