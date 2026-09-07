@@ -1,9 +1,3 @@
-// @ts-nocheck
-// Depends on a companion release of @prestashop-core/ui-testing that exposes
-// setCombinationIsVirtual / setCombinationVirtualProductFile /
-// getCombinationVirtualProductFileName on the products create/combinations page
-// object, plus getProductDownloadFileName on the FO Hummingbird product page.
-// Once that package is bumped in tests/UI, remove this @ts-nocheck.
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
