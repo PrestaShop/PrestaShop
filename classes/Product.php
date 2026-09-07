@@ -591,7 +591,7 @@ class ProductCore extends ObjectModel
                 'setter' => false,
             ],
             'quantity' => [
-                'getter' => false,
+                'getter' => 'getWsQuantity',
                 'setter' => false,
             ],
             'type' => [
@@ -6949,6 +6949,20 @@ class ProductCore extends ObjectModel
         );
 
         return $result;
+    }
+
+    /**
+     * Webservice getter : get the quantity available for sale.
+     *
+     * The $quantity property is only filled by loadStockData(), which the constructor runs when a
+     * product is loaded in full. The webservice builds its objects with `new Product($id)`, so without
+     * this getter every product was reported with a quantity of 0.
+     *
+     * @return int
+     */
+    public function getWsQuantity()
+    {
+        return StockAvailable::getQuantityAvailableByProduct((int) $this->id, 0, Shop::getContextShopID());
     }
 
     /**
