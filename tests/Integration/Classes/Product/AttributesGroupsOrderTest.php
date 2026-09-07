@@ -8,9 +8,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Classes\Product;
 
-use Configuration;
+use Combination;
 use Db;
 use Product;
+use ReflectionProperty;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -22,14 +23,14 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * return the right order, and on this database it does most of the time: the same code returned
  * 2,1,4,3,6,5,8,7 on one run and 1,2,3,4,5,6,7,8 on the next. A test that reads the result would
  * therefore pass with the bug present, which is worse than no test at all.
+ *
+ * The query is read back from the real connection rather than captured through a mocked one.
+ * Db::setInstanceForTesting() replaces the connection process-wide, so everything the call reaches
+ * while it is installed sees an empty database and can memoise that emptiness in a static that
+ * outlives the swap - which is a whole class of cross-test failure this measurement does not need.
  */
 class AttributesGroupsOrderTest extends KernelTestCase
 {
-    /**
-     * @var array<string>
-     */
-    private $executedQueries = [];
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -37,35 +38,14 @@ class AttributesGroupsOrderTest extends KernelTestCase
         global $kernel;
         $kernel = self::$kernel;
 
-        $this->executedQueries = [];
-    }
-
-    protected function tearDown(): void
-    {
-        $this->restoreRealDb();
-        parent::tearDown();
-    }
-
-    /**
-     * WHY: Db::setInstanceForTesting() replaces the connection GLOBALLY, so anything reached while the
-     * mock is installed reads [] and can memoise that emptiness in a static that outlives the swap -
-     * Configuration's cache being the one that matters, since an empty configuration yields id_lang 0
-     * and an empty shop context for every later test in the run. Put the real connection back and
-     * re-read the configuration from it, rather than only dropping the mock.
-     */
-    private function restoreRealDb(): void
-    {
-        Db::deleteTestingInstance();
-        Configuration::loadConfiguration();
+        if (!Combination::isFeatureActive()) {
+            $this->markTestSkipped('getAttributesGroups() returns early when combinations are disabled, so it builds no query.');
+        }
     }
 
     public function testTheOrderByIsTotal(): void
     {
-        // Built before the mock goes in, so the constructor's own queries hit the real connection.
-        $product = new Product(1, false, 1);
-        $sql = $this->captureQueryOf(static function () use ($product): void {
-            $product->getAttributesGroups(1);
-        });
+        $sql = $this->queryIssuedByGetAttributesGroups();
 
         $this->assertStringContainsString('ORDER BY', $sql, 'the query must be ordered at all');
         $this->assertMatchesRegularExpression(
@@ -77,11 +57,7 @@ class AttributesGroupsOrderTest extends KernelTestCase
 
     public function testTheTieBreakerComesLastSoTheDocumentedOrderIsKept(): void
     {
-        // Built before the mock goes in, so the constructor's own queries hit the real connection.
-        $product = new Product(1, false, 1);
-        $sql = $this->captureQueryOf(static function () use ($product): void {
-            $product->getAttributesGroups(1);
-        });
+        $sql = $this->queryIssuedByGetAttributesGroups();
 
         preg_match('/ORDER BY(.*)$/is', $sql, $matches);
         $orderBy = $matches[1] ?? '';
@@ -94,32 +70,25 @@ class AttributesGroupsOrderTest extends KernelTestCase
         );
     }
 
-    private function captureQueryOf(callable $call): string
+    /**
+     * Db records every statement it runs in a protected property, so the real call can be measured
+     * without standing anything in for the connection.
+     */
+    private function queryIssuedByGetAttributesGroups(): string
     {
-        $mock = $this->createMock(Db::class);
-        $mock->method('executeS')->willReturnCallback(function ($sql) {
-            $this->executedQueries[] = (string) $sql;
+        $product = new Product(1, false, 1);
+        $product->getAttributesGroups(1);
 
-            return [];
-        });
+        // setAccessible() has been a no-op since PHP 8.1 and is deprecated in 8.5.
+        $lastQuery = new ReflectionProperty(Db::class, 'last_query');
+        $sql = (string) $lastQuery->getValue(Db::getInstance());
 
-        // Keep the window around the mocked connection as small as the measurement allows: only the
-        // call under test runs against it, and the real connection is back before any assertion.
-        Db::setInstanceForTesting($mock);
-        try {
-            $call();
-        } finally {
-            $this->restoreRealDb();
-        }
+        $this->assertStringContainsString(
+            'id_attribute_group',
+            $sql,
+            'the last statement is not the attributes-groups query, so this test would prove nothing'
+        );
 
-        $this->assertNotEmpty($this->executedQueries, 'no query was issued, so this test proves nothing');
-
-        foreach ($this->executedQueries as $sql) {
-            if (false !== stripos($sql, 'id_attribute_group')) {
-                return $sql;
-            }
-        }
-
-        $this->fail('the attributes-groups query was never issued');
+        return $sql;
     }
 }
