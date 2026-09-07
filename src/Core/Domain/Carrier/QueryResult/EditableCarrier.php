@@ -36,7 +36,26 @@ class EditableCarrier
         private array $zones,
         private ?string $logoPath = null,
         private int $ordersCount = 0,
+        private bool $shippingExternal = false,
+        private bool $needRange = false,
     ) {
+    }
+
+    /**
+     * True when a module supplies the shipping cost for this carrier instead of the shop.
+     */
+    public function isShippingExternal(): bool
+    {
+        return $this->shippingExternal;
+    }
+
+    /**
+     * True when the carrier is priced from the ranges configured in the back office. A module carrier
+     * may turn this off and price everything itself.
+     */
+    public function needsRange(): bool
+    {
+        return $this->needRange;
     }
 
     public function getZones(): array
