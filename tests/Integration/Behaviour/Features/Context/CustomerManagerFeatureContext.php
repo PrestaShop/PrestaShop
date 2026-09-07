@@ -103,7 +103,8 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
             isset($data['isEnabled']) ? $data['isEnabled'] : true,
             isset($data['isPartnerOffersSubscribed']) ? $data['isPartnerOffersSubscribed'] : false,
             isset($data['birthday']) ? $data['birthday'] : null,
-            isset($data['isGuest']) ? $data['isGuest'] : false
+            isset($data['isGuest']) ? $data['isGuest'] : false,
+            isset($data['languageId']) ? $data['languageId'] : 0
         );
 
         /** @var CustomerId $id */

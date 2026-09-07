@@ -120,6 +120,11 @@ class EditCustomerCommand
     private $riskId;
 
     /**
+     * @var int
+     */
+    private $languageId;
+
+    /**
      * @param int $customerId
      */
     public function __construct($customerId)
@@ -491,6 +496,26 @@ class EditCustomerCommand
     public function setRiskId($riskId)
     {
         $this->riskId = $riskId;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLanguageId()
+    {
+        return $this->languageId;
+    }
+
+    /**
+     * @param int $languageId
+     *
+     * @return self
+     */
+    public function setLanguageId(int $languageId)
+    {
+        $this->languageId = $languageId;
 
         return $this;
     }
