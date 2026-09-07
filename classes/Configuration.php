@@ -110,7 +110,8 @@ class ConfigurationCore extends ObjectModel
         $sql = 'SELECT `' . bqSQL(self::$definition['primary']) . '`
                 FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
                 WHERE name = \'' . pSQL($key) . '\'
-                ' . Configuration::sqlRestriction($idShopGroup, $idShop);
+                ' . Configuration::sqlExactName($key)
+                . Configuration::sqlRestriction($idShopGroup, $idShop);
 
         return (int) Db::getInstance()->getValue($sql);
     }
@@ -465,7 +466,7 @@ class ConfigurationCore extends ObjectModel
                     $result &= Db::getInstance()->update(self::$definition['table'], [
                         'value' => pSQL($value, $html),
                         'date_upd' => date('Y-m-d H:i:s'),
-                    ], '`name` = \'' . pSQL($key) . '\'' . Configuration::sqlRestriction($idShopGroup, $idShop), 1, true);
+                    ], '`name` = \'' . pSQL($key) . '\'' . Configuration::sqlExactName($key) . Configuration::sqlRestriction($idShopGroup, $idShop), 1, true);
                 } else {
                     // Update multi lang
                     $sql = 'UPDATE `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl
@@ -476,6 +477,7 @@ class ConfigurationCore extends ObjectModel
                                     SELECT c.`' . bqSQL(self::$definition['primary']) . '`
                                     FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '` c
                                     WHERE c.name = \'' . pSQL($key) . '\''
+                                        . Configuration::sqlExactName($key, 'c')
                                         . Configuration::sqlRestriction($idShopGroup, $idShop)
                                 . ')';
                     $result &= Db::getInstance()->execute($sql);
@@ -564,12 +566,12 @@ class ConfigurationCore extends ObjectModel
         WHERE `' . bqSQL(self::$definition['primary']) . '` IN (
             SELECT `' . bqSQL(self::$definition['primary']) . '`
             FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
-            WHERE `name` = "' . pSQL($key) . '"
+            WHERE `name` = "' . pSQL($key) . '"' . Configuration::sqlExactName($key) . '
         )');
 
         $result2 = Db::getInstance()->execute('
         DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
-        WHERE `name` = "' . pSQL($key) . '"');
+        WHERE `name` = "' . pSQL($key) . '"' . Configuration::sqlExactName($key) . '');
 
         self::$_cache = null;
         self::$_new_cache_shop = null;
@@ -718,6 +720,26 @@ class ConfigurationCore extends ObjectModel
         } else {
             return ' AND (id_shop_group IS NULL OR id_shop_group = 0) AND (id_shop IS NULL OR id_shop = 0)';
         }
+    }
+
+    /**
+     * Restricts a name comparison to the exact key, case and accents included.
+     *
+     * WHY: the name column collates as _ci, so `name = 'x'` also matches a row differing only by
+     * case or accent, while every read goes through a PHP array and matches exactly. The two
+     * disagreeing meant a write could resolve to another key's row. The plain equality is kept
+     * beside this so the index on name still drives the seek and this only filters what it returns.
+     *
+     * @param string $key
+     * @param string $alias table alias used by the query, if any
+     *
+     * @return string
+     */
+    protected static function sqlExactName($key, $alias = '')
+    {
+        $column = ('' !== $alias ? bqSQL($alias) . '.' : '') . '`name`';
+
+        return ' AND CAST(' . $column . ' AS BINARY) = CAST(\'' . pSQL($key) . '\' AS BINARY)';
     }
 
     /**

@@ -43,4 +43,47 @@ class ConfigurationTest extends TestCase
         $this->assertEquals('RESULT_GROUP_SHOP_OVERRIDDEN', Configuration::getGlobalValue('PS_TEST_GROUP_SHOP_OVERRIDDEN'));
         $this->assertFalse(Configuration::getGlobalValue('PS_TEST_DOES_NOT_EXIST'));
     }
+
+    /**
+     * The name column collates case insensitively while every read goes through a PHP array, so a
+     * key differing from an existing one only by case used to resolve to that other key's row: the
+     * insert was skipped because the row "existed", the update was skipped because the cache said it
+     * did not, and updateValue() returned true having written nothing.
+     */
+    public function testKeysDifferingOnlyByCaseAreDistinct(): void
+    {
+        Configuration::deleteByName('PS_TEST_CASE_KEY');
+        Configuration::deleteByName('ps_test_case_key');
+
+        Configuration::updateValue('PS_TEST_CASE_KEY', 'upper');
+        Configuration::updateValue('ps_test_case_key', 'lower');
+
+        $this->assertSame('upper', Configuration::get('PS_TEST_CASE_KEY'));
+        $this->assertSame('lower', Configuration::get('ps_test_case_key'));
+
+        // updating one leaves the other alone
+        Configuration::updateValue('PS_TEST_CASE_KEY', 'upper again');
+
+        $this->assertSame('upper again', Configuration::get('PS_TEST_CASE_KEY'));
+        $this->assertSame('lower', Configuration::get('ps_test_case_key'));
+
+        // and so does deleting one
+        Configuration::deleteByName('ps_test_case_key');
+
+        $this->assertSame('upper again', Configuration::get('PS_TEST_CASE_KEY'));
+        $this->assertFalse(Configuration::get('ps_test_case_key'));
+
+        Configuration::deleteByName('PS_TEST_CASE_KEY');
+    }
+
+    public function testGetIdByNameMatchesTheExactKeyOnly(): void
+    {
+        Configuration::deleteByName('PS_TEST_CASE_ID');
+        Configuration::updateValue('PS_TEST_CASE_ID', 'value');
+
+        $this->assertGreaterThan(0, Configuration::getIdByName('PS_TEST_CASE_ID'));
+        $this->assertSame(0, Configuration::getIdByName('ps_test_case_id'));
+
+        Configuration::deleteByName('PS_TEST_CASE_ID');
+    }
 }
