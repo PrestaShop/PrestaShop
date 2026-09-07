@@ -35,6 +35,11 @@ class CartTest extends KernelTestCase
      */
     private static $id_address;
 
+    /**
+     * @var string|bool
+     */
+    private $useEcotaxBackup;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -312,6 +317,16 @@ class CartTest extends KernelTestCase
         Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
         Configuration::set('PS_GROUP_FEATURE_ACTIVE', true);
         Configuration::set('PS_ATCP_SHIPWRAP', false);
+        // The ecotax tests below flip this one, and a leaked value would silently change every price
+        // computed by the tests that run after them.
+        $this->useEcotaxBackup = Configuration::get('PS_USE_ECOTAX');
+    }
+
+    protected function tearDown(): void
+    {
+        Configuration::set('PS_USE_ECOTAX', $this->useEcotaxBackup);
+
+        parent::tearDown();
     }
 
     public function testBasicOnlyProducts(): void
@@ -455,5 +470,58 @@ class CartTest extends KernelTestCase
             $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
             $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS)
         );
+    }
+
+    /**
+     * A cart has to add up to its own rows. Product::priceCalculation() adds the ecotax whenever the
+     * product carries one, so with the feature disabled the row prices kept including it while
+     * getOrderTotal() - which reads PS_USE_ECOTAX for the rows it builds itself - left it out.
+     */
+    public function testProductRowsLeaveOutTheEcotaxWhenTheFeatureIsDisabled(): void
+    {
+        Configuration::set('PS_USE_ECOTAX', false);
+
+        $product = self::makeProduct('Ecotax Disabled Product', 10, self::getIdTaxRulesGroup(20));
+        $product->ecotax = 7;
+        self::assertTrue($product->save());
+
+        $cart = self::makeCart();
+        $cart->updateQty(1, $product->id);
+
+        $rows = $cart->getProducts(true);
+        self::assertCount(1, $rows);
+
+        $this->assertEquals(
+            $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS),
+            $rows[0]['total'],
+            'the cart total does not match the sum of its own rows'
+        );
+        // And the value left out is the ecotax, not something else that happened to cancel out.
+        $this->assertEquals(10, $rows[0]['total']);
+    }
+
+    /**
+     * The control: with the feature enabled nothing changes, rows and total both carry the ecotax.
+     */
+    public function testProductRowsKeepTheEcotaxWhenTheFeatureIsEnabled(): void
+    {
+        Configuration::set('PS_USE_ECOTAX', true);
+
+        $product = self::makeProduct('Ecotax Enabled Product', 10, self::getIdTaxRulesGroup(20));
+        $product->ecotax = 7;
+        self::assertTrue($product->save());
+
+        $cart = self::makeCart();
+        $cart->updateQty(1, $product->id);
+
+        $rows = $cart->getProducts(true);
+        self::assertCount(1, $rows);
+
+        $this->assertEquals(
+            $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS),
+            $rows[0]['total'],
+            'the cart total does not match the sum of its own rows'
+        );
+        $this->assertGreaterThan(10, $rows[0]['total'], 'the ecotax is missing from the row price');
     }
 }
