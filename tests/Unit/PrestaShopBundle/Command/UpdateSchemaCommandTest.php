@@ -9,10 +9,13 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Command;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Result;
 use Doctrine\ORM\EntityManager;
+use PDO;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Command\UpdateSchemaCommand;
+use ReflectionMethod;
 
 class UpdateSchemaCommandTest extends TestCase
 {
@@ -32,6 +35,60 @@ class UpdateSchemaCommandTest extends TestCase
             'ps',
             $manager
         );
+    }
+
+    /**
+     * The statements this command runs are DDL, and MySQL commits the open transaction implicitly as
+     * soon as it executes one. By the time a later statement fails there is nothing left to roll back,
+     * and asking anyway threw "There is no active transaction" from inside the catch block - replacing
+     * the query error that the caller actually needed.
+     */
+    public function testItDoesNotRollBackWhenTheTransactionIsAlreadyGone(): void
+    {
+        $nativeConnection = $this->createMock(PDO::class);
+        $nativeConnection->method('inTransaction')->willReturn(false);
+
+        $connection = $this->createMock(Connection::class);
+        $connection->method('getNativeConnection')->willReturn($nativeConnection);
+        $connection->expects($this->never())->method('rollBack');
+
+        $this->rollBack($connection);
+    }
+
+    public function testItRollsBackWhileATransactionIsStillOpen(): void
+    {
+        $nativeConnection = $this->createMock(PDO::class);
+        $nativeConnection->method('inTransaction')->willReturn(true);
+
+        $connection = $this->createMock(Connection::class);
+        $connection->method('getNativeConnection')->willReturn($nativeConnection);
+        $connection->expects($this->once())->method('rollBack');
+
+        $this->rollBack($connection);
+    }
+
+    /**
+     * Whatever the rollback does, it must not become the error the caller sees.
+     */
+    public function testItKeepsTheQueryErrorWhenTheRollBackItselfFails(): void
+    {
+        $nativeConnection = $this->createMock(PDO::class);
+        $nativeConnection->method('inTransaction')->willReturn(true);
+
+        $connection = $this->createMock(Connection::class);
+        $connection->method('getNativeConnection')->willReturn($nativeConnection);
+        $connection->method('rollBack')->willThrowException(new DBALException('There is no active transaction'));
+
+        $this->rollBack($connection);
+
+        $this->addToAssertionCount(1);
+    }
+
+    private function rollBack(Connection $connection): void
+    {
+        $method = new ReflectionMethod($this->command, 'rollBackWithoutHidingTheError');
+        $method->setAccessible(true);
+        $method->invoke($this->command, $connection);
     }
 
     public function testRemoveDropTables(): void
