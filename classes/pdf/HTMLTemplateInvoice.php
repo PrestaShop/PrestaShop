@@ -236,7 +236,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             $carrier->name = $shipmentCarrierNames;
         }
 
-        $cart_rules = $this->order->getCartRules();
+        $cart_rules = $this->order_invoice->getCartRules();
         $free_shipping = false;
         foreach ($cart_rules as $key => $cart_rule) {
             if ($cart_rule['free_shipping']) {
