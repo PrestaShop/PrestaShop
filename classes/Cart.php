@@ -2187,6 +2187,8 @@ class CartCore extends ObjectModel
      * @param int $id_carrier
      * @param bool $use_cache deprecated and has no effect
      * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
+     * @param int[]|null $restrictToCartRuleIds Only apply these cart rules, identified by id_cart_rule.
+     *                                          Null applies every cart rule of the cart.
      *
      * @return float Order total
      *
@@ -2198,7 +2200,8 @@ class CartCore extends ObjectModel
         $products = null,
         $id_carrier = null,
         $use_cache = false,
-        bool $keepOrderPrices = false
+        bool $keepOrderPrices = false,
+        ?array $restrictToCartRuleIds = null
     ) {
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
@@ -2277,6 +2280,18 @@ class CartCore extends ObjectModel
         $cartRules = [];
         if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
+            // WHY: a caller computing the totals of a single invoice already narrows the calculation with
+            // $products, and narrows the cart rules the same way, because a rule attached to one invoice must
+            // not reduce the others. Filtering here rather than replacing the list keeps the per-type
+            // selection above intact, so free shipping rules stay excluded from BOTH_WITHOUT_SHIPPING.
+            if (null !== $restrictToCartRuleIds) {
+                $cartRules = array_filter(
+                    $cartRules,
+                    function ($cartRule) use ($restrictToCartRuleIds) {
+                        return in_array((int) $cartRule['id_cart_rule'], $restrictToCartRuleIds, true);
+                    }
+                );
+            }
         }
 
         $computePrecision = Context::getContext()->getComputingPrecision();
