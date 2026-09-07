@@ -26,6 +26,11 @@ services:
     autowire: true
     autoconfigure: true
 
+  PrestaShop\PrestaShop\Adapter\Hook\HookResultsProvider: ~
+
+  PrestaShop\PrestaShop\Core\Hook\HookResultsProviderInterface:
+    alias: PrestaShop\PrestaShop\Adapter\Hook\HookResultsProvider
+
   PrestaShop\PrestaShop\Adapter\HookManager: ~
 
   prestashop.adapter.hook.manager:
