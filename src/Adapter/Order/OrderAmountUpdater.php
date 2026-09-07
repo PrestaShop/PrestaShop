@@ -474,7 +474,30 @@ class OrderAmountUpdater
                         // actually takes off that invoice. Recording the whole-cart amount made the order disagree
                         // with the sum of its own invoices.
                         $scopedProducts = $invoiceProducts[$scopedInvoiceId] ?? [];
-                        $orderCartRule->value = Tools::ps_round($this->getCartRuleValueForProducts($cart, $order, (int) $cartRule->id, $scopedProducts, true), $computingPrecision);
+                        $scopedValue = $this->getCartRuleValueForProducts($cart, $order, (int) $cartRule->id, $scopedProducts, true);
+
+                        if (0.0 === (float) $scopedValue) {
+                            // WHY: the products a rule reduces can be moved to another invoice, and the rule has to
+                            // follow them - a product-restricted discount belongs to the invoice actually carrying
+                            // the product, not to the one it was first recorded against. Only an invoice where the
+                            // rule now takes something off qualifies, so a rule that stopped applying stays put.
+                            foreach ($invoiceProducts as $candidateInvoiceId => $candidateProducts) {
+                                if ((int) $candidateInvoiceId === $scopedInvoiceId) {
+                                    continue;
+                                }
+
+                                $candidateValue = $this->getCartRuleValueForProducts($cart, $order, (int) $cartRule->id, $candidateProducts, true);
+                                if (0.0 !== (float) $candidateValue) {
+                                    $scopedInvoiceId = (int) $candidateInvoiceId;
+                                    $scopedProducts = $candidateProducts;
+                                    $scopedValue = $candidateValue;
+                                    $orderCartRule->id_order_invoice = $scopedInvoiceId;
+                                    break;
+                                }
+                            }
+                        }
+
+                        $orderCartRule->value = Tools::ps_round($scopedValue, $computingPrecision);
                         $orderCartRule->value_tax_excl = Tools::ps_round($this->getCartRuleValueForProducts($cart, $order, (int) $cartRule->id, $scopedProducts, false), $computingPrecision);
                     } else {
                         $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
