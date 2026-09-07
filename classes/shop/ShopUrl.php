@@ -99,9 +99,13 @@ class ShopUrlCore extends ObjectModel
 
     public function setMain()
     {
+        // A main URL has to be active: AdminShopUrlController::processUpdate() already refuses to save one
+        // that is not, and a shop whose main URL is disabled cannot be reached. Promoting a disabled URL
+        // through this method was the one way around that rule, so enable it as it is promoted.
         $res = Db::getInstance()->update('shop_url', ['main' => 0], 'id_shop = ' . (int) $this->id_shop);
-        $res &= Db::getInstance()->update('shop_url', ['main' => 1], 'id_shop_url = ' . (int) $this->id);
+        $res &= Db::getInstance()->update('shop_url', ['main' => 1, 'active' => 1], 'id_shop_url = ' . (int) $this->id);
         $this->main = true;
+        $this->active = true;
 
         // Reset main URL for all shops to prevent problems
         $sql = 'SELECT s1.id_shop_url FROM ' . _DB_PREFIX_ . 'shop_url s1
@@ -112,7 +116,7 @@ class ShopUrlCore extends ObjectModel
                 ) = 0
                 GROUP BY s1.id_shop';
         foreach (Db::getInstance()->executeS($sql) as $row) {
-            Db::getInstance()->update('shop_url', ['main' => 1], 'id_shop_url = ' . $row['id_shop_url']);
+            Db::getInstance()->update('shop_url', ['main' => 1, 'active' => 1], 'id_shop_url = ' . $row['id_shop_url']);
         }
 
         return $res;

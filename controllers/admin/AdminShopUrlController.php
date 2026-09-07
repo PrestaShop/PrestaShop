@@ -409,7 +409,10 @@ class AdminShopUrlControllerCore extends AdminController
             if ($this->access('edit')) {
                 if (Validate::isLoadedObject($object = $this->loadObject())) {
                     /** @var ShopUrl $object */
-                    if ($object->main) {
+                    // Only the disabling direction is forbidden. Refusing the toggle outright left a main
+                    // URL that had been disabled with no way back: it could not be enabled here, and the
+                    // edit form will not save a main URL that is inactive either.
+                    if ($object->main && $object->active) {
                         $this->errors[] = $this->trans('You cannot disable the Main URL.', [], 'Admin.Notifications.Error');
                     } elseif ($object->toggleStatus()) {
                         Tools::redirectAdmin(self::$currentIndex . '&conf=5&token=' . $token);
