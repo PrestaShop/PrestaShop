@@ -11,7 +11,7 @@ namespace Tests\Unit\Adapter\Customer;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class CustomerConfigurationTest extends AbstractConfigurationTestCase
@@ -85,7 +85,9 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
+            // An unknown key is now left to the module that owns it, so what makes this input
+            // invalid is that every field the class does own is missing.
+            [MissingOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['redisplay_cart_at_login' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['send_email_after_registration' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['password_reset_delay' => 'wrong_type'])],
@@ -93,6 +95,26 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['ask_for_birthday' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_offers' => 'wrong_type'])],
         ];
+    }
+
+    /**
+     * The Customer Settings form dispatches actionCustomerPreferencesPageForm, so a module can add its
+     * own field to it; the value then arrives here with the core ones and must not be rejected. The
+     * module reads it back from actionCustomerPreferencesPageSave.
+     */
+    public function testItAcceptsAFieldAModuleAddedToTheForm(): void
+    {
+        $customerConfiguration = new CustomerConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature
+        );
+
+        $result = $customerConfiguration->updateConfiguration(
+            array_merge(self::VALID_CONFIGURATION, ['a_module_field' => 'added through the form hook'])
+        );
+
+        $this->assertSame([], $result);
     }
 
     public function testSuccessfulUpdate(): void

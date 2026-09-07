@@ -11,7 +11,7 @@ namespace Tests\Unit\Adapter\Preferences;
 use PrestaShop\PrestaShop\Adapter\Meta\SEOOptionsDataConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class SEOOptionsDataConfigurationTest extends AbstractConfigurationTestCase
@@ -68,7 +68,9 @@ class SEOOptionsDataConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
+            // An unknown key is now left to the module that owns it, so what makes this input
+            // invalid is that every field the class does own is missing.
+            [MissingOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, ['product_attributes_in_title' => 'wrong_type']],
         ];
     }

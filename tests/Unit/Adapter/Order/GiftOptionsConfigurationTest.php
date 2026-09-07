@@ -11,7 +11,7 @@ namespace Tests\Unit\Adapter\Order;
 use PrestaShop\PrestaShop\Adapter\Order\GiftOptionsConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class GiftOptionsConfigurationTest extends AbstractConfigurationTestCase
@@ -81,7 +81,9 @@ class GiftOptionsConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
+            // An unknown key is now left to the module that owns it, so what makes this input
+            // invalid is that every field the class does own is missing.
+            [MissingOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_gift_wrapping' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['gift_wrapping_price' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['gift_wrapping_tax_rules_group' => 'wrong_type'])],

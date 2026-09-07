@@ -49,6 +49,10 @@ class DatabaseLogsConfiguration implements DataConfigurationInterface
     {
         $resolver = new OptionsResolver();
         $resolver
+            // WHY: the Logs form dispatches actionDatabaseLogsForm, so a module can add its own fields
+            // to it and they arrive here alongside the core ones. They belong to the module, which
+            // reads them from actionDatabaseLogsSave, so they are left to it instead of being rejected.
+            ->setIgnoreUndefined(true)
             ->setRequired(['database_min_logger_level'])
             ->resolve($configuration);
 

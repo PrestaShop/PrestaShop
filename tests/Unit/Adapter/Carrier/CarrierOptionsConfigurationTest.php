@@ -12,7 +12,7 @@ use Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class CarrierOptionsConfigurationTest extends AbstractConfigurationTestCase
@@ -73,7 +73,9 @@ class CarrierOptionsConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
+            // An unknown key is now left to the module that owns it, so what makes this input
+            // invalid is that every field the class does own is missing.
+            [MissingOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, ['default_carrier' => true, 'carrier_default_order_by' => Carrier::SORT_BY_POSITION, 'carrier_default_order_way' => Carrier::SORT_BY_DESC]],
             [InvalidOptionsException::class, ['default_carrier' => 25, 'carrier_default_order_by' => true, 'carrier_default_order_way' => Carrier::SORT_BY_DESC]],
             [InvalidOptionsException::class, ['default_carrier' => 25, 'carrier_default_order_by' => Carrier::SORT_BY_POSITION, 'carrier_default_order_way' => true]],
