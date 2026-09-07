@@ -50,7 +50,9 @@ class OrderDetailRefund
             throw new InvalidAmountException();
         }
 
-        if ($decimalRefundedAmount->isLowerOrEqualThanZero()) {
+        // A free product refunds nothing, and refusing that made it impossible to take one back into
+        // stock. Only a negative amount is meaningless.
+        if ($decimalRefundedAmount->isLowerThanZero()) {
             throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_AMOUNT);
         }
 

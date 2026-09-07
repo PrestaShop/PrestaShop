@@ -72,7 +72,10 @@ class OrderSlipCreator
         Order $order,
         OrderRefundSummary $orderRefundSummary
     ) {
-        if ($orderRefundSummary->getRefundedAmount() > 0) {
+        // A refund of free products moves no money but still has to be recorded. The calculator has
+        // already refused a refund carrying neither products nor an amount, so the only way to arrive
+        // here with nothing at all is a caller that bypassed it.
+        if ($orderRefundSummary->getRefundedAmount() > 0 || !empty($orderRefundSummary->getProductRefunds())) {
             $orderSlipCreated = $this->createOrderSlip(
                 $order,
                 $orderRefundSummary->getProductRefunds(),
