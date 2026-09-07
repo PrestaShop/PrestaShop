@@ -36,8 +36,17 @@ class ShipmentSplitter implements ShipmentSplitterInterface
         $newShipment->setOrderId($source->getOrderId());
         $newShipment->setTrackingNumber(null);
         $newShipment->setAddressId($source->getAddressId());
-        $newShipment->setShippingCostTaxExcluded($source->getShippingCostTaxExcluded());
-        $newShipment->setShippingCostTaxIncluded($source->getShippingCostTaxIncluded());
+        /*
+         * WHY not the source's cost: this shipment is being created for a DIFFERENT carrier, so what the
+         * previous one costs says nothing about what this one does. Copying it showed the merchant a price
+         * the new carrier never quoted, and it only ever went unnoticed because SplitShipmentHandler
+         * recomputes every shipment of the order straight afterwards when PS_ORDER_RECALCULATE_SHIPPING is
+         * on. With that setting off nothing recomputes it, and the copied value is what the merchant sees.
+         * A merchant who turns recalculation off sets shipping by hand, so an empty cost is the honest
+         * starting point; an inherited one is not.
+         */
+        $newShipment->setShippingCostTaxExcluded(0.0);
+        $newShipment->setShippingCostTaxIncluded(0.0);
 
         foreach ($productsToMove as $productToMove) {
             $orderDetailId = $productToMove->getOrderDetailId();
