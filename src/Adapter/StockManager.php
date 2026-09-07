@@ -86,9 +86,9 @@ class StockManager
      *
      * @return bool
      */
-    public function updatePhysicalProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
+    public function updatePhysicalProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null, $refundState = null)
     {
-        $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct, $idOrder);
+        $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct, $idOrder, $refundState);
 
         $updatePhysicalQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
 
@@ -128,7 +128,7 @@ class StockManager
      *
      * @return bool
      */
-    private function updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
+    private function updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null, $refundState = null)
     {
         $updateReservedQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
 
@@ -158,8 +158,7 @@ class StockManager
                 WHERE ' . $orderScopeCondition . ' AND
                 os.shipped != 1 AND (
                     o.valid = 1 OR (
-                        os.id_order_state != :error_state AND
-                        os.id_order_state != :cancellation_state
+                        os.id_order_state NOT IN (:non_reserving_states)
                     )
                 ) AND sa.id_product = od.product_id AND
                 sa.id_product_attribute = od.product_attribute_id
@@ -174,8 +173,7 @@ class StockManager
             '{table_prefix}' => _DB_PREFIX_,
             ':stock_shop_id' => (int) $stockContext['shopId'],
             ':stock_shop_group_id' => (int) $stockContext['shopGroupId'],
-            ':error_state' => (int) $errorState,
-            ':cancellation_state' => (int) $cancellationState,
+            ':non_reserving_states' => implode(',', $this->getNonReservingStates($errorState, $cancellationState, $refundState)),
         ];
 
         if ($idProduct) {
@@ -261,5 +259,26 @@ class StockManager
     public function outOfStock($productId, $shopId = null)
     {
         return StockAvailable::outOfStock($productId, $shopId);
+    }
+
+    /**
+     * States whose orders must not hold reserved stock. The refund state is optional so that callers
+     * which have not been updated keep the previous behaviour.
+     *
+     * @param int $errorState
+     * @param int $cancellationState
+     * @param int|null $refundState
+     *
+     * @return int[]
+     */
+    private function getNonReservingStates($errorState, $cancellationState, $refundState = null)
+    {
+        $states = [(int) $errorState, (int) $cancellationState];
+
+        if (null !== $refundState) {
+            $states[] = (int) $refundState;
+        }
+
+        return array_values(array_unique($states));
     }
 }
