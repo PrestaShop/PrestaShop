@@ -210,46 +210,24 @@ class ExtraPropertyValidator implements ExtraPropertyValidatorInterface
     }
 
     /**
-     * Applies isValueCompatible() to the submitted value. The LANG/SHOP array shape
-     * ([id_lang|locale => value] / [id_shop => value]) is checked leaf by leaf, each
-     * violation tagged with its "[<key>]" sub-path — except for JSON, whose array shape IS
-     * the (decoded) value. A scalar (COMMON/SHOP scalar, or the single-language value an
-     * ObjectModel loaded with a langId exposes) is checked directly.
+     * Applies isValueCompatible() to the submitted value, through its constraint form
+     * (ExtraPropertyTypeCompatibility — also the one the form builder modifier attaches to
+     * every extra field, so all write paths share message and rules). The LANG/SHOP array
+     * shape ([id_lang|locale => value] / [id_shop => value]) is checked leaf by leaf via
+     * Assert\All, each violation tagged with its "[<key>]" sub-path — except for JSON,
+     * whose array shape IS the (decoded) value. A scalar (COMMON/SHOP scalar, or the
+     * single-language value an ObjectModel loaded with a langId exposes) is checked
+     * directly.
      */
-    protected function validateTypeCompatibility(ExtraPropertyDefinition $definition, mixed $value): ConstraintViolationList
+    protected function validateTypeCompatibility(ExtraPropertyDefinition $definition, mixed $value): ConstraintViolationListInterface
     {
-        $violations = new ConstraintViolationList();
-        $type = $definition->getType();
+        $typeCompatibility = new ExtraPropertyTypeCompatibility($definition->getType(), $definition->getEnumValues());
 
-        if (is_array($value) && ExtraPropertyType::JSON !== $type) {
-            foreach ($value as $key => $leaf) {
-                if (!self::isValueCompatible($type, $leaf, $definition->getEnumValues())) {
-                    $violations->add($this->buildTypeViolation($type, $leaf, sprintf('[%s]', $key)));
-                }
-            }
-
-            return $violations;
+        if (is_array($value) && ExtraPropertyType::JSON !== $definition->getType()) {
+            return $this->validator->validate($value, [new All([$typeCompatibility])]);
         }
 
-        if (!self::isValueCompatible($type, $value, $definition->getEnumValues())) {
-            $violations->add($this->buildTypeViolation($type, $value, ''));
-        }
-
-        return $violations;
-    }
-
-    protected function buildTypeViolation(ExtraPropertyType $type, mixed $invalidValue, string $path): ConstraintViolation
-    {
-        $template = 'The value is not compatible with the declared "{{ type }}" field type.';
-
-        return new ConstraintViolation(
-            str_replace('{{ type }}', $type->value, $template),
-            $template,
-            ['{{ type }}' => $type->value],
-            $invalidValue,
-            $path,
-            $invalidValue
-        );
+        return $this->validator->validate($value, [$typeCompatibility]);
     }
 
     /**

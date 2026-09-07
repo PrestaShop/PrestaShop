@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionR
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyTypeCompatibility;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface;
 use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -24,6 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -138,6 +140,16 @@ class ExtraPropertiesFormBuilderModifier
         // form's own validation runs them and surfaces one error per failing constraint. Requiredness is the
         // module's responsibility — it passes Assert\NotBlank when a value must be provided (no auto NotBlank).
         $constraints = $definition->getConstraints() ?? [];
+        // Implicit type-compatibility safety net, ALWAYS attached: the same
+        // isValueCompatible() rule-set the registry applies to defaults and
+        // validateValue() to the ObjectModel/Admin API writes — so the BO form refuses
+        // the same values inline (mostly relevant for free-typed widgets: a JSON
+        // textarea, a module formType override). Wrapped in Assert\All for localized
+        // fields so each language leaf is checked like everywhere else.
+        $typeCompatibility = new ExtraPropertyTypeCompatibility($definition->getType(), $definition->getEnumValues());
+        $constraints[] = ExtraPropertyScope::LANG === $definition->getScope()
+            ? new All([$typeCompatibility])
+            : $typeCompatibility;
 
         $label = $this->translateLabel($definition->getLabelWording(), $definition->getLabelDomain());
         $help = $this->translateLabel($definition->getDescriptionWording(), $definition->getDescriptionDomain());
