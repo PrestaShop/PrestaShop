@@ -1031,7 +1031,7 @@ class DispatcherCore
      * @param array $params
      * @param bool $force_routes
      * @param string $anchor Optional anchor to add at the end of this url
-     * @param null $id_shop
+     * @param int|null $id_shop
      *
      * @return string
      *
@@ -1090,7 +1090,10 @@ class DispatcherCore
 
             foreach ($params as $key => $value) {
                 if (!isset($routeDefinition['keywords'][$key])) {
-                    $add_param[$key] = $value;
+                    // Only pass parameters that are not keywords of the default route
+                    if (!isset($this->default_routes[$routeName]['keywords'][$key])) {
+                        $add_param[$key] = $value;
+                    }
                 } else {
                     if ($params[$key]) {
                         $parameter = $params[$key];
@@ -1110,14 +1113,18 @@ class DispatcherCore
                 }
             }
             $url = preg_replace('#\{([^{}]*:)?[a-z0-9_]+?(:[^{}]*)?\}#', '', $url);
-            if (count($add_param)) {
-                $url .= '?' . http_build_query($add_param, '', '&');
+
+            // Only append a query string if parameters remain after encoding
+            $query = http_build_query($add_param, '', '&');
+            if ($query !== '') {
+                $url .= '?' . $query;
             }
         } else {
             // Build a classic url index.php?controller=foo&...
             $add_params = [];
             foreach ($params as $key => $value) {
-                if (!isset($routeDefinition['keywords'][$key])) {
+                // Only pass parameters that are not keywords of either route definition
+                if (!isset($routeDefinition['keywords'][$key]) && !isset($this->default_routes[$routeName]['keywords'][$key])) {
                     $add_params[$key] = $value;
                 }
             }
