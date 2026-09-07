@@ -4,13 +4,12 @@ name: Nightly tests (Report)
 
 on:
   schedule:
-    - cron: '0 7 * * *'
+    - cron: "0 7 * * *"
   workflow_dispatch:
 
 jobs:
-  # Add pushed reports to GCP on nightly
   push-nightly-reports:
-    name: Push reports to nightly.prestashop-project.org
+    name: Push reports to nightly boards
     runs-on: ubuntu-latest
 
     strategy:
@@ -30,7 +29,27 @@ jobs:
             database: mariadb
 
     steps:
-      - name: Push reports
+      - name: Push report to production
+        env:
+          API_URL: https://api-nightly.prestashop-project.org
+          API_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}
+          DATABASE: ${{ matrix.database }}
+          BRANCH: ${{ matrix.branch }}
         run: |
-          REPORT_NAME="$(date +%Y-%m-%d)-${{ matrix.branch }}-${{matrix.database}}"
-          curl -v "https://api-nightly.prestashop-project.org/hook/reports/import?token=${{ secrets.NIGHTLY_TOKEN }}&filename=${REPORT_NAME}.json&database=${{matrix.database}}"
+          REPORT_NAME="$(date +%Y-%m-%d)-${BRANCH}-${DATABASE}"
+          curl -v "${API_URL}/hook/reports/import?token=${API_TOKEN}&filename=${REPORT_NAME}.json&database=${DATABASE}"
+
+      - name: Push report to preproduction
+        continue-on-error: true
+        env:
+          API_URL: ${{ vars.NIGHTLY_PREPROD_API_URL }}
+          API_TOKEN: ${{ secrets.NIGHTLY_PREPROD_TOKEN }}
+          DATABASE: ${{ matrix.database }}
+          BRANCH: ${{ matrix.branch }}
+        run: |
+          if [ -z "$API_URL" ] || [ -z "$API_TOKEN" ]; then
+            echo "::warning::Preproduction target not configured, skipping"
+            exit 0
+          fi
+          REPORT_NAME="$(date +%Y-%m-%d)-${BRANCH}-${DATABASE}"
+          curl -v "${API_URL}/hook/reports/import?token=${API_TOKEN}&filename=${REPORT_NAME}.json&database=${DATABASE}"
