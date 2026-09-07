@@ -3052,7 +3052,10 @@ abstract class ModuleCore implements ModuleInterface
             // Get a uniq id for the class, because you can override a class (or remove the override) twice in the same session and we need to avoid redeclaration
             do {
                 $uniq = uniqid();
-            } while (class_exists($classname . 'OverrideOriginal_remove', false));
+            } while (
+                class_exists($classname . 'OverrideOriginal' . $uniq, false)
+                || class_exists($classname . 'Override' . $uniq, false)
+            );
 
             // Make a reflection of the override class and the module override class
             $override_file = file($override_path);
@@ -3154,7 +3157,7 @@ abstract class ModuleCore implements ModuleInterface
             if ($orig_path) {
                 do {
                     $uniq = uniqid();
-                } while (class_exists($classname . 'OverrideOriginal_remove', false));
+                } while (class_exists($classname . 'Override' . $uniq, false));
                 eval(
                     preg_replace(
                         [
@@ -3276,7 +3279,11 @@ abstract class ModuleCore implements ModuleInterface
             // Get a uniq id for the class, because you can override a class (or remove the override) twice in the same session and we need to avoid redeclaration
             do {
                 $uniq = uniqid();
-            } while (class_exists($classname . 'OverrideOriginal_remove', false));
+            } while (
+                class_exists($classname . 'OverrideOriginal_remove' . $uniq, false)
+                || class_exists($classname . 'Override_remove' . $uniq, false)
+                || class_exists($classname . 'OverrideOriginal_check' . $uniq, false)
+            );
 
             // Make a reflection of the override class and the module override class
             $override_file = file($override_path);
