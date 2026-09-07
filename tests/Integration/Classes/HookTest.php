@@ -35,6 +35,8 @@ class HookTest extends TestCase
     {
         $this->expectException(PrestaShopException::class);
 
+        // Passing a module name is the defect under test; the documented signature makes it a static error.
+        // @phpstan-ignore-next-line
         Hook::exec('displayHeader', [], 'ps_mymodule');
     }
 
