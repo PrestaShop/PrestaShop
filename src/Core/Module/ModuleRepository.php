@@ -35,6 +35,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         'limited_countries',
         'need_instance',
         'confirmUninstall',
+        'confirmUpgrade',
     ];
 
     /** @var ModuleDataProvider */
