@@ -456,4 +456,36 @@ class CartTest extends KernelTestCase
             $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS)
         );
     }
+
+    public function testGetProductsCacheIsKeyedByArguments(): void
+    {
+        $productA = self::makeProduct('Product A', 10, self::getIdTaxRulesGroup(20));
+        $productB = self::makeProduct('Product B', 20, self::getIdTaxRulesGroup(20));
+        $cart = self::makeCart();
+        $cart->updateQty(1, $productA->id);
+        $cart->updateQty(2, $productB->id);
+
+        // Reload the cart so that its products cache is cold
+        $cart = new Cart($cart->id);
+        Context::getContext()->cart = $cart;
+
+        // Requesting a single product on a cold cache must not poison the cache of the whole cart
+        $onlyA = $cart->getProducts(false, (int) $productA->id);
+        $this->assertCount(1, $onlyA);
+        $this->assertEquals($productA->id, $onlyA[0]['id_product']);
+        $this->assertCount(2, $cart->getProducts());
+
+        // Rows without full infos must not be served from the full infos cache, and vice versa
+        $this->assertArrayHasKey('price_without_reduction', $cart->getProducts()[0]);
+        $rawProducts = $cart->getProducts(false, false, null, false);
+        $this->assertCount(2, $rawProducts);
+        $this->assertArrayNotHasKey('price_without_reduction', $rawProducts[0]);
+        $this->assertArrayHasKey('price_without_reduction', $cart->getProducts()[0]);
+
+        // A single product requested from a warm cache is filtered out of the cached cart
+        $onlyB = $cart->getProducts(false, (int) $productB->id);
+        $this->assertCount(1, $onlyB);
+        $this->assertEquals($productB->id, $onlyB[0]['id_product']);
+        $this->assertArrayHasKey('price_without_reduction', $onlyB[0]);
+    }
 }
