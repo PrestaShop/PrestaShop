@@ -1015,6 +1015,41 @@ class ShopCore extends ObjectModel
         }
         static::$context_shop_group = null;
         self::$context = $type;
+
+        self::applyContextTimezone();
+    }
+
+    /**
+     * Applies the timezone configured for the shop context that was just set.
+     *
+     * WHY: the timezone is bound once during bootstrap (config/config.inc.php), where the only shop
+     * known is the one resolved from the URL. Every other shop context is decided later - the
+     * employee's shop selector in the back office, the order's shop when a status changes or an
+     * invoice is rendered, the requested shop in the webservice - so without this the process keeps
+     * running in the URL shop's timezone and every date written while working on another shop is off
+     * by the offset between the two.
+     *
+     * The comparison against the current timezone keeps this free for the common case: a shop
+     * context switch only costs a configuration read, and the session query is issued exclusively
+     * when the timezone genuinely changes.
+     */
+    private static function applyContextTimezone(): void
+    {
+        $timezone = Configuration::get('PS_TIMEZONE');
+
+        // Empty while installing, before the configuration table holds the value.
+        if (empty($timezone) || $timezone === date_default_timezone_get()) {
+            return;
+        }
+
+        // Same suppression as bootstrap: an identifier that is no longer valid must not warn, and
+        // leaves PHP - and therefore the database session - on the timezone already in place.
+        if (!@date_default_timezone_set($timezone)) {
+            return;
+        }
+
+        // Keep the database session offset aligned with PHP, as bootstrap does (see issue #30828).
+        Db::getInstance()->setTimeZone();
     }
 
     /**
