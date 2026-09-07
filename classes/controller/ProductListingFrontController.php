@@ -3,6 +3,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresentationContext;
 use PrestaShop\PrestaShop\Core\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
@@ -94,6 +95,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         // Prepare configuration
         $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
+
+        // Let the presenter resolve per-product lookups (new flag, colored variants, images) for the
+        // whole set with one batched query each, instead of one query per product on the listing.
+        $presenter->setPresentationContext(
+            new ProductPresentationContext(array_column($products, 'id_product'))
+        );
 
         // Present and return each product
         foreach ($products as &$product) {
