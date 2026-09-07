@@ -459,12 +459,25 @@ class OrderDetailCore extends ObjectModel
     }
 
     /**
-     * Dynamically get the taxRulesGroupId instead of relying one the one saved in database
+     * Get the tax rules group this line was sold under.
      *
      * @return int
      */
     public function getTaxRulesGroupId(): int
     {
+        /*
+         * WHY: a placed order is a financial record, so the tax category it is recalculated with is
+         * the one stored on the line at checkout, not the product's current one - moving a product
+         * to another tax rules group afterwards must not re-tax orders that are already placed.
+         * This does not weaken the address-driven recalculation this method feeds: the address is a
+         * separate argument to TaxManagerFactory, which picks the rule that applies to the new
+         * address *within* this group. Lines that carry no group - orders imported or created
+         * before the column was written - keep the previous lookup on the product.
+         */
+        if ((int) $this->id_tax_rules_group > 0) {
+            return (int) $this->id_tax_rules_group;
+        }
+
         return (int) Product::getIdTaxRulesGroupByIdProduct((int) $this->product_id, $this->context);
     }
 
