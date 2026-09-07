@@ -117,6 +117,12 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'js-module-form-group d-none',
                 ],
+                // The field only applies to the "modules" translation type, and its row is hidden for
+                // every other one. Left required, it renders a required select whose placeholder option
+                // is empty, so the browser refuses to submit the form and reports nothing, because the
+                // control it would point at is hidden. The page relied on JavaScript disabling the
+                // select to avoid that.
+                'required' => false,
                 'placeholder' => '---',
                 'autocomplete' => true,
                 'choices' => $this->moduleChoices,
