@@ -19,6 +19,10 @@
     'data-suggestion-field': form.vars.suggestion_field,
   }) -%}
   {%- set attr = attr|merge({class: (attr.class|default('') ~ ' entity-search-widget')|trim}) -%}
+  {# The class AutoEntitySearchInput selects on, so only the widgets that asked for it are built #}
+  {%- if auto_init -%}
+    {%- set attr = attr|merge({class: (attr.class ~ ' js-entity-search-input')|trim}) -%}
+  {%- endif -%}
 
   {# We use widget_container_attributes in this widget because we do not want the name property #}
   <div {{ block('widget_container_attributes') }}>
