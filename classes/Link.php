@@ -877,8 +877,17 @@ class LinkCore
         }
 
         if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) {
-            if (null === $idShop) {
+            $resolvedFromRequest = null === $idShop;
+            if ($resolvedFromRequest) {
                 $idShop = $this->getMatchingUrlShopId();
+
+                // getMatchingUrlShopId() also requires the request URI to start with the shop URI,
+                // which is a front office rule: the back office is served from the admin folder, not
+                // from under a shop's virtual URI, so that test never passes for a shop that is not
+                // mounted at the root. The host alone identifies the shop here.
+                if (null === $idShop) {
+                    $idShop = $this->getHostMatchingShopId();
+                }
             }
 
             // Use the matching shop if present, or fallback on the default one
@@ -886,6 +895,14 @@ class LinkCore
                 $shop = new Shop($idShop);
             } else {
                 $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
+            }
+
+            if ($resolvedFromRequest) {
+                // The admin folder sits at the installation root, never under the shop's virtual URI.
+                // Shop::initialize() blanks it for the same reason when it resolves the back office
+                // shop. Only done for the shop we resolved ourselves: a caller passing an explicit
+                // shop id keeps getting that shop's full base URI, as before.
+                $shop->virtual_uri = '';
             }
         } else {
             $shop = Context::getContext()->shop;
@@ -936,6 +953,33 @@ class LinkCore
         }
 
         return $this->urlShopId;
+    }
+
+    /**
+     * Returns the id of an active shop served by the current host, ignoring the request URI.
+     *
+     * Used for back office links only, where the request URI cannot discriminate between shops.
+     * The host is still resolved against ps_shop_url rather than trusted as-is, so a forged Host
+     * header cannot make PrestaShop generate links to an arbitrary domain. Ports are handled the
+     * same way as Shop::initialize(): the host without its port first, then with it.
+     *
+     * @return int|null
+     */
+    private function getHostMatchingShopId(): ?int
+    {
+        foreach ([Tools::getHttpHost(false, false, true), Tools::getHttpHost()] as $host) {
+            try {
+                $result = Shop::findShopByHost($host);
+            } catch (PrestaShopDatabaseException $e) {
+                return null;
+            }
+
+            if (!empty($result)) {
+                return (int) $result[0]['id_shop'];
+            }
+        }
+
+        return null;
     }
 
     /**
