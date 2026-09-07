@@ -6,6 +6,7 @@
 
 namespace Tests\Integration\Classes\controller;
 
+use AdminNotFoundController;
 use Context;
 use Controller;
 use Cookie;
@@ -121,6 +122,33 @@ class AdminControllerTest extends TestCase
         }
 
         $this->assertNull($testedController->run());
+    }
+
+    /**
+     * A missing back office page has to answer 404, otherwise nothing downstream - a browser, a crawler,
+     * an uptime check - can tell it apart from a page that exists.
+     */
+    public function testAdminNotFoundControllerAnswersWithA404Status(): void
+    {
+        $testedController = new AdminNotFoundController();
+        $refController = new ReflectionObject($testedController);
+        $refProperty = $refController->getProperty('container');
+        $refProperty->setAccessible(true);
+        $refProperty->setValue($testedController, $this->getMockContainerBuilder());
+
+        if (!defined('_PS_BASE_URL_')) {
+            define('_PS_BASE_URL_', '');
+            define('__PS_BASE_URI__', '');
+            define('_PS_BASE_URL_SSL_', '');
+        }
+
+        if (!defined('PS_INSTALLATION_IN_PROGRESS')) {
+            define('PS_INSTALLATION_IN_PROGRESS', true);
+        }
+
+        $testedController->run();
+
+        $this->assertSame(404, http_response_code());
     }
 
     /**
