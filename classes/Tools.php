@@ -2569,6 +2569,32 @@ class ToolsCore
         return $domains;
     }
 
+    /**
+     * Turns a shop or media server domain into a pattern safe to use as a RewriteCond
+     * argument in .htaccess.
+     *
+     * @param string $domain
+     *
+     * @return string
+     */
+    public static function getHtaccessDomainPattern($domain)
+    {
+        /*
+         * WHY: a domain is free text - ShopUrl validates it with isCleanHtml - but it ends up
+         * inside an Apache directive, where two character classes are dangerous:
+         *  - regex metacharacters, because a RewriteCond pattern is a regex: the unescaped dots
+         *    in "^10.0.1.34$" also match "10a0b1c34";
+         *  - whitespace, because Apache splits a directive into arguments on it. An unquoted
+         *    pattern holding a space becomes an extra argument, Apache stops parsing .htaccess
+         *    with "RewriteCond: bad flag delimiters" and answers HTTP 500 for every request -
+         *    the back office included, so the merchant can no longer correct the domain.
+         * preg_quote() handles the first and also escapes the brackets of an IPv6 literal, which
+         * is why the manual bracket escaping it replaced is no longer needed. Quoting the
+         * argument handles the second.
+         */
+        return '"^' . preg_quote($domain) . '$"';
+    }
+
     public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
     {
         if (
@@ -2667,7 +2693,7 @@ class ToolsCore
         foreach ($medias as $media) {
             foreach ($media as $media_url) {
                 if ($media_url) {
-                    $media_domains .= 'RewriteCond %{HTTP_HOST} ^' . $media_url . '$ [OR]' . PHP_EOL;
+                    $media_domains .= 'RewriteCond %{HTTP_HOST} ' . self::getHtaccessDomainPattern($media_url) . ' [OR]' . PHP_EOL;
                 }
             }
         }
@@ -2682,14 +2708,11 @@ class ToolsCore
         fwrite($write_fd, "RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]\n\n");
 
         foreach ($domains as $domain => $list_uri) {
-            // As we use regex in the htaccess, ipv6 surrounded by brackets must be escaped
-            $domain = str_replace(['[', ']'], ['\[', '\]'], $domain);
-
             $domain_rewrite_cond = '';
             foreach ($list_uri as $uri) {
                 fwrite($write_fd, PHP_EOL . PHP_EOL . '#Domain: ' . $domain . PHP_EOL);
                 if (Shop::isFeatureActive()) {
-                    fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^' . $domain . '$' . PHP_EOL);
+                    fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ' . self::getHtaccessDomainPattern($domain) . PHP_EOL);
                 }
                 fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:' . $uri['physical'] . ']' . PHP_EOL);
 
@@ -2702,7 +2725,7 @@ class ToolsCore
                     $rewrite_settings = (int) Configuration::get('PS_REWRITING_SETTINGS', null, null, (int) $uri['id_shop']);
                 }
 
-                $domain_rewrite_cond = 'RewriteCond %{HTTP_HOST} ^' . $domain . '$' . PHP_EOL;
+                $domain_rewrite_cond = 'RewriteCond %{HTTP_HOST} ' . self::getHtaccessDomainPattern($domain) . PHP_EOL;
                 // Rewrite virtual multishop uri
                 if ($uri['virtual']) {
                     if (!$rewrite_settings) {

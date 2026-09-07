@@ -1268,4 +1268,48 @@ class ToolsTest extends TestCase
         $this->assertTrue($method->isStatic());
         $this->assertSame(2, $method->getNumberOfParameters());
     }
+
+    /**
+     * @dataProvider providerHtaccessDomainPattern
+     */
+    public function testGetHtaccessDomainPatternMatchesOnlyThatDomain(string $domain, string $lookalike): void
+    {
+        $regex = $this->htaccessDomainPatternToRegex(Tools::getHtaccessDomainPattern($domain));
+
+        $this->assertSame(1, preg_match($regex, $domain), 'a domain must still match its own pattern');
+        $this->assertSame(0, preg_match($regex, $lookalike), 'the pattern must not match anything else');
+    }
+
+    public function providerHtaccessDomainPattern(): iterable
+    {
+        // An unescaped dot is "any character", so ^10.0.1.34$ also matched 10a0b1c34.
+        yield 'dots are literal' => ['10.0.1.34', '10a0b1c34'];
+        // Unescaped, ^[::1]$ is a character class matching one of : or 1 - never the address.
+        yield 'ipv6 brackets are escaped' => ['[::1]', '1'];
+        yield 'a regular domain is unaffected' => ['shop.example.com', 'shopxexample.com'];
+    }
+
+    public function testGetHtaccessDomainPatternIsQuotedSoWhitespaceCannotSplitTheDirective(): void
+    {
+        // A domain holding a space used to emit
+        //   RewriteCond %{HTTP_HOST} ^10.0.1.34 10.0.6.3$
+        // which Apache rejects with "RewriteCond: bad flag delimiters". That is a parse error
+        // on .htaccess, so every request - the back office included - answers HTTP 500 and the
+        // merchant can no longer correct the domain. Quoting keeps it a single argument.
+        $pattern = Tools::getHtaccessDomainPattern('10.0.1.34 10.0.6.3');
+
+        $this->assertStringStartsWith('"', $pattern);
+        $this->assertStringEndsWith('"', $pattern);
+        $this->assertStringNotContainsString(
+            '"',
+            substr($pattern, 1, -1),
+            'the quoted argument must not be terminated early'
+        );
+    }
+
+    private function htaccessDomainPatternToRegex(string $pattern): string
+    {
+        // preg_quote() escapes #, so it is safe as the delimiter here.
+        return '#' . trim($pattern, '"') . '#';
+    }
 }
