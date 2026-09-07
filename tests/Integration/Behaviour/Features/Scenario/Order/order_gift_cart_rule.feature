@@ -1644,3 +1644,38 @@ Feature: Order from Back Office (BO)
       | unit_price_tax_excl    | 13.00 |
       | total_price_tax_incl   | 13.78 |
       | total_price_tax_excl   | 13.00 |
+
+  @restore-cart-rules-after-scenario
+  Scenario: Applying a gift cart rule adds the product and keeps tax calculations correct
+    Given I create a product "Mug" with following properties:
+      | price            | 20.00 |
+      | tax rules group   | FR Taux standard (20%) |
+    And I create a product "Hummingbird printed sweater" with following properties:
+      | price            | 35.00 |
+      | tax rules group   | FR Taux réduit (10%)   |
+    And I create a cart rule with following properties:
+      | name[en-US]       | Gift Sweater Rule        |
+      | highlight         | true                     |
+      | active            | true                     |
+      | allow_partial_use | true                     |
+      | priority          | 1                        |
+      | is_active         | true                     |
+      | valid_from        | 2019-01-01 11:05:00       |
+      | valid_to          | 2029-12-01 00:00:00       |
+      | total_quantity    | 10                       |
+      | quantity_per_user | 2                        |
+      | free_shipping     | true                     |
+      | code              | GIFTSWEATER              |
+      | gift_product      | Hummingbird printed sweater |
+
+    When I create an empty cart for customer "test@example.com"
+    And I add 1 "Mug" to the cart
+    And I apply the cart rule "GIFTSWEATER"
+    Then the cart should contain 1 "Mug"
+    And the cart should contain 1 "Hummingbird printed sweater"
+    And the cart total excluding tax should be 20.00
+    And the cart total including tax should be 24.00
+    When I generate an invoice for order "last order"
+    Then the order invoice VAT breakdown for order "last order" should be:
+      | tax_rate | total_tax |
+      | 20.00    | 4.00      |
