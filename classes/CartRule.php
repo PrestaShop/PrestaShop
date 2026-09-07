@@ -369,6 +369,8 @@ class CartRuleCore extends ObjectModel
      */
     public static function haveCartRuleToday($idCustomer)
     {
+        $idCustomer = (int) $idCustomer;
+
         static $haveCartRuleToday = [];
 
         if (!isset($haveCartRuleToday[$idCustomer])) {
@@ -1494,22 +1496,23 @@ class CartRuleCore extends ObjectModel
 
         $all_cart_rules_ids = $context->cart->getOrderedCartRulesIds();
 
-        if (!array_key_exists($context->cart->id, static::$cartAmountCache)) {
+        $cartId = (int) $context->cart->id;
+        if (!array_key_exists($cartId, static::$cartAmountCache)) {
             if (!Configuration::get('PS_TAX')) {
-                static::$cartAmountCache[$context->cart->id]['te'] = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-                static::$cartAmountCache[$context->cart->id]['ti'] = static::$cartAmountCache[$context->cart->id]['te'];
+                static::$cartAmountCache[$cartId]['te'] = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+                static::$cartAmountCache[$cartId]['ti'] = static::$cartAmountCache[$cartId]['te'];
             } else {
-                static::$cartAmountCache[$context->cart->id]['ti'] = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-                static::$cartAmountCache[$context->cart->id]['te'] = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+                static::$cartAmountCache[$cartId]['ti'] = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+                static::$cartAmountCache[$cartId]['te'] = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
             }
         }
 
-        $cart_amount_te = static::$cartAmountCache[$context->cart->id]['te'];
-        $cart_amount_ti = static::$cartAmountCache[$context->cart->id]['ti'];
+        $cart_amount_te = static::$cartAmountCache[$cartId]['te'];
+        $cart_amount_ti = static::$cartAmountCache[$cartId]['ti'];
 
         $reduction_value = 0;
 
-        $cache_id = 'getContextualValue_' . (int) $this->id . '_' . (int) $use_tax . '_' . (int) $context->cart->id . '_' . (int) $filter;
+        $cache_id = 'getContextualValue_' . (int) $this->id . '_' . (int) $use_tax . '_' . $cartId . '_' . (int) $filter;
         foreach ($package_products as $product) {
             $cache_id .= '_' . (int) $product['id_product'] . '_' . (int) $product['id_product_attribute'] . (isset($product['in_stock']) ? '_' . (int) $product['in_stock'] : '');
         }
