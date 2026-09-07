@@ -6,15 +6,68 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Context;
+use DeliveryOptionsFinder;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use RuntimeException;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
+
+    /**
+     * The checkout presents one entry per delivery option, and an option can span several packages when
+     * the cart holds products restricted to different carriers. Its price then covers every package, so
+     * the name shown beside that price has to cover them too.
+     *
+     * @Then the delivery options for cart :cartReference should be named:
+     *
+     * @param string $cartReference
+     * @param TableNode $table
+     */
+    public function checkDeliveryOptionNames(string $cartReference, TableNode $table): void
+    {
+        $cart = new Cart((int) SharedStorage::getStorage()->get($cartReference));
+        $context = Context::getContext();
+        $previousCart = $context->cart;
+        $context->cart = $cart;
+
+        try {
+            $finder = new DeliveryOptionsFinder(
+                $context,
+                CommonFeatureContext::getContainer()->get('translator'),
+                new ObjectPresenter(),
+                new PriceFormatter()
+            );
+            $options = $finder->getDeliveryOptions();
+        } finally {
+            $context->cart = $previousCart;
+        }
+
+        $expected = array_column($table->getColumnsHash(), 'name');
+        $actual = array_values(array_map(static function (array $option): string {
+            return (string) $option['name'];
+        }, $options));
+
+        sort($expected);
+        sort($actual);
+
+        Assert::assertSame(
+            $expected,
+            $actual,
+            sprintf(
+                'Delivery option names for cart %s: expected [%s], got [%s]',
+                $cartReference,
+                implode(' | ', $expected),
+                implode(' | ', $actual)
+            )
+        );
+    }
 
     /**
      * @Then there is no delivery options available for my cart
