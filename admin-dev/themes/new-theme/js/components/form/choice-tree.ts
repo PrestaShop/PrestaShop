@@ -5,6 +5,12 @@
 
 const {$} = window;
 
+/** Marks the container of one tree, as rendered by the material choice tree form theme. */
+export const CHOICE_TREE_CONTAINER_SELECTOR = '.js-choice-tree-container';
+
+/** Key under which a tree keeps its instance on its own container. */
+export const CHOICE_TREE_DATA_KEY = 'choiceTree';
+
 /**
  * Handles UI interactions of choice tree
  */
@@ -12,10 +18,26 @@ export default class ChoiceTree {
   $container: JQuery<HTMLElement>;
 
   /**
-   * @param {String} treeSelector
+   * @param {String|JQuery} tree selector for, or container of, a single tree
    */
-  constructor(treeSelector: string) {
-    this.$container = $(treeSelector);
+  constructor(tree: string | JQuery<HTMLElement>) {
+    // WHY: this class is exposed through window.prestashop.component, where initComponents() builds
+    // every component with no argument. Built that way it used to bind its handlers to $(undefined),
+    // an empty selection, and do nothing at all without reporting anything - so point the caller at
+    // the component that does support that contract. An empty selection is still accepted, because
+    // several pages build a tree unconditionally on a form that does not always render one.
+    if (!tree) {
+      throw new Error(
+        'ChoiceTree must be constructed with the selector or the container of a single tree. '
+          + 'To initialize every choice tree of a page at once, use the ChoiceTreeWidget component instead.',
+      );
+    }
+
+    this.$container = typeof tree === 'string' ? $(tree) : tree;
+
+    // The instance is reachable through the container's data, which is how ChoiceTreeWidget can
+    // tell a tree a page has already built from one that still needs building.
+    this.$container.data(CHOICE_TREE_DATA_KEY, this);
 
     this.$container.on('click', '.js-input-wrapper', (event) => {
       const $inputWrapper = $(event.currentTarget);
@@ -87,7 +109,7 @@ export default class ChoiceTree {
    * @private
    */
   private toggleTree($action: JQuery<HTMLElement>): void {
-    const $parentContainer = $action.closest('.js-choice-tree-container');
+    const $parentContainer = $action.closest(CHOICE_TREE_CONTAINER_SELECTOR);
     const action: string = $action.data('action');
 
     // toggle action configuration
