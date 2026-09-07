@@ -189,46 +189,12 @@ class ImageManagerCore
             return false;
         }
 
-        list($tmpWidth, $tmpHeight, $sourceFileType) = getimagesize($sourceFile);
-        $rotate = 0;
-        if (function_exists('exif_read_data')) {
-            $exif = @exif_read_data($sourceFile);
-
-            if ($exif && isset($exif['Orientation'])) {
-                switch ($exif['Orientation']) {
-                    case 3:
-                        $sourceWidth = $tmpWidth;
-                        $sourceHeight = $tmpHeight;
-                        $rotate = 180;
-
-                        break;
-
-                    case 6:
-                        $sourceWidth = $tmpHeight;
-                        $sourceHeight = $tmpWidth;
-                        $rotate = -90;
-
-                        break;
-
-                    case 8:
-                        $sourceWidth = $tmpHeight;
-                        $sourceHeight = $tmpWidth;
-                        $rotate = 90;
-
-                        break;
-
-                    default:
-                        $sourceWidth = $tmpWidth;
-                        $sourceHeight = $tmpHeight;
-                }
-            } else {
-                $sourceWidth = $tmpWidth;
-                $sourceHeight = $tmpHeight;
-            }
-        } else {
-            $sourceWidth = $tmpWidth;
-            $sourceHeight = $tmpHeight;
-        }
+        // Read dimensions after the planned EXIF rotation and keep the angle to apply to the image pixels
+        $sourceInfo = self::getImageSizeWithOrientation($sourceFile);
+        $sourceWidth = $sourceInfo[0];
+        $sourceHeight = $sourceInfo[1];
+        $sourceFileType = $sourceInfo[2];
+        $rotationToApply = $sourceInfo['rotation_to_apply'] ?? 0;
 
         /*
          * If the filetype is not forced and we are requesting a JPG file, we will adjust the format inside
@@ -258,39 +224,14 @@ class ImageManagerCore
             $destinationHeight = $sourceHeight;
         }
 
-        // Unknown fitments fall back to legacy behavior to keep old integrations working.
-        if (!in_array($imageFitment, ImageFitment::AVAILABLE_VALUES, true)) {
-            $imageFitment = ImageFitment::FIT;
-        }
-
-        $widthDiff = $destinationWidth / $sourceWidth;
-        $heightDiff = $destinationHeight / $sourceHeight;
-
-        $psImageGenerationMethod = Configuration::get('PS_IMAGE_GENERATION_METHOD');
-
-        // Calculate target dimensions according to the selected thumbnail fitment.
-        if ($imageFitment === ImageFitment::BOUND) {
-            $ratio = min(1, $widthDiff, $heightDiff);
-            $nextWidth = (int) round($sourceWidth * $ratio);
-            $nextHeight = (int) round($sourceHeight * $ratio);
-            $destinationWidth = $nextWidth;
-            $destinationHeight = $nextHeight;
-        } elseif ($imageFitment === ImageFitment::CROP) {
-            $ratio = max($widthDiff, $heightDiff);
-            $nextWidth = (int) round($sourceWidth * $ratio);
-            $nextHeight = (int) round($sourceHeight * $ratio);
-        } elseif ($widthDiff > 1 && $heightDiff > 1) {
-            $nextWidth = $sourceWidth;
-            $nextHeight = $sourceHeight;
-        } elseif ($psImageGenerationMethod == 2 || (!$psImageGenerationMethod && $widthDiff > $heightDiff)) {
-            $nextHeight = $destinationHeight;
-            $nextWidth = round(($sourceWidth * $nextHeight) / $sourceHeight);
-            $destinationWidth = (int) (!$psImageGenerationMethod ? $destinationWidth : $nextWidth);
-        } else {
-            $nextWidth = $destinationWidth;
-            $nextHeight = round($sourceHeight * $destinationWidth / $sourceWidth);
-            $destinationHeight = (int) (!$psImageGenerationMethod ? $destinationHeight : $nextHeight);
-        }
+        // Compute the thumbnail canvas and the image dimensions used for resampling.
+        [$destinationWidth, $destinationHeight, $nextWidth, $nextHeight] = self::computeThumbnailDimensions(
+            $sourceWidth,
+            $sourceHeight,
+            $destinationWidth,
+            $destinationHeight,
+            $imageFitment
+        );
 
         if (!ImageManager::checkImageMemoryLimit($sourceFile)) {
             $error = self::ERROR_MEMORY_LIMIT;
@@ -320,9 +261,9 @@ class ImageManagerCore
         }
 
         $srcImage = ImageManager::create($sourceFileType, $sourceFile);
-        if ($rotate) {
+        if ($rotationToApply) {
             /** @phpstan-ignore-next-line */
-            $srcImage = imagerotate($srcImage, $rotate, 0);
+            $srcImage = imagerotate($srcImage, $rotationToApply, 0);
         }
 
         if ($destinationWidth >= $sourceWidth && $destinationHeight >= $sourceHeight) {
@@ -335,6 +276,88 @@ class ImageManagerCore
         @imagedestroy($srcImage);
 
         return $writeFile;
+    }
+
+    /**
+     * Reads image information with dimensions adjusted for the EXIF rotation applied during resizing.
+     *
+     * @return array|false Full image information with rotation_to_apply in degrees (positive counterclockwise), or false when reading fails
+     */
+    public static function getImageSizeWithOrientation(string $sourceFile): array|false
+    {
+        // Read the current image information without retaining it across file changes
+        $imageInfo = getimagesize($sourceFile);
+        if ($imageInfo === false) {
+            return false;
+        }
+
+        // Images without EXIF orientation retain their dimensions and require no rotation
+        $imageInfo['rotation_to_apply'] = 0;
+        $exif = function_exists('exif_read_data') ? @exif_read_data($sourceFile) : false;
+        $orientation = $exif['Orientation'] ?? 1;
+
+        // Adjust dimensions for the supported EXIF orientation and record the rotation still to apply to the pixels
+        if ($orientation == 3) {
+            $imageInfo['rotation_to_apply'] = 180;
+        }
+        if ($orientation == 6) {
+            [$imageInfo[0], $imageInfo[1]] = [$imageInfo[1], $imageInfo[0]];
+            $imageInfo['rotation_to_apply'] = -90;
+        }
+        if ($orientation == 8) {
+            [$imageInfo[0], $imageInfo[1]] = [$imageInfo[1], $imageInfo[0]];
+            $imageInfo['rotation_to_apply'] = 90;
+        }
+
+        return $imageInfo;
+    }
+
+    /**
+     * Computes the thumbnail canvas and resampled image dimensions for the selected fitment.
+     *
+     * @param value-of<ImageFitment::AVAILABLE_VALUES> $imageFitment
+     *
+     * @return array{0: int, 1: int, 2: int, 3: int} Canvas width/height followed by resampled width/height
+     */
+    public static function computeThumbnailDimensions(int $sourceWidth, int $sourceHeight, int $destinationWidth, int $destinationHeight, string $imageFitment): array
+    {
+        // Unknown fitments fall back to legacy behavior to keep old integrations working.
+        if (!in_array($imageFitment, ImageFitment::AVAILABLE_VALUES, true)) {
+            $imageFitment = ImageFitment::FIT;
+        }
+
+        // Compare the requested dimensions with the source and get the generation method.
+        $widthDiff = $destinationWidth / $sourceWidth;
+        $heightDiff = $destinationHeight / $sourceHeight;
+
+        $psImageGenerationMethod = Configuration::get('PS_IMAGE_GENERATION_METHOD');
+
+        // Calculate target dimensions according to the selected thumbnail fitment.
+        if ($imageFitment === ImageFitment::BOUND) {
+            $ratio = min(1, $widthDiff, $heightDiff);
+            $nextWidth = (int) round($sourceWidth * $ratio);
+            $nextHeight = (int) round($sourceHeight * $ratio);
+            $destinationWidth = $nextWidth;
+            $destinationHeight = $nextHeight;
+        } elseif ($imageFitment === ImageFitment::CROP) {
+            $ratio = max($widthDiff, $heightDiff);
+            $nextWidth = (int) round($sourceWidth * $ratio);
+            $nextHeight = (int) round($sourceHeight * $ratio);
+        } elseif ($widthDiff > 1 && $heightDiff > 1) {
+            $nextWidth = $sourceWidth;
+            $nextHeight = $sourceHeight;
+        } elseif ($psImageGenerationMethod == 2 || (!$psImageGenerationMethod && $widthDiff > $heightDiff)) {
+            $nextHeight = $destinationHeight;
+            $nextWidth = round(($sourceWidth * $nextHeight) / $sourceHeight);
+            $destinationWidth = (int) (!$psImageGenerationMethod ? $destinationWidth : $nextWidth);
+        } else {
+            $nextWidth = $destinationWidth;
+            $nextHeight = round($sourceHeight * $destinationWidth / $sourceWidth);
+            $destinationHeight = (int) (!$psImageGenerationMethod ? $destinationHeight : $nextHeight);
+        }
+
+        // Return both sizes so resizing can center or crop the image on the thumbnail canvas.
+        return [(int) $destinationWidth, (int) $destinationHeight, (int) $nextWidth, (int) $nextHeight];
     }
 
     /**
