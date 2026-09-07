@@ -165,6 +165,50 @@ class ImageManagerCore
      *
      * @return bool Operation result
      */
+    /**
+     * The rotation, in degrees, that an image's EXIF orientation asks for. Zero when there is none,
+     * when the orientation needs no rotation, or when the extension is unavailable.
+     *
+     * @param string $file
+     *
+     * @return int one of 0, 90, -90 or 180
+     */
+    public static function getExifRotationDegrees(string $file): int
+    {
+        if (!function_exists('exif_read_data')) {
+            return 0;
+        }
+
+        $exif = @exif_read_data($file);
+        if (!$exif || !isset($exif['Orientation'])) {
+            return 0;
+        }
+
+        return self::getRotationForExifOrientation((int) $exif['Orientation']);
+    }
+
+    /**
+     * The rotation an EXIF orientation value asks for. The mirrored orientations, 2, 4, 5 and 7, are
+     * not rotations and are left alone, which is what resize() has always done with them.
+     *
+     * @param int $orientation
+     *
+     * @return int one of 0, 90, -90 or 180
+     */
+    public static function getRotationForExifOrientation(int $orientation): int
+    {
+        switch ($orientation) {
+            case 3:
+                return 180;
+            case 6:
+                return -90;
+            case 8:
+                return 90;
+            default:
+                return 0;
+        }
+    }
+
     public static function resize(
         $sourceFile,
         $destinationFile,
