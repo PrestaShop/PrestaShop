@@ -2415,6 +2415,10 @@ abstract class ModuleCore implements ModuleInterface
         if (isset($this->context->country)) {
             $cache_array[] = (int) $this->context->country->id;
         }
+        // A template is free to branch on Context::getDevice() or isMobile(), and the same shop is
+        // reached from phones, tablets and computers, so a cached block rendered for one of them must
+        // not be served to the others.
+        $cache_array[] = (int) $this->context->getDevice();
 
         return implode('|', $cache_array);
     }
