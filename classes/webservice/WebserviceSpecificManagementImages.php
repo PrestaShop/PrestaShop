@@ -1036,12 +1036,132 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      *
      * @throws WebserviceException
      */
+    /**
+     * Returns the image sent with a PUT request, in the $_FILES shape the rest of this class expects.
+     *
+     * PHP only parses a multipart body for POST requests, so $_FILES is empty on a PUT whatever the
+     * client sends. A PUT therefore carries its image as the raw request body, which is also what
+     * REST clients do for a binary resource. The multipart branch is kept for the servers and SAPIs
+     * that do populate $_FILES on a PUT.
+     *
+     * The body goes straight to a temporary file rather than to a string: $_FILES is capped by
+     * upload_max_filesize before any of this runs, but nothing caps a body read out of php://input,
+     * so the shop's own image limit has to be applied while reading rather than afterwards.
+     *
+     * @param int $maxBytes largest body this caller accepts, in bytes
+     *
+     * @return array{name: string, type: string, tmp_name: string, error: int, size: int, is_upload: bool}|null
+     *                                                                                                          null when the request carries no image at all
+     *
+     * @throws WebserviceException
+     */
+    protected function getPutImageFile($maxBytes)
+    {
+        if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name']) {
+            return $_FILES['image'] + ['is_upload' => true];
+        }
+
+        $tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+
+        if ($tmpName === false) {
+            throw new WebserviceException('Error while copying image to the temporary directory', [75, 400]);
+        }
+
+        $size = $this->readRequestBody($tmpName, $maxBytes);
+
+        if ($size === 0) {
+            @unlink($tmpName);
+
+            return null;
+        }
+
+        return [
+            'name' => basename($tmpName),
+            'type' => $_SERVER['CONTENT_TYPE'] ?? '',
+            'tmp_name' => $tmpName,
+            'error' => UPLOAD_ERR_OK,
+            'size' => $size,
+            'is_upload' => false,
+        ];
+    }
+
+    /**
+     * The raw request body, as a stream. Isolated so it can be replaced in tests.
+     *
+     * @return resource|false
+     */
+    protected function openRequestBody()
+    {
+        return fopen('php://input', 'rb');
+    }
+
+    /**
+     * Copies the request body to $destination, reading at most one byte more than the caller
+     * accepts. The body is never held in memory as a whole, and an oversized one stops being read
+     * as soon as it is known to be oversized - that one extra byte is what tells the caller so.
+     *
+     * @param string $destination
+     * @param int $maxBytes
+     *
+     * @return int bytes written
+     *
+     * @throws WebserviceException
+     */
+    protected function readRequestBody($destination, $maxBytes)
+    {
+        $input = $this->openRequestBody();
+
+        if ($input === false) {
+            return 0;
+        }
+
+        $output = fopen($destination, 'wb');
+
+        if ($output === false) {
+            fclose($input);
+
+            throw new WebserviceException('Error while copying image to the temporary directory', [75, 400]);
+        }
+
+        $size = stream_copy_to_stream($input, $output, $maxBytes + 1);
+
+        fclose($input);
+        fclose($output);
+
+        return $size === false ? 0 : $size;
+    }
+
+    /**
+     * Moves a file returned by getPutImageFile() to its destination.
+     *
+     * move_uploaded_file() only accepts a file PHP itself received as an upload, so the raw body
+     * variant has to be renamed instead.
+     *
+     * @param array $file
+     * @param string $destination
+     *
+     * @return bool
+     */
+    protected function moveReceivedFile(array $file, $destination)
+    {
+        if (!empty($file['is_upload'])) {
+            return move_uploaded_file($file['tmp_name'], $destination);
+        }
+
+        return rename($file['tmp_name'], $destination);
+    }
+
     protected function writePostedImageOnDisk($reception_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null)
     {
         $imgMaxUploadSize = ((int) Configuration::get('PS_LIMIT_UPLOAD_IMAGE_VALUE')) * 1000 * 1000;
         if ($this->wsObject->method == 'PUT') {
-            if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name']) {
-                $file = $_FILES['image'];
+            $file = $this->getPutImageFile($imgMaxUploadSize);
+
+            if ($file === null) {
+                throw new WebserviceException('Please set an "image" parameter with image data for value', [76, 400]);
+            }
+
+            try {
                 if ($file['size'] > $imgMaxUploadSize) {
                     throw new WebserviceException(sprintf('The image size is too large (maximum allowed is %d KB)', $imgMaxUploadSize / 1000), [72, 400]);
                 }
@@ -1073,7 +1193,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 }
 
                 // Try to copy image file to a temporary file
-                if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['image']['tmp_name'], $tmp_name)) {
+                if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !$this->moveReceivedFile($file, $tmp_name)) {
                     throw new WebserviceException('Error while copying image to the temporary directory', [75, 400]);
                 } else {
                     // Try to copy image file to the image directory
@@ -1083,8 +1203,12 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 @unlink($tmp_name);
 
                 return $result;
-            } else {
-                throw new WebserviceException('Please set an "image" parameter with image data for value', [76, 400]);
+            } finally {
+                // A body received into a temporary file is ours to remove, on the way out of any of
+                // the checks above as much as on success; a real upload is PHP's to clean up.
+                if (empty($file['is_upload']) && file_exists($file['tmp_name'])) {
+                    @unlink($file['tmp_name']);
+                }
             }
         } elseif ($this->wsObject->method == 'POST') {
             if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name']) {
