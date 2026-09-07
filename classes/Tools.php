@@ -1029,23 +1029,30 @@ class ToolsCore
         $dirname = rtrim($dirname, '/') . '/';
         if (file_exists($dirname)) {
             if ($files = scandir($dirname, SCANDIR_SORT_NONE)) {
+                $deletedEverything = true;
+
                 foreach ($files as $file) {
                     if ($file != '.' && $file != '..' && $file != '.svn') {
                         if (is_dir($dirname . $file)) {
-                            Tools::deleteDirectory($dirname . $file);
-                        } elseif (file_exists($dirname . $file)) {
-                            unlink($dirname . $file);
+                            // WHY: the result used to be discarded, so a subdirectory that could not be
+                            // emptied still counted as a success for the whole tree.
+                            $deletedEverything = Tools::deleteDirectory($dirname . $file) && $deletedEverything;
+                        } else {
+                            // WHY: no file_exists() first. It cannot make this safe - the file can go away,
+                            // or become locked, between the check and the call - and unlink() reports the
+                            // same condition anyway. The diagnostic is silenced because a file another
+                            // process still holds is an expected outcome when clearing a cache, and the
+                            // caller is told through the return value instead of through a PHP warning.
+                            $deletedEverything = @unlink($dirname . $file) && $deletedEverything;
                         }
                     }
                 }
 
-                if ($delete_self) {
-                    if (!rmdir($dirname)) {
-                        return false;
-                    }
+                if ($delete_self && !@rmdir($dirname)) {
+                    return false;
                 }
 
-                return true;
+                return $deletedEverything;
             }
         }
 
@@ -1066,8 +1073,11 @@ class ToolsCore
             $exclude_files = [$exclude_files];
         }
 
-        if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === false) {
-            return unlink($file);
+        // WHY: is_file() already implies the file exists, and unlink() reports a file that disappeared
+        // or is locked on its own. Silenced for the same reason as deleteDirectory(): the caller reads
+        // the return value.
+        if (is_file($file) && array_search(basename($file), $exclude_files) === false) {
+            return @unlink($file);
         }
 
         return false;
