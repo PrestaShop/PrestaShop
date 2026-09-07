@@ -7,6 +7,7 @@
 namespace Core\Domain\Discount;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\AddDiscountCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\UpdateDiscountCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountConstraintException;
@@ -18,6 +19,30 @@ use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
 
 class DiscountCommandTest extends TestCase
 {
+    /**
+     * The minimum amount's shipping inclusion has no field in the discount form since #40809 removed it,
+     * so the form's data handler sends false. A caller that omits the argument has to land on the same
+     * value: `install-dev/data/db_structure.sql` declares the column `DEFAULT '0'` and the legacy cart
+     * rule form offers "Shipping excluded" first.
+     *
+     * @dataProvider getCommandsWithAMinimumAmountAndNoShippingInclusion
+     */
+    public function testAMinimumAmountExcludesShippingUnlessItIsAskedFor(AddDiscountCommand|UpdateDiscountCommand $command): void
+    {
+        $this->assertFalse($command->getMinimumAmount()->isShippingIncluded());
+    }
+
+    public static function getCommandsWithAMinimumAmountAndNoShippingInclusion(): iterable
+    {
+        $add = new AddDiscountCommand(DiscountType::CART_LEVEL, [1 => 'name']);
+        $add->setMinimumAmount(new DecimalNumber('50'), 1, true);
+        yield 'add' => [$add];
+
+        $update = new UpdateDiscountCommand(1);
+        $update->setMinimumAmount(new DecimalNumber('50'), 1, true);
+        yield 'update' => [$update];
+    }
+
     /**
      * @dataProvider getAddProductConditionsData
      */
