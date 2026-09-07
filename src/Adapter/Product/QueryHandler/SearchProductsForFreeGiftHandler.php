@@ -81,6 +81,10 @@ class SearchProductsForFreeGiftHandler implements SearchProductsForFreeGiftHandl
      */
     private function checkEligibility(array $product): array
     {
+        if (empty($product['active'])) {
+            return [true, $this->translator->trans('This product is disabled.', [], 'Admin.Catalog.Notification')];
+        }
+
         if (empty($product['available_for_order'])) {
             return [true, $this->translator->trans('This product is not available for order.', [], 'Admin.Catalog.Notification')];
         }
