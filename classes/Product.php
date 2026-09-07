@@ -7487,11 +7487,33 @@ class ProductCore extends ObjectModel
     public function addWs($autodate = true, $null_values = false)
     {
         $success = $this->add($autodate, $null_values);
-        if ($success && Configuration::get('PS_SEARCH_INDEXATION')) {
-            Search::indexation(false, $this->id);
+        if ($success) {
+            $this->addDefaultCategoryFromWebservice();
+
+            if (Configuration::get('PS_SEARCH_INDEXATION')) {
+                Search::indexation(false, $this->id);
+            }
         }
 
         return $success;
+    }
+
+    /**
+     * A product created through the webservice carries `id_category_default` as a plain column, and
+     * nothing writes the `category_product` row the front office needs to reach it, so the product was
+     * created invisible until it was saved again from the back office.
+     *
+     * A `categories` association in the same payload still wins: it is applied after this and
+     * `setWsCategories()` deletes the existing associations before inserting its own.
+     */
+    protected function addDefaultCategoryFromWebservice(): void
+    {
+        $categoryId = (int) $this->id_category_default;
+        if ($categoryId <= 0 || !Category::categoryExists($categoryId)) {
+            return;
+        }
+
+        $this->addToCategories([$categoryId]);
     }
 
     /**
