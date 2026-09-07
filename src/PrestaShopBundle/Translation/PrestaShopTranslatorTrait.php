@@ -35,6 +35,12 @@ trait PrestaShopTranslatorTrait
             $locale = null;
         }
 
+        // Only an explicit locale can be one this translator never loaded; the default path is
+        // untouched.
+        if (null !== $locale && method_exists($this, 'loadLanguageOnDemand')) {
+            $this->loadLanguageOnDemand($locale);
+        }
+
         if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain, $locale)) {
             return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
         }

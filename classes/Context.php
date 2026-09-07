@@ -442,6 +442,12 @@ class ContextCore
         $cacheDir = _PS_CACHE_DIR_ . 'translations';
         $translator = new Translator($locale, null, $cacheDir, false);
 
+        // Wired before the early return below, so a translator served straight from the cache can
+        // still resolve a wording explicitly requested in another language.
+        $translator->setLanguageLoader(function (string $requestedLocale) use ($translator): void {
+            $this->loadTranslatorLanguage($translator, $requestedLocale);
+        });
+
         // In case we have at least 1 translated message, we return the current translator.
         // If some translations are missing, clear cache
         if (empty($locale) || count($translator->getCatalogue($locale)->all())) {
@@ -461,35 +467,51 @@ class ContextCore
 
         $translator->clearLanguage($locale);
 
-        $adminContext = defined('_PS_ADMIN_DIR_');
-        // Do not load DB translations when $this->language is InstallLanguage
-        // because it means that we're looking for the installer translations, so we're not yet connected to the DB
-        $withDB = !$this->language instanceof InstallLanguage;
-        $theme = $this->shop !== null ? $this->shop->theme : null;
-
-        if ($this instanceof Context) {
-            try {
-                $containerFinder = new ContainerFinder($this);
-                $container = $containerFinder->getContainer();
-                $translatorLoader = $container->get('prestashop.translation.translator_language_loader');
-            } catch (ContainerNotFoundException|ServiceNotFoundException $exception) {
-                $translatorLoader = null;
-            }
-
-            if (null === $translatorLoader) {
-                // If a container is still not found, instantiate manually the translator loader
-                // This will happen in the Front as we have legacy controllers, the Sf container won't be available.
-                // As we get the translator in the controller's constructor and the container is built in the init method, we won't find it here
-                $translatorLoader = (new TranslatorLanguageLoader(new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_)));
-            }
-
-            $translatorLoader
-                ->setIsAdminContext($adminContext)
-                ->loadLanguage($translator, $locale, $withDB, $theme)
-            ;
-        }
+        $this->loadTranslatorLanguage($translator, $locale);
 
         return $translator;
+    }
+
+    /**
+     * Register a locale's translation resources on the given translator.
+     *
+     * @param Translator $translator
+     * @param string $locale IETF language tag (eg. "en-US")
+     */
+    private function loadTranslatorLanguage($translator, $locale): void
+    {
+        // ContainerFinder needs the concrete Context; the sub-classes that extend ContextCore
+        // without being one (the installer's) have no container to find anyway.
+        if (!$this instanceof Context) {
+            return;
+        }
+
+        try {
+            $containerFinder = new ContainerFinder($this);
+            $container = $containerFinder->getContainer();
+            $translatorLoader = $container->get('prestashop.translation.translator_language_loader');
+        } catch (ContainerNotFoundException|ServiceNotFoundException $exception) {
+            $translatorLoader = null;
+        }
+
+        if (null === $translatorLoader) {
+            // If a container is still not found, instantiate manually the translator loader
+            // This will happen in the Front as we have legacy controllers, the Sf container won't be available.
+            // As we get the translator in the controller's constructor and the container is built in the init method, we won't find it here
+            $translatorLoader = (new TranslatorLanguageLoader(new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_)));
+        }
+
+        $translatorLoader
+            ->setIsAdminContext(defined('_PS_ADMIN_DIR_'))
+            // Do not load DB translations when $this->language is InstallLanguage
+            // because it means that we're looking for the installer translations, so we're not yet connected to the DB
+            ->loadLanguage(
+                $translator,
+                $locale,
+                !$this->language instanceof InstallLanguage,
+                $this->shop !== null ? $this->shop->theme : null
+            )
+        ;
     }
 
     /**
