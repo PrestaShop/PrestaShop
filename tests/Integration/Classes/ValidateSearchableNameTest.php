@@ -49,36 +49,36 @@ class ValidateSearchableNameTest extends TestCase
     public function provideSearchableNames(): array
     {
         return [
-            'plain word'                          => ['summer'],
-            'digits only'                         => ['2024'],
-            'letters with leading special chars'  => ['+++promo'],
-            'accented letters'                    => ['été'],
+            'plain word' => ['summer'],
+            'digits only' => ['2024'],
+            'letters with leading special chars' => ['+++promo'],
+            'accented letters' => ['été'],
             // Hyphen-only terms are kept: PREG_CLASS_SEARCH_EXCLUDE only strips a term made
             // entirely of excluded characters when the whole-term check matches, and the
             // hyphen-preserving pass in extractKeyWords() adds "----" back. Verified on 9.x.
-            'dashes only are indexable'           => ['----'],
-            'hyphenated word'                     => ['t-shirt'],
+            'dashes only are indexable' => ['----'],
+            'hyphenated word' => ['t-shirt'],
             // '/' is not in PREG_CLASS_SEARCH_EXCLUDE, so this term survives sanitization -
             // another case a "contains letter/digit" rule would have over-rejected.
-            'slash keeps the term alive'          => ['+-*/'],
+            'slash keeps the term alive' => ['+-*/'],
         ];
     }
 
     public function provideNonSearchableNames(): array
     {
         return [
-            'plus signs'                => ['++++'],
-            'asterisks'                 => ['***'],
-            'hashes'                    => ['###'],
-            'single plus'               => ['+'],
-            'whitespace only'           => ['   '],
-            'empty string'              => [''],
+            'plus signs' => ['++++'],
+            'asterisks' => ['***'],
+            'hashes' => ['###'],
+            'single plus' => ['+'],
+            'whitespace only' => ['   '],
+            'empty string' => [''],
             // Contains a letter but indexation yields no keyword (verified on 9.x). This
             // is why a character-class rule like "contains any letter or digit" was not
             // enough - it would under-reject "a+".
             'letter followed by excluded char' => ['a+'],
             // Single-char tokens are filtered by the indexer under the default English lang.
-            'single letter'             => ['a'],
+            'single letter' => ['a'],
             // CJK is only tokenised for iso zh/tw/ja; with iso "en" it drops.
             'cjk letters under non-cjk lang' => ['中文'],
         ];

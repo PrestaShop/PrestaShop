@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Tag\CommandHandler;
 
+use Language;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Command\EditTagCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tag\CommandHandler\EditTagCommandHandlerInterface;
@@ -16,7 +17,6 @@ use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\CannotUpdateTagException;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\TagConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\TagNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tag\ValueObject\TagId;
-use Language;
 use Tag;
 use Validate;
 
