@@ -28,8 +28,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Classes;
 
+use Cart;
 use CartRule;
+use Context;
+use Currency;
 use Customer;
+use Db;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -53,12 +57,30 @@ class CartRuleTest extends TestCase
      */
     protected $defaultLanguageId;
 
+    /**
+     * @var int
+     */
+    protected $defaultCurrencyId;
+
     public static function setUpBeforeClass(): void
     {
         DatabaseDump::restoreTables(
             [
                 'cart_rule',
                 'cart_rule_lang',
+                'cart_rule_product_rule_group',
+                'cart_rule_product_rule',
+                'cart_rule_product_rule_value',
+            ]
+        );
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        DatabaseDump::restoreTables(
+            [
+                'cart',
+                'cart_product',
             ]
         );
     }
@@ -70,6 +92,7 @@ class CartRuleTest extends TestCase
         $this->dummyCustomer = $this->createDummyCustomer();
         $this->configuration = new Configuration();
         $this->defaultLanguageId = $this->configuration->get('PS_LANG_DEFAULT', null, ShopConstraint::allShops());
+        $this->defaultCurrencyId = (int) $this->configuration->get('PS_CURRENCY_DEFAULT', null, ShopConstraint::allShops());
     }
 
     public function testGetCartRulesForCustomer(): void
@@ -82,6 +105,56 @@ class CartRuleTest extends TestCase
         );
 
         $this->assertEquals(1, count($customerCartRules));
+    }
+
+    /**
+     * The product restrictions of a cart rule must be checked against the cart given to
+     * getCustomerCartRules(), and not against the one the context happens to hold. Callers that
+     * work on another cart than the shopper's own one (back office, webservice, CLI) either get
+     * results computed for the wrong cart, or a fatal error when the context has no cart at all.
+     */
+    public function testGetCustomerCartRulesChecksProductRestrictionsOnTheGivenCart(): void
+    {
+        // Reset tables
+        self::setUpBeforeClass();
+
+        $contextCart = Context::getContext()->cart;
+        $contextCurrency = Context::getContext()->currency;
+        // Loading the products of a cart needs a currency to compute their price with
+        Context::getContext()->currency = new Currency($this->defaultCurrencyId);
+
+        try {
+            $productId = $this->getProductIdWithoutCombination();
+            $cartRule = $this->createDummyCartRuleRestrictedToProduct($productId);
+
+            $cartWithTheProduct = $this->createDummyCart($productId);
+            $cartWithoutTheProduct = $this->createDummyCart();
+
+            Context::getContext()->cart = $cartWithoutTheProduct;
+            $customerCartRules = CartRule::getCustomerCartRules(
+                $this->defaultLanguageId,
+                (int) $this->dummyCustomer->id,
+                true,
+                false,
+                false,
+                $cartWithTheProduct
+            );
+            $this->assertEquals([$cartRule->id], array_column($customerCartRules, 'id_cart_rule'));
+
+            Context::getContext()->cart = $cartWithTheProduct;
+            $customerCartRules = CartRule::getCustomerCartRules(
+                $this->defaultLanguageId,
+                (int) $this->dummyCustomer->id,
+                true,
+                false,
+                false,
+                $cartWithoutTheProduct
+            );
+            $this->assertEquals([], array_column($customerCartRules, 'id_cart_rule'));
+        } finally {
+            Context::getContext()->cart = $contextCart;
+            Context::getContext()->currency = $contextCurrency;
+        }
     }
 
     public function testGetAllCartRulesForCustomerEvenDisabled(): void
@@ -403,6 +476,74 @@ class CartRuleTest extends TestCase
         $cart_rule->add();
 
         return $cart_rule;
+    }
+
+    /**
+     * Builds a cart rule that can only be used when the given product is in the cart.
+     *
+     * @param int $productId
+     *
+     * @return CartRule
+     */
+    public function createDummyCartRuleRestrictedToProduct(int $productId): CartRule
+    {
+        $cartRule = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id);
+        $cartRule->product_restriction = true;
+        $cartRule->update();
+
+        Db::getInstance()->insert('cart_rule_product_rule_group', [
+            'id_cart_rule' => (int) $cartRule->id,
+            'quantity' => 1,
+        ]);
+        $productRuleGroupId = (int) Db::getInstance()->Insert_ID();
+
+        Db::getInstance()->insert('cart_rule_product_rule', [
+            'id_product_rule_group' => $productRuleGroupId,
+            'type' => 'products',
+        ]);
+        $productRuleId = (int) Db::getInstance()->Insert_ID();
+
+        Db::getInstance()->insert('cart_rule_product_rule_value', [
+            'id_product_rule' => $productRuleId,
+            'id_item' => $productId,
+        ]);
+
+        return $cartRule;
+    }
+
+    /**
+     * @param int|null $productId product to put in the cart, if any
+     *
+     * @return Cart
+     */
+    public function createDummyCart(?int $productId = null): Cart
+    {
+        $cart = new Cart();
+        $cart->id_customer = (int) $this->dummyCustomer->id;
+        $cart->id_currency = $this->defaultCurrencyId;
+        $cart->id_lang = $this->defaultLanguageId;
+        $cart->id_shop = (int) Context::getContext()->shop->id;
+        $cart->add();
+
+        if (null !== $productId) {
+            $cart->updateQty(1, $productId);
+            $this->assertNotEmpty($cart->getProducts(true), 'The dummy cart could not be filled');
+        }
+
+        return $cart;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductIdWithoutCombination(): int
+    {
+        return (int) Db::getInstance()->getValue('
+            SELECT `id_product`
+            FROM `' . _DB_PREFIX_ . 'product`
+            WHERE `active` = 1 AND `cache_default_attribute` = 0
+            ORDER BY `id_product`
+        ');
     }
 
     /**
