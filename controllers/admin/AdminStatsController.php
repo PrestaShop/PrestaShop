@@ -450,6 +450,21 @@ class AdminStatsControllerCore extends AdminStatsTabController
         return round($messages / $threads, 1);
     }
 
+    /**
+     * Share of a sale price that the goods cost, as a percentage, used to estimate the cost of goods
+     * sold for order lines that carry no wholesale price.
+     *
+     * WHY: CONF_AVERAGE_PRODUCT_MARGIN holds the average GROSS MARGIN, which its own help text defines
+     * as ((total sales revenue) - (cost of goods sold)) / (total sales revenue) * 100. The cost is
+     * therefore the complement of that percentage, not the percentage itself.
+     *
+     * @return int
+     */
+    public static function getAverageCostPercentage()
+    {
+        return 100 - (int) Configuration::get('CONF_AVERAGE_PRODUCT_MARGIN');
+    }
+
     public static function getPurchases($date_from, $date_to, $granularity = false)
     {
         if ($granularity == 'day') {
@@ -461,7 +476,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				SUM(od.`product_quantity` * IF(
 					od.`purchase_supplier_price` > 0,
 					od.`purchase_supplier_price` / `conversion_rate`,
-					od.`original_product_price` * ' . (int) Configuration::get('CONF_AVERAGE_PRODUCT_MARGIN') . ' / 100
+					od.`original_product_price` * ' . self::getAverageCostPercentage() . ' / 100
 				)) as total_purchase_price
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
@@ -481,7 +496,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			SELECT SUM(od.`product_quantity` * IF(
 				od.`purchase_supplier_price` > 0,
 				od.`purchase_supplier_price` / `conversion_rate`,
-				od.`original_product_price` * ' . (int) Configuration::get('CONF_AVERAGE_PRODUCT_MARGIN') . ' / 100
+				od.`original_product_price` * ' . self::getAverageCostPercentage() . ' / 100
 			)) as total_purchase_price
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
