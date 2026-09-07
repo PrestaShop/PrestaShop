@@ -12,8 +12,14 @@ $(() => {
     storage = getStorageAvailable();
   }
 
+  // Opening or closing the help narrows #main to 70% and back. Widgets that size
+  // themselves from their container - the dashboard charts among them - only listen
+  // to window resize, so without this they keep the width they had before the toggle.
+  const notifyLayoutChange = () => window.dispatchEvent(new Event('resize'));
+
   window.initHelp = function () {
     $('#main').addClass('helpOpen');
+    notifyLayoutChange();
     // first time only
     if ($('#help-container').length === 0) {
       // add css
@@ -53,6 +59,7 @@ $(() => {
       );
     } else {
       $('#main').removeClass('helpOpen');
+      notifyLayoutChange();
       $('#help-container').html('');
       $('.toolbarBox a.btn-help i').removeClass('process-icon-close').addClass('process-icon-help');
       if (storage) storage.setItem('helpOpen', false);
