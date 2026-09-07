@@ -166,27 +166,37 @@ class LogoUploader
         return false;
     }
 
+    /**
+     * Deletes the previous file when the logo of this scope is its own rather than one inherited from
+     * the group or from all shops.
+     *
+     * Each scope is read with the shop parameters of Configuration::get() instead of by switching the
+     * global shop context. Switching it here was doing real damage: Shop::setContext() was called three
+     * times and never restored, so anything that failed in between left the rest of the request holding
+     * a context that no longer described the shop being edited. The last of those calls also passed the
+     * context shop id straight to Shop::setContext(), which forwards it unchanged to the int-typed
+     * Shop::getGroupIdFromShopId(); with no shop in context that is a TypeError, and the request then
+     * died a second time inside the error page, because every Adapter\Configuration::get() there builds
+     * a ShopConstraint from the context this method had left at group id 0. The merchant saw "Shop group
+     * id 0 is invalid" - a message about the aborted cleanup rather than about their logo.
+     */
     private function updateInMultiShopContext(&$idShop, &$idShopGroup, $fieldName)
     {
         if (Shop::getContext() == Shop::CONTEXT_SHOP) {
             $idShop = Shop::getContextShopID();
             $idShopGroup = Shop::getContextShopGroupID();
-            Shop::setContext(Shop::CONTEXT_ALL);
-            $logoAll = Configuration::get($fieldName);
-            Shop::setContext(Shop::CONTEXT_GROUP, $idShopGroup);
-            $logoGroup = Configuration::get($fieldName);
-            Shop::setContext(Shop::CONTEXT_SHOP, $idShop);
-            $logoShop = Configuration::get($fieldName);
+            $logoAll = Configuration::getGlobalValue($fieldName);
+            $logoGroup = Configuration::get($fieldName, null, $idShopGroup, 0);
+            $logoShop = Configuration::get($fieldName, null, $idShopGroup, $idShop);
             if ($logoAll != $logoShop && $logoGroup != $logoShop && $logoShop != false) {
-                @unlink($this->imageDirection . Configuration::get($fieldName));
+                @unlink($this->imageDirection . $logoShop);
             }
         } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
             $idShopGroup = Shop::getContextShopGroupID();
-            Shop::setContext(Shop::CONTEXT_ALL);
-            $logoAll = Configuration::get($fieldName);
-            Shop::setContext(Shop::CONTEXT_GROUP, $idShopGroup);
-            if ($logoAll != Configuration::get($fieldName)) {
-                @unlink($this->imageDirection . Configuration::get($fieldName));
+            $logoAll = Configuration::getGlobalValue($fieldName);
+            $logoGroup = Configuration::get($fieldName, null, $idShopGroup, 0);
+            if ($logoAll != $logoGroup) {
+                @unlink($this->imageDirection . $logoGroup);
             }
         }
     }
