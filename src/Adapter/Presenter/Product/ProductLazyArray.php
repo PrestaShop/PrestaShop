@@ -1428,11 +1428,13 @@ class ProductLazyArray extends AbstractLazyArray
             // If the products are the last items remaining, we show different message and exclamation mark
             if ($availableQuantity < $settings->lastRemainingItems) {
                 $this->product['availability'] = 'last_remaining_items';
+                // The stock itself, not what is left after the wanted quantity: the shopper is told
+                // how many the shop has, and the label has to stay true on the cart page too.
                 $this->product[
                     'availability_message'
                 ] = $this->translator->trans(
-                    'Last items in stock',
-                    [],
+                    'Only %quantity% left in stock',
+                    ['%quantity%' => $stockQuantity],
                     'Shop.Theme.Catalog'
                 );
             } else {
