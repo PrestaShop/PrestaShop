@@ -21,14 +21,16 @@ Context::getContext()->currency = Context::getContext()->currency ?? Currency::g
 
 //set http auth headers for apache+php-cgi work around
 if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
-    list($name, $password) = explode(':', base64_decode($matches[1]));
-    $_SERVER['PHP_AUTH_USER'] = strip_tags($name);
+    // The key is sent as the user name and no password is expected, so the header does not have to
+    // carry a colon at all. Reading the second part unconditionally warns when it does not.
+    $credentials = explode(':', base64_decode($matches[1]), 2);
+    $_SERVER['PHP_AUTH_USER'] = strip_tags($credentials[0]);
 }
 
 //set http auth headers for apache+php-cgi work around if variable gets renamed by apache
 if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['REDIRECT_HTTP_AUTHORIZATION'], $matches)) {
-    list($name, $password) = explode(':', base64_decode($matches[1]));
-    $_SERVER['PHP_AUTH_USER'] = strip_tags($name);
+    $credentials = explode(':', base64_decode($matches[1]), 2);
+    $_SERVER['PHP_AUTH_USER'] = strip_tags($credentials[0]);
 }
 
 // Use for image management (using the POST method of the browser to simulate the PUT method)
