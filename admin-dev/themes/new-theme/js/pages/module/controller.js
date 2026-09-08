@@ -976,7 +976,6 @@ class AdminModuleController {
       const modulesCount = $('.modules-list').find('.module-item').length;
       replaceFirstWordBy($('.module-search-result-wording'), modulesCount);
 
-      // eslint-disable-next-line
       $(this.addonItemListSelector).toggle(modulesCount !== this.modulesList.length / 2);
     }
   }

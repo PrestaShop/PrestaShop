@@ -324,7 +324,7 @@ export default class CreateOrderPage {
     ),
     );
 
-    // eslint-disable-next-line
+    // eslint-disable-next-line max-len
     this.$container.on('click', createOrderMap.sendProcessOrderEmailBtn, () => this.summaryManager.sendProcessOrderEmail(<number> this.cartId),
     );
 
@@ -682,7 +682,7 @@ export default class CreateOrderPage {
       );
 
       inputsQty.forEach((inputQty: HTMLInputElement) => {
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-param-reassign
         inputQty.disabled = false;
       });
     }

@@ -12,14 +12,11 @@ interface Window {
   moduleURLs: Record<string, any>;
   str2url: any;
   prestaShopUiKit: any;
-  // eslint-disable-next-line
   update_success_msg: string;
   adminNotificationPushLink: string;
   baseAdminDir: string;
-  // eslint-disable-next-line
   translate_javascripts: Record<string, any>;
   modalConfirmation: any;
-  // eslint-disable-next-line
   ps_round: any;
   Dropzone: Dropzone;
   data: any;

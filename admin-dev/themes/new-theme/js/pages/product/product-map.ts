@@ -138,7 +138,6 @@ export default {
     },
     editionForm: 'form[name="combination_form"]',
     editionFormInputs:
-      // eslint-disable-next-line
       'form[name="combination_form"] input, form[name="combination_form"] textarea, form[name="combination_form"] select',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
@@ -299,7 +298,7 @@ export default {
     treeCheckboxInput: '.tree-checkbox-input',
     checkboxInput: '[type=checkbox]',
     checkedCheckboxInputs: '[type=checkbox]:checked',
-    // eslint-disable-next-line
+    // eslint-disable-next-line max-len
     checkboxName: (categoryId: string): string => `product[description][categories][product_categories][${categoryId}][is_associated]`,
     inputByValue: (value: number): string => `input[value="${value}"]`,
     defaultCategorySelectInput: '#product_description_categories_default_category_id',
@@ -312,7 +311,6 @@ export default {
     tagCategoryIdInput: '.category-id-input',
     tagItem: '.tag-item',
     categoryNamePreview: '.category-name-preview',
-    // eslint-disable-next-line max-len
     namePreviewInput: '.category-name-preview-input',
     categoryNameInput: '.category-name-input',
     searchInput: '#ps-select-product-category',
