@@ -237,7 +237,16 @@ class TranslationService
             } else {
                 $queryBuilder->andWhere('t.theme IS NULL');
             }
-            $translation = $queryBuilder->getQuery()->getOneOrNullResult();
+            // WHY: the `key` column collation is case and accent insensitive, so the SQL equality
+            // also matches expressions that only differ by case ("show details" when saving
+            // "Show details") or by accents. Narrow the candidates in SQL, then keep the exact one.
+            foreach ($queryBuilder->getQuery()->getResult() as $candidate) {
+                if ($candidate->getKey() === $key) {
+                    $translation = $candidate;
+
+                    break;
+                }
+            }
         } catch (Exception $exception) {
             $logger->error($exception->getMessage(), $log_context);
         }
@@ -310,15 +319,27 @@ class TranslationService
             $searchTranslation['theme'] = $theme;
         }
 
-        $translation = $entityManager->getRepository(Translation::class)->findOneBy($searchTranslation);
-
-        $resetTranslationSuccessfully = false;
-        if (null === $translation) {
-            $resetTranslationSuccessfully = true;
+        $translations = [];
+        // WHY: same insensitive collation as in saveTranslationMessage - without the exact match a
+        // reset of "Show details" removes the merchant's translation of "show details". Every row
+        // is collected because shops that ran with that bug hold several rows under one key, and
+        // leaving one behind would report a successful reset that changes nothing.
+        foreach ($entityManager->getRepository(Translation::class)->findBy($searchTranslation) as $candidate) {
+            if ($candidate->getKey() === $key) {
+                $translations[] = $candidate;
+            }
         }
 
+        if (empty($translations)) {
+            return true;
+        }
+
+        $resetTranslationSuccessfully = false;
+
         try {
-            $entityManager->remove($translation);
+            foreach ($translations as $translation) {
+                $entityManager->remove($translation);
+            }
             $entityManager->flush();
 
             $resetTranslationSuccessfully = true;
