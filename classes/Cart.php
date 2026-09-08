@@ -1742,6 +1742,10 @@ class CartCore extends ObjectModel
             (int) $id_customization
         );
 
+        // Tells the actionCartUpdateQuantityAfter listeners whether a line was created or an existing
+        // one changed, so a single hook covers both without them re-querying the cart.
+        $productAddedToCart = false;
+
         /* Update quantity if product already exist */
         if (!empty($cartProductQuantity['quantity'])) {
             $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this, false);
@@ -1782,6 +1786,7 @@ class CartCore extends ObjectModel
             );
         } elseif ($operator == 'up') {
             /* Add product to the cart */
+            $productAddedToCart = true;
 
             $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
                         FROM ' . _DB_PREFIX_ . 'product p
@@ -1840,6 +1845,12 @@ class CartCore extends ObjectModel
         if ($auto_add_cart_rule) {
             CartRule::autoAddToCart($context, $useOrderPrices);
         }
+
+        // Counterpart of actionCartUpdateQuantityBefore, dispatched only once the change succeeded and
+        // the cart is consistent again: after update() and after the cart rules have been reconciled,
+        // so a listener reads settled totals rather than the state between the write and the refresh.
+        $data['product_added_to_cart'] = $productAddedToCart;
+        Hook::exec('actionCartUpdateQuantityAfter', $data);
 
         return true;
     }
