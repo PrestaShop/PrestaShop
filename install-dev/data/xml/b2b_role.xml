@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_b2b_role>
+  <fields primary="id_role">
+    <field name="role"/>
+  </fields>
+  <entities>
+    <b2b_role id="SuperAdmin" role="ROLE_B2B_SUPER_ADMIN"/>
+    <b2b_role id="Admin" role="ROLE_B2B_ADMIN"/>
+    <b2b_role id="Buyer" role="ROLE_B2B_BUYER"/>
+  </entities>
+</entity_b2b_role>

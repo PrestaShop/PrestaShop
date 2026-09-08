@@ -187,3 +187,7 @@ services:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\B2B\BusinessEntity
+
+  PrestaShopBundle\Entity\Repository\B2bRoleRepository:
+    autowire: true
+    autoconfigure: true
