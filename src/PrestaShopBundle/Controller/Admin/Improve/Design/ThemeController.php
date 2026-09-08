@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExists
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
-use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
@@ -180,14 +179,20 @@ class ThemeController extends PrestaShopAdminController
 
             try {
                 if ($data['import_from_computer']) {
-                    $importSource = ThemeImportSource::fromArchive($data['import_from_computer']);
+                    $sourceType = ThemeImportSource::FROM_ARCHIVE;
+                    $source = $data['import_from_computer'];
                 } elseif ($data['import_from_web']) {
-                    $importSource = ThemeImportSource::fromWeb($data['import_from_web']);
+                    $sourceType = ThemeImportSource::FROM_WEB;
+                    $source = $data['import_from_web'];
                 } elseif ($data['import_from_ftp']) {
-                    $importSource = ThemeImportSource::fromFtp($data['import_from_ftp']);
+                    $sourceType = ThemeImportSource::FROM_FTP;
+                    $source = $data['import_from_ftp'];
+                } else {
+                    $sourceType = null;
+                    $source = null;
                 }
 
-                if (null === $importSource) {
+                if (null === $sourceType) {
                     $this->addFlash(
                         'warning',
                         $this->trans('Please select theme\'s import source.', [], 'Admin.Notifications.Warning')
@@ -196,7 +201,7 @@ class ThemeController extends PrestaShopAdminController
                     return $this->redirectToRoute('admin_themes_import');
                 }
 
-                $this->dispatchCommand(new ImportThemeCommand($importSource));
+                $this->dispatchCommand(new ImportThemeCommand($sourceType, $source));
 
                 return $this->redirectToRoute('admin_themes_index');
             } catch (ThemeException $e) {
@@ -231,7 +236,7 @@ class ThemeController extends PrestaShopAdminController
     {
         try {
             $handler->startSavingRecords();
-            $this->dispatchCommand(new EnableThemeCommand(new ThemeName($themeName)));
+            $this->dispatchCommand(new EnableThemeCommand($themeName));
             $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
         } catch (ThemeException $e) {
             $this->addFlash(
@@ -269,7 +274,7 @@ class ThemeController extends PrestaShopAdminController
     public function deleteAction(string $themeName): RedirectResponse
     {
         try {
-            $this->dispatchCommand(new DeleteThemeCommand(new ThemeName($themeName)));
+            $this->dispatchCommand(new DeleteThemeCommand($themeName));
 
             $this->addFlash(
                 'success',
@@ -309,9 +314,7 @@ class ThemeController extends PrestaShopAdminController
         }
 
         try {
-            $this->dispatchCommand(new AdaptThemeToRTLLanguagesCommand(
-                new ThemeName($data['theme_to_adapt'])
-            ));
+            $this->dispatchCommand(new AdaptThemeToRTLLanguagesCommand($data['theme_to_adapt']));
 
             $this->addFlash(
                 'success',
@@ -335,7 +338,7 @@ class ThemeController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to edit this.')]
     public function resetLayoutsAction(string $themeName): RedirectResponse
     {
-        $this->dispatchCommand(new ResetThemeLayoutsCommand(new ThemeName($themeName)));
+        $this->dispatchCommand(new ResetThemeLayoutsCommand($themeName));
 
         $this->addFlash('success', $this->trans(
             'Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'%regenerate_label%\' button.',

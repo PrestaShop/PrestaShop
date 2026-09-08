@@ -19,11 +19,13 @@ class EnableThemeCommand
     private $themeName;
 
     /**
-     * @param ThemeName $themeName
+     * @param string|ThemeName $themeName
+     *
+     * @deprecated Since 9.2 - The parameter $themeName will not support ThemeName as type in 10.0
      */
-    public function __construct(ThemeName $themeName)
+    public function __construct(string|ThemeName $themeName)
     {
-        $this->themeName = $themeName;
+        $this->themeName = is_object($themeName) ? $themeName : new ThemeName($themeName);
     }
 
     /**
