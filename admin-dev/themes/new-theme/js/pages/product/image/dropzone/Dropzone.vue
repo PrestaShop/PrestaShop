@@ -137,7 +137,6 @@
   import DropzoneWindow from './DropzoneWindow.vue';
   import DropzonePhotoSwipe from './DropzonePhotoSwipe.vue';
 
-  /* eslint-disable camelcase */
   export interface PSDropzoneFile extends Dropzone.DropzoneFile {
     image_id: string;
     is_cover: boolean;
@@ -145,7 +144,6 @@
     shop_ids: number[];
     isAssociatedToCurrentShop: boolean;
   }
-  /* eslint-enable camelcase */
 
   const {$} = window;
 

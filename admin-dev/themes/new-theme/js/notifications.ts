@@ -91,7 +91,6 @@ let fillTpl = function (
     }
     const router = new Router();
 
-    /* eslint-disable max-len */
     eltAppendTo.children(GlobalMap.notifications.element).append(
       tpl
         .replace(/_id_order_/g, <string>(<unknown>parseInt(value.id_order, 10)))

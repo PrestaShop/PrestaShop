@@ -81,7 +81,6 @@ export default class OrderProductRenderer {
     this.resetAllEditRows();
     if (!this.isMultishipmentIsEnabled) {
       $(
-        /* eslint-disable-next-line max-len */
         `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`,
       ).addClass('d-none');
     } else {
@@ -275,7 +274,7 @@ export default class OrderProductRenderer {
     if (forceDisplay === null) {
       $(target)
         .filter('td')
-        // eslint-disable-next-line
+        // eslint-disable-next-line consistent-return, space-before-function-paren
         .each(function() {
           if ($(this).html() !== '') {
             isColumnDisplayed = true;

@@ -51,7 +51,7 @@ class NumberSpecification {
     this.symbol = symbol;
 
     this.maxFractionDigits = maxFractionDigits;
-    // eslint-disable-next-line
+    // eslint-disable-next-line operator-linebreak
     this.minFractionDigits =
       maxFractionDigits < minFractionDigits
         ? maxFractionDigits
