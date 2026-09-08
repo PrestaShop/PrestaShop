@@ -17,6 +17,8 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\AddCatalogPriceRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\EditCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleListForProduct;
@@ -53,6 +55,53 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
 
             $this->getSharedStorage()->set($catalogPriceRuleReference, $catalogPriceRuleId->getValue());
         } catch (CatalogPriceRuleException|DomainConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I edit catalog price rule :catalogPriceRuleReference with following details:
+     *
+     * @param string $catalogPriceRuleReference
+     * @param TableNode $tableNode
+     */
+    public function editCatalogPriceRule(string $catalogPriceRuleReference, TableNode $tableNode): void
+    {
+        $command = new EditCatalogPriceRuleCommand($this->getSharedStorage()->get($catalogPriceRuleReference));
+        $data = $tableNode->getRowsHash();
+
+        if (isset($data['name'])) {
+            $command->setName($data['name']);
+        }
+        if (isset($data['from quantity'])) {
+            $command->setFromQuantity((int) $data['from quantity']);
+        }
+        if (isset($data['price'])) {
+            $command->setPrice((float) $data['price']);
+        }
+        if (isset($data['reduction type'], $data['reduction value'])) {
+            $command->setReduction($data['reduction type'], $data['reduction value']);
+        }
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (CatalogPriceRuleException|DomainConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I delete catalog price rule :catalogPriceRuleReference
+     *
+     * @param string $catalogPriceRuleReference
+     */
+    public function deleteCatalogPriceRule(string $catalogPriceRuleReference): void
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new DeleteCatalogPriceRuleCommand($this->getSharedStorage()->get($catalogPriceRuleReference))
+            );
+        } catch (CatalogPriceRuleException $e) {
             $this->setLastException($e);
         }
     }
