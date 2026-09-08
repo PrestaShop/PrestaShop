@@ -5,6 +5,25 @@ services:
     autowire: true
     autoconfigure: true
 
+  # ROUTING
+  # The tokenized router only makes sense for the back office, where the CSRF token in the URL is
+  # part of the admin security model. Defining it here rather than in the bundle keeps it out of the
+  # front office and the Admin API containers, whose generated URLs (an API Location header, for
+  # instance) have no use for an admin token. See RouterPass, which only aliases when it is defined.
+  prestashop.router:
+    class: PrestaShopBundle\Service\Routing\Router
+    parent: 'router.default'
+    public: true
+    # This file's _defaults autowire, which would try to resolve the parent router's own constructor
+    # (LoaderInterface and friends) and fail on an abstract definition. The parent supplies them.
+    autowire: false
+    autoconfigure: false
+    arguments:
+      $container: '@service_container'
+    calls:
+      - [ 'setUserTokenManager', [ '@PrestaShopBundle\Security\Admin\UserTokenManager' ] ]
+      - [ 'setAnonymousRouteProvider', [ '@PrestaShopBundle\Routing\AnonymousRouteProvider' ] ]
+
   # SECURITY
   PrestaShopBundle\EventListener\Admin\TokenizedUrlsListener:
     autowire: true
