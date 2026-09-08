@@ -30,30 +30,11 @@ insert_block_after "${WF}/cron_php_update_modules.yml" "- develop" "- ${NEW}" <<
           - ${NEW}
 EOF
 
-# 4) cron_nightly_tests_reports.yml: add {branch: NEW, database: mysql|mariadb}
-#    just before the develop entries (anchored on develop).
-insert_block_before "${WF}/cron_nightly_tests_reports.yml" "- branch: develop" "branch: ${NEW}" <<EOF
-          - branch: ${NEW}
-            database: mysql
-          - branch: ${NEW}
-            database: mariadb
-EOF
-
-# 5) cron_nightly_tests_reusable.yml: mirror the previous 9.x exclude set for NEW,
-#    placed just before the develop excludes (anchored on the "## develop" header),
-#    with its own "## NEW" comment header like the other branches.
-insert_block_before "${WF}/cron_nightly_tests_reusable.yml" "## develop" "BRANCH: ${NEW}" <<EOF
-          ## ${NEW}
-          - BRANCH: ${NEW}
-            CAMPAIGN: 'sanity:productV2'
-          - BRANCH: ${NEW}
-            CAMPAIGN: 'functional:productV2'
-          - BRANCH: ${NEW}
-            CAMPAIGN: 'modules'
-EOF
-
-# 6) Create the per-version nightly caller files from the template.
+# 4) Create the per-version nightly caller files from the template.
 #    PHP 8.2 / Node 20 inherited from develop (9.1.x used PHP 8.1).
+#    nightly_tests_follow_up.yml derives <branch>/<db> from these file names.
+#    (cron_nightly_tests_reusable.yml itself needs no change: it resolves the
+#    campaigns from the branch's tests/UI/package.json.)
 tmpl="${SCRIPT_DIR}/templates/cron_nightly_tests_DB.yml.tmpl"
 PHP_VERSION="8.2"
 NODE_VERSION="20"
@@ -70,17 +51,17 @@ for db in mysql mariadb; do
   fi
 done
 
-# 6b) auto_retry_failed_nightly_jobs.yml: watch the NEW branch nightly test
-#     workflows, placed right after the develop entries (anchored on the
-#     develop mariadb entry — develop is always present).
-insert_block_after "${WF}/auto_retry_failed_nightly_jobs.yml" \
+# 4b) nightly_tests_follow_up.yml (auto-retry + report import): watch the NEW
+#     branch nightly test workflows, placed right after the develop entries
+#     (anchored on the develop mariadb entry — develop is always present).
+insert_block_after "${WF}/nightly_tests_follow_up.yml" \
   "- 'Nightly tests and report - develop (mariadb)'" \
   "Nightly tests and report - ${NEW} (mysql)" <<EOF
       - 'Nightly tests and report - ${NEW} (mysql)'
       - 'Nightly tests and report - ${NEW} (mariadb)'
 EOF
 
-# 7) cron_create_merge_prs.yml: insert NEW into the merge-up CHAIN. Each stable
+# 5) cron_create_merge_prs.yml: insert NEW into the merge-up CHAIN. Each stable
 #    branch merges into the one just above it, not straight into develop:
 #    the pair that currently targets develop is retargeted to NEW, then a new
 #    NEW -> develop pair is added. e.g. {9.1.x -> develop} becomes
@@ -102,7 +83,7 @@ EOF
   log "merge-up chain: retargeted -> develop to -> ${NEW}, added ${NEW} -> develop"
 fi
 
-# 8) PULL_REQUEST_TEMPLATE.md: add NEW to the "| Branch?" choice line
+# 6) PULL_REQUEST_TEMPLATE.md: add NEW to the "| Branch?" choice line
 prt=".github/PULL_REQUEST_TEMPLATE.md"
 if [ -f "${prt}" ] && ! line_has "${prt}" '^\| Branch\?' "${NEW}"; then
   sed -i.bak -E "/Branch\?/ s#(develop / )#\\1${NEW} / #" "${prt}"

@@ -1,5 +1,8 @@
 # This workflow aim to run all UI tests on active branches
-# and upload the report on Google cloud platform storage
+# and upload the report on Google cloud platform storage.
+# The campaigns to run are resolved from the `test:<campaign>` scripts of the
+# branch's tests/UI/package.json, so there is nothing to maintain here when a
+# version branch appears or when a campaign is added, renamed or split.
 name: Nightly tests (Run & Upload)
 
 on:
@@ -43,99 +46,137 @@ permissions:
 
 jobs:
 
-  # First job: Run tests in parallel
+  # First job: resolve the campaigns that exist on the tested branch
+  campaigns:
+    name: Resolve the test campaigns of ${{ inputs.BRANCH }}
+    runs-on: ${{ inputs.UBUNTU_VERSION }}
+    outputs:
+      campaigns: ${{ steps.campaigns.outputs.campaigns }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.BRANCH }}
+          fetch-depth: 1
+          sparse-checkout: ${{ inputs.TESTS_DIR }}/package.json
+          sparse-checkout-cone-mode: false
+
+      - name: Resolve the test campaigns available on this branch
+        id: campaigns
+        env:
+          BRANCH: ${{ inputs.BRANCH }}
+          PACKAGE_JSON: ${{ inputs.TESTS_DIR }}/package.json
+        run: |
+          if [ ! -f "$PACKAGE_JSON" ]; then
+            echo "::error::$PACKAGE_JSON not found, cannot resolve the list of test campaigns"
+            exit 1
+          fi
+
+          # Campaigns we would like to run, whatever the branch. A campaign with no
+          # matching `test:<campaign>` script in the branch's tests/UI/package.json is
+          # dropped: that is how version differences are handled (same mechanism as
+          # ga.tests.ui.pr). Add a campaign here when a new `test:<campaign>` script
+          # is meant to run nightly.
+          CANDIDATES="
+          audit
+          cldr
+          sanity
+          sanity:productV2
+          functional:BO:login
+          functional:BO:dashboard
+          functional:BO:orders:01:0-1
+          functional:BO:orders:01-create-orders
+          functional:BO:orders:01-view-and-edit-order
+          functional:BO:orders:02
+          functional:BO:orders:03-05
+          functional:BO:catalog:01-02
+          functional:BO:catalog:03-04
+          functional:BO:catalog:05-06
+          functional:BO:catalog:07-08
+          functional:BO:customer:01
+          functional:BO:customer:02-03
+          functional:BO:customer-service
+          functional:BO:modules
+          functional:BO:design
+          functional:BO:shipping
+          functional:BO:payment
+          functional:BO:international:01
+          functional:BO:international:02
+          functional:BO:international:03-04
+          functional:BO:shop-parameters:01-02
+          functional:BO:shop-parameters:03-04
+          functional:BO:shop-parameters:05-07
+          functional:BO:advanced-parameters:01-06
+          functional:BO:advanced-parameters:07-10
+          functional:BO:advanced-parameters:11-12
+          functional:BO:header
+          functional:BO:community
+          functional:FO:classic:01-03
+          functional:FO:classic:04-07
+          functional:FO:classic:08-12
+          functional:FO:hummingbird:01-03
+          functional:FO:hummingbird:04-07
+          functional:FO:hummingbird:08-12
+          functional:productV2
+          functional:API
+          functional:WS
+          modules
+          modules:01-09
+          modules:10-19
+          modules:20-29
+          modules:30-39
+          regression
+          "
+
+          # Campaigns that do exist in tests/UI but must not run nightly on a branch
+          # (deliberate exclusion, as opposed to a missing script). None at the moment.
+          case "$BRANCH" in
+            *) KNOWN_BROKEN="" ;;
+          esac
+
+          KEPT=()
+          SKIPPED=()
+          for CAMPAIGN in $CANDIDATES; do
+            case " $KNOWN_BROKEN " in
+              *" $CAMPAIGN "*)
+                SKIPPED+=("$CAMPAIGN (known broken on $BRANCH)")
+                continue
+                ;;
+            esac
+            if jq -e --arg script "test:$CAMPAIGN" '.scripts | has($script)' "$PACKAGE_JSON" > /dev/null; then
+              KEPT+=("$CAMPAIGN")
+            else
+              SKIPPED+=("$CAMPAIGN (no test:$CAMPAIGN script)")
+            fi
+          done
+
+          if [ ${#KEPT[@]} -eq 0 ]; then
+            echo "::error::None of the candidate campaigns exist in $PACKAGE_JSON"
+            exit 1
+          fi
+
+          echo "Campaigns to run (${#KEPT[@]}):"
+          printf '  %s\n' "${KEPT[@]}"
+          if [ ${#SKIPPED[@]} -gt 0 ]; then
+            echo "Campaigns skipped (${#SKIPPED[@]}):"
+            printf '  %s\n' "${SKIPPED[@]}"
+          fi
+
+          CAMPAIGNS=$(printf '%s\n' "${KEPT[@]}" | jq -Rsc 'split("\n") | map(select(length > 0))')
+          echo "campaigns=$CAMPAIGNS" >> "$GITHUB_OUTPUT"
+
+  # Second job: Run tests in parallel
   test:
-    name: Nightly tests
+    name: Nightly tests (${{ inputs.BRANCH }}, ${{ matrix.CAMPAIGN }})
+    needs: campaigns
     runs-on: ${{ inputs.UBUNTU_VERSION }}
     strategy:
       fail-fast: false
       matrix:
-        BRANCH:
-          - ${{ inputs.BRANCH }}
-        CAMPAIGN:
-          - 'audit'
-          - 'cldr'
-          - 'sanity'
-          - 'sanity:productV2'
-          - 'functional:BO:login'
-          - 'functional:BO:dashboard'
-          - 'functional:BO:orders:01:0-1'
-          - 'functional:BO:orders:01-create-orders'
-          - 'functional:BO:orders:01-view-and-edit-order'
-          - 'functional:BO:orders:02'
-          - 'functional:BO:orders:03-05'
-          - 'functional:BO:catalog:01-02'
-          - 'functional:BO:catalog:03-04'
-          - 'functional:BO:catalog:05-06'
-          - 'functional:BO:catalog:07-08'
-          - 'functional:BO:customer:01'
-          - 'functional:BO:customer:02-03'
-          - 'functional:BO:customer-service'
-          - 'functional:BO:modules'
-          - 'functional:BO:design'
-          - 'functional:BO:shipping'
-          - 'functional:BO:payment'
-          - 'functional:BO:international:01'
-          - 'functional:BO:international:02'
-          - 'functional:BO:international:03-04'
-          - 'functional:BO:shop-parameters:01-02'
-          - 'functional:BO:shop-parameters:03-04'
-          - 'functional:BO:shop-parameters:05-07'
-          - 'functional:BO:advanced-parameters:01-06'
-          - 'functional:BO:advanced-parameters:07-10'
-          - 'functional:BO:advanced-parameters:11-12'
-          - 'functional:BO:header'
-          - 'functional:FO:classic:01-03'
-          - 'functional:FO:classic:04-07'
-          - 'functional:FO:classic:08-12'
-          - 'functional:FO:hummingbird:01-03'
-          - 'functional:FO:hummingbird:04-07'
-          - 'functional:FO:hummingbird:08-12'
-          - 'functional:productV2'
-          - 'functional:API'
-          - 'functional:WS'
-          - 'modules'
-          - 'modules:01-09'
-          - 'modules:10-19'
-          - 'modules:20-29'
-          - 'modules:30-39'
-          - 'regression'
-        exclude:
-          ## 8.2.x
-          - BRANCH: 8.2.x
-            CAMPAIGN: 'audit'
-          - BRANCH: 8.2.x
-            CAMPAIGN: 'functional:BO:advanced-parameters:11-12'
-          - BRANCH: 8.2.x
-            CAMPAIGN: 'functional:FO:hummingbird:04-07'
-          - BRANCH: 8.2.x
-            CAMPAIGN: 'functional:FO:hummingbird:08-12'
-          - BRANCH: 8.2.x
-            CAMPAIGN: 'modules:01-09'
-          - BRANCH: 8.2.x
-            CAMPAIGN: 'modules:10-19'
-          - BRANCH: 8.2.x
-            CAMPAIGN: 'modules:20-29'
-          - BRANCH: 8.2.x
-            CAMPAIGN: 'modules:30-39'
-          ## 9.2.x
-          - BRANCH: 9.2.x
-            CAMPAIGN: 'sanity:productV2'
-          - BRANCH: 9.2.x
-            CAMPAIGN: 'functional:productV2'
-          - BRANCH: 9.2.x
-            CAMPAIGN: 'modules'
-          ## develop
-          - BRANCH: develop
-            CAMPAIGN: 'sanity:productV2'
-          - BRANCH: develop
-            CAMPAIGN: 'functional:productV2'
-          - BRANCH: develop
-            CAMPAIGN: 'modules'
+        CAMPAIGN: ${{ fromJSON(needs.campaigns.outputs.campaigns) }}
 
     env:
-      GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test
-      REPORTS_DIR: 'reports_${{ matrix.BRANCH }}'  # Where to move test's reports
+      GH_BRANCH: ${{ inputs.BRANCH }}  # Branch to test
+      REPORTS_DIR: 'reports_${{ inputs.BRANCH }}'  # Where to move test's reports
       TEST_CAMPAIGN: ${{ matrix.CAMPAIGN }}  # Command to execute from the matrix
       INSTALL_AUTO: ${{ (matrix.CAMPAIGN == 'sanity') && 'false' || 'true' }}
       CLIENT_ID_API: ui-test-client
@@ -159,7 +200,7 @@ jobs:
         uses: ./.github/actions/setup-env-export-logs
         with:
           DOCKER_PREFIX: prestashop
-          ARTIFACT_NAME: setup-nightly-${{ matrix.BRANCH }}-${{ matrix.CAMPAIGN }}-${{ inputs.DB_SERVER }}
+          ARTIFACT_NAME: setup-nightly-${{ inputs.BRANCH }}-${{ matrix.CAMPAIGN }}-${{ inputs.DB_SERVER }}
           DB_SERVER: ${{ inputs.DB_SERVER }}
           INSTALL_AUTO: ${{ env.INSTALL_AUTO }}
         if: failure()
@@ -176,6 +217,10 @@ jobs:
         if: ${{ (startsWith(env.GH_BRANCH, '9.') || env.GH_BRANCH == 'develop') && env.TEST_CAMPAIGN == 'functional:API' }}
 
       - name: Run Tests
+        id: run_tests
+        # A failing campaign must not stop the job here: its mochawesome report has to be
+        # renamed and uploaded (the nightly board displays the failures). The job is failed
+        # afterwards, once the report is safe (last step of the job).
         continue-on-error: true
         uses: ./.github/actions/ui-test
         with:
@@ -206,10 +251,30 @@ jobs:
           name: reports_${{ env.GH_BRANCH }}_${{ env.TEST_CAMPAIGN_ARTIFACT }}
           path: ${{ env.REPORTS_DIR }}
           # A retried job must be able to replace the artifact uploaded by a
-          # previous attempt of the same run (auto_retry_failed_nightly_jobs.yml)
+          # previous attempt of the same run (nightly_tests_follow_up.yml)
           overwrite: true
 
-  # Second job: Merge Mochawesome reports and upload them on GCP
+      # Failure screenshots (TAKE_SCREENSHOT_AFTER_FAIL=true in tests/UI/.env.ci) help to tell
+      # a flaky failure from a real one. The name must not match reports_<branch>_*, which is
+      # the pattern downloaded by the merge job.
+      - name: Upload screenshots of failed steps
+        if: steps.run_tests.outcome == 'failure'
+        uses: actions/upload-artifact@v6
+        with:
+          name: screenshots_${{ env.GH_BRANCH }}_${{ env.TEST_CAMPAIGN_ARTIFACT }}
+          path: ${{ inputs.TESTS_DIR }}/screenshots/
+          if-no-files-found: ignore
+          overwrite: true
+
+      # Only now fail the job: the run turns red, "Re-run failed jobs" becomes available and
+      # nightly_tests_follow_up.yml re-runs this campaign and the merge job.
+      - name: Fail the job when the campaign failed
+        if: steps.run_tests.outcome == 'failure'
+        run: |
+          echo "::error::Campaign '${{ env.TEST_CAMPAIGN }}': the 'Run Tests' step failed (failing tests or test-runner error), see its log."
+          exit 1
+
+  # Third job: Merge Mochawesome reports and upload them on GCP
   ## Always executed even if tests are in error
   merge-upload-reports:
     name: Combine all reports and upload them
