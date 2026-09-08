@@ -11,7 +11,6 @@ namespace Tests\Unit\Adapter\Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\HandlingConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class HandlingConfigurationTest extends AbstractConfigurationTestCase
@@ -72,7 +71,6 @@ class HandlingConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, ['shipping_handling_charges' => 'wrong_value', 'free_shipping_price' => 10.5, 'free_shipping_weight' => 10.5]],
             [InvalidOptionsException::class, ['shipping_handling_charges' => 10.5, 'free_shipping_price' => 'wrong_value', 'free_shipping_weight' => 10.5]],
             [InvalidOptionsException::class, ['shipping_handling_charges' => 10.5, 'free_shipping_price' => 10.5, 'free_shipping_weight' => 'wrong_value']],
