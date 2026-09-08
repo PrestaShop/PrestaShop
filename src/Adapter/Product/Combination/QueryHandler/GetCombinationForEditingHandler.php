@@ -185,11 +185,13 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private function getDetails(Combination $combination): CombinationDetails
     {
         return new CombinationDetails(
-            $combination->ean13,
-            $combination->isbn,
-            $combination->mpn,
-            $combination->reference,
-            $combination->upc,
+            // These identifier columns are nullable in the database, but CombinationDetails
+            // is strictly typed to string — cast so a NULL value does not fatal. (#39988)
+            (string) $combination->ean13,
+            (string) $combination->isbn,
+            (string) $combination->mpn,
+            (string) $combination->reference,
+            (string) $combination->upc,
             $this->numberExtractor->extract($combination, 'weight')
         );
     }
