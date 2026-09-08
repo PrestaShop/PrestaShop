@@ -28,6 +28,10 @@ class LastName
      */
     public function __construct($lastName)
     {
+        // The back office form trims these values before they ever reach the domain.
+        // Normalise here too so every entry point stores the same thing.
+        $lastName = is_string($lastName) ? trim($lastName) : $lastName;
+
         $this->assertLastNameDoesNotExceedAllowedLength($lastName);
         $this->assertLastNameIsValid($lastName);
 
