@@ -151,6 +151,9 @@ services:
       $groupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
       $carrierChoices: '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
       $countryDataProvider: '@prestashop.adapter.data_provider.country'
+      # Restrictions are set up before a currency is switched on, so this screen lists the disabled
+      # ones too - unlike everywhere else, where a currency is being picked for immediate use.
+      $currencyChoicesProvider: '@prestashop.core.form.choice_provider.currency_by_id_including_disabled'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType:
     arguments:
