@@ -276,7 +276,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'wholesale_price' => 12,
                     'price_tax_excluded' => 10,
                     'price_tax_included' => 18,
-                    'unit_price' => 87,
+                    'unit_price_tax_excluded' => 87,
                     'weight' => 45,
                 ],
             ],
@@ -303,8 +303,8 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'price_tax_excluded' => 10,
                     self::MODIFY_ALL_SHOPS_PREFIX . 'price_tax_excluded' => true,
                     'price_tax_included' => 18,
-                    'unit_price' => 87,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'unit_price' => false,
+                    'unit_price_tax_excluded' => 87,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'unit_price_tax_excluded' => false,
                     'weight' => 45,
                     self::MODIFY_ALL_SHOPS_PREFIX . 'weight' => false,
                 ],
@@ -323,7 +323,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                 'price_impact' => [
                     'wholesale_price' => 12,
                     'price_tax_included' => 18,
-                    'unit_price' => 87,
+                    'unit_price_tax_excluded' => 87,
                 ],
             ],
         ];
