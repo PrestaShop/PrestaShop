@@ -25,4 +25,9 @@ class CartConstraintException extends CartException
      * When carrier is not found or inactive
      */
     public const INVALID_CARRIER = 3;
+
+    /**
+     * When the order message contains markup that is not allowed
+     */
+    public const INVALID_ORDER_MESSAGE = 4;
 }

@@ -121,6 +121,17 @@ admin_carts_edit_language:
   options:
     expose: true
 
+admin_carts_set_order_message:
+  path: /{cartId}/order-message
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\CartController::updateOrderMessageAction
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
+  options:
+    expose: true
+
 admin_carts_set_delivery_settings:
   path: /{cartId}/rules/delivery-settings
   methods: [ POST ]

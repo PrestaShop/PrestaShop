@@ -20,6 +20,10 @@ services:
     arguments:
       - '@prestashop.adapter.command_handler.update_cart_carrier_handler'
 
+  prestashop.adapter.cart.command_handler.update_cart_order_message_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartOrderMessageHandler'
+    autoconfigure: true
+
   prestashop.adapter.cart.command_handler.update_delivery_options_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartDeliverySettingsHandler'
     autoconfigure: true
