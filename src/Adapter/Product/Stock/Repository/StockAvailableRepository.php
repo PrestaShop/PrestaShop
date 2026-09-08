@@ -332,7 +332,12 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->addSelect('SUM(od.product_quantity - od.product_quantity_refunded) AS reserved_quantity')
+            ->addSelect(
+                // Both columns are UNSIGNED, so a line refunded beyond its ordered quantity makes the
+                // subtraction underflow and MySQL raises "BIGINT UNSIGNED value is out of range"
+                // instead of returning a reserved quantity. Such a line reserves nothing.
+                'SUM(GREATEST(CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED), 0)) AS reserved_quantity'
+            )
             ->from($this->dbPrefix . 'orders', 'o')
             ->innerJoin('o', $this->dbPrefix . 'order_detail', 'od', 'od.id_order = o.id_order')
             ->innerJoin('o', $this->dbPrefix . 'order_state', 'os', 'os.id_order_state = o.current_state')
