@@ -94,15 +94,37 @@ export const saveTranslations = async ({commit}: {commit: Commit}, payload: Reco
   const {translations} = payload;
 
   try {
-    await fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       body: JSON.stringify({translations}),
     });
 
-    payload.store.dispatch('refreshCounts', {
-      successfullySaved: translations.length,
-      store: payload.store,
-    });
+    // fetch() only rejects on a network failure, so an error status arrives here as a resolved
+    // promise and would otherwise be reported as a success.
+    if (!response.ok) {
+      showGrowl('error', response.statusText);
+      return;
+    }
+
+    // The endpoint answers with one flag per translation. A save can fail on its own - a value the
+    // database refuses, for instance - while the request itself succeeds.
+    const savedByKey: Record<string, boolean> = await response.json();
+    const failedCount = Object.values(savedByKey).filter((saved) => !saved).length;
+    const savedCount = translations.length - failedCount;
+
+    if (savedCount > 0) {
+      payload.store.dispatch('refreshCounts', {
+        successfullySaved: savedCount,
+        store: payload.store,
+      });
+    }
+
+    if (failedCount > 0) {
+      // The ones that failed stay marked as modified, so they are still there to try again.
+      showGrowl('error', `${failedCount} of ${translations.length} translations could not be saved`);
+      return;
+    }
+
     commit(types.RESET_MODIFIED_TRANSLATIONS);
     showGrowl('success', 'Translations successfully updated');
   } catch (error: any) {
