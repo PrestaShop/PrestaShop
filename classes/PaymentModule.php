@@ -172,6 +172,37 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
+     * Flattens the customizations of one order line across the delivery-address buckets returned by
+     * Product::getAllCustomizedDatas().
+     *
+     * That method indexes a line's customizations under the cart's delivery address, so in a
+     * multi-shipping order (where a package's address differs from the cart's) indexing by the
+     * package address misses them. The customization content is the same whatever address the line
+     * ships to, so every bucket is flattened here.
+     *
+     * @param array $customizedDatas result of Product::getAllCustomizedDatas()
+     * @param int $idProduct
+     * @param int $idProductAttribute
+     *
+     * @return array<int, array>
+     */
+    protected static function flattenProductCustomizations(array $customizedDatas, $idProduct, $idProductAttribute)
+    {
+        $customizations = [];
+        if (!isset($customizedDatas[$idProduct][$idProductAttribute])) {
+            return $customizations;
+        }
+
+        foreach ($customizedDatas[$idProduct][$idProductAttribute] as $customizationsByAddress) {
+            foreach ($customizationsByAddress as $customization) {
+                $customizations[] = $customization;
+            }
+        }
+
+        return $customizations;
+    }
+
+    /**
      * Validate an order in database
      * Function called from a payment module.
      *
@@ -506,7 +537,12 @@ abstract class PaymentModuleCore extends Module
                 $customized_datas = Product::getAllCustomizedDatas((int) $order->id_cart, null, true, null, (int) $product['id_customization']);
                 if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']])) {
                     $product_var_tpl['customization'] = [];
-                    foreach ($customized_datas[$product['id_product']][$product['id_product_attribute']][$order->id_address_delivery] as $customization) {
+                    // getAllCustomizedDatas() buckets a line's customizations under the cart's delivery
+                    // address, which in a multi-shipping order differs from this package's
+                    // $order->id_address_delivery — flatten every address bucket instead of indexing by
+                    // the package address, which would miss the line's customizations. WHY: fixes lost
+                    // personalization in the confirmation email for products shipped to a non-primary address.
+                    foreach (self::flattenProductCustomizations($customized_datas, (int) $product['id_product'], (int) $product['id_product_attribute']) as $customization) {
                         $customization_text = '';
                         if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
                             foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
