@@ -784,6 +784,8 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             $newCombinationImages[] = [
                 'id_image' => $imagesMapping[(int) $oldCombinationImage['id_image']],
                 'id_product_attribute' => $combinationMatching[(int) $oldCombinationImage['id_product_attribute']],
+                // The copy keeps the shop the original association was made for
+                'id_shop' => (int) $oldCombinationImage['id_shop'],
             ];
         }
         $this->bulkInsert('product_attribute_image', $newCombinationImages, CannotDuplicateProductException::FAILED_DUPLICATE_IMAGES);

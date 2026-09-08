@@ -69,6 +69,7 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationSuppliersHandler:
     autoconfigure: true

@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepositor
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Provider\ProductImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class ProductImageProvider implements ProductImageProviderInterface
@@ -53,7 +54,10 @@ class ProductImageProvider implements ProductImageProviderInterface
 
     public function getCombinationCoverUrl(CombinationId $combinationId, ShopId $shopId): string
     {
-        $imageId = $this->productImageRepository->getPreviewCombinationProduct($combinationId);
+        $imageId = $this->productImageRepository->getPreviewCombinationProduct(
+            $combinationId,
+            ShopConstraint::shop($shopId->getValue())
+        );
 
         if ($imageId) {
             return $this->productImagePathFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
