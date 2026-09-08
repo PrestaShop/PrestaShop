@@ -28,7 +28,7 @@ export default class SpecificPriceListRenderer implements RendererType {
     productId: number,
   ) {
     this.productId = productId;
-    this.listContainer = document.querySelector(SpecificPriceMap.listContainer) as HTMLElement;
+    this.listContainer = document.querySelector<HTMLElement>(SpecificPriceMap.listContainer)!;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$loadingSpinner = $(ProductMap.specificPrice.loadingSpinner);
     this.$listTable = $(ProductMap.specificPrice.listTable);
@@ -41,8 +41,8 @@ export default class SpecificPriceListRenderer implements RendererType {
 
   public render(data: Record<string, any>): void {
     const {listFields} = SpecificPriceMap;
-    const tbody = this.listContainer.querySelector(`${SpecificPriceMap.listContainer} tbody`) as HTMLElement;
-    const trTemplateContainer = this.listContainer.querySelector(SpecificPriceMap.listRowTemplate) as HTMLScriptElement;
+    const tbody = this.listContainer.querySelector<HTMLElement>(`${SpecificPriceMap.listContainer} tbody`)!;
+    const trTemplateContainer = this.listContainer.querySelector<HTMLScriptElement>(SpecificPriceMap.listRowTemplate)!;
     const trTemplate = trTemplateContainer.innerHTML as string;
     tbody.innerHTML = '';
 
@@ -99,7 +99,7 @@ export default class SpecificPriceListRenderer implements RendererType {
   }
 
   private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement {
-    return templateTrClone.querySelector(selector) as HTMLElement;
+    return templateTrClone.querySelector<HTMLElement>(selector)!;
   }
 
   private addEventListenerForDeleteBtn(deleteBtn: HTMLElement): void {
