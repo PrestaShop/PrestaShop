@@ -226,6 +226,77 @@ class ProductLazyArrayTest extends TestCase
     }
 
     /**
+     * The hint shown under the availability message when the chosen version cannot be ordered but
+     * another one can. The translator mock returns the wording it is given, so this pins the wording
+     * itself, which no other case in this file does.
+     *
+     * @param array $product
+     * @param string|null $expectedSubmessage
+     *
+     * @dataProvider providerAvailabilitySubmessageCases
+     */
+    public function testAvailabilitySubmessage(
+        array $product,
+        ?string $expectedSubmessage
+    ): void {
+        $this->setDefaultConfiguration();
+
+        $this->mockProductPresentationSettings
+            ->method('shouldShowPrice')
+            ->willReturn(true);
+        $this->mockProductPresentationSettings->showLabelOOSListingPages = true;
+        $this->mockProductPresentationSettings->stock_management_enabled = true;
+        $this->mockProductPresentationSettings->showPrices = true;
+        $this->mockProductPresentationSettings->catalog_mode = false;
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            $product,
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        $this->assertSame($expectedSubmessage, $productLazyArray->availability_submessage);
+    }
+
+    public function providerAvailabilitySubmessageCases(): iterable
+    {
+        // Out of stock, backorders denied, has combinations, another one is in stock.
+        $outOfStockWithAnotherVersionAvailable = array_merge($this->baseProduct, [
+            'show_price' => 1,
+            'quantity' => 0,
+            'stock_quantity' => 0,
+            'quantity_wanted' => 1,
+            'show_availability' => 1,
+            'available_date' => false,
+            'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+            'cache_default_attribute' => 1,
+            'quantity_all_versions' => 5,
+        ]);
+
+        yield 'another version in stock' => [
+            $outOfStockWithAnotherVersionAvailable,
+            'Other product variations available',
+        ];
+
+        yield 'no other version in stock' => [
+            array_merge($outOfStockWithAnotherVersionAvailable, ['quantity_all_versions' => 0]),
+            null,
+        ];
+
+        yield 'product without combinations' => [
+            array_merge($outOfStockWithAnotherVersionAvailable, ['cache_default_attribute' => 0]),
+            null,
+        ];
+    }
+
+    /**
      * @param array $product
      * @param string|null $deliveryInformationMessage
      *
