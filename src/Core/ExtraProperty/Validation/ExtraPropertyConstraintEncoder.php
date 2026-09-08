@@ -12,6 +12,8 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Validation;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyConstraintException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\UnknownExtraPropertyConstraintException;
 use ReflectionObject;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Constraint;
 
 /**
@@ -32,28 +34,40 @@ use Symfony\Component\Validator\Constraint;
  *   `normalizer: 'system'` survives it perfectly. Callable and property-path options are therefore
  *   rejected explicitly, by the grammar on the way in and by this encoder on the way out.
  *
- * Failure policy is asymmetric on purpose, and carried by the method names rather than by a runtime
- * flag, so a caller cannot pick the wrong one silently:
- * - {@see self::encode()} and {@see self::decode()} fail closed — they throw, and nothing is persisted;
- * - {@see self::decodeTolerant()} fails safe — it drops the offending root constraint, reports it in
- *   its result and keeps the valid siblings, because a corrupt row must never break a front-office
- *   render.
+ * Failure policy differs by direction, which is what the two sides of the contract express:
+ * - {@see self::normalize()} fails closed — it throws, and nothing is persisted;
+ * - {@see self::denormalize()} never throws. It returns what it could read together with what it had
+ *   to drop, because definitions are hydrated during front-office requests too and a corrupt or
+ *   tampered row must not break a render. The caller decides what to do with the rejections: the
+ *   repository logs them with their registry context.
+ *
+ * It implements Symfony's normalizer contracts, whose semantics match this use case: denormalize the
+ * value read from the database into constraints, normalize constraints into a persistable string.
+ * The service is deliberately NOT tagged `serializer.normalizer` — nothing routes through the
+ * Serializer here, the callers are direct.
  *
  * Usable as a service (its constructor takes no argument) and instantiable on demand where no
  * container is available.
  */
-class ExtraPropertyConstraintEncoder
+class ExtraPropertyConstraintEncoder implements NormalizerInterface, DenormalizerInterface
 {
     /**
-     * Encodes constraints into the value stored in the registry.
+     * The type this encoder handles: a list of Symfony constraints.
+     */
+    public const SUPPORTED_TYPE = Constraint::class . '[]';
+
+    /**
+     * Normalizes constraints into the value stored in the registry.
      *
-     * @param list<Constraint>|null $constraints
+     * @param list<Constraint>|null $object
+     * @param array<string, mixed> $context
      *
      * @throws InvalidExtraPropertyConstraintException when a constraint cannot be represented safely
      *                                                 or would not survive the round-trip
      */
-    public function encode(?array $constraints): ?string
+    public function normalize(mixed $object, ?string $format = null, array $context = []): ?string
     {
+        $constraints = $object;
         if (null === $constraints || [] === $constraints) {
             return null;
         }
@@ -89,7 +103,7 @@ class ExtraPropertyConstraintEncoder
     /**
      * Asserts that constraints can be persisted, without keeping the result.
      *
-     * This is a genuine dry-run of {@see self::encode()} rather than a parallel set of checks: any
+     * This is a genuine dry-run of {@see self::normalize()} rather than a parallel set of checks: any
      * divergence between the two would let a definition pass the registry guard and then fail while
      * saving — after the DDL has already created its storage column.
      *
@@ -97,45 +111,41 @@ class ExtraPropertyConstraintEncoder
      *
      * @throws InvalidExtraPropertyConstraintException
      */
-    public function assertEncodable(?array $constraints): void
+    public function assertNormalizable(?array $constraints): void
     {
-        $this->encode($constraints);
+        $this->normalize($constraints);
+    }
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
+    {
+        return null === $data || is_array($data);
+    }
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
+    {
+        return self::SUPPORTED_TYPE === $type;
     }
 
     /**
-     * Decodes a stored value, refusing the whole set as soon as anything is wrong.
-     *
-     * Used wherever a human is waiting for an answer — the back-office form, and any write path
-     * re-reading what it is about to store.
-     *
-     * @return list<Constraint>|null
-     *
-     * @throws UnknownExtraPropertyConstraintException
-     * @throws InvalidExtraPropertyConstraintException
+     * @return array<class-string|string, bool|null>
      */
-    public function decode(mixed $raw): ?array
+    public function getSupportedTypes(?string $format): array
     {
-        if (is_array($raw)) {
-            return [] !== $raw ? array_values($raw) : null;
-        }
-        if (!is_string($raw)) {
-            return null;
-        }
-
-        $this->assertWithinLengthBound($raw);
-
-        return ExtraPropertyConstraintMapper::fromNames($raw);
+        return [self::SUPPORTED_TYPE => true];
     }
 
     /**
-     * Decodes a stored value, tolerating a corrupt root constraint.
+     * Denormalizes a stored value into constraints, tolerating a corrupt one.
      *
-     * Each top-level constraint is decoded on its own: an invalid one is dropped and reported in the
-     * result, while its valid siblings stay active. A composite is always dropped as a whole — a
-     * partially decoded composite would silently weaken the validation it describes.
+     * Never throws. Each top-level constraint is decoded on its own: an invalid one is dropped and
+     * reported in the result, while its valid siblings stay active. A composite is always dropped as
+     * a whole — a partially decoded composite would silently weaken the validation it describes.
+     *
+     * @param array<string, mixed> $context
      */
-    public function decodeTolerant(mixed $raw): DecodedConstraints
+    public function denormalize(mixed $data, string $type = self::SUPPORTED_TYPE, ?string $format = null, array $context = []): DecodedConstraints
     {
+        $raw = $data;
         if (is_array($raw)) {
             return new DecodedConstraints(array_values($raw));
         }
@@ -306,19 +316,19 @@ class ExtraPropertyConstraintEncoder
      */
     private function isIdentical(array $expected, ?array $actual): bool
     {
-        return null !== $actual && $this->normalize($expected) === $this->normalize($actual);
+        return null !== $actual && $this->toComparableForm($expected) === $this->toComparableForm($actual);
     }
 
     /**
      * Reduces a graph to nested arrays of scalars, keeping class names, keys, order and scalar types,
      * so a plain `===` becomes a strict structural comparison.
      */
-    private function normalize(mixed $value): mixed
+    private function toComparableForm(mixed $value): mixed
     {
         if (is_array($value)) {
             $normalized = [];
             foreach ($value as $key => $item) {
-                $normalized[$key] = $this->normalize($item);
+                $normalized[$key] = $this->toComparableForm($item);
             }
 
             return $normalized;
@@ -338,7 +348,7 @@ class ExtraPropertyConstraintEncoder
                 continue;
             }
             $normalized[$property->getName()] = $property->isInitialized($value)
-                ? $this->normalize($property->getValue($value))
+                ? $this->toComparableForm($property->getValue($value))
                 : '#uninitialized';
         }
 

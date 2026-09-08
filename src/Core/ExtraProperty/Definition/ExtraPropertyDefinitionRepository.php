@@ -174,7 +174,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             'form_type' => $definition->getFormType(),
             'form_options' => null !== $definition->getFormOptions() ? json_encode($definition->getFormOptions()) : null,
             'sql_index' => $definition->getSqlIndex()->value,
-            'constraints' => $this->constraintEncoder->encode($definition->getConstraints()),
+            'constraints' => $this->constraintEncoder->normalize($definition->getConstraints()),
             'associated_forms' => !empty($definition->getAssociatedForms()) ? json_encode(array_values($definition->getAssociatedForms())) : null,
             'associated_grids' => !empty($definition->getAssociatedGrids()) ? json_encode(array_values($definition->getAssociatedGrids())) : null,
             'associated_apis' => !empty($definition->getAssociatedApis()) ? json_encode(array_values($definition->getAssociatedApis())) : null,
@@ -346,7 +346,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
     protected function enrichRowsWithDecodedConstraints(array $rows): array
     {
         foreach ($rows as $index => $row) {
-            $decoded = $this->constraintEncoder->decodeTolerant($row['constraints'] ?? null);
+            $decoded = $this->constraintEncoder->denormalize($row['constraints'] ?? null);
             $rows[$index]['constraints'] = $decoded->getConstraints();
 
             if ($decoded->hasRejections()) {

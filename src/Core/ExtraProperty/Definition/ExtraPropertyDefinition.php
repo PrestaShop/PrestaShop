@@ -563,7 +563,7 @@ final class ExtraPropertyDefinition
         // The repository decodes rows itself, through the injected encoder, so it can log a
         // rejection with its registry context. This fallback keeps fromRow() usable on a raw row:
         // the encoder has no dependency, so building one here costs nothing.
-        return (new ExtraPropertyConstraintEncoder())->decodeTolerant($raw)->getConstraints();
+        return (new ExtraPropertyConstraintEncoder())->denormalize($raw)->getConstraints();
     }
 
     // -------------------------------------------------------------------------

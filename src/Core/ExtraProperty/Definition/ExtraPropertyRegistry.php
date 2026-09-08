@@ -97,7 +97,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         // 1. Refuse constraints that cannot be stored, before any DDL runs: a definition rejected
         // later would otherwise leave an orphan storage column behind.
         try {
-            $this->constraintEncoder->assertEncodable($definition->getConstraints());
+            $this->constraintEncoder->assertNormalizable($definition->getConstraints());
         } catch (InvalidExtraPropertyConstraintException $exception) {
             $message = sprintf(
                 'Invalid constraints for extra property %s.%s: %s',
