@@ -49,21 +49,32 @@ class DbPDOCore extends Db
          * replacements are the new Pdo\Mysql:: constants, introduced in PHP 8.4. Unfortunately, we don't
          * have one solution that fits all supported PHP versions.
          */
+        /*
+         * These are assigned rather than merged: PDO attributes are integer constants, and
+         * array_merge() renumbers integer keys, so merging replaced every attribute with a
+         * meaningless one and PDO fell back to its own defaults.
+         */
         if (PHP_VERSION_ID >= 80500) {
-            $options = array_merge($options, [
-                /* @phpstan-ignore-next-line */
-                Pdo\Mysql::ATTR_USE_BUFFERED_QUERY => true,
-                /* @phpstan-ignore-next-line */
-                Pdo\Mysql::ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
-                /* @phpstan-ignore-next-line */
-                Pdo\Mysql::ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
-            ]);
+            /* @phpstan-ignore-next-line */
+            $options[Pdo\Mysql::ATTR_USE_BUFFERED_QUERY] = true;
+            /* @phpstan-ignore-next-line */
+            $options[Pdo\Mysql::ATTR_INIT_COMMAND] = 'SET NAMES utf8mb4';
+            /* @phpstan-ignore-next-line */
+            $options[Pdo\Mysql::ATTR_MULTI_STATEMENTS] = _PS_ALLOW_MULTI_STATEMENTS_QUERIES_;
         } else {
-            $options = array_merge($options, [
-                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
-                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
-                PDO::MYSQL_ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
-            ]);
+            $options[PDO::MYSQL_ATTR_USE_BUFFERED_QUERY] = true;
+            $options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8mb4';
+            $options[PDO::MYSQL_ATTR_MULTI_STATEMENTS] = _PS_ALLOW_MULTI_STATEMENTS_QUERIES_;
+        }
+
+        foreach (self::getSslOptions(
+            _PS_DB_SSL_CA_,
+            _PS_DB_SSL_CERT_,
+            _PS_DB_SSL_KEY_,
+            _PS_DB_SSL_VERIFY_SERVER_CERT_,
+            PHP_VERSION_ID >= 80500
+        ) as $attribute => $value) {
+            $options[$attribute] = $value;
         }
 
         return new PDO(
@@ -72,6 +83,67 @@ class DbPDOCore extends Db
             $password,
             $options
         );
+    }
+
+    /**
+     * PDO options for a TLS connection, or an empty array when none of the paths is configured.
+     *
+     * Naming the certificate authority is the right answer wherever it is possible. Verification is
+     * nonetheless made switchable, because a server presenting a certificate that cannot match the
+     * host it is reached on, which is what MySQL's own auto generated certificates do, refuses the
+     * connection outright even when the authority is correct. Without the switch TLS would be
+     * unusable against a stock MySQL, and encryption without authentication still removes passive
+     * eavesdropping, so it is offered rather than pretended not to exist.
+     *
+     * @param string $ca path to the certificate authority bundle
+     * @param string $cert path to the client certificate, for a server that asks for one
+     * @param string $key path to the client certificate's key
+     * @param bool $verifyServerCert whether the server's certificate has to match the host
+     * @param bool $useModernConstants whether the Pdo\Mysql constants are available, PHP 8.4 and up
+     *
+     * @return array<int, mixed>
+     */
+    protected static function getSslOptions($ca, $cert, $key, $verifyServerCert, $useModernConstants)
+    {
+        $options = [];
+
+        /*
+         * PHP 8.5 deprecated the driver specific PDO:: prefixed constants, as above, so the same
+         * split applies here.
+         */
+        if ($useModernConstants) {
+            /* @phpstan-ignore-next-line */
+            $keys = [
+                'ca' => Pdo\Mysql::ATTR_SSL_CA,
+                'cert' => Pdo\Mysql::ATTR_SSL_CERT,
+                'key' => Pdo\Mysql::ATTR_SSL_KEY,
+            ];
+        } else {
+            $keys = [
+                'ca' => PDO::MYSQL_ATTR_SSL_CA,
+                'cert' => PDO::MYSQL_ATTR_SSL_CERT,
+                'key' => PDO::MYSQL_ATTR_SSL_KEY,
+            ];
+        }
+
+        foreach (['ca' => $ca, 'cert' => $cert, 'key' => $key] as $name => $path) {
+            if (is_string($path) && '' !== $path) {
+                $options[$keys[$name]] = $path;
+            }
+        }
+
+        // Only meaningful alongside TLS material, and only worth sending when it turns the check
+        // off, so a shop that configures nothing keeps PDO's own behaviour untouched.
+        if ([] !== $options && !$verifyServerCert) {
+            // Resolved here rather than alongside the others because the Pdo\Mysql polyfill below
+            // PHP 8.4 declares several feature detected variants and only one carries this one.
+            $verifyAttribute = $useModernConstants
+                ? constant('Pdo\\Mysql::ATTR_SSL_VERIFY_SERVER_CERT')
+                : PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT;
+            $options[$verifyAttribute] = false;
+        }
+
+        return $options;
     }
 
     /**
