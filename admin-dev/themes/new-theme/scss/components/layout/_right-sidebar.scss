@@ -20,6 +20,7 @@
 
   .quicknav-header {
     display: flex;
+    flex: 0 0 auto;
     flex-direction: row-reverse;
     align-items: center;
     justify-content: space-between;
@@ -27,6 +28,13 @@
 
   .quicknav-container {
     height: 100%;
+  }
+
+  // The panel is a column of header, scrollable document and footer. Laying it out here lets the
+  // document claim whatever the other two leave, instead of subtracting their heights by hand.
+  #ps-quicknav-sidebar {
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -70,10 +78,9 @@
   }
 
   .quicknav-fixed-bottom {
-    position: fixed;
-    right: 3em;
-    bottom: 0;
-    left: 0;
+    // Fixed positioning anchored this to the viewport rather than to the panel, so the 3em inset
+    // that suited a narrow column left it short of the edge once the panel was wide.
+    flex: 0 0 auto;
     height: 50px;
     margin-bottom: 0;
 
@@ -115,7 +122,10 @@
   }
 
   .quicknav-scroller {
-    height: calc(100% - 50px - 50px);
+    // Was calc(100% - 50px - 50px); the header is 56px, so the document ran 6px under the footer.
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
     overflow: auto;
 
     table {
