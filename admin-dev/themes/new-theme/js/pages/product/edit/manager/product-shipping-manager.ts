@@ -17,6 +17,7 @@ export default class ProductShippingManager {
       disableOnMatch: false,
       targetSelector: ProductMap.shipping.deliveryTimeNotesBlock,
       toggleType: ToggleType.availability,
+      reenableOnSubmit: true,
     });
   }
 }
