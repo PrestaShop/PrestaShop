@@ -234,13 +234,8 @@ class ConfigurationTestCore
             return false;
         }
         closedir($dh);
-        $dummy = rtrim($dir, '\\/') . DIRECTORY_SEPARATOR . uniqid();
-        if (@file_put_contents($dummy, 'test')) {
-            @unlink($dummy);
-            if (!$recursive) {
-                return true;
-            }
-        } elseif (!is_writable($dir)) {
+
+        if (!ConfigurationTest::isDirectoryWritable($dir)) {
             $full_report = sprintf('Directory %s is not writable', $dir); // sprintf for future translation
 
             return false;
@@ -255,6 +250,32 @@ class ConfigurationTestCore
         }
 
         return true;
+    }
+
+    /**
+     * A directory counts as writable if a file can be created in it, or if the permission bits say
+     * so - the two together, because is_writable() can be wrong where ACLs or a network filesystem
+     * are involved, and the write probe can be refused where the bits are fine.
+     *
+     * The cheap check runs first. Writing and deleting a file costs about thirty times more than
+     * reading the bits, and the recursive tests walk every directory under img, modules and
+     * var/cache, so paying for the probe only to confirm a refusal is what keeps the system
+     * information page usable on a large shop.
+     */
+    private static function isDirectoryWritable(string $dir): bool
+    {
+        if (is_writable($dir)) {
+            return true;
+        }
+
+        $dummy = rtrim($dir, '\\/') . DIRECTORY_SEPARATOR . uniqid();
+        if (@file_put_contents($dummy, 'test')) {
+            @unlink($dummy);
+
+            return true;
+        }
+
+        return false;
     }
 
     public static function test_file($file_relative)
