@@ -10,6 +10,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ConnectionException;
 use Exception;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
 
 /**
@@ -57,6 +58,12 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
                 ->setParameter('parentId', $parentId);
         }
 
+        foreach ($this->getFilters($positionDefinition) as $column => $value) {
+            $qb
+                ->andWhere('t.`' . $column . '` = :filter_' . $column)
+                ->setParameter('filter_' . $column, $value);
+        }
+
         $positions = $qb->executeQuery()->fetchAllAssociative();
         $currentPositions = [];
         foreach ($positions as $position) {
@@ -90,6 +97,12 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
                         ->setParameter('parentId', $parentId);
                 }
 
+                foreach ($this->getFilters($positionDefinition) as $column => $value) {
+                    $qb
+                        ->andWhere('`' . $column . '` = :filter_' . $column)
+                        ->setParameter('filter_' . $column, $value);
+                }
+
                 try {
                     $qb->executeStatement();
                 } catch (Exception) {
@@ -103,5 +116,18 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
 
             throw new PositionUpdateException('Could not update.', 'Admin.Catalog.Notification');
         }
+    }
+
+    /**
+     * A grid that hides part of its table - carriers keep their superseded rows as `deleted` - must
+     * not have those rows numbered, or they consume positions and the visible ones come out with
+     * gaps. The filters live on PositionDefinition rather than on its interface so that a module
+     * implementing that interface keeps working.
+     *
+     * @return array<string, scalar>
+     */
+    private function getFilters(PositionDefinitionInterface $positionDefinition): array
+    {
+        return $positionDefinition instanceof PositionDefinition ? $positionDefinition->getFilters() : [];
     }
 }

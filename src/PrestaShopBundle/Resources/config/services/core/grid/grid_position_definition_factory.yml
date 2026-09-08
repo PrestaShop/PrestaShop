@@ -46,6 +46,10 @@ services:
       $table: 'carrier'
       $idField: 'id_carrier'
       $positionField: 'position'
+      # The carriers grid selects `deleted = 0`, and editing a carrier keeps the old row as deleted.
+      # Without the same restriction here those rows are numbered too and eat positions out of the
+      # visible sequence, which is what leaves gaps in the list after a drag.
+      $filters: { deleted: 0 }
 
   prestashop.core.grid.image.position_definition:
     class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
