@@ -42,16 +42,25 @@ trait QueryResultSerializerTrait
         // Start by normalizing the QueryResult object into normalized array
         $normalizedQueryResult = $this->domainSerializer->normalize($CQRSQueryResult, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
 
+        // A CQRS query is free to return raw database rows instead of a QueryResult DTO (SearchCustomers
+        // does), and those carry booleans as tiny ints, so the cast is needed here for the same reason
+        // QueryListProvider needs it for grid rows. It only affects properties typed bool, a result that
+        // already carries real booleans is unchanged.
+        $denormalizationContext = [
+            NormalizationMapper::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation),
+            CQRSApiSerializer::CAST_BOOL => true,
+        ];
+
         if ($operation instanceof CollectionOperationInterface) {
             foreach ($normalizedQueryResult as $key => $result) {
-                $normalizedQueryResult[$key] = $this->domainSerializer->denormalize(array_merge($extraParameters, $result), $operation->getClass(), null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation)]);
+                $normalizedQueryResult[$key] = $this->domainSerializer->denormalize(array_merge($extraParameters, $result), $operation->getClass(), null, $denormalizationContext);
             }
 
             return $normalizedQueryResult;
         } else {
             $normalizedQueryResult = array_merge($extraParameters, $normalizedQueryResult);
 
-            return $this->domainSerializer->denormalize($normalizedQueryResult, $operation->getClass(), null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation)]);
+            return $this->domainSerializer->denormalize($normalizedQueryResult, $operation->getClass(), null, $denormalizationContext);
         }
     }
 
