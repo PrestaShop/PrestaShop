@@ -2299,8 +2299,9 @@ class ProductCore extends ObjectModel
      */
     public function deleteProductFeatures()
     {
-        SpecificPriceRule::applyAllRules([(int) $this->id]);
-
+        // No price rule recalculation here: it used to run before deleteFeatures(), so it could only
+        // ever see the state being removed, and the sole caller is delete(), after which the product
+        // has no prices left to recalculate.
         return $this->deleteFeatures();
     }
 
@@ -4619,7 +4620,9 @@ class ProductCore extends ObjectModel
         }
         $row = ['id_feature' => (int) $id_feature, 'id_product' => (int) $this->id, 'id_feature_value' => (int) $id_value];
         Db::getInstance()->insert('feature_product', $row);
-        SpecificPriceRule::applyAllRules([(int) $this->id]);
+        // Price rules are not re-applied here: this method adds one feature value, and a caller
+        // adding a whole set would pay for a full recalculation on every one of them. Callers apply
+        // them once when they are done, see setWsProductFeatures().
         if ($id_value) {
             return $id_value;
         }
@@ -6691,6 +6694,9 @@ class ProductCore extends ObjectModel
         foreach ($product_features as $product_feature) {
             $this->addFeaturesToDB($product_feature['id'], $product_feature['id_feature_value']);
         }
+        // Once for the whole set rather than once per feature value: a product carrying a hundred
+        // features used to trigger a hundred full recalculations for a single webservice call.
+        SpecificPriceRule::applyAllRules([(int) $this->id]);
 
         return true;
     }
