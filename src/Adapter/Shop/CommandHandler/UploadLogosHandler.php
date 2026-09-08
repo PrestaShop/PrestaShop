@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop\CommandHandler;
 
+use Configuration as ConfigurationLegacy;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
@@ -16,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
 use PrestaShopException;
+use Shop;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -95,6 +97,7 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
         $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::HEADER_LOGO_FILE_NAME, $uploadedFile);
 
         $this->logoUploader->updateHeader();
+        $this->dropShopOverridesOfGroupContext(['PS_LOGO', 'SHOP_LOGO_HEIGHT', 'SHOP_LOGO_WIDTH']);
     }
 
     /**
@@ -105,6 +108,7 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
         $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::MAIL_LOGO_FILE_NAME, $uploadedFile);
 
         $this->logoUploader->updateMail();
+        $this->dropShopOverridesOfGroupContext(['PS_LOGO_MAIL']);
     }
 
     /**
@@ -115,6 +119,7 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
         $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::INVOICE_LOGO_FILE_NAME, $uploadedHeaderLogo);
 
         $this->logoUploader->updateInvoice();
+        $this->dropShopOverridesOfGroupContext(['PS_LOGO_INVOICE']);
     }
 
     /**
@@ -125,6 +130,31 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
         $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::FAVICON_FILE_NAME, $uploadedHeaderLogo);
 
         $this->logoUploader->updateFavicon();
+    }
+
+    /**
+     * A logo saved from a group context belongs to every shop of that group. The value is stored on the
+     * group, but a value stored earlier for one of those shops individually keeps taking precedence over
+     * it, so the new logo appears only on the shops that never had one of their own. Dropping those
+     * leaves the group value as the one they all read.
+     *
+     * The favicon is deliberately left out: updateFavicon() names the file after the shop and stores it
+     * per shop on purpose.
+     *
+     * @param string[] $configurationKeys
+     */
+    private function dropShopOverridesOfGroupContext(array $configurationKeys): void
+    {
+        if (!Shop::isFeatureActive() || Shop::getContext() !== Shop::CONTEXT_GROUP) {
+            return;
+        }
+
+        $idShopGroup = (int) Shop::getContextShopGroupID();
+        foreach (Shop::getShops(false, $idShopGroup, true) as $idShop) {
+            foreach ($configurationKeys as $configurationKey) {
+                ConfigurationLegacy::deleteFromGivenContext($configurationKey, $idShopGroup, (int) $idShop);
+            }
+        }
     }
 
     /**
