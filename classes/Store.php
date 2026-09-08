@@ -188,6 +188,6 @@ class StoreCore extends ObjectModel
      */
     public static function atLeastOneStoreExists()
     {
-        return (bool) Db::getInstance()->getValue('SELECT `id_store` FROM `' . _DB_PREFIX_ . 'store`', false);
+        return (bool) Db::getInstance()->getValue('SELECT s.`id_store` FROM `' . _DB_PREFIX_ . 'store` s ' . Shop::addSqlAssociation('store', 's') . ' WHERE s.`active` = 1', false);
     }
 }
