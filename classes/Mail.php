@@ -563,22 +563,10 @@ class MailCore extends ObjectModel
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
 
             // Hook to allow modules to add extra template variables
-            // Get extra template_vars
-            $extraTemplateVars = [];
-
-            // An array [module_name => module_output] will be returned (no effect)
-            Hook::exec(
-                'actionGetExtraMailTemplateVars',
-                [
-                    'template' => $template,
-                    'template_vars' => $templateVars,
-                    'extra_template_vars' => &$extraTemplateVars,
-                    'id_lang' => (int) $idLang,
-                ],
-                null,
-                true
+            $templateVars = array_merge(
+                $templateVars,
+                self::getExtraTemplateVars($template, $templateVars, (int) $idLang)
             );
-            $templateVars = array_merge($templateVars, $extraTemplateVars);
 
             // Assign the content itself to the email message
             switch ($configuration['PS_MAIL_TYPE']) {
@@ -725,6 +713,39 @@ class MailCore extends ObjectModel
         }
 
         return '';
+    }
+
+    /**
+     * Collects the extra template variables modules provide for a mail template.
+     *
+     * Shared so that anything rendering a template - sending it, or previewing it in the back office -
+     * substitutes the same set of placeholders. A module registering a placeholder through
+     * actionGetExtraMailTemplateVars used to see it replaced in the sent mail but left raw in the preview.
+     *
+     * @param string $template Template name, without extension
+     * @param array $templateVars Variables already resolved for this template
+     * @param int $idLang Language ID
+     *
+     * @return array Extra variables, keyed by placeholder
+     */
+    public static function getExtraTemplateVars($template, array $templateVars, $idLang)
+    {
+        $extraTemplateVars = [];
+
+        // An array [module_name => module_output] will be returned (no effect)
+        Hook::exec(
+            'actionGetExtraMailTemplateVars',
+            [
+                'template' => $template,
+                'template_vars' => $templateVars,
+                'extra_template_vars' => &$extraTemplateVars,
+                'id_lang' => (int) $idLang,
+            ],
+            null,
+            true
+        );
+
+        return $extraTemplateVars;
     }
 
     /**
