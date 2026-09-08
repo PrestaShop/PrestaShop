@@ -1,0 +1,131 @@
+# Follow-up of every attempt of a nightly test run (workflow_run: completed). Two
+# complementary jobs keyed on the same cap of 4 attempts (1 run + 3 retries):
+#
+#   - retry:         the attempt failed and the cap is not reached -> re-run the failed
+#                    jobs only: the failed campaigns plus their dependent "Combine all
+#                    reports and upload them" job, which re-merges every campaign report
+#                    and overwrites the same date-based file on GCS.
+#   - import-report: the attempt is final (success, or failure at the cap) -> ask the
+#                    nightly boards (production, and preproduction when configured via
+#                    vars.NIGHTLY_PREPROD_API_URL / secrets.NIGHTLY_PREPROD_TOKEN) to
+#                    import that GCS file.
+#
+# The rerun re-emits a `workflow_run: completed` event for the same run with an
+# incremented run_attempt, so the retry chain self-terminates at the cap and the
+# import happens exactly once per run. It must: the import hook refuses a same-day
+# re-import (HTTP 403) and `force=1` would duplicate the board entry, not update it.
+#
+# Recovery when the import call itself fails (hook down): "Re-run failed jobs" on
+# this follow-up run, the workflow_run payload is preserved. A 403 is only a warning.
+name: Nightly tests follow-up
+
+on:
+  workflow_run:
+    workflows:
+      - 'Nightly tests and report - develop (mysql)'
+      - 'Nightly tests and report - develop (mariadb)'
+      - 'Nightly tests and report - 9.2.x (mysql)'
+      - 'Nightly tests and report - 9.2.x (mariadb)'
+      - 'Nightly tests and report - 8.2.x'
+    types:
+      - completed
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  retry:
+    name: Re-run failed jobs (attempt ${{ github.event.workflow_run.run_attempt }})
+    # Cap: keep in sync with the import-report condition below
+    if: >
+      github.event.workflow_run.conclusion == 'failure' &&
+      github.event.workflow_run.run_attempt < 4
+    runs-on: ubuntu-latest
+    steps:
+      - name: Re-run failed jobs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: |
+          echo "Workflow: $WORKFLOW_NAME"
+          echo "Run URL:  $RUN_URL"
+          echo "Attempt $RUN_ATTEMPT failed — triggering rerun of failed jobs only."
+          gh run rerun "$RUN_ID" --failed
+
+  import-report:
+    name: Import the final report on the nightly boards
+    # Complement of the retry condition: the run is final when it succeeded, or when it
+    # failed at the cap. A cancelled run imports nothing (no complete report to import).
+    if: >
+      github.event.workflow_run.conclusion == 'success' ||
+      (github.event.workflow_run.conclusion == 'failure' && github.event.workflow_run.run_attempt >= 4)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve the report name
+        env:
+          # e.g. .github/workflows/cron_nightly_tests_9.2.x_mysql.yml
+          WORKFLOW_PATH: ${{ github.event.workflow_run.path }}
+          # The merge job is the last job of the run, it finished seconds before this timestamp
+          RUN_COMPLETED_AT: ${{ github.event.workflow_run.updated_at }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: |
+          echo "Run URL: $RUN_URL"
+          # Caller file naming convention (see .github/release-bootstrap/templates/cron_nightly_tests_DB.yml.tmpl):
+          # cron_nightly_tests_<branch>_<mysql|mariadb>.yml, or cron_nightly_tests_<branch>.yml for a mysql-only branch (8.2.x)
+          NAME=$(basename "$WORKFLOW_PATH" .yml)
+          NAME=${NAME#cron_nightly_tests_}
+          case "$NAME" in
+            *_mysql)   BRANCH=${NAME%_mysql};   DATABASE=mysql ;;
+            *_mariadb) BRANCH=${NAME%_mariadb}; DATABASE=mariadb ;;
+            *)         BRANCH=$NAME;            DATABASE=mysql ;;
+          esac
+          # Same name as the one built by the merge job of cron_nightly_tests_reusable.yml:
+          # <date at merge time>-<branch>-<db>.json
+          REPORT_NAME="$(date -u -d "$RUN_COMPLETED_AT" +%Y-%m-%d)-${BRANCH}-${DATABASE}.json"
+          echo "Report: ${REPORT_NAME} (database: ${DATABASE})"
+          {
+            echo "BRANCH=${BRANCH}"
+            echo "DATABASE=${DATABASE}"
+            echo "REPORT_NAME=${REPORT_NAME}"
+          } >> "$GITHUB_ENV"
+
+      - name: Import report on production
+        env:
+          API_URL: https://api-nightly.prestashop-project.org
+          API_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}
+        run: |
+          HTTP_CODE=$(curl -sS -o response.json -w '%{http_code}' \
+            "${API_URL}/hook/reports/import?token=${API_TOKEN}&filename=${REPORT_NAME}&database=${DATABASE}")
+          cat response.json; echo
+          case "$HTTP_CODE" in
+            200) echo "Imported ${REPORT_NAME} on ${API_URL}" ;;
+            403) echo "::warning::${REPORT_NAME} was already imported on ${API_URL} (HTTP 403), nothing to do" ;;
+            *)   echo "::error::Import of ${REPORT_NAME} on ${API_URL} failed (HTTP ${HTTP_CODE})"; exit 1 ;;
+          esac
+
+      # The preproduction board gets the same report so it can be tested against real data.
+      # Isolated (continue-on-error) and skipped when not configured: it can never break the
+      # production import.
+      - name: Import report on preproduction
+        continue-on-error: true
+        env:
+          API_URL: ${{ vars.NIGHTLY_PREPROD_API_URL }}
+          API_TOKEN: ${{ secrets.NIGHTLY_PREPROD_TOKEN }}
+        run: |
+          if [ -z "$API_URL" ] || [ -z "$API_TOKEN" ]; then
+            echo "::warning::Preproduction target not configured, skipping"
+            exit 0
+          fi
+          HTTP_CODE=$(curl -sS -o response.json -w '%{http_code}' \
+            "${API_URL}/hook/reports/import?token=${API_TOKEN}&filename=${REPORT_NAME}&database=${DATABASE}")
+          cat response.json; echo
+          case "$HTTP_CODE" in
+            200) echo "Imported ${REPORT_NAME} on ${API_URL}" ;;
+            403) echo "::warning::${REPORT_NAME} was already imported on ${API_URL} (HTTP 403), nothing to do" ;;
+            *)   echo "::error::Import of ${REPORT_NAME} on ${API_URL} failed (HTTP ${HTTP_CODE})"; exit 1 ;;
+          esac
