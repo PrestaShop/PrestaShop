@@ -44,11 +44,13 @@ class RegistrationControllerCore extends FrontController
 
         // If registration form was submitted
         if (Tools::isSubmit('submitCreate')) {
-            $hookResult = array_reduce(
+            // WHY: only an explicit false is a veto. Modules registered on this hook are observers
+            // as often as they are gatekeepers, and a hook method that returns nothing yields null
+            // in the results array - which the previous `$carry && $item` reduction read as a
+            // refusal, silently blocking account creation with no message (issue #37103).
+            $hookResult = !in_array(
+                false,
                 Hook::exec('actionSubmitAccountBefore', [], null, true),
-                function ($carry, $item) {
-                    return $carry && $item;
-                },
                 true
             );
 
