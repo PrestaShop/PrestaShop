@@ -295,11 +295,21 @@ class OrderSlipCreator
             }
         }
 
+        // WHY: the voucher comes off BOTH totals, each in its own tax base. $amount is the order's
+        // voucher taken from Order::$total_discounts, which is tax included, so deducting it from
+        // total_products_tax_excl - as the tax-included-shop branch did - subtracted a tax-included
+        // figure from a tax-excluded total. The order carries the matching tax-excluded value already.
+        if ($amount && !$amount_choosen) {
+            $orderSlip->total_products_tax_incl -= (float) $order->total_discounts_tax_incl;
+            $orderSlip->total_products_tax_excl -= (float) $order->total_discounts_tax_excl;
+        }
+
+        // WHY: read AFTER the deduction. Which total `amount` mirrors is left exactly as it was - the
+        // tax base of this stored field is not this fix's to redefine - but both branches used to read
+        // the one the deduction had not touched, which is how the voucher stayed in the credit slip.
         if ($add_tax) {
-            $orderSlip->total_products_tax_incl -= $amount && !$amount_choosen ? $amount : 0;
             $orderSlip->amount = $amount_choosen ? $amount : $orderSlip->total_products_tax_excl;
         } else {
-            $orderSlip->total_products_tax_excl -= $amount && !$amount_choosen ? $amount : 0;
             $orderSlip->amount = $amount_choosen ? $amount : $orderSlip->total_products_tax_incl;
         }
         $orderSlip->shipping_cost_amount = $orderSlip->total_shipping_tax_incl;
