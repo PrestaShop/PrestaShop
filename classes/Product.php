@@ -1691,8 +1691,20 @@ class ProductCore extends ObjectModel
      *
      * @return bool
      */
+    /**
+     * Request-scoped cache of the "new" flag, keyed by "idProduct-idShop".
+     *
+     * @var array<string, bool>
+     */
+    protected static $cacheIsNew = [];
+
     public static function isNewStatic($idProduct)
     {
+        $cacheKey = (int) $idProduct . '-' . (int) Context::getContext()->shop->id;
+        if (isset(static::$cacheIsNew[$cacheKey])) {
+            return static::$cacheIsNew[$cacheKey];
+        }
+
         $nbDaysNewProduct = Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
         if (!Validate::isUnsignedInt($nbDaysNewProduct)) {
             $nbDaysNewProduct = 20;
@@ -1704,7 +1716,44 @@ class ProductCore extends ObjectModel
             WHERE p.id_product = ' . (int) $idProduct . '
             AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_add`) < ' . $nbDaysNewProduct;
 
-        return (bool) Db::getInstance()->getValue($query, false);
+        return static::$cacheIsNew[$cacheKey] = (bool) Db::getInstance()->getValue($query, false);
+    }
+
+    /**
+     * Prefetches the "new" flag for a whole set of products (e.g. a listing page) in a single query,
+     * so isNewStatic() does not run a COUNT query once per product during presentation. The result is
+     * stored request-scoped and consumed by isNewStatic().
+     *
+     * @param int[] $idProducts
+     */
+    public static function prefetchIsNew(array $idProducts)
+    {
+        $idProducts = array_unique(array_filter(array_map('intval', $idProducts)));
+        if (empty($idProducts)) {
+            return;
+        }
+
+        $nbDaysNewProduct = Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
+        if (!Validate::isUnsignedInt($nbDaysNewProduct)) {
+            $nbDaysNewProduct = 20;
+        }
+
+        $idShop = (int) Context::getContext()->shop->id;
+
+        $rows = Db::getInstance()->executeS(
+            'SELECT p.id_product
+            FROM `' . _DB_PREFIX_ . 'product` p
+            ' . Shop::addSqlAssociation('product', 'p') . '
+            WHERE p.id_product IN (' . implode(',', $idProducts) . ')
+            AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_add`) < ' . (int) $nbDaysNewProduct,
+            true,
+            false
+        ) ?: [];
+        $newProductIds = array_flip(array_map('intval', array_column($rows, 'id_product')));
+
+        foreach ($idProducts as $idProduct) {
+            static::$cacheIsNew[$idProduct . '-' . $idShop] = isset($newProductIds[$idProduct]);
+        }
     }
 
     /**
