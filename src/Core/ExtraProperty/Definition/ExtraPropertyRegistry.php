@@ -15,7 +15,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryExce
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyConstraintException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManagerInterface;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCodec;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintEncoder;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -43,6 +43,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         // where the form factory is always available — never in the FO legacy container.
         protected readonly FormOptionsValidator $formOptionsValidator,
         protected readonly ShopRepository $shopRepository,
+        protected readonly ExtraPropertyConstraintEncoder $constraintEncoder,
     ) {
     }
 
@@ -96,7 +97,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         // 1. Refuse constraints that cannot be stored, before any DDL runs: a definition rejected
         // later would otherwise leave an orphan storage column behind.
         try {
-            ExtraPropertyConstraintCodec::assertEncodable($definition->getConstraints());
+            $this->constraintEncoder->assertEncodable($definition->getConstraints());
         } catch (InvalidExtraPropertyConstraintException $exception) {
             $message = sprintf(
                 'Invalid constraints for extra property %s.%s: %s',

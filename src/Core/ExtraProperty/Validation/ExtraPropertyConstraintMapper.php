@@ -149,9 +149,9 @@ class ExtraPropertyConstraintMapper
      * Bounds applied to any DSL string being parsed. The value stored in the registry is parsed on
      * read, so a tampered row must not be able to exhaust the stack or the request budget.
      */
-    private const MAX_NESTING_DEPTH = 16;
-    private const MAX_RAW_LENGTH = 65535;
-    private const MAX_TOKENS = 256;
+    public const MAX_NESTING_DEPTH = 16;
+    public const MAX_RAW_LENGTH = 65535;
+    public const MAX_TOKENS = 256;
 
     /**
      * Parses a "one constraint per line (or comma-separated)" textarea value into Constraint instances.
@@ -169,22 +169,9 @@ class ExtraPropertyConstraintMapper
             return null;
         }
 
-        // This string is also the persisted form, so it can reach us from a tampered registry row:
-        // bound the work before parsing anything.
-        if (strlen($rawNames) > self::MAX_RAW_LENGTH) {
-            throw new InvalidExtraPropertyConstraintException(sprintf(
-                'Constraint definition exceeds the maximum length of %d characters.',
-                self::MAX_RAW_LENGTH
-            ));
-        }
-
-        $tokens = self::splitTopLevelWithLines($rawNames, ",\n");
-        if (count($tokens) > self::MAX_TOKENS) {
-            throw new InvalidExtraPropertyConstraintException(sprintf(
-                'Constraint definition exceeds the maximum of %d top-level constraints.',
-                self::MAX_TOKENS
-            ));
-        }
+        // tokenize() carries the token-count bound, so every caller splitting a definition gets it.
+        // The length bound belongs to the encoder, which guards both of its decoding paths with it.
+        $tokens = self::tokenize($rawNames);
 
         $constraints = [];
         foreach ($tokens as [$token, $line]) {
@@ -235,15 +222,6 @@ class ExtraPropertyConstraintMapper
     }
 
     /**
-     * The nesting bound applied by the grammar, exposed so the codec applies the same one while
-     * walking the object graph handed over by module code.
-     */
-    public static function maxNestingDepth(): int
-    {
-        return self::MAX_NESTING_DEPTH;
-    }
-
-    /**
      * Whether an option name is refused wherever a constraint is built: callable options Symfony
      * invokes at validation time, and property-path options that traverse the validated object.
      */
@@ -251,14 +229,6 @@ class ExtraPropertyConstraintMapper
     {
         return in_array($option, self::CALLABLE_OPTIONS, true)
             || str_ends_with(strtolower($option), 'propertypath');
-    }
-
-    /**
-     * The longest raw definition the parser accepts.
-     */
-    public static function maxRawLength(): int
-    {
-        return self::MAX_RAW_LENGTH;
     }
 
     /**
@@ -281,7 +251,15 @@ class ExtraPropertyConstraintMapper
      */
     public static function tokenize(string $raw): array
     {
-        return self::splitTopLevelWithLines($raw, ",\n");
+        $tokens = self::splitTopLevelWithLines($raw, ",\n");
+        if (count($tokens) > self::MAX_TOKENS) {
+            throw new InvalidExtraPropertyConstraintException(sprintf(
+                'Constraint definition exceeds the maximum of %d top-level constraints.',
+                self::MAX_TOKENS
+            ));
+        }
+
+        return $tokens;
     }
 
     /**

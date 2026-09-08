@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Form;
 
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
@@ -26,6 +27,12 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintM
  * editable form the row form type validates names on submit). A token without the Name/Name(...)/
  * Name[...] shape cannot be represented as a row and is skipped; the mapper never renders such a
  * token, so this only drops hand-edited database values.
+ *
+ * Every row carries 'composite_options' even when it is empty, which is only ever filled for a
+ * composite. This is deliberate: the field is declared on the row form type, so Symfony binds it on
+ * every row regardless — a submitted row comes back with 'composite_options' => null even when the
+ * request did not carry it. Emitting it only for composites would make this output disagree with the
+ * shape of the bound data, which is exactly what the form round-trip compares.
  */
 class ConstraintRowPresenter
 {
@@ -45,14 +52,28 @@ class ConstraintRowPresenter
             return [];
         }
 
+        // Displaying a definition must never fail: tokenize() enforces the grammar bounds and throws
+        // past them, but a row that cannot be shown is better rendered as an empty builder than as a
+        // broken page. The definition itself is unaffected — only this view of it.
+        try {
+            $tokens = ExtraPropertyConstraintMapper::tokenize($raw);
+        } catch (ExtraPropertyException) {
+            return [];
+        }
+
         $rows = [];
         $allExploded = false;
-        foreach (ExtraPropertyConstraintMapper::tokenize($raw) as [$token, $line]) {
+        foreach ($tokens as [$token, $line]) {
             // The first top-level All[...] feeds the per-language zone: each child becomes its own
             // per_language row, folded back into one All[...] line on serialization.
             if (!$allExploded && 1 === preg_match('/^All\s*\[(.*)\]$/s', $token, $matches)) {
                 $allExploded = true;
-                foreach (ExtraPropertyConstraintMapper::tokenize($matches[1]) as [$childToken, $childLine]) {
+                try {
+                    $children = ExtraPropertyConstraintMapper::tokenize($matches[1]);
+                } catch (ExtraPropertyException) {
+                    continue;
+                }
+                foreach ($children as [$childToken, $childLine]) {
                     self::appendTokenRow($rows, $childToken, '1');
                 }
                 continue;

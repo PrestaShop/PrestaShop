@@ -30,14 +30,19 @@ use Symfony\Component\Validator\Constraint;
  *   dropped weeks later.
  * - **Safety** — the round-trip says nothing about danger: an executable option such as
  *   `normalizer: 'system'` survives it perfectly. Callable and property-path options are therefore
- *   rejected explicitly, by the grammar on the way in and by this codec on the way out.
+ *   rejected explicitly, by the grammar on the way in and by this encoder on the way out.
  *
- * Failure policy is asymmetric on purpose:
- * - writing fails closed — encode() throws and nothing is persisted;
- * - reading fails safe — decodeTolerant() drops the offending root constraint, reports it, and keeps
- *   its valid siblings, because a corrupt row must never break a front-office render.
+ * Failure policy is asymmetric on purpose, and carried by the method names rather than by a runtime
+ * flag, so a caller cannot pick the wrong one silently:
+ * - {@see self::encode()} and {@see self::decode()} fail closed — they throw, and nothing is persisted;
+ * - {@see self::decodeTolerant()} fails safe — it drops the offending root constraint, reports it in
+ *   its result and keeps the valid siblings, because a corrupt row must never break a front-office
+ *   render.
+ *
+ * Usable as a service (its constructor takes no argument) and instantiable on demand where no
+ * container is available.
  */
-final class ExtraPropertyConstraintCodec
+class ExtraPropertyConstraintEncoder
 {
     /**
      * Encodes constraints into the value stored in the registry.
@@ -47,13 +52,13 @@ final class ExtraPropertyConstraintCodec
      * @throws InvalidExtraPropertyConstraintException when a constraint cannot be represented safely
      *                                                 or would not survive the round-trip
      */
-    public static function encode(?array $constraints): ?string
+    public function encode(?array $constraints): ?string
     {
         if (null === $constraints || [] === $constraints) {
             return null;
         }
 
-        self::assertEncodable($constraints);
+        $this->assertConstraintList($constraints);
 
         $encoded = ExtraPropertyConstraintMapper::toNames($constraints);
         if (null === $encoded) {
@@ -71,7 +76,7 @@ final class ExtraPropertyConstraintCodec
             ), 0, $exception);
         }
 
-        if (!self::isIdentical($constraints, $decoded)) {
+        if (!$this->isIdentical($constraints, $decoded)) {
             throw new InvalidExtraPropertyConstraintException(
                 'Constraints cannot be persisted without loss: decoding the encoded form does not yield the original constraints. '
                 . 'This usually means an option the extra property constraint format does not carry.'
@@ -79,6 +84,22 @@ final class ExtraPropertyConstraintCodec
         }
 
         return $encoded;
+    }
+
+    /**
+     * Asserts that constraints can be persisted, without keeping the result.
+     *
+     * This is a genuine dry-run of {@see self::encode()} rather than a parallel set of checks: any
+     * divergence between the two would let a definition pass the registry guard and then fail while
+     * saving — after the DDL has already created its storage column.
+     *
+     * @param list<Constraint>|null $constraints
+     *
+     * @throws InvalidExtraPropertyConstraintException
+     */
+    public function assertEncodable(?array $constraints): void
+    {
+        $this->encode($constraints);
     }
 
     /**
@@ -92,52 +113,45 @@ final class ExtraPropertyConstraintCodec
      * @throws UnknownExtraPropertyConstraintException
      * @throws InvalidExtraPropertyConstraintException
      */
-    public static function decodeStrict(mixed $raw): ?array
+    public function decode(mixed $raw): ?array
     {
         if (is_array($raw)) {
             return [] !== $raw ? array_values($raw) : null;
         }
+        if (!is_string($raw)) {
+            return null;
+        }
 
-        return is_string($raw) ? ExtraPropertyConstraintMapper::fromNames($raw) : null;
+        $this->assertWithinLengthBound($raw);
+
+        return ExtraPropertyConstraintMapper::fromNames($raw);
     }
 
     /**
      * Decodes a stored value, tolerating a corrupt root constraint.
      *
-     * Each top-level constraint is decoded on its own: an invalid one is dropped and reported
-     * through $onRejected, while its valid siblings stay active. A composite is always dropped as a
-     * whole — a partially decoded composite would silently weaken the validation it describes.
-     *
-     * @param callable(int|string|null, string): void|null $onRejected
-     *
-     * @return list<Constraint>|null
+     * Each top-level constraint is decoded on its own: an invalid one is dropped and reported in the
+     * result, while its valid siblings stay active. A composite is always dropped as a whole — a
+     * partially decoded composite would silently weaken the validation it describes.
      */
-    public static function decodeTolerant(mixed $raw, ?callable $onRejected = null): ?array
+    public function decodeTolerant(mixed $raw): DecodedConstraints
     {
         if (is_array($raw)) {
-            return [] !== $raw ? array_values($raw) : null;
+            return new DecodedConstraints(array_values($raw));
         }
         if (!is_string($raw) || '' === trim($raw)) {
-            return null;
-        }
-        if (strlen($raw) > ExtraPropertyConstraintMapper::maxRawLength()) {
-            self::reject($onRejected, null, sprintf(
-                'Stored constraints exceed the maximum length of %d characters.',
-                ExtraPropertyConstraintMapper::maxRawLength()
-            ));
-
-            return null;
+            return new DecodedConstraints();
         }
 
         try {
+            $this->assertWithinLengthBound($raw);
             $tokens = ExtraPropertyConstraintMapper::tokenize($raw);
         } catch (UnknownExtraPropertyConstraintException|InvalidExtraPropertyConstraintException $exception) {
-            self::reject($onRejected, null, $exception->getMessage());
-
-            return null;
+            return new DecodedConstraints([], [['index' => null, 'reason' => $exception->getMessage()]]);
         }
 
         $constraints = [];
+        $rejections = [];
         foreach ($tokens as $index => [$token, $line]) {
             try {
                 $parsed = ExtraPropertyConstraintMapper::fromNames($token);
@@ -145,7 +159,7 @@ final class ExtraPropertyConstraintCodec
                 // fromNames() numbers lines within the single token it was handed, which is always
                 // line 1 here; the meaningful number is the one from the full definition.
                 $reason = preg_replace('/^Line \d+: /', '', $exception->getMessage()) ?? $exception->getMessage();
-                self::reject($onRejected, $index, sprintf('line %d: %s', $line, $reason));
+                $rejections[] = ['index' => $index, 'reason' => sprintf('line %d: %s', $line, $reason)];
 
                 continue;
             }
@@ -154,7 +168,22 @@ final class ExtraPropertyConstraintCodec
             }
         }
 
-        return [] !== $constraints ? $constraints : null;
+        return new DecodedConstraints($constraints, $rejections);
+    }
+
+    /**
+     * The single length bound both decoding paths apply, so neither can drift from the other.
+     *
+     * @throws InvalidExtraPropertyConstraintException
+     */
+    private function assertWithinLengthBound(string $raw): void
+    {
+        if (strlen($raw) > ExtraPropertyConstraintMapper::MAX_RAW_LENGTH) {
+            throw new InvalidExtraPropertyConstraintException(sprintf(
+                'Constraint definition exceeds the maximum length of %d characters.',
+                ExtraPropertyConstraintMapper::MAX_RAW_LENGTH
+            ));
+        }
     }
 
     /**
@@ -164,15 +193,12 @@ final class ExtraPropertyConstraintCodec
      * two families would otherwise slip through silently: options excluded from rendering by design
      * (`groups`, `payload`), and executable options that render and re-parse perfectly.
      *
-     * @param list<Constraint>|null $constraints
+     * @param list<Constraint> $constraints
      *
      * @throws InvalidExtraPropertyConstraintException
      */
-    public static function assertEncodable(?array $constraints): void
+    private function assertConstraintList(array $constraints): void
     {
-        if (null === $constraints || [] === $constraints) {
-            return;
-        }
         if (!array_is_list($constraints)) {
             throw new InvalidExtraPropertyConstraintException('Extra property constraints must be provided as a list.');
         }
@@ -187,19 +213,19 @@ final class ExtraPropertyConstraintCodec
                 ));
             }
 
-            self::assertConstraintEncodable($constraint, 0, sprintf('constraints[%d]', $index));
+            $this->assertConstraintEncodable($constraint, 0, sprintf('constraints[%d]', $index));
         }
     }
 
     /**
      * @throws InvalidExtraPropertyConstraintException
      */
-    private static function assertConstraintEncodable(Constraint $constraint, int $depth, string $path): void
+    private function assertConstraintEncodable(Constraint $constraint, int $depth, string $path): void
     {
-        if ($depth > ExtraPropertyConstraintMapper::maxNestingDepth()) {
+        if ($depth > ExtraPropertyConstraintMapper::MAX_NESTING_DEPTH) {
             throw new InvalidExtraPropertyConstraintException(sprintf(
                 'Constraint nesting exceeds the maximum depth of %d at %s.',
-                ExtraPropertyConstraintMapper::maxNestingDepth(),
+                ExtraPropertyConstraintMapper::MAX_NESTING_DEPTH,
                 $path
             ));
         }
@@ -234,14 +260,14 @@ final class ExtraPropertyConstraintCodec
                 ));
             }
 
-            self::assertValueEncodable($value, $depth, $path . '.' . $name);
+            $this->assertValueEncodable($value, $depth, $path . '.' . $name);
         }
     }
 
     /**
      * @throws InvalidExtraPropertyConstraintException
      */
-    private static function assertValueEncodable(mixed $value, int $depth, string $path): void
+    private function assertValueEncodable(mixed $value, int $depth, string $path): void
     {
         if (null === $value || is_scalar($value)) {
             return;
@@ -249,14 +275,14 @@ final class ExtraPropertyConstraintCodec
 
         if (is_array($value)) {
             foreach ($value as $key => $item) {
-                self::assertValueEncodable($item, $depth + 1, sprintf('%s[%s]', $path, (string) $key));
+                $this->assertValueEncodable($item, $depth + 1, sprintf('%s[%s]', $path, (string) $key));
             }
 
             return;
         }
 
         if ($value instanceof Constraint) {
-            self::assertConstraintEncodable($value, $depth + 1, $path);
+            $this->assertConstraintEncodable($value, $depth + 1, $path);
 
             return;
         }
@@ -278,21 +304,21 @@ final class ExtraPropertyConstraintCodec
      * @param list<Constraint> $expected
      * @param list<Constraint>|null $actual
      */
-    private static function isIdentical(array $expected, ?array $actual): bool
+    private function isIdentical(array $expected, ?array $actual): bool
     {
-        return null !== $actual && self::normalize($expected) === self::normalize($actual);
+        return null !== $actual && $this->normalize($expected) === $this->normalize($actual);
     }
 
     /**
      * Reduces a graph to nested arrays of scalars, keeping class names, keys, order and scalar types,
      * so a plain `===` becomes a strict structural comparison.
      */
-    private static function normalize(mixed $value): mixed
+    private function normalize(mixed $value): mixed
     {
         if (is_array($value)) {
             $normalized = [];
             foreach ($value as $key => $item) {
-                $normalized[$key] = self::normalize($item);
+                $normalized[$key] = $this->normalize($item);
             }
 
             return $normalized;
@@ -312,20 +338,10 @@ final class ExtraPropertyConstraintCodec
                 continue;
             }
             $normalized[$property->getName()] = $property->isInitialized($value)
-                ? self::normalize($property->getValue($value))
+                ? $this->normalize($property->getValue($value))
                 : '#uninitialized';
         }
 
         return $normalized;
-    }
-
-    /**
-     * @param callable(int|string|null, string): void|null $onRejected
-     */
-    private static function reject(?callable $onRejected, int|string|null $index, string $reason): void
-    {
-        if (null !== $onRejected) {
-            $onRejected($index, $reason);
-        }
     }
 }

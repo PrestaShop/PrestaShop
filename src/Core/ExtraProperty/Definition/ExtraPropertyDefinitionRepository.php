@@ -14,7 +14,8 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefinitionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ColumnDefinitionMapper;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCodec;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\DecodedConstraints;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintEncoder;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -44,7 +45,8 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
     public function __construct(
         protected readonly Connection $connection,
         protected readonly string $prefix,
-        protected readonly ?LoggerInterface $logger = null,
+        protected readonly ExtraPropertyConstraintEncoder $constraintEncoder,
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
@@ -60,12 +62,12 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             ->from($table, 'eef')
             ->orderBy('eef.id_extra_property_definition', 'ASC');
 
-        $rows = $this->enrichRowsWithShopAssociations(
+        $rows = $this->enrichRowsWithDecodedConstraints($this->enrichRowsWithShopAssociations(
             $this->enrichRowsWithColumnMetadata($qb->executeQuery()->fetchAllAssociative() ?: [])
-        );
+        ));
 
         return new ExtraPropertyDefinitionCollection(array_values(array_map(
-            $this->hydrateDefinition(...),
+            static fn (array $row): ExtraPropertyDefinition => ExtraPropertyDefinition::fromRow($row),
             $rows
         )));
     }
@@ -92,7 +94,9 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             return null;
         }
 
-        return $this->hydrateDefinition($this->enrichRowsWithShopAssociations($this->enrichRowsWithColumnMetadata([$row]))[0]);
+        return ExtraPropertyDefinition::fromRow(
+            $this->enrichRowsWithDecodedConstraints($this->enrichRowsWithShopAssociations($this->enrichRowsWithColumnMetadata([$row])))[0]
+        );
     }
 
     /**
@@ -113,7 +117,9 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             return null;
         }
 
-        return $this->hydrateDefinition($this->enrichRowsWithShopAssociations($this->enrichRowsWithColumnMetadata([$row]))[0]);
+        return ExtraPropertyDefinition::fromRow(
+            $this->enrichRowsWithDecodedConstraints($this->enrichRowsWithShopAssociations($this->enrichRowsWithColumnMetadata([$row])))[0]
+        );
     }
 
     /**
@@ -168,7 +174,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             'form_type' => $definition->getFormType(),
             'form_options' => null !== $definition->getFormOptions() ? json_encode($definition->getFormOptions()) : null,
             'sql_index' => $definition->getSqlIndex()->value,
-            'constraints' => ExtraPropertyConstraintCodec::encode($definition->getConstraints()),
+            'constraints' => $this->constraintEncoder->encode($definition->getConstraints()),
             'associated_forms' => !empty($definition->getAssociatedForms()) ? json_encode(array_values($definition->getAssociatedForms())) : null,
             'associated_grids' => !empty($definition->getAssociatedGrids()) ? json_encode(array_values($definition->getAssociatedGrids())) : null,
             'associated_apis' => !empty($definition->getAssociatedApis()) ? json_encode(array_values($definition->getAssociatedApis())) : null,
@@ -327,44 +333,57 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
     }
 
     /**
-     * Builds a definition from a registry row, decoding its constraints beforehand so a rejected
-     * one can be reported with the row it came from.
+     * Replaces the raw 'constraints' cell of each row by the decoded constraint objects.
      *
      * Reading stays fail-safe: an unreadable constraint is dropped and logged, never thrown, because
-     * definitions are hydrated on front-office requests too — a corrupt or tampered row must not
-     * take a page down. Writing is the opposite: save() refuses to persist what it cannot encode.
+     * definitions are hydrated on front-office requests too — a corrupt or tampered row must not take
+     * a page down. Writing is the opposite: save() refuses to persist what it cannot encode.
      *
+     * @param array<int, array<string, mixed>> $rows
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function enrichRowsWithDecodedConstraints(array $rows): array
+    {
+        foreach ($rows as $index => $row) {
+            $decoded = $this->constraintEncoder->decodeTolerant($row['constraints'] ?? null);
+            $rows[$index]['constraints'] = $decoded->getConstraints();
+
+            if ($decoded->hasRejections()) {
+                $this->logRejectedConstraints($row, $decoded);
+            }
+        }
+
+        return $rows;
+    }
+
+    /**
      * @param array<string, mixed> $row
      */
-    protected function hydrateDefinition(array $row): ExtraPropertyDefinition
+    private function logRejectedConstraints(array $row, DecodedConstraints $decoded): void
     {
-        $row['constraints'] = ExtraPropertyConstraintCodec::decodeTolerant(
-            $row['constraints'] ?? null,
-            function (int|string|null $index, string $reason) use ($row): void {
-                $definitionId = isset($row['id_extra_property_definition'])
-                    ? (int) $row['id_extra_property_definition']
-                    : null;
+        $definitionId = isset($row['id_extra_property_definition'])
+            ? (int) $row['id_extra_property_definition']
+            : null;
 
-                try {
-                    $this->logger?->error(sprintf(
-                        'Rejected extra property constraint %s for definition #%s (%s/%s/%s): %s',
-                        null === $index ? 'definition' : sprintf('index %s', (string) $index),
-                        null !== $definitionId ? (string) $definitionId : 'unknown',
-                        (string) ($row['entity_name'] ?? 'unknown'),
-                        (string) ($row['module_name'] ?? ExtraPropertyDefinition::CORE_MODULE_KEY),
-                        (string) ($row['property_name'] ?? 'unknown'),
-                        $reason
-                    ), [
-                        'object_type' => 'extra_property_definition',
-                        'object_id' => $definitionId,
-                    ]);
-                } catch (Throwable) {
-                    // Logging must never turn a degraded definition into a failed request.
-                }
+        foreach ($decoded->getRejections() as $rejection) {
+            try {
+                $this->logger->error(sprintf(
+                    'Rejected extra property constraint %s for definition #%s (%s/%s/%s): %s',
+                    null === $rejection['index'] ? 'definition' : sprintf('index %s', (string) $rejection['index']),
+                    null !== $definitionId ? (string) $definitionId : 'unknown',
+                    (string) ($row['entity_name'] ?? 'unknown'),
+                    (string) ($row['module_name'] ?? ExtraPropertyDefinition::CORE_MODULE_KEY),
+                    (string) ($row['property_name'] ?? 'unknown'),
+                    $rejection['reason']
+                ), [
+                    'object_type' => 'extra_property_definition',
+                    'object_id' => $definitionId,
+                ]);
+            } catch (Throwable) {
+                // Logging must never turn a degraded definition into a failed request.
             }
-        );
-
-        return ExtraPropertyDefinition::fromRow($row);
+        }
     }
 
     /**

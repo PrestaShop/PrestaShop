@@ -11,7 +11,7 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
 
 use ObjectModelCore;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCodec;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintEncoder;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
@@ -560,7 +560,10 @@ final class ExtraPropertyDefinition
      */
     private static function decodeConstraints(mixed $raw): ?array
     {
-        return ExtraPropertyConstraintCodec::decodeTolerant($raw);
+        // The repository decodes rows itself, through the injected encoder, so it can log a
+        // rejection with its registry context. This fallback keeps fromRow() usable on a raw row:
+        // the encoder has no dependency, so building one here costs nothing.
+        return (new ExtraPropertyConstraintEncoder())->decodeTolerant($raw)->getConstraints();
     }
 
     // -------------------------------------------------------------------------

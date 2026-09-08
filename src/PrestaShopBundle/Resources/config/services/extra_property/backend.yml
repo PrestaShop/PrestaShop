@@ -34,6 +34,7 @@ services:
       $formOptionsValidator: '@PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator'
       # Existence check on the shop association ids (the *_shop rows carry no foreign key).
       $shopRepository: '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
+      $constraintEncoder: '@PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintEncoder'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface:
     alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistry'

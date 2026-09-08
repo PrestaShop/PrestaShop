@@ -12,20 +12,27 @@ namespace Tests\Unit\Core\ExtraProperty\Validation;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyConstraintException;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCodec;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintEncoder;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ExtraPropertyConstraintCodecTest extends TestCase
+class ExtraPropertyConstraintEncoderTest extends TestCase
 {
+    private ExtraPropertyConstraintEncoder $encoder;
+
+    protected function setUp(): void
+    {
+        $this->encoder = new ExtraPropertyConstraintEncoder();
+    }
+
     /**
      * The persisted form is the DSL, so no PHP deserialization primitive may remain on this path.
      */
     public function testNoPhpDeserializationRemainsOnTheConstraintPath(): void
     {
         $sources = [
-            __DIR__ . '/../../../../../src/Core/ExtraProperty/Validation/ExtraPropertyConstraintCodec.php',
+            __DIR__ . '/../../../../../src/Core/ExtraProperty/Validation/ExtraPropertyConstraintEncoder.php',
             __DIR__ . '/../../../../../src/Core/ExtraProperty/Validation/ExtraPropertyConstraintMapper.php',
             __DIR__ . '/../../../../../src/Core/ExtraProperty/Definition/ExtraPropertyDefinition.php',
             __DIR__ . '/../../../../../src/Core/ExtraProperty/Definition/ExtraPropertyDefinitionRepository.php',
@@ -51,10 +58,10 @@ class ExtraPropertyConstraintCodecTest extends TestCase
      */
     public function testConstraintsSurviveTheStorageRoundTrip(string $_label, array $constraints): void
     {
-        $encoded = ExtraPropertyConstraintCodec::encode($constraints);
+        $encoded = $this->encoder->encode($constraints);
         $this->assertIsString($encoded);
 
-        $decoded = ExtraPropertyConstraintCodec::decodeStrict($encoded);
+        $decoded = $this->encoder->decode($encoded);
 
         // var_export keeps scalar types apart, which a loose comparison would not.
         $this->assertSame(var_export($constraints, true), var_export($decoded, true));
@@ -109,7 +116,7 @@ class ExtraPropertyConstraintCodecTest extends TestCase
             $constraints = ExtraPropertyConstraintMapper::fromNames($samples[$name] ?? $name);
             $this->assertIsArray($constraints);
 
-            $decoded = ExtraPropertyConstraintCodec::decodeStrict(ExtraPropertyConstraintCodec::encode($constraints));
+            $decoded = $this->encoder->decode($this->encoder->encode($constraints));
 
             $this->assertSame(
                 var_export($constraints, true),
@@ -127,7 +134,7 @@ class ExtraPropertyConstraintCodecTest extends TestCase
         $this->expectException(InvalidExtraPropertyConstraintException::class);
         $this->expectExceptionMessageMatches($expectedMessage);
 
-        ExtraPropertyConstraintCodec::encode([$constraint]);
+        $this->encoder->encode([$constraint]);
     }
 
     public static function refusedConstraintProvider(): iterable
@@ -154,7 +161,7 @@ class ExtraPropertyConstraintCodecTest extends TestCase
 
         yield 'object option' => [new Assert\LessThan(new DateTimeImmutable('2030-01-01')), '/cannot be represented/'];
 
-        yield 'constraint outside the grammar' => [new CodecUnsupportedConstraint(), '/not part of the extra property constraint grammar/'];
+        yield 'constraint outside the grammar' => [new EncoderUnsupportedConstraint(), '/not part of the extra property constraint grammar/'];
     }
 
     public function testSelfReferencingCompositeIsRefused(): void
@@ -165,7 +172,7 @@ class ExtraPropertyConstraintCodecTest extends TestCase
         $this->expectException(InvalidExtraPropertyConstraintException::class);
         $this->expectExceptionMessageMatches('/exceeds the maximum depth/');
 
-        ExtraPropertyConstraintCodec::encode([$composite]);
+        $this->encoder->encode([$composite]);
     }
 
     /**
@@ -174,53 +181,58 @@ class ExtraPropertyConstraintCodecTest extends TestCase
      */
     public function testTamperedStoredValueLosesOnlyTheOffendingConstraint(): void
     {
-        $rejections = [];
+        $decoded = $this->encoder->decodeTolerant("Url\nLength(max: 5, normalizer: 'system')\nNotBlank");
 
-        $decoded = ExtraPropertyConstraintCodec::decodeTolerant(
-            "Url\nLength(max: 5, normalizer: 'system')\nNotBlank",
-            static function (int|string|null $index, string $reason) use (&$rejections): void {
-                $rejections[] = [$index, $reason];
-            }
-        );
+        $constraints = $decoded->getConstraints();
+        $this->assertIsArray($constraints);
+        $this->assertCount(2, $constraints);
+        $this->assertInstanceOf(Assert\Url::class, $constraints[0]);
+        $this->assertInstanceOf(Assert\NotBlank::class, $constraints[1]);
 
-        $this->assertIsArray($decoded);
-        $this->assertCount(2, $decoded);
-        $this->assertInstanceOf(Assert\Url::class, $decoded[0]);
-        $this->assertInstanceOf(Assert\NotBlank::class, $decoded[1]);
-
-        $this->assertCount(1, $rejections);
-        $this->assertSame(1, $rejections[0][0]);
-        $this->assertStringContainsString('may execute a callable', $rejections[0][1]);
+        $this->assertTrue($decoded->hasRejections());
+        $this->assertCount(1, $decoded->getRejections());
+        $this->assertSame(1, $decoded->getRejections()[0]['index']);
+        $this->assertStringContainsString('may execute a callable', $decoded->getRejections()[0]['reason']);
     }
 
     public function testMalformedStoredValueIsReportedWithoutThrowing(): void
     {
-        $rejections = [];
+        $decoded = $this->encoder->decodeTolerant('}{ not a constraint');
 
-        $decoded = ExtraPropertyConstraintCodec::decodeTolerant(
-            '}{ not a constraint',
-            static function (int|string|null $index, string $reason) use (&$rejections): void {
-                $rejections[] = $reason;
-            }
-        );
-
-        $this->assertNull($decoded);
-        $this->assertCount(1, $rejections);
+        $this->assertNull($decoded->getConstraints());
+        $this->assertCount(1, $decoded->getRejections());
     }
 
     public function testOversizedStoredValueIsRefusedBeforeParsing(): void
     {
-        $rejections = [];
-
-        $decoded = ExtraPropertyConstraintCodec::decodeTolerant(
-            str_repeat('NotBlank,', ExtraPropertyConstraintMapper::maxRawLength()),
-            static function (int|string|null $index, string $reason) use (&$rejections): void {
-                $rejections[] = $reason;
-            }
+        $decoded = $this->encoder->decodeTolerant(
+            str_repeat('NotBlank,', ExtraPropertyConstraintMapper::MAX_RAW_LENGTH)
         );
 
-        $this->assertNull($decoded);
-        $this->assertStringContainsString('maximum length', $rejections[0]);
+        $this->assertNull($decoded->getConstraints());
+        $this->assertStringContainsString('maximum length', $decoded->getRejections()[0]['reason']);
+    }
+
+    public function testTooManyTopLevelConstraintsAreRefused(): void
+    {
+        $decoded = $this->encoder->decodeTolerant(
+            implode(',', array_fill(0, ExtraPropertyConstraintMapper::MAX_TOKENS + 1, 'NotBlank'))
+        );
+
+        $this->assertNull($decoded->getConstraints());
+        $this->assertStringContainsString('maximum of', $decoded->getRejections()[0]['reason']);
+    }
+
+    /**
+     * A valid definition decodes without any rejection to report.
+     */
+    public function testCleanStoredValueReportsNoRejection(): void
+    {
+        $decoded = $this->encoder->decodeTolerant("NotBlank\nLength(max: 10)");
+
+        $this->assertCount(2, (array) $decoded->getConstraints());
+        $this->assertFalse($decoded->hasRejections());
+        $this->assertSame([], $decoded->getRejections());
     }
 
     /**
@@ -232,19 +244,37 @@ class ExtraPropertyConstraintCodecTest extends TestCase
         $this->assertNotContains('Required', ExtraPropertyConstraintMapper::getAllowedNames());
         $this->assertNotContains('Optional', ExtraPropertyConstraintMapper::getAllowedNames());
 
-        $rejections = [];
-        $decoded = ExtraPropertyConstraintCodec::decodeTolerant(
-            'Required[ NotBlank ]',
-            static function (int|string|null $index, string $reason) use (&$rejections): void {
-                $rejections[] = $reason;
-            }
-        );
+        $decoded = $this->encoder->decodeTolerant('Required[ NotBlank ]');
 
-        $this->assertNull($decoded);
-        $this->assertStringContainsString('Unknown extra property constraint "Required"', $rejections[0]);
+        $this->assertNull($decoded->getConstraints());
+        $this->assertStringContainsString(
+            'Unknown extra property constraint "Required"',
+            $decoded->getRejections()[0]['reason']
+        );
+    }
+
+    /**
+     * The registry guard must refuse exactly what save() would refuse, or a definition can pass the
+     * guard and then fail once its storage column has already been created.
+     */
+    public function testAssertEncodableRefusesEverythingEncodeRefuses(): void
+    {
+        // Keyed map: the object graph walk accepts it, the rendering cannot represent it.
+        $constraints = [new Assert\Choice(['choices' => ['a' => 1, 'b' => 2]])];
+
+        $encodeFailed = false;
+        try {
+            $this->encoder->encode($constraints);
+        } catch (InvalidExtraPropertyConstraintException) {
+            $encodeFailed = true;
+        }
+        $this->assertTrue($encodeFailed, 'This fixture is meant to be refused by encode().');
+
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+        $this->encoder->assertEncodable($constraints);
     }
 }
 
-final class CodecUnsupportedConstraint extends Constraint
+final class EncoderUnsupportedConstraint extends Constraint
 {
 }
