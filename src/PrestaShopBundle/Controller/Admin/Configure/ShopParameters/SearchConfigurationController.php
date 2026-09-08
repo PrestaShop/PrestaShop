@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,22 +39,12 @@ class SearchConfigurationController extends PrestaShopAdminController
         #[Autowire(param: 'cookie_key')]
         string $cookieKey,
     ): Response {
-        $indexedCount = $this->dispatchQuery(new GetIndexedProductsCount());
-        $cronToken = substr($cookieKey, 34, 8);
-        $cronUrl = UrlCleaner::cleanUrl(
-            $this->generateUrl('admin_search_indexation_cron', ['token' => $cronToken], UrlGeneratorInterface::ABSOLUTE_URL),
-            ['_token']
+        return $this->renderPreferences(
+            $cookieKey,
+            $indexationFormHandler->getForm(),
+            $searchOptionsFormHandler->getForm(),
+            $weightFormHandler->getForm()
         );
-
-        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/preferences.html.twig', [
-            'help_link' => $this->generateSidebarLink('AdminSearchConf'),
-            'indexationForm' => $indexationFormHandler->getForm()->createView(),
-            'searchOptionsForm' => $searchOptionsFormHandler->getForm()->createView(),
-            'weightForm' => $weightFormHandler->getForm()->createView(),
-            'indexedProductsCount' => $indexedCount->getIndexed(),
-            'totalProductsCount' => $indexedCount->getTotal(),
-            'cronUrl' => $cronUrl,
-        ]);
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
@@ -61,8 +52,25 @@ class SearchConfigurationController extends PrestaShopAdminController
         Request $request,
         #[Autowire(service: 'prestashop.admin.search_preferences.indexation.form_handler')]
         FormHandlerInterface $formHandler,
-    ): RedirectResponse {
-        return $this->processForm($request, $formHandler, 'Indexation');
+        #[Autowire(service: 'prestashop.admin.search_preferences.search_options.form_handler')]
+        FormHandlerInterface $searchOptionsFormHandler,
+        #[Autowire(service: 'prestashop.admin.search_preferences.weight.form_handler')]
+        FormHandlerInterface $weightFormHandler,
+        #[Autowire(param: 'cookie_key')]
+        string $cookieKey,
+    ): Response {
+        $formProcessResult = $this->processForm($request, $formHandler, 'Indexation');
+
+        if ($formProcessResult instanceof RedirectResponse) {
+            return $formProcessResult;
+        }
+
+        return $this->renderPreferences(
+            $cookieKey,
+            $formProcessResult,
+            $searchOptionsFormHandler->getForm(),
+            $weightFormHandler->getForm()
+        );
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
@@ -70,8 +78,25 @@ class SearchConfigurationController extends PrestaShopAdminController
         Request $request,
         #[Autowire(service: 'prestashop.admin.search_preferences.search_options.form_handler')]
         FormHandlerInterface $formHandler,
-    ): RedirectResponse {
-        return $this->processForm($request, $formHandler, 'SearchOptions');
+        #[Autowire(service: 'prestashop.admin.search_preferences.indexation.form_handler')]
+        FormHandlerInterface $indexationFormHandler,
+        #[Autowire(service: 'prestashop.admin.search_preferences.weight.form_handler')]
+        FormHandlerInterface $weightFormHandler,
+        #[Autowire(param: 'cookie_key')]
+        string $cookieKey,
+    ): Response {
+        $formProcessResult = $this->processForm($request, $formHandler, 'SearchOptions');
+
+        if ($formProcessResult instanceof RedirectResponse) {
+            return $formProcessResult;
+        }
+
+        return $this->renderPreferences(
+            $cookieKey,
+            $indexationFormHandler->getForm(),
+            $formProcessResult,
+            $weightFormHandler->getForm()
+        );
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
@@ -79,8 +104,25 @@ class SearchConfigurationController extends PrestaShopAdminController
         Request $request,
         #[Autowire(service: 'prestashop.admin.search_preferences.weight.form_handler')]
         FormHandlerInterface $formHandler,
-    ): RedirectResponse {
-        return $this->processForm($request, $formHandler, 'Weight');
+        #[Autowire(service: 'prestashop.admin.search_preferences.indexation.form_handler')]
+        FormHandlerInterface $indexationFormHandler,
+        #[Autowire(service: 'prestashop.admin.search_preferences.search_options.form_handler')]
+        FormHandlerInterface $searchOptionsFormHandler,
+        #[Autowire(param: 'cookie_key')]
+        string $cookieKey,
+    ): Response {
+        $formProcessResult = $this->processForm($request, $formHandler, 'Weight');
+
+        if ($formProcessResult instanceof RedirectResponse) {
+            return $formProcessResult;
+        }
+
+        return $this->renderPreferences(
+            $cookieKey,
+            $indexationFormHandler->getForm(),
+            $searchOptionsFormHandler->getForm(),
+            $formProcessResult
+        );
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
@@ -134,7 +176,7 @@ class SearchConfigurationController extends PrestaShopAdminController
         return new Response('OK');
     }
 
-    private function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName): RedirectResponse
+    private function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName): FormInterface|RedirectResponse
     {
         $this->dispatchHookWithParameters(
             'actionAdminShopParametersSearchPreferencesControllerPostProcess' . $hookName . 'Before',
@@ -144,17 +186,44 @@ class SearchConfigurationController extends PrestaShopAdminController
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+
             $saveErrors = $formHandler->save($data);
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
-            } else {
-                $this->addFlashErrors($saveErrors);
+
+                return $this->redirectToRoute('admin_search_preferences_index');
             }
+
+            $this->addFlashErrors($saveErrors);
         }
 
-        return $this->redirectToRoute('admin_search_preferences_index');
+        return $form;
+    }
+
+    private function renderPreferences(
+        string $cookieKey,
+        FormInterface $indexationForm,
+        FormInterface $searchOptionsForm,
+        FormInterface $weightForm,
+    ): Response {
+        $indexedCount = $this->dispatchQuery(new GetIndexedProductsCount());
+        $cronToken = substr($cookieKey, 34, 8);
+        $cronUrl = UrlCleaner::cleanUrl(
+            $this->generateUrl('admin_search_indexation_cron', ['token' => $cronToken], UrlGeneratorInterface::ABSOLUTE_URL),
+            ['_token']
+        );
+
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/preferences.html.twig', [
+            'help_link' => $this->generateSidebarLink('AdminSearchConf'),
+            'indexationForm' => $indexationForm->createView(),
+            'searchOptionsForm' => $searchOptionsForm->createView(),
+            'weightForm' => $weightForm->createView(),
+            'indexedProductsCount' => $indexedCount->getIndexed(),
+            'totalProductsCount' => $indexedCount->getTotal(),
+            'cronUrl' => $cronUrl,
+        ]);
     }
 }
