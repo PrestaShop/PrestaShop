@@ -140,7 +140,8 @@ class ProductLazyArrayTest extends TestCase
         $this->mockTranslatorInterface
             ->method('trans')
             ->willReturnCallback(function ($id, array $parameters = [], $domain = null, $locale = null) {
-                return $id;
+                // Substitute parameters like the real translator, so the placeholder value is checked
+                return empty($parameters) ? $id : strtr($id, $parameters);
             })
         ;
     }
@@ -223,6 +224,72 @@ class ProductLazyArrayTest extends TestCase
         );
 
         $this->assertEquals($availabilityMessage, $productLazyArray->availability_message);
+    }
+
+    /**
+     * @dataProvider providerLastRemainingItemsCases
+     */
+    public function testLastRemainingItemsMessageCarriesTheStock(
+        array $product,
+        int $lastRemainingItems,
+        string $expectedAvailability,
+        string $expectedMessage
+    ): void {
+        $this->setDefaultConfiguration();
+
+        $this->mockProductPresentationSettings
+            ->method('shouldShowPrice')
+            ->willReturn(true);
+        $this->mockProductPresentationSettings->showLabelOOSListingPages = true;
+        $this->mockProductPresentationSettings->stock_management_enabled = true;
+        $this->mockProductPresentationSettings->showPrices = true;
+        $this->mockProductPresentationSettings->catalog_mode = false;
+        $this->mockProductPresentationSettings->lastRemainingItems = $lastRemainingItems;
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            $product,
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        $this->assertSame($expectedAvailability, $productLazyArray['availability']);
+        $this->assertSame($expectedMessage, $productLazyArray->availability_message);
+    }
+
+    public function providerLastRemainingItemsCases(): iterable
+    {
+        $lowStock = array_merge($this->baseProduct, [
+            'show_price' => 1,
+            'quantity' => 3,
+            'stock_quantity' => 3,
+            'quantity_wanted' => 1,
+            'show_availability' => 1,
+            'available_date' => false,
+            'available_now' => self::PRODUCT_AVAILABLE_NOW,
+            'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+        ]);
+
+        yield 'stock below the threshold' => [$lowStock, 5, 'last_remaining_items', 'Only 3 left in stock'];
+        yield 'quantity wanted does not change the number' => [
+            array_merge($lowStock, ['quantity_wanted' => 2]),
+            5,
+            'last_remaining_items',
+            'Only 3 left in stock',
+        ];
+        yield 'stock above the threshold' => [$lowStock, 2, 'in_stock', self::PRODUCT_AVAILABLE_NOW];
+        yield 'stock above the threshold, quantity wanted below it' => [
+            array_merge($lowStock, ['quantity' => 6, 'stock_quantity' => 6, 'quantity_wanted' => 2]),
+            5,
+            'in_stock',
+            self::PRODUCT_AVAILABLE_NOW,
+        ];
     }
 
     /**
