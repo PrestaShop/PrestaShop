@@ -534,7 +534,7 @@
 													{l s='December'}
 												*}
 												{foreach $select as $k => $v}
-													<option value="{$k}" {if $k == $fields_value[$key]}selected="selected"{/if}>{l s=$v|escape:'html':'UTF-8'}</option>
+													<option value="{$k}" {if $k == $fields_value[$key]}selected="selected"{/if}>{l s=$v}</option>
 												{/foreach}
 											{else}
 												{foreach $select as $v}
