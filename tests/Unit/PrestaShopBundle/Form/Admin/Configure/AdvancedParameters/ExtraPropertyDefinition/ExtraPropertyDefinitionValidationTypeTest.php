@@ -65,6 +65,41 @@ class ExtraPropertyDefinitionValidationTypeTest extends TypeTestCase
         ], $form->getData()['constraints']);
     }
 
+    /**
+     * A composite carries two tails, so the row form must bind both: the children in 'options' and
+     * the composite's own options in 'composite_options'. The presenter's split is covered in
+     * ConstraintRowPresenterTest; what matters here is that the extra hidden field survives a submit.
+     */
+    public function testCompositeOwnOptionsSurviveASubmit(): void
+    {
+        $form = $this->factory->create(ExtraPropertyDefinitionValidationType::class, [
+            'constraints' => [
+                ['name' => 'NotBlank', 'options' => '', 'composite_options' => '', 'per_language' => '0'],
+            ],
+        ]);
+
+        $form->submit([
+            'constraints' => [
+                [
+                    'name' => 'Collection',
+                    'options' => 'a: NotBlank',
+                    'composite_options' => 'allowExtraFields: true',
+                    'per_language' => '0',
+                ],
+            ],
+        ]);
+
+        $this->assertTrue($form->isValid());
+        $this->assertSame([
+            [
+                'name' => 'Collection',
+                'options' => 'a: NotBlank',
+                'composite_options' => 'allowExtraFields: true',
+                'per_language' => '0',
+            ],
+        ], $form->getData()['constraints']);
+    }
+
     public function testAbandonedRowsAreDroppedAtSubmit(): void
     {
         $form = $this->factory->create(ExtraPropertyDefinitionValidationType::class, ['constraints' => []]);

@@ -31,7 +31,7 @@ class ConstraintRowPresenterTest extends TestCase
     /**
      * @dataProvider rowsProvider
      *
-     * @param list<array{name: string, options: string, per_language: string}> $expected
+     * @param list<array{name: string, options: string, composite_options: string, per_language: string}> $expected
      */
     public function testRows(string $raw, array $expected): void
     {
@@ -43,6 +43,33 @@ class ConstraintRowPresenterTest extends TestCase
      */
     public static function rowsProvider(): iterable
     {
+        // A composite carrying its own options: the children go to 'options', the options tail to
+        // 'composite_options'. This is the shape the whole field exists for.
+        yield 'composite with its own options splits both tails' => [
+            'Collection(allowExtraFields: true, allowMissingFields: false)[ a: NotBlank, b: Length(max: 5) ]', [
+                [
+                    'name' => 'Collection',
+                    'options' => 'a: NotBlank, b: Length(max: 5)',
+                    'composite_options' => 'allowExtraFields: true, allowMissingFields: false',
+                    'per_language' => '0',
+                ],
+            ]];
+
+        yield 'list composite with its own option' => [
+            'AtLeastOneOf(includeInternalMessages: false)[ NotBlank, Email ]', [
+                [
+                    'name' => 'AtLeastOneOf',
+                    'options' => 'NotBlank, Email',
+                    'composite_options' => 'includeInternalMessages: false',
+                    'per_language' => '0',
+                ],
+            ]];
+
+        // Not All[...]: the first top-level All is exploded into per-language rows instead.
+        yield 'composite without options leaves the tail empty' => ['Sequentially[ NotBlank, Email ]', [
+            ['name' => 'Sequentially', 'options' => 'NotBlank, Email', 'composite_options' => '', 'per_language' => '0'],
+        ]];
+
         yield 'bare name' => ['NotBlank', [
             ['name' => 'NotBlank', 'options' => '', 'composite_options' => '', 'per_language' => '0'],
         ]];

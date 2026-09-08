@@ -18,13 +18,8 @@ services:
     arguments:
       $connection: '@doctrine.dbal.default_connection'
       $prefix: '%database_prefix%'
-      # Dedicated definition: the legacy FO container imports this file but not
-      # adapter/services.yml, so prestashop.adapter.legacy.logger is unreachable there.
-      $logger: '@prestashop.extra_property.constraint_decode_logger'
+      $logger: '@prestashop.adapter.legacy.logger.shared'
       $constraintNormalizer: '@PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer'
-
-  prestashop.extra_property.constraint_decode_logger:
-    class: PrestaShop\PrestaShop\Adapter\LegacyLogger
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer: ~
 

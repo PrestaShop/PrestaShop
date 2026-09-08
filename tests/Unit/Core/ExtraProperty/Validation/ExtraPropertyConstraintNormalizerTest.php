@@ -116,11 +116,12 @@ class ExtraPropertyConstraintNormalizerTest extends TestCase
             $constraints = ExtraPropertyConstraintMapper::fromNames($samples[$name] ?? $name);
             $this->assertIsArray($constraints);
 
-            $decoded = $this->normalizer->denormalize($this->normalizer->normalize($constraints))->getConstraints();
+            $decoded = $this->normalizer->denormalize($this->normalizer->normalize($constraints));
 
+            $this->assertSame([], $decoded->getRejections(), sprintf('%s must decode without a rejection.', $name));
             $this->assertSame(
                 var_export($constraints, true),
-                var_export($decoded, true),
+                var_export($decoded->getConstraints(), true),
                 sprintf('%s must survive the storage round-trip.', $name)
             );
         }
@@ -224,18 +225,6 @@ class ExtraPropertyConstraintNormalizerTest extends TestCase
     }
 
     /**
-     * A valid definition decodes without any rejection to report.
-     */
-    public function testCleanStoredValueReportsNoRejection(): void
-    {
-        $decoded = $this->normalizer->denormalize("NotBlank\nLength(max: 10)");
-
-        $this->assertCount(2, (array) $decoded->getConstraints());
-        $this->assertFalse($decoded->hasRejections());
-        $this->assertSame([], $decoded->getRejections());
-    }
-
-    /**
      * The wrappers Collection generates are part of the grammar but must never be offered as
      * constraints a merchant can pick, nor accepted at the top level of a definition.
      */
@@ -244,12 +233,21 @@ class ExtraPropertyConstraintNormalizerTest extends TestCase
         $this->assertNotContains('Required', ExtraPropertyConstraintMapper::getAllowedNames());
         $this->assertNotContains('Optional', ExtraPropertyConstraintMapper::getAllowedNames());
 
-        $decoded = $this->normalizer->denormalize('Required[ NotBlank ]');
+        // Accepted where they belong: as the wrappers of a Collection's fields.
+        $accepted = $this->normalizer->denormalize('Collection[ a: Required[ NotBlank ], b: Optional[ Email ] ]');
+        $this->assertSame([], $accepted->getRejections());
+        $constraints = $accepted->getConstraints();
+        $this->assertIsArray($constraints);
+        $this->assertInstanceOf(Assert\Collection::class, $constraints[0]);
+        $this->assertInstanceOf(Assert\Required::class, $constraints[0]->fields['a']);
+        $this->assertInstanceOf(Assert\Optional::class, $constraints[0]->fields['b']);
 
-        $this->assertNull($decoded->getConstraints());
+        // Refused anywhere else: they are grammar plumbing, not constraints a merchant picks.
+        $refused = $this->normalizer->denormalize('Required[ NotBlank ]');
+        $this->assertNull($refused->getConstraints());
         $this->assertStringContainsString(
             'Unknown extra property constraint "Required"',
-            $decoded->getRejections()[0]['reason']
+            $refused->getRejections()[0]['reason']
         );
     }
 
@@ -302,33 +300,16 @@ class ExtraPropertyConstraintNormalizerTest extends TestCase
      */
     public function testSupportChecksAreShallowerThanNormalization(): void
     {
-        // A keyed map: every name and option is fine, only the rendering cannot represent it.
+        // A keyed map. Every name and option is fine — only the rendering cannot represent it, the
+        // format carrying scalars and lists of scalars but no map. That is a known limitation rather
+        // than a desirable rule, tracked for a follow-up (epic #41422): Symfony ignores the keys of
+        // Choice::$choices, so normalizing such a map down to its values would change no validation
+        // behaviour. What it does change is the strict round-trip contract, which is why it is not
+        // done here.
         $constraints = [new Assert\Choice(['choices' => ['a' => 1, 'b' => 2]])];
 
         $this->assertTrue($this->normalizer->supportsNormalization($constraints));
 
-        $this->expectException(InvalidExtraPropertyConstraintException::class);
-        $this->normalizer->normalize($constraints);
-    }
-
-    /**
-     * The registry guard must refuse exactly what save() would refuse, or a definition can pass the
-     * guard and then fail once its storage column has already been created.
-     */
-    public function testTheRegistryGuardRefusesEverythingNormalizeRefuses(): void
-    {
-        // Keyed map: the object graph walk accepts it, the rendering cannot represent it.
-        $constraints = [new Assert\Choice(['choices' => ['a' => 1, 'b' => 2]])];
-
-        $normalizeFailed = false;
-        try {
-            $this->normalizer->normalize($constraints);
-        } catch (InvalidExtraPropertyConstraintException) {
-            $normalizeFailed = true;
-        }
-        $this->assertTrue($normalizeFailed, 'This fixture is meant to be refused by normalize().');
-
-        // The registry runs this very call as its guard, which is what keeps it equivalent to save().
         $this->expectException(InvalidExtraPropertyConstraintException::class);
         $this->normalizer->normalize($constraints);
     }
