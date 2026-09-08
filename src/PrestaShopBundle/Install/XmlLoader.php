@@ -8,6 +8,7 @@ namespace PrestaShopBundle\Install;
 
 use Country;
 use Module;
+use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Entity\Image;
@@ -505,10 +506,14 @@ class XmlLoader
         if ($classname) {
             $classname = '\\' . $classname;
             // Create entity with ObjectModel class
+            /** @var ObjectModel $object */
             $object = new $classname();
             $object->hydrate($data);
             if ($data_lang) {
                 $object->hydrate($data_lang);
+            }
+            if (!empty($object->id)) {
+                $object->force_id = true;
             }
             $object->add(true, isset($xml->fields['null']));
             $entity_id = $object->id;
