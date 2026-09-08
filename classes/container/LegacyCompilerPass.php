@@ -53,10 +53,32 @@ class LegacyCompilerPass implements CompilerPassInterface
         $definition
             ->setPublic(true)
             ->setFactory([new Reference(CacheAdapterFactory::class), 'getCacheAdapter'])
-            ->setArguments([$cacheDriver])
+            ->setArguments([$cacheDriver, $this->getMemcachedServers($cacheDriver)])
         ;
 
         $container->setDefinition($cacheDriver, $definition);
+    }
+
+    /**
+     * Read here rather than in the factory: the factory lives in the bundle, which is not allowed to
+     * call legacy code, and this container has no service exposing these rows. The driver itself is
+     * already resolved at compile time, so the servers follow the same lifecycle - both are picked
+     * up when the container is rebuilt, which is what saving the Performance page triggers.
+     *
+     * @return array<int, array{ip: string, port: int|string}>
+     */
+    private function getMemcachedServers(string $cacheDriver): array
+    {
+        if ($cacheDriver !== 'memcached') {
+            return [];
+        }
+
+        try {
+            return CacheMemcached::getMemcachedServers() ?: [];
+        } catch (Throwable $e) {
+            // No database yet, during installation for instance. The factory falls back to localhost.
+            return [];
+        }
     }
 
     private function buildSyntheticDefinitions(array $keys, ContainerBuilder $container): void
