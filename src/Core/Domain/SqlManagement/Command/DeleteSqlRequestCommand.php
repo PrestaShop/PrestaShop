@@ -19,11 +19,11 @@ class DeleteSqlRequestCommand
     private $sqlRequestId;
 
     /**
-     * @param SqlRequestId $sqlRequestId
+     * @param int|SqlRequestId $sqlRequestId
      */
-    public function __construct(SqlRequestId $sqlRequestId)
+    public function __construct(int|SqlRequestId $sqlRequestId)
     {
-        $this->setSqlRequestId($sqlRequestId);
+        $this->setSqlRequestId($sqlRequestId instanceof SqlRequestId ? $sqlRequestId : new SqlRequestId($sqlRequestId));
     }
 
     /**
