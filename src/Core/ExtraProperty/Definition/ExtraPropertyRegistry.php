@@ -15,7 +15,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryExce
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyConstraintException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManagerInterface;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintEncoder;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -43,7 +43,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         // where the form factory is always available — never in the FO legacy container.
         protected readonly FormOptionsValidator $formOptionsValidator,
         protected readonly ShopRepository $shopRepository,
-        protected readonly ExtraPropertyConstraintEncoder $constraintEncoder,
+        protected readonly ExtraPropertyConstraintNormalizer $constraintNormalizer,
     ) {
     }
 
@@ -97,7 +97,10 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         // 1. Refuse constraints that cannot be stored, before any DDL runs: a definition rejected
         // later would otherwise leave an orphan storage column behind.
         try {
-            $this->constraintEncoder->assertNormalizable($definition->getConstraints());
+            // The result is discarded: this is a dry-run of what save() will do. It must stay a
+            // full normalization — a shallower check (supportsNormalization(), for instance) would
+            // accept constraints that fail while saving, after step 7 created the storage column.
+            $this->constraintNormalizer->normalize($definition->getConstraints());
         } catch (InvalidExtraPropertyConstraintException $exception) {
             $message = sprintf(
                 'Invalid constraints for extra property %s.%s: %s',

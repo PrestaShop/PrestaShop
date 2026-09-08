@@ -21,12 +21,12 @@ services:
       # Dedicated definition: the legacy FO container imports this file but not
       # adapter/services.yml, so prestashop.adapter.legacy.logger is unreachable there.
       $logger: '@prestashop.extra_property.constraint_decode_logger'
-      $constraintEncoder: '@PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintEncoder'
+      $constraintNormalizer: '@PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer'
 
   prestashop.extra_property.constraint_decode_logger:
     class: PrestaShop\PrestaShop\Adapter\LegacyLogger
 
-  PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintEncoder: ~
+  PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer: ~
 
   # Note: the definition WRITER interface (ExtraPropertyDefinitionWriterInterface) is intentionally NOT aliased
   # here. Writing definitions (register/unregister) is a back-office-only concern, so the alias lives in

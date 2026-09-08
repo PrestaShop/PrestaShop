@@ -11,7 +11,6 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
 
 use ObjectModelCore;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintEncoder;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
@@ -423,6 +422,11 @@ final class ExtraPropertyDefinition
     /**
      * Builds an instance from a raw registry DB row.
      *
+     * The 'constraints' cell must already hold decoded Constraint objects, not the string stored in
+     * the registry: decoding belongs to the repository, which owns the normalizer and can report a
+     * rejected constraint with the row it came from. This value object stays free of that
+     * responsibility (see ExtraPropertyDefinitionRepository::enrichRowsWithDecodedConstraints()).
+     *
      * Resolves the entity's ObjectModel definition ('table' + 'primary') from the
      * canonical entity name: classify() gives the class name ('combination' →
      * 'Combination', 'cart' → 'Cart'), which must exist and be an ObjectModel. The
@@ -524,7 +528,9 @@ final class ExtraPropertyDefinition
             associatedApis: is_array($associatedApis) ? $associatedApis : null,
             formType: isset($row['form_type']) && '' !== $row['form_type'] ? (string) $row['form_type'] : null,
             formOptions: is_array($formOptions) ? $formOptions : null,
-            constraints: self::decodeConstraints($row['constraints'] ?? null),
+            constraints: is_array($row['constraints'] ?? null) && [] !== $row['constraints']
+                ? array_values($row['constraints'])
+                : null,
             labelWording: isset($row['label_wording']) && '' !== $row['label_wording'] ? (string) $row['label_wording'] : null,
             labelDomain: isset($row['label_domain']) && '' !== $row['label_domain'] ? (string) $row['label_domain'] : null,
             descriptionWording: isset($row['description_wording']) && '' !== $row['description_wording'] ? (string) $row['description_wording'] : null,
@@ -542,28 +548,6 @@ final class ExtraPropertyDefinition
             // Stored override only — null rows resolve through the map/convention at read.
             controllerName: isset($row['controller_name']) && '' !== $row['controller_name'] ? (string) $row['controller_name'] : null,
         );
-    }
-
-    /**
-     * Normalizes the registry "constraints" cell into a list of Constraint objects.
-     *
-     * Accepts both shapes so fromRow() works for an in-memory row (constraints already given as
-     * Constraint objects) and a registry row (constraints stored as their DSL text):
-     *  - array  → already-decoded constraints, returned as-is.
-     *  - string → the constraint DSL, parsed against the core-owned grammar. No PHP deserialization
-     *             is involved: class names are resolved from the allowlist, never from the value.
-     *
-     * The repository decodes rows itself so it can log a rejection with its registry context; this
-     * fallback keeps fromRow() usable on a raw row, dropping what it cannot read.
-     *
-     * @return list<Constraint>|null
-     */
-    private static function decodeConstraints(mixed $raw): ?array
-    {
-        // The repository decodes rows itself, through the injected encoder, so it can log a
-        // rejection with its registry context. This fallback keeps fromRow() usable on a raw row:
-        // the encoder has no dependency, so building one here costs nothing.
-        return (new ExtraPropertyConstraintEncoder())->denormalize($raw)->getConstraints();
     }
 
     // -------------------------------------------------------------------------

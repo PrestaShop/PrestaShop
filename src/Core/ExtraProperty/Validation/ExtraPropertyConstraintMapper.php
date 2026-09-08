@@ -263,6 +263,92 @@ class ExtraPropertyConstraintMapper
     }
 
     /**
+     * The grammar alias of a class, or null when the class is outside the grammar.
+     *
+     * @param class-string $fqcn
+     */
+    public static function aliasOfClass(string $fqcn): ?string
+    {
+        return self::aliasesByClass()[$fqcn] ?? null;
+    }
+
+    /**
+     * Whether a raw definition only mentions constraints this grammar knows, with no forbidden option.
+     *
+     * A name-level examination: it walks the token structure, resolves every name against the core
+     * allowlist and checks the option names, but **builds nothing** — an unknown name is rejected on
+     * its name alone, before anything could be instantiated from it.
+     *
+     * It is deliberately shallower than parsing. It cannot tell whether an option actually exists on
+     * a constraint, whether a required value is missing, or whether a value can be rendered back:
+     * those only surface while building. Callers that must not fail later parse for real.
+     */
+    public static function describesKnownConstraints(string $raw): bool
+    {
+        try {
+            $tokens = self::tokenize($raw);
+        } catch (UnknownExtraPropertyConstraintException|InvalidExtraPropertyConstraintException) {
+            return false;
+        }
+
+        foreach ($tokens as [$token, $line]) {
+            if (!self::tokenDescribesKnownConstraint($token, 0, false)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static function tokenDescribesKnownConstraint(string $token, int $depth, bool $allowInternal): bool
+    {
+        if ($depth > self::MAX_NESTING_DEPTH) {
+            return false;
+        }
+
+        $parts = self::splitTokenParts(trim($token));
+        if (null === $parts) {
+            return false;
+        }
+
+        $fqcn = self::ALLOWED_CONSTRAINTS[$parts['name']]
+            ?? ($allowInternal ? (self::INTERNAL_CONSTRAINTS[$parts['name']] ?? null) : null);
+        if (null === $fqcn) {
+            return false;
+        }
+
+        $options = null !== $parts['options'] ? trim($parts['options']) : '';
+        if ('' !== $options && self::looksLikeNamedOptions($options)) {
+            foreach (self::splitTopLevel($options, ',') as $option) {
+                if (1 === preg_match('/^(\w+)\s*:/', $option, $matches) && self::isForbiddenOption($matches[1])) {
+                    return false;
+                }
+            }
+        }
+
+        if (null === $parts['children']) {
+            return true;
+        }
+
+        $keysChildren = Assert\Collection::class === $fqcn;
+        foreach (self::splitTopLevel($parts['children'], ",\n") as $child) {
+            // Only a Collection keys its children, and only there do the internal wrappers apply.
+            if ($keysChildren && 1 === preg_match('/^(\w+)\s*:\s*(.+)$/s', $child, $childMatches)) {
+                if (!self::tokenDescribesKnownConstraint(trim($childMatches[2]), $depth + 1, true)) {
+                    return false;
+                }
+
+                continue;
+            }
+            if (!self::tokenDescribesKnownConstraint($child, $depth + 1, false)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Splits one token into its name, its optional "(...)" options tail and its optional "[...]"
      * children tail, or returns null when the token does not match the grammar.
      *

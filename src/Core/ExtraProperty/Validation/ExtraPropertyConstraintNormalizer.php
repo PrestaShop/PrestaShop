@@ -49,7 +49,7 @@ use Symfony\Component\Validator\Constraint;
  * Usable as a service (its constructor takes no argument) and instantiable on demand where no
  * container is available.
  */
-class ExtraPropertyConstraintEncoder implements NormalizerInterface, DenormalizerInterface
+class ExtraPropertyConstraintNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     /**
      * The type this encoder handles: a list of Symfony constraints.
@@ -101,29 +101,90 @@ class ExtraPropertyConstraintEncoder implements NormalizerInterface, Denormalize
     }
 
     /**
-     * Asserts that constraints can be persisted, without keeping the result.
+     * Whether these constraints look like something this normalizer handles.
      *
-     * This is a genuine dry-run of {@see self::normalize()} rather than a parallel set of checks: any
-     * divergence between the two would let a definition pass the registry guard and then fail while
-     * saving — after the DDL has already created its storage column.
+     * The interface passes the data, not just the type, precisely so this can inspect it: every
+     * constraint must belong to the grammar and carry no option the persisted format refuses. It
+     * never throws and builds nothing.
      *
-     * @param list<Constraint>|null $constraints
-     *
-     * @throws InvalidExtraPropertyConstraintException
+     * This answers "does it look like mine?", not "will it normalize?". The deeper failures — an
+     * option the constraint class does not declare, a value the format cannot render — only surface
+     * while normalizing, so a caller that must not fail later runs {@see self::normalize()} itself
+     * rather than relying on this.
      */
-    public function assertNormalizable(?array $constraints): void
-    {
-        $this->normalize($constraints);
-    }
-
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return null === $data || is_array($data);
+        if (null === $data || [] === $data) {
+            return true;
+        }
+        if (!is_array($data) || !array_is_list($data)) {
+            return false;
+        }
+
+        foreach ($data as $constraint) {
+            if (!$constraint instanceof Constraint
+                || null === ExtraPropertyConstraintMapper::aliasOfClass($constraint::class)
+                || $this->hasForbiddenOption($constraint)
+            ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
+    /**
+     * Whether a constraint carries an option the persisted format refuses, without building anything.
+     */
+    private function hasForbiddenOption(Constraint $constraint): bool
+    {
+        foreach ((new ReflectionObject($constraint))->getProperties() as $property) {
+            if ($property->isStatic() || !$property->isInitialized($constraint)) {
+                continue;
+            }
+            if (null !== $property->getValue($constraint)
+                && ExtraPropertyConstraintMapper::isForbiddenOption($property->getName())
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether a stored value looks like something this normalizer can read.
+     *
+     * Inspects the string itself, not only the type: it checks the grammar bounds and that every
+     * constraint name it mentions belongs to the core allowlist, carrying no forbidden option. It
+     * never throws and — importantly — never builds a constraint to decide, so an unknown name is
+     * rejected on its name alone.
+     *
+     * A true answer means the value is worth decoding, not that decoding will yield every
+     * constraint: {@see self::denormalize()} still reports what it had to drop.
+     */
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return self::SUPPORTED_TYPE === $type;
+        if (self::SUPPORTED_TYPE !== $type) {
+            return false;
+        }
+        if (null === $data || is_array($data)) {
+            return true;
+        }
+        if (!is_string($data)) {
+            return false;
+        }
+        if ('' === trim($data)) {
+            return true;
+        }
+
+        try {
+            $this->assertWithinLengthBound($data);
+
+            return ExtraPropertyConstraintMapper::describesKnownConstraints($data);
+        } catch (UnknownExtraPropertyConstraintException|InvalidExtraPropertyConstraintException) {
+            return false;
+        }
     }
 
     /**

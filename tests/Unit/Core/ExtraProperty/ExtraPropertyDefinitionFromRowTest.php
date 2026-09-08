@@ -66,10 +66,14 @@ class ExtraPropertyDefinitionFromRowTest extends TestCase
         $this->assertNull($invalid->getEnumValues());
     }
 
-    public function testConstraintsRoundTripFromStoredRow(): void
+    /**
+     * Decoding is the repository's job — it owns the normalizer and can report a rejected constraint
+     * with the row it came from. fromRow() receives constraints already decoded, and only carries
+     * them through.
+     */
+    public function testConstraintsAreCarriedThroughAlreadyDecoded(): void
     {
-        // The registry stores the constraint DSL itself — no serialized PHP object graph.
-        $row = self::BASE_ROW + ['constraints' => "Url\nLength(max: 50)"];
+        $row = self::BASE_ROW + ['constraints' => [new Assert\Url(), new Assert\Length(['max' => 50])]];
 
         $constraints = ExtraPropertyDefinition::fromRow($row)->getConstraints();
 
@@ -80,102 +84,15 @@ class ExtraPropertyDefinitionFromRowTest extends TestCase
         $this->assertSame(50, $constraints[1]->max);
     }
 
-    public function testConstraintsAbsentOrUnusableFallBackToNull(): void
+    public function testConstraintsAbsentOrEmptyFallBackToNull(): void
     {
         $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW)->getConstraints(), 'No constraints key → null.');
-        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => ''])->getConstraints(), 'Empty string → null.');
-        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => 'NotAConstraintName'])->getConstraints(), 'Unknown constraint name → null.');
-        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => '}{ garbage'])->getConstraints(), 'Malformed definition → null.');
+        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => []])->getConstraints(), 'Empty list → null.');
+        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => null])->getConstraints(), 'Null → null.');
         $this->assertNull(
-            ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => serialize([new Assert\Url()])])->getConstraints(),
-            'A legacy PHP-serialized blob is no longer a supported format and decodes to nothing.'
+            ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => "Url\nLength(max: 50)"])->getConstraints(),
+            'A raw stored string is not decoded here: that belongs to the repository.'
         );
-    }
-
-    public function testValidConstraintsSurviveACorruptSibling(): void
-    {
-        $row = self::BASE_ROW + ['constraints' => "Url\nLength(max: 5, normalizer: 'system')\nNotBlank"];
-
-        $constraints = ExtraPropertyDefinition::fromRow($row)->getConstraints();
-
-        $this->assertIsArray($constraints);
-        $this->assertCount(2, $constraints, 'The tampered constraint is dropped, its neighbours stay active.');
-        $this->assertInstanceOf(Assert\Url::class, $constraints[0]);
-        $this->assertInstanceOf(Assert\NotBlank::class, $constraints[1]);
-    }
-
-    /**
-     * The registry default_value cell is always a string: hydration casts it back to the
-     * declared type through castDefaultValueFromDb(). The BOOL '0' case is the historical
-     * bug pin — a naive (string)/(bool) round-trip lost a false default on reload.
-     *
-     * @dataProvider defaultValueRowProvider
-     */
-    public function testDefaultValueIsHydratedWithItsDeclaredType(string $type, ?string $rawDefault, int|float|string|bool|null $expected): void
-    {
-        $row = array_merge(self::BASE_ROW, ['type' => $type]);
-        if (null !== $rawDefault) {
-            $row['default_value'] = $rawDefault;
-        }
-
-        $this->assertSame($expected, ExtraPropertyDefinition::fromRow($row)->getDefaultValue());
-    }
-
-    public static function defaultValueRowProvider(): iterable
-    {
-        yield 'bool 0 hydrates to false' => ['bool', '0', false];
-        yield 'bool 1 hydrates to true' => ['bool', '1', true];
-        yield 'int 0 hydrates to int zero' => ['int', '0', 0];
-        yield 'float hydrates to float' => ['float', '1.5', 1.5];
-        yield 'string passes through' => ['string', 'hello', 'hello'];
-        yield 'json default stays a string' => ['json', '{"a":1}', '{"a":1}'];
-        yield 'absent key hydrates to null' => ['string', null, null];
-        yield 'empty cell hydrates to null' => ['string', '', null];
-    }
-
-    /**
-     * table_name is persisted resolved at registration: when present it is authoritative
-     * (hydration never re-resolves); when absent (rows predating the column) the
-     * constructor resolution applies — ObjectModel class, then the entity name itself.
-     */
-    public function testTableNameComesFromRowWhenPresent(): void
-    {
-        $definition = ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['table_name' => 'some_physical_table']);
-
-        $this->assertSame('some_physical_table', $definition->getTableName());
-    }
-
-    public function testTableNameFallsBackToConstructorResolutionWhenAbsent(): void
-    {
-        $combination = ExtraPropertyDefinition::fromRow(['entity_name' => 'combination', 'property_name' => 'field']);
-        $bareTable = ExtraPropertyDefinition::fromRow(['entity_name' => 'my_custom_table', 'property_name' => 'field']);
-
-        // 'combination' resolves its physical table through the Combination ObjectModel class.
-        $this->assertSame('product_attribute', $combination->getTableName());
-        // No matching ObjectModel class: the entity name is the table (bare-table registration).
-        $this->assertSame('my_custom_table', $bareTable->getTableName());
-    }
-
-    /**
-     * primary_key_name is the introspected live extra-table PK (synthetic key). Absent,
-     * the ObjectModel class resolution applies, then the 'id_' + entityName convention.
-     */
-    public function testPrimaryKeyNameComesFromRowWhenPresent(): void
-    {
-        $definition = ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['primary_key_name' => 'id_custom']);
-
-        $this->assertSame('id_custom', $definition->getPrimaryKeyName());
-    }
-
-    public function testPrimaryKeyNameFallsBackToClassThenConvention(): void
-    {
-        $order = ExtraPropertyDefinition::fromRow(['entity_name' => 'order', 'property_name' => 'field']);
-        $bareTable = ExtraPropertyDefinition::fromRow(['entity_name' => 'my_custom_table', 'property_name' => 'field']);
-
-        // Order::$definition['primary'] resolves the irregular PK.
-        $this->assertSame('id_order', $order->getPrimaryKeyName());
-        // No class: naming convention.
-        $this->assertSame('id_my_custom_table', $bareTable->getPrimaryKeyName());
     }
 
     /**

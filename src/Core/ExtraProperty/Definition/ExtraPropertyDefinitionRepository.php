@@ -15,7 +15,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefin
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ColumnDefinitionMapper;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\DecodedConstraints;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintEncoder;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -45,7 +45,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
     public function __construct(
         protected readonly Connection $connection,
         protected readonly string $prefix,
-        protected readonly ExtraPropertyConstraintEncoder $constraintEncoder,
+        protected readonly ExtraPropertyConstraintNormalizer $constraintNormalizer,
         protected readonly LoggerInterface $logger,
     ) {
     }
@@ -174,7 +174,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             'form_type' => $definition->getFormType(),
             'form_options' => null !== $definition->getFormOptions() ? json_encode($definition->getFormOptions()) : null,
             'sql_index' => $definition->getSqlIndex()->value,
-            'constraints' => $this->constraintEncoder->normalize($definition->getConstraints()),
+            'constraints' => $this->constraintNormalizer->normalize($definition->getConstraints()),
             'associated_forms' => !empty($definition->getAssociatedForms()) ? json_encode(array_values($definition->getAssociatedForms())) : null,
             'associated_grids' => !empty($definition->getAssociatedGrids()) ? json_encode(array_values($definition->getAssociatedGrids())) : null,
             'associated_apis' => !empty($definition->getAssociatedApis()) ? json_encode(array_values($definition->getAssociatedApis())) : null,
@@ -346,7 +346,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
     protected function enrichRowsWithDecodedConstraints(array $rows): array
     {
         foreach ($rows as $index => $row) {
-            $decoded = $this->constraintEncoder->denormalize($row['constraints'] ?? null);
+            $decoded = $this->constraintNormalizer->denormalize($row['constraints'] ?? null);
             $rows[$index]['constraints'] = $decoded->getConstraints();
 
             if ($decoded->hasRejections()) {

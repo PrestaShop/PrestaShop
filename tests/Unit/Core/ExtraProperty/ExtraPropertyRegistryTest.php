@@ -22,7 +22,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryExce
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManagerInterface;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintEncoder;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer;
 use Psr\Log\NullLogger;
 use RuntimeException;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
@@ -511,7 +511,7 @@ class ExtraPropertyRegistryTest extends TestCase
                 new ExtraPropertyFormTypeMap()
             ),
             $shopRepository,
-            new ExtraPropertyConstraintEncoder(),
+            new ExtraPropertyConstraintNormalizer(),
         );
     }
 

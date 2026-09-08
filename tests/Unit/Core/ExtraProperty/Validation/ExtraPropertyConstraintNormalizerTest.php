@@ -12,18 +12,18 @@ namespace Tests\Unit\Core\ExtraProperty\Validation;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyConstraintException;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintEncoder;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ExtraPropertyConstraintEncoderTest extends TestCase
+class ExtraPropertyConstraintNormalizerTest extends TestCase
 {
-    private ExtraPropertyConstraintEncoder $encoder;
+    private ExtraPropertyConstraintNormalizer $normalizer;
 
     protected function setUp(): void
     {
-        $this->encoder = new ExtraPropertyConstraintEncoder();
+        $this->normalizer = new ExtraPropertyConstraintNormalizer();
     }
 
     /**
@@ -32,7 +32,7 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
     public function testNoPhpDeserializationRemainsOnTheConstraintPath(): void
     {
         $sources = [
-            __DIR__ . '/../../../../../src/Core/ExtraProperty/Validation/ExtraPropertyConstraintEncoder.php',
+            __DIR__ . '/../../../../../src/Core/ExtraProperty/Validation/ExtraPropertyConstraintNormalizer.php',
             __DIR__ . '/../../../../../src/Core/ExtraProperty/Validation/ExtraPropertyConstraintMapper.php',
             __DIR__ . '/../../../../../src/Core/ExtraProperty/Definition/ExtraPropertyDefinition.php',
             __DIR__ . '/../../../../../src/Core/ExtraProperty/Definition/ExtraPropertyDefinitionRepository.php',
@@ -58,10 +58,10 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
      */
     public function testConstraintsSurviveTheStorageRoundTrip(string $_label, array $constraints): void
     {
-        $encoded = $this->encoder->normalize($constraints);
+        $encoded = $this->normalizer->normalize($constraints);
         $this->assertIsString($encoded);
 
-        $decoded = $this->encoder->denormalize($encoded)->getConstraints();
+        $decoded = $this->normalizer->denormalize($encoded)->getConstraints();
 
         // var_export keeps scalar types apart, which a loose comparison would not.
         $this->assertSame(var_export($constraints, true), var_export($decoded, true));
@@ -116,7 +116,7 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
             $constraints = ExtraPropertyConstraintMapper::fromNames($samples[$name] ?? $name);
             $this->assertIsArray($constraints);
 
-            $decoded = $this->encoder->denormalize($this->encoder->normalize($constraints))->getConstraints();
+            $decoded = $this->normalizer->denormalize($this->normalizer->normalize($constraints))->getConstraints();
 
             $this->assertSame(
                 var_export($constraints, true),
@@ -134,7 +134,7 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
         $this->expectException(InvalidExtraPropertyConstraintException::class);
         $this->expectExceptionMessageMatches($expectedMessage);
 
-        $this->encoder->normalize([$constraint]);
+        $this->normalizer->normalize([$constraint]);
     }
 
     public static function refusedConstraintProvider(): iterable
@@ -161,7 +161,7 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
 
         yield 'object option' => [new Assert\LessThan(new DateTimeImmutable('2030-01-01')), '/cannot be represented/'];
 
-        yield 'constraint outside the grammar' => [new EncoderUnsupportedConstraint(), '/not part of the extra property constraint grammar/'];
+        yield 'constraint outside the grammar' => [new NormalizerUnsupportedConstraint(), '/not part of the extra property constraint grammar/'];
     }
 
     public function testSelfReferencingCompositeIsRefused(): void
@@ -172,7 +172,7 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
         $this->expectException(InvalidExtraPropertyConstraintException::class);
         $this->expectExceptionMessageMatches('/exceeds the maximum depth/');
 
-        $this->encoder->normalize([$composite]);
+        $this->normalizer->normalize([$composite]);
     }
 
     /**
@@ -181,7 +181,7 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
      */
     public function testTamperedStoredValueLosesOnlyTheOffendingConstraint(): void
     {
-        $decoded = $this->encoder->denormalize("Url\nLength(max: 5, normalizer: 'system')\nNotBlank");
+        $decoded = $this->normalizer->denormalize("Url\nLength(max: 5, normalizer: 'system')\nNotBlank");
 
         $constraints = $decoded->getConstraints();
         $this->assertIsArray($constraints);
@@ -197,7 +197,7 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
 
     public function testMalformedStoredValueIsReportedWithoutThrowing(): void
     {
-        $decoded = $this->encoder->denormalize('}{ not a constraint');
+        $decoded = $this->normalizer->denormalize('}{ not a constraint');
 
         $this->assertNull($decoded->getConstraints());
         $this->assertCount(1, $decoded->getRejections());
@@ -205,7 +205,7 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
 
     public function testOversizedStoredValueIsRefusedBeforeParsing(): void
     {
-        $decoded = $this->encoder->denormalize(
+        $decoded = $this->normalizer->denormalize(
             str_repeat('NotBlank,', ExtraPropertyConstraintMapper::MAX_RAW_LENGTH)
         );
 
@@ -215,7 +215,7 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
 
     public function testTooManyTopLevelConstraintsAreRefused(): void
     {
-        $decoded = $this->encoder->denormalize(
+        $decoded = $this->normalizer->denormalize(
             implode(',', array_fill(0, ExtraPropertyConstraintMapper::MAX_TOKENS + 1, 'NotBlank'))
         );
 
@@ -228,7 +228,7 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
      */
     public function testCleanStoredValueReportsNoRejection(): void
     {
-        $decoded = $this->encoder->denormalize("NotBlank\nLength(max: 10)");
+        $decoded = $this->normalizer->denormalize("NotBlank\nLength(max: 10)");
 
         $this->assertCount(2, (array) $decoded->getConstraints());
         $this->assertFalse($decoded->hasRejections());
@@ -244,7 +244,7 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
         $this->assertNotContains('Required', ExtraPropertyConstraintMapper::getAllowedNames());
         $this->assertNotContains('Optional', ExtraPropertyConstraintMapper::getAllowedNames());
 
-        $decoded = $this->encoder->denormalize('Required[ NotBlank ]');
+        $decoded = $this->normalizer->denormalize('Required[ NotBlank ]');
 
         $this->assertNull($decoded->getConstraints());
         $this->assertStringContainsString(
@@ -254,27 +254,86 @@ class ExtraPropertyConstraintEncoderTest extends TestCase
     }
 
     /**
+     * @dataProvider supportedStoredValueProvider
+     */
+    public function testSupportsDenormalizationInspectsTheStoredValue(string $raw, bool $expected): void
+    {
+        $this->assertSame(
+            $expected,
+            $this->normalizer->supportsDenormalization($raw, ExtraPropertyConstraintNormalizer::SUPPORTED_TYPE)
+        );
+    }
+
+    public static function supportedStoredValueProvider(): iterable
+    {
+        yield 'known constraints' => ["NotBlank\nLength(max: 10)", true];
+        yield 'composite with its own options' => ['Collection(allowExtraFields: true)[ a: NotBlank ]', true];
+        yield 'empty value' => ['', true];
+        yield 'unknown name' => ['NotAConstraint', false];
+        yield 'callable option' => ["Length(max: 5, normalizer: 'system')", false];
+        yield 'property path option' => ["LessThan(propertyPath: 'secret')", false];
+        yield 'internal wrapper at the top level' => ['Required[ NotBlank ]', false];
+        yield 'malformed' => ['}{ garbage', false];
+        yield 'too deep' => [str_repeat('All[', 40) . 'NotBlank' . str_repeat(']', 40), false];
+    }
+
+    public function testSupportsDenormalizationRejectsAnotherType(): void
+    {
+        $this->assertFalse($this->normalizer->supportsDenormalization('NotBlank', 'SomethingElse'));
+    }
+
+    public function testSupportsNormalizationInspectsTheConstraints(): void
+    {
+        $this->assertTrue($this->normalizer->supportsNormalization([new Assert\NotBlank(), new Assert\Length(['max' => 5])]));
+        $this->assertTrue($this->normalizer->supportsNormalization([]));
+        $this->assertTrue($this->normalizer->supportsNormalization(null));
+
+        $callable = new Assert\Length(['max' => 5]);
+        $callable->normalizer = 'system';
+        $this->assertFalse($this->normalizer->supportsNormalization([$callable]));
+
+        $this->assertFalse($this->normalizer->supportsNormalization([new NormalizerUnsupportedConstraint()]));
+    }
+
+    /**
+     * The support checks answer "does this look like mine?", never "will this normalize?". Anything
+     * relying on the second — the registry guard in particular — must normalize for real, or it
+     * accepts constraints that fail once the storage column already exists.
+     */
+    public function testSupportChecksAreShallowerThanNormalization(): void
+    {
+        // A keyed map: every name and option is fine, only the rendering cannot represent it.
+        $constraints = [new Assert\Choice(['choices' => ['a' => 1, 'b' => 2]])];
+
+        $this->assertTrue($this->normalizer->supportsNormalization($constraints));
+
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+        $this->normalizer->normalize($constraints);
+    }
+
+    /**
      * The registry guard must refuse exactly what save() would refuse, or a definition can pass the
      * guard and then fail once its storage column has already been created.
      */
-    public function testAssertEncodableRefusesEverythingEncodeRefuses(): void
+    public function testTheRegistryGuardRefusesEverythingNormalizeRefuses(): void
     {
         // Keyed map: the object graph walk accepts it, the rendering cannot represent it.
         $constraints = [new Assert\Choice(['choices' => ['a' => 1, 'b' => 2]])];
 
         $normalizeFailed = false;
         try {
-            $this->encoder->normalize($constraints);
+            $this->normalizer->normalize($constraints);
         } catch (InvalidExtraPropertyConstraintException) {
             $normalizeFailed = true;
         }
         $this->assertTrue($normalizeFailed, 'This fixture is meant to be refused by normalize().');
 
+        // The registry runs this very call as its guard, which is what keeps it equivalent to save().
         $this->expectException(InvalidExtraPropertyConstraintException::class);
-        $this->encoder->assertNormalizable($constraints);
+        $this->normalizer->normalize($constraints);
     }
 }
 
-final class EncoderUnsupportedConstraint extends Constraint
+final class NormalizerUnsupportedConstraint extends Constraint
 {
 }
