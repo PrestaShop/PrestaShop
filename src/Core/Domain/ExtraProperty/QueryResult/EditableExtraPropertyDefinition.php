@@ -28,8 +28,8 @@ class EditableExtraPropertyDefinition
      * @param string $entityName
      * @param string|null $moduleName Null for core fields; non-null = module-owned (read-only)
      * @param string $propertyName
-     * @param ExtraPropertyType $fieldType
-     * @param ExtraPropertyScope $fieldScope
+     * @param ExtraPropertyType $type
+     * @param ExtraPropertyScope $scope
      * @param ExtraPropertySqlIndex $sqlIndex
      * @param bool $nullable
      * @param int|null $size Varchar size for string fields
@@ -54,8 +54,8 @@ class EditableExtraPropertyDefinition
         protected readonly string $entityName,
         protected readonly ?string $moduleName,
         protected readonly string $propertyName,
-        protected readonly ExtraPropertyType $fieldType,
-        protected readonly ExtraPropertyScope $fieldScope,
+        protected readonly ExtraPropertyType $type,
+        protected readonly ExtraPropertyScope $scope,
         protected readonly ExtraPropertySqlIndex $sqlIndex,
         protected readonly bool $nullable,
         protected readonly ?int $size,
@@ -100,14 +100,14 @@ class EditableExtraPropertyDefinition
         return $this->propertyName;
     }
 
-    public function getFieldType(): ExtraPropertyType
+    public function getType(): ExtraPropertyType
     {
-        return $this->fieldType;
+        return $this->type;
     }
 
-    public function getFieldScope(): ExtraPropertyScope
+    public function getScope(): ExtraPropertyScope
     {
-        return $this->fieldScope;
+        return $this->scope;
     }
 
     public function getSqlIndex(): ExtraPropertySqlIndex

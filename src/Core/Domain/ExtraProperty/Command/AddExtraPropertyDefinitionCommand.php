@@ -39,8 +39,8 @@ class AddExtraPropertyDefinitionCommand
     /**
      * @param string $entityName Entity table name (e.g. 'product', 'customer')
      * @param string $propertyName Property identifier (e.g. 'internal_code')
-     * @param ExtraPropertyType $fieldType
-     * @param ExtraPropertyScope $fieldScope
+     * @param ExtraPropertyType $type
+     * @param ExtraPropertyScope $scope
      * @param ExtraPropertySqlIndex $sqlIndex
      * @param bool $displayFront Whether to include in FO presenters
      * @param bool $required Whether the field is marked required in the BO form and in the Admin API (OpenAPI) schema
@@ -65,8 +65,8 @@ class AddExtraPropertyDefinitionCommand
     public function __construct(
         protected readonly string $entityName,
         protected readonly string $propertyName,
-        protected readonly ExtraPropertyType $fieldType = ExtraPropertyType::STRING,
-        protected readonly ExtraPropertyScope $fieldScope = ExtraPropertyScope::COMMON,
+        protected readonly ExtraPropertyType $type = ExtraPropertyType::STRING,
+        protected readonly ExtraPropertyScope $scope = ExtraPropertyScope::COMMON,
         protected readonly ExtraPropertySqlIndex $sqlIndex = ExtraPropertySqlIndex::NONE,
         protected readonly bool $displayFront = false,
         protected readonly bool $required = false,
@@ -99,14 +99,14 @@ class AddExtraPropertyDefinitionCommand
         return $this->propertyName;
     }
 
-    public function getFieldType(): ExtraPropertyType
+    public function getType(): ExtraPropertyType
     {
-        return $this->fieldType;
+        return $this->type;
     }
 
-    public function getFieldScope(): ExtraPropertyScope
+    public function getScope(): ExtraPropertyScope
     {
-        return $this->fieldScope;
+        return $this->scope;
     }
 
     public function getSqlIndex(): ExtraPropertySqlIndex

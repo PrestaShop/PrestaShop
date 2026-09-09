@@ -76,8 +76,8 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
             $command = new AddExtraPropertyDefinitionCommand(
                 entityName: $data['entity_name'],
                 propertyName: $data['property_name'],
-                fieldType: ExtraPropertyType::from($data['type'] ?? ExtraPropertyType::STRING->value),
-                fieldScope: ExtraPropertyScope::from($data['scope'] ?? ExtraPropertyScope::COMMON->value),
+                type: ExtraPropertyType::from($data['type'] ?? ExtraPropertyType::STRING->value),
+                scope: ExtraPropertyScope::from($data['scope'] ?? ExtraPropertyScope::COMMON->value),
                 sqlIndex: ExtraPropertySqlIndex::from($data['sql_index'] ?? ExtraPropertySqlIndex::NONE->value),
                 displayFront: filter_var($data['display_front'] ?? false, FILTER_VALIDATE_BOOL),
                 required: filter_var($data['required'] ?? false, FILTER_VALIDATE_BOOL),
@@ -302,14 +302,14 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
         return match ($field) {
             'entity_name' => $definition->getEntityName(),
             'property_name' => $definition->getPropertyName(),
-            'type' => $definition->getFieldType()->value,
-            'scope' => $definition->getFieldScope()->value,
+            'type' => $definition->getType()->value,
+            'scope' => $definition->getScope()->value,
             'sql_index' => $definition->getSqlIndex()->value,
             'nullable' => $definition->isNullable() ? 'true' : 'false',
             'size' => null !== $definition->getSize() ? (string) $definition->getSize() : '',
             // Typed scalar since the CQRS widening — stringified with the same canonical
             // mapping as the registry ('1'/'0' for booleans) for Gherkin cell comparison.
-            'default_value' => ExtraPropertyValueCaster::castDefaultValueForDb($definition->getFieldType(), $definition->getDefaultValue()) ?? '',
+            'default_value' => ExtraPropertyValueCaster::castDefaultValueForDb($definition->getType(), $definition->getDefaultValue()) ?? '',
             'enum_values' => implode(',', $definition->getEnumValues() ?? []),
             'display_front' => $definition->isDisplayFront() ? 'true' : 'false',
             'required' => $definition->isRequired() ? 'true' : 'false',

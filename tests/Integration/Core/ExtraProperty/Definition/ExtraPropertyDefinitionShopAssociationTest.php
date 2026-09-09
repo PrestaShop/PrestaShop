@@ -329,8 +329,8 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
         $id = $this->getCommandBus()->handle(new AddExtraPropertyDefinitionCommand(
             entityName: 'product',
             propertyName: 'zzcmd_core_created',
-            fieldType: ExtraPropertyType::STRING,
-            fieldScope: ExtraPropertyScope::COMMON,
+            type: ExtraPropertyType::STRING,
+            scope: ExtraPropertyScope::COMMON,
             associatedShopIds: [self::$secondShopId, self::$thirdShopId],
         ));
 

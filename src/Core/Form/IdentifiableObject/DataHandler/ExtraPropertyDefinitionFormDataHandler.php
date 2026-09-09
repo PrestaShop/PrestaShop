@@ -69,8 +69,8 @@ class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInterface
         $id = $this->commandBus->handle(new AddExtraPropertyDefinitionCommand(
             entityName: $fieldDefinition['entity_name'],
             propertyName: $fieldDefinition['property_name'],
-            fieldType: ExtraPropertyType::from($fieldDefinition['type']),
-            fieldScope: ExtraPropertyScope::from($fieldDefinition['scope']),
+            type: ExtraPropertyType::from($fieldDefinition['type']),
+            scope: ExtraPropertyScope::from($fieldDefinition['scope']),
             sqlIndex: ExtraPropertySqlIndex::from($fieldDefinition['sql_index']),
             displayFront: (bool) $visibility['display_front'],
             required: (bool) $visibility['required'],
