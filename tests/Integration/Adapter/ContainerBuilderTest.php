@@ -47,6 +47,20 @@ class ContainerBuilderTest extends TestCase
         $this->assertInstanceOf(ExtraPropertyDefinitionRepositoryInterface::class, $repository);
     }
 
+    /**
+     * The legacy webservice (webservice/dispatcher.php) runs on its own hand-built container, built from
+     * config/services/webservice/*.yml: everything the front container needs from config/services/common.yml
+     * (the logger the extra property repository depends on, for instance) must resolve there too.
+     */
+    public function testWebserviceContainerBuildsTheExtraPropertyRepository(): void
+    {
+        $container = ContainerBuilder::getContainer('webservice', true);
+
+        $repository = $container->get(ExtraPropertyDefinitionRepositoryInterface::class);
+
+        $this->assertInstanceOf(ExtraPropertyDefinitionRepositoryInterface::class, $repository);
+    }
+
     public function testContainerLoadsModuleAutoload()
     {
         ContainerBuilder::getContainer('front', true);

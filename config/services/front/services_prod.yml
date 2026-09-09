@@ -5,10 +5,6 @@ services:
     _defaults:
         public: true
 
-    Psr\Log\LoggerInterface:
-        alias: prestashop.adapter.legacy.logger
-        public: true
-
     prestashop.core.filter.front_end_object.main:
         class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\MainFilter
         arguments:
