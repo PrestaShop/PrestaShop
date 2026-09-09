@@ -417,14 +417,20 @@ class GroupCore extends ObjectModel
         return self::$groups[$id_group];
     }
 
-    public static function getAllGroupIds(): array
+    public static function getAllGroupIds($filterByShop = false): array
     {
         $query = new DbQuery();
+
         $query
-            ->select('g.`id_group`')
+            ->select('DISTINCT g.`id_group`')
             ->from('group', 'g')
             ->orderby('g.`id_group` ASC')
         ;
+
+        if ($filterByShop) {
+            $query->join(Shop::addSqlAssociation('group', 'g'));
+        }
+
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
         return array_column($result, 'id_group');

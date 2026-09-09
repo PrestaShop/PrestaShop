@@ -26,15 +26,23 @@ final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
     private $langId;
 
     /**
+     * @var bool whether choices must be restricted to the groups of the current shop context
+     */
+    private $filterByShop;
+
+    /**
      * @param GroupDataProvider $groupDataProvider
      * @param int $langId
+     * @param bool $filterByShop
      */
     public function __construct(
         GroupDataProvider $groupDataProvider,
-        $langId
+        $langId,
+        bool $filterByShop = false
     ) {
         $this->groupDataProvider = $groupDataProvider;
         $this->langId = $langId;
+        $this->filterByShop = $filterByShop;
     }
 
     /**
@@ -43,7 +51,7 @@ final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         return FormChoiceFormatter::formatFormChoices(
-            $this->groupDataProvider->getGroups($this->langId),
+            $this->groupDataProvider->getGroups($this->langId, $this->filterByShop),
             'id_group',
             'name',
             false
