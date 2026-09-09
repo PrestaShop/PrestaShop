@@ -147,6 +147,24 @@ final class ExtraPropertyConstraintRendererTest extends TestCase
         );
     }
 
+    /**
+     * A keyed "label => value" map (the common shape a module already builds for its own form
+     * widget) canonicalizes to its plain values list: nothing downstream (ChoiceValidator included)
+     * ever reads the keys, so they are intentionally not preserved.
+     */
+    public function testRenderCanonicalizesAKeyedScalarMapToItsValues(): void
+    {
+        $rendered = ExtraPropertyConstraintRenderer::render([new Assert\Choice(['choices' => ['a' => 1, 'b' => 2]])]);
+
+        $this->assertSame('Choice([1, 2])', $rendered);
+
+        $decoded = ExtraPropertyConstraintParser::parse($rendered);
+        $this->assertFalse($decoded->hasRejections());
+        /** @var Assert\Choice $choice */
+        $choice = $decoded->getConstraints()[0];
+        $this->assertSame([1, 2], $choice->choices);
+    }
+
     public function testRenderTheTypeConstraintScalarAndList(): void
     {
         $this->assertSame(
@@ -477,10 +495,6 @@ final class ExtraPropertyConstraintRendererTest extends TestCase
 
         yield 'object option' => [new Assert\LessThan(new DateTimeImmutable('2030-01-01')), '/"value" of constraint "LessThan" holds a DateTimeImmutable.*cannot represent/'];
 
-        // A keyed map: every name and option is fine, only the format carries scalars and lists of
-        // scalars but no map. Known limitation (epic #41422), refused rather than silently flattened.
-        yield 'keyed map option' => [new Assert\Choice(['choices' => ['a' => 1, 'b' => 2]]), '/"choices" of constraint "Choice" holds a array.*cannot represent/'];
-
         yield 'constraint outside the grammar' => [new RendererUnsupportedConstraint(), '/not part of the extra property constraint grammar/'];
     }
 
@@ -534,7 +548,7 @@ final class ExtraPropertyConstraintRendererTest extends TestCase
         $this->expectException(InvalidExtraPropertyConstraintException::class);
         $this->expectExceptionMessage('Extra property constraints must be provided as a list.');
 
-        ExtraPropertyConstraintRenderer::render(['first' => new Assert\NotBlank()]);
+        ExtraPropertyConstraintRenderer::render(['first' => new Assert\NotBlank()]); // @phpstan-ignore-line intentionally invalid: keyed array to trigger the "must be a list" refusal
     }
 
     // -- helpers -----------------------------------------------------------------------------

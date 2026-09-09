@@ -42,6 +42,11 @@ use Throwable;
  * parser already built), so there is nothing to tolerate — the write path must refuse what it
  * cannot store, and a read-path failure exposes a corrupt definition instead of displaying a wrong
  * one.
+ *
+ * A keyed scalar map on an array option (e.g. Choice::$choices built as ['label' => 'value']) is
+ * canonicalized to its plain values list rather than refused: the validators that read such
+ * options (ChoiceValidator, for instance) never look at the keys, so the map and the equivalent
+ * positional list validate identically — only the keys, which nothing reads, are not persisted.
  */
 class ExtraPropertyConstraintRenderer
 {
@@ -269,7 +274,11 @@ class ExtraPropertyConstraintRenderer
             if (null === $value || $value === ($defaults[$option] ?? null)) {
                 continue;
             }
-            $configured[$option] = $value;
+            // A keyed scalar map (e.g. Choice::$choices built as ['label' => 'value']) carries no
+            // meaning the format can express: the validator that reads it (e.g. ChoiceValidator)
+            // never looks at the keys, only in_array()s the values. Canonicalizing here means such
+            // an option is stored and compared exactly like the equivalent positional list.
+            $configured[$option] = is_array($value) ? self::canonicalizeScalarMap($value) : $value;
         }
 
         return $configured;
@@ -312,6 +321,26 @@ class ExtraPropertyConstraintRenderer
     }
 
     /**
+     * A non-list array whose values are all scalars (e.g. Choice::$choices built as a
+     * "label => value" map) carries no information the format keeps: rendering and the round-trip
+     * comparison both work on its values only, in their original order, discarding the keys.
+     *
+     * @param array<mixed> $value
+     *
+     * @return array<mixed>
+     */
+    private static function canonicalizeScalarMap(array $value): array
+    {
+        if (self::isScalarList($value)) {
+            return $value;
+        }
+
+        $values = array_values($value);
+
+        return self::isScalarList($values) ? $values : $value;
+    }
+
+    /**
      * Reduces a constraint graph to nested arrays of scalars, keeping class names, keys, order and
      * scalar types, so a plain `===` becomes a strict structural comparison.
      *
@@ -344,9 +373,17 @@ class ExtraPropertyConstraintRenderer
             if ($property->isStatic() || !ExtraPropertyConstraintGrammar::isRenderableOption($property->getName())) {
                 continue;
             }
-            $normalized[$property->getName()] = $property->isInitialized($value)
-                ? self::toComparableForm($property->getValue($value))
-                : '#uninitialized';
+            if (!$property->isInitialized($value)) {
+                $normalized[$property->getName()] = '#uninitialized';
+                continue;
+            }
+            $propertyValue = $property->getValue($value);
+            // Mirrors configuredOptions(): a keyed scalar map compares equal to the plain values
+            // list the parser produces, since that's exactly what gets stored.
+            if (is_array($propertyValue)) {
+                $propertyValue = self::canonicalizeScalarMap($propertyValue);
+            }
+            $normalized[$property->getName()] = self::toComparableForm($propertyValue);
         }
 
         return $normalized;
