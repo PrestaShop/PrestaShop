@@ -422,6 +422,11 @@ final class ExtraPropertyDefinition
     /**
      * Builds an instance from a raw registry DB row.
      *
+     * The 'constraints' cell must already hold decoded Constraint objects, not the string stored in
+     * the registry: decoding belongs to the repository, which owns the normalizer and can report a
+     * rejected constraint with the row it came from. This value object stays free of that
+     * responsibility (see ExtraPropertyDefinitionRepository::enrichRowsWithDecodedConstraints()).
+     *
      * Resolves the entity's ObjectModel definition ('table' + 'primary') from the
      * canonical entity name: classify() gives the class name ('combination' →
      * 'Combination', 'cart' → 'Cart'), which must exist and be an ObjectModel. The
@@ -523,7 +528,9 @@ final class ExtraPropertyDefinition
             associatedApis: is_array($associatedApis) ? $associatedApis : null,
             formType: isset($row['form_type']) && '' !== $row['form_type'] ? (string) $row['form_type'] : null,
             formOptions: is_array($formOptions) ? $formOptions : null,
-            constraints: self::decodeConstraints($row['constraints'] ?? null),
+            constraints: is_array($row['constraints'] ?? null) && [] !== $row['constraints']
+                ? array_values($row['constraints'])
+                : null,
             labelWording: isset($row['label_wording']) && '' !== $row['label_wording'] ? (string) $row['label_wording'] : null,
             labelDomain: isset($row['label_domain']) && '' !== $row['label_domain'] ? (string) $row['label_domain'] : null,
             descriptionWording: isset($row['description_wording']) && '' !== $row['description_wording'] ? (string) $row['description_wording'] : null,
@@ -541,49 +548,6 @@ final class ExtraPropertyDefinition
             // Stored override only — null rows resolve through the map/convention at read.
             controllerName: isset($row['controller_name']) && '' !== $row['controller_name'] ? (string) $row['controller_name'] : null,
         );
-    }
-
-    /**
-     * Normalizes the registry "constraints" cell into a list of Constraint objects.
-     *
-     * Accepts both shapes so fromRow() works for an in-memory row (constraints already given as
-     * Constraint objects) and a DB row (constraints serialized to a string):
-     *  - array  → already-decoded constraints; filtered and returned as-is (no unserialize).
-     *  - string → a serialized blob written by trusted module install code (registerExtraProperty);
-     *             unserialized then filtered.
-     * Anything that is not a Symfony Constraint is discarded. Returns null when nothing usable
-     * remains, mirroring the "no validation" default.
-     *
-     * @return list<Constraint>|null
-     */
-    private static function decodeConstraints(mixed $raw): ?array
-    {
-        if (is_array($raw)) {
-            return self::filterConstraints($raw);
-        }
-
-        if (!is_string($raw) || '' === $raw) {
-            return null;
-        }
-
-        $decoded = @unserialize($raw, ['allowed_classes' => true]);
-
-        return is_array($decoded) ? self::filterConstraints($decoded) : null;
-    }
-
-    /**
-     * @param array<mixed> $candidates
-     *
-     * @return list<Constraint>|null
-     */
-    private static function filterConstraints(array $candidates): ?array
-    {
-        $constraints = array_values(array_filter(
-            $candidates,
-            static fn (mixed $constraint): bool => $constraint instanceof Constraint
-        ));
-
-        return [] !== $constraints ? $constraints : null;
     }
 
     // -------------------------------------------------------------------------

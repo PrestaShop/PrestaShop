@@ -71,6 +71,12 @@ class ExtraPropertyRegistrationFailureException extends ExtraPropertyException
     public const INVALID_DEFAULT_VALUE = 9;
 
     /**
+     * The declared constraints contain a class, an option or a value the extra property
+     * constraint format cannot carry safely.
+     */
+    public const INVALID_CONSTRAINTS = 10;
+
+    /**
      * Builds the domain exception from the core exception thrown by the registry,
      * mapping the core reason code to the matching domain code and keeping the
      * core exception as the previous one.
@@ -84,6 +90,7 @@ class ExtraPropertyRegistrationFailureException extends ExtraPropertyException
             ExtraPropertyRegistryException::PERSISTENCE_FAILURE => self::PERSISTENCE_FAILURE,
             ExtraPropertyRegistryException::SCHEMA_FAILURE => self::SCHEMA_FAILURE,
             ExtraPropertyRegistryException::INVALID_FORM_OPTIONS => self::INVALID_FORM_OPTIONS,
+            ExtraPropertyRegistryException::INVALID_CONSTRAINTS => self::INVALID_CONSTRAINTS,
             ExtraPropertyRegistryException::UNKNOWN_SHOP => self::UNKNOWN_SHOP,
             ExtraPropertyRegistryException::STORAGE_CONFLICT => self::STORAGE_CONFLICT,
             ExtraPropertyRegistryException::INVALID_DEFAULT_VALUE => self::INVALID_DEFAULT_VALUE,

@@ -71,10 +71,11 @@ class ConstraintRowSerializer
     }
 
     /**
-     * Serializes a single row into its DSL token: "Name", "Name(tail)" or "Name[tail]" for
-     * composites. An empty name serializes to nothing (skipped row).
+     * Serializes a single row into its DSL token: "Name", "Name(tail)", "Name[tail]" for composites
+     * and "Name(options)[tail]" for a composite carrying its own options. An empty name serializes
+     * to nothing (skipped row).
      *
-     * @param array{name?: string|null, options?: string|null, per_language?: string|null} $row
+     * @param array{name?: string|null, options?: string|null, composite_options?: string|null, per_language?: string|null} $row
      */
     public static function token(array $row): string
     {
@@ -84,16 +85,18 @@ class ConstraintRowSerializer
         }
 
         $tail = trim($row['options'] ?? '');
-        if ('' === $tail) {
-            // An empty composite keeps its brackets ("All[]" — the mapper's own toNames render);
-            // a regular constraint reads bare ("NotBlank").
-            return in_array($name, ExtraPropertyConstraintMapper::compositeNames(), true) ? $name . '[]' : $name;
+        $isComposite = in_array($name, ExtraPropertyConstraintMapper::compositeNames(), true);
+
+        if (!$isComposite) {
+            return '' === $tail ? $name : $name . '(' . $tail . ')';
         }
 
-        if (in_array($name, ExtraPropertyConstraintMapper::compositeNames(), true)) {
-            return $name . '[' . $tail . ']';
-        }
+        // A composite may carry its own options ahead of its children:
+        // "Collection(allowExtraFields: true)[ name: NotBlank ]".
+        $compositeOptions = trim($row['composite_options'] ?? '');
+        $head = '' === $compositeOptions ? $name : $name . '(' . $compositeOptions . ')';
 
-        return $name . '(' . $tail . ')';
+        // An empty composite keeps its brackets ("All[]" — the mapper's own toNames render).
+        return $head . '[' . $tail . ']';
     }
 }

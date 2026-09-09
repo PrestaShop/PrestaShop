@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Form;
 
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
@@ -26,6 +27,12 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintM
  * editable form the row form type validates names on submit). A token without the Name/Name(...)/
  * Name[...] shape cannot be represented as a row and is skipped; the mapper never renders such a
  * token, so this only drops hand-edited database values.
+ *
+ * Every row carries 'composite_options' even when it is empty, which is only ever filled for a
+ * composite. This is deliberate: the field is declared on the row form type, so Symfony binds it on
+ * every row regardless — a submitted row comes back with 'composite_options' => null even when the
+ * request did not carry it. Emitting it only for composites would make this output disagree with the
+ * shape of the bound data, which is exactly what the form round-trip compares.
  */
 class ConstraintRowPresenter
 {
@@ -37,7 +44,7 @@ class ConstraintRowPresenter
     }
 
     /**
-     * @return list<array{name: string, options: string, per_language: string}>
+     * @return list<array{name: string, options: string, composite_options: string, per_language: string}>
      */
     public static function rows(?string $raw): array
     {
@@ -45,14 +52,30 @@ class ConstraintRowPresenter
             return [];
         }
 
+        // Displaying a definition must never fail: tokenize() enforces the grammar bounds and throws
+        // past them, but a row that cannot be shown is better rendered as an empty builder than as a
+        // broken page. The definition itself is unaffected — only this view of it.
+        try {
+            $tokens = ExtraPropertyConstraintMapper::tokenize($raw);
+        } catch (ExtraPropertyException) {
+            return [];
+        }
+
         $rows = [];
         $allExploded = false;
-        foreach (ExtraPropertyConstraintMapper::tokenize($raw) as [$token, $line]) {
+        foreach ($tokens as [$token, $line]) {
             // The first top-level All[...] feeds the per-language zone: each child becomes its own
             // per_language row, folded back into one All[...] line on serialization.
             if (!$allExploded && 1 === preg_match('/^All\s*\[(.*)\]$/s', $token, $matches)) {
+                try {
+                    $children = ExtraPropertyConstraintMapper::tokenize($matches[1]);
+                } catch (ExtraPropertyException) {
+                    // Unrepresentable children (hand-edited database value): this All is dropped and
+                    // the per-language zone stays available to the next top-level All.
+                    continue;
+                }
                 $allExploded = true;
-                foreach (ExtraPropertyConstraintMapper::tokenize($matches[1]) as [$childToken, $childLine]) {
+                foreach ($children as [$childToken, $childLine]) {
                     self::appendTokenRow($rows, $childToken, '1');
                 }
                 continue;
@@ -65,22 +88,36 @@ class ConstraintRowPresenter
     }
 
     /**
-     * @param list<array{name: string, options: string, per_language: string}> $rows
+     * @param list<array{name: string, options: string, composite_options: string, per_language: string}> $rows
      */
     private static function appendTokenRow(array &$rows, string $token, string $perLanguage): void
     {
-        // Composite shape: Name[ nested, constraints ]
-        if (1 === preg_match('/^(\w+)\s*\[(.*)\]$/s', $token, $matches)) {
-            $rows[] = ['name' => $matches[1], 'options' => trim($matches[2]), 'per_language' => $perLanguage];
+        // The mapper owns the grammar: it splits the token with the same quote and delimiter rules
+        // the parser applies, so the builder never drifts from what the server will accept.
+        $parts = ExtraPropertyConstraintMapper::splitToken($token);
+        if (null === $parts) {
+            // Any other shape is unrepresentable without the raw edition — dropped (see class docblock).
+            return;
+        }
+
+        if (null !== $parts['children']) {
+            // Composite, with or without its own options tail:
+            // "All[ Url ]" or "Collection(allowExtraFields: true)[ name: NotBlank ]".
+            $rows[] = [
+                'name' => $parts['name'],
+                'options' => trim($parts['children']),
+                'composite_options' => trim($parts['options'] ?? ''),
+                'per_language' => $perLanguage,
+            ];
 
             return;
         }
 
-        // Regular shape: Name or Name(argument)
-        if (1 === preg_match('/^(\w+)\s*(?:\((.*)\))?$/s', $token, $matches)) {
-            $rows[] = ['name' => $matches[1], 'options' => trim($matches[2] ?? ''), 'per_language' => $perLanguage];
-        }
-
-        // Any other shape is unrepresentable without the raw edition — dropped (see class docblock).
+        $rows[] = [
+            'name' => $parts['name'],
+            'options' => trim($parts['options'] ?? ''),
+            'composite_options' => '',
+            'per_language' => $perLanguage,
+        ];
     }
 }

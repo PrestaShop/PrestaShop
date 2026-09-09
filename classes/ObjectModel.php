@@ -1095,6 +1095,14 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      */
     public function validateExtraProperties(bool $die = true, bool $errorReturn = false)
     {
+        // Nothing was ever set on this instance: nothing to validate, so the definitions are not
+        // loaded at all. Saving an entity that carries no extra property values (a log row, for
+        // instance) must not depend on the definitions repository, which may itself be in the
+        // middle of hydrating definitions and logging about them.
+        if (null === $this->extra_properties_bag) {
+            return true;
+        }
+
         // B6: check definitions first (avoids loading bag when entity has no extra fields).
         $collection = $this->getDefinitionCollection();
         if ($collection->isEmpty()) {
@@ -2309,6 +2317,11 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     protected function persistExtraProperties(): bool
     {
         if (empty($this->def['table']) || (int) $this->id <= 0) {
+            return true;
+        }
+
+        // Same short-circuit as validateExtraProperties(): no bag, nothing was set, nothing to persist.
+        if (null === $this->extra_properties_bag) {
             return true;
         }
 

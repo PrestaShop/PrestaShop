@@ -14,10 +14,18 @@ services:
 
   # ─── Repository ──────────────────────────────────────────────────────────────
 
+  # The logger is taken through its interface on purpose: in the Symfony kernels (back office,
+  # Admin API) Psr\Log\LoggerInterface is Monolog, which writes to var/logs and never touches the
+  # database. The hand-built front-office container has no Monolog and aliases the interface to the
+  # legacy logger (ps_log) in config/services/front/services_prod.yml.
   PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepository:
     arguments:
       $connection: '@doctrine.dbal.default_connection'
       $prefix: '%database_prefix%'
+      $logger: '@Psr\Log\LoggerInterface'
+      $constraintNormalizer: '@PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer: ~
 
   # Note: the definition WRITER interface (ExtraPropertyDefinitionWriterInterface) is intentionally NOT aliased
   # here. Writing definitions (register/unregister) is a back-office-only concern, so the alias lives in

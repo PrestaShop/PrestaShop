@@ -480,6 +480,11 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
                     [],
                     'Admin.Advparameters.Notification'
                 ),
+                ExtraPropertyRegistrationFailureException::INVALID_CONSTRAINTS => $this->trans(
+                    'The validation constraints could not be saved: they contain a constraint, an option or a value that is not supported. Use only the constraints and options offered by the validation builder.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
                 ExtraPropertyRegistrationFailureException::UNKNOWN_SHOP => $this->trans(
                     'The store association contains a store that does not exist. Refresh the page and try again.',
                     [],

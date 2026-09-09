@@ -128,6 +128,32 @@ class ExtraPropertyConstraintMapper
     private const NON_RENDERABLE_OPTIONS = ['groups', 'payload'];
 
     /**
+     * Wrappers Symfony generates inside a Collection for each of its fields. They are part of the
+     * grammar — a Collection cannot round-trip without them — but they are NOT public constraints:
+     * they never appear in getAllowedConstraints(), so the BO builder catalog does not offer them,
+     * and they are only accepted directly under a Collection.
+     */
+    private const INTERNAL_CONSTRAINTS = [
+        'Optional' => Assert\Optional::class,
+        'Required' => Assert\Required::class,
+    ];
+
+    /**
+     * Options whose value Symfony invokes as a callable at validation time. `unserialize()` is gone,
+     * but a stored DSL string is still attacker-reachable through the database, so these are refused
+     * wherever a constraint is built.
+     */
+    private const CALLABLE_OPTIONS = ['callback', 'normalizer'];
+
+    /**
+     * Bounds applied to any DSL string being parsed. The value stored in the registry is parsed on
+     * read, so a tampered row must not be able to exhaust the stack or the request budget.
+     */
+    public const MAX_NESTING_DEPTH = 16;
+    public const MAX_RAW_LENGTH = 65535;
+    public const MAX_TOKENS = 256;
+
+    /**
      * Parses a "one constraint per line (or comma-separated)" textarea value into Constraint instances.
      *
      * @param string|null $rawNames
@@ -143,8 +169,12 @@ class ExtraPropertyConstraintMapper
             return null;
         }
 
+        // tokenize() carries the token-count bound, so every caller splitting a definition gets it.
+        // The length bound belongs to the encoder, which guards both of its decoding paths with it.
+        $tokens = self::tokenize($rawNames);
+
         $constraints = [];
-        foreach (self::splitTopLevelWithLines($rawNames, ",\n") as [$token, $line]) {
+        foreach ($tokens as [$token, $line]) {
             try {
                 $constraints[] = self::parseToken($token);
             } catch (UnknownExtraPropertyConstraintException|InvalidExtraPropertyConstraintException $e) {
@@ -192,6 +222,16 @@ class ExtraPropertyConstraintMapper
     }
 
     /**
+     * Whether an option name is refused wherever a constraint is built: callable options Symfony
+     * invokes at validation time, and property-path options that traverse the validated object.
+     */
+    public static function isForbiddenOption(string $option): bool
+    {
+        return in_array($option, self::CALLABLE_OPTIONS, true)
+            || str_ends_with(strtolower($option), 'propertypath');
+    }
+
+    /**
      * The whitelist itself (name => constraint FQCN), e.g. to build a machine-readable catalog.
      *
      * @return array<string, class-string<Constraint>>
@@ -211,7 +251,115 @@ class ExtraPropertyConstraintMapper
      */
     public static function tokenize(string $raw): array
     {
-        return self::splitTopLevelWithLines($raw, ",\n");
+        $tokens = self::splitTopLevelWithLines($raw, ",\n");
+        if (count($tokens) > self::MAX_TOKENS) {
+            throw new InvalidExtraPropertyConstraintException(sprintf(
+                'Constraint definition exceeds the maximum of %d top-level constraints.',
+                self::MAX_TOKENS
+            ));
+        }
+
+        return $tokens;
+    }
+
+    /**
+     * The grammar alias of a class, or null when the class is outside the grammar.
+     *
+     * @param class-string $fqcn
+     */
+    public static function aliasOfClass(string $fqcn): ?string
+    {
+        return self::aliasesByClass()[$fqcn] ?? null;
+    }
+
+    /**
+     * Whether a raw definition only mentions constraints this grammar knows, with no forbidden option.
+     *
+     * A name-level examination: it walks the token structure, resolves every name against the core
+     * allowlist and checks the option names, but **builds nothing** — an unknown name is rejected on
+     * its name alone, before anything could be instantiated from it.
+     *
+     * It is deliberately shallower than parsing. It cannot tell whether an option actually exists on
+     * a constraint, whether a required value is missing, or whether a value can be rendered back:
+     * those only surface while building. Callers that must not fail later parse for real.
+     */
+    public static function describesKnownConstraints(string $raw): bool
+    {
+        try {
+            $tokens = self::tokenize($raw);
+        } catch (UnknownExtraPropertyConstraintException|InvalidExtraPropertyConstraintException) {
+            return false;
+        }
+
+        foreach ($tokens as [$token, $line]) {
+            if (!self::tokenDescribesKnownConstraint($token, 0, false)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static function tokenDescribesKnownConstraint(string $token, int $depth, bool $allowInternal): bool
+    {
+        if ($depth > self::MAX_NESTING_DEPTH) {
+            return false;
+        }
+
+        $parts = self::splitTokenParts(trim($token));
+        if (null === $parts) {
+            return false;
+        }
+
+        $fqcn = self::ALLOWED_CONSTRAINTS[$parts['name']]
+            ?? ($allowInternal ? (self::INTERNAL_CONSTRAINTS[$parts['name']] ?? null) : null);
+        if (null === $fqcn) {
+            return false;
+        }
+
+        $options = null !== $parts['options'] ? trim($parts['options']) : '';
+        if ('' !== $options && self::looksLikeNamedOptions($options)) {
+            foreach (self::splitTopLevel($options, ',') as $option) {
+                if (1 === preg_match('/^(\w+)\s*:/', $option, $matches) && self::isForbiddenOption($matches[1])) {
+                    return false;
+                }
+            }
+        }
+
+        if (null === $parts['children']) {
+            return true;
+        }
+
+        $keysChildren = Assert\Collection::class === $fqcn;
+        foreach (self::splitTopLevel($parts['children'], ",\n") as $child) {
+            // Only a Collection keys its children, and only there do the internal wrappers apply.
+            if ($keysChildren && 1 === preg_match('/^(\w+)\s*:\s*(.+)$/s', $child, $childMatches)) {
+                if (!self::tokenDescribesKnownConstraint(trim($childMatches[2]), $depth + 1, true)) {
+                    return false;
+                }
+
+                continue;
+            }
+            if (!self::tokenDescribesKnownConstraint($child, $depth + 1, false)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Splits one token into its name, its optional "(...)" options tail and its optional "[...]"
+     * children tail, or returns null when the token does not match the grammar.
+     *
+     * Exposed so the BO builder's row presenter splits tokens with the exact same quote and
+     * delimiter rules as the parser, instead of re-implementing them with a weaker regex.
+     *
+     * @return array{name: string, options: string|null, children: string|null}|null
+     */
+    public static function splitToken(string $token): ?array
+    {
+        return self::splitTokenParts(trim($token));
     }
 
     /**
@@ -300,42 +448,174 @@ class ExtraPropertyConstraintMapper
      * @throws UnknownExtraPropertyConstraintException
      * @throws InvalidExtraPropertyConstraintException
      */
-    private static function parseToken(string $token): Constraint
+    private static function parseToken(string $token, int $depth = 0, bool $allowInternal = false): Constraint
     {
-        // Composite shape: Name[ nested, constraints ]
-        if (1 === preg_match('/^(\w+)\s*\[(.*)\]$/s', $token, $matches)) {
-            return self::parseComposite($matches[1], $matches[2], $token);
+        if ($depth > self::MAX_NESTING_DEPTH) {
+            throw new InvalidExtraPropertyConstraintException(sprintf(
+                'Constraint nesting exceeds the maximum depth of %d.',
+                self::MAX_NESTING_DEPTH
+            ));
         }
 
-        if (1 !== preg_match('/^(\w+)\s*(?:\((.*)\))?$/s', $token, $matches)) {
+        $parts = self::splitTokenParts($token);
+        if (null === $parts) {
             throw new UnknownExtraPropertyConstraintException(sprintf(
-                'Malformed constraint "%s". Use a name optionally followed by a value — e.g. NotBlank, TypedRegex(generic_name), Length(min: 2, max: 64) or All[Url].',
+                'Malformed constraint "%s". Use a name optionally followed by a value and/or nested constraints — e.g. NotBlank, TypedRegex(generic_name), Length(min: 2, max: 64), All[Url] or Collection(allowExtraFields: true)[ name: NotBlank ].',
                 $token
             ));
         }
 
-        $fqcn = self::resolveName($matches[1]);
-        $hasArgument = isset($matches[2]) && '' !== trim($matches[2]);
+        // Composite shape: Name[ children ], optionally preceded by its own options.
+        if (null !== $parts['children']) {
+            return self::parseComposite($parts['name'], $parts['children'], $parts['options'], $token, $depth, $allowInternal);
+        }
 
-        if (!$hasArgument) {
+        $fqcn = self::resolveName($parts['name'], $allowInternal);
+        $inner = null !== $parts['options'] ? trim($parts['options']) : '';
+
+        if ('' === $inner) {
             return self::instantiate($fqcn, $token, null);
         }
 
-        $inner = trim($matches[2]);
-
         if (self::looksLikeNamedOptions($inner)) {
-            return self::instantiate($fqcn, $token, self::parseNamedOptions($inner, $token));
+            return self::instantiate($fqcn, $token, self::assertOptionsAllowed(self::parseNamedOptions($inner, $token), $token));
         }
 
         $defaultOption = self::defaultOptionOf($fqcn);
         if (null === $defaultOption) {
             throw new InvalidExtraPropertyConstraintException(sprintf(
                 'Constraint "%s" does not accept a value.',
-                $matches[1]
+                $parts['name']
             ));
         }
 
-        return self::instantiate($fqcn, $token, [$defaultOption => self::parseArgument($inner)]);
+        return self::instantiate($fqcn, $token, self::assertOptionsAllowed([$defaultOption => self::parseArgument($inner)], $token));
+    }
+
+    /**
+     * Splits a token into its name, its optional "(...)" options tail and its optional "[...]"
+     * children tail, honoring quoted runs and nested delimiters. Returns null when the token has a
+     * shape this grammar does not describe (missing name, unbalanced delimiters, trailing text).
+     *
+     * Both tails may be present, in that order: "Collection(allowExtraFields: true)[ name: NotBlank ]".
+     *
+     * @return array{name: string, options: string|null, children: string|null}|null
+     */
+    private static function splitTokenParts(string $token): ?array
+    {
+        $length = strlen($token);
+        $cursor = 0;
+        while ($cursor < $length && (ctype_alnum($token[$cursor]) || '_' === $token[$cursor])) {
+            ++$cursor;
+        }
+        if (0 === $cursor) {
+            return null;
+        }
+
+        $name = substr($token, 0, $cursor);
+        $options = null;
+        $children = null;
+
+        $cursor = self::skipWhitespace($token, $cursor);
+        if ($cursor < $length && '(' === $token[$cursor]) {
+            $end = self::matchingDelimiter($token, $cursor, '(', ')');
+            if (null === $end) {
+                return null;
+            }
+            $options = substr($token, $cursor + 1, $end - $cursor - 1);
+            $cursor = self::skipWhitespace($token, $end + 1);
+        }
+
+        if ($cursor < $length && '[' === $token[$cursor]) {
+            $end = self::matchingDelimiter($token, $cursor, '[', ']');
+            if (null === $end) {
+                return null;
+            }
+            $children = substr($token, $cursor + 1, $end - $cursor - 1);
+            $cursor = self::skipWhitespace($token, $end + 1);
+        }
+
+        // Anything left after both tails means the token is not fully described by this grammar.
+        return $cursor === $length ? ['name' => $name, 'options' => $options, 'children' => $children] : null;
+    }
+
+    /**
+     * Returns the offset of the delimiter closing the run opened at $start, or null when the run is
+     * never closed. Quoted sections (with backslash escapes) are skipped, and nested pairs counted.
+     */
+    private static function matchingDelimiter(string $raw, int $start, string $open, string $close): ?int
+    {
+        $length = strlen($raw);
+        $depth = 0;
+        $quote = null;
+
+        for ($i = $start; $i < $length; ++$i) {
+            $char = $raw[$i];
+            if (null !== $quote) {
+                if ('\\' === $char && $i + 1 < $length) {
+                    ++$i;
+                } elseif ($char === $quote) {
+                    $quote = null;
+                }
+
+                continue;
+            }
+            if ("'" === $char || '"' === $char) {
+                $quote = $char;
+            } elseif ($char === $open) {
+                ++$depth;
+            } elseif ($char === $close && 0 === --$depth) {
+                return $i;
+            }
+        }
+
+        return null;
+    }
+
+    private static function skipWhitespace(string $raw, int $cursor): int
+    {
+        $length = strlen($raw);
+        while ($cursor < $length && ctype_space($raw[$cursor])) {
+            ++$cursor;
+        }
+
+        return $cursor;
+    }
+
+    /**
+     * Rejects the options that make a stored constraint executable or able to traverse the
+     * validated object. They are refused wherever a constraint is built — the BO textarea, the
+     * builder and the registry row alike — because the DSL is also the persisted format.
+     *
+     * @param array<string, mixed> $options
+     *
+     * @return array<string, mixed>
+     *
+     * @throws InvalidExtraPropertyConstraintException
+     */
+    private static function assertOptionsAllowed(array $options, string $token): array
+    {
+        foreach ($options as $option => $value) {
+            if (null === $value) {
+                continue;
+            }
+            if (in_array($option, self::CALLABLE_OPTIONS, true)) {
+                throw new InvalidExtraPropertyConstraintException(sprintf(
+                    'Option "%s" is not supported in constraint "%s" because it may execute a callable. Normalize the value in module code before validation.',
+                    $option,
+                    $token
+                ));
+            }
+            if (self::isForbiddenOption($option)) {
+                throw new InvalidExtraPropertyConstraintException(sprintf(
+                    'Option "%s" is not supported in constraint "%s" because it may traverse the validated object. An extra property constraint validates a single value.',
+                    $option,
+                    $token
+                ));
+            }
+        }
+
+        return $options;
     }
 
     /**
@@ -345,9 +625,15 @@ class ExtraPropertyConstraintMapper
      * @throws UnknownExtraPropertyConstraintException
      * @throws InvalidExtraPropertyConstraintException
      */
-    private static function parseComposite(string $name, string $inner, string $token): Constraint
-    {
-        $fqcn = self::resolveName($name);
+    private static function parseComposite(
+        string $name,
+        string $inner,
+        ?string $rawOptions,
+        string $token,
+        int $depth = 0,
+        bool $allowInternal = false
+    ): Constraint {
+        $fqcn = self::resolveName($name, $allowInternal);
 
         if (!is_subclass_of($fqcn, Composite::class)) {
             throw new InvalidExtraPropertyConstraintException(sprintf(
@@ -368,19 +654,36 @@ class ExtraPropertyConstraintMapper
                         $name
                     ));
                 }
-                $children[$childMatches[1]] = self::parseToken(trim($childMatches[2]));
+                // A Collection field may name its Required/Optional wrapper explicitly.
+                $children[$childMatches[1]] = self::parseToken(trim($childMatches[2]), $depth + 1, true);
             } else {
-                $children[] = self::parseToken($childToken);
+                // Required/Optional only exist as Collection fields, so they stay refused here.
+                $children[] = self::parseToken($childToken, $depth + 1);
             }
         }
 
-        if (Assert\Collection::class === $fqcn) {
-            return self::instantiate($fqcn, $token, ['fields' => $children]);
+        // A composite may carry its own options ahead of its children:
+        // "Collection(allowExtraFields: true)[ name: NotBlank ]".
+        $options = [];
+        $trimmedOptions = null !== $rawOptions ? trim($rawOptions) : '';
+        if ('' !== $trimmedOptions) {
+            if (!self::looksLikeNamedOptions($trimmedOptions)) {
+                throw new InvalidExtraPropertyConstraintException(sprintf(
+                    'Composite constraint "%s" only accepts named options before its nested constraints — e.g. Collection(allowExtraFields: true)[ name: NotBlank ].',
+                    $name
+                ));
+            }
+            $options = self::assertOptionsAllowed(self::parseNamedOptions($trimmedOptions, $token), $token);
         }
 
-        // List composites (All, AtLeastOneOf, Sequentially) take the children through their default
-        // option ("constraints").
-        return self::instantiate($fqcn, $token, [self::defaultOptionOf($fqcn) ?? 'constraints' => $children]);
+        // The children always win over a same-named option coming from the options tail, so a
+        // hand-written "constraints:"/"fields:" cannot smuggle a second children list.
+        $childrenOption = Assert\Collection::class === $fqcn
+            ? 'fields'
+            : (self::defaultOptionOf($fqcn) ?? 'constraints');
+        $options[$childrenOption] = $children;
+
+        return self::instantiate($fqcn, $token, $options);
     }
 
     /**
@@ -388,8 +691,12 @@ class ExtraPropertyConstraintMapper
      *
      * @throws UnknownExtraPropertyConstraintException
      */
-    private static function resolveName(string $name): string
+    private static function resolveName(string $name, bool $allowInternal = false): string
     {
+        if ($allowInternal && isset(self::INTERNAL_CONSTRAINTS[$name])) {
+            return self::INTERNAL_CONSTRAINTS[$name];
+        }
+
         if (!isset(self::ALLOWED_CONSTRAINTS[$name])) {
             throw new UnknownExtraPropertyConstraintException(sprintf(
                 'Unknown extra property constraint "%s". Allowed constraints: %s.',
@@ -399,6 +706,22 @@ class ExtraPropertyConstraintMapper
         }
 
         return self::ALLOWED_CONSTRAINTS[$name];
+    }
+
+    /**
+     * Reverse map FQCN => alias, covering public constraints and the internal Collection wrappers.
+     *
+     * Rendering resolves the alias through this map instead of ReflectionClass::getShortName(), so a
+     * class outside the grammar is structurally unrenderable rather than emitted as a name the
+     * parser would later reject.
+     *
+     * @return array<class-string, string>
+     */
+    private static function aliasesByClass(): array
+    {
+        static $aliases = null;
+
+        return $aliases ??= array_flip(self::ALLOWED_CONSTRAINTS + self::INTERNAL_CONSTRAINTS);
     }
 
     /**
@@ -557,13 +880,27 @@ class ExtraPropertyConstraintMapper
 
     private static function render(Constraint $constraint, int $indent): string
     {
+        // A composite built in PHP can reference itself; the indent doubles as the recursion bound.
+        if ($indent > self::MAX_NESTING_DEPTH) {
+            throw new InvalidExtraPropertyConstraintException(sprintf(
+                'Constraint nesting exceeds the maximum depth of %d.',
+                self::MAX_NESTING_DEPTH
+            ));
+        }
+
         $pad = str_repeat('  ', $indent);
-        $shortName = (new ReflectionClass($constraint))->getShortName();
+        $alias = self::aliasOf($constraint);
 
         if ($constraint instanceof Composite) {
+            // The children travel in their own "[...]" tail, so the option carrying them must not be
+            // rendered a second time as a regular option.
+            $configured = self::configuredOptions($constraint);
+            unset($configured[self::childrenOptionOf($constraint)]);
+            $optionsTail = self::renderOptionsTail($configured, $alias);
+
             $nested = $constraint->getNestedConstraints();
             if ([] === $nested) {
-                return $pad . $shortName . '[]';
+                return $pad . $alias . $optionsTail . '[]';
             }
 
             $children = [];
@@ -576,7 +913,7 @@ class ExtraPropertyConstraintMapper
                 $children[] = $rendered;
             }
 
-            return $pad . $shortName . "[\n" . implode(",\n", $children) . "\n" . $pad . ']';
+            return $pad . $alias . $optionsTail . "[\n" . implode(",\n", $children) . "\n" . $pad . ']';
         }
 
         $configured = self::configuredOptions($constraint);
@@ -586,30 +923,79 @@ class ExtraPropertyConstraintMapper
         if (null !== $defaultOption && [$defaultOption] === array_keys($configured)) {
             $value = $configured[$defaultOption];
             if (is_scalar($value) && '' !== (string) $value) {
-                return $pad . $shortName . '(' . self::renderValue($value) . ')';
+                return $pad . $alias . '(' . self::renderValue($value) . ')';
             }
             if (is_array($value) && [] !== $value && self::isScalarList($value)) {
-                return $pad . $shortName . '([' . implode(', ', array_map(self::renderValue(...), $value)) . '])';
+                return $pad . $alias . '([' . implode(', ', array_map(self::renderValue(...), $value)) . '])';
             }
         }
 
-        // Named shape for any other configured option combination (alphabetical for determinism).
-        ksort($configured);
+        return $pad . $alias . self::renderOptionsTail($configured, $alias);
+    }
+
+    /**
+     * Renders the "(option: value, ...)" tail, alphabetically for determinism, or an empty string
+     * when nothing is configured.
+     *
+     * Anything the grammar cannot express raises instead of being dropped: this render is the
+     * persisted form, so a silent omission would be a silent loss of validation.
+     *
+     * @param array<string, mixed> $options
+     *
+     * @throws InvalidExtraPropertyConstraintException
+     */
+    private static function renderOptionsTail(array $options, string $alias): string
+    {
+        if ([] === $options) {
+            return '';
+        }
+
+        ksort($options);
         $rendered = [];
-        foreach ($configured as $option => $value) {
+        foreach ($options as $option => $value) {
             if (is_scalar($value)) {
                 $rendered[] = $option . ': ' . self::renderValue($value);
-            } elseif (is_array($value) && [] !== $value && self::isScalarList($value)) {
+            } elseif (is_array($value) && self::isScalarList($value)) {
                 $rendered[] = $option . ': [' . implode(', ', array_map(self::renderValue(...), $value)) . ']';
+            } else {
+                throw new InvalidExtraPropertyConstraintException(sprintf(
+                    'Option "%s" of constraint "%s" holds a %s, which the extra property constraint format cannot represent. Only scalars and lists of scalars are supported.',
+                    $option,
+                    $alias,
+                    get_debug_type($value)
+                ));
             }
-            // Non-scalar options (objects, closures, nested maps) have no textarea shape: skipped.
         }
 
-        if ([] !== $rendered) {
-            return $pad . $shortName . '(' . implode(', ', $rendered) . ')';
+        return '(' . implode(', ', $rendered) . ')';
+    }
+
+    /**
+     * The option through which a composite carries its nested constraints.
+     */
+    private static function childrenOptionOf(Composite $constraint): string
+    {
+        return $constraint instanceof Assert\Collection
+            ? 'fields'
+            : ($constraint->getDefaultOption() ?? 'constraints');
+    }
+
+    /**
+     * The grammar alias of a constraint instance.
+     *
+     * @throws InvalidExtraPropertyConstraintException when the class is outside the grammar
+     */
+    private static function aliasOf(Constraint $constraint): string
+    {
+        $alias = self::aliasesByClass()[$constraint::class] ?? null;
+        if (null === $alias) {
+            throw new InvalidExtraPropertyConstraintException(sprintf(
+                'Constraint class "%s" is not part of the extra property constraint grammar and cannot be represented.',
+                $constraint::class
+            ));
         }
 
-        return $pad . $shortName;
+        return $alias;
     }
 
     /**
