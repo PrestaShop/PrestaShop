@@ -915,6 +915,40 @@ abstract class ModuleCore implements ModuleInterface
             return false;
         }
 
+        if ($this->uninstallCoreRegistration()) {
+            PrestaShopLogger::addLog(
+                Context::getContext()->getTranslator()->trans(
+                    'Module uninstalled successfully: %s v%s',
+                    [$this->name, $this->version],
+                    'Admin.Modules.Notification'
+                ),
+                PrestaShopLogger::LOG_SEVERITY_LEVEL_INFORMATIVE,
+                null,
+                'Module',
+                null,
+                true
+            );
+            Hook::exec('actionModuleUninstallAfter', ['object' => $this]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Removes everything the core registered for this module: its hooks and hook exceptions, the meta
+     * of its front controllers, its association to every shop, its permissions, its customer group
+     * restrictions, and the module row itself. It does not touch anything the module created for
+     * itself, and it does not emit the uninstall log or hooks - uninstall() does that around it.
+     *
+     * Every step removes rows if they are there and is a no-op if they are not, so this can be called
+     * on a module that is only partially registered.
+     *
+     * @return bool whether the module row could be deleted
+     */
+    public function uninstallCoreRegistration(): bool
+    {
         // Retrieve hooks used by the module
         $sql = 'SELECT DISTINCT(`id_hook`) FROM `' . _DB_PREFIX_ . 'hook_module` WHERE `id_module` = ' . (int) $this->id;
         $result = Db::getInstance()->executeS($sql);
@@ -959,19 +993,6 @@ abstract class ModuleCore implements ModuleInterface
         if (Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module` WHERE `id_module` = ' . (int) $this->id)) {
             Cache::clean('Module::isInstalled' . $this->name);
             Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
-            PrestaShopLogger::addLog(
-                Context::getContext()->getTranslator()->trans(
-                    'Module uninstalled successfully: %s v%s',
-                    [$this->name, $this->version],
-                    'Admin.Modules.Notification'
-                ),
-                PrestaShopLogger::LOG_SEVERITY_LEVEL_INFORMATIVE,
-                null,
-                'Module',
-                null,
-                true
-            );
-            Hook::exec('actionModuleUninstallAfter', ['object' => $this]);
 
             return true;
         }
