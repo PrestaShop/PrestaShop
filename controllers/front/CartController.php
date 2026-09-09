@@ -384,7 +384,9 @@ class CartControllerCore extends FrontController
         if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer)) {
             $this->{$ErrorKey}[] = $this->trans(
                 'This product (%product%) is no longer available.',
-                ['%product%' => $product->name],
+                ['%product%' => $product->id
+                    ? Product::getProductName($this->id_product, $this->id_product_attribute)
+                    : $product->name],
                 'Shop.Notifications.Error'
             );
 
@@ -452,11 +454,17 @@ class CartControllerCore extends FrontController
         }
 
         // Check minimal_quantity
+        // WHY the name is resolved with the combination: the minimum below comes from the combination
+        // whenever one is selected, so naming only the product leaves the customer unable to tell which
+        // of several combinations of the same product in the cart the message is about.
         if (!$this->id_product_attribute) {
             if ($qty_to_check < $product->minimal_quantity) {
                 $this->errors[] = $this->trans(
                     'The minimum purchase order quantity for the product %product% is %quantity%.',
-                    ['%product%' => $product->name, '%quantity%' => $product->minimal_quantity],
+                    [
+                        '%product%' => Product::getProductName($this->id_product),
+                        '%quantity%' => $product->minimal_quantity,
+                    ],
                     'Shop.Notifications.Error'
                 );
 
@@ -467,7 +475,10 @@ class CartControllerCore extends FrontController
             if ($qty_to_check < $combination->minimal_quantity) {
                 $this->errors[] = $this->trans(
                     'The minimum purchase order quantity for the product %product% is %quantity%.',
-                    ['%product%' => $product->name, '%quantity%' => $combination->minimal_quantity],
+                    [
+                        '%product%' => Product::getProductName($this->id_product, $this->id_product_attribute),
+                        '%quantity%' => $combination->minimal_quantity,
+                    ],
                     'Shop.Notifications.Error'
                 );
 
@@ -669,7 +680,7 @@ class CartControllerCore extends FrontController
             return true;
         }
 
-        $productName = !empty($product['attributes']) ? $product['name'] . ' ' . $product['attributes'] : $product['name'];
+        $productName = $this->getCartProductName($product);
 
         if ($product['active'] && $product['quantity_available'] > 0) {
             return $this->trans(
@@ -690,6 +701,25 @@ class CartControllerCore extends FrontController
     }
 
     /**
+     * Name of a cart line, including its combination when it has one.
+     *
+     * WHY it reads the row instead of querying: every row returned by Cart::getProducts() and by
+     * Cart::checkQuantities() is merged with Cart::DEFAULT_ATTRIBUTES_KEYS, so 'attributes' is always
+     * present and is an empty string for a product without combinations. Resolving the name per row
+     * with a query would cost one query per cart line for something the row already carries.
+     *
+     * @param array $product a cart line as returned by Cart::getProducts() or Cart::checkQuantities()
+     */
+    private function getCartProductName(array $product): string
+    {
+        if (empty($product['attributes'])) {
+            return $product['name'];
+        }
+
+        return $product['name'] . ' ' . $product['attributes'];
+    }
+
+    /**
      * Check that minimal quantity conditions are respected for each product in the cart
      */
     private function checkCartProductsMinimalQuantities(): void
@@ -702,7 +732,7 @@ class CartControllerCore extends FrontController
                 $this->errors[] = $this->trans(
                     'The minimum purchase order quantity for the product %product% is %quantity%.',
                     [
-                        '%product%' => $product['name'],
+                        '%product%' => $this->getCartProductName($product),
                         '%quantity%' => $product['minimal_quantity'],
                     ],
                     'Shop.Notifications.Error'
