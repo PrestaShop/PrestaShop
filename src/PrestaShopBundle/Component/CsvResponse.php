@@ -8,6 +8,7 @@ namespace PrestaShopBundle\Component;
 
 use InvalidArgumentException;
 use LogicException;
+use PrestaShop\PrestaShop\Core\Util\File\Utf8Bom;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -322,6 +323,9 @@ class CsvResponse extends StreamedResponse
      */
     private function dumpFile($handle)
     {
+        // Spreadsheets have no other way to know the stream is UTF-8, see Utf8Bom.
+        echo Utf8Bom::SEQUENCE;
+
         fseek($handle, 0);
 
         while (!feof($handle)) {
