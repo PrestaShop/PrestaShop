@@ -96,7 +96,7 @@ class LanguageList
      */
     public function getLanguage($iso = null)
     {
-        if (!isset($this->languages[$iso])) {
+        if (empty($iso) || !isset($this->languages[$iso])) {
             $iso = $this->language;
         }
 
