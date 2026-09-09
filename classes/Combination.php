@@ -200,6 +200,7 @@ class CombinationCore extends ObjectModel
     {
         if ($this->default_on) {
             $this->default_on = true;
+            $this->releasePreviousDefaultCombination();
         } else {
             $this->default_on = null;
         }
@@ -247,6 +248,7 @@ class CombinationCore extends ObjectModel
     {
         if ($this->default_on) {
             $this->default_on = true;
+            $this->releasePreviousDefaultCombination();
         } else {
             $this->default_on = null;
         }
@@ -255,6 +257,62 @@ class CombinationCore extends ObjectModel
         Product::updateDefaultAttribute($this->id_product);
 
         return $return;
+    }
+
+    /**
+     * Clears the default flag from whichever combination of this product currently holds it.
+     *
+     * WHY this runs before the write and not after: `default_on` is covered by a unique index on
+     * (id_product, default_on) in both `product_attribute` and `product_attribute_shop`, so the write
+     * itself is rejected while another combination of the same product still holds the flag - which is
+     * what happens when a combination is created or promoted through the webservice.
+     * Product::updateDefaultAttribute(), called afterwards, only refreshes the product's cached default
+     * id; it never releases the previous holder.
+     *
+     * The flag is set back to NULL rather than 0 because the unique index treats 0 as a value, so a
+     * second zeroed row would collide just as a second 1 does. This mirrors what
+     * CombinationRepository::setDefaultCombination() does for the migrated pages.
+     */
+    protected function releasePreviousDefaultCombination(): void
+    {
+        $idProduct = (int) $this->id_product;
+        if (!$idProduct) {
+            return;
+        }
+
+        // WHY: a partial update that does not write default_on - a price or reference change sent to several
+        // shops at once - must leave every shop's default alone. The object's default_on was hydrated from one
+        // shop only, so releasing on its word cleared the default of shops where another combination held it.
+        if (is_array($this->update_fields) && empty($this->update_fields['default_on'])) {
+            return;
+        }
+
+        // WHY this excludes the combination being written: update() is the general save path, not a
+        // dedicated "move the default" operation, and a webservice PUT arrives with default_on already
+        // hydrated from the database. Re-saving the combination that is ALREADY the default would
+        // otherwise clear its own flag and set it again, leaving the product momentarily without a
+        // default and losing it altogether if the write then fails. On add() the id is still 0, so the
+        // clause matches every row.
+        $exceptSelf = ' AND `id_product_attribute` != ' . (int) $this->id;
+
+        Db::getInstance()->execute(
+            'UPDATE `' . _DB_PREFIX_ . 'product_attribute`
+            SET `default_on` = NULL
+            WHERE `default_on` = 1 AND `id_product` = ' . $idProduct . $exceptSelf
+        );
+
+        $shopIds = array_map('intval', $this->getShopIdsList());
+        if (empty($shopIds)) {
+            return;
+        }
+
+        Db::getInstance()->execute(
+            'UPDATE `' . _DB_PREFIX_ . 'product_attribute_shop`
+            SET `default_on` = NULL
+            WHERE `default_on` = 1
+                AND `id_product` = ' . $idProduct . '
+                AND `id_shop` IN (' . implode(',', $shopIds) . ')' . $exceptSelf
+        );
     }
 
     /**
