@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\ValueObject\ExtraPropertyDefinitionId;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use Symfony\Component\Validator\Constraint;
 
@@ -85,6 +87,9 @@ class UpdateExtraPropertyDefinitionCommand
     protected ?string $descriptionDomain = null;
 
     /**
+     * Null = never set (untouched); [] = explicit clear. Parsed from the DSL input, see
+     * setConstraints().
+     *
      * @var list<Constraint>|null
      */
     protected ?array $constraints = null;
@@ -338,7 +343,8 @@ class UpdateExtraPropertyDefinitionCommand
     }
 
     /**
-     * @return list<Constraint>|null
+     * @return list<Constraint>|null Null = never set (constraints untouched), [] = every constraint
+     *                               removed, otherwise the replacement constraints
      */
     public function getConstraints(): ?array
     {
@@ -346,13 +352,24 @@ class UpdateExtraPropertyDefinitionCommand
     }
 
     /**
-     * @param list<Constraint>|null $constraints
+     * @param string|null $constraints Validation constraints in the extra property constraint DSL
+     *                                 (one per line or comma-separated, e.g. "NotBlank\nLength(min: 2, max: 64)");
+     *                                 null or empty removes every constraint
      *
      * @return self
+     *
+     * @throws ExtraPropertyConstraintException when the DSL cannot be parsed
      */
-    public function setConstraints(?array $constraints): self
+    public function setConstraints(?string $constraints): self
     {
-        $this->constraints = $constraints;
+        $decoded = ExtraPropertyConstraintParser::parse($constraints);
+        if ($decoded->hasRejections()) {
+            throw new ExtraPropertyConstraintException(
+                sprintf('Invalid extra property constraints: %s', implode(' ', $decoded->getRejectionMessages())),
+                ExtraPropertyConstraintException::INVALID_CONSTRAINTS
+            );
+        }
+        $this->constraints = $decoded->getConstraints() ?? [];
 
         return $this;
     }

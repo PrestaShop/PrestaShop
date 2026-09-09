@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\AddExtraPropertyDefinitionCommand;
@@ -16,19 +17,21 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\BulkDeleteExtraPrope
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\DeleteExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\UpdateExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\BulkExtraPropertyException;
+use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefinitionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyRegistrationFailureException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Query\GetExtraPropertyDefinitionForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\QueryResult\EditableExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\ValueObject\ExtraPropertyDefinitionId;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintParser;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintRenderer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -68,32 +71,33 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
 
-        $command = new AddExtraPropertyDefinitionCommand(
-            entityName: $data['entity_name'],
-            propertyName: $data['property_name'],
-            fieldType: ExtraPropertyType::from($data['type'] ?? ExtraPropertyType::STRING->value),
-            fieldScope: ExtraPropertyScope::from($data['scope'] ?? ExtraPropertyScope::COMMON->value),
-            sqlIndex: ExtraPropertySqlIndex::from($data['sql_index'] ?? ExtraPropertySqlIndex::NONE->value),
-            displayFront: filter_var($data['display_front'] ?? false, FILTER_VALIDATE_BOOL),
-            required: filter_var($data['required'] ?? false, FILTER_VALIDATE_BOOL),
-            nullable: filter_var($data['nullable'] ?? true, FILTER_VALIDATE_BOOL),
-            size: isset($data['size']) ? (int) $data['size'] : null,
-            defaultValue: $data['default_value'] ?? null,
-            enumValues: isset($data['enum_values']) ? explode(',', $data['enum_values']) : null,
-            labelWording: $data['label_wording'] ?? null,
-            labelDomain: $data['label_domain'] ?? null,
-            descriptionWording: null,
-            descriptionDomain: null,
-            constraints: isset($data['constraints']) ? ExtraPropertyConstraintMapper::fromNames($data['constraints']) : null,
-            formType: null,
-            formOptions: null,
-            associatedForms: isset($data['associated_forms']) ? explode(',', $data['associated_forms']) : null,
-            associatedGrids: isset($data['associated_grids']) ? explode(',', $data['associated_grids']) : null,
-            associatedApis: isset($data['associated_apis']) ? explode(',', $data['associated_apis']) : null,
-            associatedShopIds: isset($data['associated_shop_ids']) ? $this->referencesToIds($data['associated_shop_ids']) : null,
-        );
-
+        // The command parses the constraints DSL itself, so building it is part of the tested action.
         try {
+            $command = new AddExtraPropertyDefinitionCommand(
+                entityName: $data['entity_name'],
+                propertyName: $data['property_name'],
+                fieldType: ExtraPropertyType::from($data['type'] ?? ExtraPropertyType::STRING->value),
+                fieldScope: ExtraPropertyScope::from($data['scope'] ?? ExtraPropertyScope::COMMON->value),
+                sqlIndex: ExtraPropertySqlIndex::from($data['sql_index'] ?? ExtraPropertySqlIndex::NONE->value),
+                displayFront: filter_var($data['display_front'] ?? false, FILTER_VALIDATE_BOOL),
+                required: filter_var($data['required'] ?? false, FILTER_VALIDATE_BOOL),
+                nullable: filter_var($data['nullable'] ?? true, FILTER_VALIDATE_BOOL),
+                size: isset($data['size']) ? (int) $data['size'] : null,
+                defaultValue: $data['default_value'] ?? null,
+                enumValues: isset($data['enum_values']) ? explode(',', $data['enum_values']) : null,
+                labelWording: $data['label_wording'] ?? null,
+                labelDomain: $data['label_domain'] ?? null,
+                descriptionWording: null,
+                descriptionDomain: null,
+                constraints: $data['constraints'] ?? null,
+                formType: null,
+                formOptions: null,
+                associatedForms: isset($data['associated_forms']) ? explode(',', $data['associated_forms']) : null,
+                associatedGrids: isset($data['associated_grids']) ? explode(',', $data['associated_grids']) : null,
+                associatedApis: isset($data['associated_apis']) ? explode(',', $data['associated_apis']) : null,
+                associatedShopIds: isset($data['associated_shop_ids']) ? $this->referencesToIds($data['associated_shop_ids']) : null,
+            );
+
             /** @var ExtraPropertyDefinitionId $id */
             $id = $this->getCommandBus()->handle($command);
             SharedStorage::getStorage()->set($reference, $id->getValue());
@@ -151,46 +155,48 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
         $command = new UpdateExtraPropertyDefinitionCommand($this->referenceToId($reference));
         $data = $table->getRowsHash();
 
-        if (isset($data['display_front'])) {
-            $command->setDisplayFront(filter_var($data['display_front'], FILTER_VALIDATE_BOOL));
-        }
-        if (isset($data['required'])) {
-            $command->setRequired(filter_var($data['required'], FILTER_VALIDATE_BOOL));
-        }
-        if (isset($data['nullable'])) {
-            $command->setNullable(filter_var($data['nullable'], FILTER_VALIDATE_BOOL));
-        }
-        if (isset($data['size'])) {
-            $command->setSize((int) $data['size']);
-        }
-        if (isset($data['enum_values'])) {
-            $command->setEnumValues(explode(',', $data['enum_values']));
-        }
-        if (isset($data['sql_index'])) {
-            $command->setSqlIndex(ExtraPropertySqlIndex::from($data['sql_index']));
-        }
-        if (isset($data['label_wording'])) {
-            $command->setLabelWording($data['label_wording']);
-        }
-        if (isset($data['constraints'])) {
-            $command->setConstraints(ExtraPropertyConstraintMapper::fromNames($data['constraints']));
-        }
-        if (isset($data['associated_forms'])) {
-            $command->setAssociatedForms(explode(',', $data['associated_forms']));
-        }
-        if (isset($data['associated_grids'])) {
-            $command->setAssociatedGrids(explode(',', $data['associated_grids']));
-        }
-        if (isset($data['associated_apis'])) {
-            $command->setAssociatedApis(explode(',', $data['associated_apis']));
-        }
-        if (isset($data['associated_shop_ids'])) {
-            // An empty cell means "revert to the fallback" ([]); an absent row leaves the
-            // stored association untouched (the setter is simply never called).
-            $command->setAssociatedShopIds($this->referencesToIds($data['associated_shop_ids']));
-        }
-
+        // setConstraints() parses the DSL itself, so the setters are part of the tested action.
         try {
+            if (isset($data['display_front'])) {
+                $command->setDisplayFront(filter_var($data['display_front'], FILTER_VALIDATE_BOOL));
+            }
+            if (isset($data['required'])) {
+                $command->setRequired(filter_var($data['required'], FILTER_VALIDATE_BOOL));
+            }
+            if (isset($data['nullable'])) {
+                $command->setNullable(filter_var($data['nullable'], FILTER_VALIDATE_BOOL));
+            }
+            if (isset($data['size'])) {
+                $command->setSize((int) $data['size']);
+            }
+            if (isset($data['enum_values'])) {
+                $command->setEnumValues(explode(',', $data['enum_values']));
+            }
+            if (isset($data['sql_index'])) {
+                $command->setSqlIndex(ExtraPropertySqlIndex::from($data['sql_index']));
+            }
+            if (isset($data['label_wording'])) {
+                $command->setLabelWording($data['label_wording']);
+            }
+            if (isset($data['constraints'])) {
+                // An empty cell removes every constraint; an absent row leaves them untouched.
+                $command->setConstraints($data['constraints']);
+            }
+            if (isset($data['associated_forms'])) {
+                $command->setAssociatedForms(explode(',', $data['associated_forms']));
+            }
+            if (isset($data['associated_grids'])) {
+                $command->setAssociatedGrids(explode(',', $data['associated_grids']));
+            }
+            if (isset($data['associated_apis'])) {
+                $command->setAssociatedApis(explode(',', $data['associated_apis']));
+            }
+            if (isset($data['associated_shop_ids'])) {
+                // An empty cell means "revert to the fallback" ([]); an absent row leaves the
+                // stored association untouched (the setter is simply never called).
+                $command->setAssociatedShopIds($this->referencesToIds($data['associated_shop_ids']));
+            }
+
             $this->getCommandBus()->handle($command);
         } catch (Exception $e) {
             $this->setLastException($e);
@@ -269,6 +275,11 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
                 // Cells hold shop references, resolved to the ids the definition stores.
                 $expected = implode(',', $this->referencesToIds($expected));
             }
+            if ('constraints' === $field) {
+                // Compared in canonical DSL form so a one-line cell matches the multi-line render
+                // of a composite and the ordering of named options is not a concern.
+                $expected = $this->canonicalConstraints($expected);
+            }
 
             if ($actual !== $expected) {
                 throw new RuntimeException(sprintf(
@@ -303,13 +314,52 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
             'display_front' => $definition->isDisplayFront() ? 'true' : 'false',
             'required' => $definition->isRequired() ? 'true' : 'false',
             'label_wording' => $definition->getLabelWording() ?? '',
-            'constraints' => str_replace("\n", ',', ExtraPropertyConstraintMapper::toNames($definition->getConstraints()) ?? ''),
+            'constraints' => $definition->getConstraints() ?? '',
             'associated_forms' => implode(',', $definition->getAssociatedForms() ?? []),
             'associated_grids' => implode(',', $definition->getAssociatedGrids() ?? []),
             'associated_apis' => implode(',', $definition->getAssociatedApis() ?? []),
             'associated_shop_ids' => implode(',', $definition->getAssociatedShopIds() ?? []),
             default => throw new RuntimeException(sprintf('Unknown extra property definition parameter "%s".', $field)),
         };
+    }
+
+    /**
+     * The canonical render of a DSL cell: what the query result returns for the same constraints.
+     * An invalid cell is a scenario bug, not a "no constraints" expectation.
+     */
+    private function canonicalConstraints(string $dsl): string
+    {
+        $decoded = ExtraPropertyConstraintParser::parse($dsl);
+        if ($decoded->hasRejections()) {
+            throw new RuntimeException(sprintf(
+                'The expected constraints "%s" are not valid DSL: %s',
+                $dsl,
+                implode(' ', $decoded->getRejectionMessages())
+            ));
+        }
+
+        return ExtraPropertyConstraintRenderer::render($decoded->getConstraints()) ?? '';
+    }
+
+    /**
+     * Exact-text assertion on the stored/rendered DSL, for the scenarios documenting the canonical
+     * form itself (indentation, option ordering, Collection wrappers) — the table step above
+     * deliberately ignores those.
+     *
+     * @Then extra property definition :reference should have the following constraints:
+     */
+    public function assertExtraPropertyDefinitionConstraintsRender(string $reference, PyStringNode $expected): void
+    {
+        $actual = $this->getExtraPropertyDefinitionFromReference($reference)->getConstraints() ?? '';
+
+        if ($actual !== $expected->getRaw()) {
+            throw new RuntimeException(sprintf(
+                "Expected the constraints of extra property definition \"%s\" to read:\n%s\nbut got:\n%s",
+                $reference,
+                $expected->getRaw(),
+                $actual
+            ));
+        }
     }
 
     /**
@@ -400,6 +450,28 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsRegistrationFailureForInvalidDefaultValue(): void
     {
         $this->assertLastErrorIs(ExtraPropertyRegistrationFailureException::class, ExtraPropertyRegistrationFailureException::INVALID_DEFAULT_VALUE);
+    }
+
+    /**
+     * The command itself refused the constraints DSL (unknown name, malformed token, unsupported
+     * option or value): nothing reached the registry.
+     *
+     * @Then I should get an error that the constraints are invalid
+     */
+    public function assertLastErrorIsInvalidConstraints(): void
+    {
+        $this->assertLastErrorIs(ExtraPropertyConstraintException::class, ExtraPropertyConstraintException::INVALID_CONSTRAINTS);
+    }
+
+    /**
+     * The constraints parsed, but the registry refused to store them: they would not survive the
+     * render/parse round-trip or carry an option the persisted format never accepts.
+     *
+     * @Then I should get an error that the constraints cannot be stored
+     */
+    public function assertLastErrorIsRegistrationFailureForInvalidConstraints(): void
+    {
+        $this->assertLastErrorIs(ExtraPropertyRegistrationFailureException::class, ExtraPropertyRegistrationFailureException::INVALID_CONSTRAINTS);
     }
 
     /**

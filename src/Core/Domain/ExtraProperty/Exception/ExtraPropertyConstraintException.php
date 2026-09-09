@@ -28,4 +28,10 @@ class ExtraPropertyConstraintException extends ExtraPropertyException
      * Thrown when the property name contains invalid characters.
      */
     public const INVALID_PROPERTY_NAME = 3;
+
+    /**
+     * Thrown when the validation constraints DSL cannot be parsed (unknown constraint, malformed
+     * token, unsupported option or value). The message lists every rejected line.
+     */
+    public const INVALID_CONSTRAINTS = 4;
 }

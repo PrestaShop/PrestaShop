@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\BulkDeleteExtraPrope
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\DeleteExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\UpdateExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\BulkExtraPropertyException;
+use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefinitionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyRegistrationFailureException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
@@ -502,6 +503,13 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
                 ),
             ],
             InvalidExtraPropertyDefinitionException::class => $this->trans(
+                'The submitted extra property definition is invalid. Check the form values and try again.',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            // The Validation card validates every row before the command is built, so this is a
+            // safety net for programmatic or hook-mutated submissions.
+            ExtraPropertyConstraintException::class => $this->trans(
                 'The submitted extra property definition is invalid. Check the form values and try again.',
                 [],
                 'Admin.Advparameters.Notification'

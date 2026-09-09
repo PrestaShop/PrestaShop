@@ -9,11 +9,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Form;
 
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
- * Splits a constraints DSL string (the mapper's toNames() render) into the row models backing the
+ * Splits a constraints DSL string (the ExtraPropertyConstraintRenderer output) into the row models backing the
  * definition form's constraint builder (one row = one collection entry, keys = row field names) —
  * the mirror image of ConstraintRowSerializer, which the data handler runs on submit.
  *
@@ -56,7 +56,7 @@ class ConstraintRowPresenter
         // past them, but a row that cannot be shown is better rendered as an empty builder than as a
         // broken page. The definition itself is unaffected — only this view of it.
         try {
-            $tokens = ExtraPropertyConstraintMapper::tokenize($raw);
+            $tokens = ExtraPropertyConstraintParser::tokenize($raw);
         } catch (ExtraPropertyException) {
             return [];
         }
@@ -68,7 +68,7 @@ class ConstraintRowPresenter
             // per_language row, folded back into one All[...] line on serialization.
             if (!$allExploded && 1 === preg_match('/^All\s*\[(.*)\]$/s', $token, $matches)) {
                 try {
-                    $children = ExtraPropertyConstraintMapper::tokenize($matches[1]);
+                    $children = ExtraPropertyConstraintParser::tokenize($matches[1]);
                 } catch (ExtraPropertyException) {
                     // Unrepresentable children (hand-edited database value): this All is dropped and
                     // the per-language zone stays available to the next top-level All.
@@ -94,7 +94,7 @@ class ConstraintRowPresenter
     {
         // The mapper owns the grammar: it splits the token with the same quote and delimiter rules
         // the parser applies, so the builder never drifts from what the server will accept.
-        $parts = ExtraPropertyConstraintMapper::splitToken($token);
+        $parts = ExtraPropertyConstraintParser::splitToken($token);
         if (null === $parts) {
             // Any other shape is unrepresentable without the raw edition — dropped (see class docblock).
             return;

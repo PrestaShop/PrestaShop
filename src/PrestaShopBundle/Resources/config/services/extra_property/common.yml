@@ -23,9 +23,6 @@ services:
       $connection: '@doctrine.dbal.default_connection'
       $prefix: '%database_prefix%'
       $logger: '@Psr\Log\LoggerInterface'
-      $constraintNormalizer: '@PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer'
-
-  PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer: ~
 
   # Note: the definition WRITER interface (ExtraPropertyDefinitionWriterInterface) is intentionally NOT aliased
   # here. Writing definitions (register/unregister) is a back-office-only concern, so the alias lives in

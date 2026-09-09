@@ -12,7 +12,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\ExtraProperty\QueryResult;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
-use Symfony\Component\Validator\Constraint;
 
 /**
  * Read-only DTO carrying all data for an extra property definition edit form.
@@ -42,7 +41,7 @@ class EditableExtraPropertyDefinition
      * @param string|null $labelDomain
      * @param string|null $descriptionWording
      * @param string|null $descriptionDomain
-     * @param list<Constraint>|null $constraints
+     * @param string|null $constraints Validation constraints in the extra property DSL (canonical render, one constraint per line); null = no validation
      * @param string|null $formType
      * @param array<string, mixed>|null $formOptions
      * @param list<string>|null $associatedForms
@@ -68,7 +67,7 @@ class EditableExtraPropertyDefinition
         protected readonly ?string $labelDomain,
         protected readonly ?string $descriptionWording,
         protected readonly ?string $descriptionDomain,
-        protected readonly ?array $constraints,
+        protected readonly ?string $constraints,
         protected readonly ?string $formType,
         protected readonly ?array $formOptions,
         protected readonly ?array $associatedForms,
@@ -170,9 +169,11 @@ class EditableExtraPropertyDefinition
     }
 
     /**
-     * @return list<Constraint>|null
+     * Validation constraints in the extra property DSL (canonical render, one constraint per line,
+     * e.g. "NotBlank\nLength(min: 2, max: 64)"), the same format the Add/Update commands accept.
+     * Null = no validation.
      */
-    public function getConstraints(): ?array
+    public function getConstraints(): ?string
     {
         return $this->constraints;
     }

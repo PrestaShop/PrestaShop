@@ -7,19 +7,19 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\ExtraProperty\Validation;
+namespace PrestaShop\PrestaShop\Core\ExtraProperty\Form;
 
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintGrammar;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionProperty;
 use ReflectionUnionType;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Composite;
 
 /**
  * Machine-readable description of the constraints the BO "Validation" textarea accepts
- * (ExtraPropertyConstraintMapper's whitelist), meant to be serialized into the definition
+ * (the ExtraPropertyConstraintGrammar allowlist), meant to be serialized into the definition
  * page so a builder UI can offer each constraint with its configurable options.
  *
  * Shape (JSON-ready):
@@ -68,7 +68,7 @@ class ExtraPropertyConstraintCatalog
         }
 
         $catalog = [];
-        foreach (ExtraPropertyConstraintMapper::getAllowedConstraints() as $name => $fqcn) {
+        foreach (ExtraPropertyConstraintGrammar::getAllowedConstraints() as $name => $fqcn) {
             $catalog[$name] = $this->describe($name, $fqcn);
         }
 
@@ -90,18 +90,18 @@ class ExtraPropertyConstraintCatalog
             ? array_map(static fn (string $type): array => ['type' => $type], self::OPTION_OVERRIDES[$name])
             : $this->reflectOptions($reflection);
 
-        $isComposite = is_subclass_of($fqcn, Composite::class);
+        $isComposite = ExtraPropertyConstraintGrammar::isComposite($fqcn);
         if ($isComposite) {
             // The nested constraints travel in the composite's "[...]" tail and have their own
             // editor, so the option carrying them must not be offered as a regular option.
-            unset($options[Assert\Collection::class === $fqcn ? 'fields' : ($prototype->getDefaultOption() ?? 'constraints')]);
+            unset($options[ExtraPropertyConstraintGrammar::childrenOptionOf($fqcn)]);
         }
 
         // Options the persisted format refuses are not offered either — the builder must not let a
         // merchant compose a constraint the registry will then reject.
         $options = array_filter(
             $options,
-            static fn (string $option): bool => !ExtraPropertyConstraintMapper::isForbiddenOption($option),
+            static fn (string $option): bool => !ExtraPropertyConstraintGrammar::isForbiddenOption($option),
             ARRAY_FILTER_USE_KEY
         );
 
@@ -124,7 +124,7 @@ class ExtraPropertyConstraintCatalog
         foreach ($reflection->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             $optionName = $property->getName();
             if ($property->isStatic()
-                || in_array($optionName, ['groups', 'payload'], true)
+                || !ExtraPropertyConstraintGrammar::isRenderableOption($optionName)
                 || 1 === preg_match('/message$/i', $optionName)
             ) {
                 continue;

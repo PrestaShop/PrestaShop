@@ -17,7 +17,6 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowPresenter;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowPresenter;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 
 /**
@@ -78,7 +77,7 @@ final class ExtraPropertyDefinitionFormDataProvider implements FormDataProviderI
                 'description_domain' => $definition->getDescriptionDomain(),
             ],
             'validation' => [
-                'constraints' => ConstraintRowPresenter::rows(ExtraPropertyConstraintMapper::toNames($definition->getConstraints())),
+                'constraints' => ConstraintRowPresenter::rows($definition->getConstraints()),
             ],
             'advanced' => [
                 'form_type' => $definition->getFormType(),

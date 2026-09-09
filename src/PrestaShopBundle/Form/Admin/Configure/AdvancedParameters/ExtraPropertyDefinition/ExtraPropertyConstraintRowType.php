@@ -9,9 +9,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition;
 
-use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowSerializer;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -78,11 +77,10 @@ class ExtraPropertyConstraintRowType extends TranslatorAwareType
             return;
         }
 
-        try {
-            ExtraPropertyConstraintMapper::fromNames($token);
-        } catch (ExtraPropertyException $e) {
-            // The mapper's "Line N: " prefix is meaningless for a single row.
-            $context->buildViolation($e->getBareMessage())->addViolation();
+        // A row is one token, so the rejection's line number is meaningless here: only the reason
+        // is shown, on the row itself.
+        foreach (ExtraPropertyConstraintParser::parse($token)->getRejections() as $rejection) {
+            $context->buildViolation($rejection['reason'])->addViolation();
         }
     }
 

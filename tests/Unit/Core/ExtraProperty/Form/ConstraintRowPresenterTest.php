@@ -10,8 +10,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\ExtraProperty\Form;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintGrammar;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowPresenter;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
  * The constraint row presenter feeds the Validation card's constraint collection: one DSL token =
@@ -93,7 +94,7 @@ class ConstraintRowPresenterTest extends TestCase
             ['name' => 'Length', 'options' => 'max: 255', 'composite_options' => '', 'per_language' => '1'],
         ]];
 
-        yield 'multi-line rendered All (toNames output) explodes the same way' => ["All[\n  Url,\n  NotBlank\n]", [
+        yield 'multi-line rendered All (renderer output) explodes the same way' => ["All[\n  Url,\n  NotBlank\n]", [
             ['name' => 'Url', 'options' => '', 'composite_options' => '', 'per_language' => '1'],
             ['name' => 'NotBlank', 'options' => '', 'composite_options' => '', 'per_language' => '1'],
         ]];
@@ -107,7 +108,7 @@ class ConstraintRowPresenterTest extends TestCase
         // grammar allows, so its tokenize() throws. It is dropped, and the per-language zone must still
         // be fed by the next top-level All instead of presenting it as an opaque set-level row.
         yield 'an All whose children cannot be tokenized is dropped and the next All still explodes' => [
-            'All[ ' . implode(', ', array_fill(0, ExtraPropertyConstraintMapper::MAX_TOKENS + 1, 'NotBlank')) . " ]\nAll[ Url ]",
+            'All[ ' . implode(', ', array_fill(0, ExtraPropertyConstraintGrammar::MAX_TOKENS + 1, 'NotBlank')) . " ]\nAll[ Url ]",
             [
                 ['name' => 'Url', 'options' => '', 'composite_options' => '', 'per_language' => '1'],
             ],
@@ -137,13 +138,13 @@ class ConstraintRowPresenterTest extends TestCase
     }
 
     /**
-     * tokenize() is the grammar authority: same splitting as fromNames(), with 1-based starting lines.
+     * tokenize() is the grammar authority: same splitting as parse(), with 1-based starting lines.
      */
-    public function testTokenizeExposesTheMapperSplitting(): void
+    public function testTokenizeExposesTheParserSplitting(): void
     {
         $this->assertSame(
             [['NotBlank', 1], ['Length(min: 2, max: 64)', 2], ['All[Url, NotBlank]', 4]],
-            ExtraPropertyConstraintMapper::tokenize("NotBlank\nLength(min: 2, max: 64)\n\nAll[Url, NotBlank]")
+            ExtraPropertyConstraintParser::tokenize("NotBlank\nLength(min: 2, max: 64)\n\nAll[Url, NotBlank]")
         );
     }
 }

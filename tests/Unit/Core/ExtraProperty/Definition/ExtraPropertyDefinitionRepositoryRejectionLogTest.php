@@ -11,7 +11,6 @@ namespace Tests\Unit\Core\ExtraProperty\Definition;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepository;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 use Stringable;
@@ -102,7 +101,7 @@ class ExtraPropertyDefinitionRepositoryRejectionLogTest extends TestCase
     private function repository(LoggerInterface $logger): DecodingRepository
     {
         // The connection is never used by the decoding path under test.
-        return new DecodingRepository($this->createMock(Connection::class), 'ps_', new ExtraPropertyConstraintNormalizer(), $logger);
+        return new DecodingRepository($this->createMock(Connection::class), 'ps_', $logger);
     }
 }
 

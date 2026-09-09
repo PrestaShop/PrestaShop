@@ -21,7 +21,6 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefin
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowSerializer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowSerializer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\EnumValuesParser;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
  * Handles form data submission for extra property definitions.
@@ -84,7 +83,7 @@ class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInterface
             labelDomain: $labels['label_domain'] ?: null,
             descriptionWording: $labels['description_wording'] ?: null,
             descriptionDomain: $labels['description_domain'] ?: null,
-            constraints: ExtraPropertyConstraintMapper::fromNames(ConstraintRowSerializer::serialize($validation['constraints'] ?? [])),
+            constraints: ConstraintRowSerializer::serialize($validation['constraints'] ?? []),
             formType: $advanced['form_type'] ?: null,
             formOptions: $this->parseJsonObject($advanced['form_options'] ?? null),
             associatedForms: AssociationRowSerializer::formEntries($advanced['associated_forms'] ?? []),
@@ -123,7 +122,9 @@ class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInterface
             ->setLabelDomain($labels['label_domain'] ?: null)
             ->setDescriptionWording($labels['description_wording'] ?: null)
             ->setDescriptionDomain($labels['description_domain'] ?: null)
-            ->setConstraints(ExtraPropertyConstraintMapper::fromNames(ConstraintRowSerializer::serialize($validation['constraints'] ?? [])))
+            // An empty builder (every row removed) must clear the stored constraints: '' is the
+            // command's explicit "no validation", null would leave them untouched.
+            ->setConstraints(ConstraintRowSerializer::serialize($validation['constraints'] ?? []) ?? '')
             ->setFormType($advanced['form_type'] ?: null)
             ->setFormOptions($this->parseJsonObject($advanced['form_options'] ?? null))
             ->setAssociatedForms(AssociationRowSerializer::formEntries($advanced['associated_forms'] ?? []))
