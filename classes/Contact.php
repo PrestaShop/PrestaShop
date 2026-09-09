@@ -25,6 +25,9 @@ class ContactCore extends ObjectModel
     /** @var bool */
     public $customer_service;
 
+    /** @var int Position in the contact list */
+    public $position = 0;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -41,6 +44,10 @@ class ContactCore extends ObjectModel
             'customer_service' => [
                 'type' => self::TYPE_BOOL,
                 'validate' => 'isBool',
+            ],
+            'position' => [
+                'type' => self::TYPE_INT,
+                'validate' => 'isUnsignedInt',
             ],
 
             /* Lang fields */
@@ -77,7 +84,7 @@ class ContactCore extends ObjectModel
                 WHERE cl.`id_lang` = ' . (int) $idLang . '
                 AND contact_shop.`id_shop` IN (' . implode(', ', array_map('intval', $shopIds)) . ')
                 GROUP BY c.`id_contact`
-                ORDER BY `name` ASC';
+                ORDER BY c.`position` ASC, cl.`name` ASC';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
@@ -100,6 +107,71 @@ class ContactCore extends ObjectModel
             WHERE ct.customer_service = 1
             AND contact_shop.`id_shop` IN (' . implode(', ', array_map('intval', $shopIds)) . ')
             GROUP BY ct.`id_contact`
+            ORDER BY ct.`position` ASC, cl.`name` ASC
         ');
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * A newly created contact is appended at the end of the list.
+     */
+    public function add($autoDate = true, $nullValues = false)
+    {
+        if ($this->position <= 0) {
+            $this->position = Contact::getHighestPosition() + 1;
+        }
+
+        return parent::add($autoDate, $nullValues);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Positions are compacted afterwards so the list keeps a gapless order.
+     */
+    public function delete()
+    {
+        return parent::delete() && Contact::cleanPositions();
+    }
+
+    /**
+     * Gets the highest contact position, or -1 when there is no contact yet.
+     */
+    public static function getHighestPosition(): int
+    {
+        $position = Db::getInstance()->getValue('SELECT MAX(`position`) FROM `' . _DB_PREFIX_ . 'contact`');
+
+        return is_numeric($position) ? (int) $position : -1;
+    }
+
+    /**
+     * Reorders contact positions consecutively, starting at 0.
+     * Called after deleting a contact.
+     */
+    public static function cleanPositions(): bool
+    {
+        $contacts = Db::getInstance()->executeS(
+            'SELECT `id_contact`
+             FROM `' . _DB_PREFIX_ . 'contact`
+             ORDER BY `position` ASC, `id_contact` ASC'
+        );
+
+        if ($contacts === false) {
+            return false;
+        }
+
+        $result = true;
+        $position = 0;
+
+        foreach ($contacts as $contact) {
+            $result = Db::getInstance()->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'contact`
+                 SET `position` = ' . (int) $position++ . '
+                 WHERE `id_contact` = ' . (int) $contact['id_contact']
+            ) && $result;
+        }
+
+        return $result;
     }
 }
