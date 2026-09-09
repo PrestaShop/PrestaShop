@@ -234,6 +234,8 @@ abstract class ModuleGraphCore extends Module
         }
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename="' . $this->displayName . ' - ' . time() . '.csv"');
+        // Spreadsheets have no other way to know the file is UTF-8, see Utf8Bom.
+        echo PrestaShop\PrestaShop\Core\Util\File\Utf8Bom::SEQUENCE;
         echo $this->_csv;
         exit;
     }
