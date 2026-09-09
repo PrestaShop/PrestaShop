@@ -157,6 +157,11 @@ class UpdateProductCommand
     private $redirectOption;
 
     /**
+     * @var bool|null
+     */
+    private $indexation;
+
+    /**
      * @var Isbn|null
      */
     private $isbn;
@@ -335,6 +340,18 @@ class UpdateProductCommand
     public function setLocalizedLinkRewrites(array $localizedLinkRewrites): self
     {
         $this->localizedLinkRewrites = $localizedLinkRewrites;
+
+        return $this;
+    }
+
+    public function getIndexation(): ?bool
+    {
+        return $this->indexation;
+    }
+
+    public function setIndexation(bool $indexation): self
+    {
+        $this->indexation = $indexation;
 
         return $this;
     }

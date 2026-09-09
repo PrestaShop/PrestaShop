@@ -1703,6 +1703,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             return $page;
         }
 
+        if (!$this->product->indexation) {
+            $page['meta']['robots'] = 'noindex';
+        }
+
         $page['body_classes']['product-id-' . $this->product->id] = true;
         $page['body_classes']['product-' . $this->product->name] = true;
         $page['body_classes']['product-id-category-' . $this->product->id_category_default] = true;

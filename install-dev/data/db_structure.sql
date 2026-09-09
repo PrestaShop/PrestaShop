@@ -364,6 +364,7 @@ CREATE TABLE `PREFIX_category` (
   `nleft` int(10) unsigned NOT NULL DEFAULT '0',
   `nright` int(10) unsigned NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `indexation` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   `redirect_type` ENUM(
@@ -1667,6 +1668,7 @@ CREATE TABLE `PREFIX_product` (
   `id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
   `on_sale` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `online_only` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `indexation` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `ean13` varchar(20) DEFAULT NULL,
   `isbn` varchar(32) DEFAULT NULL,
   `upc` varchar(12) DEFAULT NULL,
@@ -1742,6 +1744,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
   `on_sale` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `online_only` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `indexation` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `ecotax` decimal(17, 6) NOT NULL DEFAULT '0.000000',
   `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
   `low_stock_threshold` int(10) NULL DEFAULT NULL,
@@ -2735,6 +2738,7 @@ CREATE TABLE `PREFIX_category_shop` (
   `id_category` int(11) NOT NULL,
   `id_shop` int(11) NOT NULL,
   `position` int(10) unsigned NOT NULL DEFAULT '0',
+  `indexation` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_category`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
