@@ -202,7 +202,7 @@
     <country id="RS" id_zone="Europe_out_E_U" iso_code="RS" call_prefix="381" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNNN" display_tax_label="1"/>
     <country id="SC" id_zone="Africa" iso_code="SC" call_prefix="248" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
     <country id="SL" id_zone="Africa" iso_code="SL" call_prefix="232" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
-    <country id="SI" id_zone="Europe" iso_code="SI" call_prefix="386" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="C-NNNN" display_tax_label="1"/>
+    <country id="SI" id_zone="Europe" iso_code="SI" call_prefix="386" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNN" display_tax_label="1"/>
     <country id="SB" id_zone="Oceania" iso_code="SB" call_prefix="677" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
     <country id="SO" id_zone="Africa" iso_code="SO" call_prefix="252" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
     <country id="GS" id_zone="Central_America_Antilla" iso_code="GS" call_prefix="0" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="LLLL NLL" display_tax_label="1"/>
