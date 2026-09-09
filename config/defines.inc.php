@@ -54,6 +54,33 @@ if (!defined('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_')) {
     define('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_', false);
 }
 
+/*
+ * TLS material for the database connection, for a shop whose database is not on the same host.
+ * Each one is a path, read from the environment so a deployment can set it without editing files,
+ * and definable in config/defines_custom.inc.php like every other define here. Leaving them empty,
+ * which is the default, connects exactly as before.
+ */
+if (!defined('_PS_DB_SSL_CA_')) {
+    define('_PS_DB_SSL_CA_', getenv('PS_DB_SSL_CA') ?: '');
+}
+if (!defined('_PS_DB_SSL_CERT_')) {
+    define('_PS_DB_SSL_CERT_', getenv('PS_DB_SSL_CERT') ?: '');
+}
+if (!defined('_PS_DB_SSL_KEY_')) {
+    define('_PS_DB_SSL_KEY_', getenv('PS_DB_SSL_KEY') ?: '');
+}
+/*
+ * Whether the server's certificate has to match the host being connected to. Leave it alone unless
+ * the database presents a certificate that cannot match, which is what MySQL's own auto generated
+ * certificates do; turning it off keeps the connection encrypted but stops it proving who answered.
+ */
+if (!defined('_PS_DB_SSL_VERIFY_SERVER_CERT_')) {
+    define(
+        '_PS_DB_SSL_VERIFY_SERVER_CERT_',
+        !in_array(strtolower((string) getenv('PS_DB_SSL_VERIFY_SERVER_CERT')), ['0', 'false', 'off', 'no'], true)
+    );
+}
+
 $currentDir = dirname(__FILE__);
 
 if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__PS_ROOT_DIR_'))) {
@@ -62,19 +89,19 @@ if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__P
 
 /* Directories */
 if (!defined('_PS_ROOT_DIR_')) {
-    define('_PS_ROOT_DIR_', realpath($currentDir.'/..'));
+    define('_PS_ROOT_DIR_', realpath($currentDir . '/..'));
 }
 
 if (!defined('_PS_CORE_DIR_')) {
-    define('_PS_CORE_DIR_', realpath($currentDir.'/..'));
+    define('_PS_CORE_DIR_', realpath($currentDir . '/..'));
 }
 
 if (!defined('_PS_ALL_THEMES_DIR_')) {
-    define('_PS_ALL_THEMES_DIR_', _PS_ROOT_DIR_.'/themes/');
+    define('_PS_ALL_THEMES_DIR_', _PS_ROOT_DIR_ . '/themes/');
 }
 /* BO THEMES */
 if (defined('_PS_ADMIN_DIR_')) {
-    define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
+    define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_ . '/themes/');
 }
 
 // Find if we are running under a Symfony command
@@ -92,7 +119,7 @@ if ((defined('_PS_IN_TEST_') && _PS_IN_TEST_)
 ) {
     define('_PS_ENV_', 'test');
 } else {
-    define('_PS_ENV_', _PS_MODE_DEV_ ? 'dev': 'prod');
+    define('_PS_ENV_', _PS_MODE_DEV_ ? 'dev' : 'prod');
 }
 
 // This legacy const is used in many legacy components (smarty, parameters caching, ...) We don't change this one
@@ -100,62 +127,62 @@ if ((defined('_PS_IN_TEST_') && _PS_IN_TEST_)
 // (dev, prod, test) will contain some cache folder common to all the kernels, it simplifies the cache clearing
 // for legacy codes since they only need to clear one cache and not three
 if (!defined('_PS_CACHE_DIR_')) {
-    define('_PS_CACHE_DIR_', _PS_ROOT_DIR_.'/var/cache/' . _PS_ENV_ . DIRECTORY_SEPARATOR);
+    define('_PS_CACHE_DIR_', _PS_ROOT_DIR_ . '/var/cache/' . _PS_ENV_ . DIRECTORY_SEPARATOR);
 }
 
-define('_PS_CONFIG_DIR_', _PS_CORE_DIR_.'/config/');
-define('_PS_CUSTOM_CONFIG_FILE_', _PS_CONFIG_DIR_.'settings_custom.inc.php');
-define('_PS_CLASS_DIR_', _PS_CORE_DIR_.'/classes/');
+define('_PS_CONFIG_DIR_', _PS_CORE_DIR_ . '/config/');
+define('_PS_CUSTOM_CONFIG_FILE_', _PS_CONFIG_DIR_ . 'settings_custom.inc.php');
+define('_PS_CLASS_DIR_', _PS_CORE_DIR_ . '/classes/');
 if (!defined('_PS_DOWNLOAD_DIR_')) {
     $dir = (defined('_PS_IN_TEST_') && _PS_IN_TEST_) ? '/tests/Resources/download/' : '/download/';
-    define('_PS_DOWNLOAD_DIR_', _PS_ROOT_DIR_.$dir);
+    define('_PS_DOWNLOAD_DIR_', _PS_ROOT_DIR_ . $dir);
 }
-define('_PS_MAIL_DIR_', _PS_CORE_DIR_.'/mails/');
+define('_PS_MAIL_DIR_', _PS_CORE_DIR_ . '/mails/');
 if (!defined('_PS_MODULE_DIR_')) {
-    define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/modules/');
+    define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
 }
 if (!defined('_PS_OVERRIDE_DIR_')) {
-    define('_PS_OVERRIDE_DIR_', _PS_ROOT_DIR_.'/override/');
+    define('_PS_OVERRIDE_DIR_', _PS_ROOT_DIR_ . '/override/');
 }
-define('_PS_PDF_DIR_', _PS_CORE_DIR_.'/pdf/');
-define('_PS_TRANSLATIONS_DIR_', _PS_ROOT_DIR_.'/translations/');
+define('_PS_PDF_DIR_', _PS_CORE_DIR_ . '/pdf/');
+define('_PS_TRANSLATIONS_DIR_', _PS_ROOT_DIR_ . '/translations/');
 if (!defined('_PS_UPLOAD_DIR_')) {
-    define('_PS_UPLOAD_DIR_', _PS_ROOT_DIR_.'/upload/');
+    define('_PS_UPLOAD_DIR_', _PS_ROOT_DIR_ . '/upload/');
 }
-define('_PS_CONTROLLER_DIR_', _PS_CORE_DIR_.'/controllers/');
-define('_PS_ADMIN_CONTROLLER_DIR_', _PS_CORE_DIR_.'/controllers/admin/');
-define('_PS_FRONT_CONTROLLER_DIR_', _PS_CORE_DIR_.'/controllers/front/');
+define('_PS_CONTROLLER_DIR_', _PS_CORE_DIR_ . '/controllers/');
+define('_PS_ADMIN_CONTROLLER_DIR_', _PS_CORE_DIR_ . '/controllers/admin/');
+define('_PS_FRONT_CONTROLLER_DIR_', _PS_CORE_DIR_ . '/controllers/front/');
 
-define('_PS_TOOL_DIR_', _PS_CORE_DIR_.'/tools/');
+define('_PS_TOOL_DIR_', _PS_CORE_DIR_ . '/tools/');
 if (!defined('_PS_GEOIP_DIR_')) {
-    define('_PS_GEOIP_DIR_', _PS_CORE_DIR_.'/app/Resources/geoip/');
+    define('_PS_GEOIP_DIR_', _PS_CORE_DIR_ . '/app/Resources/geoip/');
 }
 if (!defined('_PS_GEOIP_CITY_FILE_')) {
     define('_PS_GEOIP_CITY_FILE_', 'GeoLite2-City.mmdb');
 }
 
-define('_PS_VENDOR_DIR_', _PS_CORE_DIR_.'/vendor/');
+define('_PS_VENDOR_DIR_', _PS_CORE_DIR_ . '/vendor/');
 
-define('_PS_IMG_SOURCE_DIR_', _PS_ROOT_DIR_.'/img/');
+define('_PS_IMG_SOURCE_DIR_', _PS_ROOT_DIR_ . '/img/');
 if (!defined('_PS_IMG_DIR_')) {
     $dir = (defined('_PS_IN_TEST_') && _PS_IN_TEST_) ? '/tests/Resources/img/' : '/img/';
-    define('_PS_IMG_DIR_', _PS_ROOT_DIR_.$dir);
+    define('_PS_IMG_DIR_', _PS_ROOT_DIR_ . $dir);
 }
 
-define('_PS_CORE_IMG_DIR_', _PS_CORE_DIR_.'/img/');
-define('_PS_CAT_IMG_DIR_', _PS_IMG_DIR_.'c/');
-define('_PS_COL_IMG_DIR_', _PS_IMG_DIR_.'co/');
-define('_PS_EMPLOYEE_IMG_DIR_', _PS_IMG_DIR_.'e/');
-define('_PS_GENDERS_DIR_', _PS_IMG_DIR_.'genders/');
-define('_PS_LANG_IMG_DIR_', _PS_IMG_DIR_.'l/');
-define('_PS_MANU_IMG_DIR_', _PS_IMG_DIR_.'m/');
-define('_PS_ORDER_STATE_IMG_DIR_', _PS_IMG_DIR_.'os/');
+define('_PS_CORE_IMG_DIR_', _PS_CORE_DIR_ . '/img/');
+define('_PS_CAT_IMG_DIR_', _PS_IMG_DIR_ . 'c/');
+define('_PS_COL_IMG_DIR_', _PS_IMG_DIR_ . 'co/');
+define('_PS_EMPLOYEE_IMG_DIR_', _PS_IMG_DIR_ . 'e/');
+define('_PS_GENDERS_DIR_', _PS_IMG_DIR_ . 'genders/');
+define('_PS_LANG_IMG_DIR_', _PS_IMG_DIR_ . 'l/');
+define('_PS_MANU_IMG_DIR_', _PS_IMG_DIR_ . 'm/');
+define('_PS_ORDER_STATE_IMG_DIR_', _PS_IMG_DIR_ . 'os/');
 define('_PS_PRODUCT_IMG_DIR_', _PS_IMG_DIR_ . 'p/');
-define('_PS_PROFILE_IMG_DIR_', _PS_IMG_DIR_.'pr/');
-define('_PS_SHIP_IMG_DIR_', _PS_IMG_DIR_.'s/');
-define('_PS_STORE_IMG_DIR_', _PS_IMG_DIR_.'st/');
-define('_PS_SUPP_IMG_DIR_', _PS_IMG_DIR_.'su/');
-define('_PS_TMP_IMG_DIR_', _PS_IMG_DIR_.'tmp/');
+define('_PS_PROFILE_IMG_DIR_', _PS_IMG_DIR_ . 'pr/');
+define('_PS_SHIP_IMG_DIR_', _PS_IMG_DIR_ . 's/');
+define('_PS_STORE_IMG_DIR_', _PS_IMG_DIR_ . 'st/');
+define('_PS_SUPP_IMG_DIR_', _PS_IMG_DIR_ . 'su/');
+define('_PS_TMP_IMG_DIR_', _PS_IMG_DIR_ . 'tmp/');
 
 /* Settings php */
 define('_PS_TRANS_PATTERN_', '(.*[^\\\\])');
@@ -185,7 +212,7 @@ define('_PS_USE_SQL_SLAVE_', false);
 define('_PS_ADMIN_PROFILE_', 1);
 
 /* Cache */
-define('_PS_CACHEFS_DIRECTORY_', _PS_ROOT_DIR_.'/cache/cachefs/');
+define('_PS_CACHEFS_DIRECTORY_', _PS_ROOT_DIR_ . '/cache/cachefs/');
 
 /* Geolocation */
 define('_PS_GEOLOCATION_NO_CATALOG_', 0);
@@ -196,4 +223,4 @@ define('_PS_SMARTY_NO_COMPILE_', 0);
 define('_PS_SMARTY_CHECK_COMPILE_', 1);
 define('_PS_SMARTY_FORCE_COMPILE_', 2);
 
-define('_PS_CACHE_CA_CERT_FILE_', _PS_CACHE_DIR_.'cacert.pem');
+define('_PS_CACHE_CA_CERT_FILE_', _PS_CACHE_DIR_ . 'cacert.pem');
