@@ -58,12 +58,17 @@ final class ContactQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
-            ->select('c.id_contact, c.email, cl.name, cl.description, c.customer_service')
+            ->select('c.id_contact, c.email, cl.name, cl.description, c.customer_service, c.position')
             ->groupBy('c.id_contact');
 
         $this->searchCriteriaApplicator
             ->applySorting($searchCriteria, $qb)
             ->applyPagination($searchCriteria, $qb);
+
+        // Always sort by id as the second sorting condition: positions can be equal on shops upgraded from a
+        // version that never maintained them, and the position update handler re-indexes rows by the order they
+        // are read in, so an ambiguous order would make a drag and drop land on the wrong row.
+        $qb->addOrderBy('c.id_contact', 'ASC');
 
         return $qb;
     }
