@@ -60,6 +60,9 @@ export default class OrderPricesRefresher {
         $(`${orderProductTrId} ${OrderViewPageMap.productEditUnitPrice}`).text(
           productPrices.unitPrice,
         );
+        $(
+          `${orderProductTrId} ${OrderViewPageMap.productEditUnitPriceOtherTaxMethod}`,
+        ).text(productPrices.unitPriceOtherTaxMethod);
         $(`${orderProductTrId} ${OrderViewPageMap.productEditQuantity}`).html(
           $quantity.html(),
         );
