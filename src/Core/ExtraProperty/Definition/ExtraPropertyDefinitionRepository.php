@@ -42,6 +42,18 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
     /** SHOW COLUMNS "Key" flag marking a primary key column. */
     private const PRIMARY_KEY_COLUMN_FLAG = 'PRI';
 
+    /**
+     * Rejections already reported by this instance, keyed by definition id and raw stored value.
+     *
+     * A row is hydrated many times per request (full list, by id, cache rebuild) and would otherwise
+     * produce one log entry each time. The key is marked BEFORE the logger is called: a logger that
+     * persists through an ObjectModel (the legacy logger writes ps_log) may hydrate the definitions
+     * itself, which decodes this very row again. Finding it already marked ends that recursion.
+     *
+     * @var array<string, true>
+     */
+    private array $reportedRejections = [];
+
     public function __construct(
         protected readonly Connection $connection,
         protected readonly string $prefix,
@@ -365,6 +377,14 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
         $definitionId = isset($row['id_extra_property_definition'])
             ? (int) $row['id_extra_property_definition']
             : null;
+
+        // Once per row content and per instance (see $reportedRejections): a re-saved definition
+        // changes the raw value, hence the key, and is reported again.
+        $reportKey = ($definitionId ?? 'unknown') . ':' . sha1((string) ($row['constraints'] ?? ''));
+        if (isset($this->reportedRejections[$reportKey])) {
+            return;
+        }
+        $this->reportedRejections[$reportKey] = true;
 
         foreach ($decoded->getRejections() as $rejection) {
             try {
