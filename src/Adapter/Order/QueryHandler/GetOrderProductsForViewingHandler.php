@@ -145,17 +145,25 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $product['unit_price_tax_excl'] :
                 $product['unit_price_tax_incl']
             ;
+            // The same unit price in the tax method the order does not display, so both
+            // values are readable without changing the customer group's price display method.
+            $unitPriceOtherTaxMethod = $isOrderTaxExcluded ?
+                $product['unit_price_tax_incl'] :
+                $product['unit_price_tax_excl']
+            ;
 
             // if rounding type is set to "per item" we must round the unit price now, otherwise values won't match
             // the totals in the order summary
             if ((int) $order->round_type === Order::ROUND_ITEM) {
                 $unitPrice = (new DecimalNumber((string) $unitPrice))->round($precision, $this->getNumberRoundMode());
+                $unitPriceOtherTaxMethod = (new DecimalNumber((string) $unitPriceOtherTaxMethod))->round($precision, $this->getNumberRoundMode());
             }
 
             $totalPrice = $unitPrice * $product['product_quantity'];
 
             $unitPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
             $totalPriceFormatted = $this->locale->formatPrice($totalPrice, $currency->iso_code);
+            $unitPriceOtherTaxMethodFormatted = $this->locale->formatPrice($unitPriceOtherTaxMethod, $currency->iso_code);
 
             $imagePath = isset($product['image_tag']) ?
                 $this->imageTagSourceParser->parse($product['image_tag']) :
@@ -246,7 +254,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $packItems,
                 $product['customizations'],
                 $product['product_mpn'],
-                $shipmentIds
+                $shipmentIds,
+                $unitPriceOtherTaxMethodFormatted
             );
         }
 
