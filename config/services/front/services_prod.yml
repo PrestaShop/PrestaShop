@@ -6,7 +6,7 @@ services:
         public: true
 
     Psr\Log\LoggerInterface:
-        alias: prestashop.adapter.legacy.logger.shared
+        alias: prestashop.adapter.legacy.logger
         public: true
 
     prestashop.core.filter.front_end_object.main:

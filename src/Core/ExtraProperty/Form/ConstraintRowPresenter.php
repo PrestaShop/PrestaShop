@@ -67,12 +67,14 @@ class ConstraintRowPresenter
             // The first top-level All[...] feeds the per-language zone: each child becomes its own
             // per_language row, folded back into one All[...] line on serialization.
             if (!$allExploded && 1 === preg_match('/^All\s*\[(.*)\]$/s', $token, $matches)) {
-                $allExploded = true;
                 try {
                     $children = ExtraPropertyConstraintMapper::tokenize($matches[1]);
                 } catch (ExtraPropertyException) {
+                    // Unrepresentable children (hand-edited database value): this All is dropped and
+                    // the per-language zone stays available to the next top-level All.
                     continue;
                 }
+                $allExploded = true;
                 foreach ($children as [$childToken, $childLine]) {
                     self::appendTokenRow($rows, $childToken, '1');
                 }

@@ -103,6 +103,16 @@ class ConstraintRowPresenterTest extends TestCase
             ['name' => 'All', 'options' => 'NotBlank', 'composite_options' => '', 'per_language' => '0'],
         ]];
 
+        // Only reachable on a hand-edited database value: the first All carries more children than the
+        // grammar allows, so its tokenize() throws. It is dropped, and the per-language zone must still
+        // be fed by the next top-level All instead of presenting it as an opaque set-level row.
+        yield 'an All whose children cannot be tokenized is dropped and the next All still explodes' => [
+            'All[ ' . implode(', ', array_fill(0, ExtraPropertyConstraintMapper::MAX_TOKENS + 1, 'NotBlank')) . " ]\nAll[ Url ]",
+            [
+                ['name' => 'Url', 'options' => '', 'composite_options' => '', 'per_language' => '1'],
+            ],
+        ];
+
         yield 'non-All composites stay set-level rows with their verbatim inner tail' => ['Collection[name: NotBlank, code: Length(max: 5)]', [
             ['name' => 'Collection', 'options' => 'name: NotBlank, code: Length(max: 5)', 'composite_options' => '', 'per_language' => '0'],
         ]];

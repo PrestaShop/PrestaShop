@@ -76,11 +76,9 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository: ~
 
-  # Legacy logger reachable from every container: adapter/services.yml is not imported by the
-  # hand-built front-office container, so its prestashop.adapter.legacy.logger is unreachable
-  # there. Private — only the front office aliases Psr\Log\LoggerInterface onto it, in its own
-  # config (config/services/front/services_prod.yml); the Symfony kernels keep Monolog behind
-  # that interface.
-  prestashop.adapter.legacy.logger.shared:
+  # Legacy logger (writes ps_log), defined here so that every container has it: the hand-built
+  # front-office container does not import adapter/services.yml. The Symfony kernels keep Monolog
+  # behind Psr\Log\LoggerInterface; only the front office aliases the interface onto this service,
+  # in its own config (config/services/front/services_prod.yml).
+  prestashop.adapter.legacy.logger:
     class: PrestaShop\PrestaShop\Adapter\LegacyLogger
-    public: false
