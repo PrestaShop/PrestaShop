@@ -50,6 +50,7 @@ use PrestashopInstallerException;
 use PrestaShopLoggerInterface;
 use Psr\Log\LogLevel;
 use PSRLoggerAdapter;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
@@ -1228,12 +1229,25 @@ class Install extends AbstractInstall
             );
             $adminFolder = $randomizedAdminFolderName;
 
-            // rename folder
-            if (@rename(_PS_ROOT_DIR_ . '/admin/', _PS_ROOT_DIR_ . '/' . $randomizedAdminFolderName)) {
+            /*
+             * Rename the folder through the filesystem component rather than rename() directly: the two
+             * paths are not guaranteed to sit on the same device, and rename() answers EXDEV there instead
+             * of moving anything. That happens on an ordinary Docker install where /var/www/html/admin comes
+             * from the image while its parent is a mount. The component falls back to a copy and a delete in
+             * that case, and reports why when even that fails - rename() was called with @, so the reason
+             * used to be discarded and the merchant was left with a message naming only the target folder.
+             */
+            try {
+                (new Filesystem())->rename(_PS_ROOT_DIR_ . '/admin/', _PS_ROOT_DIR_ . '/' . $randomizedAdminFolderName);
                 $successLogMessage = sprintf('The admin folder was renamed into %s', $randomizedAdminFolderName);
                 $this->getLogger()->logInfo($successLogMessage);
                 $this->clearCache();
-            } else {
+            } catch (IOException $e) {
+                $this->getLogger()->logError(sprintf(
+                    'The admin folder could not be renamed into %s: %s',
+                    $randomizedAdminFolderName,
+                    $e->getMessage()
+                ));
                 $this->setError($this->translator->trans('The admin folder could not be renamed into %folderName%', ['%folderName%' => $randomizedAdminFolderName], 'Install'));
 
                 return false;
