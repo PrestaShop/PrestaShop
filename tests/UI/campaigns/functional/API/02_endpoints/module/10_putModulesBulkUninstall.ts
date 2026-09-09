@@ -4,6 +4,7 @@ import {requestAccessToken} from '@commonTests/BO/advancedParameters/authServer'
 import {installModule} from '@commonTests/BO/modules/moduleManager';
 
 import {expect} from 'chai';
+import semver from 'semver';
 import {
   type APIRequestContext,
   boDashboardPage,
@@ -170,7 +171,12 @@ describe('API : PUT /modules/bulk-uninstall', async () => {
 
           const moduleInfo = await boModuleManagerPage.getModuleInformationNth(page, 1);
           expect(moduleInfo.technicalName).to.equal(module.tag);
-          expect(module.versionCurrent).to.contains(moduleInfo.version);
+          // The module is no longer on disk: the card is built from the Distribution API listing,
+          // whose version can be ahead of the one bundled in the core
+          expect(
+            semver.gte(moduleInfo.version, module.versionCurrent),
+            `Module version ${moduleInfo.version} should be at least ${module.versionCurrent}`,
+          ).to.eq(true);
           expect(moduleInfo.enabled).to.equal(false);
           expect(moduleInfo.installed).to.equal(false);
         }
