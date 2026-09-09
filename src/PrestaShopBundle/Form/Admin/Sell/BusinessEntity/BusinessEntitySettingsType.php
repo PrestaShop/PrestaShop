@@ -17,15 +17,14 @@ use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * How the company is referenced and classified. Declared with inherit_data so the submitted data
- * stays flat under the general information section; the nesting only exists to lay the fields out.
- */
 class BusinessEntitySettingsType extends TranslatorAwareType
 {
+    public const MAX_EXTERNAL_REF_LENGTH = 255;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -40,6 +39,16 @@ class BusinessEntitySettingsType extends TranslatorAwareType
             ->add(BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF, TextType::class, [
                 'label' => $this->trans('External Reference', 'Admin.Global'),
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => self::MAX_EXTERNAL_REF_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::MAX_EXTERNAL_REF_LENGTH]
+                        ),
+                    ]),
+                ],
                 // Keeps the field alone on its line, the way the product page breaks a column run.
                 'column_breaker' => true,
             ])

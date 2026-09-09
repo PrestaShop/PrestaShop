@@ -148,13 +148,62 @@ class BusinessEntityGeneralInformationTypeTest extends TypeTestCase
         $this->assertContains(BusinessEntityGeneralInformationType::FIELD_CUSTOMER_GROUP_ID, $fieldsInError);
     }
 
-    public function testExternalRefIsOptionalSoItCanBeCleared(): void
+    public function testExternalRefIsOptionalButBoundedToItsColumn(): void
     {
         $form = $this->factory->create(BusinessEntityGeneralInformationType::class);
         $config = $this->field($form, BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF)->getConfig();
 
         $this->assertFalse($config->getOption('required'));
-        $this->assertEmpty($config->getOption('constraints'));
+        $this->assertSame(
+            [Length::class],
+            array_map('get_class', $config->getOption('constraints'))
+        );
+    }
+
+    public function testAnExternalRefLongerThanItsColumnIsRejected(): void
+    {
+        $form = $this->factory->create(BusinessEntityGeneralInformationType::class);
+        $form->submit($this->submission([
+            BusinessEntityGeneralInformationType::FIELD_NAME => 'Probe',
+            BusinessEntityGeneralInformationType::FIELD_LEGAL_NAME => 'Probe Legal',
+            BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF => str_repeat('X', BusinessEntitySettingsType::MAX_EXTERNAL_REF_LENGTH + 1),
+            BusinessEntityGeneralInformationType::FIELD_DELIVERY_AUTHORIZED => '1',
+            BusinessEntityGeneralInformationType::FIELD_STATUS => BusinessEntityStatus::ACTIVE->value,
+            BusinessEntityGeneralInformationType::FIELD_CUSTOMER_GROUP_ID => 3,
+        ]));
+
+        $this->assertTrue($form->isSynchronized());
+        $this->assertCount(
+            1,
+            $this->field($form, BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF)->getErrors(),
+            'The error must be attached to the field, so the merchant sees it where they typed.'
+        );
+    }
+
+    public function testTheSectionsCarryTheirLayoutOptions(): void
+    {
+        $form = $this->factory->create(BusinessEntityGeneralInformationType::class);
+
+        foreach ([
+            BusinessEntityGeneralInformationType::SECTION_IDENTITY,
+            BusinessEntityGeneralInformationType::SECTION_SETTINGS,
+        ] as $section) {
+            $this->assertSame(
+                2,
+                $form->get($section)->getConfig()->getOption('columns_number'),
+                sprintf('Section "%s" must lay its fields out in two columns.', $section)
+            );
+        }
+
+        foreach ([
+            BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF,
+            BusinessEntityGeneralInformationType::FIELD_CUSTOMER_GROUP_ID,
+        ] as $field) {
+            $this->assertTrue(
+                $this->field($form, $field)->getConfig()->getOption('column_breaker'),
+                sprintf('"%s" must break the column run.', $field)
+            );
+        }
     }
 
     /**

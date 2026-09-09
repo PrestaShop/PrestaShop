@@ -18,10 +18,6 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-/**
- * Names identifying the company. Declared with inherit_data so the submitted data stays flat
- * under the general information section; the nesting only exists to lay the fields out.
- */
 class BusinessEntityIdentityType extends TranslatorAwareType
 {
     public const MAX_NAME_LENGTH = 255;

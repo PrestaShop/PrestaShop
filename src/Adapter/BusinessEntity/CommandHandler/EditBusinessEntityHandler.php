@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler;
 
-use Doctrine\ORM\Exception\ORMException;
-use JsonException;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\EditBusinessEntityCommand;
@@ -20,6 +18,7 @@ use PrestaShopBundle\Entity\B2B\BusinessEntity;
 use PrestaShopBundle\Entity\Repository\BusinessEntityRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Throwable;
 
 #[AsCommandHandler]
 final class EditBusinessEntityHandler implements EditBusinessEntityHandlerInterface
@@ -35,7 +34,6 @@ final class EditBusinessEntityHandler implements EditBusinessEntityHandlerInterf
     /**
      * @throws BusinessEntityNotFoundException
      * @throws CannotUpdateBusinessEntityException
-     * @throws JsonException
      */
     public function handle(EditBusinessEntityCommand $command): void
     {
@@ -49,7 +47,6 @@ final class EditBusinessEntityHandler implements EditBusinessEntityHandlerInterf
         }
 
         $modifiedFields = $this->getModifiedFields($businessEntity, $command);
-        $logMessage = $this->formatLogMessage($modifiedFields);
 
         if (null !== $command->getName()) {
             $businessEntity->setName($command->getName());
@@ -77,12 +74,12 @@ final class EditBusinessEntityHandler implements EditBusinessEntityHandlerInterf
 
         try {
             $this->businessEntityRepository->save($businessEntity);
-        } catch (ORMException $e) {
+        } catch (Throwable $e) {
             throw new CannotUpdateBusinessEntityException('Could not update business entity', 0, $e);
         }
 
         $this->logger->info(
-            $logMessage,
+            $this->formatLogMessage($modifiedFields),
             [
                 'object_type' => 'BusinessEntity',
                 'object_id' => $businessEntityId,
@@ -96,16 +93,18 @@ final class EditBusinessEntityHandler implements EditBusinessEntityHandlerInterf
 
     /**
      * @param array<string, array{old: mixed, new: mixed}> $modifiedFields
-     *
-     * @throws JsonException
      */
     private function formatLogMessage(array $modifiedFields): string
     {
+        $baseMessage = 'Business entity updated successfully';
+
         if ([] === $modifiedFields) {
-            return 'Business entity updated successfully';
+            return $baseMessage;
         }
 
-        return 'Business entity updated successfully ' . json_encode($modifiedFields, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+        $encodedFields = json_encode($modifiedFields, JSON_INVALID_UTF8_SUBSTITUTE | JSON_UNESCAPED_UNICODE);
+
+        return false === $encodedFields ? $baseMessage : $baseMessage . ' ' . $encodedFields;
     }
 
     /**

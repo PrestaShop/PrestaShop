@@ -9,9 +9,12 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Sell\BusinessEntity;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotUpdateBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 use Tests\Resources\Resetter\BusinessEntityResetter;
@@ -23,6 +26,10 @@ class BusinessEntityControllerTest extends GridControllerTestCase
     private const DEFAULT_COUNTRY_ID = 8;
 
     private const SAVE_BUTTON_SELECTOR = 'save-button';
+
+    private const UNKNOWN_BUSINESS_ENTITY_ID = 999999;
+
+    private const CREATION_SAMPLE_VALUES = ['FR12345678901', '123 456 789 00012', '12-345-6789'];
 
     private const ACTIVE_COMPANY_NAME = 'Grid active company';
     private const PENDING_COMPANY_NAME = 'Grid pending company';
@@ -129,6 +136,92 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         );
         $this->assertSame('', $formValues[$this->fieldName('external_ref')]);
         $this->assertSame('1', $formValues[$this->fieldName('delivery_authorized')]);
+    }
+
+    /**
+     * @depends testIndex
+     */
+    public function testTheCreationPageShowsTheSampleIdentifiers(): void
+    {
+        $crawler = $this->client->request('GET', $this->router->generate('admin_business_entities_create'));
+        $this->assertResponseIsSuccessful();
+
+        foreach (self::CREATION_SAMPLE_VALUES as $sampleValue) {
+            $this->assertCount(
+                1,
+                $crawler->filter(sprintf('input[placeholder="%s"]', $sampleValue)),
+                sprintf('The creation page must show the sample "%s".', $sampleValue)
+            );
+        }
+    }
+
+    /**
+     * @depends testIndex
+     */
+    public function testTheEditPageOfAnEntityWithoutIdentifiersShowsNoSampleValues(): void
+    {
+        $crawler = $this->client->request('GET', $this->generateEditUrl(self::$activeBusinessEntityId));
+        $this->assertResponseIsSuccessful();
+
+        foreach (self::CREATION_SAMPLE_VALUES as $sampleValue) {
+            $this->assertCount(
+                0,
+                $crawler->filter(sprintf('input[placeholder="%s"]', $sampleValue)),
+                sprintf('The creation sample "%s" must not appear on an edit page.', $sampleValue)
+            );
+        }
+    }
+
+    /**
+     * @depends testIndex
+     */
+    public function testEditingAnUnknownEntityRedirectsToTheListingWithAnError(): void
+    {
+        $this->client->request('GET', $this->generateEditUrl(self::UNKNOWN_BUSINESS_ENTITY_ID));
+
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
+
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
+        $this->assertArrayHasKey('error', $messages);
+        $this->assertContains(
+            'The object cannot be loaded (or found).',
+            $messages['error'],
+            print_r($messages['error'], true)
+        );
+    }
+
+    /**
+     * @depends testIndex
+     */
+    public function testAFailedWriteLeavesTheEditPageInsteadOfRedisplayingIt(): void
+    {
+        $this->client->disableReboot();
+
+        $formHandler = $this->createMock(FormHandlerInterface::class);
+        $formHandler->method('handleFor')->willThrowException(
+            new CannotUpdateBusinessEntityException('Could not update business entity')
+        );
+
+        self::$kernel->getContainer()->set(
+            'prestashop.core.form.identifiable_object.business_entity_form_handler',
+            $formHandler
+        );
+
+        $this->client->request('POST', $this->generateEditUrl(self::$activeBusinessEntityId));
+
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
+
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
+        $this->assertArrayHasKey('error', $messages);
+        $this->assertContains(
+            'An error occurred while updating the business entity.',
+            $messages['error'],
+            print_r($messages['error'], true)
+        );
     }
 
     /**

@@ -209,9 +209,7 @@ class BusinessEntitiesController extends PrestaShopAdminController
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
-            // The re-display below queries the entity again; if it is gone there is nothing to
-            // render, so leave the page instead of letting the query throw.
-            if ($e instanceof BusinessEntityNotFoundException) {
+            if ($e instanceof BusinessEntityNotFoundException || $e instanceof CannotUpdateBusinessEntityException) {
                 return $this->redirectToRoute('admin_business_entities_list');
             }
         }

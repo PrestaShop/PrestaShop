@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\BusinessEntity\CommandHandler;
 
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\ORM\Exception\ORMException;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\EditBusinessEntityHandler;
@@ -19,6 +20,7 @@ use PrestaShopBundle\Entity\B2B\BusinessEntity;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Entity\Repository\BusinessEntityRepository;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class EditBusinessEntityHandlerTest extends TestCase
 {
@@ -285,20 +287,77 @@ class EditBusinessEntityHandlerTest extends TestCase
      * The sibling AddBusinessEntityHandler translates a persistence failure into a domain
      * exception, and BusinessEntitiesController::getErrorMessages() only maps domain exceptions:
      * a raw Doctrine exception would fall through to the generic "unexpected error" message.
+     *
+     * @dataProvider providePersistenceFailures
      */
-    public function testItTranslatesAPersistenceFailureIntoADomainException(): void
+    public function testItTranslatesAnyPersistenceFailureIntoADomainException(Throwable $failure): void
     {
         $businessEntity = $this->buildBusinessEntity();
 
         $repository = $this->createMock(BusinessEntityRepository::class);
         $repository->method('findById')->willReturn($businessEntity);
-        $repository->method('save')->willThrowException(new ORMException('Deadlock found'));
+        $repository->method('save')->willThrowException($failure);
 
         $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $this->createMock(LoggerInterface::class));
+
+        try {
+            $handler->handle((new EditBusinessEntityCommand(7))->setName('New name'));
+            $this->fail(sprintf('A %s should have been thrown.', CannotUpdateBusinessEntityException::class));
+        } catch (CannotUpdateBusinessEntityException $e) {
+            $this->assertSame($failure, $e->getPrevious());
+        }
+    }
+
+    /**
+     * @return iterable<string, array{Throwable}>
+     */
+    public static function providePersistenceFailures(): iterable
+    {
+        yield 'ORM level' => [new ORMException('Deadlock found')];
+        yield 'DBAL driver level' => [new DBALException('An exception occurred while executing a query')];
+    }
+
+    public function testItDoesNotWriteToTheAuditTrailWhenTheWriteFailed(): void
+    {
+        $repository = $this->createMock(BusinessEntityRepository::class);
+        $repository->method('findById')->willReturn($this->buildBusinessEntity());
+        $repository->method('save')->willThrowException(new DBALException('Connection lost'));
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->never())->method('info');
+
+        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $logger);
 
         $this->expectException(CannotUpdateBusinessEntityException::class);
 
         $handler->handle((new EditBusinessEntityCommand(7))->setName('New name'));
+    }
+
+    public function testAnUnencodableStoredValueDegradesTheAuditEntryInsteadOfFailingTheEdit(): void
+    {
+        $businessEntity = $this->buildBusinessEntity();
+        $businessEntity->setName("Ancien nom \xB1\x31");
+
+        $repository = $this->createMock(BusinessEntityRepository::class);
+        $repository->method('findById')->willReturn($businessEntity);
+        $repository->expects($this->once())->method('save');
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())
+            ->method('info')
+            ->with(
+                $this->logicalAnd(
+                    $this->stringContains('"name"'),
+                    $this->stringContains('New name'),
+                    $this->stringContains("\u{FFFD}")
+                ),
+                $this->anything()
+            );
+
+        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $logger);
+        $handler->handle((new EditBusinessEntityCommand(7))->setName('New name'));
+
+        $this->assertSame('New name', $businessEntity->getName());
     }
 
     private function buildBusinessEntity(): BusinessEntity
