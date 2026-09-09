@@ -58,6 +58,8 @@ final class GetCarrierForEditingHandler implements GetCarrierForEditingHandlerIn
             $zones,
             $logoPath,
             $this->carrierRepository->getOrdersCount($query->getCarrierId()),
+            (bool) $carrier->shipping_external,
+            (bool) $carrier->need_range,
         );
     }
 }
