@@ -171,6 +171,8 @@ services:
       $themeChoices: '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
       $moduleChoices: '@=service("prestashop.core.form.choice_provider.module_by_name").getChoices()'
 
+  PrestaShopBundle\Form\Admin\Improve\International\Translations\ImportLanguagePackType: ~
+
   PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType:
     arguments:
       $themeChoices: '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
