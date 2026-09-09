@@ -20,14 +20,14 @@
 		<td colspan="12" height="30">&nbsp;</td>
 	</tr>
 
-	<!-- Product -->
-	<tr>
-		<td colspan="12">
+</table>
 
-			{$product_tab}
+{* The product table is rendered outside this layout table on purpose. TCPDF only repeats a
+   <thead> across a page break for a table that is not nested, so a document longer than one
+   page would lose its column headers. *}
+{$product_tab}
 
-		</td>
-	</tr>
+<table width="100%" id="body-end" border="0" cellpadding="0" cellspacing="0" style="margin:0;">
 
 
 	<tr>
