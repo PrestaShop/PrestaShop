@@ -1563,6 +1563,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             ];
         }
 
+        // Add the shop's return policy, when it publishes one
+        $merchantReturnPolicy = $this->getMerchantReturnPolicyStructuredData();
+        if ($merchantReturnPolicy !== null) {
+            $structuredData['product']['hasMerchantReturnPolicy'] = $merchantReturnPolicy;
+        }
+
         // Add offer data if price is shown
         if ($product['show_price']) {
             $structuredData['product']['offers'] = [
@@ -1629,6 +1635,55 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'value' => $featureValue,
             ];
         }
+    }
+
+    /**
+     * Build the schema.org MerchantReturnPolicy of the current shop from its order return settings.
+     *
+     * WHY nothing is published when returns are switched off: PS_ORDER_RETURN only governs the built-in
+     * merchandise return feature, so turning it off says the merchant does not process returns through
+     * the back office - not that returns are refused. Publishing MerchantReturnNotPermitted on that
+     * basis would state a policy the merchant never set, and would contradict the statutory withdrawal
+     * right that applies in the EU and elsewhere.
+     *
+     * @return array<string, mixed>|null the policy, or null when the shop publishes none
+     */
+    protected function getMerchantReturnPolicyStructuredData(): ?array
+    {
+        $shopId = (int) $this->context->shop->id;
+
+        if (!Configuration::get('PS_ORDER_RETURN', null, null, $shopId)) {
+            return null;
+        }
+
+        // WHY this pair and this order: applicableCountry is where the goods are sold and returned to,
+        // so it is the shop's own address country. Shop::getAddress() resolves that exact question the
+        // same way, falling back to the localisation default when the shop address has no country set.
+        $countryId = (int) Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $shopId)
+            ?: (int) Configuration::get('PS_COUNTRY_DEFAULT', null, null, $shopId);
+
+        $country = new Country($countryId);
+        if (!Validate::isLoadedObject($country)) {
+            return null;
+        }
+
+        $policy = [
+            '@type' => 'MerchantReturnPolicy',
+            'applicableCountry' => $country->iso_code,
+        ];
+
+        // WHY the zero case is a different category: Order::getNumberOfDays() returns true as soon as
+        // PS_ORDER_RETURN_NB_DAYS is 0, so zero means "no time limit" here. Publishing it verbatim as
+        // merchantReturnDays would advertise the opposite - a window that closes on the delivery date.
+        $returnWindowInDays = (int) Configuration::get('PS_ORDER_RETURN_NB_DAYS', null, null, $shopId);
+        if ($returnWindowInDays > 0) {
+            $policy['returnPolicyCategory'] = 'https://schema.org/MerchantReturnFiniteReturnWindow';
+            $policy['merchantReturnDays'] = $returnWindowInDays;
+        } else {
+            $policy['returnPolicyCategory'] = 'https://schema.org/MerchantReturnUnlimitedWindow';
+        }
+
+        return $policy;
     }
 
     protected function addProductCustomizationData(array $product_full)
