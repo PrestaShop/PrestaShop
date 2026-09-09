@@ -1130,18 +1130,6 @@ $relations = array(
     'memcached_servers' => array(
     ),
 
-    'product_country_tax' => array(
-        'id_product' => array(
-            'product' => 'id_product',
-        ),
-        'id_country' => array(
-            'country' => 'id_country',
-        ),
-        'id_tax' => array(
-            'tax' => 'id_tax',
-        ),
-    ),
-
     'tax_rule' => array(
         'id_tax_rules_group' => array(
             'tax_rules_group' => 'id_tax_rules_group',

@@ -2239,13 +2239,6 @@ CREATE TABLE `PREFIX_memcached_servers` (
   `weight` INT(11) UNSIGNED NOT NULL
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
-CREATE TABLE `PREFIX_product_country_tax` (
-  `id_product` int(11) NOT NULL,
-  `id_country` int(11) NOT NULL,
-  `id_tax` int(11) NOT NULL,
-  PRIMARY KEY (`id_product`, `id_country`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
-
 CREATE TABLE `PREFIX_tax_rule` (
   `id_tax_rule` int(11) NOT NULL AUTO_INCREMENT,
   `id_tax_rules_group` int(11) NOT NULL,
