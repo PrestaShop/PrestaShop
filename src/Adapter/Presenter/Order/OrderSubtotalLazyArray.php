@@ -147,7 +147,11 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
 
         return [
             'type' => 'tax',
-            'label' => $this->translator->trans('Tax', [], 'Shop.Theme.Checkout'),
+            // Same wording as the cart: the amount is informative when the prices around it already
+            // contain it, and an addition when they do not.
+            'label' => $this->includeTaxes
+                ? $this->translator->trans('Included taxes', [], 'Shop.Theme.Checkout')
+                : $this->translator->trans('Taxes', [], 'Shop.Theme.Checkout'),
             'amount' => $tax,
             'value' => $this->priceFormatter->format(
                 $tax,
