@@ -342,6 +342,41 @@ admin_products_bulk_enable_shop_group:
   options:
     expose: true
 
+admin_products_bulk_set_out_of_stock_type_all_shops:
+  path: /bulk-set-out-of-stock-type-all-shops/{outOfStockType}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkSetOutOfStockTypeAllShopsAction
+    _legacy_controller: AdminProducts
+  requirements:
+    outOfStockType: \d+
+  options:
+    expose: true
+
+admin_products_bulk_set_out_of_stock_type_shop:
+  path: /bulk-set-out-of-stock-type-shop/{shopId}/{outOfStockType}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkSetOutOfStockTypeShopAction
+    _legacy_controller: AdminProducts
+  requirements:
+    shopId: \d+
+    outOfStockType: \d+
+  options:
+    expose: true
+
+admin_products_bulk_set_out_of_stock_type_shop_group:
+  path: /bulk-set-out-of-stock-type-shop-group/{shopGroupId}/{outOfStockType}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkSetOutOfStockTypeShopGroupAction
+    _legacy_controller: AdminProducts
+  requirements:
+    shopGroupId: \d+
+    outOfStockType: \d+
+  options:
+    expose: true
+
 admin_products_bulk_disable_all_shops:
   path: /bulk-disable-for-all-shops
   methods: [ POST ]
