@@ -780,6 +780,7 @@ class CartCore extends ObjectModel
                 product_attribute_shop.`ecotax` AS ecotax_attr,
                 IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
                 (p.`weight`+ IFNULL(product_attribute_shop.`weight`, pa.`weight`)) weight_attribute,
+                IFNULL(product_attribute_shop.`additional_shipping_cost`, pa.`additional_shipping_cost`) AS additional_shipping_cost_attribute,
                 IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13,
                 IF (IFNULL(pa.`isbn`, \'\') = \'\', p.`isbn`, pa.`isbn`) AS isbn,
                 IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
@@ -980,6 +981,15 @@ class CartCore extends ObjectModel
             $row['weight'] = (float) $row['weight_attribute'];
         } else {
             $row['weight'] += $customization_weight;
+        }
+
+        // A combination carries an impact on the shipping fee the way it carries one on the weight,
+        // so the two are added and everything downstream reads the effective figure.
+        if (isset($row['id_product_attribute'], $row['additional_shipping_cost_attribute'])
+            && (int) $row['id_product_attribute']
+        ) {
+            $row['additional_shipping_cost'] = (float) $row['additional_shipping_cost']
+                + (float) $row['additional_shipping_cost_attribute'];
         }
 
         if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice') {
