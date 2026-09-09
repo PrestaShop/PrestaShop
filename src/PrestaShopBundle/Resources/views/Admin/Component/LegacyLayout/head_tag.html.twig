@@ -47,7 +47,9 @@
 </script>
 
 {# It is ok to load this file from new theme because the content needed is the same for default theme, so no need to generate two identical files #}
-{{ include('@AdminNewTheme/public/preload.html.twig') }}
+{# ignore_missing: this file is a webpack build artifact excluded from git, so a checkout whose
+   admin assets have not been built must still render the back office instead of failing here #}
+{{ include('@AdminNewTheme/public/preload.html.twig', ignore_missing: true) }}
 
 {# Many modules register on this hook to add their assets, they use addCss and/or addJs methods to do that
 (even if this is supposed to be a display hook). These methods must be executed before we loop through the
