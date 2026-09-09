@@ -5,6 +5,7 @@ import testContext from '@utils/testContext';
 import {installModule, uninstallModule} from '@commonTests/BO/modules/moduleManager';
 
 import {expect} from 'chai';
+import semver from 'semver';
 import {
   boDashboardPage,
   boLoginPage,
@@ -148,7 +149,12 @@ describe('New products block module: Upgrade module', async () => {
       expect(isModuleVisible).to.eq(true);
 
       const moduleInfo = await boModuleManagerPage.getModuleInformationNth(page, 1);
-      expect(dataModules.psNewProducts.versionCurrent).to.contains(moduleInfo.version);
+      // The upgrade installs the latest release published on the Distribution API, which may be
+      // ahead of the version referenced by the ui-testing-library: only check the module got newer
+      expect(
+        semver.gt(moduleInfo.version, dataModules.psNewProducts.versionOld),
+        `Module version ${moduleInfo.version} should be greater than ${dataModules.psNewProducts.versionOld}`,
+      ).to.eq(true);
     });
 
     it('should go to \'Shop parameters > General\' page', async function () {
@@ -266,7 +272,12 @@ describe('New products block module: Upgrade module', async () => {
       expect(isModuleVisible).to.eq(true);
 
       const moduleInfo = await boModuleManagerPage.getModuleInformationNth(page, 1);
-      expect(dataModules.psNewProducts.versionCurrent).to.contains(moduleInfo.version);
+      // The upgrade installs the latest release published on the Distribution API, which may be
+      // ahead of the version referenced by the ui-testing-library: only check the module got newer
+      expect(
+        semver.gt(moduleInfo.version, dataModules.psNewProducts.versionOld),
+        `Module version ${moduleInfo.version} should be greater than ${dataModules.psNewProducts.versionOld}`,
+      ).to.eq(true);
     });
 
     it('should go to the front office', async function () {
