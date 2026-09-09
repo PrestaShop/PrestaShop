@@ -6,7 +6,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 
-use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShopBundle\Form\Admin\Type\LocaleChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -75,13 +74,6 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'class' => 'js-no-theme',
             ],
         ];
-
-        // Only one theme must be identified as the default one
-        if (isset($this->themeChoices[Theme::getDefaultTheme()])) {
-            $themeChoiceAttributes[Theme::getDefaultTheme()] = [
-                'class' => 'js-default-theme',
-            ];
-        }
 
         $builder
             ->add('translation_type', ChoiceType::class, [
