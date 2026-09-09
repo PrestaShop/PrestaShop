@@ -53,7 +53,7 @@ final class GetExtraPropertyDefinitionForEditingHandler implements GetExtraPrope
             sqlIndex: $definition->getSqlIndex(),
             nullable: $definition->isNullable(),
             size: $definition->getSize(),
-            defaultValue: null !== $definition->getDefaultValue() ? (string) $definition->getDefaultValue() : null,
+            defaultValue: $definition->getDefaultValue(),
             enumValues: $definition->getEnumValues(),
             displayFront: $definition->isDisplayFront(),
             required: $definition->isRequired(),

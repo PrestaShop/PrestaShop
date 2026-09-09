@@ -58,7 +58,7 @@ final class ExtraPropertyDefinitionFormDataProvider implements FormDataProviderI
                 'sql_index' => $definition->getSqlIndex()->value,
                 'nullable' => $definition->isNullable(),
                 'size' => $definition->getSize(),
-                'default_value' => $definition->getDefaultValue(),
+                'default_value' => null !== $definition->getDefaultValue() ? (string) $definition->getDefaultValue() : null,
                 'enum_values' => null !== $definition->getEnumValues() ? implode("\n", $definition->getEnumValues()) : null,
             ],
             'visibility' => [
