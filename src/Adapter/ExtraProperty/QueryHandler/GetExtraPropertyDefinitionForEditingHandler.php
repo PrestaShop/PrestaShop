@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefin
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Query\GetExtraPropertyDefinitionForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\QueryHandler\GetExtraPropertyDefinitionForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\QueryResult\EditableExtraPropertyDefinition;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintRenderer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 
 /**
@@ -48,8 +49,8 @@ final class GetExtraPropertyDefinitionForEditingHandler implements GetExtraPrope
             entityName: $definition->getEntityName(),
             moduleName: $definition->getModuleName(),
             propertyName: $definition->getPropertyName(),
-            fieldType: $definition->getType(),
-            fieldScope: $definition->getScope(),
+            type: $definition->getType(),
+            scope: $definition->getScope(),
             sqlIndex: $definition->getSqlIndex(),
             nullable: $definition->isNullable(),
             size: $definition->getSize(),
@@ -61,7 +62,8 @@ final class GetExtraPropertyDefinitionForEditingHandler implements GetExtraPrope
             labelDomain: $definition->getLabelDomain(),
             descriptionWording: $definition->getDescriptionWording(),
             descriptionDomain: $definition->getDescriptionDomain(),
-            constraints: $definition->getConstraints(),
+            // The DTO carries the DSL string (scalar-only query results), in its canonical render.
+            constraints: ExtraPropertyConstraintRenderer::render($definition->getConstraints()),
             formType: $definition->getFormType(),
             formOptions: $definition->getFormOptions(),
             associatedForms: $definition->getAssociatedForms(),

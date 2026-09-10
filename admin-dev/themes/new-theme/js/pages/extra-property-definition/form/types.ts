@@ -5,7 +5,8 @@
 
 /**
  * Shapes of the inline JSON payloads rendered by the form theme (frozen contracts — see the
- * catalog services under PrestaShop\Core\ExtraProperty\Catalog and ExtraPropertyConstraintCatalog).
+ * catalog services under PrestaShop\Core\ExtraProperty\Catalog and
+ * PrestaShop\Core\ExtraProperty\Form\ExtraPropertyConstraintCatalog).
  */
 
 export interface FormCatalogEntry {

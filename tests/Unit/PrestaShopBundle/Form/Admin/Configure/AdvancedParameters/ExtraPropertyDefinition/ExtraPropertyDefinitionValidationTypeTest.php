@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition;
 
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCatalog;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyConstraintCatalog;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyConstraintRowType;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyDefinitionValidationType;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;

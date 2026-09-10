@@ -58,6 +58,15 @@ services:
     tags:
       - { name: 'property_info.type_extractor', priority: 10 }
 
+  # Ahead of every other type extractor: a union mixing scalars and classes is answered with its
+  # scalar members first (PHP reflects the classes first, which makes the serializer try e.g.
+  # DecimalNumber on every scalar value). Silent for any other property.
+  PrestaShopBundle\ApiPlatform\Serializer\ScalarFirstUnionTypeExtractor:
+    arguments:
+      $reflectionExtractor: '@property_info.reflection_extractor'
+    tags:
+      - { name: 'property_info.type_extractor', priority: 20 }
+
   PrestaShopBundle\ApiPlatform\ContextParametersProvider:
     autowire: true
   PrestaShopBundle\ApiPlatform\LocalizedValueUpdater:

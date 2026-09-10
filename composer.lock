@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89e2352d6f6b0e1d065a196d5b00e993",
+    "content-hash": "5e5f1f2e12f218dac7e7e06974abea14",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5212,16 +5212,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-dev",
+            "version": "dev-41542-extra-property-definition-endpoints",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "9c8ee15ddd66b654d68cb6578d1cbb19bb07e9fc"
+                "url": "https://github.com/jolelievre/ps_apiresources.git",
+                "reference": "010692dab6c4acdedb18ea6124b70f0d6faf90c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/9c8ee15ddd66b654d68cb6578d1cbb19bb07e9fc",
-                "reference": "9c8ee15ddd66b654d68cb6578d1cbb19bb07e9fc",
+                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/010692dab6c4acdedb18ea6124b70f0d6faf90c9",
+                "reference": "010692dab6c4acdedb18ea6124b70f0d6faf90c9",
                 "shasum": ""
             },
             "require": {
@@ -5235,7 +5235,6 @@
                 "prestashop/php-dev-tools": "^4.3",
                 "rector/rector": "^2.0"
             },
-            "default-branch": true,
             "type": "prestashop-module",
             "autoload": {
                 "psr-4": {
@@ -5306,10 +5305,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_apiresources/tree/dev",
-                "issues": "https://github.com/PrestaShop/ps_apiresources/issues"
+                "source": "https://github.com/jolelievre/ps_apiresources/tree/41542-extra-property-definition-endpoints"
             },
-            "time": "2026-09-01T16:22:03+00:00"
+            "time": "2026-09-10T10:17:17+00:00"
         },
         {
             "name": "prestashop/ps_banner",

@@ -17,7 +17,6 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowPresenter;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowPresenter;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 
 /**
@@ -54,14 +53,14 @@ final class ExtraPropertyDefinitionFormDataProvider implements FormDataProviderI
                 'entity_name' => $definition->getEntityName(),
                 'property_name' => $definition->getPropertyName(),
                 'module_name' => $definition->getModuleName(),
-                'type' => $definition->getFieldType()->value,
-                'scope' => $definition->getFieldScope()->value,
+                'type' => $definition->getType()->value,
+                'scope' => $definition->getScope()->value,
                 'sql_index' => $definition->getSqlIndex()->value,
                 'nullable' => $definition->isNullable(),
                 'size' => $definition->getSize(),
                 // The BO field is a TextType: stringify with the shared canonical mapping
                 // (BOOL false → '0', never the empty string a naive cast would produce).
-                'default_value' => ExtraPropertyValueCaster::castDefaultValueForDb($definition->getFieldType(), $definition->getDefaultValue()),
+                'default_value' => ExtraPropertyValueCaster::castDefaultValueForDb($definition->getType(), $definition->getDefaultValue()),
                 'enum_values' => null !== $definition->getEnumValues() ? implode("\n", $definition->getEnumValues()) : null,
             ],
             'visibility' => [
@@ -78,7 +77,7 @@ final class ExtraPropertyDefinitionFormDataProvider implements FormDataProviderI
                 'description_domain' => $definition->getDescriptionDomain(),
             ],
             'validation' => [
-                'constraints' => ConstraintRowPresenter::rows(ExtraPropertyConstraintMapper::toNames($definition->getConstraints())),
+                'constraints' => ConstraintRowPresenter::rows($definition->getConstraints()),
             ],
             'advanced' => [
                 'form_type' => $definition->getFormType(),

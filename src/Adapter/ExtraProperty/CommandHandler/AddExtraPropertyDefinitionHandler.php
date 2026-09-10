@@ -44,8 +44,8 @@ final class AddExtraPropertyDefinitionHandler implements AddExtraPropertyDefinit
         $definition = new ExtraPropertyDefinition(
             entityName: $command->getEntityName(),
             propertyName: $command->getPropertyName(),
-            type: $command->getFieldType(),
-            scope: $command->getFieldScope(),
+            type: $command->getType(),
+            scope: $command->getScope(),
             moduleName: null,
             enumValues: $command->getEnumValues(),
             defaultValue: $command->getDefaultValue(),

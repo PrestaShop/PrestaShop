@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition;
 
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCatalog;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyConstraintCatalog;
 use PrestaShopBundle\Form\Admin\Type\CardType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -22,14 +22,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * "Validation" card: Symfony Constraint(s) applied to the value before persistence.
  *
- * Limited to a whitelist (see ExtraPropertyConstraintMapper). Each row is one constraint: bare
+ * Limited to an allowlist (see ExtraPropertyConstraintGrammar). Each row is one constraint: bare
  * (NotBlank), a single value via the constraint's default option (TypedRegex('generic_name')),
  * named options (Length(min: 2, max: 64)), or a composite (per_language rows fold into one
  * All[...] — the per-language validation of multilingual fields).
  *
  * The constraint rows are the MAPPED form data: the form data provider splits the stored
  * constraints into rows (ConstraintRowPresenter) and the data handler folds them back
- * (ConstraintRowSerializer -> ExtraPropertyConstraintMapper). Each row validates its own token
+ * (ConstraintRowSerializer -> the DSL string the command parses). Each row validates its own token
  * (see ExtraPropertyConstraintRowType); abandoned rows are dropped at submit by delete_empty.
  */
 class ExtraPropertyDefinitionValidationType extends TranslatorAwareType
@@ -69,7 +69,7 @@ class ExtraPropertyDefinitionValidationType extends TranslatorAwareType
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         // Inlined by the form theme as a JSON block so the constraint builder UI knows each
-        // whitelisted constraint's options without AJAX.
+        // allowlisted constraint's options without AJAX.
         $view->vars['extra_property_constraint_catalog'] = $this->constraintCatalog->getCatalog();
     }
 

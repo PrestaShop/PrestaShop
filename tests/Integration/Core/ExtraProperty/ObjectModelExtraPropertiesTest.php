@@ -19,6 +19,7 @@ use PrestaShopException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Integration\Utility\LanguageTrait;
 use Tests\Resources\DatabaseDump;
+use Tests\Resources\Resetter\ExtraPropertyResetter;
 use Tests\Resources\Resetter\LanguageResetter;
 
 /**
@@ -61,11 +62,8 @@ class ObjectModelExtraPropertiesTest extends KernelTestCase
 
     public static function tearDownAfterClass(): void
     {
-        foreach (self::definitions() as $definition) {
-            self::$registry->unregister($definition, true);
-        }
-        DatabaseDump::restoreTables(['manufacturer', 'manufacturer_lang', 'manufacturer_shop', 'extra_property_definition']);
-        DatabaseDump::removeExtraTables();
+        ExtraPropertyResetter::resetExtraProperties();
+        DatabaseDump::restoreTables(['manufacturer', 'manufacturer_lang', 'manufacturer_shop']);
         LanguageResetter::resetLanguages();
 
         parent::tearDownAfterClass();

@@ -7,7 +7,7 @@
  * Client-side lexer of a constraint's VERBATIM argument tail (the text between a DSL token's
  * "(...)" delimiters, carried by a constraint row's hidden options input). The typed option
  * editor renders inputs over the lexed fragments and serializes them back; quoting mirrors the
- * server-side ExtraPropertyConstraintMapper value rules so a value round-trips identically.
+ * server-side ExtraPropertyConstraintParser/Renderer value rules so a value round-trips identically.
  * The server stays the parsing/validation authority — rows are validated on submit.
  * See tests/pages/extra-property-definition/constraint-dsl.spec.js.
  */

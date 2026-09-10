@@ -34,7 +34,6 @@ services:
       $formOptionsValidator: '@PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator'
       # Existence check on the shop association ids (the *_shop rows carry no foreign key).
       $shopRepository: '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
-      $constraintNormalizer: '@PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintNormalizer'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface:
     alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistry'
@@ -54,9 +53,9 @@ services:
       $formFactory: '@form.factory'
       $formTypeMap: '@PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap'
 
-  # Machine-readable description of the constraint whitelist, serialized into the definition
+  # Machine-readable description of the constraint allowlist, serialized into the definition
   # page so the Validation card UI can offer constraints with their configurable options.
-  PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCatalog: ~
+  PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyConstraintCatalog: ~
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormBuilderModifier:
     arguments:

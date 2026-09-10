@@ -9,22 +9,22 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Form;
 
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintGrammar;
 
 /**
- * Turns the definition form's constraint rows back into the DSL string the constraint mapper
- * parses — the mirror image of ConstraintRowPresenter, which splits a DSL string into rows.
+ * Turns the definition form's constraint rows back into the DSL string the constraint parser
+ * reads — the mirror image of ConstraintRowPresenter, which splits a DSL string into rows.
  *
  * A row's options tail is re-emitted VERBATIM inside the token's delimiters — parenthesis shape
  * for regular constraints ("Length(min: 2, max: 64)"), bracket shape for composites ("All[ Url ]",
- * see ExtraPropertyConstraintMapper::compositeNames()). Set-level rows serialize one per line in
+ * see ExtraPropertyConstraintGrammar::compositeNames()). Set-level rows serialize one per line in
  * order; all per_language rows fold into ONE "All[ a, b ]" line inserted where the first
  * per-language row sits among the rows — the inverse of the presenter's first-All explosion, so a
  * presenter->serializer round trip is order-stable.
  *
  * Rows with an empty name are skipped: an added-then-abandoned builder row must not produce a
  * token. No name/options check happens here — the row form type validates each serialized token
- * through the mapper before the data handler runs.
+ * through the parser before the data handler runs.
  */
 class ConstraintRowSerializer
 {
@@ -85,7 +85,7 @@ class ConstraintRowSerializer
         }
 
         $tail = trim($row['options'] ?? '');
-        $isComposite = in_array($name, ExtraPropertyConstraintMapper::compositeNames(), true);
+        $isComposite = in_array($name, ExtraPropertyConstraintGrammar::compositeNames(), true);
 
         if (!$isComposite) {
             return '' === $tail ? $name : $name . '(' . $tail . ')';
@@ -96,7 +96,7 @@ class ConstraintRowSerializer
         $compositeOptions = trim($row['composite_options'] ?? '');
         $head = '' === $compositeOptions ? $name : $name . '(' . $compositeOptions . ')';
 
-        // An empty composite keeps its brackets ("All[]" — the mapper's own toNames render).
+        // An empty composite keeps its brackets ("All[]" — the renderer's own output).
         return $head . '[' . $tail . ']';
     }
 }
