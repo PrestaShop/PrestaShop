@@ -16,51 +16,7 @@
 {% block business_entity_form %}
   {{ form_start(businessEntityForm, {attr: {novalidate: 'novalidate'}}) }}
   {{ form_errors(businessEntityForm) }}
-  <div class="card">
-    <h3 class="card-header">
-      {{ 'General information'|trans({}, 'Admin.Global') }}
-    </h3>
-    <div class="card-body">
-      <div class="form-wrapper">
-        <div class="row">
-          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.name) }}</div>
-          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.legal_name) }}</div>
-        </div>
-
-        <hr>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-control-label">{{ 'VAT number'|trans({}, 'Admin.Global') }}</label>
-              <input type="text" class="form-control" placeholder="FR12345678901" disabled>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-control-label">{{ 'SIREN / SIRET'|trans({}, 'Admin.Global') }}</label>
-              <input type="text" class="form-control" placeholder="123 456 789 00012" disabled>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-control-label">{{ 'DUNS number'|trans({}, 'Admin.Global') }}</label>
-              <input type="text" class="form-control" placeholder="12-345-6789" disabled>
-            </div>
-          </div>
-        </div>
-
-        <hr>
-        <div class="row">
-          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.external_ref) }}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.status) }}</div>
-          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.customer_group_id) }}</div>
-        </div>
-        {{ form_row(businessEntityForm.general_information.delivery_authorized) }}
-      </div>
-    </div>
-  </div>
+  {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/_general_information.html.twig') }}
 
   <div class="card">
     <h3 class="card-header d-flex justify-content-between">
