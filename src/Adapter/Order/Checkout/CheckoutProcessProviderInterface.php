@@ -10,7 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\Checkout;
 
 use CheckoutProcess;
 use CheckoutSession;
-use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopBundle\Translation\TranslatorInterface;
 
 /**
  * Contract for modules that provide their own checkout process.
@@ -30,6 +30,6 @@ interface CheckoutProcessProviderInterface
      */
     public function buildCheckoutProcess(
         CheckoutSession $session,
-        TranslatorComponent $translator
+        TranslatorInterface $translator
     ): CheckoutProcess;
 }

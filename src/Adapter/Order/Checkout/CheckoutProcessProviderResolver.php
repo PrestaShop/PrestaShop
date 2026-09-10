@@ -11,7 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\Checkout;
 use CheckoutProcess;
 use CheckoutSession;
 use Hook;
-use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopBundle\Translation\TranslatorInterface;
 
 /**
  * Resolves the checkout process provided by modules through the checkout hook.
@@ -23,11 +23,11 @@ class CheckoutProcessProviderResolver
      * or null to keep the native checkout.
      *
      * @param CheckoutSession $session
-     * @param TranslatorComponent $translator
+     * @param TranslatorInterface $translator
      *
      * @return CheckoutProcess|null
      */
-    public function resolve(CheckoutSession $session, TranslatorComponent $translator): ?CheckoutProcess
+    public function resolve(CheckoutSession $session, TranslatorInterface $translator): ?CheckoutProcess
     {
         $providers = $this->getValidProviders();
         $providersCount = count($providers);

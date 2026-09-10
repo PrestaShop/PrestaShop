@@ -13,7 +13,10 @@ use CheckoutSession;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Order\Checkout\CheckoutProcessProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Order\Checkout\CheckoutProcessProviderResolver;
+use PrestaShopBundle\Translation\DataCollectorTranslator;
+use PrestaShopBundle\Translation\Translator;
 use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopBundle\Translation\TranslatorInterface;
 
 class StubCheckoutProcessProvider implements CheckoutProcessProviderInterface
 {
@@ -30,7 +33,7 @@ class StubCheckoutProcessProvider implements CheckoutProcessProviderInterface
 
     public function buildCheckoutProcess(
         $session,
-        TranslatorComponent $translator
+        TranslatorInterface $translator
     ): CheckoutProcess {
         return $this->checkoutProcess;
     }
@@ -91,6 +94,35 @@ class CheckoutProcessProviderResolverTest extends TestCase
         );
 
         $this->assertNull($resolvedProcess);
+    }
+
+    /**
+     * The front controller hands over whatever the container registered as the translator: that is
+     * Translator in prod and DataCollectorTranslator in dev, and neither of them extends
+     * TranslatorComponent. A signature naming that class fails while binding the argument, before
+     * the method body runs, which is what broke the order page under the new front container.
+     *
+     * @dataProvider provideTranslatorsTheContainerCanReturn
+     *
+     * @param class-string<TranslatorInterface> $translatorClass
+     */
+    public function testResolveAcceptsEveryTranslatorTheContainerCanReturn(string $translatorClass): void
+    {
+        $resolver = new TestableCheckoutProcessProviderResolver();
+
+        $resolvedProcess = $resolver->resolve(
+            $this->createMock(CheckoutSession::class),
+            $this->createMock($translatorClass)
+        );
+
+        $this->assertNull($resolvedProcess);
+    }
+
+    public function provideTranslatorsTheContainerCanReturn(): iterable
+    {
+        yield 'prod front container' => [Translator::class];
+        yield 'dev front container' => [DataCollectorTranslator::class];
+        yield 'the class the signature used to name' => [TranslatorComponent::class];
     }
 
     private function createProvider(bool $enabled, ?CheckoutProcess $checkoutProcess = null): CheckoutProcessProviderInterface
