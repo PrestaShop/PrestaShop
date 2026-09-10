@@ -13,7 +13,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS)]
 class AsCommandHandler
 {
-    public function __construct(public $method = 'handle')
+    public function __construct(public string $method = 'handle', public bool $transactional = false)
     {
     }
 }

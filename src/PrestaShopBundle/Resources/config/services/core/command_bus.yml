@@ -23,6 +23,12 @@ services:
     arguments:
       - '@messenger.bus.default.messenger.handlers_locator'
 
+  PrestaShopBundle\CommandBus\Middleware\TransactionalMiddleware:
+    public: false
+    arguments:
+      - '@messenger.bus.default.messenger.handlers_locator'
+      - '@PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface'
+
   PrestaShop\PrestaShop\Core\CommandBus\ExecutedCommandRegistry:
     arguments:
       - '@prestashop.core.command_bus.parser.command_type_parser'

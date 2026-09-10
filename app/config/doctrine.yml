@@ -18,7 +18,9 @@ doctrine:
         options:
           # PDO::MYSQL_ATTR_INIT_COMMAND (<=PHP 8.4)
           # Pdo\Mysql::ATTR_INIT_COMMAND (> PHP 8.5)
-          1002: "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))"
+          # Same sql_mode as the legacy Db connection - see _PS_MYSQL_SESSION_SQL_MODE_ in
+          # config/defines.inc.php for why both layers must agree.
+          1002: "SET SESSION sql_mode = '%env(const:runtime:_PS_MYSQL_SESSION_SQL_MODE_)%'"
           # PDO::MYSQL_ATTR_MULTI_STATEMENTS (<=PHP 8.4)
           # Pdo\Mysql::ATTR_MULTI_STATEMENTS (> PHP 8.5)
           1013: '%env(const:runtime:_PS_ALLOW_MULTI_STATEMENTS_QUERIES_)%'

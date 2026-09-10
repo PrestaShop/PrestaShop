@@ -76,7 +76,8 @@ abstract class DbCore
     /**
      * Opens a database connection.
      *
-     * @return PDO|mysqli|resource
+     * @return PDO|mysqli|resource The native connection. For DbDoctrineCore, this is the same PDO
+     *                             instance shared with Doctrine's own DBAL connection.
      */
     abstract public function connect();
 
@@ -361,6 +362,10 @@ abstract class DbCore
         $this->result = $this->_query($sql);
 
         if (!$this->result && $this->getNumberError() == 2006) {
+            // disconnect() first: DbPDOCore::connect() now skips reconnecting if $this->link is
+            // still set (needed to avoid overwriting a connection shared with Doctrine), so without
+            // this the dead link here would never actually get replaced.
+            $this->disconnect();
             $this->connect();
             $this->result = $this->_query($sql);
         }
@@ -889,6 +894,25 @@ abstract class DbCore
      * purpose: it needs no MySQL time zone tables and is recomputed on each
      * call, so DST is always correct at connection time.
      */
+    /**
+     * Aligns the MySQL session sql_mode with _PS_MYSQL_SESSION_SQL_MODE_.
+     *
+     * The Doctrine DBAL connection applies the very same value on connect (see
+     * app/config/doctrine.yml), so that legacy and Doctrine writes to the same
+     * tables are validated by the same rules - all the more so since they can
+     * share a single physical connection.
+     */
+    public function setSqlMode(): void
+    {
+        $sqlMode = defined('_PS_MYSQL_SESSION_SQL_MODE_') ? _PS_MYSQL_SESSION_SQL_MODE_ : '';
+        // Defensive: a sql_mode is a comma-separated list of flags, nothing else.
+        if (!preg_match('/^[A-Za-z_,]*$/', $sqlMode)) {
+            return;
+        }
+
+        $this->_query("SET SESSION sql_mode = '" . $sqlMode . "'");
+    }
+
     public function setTimeZone(): void
     {
         $offset = (new DateTime())->format('P');

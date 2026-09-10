@@ -9,11 +9,43 @@
  */
 class DbPDOCore extends Db
 {
-    /** @var PDO */
+    /** @var PDO|null */
     protected $link;
 
     /** @var PDOStatement */
     protected $result;
+
+    /**
+     * Shares an externally-managed PDO connection (typically Doctrine's, via DbDoctrineCore::connect())
+     * with this legacy Db instance, so that both sides run in the same physical connection/transaction.
+     *
+     * A no-op when $pdo is already the current link, so callers (DbDoctrineCore::connect()) can call this
+     * on every transaction without paying for a redundant applySessionSettings() round-trip each time.
+     *
+     * @throws PrestaShopException if this instance's current connection has an uncommitted transaction,
+     *                             since replacing it would silently discard that work instead of erroring
+     */
+    public function setPDO(PDO $pdo)
+    {
+        if ($this->link === $pdo) {
+            return;
+        }
+
+        if ($this->hasUncommittedTransaction()) {
+            throw new PrestaShopException('Cannot share the Doctrine connection: the legacy Db connection it would replace has an uncommitted transaction.');
+        }
+
+        $this->link = $pdo;
+        $this->applySessionSettings();
+    }
+
+    /**
+     * @return bool Whether the current connection has an uncommitted transaction
+     */
+    public function hasUncommittedTransaction(): bool
+    {
+        return $this->link instanceof PDO && $this->link->inTransaction();
+    }
 
     /**
      * Returns a new PDO object (database link).
@@ -112,25 +144,42 @@ class DbPDOCore extends Db
     public function connect()
     {
         try {
-            $this->link = $this->getPDO($this->server, $this->user, $this->password, $this->database, 5);
+            if (!$this->link) {
+                $this->link = $this->getPDO($this->server, $this->user, $this->password, $this->database, 5);
+            }
         } catch (PDOException $e) {
             throw new PrestaShopException('Link to database cannot be established: ' . $e->getMessage());
         }
 
-        $this->link->exec('SET SESSION sql_mode = \'\'');
-        $this->setTimeZone();
+        $this->applySessionSettings();
 
         return $this->link;
     }
 
     /**
+     * Applies the session settings legacy code relies on (sql_mode, configured timezone).
+     * Must run both after a fresh connect() and after setPDO(), since an externally-provided PDO
+     * (e.g. Doctrine's) was not opened through connect() and never got these applied otherwise.
+     */
+    private function applySessionSettings(): void
+    {
+        $this->setSqlMode();
+        $this->setTimeZone();
+    }
+
+    /**
      * Destroys the database connection link.
+     *
+     * Sets $link to null rather than unsetting the property: unset() removes it from the object
+     * entirely, and every subsequent read of an untyped, removed property (setPDO()'s
+     * `$this->link === $pdo`, hasUncommittedTransaction()'s `instanceof`, this class's own
+     * `!$this->link`) then raises an "Undefined property" warning until it's reassigned.
      *
      * @see DbCore::disconnect()
      */
     public function disconnect()
     {
-        unset($this->link);
+        $this->link = null;
     }
 
     /**

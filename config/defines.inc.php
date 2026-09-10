@@ -54,6 +54,22 @@ if (!defined('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_')) {
     define('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_', false);
 }
 
+/*
+ * MySQL session sql_mode applied to every database connection, legacy and Doctrine alike.
+ *
+ * Defined here so that both layers share a single source of truth: the legacy Db classes read it
+ * directly (DbPDOCore::applySessionSettings(), DbMySQLiCore::connect()) and the Doctrine DBAL
+ * connection reads it through app/config/doctrine.yml. They must agree - a shop runs legacy and
+ * Doctrine writes against the same tables, and since PrestaShop 9.2 they can even share the same
+ * physical connection, so a different sql_mode per layer means the same data is validated by
+ * different rules depending on which layer happens to write it.
+ *
+ * Kept permissive (empty) for backward compatibility with legacy queries.
+ */
+if (!defined('_PS_MYSQL_SESSION_SQL_MODE_')) {
+    define('_PS_MYSQL_SESSION_SQL_MODE_', '');
+}
+
 $currentDir = dirname(__FILE__);
 
 if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__PS_ROOT_DIR_'))) {
