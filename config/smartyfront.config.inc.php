@@ -24,6 +24,14 @@ if (_PS_PARENT_THEME_DIR_ !== '') {
 $module_resources['modules'] = _PS_MODULE_DIR_;
 $smarty->registerResource('module', new SmartyResourceModule($module_resources));
 
+// The `module` resource looks in the current theme first, so a theme template overriding a module
+// template cannot use it to reach the file it overrides - it finds itself and Smarty recurses. This
+// resource resolves the same chain with the current theme dropped, which is what a template needs in
+// order to `{extends}` the version it is overriding rather than replace it outright.
+$parent_module_resources = $module_resources;
+unset($parent_module_resources['theme']);
+$smarty->registerResource('parent_module', new SmartyResourceModule($parent_module_resources));
+
 $parent_resources = array();
 // @phpstan-ignore notIdentical.alwaysTrue
 if (_PS_PARENT_THEME_DIR_ !== '') {
