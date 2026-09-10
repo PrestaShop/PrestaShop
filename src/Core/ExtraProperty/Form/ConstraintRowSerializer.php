@@ -12,8 +12,8 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Form;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintGrammar;
 
 /**
- * Turns the definition form's constraint rows back into the DSL string the constraint mapper
- * parses — the mirror image of ConstraintRowPresenter, which splits a DSL string into rows.
+ * Turns the definition form's constraint rows back into the DSL string the constraint parser
+ * reads — the mirror image of ConstraintRowPresenter, which splits a DSL string into rows.
  *
  * A row's options tail is re-emitted VERBATIM inside the token's delimiters — parenthesis shape
  * for regular constraints ("Length(min: 2, max: 64)"), bracket shape for composites ("All[ Url ]",
@@ -24,7 +24,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintG
  *
  * Rows with an empty name are skipped: an added-then-abandoned builder row must not produce a
  * token. No name/options check happens here — the row form type validates each serialized token
- * through the mapper before the data handler runs.
+ * through the parser before the data handler runs.
  */
 class ConstraintRowSerializer
 {

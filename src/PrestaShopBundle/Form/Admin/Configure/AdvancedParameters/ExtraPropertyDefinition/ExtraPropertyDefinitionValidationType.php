@@ -69,7 +69,7 @@ class ExtraPropertyDefinitionValidationType extends TranslatorAwareType
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         // Inlined by the form theme as a JSON block so the constraint builder UI knows each
-        // whitelisted constraint's options without AJAX.
+        // allowlisted constraint's options without AJAX.
         $view->vars['extra_property_constraint_catalog'] = $this->constraintCatalog->getCatalog();
     }
 

@@ -22,10 +22,10 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
  * shows it as-is when it can't — either way nothing is lost. The FIRST top-level All[...] token is
  * exploded into per_language rows (the builder's "Applied to each language's value" zone) and folds
  * back into a single All[...] line on serialization; any further All[...] tokens stay opaque
- * set-level rows. Names are NOT checked against the mapper's whitelist here — a module-attached
- * constraint outside the whitelist still presents as a row (the read-only view renders it; on the
+ * set-level rows. Names are NOT checked against the grammar's allowlist here — a module-attached
+ * constraint outside the allowlist still presents as a row (the read-only view renders it; on the
  * editable form the row form type validates names on submit). A token without the Name/Name(...)/
- * Name[...] shape cannot be represented as a row and is skipped; the mapper never renders such a
+ * Name[...] shape cannot be represented as a row and is skipped; the renderer never emits such a
  * token, so this only drops hand-edited database values.
  *
  * Every row carries 'composite_options' even when it is empty, which is only ever filled for a
@@ -92,8 +92,8 @@ class ConstraintRowPresenter
      */
     private static function appendTokenRow(array &$rows, string $token, string $perLanguage): void
     {
-        // The mapper owns the grammar: it splits the token with the same quote and delimiter rules
-        // the parser applies, so the builder never drifts from what the server will accept.
+        // The parser owns the tokenizer: it splits the token with the same quote and delimiter rules
+        // it applies when reading a definition, so the builder never drifts from what the server accepts.
         $parts = ExtraPropertyConstraintParser::splitToken($token);
         if (null === $parts) {
             // Any other shape is unrepresentable without the raw edition — dropped (see class docblock).

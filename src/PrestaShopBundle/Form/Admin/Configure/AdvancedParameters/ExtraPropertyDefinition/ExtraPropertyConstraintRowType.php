@@ -28,7 +28,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  * "min: 2, max: 64" or "'generic_name'"); the page JS renders typed inputs over it when it can and
  * shows it as-is when it can't, so the row stays lossless either way. per_language flags the rows
  * living in the "Applied to each language's value" zone — they fold into one All[...] line on
- * serialization. The row validates its own token through the exact mapper the data handler runs
+ * serialization. The row validates its own token through the exact parser the command runs
  * later, so an unknown name or a bad argument surfaces on the offending row.
  */
 class ExtraPropertyConstraintRowType extends TranslatorAwareType
@@ -57,7 +57,7 @@ class ExtraPropertyConstraintRowType extends TranslatorAwareType
     }
 
     /**
-     * Validates the row's DSL token with the exact mapper the data handler runs later, so a row
+     * Validates the row's DSL token with the exact parser the command runs later, so a row
      * accepted here is guaranteed to be accepted downstream. An abandoned row (no name, no
      * options) is skipped; options without a name get a dedicated message instead of silently
      * serializing to nothing.
