@@ -1,6 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s extra-property-definition
-@restore-extra-property-definition-before-feature
-@remove-extra-tables-after-feature
+@reset-extra-properties-before-feature
+@reset-extra-properties-after-feature
 @restore-shops-before-feature
 @restore-shops-after-feature
 @clear-cache-before-feature

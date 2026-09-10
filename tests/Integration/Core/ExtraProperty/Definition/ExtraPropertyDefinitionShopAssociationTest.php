@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ExtraPropertyDefinitionFilters;
 use Shop;
 use ShopGroup;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Resources\Resetter\ExtraPropertyResetter;
 use Tests\Resources\Resetter\ShopResetter;
 
 /**
@@ -155,25 +156,16 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
 
     public static function tearDownAfterClass(): void
     {
-        foreach (self::definitions() as $definition) {
-            self::$registry->unregister($definition, true);
-        }
-        // Commands of this test may have created core-owned definitions.
-        Db::getInstance()->execute(sprintf(
-            "DELETE FROM `%sextra_property_definition` WHERE `property_name` LIKE 'sa_%%' OR `property_name` LIKE 'zzcmd_%%'",
-            _DB_PREFIX_
-        ));
-        Db::getInstance()->execute(sprintf(
-            'DELETE FROM `%sextra_property_definition_shop`',
-            _DB_PREFIX_
-        ));
+        // Registry rows (the fixtures and whatever the commands created), storage tables and the
+        // definition cache all go back to the dump in one call.
+        ExtraPropertyResetter::resetExtraProperties();
         Db::getInstance()->execute(sprintf(
             "DELETE FROM `%smodule` WHERE `name` IN ('%s', '%s')",
             _DB_PREFIX_,
             self::MODULE,
             self::ORPHAN_MODULE
         ));
-        // ShopResetter restores every *_shop table (module_shop and extra_property_definition_shop included).
+        // ShopResetter restores every *_shop table (module_shop included).
         ShopResetter::resetShops();
 
         parent::tearDownAfterClass();

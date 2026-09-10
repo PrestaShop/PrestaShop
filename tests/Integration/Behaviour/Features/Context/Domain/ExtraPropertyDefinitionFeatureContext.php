@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
-use Tests\Resources\DatabaseDump;
+use Tests\Resources\Resetter\ExtraPropertyResetter;
 
 /**
  * Covers the BO extra property definition registry management: AddExtraPropertyDefinitionCommand,
@@ -46,22 +46,23 @@ use Tests\Resources\DatabaseDump;
 class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @BeforeFeature @restore-extra-property-definition-before-feature
+     * @BeforeFeature @reset-extra-properties-before-feature
      */
-    public static function restoreExtraPropertyDefinitionTable(): void
+    public static function resetExtraPropertiesBeforeFeature(): void
     {
-        DatabaseDump::restoreTables(['extra_property_definition']);
+        ExtraPropertyResetter::resetExtraProperties();
     }
 
     /**
-     * All extra tables must be removed because they mess with the restore tables functions,
-     * since they are scanned but have no associated table dump.
+     * Most scenarios register definitions they never delete: reset the registry (rows, storage
+     * tables, cached definitions) so nothing leaks into whatever runs next on the same database —
+     * the PHPUnit integration suite reads the registry live.
      *
-     * @AfterFeature @remove-extra-tables-after-feature
+     * @AfterFeature @reset-extra-properties-after-feature
      */
-    public static function removeExtraTablesAfterFeature(): void
+    public static function resetExtraPropertiesAfterFeature(): void
     {
-        DatabaseDump::removeExtraTables();
+        ExtraPropertyResetter::resetExtraProperties();
     }
 
     /**

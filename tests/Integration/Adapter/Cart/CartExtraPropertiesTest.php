@@ -23,6 +23,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Resources\DatabaseDump;
+use Tests\Resources\Resetter\ExtraPropertyResetter;
 
 /**
  * Extra properties on the CART entity (#41424), end to end:
@@ -56,9 +57,8 @@ class CartExtraPropertiesTest extends KernelTestCase
 
     public static function tearDownAfterClass(): void
     {
-        self::$registry->unregister(self::cartDefinition(), true);
-        DatabaseDump::restoreTables(['cart', 'extra_property_definition']);
-        DatabaseDump::removeExtraTables();
+        ExtraPropertyResetter::resetExtraProperties();
+        DatabaseDump::restoreTables(['cart']);
 
         parent::tearDownAfterClass();
     }
