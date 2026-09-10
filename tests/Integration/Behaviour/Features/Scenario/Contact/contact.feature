@@ -38,3 +38,29 @@ Feature: Contact
       | description               | test12345           |
       | shop_id_association       | 1                   |
 
+  Scenario: Delete a single contact
+    When I add new contact "contact_to_delete" with the following details:
+      | title                     | Contact to delete   |
+      | email_address             | test@prestashop.com |
+      | is_message_saving_enabled | true                |
+      | description               | test delete         |
+      | shop_id_association       | 1                   |
+    And I delete contact "contact_to_delete"
+    Then contact "contact_to_delete" should not exist
+
+  Scenario: Bulk delete multiple contacts
+    When I add new contact "bulk_contact_1" with the following details:
+      | title                     | Bulk 1              |
+      | email_address             | test@prestashop.com |
+      | is_message_saving_enabled | true                |
+      | description               | delete bulk 1       |
+      | shop_id_association       | 1                   |
+    And I add new contact "bulk_contact_2" with the following details:
+      | title                     | Bulk 2              |
+      | email_address             | test@prestashop.com |
+      | is_message_saving_enabled | true                |
+      | description               | delete bulk 2       |
+      | shop_id_association       | 1                   |
+    And I bulk delete contacts "bulk_contact_1, bulk_contact_2"
+    Then contact "bulk_contact_1" should not exist
+    And contact "bulk_contact_2" should not exist
