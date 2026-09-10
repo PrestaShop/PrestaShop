@@ -1031,7 +1031,7 @@ class DispatcherCore
      * @param array $params
      * @param bool $force_routes
      * @param string $anchor Optional anchor to add at the end of this url
-     * @param null $id_shop
+     * @param int|null $id_shop Defaults to the shop in context
      *
      * @return string
      *
@@ -1090,7 +1090,12 @@ class DispatcherCore
 
             foreach ($params as $key => $value) {
                 if (!isset($routeDefinition['keywords'][$key])) {
-                    $add_param[$key] = $value;
+                    // A customised rule may deliberately drop a keyword the default route still
+                    // declares (removing {id} from the schema, for instance). Such a parameter is
+                    // consumed by the route, not an extra one, so it must not reach the query string.
+                    if (!isset($this->default_routes[$routeName]['keywords'][$key])) {
+                        $add_param[$key] = $value;
+                    }
                 } else {
                     if ($params[$key]) {
                         $parameter = $params[$key];
@@ -1117,7 +1122,9 @@ class DispatcherCore
             // Build a classic url index.php?controller=foo&...
             $add_params = [];
             foreach ($params as $key => $value) {
-                if (!isset($routeDefinition['keywords'][$key])) {
+                if (!isset($routeDefinition['keywords'][$key])
+                    && !isset($this->default_routes[$routeName]['keywords'][$key])
+                ) {
                     $add_params[$key] = $value;
                 }
             }
