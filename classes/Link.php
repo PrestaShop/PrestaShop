@@ -175,43 +175,56 @@ class LinkCore
         if (empty($idProductAttribute)) {
             $idProductAttribute = null;
         }
-        $params['id_product_attribute'] = $idProductAttribute;
+
+        // Only pass the combination parameter when the active product route uses it
+        if ($dispatcher->hasKeyword('product_rule', $idLang, 'id_product_attribute', $idShop)) {
+            $params['id_product_attribute'] = $idProductAttribute;
+        }
+
         if (!$alias) {
             $product = $this->getProductObject($product, $idLang, $idShop);
         }
         $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite') : $alias;
 
+        // Only pass the ean13 parameter when the active route uses it
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'ean13', $idShop)) {
             if (!$ean13) {
                 $product = $this->getProductObject($product, $idLang, $idShop);
             }
             $params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
         }
+
+        // Only pass the meta title parameter when the active route uses it
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'meta_title', $idShop)) {
             $product = $this->getProductObject($product, $idLang, $idShop);
             $params['meta_title'] = Tools::str2url($product->getFieldByLang('meta_title'));
         }
 
+        // Only pass the manufacturer parameter when the active route uses it
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'manufacturer', $idShop)) {
             $product = $this->getProductObject($product, $idLang, $idShop);
             $params['manufacturer'] = Tools::str2url($product->isFullyLoaded ? $product->manufacturer_name : Manufacturer::getNameById($product->id_manufacturer));
         }
 
+        // Only pass the supplier parameter when the active route uses it
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'supplier', $idShop)) {
             $product = $this->getProductObject($product, $idLang, $idShop);
             $params['supplier'] = Tools::str2url($product->isFullyLoaded ? $product->supplier_name : Supplier::getNameById($product->id_supplier));
         }
 
+        // Only pass the price parameter when the active route uses it
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'price', $idShop)) {
             $product = $this->getProductObject($product, $idLang, $idShop);
             $params['price'] = $product->isFullyLoaded ? $product->price : Product::getPriceStatic($product->id, false, null, 6, null, false, true, 1, false, null, null, null, $product->specificPrice);
         }
 
+        // Only pass the tags parameter when the active route uses it
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'tags', $idShop)) {
             $product = $this->getProductObject($product, $idLang, $idShop);
             $params['tags'] = Tools::str2url($product->getTags($idLang));
         }
 
+        // Only pass the category parameter when the active route uses it
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'category', $idShop)) {
             if (!$category) {
                 $product = $this->getProductObject($product, $idLang, $idShop);
@@ -219,11 +232,13 @@ class LinkCore
             $params['category'] = (!$category) ? $product->category : $category;
         }
 
+        // Only pass the reference parameter when the active route uses it
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'reference', $idShop)) {
             $product = $this->getProductObject($product, $idLang, $idShop);
             $params['reference'] = Tools::str2url($product->reference);
         }
 
+        // Only pass the categories parameter when the active route uses it
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'categories', $idShop)) {
             $product = $this->getProductObject($product, $idLang, $idShop);
             $params['category'] = (!$category) ? $product->category : $category;
@@ -455,10 +470,14 @@ class LinkCore
             $category = $this->getCategoryObject($category, $idLang);
         }
         $params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
+
+        // Only pass the meta title parameter when the active route uses it
         if ($dispatcher->hasKeyword($rule, $idLang, 'meta_title', $idShop)) {
             $category = $this->getCategoryObject($category, $idLang);
             $params['meta_title'] = Tools::str2url($category->getFieldByLang('meta_title'));
         }
+
+        // Only pass the categories parameter when the active route uses it
         if ($dispatcher->hasKeyword($rule, $idLang, 'categories', $idShop)) {
             $category = $this->getCategoryObject($category, $idLang);
             $cats = [];
@@ -502,6 +521,7 @@ class LinkCore
 
         $dispatcher = Dispatcher::getInstance();
         if (!is_object($cmsCategory)) {
+            // Use the supplied alias without loading the object when the active route does not need its meta title
             if ($alias !== null && !$dispatcher->hasKeyword('cms_category_rule', $idLang, 'meta_title', $idShop)) {
                 return $url . $dispatcher->createUrl('cms_category_rule', $idLang, ['id' => (int) $cmsCategory, 'rewrite' => (string) $alias], $this->allow, '', $idShop);
             }
@@ -519,6 +539,7 @@ class LinkCore
         $params['id'] = $cmsCategory->id;
         $params['rewrite'] = (!$alias) ? $cmsCategory->link_rewrite : $alias;
 
+        // Only pass the meta title parameter when the active route uses it
         if ($dispatcher->hasKeyword('cms_category_rule', $idLang, 'meta_title', $idShop)) {
             $params['meta_title'] = Tools::str2url($cmsCategory->meta_title);
         }
@@ -554,6 +575,7 @@ class LinkCore
 
         $dispatcher = Dispatcher::getInstance();
         if (!is_object($cms)) {
+            // Use the supplied alias without loading the object when the active route does not need its meta title
             if ($alias !== null && !$dispatcher->hasKeyword('cms_rule', $idLang, 'meta_title', $idShop)) {
                 return $url . $dispatcher->createUrl('cms_rule', $idLang, ['id' => (int) $cms, 'rewrite' => (string) $alias], $this->allow, '', $idShop);
             }
@@ -565,6 +587,7 @@ class LinkCore
         $params['id'] = $cms->id;
         $params['rewrite'] = (!$alias) ? (is_array($cms->link_rewrite) ? $cms->link_rewrite[(int) $idLang] : $cms->link_rewrite) : $alias;
 
+        // Only pass the meta title parameter when the active route uses it
         if ($dispatcher->hasKeyword('cms_rule', $idLang, 'meta_title', $idShop)) {
             $params['meta_title'] = is_array($cms->meta_title) ? Tools::str2url($cms->meta_title[(int) $idLang]) : Tools::str2url($cms->meta_title);
         }
@@ -598,6 +621,7 @@ class LinkCore
 
         $dispatcher = Dispatcher::getInstance();
         if (!is_object($supplier)) {
+            // Use the supplied alias without loading the object when the active route does not need its meta title
             if ($alias !== null
                 && !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_title', $idShop)
             ) {
@@ -618,6 +642,7 @@ class LinkCore
         $params['id'] = $supplier->id;
         $params['rewrite'] = (!$alias) ? $supplier->link_rewrite : $alias;
 
+        // Only pass the meta title parameter when the active route uses it
         if ($dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_title', $idShop)) {
             $params['meta_title'] = Tools::str2url($supplier->meta_title);
         }
@@ -651,6 +676,7 @@ class LinkCore
 
         $dispatcher = Dispatcher::getInstance();
         if (!is_object($manufacturer)) {
+            // Use the supplied alias without loading the object when the active route does not need its meta title
             if ($alias !== null && !$dispatcher->hasKeyword('manufacturer_rule', $idLang, 'meta_title', $idShop)) {
                 return $url . $dispatcher->createUrl('manufacturer_rule', $idLang, ['id' => (int) $manufacturer, 'rewrite' => (string) $alias], $this->allow, '', $idShop);
             }
@@ -662,6 +688,7 @@ class LinkCore
         $params['id'] = $manufacturer->id;
         $params['rewrite'] = (!$alias) ? $manufacturer->link_rewrite : $alias;
 
+        // Only pass the meta title parameter when the active route uses it
         if ($dispatcher->hasKeyword('manufacturer_rule', $idLang, 'meta_title', $idShop)) {
             $params['meta_title'] = Tools::str2url($manufacturer->meta_title);
         }
@@ -1269,6 +1296,7 @@ class LinkCore
 
         $dispatcher = Dispatcher::getInstance();
         if (!is_object($attachment)) {
+            // Use the supplied alias without loading the object when the active route does not need its meta title
             if ($alias !== null && !$dispatcher->hasKeyword('attachment_rule', $idLang, 'meta_title', $idShop)) {
                 return $url . $dispatcher->createUrl('attachment_rule', $idLang, ['id' => (int) $attachment, 'rewrite' => (string) $alias], $this->allow, '', $idShop);
             }
