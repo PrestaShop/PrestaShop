@@ -5,6 +5,7 @@
 
 import Chart from 'chart.js/auto';
 import type {Plugin} from 'chart.js';
+import mountDashboardCharts from './dashboardCharts';
 
 /**
  * PrestaShop chart palette, mirroring the modern PrestaShop branding as published on
@@ -158,3 +159,6 @@ export type PsChart = typeof psChart;
 const globalScope = window as unknown as {Chart: typeof Chart; psChart: PsChart};
 globalScope.Chart = Chart;
 globalScope.psChart = psChart;
+
+// Contract documented in dashboardCharts.ts.
+document.addEventListener('DOMContentLoaded', () => mountDashboardCharts(Chart));
