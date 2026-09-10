@@ -36,7 +36,7 @@ class CreateShipment
         $this->productId = new ProductId($productId);
         $this->quantity = $quantity;
         if ($combinationId > 0) {
-            $this->productCombinationId = new CombinationId($quantity);
+            $this->productCombinationId = new CombinationId($combinationId);
         }
     }
 

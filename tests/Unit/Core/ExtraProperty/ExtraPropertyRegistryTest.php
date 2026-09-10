@@ -10,7 +10,9 @@ namespace Tests\Unit\Core\ExtraProperty;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionWriterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistry;
@@ -97,6 +99,12 @@ class ExtraPropertyRegistryTest extends TestCase
             'enum to varchar fallback switch' => [
                 self::definition(type: ExtraPropertyType::CHOICE, enumValues: ['a']),
                 self::definition(type: ExtraPropertyType::CHOICE, enumValues: null),
+            ],
+            // A different explicit tableName would silently relocate storage to another
+            // {table}_extra, orphaning every stored value.
+            'physical table relocation' => [
+                self::definition(),
+                self::definition(tableName: 'supplier'),
             ],
         ];
     }
@@ -200,6 +208,35 @@ class ExtraPropertyRegistryTest extends TestCase
         $registry = $this->buildRegistry(existing: null, expectSave: true);
 
         $this->assertSame(1, $registry->register($this->definition(formOptions: ['attr' => ['class' => 'custom-class']])));
+    }
+
+    public function testUnknownShopIdsInTheAssociationAreRejectedBeforeAnyWrite(): void
+    {
+        // The association rows carry no FK: an unknown id would be stored silently and make
+        // the definition invisible on every real shop, so it is refused before any DDL
+        // (expectSave: false also asserts ensureExtraTableAndColumn() is never reached).
+        $registry = $this->buildRegistry(existing: null, expectSave: false);
+
+        $this->expectException(ExtraPropertyRegistryException::class);
+        $this->expectExceptionCode(ExtraPropertyRegistryException::UNKNOWN_SHOP);
+        $this->expectExceptionMessage('unknown shop id(s) 99');
+
+        $registry->register($this->definition(associatedShopIds: [2, 99]));
+    }
+
+    public function testExistingShopIdsInTheAssociationAreAccepted(): void
+    {
+        $registry = $this->buildRegistry(existing: null, expectSave: true);
+
+        $this->assertSame(1, $registry->register($this->definition(associatedShopIds: [1, 4])));
+    }
+
+    public function testTheEmptyClearMarkerAssociationNeedsNoShopCheck(): void
+    {
+        // [] means "revert to the fallback": it names no shop id, so nothing to validate.
+        $registry = $this->buildRegistry(existing: null, expectSave: true);
+
+        $this->assertSame(1, $registry->register($this->definition(associatedShopIds: [])));
     }
 
     public function testDdlRunsBeforeSave(): void
@@ -453,6 +490,12 @@ class ExtraPropertyRegistryTest extends TestCase
     ): ExtraPropertyRegistry {
         $readRepository = $this->createMock(ExtraPropertyDefinitionRepositoryInterface::class);
         $readRepository->method('findDefinitionByModuleAndField')->willReturn($existing);
+        // The cross-entity storage guard scans the whole registry on new registrations.
+        $readRepository->method('getAllDefinitions')->willReturn(new ExtraPropertyDefinitionCollection(array_filter([$existing])));
+
+        // The stubbed installation has shops 1 to 4 (shop association existence check).
+        $shopRepository = $this->createMock(ShopRepository::class);
+        $shopRepository->method('getAllShopIds')->willReturn([1, 2, 3, 4]);
 
         return new ExtraPropertyRegistry(
             $readRepository,
@@ -466,6 +509,7 @@ class ExtraPropertyRegistryTest extends TestCase
                     ->getFormFactory(),
                 new ExtraPropertyFormTypeMap()
             ),
+            $shopRepository,
         );
     }
 
@@ -505,6 +549,8 @@ class ExtraPropertyRegistryTest extends TestCase
         int|float|string|bool|null $defaultValue = null,
         ?string $formType = null,
         ?array $formOptions = null,
+        ?array $associatedShopIds = null,
+        ?string $tableName = null,
     ): ExtraPropertyDefinition {
         return new ExtraPropertyDefinition(
             entityName: 'product',
@@ -518,6 +564,8 @@ class ExtraPropertyRegistryTest extends TestCase
             size: $size,
             formType: $formType,
             formOptions: $formOptions,
+            associatedShopIds: $associatedShopIds,
+            tableName: $tableName,
         );
     }
 }

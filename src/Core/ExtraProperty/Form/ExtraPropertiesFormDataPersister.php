@@ -11,7 +11,7 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Form;
 
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
 use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
 use Symfony\Component\Form\FormInterface;
@@ -31,6 +31,7 @@ class ExtraPropertiesFormDataPersister
         protected readonly ExtraPropertyDefinitionRepositoryInterface $repository,
         protected readonly ExtraPropertyWriterInterface $writer,
         protected readonly ShopContext $shopContext,
+        protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
     ) {
     }
 
@@ -40,12 +41,17 @@ class ExtraPropertiesFormDataPersister
             return;
         }
 
-        $definitions = $this->repository->getAllDefinitions()->filterByForm($entityName);
+        // Same shop filter as ExtraPropertiesFormBuilderModifier: fields that were not
+        // built are not read back (the writer would skip them anyway — defense in depth).
+        $definitions = $this->definitionShopFilter->filterByShopConstraint(
+            $this->repository->getAllDefinitions()->filterByForm($entityName),
+            $this->shopContext->getShopConstraint()
+        );
         if ($definitions->isEmpty()) {
             return;
         }
 
-        $storageEntityName = $definitions->first()->getEntityName();
+        $storageEntityName = $definitions->first()->getTableName();
 
         $valuesByModule = [];
 
@@ -69,8 +75,9 @@ class ExtraPropertiesFormDataPersister
                 continue;
             }
 
+            // No cast here: the writer itself is the single castForDb() choke point, so
+            // form submissions get exactly the same typing as ObjectModel and API writes.
             $submittedValue = $targetForm->get($formFieldName)->getData();
-            $submittedValue = ExtraPropertyValueCaster::castForDb($definition, $submittedValue);
 
             $valuesByModule[$definition->getNormalizedModuleKey()][$definition->getPropertyName()] = $submittedValue;
         }

@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\SwitchShipmentCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\CommandHandler\SwitchShipmentCarrierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\CannotSaveShipmentException;
@@ -26,6 +28,7 @@ class SwitchShipmentCarrierHandler implements SwitchShipmentCarrierHandlerInterf
 {
     public function __construct(
         private readonly ShipmentRepository $shipmentRepository,
+        private readonly CarrierRepository $carrierRepository,
         private TranslatorInterface $translator,
     ) {
     }
@@ -34,12 +37,16 @@ class SwitchShipmentCarrierHandler implements SwitchShipmentCarrierHandlerInterf
      * {@inheritdoc}
      *
      * @throws ShipmentNotFoundException
+     * @throws CarrierNotFoundException
      * @throws CannotSaveShipmentException
      */
     public function handle(SwitchShipmentCarrierCommand $command): void
     {
         $shipmentId = $command->getShipmentId()->getValue();
         $carrierId = $command->getCarrierId()->getValue();
+
+        // There is no foreign key on the shipment table, an unknown carrier id would silently be stored
+        $this->carrierRepository->get($command->getCarrierId());
 
         try {
             /** @var Shipment|null $shipment */

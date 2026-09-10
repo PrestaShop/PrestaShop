@@ -12,9 +12,10 @@ services:
   # over it and adds the representative rule.
   PrestaShop\PrestaShop\Core\Shop\ShopListResolver:
     arguments:
-      $connection: '@doctrine.dbal.default_connection'
-      $prefix: '%database_prefix%'
       $shopRepository: '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
+      # Explicit reference to the concrete adapter: the interface alias
+      # (core/configuration.yml) is not loaded in the FO legacy container.
+      $configuration: '@PrestaShop\PrestaShop\Adapter\Configuration'
 
   PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface:
     alias: 'PrestaShop\PrestaShop\Core\Shop\ShopListResolver'

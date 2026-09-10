@@ -32,7 +32,10 @@ interface ExtraPropertyDefinitionRepositoryInterface
      *   - filterByEntity($entityName) — replaces the former getDefinitionCollection($entityName)
      *   - filterByForm($formId)       — replaces getDefinitionCollectionByFormId($formId)
      *   - filterByGrid($gridId)       — replaces getDefinitionCollectionByGridId($gridId)
-     *   - filterByScope(), filterByApi(), filterForFrontOffice(), etc.
+     *   - filterByScope(), filterByApi(), filterForFrontOffice(), filterByShops(), etc.
+     *
+     * For shop-context filtering from a ShopConstraint, use
+     * ExtraPropertyDefinitionShopFilterInterface::filterByShopConstraint().
      */
     public function getAllDefinitions(): ExtraPropertyDefinitionCollection;
 

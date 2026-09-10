@@ -1,0 +1,19 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% set shopNames = record[column.options.field] ?? [] %}
+
+{% if shopNames is empty %}
+  <span class="grid-associated-shops grid-associated-shops--all text-muted">{{ column.options.empty_label }}</span>
+{% else %}
+  {% set allShops = shopNames|join(', ') %}
+  <span class="grid-associated-shops" title="{{ allShops }}">
+    {%- if column.options.max_displayed_characters > 0 and allShops|length > column.options.max_displayed_characters -%}
+      {{ allShops|slice(0, column.options.max_displayed_characters) }}&mldr;
+    {%- else -%}
+      {{ allShops }}
+    {%- endif -%}
+  </span>
+{% endif %}

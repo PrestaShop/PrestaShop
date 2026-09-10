@@ -34,7 +34,7 @@ class EditableExtraPropertyDefinition
      * @param ExtraPropertySqlIndex $sqlIndex
      * @param bool $nullable
      * @param int|null $size Varchar size for string fields
-     * @param string|null $defaultValue
+     * @param int|float|string|bool|null $defaultValue
      * @param list<string>|null $enumValues Allowed values for CHOICE type
      * @param bool $displayFront
      * @param bool $required
@@ -48,6 +48,7 @@ class EditableExtraPropertyDefinition
      * @param list<string>|null $associatedForms
      * @param list<string>|null $associatedGrids
      * @param list<string>|null $associatedApis
+     * @param list<int>|null $associatedShopIds Explicit shop restriction; null = fallback behavior (core-owned: all shops, module-owned: the module's enabled shops)
      */
     public function __construct(
         protected readonly int $id,
@@ -59,7 +60,7 @@ class EditableExtraPropertyDefinition
         protected readonly ExtraPropertySqlIndex $sqlIndex,
         protected readonly bool $nullable,
         protected readonly ?int $size,
-        protected readonly ?string $defaultValue,
+        protected readonly int|float|string|bool|null $defaultValue,
         protected readonly ?array $enumValues,
         protected readonly bool $displayFront,
         protected readonly bool $required,
@@ -73,6 +74,7 @@ class EditableExtraPropertyDefinition
         protected readonly ?array $associatedForms,
         protected readonly ?array $associatedGrids,
         protected readonly ?array $associatedApis,
+        protected readonly ?array $associatedShopIds = null,
     ) {
     }
 
@@ -124,7 +126,7 @@ class EditableExtraPropertyDefinition
         return $this->size;
     }
 
-    public function getDefaultValue(): ?string
+    public function getDefaultValue(): int|float|string|bool|null
     {
         return $this->defaultValue;
     }
@@ -213,7 +215,19 @@ class EditableExtraPropertyDefinition
     }
 
     /**
-     * Returns true when the definition is owned by a module and cannot be modified via the BO UI.
+     * Explicit shop restriction; null = fallback behavior (core-owned: all shops,
+     * module-owned: the module's enabled shops).
+     *
+     * @return list<int>|null
+     */
+    public function getAssociatedShopIds(): ?array
+    {
+        return $this->associatedShopIds;
+    }
+
+    /**
+     * Returns true when the definition is owned by a module and cannot be modified via the BO UI
+     * — except for its shop association, the single field the Update command accepts on it.
      */
     public function isModuleOwned(): bool
     {

@@ -153,6 +153,7 @@ class ShopCore extends ObjectModel
             'country' => ['type' => 'shop'],
             'currency' => ['type' => 'shop'],
             'employee' => ['type' => 'shop'],
+            'extra_property_definition' => ['type' => 'shop'],
             'hook_module' => ['type' => 'fk_shop'],
             'hook_module_exceptions' => ['type' => 'fk_shop', 'primary' => 'id_hook_module_exceptions'],
             'image' => ['type' => 'shop'],
@@ -639,6 +640,20 @@ class ShopCore extends ObjectModel
         }
 
         return true;
+    }
+
+    /**
+     * Remove a table registered through addTableAssociation().
+     *
+     * Counterpart of addTableAssociation() for callers that drop the table they
+     * registered (a module uninstall, a test object model): a stale entry pointing at a
+     * missing table makes the association loops of delete() and copyShopData() fail.
+     *
+     * @param string $table_name
+     */
+    public static function removeTableAssociation($table_name)
+    {
+        unset(Shop::$asso_tables[$table_name]);
     }
 
     /**

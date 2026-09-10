@@ -25,6 +25,8 @@ Feature: Retrieving shipment for orders
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
     And I reference order "bo_order1" delivery address as "US"
+    And there is a product "mug_best" with name "Mug The best is yet to come"
+    And there is a product "mug_today" with name "Mug Today is a good day"
 
   Scenario: Retrieve shipmets for existing order
     Given the order "bo_order1" should have the following shipments:
@@ -34,6 +36,15 @@ Feature: Retrieving shipment for orders
       | product_name                | quantity |
       | Mug The best is yet to come |        1 |
       | Mug Today is a good day     |        2 |
+
+  Scenario: Retrieve shipment for editing
+    Given the order "bo_order1" should have the following shipments:
+      | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
+    Then the shipment "shipment1" of order "bo_order1" should be editable with the following products:
+      | product   | quantity |
+      | mug_best  |        1 |
+      | mug_today |        2 |
 
   Scenario: Switch shipment carrier
     Given the order "bo_order1" should have the following shipments:
@@ -75,6 +86,38 @@ Feature: Retrieving shipment for orders
       | shipment     | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
       | shipment1    | default_carrier |                 | US      |                    7.0 |                   7.42 |
       | new_shipment | default_carrier |                 | US      |                    7.0 |                   7.42 |
+
+  Scenario: List the available shipments of a product of the order
+    Given the order "bo_order1" should have the following shipments:
+      | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
+    Then the available shipments of order "bo_order1" for product "mug_best" should be:
+      | shipment  | name                  |
+      | shipment1 | Shipment {shipmentId} |
+
+  Scenario: List the available shipments of a product that is not in the order
+    Given the order "bo_order1" should have the following shipments:
+      | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
+    And I add product "product_not_ordered" with following information:
+      | name[en-US] | Product not ordered |
+      | type        | standard            |
+    When I try to list the available shipments of order "bo_order1" for product "product_not_ordered"
+    Then I should get an error that the product was not found in the order
+
+  Scenario: Edit a shipment with a carrier that does not exist
+    Given the order "bo_order1" should have the following shipments:
+      | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
+    When I try to edit the shipment "shipment1" with a carrier that does not exist
+    Then I should get an error that the carrier was not found
+
+  Scenario: Switch shipment carrier to a carrier that does not exist
+    Given the order "bo_order1" should have the following shipments:
+      | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
+    When I try to switch the carrier for shipment "shipment1" to a carrier that does not exist
+    Then I should get an error that the carrier was not found
 
   Scenario: Retrieve shipment for viewing
     Given the order "bo_order1" should have the following shipments:

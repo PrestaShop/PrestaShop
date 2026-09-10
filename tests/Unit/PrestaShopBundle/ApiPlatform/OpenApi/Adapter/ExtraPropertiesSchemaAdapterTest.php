@@ -48,6 +48,35 @@ class ExtraPropertiesSchemaAdapterTest extends TestCase
     }
 
     /**
+     * A declared defaultValue is part of the contract (a missing value row reads back as
+     * that value): it must be emitted as the field's OpenAPI "default", with its scalar
+     * type — and decoded for JSON, whose runtime read shape is the decoded structure.
+     * A definition without a default must not emit the key.
+     */
+    public function testDeclaredDefaultsAreEmittedWithTheirType(): void
+    {
+        $definitions = new ExtraPropertyDefinitionCollection([
+            $this->definition('demoextrafield', 'flag', type: ExtraPropertyType::BOOL, defaultValue: false),
+            $this->definition('demoextrafield', 'score', type: ExtraPropertyType::INT, defaultValue: 0),
+            $this->definition('demoextrafield', 'ratio', type: ExtraPropertyType::FLOAT, defaultValue: 1.5),
+            $this->definition('demoextrafield', 'label', defaultValue: 'fallback'),
+            $this->definition('demoextrafield', 'meta', type: ExtraPropertyType::JSON, defaultValue: '{"tier":"bronze"}'),
+            $this->definition('demoextrafield', 'no_default'),
+        ]);
+
+        $properties = $this->buildSchema($definitions)['properties'][$definitions->first()->getNormalizedModuleKey()]['properties'];
+
+        self::assertFalse($properties['flag']['default']);
+        self::assertSame(0, $properties['score']['default']);
+        self::assertSame(1.5, $properties['ratio']['default']);
+        self::assertSame('fallback', $properties['label']['default']);
+        // JSON defaults are stored as strings but the API returns decoded structures:
+        // the documented default matches the runtime shape.
+        self::assertSame(['tier' => 'bronze'], $properties['meta']['default']);
+        self::assertArrayNotHasKey('default', $properties['no_default']);
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private function buildSchema(ExtraPropertyDefinitionCollection $definitions): array
@@ -67,14 +96,17 @@ class ExtraPropertiesSchemaAdapterTest extends TestCase
         string $propertyName,
         ExtraPropertyScope $scope = ExtraPropertyScope::COMMON,
         bool $required = false,
+        ExtraPropertyType $type = ExtraPropertyType::STRING,
+        int|float|string|bool|null $defaultValue = null,
     ): ExtraPropertyDefinition {
         return new ExtraPropertyDefinition(
             entityName: 'product',
             propertyName: $propertyName,
-            type: ExtraPropertyType::STRING,
+            type: $type,
             scope: $scope,
             moduleName: $moduleName,
             required: $required,
+            defaultValue: $defaultValue,
         );
     }
 }

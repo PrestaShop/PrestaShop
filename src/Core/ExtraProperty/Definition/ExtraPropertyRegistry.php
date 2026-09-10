@@ -9,10 +9,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManagerInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -38,6 +40,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         // Required: the registry is only defined in Symfony kernels (services/extra_property/backend.yml),
         // where the form factory is always available — never in the FO legacy container.
         protected readonly FormOptionsValidator $formOptionsValidator,
+        protected readonly ShopRepository $shopRepository,
     ) {
     }
 
@@ -52,6 +55,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
      * - destructive schema changes on already-registered definitions are refused (see hasStorageChanges())
      * - formType/formOptions must build a working form field (see FormOptionsValidator) — being the single
      *   write choke point, this covers every path: BO form, CQRS commands and Module::registerExtraProperty()
+     * - every shop id in the shop association must exist (the association rows carry no foreign key)
      *
      * Non-destructive schema changes (defaultValue change, STRING size increase, nullable
      * relaxing, CHOICE enum value addition) are applied to the live column by the schema
@@ -74,7 +78,8 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
      *
      * @throws ExtraPropertyRegistryException the failure reason is carried by the exception code:
      *                                        SCOPE_CONFLICT, DESTRUCTIVE_SCHEMA_CHANGE, INVALID_FORM_OPTIONS,
-     *                                        BASE_TABLE_NOT_FOUND, SCHEMA_FAILURE or PERSISTENCE_FAILURE
+     *                                        UNKNOWN_SHOP, BASE_TABLE_NOT_FOUND, SCHEMA_FAILURE or
+     *                                        PERSISTENCE_FAILURE
      */
     public function register(ExtraPropertyDefinition $definition): int
     {
@@ -107,10 +112,36 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::SCOPE_CONFLICT);
         }
 
+        // 1b. Refuse a different entity name resolving to the SAME storage (table + column):
+        // the DB unique key on (entity_name, module_name, property_name) cannot see across
+        // entity spellings, but two definitions writing the same physical column would
+        // corrupt each other (an explicit tableName pointing at another entity's table is
+        // the reachable case — canonical entity names already converge the known spellings).
+        if (null === $existingDefinition) {
+            foreach ($this->readRepository->getAllDefinitions()->filterByTableName($definition->getTableName()) as $sibling) {
+                if ($sibling->getStorageColumnName() === $definition->getStorageColumnName()
+                    && $sibling->getEntityName() !== $entityName
+                ) {
+                    $message = sprintf(
+                        'Cannot register extra property %s.%s: the definition %s.%s already stores its values in the same column ("%s" on the "%s" table). Use one entity name consistently.',
+                        $entityName,
+                        $propertyName,
+                        $sibling->getEntityName(),
+                        $sibling->getPropertyName(),
+                        $definition->getStorageColumnName(),
+                        $definition->getTableName()
+                    );
+                    $this->logger->error($message);
+
+                    throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::STORAGE_CONFLICT);
+                }
+            }
+        }
+
         // 2. Refuse destructive schema changes on an existing definition.
         if (null !== $existingDefinition && $this->hasStorageChanges($definition, $existingDefinition)) {
             $message = sprintf(
-                'Refusing destructive schema change (type/scope change, size decrease, nullable tightening, enum value removal) for existing extra property %s.%s.',
+                'Refusing destructive schema change (type/scope/table change, size decrease, nullable tightening, enum value removal) for existing extra property %s.%s.',
                 $entityName,
                 $propertyName
             );
@@ -136,7 +167,56 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::INVALID_FORM_OPTIONS, errors: $formOptionErrors);
         }
 
-        // 4. Ensure the *_extra table and column exist and match the definition: the schema
+        // 3b. Refuse a defaultValue that does not fit the declared type, BEFORE any DDL: a
+        //     malformed DATE default would otherwise be silently erased on hydration, a
+        //     non-numeric INT/FLOAT default silently coerced, and a CHOICE default outside
+        //     the enum would produce a DDL DEFAULT the column itself refuses.
+        if (null !== $definition->getDefaultValue() && !$this->isDefaultValueCompatible($definition)) {
+            $message = sprintf(
+                'Cannot register extra property %s.%s: default value "%s" is not a valid %s value%s.',
+                $entityName,
+                $propertyName,
+                is_bool($definition->getDefaultValue()) ? var_export($definition->getDefaultValue(), true) : (string) $definition->getDefaultValue(),
+                $definition->getType()->value,
+                ExtraPropertyType::CHOICE === $definition->getType() && null !== $definition->getEnumValues()
+                    ? ' (allowed: ' . implode(', ', $definition->getEnumValues()) . ')'
+                    : ''
+            );
+            $this->logger->error($message);
+
+            throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::INVALID_DEFAULT_VALUE);
+        }
+
+        // 4. Refuse unknown shop ids in the association, BEFORE any DDL or row write: the
+        //    association rows carry no foreign key, so an unknown id (e.g. a module calling
+        //    registerExtraProperty() with a wrong shop id) would be stored silently and make
+        //    the definition invisible on every real shop. Being the single write choke point,
+        //    this covers the BO form, the CQRS commands and Module::registerExtraProperty().
+        //    null (untouched) and [] (revert to fallback) carry no id to check.
+        //    Deliberately validated against EVERY existing shop (getAllShopIds(), no
+        //    active/deleted filter): an inactive shop is a legitimate restriction target —
+        //    the association is configuration and must survive deactivation/reactivation
+        //    cycles. A definition restricted to inactive shops only is simply dormant:
+        //    group/all-shops resolution covers usable shops only (ShopListResolver), so it
+        //    surfaces nowhere at runtime, while the registry grid's all-shops management
+        //    view still lists it for editing.
+        $associatedShopIds = $definition->getAssociatedShopIds();
+        if (!empty($associatedShopIds)) {
+            $unknownShopIds = array_diff($associatedShopIds, $this->shopRepository->getAllShopIds());
+            if ([] !== $unknownShopIds) {
+                $message = sprintf(
+                    'Cannot register extra property %s.%s: unknown shop id(s) %s in the shop association.',
+                    $entityName,
+                    $propertyName,
+                    implode(', ', $unknownShopIds)
+                );
+                $this->logger->error($message);
+
+                throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::UNKNOWN_SHOP);
+            }
+        }
+
+        // 5. Ensure the *_extra table and column exist and match the definition: the schema
         //    manager also syncs remaining non-destructive changes on the live column.
         //    DDL runs BEFORE the row write (see the method docblock): a DDL failure here
         //    persists nothing on a creation and leaves the previous row intact on an update.
@@ -156,7 +236,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::SCHEMA_FAILURE, $exception);
         }
 
-        // 5. Insert or update the registry row.
+        // 6. Insert or update the registry row.
         $savedId = $this->writeRepository->save($definition);
 
         if (false === $savedId) {
@@ -250,9 +330,28 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
     }
 
     /**
+     * Whether the declared defaultValue can actually serve as a default of the declared
+     * type — the SAME isValueCompatible() rule-set the validator applies to every regular
+     * write, so what is refused as a value is refused as a default and vice versa (only
+     * literal datetimes for DATE, no 'tomorrow'; numeric strings for INT/FLOAT; enum
+     * membership for CHOICE; valid JSON…). Only the failure handling differs: here it is
+     * the INVALID_DEFAULT_VALUE registration error.
+     */
+    protected function isDefaultValueCompatible(ExtraPropertyDefinition $definition): bool
+    {
+        return ExtraPropertyValidator::isValueCompatible(
+            $definition->getType(),
+            $definition->getDefaultValue(),
+            $definition->getEnumValues()
+        );
+    }
+
+    /**
      * Returns true when $incoming would change the column schema in a DESTRUCTIVE way,
      * i.e. a change that risks data already stored in the extra column:
      *   - type or scope change (data conversion / storage table move)
+     *   - physical table change (a different explicit tableName): the definition would
+     *     silently relocate to another {table}_extra, orphaning every stored value
      *   - STRING size decrease — truncation risk; effective lengths compared (null ≡ 255)
      *   - nullable tightening (NULL → NOT NULL): existing NULL rows would break the ALTER
      *   - CHOICE enum value removal, or switching between ENUM and the VARCHAR fallback:
@@ -269,6 +368,10 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
     protected function hasStorageChanges(ExtraPropertyDefinition $incoming, ExtraPropertyDefinition $existing): bool
     {
         if ($incoming->getType() !== $existing->getType() || $incoming->getScope() !== $existing->getScope()) {
+            return true;
+        }
+
+        if ($incoming->getTableName() !== $existing->getTableName()) {
             return true;
         }
 

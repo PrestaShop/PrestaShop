@@ -33,7 +33,7 @@ class AddExtraPropertyDefinitionCommand
      * @param bool $required Whether the field is marked required in the BO form and in the Admin API (OpenAPI) schema
      * @param bool $nullable Whether the storage column allows NULL
      * @param int|null $size Varchar size for string type (null → 255)
-     * @param string|null $defaultValue SQL DEFAULT clause value
+     * @param int|float|string|bool|null $defaultValue SQL DEFAULT clause value, carried with its scalar type (an Admin API JSON payload legitimately sends int/float/bool)
      * @param list<string>|null $enumValues Allowed values for CHOICE type
      * @param string|null $labelWording i18n wording for the BO label (required when associated_forms or associated_grids)
      * @param string|null $labelDomain Translation domain for the label
@@ -45,6 +45,7 @@ class AddExtraPropertyDefinitionCommand
      * @param list<string>|null $associatedForms Form placement entries (e.g. "product:reference:after")
      * @param list<string>|null $associatedGrids Grid placement entries (e.g. "product:reference:after")
      * @param list<string>|null $associatedApis Admin API placement entries (e.g. "/products:GET")
+     * @param list<int>|null $associatedShopIds Shops the definition is restricted to; null/empty = available on all shops
      */
     public function __construct(
         protected readonly string $entityName,
@@ -56,7 +57,7 @@ class AddExtraPropertyDefinitionCommand
         protected readonly bool $required = false,
         protected readonly bool $nullable = true,
         protected readonly ?int $size = null,
-        protected readonly ?string $defaultValue = null,
+        protected readonly int|float|string|bool|null $defaultValue = null,
         protected readonly ?array $enumValues = null,
         protected readonly ?string $labelWording = null,
         protected readonly ?string $labelDomain = null,
@@ -68,6 +69,7 @@ class AddExtraPropertyDefinitionCommand
         protected readonly ?array $associatedForms = null,
         protected readonly ?array $associatedGrids = null,
         protected readonly ?array $associatedApis = null,
+        protected readonly ?array $associatedShopIds = null,
     ) {
     }
 
@@ -116,7 +118,7 @@ class AddExtraPropertyDefinitionCommand
         return $this->size;
     }
 
-    public function getDefaultValue(): ?string
+    public function getDefaultValue(): int|float|string|bool|null
     {
         return $this->defaultValue;
     }
@@ -192,5 +194,13 @@ class AddExtraPropertyDefinitionCommand
     public function getAssociatedApis(): ?array
     {
         return $this->associatedApis;
+    }
+
+    /**
+     * @return list<int>|null
+     */
+    public function getAssociatedShopIds(): ?array
+    {
+        return $this->associatedShopIds;
     }
 }

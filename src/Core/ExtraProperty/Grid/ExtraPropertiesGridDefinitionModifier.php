@@ -8,8 +8,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Grid;
 
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
@@ -31,6 +33,8 @@ class ExtraPropertiesGridDefinitionModifier
     public function __construct(
         protected readonly ExtraPropertyDefinitionRepositoryInterface $repository,
         protected readonly TranslatorInterface $translator,
+        protected readonly ShopContext $shopContext,
+        protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
     ) {
     }
 
@@ -40,7 +44,12 @@ class ExtraPropertiesGridDefinitionModifier
      */
     public function apply(GridDefinition $definition, string $gridId): void
     {
-        $definitions = $this->repository->getAllDefinitions()->filterByGrid($gridId);
+        // MUST filter exactly like ExtraPropertiesGridQueryBuilderModifier (same service,
+        // same constraint source): a column without its SELECT — or the reverse — breaks the grid.
+        $definitions = $this->definitionShopFilter->filterByShopConstraint(
+            $this->repository->getAllDefinitions()->filterByGrid($gridId),
+            $this->shopContext->getShopConstraint()
+        );
         if ($definitions->isEmpty()) {
             return;
         }

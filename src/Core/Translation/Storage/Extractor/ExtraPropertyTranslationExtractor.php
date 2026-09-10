@@ -38,9 +38,10 @@ class ExtraPropertyTranslationExtractor
 
     /**
      * Returns every registered label/description wording, keyed under its declared translation
-     * domain. The catalogue is NOT filtered by context: each catalogue provider narrows it to
-     * its own domains. Domain names contain separating dots, like the wordings extracted from
-     * source code.
+     * domain. The catalogue is NOT filtered by context — neither by domain (each catalogue
+     * provider narrows it to its own domains) nor by shop association (wordings must stay
+     * translatable even for definitions restricted to other shops). Domain names contain
+     * separating dots, like the wordings extracted from source code.
      *
      * @param string $locale The locale used for the message catalogue. Note that wordings won't be translated in this locale.
      */

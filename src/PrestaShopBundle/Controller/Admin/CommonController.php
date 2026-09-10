@@ -84,10 +84,12 @@ class CommonController extends PrestaShopAdminController
      * This endpoint is designed for ToggleColumn async usage in BO grids.
      * It performs an UPSERT and toggles the value in SQL without doing a preliminary SELECT.
      *
-     * Security: the legacy controller name is derived server-side from the entityName URL path
-     * parameter (non-forgeable), NOT from any client-supplied value. This prevents privilege
-     * escalation where an authenticated admin could bypass per-entity permission checks by
-     * forging a _legacy_controller value they hold rights on.
+     * Security: the permission subject is the registry-hydrated definition's controller name
+     * (ExtraPropertyDefinition::getControllerName()), NOT any client-supplied value. This
+     * prevents privilege escalation where an authenticated admin could bypass per-entity
+     * permission checks by forging a _legacy_controller value they hold rights on. An unknown
+     * definition returns the same 403 as a denied one, so the endpoint never discloses whether
+     * a definition exists.
      *
      * The shop context of shop-scoped properties is resolved from ShopContext (not from the
      * route): the writer receives the current ShopConstraint and toggles the matching row.
@@ -104,16 +106,6 @@ class CommonController extends PrestaShopAdminController
         string $moduleName,
         string $propertyName,
     ): JsonResponse {
-        // Derive the legacy controller from the entityName URL path param (trusted, non-forgeable).
-        // Never trust a _legacy_controller value coming from the request body/query string.
-        $legacyController = self::legacyControllerFromEntityName($entityName);
-        if (!$this->isGranted('update', $legacyController)) {
-            return new JsonResponse([
-                'status' => false,
-                'message' => 'Access denied.',
-            ], 403);
-        }
-
         /** @var ExtraPropertyDefinitionRepositoryInterface $repository */
         $repository = $this->container->get(ExtraPropertyDefinitionRepositoryInterface::class);
 
@@ -121,12 +113,17 @@ class CommonController extends PrestaShopAdminController
         $resolvedModuleName = ExtraPropertyDefinition::CORE_MODULE_KEY === $moduleName ? null : $moduleName;
 
         // (entity, module, property) is unique across scopes — the definition carries its own scope.
+        // The permission subject comes from the registry-hydrated definition (its stored
+        // override, or the map/convention deduction) — never from any client-supplied
+        // _legacy_controller value, which would allow privilege escalation. An unknown
+        // definition gets the same 403 as a denied one: the response never discloses
+        // whether a definition exists.
         $matched = $repository->findDefinitionByModuleAndField($entityName, $resolvedModuleName, $propertyName);
-        if (null === $matched) {
+        if (null === $matched || !$this->isGranted('update', $matched->getControllerName())) {
             return new JsonResponse([
                 'status' => false,
-                'message' => $this->trans('Field not found.', [], 'Admin.Notifications.Error'),
-            ], 404);
+                'message' => 'Access denied.',
+            ], 403);
         }
 
         /** @var ExtraPropertyWriterInterface $writer */
@@ -396,39 +393,6 @@ class CommonController extends PrestaShopAdminController
             $redirectRoute,
             $redirectQueryParamsToKeep
         );
-    }
-
-    /**
-     * Derives the BO legacy controller name for a given entity name.
-     *
-     * Applies standard English pluralization rules to match PS controller naming conventions:
-     * - consonant + 'y' → 'ies'  (category → AdminCategories)
-     * - 's', 'x', 'z', 'sh', 'ch' → append 'es'  (address → AdminAddresses)
-     * - everything else → append 's'  (product → AdminProducts)
-     *
-     * Used server-side to verify employee permissions without trusting any
-     * client-supplied value (e.g. for the extra-property toggle endpoint).
-     */
-    private static function legacyControllerFromEntityName(string $entityName): string
-    {
-        $length = strlen($entityName);
-        if ($length > 1) {
-            $last = strtolower($entityName[$length - 1]);
-            $prev = strtolower($entityName[$length - 2]);
-
-            // consonant + 'y' → 'ies'
-            if ('y' === $last && !in_array($prev, ['a', 'e', 'i', 'o', 'u'], true)) {
-                return 'Admin' . ucfirst(substr($entityName, 0, -1)) . 'ies';
-            }
-
-            // 's', 'x', 'z', 'sh', 'ch' → 'es'
-            if ('s' === $last || 'x' === $last || 'z' === $last
-                || ('h' === $last && in_array($prev, ['s', 'c'], true))) {
-                return 'Admin' . ucfirst($entityName) . 'es';
-            }
-        }
-
-        return 'Admin' . ucfirst($entityName) . 's';
     }
 
     /**

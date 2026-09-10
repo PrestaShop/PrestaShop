@@ -216,7 +216,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
         if ($packStockType === PackStockType::STOCK_TYPE_PACK_ONLY) {
             try {
                 $stockAvailable = $this->stockAvailableRepository->getForProduct($productId, $shopId);
-                $packQuantity = $stockAvailable->quantity;
+                $packQuantity = (int) $stockAvailable->quantity;
             } catch (StockAvailableNotFoundException) {
                 $packQuantity = 0;
             }
@@ -240,7 +240,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
                         $packedItemStockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId($packedItemCombinationId), $shopId);
                     }
 
-                    $packedItemStock = $packedItemStockAvailable->quantity;
+                    $packedItemStock = (int) $packedItemStockAvailable->quantity;
                 } catch (StockAvailableNotFoundException) {
                     $packedItemStock = 0;
                 }

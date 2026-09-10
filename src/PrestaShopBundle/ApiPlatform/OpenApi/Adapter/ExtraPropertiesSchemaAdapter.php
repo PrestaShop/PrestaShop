@@ -34,6 +34,10 @@ use Throwable;
  *
  * Registered with a very low priority so it runs AFTER SchemaSynchronizer (which strips properties that are not
  * declared on the resource class) — otherwise the synthetic `extraProperties` property would be removed again.
+ *
+ * Deliberately NOT filtered by shop association: the OpenAPI document describes the API's full
+ * capability, not one shop context — a definition restricted to some shops is still documented;
+ * at runtime the subscriber/validator simply ignore it outside its shops.
  */
 class ExtraPropertiesSchemaAdapter implements OpenApiSchemaAdapterInterface
 {
@@ -156,7 +160,7 @@ class ExtraPropertiesSchemaAdapter implements OpenApiSchemaAdapterInterface
             ];
         }
 
-        return match ($definition->getType()) {
+        $schema = match ($definition->getType()) {
             ExtraPropertyType::INT => ['type' => 'integer'],
             ExtraPropertyType::BOOL => ['type' => 'boolean'],
             ExtraPropertyType::FLOAT => ['type' => 'number'],
@@ -165,6 +169,18 @@ class ExtraPropertiesSchemaAdapter implements OpenApiSchemaAdapterInterface
             ExtraPropertyType::CHOICE => $this->buildChoiceSchema($definition),
             default => ['type' => 'string'],
         };
+
+        // The declared default is part of the contract — a missing value row reads back
+        // as this value (see ExtraPropertyReader). JSON defaults are stored as strings:
+        // decode so the documented default matches the object shape the API returns.
+        $defaultValue = $definition->getDefaultValue();
+        if (null !== $defaultValue) {
+            $schema['default'] = ExtraPropertyType::JSON === $definition->getType() && is_string($defaultValue)
+                ? json_decode($defaultValue, true)
+                : $defaultValue;
+        }
+
+        return $schema;
     }
 
     /**

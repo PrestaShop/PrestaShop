@@ -13,23 +13,19 @@ use Cart;
 use CartRule;
 use Configuration;
 use Context;
-use Currency;
 use DateTime;
 use Db;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use Product;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\TestCase\SymfonyIntegrationTestCase;
 
-class CartVoucherSummaryTest extends KernelTestCase
+class CartVoucherSummaryTest extends SymfonyIntegrationTestCase
 {
     protected function setUp(): void
     {
+        // Mocks the context (currency, customer, kernel…) and restores it after the class;
+        // the database is restored before the class, cleaning up the fixtures created here.
         parent::setUp();
-        self::bootKernel();
-        // ContainerFinder (used by Cart::getCartRules) reads the global $kernel.
-        global $kernel;
-        $kernel = self::$kernel;
-        Context::getContext()->currency = Currency::getDefaultCurrency();
         Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', true);
         Configuration::updateValue('PS_TAX_ADDRESS_TYPE', 'id_address_invoice');
         // Pre-existing (auto-applied) cart rules would pollute the cart summary.
@@ -64,7 +60,7 @@ class CartVoucherSummaryTest extends KernelTestCase
         $product->save();
 
         $cart = new Cart(null, $lang);
-        $cart->id_currency = Currency::getDefaultCurrencyId();
+        $cart->id_currency = (int) Context::getContext()->currency->id;
         $cart->id_address_invoice = (int) $address->id;
         $cart->save();
         Context::getContext()->cart = $cart;
