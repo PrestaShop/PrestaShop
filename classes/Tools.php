@@ -4075,7 +4075,7 @@ exit;
     public static function purifyHTML($html, $uri_unescape = null, $allow_style = false)
     {
         static $use_html_purifier = null;
-        static $purifier = null;
+        static $purifiers = [];
 
         if (defined('PS_INSTALLATION_IN_PROGRESS') || !Configuration::configurationIsLoaded()) {
             return $html;
@@ -4086,7 +4086,15 @@ exit;
         }
 
         if ($use_html_purifier) {
-            if ($purifier === null) {
+            // WHY: building the purifier is expensive so the instance is cached, but
+            // $uri_unescape and $allow_style change the configuration it is built from.
+            // Caching a single instance served the first caller's configuration to every
+            // later one, which both ignored those arguments and leaked a relaxed
+            // definition to callers that had asked for the strict one. Key the cache on
+            // the arguments that shape the configuration instead.
+            $purifierCacheKey = md5(serialize([$uri_unescape, $allow_style]));
+
+            if (!isset($purifiers[$purifierCacheKey])) {
                 $config = HTMLPurifier_Config::createDefault();
                 $cacheDir = _PS_CACHE_DIR_ . 'purifier';
                 // Make sure the cache directory exists, as the purifier won't create it automatically
@@ -4137,10 +4145,10 @@ exit;
                     ]);
                 }
 
-                $purifier = new HTMLPurifier($config);
+                $purifiers[$purifierCacheKey] = new HTMLPurifier($config);
             }
 
-            $html = $purifier->purify($html);
+            $html = $purifiers[$purifierCacheKey]->purify($html);
         }
 
         return $html;
