@@ -5216,12 +5216,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "3b884a3d08a8cb46d083ad7c3b43f405dd60bdb7"
+                "reference": "010692dab6c4acdedb18ea6124b70f0d6faf90c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/3b884a3d08a8cb46d083ad7c3b43f405dd60bdb7",
-                "reference": "3b884a3d08a8cb46d083ad7c3b43f405dd60bdb7",
+                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/010692dab6c4acdedb18ea6124b70f0d6faf90c9",
+                "reference": "010692dab6c4acdedb18ea6124b70f0d6faf90c9",
                 "shasum": ""
             },
             "require": {
@@ -5307,7 +5307,7 @@
             "support": {
                 "source": "https://github.com/jolelievre/ps_apiresources/tree/41542-extra-property-definition-endpoints"
             },
-            "time": "2026-09-09T23:37:39+00:00"
+            "time": "2026-09-10T10:17:17+00:00"
         },
         {
             "name": "prestashop/ps_banner",
