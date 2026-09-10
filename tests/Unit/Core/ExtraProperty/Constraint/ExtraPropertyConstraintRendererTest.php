@@ -540,7 +540,7 @@ final class ExtraPropertyConstraintRendererTest extends TestCase
             Constraint::class
         ));
 
-        ExtraPropertyConstraintRenderer::render([new Assert\NotBlank(), 'Email']);
+        ExtraPropertyConstraintRenderer::render([new Assert\NotBlank(), 'Email']); // @phpstan-ignore-line intentionally invalid: a non-Constraint item to trigger the refusal
     }
 
     public function testAKeyedArrayOfConstraintsIsRefused(): void
