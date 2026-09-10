@@ -8,6 +8,7 @@ namespace PrestaShopBundle\EventListener\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 use PrestaShopBundle\Entity\Employee\Employee;
@@ -18,6 +19,7 @@ use PrestaShopBundle\Security\Admin\TokenAttributes;
 use PrestaShopBundle\Service\Routing\Router;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +29,7 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
@@ -35,9 +38,9 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * This subscriber watches the various authentication event and saves or removes the persisted
- * Employee sessions accordingly. It is also in charge of maintaining some backward compatibility
- * with the legacy cookie.
+ * This subscriber watches the various authentication events and saves or removes persisted
+ * Employee sessions accordingly. It also handles successful login logging and maintains
+ * backward compatibility with the legacy cookie.
  */
 class EmployeeSessionSubscriber implements EventSubscriberInterface
 {
@@ -55,6 +58,8 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         private readonly ConfigurationInterface $configuration,
         private readonly TranslatorInterface $translator,
         private readonly EmployeeContextBuilder $employeeContextBuilder,
+        #[Autowire(service: 'prestashop.adapter.legacy.logger')]
+        private readonly LegacyLogger $legacyLogger,
     ) {
     }
 
@@ -111,6 +116,28 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
 
         // Update the cookie after successful login
         $this->updateLegacyCookie($event->getRequest(), true);
+
+        if (!($event->getAuthenticator() instanceof FormLoginAuthenticator)) {
+            return;
+        }
+
+        $employee = $event->getUser();
+
+        if (!$employee instanceof Employee) {
+            return;
+        }
+
+        $this->legacyLogger->info(
+            $this->translator->trans(
+                'Back office connection from %ip%',
+                ['%ip%' => $event->getRequest()->getClientIp()],
+                'Admin.Advparameters.Feature'
+            ),
+            [
+                'allow_duplicate' => true,
+                'id_employee' => $employee->getId(),
+            ]
+        );
     }
 
     public function onKernelRequest(RequestEvent $event): void
