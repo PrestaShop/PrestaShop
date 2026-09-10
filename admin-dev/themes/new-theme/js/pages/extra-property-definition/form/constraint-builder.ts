@@ -160,7 +160,31 @@ export default class ConstraintBuilder {
     };
 
     if (entry.composite) {
-      this.rawTailInput(editor, optionsInput, 'option-nested');
+      // A composite carries two tails: its own options ("Collection(allowExtraFields: true)[…]")
+      // and its nested constraints. They live in separate inputs, so they get separate editors.
+      const compositeOptionsInput = row.querySelector<HTMLInputElement>(
+        ExtraPropertyFormMap.rowField('composite_options'),
+      );
+
+      if (compositeOptionsInput) {
+        const ownOptionsEditor = document.createElement('span');
+        editor.appendChild(ownOptionsEditor);
+
+        const lexedOwnOptions = parseTail(compositeOptionsInput.value);
+
+        if (lexedOwnOptions === null) {
+          this.rawTailInput(ownOptionsEditor, compositeOptionsInput, 'option-raw');
+        } else {
+          this.renderOptionFields(ownOptionsEditor, entry, [...lexedOwnOptions], (tailOptions) => {
+            compositeOptionsInput.value = serializeTail(tailOptions);
+            compositeOptionsInput.dispatchEvent(new Event('input', {bubbles: true}));
+          });
+        }
+      }
+
+      const nestedEditor = document.createElement('span');
+      editor.appendChild(nestedEditor);
+      this.rawTailInput(nestedEditor, optionsInput, 'option-nested');
 
       return;
     }

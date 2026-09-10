@@ -4,8 +4,8 @@
  */
 
 /**
- * Static curation of the constraint whitelist into the "Add a constraint" menu groups. Names
- * missing from this table (e.g. added later to the whitelist) fall back to the "Other" group —
+ * Static curation of the constraint allowlist into the "Add a constraint" menu groups. Names
+ * missing from this table (e.g. added later to the allowlist) fall back to the "Other" group —
  * grouping is a display concern only, the catalog payload stays the source of truth for which
  * names exist.
  */

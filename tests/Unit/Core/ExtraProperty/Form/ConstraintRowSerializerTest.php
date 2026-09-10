@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\ExtraProperty\Form;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowPresenter;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowSerializer;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
  * The constraint row serializer is the data handler's inverse of ConstraintRowPresenter: verbatim
@@ -116,20 +116,20 @@ class ConstraintRowSerializerTest extends TestCase
     }
 
     /**
-     * Present -> serialize -> mapper round trip: the serialized DSL parses into the same
-     * constraints as the stored render. Byte equality is not required (toNames renders composites
-     * multi-line, the fold emits one line) — semantic equality through fromNames is.
+     * Present -> serialize -> parser round trip: the serialized DSL parses into the same
+     * constraints as the stored render. Byte equality is not required (the renderer emits
+     * composites multi-line, the fold emits one line) — semantic equality through parse() is.
      *
      * @dataProvider roundTripProvider
      */
-    public function testMapperRoundTrip(string $stored): void
+    public function testParserRoundTrip(string $stored): void
     {
         $serialized = ConstraintRowSerializer::serialize(ConstraintRowPresenter::rows($stored));
 
         $this->assertNotNull($serialized);
         $this->assertEquals(
-            ExtraPropertyConstraintMapper::fromNames($stored),
-            ExtraPropertyConstraintMapper::fromNames($serialized)
+            ExtraPropertyConstraintParser::parse($stored)->getConstraints(),
+            ExtraPropertyConstraintParser::parse($serialized)->getConstraints()
         );
     }
 
@@ -140,7 +140,7 @@ class ConstraintRowSerializerTest extends TestCase
     {
         yield 'flat set' => ["NotBlank\nLength(min: 2, max: 64)\nTypedRegex('generic_name')"];
         yield 'per-language fold' => ["DefaultLanguage('Warranty note')\nAll[ Length(max: 64), Url ]"];
-        yield 'multi-line toNames render' => ["All[\n  Url,\n  NotBlank\n]"];
+        yield 'multi-line renderer output' => ["All[\n  Url,\n  NotBlank\n]"];
         yield 'nested composite' => ['All[ Collection[name: NotBlank, code: Length(max: 5)] ]'];
         yield 'quoted commas and escapes' => ["Choice(['a,b', 'c\\'d'])"];
     }

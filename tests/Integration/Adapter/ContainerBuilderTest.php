@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Module\Banner\Repository\FrontRepository;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShopBundle\Exception\ServiceContainerException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -30,6 +31,34 @@ class ContainerBuilderTest extends TestCase
         $entityManager = $container->get('doctrine.orm.entity_manager');
         $this->assertNotNull($entityManager);
         $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
+    }
+
+    /**
+     * The extra property repository has mandatory collaborators (a logger and the constraint
+     * encoder). The hand-built front-office container imports the extra_property services but not
+     * adapter/services.yml, so it is the one that would break first if either were unresolvable.
+     */
+    public function testFrontContainerBuildsTheExtraPropertyRepository(): void
+    {
+        $container = ContainerBuilder::getContainer('front', true);
+
+        $repository = $container->get(ExtraPropertyDefinitionRepositoryInterface::class);
+
+        $this->assertInstanceOf(ExtraPropertyDefinitionRepositoryInterface::class, $repository);
+    }
+
+    /**
+     * The legacy webservice (webservice/dispatcher.php) runs on its own hand-built container, built from
+     * config/services/webservice/*.yml: everything the front container needs from config/services/common.yml
+     * (the logger the extra property repository depends on, for instance) must resolve there too.
+     */
+    public function testWebserviceContainerBuildsTheExtraPropertyRepository(): void
+    {
+        $container = ContainerBuilder::getContainer('webservice', true);
+
+        $repository = $container->get(ExtraPropertyDefinitionRepositoryInterface::class);
+
+        $this->assertInstanceOf(ExtraPropertyDefinitionRepositoryInterface::class, $repository);
     }
 
     public function testContainerLoadsModuleAutoload()

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyConstraintException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
@@ -20,14 +22,25 @@ use Symfony\Component\Validator\Constraint;
  * Structural fields (entity_name, property_name, type, scope, size, sql_index) are immutable
  * once created. Only label, display, and validation metadata can be changed afterwards via
  * UpdateExtraPropertyDefinitionCommand.
+ *
+ * Inputs are scalars so the command can be built from any serialized payload (Admin API): the
+ * validation constraints are given in the extra property constraint DSL and parsed here, so
+ * getConstraints() already hands Symfony Constraint objects to the handler.
  */
 class AddExtraPropertyDefinitionCommand
 {
     /**
+     * Parsed from the DSL input (see getConstraints()).
+     *
+     * @var list<Constraint>|null
+     */
+    protected readonly ?array $constraints;
+
+    /**
      * @param string $entityName Entity table name (e.g. 'product', 'customer')
      * @param string $propertyName Property identifier (e.g. 'internal_code')
-     * @param ExtraPropertyType $fieldType
-     * @param ExtraPropertyScope $fieldScope
+     * @param ExtraPropertyType $type
+     * @param ExtraPropertyScope $scope
      * @param ExtraPropertySqlIndex $sqlIndex
      * @param bool $displayFront Whether to include in FO presenters
      * @param bool $required Whether the field is marked required in the BO form and in the Admin API (OpenAPI) schema
@@ -39,19 +52,21 @@ class AddExtraPropertyDefinitionCommand
      * @param string|null $labelDomain Translation domain for the label
      * @param string|null $descriptionWording i18n wording for the BO description
      * @param string|null $descriptionDomain Translation domain for the description
-     * @param list<Constraint>|null $constraints Symfony validation constraints applied to each value before persistence
+     * @param string|null $constraints Validation constraints applied to each value before persistence, in the extra property constraint DSL (one per line or comma-separated, e.g. "NotBlank\nLength(min: 2, max: 64)"); null/empty = no validation
      * @param string|null $formType Symfony form type FQCN override
      * @param array<string, mixed>|null $formOptions Extra options for the Symfony form type
      * @param list<string>|null $associatedForms Form placement entries (e.g. "product:reference:after")
      * @param list<string>|null $associatedGrids Grid placement entries (e.g. "product:reference:after")
      * @param list<string>|null $associatedApis Admin API placement entries (e.g. "/products:GET")
      * @param list<int>|null $associatedShopIds Shops the definition is restricted to; null/empty = available on all shops
+     *
+     * @throws ExtraPropertyConstraintException when the constraints DSL cannot be parsed
      */
     public function __construct(
         protected readonly string $entityName,
         protected readonly string $propertyName,
-        protected readonly ExtraPropertyType $fieldType = ExtraPropertyType::STRING,
-        protected readonly ExtraPropertyScope $fieldScope = ExtraPropertyScope::COMMON,
+        protected readonly ExtraPropertyType $type = ExtraPropertyType::STRING,
+        protected readonly ExtraPropertyScope $scope = ExtraPropertyScope::COMMON,
         protected readonly ExtraPropertySqlIndex $sqlIndex = ExtraPropertySqlIndex::NONE,
         protected readonly bool $displayFront = false,
         protected readonly bool $required = false,
@@ -63,7 +78,7 @@ class AddExtraPropertyDefinitionCommand
         protected readonly ?string $labelDomain = null,
         protected readonly ?string $descriptionWording = null,
         protected readonly ?string $descriptionDomain = null,
-        protected readonly ?array $constraints = null,
+        ?string $constraints = null,
         protected readonly ?string $formType = null,
         protected readonly ?array $formOptions = null,
         protected readonly ?array $associatedForms = null,
@@ -71,6 +86,7 @@ class AddExtraPropertyDefinitionCommand
         protected readonly ?array $associatedApis = null,
         protected readonly ?array $associatedShopIds = null,
     ) {
+        $this->constraints = $this->parseConstraints($constraints);
     }
 
     public function getEntityName(): string
@@ -83,14 +99,14 @@ class AddExtraPropertyDefinitionCommand
         return $this->propertyName;
     }
 
-    public function getFieldType(): ExtraPropertyType
+    public function getType(): ExtraPropertyType
     {
-        return $this->fieldType;
+        return $this->type;
     }
 
-    public function getFieldScope(): ExtraPropertyScope
+    public function getScope(): ExtraPropertyScope
     {
-        return $this->fieldScope;
+        return $this->scope;
     }
 
     public function getSqlIndex(): ExtraPropertySqlIndex
@@ -152,11 +168,31 @@ class AddExtraPropertyDefinitionCommand
     }
 
     /**
+     * The constraints parsed from the DSL input; null = no validation.
+     *
      * @return list<Constraint>|null
      */
     public function getConstraints(): ?array
     {
         return $this->constraints;
+    }
+
+    /**
+     * @return list<Constraint>|null
+     *
+     * @throws ExtraPropertyConstraintException
+     */
+    private function parseConstraints(?string $constraints): ?array
+    {
+        $decoded = ExtraPropertyConstraintParser::parse($constraints);
+        if ($decoded->hasRejections()) {
+            throw new ExtraPropertyConstraintException(
+                sprintf('Invalid extra property constraints: %s', implode(' ', $decoded->getRejectionMessages())),
+                ExtraPropertyConstraintException::INVALID_CONSTRAINTS
+            );
+        }
+
+        return $decoded->getConstraints();
     }
 
     public function getFormType(): ?string

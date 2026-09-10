@@ -31,6 +31,7 @@ Accepted exceptions to the scalar-only input rule:
 - `ShopConstraint` — for multistore scoping
 - `DecimalNumber` — ALWAYS use instead of native `float` (which carries imprecision)
 - `DateTimeInterface` / `DateTimeImmutable` — for date/time values
+- string-backed enums (`BackedEnum`, e.g. `ExtraPropertyType`) — the Admin API serializer denormalizes them natively from their string value (`CQRSApiNormalizer` yields `BackedEnum` to Symfony's `BackedEnumNormalizer`) and documents them as OpenAPI `enum`s
 
 ### Commands
 

@@ -9,7 +9,6 @@ export default {
   emailFormGroup: '.js-email-form-group',
   modulesFormGroup: '.js-module-form-group',
   themesFormGroup: '.js-theme-form-group',
-  defaultThemeOption: '.js-default-theme',
   noThemeOption: '.js-no-theme',
   exportCoreType: '#form_core_selectors_core_type',
   exportCoreValues: '#form_core_selectors_selected_value',

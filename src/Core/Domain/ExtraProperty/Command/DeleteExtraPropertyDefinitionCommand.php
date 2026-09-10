@@ -27,8 +27,10 @@ class DeleteExtraPropertyDefinitionCommand
     /**
      * @param int $id
      * @param bool $dropColumn When true, the physical column in {entity}_extra table is also dropped
+     *                         (data loss). Defaults to keeping the column, like the bulk command
+     *                         and the BO plain delete action.
      */
-    public function __construct(int $id, protected readonly bool $dropColumn = true)
+    public function __construct(int $id, protected readonly bool $dropColumn = false)
     {
         $this->id = new ExtraPropertyDefinitionId($id);
     }

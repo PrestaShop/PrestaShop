@@ -93,8 +93,10 @@ final class UpdateExtraPropertyDefinitionHandler implements UpdateExtraPropertyD
         if (null !== $command->getDescriptionDomain()) {
             $overrides['descriptionDomain'] = $command->getDescriptionDomain() ?: null;
         }
+        // Null = setter never used; [] = explicit clear (no validation left), which the definition
+        // stores as null.
         if (null !== $command->getConstraints()) {
-            $overrides['constraints'] = $command->getConstraints();
+            $overrides['constraints'] = $command->getConstraints() ?: null;
         }
         if (null !== $command->getFormType()) {
             $overrides['formType'] = $command->getFormType() ?: null;

@@ -53,9 +53,9 @@ services:
       $formFactory: '@form.factory'
       $formTypeMap: '@PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap'
 
-  # Machine-readable description of the constraint whitelist, serialized into the definition
+  # Machine-readable description of the constraint allowlist, serialized into the definition
   # page so the Validation card UI can offer constraints with their configurable options.
-  PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCatalog: ~
+  PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyConstraintCatalog: ~
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormBuilderModifier:
     arguments:

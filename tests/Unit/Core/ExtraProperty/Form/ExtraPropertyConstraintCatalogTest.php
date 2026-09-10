@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\ExtraProperty\Validation;
+namespace Tests\Unit\Core\ExtraProperty\Form;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCatalog;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintGrammar;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyConstraintCatalog;
 
 class ExtraPropertyConstraintCatalogTest extends TestCase
 {
@@ -19,7 +19,7 @@ class ExtraPropertyConstraintCatalogTest extends TestCase
     {
         $catalog = (new ExtraPropertyConstraintCatalog())->getCatalog();
 
-        $this->assertSame(ExtraPropertyConstraintMapper::getAllowedNames(), array_keys($catalog));
+        $this->assertSame(ExtraPropertyConstraintGrammar::getAllowedNames(), array_keys($catalog));
         foreach ($catalog as $name => $entry) {
             $this->assertArrayHasKey('defaultOption', $entry, $name);
             $this->assertArrayHasKey('composite', $entry, $name);
