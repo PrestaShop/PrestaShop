@@ -182,7 +182,15 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             $definition->getFormOptions()
         );
         if ([] !== $formOptionErrors) {
-            $message = sprintf('Invalid extra property form options: %s', implode(' ', $formOptionErrors));
+            // The property is named like in every other refusal of this method: a module install
+            // registers many definitions in a row, and the stack trace alone does not tell which
+            // one the container refused.
+            $message = sprintf(
+                'Invalid extra property form options for %s.%s: %s',
+                $entityName,
+                $propertyName,
+                implode(' ', $formOptionErrors)
+            );
             $this->logger->error($message);
 
             throw new ExtraPropertyRegistryException($message, ExtraPropertyRegistryException::INVALID_FORM_OPTIONS, errors: $formOptionErrors);
