@@ -17,22 +17,11 @@
       <div class="card-body">
         <div class="form-wrapper">
           {% if not app.request.isSecure() %}
-            <div class="form-group row">
-              <label class="form-control-label ">
-                {{ 'Enable SSL'|trans({}, 'Admin.Shopparameters.Feature') }}
-              </label>
-              <div class="col-sm">
-                <div class="input-group">
-                  <div class="form-control-plaintext">
-                    <a class="d-block" href="{{ sslUri }}">
-                      {{ 'Please click here to check if your shop supports HTTPS.'|trans({}, 'Admin.Shopparameters.Feature') }}
-                    </a>
-                  </div>
-                </div>
-                <small class="form-text">
-                  {{ 'If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.'|trans({}, 'Admin.Shopparameters.Help') }}
-                </small>
-              </div>
+            <div class="alert alert-info" role="alert">
+              <p class="alert-text">
+                {{ 'The SSL setting below cannot be changed from this page while it is served over http://.'|trans({}, 'Admin.Shopparameters.Help') }}
+                <a href="{{ sslUri }}">{{ 'Open this page over HTTPS'|trans({}, 'Admin.Shopparameters.Feature') }}</a>
+              </p>
             </div>
           {% endif %}
           {{ form_widget(generalForm) }}
