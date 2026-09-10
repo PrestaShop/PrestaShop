@@ -497,6 +497,30 @@ final class ExtraPropertyConstraintParserTest extends TestCase
     }
 
     /**
+     * groups and payload are never carried by the format: refusing them at parse time surfaces the
+     * error on the offending token (BO row, command) instead of as a save-time registry failure.
+     *
+     * @dataProvider nonRenderableOptionProvider
+     */
+    public function testANonRenderableOptionIsRejected(string $raw, string $option, string $reason): void
+    {
+        $decoded = ExtraPropertyConstraintParser::parse($raw);
+
+        $this->assertNull($decoded->getConstraints());
+        $this->assertSingleRejection($decoded, 0, 1, sprintf('Option "%s" is not supported', $option));
+        $this->assertStringContainsString($reason, $decoded->getRejections()[0]['reason']);
+    }
+
+    /**
+     * @return iterable<string, array{string, string, string}>
+     */
+    public static function nonRenderableOptionProvider(): iterable
+    {
+        yield 'validation groups' => ["NotBlank(groups: ['custom'])", 'groups', 'only the default validation group applies'];
+        yield 'payload' => ["NotBlank(payload: 'x')", 'payload', 'carries no payload'];
+    }
+
+    /**
      * @dataProvider propertyPathOptionProvider
      */
     public function testAPropertyPathOptionIsRejected(string $raw, string $option): void

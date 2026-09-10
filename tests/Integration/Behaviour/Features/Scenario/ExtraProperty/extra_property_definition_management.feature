@@ -515,24 +515,23 @@ Feature: Extra property definition management
       | property_name | constraint_refused_by_parser                                                                    |
       | constraints   | All[All[All[All[All[All[All[All[All[All[All[All[All[All[All[All[All[All[ NotBlank ]]]]]]]]]]]]]]]]]] |
     Then I should get an error that the constraints are invalid
+    # Options the format never carries: only the default validation group applies, and there is no payload
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | NotBlank(groups: ['custom']) |
+    Then I should get an error that the constraints are invalid
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | NotBlank(payload: 'x')       |
+    Then I should get an error that the constraints are invalid
     And no extra property definition should exist for entity "product" and property "constraint_refused_by_parser"
 
   Scenario: Validation constraints that cannot be stored losslessly are refused by the registry
-    # These parse into valid Symfony constraints, but the persisted DSL could not carry them back
-    # identically: validation groups and payloads are never rendered, and a whole-number float
-    # renders as an integer. The registry refuses them before any storage column is created.
-    When I add an extra property definition "ep46" with following properties:
-      | entity_name   | product                        |
-      | property_name | constraint_refused_by_registry |
-      | type          | int                            |
-      | constraints   | NotBlank(groups: ['custom'])   |
-    Then I should get an error that the constraints cannot be stored
-    When I add an extra property definition "ep46" with following properties:
-      | entity_name   | product                        |
-      | property_name | constraint_refused_by_registry |
-      | type          | int                            |
-      | constraints   | NotBlank(payload: 'x')         |
-    Then I should get an error that the constraints cannot be stored
+    # This parses into a valid Symfony constraint, but the persisted DSL could not carry it back
+    # identically: a whole-number float renders as an integer. The registry refuses it before any
+    # storage column is created.
     When I add an extra property definition "ep46" with following properties:
       | entity_name   | product                        |
       | property_name | constraint_refused_by_registry |
@@ -555,6 +554,6 @@ Feature: Extra property definition management
       | constraints | NotBlank |
     When I edit extra property definition "ep47" with following properties:
       | constraints | NotBlank(groups: ['custom']) |
-    Then I should get an error that the constraints cannot be stored
+    Then I should get an error that the constraints are invalid
     And extra property definition "ep47" should have the following parameters:
       | constraints | NotBlank |

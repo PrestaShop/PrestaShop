@@ -240,8 +240,9 @@ class ExtraPropertyConstraintGrammar
 
     /**
      * Whether an option may appear in the DSL at all. groups and payload exist on every constraint
-     * but carry no meaning for an extra property; the renderer refuses non-default values instead of
-     * dropping them silently, and the BO builder never offers them.
+     * but carry no meaning for an extra property: the parser refuses them in a token, the renderer
+     * refuses non-default values on an object instead of dropping them silently, and the BO builder
+     * never offers them.
      */
     public static function isRenderableOption(string $option): bool
     {

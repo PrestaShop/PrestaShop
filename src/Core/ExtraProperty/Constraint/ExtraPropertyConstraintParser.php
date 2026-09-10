@@ -375,6 +375,18 @@ class ExtraPropertyConstraintParser
                     $token
                 ));
             }
+            // The format never carries these, so the renderer would refuse the constraint at save
+            // time anyway: refusing here surfaces the error on the offending token instead.
+            if (!ExtraPropertyConstraintGrammar::isRenderableOption($option)) {
+                throw new InvalidExtraPropertyConstraintException(sprintf(
+                    'Option "%s" is not supported in constraint "%s": %s.',
+                    $option,
+                    $token,
+                    'groups' === $option
+                        ? 'only the default validation group applies to an extra property constraint'
+                        : 'an extra property constraint carries no payload'
+                ));
+            }
         }
 
         return $options;
