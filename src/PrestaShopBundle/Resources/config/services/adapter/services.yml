@@ -67,9 +67,6 @@ services:
   prestashop.adapter.legacy.kpi_configuration:
     class: PrestaShop\PrestaShop\Adapter\Configuration\KpiConfiguration
 
-  prestashop.adapter.legacy.logger:
-    class: PrestaShop\PrestaShop\Adapter\LegacyLogger
-
   PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider:
     public: false
 

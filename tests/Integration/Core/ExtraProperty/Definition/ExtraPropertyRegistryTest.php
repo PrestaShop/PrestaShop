@@ -16,7 +16,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Tests\Resources\DatabaseDump;
+use Tests\Resources\Resetter\ExtraPropertyResetter;
 use Throwable;
 
 /**
@@ -53,8 +53,7 @@ class ExtraPropertyRegistryTest extends KernelTestCase
 
     public static function tearDownAfterClass(): void
     {
-        DatabaseDump::restoreTables(['extra_property_definition']);
-        DatabaseDump::removeExtraTables();
+        ExtraPropertyResetter::resetExtraProperties();
 
         parent::tearDownAfterClass();
     }

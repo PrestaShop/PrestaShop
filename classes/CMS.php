@@ -19,7 +19,7 @@ class CMSCore extends ObjectModel
     public $link_rewrite;
     public $id_cms_category;
     public $position;
-    public $indexation;
+    public $indexation = true;
     public $active;
 
     /**

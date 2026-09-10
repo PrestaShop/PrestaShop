@@ -19,7 +19,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryExce
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Tests\Resources\DatabaseDump;
+use Tests\Resources\Resetter\ExtraPropertyResetter;
 
 /**
  * Entities with non-conventional naming (#41779), end to end against the live DB:
@@ -62,11 +62,7 @@ class NonConventionalEntityNamingTest extends KernelTestCase
 
     public static function tearDownAfterClass(): void
     {
-        foreach (self::definitions() as $definition) {
-            self::$registry->unregister($definition, true);
-        }
-        DatabaseDump::restoreTables(['extra_property_definition']);
-        DatabaseDump::removeExtraTables();
+        ExtraPropertyResetter::resetExtraProperties();
 
         parent::tearDownAfterClass();
     }

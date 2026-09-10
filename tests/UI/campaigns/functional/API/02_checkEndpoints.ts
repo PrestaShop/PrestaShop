@@ -199,6 +199,18 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/employees/send-password-reset-email: POST',
     // @todo: add tests
+    '/extra-property-definitions/bulk-delete: DELETE',
+    // @todo: add tests
+    '/extra-property-definitions/{extraPropertyDefinitionId}: DELETE',
+    // @todo: add tests
+    '/extra-property-definitions/{extraPropertyDefinitionId}: GET',
+    // @todo: add tests
+    '/extra-property-definitions/{extraPropertyDefinitionId}: PATCH',
+    // @todo: add tests
+    '/extra-property-definitions: GET',
+    // @todo: add tests
+    '/extra-property-definitions: POST',
+    // @todo: add tests
     '/features/bulk-delete: DELETE',
     // @todo: add tests
     '/features/values/bulk-delete: DELETE',

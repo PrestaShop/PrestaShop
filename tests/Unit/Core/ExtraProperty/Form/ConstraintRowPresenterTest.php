@@ -10,8 +10,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\ExtraProperty\Form;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintGrammar;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowPresenter;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
  * The constraint row presenter feeds the Validation card's constraint collection: one DSL token =
@@ -31,7 +32,7 @@ class ConstraintRowPresenterTest extends TestCase
     /**
      * @dataProvider rowsProvider
      *
-     * @param list<array{name: string, options: string, per_language: string}> $expected
+     * @param list<array{name: string, options: string, composite_options: string, per_language: string}> $expected
      */
     public function testRows(string $raw, array $expected): void
     {
@@ -43,70 +44,107 @@ class ConstraintRowPresenterTest extends TestCase
      */
     public static function rowsProvider(): iterable
     {
+        // A composite carrying its own options: the children go to 'options', the options tail to
+        // 'composite_options'. This is the shape the whole field exists for.
+        yield 'composite with its own options splits both tails' => [
+            'Collection(allowExtraFields: true, allowMissingFields: false)[ a: NotBlank, b: Length(max: 5) ]', [
+                [
+                    'name' => 'Collection',
+                    'options' => 'a: NotBlank, b: Length(max: 5)',
+                    'composite_options' => 'allowExtraFields: true, allowMissingFields: false',
+                    'per_language' => '0',
+                ],
+            ]];
+
+        yield 'list composite with its own option' => [
+            'AtLeastOneOf(includeInternalMessages: false)[ NotBlank, Email ]', [
+                [
+                    'name' => 'AtLeastOneOf',
+                    'options' => 'NotBlank, Email',
+                    'composite_options' => 'includeInternalMessages: false',
+                    'per_language' => '0',
+                ],
+            ]];
+
+        // Not All[...]: the first top-level All is exploded into per-language rows instead.
+        yield 'composite without options leaves the tail empty' => ['Sequentially[ NotBlank, Email ]', [
+            ['name' => 'Sequentially', 'options' => 'NotBlank, Email', 'composite_options' => '', 'per_language' => '0'],
+        ]];
+
         yield 'bare name' => ['NotBlank', [
-            ['name' => 'NotBlank', 'options' => '', 'per_language' => '0'],
+            ['name' => 'NotBlank', 'options' => '', 'composite_options' => '', 'per_language' => '0'],
         ]];
 
         yield 'positional value keeps the verbatim tail' => ["TypedRegex('generic_name')", [
-            ['name' => 'TypedRegex', 'options' => "'generic_name'", 'per_language' => '0'],
+            ['name' => 'TypedRegex', 'options' => "'generic_name'", 'composite_options' => '', 'per_language' => '0'],
         ]];
 
         yield 'named options keep the verbatim tail' => ['Length(min: 2, max: 64)', [
-            ['name' => 'Length', 'options' => 'min: 2, max: 64', 'per_language' => '0'],
+            ['name' => 'Length', 'options' => 'min: 2, max: 64', 'composite_options' => '', 'per_language' => '0'],
         ]];
 
         yield 'comma-separated tokens on one line' => ['NotBlank, GreaterThan(5)', [
-            ['name' => 'NotBlank', 'options' => '', 'per_language' => '0'],
-            ['name' => 'GreaterThan', 'options' => '5', 'per_language' => '0'],
+            ['name' => 'NotBlank', 'options' => '', 'composite_options' => '', 'per_language' => '0'],
+            ['name' => 'GreaterThan', 'options' => '5', 'composite_options' => '', 'per_language' => '0'],
         ]];
 
         yield 'first All explodes into per-language rows' => ["DefaultLanguage('Video link')\nAll[ Url, Length(max: 255) ]", [
-            ['name' => 'DefaultLanguage', 'options' => "'Video link'", 'per_language' => '0'],
-            ['name' => 'Url', 'options' => '', 'per_language' => '1'],
-            ['name' => 'Length', 'options' => 'max: 255', 'per_language' => '1'],
+            ['name' => 'DefaultLanguage', 'options' => "'Video link'", 'composite_options' => '', 'per_language' => '0'],
+            ['name' => 'Url', 'options' => '', 'composite_options' => '', 'per_language' => '1'],
+            ['name' => 'Length', 'options' => 'max: 255', 'composite_options' => '', 'per_language' => '1'],
         ]];
 
-        yield 'multi-line rendered All (toNames output) explodes the same way' => ["All[\n  Url,\n  NotBlank\n]", [
-            ['name' => 'Url', 'options' => '', 'per_language' => '1'],
-            ['name' => 'NotBlank', 'options' => '', 'per_language' => '1'],
+        yield 'multi-line rendered All (renderer output) explodes the same way' => ["All[\n  Url,\n  NotBlank\n]", [
+            ['name' => 'Url', 'options' => '', 'composite_options' => '', 'per_language' => '1'],
+            ['name' => 'NotBlank', 'options' => '', 'composite_options' => '', 'per_language' => '1'],
         ]];
 
         yield 'second All stays an opaque set-level composite row' => ['All[Url], All[NotBlank]', [
-            ['name' => 'Url', 'options' => '', 'per_language' => '1'],
-            ['name' => 'All', 'options' => 'NotBlank', 'per_language' => '0'],
+            ['name' => 'Url', 'options' => '', 'composite_options' => '', 'per_language' => '1'],
+            ['name' => 'All', 'options' => 'NotBlank', 'composite_options' => '', 'per_language' => '0'],
         ]];
 
+        // Only reachable on a hand-edited database value: the first All carries more children than the
+        // grammar allows, so its tokenize() throws. It is dropped, and the per-language zone must still
+        // be fed by the next top-level All instead of presenting it as an opaque set-level row.
+        yield 'an All whose children cannot be tokenized is dropped and the next All still explodes' => [
+            'All[ ' . implode(', ', array_fill(0, ExtraPropertyConstraintGrammar::MAX_TOKENS + 1, 'NotBlank')) . " ]\nAll[ Url ]",
+            [
+                ['name' => 'Url', 'options' => '', 'composite_options' => '', 'per_language' => '1'],
+            ],
+        ];
+
         yield 'non-All composites stay set-level rows with their verbatim inner tail' => ['Collection[name: NotBlank, code: Length(max: 5)]', [
-            ['name' => 'Collection', 'options' => 'name: NotBlank, code: Length(max: 5)', 'per_language' => '0'],
+            ['name' => 'Collection', 'options' => 'name: NotBlank, code: Length(max: 5)', 'composite_options' => '', 'per_language' => '0'],
         ]];
 
         yield 'unknown name still presents as a structured row (validated on submit, not here)' => ["Lenght(max: 64)\nNotBlank", [
-            ['name' => 'Lenght', 'options' => 'max: 64', 'per_language' => '0'],
-            ['name' => 'NotBlank', 'options' => '', 'per_language' => '0'],
+            ['name' => 'Lenght', 'options' => 'max: 64', 'composite_options' => '', 'per_language' => '0'],
+            ['name' => 'NotBlank', 'options' => '', 'composite_options' => '', 'per_language' => '0'],
         ]];
 
         yield 'unknown name inside All presents as a per-language row' => ['All[ Lenght(max: 64), Url ]', [
-            ['name' => 'Lenght', 'options' => 'max: 64', 'per_language' => '1'],
-            ['name' => 'Url', 'options' => '', 'per_language' => '1'],
+            ['name' => 'Lenght', 'options' => 'max: 64', 'composite_options' => '', 'per_language' => '1'],
+            ['name' => 'Url', 'options' => '', 'composite_options' => '', 'per_language' => '1'],
         ]];
 
         yield 'shapeless token is skipped' => ["weird token!\nNotBlank", [
-            ['name' => 'NotBlank', 'options' => '', 'per_language' => '0'],
+            ['name' => 'NotBlank', 'options' => '', 'composite_options' => '', 'per_language' => '0'],
         ]];
 
         yield 'quoted separators never split a token' => ["Choice(['a,b', 'c'])", [
-            ['name' => 'Choice', 'options' => "['a,b', 'c']", 'per_language' => '0'],
+            ['name' => 'Choice', 'options' => "['a,b', 'c']", 'composite_options' => '', 'per_language' => '0'],
         ]];
     }
 
     /**
-     * tokenize() is the grammar authority: same splitting as fromNames(), with 1-based starting lines.
+     * tokenize() is the grammar authority: same splitting as parse(), with 1-based starting lines.
      */
-    public function testTokenizeExposesTheMapperSplitting(): void
+    public function testTokenizeExposesTheParserSplitting(): void
     {
         $this->assertSame(
             [['NotBlank', 1], ['Length(min: 2, max: 64)', 2], ['All[Url, NotBlank]', 4]],
-            ExtraPropertyConstraintMapper::tokenize("NotBlank\nLength(min: 2, max: 64)\n\nAll[Url, NotBlank]")
+            ExtraPropertyConstraintParser::tokenize("NotBlank\nLength(min: 2, max: 64)\n\nAll[Url, NotBlank]")
         );
     }
 }

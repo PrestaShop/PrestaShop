@@ -12,7 +12,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\ExtraProperty\QueryResult;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
-use Symfony\Component\Validator\Constraint;
 
 /**
  * Read-only DTO carrying all data for an extra property definition edit form.
@@ -29,8 +28,8 @@ class EditableExtraPropertyDefinition
      * @param string $entityName
      * @param string|null $moduleName Null for core fields; non-null = module-owned (read-only)
      * @param string $propertyName
-     * @param ExtraPropertyType $fieldType
-     * @param ExtraPropertyScope $fieldScope
+     * @param ExtraPropertyType $type
+     * @param ExtraPropertyScope $scope
      * @param ExtraPropertySqlIndex $sqlIndex
      * @param bool $nullable
      * @param int|null $size Varchar size for string fields
@@ -42,7 +41,7 @@ class EditableExtraPropertyDefinition
      * @param string|null $labelDomain
      * @param string|null $descriptionWording
      * @param string|null $descriptionDomain
-     * @param list<Constraint>|null $constraints
+     * @param string|null $constraints Validation constraints in the extra property DSL (canonical render, one constraint per line); null = no validation
      * @param string|null $formType
      * @param array<string, mixed>|null $formOptions
      * @param list<string>|null $associatedForms
@@ -55,8 +54,8 @@ class EditableExtraPropertyDefinition
         protected readonly string $entityName,
         protected readonly ?string $moduleName,
         protected readonly string $propertyName,
-        protected readonly ExtraPropertyType $fieldType,
-        protected readonly ExtraPropertyScope $fieldScope,
+        protected readonly ExtraPropertyType $type,
+        protected readonly ExtraPropertyScope $scope,
         protected readonly ExtraPropertySqlIndex $sqlIndex,
         protected readonly bool $nullable,
         protected readonly ?int $size,
@@ -68,7 +67,7 @@ class EditableExtraPropertyDefinition
         protected readonly ?string $labelDomain,
         protected readonly ?string $descriptionWording,
         protected readonly ?string $descriptionDomain,
-        protected readonly ?array $constraints,
+        protected readonly ?string $constraints,
         protected readonly ?string $formType,
         protected readonly ?array $formOptions,
         protected readonly ?array $associatedForms,
@@ -101,14 +100,14 @@ class EditableExtraPropertyDefinition
         return $this->propertyName;
     }
 
-    public function getFieldType(): ExtraPropertyType
+    public function getType(): ExtraPropertyType
     {
-        return $this->fieldType;
+        return $this->type;
     }
 
-    public function getFieldScope(): ExtraPropertyScope
+    public function getScope(): ExtraPropertyScope
     {
-        return $this->fieldScope;
+        return $this->scope;
     }
 
     public function getSqlIndex(): ExtraPropertySqlIndex
@@ -170,9 +169,11 @@ class EditableExtraPropertyDefinition
     }
 
     /**
-     * @return list<Constraint>|null
+     * Validation constraints in the extra property DSL (canonical render, one constraint per line,
+     * e.g. "NotBlank\nLength(min: 2, max: 64)"), the same format the Add/Update commands accept.
+     * Null = no validation.
      */
-    public function getConstraints(): ?array
+    public function getConstraints(): ?string
     {
         return $this->constraints;
     }

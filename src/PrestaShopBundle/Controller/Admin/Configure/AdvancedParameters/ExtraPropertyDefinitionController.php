@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\BulkDeleteExtraPrope
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\DeleteExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\UpdateExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\BulkExtraPropertyException;
+use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefinitionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyRegistrationFailureException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
@@ -480,6 +481,11 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
                     [],
                     'Admin.Advparameters.Notification'
                 ),
+                ExtraPropertyRegistrationFailureException::INVALID_CONSTRAINTS => $this->trans(
+                    'The validation constraints could not be saved: they contain a constraint, an option or a value that is not supported. Use only the constraints and options offered by the validation builder.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
                 ExtraPropertyRegistrationFailureException::UNKNOWN_SHOP => $this->trans(
                     'The store association contains a store that does not exist. Refresh the page and try again.',
                     [],
@@ -497,6 +503,13 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
                 ),
             ],
             InvalidExtraPropertyDefinitionException::class => $this->trans(
+                'The submitted extra property definition is invalid. Check the form values and try again.',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            // The Validation card validates every row before the command is built, so this is a
+            // safety net for programmatic or hook-mutated submissions.
+            ExtraPropertyConstraintException::class => $this->trans(
                 'The submitted extra property definition is invalid. Check the form values and try again.',
                 [],
                 'Admin.Advparameters.Notification'

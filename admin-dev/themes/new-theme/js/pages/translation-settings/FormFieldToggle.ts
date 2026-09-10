@@ -66,9 +66,6 @@ export default class FormFieldToggle {
     const $modulesFormGroup = $(TranslationSettingsMap.modulesFormGroup);
     const $emailFormGroup = $(TranslationSettingsMap.emailFormGroup);
     const $themesFormGroup = $(TranslationSettingsMap.themesFormGroup);
-    const $defaultThemeOption = $themesFormGroup.find(
-      TranslationSettingsMap.defaultThemeOption,
-    );
 
     switch (selectedOption) {
       case back:
@@ -78,7 +75,7 @@ export default class FormFieldToggle {
 
       case themes:
         this.show($themesFormGroup);
-        this.hide($modulesFormGroup, $emailFormGroup, $defaultThemeOption);
+        this.hide($modulesFormGroup, $emailFormGroup);
         break;
 
       case modules:
@@ -113,15 +110,12 @@ export default class FormFieldToggle {
     const $noThemeOption = $themesFormGroup.find(
       TranslationSettingsMap.noThemeOption,
     );
-    const $defaultThemeOption = $themesFormGroup.find(
-      TranslationSettingsMap.defaultThemeOption,
-    );
 
     if (selectedEmailContentType === emailContentBody) {
       $noThemeOption.prop('selected', true);
-      this.show($noThemeOption, $themesFormGroup, $defaultThemeOption);
+      this.show($themesFormGroup);
     } else {
-      this.hide($noThemeOption, $themesFormGroup, $defaultThemeOption);
+      this.hide($themesFormGroup);
     }
   }
 

@@ -1,6 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s extra-property-definition
-@restore-extra-property-definition-before-feature
-@remove-extra-tables-after-feature
+@reset-extra-properties-before-feature
+@reset-extra-properties-after-feature
 @restore-shops-before-feature
 @restore-shops-after-feature
 @clear-cache-before-feature
@@ -349,3 +349,211 @@ Feature: Extra property definition management
     Then I should get an error that the shop association contains an unknown shop
     And extra property definition "ep23" should have the following parameters:
       | associated_shop_ids | shop1 |
+
+  Scenario: Validation constraints with named options, composites and custom messages round-trip
+    When I add an extra property definition "ep40" with following properties:
+      | entity_name   | product                                                                     |
+      | property_name | constraint_shapes                                                           |
+      | type          | string                                                                      |
+      | scope         | common                                                                      |
+      | constraints   | NotBlank(message: 'Required!'),Length(min: 2, max: 64),All[ Url, NotBlank ] |
+    Then extra property definition "ep40" should have the following parameters:
+      | constraints | NotBlank(message: 'Required!'),Length(min: 2, max: 64),All[ Url, NotBlank ] |
+    # The stored form is the canonical render: one constraint per line, composites indented,
+    # named options sorted alphabetically
+    And extra property definition "ep40" should have the following constraints:
+      """
+      NotBlank(message: 'Required!')
+      Length(max: 64, min: 2)
+      All[
+        Url,
+        NotBlank
+      ]
+      """
+
+  Scenario: A Collection constraint reads back with the Required wrappers Symfony gives its fields
+    When I add an extra property definition "ep41" with following properties:
+      | entity_name   | product                                                                   |
+      | property_name | constraint_collection                                                     |
+      | type          | json                                                                      |
+      | scope         | common                                                                    |
+      | constraints   | Collection(allowExtraFields: true)[ name: NotBlank, code: Length(min: 2, max: 5) ] |
+    # Required/Optional are only ever accepted as Collection fields (see the refused examples below)
+    Then extra property definition "ep41" should have the following parameters:
+      | constraints | Collection(allowExtraFields: true)[ name: Required[ NotBlank ], code: Required[ Length(min: 2, max: 5) ] ] |
+    And extra property definition "ep41" should have the following constraints:
+      """
+      Collection(allowExtraFields: true)[
+        name: Required[
+          NotBlank
+        ],
+        code: Required[
+          Length(max: 5, min: 2)
+        ]
+      ]
+      """
+
+  Scenario: Validation constraint values keep their type
+    # An unquoted number is a number, a quoted one is a string, and a list may mix both
+    When I add an extra property definition "ep42" with following properties:
+      | entity_name   | product                                                     |
+      | property_name | constraint_typed_values                                     |
+      | type          | int                                                         |
+      | scope         | common                                                      |
+      | constraints   | GreaterThan(5),NotEqualTo('5'),Choice(['1', 2]),LessThan(9.5) |
+    Then extra property definition "ep42" should have the following parameters:
+      | constraints | GreaterThan(5),NotEqualTo('5'),Choice(['1', 2]),LessThan(9.5) |
+    And extra property definition "ep42" should have the following constraints:
+      """
+      GreaterThan(5)
+      NotEqualTo('5')
+      Choice(['1', 2])
+      LessThan(9.5)
+      """
+
+  Scenario: Per-language validation rules of a multilingual extra property
+    When I add an extra property definition "ep43" with following properties:
+      | entity_name   | product                              |
+      | property_name | constraint_per_language              |
+      | type          | string                               |
+      | scope         | lang                                 |
+      | constraints   | All[ NotBlank, Length(min: 1, max: 10) ] |
+    Then extra property definition "ep43" should have the following parameters:
+      | constraints | All[ NotBlank, Length(min: 1, max: 10) ] |
+
+  Scenario: Editing keeps, replaces or clears the validation constraints
+    When I add an extra property definition "ep44" with following properties:
+      | entity_name   | product           |
+      | property_name | constraint_edits  |
+      | type          | string            |
+      | scope         | common            |
+      | constraints   | NotBlank,Email    |
+    # A row-less edit leaves the constraints untouched
+    When I edit extra property definition "ep44" with following properties:
+      | label_wording | Edited label |
+    Then extra property definition "ep44" should have the following parameters:
+      | label_wording | Edited label   |
+      | constraints   | NotBlank,Email |
+    # Providing constraints replaces them as a whole
+    When I edit extra property definition "ep44" with following properties:
+      | constraints | Url |
+    Then extra property definition "ep44" should have the following parameters:
+      | constraints | Url |
+    # An empty cell removes every constraint
+    When I edit extra property definition "ep44" with following properties:
+      | constraints |  |
+    Then extra property definition "ep44" should have the following parameters:
+      | constraints |  |
+
+  Scenario: Validation constraints the parser cannot build are refused by the command
+    # The DSL is parsed when the command is built: an unknown name, a malformed token or an option
+    # Symfony would execute never reaches the registry, so nothing is written. Each attempt below
+    # fails on its own; the property name is reused because no attempt ever creates the row.
+    # Unknown constraint name
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | Nope                         |
+    Then I should get an error that the constraints are invalid
+    # Names are case-sensitive
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | notblank                     |
+    Then I should get an error that the constraints are invalid
+    # Unbalanced delimiter
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | Length(min: 2                |
+    Then I should get an error that the constraints are invalid
+    # An option Symfony invokes as a callable at validation time
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | Length(normalizer: 'trim')   |
+    Then I should get an error that the constraints are invalid
+    # An option that traverses the validated object
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                            |
+      | property_name | constraint_refused_by_parser       |
+      | constraints   | GreaterThan(propertyPath: 'other') |
+    Then I should get an error that the constraints are invalid
+    # A value given to a constraint that takes none
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | NotBlank(5)                  |
+    Then I should get an error that the constraints are invalid
+    # A required option left out (Regex needs its pattern)
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | Regex                        |
+    Then I should get an error that the constraints are invalid
+    # The bracket shape on a constraint that is not a composite
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | NotBlank[ Url ]              |
+    Then I should get an error that the constraints are invalid
+    # Keyed children outside a Collection
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | All[ name: NotBlank ]        |
+    Then I should get an error that the constraints are invalid
+    # The internal Collection wrappers are not public constraints
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | Required[ NotBlank ]         |
+    Then I should get an error that the constraints are invalid
+    # Nesting deeper than the grammar bound (16 levels)
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                                                                                         |
+      | property_name | constraint_refused_by_parser                                                                    |
+      | constraints   | All[All[All[All[All[All[All[All[All[All[All[All[All[All[All[All[All[All[ NotBlank ]]]]]]]]]]]]]]]]]] |
+    Then I should get an error that the constraints are invalid
+    # Options the format never carries: only the default validation group applies, and there is no payload
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | NotBlank(groups: ['custom']) |
+    Then I should get an error that the constraints are invalid
+    When I add an extra property definition "ep45" with following properties:
+      | entity_name   | product                      |
+      | property_name | constraint_refused_by_parser |
+      | constraints   | NotBlank(payload: 'x')       |
+    Then I should get an error that the constraints are invalid
+    And no extra property definition should exist for entity "product" and property "constraint_refused_by_parser"
+
+  Scenario: Validation constraints that cannot be stored losslessly are refused by the registry
+    # This parses into a valid Symfony constraint, but the persisted DSL could not carry it back
+    # identically: a whole-number float renders as an integer. The registry refuses it before any
+    # storage column is created.
+    When I add an extra property definition "ep46" with following properties:
+      | entity_name   | product                        |
+      | property_name | constraint_refused_by_registry |
+      | type          | int                            |
+      | constraints   | GreaterThan(1.0)               |
+    Then I should get an error that the constraints cannot be stored
+    And no extra property definition should exist for entity "product" and property "constraint_refused_by_registry"
+
+  Scenario: Refused validation constraints leave an existing definition unchanged
+    When I add an extra property definition "ep47" with following properties:
+      | entity_name   | product                     |
+      | property_name | constraint_refused_on_edit  |
+      | type          | string                      |
+      | scope         | common                      |
+      | constraints   | NotBlank                    |
+    When I edit extra property definition "ep47" with following properties:
+      | constraints | Nope |
+    Then I should get an error that the constraints are invalid
+    And extra property definition "ep47" should have the following parameters:
+      | constraints | NotBlank |
+    When I edit extra property definition "ep47" with following properties:
+      | constraints | NotBlank(groups: ['custom']) |
+    Then I should get an error that the constraints are invalid
+    And extra property definition "ep47" should have the following parameters:
+      | constraints | NotBlank |

@@ -11,6 +11,7 @@ namespace PrestaShopBundle\ApiPlatform\Normalizer;
 use PrestaShop\Decimal\DecimalNumber;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -20,9 +21,32 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 #[AutoconfigureTag('prestashop.api.normalizers')]
 class DecimalNumberNormalizer implements DenormalizerInterface, NormalizerInterface
 {
+    /**
+     * A value that is not a number raises the serializer's own exception (a 400 with a message
+     * on the API, and the next member of a union type gets its chance) instead of the decimal
+     * library's InvalidArgumentException, which the serializer would not recognize (500).
+     */
     public function denormalize($data, string $type, ?string $format = null, array $context = [])
     {
-        return new DecimalNumber((string) $data);
+        if ($data instanceof DecimalNumber) {
+            return $data;
+        }
+
+        if (is_scalar($data) && !is_bool($data)) {
+            try {
+                return new DecimalNumber((string) $data);
+            } catch (\InvalidArgumentException $e) {
+                // Falls through to the exception below.
+            }
+        }
+
+        throw NotNormalizableValueException::createForUnexpectedDataType(
+            sprintf('The value %s cannot be interpreted as a number.', is_scalar($data) ? var_export($data, true) : get_debug_type($data)),
+            $data,
+            ['number'],
+            $context['deserialization_path'] ?? null,
+            true
+        );
     }
 
     public function supportsDenormalization($data, string $type, ?string $format = null)

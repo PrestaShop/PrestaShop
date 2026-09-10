@@ -9,9 +9,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition;
 
-use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowSerializer;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -29,7 +28,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  * "min: 2, max: 64" or "'generic_name'"); the page JS renders typed inputs over it when it can and
  * shows it as-is when it can't, so the row stays lossless either way. per_language flags the rows
  * living in the "Applied to each language's value" zone — they fold into one All[...] line on
- * serialization. The row validates its own token through the exact mapper the data handler runs
+ * serialization. The row validates its own token through the exact parser the command runs
  * later, so an unknown name or a bad argument surfaces on the offending row.
  */
 class ExtraPropertyConstraintRowType extends TranslatorAwareType
@@ -47,13 +46,18 @@ class ExtraPropertyConstraintRowType extends TranslatorAwareType
             ->add('options', HiddenType::class, [
                 'required' => false,
             ])
+            // Options a composite carries ahead of its children
+            // ("Collection(allowExtraFields: true)[ ... ]"); empty for every other shape.
+            ->add('composite_options', HiddenType::class, [
+                'required' => false,
+            ])
             ->add('per_language', HiddenType::class, [
                 'required' => false,
             ]);
     }
 
     /**
-     * Validates the row's DSL token with the exact mapper the data handler runs later, so a row
+     * Validates the row's DSL token with the exact parser the command runs later, so a row
      * accepted here is guaranteed to be accepted downstream. An abandoned row (no name, no
      * options) is skipped; options without a name get a dedicated message instead of silently
      * serializing to nothing.
@@ -64,7 +68,7 @@ class ExtraPropertyConstraintRowType extends TranslatorAwareType
         $token = ConstraintRowSerializer::token($row);
 
         if ('' === $token) {
-            if ('' !== trim((string) ($row['options'] ?? ''))) {
+            if ('' !== trim((string) ($row['options'] ?? '')) || '' !== trim((string) ($row['composite_options'] ?? ''))) {
                 $context->buildViolation(
                     $this->trans('The constraint name is required.', 'Admin.Advparameters.Notification')
                 )->atPath('[name]')->addViolation();
@@ -73,11 +77,10 @@ class ExtraPropertyConstraintRowType extends TranslatorAwareType
             return;
         }
 
-        try {
-            ExtraPropertyConstraintMapper::fromNames($token);
-        } catch (ExtraPropertyException $e) {
-            // The mapper's "Line N: " prefix is meaningless for a single row.
-            $context->buildViolation($e->getBareMessage())->addViolation();
+        // A row is one token, so the rejection's line number is meaningless here: only the reason
+        // is shown, on the row itself.
+        foreach (ExtraPropertyConstraintParser::parse($token)->getRejections() as $rejection) {
+            $context->buildViolation($rejection['reason'])->addViolation();
         }
     }
 

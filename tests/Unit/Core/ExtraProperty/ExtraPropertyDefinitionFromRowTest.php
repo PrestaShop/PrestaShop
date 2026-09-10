@@ -66,9 +66,14 @@ class ExtraPropertyDefinitionFromRowTest extends TestCase
         $this->assertNull($invalid->getEnumValues());
     }
 
-    public function testConstraintsRoundTripFromSerializedRow(): void
+    /**
+     * Decoding is the repository's job — it owns the normalizer and can report a rejected constraint
+     * with the row it came from. fromRow() receives constraints already decoded, and only carries
+     * them through.
+     */
+    public function testConstraintsAreCarriedThroughAlreadyDecoded(): void
     {
-        $row = self::BASE_ROW + ['constraints' => serialize([new Assert\Url(), new Assert\Length(['max' => 50])])];
+        $row = self::BASE_ROW + ['constraints' => [new Assert\Url(), new Assert\Length(['max' => 50])]];
 
         $constraints = ExtraPropertyDefinition::fromRow($row)->getConstraints();
 
@@ -76,14 +81,18 @@ class ExtraPropertyDefinitionFromRowTest extends TestCase
         $this->assertCount(2, $constraints);
         $this->assertInstanceOf(Assert\Url::class, $constraints[0]);
         $this->assertInstanceOf(Assert\Length::class, $constraints[1]);
+        $this->assertSame(50, $constraints[1]->max);
     }
 
-    public function testConstraintsAbsentOrUnusableFallBackToNull(): void
+    public function testConstraintsAbsentOrEmptyFallBackToNull(): void
     {
         $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW)->getConstraints(), 'No constraints key → null.');
-        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => ''])->getConstraints(), 'Empty string → null.');
-        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => 'not-serialized'])->getConstraints(), 'Unserializable garbage → null.');
-        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => serialize(['x', 123])])->getConstraints(), 'Non-Constraint entries are filtered out → null.');
+        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => []])->getConstraints(), 'Empty list → null.');
+        $this->assertNull(ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => null])->getConstraints(), 'Null → null.');
+        $this->assertNull(
+            ExtraPropertyDefinition::fromRow(self::BASE_ROW + ['constraints' => "Url\nLength(max: 50)"])->getConstraints(),
+            'A raw stored string is not decoded here: that belongs to the repository.'
+        );
     }
 
     /**
