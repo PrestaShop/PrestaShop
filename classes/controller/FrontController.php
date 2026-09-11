@@ -1112,7 +1112,11 @@ class FrontControllerCore extends Controller
         ];
         $params = array_merge($default_params, $params);
 
-        if (Tools::hasMediaServer() && !Configuration::get('PS_CSS_THEME_CACHE')) {
+        // WHY: the media server rewrite turns a path relative to the shop into a URL on the media
+        // server, which only makes sense for an asset served from this shop. A remote asset already
+        // carries an absolute URL, so getFullPath() cannot resolve it and the asset used to be
+        // dropped by the guard below.
+        if ('local' === $params['server'] && Tools::hasMediaServer() && !Configuration::get('PS_CSS_THEME_CACHE')) {
             $fullPath = $this->stylesheetManager->getFullPath($relativePath);
 
             if (!$fullPath) {
@@ -1147,7 +1151,8 @@ class FrontControllerCore extends Controller
         ];
         $params = array_merge($default_params, $params);
 
-        if (Tools::hasMediaServer() && !Configuration::get('PS_JS_THEME_CACHE')) {
+        // WHY: see registerStylesheet() above, a remote asset must keep the URL it was given.
+        if ('local' === $params['server'] && Tools::hasMediaServer() && !Configuration::get('PS_JS_THEME_CACHE')) {
             $fullPath = $this->javascriptManager->getFullPath($relativePath);
 
             if (!$fullPath) {
