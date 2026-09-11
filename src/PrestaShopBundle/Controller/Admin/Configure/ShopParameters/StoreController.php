@@ -286,11 +286,6 @@ class StoreController extends PrestaShopAdminController
                     [],
                     'Admin.Shopparameters.Notification'
                 ),
-                StoreConstraintException::MISSING_COORDINATE => $this->trans(
-                    'Latitude and longitude are required.',
-                    [],
-                    'Admin.Shopparameters.Notification'
-                ),
             ],
         ];
     }
