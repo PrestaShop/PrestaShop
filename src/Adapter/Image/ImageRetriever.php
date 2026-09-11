@@ -15,6 +15,7 @@ use Language;
 use Link;
 use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShopDatabaseException;
 use PrestaShopException;
@@ -190,6 +191,9 @@ class ImageRetriever
             $rewrite = $id_image;
         }
 
+        // Cache source information only for this retrieval, across thumbnail sizes and formats
+        $sourceImageSizes = [];
+
         // Check and generate each thumbnail size
         $image_types = ImageType::getImagesTypes($type, true);
         foreach ($image_types as $image_type) {
@@ -208,9 +212,10 @@ class ImageRetriever
                 $originalFileName,
             ]);
 
+            // Generate each configured thumbnail format
             foreach ($configuredImageFormats as $imageFormat) {
-                // Generate the thumbnail
-                $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
+                // Generate the thumbnail and return its path and dimensions
+                $thumbnail = $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, $sourceImageSizes);
 
                 // Get the URL of the thumb and add it to sources
                 // Manufacturer and supplier use only IDs
@@ -231,11 +236,13 @@ class ImageRetriever
                 $baseUrl = reset($sources);
             }
 
-            // And add this size to our list
+            // And add this size to our list; getGenerationFormats() always includes JPG, so the loop defines $thumbnail
             $urls[$image_type['name']] = [
                 'url' => $baseUrl,
-                'width' => (int) $image_type['width'],
-                'height' => (int) $image_type['height'],
+                // @phpstan-ignore-next-line
+                'width' => $thumbnail['width'],
+                // @phpstan-ignore-next-line
+                'height' => $thumbnail['height'],
                 'sources' => $sources,
             ];
         }
@@ -267,11 +274,13 @@ class ImageRetriever
      * @param int|string $idImage
      * @param array $imageTypeData
      * @param string $imageFormat
+     * @param array<string, array|false> $sourceImageSizes Source information cached for the current retrieval
      *
-     * @return void
+     * @return array{path: string, width: int, height: int}
      */
-    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int|string $idImage, array $imageTypeData, string $imageFormat)
+    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int|string $idImage, array $imageTypeData, string $imageFormat, array &$sourceImageSizes): array
     {
+        // Get the path of the final thumbnail
         $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $imageFormat);
         $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,
@@ -302,6 +311,38 @@ class ImageRetriever
                 $imageTypeData['image_fitment']
             );
         }
+
+        // Start with the configured size and the thumbnail path
+        $thumbnail = [
+            'path' => $resizedImagePath,
+            'width' => (int) $imageTypeData['width'],
+            'height' => (int) $imageTypeData['height'],
+        ];
+
+        // Bound fitment can change the configured dimensions; other fitments need no file read here
+        if ($imageTypeData['image_fitment'] === ImageFitment::BOUND) {
+            // Read each source path once per retrieval, caching EXIF-adjusted image information and failed reads too
+            if (!array_key_exists($originalImagePath, $sourceImageSizes)) {
+                $sourceImageSizes[$originalImagePath] = is_file($originalImagePath) && is_readable($originalImagePath)
+                    ? ImageManager::getImageSizeWithOrientation($originalImagePath)
+                    : false;
+            }
+
+            // Reuse cached source dimensions, keeping the configured size if reading fails or dimensions are invalid
+            $sourceDimensions = $sourceImageSizes[$originalImagePath];
+            if ($sourceDimensions !== false && $sourceDimensions[0] > 0 && $sourceDimensions[1] > 0) {
+                // Compute the real thumbnail dimensions using the same calculation as resizing
+                [$thumbnail['width'], $thumbnail['height']] = ImageManager::computeThumbnailDimensions(
+                    $sourceDimensions[0],
+                    $sourceDimensions[1],
+                    $thumbnail['width'],
+                    $thumbnail['height'],
+                    $imageTypeData['image_fitment']
+                );
+            }
+        }
+
+        return $thumbnail;
     }
 
     /**
@@ -349,6 +390,9 @@ class ImageRetriever
     {
         $urls = [];
 
+        // Share source information across fallback images only for this retrieval
+        $sourceImageSizes = [];
+
         // Set images to regenerate with all theirs specific directories
         $objectsToRegenerate = [
             ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
@@ -386,36 +430,15 @@ class ImageRetriever
 
             // Get all image sizes for product objects
             foreach ($imageTypes as $imageType) {
-                // Get path of the final thumbnail
-                $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
+                // Check or generate the thumbnail and get its path and dimensions
+                $thumbnail = $this->checkOrGenerateImageType(
+                    $originalImagePath,
                     rtrim($object['dir'], DIRECTORY_SEPARATOR),
-                    $language->getIsoCode() . '-default-' . $imageType['name'] . '.jpg',
-                ]);
-
-                // Check if the thumbnail exists and generate it if needed
-                if (!file_exists($resizedImagePath)) {
-                    $error = 0;
-                    $targetWidth = null;
-                    $targetHeight = null;
-                    $sourceWidth = null;
-                    $sourceHeight = null;
-
-                    ImageManager::resize(
-                        $originalImagePath,
-                        $resizedImagePath,
-                        (int) $imageType['width'],
-                        (int) $imageType['height'],
-                        'jpg',
-                        false,
-                        $error,
-                        $targetWidth,
-                        $targetHeight,
-                        5,
-                        $sourceWidth,
-                        $sourceHeight,
-                        $imageType['image_fitment']
-                    );
-                }
+                    $language->getIsoCode() . '-default',
+                    $imageType,
+                    'jpg',
+                    $sourceImageSizes
+                );
 
                 // Build image URL for that thumbnail
                 $imageUrl = $this->link->getImageLink(
@@ -427,8 +450,8 @@ class ImageRetriever
                 // And add it to the list
                 $urls[$imageType['name']] = [
                     'url' => $imageUrl,
-                    'width' => (int) $imageType['width'],
-                    'height' => (int) $imageType['height'],
+                    'width' => $thumbnail['width'],
+                    'height' => $thumbnail['height'],
                 ];
             }
         }
