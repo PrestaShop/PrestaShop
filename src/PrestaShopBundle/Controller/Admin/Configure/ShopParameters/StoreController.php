@@ -149,15 +149,19 @@ class StoreController extends PrestaShopAdminController
         $contactDetailsForm->handleRequest($request);
 
         if ($contactDetailsForm->isSubmitted()) {
-            $errors = $contactDetailsFormHandler->save($contactDetailsForm->getData());
+            if ($contactDetailsForm->isValid()) {
+                $errors = $contactDetailsFormHandler->save($contactDetailsForm->getData());
 
-            if (!empty($errors)) {
-                $this->addFlashErrors($errors);
+                if (!empty($errors)) {
+                    $this->addFlashErrors($errors);
+                } else {
+                    $this->addFlash(
+                        'success',
+                        $this->trans('The settings have been successfully updated.', [], 'Admin.Notifications.Success')
+                    );
+                }
             } else {
-                $this->addFlash(
-                    'success',
-                    $this->trans('The settings have been successfully updated.', [], 'Admin.Notifications.Success')
-                );
+                $this->addFlashFormErrors($contactDetailsForm);
             }
         }
 

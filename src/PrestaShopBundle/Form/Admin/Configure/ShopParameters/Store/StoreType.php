@@ -135,7 +135,11 @@ class StoreType extends TranslatorAwareType
                         ),
                     ]),
                 ],
-            ])
+            ]);
+
+        $this->rebuildStateField($builder, $countryId);
+
+        $builder
             ->add('latitude', TextType::class, [
                 'label' => $this->trans('Latitude', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Store coordinates (e.g. 45.265469 or -0.265469)', 'Admin.Shopparameters.Help'),
@@ -249,8 +253,6 @@ class StoreType extends TranslatorAwareType
                 'required' => false,
             ]);
         }
-
-        $this->rebuildStateField($builder, $countryId);
 
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
             $data = $event->getData() ?? [];
