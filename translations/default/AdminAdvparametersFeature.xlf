@@ -315,22 +315,22 @@
       <trans-unit id="9bd32f348e04d39b11bcbcbae33e1008">
         <source>Are you sure you want to delete the selected item(s)? The SQL column will be kept.</source>
         <target>Are you sure you want to delete the selected item(s)? The SQL column will be kept.</target>
-        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 177]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 199]</note>
       </trans-unit>
       <trans-unit id="6cebce27fb1175e93c88571f85e98f7b">
         <source>Are you sure you want to delete the selected item(s)? The SQL columns will be kept.</source>
         <target>Are you sure you want to delete the selected item(s)? The SQL columns will be kept.</target>
-        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 302]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 324]</note>
       </trans-unit>
       <trans-unit id="9a733a9c5f0e527a8b7ade8320b54a26">
         <source>Are you sure? This will also permanently DROP the SQL column and all its data.</source>
         <target>Are you sure? This will also permanently DROP the SQL column and all its data.</target>
-        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 190]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 212]</note>
       </trans-unit>
       <trans-unit id="ac638f83a4e55db3a66a9bc62fd9a344">
         <source>Are you sure? This will also permanently DROP the SQL columns and all their data.</source>
         <target>Are you sure? This will also permanently DROP the SQL columns and all their data.</target>
-        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 310]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 332]</note>
       </trans-unit>
       <trans-unit id="8ae880593c2afcc7da6d3530513a05d6">
         <source>Attribute (Name:Type:Position)</source>
@@ -490,7 +490,7 @@
       <trans-unit id="967db4d257af07feced01d6633f575f7">
         <source>Check the cookie's IP address</source>
         <target>Check the cookie's IP address</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 30]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 32]</note>
       </trans-unit>
       <trans-unit id="e91dd9bbca6e42bb85c0f2d94aaee995">
         <source>Check your configuration</source>
@@ -615,7 +615,7 @@
       <trans-unit id="57c6b2481e04c5d88b6b54e7b7167554">
         <source>Cookie SameSite</source>
         <target>Cookie SameSite</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 44]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 49]</note>
       </trans-unit>
       <trans-unit id="790d59ef178acbc75d233bf4211763c6">
         <source>Countries</source>
@@ -745,7 +745,7 @@
       <trans-unit id="435a2d71a0c6c33cd2c917b00b8e0da1">
         <source>Default page</source>
         <target>Default page</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php [Line: 210]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php [Line: 340]</note>
       </trans-unit>
       <trans-unit id="43d180619356641995d3c1575c4bad12">
         <source>Default store</source>
@@ -770,7 +770,7 @@
       <trans-unit id="f2b7b29551069fb6dba414498d3fc8b0">
         <source>Delete + drop column</source>
         <target>Delete + drop column</target>
-        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 196]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 218]</note>
       </trans-unit>
       <trans-unit id="1269b023d7c37aceefb33ef49c9fec4d">
         <source>Delete all [1]categories[/1] before import</source>
@@ -785,7 +785,7 @@
       <trans-unit id="4e90098f6a3395b32da930f2467d73a0">
         <source>Delete selected + drop SQL columns</source>
         <target>Delete selected + drop SQL columns</target>
-        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 317]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 339]</note>
       </trans-unit>
       <trans-unit id="b0778bfd9332089cdb4468bd9f04e031">
         <source>Delete selected sessions?</source>
@@ -865,7 +865,7 @@
       <trans-unit id="9763cb99c738d8b7a8cb226c5b2b33b5">
         <source>Display in front-office</source>
         <target>Display in front-office</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 30]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 41]</note>
       </trans-unit>
       <trans-unit id="eae639a70006feff484a39363c977e24">
         <source>Domain</source>
@@ -905,7 +905,7 @@
       <trans-unit id="08b5c9d3af75fe2b5cf4d93f97d5e500">
         <source>Editing extra property "%name%"</source>
         <target>Editing extra property "%name%"</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 204]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 207]</note>
       </trans-unit>
       <trans-unit id="3e5b7324ee6019d543023eac3bb13016">
         <source>Email domain name</source>
@@ -985,7 +985,7 @@
       <trans-unit id="1a434befae3f49ae09347ded52032f6f">
         <source>Entity</source>
         <target>Entity</target>
-        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 96]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 99]</note>
       </trans-unit>
       <trans-unit id="694d77664575fb0b446ef89342fbc71d">
         <source>Entity name</source>
@@ -1025,7 +1025,7 @@
       <trans-unit id="f2ec2e902790597cd33564578ce53588">
         <source>Extra property definitions</source>
         <target>Extra property definitions</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 68]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 71]</note>
       </trans-unit>
       <trans-unit id="028f42454a71f86007a79664b2a35882">
         <source>Fast view (HEAD)</source>
@@ -1115,7 +1115,7 @@
       <trans-unit id="5835bab1ade0060909e31a06af2e2cde">
         <source>Front</source>
         <target>Front</target>
-        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 131]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 134]</note>
       </trans-unit>
       <trans-unit id="80c51f5505fde0cbc732084a8d16e112">
         <source>Generate client secret and save</source>
@@ -1300,12 +1300,12 @@
       <trans-unit id="e62d77475fe6318731b4411ba1181dca">
         <source>Lifetime of back office cookies</source>
         <target>Lifetime of back office cookies</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 39]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 43]</note>
       </trans-unit>
       <trans-unit id="dcfba1534995899d2ca36cda978da215">
         <source>Lifetime of front office cookies</source>
         <target>Lifetime of front office cookies</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 34]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 37]</note>
       </trans-unit>
       <trans-unit id="ac104da0cd80e52437b67aefa351e177">
         <source>List of MySQL Tables</source>
@@ -1385,17 +1385,17 @@
       <trans-unit id="4ae386b852a3ee22324e8922e50c9aec">
         <source>Maximum size for a downloadable product</source>
         <target>Maximum size for a downloadable product</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 86]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 89]</note>
       </trans-unit>
       <trans-unit id="a1652ab7a761fa7bb3726fe28b97d1f3">
         <source>Maximum size for a product's image</source>
         <target>Maximum size for a product's image</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 118]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 122]</note>
       </trans-unit>
       <trans-unit id="454036c51196464f8d9c84ded5808985">
         <source>Maximum size for attached files</source>
         <target>Maximum size for attached files</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 54]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 56]</note>
       </trans-unit>
       <trans-unit id="c9869fa659bd86f03aba826acd8db5b5">
         <source>Meaning of severity levels:</source>
@@ -1485,7 +1485,7 @@
       <trans-unit id="e55f75a29310d7b60f7ac1d390c8ae42">
         <source>Module</source>
         <target>Module</target>
-        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 103]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 106]</note>
       </trans-unit>
       <trans-unit id="b04f2c8a90cfc485fc990dc8dc4ba293">
         <source>Module configuration</source>
@@ -1589,7 +1589,7 @@
       <trans-unit id="c59045872e5a1422e514a5b360bf0929">
         <source>New extra property</source>
         <target>New extra property</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 116]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 119]</note>
       </trans-unit>
       <trans-unit id="4078e029d86559a033707b1f7af7f04d">
         <source>New features</source>
@@ -1939,7 +1939,7 @@
       <trans-unit id="b651efdb98a5d6bd2b3935d0c3f4a5e2">
         <source>Required</source>
         <target>Required</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 35]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 46]</note>
       </trans-unit>
       <trans-unit id="a3810ddb5a67e550cb3ca9c1cffce800">
         <source>Required parameters:</source>
@@ -2198,17 +2198,17 @@
       <trans-unit id="8004e61ca76ff500d1e6ee92f7cb7f93">
         <source>Show notifications for new customers</source>
         <target>Show notifications for new customers</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/NotificationsType.php [Line: 26]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/NotificationsType.php [Line: 29]</note>
       </trans-unit>
       <trans-unit id="4e7ff7ca556a7ac8329ab27834e9631b">
         <source>Show notifications for new messages</source>
         <target>Show notifications for new messages</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/NotificationsType.php [Line: 29]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/NotificationsType.php [Line: 33]</note>
       </trans-unit>
       <trans-unit id="1b1befcb86d487715da458117710dfeb">
         <source>Show notifications for new orders</source>
         <target>Show notifications for new orders</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/NotificationsType.php [Line: 23]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/NotificationsType.php [Line: 25]</note>
       </trans-unit>
       <trans-unit id="76aeea9f48196068e6b47d46d41e7618">
         <source>Show price (0 = No, 1 = Yes)</source>
@@ -2479,7 +2479,7 @@
       <trans-unit id="a1fa27779242b4902f7ae3bdd5c6d508">
         <source>Type</source>
         <target>Type</target>
-        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 117]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ExtraPropertyDefinitionGridDefinitionFactory.php [Line: 120]</note>
       </trans-unit>
       <trans-unit id="fbd99ad01b92dbafc686772a39e3d065">
         <source>UPC</source>
@@ -2584,7 +2584,7 @@
       <trans-unit id="db8dc0c40b4ad6aa6b9398856b20ba6e">
         <source>Viewing extra property "%name%"</source>
         <target>Viewing extra property "%name%"</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 248]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php [Line: 288]</note>
       </trans-unit>
       <trans-unit id="bbc1203755645168294af35f880d61e5">
         <source>Virtual URL</source>
@@ -2689,7 +2689,7 @@
       <trans-unit id="2c111a587b8e6a65856ac7933d76bdce">
         <source>megabytes</source>
         <target>megabytes</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 142]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 146]</note>
       </trans-unit>
       <trans-unit id="640fd0cc0ffa0316ae087652871f4486">
         <source>minutes</source>

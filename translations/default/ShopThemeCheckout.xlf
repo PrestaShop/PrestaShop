@@ -5,7 +5,7 @@
       <trans-unit id="ca96f27e7d3e3b67b5d1f43a54296466">
         <source>%count% items</source>
         <target>%count% items</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 249]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 257]</note>
       </trans-unit>
       <trans-unit id="e532954941a2469e3b3ae35ce44885d6">
         <source>%price% tax excl.</source>
@@ -65,12 +65,12 @@
       <trans-unit id="7e0eb131cbb6280fe2b38edf92a3bcc5">
         <source>1 item</source>
         <target>1 item</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 248]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 256]</note>
       </trans-unit>
       <trans-unit id="2bd544f123f671c597c4b330ef05b5da">
         <source>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</source>
         <target>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 350]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 353]</note>
       </trans-unit>
       <trans-unit id="06df33001c1d7187fdd81ea1f5b277aa">
         <source>Actions</source>
@@ -194,7 +194,7 @@
       <trans-unit id="40d906eb5dd9a2734d0c20c437e2ff68">
         <source>Discount(s)</source>
         <target>Discount(s)</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 172]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 180]</note>
       </trans-unit>
       <trans-unit id="8c1279db4db86553e4b9682f78cf500e">
         <source>Expiration date</source>
@@ -214,7 +214,7 @@
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 460]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 465]</note>
       </trans-unit>
       <trans-unit id="0d9175fe89fb80d815e7d03698b6e83a">
         <source>Gift</source>
@@ -274,7 +274,7 @@
       <trans-unit id="3b5a05f2c4a0373c7a6e8d1cfec7020f">
         <source>Included taxes</source>
         <target>Included taxes</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 212]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 220]</note>
       </trans-unit>
       <trans-unit id="466eadd40b3c10580e3ab4e8061161ce">
         <source>Invoice</source>
@@ -509,7 +509,7 @@
       <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
         <source>Shipping</source>
         <target>Shipping</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 200]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 208]</note>
       </trans-unit>
       <trans-unit id="48974cc3df177e6b565c39aa155458cd">
         <source>Shipping Address</source>
@@ -588,7 +588,7 @@
       <trans-unit id="719fec04166d6fa75f89cd29ad61fa8c">
         <source>Taxes</source>
         <target>Taxes</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 213]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 221]</note>
       </trans-unit>
       <trans-unit id="829f96defc7c51f96edf84b190ab864a">
         <source>Terms and conditions</source>

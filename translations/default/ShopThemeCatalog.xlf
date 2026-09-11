@@ -10,7 +10,7 @@
       <trans-unit id="e84cb421d62df8fc15445ab55c787e76">
         <source>%1s of these products are included in packs in your cart.</source>
         <target>%1s of these products are included in packs in your cart.</target>
-        <note>File: controllers/front/ProductController.php [Line: 536]</note>
+        <note>File: controllers/front/ProductController.php [Line: 557]</note>
       </trans-unit>
       <trans-unit id="8d11ea42eb87c7c24779e8d020ceff31">
         <source>%label%</source>
@@ -25,12 +25,12 @@
       <trans-unit id="8e7fb1213c4692b195ed6b7cf580d7f3">
         <source>%number% product</source>
         <target>%number% product</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/supplier.tpl [Line: 32]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/supplier.tpl [Line: 45]</note>
       </trans-unit>
       <trans-unit id="108b413416adf90e7c6f21a68bb02dd2">
         <source>%number% products</source>
         <target>%number% products</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/supplier.tpl [Line: 30]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/supplier.tpl [Line: 43]</note>
       </trans-unit>
       <trans-unit id="e532954941a2469e3b3ae35ce44885d6">
         <source>%price% tax excl.</source>
@@ -156,6 +156,11 @@
         <target>Back to Home page</target>
         <note>File: themes/hummingbird/templates/errors/not-found.tpl [Line: 13]</note>
       </trans-unit>
+      <trans-unit id="6110e3692a789bcff0870b04b13a06bb">
+        <source>Back to home</source>
+        <target>Back to home</target>
+        <note>File: themes/hummingbird/templates/catalog/listing/search.tpl [Line: 21]</note>
+      </trans-unit>
       <trans-unit id="d7b2933ba512ada478c97fa43dd7ebe6">
         <source>Best Sellers</source>
         <target>Best Sellers</target>
@@ -199,7 +204,12 @@
       <trans-unit id="aa89fd8bf65df5c1a1c11474bf2c16b5">
         <source>Category: %category_name%</source>
         <target>Category: %category_name%</target>
-        <note>File: controllers/front/listing/CategoryController.php [Line: 350]</note>
+        <note>File: controllers/front/listing/CategoryController.php [Line: 357]</note>
+      </trans-unit>
+      <trans-unit id="89c5ab6aca01b547fa7ff01445298e1b">
+        <source>Check the spelling of your search term.</source>
+        <target>Check the spelling of your search term.</target>
+        <note>File: themes/hummingbird/templates/catalog/listing/search.tpl [Line: 18]</note>
       </trans-unit>
       <trans-unit id="9983381c21069a3d6e4432e0aaea0079">
         <source>Clear search</source>
@@ -224,7 +234,7 @@
       <trans-unit id="f7bd791aac4fda53ce6d08edc1a62e01">
         <source>Damaged</source>
         <target>Damaged</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 303]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 314]</note>
       </trans-unit>
       <trans-unit id="7dcd185f890fd28f69d1ed210292d77f">
         <source>Data sheet</source>
@@ -292,17 +302,17 @@
       <trans-unit id="7d74f3b92b19da5e606d737d339a9679">
         <source>Item</source>
         <target>Item</target>
-        <note>File: controllers/front/ProductController.php [Line: 1253]</note>
+        <note>File: controllers/front/ProductController.php [Line: 1274]</note>
       </trans-unit>
       <trans-unit id="9dea4016dbcc290b773ab2fae678aaa8">
         <source>Items</source>
         <target>Items</target>
-        <note>File: controllers/front/ProductController.php [Line: 1253]</note>
+        <note>File: controllers/front/ProductController.php [Line: 1274]</note>
       </trans-unit>
       <trans-unit id="348325afced7f3da215310efbe21f1c1">
         <source>Last items in stock</source>
         <target>Last items in stock</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1398]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1433]</note>
       </trans-unit>
       <trans-unit id="160b4798999cb85c815beeb40ac268cc">
         <source>Last time this product was added to a cart: %date_last_cart%</source>
@@ -347,7 +357,7 @@
       <trans-unit id="294598238a4d88a9920c7e6fba9bb843">
         <source>MPN</source>
         <target>MPN</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1568]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1603]</note>
       </trans-unit>
       <trans-unit id="4edfd10d0bb5f51e0fd2327df608b5a8">
         <source>My alerts</source>
@@ -367,7 +377,7 @@
       <trans-unit id="03c2e7e41ffc181a4e84080b4710e81e">
         <source>New</source>
         <target>New</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 274]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 285]</note>
       </trans-unit>
       <trans-unit id="9ff0635f5737513b1a6f559ac2bff745">
         <source>New products</source>
@@ -377,12 +387,12 @@
       <trans-unit id="81983ba194858a26c153d76ea2a4251b">
         <source>New, minor defects</source>
         <target>New, minor defects</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 315]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 326]</note>
       </trans-unit>
       <trans-unit id="2d76769c3f5b9dc963c4f5a17946725f">
         <source>New, open box</source>
         <target>New, open box</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 309]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 320]</note>
       </trans-unit>
       <trans-unit id="10fd25dcd3353c0ba3731d4a23657f2e">
         <source>No RSS feed added</source>
@@ -407,7 +417,7 @@
       <trans-unit id="09dc02ecbb078868a3a86dded030076d">
         <source>No products</source>
         <target>No products</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/supplier.tpl [Line: 34]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/supplier.tpl [Line: 47]</note>
       </trans-unit>
       <trans-unit id="c9189b9d0be364a501aa527e5d8265d3">
         <source>No products available</source>
@@ -427,7 +437,7 @@
       <trans-unit id="a4b05152a33a0c0b30e535471132c8d3">
         <source>No search results for "%search_term%"</source>
         <target>No search results for "%search_term%"</target>
-        <note>File: themes/hummingbird/templates/catalog/listing/search.tpl [Line: 26]</note>
+        <note>File: themes/hummingbird/templates/catalog/listing/search.tpl [Line: 31]</note>
       </trans-unit>
       <trans-unit id="496689fbd342f80d30f1f266d060415a">
         <source>No supplier</source>
@@ -442,7 +452,7 @@
       <trans-unit id="39c08f79d381c6292bb9323232680fb7">
         <source>Nothing to search for</source>
         <target>Nothing to search for</target>
-        <note>File: themes/hummingbird/templates/catalog/listing/search.tpl [Line: 21]</note>
+        <note>File: themes/hummingbird/templates/catalog/listing/search.tpl [Line: 26]</note>
       </trans-unit>
       <trans-unit id="588907ab2d492aca0b07b5bf9c931eea">
         <source>On sale</source>
@@ -452,12 +462,12 @@
       <trans-unit id="800e90e940e7f1fb938b0fda5137f38c">
         <source>On sale!</source>
         <target>On sale!</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 716]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 727]</note>
       </trans-unit>
       <trans-unit id="03de921a8ea82897e13d33d66c28b4db">
         <source>Online only</source>
         <target>Online only</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 701]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 712]</note>
       </trans-unit>
       <trans-unit id="99f0c07c3b8b3bc78f5f9733019ec3d5">
         <source>Order totals</source>
@@ -467,7 +477,7 @@
       <trans-unit id="4492081ca02b059f9e8af4ddaf0f7292">
         <source>Pack</source>
         <target>Pack</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 761]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 772]</note>
       </trans-unit>
       <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
         <source>Pages</source>
@@ -537,7 +547,7 @@
       <trans-unit id="cb3c718c905f00adbb6735f55bfb38ef">
         <source>Product available with different options</source>
         <target>Product available with different options</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1480]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1515]</note>
       </trans-unit>
       <trans-unit id="04c06765e76fdf5efd32d865bb1e9210">
         <source>Product brand: %brand_name%</source>
@@ -576,7 +586,7 @@
       <trans-unit id="63b539babcf7978229d66ba4052ca71f">
         <source>Reduced price</source>
         <target>Reduced price</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 738]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 749]</note>
       </trans-unit>
       <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
         <source>Reference</source>
@@ -606,7 +616,7 @@
       <trans-unit id="6da03a74721a0554b7143254225cc08a">
         <source>Refurbished</source>
         <target>Refurbished</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 294]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 305]</note>
       </trans-unit>
       <trans-unit id="4d8adffdc001189e0202c01ac529a3a9">
         <source>Regular price</source>
@@ -656,7 +666,6 @@
       <trans-unit id="84d9573d77435d23507ba3809cfc6efc">
         <source>Search again what you are looking for.</source>
         <target>Search again what you are looking for.</target>
-        <note>File: themes/hummingbird/templates/catalog/listing/search.tpl [Line: 16]</note>
       </trans-unit>
       <trans-unit id="5bdba1fc0fba1010d61ce253c2e57da8">
         <source>Search our catalog</source>
@@ -676,7 +685,7 @@
       <trans-unit id="ab369684c980b2a9f39bd63885ec885a">
         <source>Search results for "%search_term%"</source>
         <target>Search results for "%search_term%"</target>
-        <note>File: themes/hummingbird/templates/catalog/listing/search.tpl [Line: 24]</note>
+        <note>File: themes/hummingbird/templates/catalog/listing/search.tpl [Line: 29]</note>
       </trans-unit>
       <trans-unit id="e0626222614bdee31951d84c64e5e9ff">
         <source>Select</source>
@@ -758,10 +767,15 @@
         <target>Total price</target>
         <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 178]</note>
       </trans-unit>
+      <trans-unit id="5fe40c576fdbea0d2cc25192a1d5c29f">
+        <source>Try a more general or different keyword.</source>
+        <target>Try a more general or different keyword.</target>
+        <note>File: themes/hummingbird/templates/catalog/listing/search.tpl [Line: 19]</note>
+      </trans-unit>
       <trans-unit id="af342023e90ca45b0d69be497168ac56">
         <source>Unit discount</source>
         <target>Unit discount</target>
-        <note>File: classes/controller/FrontController.php [Line: 1650]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1653]</note>
       </trans-unit>
       <trans-unit id="6c957f72dc8cdacc75762f2cbdcdfaf2">
         <source>Unit price</source>
@@ -771,12 +785,12 @@
       <trans-unit id="019d1ca7d50cc54b995f60d456435e87">
         <source>Used</source>
         <target>Used</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 284]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 295]</note>
       </trans-unit>
       <trans-unit id="d9d697694800fc1320e90fd0d6a7d92d">
         <source>View product %product_name%</source>
         <target>View product %product_name%</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/product.tpl [Line: 109]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/product.tpl [Line: 28]</note>
       </trans-unit>
       <trans-unit id="27c58e5a84e08e2f404d31c258946c90">
         <source>View product %product_name%, part of the pack.</source>
@@ -798,6 +812,11 @@
         <target>Volume discounts</target>
         <note>File: themes/classic/templates/catalog/_partials/product-discounts.tpl [Line: 27]</note>
       </trans-unit>
+      <trans-unit id="d7acc81f62ec462e0e35c78c1573b6b3">
+        <source>We couldn't find any matching products.</source>
+        <target>We couldn't find any matching products.</target>
+        <note>File: themes/hummingbird/templates/catalog/listing/search.tpl [Line: 16]</note>
+      </trans-unit>
       <trans-unit id="861c0c6ef832cd96c5fe152f9d610973">
         <source>You Save</source>
         <target>You Save</target>
@@ -811,12 +830,12 @@
       <trans-unit id="eeb1ea8686e8d4f7e4f645cb4c1a1125">
         <source>Your cart contains %1s of these products and another %2s of these are included in packs in your cart.</source>
         <target>Your cart contains %1s of these products and another %2s of these are included in packs in your cart.</target>
-        <note>File: controllers/front/ProductController.php [Line: 524]</note>
+        <note>File: controllers/front/ProductController.php [Line: 545]</note>
       </trans-unit>
       <trans-unit id="75ab944a828d35122e062c504de6970b">
         <source>Your cart contains %1s of these products.</source>
         <target>Your cart contains %1s of these products.</target>
-        <note>File: controllers/front/ProductController.php [Line: 530]</note>
+        <note>File: controllers/front/ProductController.php [Line: 551]</note>
       </trans-unit>
       <trans-unit id="5d1190edfb16f1dcaaecc56570c864be">
         <source>Your customization:</source>
@@ -831,7 +850,7 @@
       <trans-unit id="a3b6a4d0897451813950029a3066f219">
         <source>ean13</source>
         <target>ean13</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1550]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1585]</note>
       </trans-unit>
       <trans-unit id="59b514174bffe4ae402b3d63aad79fe0">
         <source>images</source>
@@ -841,7 +860,7 @@
       <trans-unit id="6496117322fd76fa12ac1b87d8a4db6c">
         <source>isbn</source>
         <target>isbn</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1556]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1591]</note>
       </trans-unit>
       <trans-unit id="f286999e8dee46f02dbd9f8f523220f5">
         <source>quick view</source>
@@ -851,7 +870,7 @@
       <trans-unit id="2f9e567efb6a38663162f65eaac2d73b">
         <source>upc</source>
         <target>upc</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1562]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1597]</note>
       </trans-unit>
       <trans-unit id="4f4adcbf8c6f66dcfc8a3282ac2bf10a">
         <source>404</source>
