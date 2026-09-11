@@ -25,8 +25,10 @@ final class HoursEncoder
         foreach ($localizedHours as $langId => $days) {
             $encoded = [];
             foreach ($days as $day) {
-                $parts = array_map('trim', explode('|', (string) $day, 2));
-                $encoded[] = isset($parts[1]) ? [$parts[0], $parts[1]] : [$parts[0]];
+                // No limit: a day can carry more than one open/close pair (see decode()'s
+                // legacy-format branch), and splitting only the first pipe silently merged
+                // every slot after the second back into the closing time's string.
+                $encoded[] = array_map('trim', explode('|', (string) $day));
             }
             $result[(int) $langId] = json_encode($encoded);
         }
