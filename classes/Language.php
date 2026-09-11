@@ -1236,7 +1236,11 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function downloadXLFLanguagePack($locale, &$errors = [], $type = self::PACK_TYPE_SYMFONY)
     {
         $file = self::getPathToCachedTranslationPack($locale, $type);
-        $url = (self::PACK_TYPE_EMAILS === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
+        // A shop hosting its own packs overrides these in Improve > International > Localization;
+        // the constants stay the default the shop is installed with.
+        $url = (self::PACK_TYPE_EMAILS === $type)
+            ? (Configuration::get('PS_EMAILS_PACK_URL') ?: self::EMAILS_LANGUAGE_PACK_URL)
+            : (Configuration::get('PS_LANGUAGE_PACK_URL') ?: self::SF_LANGUAGE_PACK_URL);
         $url = str_replace(
             [
                 '%version%',
