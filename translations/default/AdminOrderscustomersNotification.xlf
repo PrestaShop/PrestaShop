@@ -150,7 +150,7 @@
       <trans-unit id="764368526633c5baf14291ba7fbb9e05">
         <source>For this particular customer group, prices are displayed as:</source>
         <target>For this particular customer group, prices are displayed as:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 184]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 186]</note>
       </trans-unit>
       <trans-unit id="a37bf274ad160c76e7d17b9178bc1f57">
         <source>How do you want to delete the selected customers?</source>
@@ -620,7 +620,7 @@
       <trans-unit id="6a94d8492279c2bfd3e81f3158658980">
         <source>[Generated] CartRule for Free Shipping</source>
         <target>[Generated] CartRule for Free Shipping</target>
-        <note>File: src/Adapter/Order/CommandHandler/AddProductToOrderHandler.php [Line: 453]</note>
+        <note>File: src/Adapter/Order/CommandHandler/AddProductToOrderHandler.php [Line: 440]</note>
       </trans-unit>
       <trans-unit id="0db24e725e6876d0fc7467554e8b6c03">
         <source>downloadable %d time(s)</source>

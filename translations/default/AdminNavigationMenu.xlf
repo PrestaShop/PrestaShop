@@ -124,7 +124,7 @@
       <trans-unit id="f0dbca7d922e4e759a1e3b512b9be852">
         <source>Choose layouts</source>
         <target>Choose layouts</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 395]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 398]</note>
       </trans-unit>
       <trans-unit id="f647e3f65d2df0358ad2eff6a6d85c15">
         <source>Combinations Generator</source>
@@ -264,7 +264,7 @@
       <trans-unit id="9d5bf15117441a1b52eb1f0808e4aad3">
         <source>Discounts</source>
         <target>Discounts</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/DiscountController.php [Line: 203]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/DiscountController.php [Line: 223]</note>
       </trans-unit>
       <trans-unit id="aecb63e193fd78cde871402ce2797b9b">
         <source>Downloading backup %s</source>
@@ -529,7 +529,7 @@
       <trans-unit id="4c99c66c65d5cc7f1c5ef76302aa9988">
         <source>Image Settings</source>
         <target>Image Settings</target>
-        <note>File: src/Core/Grid/Definition/Factory/ImageTypeGridDefinitionFactory.php [Line: 50]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ImageTypeGridDefinitionFactory.php [Line: 52]</note>
       </trans-unit>
       <trans-unit id="fff0d600f8a0b5e19e88bfb821dd1157">
         <source>Images</source>
@@ -1166,7 +1166,7 @@
       <trans-unit id="8a602bb445146718f08e3aba13569f11">
         <source>Theme import</source>
         <target>Theme import</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 217]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 222]</note>
       </trans-unit>
       <trans-unit id="8612579044efe457f11398b5a2377226">
         <source>Titles</source>
