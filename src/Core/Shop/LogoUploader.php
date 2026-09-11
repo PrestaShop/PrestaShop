@@ -35,10 +35,82 @@ class LogoUploader
     public function updateHeader()
     {
         if ($this->update('PS_LOGO', 'logo')) {
-            [$width, $height] = getimagesize($this->imageDirection . Configuration::get('PS_LOGO'));
+            [$width, $height] = $this->getLogoDimensions($this->imageDirection . Configuration::get('PS_LOGO'));
             Configuration::updateValue('SHOP_LOGO_HEIGHT', (int) round($height));
             Configuration::updateValue('SHOP_LOGO_WIDTH', (int) round($width));
         }
+    }
+
+    /**
+     * getimagesize() only reads raster headers and returns false for an SVG, which used to leave the
+     * stored logo dimensions at zero and the front office img tag without width and height. An SVG
+     * carries its own size, so read it from the file instead.
+     *
+     * @param string $path
+     *
+     * @return array{0: int, 1: int} width and height, both 0 when neither can be determined
+     */
+    protected function getLogoDimensions(string $path): array
+    {
+        $size = @getimagesize($path);
+        if (is_array($size)) {
+            return [(int) $size[0], (int) $size[1]];
+        }
+
+        return $this->getSvgDimensions($path);
+    }
+
+    /**
+     * Reads the intrinsic size of an SVG, from its width and height attributes when they are absolute,
+     * and from its viewBox otherwise. A relative size such as "100%" carries no intrinsic dimension,
+     * so the viewBox is used for those.
+     *
+     * @param string $path
+     *
+     * @return array{0: int, 1: int}
+     */
+    protected function getSvgDimensions(string $path): array
+    {
+        if (!is_readable($path)) {
+            return [0, 0];
+        }
+
+        $previous = libxml_use_internal_errors(true);
+        // LIBXML_NONET keeps the parser from resolving anything over the network.
+        $svg = simplexml_load_file($path, 'SimpleXMLElement', LIBXML_NONET);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+
+        if (false === $svg) {
+            return [0, 0];
+        }
+
+        $width = $this->parseSvgLength((string) ($svg['width'] ?? ''));
+        $height = $this->parseSvgLength((string) ($svg['height'] ?? ''));
+        if ($width > 0 && $height > 0) {
+            return [$width, $height];
+        }
+
+        $viewBox = preg_split('/[\s,]+/', trim((string) ($svg['viewBox'] ?? '')));
+        if (is_array($viewBox) && count($viewBox) === 4) {
+            return [(int) round((float) $viewBox[2]), (int) round((float) $viewBox[3])];
+        }
+
+        return [0, 0];
+    }
+
+    /**
+     * @param string $length
+     *
+     * @return int 0 when the length is relative or unusable
+     */
+    private function parseSvgLength(string $length): int
+    {
+        if (!preg_match('/^\s*([0-9]*\.?[0-9]+)\s*(px)?\s*$/i', $length, $matches)) {
+            return 0;
+        }
+
+        return (int) round((float) $matches[1]);
     }
 
     public function updateMail()
