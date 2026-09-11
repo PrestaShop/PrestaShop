@@ -210,6 +210,23 @@ class LegacyContext
     }
 
     /**
+     * Returns the language the current employee last selected in a translatable form, if any.
+     *
+     * Read through this adapter rather than straight from the cookie in the container bindings:
+     * the legacy cookie is only set by config/config.inc.php, so it is absent from the installer
+     * context, where form types are nevertheless built (an extra property definition validates
+     * its form options when it is registered by a module install).
+     *
+     * @return int|string|null the raw cookie value, null when there is no legacy cookie
+     */
+    public function getEmployeeFormLanguageId()
+    {
+        $cookie = $this->getContext()->cookie;
+
+        return null !== $cookie ? $cookie->employee_form_lang : null;
+    }
+
+    /**
      * Returns Currency set for the current employee.
      *
      * @return Currency|null
