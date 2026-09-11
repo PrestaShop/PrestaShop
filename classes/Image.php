@@ -348,6 +348,14 @@ class ImageCore extends ObjectModel
             unlink(_PS_TMP_IMG_DIR_ . 'product_' . $idProduct . '.jpg');
         }
 
+        // Clear order/cart page thumbnails keyed by attribute id or shop id.
+        $oldThumbnails = glob(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $idProduct . '_*.jpg');
+        if (!empty($oldThumbnails)) {
+            foreach ($oldThumbnails as $file) {
+                @unlink($file);
+            }
+        }
+
         return Db::getInstance()->execute(
             '
 			UPDATE `' . _DB_PREFIX_ . 'image`
