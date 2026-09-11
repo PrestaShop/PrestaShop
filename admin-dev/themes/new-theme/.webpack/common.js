@@ -36,6 +36,21 @@ const FontPreloadPlugin = require('webpack-font-preload-plugin');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 
 module.exports = {
+  // Webpack 5 defaults to no cache at all in production, so every `npm run build`
+  // recompiled and re-minified the whole tree from scratch. Persisting it between runs
+  // is the bulk of this theme's build time.
+  //
+  // cacheDirectory is deliberately left at its default, node_modules/.cache/webpack:
+  // `npm ci` wipes it along with the dependencies it was built against, and the release
+  // packager already excludes node_modules from the shipped archive.
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      // webpack.config.js requires prod.js/dev.js, which require this file; webpack
+      // hashes each entry together with its dependencies, so this one covers them all.
+      config: [path.resolve(__dirname, '../webpack.config.js')],
+    },
+  },
   externals: {
     jquery: 'jQuery',
   },

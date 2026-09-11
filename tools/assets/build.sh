@@ -1,10 +1,11 @@
 #!/bin/bash
 
 ###
-# This script rebuilds all the static assets, running npm install-clean as needed
-# Usage: ./tools/assets/build.sh [asset-name] [--force]
+# This script rebuilds all the static assets, reinstalling dependencies when they changed
+# Usage: ./tools/assets/build.sh [asset-name] [--force] [--force-install]
 #   asset-name: admin-default, admin-new-theme, front-core, front-classic, front-hummingbird, or all
 #   --force: Force rebuild even if assets already exist
+#   --force-install: Force a clean reinstall of node_modules (implies --force)
 #
 
 #http://redsymbol.net/articles/unofficial-bash-strict-mode/
@@ -14,11 +15,18 @@ ADMIN_DIR="${PROJECT_PATH}/${ADMIN_DIR:-admin-dev}"
 
 # Parse command line arguments
 FORCE_BUILD=false
+FORCE_INSTALL=false
 ASSET_NAME=""
 
 for arg in "$@"; do
   case $arg in
     --force)
+      FORCE_BUILD=true
+      ;;
+    --force-install)
+      FORCE_INSTALL=true
+      # Dependencies are only installed as part of a build, and reinstalling them
+      # without rebuilding would leave the previous assets in place, so this implies --force.
       FORCE_BUILD=true
       ;;
     *)
@@ -34,6 +42,70 @@ if [[ ! -d $ADMIN_DIR ]]; then
   return 1
 fi
 
+# Portable sha256 of stdin (sha256sum on Linux, shasum on macOS)
+function sha256_stdin {
+  if command -v sha256sum > /dev/null 2>&1; then
+    sha256sum | cut -d' ' -f1
+  else
+    shasum -a 256 | cut -d' ' -f1
+  fi
+}
+
+# Fingerprint of everything the content of node_modules depends on.
+#
+# - package-lock.json: the resolved dependency tree.
+# - package.json: so a dependency bumped without regenerating the lockfile still runs
+#   `npm ci`, which is what reports the two files being out of sync.
+# - NODE_ENV: npm omits devDependencies when it is `production`, which yields a tree
+#   that cannot build at all.
+# - platform, libc, Node and npm versions, and whether we are inside the container:
+#   native dependencies such as sass-embedded ship a prebuilt per-platform binary, and
+#   docker-compose.yml bind-mounts the repository into the container, so the host and
+#   the container share a single node_modules directory. `uname -sm` alone does not
+#   separate a Linux host from the container running on it.
+#
+# Prints nothing when a manifest is missing, so install_dependencies falls through to
+# `npm ci` and lets it report the real problem.
+function install_stamp_value {
+  if [[ ! -f package.json || ! -f package-lock.json ]]; then
+    return 0
+  fi
+
+  {
+    sha256_stdin < package.json
+    sha256_stdin < package-lock.json
+    uname -sm
+    node -v
+    npm -v
+    echo "NODE_ENV=${NODE_ENV:-}"
+    if [[ -f /.dockerenv ]]; then echo 'container'; else echo 'host'; fi
+    if command -v ldd > /dev/null 2>&1; then
+      ldd --version 2>&1 | head -1 || true
+    fi
+  } | sha256_stdin
+}
+
+# Install dependencies only when they are actually out of date.
+#
+# `npm ci` wipes and repopulates node_modules from scratch, which on large themes means
+# tens of thousands of files, so it should only run when something it depends on changed.
+# Note: `npm ci` removes node_modules itself, so no explicit `rm -rf` is needed.
+function install_dependencies {
+  local stamp="node_modules/.ps-install-stamp"
+  local expected
+  expected=$(install_stamp_value)
+
+  if [[ -n "$expected" && "$FORCE_INSTALL" == "false" && -d "node_modules" && -f "$stamp" && "$(cat "$stamp")" == "$expected" ]]; then
+    echo "> Dependencies already up to date, skipping npm ci (use --force-install to reinstall)"
+    return 0
+  fi
+
+  npm ci
+  if [[ -n "$expected" ]]; then
+    echo "$expected" > "$stamp"
+  fi
+}
+
 function build {
   if [[ -z "$1" ]]; then
     echo "Parameter is empty"
@@ -45,13 +117,10 @@ function build {
   fi
 
   pushd $1
-  if [[ -d "node_modules" ]]; then
-    rm -rf node_modules
-  fi
 
   touch buildLock
   chmod 664 buildLock
-  npm ci
+  install_dependencies
   npm run build
   rm buildLock
   popd
