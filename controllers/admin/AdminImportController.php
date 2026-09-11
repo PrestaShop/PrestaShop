@@ -3677,7 +3677,21 @@ class AdminImportControllerCore extends AdminController
 
     public function utf8EncodeArray($array)
     {
-        return is_array($array) ? array_map('utf8_encode', $array) : utf8_encode($array);
+        return is_array($array)
+            ? array_map([self::class, 'utf8EncodeString'], $array)
+            : self::utf8EncodeString($array);
+    }
+
+    /**
+     * ISO-8859-1 to UTF-8, the conversion utf8_encode() performed before it was deprecated in PHP 8.2.
+     *
+     * @param string|null $string
+     *
+     * @return string
+     */
+    private static function utf8EncodeString($string)
+    {
+        return mb_convert_encoding((string) $string, 'UTF-8', 'ISO-8859-1');
     }
 
     protected function getNbrColumn($handle, $glue)
