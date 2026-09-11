@@ -20,7 +20,6 @@ class StoreConstraintException extends StoreException
     public const STATE_COUNTRY_MISMATCH = 52;
     public const INVALID_POSTCODE = 60;
     public const INVALID_COORDINATE = 70;
-    public const MISSING_COORDINATE = 71;
     public const INVALID_PHONE = 80;
     public const INVALID_EMAIL = 90;
     public const INVALID_HOURS = 100;
