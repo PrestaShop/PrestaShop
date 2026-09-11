@@ -70,7 +70,7 @@
     {/if}
   </div>
 
-	<script type="text/javascript">
+	<script type="text/javascript" nonce="{$cspNonce}">
 	//<![CDATA[
 		var submited = false
 

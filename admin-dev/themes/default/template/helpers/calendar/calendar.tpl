@@ -86,7 +86,7 @@
 	</div>
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	translated_dates = {
 		days: ['{l s='Sunday' js=1}', '{l s='Monday' js=1}', '{l s='Tuesday' js=1}', '{l s='Wednesday' js=1}', '{l s='Thursday' js=1}', '{l s='Friday' js=1}', '{l s='Saturday' js=1}', '{l s='Sunday' js=1}'],
 		daysShort: ['{l s='Sun' js=1}', '{l s='Mon' js=1}', '{l s='Tue' js=1}', '{l s='Wed' js=1}', '{l s='Thu' js=1}', '{l s='Fri' js=1}', '{l s='Sat' js=1}', '{l s='Sun' js=1}'],

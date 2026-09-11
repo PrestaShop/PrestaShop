@@ -23,7 +23,7 @@
 		<p style="color: #000000; padding: 0px; font-size: 12px; margin-top: 4px;">{$input.value}</p>
 	{else}
 		{if $input.type == 'select' && $input.name == 'id_category'}
-			<script type="text/javascript">
+			<script type="text/javascript" nonce="{$cspNonce}">
 				$(function(){
 					$('#id_category').on('change', function(){
 						doAdminAjax(

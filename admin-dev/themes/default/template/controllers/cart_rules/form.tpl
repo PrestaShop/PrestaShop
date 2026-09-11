@@ -34,7 +34,7 @@
 		<!--<input type="submit" value="{l s='Save and stay' d='Admin.Actions'}" class="button" name="submitAddcart_ruleAndStay" id="" />-->
 	</form>
 
-	<script type="text/javascript">
+	<script type="text/javascript" nonce="{$cspNonce}">
 		var product_rule_groups_counter = {if isset($product_rule_groups_counter)}{$product_rule_groups_counter|intval}{else}0{/if};
 		var product_rule_counters = new Array();
 		var currentToken = '{$currentToken|escape:'quotes'}';

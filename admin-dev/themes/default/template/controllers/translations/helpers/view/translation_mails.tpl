@@ -34,7 +34,7 @@
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />
 				<input type="hidden" name="selected-theme" value="{$theme}" />
-				<script type="text/javascript">
+				<script type="text/javascript" nonce="{$cspNonce}">
 					$(function(){
 						$('a.useSpecialSyntax').on('click', function(){
 							var syntax = $(this).find('img').attr('alt');
@@ -82,7 +82,7 @@
 				</h3>
 				{$mail_content}
 				{literal}
-				<script type="text/javascript">
+				<script type="text/javascript" nonce="{$cspNonce}">
 				//<![CDATA[
 					$(function () {
 						$('.mails_field').on('shown.bs.collapse', function () {

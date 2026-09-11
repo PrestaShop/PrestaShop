@@ -44,7 +44,7 @@
 				<input type="hidden" name="type" value="{$type}" />
 				<input type="hidden" name="theme" value="{$theme}" />
 
-				<script type="text/javascript">
+				<script type="text/javascript" nonce="{$cspNonce}">
 					$(function(){
 						$('a.useSpecialSyntax').on('click', function(){
 							var syntax = $(this).find('img').attr('alt');

@@ -27,7 +27,7 @@
 <div class="row">
 	<div class="alert alert-warning">{l s='You have reached the limit (%s) of files to upload, please remove files to continue uploading' sprintf=[$max_files]}</div>
 </div>
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	$( document ).ready(function() {
 		{if isset($files) && $files}
 		$('#{$id|escape:'html':'UTF-8'}-images-thumbnails').parent().show();
@@ -56,7 +56,7 @@
 <div class="row" style="display:none">
 	<div class="alert alert-danger" id="{$id|escape:'html':'UTF-8'}-errors"></div>
 </div>
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	function humanizeSize(bytes)
 	{
 		if (typeof bytes !== 'number') {

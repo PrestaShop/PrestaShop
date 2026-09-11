@@ -14,7 +14,7 @@
 {/block}
 
 {block name="after"}
-	<script type="text/javascript">
+	<script type="text/javascript" nonce="{$cspNonce}">
 		startingData = new Array();
 		{foreach from=$products item=product key=key}
 			startingData[{$key}] = new Array(

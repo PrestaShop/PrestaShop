@@ -10,7 +10,7 @@
 	</ul>
 	{/if}
 </div>
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	var currentToken="{$token|@addslashes}";
 	var treeClickFunc = function() {
 		var newURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
