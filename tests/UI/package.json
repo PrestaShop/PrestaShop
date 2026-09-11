@@ -133,7 +133,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-html": "^8.1.4",
+    "eslint-plugin-html": "^8.2.0",
     "eslint-plugin-import": "^2.32.0",
     "mochawesome-merge": "^4.3.0",
     "ts-mocha": "^11.1.0",
