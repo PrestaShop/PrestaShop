@@ -1,12 +1,12 @@
 /*!
- * jQuery UI Datepicker 1.10.3
- * http://jqueryui.com
+ * jQuery UI Datepicker 1.13.3
+ * https://jqueryui.com
  *
- * Copyright 2013 jQuery Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license.
- * http://jquery.org/license
+ * https://jquery.org/license
  *
- * http://docs.jquery.com/UI/Datepicker#theming
+ * https://api.jqueryui.com/datepicker/#theming
  */
 .ui-datepicker {
 	width: 17em;
@@ -58,12 +58,9 @@
 	font-size: 1em;
 	margin: 1px 0;
 }
-.ui-datepicker select.ui-datepicker-month-year {
-	width: 100%;
-}
 .ui-datepicker select.ui-datepicker-month,
 .ui-datepicker select.ui-datepicker-year {
-	width: 49%;
+	width: 45%;
 }
 .ui-datepicker table {
 	width: 100%;
@@ -175,4 +172,14 @@
 .ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header {
 	border-right-width: 0;
 	border-left-width: 1px;
+}
+
+/* Icons */
+.ui-datepicker .ui-icon {
+	display: block;
+	text-indent: -99999px;
+	overflow: hidden;
+	background-repeat: no-repeat;
+	left: .5em;
+	top: .3em;
 }
