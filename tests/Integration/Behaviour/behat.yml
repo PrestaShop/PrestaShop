@@ -58,7 +58,7 @@ default:
       contexts:
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\StoreFeatureContext
-        - Tests\Integration\Behaviour\Features\Context\StoreFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
     email_body_translation:
       paths:
         - "%paths.base%/Features/Scenario/MailTemplate"

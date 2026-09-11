@@ -164,6 +164,7 @@ module.exports = {
     stock: './js/app/pages/stock',
     stock_page: './scss/pages/stock/stock_page.scss',
     store: './js/pages/store',
+    store_form: './js/pages/store/form',
     supplier: './js/pages/supplier',
     supplier_form: './js/pages/supplier/supplier-form',
     tag: './js/pages/tag',
