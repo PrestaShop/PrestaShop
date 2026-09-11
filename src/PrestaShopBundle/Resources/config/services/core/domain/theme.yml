@@ -25,6 +25,7 @@ services:
     autoconfigure: true
     arguments:
       - '@prestashop.core.addon.theme.theme_manager'
+      - '@prestashop.core.addon.theme.theme_provider'
 
   prestashop.core.domain.theme.command_handler.adapt_theme_to_rtl_languages_handler:
     class: 'PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler\AdaptThemeToRTLLanguagesHandler'

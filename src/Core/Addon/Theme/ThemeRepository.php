@@ -147,4 +147,24 @@ class ThemeRepository implements AddonRepositoryInterface
             return json_decode($content, true);
         }
     }
+
+    /**
+     * Get all parent themes names
+     *
+     * @return array
+     */
+    public function getParentThemes(): array
+    {
+        $parentThemes = [];
+
+        $diskThemes = $this->getThemesOnDisk();
+
+        foreach ($diskThemes as $diskTheme) {
+            if ($diskTheme->get('parent')) {
+                $parentThemes[] = $diskTheme->get('parent');
+            }
+        }
+
+        return $parentThemes;
+    }
 }
