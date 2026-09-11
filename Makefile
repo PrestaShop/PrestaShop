@@ -17,7 +17,7 @@ SYMFONY  = $(PHP_CONT) bin/console
 
 # Misc
 .DEFAULT_GOAL = install
-.PHONY        : help docker-build docker-up docker-start docker-restart docker-down docker-logs docker-sh composer cc test test-unit test-integration test-integration-behaviour test-api-module assets wait-assets admin front admin-default admin-new-theme front-core front-classic front-hummingbird install install-prestashop cs-fixer cs-fixer-dry phpstan scss-fixer es-linter
+.PHONY        : help docker-build docker-up docker-start docker-restart docker-down docker-logs docker-sh composer cc test test-unit test-integration test-integration-behaviour test-api-module assets assets-clean wait-assets admin front admin-default admin-new-theme front-core front-classic front-hummingbird install install-prestashop cs-fixer cs-fixer-dry phpstan scss-fixer es-linter
 
 ## —— 🎵 🐳 PrestaShop Docker Makefile 🐳 🎵 ———————————————————————————————————
 help: ## Outputs this help screen
@@ -52,6 +52,9 @@ install-prestashop: ## Install fresh PrestaShop database (requires containers to
 ## —— Assets 🎨 ———————————————————————————————————————————————————————————————
 assets: ## Build all assets
 	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh all --force
+
+assets-clean: ## Build all assets, forcing a clean reinstall of node_modules
+	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh all --force-install
 
 wait-assets: ## Wait for assets to be built
 	$(PHP_CONT_WITH_LOGIN) ./tools/assets/wait-build.sh
