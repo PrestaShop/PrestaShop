@@ -182,18 +182,55 @@ class AdminStatsControllerCore extends AdminStatsTabController
         );
     }
 
+    /**
+     * The date a statistic counts an order at.
+     *
+     * WHY: an order only receives an invoice date when its status issues invoices. With invoices
+     * turned off for a status, the column keeps the zero date, which is outside every range, so the
+     * order disappeared from every statistic. It is counted at its creation date in that case.
+     *
+     * @return string
+     */
+    protected static function getCountedAtSql()
+    {
+        return '(CASE WHEN `invoice_date` > "1000-01-01 00:00:00" THEN `invoice_date` ELSE `date_add` END)';
+    }
+
+    /**
+     * Restricts a statistic to the orders counted inside the given range.
+     *
+     * WHY two comparisons instead of a condition on getCountedAtSql(): both columns are indexed and
+     * a CASE around them would not be, which matters on a shop with a large order table.
+     *
+     * @param string $dateFrom
+     * @param string $dateTo
+     *
+     * @return string
+     */
+    protected static function getCountedBetweenSql($dateFrom, $dateTo, string $alias = '')
+    {
+        // WHY the alias: getBestCategory() joins the orders table next to the product table, which
+        // carries a date_add of its own, so the columns have to be qualified there.
+        $prefix = '' === $alias ? '' : '`' . $alias . '`.';
+        $from = '"' . pSQL($dateFrom) . ' 00:00:00"';
+        $to = '"' . pSQL($dateTo) . ' 23:59:59"';
+
+        return '(' . $prefix . '`invoice_date` BETWEEN ' . $from . ' AND ' . $to
+            . ' OR (' . $prefix . '`invoice_date` <= "1000-01-01 00:00:00" AND ' . $prefix . '`date_add` BETWEEN ' . $from . ' AND ' . $to . '))';
+    }
+
     public static function getTotalSales($date_from, $date_to, $granularity = false)
     {
         if ($granularity == 'day') {
             $sales = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT LEFT(`invoice_date`, 10) AS date, SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate) AS sales
+			SELECT LEFT(' . self::getCountedAtSql() . ', 10) AS date, SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate) AS sales
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+			WHERE ' . self::getCountedBetweenSql($date_from, $date_to) . ' AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o') . '
-			GROUP BY LEFT(`invoice_date`, 10)'
+			GROUP BY LEFT(' . self::getCountedAtSql() . ', 10)'
             );
             foreach ($result as $row) {
                 $sales[strtotime($row['date'])] = $row['sales'];
@@ -204,12 +241,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $sales = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT LEFT(`invoice_date`, 7) AS date, SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate) AS sales
+			SELECT LEFT(' . self::getCountedAtSql() . ', 7) AS date, SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate) AS sales
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+			WHERE ' . self::getCountedBetweenSql($date_from, $date_to) . ' AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o') . '
-			GROUP BY LEFT(`invoice_date`, 7)'
+			GROUP BY LEFT(' . self::getCountedAtSql() . ', 7)'
             );
             foreach ($result as $row) {
                 $sales[strtotime($row['date'] . '-01')] = $row['sales'];
@@ -222,7 +259,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			SELECT SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate)
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+			WHERE ' . self::getCountedBetweenSql($date_from, $date_to) . ' AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o')
             );
         }
@@ -234,7 +271,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             'SELECT COUNT(DISTINCT od.product_id)
 		FROM `' . _DB_PREFIX_ . 'orders` o
 		LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
-		WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+		WHERE ' . self::getCountedBetweenSql($date_from, $date_to) . '
 		' . Shop::addSqlRestriction(false, 'o')
         );
         if (!$distinct_products) {
@@ -250,12 +287,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $orders = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT LEFT(`invoice_date`, 10) AS date, COUNT(*) AS orders
+			SELECT LEFT(' . self::getCountedAtSql() . ', 10) AS date, COUNT(*) AS orders
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+			WHERE ' . self::getCountedBetweenSql($date_from, $date_to) . ' AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o') . '
-			GROUP BY LEFT(`invoice_date`, 10)'
+			GROUP BY LEFT(' . self::getCountedAtSql() . ', 10)'
             );
             foreach ($result as $row) {
                 $orders[strtotime($row['date'])] = $row['orders'];
@@ -266,12 +303,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $orders = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT LEFT(`invoice_date`, 7) AS date, COUNT(*) AS orders
+			SELECT LEFT(' . self::getCountedAtSql() . ', 7) AS date, COUNT(*) AS orders
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+			WHERE ' . self::getCountedBetweenSql($date_from, $date_to) . ' AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o') . '
-			GROUP BY LEFT(`invoice_date`, 7)'
+			GROUP BY LEFT(' . self::getCountedAtSql() . ', 7)'
             );
             foreach ($result as $row) {
                 $orders[strtotime($row['date'] . '-01')] = $row['orders'];
@@ -284,7 +321,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			SELECT COUNT(*) AS orders
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+			WHERE ' . self::getCountedBetweenSql($date_from, $date_to) . ' AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o')
             );
         }
@@ -351,7 +388,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				FROM `' . _DB_PREFIX_ . 'product` pr
 				LEFT OUTER JOIN `' . _DB_PREFIX_ . 'order_detail` cp ON pr.`id_product` = cp.`product_id`
 				LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON o.`id_order` = cp.`id_order`
-				WHERE o.invoice_date BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+				WHERE ' . self::getCountedBetweenSql($date_from, $date_to, 'o') . '
 				GROUP BY pr.`id_product`
 			) t ON t.`id_product` = pr.`id_product`
 		) t	ON t.`id_product` = capr.`id_product`
@@ -372,7 +409,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		SELECT a.id_country, COUNT(*) AS orders
 		FROM `' . _DB_PREFIX_ . 'orders` o
 		LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON o.id_address_delivery = a.id_address
-		WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+		WHERE ' . self::getCountedBetweenSql($date_from, $date_to) . '
 		' . Shop::addSqlRestriction()
         );
         $row['orders'] = round(100 * $row['orders'] / $total_orders, 1);
@@ -457,7 +494,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
 			SELECT
-				LEFT(`invoice_date`, 10) as date,
+				LEFT(' . self::getCountedAtSql() . ', 10) as date,
 				SUM(od.`product_quantity` * IF(
 					od.`purchase_supplier_price` > 0,
 					od.`purchase_supplier_price` / `conversion_rate`,
@@ -466,9 +503,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+			WHERE ' . self::getCountedBetweenSql($date_from, $date_to) . ' AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o') . '
-			GROUP BY LEFT(`invoice_date`, 10)'
+			GROUP BY LEFT(' . self::getCountedAtSql() . ', 10)'
             );
             foreach ($result as $row) {
                 $purchases[strtotime($row['date'])] = $row['total_purchase_price'];
@@ -486,7 +523,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+			WHERE ' . self::getCountedBetweenSql($date_from, $date_to) . ' AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o')
             );
         }
@@ -499,7 +536,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         $orders = Db::getInstance()->executeS(
             '
 		SELECT
-			LEFT(`invoice_date`, 10) AS date,
+			LEFT(' . self::getCountedAtSql() . ', 10) AS date,
 			total_paid_tax_incl / o.conversion_rate AS total_paid_tax_incl,
 			total_shipping_tax_excl / o.conversion_rate AS total_shipping_tax_excl,
 			o.module,
@@ -510,7 +547,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON o.id_address_delivery = a.id_address
 		LEFT JOIN `' . _DB_PREFIX_ . 'carrier` c ON o.id_carrier = c.id_carrier
 		LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-		WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
+		WHERE ' . self::getCountedBetweenSql($date_from, $date_to) . ' AND os.logable = 1
 		' . Shop::addSqlRestriction(false, 'o')
         );
         foreach ($orders as $order) {
@@ -868,9 +905,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
 					COUNT(`id_order`) AS orders,
 					SUM(`total_paid_tax_excl` / `conversion_rate`) AS total_paid_tax_excl
 				FROM `' . _DB_PREFIX_ . 'orders`
-				WHERE `invoice_date` BETWEEN "' . pSQL(date('Y-m-d', strtotime('-31 day'))) . ' 00:00:00" AND "' . pSQL(
+				WHERE ' . self::getCountedBetweenSql(
+                        date('Y-m-d', strtotime('-31 day')),
                         date('Y-m-d', strtotime('-1 day'))
-                    ) . ' 23:59:59"
+                    ) . '
 				' . Shop::addSqlRestriction()
                 );
                 $value = $this->context->getCurrentLocale()->formatPrice(
