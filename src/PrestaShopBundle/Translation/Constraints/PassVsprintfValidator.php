@@ -1,4 +1,5 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -25,7 +26,10 @@ class PassVsprintfValidator extends ConstraintValidator
             throw new UnexpectedTypeException($translation, 'PrestaShopBundle\Entity\Translation');
         }
 
-        if ($this->countArgumentsOfTranslation($translation->getKey()) != $this->countArgumentsOfTranslation($translation->getTranslation())) {
+        if (
+            $this->countArgumentsOfTranslation($translation->getKey()) !=
+            $this->countArgumentsOfTranslation($translation->getTranslation())
+        ) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
         }
@@ -36,7 +40,13 @@ class PassVsprintfValidator extends ConstraintValidator
         if (empty($property)) {
             return 0;
         }
+
         $matches = [];
+
+        // First we remove all classic parameters (%var%)
+        $property = preg_replace(Translator::$regexClassicParams, '~', $property);
+
+        // Then we count the number of sprintf parameters
         if (preg_match_all(Translator::$regexSprintfParams, $property, $matches) === false) {
             throw new Exception('Preg_match failed');
         }
