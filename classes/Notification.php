@@ -94,39 +94,55 @@ class NotificationCore
 
         switch ($type) {
             case 'order':
-                $sql = '
-					SELECT SQL_CALC_FOUND_ROWS o.`id_order`, o.`id_customer`, o.`total_paid`, o.`id_currency`, o.`date_upd`, c.`firstname`, c.`lastname`, ca.`name`, co.`iso_code`
-					FROM `' . _DB_PREFIX_ . 'orders` as o
+                $from = '
+					FROM `' . _DB_PREFIX_ . 'orders` as o';
+                $joins = '
 					LEFT JOIN `' . _DB_PREFIX_ . 'customer` as c ON (c.`id_customer` = o.`id_customer`)
 					LEFT JOIN `' . _DB_PREFIX_ . 'carrier` as ca ON (ca.`id_carrier` = o.`id_carrier`)
 					LEFT JOIN `' . _DB_PREFIX_ . 'address` as a ON (a.`id_address` = o.`id_address_delivery`)
-					LEFT JOIN `' . _DB_PREFIX_ . 'country` as co ON (co.`id_country` = a.`id_country`)
+					LEFT JOIN `' . _DB_PREFIX_ . 'country` as co ON (co.`id_country` = a.`id_country`)';
+                $where = '
 					WHERE `id_order` > ' . (int) $idLastElement .
-                    Shop::addSqlRestriction(false, 'o') . '
+                    Shop::addSqlRestriction(false, 'o');
+
+                $sql = '
+					SELECT o.`id_order`, o.`id_customer`, o.`total_paid`, o.`id_currency`, o.`date_upd`, c.`firstname`, c.`lastname`, ca.`name`, co.`iso_code`'
+                    . $from . $joins . $where . '
 					ORDER BY `id_order` DESC
 					LIMIT 5';
 
                 break;
 
             case 'customer_message':
-                $sql = '
-					SELECT SQL_CALC_FOUND_ROWS c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`, ct.`status`, c.`date_add`, cu.`firstname`, cu.`lastname`
+                // The customer thread is joined here and not in $joins because the WHERE clause filters on it.
+                $from = '
 					FROM `' . _DB_PREFIX_ . 'customer_message` as c
-					LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)
-					LEFT JOIN `' . _DB_PREFIX_ . 'customer` as cu ON (cu.`id_customer` = ct.`id_customer`)
+					LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)';
+                $joins = '
+					LEFT JOIN `' . _DB_PREFIX_ . 'customer` as cu ON (cu.`id_customer` = ct.`id_customer`)';
+                $where = '
 					WHERE c.`id_customer_message` > ' . (int) $idLastElement . '
 						AND c.`id_employee` = 0
-						AND ct.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
+						AND ct.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')';
+
+                $sql = '
+					SELECT c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`, ct.`status`, c.`date_add`, cu.`firstname`, cu.`lastname`'
+                    . $from . $joins . $where . '
 					ORDER BY c.`id_customer_message` DESC
 					LIMIT 5';
 
                 break;
             default:
-                $sql = '
-					SELECT SQL_CALC_FOUND_ROWS t.`id_' . bqSQL($type) . '`, t.*
-					FROM `' . _DB_PREFIX_ . bqSQL($type) . '` t
+                $from = '
+					FROM `' . _DB_PREFIX_ . bqSQL($type) . '` t';
+                $joins = '';
+                $where = '
 					WHERE t.`deleted` = 0 AND t.`id_' . bqSQL($type) . '` > ' . (int) $idLastElement .
-                    Shop::addSqlRestriction(false, 't') . '
+                    Shop::addSqlRestriction(false, 't');
+
+                $sql = '
+					SELECT t.`id_' . bqSQL($type) . '`, t.*'
+                    . $from . $joins . $where . '
 					ORDER BY t.`id_' . bqSQL($type) . '` DESC
 					LIMIT 5';
 
@@ -134,7 +150,12 @@ class NotificationCore
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
-        $total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()', false);
+        // A dedicated COUNT() is used instead of SQL_CALC_FOUND_ROWS: the latter is deprecated since
+        // MySQL 8.0.17, and it forces the optimizer to resolve every matching row even though the
+        // displayed list is capped at 5. $from and $where are shared with the query above, so both
+        // statements always see the same set of rows. Presentation-only joins are left out of the
+        // count: they all match at most one row on a primary key, so they cannot change the total.
+        $total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*)' . $from . $where, false);
         $json = ['total' => $total, 'results' => []];
         foreach ($result as $value) {
             $customerName = '';
