@@ -72,6 +72,13 @@ class MemcacheServerManager
             return is_array($version) && false === in_array('255.255.255', $version, true);
         }
 
+        // Both cache classes guard their own instantiation the same way. Without it, a shop that has
+        // neither extension answers the back office test and add requests with "Class Memcache not
+        // found" and a 500, instead of reporting that the server cannot be reached.
+        if (!class_exists('Memcache') || !extension_loaded('memcache')) {
+            return false;
+        }
+
         $memcache = new Memcache();
 
         return true === $memcache->connect($serverIp, (int) $serverPort);
