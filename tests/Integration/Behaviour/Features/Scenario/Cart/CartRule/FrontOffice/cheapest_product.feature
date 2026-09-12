@@ -77,3 +77,25 @@ Feature: Cart rule (percent) calculation with one cart rule restricted to cheape
     # The cheapest product is applied only once on one of the cheapest products
     # (2 * 32.388) + (2 * 9.812 / 2) + (9.812 / 2) + 31.188 + 7
     Then my cart total should be 127.494 tax included
+
+  @restore-cart-rules-after-scenario
+  Scenario: 50% cartRule on cheapest product must ignore a product offered as a gift
+    Given there is a product in the catalog named "giftproduct" with a price of 5.0 and 1000 items in stock
+    And there is a cart rule "cartrule30" with following properties:
+      | name[en-US]                  | cartrule30  |
+      | priority                     | 30          |
+      | free_shipping                | false       |
+      | code                         | foo30       |
+      | gift_product                 | giftproduct |
+      | apply_to_discounted_products | true        |
+    And I add 1 items of product "product2" in my cart
+    And my cart total should be 39.388 tax included
+    When I apply the voucher code "foo30"
+    # the gift is free, so the total does not move
+    Then my cart total should be 39.388 tax included
+    When I apply the voucher code "foo10"
+    # The cheapest product the customer actually pays for is product2, not the 5.0 gift,
+    # so the discount is 32.388 / 2 and not 5.0 / 2.
+    Then I should have a voucher named "foo10" with 16.194 of discount
+    # 32.388 + 5.0 gift + 7 shipping - 5.0 gift discount - 16.194
+    And my cart total should be 23.194 tax included
