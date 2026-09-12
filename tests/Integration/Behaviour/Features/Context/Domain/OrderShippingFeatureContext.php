@@ -6,6 +6,8 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Carrier;
+use Db;
 use Order;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
@@ -43,6 +45,48 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
                 $trackingNumber
             )
         );
+    }
+
+    /**
+     * @Then order :orderReference should have a logged carrier change from :oldCarrierReference to :newCarrierReference
+     *
+     * @param string $orderReference
+     * @param string $oldCarrierReference
+     * @param string $newCarrierReference
+     */
+    public function orderShouldHaveALoggedCarrierChange(
+        string $orderReference,
+        string $oldCarrierReference,
+        string $newCarrierReference
+    ) {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $oldCarrier = new Carrier(SharedStorage::getStorage()->get($oldCarrierReference));
+        $newCarrier = new Carrier(SharedStorage::getStorage()->get($newCarrierReference));
+
+        $logs = Db::getInstance()->executeS(
+            'SELECT `message`, `id_employee` FROM `' . _DB_PREFIX_ . 'log`
+            WHERE `object_type` = "Order" AND `object_id` = ' . (int) $orderId
+        );
+
+        $matching = array_filter($logs, static function (array $log) use ($oldCarrier, $newCarrier): bool {
+            return str_contains($log['message'], '"' . $oldCarrier->name . '"')
+                && str_contains($log['message'], '"' . $newCarrier->name . '"');
+        });
+
+        Assert::assertNotEmpty(
+            $matching,
+            sprintf(
+                'Expected a log of the carrier change from "%s" to "%s" on order %d, got: %s',
+                $oldCarrier->name,
+                $newCarrier->name,
+                $orderId,
+                json_encode(array_column($logs, 'message'))
+            )
+        );
+
+        foreach ($matching as $log) {
+            Assert::assertNotEmpty($log['id_employee'], 'The carrier change was logged without the employee who made it');
+        }
     }
 
     /**
