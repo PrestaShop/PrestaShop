@@ -995,7 +995,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
                 break;
         }
-        imagedestroy($dest_image);
+
         if (!$imaged) {
             throw new WebserviceException(sprintf('Unable to write the image "%s".', str_replace(_PS_ROOT_DIR_, '[SHOP_ROOT_DIR]', $new_path)), [70, 500]);
         }
