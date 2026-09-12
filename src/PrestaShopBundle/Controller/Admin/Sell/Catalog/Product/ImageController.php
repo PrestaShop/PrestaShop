@@ -294,6 +294,11 @@ class ImageController extends PrestaShopAdminController
                     [],
                     'Admin.Notifications.Error'
                 ),
+                UploadedImageConstraintException::AVIF_NOT_SUPPORTED => $this->trans(
+                    'AVIF image format is not supported on this server. Please install Imagick with AVIF support or GD compiled with libavif.',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
             ],
             MemoryLimitException::class => $this->trans(
                 'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',

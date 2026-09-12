@@ -13,4 +13,5 @@ class UploadedImageConstraintException extends ImageException
     public const EXCEEDED_SIZE = 1;
     public const UNRECOGNIZED_FORMAT = 2;
     public const UNKNOWN_ERROR = 4;
+    public const AVIF_NOT_SUPPORTED = 5;
 }

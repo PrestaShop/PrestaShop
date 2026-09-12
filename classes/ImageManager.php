@@ -16,6 +16,16 @@ class ImageManagerCore
     public const ERROR_FILE_NOT_EXIST = 1;
     public const ERROR_FILE_WIDTH = 2;
     public const ERROR_MEMORY_LIMIT = 3;
+    public const ERROR_AVIF_NOT_SUPPORTED = 4;
+
+    /** @var bool|null Cached result of Imagick availability check */
+    private static $imagickAvailable = null;
+
+    /** @var bool|null Cached result of Imagick AVIF support check */
+    private static $imagickAvifSupported = null;
+
+    /** @var bool|null Cached result of GD AVIF support check */
+    private static $gdAvifSupported = null;
 
     public const MIME_TYPE_SUPPORTED = [
         'image/gif',
@@ -25,6 +35,7 @@ class ImageManagerCore
         'image/png',
         'image/x-png',
         'image/webp',
+        'image/avif',
         'image/svg+xml',
         'image/svg',
     ];
@@ -36,6 +47,7 @@ class ImageManagerCore
         'jpe',
         'png',
         'webp',
+        'avif',
     ];
 
     /**
@@ -189,7 +201,66 @@ class ImageManagerCore
             return false;
         }
 
-        list($tmpWidth, $tmpHeight, $sourceFileType) = getimagesize($sourceFile);
+        // Detect source file type early to check AVIF support
+        $sourceInfo = @getimagesize($sourceFile);
+        $sourceFileType = $sourceInfo ? $sourceInfo[2] : 0;
+
+        // Check if source is AVIF and verify support is available
+        $isSourceAvif = ($sourceFileType === IMAGETYPE_AVIF)
+            || (pathinfo($sourceFile, PATHINFO_EXTENSION) === 'avif');
+
+        if ($isSourceAvif && !self::isAvifSupported()) {
+            $error = self::ERROR_AVIF_NOT_SUPPORTED;
+
+            return false;
+        }
+
+        // Check if destination is AVIF and verify support is available
+        $isDestAvif = ($destinationFileType === 'avif')
+            || (pathinfo($destinationFile, PATHINFO_EXTENSION) === 'avif');
+
+        if ($isDestAvif && !self::isAvifSupported()) {
+            $error = self::ERROR_AVIF_NOT_SUPPORTED;
+
+            return false;
+        }
+
+        // Try ImageMagick first if available
+        // For AVIF (source or destination), only use Imagick if it supports AVIF
+        $needsAvifSupport = $isSourceAvif || $isDestAvif;
+        $useImagick = self::isImagickAvailable()
+            && (!$needsAvifSupport || self::isImagickAvifSupported());
+
+        if ($useImagick) {
+            try {
+                return self::resizeWithImagick(
+                    $sourceFile,
+                    $destinationFile,
+                    $destinationWidth,
+                    $destinationHeight,
+                    $destinationFileType,
+                    $forceType,
+                    $error,
+                    $targetWidth,
+                    $targetHeight,
+                    $sourceWidth,
+                    $sourceHeight,
+                    $imageFitment
+                );
+            } catch (Exception $e) {
+                // Imagick failed, fall through to GD
+                // But if AVIF is needed and GD doesn't support it, we must fail
+                if ($needsAvifSupport && !self::isGdAvifSupported()) {
+                    $error = self::ERROR_AVIF_NOT_SUPPORTED;
+
+                    return false;
+                }
+            }
+        }
+
+        // GD path - reuse sourceFileType from earlier detection
+        $tmpWidth = $sourceInfo ? $sourceInfo[0] : 0;
+        $tmpHeight = $sourceInfo ? $sourceInfo[1] : 0;
         $rotate = 0;
         if (function_exists('exif_read_data')) {
             $exif = @exif_read_data($sourceFile);
@@ -230,67 +301,25 @@ class ImageManagerCore
             $sourceHeight = $tmpHeight;
         }
 
-        /*
-         * If the filetype is not forced and we are requesting a JPG file, we will adjust the format inside
-         * the image according to PS_IMAGE_QUALITY in some cases.
-         */
-        if (!$forceType && $destinationFileType === 'jpg') {
-            // If PS_IMAGE_QUALITY is set to png_all, we will use PNG file no matter the source.
-            if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all') {
-                $destinationFileType = 'png';
-            }
-
-            // If PS_IMAGE_QUALITY is set to png (optional), we will use PNG if the original format could support transparency.
-            if (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $sourceFileType != IMAGETYPE_JPEG) {
-                $destinationFileType = 'png';
-            }
-        }
+        $destinationFileType = self::getDestinationFileType($destinationFileType, $forceType, $sourceFileType);
 
         if (!$sourceWidth) {
             $error = self::ERROR_FILE_WIDTH;
 
             return false;
         }
-        if (!$destinationWidth) {
-            $destinationWidth = $sourceWidth;
-        }
-        if (!$destinationHeight) {
-            $destinationHeight = $sourceHeight;
-        }
 
-        // Unknown fitments fall back to legacy behavior to keep old integrations working.
-        if (!in_array($imageFitment, ImageFitment::AVAILABLE_VALUES, true)) {
-            $imageFitment = ImageFitment::FIT;
-        }
-
-        $widthDiff = $destinationWidth / $sourceWidth;
-        $heightDiff = $destinationHeight / $sourceHeight;
-
-        $psImageGenerationMethod = Configuration::get('PS_IMAGE_GENERATION_METHOD');
-
-        // Calculate target dimensions according to the selected thumbnail fitment.
-        if ($imageFitment === ImageFitment::BOUND) {
-            $ratio = min(1, $widthDiff, $heightDiff);
-            $nextWidth = (int) round($sourceWidth * $ratio);
-            $nextHeight = (int) round($sourceHeight * $ratio);
-            $destinationWidth = $nextWidth;
-            $destinationHeight = $nextHeight;
-        } elseif ($imageFitment === ImageFitment::CROP) {
-            $ratio = max($widthDiff, $heightDiff);
-            $nextWidth = (int) round($sourceWidth * $ratio);
-            $nextHeight = (int) round($sourceHeight * $ratio);
-        } elseif ($widthDiff > 1 && $heightDiff > 1) {
-            $nextWidth = $sourceWidth;
-            $nextHeight = $sourceHeight;
-        } elseif ($psImageGenerationMethod == 2 || (!$psImageGenerationMethod && $widthDiff > $heightDiff)) {
-            $nextHeight = $destinationHeight;
-            $nextWidth = round(($sourceWidth * $nextHeight) / $sourceHeight);
-            $destinationWidth = (int) (!$psImageGenerationMethod ? $destinationWidth : $nextWidth);
-        } else {
-            $nextWidth = $destinationWidth;
-            $nextHeight = round($sourceHeight * $destinationWidth / $sourceWidth);
-            $destinationHeight = (int) (!$psImageGenerationMethod ? $destinationHeight : $nextHeight);
-        }
+        $dimensions = self::calculateResizeDimensions(
+            $sourceWidth,
+            $sourceHeight,
+            $destinationWidth,
+            $destinationHeight,
+            $imageFitment
+        );
+        $destinationWidth = $dimensions['destinationWidth'];
+        $destinationHeight = $dimensions['destinationHeight'];
+        $nextWidth = $dimensions['nextWidth'];
+        $nextHeight = $dimensions['nextHeight'];
 
         if (!ImageManager::checkImageMemoryLimit($sourceFile)) {
             $error = self::ERROR_MEMORY_LIMIT;
@@ -613,6 +642,8 @@ class ImageManagerCore
                 return imagecreatefrompng($filename);
             case IMAGETYPE_WEBP:
                 return imagecreatefromwebp($filename);
+            case IMAGETYPE_AVIF:
+                return imagecreatefromavif($filename);
             case IMAGETYPE_JPEG:
             default:
                 return imagecreatefromjpeg($filename);
@@ -907,6 +938,353 @@ class ImageManagerCore
         }
 
         return $path;
+    }
+
+    /**
+     * Check if the Imagick extension is available.
+     *
+     * @return bool
+     */
+    public static function isImagickAvailable(): bool
+    {
+        if (self::$imagickAvailable === null) {
+            self::$imagickAvailable = extension_loaded('imagick') && class_exists('Imagick');
+        }
+
+        return self::$imagickAvailable;
+    }
+
+    /**
+     * Check if Imagick supports AVIF format.
+     *
+     * @return bool
+     */
+    public static function isImagickAvifSupported(): bool
+    {
+        if (self::$imagickAvifSupported === null) {
+            self::$imagickAvifSupported = false;
+            if (self::isImagickAvailable()) {
+                $imagick = new Imagick();
+                $formats = $imagick->queryFormats('AVIF');
+                self::$imagickAvifSupported = !empty($formats);
+                $imagick->destroy();
+            }
+        }
+
+        return self::$imagickAvifSupported;
+    }
+
+    /**
+     * Check if GD supports AVIF format.
+     *
+     * @return bool
+     */
+    public static function isGdAvifSupported(): bool
+    {
+        if (self::$gdAvifSupported === null) {
+            self::$gdAvifSupported = function_exists('imagecreatefromavif') && function_exists('imageavif');
+        }
+
+        return self::$gdAvifSupported;
+    }
+
+    /**
+     * Check if AVIF format is supported by any available image processor.
+     *
+     * @return bool
+     */
+    public static function isAvifSupported(): bool
+    {
+        return self::isImagickAvifSupported() || self::isGdAvifSupported();
+    }
+
+    /**
+     * Determine the destination file type based on PS_IMAGE_QUALITY configuration.
+     *
+     * @param string $destinationFileType
+     * @param bool $forceType
+     * @param int $sourceFileType
+     *
+     * @return string
+     */
+    private static function getDestinationFileType(string $destinationFileType, bool $forceType, int $sourceFileType): string
+    {
+        /*
+         * If the filetype is not forced and we are requesting a JPG file, we will adjust the format inside
+         * the image according to PS_IMAGE_QUALITY in some cases.
+         */
+        if (!$forceType && $destinationFileType === 'jpg') {
+            // If PS_IMAGE_QUALITY is set to png_all, we will use PNG file no matter the source.
+            if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all') {
+                $destinationFileType = 'png';
+            }
+
+            // If PS_IMAGE_QUALITY is set to png (optional), we will use PNG if the original format could support transparency.
+            if (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $sourceFileType != IMAGETYPE_JPEG) {
+                $destinationFileType = 'png';
+            }
+        }
+
+        return $destinationFileType;
+    }
+
+    /**
+     * Calculate resize dimensions based on source and destination sizes.
+     *
+     * @param int $sourceWidth
+     * @param int $sourceHeight
+     * @param int|null $destinationWidth
+     * @param int|null $destinationHeight
+     * @param value-of<ImageFitment::AVAILABLE_VALUES> $imageFitment Defines how the source image fits generated dimensions
+     *
+     * @return array{destinationWidth: int, destinationHeight: int, nextWidth: int, nextHeight: int}
+     */
+    private static function calculateResizeDimensions(
+        int $sourceWidth,
+        int $sourceHeight,
+        ?int $destinationWidth,
+        ?int $destinationHeight,
+        string $imageFitment = ImageFitment::FIT
+    ): array {
+        if (!$destinationWidth) {
+            $destinationWidth = $sourceWidth;
+        }
+        if (!$destinationHeight) {
+            $destinationHeight = $sourceHeight;
+        }
+
+        // Unknown fitments fall back to legacy behavior to keep old integrations working.
+        if (!in_array($imageFitment, ImageFitment::AVAILABLE_VALUES, true)) {
+            $imageFitment = ImageFitment::FIT;
+        }
+
+        $widthDiff = $destinationWidth / $sourceWidth;
+        $heightDiff = $destinationHeight / $sourceHeight;
+
+        $psImageGenerationMethod = Configuration::get('PS_IMAGE_GENERATION_METHOD');
+
+        // Calculate target dimensions according to the selected thumbnail fitment.
+        if ($imageFitment === ImageFitment::BOUND) {
+            $ratio = min(1, $widthDiff, $heightDiff);
+            $nextWidth = (int) round($sourceWidth * $ratio);
+            $nextHeight = (int) round($sourceHeight * $ratio);
+            $destinationWidth = $nextWidth;
+            $destinationHeight = $nextHeight;
+        } elseif ($imageFitment === ImageFitment::CROP) {
+            $ratio = max($widthDiff, $heightDiff);
+            $nextWidth = (int) round($sourceWidth * $ratio);
+            $nextHeight = (int) round($sourceHeight * $ratio);
+        } elseif ($widthDiff > 1 && $heightDiff > 1) {
+            $nextWidth = $sourceWidth;
+            $nextHeight = $sourceHeight;
+        } elseif ($psImageGenerationMethod == 2 || (!$psImageGenerationMethod && $widthDiff > $heightDiff)) {
+            $nextHeight = $destinationHeight;
+            $nextWidth = round(($sourceWidth * $nextHeight) / $sourceHeight);
+            $destinationWidth = (int) (!$psImageGenerationMethod ? $destinationWidth : $nextWidth);
+        } else {
+            $nextWidth = $destinationWidth;
+            $nextHeight = round($sourceHeight * $destinationWidth / $sourceWidth);
+            $destinationHeight = (int) (!$psImageGenerationMethod ? $destinationHeight : $nextHeight);
+        }
+
+        return [
+            'destinationWidth' => (int) $destinationWidth,
+            'destinationHeight' => (int) $destinationHeight,
+            'nextWidth' => (int) $nextWidth,
+            'nextHeight' => (int) $nextHeight,
+        ];
+    }
+
+    /**
+     * Resize an image using the Imagick extension.
+     *
+     * @param string $sourceFile
+     * @param string $destinationFile
+     * @param int|null $destinationWidth
+     * @param int|null $destinationHeight
+     * @param string $destinationFileType
+     * @param bool $forceType
+     * @param int $error
+     * @param int|null $targetWidth
+     * @param int|null $targetHeight
+     * @param int|null $sourceWidth
+     * @param int|null $sourceHeight
+     * @param value-of<ImageFitment::AVAILABLE_VALUES> $imageFitment Defines how the source image fits generated dimensions
+     *
+     * @return bool
+     *
+     * @throws ImagickException
+     */
+    private static function resizeWithImagick(
+        string $sourceFile,
+        string $destinationFile,
+        ?int $destinationWidth,
+        ?int $destinationHeight,
+        string $destinationFileType,
+        bool $forceType,
+        int &$error,
+        ?int &$targetWidth,
+        ?int &$targetHeight,
+        ?int &$sourceWidth,
+        ?int &$sourceHeight,
+        string $imageFitment = ImageFitment::FIT
+    ): bool {
+        $imagick = new Imagick($sourceFile);
+
+        // Convert to sRGB colorspace to avoid color issues (especially with AVIF)
+        if ($imagick->getImageColorspace() !== Imagick::COLORSPACE_SRGB) {
+            $imagick->transformImageColorspace(Imagick::COLORSPACE_SRGB);
+        }
+
+        // Auto-orient based on EXIF data
+        $imagick->autoOrient();
+
+        $sourceWidth = $imagick->getImageWidth();
+        $sourceHeight = $imagick->getImageHeight();
+
+        // Determine source file type for format-dependent logic
+        $sourceFileType = self::getImagickSourceFileType($imagick);
+        $destinationFileType = self::getDestinationFileType($destinationFileType, $forceType, $sourceFileType);
+
+        if (!$sourceWidth) {
+            $error = self::ERROR_FILE_WIDTH;
+            $imagick->destroy();
+
+            return false;
+        }
+
+        $dimensions = self::calculateResizeDimensions(
+            $sourceWidth,
+            $sourceHeight,
+            $destinationWidth,
+            $destinationHeight,
+            $imageFitment
+        );
+        $destinationWidth = $dimensions['destinationWidth'];
+        $destinationHeight = $dimensions['destinationHeight'];
+        $nextWidth = $dimensions['nextWidth'];
+        $nextHeight = $dimensions['nextHeight'];
+
+        $targetWidth = $destinationWidth;
+        $targetHeight = $destinationHeight;
+
+        // Resize the image using Lanczos filter for better quality
+        $imagick->resizeImage($nextWidth, $nextHeight, Imagick::FILTER_LANCZOS, 1);
+
+        // Create canvas and composite for centering
+        $canvas = new Imagick();
+
+        if (in_array($destinationFileType, ['png', 'webp', 'avif'])) {
+            $canvas->newImage($destinationWidth, $destinationHeight, new ImagickPixel('transparent'));
+        } else {
+            $canvas->newImage($destinationWidth, $destinationHeight, new ImagickPixel('white'));
+        }
+
+        $offsetX = (int) (($destinationWidth - $nextWidth) / 2);
+        $offsetY = (int) (($destinationHeight - $nextHeight) / 2);
+        $canvas->compositeImage($imagick, Imagick::COMPOSITE_OVER, $offsetX, $offsetY);
+
+        $imagick->destroy();
+
+        $result = self::writeImagick($destinationFileType, $canvas, $destinationFile);
+        $canvas->destroy();
+
+        Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $destinationFileType]);
+
+        return $result;
+    }
+
+    /**
+     * Get the IMAGETYPE_* constant equivalent from an Imagick object.
+     *
+     * @param Imagick $imagick
+     *
+     * @return int
+     */
+    private static function getImagickSourceFileType(Imagick $imagick): int
+    {
+        $format = strtoupper($imagick->getImageFormat());
+
+        return match ($format) {
+            'GIF' => IMAGETYPE_GIF,
+            'PNG' => IMAGETYPE_PNG,
+            'WEBP' => IMAGETYPE_WEBP,
+            default => IMAGETYPE_JPEG,
+        };
+    }
+
+    /**
+     * Write an image using Imagick.
+     *
+     * @param string $type
+     * @param Imagick $imagick
+     * @param string $filename
+     *
+     * @return bool
+     */
+    private static function writeImagick(string $type, Imagick $imagick, string $filename): bool
+    {
+        static $psPngQuality = null;
+        static $psJpegQuality = null;
+        static $psWebpQuality = null;
+        static $psAvifQuality = null;
+
+        if ($psPngQuality === null) {
+            $psPngQuality = Configuration::get('PS_PNG_QUALITY');
+        }
+        if ($psJpegQuality === null) {
+            $psJpegQuality = Configuration::get('PS_JPEG_QUALITY');
+        }
+        if ($psWebpQuality === null) {
+            $psWebpQuality = Configuration::get('PS_WEBP_QUALITY');
+        }
+        if ($psAvifQuality === null) {
+            $psAvifQuality = Configuration::get('PS_AVIF_QUALITY');
+        }
+
+        switch ($type) {
+            case 'gif':
+                $imagick->setImageFormat('gif');
+
+                break;
+
+            case 'png':
+                $imagick->setImageFormat('png');
+                $quality = ($psPngQuality === false ? 7 : (int) $psPngQuality);
+                // Imagick PNG compression: tens digit = zlib level, units digit = filter type
+                $imagick->setImageCompressionQuality($quality * 10);
+
+                break;
+
+            case 'webp':
+                $imagick->setImageFormat('webp');
+                $quality = ($psWebpQuality === false ? 80 : (int) $psWebpQuality);
+                $imagick->setImageCompressionQuality($quality);
+
+                break;
+
+            case 'avif':
+                $imagick->setImageFormat('avif');
+                $quality = ($psAvifQuality === false ? 80 : (int) $psAvifQuality);
+                $imagick->setImageCompressionQuality($quality);
+
+                break;
+
+            case 'jpg':
+            case 'jpeg':
+            default:
+                $imagick->setImageFormat('jpeg');
+                $quality = ($psJpegQuality === false ? 90 : (int) $psJpegQuality);
+                $imagick->setImageCompressionQuality($quality);
+                $imagick->setInterlaceScheme(Imagick::INTERLACE_PLANE);
+
+                break;
+        }
+
+        $success = $imagick->writeImage($filename);
+        @chmod($filename, 0664);
+
+        return $success;
     }
 
     /**

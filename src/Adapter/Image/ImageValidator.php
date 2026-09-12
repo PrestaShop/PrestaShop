@@ -73,5 +73,15 @@ class ImageValidator
         if (!ImageManager::isRealImage($filePath, $mime, $allowedMimeTypes)) {
             throw new UploadedImageConstraintException(sprintf('Image type "%s" is not allowed, allowed types are: %s', $mime, implode(',', $allowedMimeTypes)), UploadedImageConstraintException::UNRECOGNIZED_FORMAT);
         }
+
+        // Check if AVIF file can be processed (requires Imagick or GD with AVIF support)
+        // Use ImageManager::getMimeType() for accurate AVIF detection (mime_content_type may return image/heif)
+        $detectedMime = ImageManager::getMimeType($filePath);
+        if ($detectedMime === 'image/avif' && !ImageManager::isAvifSupported()) {
+            throw new UploadedImageConstraintException(
+                'AVIF image format is not supported on this server. Please install Imagick with AVIF support or GD compiled with libavif.',
+                UploadedImageConstraintException::AVIF_NOT_SUPPORTED
+            );
+        }
     }
 }

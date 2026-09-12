@@ -41,6 +41,7 @@ class ImageManagerTest extends TestCase
             ['name.jpe', null, true],
             ['name.png', null, true],
             ['name.webp', null, true],
+            ['name.avif', null, true],
             ['name.name.gif', null, true],
             ['name.GIF', null, true],
             ['name.doc', ['doc'], true],
@@ -72,8 +73,48 @@ class ImageManagerTest extends TestCase
             ['file.jpeg', 'image/jpeg'],
             ['file.png', 'image/png'],
             ['file.webp', 'image/webp'],
+            ['file.avif', 'image/avif'],
             ['file.test', 'image/jpeg'],
             ['file', 'image/jpeg'],
         ];
+    }
+
+    public function testIsImagickAvailableReturnsBool(): void
+    {
+        $result = ImageManager::isImagickAvailable();
+        self::assertIsBool($result);
+    }
+
+    public function testIsImagickAvifSupportedReturnsBool(): void
+    {
+        $result = ImageManager::isImagickAvifSupported();
+        self::assertIsBool($result);
+    }
+
+    public function testIsGdAvifSupportedReturnsBool(): void
+    {
+        $result = ImageManager::isGdAvifSupported();
+        self::assertIsBool($result);
+    }
+
+    public function testIsAvifSupportedReturnsBool(): void
+    {
+        $result = ImageManager::isAvifSupported();
+        self::assertIsBool($result);
+    }
+
+    public function testIsAvifSupportedMatchesComponentSupport(): void
+    {
+        // isAvifSupported should be true if either Imagick or GD supports AVIF
+        $imagickAvif = ImageManager::isImagickAvifSupported();
+        $gdAvif = ImageManager::isGdAvifSupported();
+        $expected = $imagickAvif || $gdAvif;
+
+        self::assertSame($expected, ImageManager::isAvifSupported());
+    }
+
+    public function testErrorAvifNotSupportedConstant(): void
+    {
+        self::assertSame(4, ImageManager::ERROR_AVIF_NOT_SUPPORTED);
     }
 }

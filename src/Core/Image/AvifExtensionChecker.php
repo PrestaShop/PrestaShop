@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Image;
 
+use Imagick;
 use PrestaShop\PrestaShop\Core\Image\Exception\AvifUnavailableException;
 
 /**
@@ -23,6 +24,17 @@ class AvifExtensionChecker
             return $this->isAvailable;
         }
 
+        // Check Imagick first — it has broader AVIF support and better quality
+        if (extension_loaded('imagick')) {
+            $imagick = new Imagick();
+            $this->isAvailable = in_array('AVIF', $imagick->queryFormats('AVIF'));
+
+            if ($this->isAvailable) {
+                return $this->isAvailable;
+            }
+        }
+
+        // Fall back to GD AVIF support check
         $this->isAvailable = extension_loaded('gd') /* @phpstan-ignore-line */
             && version_compare(PHP_VERSION, '8.1') >= 0
             && function_exists('imageavif')
