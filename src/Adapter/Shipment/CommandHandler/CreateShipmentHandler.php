@@ -74,7 +74,10 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
                     countryZoneId: 0,
                     currencyId: (int) $order->id_currency,
                     customerId: (int) $order->id_customer,
-                    orderTotal: (float) $order->total_products,
+                    // WHY: total_products is tax excluded, and this total picks the carrier's price
+                    // range and is compared against the free shipping threshold. The cart uses a tax
+                    // included total for both, so the tax excluded one can select another range.
+                    orderTotal: (float) $order->total_products_wt,
                 );
 
                 $context = ShippingCostPrice::createFromRequest($request);
