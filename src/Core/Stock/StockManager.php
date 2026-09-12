@@ -420,6 +420,19 @@ class StockManager
                     $stockMvt->setEmployeeLastname($employee->lastname);
                 }
 
+                // A caller running without an employee in the context - a console command, a cron - can
+                // name the author itself through the same array that already carries id_order and
+                // id_stock_mvt_reason, instead of the movement being recorded against nobody.
+                if (isset($params['id_employee'])) {
+                    $stockMvt->setIdEmployee((int) $params['id_employee']);
+                }
+                if (isset($params['employee_firstname'])) {
+                    $stockMvt->setEmployeeFirstname((string) $params['employee_firstname']);
+                }
+                if (isset($params['employee_lastname'])) {
+                    $stockMvt->setEmployeeLastname((string) $params['employee_lastname']);
+                }
+
                 return $stockMvt;
             }
         }
