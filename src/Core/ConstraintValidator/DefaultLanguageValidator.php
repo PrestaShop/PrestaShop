@@ -66,7 +66,9 @@ class DefaultLanguageValidator extends ConstraintValidator
 
         // Check if value for default language is present, we use language ID for back-office form's usage, and we use the locale
         // for Admin API usages since the input data is indexed by locale thanks to the LocalizedValue attribute
-        if (empty($value[$this->defaultLanguageContext->getId()]) && empty($value[$this->defaultLanguageContext->getLocale()])) {
+        $defaultValueById = $value[$this->defaultLanguageContext->getId()] ?? null;
+        $defaultValueByLocale = $value[$this->defaultLanguageContext->getLocale()] ?? null;
+        if (($defaultValueById === null || $defaultValueById === '') && ($defaultValueByLocale === null || $defaultValueByLocale === '')) {
             $fieldName = $constraint->fieldName;
             if (empty($fieldName) && $this->context->getObject() instanceof Form) {
                 $fieldName = $this->context->getObject()->getName();

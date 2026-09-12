@@ -82,7 +82,7 @@ final class FeatureValuesCommandsBuilder implements ProductCommandsBuilderInterf
         }
 
         foreach ($featureValueData['custom_value'] as $localizedValue) {
-            if (!empty($localizedValue)) {
+            if ($localizedValue !== null && $localizedValue !== '') {
                 return true;
             }
         }

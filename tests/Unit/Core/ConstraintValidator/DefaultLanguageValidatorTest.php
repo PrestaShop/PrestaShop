@@ -114,6 +114,13 @@ class DefaultLanguageValidatorTest extends ConstraintValidatorTestCase
             $constraintNullNotAllowed,
         ];
 
+        yield 'zero string by ID, null not allowed' => [
+            [
+                self::DEFAULT_LANG_ID => '0',
+            ],
+            $constraintNullNotAllowed,
+        ];
+
         yield 'multilang array but with default language by locale, null not allowed' => [
             [
                 self::DEFAULT_LANG_LOCALE => 'some kind of value',
@@ -125,6 +132,13 @@ class DefaultLanguageValidatorTest extends ConstraintValidatorTestCase
             [
                 self::DEFAULT_LANG_LOCALE => 'some kind of value',
                 2 => '',
+            ],
+            $constraintNullNotAllowed,
+        ];
+
+        yield 'zero string by locale, null not allowed' => [
+            [
+                self::DEFAULT_LANG_LOCALE => '0',
             ],
             $constraintNullNotAllowed,
         ];
