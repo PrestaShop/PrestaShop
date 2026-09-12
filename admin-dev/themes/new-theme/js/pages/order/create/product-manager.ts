@@ -293,10 +293,11 @@ export default class ProductManager {
     this.productRenderer.renderProductMetadata(
       <Record<string, any>> this.selectedProduct,
     );
-    // if product has combinations select the first else leave it null
+    // if product has combinations select the first displayed one else leave it null
     if (this.selectedProduct?.combinations.length !== 0) {
       this.selectCombination(
-        Object.keys(this.selectedProduct?.combinations)[0],
+        ProductRenderer.sortCombinations(this.selectedProduct?.combinations)[0]
+          .attributeCombinationId,
       );
     }
 
