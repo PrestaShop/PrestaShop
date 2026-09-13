@@ -77,7 +77,7 @@
 						</ul>
 					</div>
 				</div>
-				<script type="text/javascript">
+				<script type="text/javascript" nonce="{$cspNonce}">
 					$(function(){
 						$('a.useSpecialSyntax').on('click', function(){
 							var syntax = $(this).find('img').attr('alt');

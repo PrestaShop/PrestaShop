@@ -2,7 +2,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
-<script>
+<script nonce="{$cspNonce}">
 	var dashboard_ajax_url = '{$link->getAdminLink('AdminDashboard')}';
 	var adminstats_ajax_url = '{$link->getAdminLink('AdminStats')}';
 	var no_results_translation = '{l s='No result' js=1}';

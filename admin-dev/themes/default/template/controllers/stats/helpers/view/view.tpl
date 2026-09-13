@@ -6,7 +6,7 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-	<script type="text/javascript">
+	<script type="text/javascript" nonce="{$cspNonce}">
 		$(function() {
 			var btn_save_calendar = $('span[class~="process-icon-save-calendar"]').parent();
 			var btn_submit_calendar = $('#submitDatePicker');
