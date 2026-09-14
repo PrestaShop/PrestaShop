@@ -8,6 +8,12 @@
     {% block grid_bulk_actions_block %}
       {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions.html.twig', {grid: grid}) }}
     {% endblock %}
+
+    {% block grid_views_block %}
+      {% if grid.grid_views is defined and grid.grid_views is not null %}
+        {{ include('@PrestaShop/Admin/Common/Grid/GridViews/panel.html.twig', {grid: grid}) }}
+      {% endif %}
+    {% endblock %}
   {% endblock %}
 
   {% block grid_table_row %}

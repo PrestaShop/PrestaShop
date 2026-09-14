@@ -6,6 +6,10 @@ _admin_common_routing:
   resource: "admin/_common.yml"
   prefix: /common
 
+_admin_grid_views_routing:
+  resource: "admin/_grid_views.yml"
+  prefix: /grid-views
+
 _admin_security_routing:
   resource: "admin/_security.yml"
   prefix: /security

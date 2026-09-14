@@ -1,0 +1,26 @@
+services:
+  _defaults:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\GridView\GridViewProvider: ~
+
+  PrestaShop\PrestaShop\Adapter\GridView\GridViewValidator: ~
+
+  PrestaShop\PrestaShop\Adapter\GridView\CommandHandler\AddGridViewHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\GridView\CommandHandler\DeleteGridViewHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\GridView\CommandHandler\DuplicateGridViewHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\GridView\CommandHandler\EditGridViewHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\GridView\CommandHandler\SaveGridConfigurationHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\GridView\QueryHandler\GetGridViewForEditingHandler:
+    autoconfigure: true
