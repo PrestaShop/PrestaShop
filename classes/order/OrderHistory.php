@@ -96,6 +96,10 @@ class OrderHistoryCore extends ObjectModel
         if (Validate::isLoadedObject($order) && $new_os instanceof OrderState) {
             $context = Context::getContext();
 
+            if (!isset($context->currency) || !Validate::isLoadedObject($context->currency)) {
+                $context->currency = new Currency((int) $order->id_currency);
+            }
+
             // An email is sent the first time a virtual item is validated
             $virtual_products = $order->getVirtualProducts();
             if ($virtual_products && !$old_os->logable && $new_os->logable) {
