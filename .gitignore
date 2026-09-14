@@ -235,3 +235,4 @@ docker-compose.override.yml
 
 # Claude Code - personal settings (commands are shared, settings are not)
 .claude/settings.local.json
+.ps-dev-build
