@@ -75,8 +75,10 @@ function install_stamp_value {
     sha256_stdin < package.json
     sha256_stdin < package-lock.json
     uname -sm
-    node -v
-    npm -v
+    # Tolerate a missing toolchain: the point here is to fingerprint it, and letting
+    # `npm ci` fail with its own message beats aborting mid-fingerprint under `set -e`.
+    node -v || true
+    npm -v || true
     echo "NODE_ENV=${NODE_ENV:-}"
     if [[ -f /.dockerenv ]]; then echo 'container'; else echo 'host'; fi
     if command -v ldd > /dev/null 2>&1; then
