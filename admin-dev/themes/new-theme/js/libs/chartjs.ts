@@ -152,6 +152,11 @@ const psChart = {
     return getSeries();
   },
   withAlpha,
+  // Re-scans `root` for [data-chart] canvases (see dashboardCharts.ts) — for callers that
+  // inject new dashboard HTML after the initial page load (e.g. an AJAX date-range reload).
+  mountCharts(root: ParentNode = document): void {
+    mountDashboardCharts(Chart, root);
+  },
 };
 
 export type PsChart = typeof psChart;
@@ -160,5 +165,11 @@ const globalScope = window as unknown as {Chart: typeof Chart; psChart: PsChart}
 globalScope.Chart = Chart;
 globalScope.psChart = psChart;
 
-// Contract documented in dashboardCharts.ts.
-document.addEventListener('DOMContentLoaded', () => mountDashboardCharts(Chart));
+// Contract documented in dashboardCharts.ts. Guards against the bundle being loaded after
+// DOMContentLoaded already fired (e.g. `defer` or a dynamic injection), which would otherwise
+// mount nothing since the event would never fire again.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => mountDashboardCharts(Chart));
+} else {
+  mountDashboardCharts(Chart);
+}

@@ -3,7 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-import type {Chart as ChartClass, ChartConfiguration} from 'chart.js';
+import type {Chart as ChartClass, ChartConfiguration, ChartData} from 'chart.js';
 
 /**
  * Dashboard chart contract (#41971): a `<canvas data-chart id="X">` auto-mounts from a
@@ -15,27 +15,34 @@ import type {Chart as ChartClass, ChartConfiguration} from 'chart.js';
  *     {"type": "line", "data": {"labels": [...], "datasets": [{"label": "Sales", "data": [...]}]}}
  *   </script>
  *
- * JSON only, so no callbacks (tooltip/label formatters...). Omit dataset colors to get the
- * PrestaShop palette automatically (psColors, in chartjs.ts). Invalid widgets are skipped
- * with a console.warn, never break the other zones.
+ * The canvas id must be unique page-wide (module-prefixed), since the sibling script is
+ * looked up with a plain `document.getElementById`. JSON only, so no callbacks (tooltip/label
+ * formatters...). Omit dataset colors to get the PrestaShop palette automatically (psColors,
+ * in chartjs.ts). Invalid widgets are skipped with a console.warn, never break the other zones.
  */
 
-interface ChartConfigPayload {
-  type: string;
-  data: unknown;
-  options?: unknown;
+function isChartConfiguration(value: unknown, ChartCtor: typeof ChartClass): value is ChartConfiguration {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  const {type, data} = value as {type?: unknown; data?: unknown};
+
+  if (typeof type !== 'string') {
+    return false;
+  }
+
+  try {
+    // Throws on any string that isn't a controller Chart.js actually registered.
+    ChartCtor.registry.getController(type);
+  } catch {
+    return false;
+  }
+
+  return typeof data === 'object' && data !== null && Array.isArray((data as ChartData).datasets);
 }
 
-function isChartConfigPayload(value: unknown): value is ChartConfigPayload {
-  return (
-    typeof value === 'object'
-    && value !== null
-    && typeof (value as ChartConfigPayload).type === 'string'
-    && (value as ChartConfigPayload).data !== undefined
-  );
-}
-
-function readConfig(canvas: HTMLCanvasElement): ChartConfiguration | null {
+function readConfig(canvas: HTMLCanvasElement, ChartCtor: typeof ChartClass): ChartConfiguration | null {
   const script = document.getElementById(`${canvas.id}-data`);
 
   if (!(script instanceof HTMLScriptElement) || script.type !== 'application/json') {
@@ -52,12 +59,13 @@ function readConfig(canvas: HTMLCanvasElement): ChartConfiguration | null {
     return null;
   }
 
-  if (!isChartConfigPayload(payload)) {
-    console.warn(`[dashboard chart] #${script.id} is missing "type" or "data"`);
+  if (!isChartConfiguration(payload, ChartCtor)) {
+    console.warn(`[dashboard chart] #${script.id} is not a valid Chart.js configuration`
+      + ' (missing/unknown "type" or "data.datasets")');
     return null;
   }
 
-  return payload as ChartConfiguration;
+  return payload;
 }
 
 function mountChart(canvas: HTMLCanvasElement, ChartCtor: typeof ChartClass): void {
@@ -66,18 +74,27 @@ function mountChart(canvas: HTMLCanvasElement, ChartCtor: typeof ChartClass): vo
     return;
   }
 
-  const config = readConfig(canvas);
+  const config = readConfig(canvas, ChartCtor);
 
   if (config === null) {
     return;
   }
 
-  // eslint-disable-next-line no-new
-  new ChartCtor(canvas, config);
+  // Destroy any previous instance first: a page that re-mounts this canvas after refreshing
+  // its HTML (e.g. an AJAX date-range reload) would otherwise hit Chart.js's "Canvas is
+  // already in use" error.
+  ChartCtor.getChart(canvas)?.destroy();
+
+  try {
+    // eslint-disable-next-line no-new
+    new ChartCtor(canvas, config);
+  } catch (error) {
+    console.warn(`[dashboard chart] Chart.js rejected the config of #${canvas.id}:`, error);
+  }
 }
 
-function mountDashboardCharts(ChartCtor: typeof ChartClass): void {
-  document
+function mountDashboardCharts(ChartCtor: typeof ChartClass, root: ParentNode = document): void {
+  root
     .querySelectorAll<HTMLCanvasElement>('canvas[data-chart]')
     .forEach((canvas) => mountChart(canvas, ChartCtor));
 }
