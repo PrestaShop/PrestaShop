@@ -147,6 +147,18 @@ class ProductImageUploader extends AbstractImageUploader
     }
 
     /**
+     * Clears temporary product thumbnails used by back-office listings and order/cart views.
+     *
+     * @param int $productId
+     *
+     * @throws CannotUnlinkImageException
+     */
+    public function clearCachedImages(int $productId): void
+    {
+        $this->deleteCachedImages($productId);
+    }
+
+    /**
      * @param int $productId
      *
      * @throws CannotUnlinkImageException
@@ -157,6 +169,18 @@ class ProductImageUploader extends AbstractImageUploader
             $this->productImagePathFactory->getHelperThumbnail($productId, $this->contextShopId),
             $this->productImagePathFactory->getCachedCover($productId),
         ];
+
+        // Order/cart pages also cache product_mini_{productId}_{attributeId}.jpg variants.
+        $temporaryMiniThumbnails = glob(
+            dirname($this->productImagePathFactory->getCachedCover($productId))
+            . DIRECTORY_SEPARATOR
+            . 'product_mini_'
+            . $productId
+            . '_*.jpg'
+        );
+        if (!empty($temporaryMiniThumbnails)) {
+            $cachedImages = array_unique(array_merge($cachedImages, $temporaryMiniThumbnails));
+        }
 
         foreach ($cachedImages as $cachedImage) {
             if (!file_exists($cachedImage)) {
