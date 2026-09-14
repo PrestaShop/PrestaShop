@@ -131,7 +131,7 @@
     "@typescript-eslint/eslint-plugin": "^8.69.0",
     "@typescript-eslint/parser": "^8.70.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^8.57.1",
+    "eslint": "^10.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-html": "^8.2.0",
     "eslint-plugin-import": "^2.32.0",
