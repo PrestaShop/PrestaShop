@@ -442,6 +442,19 @@ class StockManagementControllerTest extends ApiTestCase
         $this->assertResponseBodyValidJson(200);
     }
 
+    public function testItShouldReturnValidResponseWhenSearchingStockByLocation(): void
+    {
+        $listProductsRoute = $this->router->generate('api_stock_list_products');
+
+        self::$client->request(
+            'GET',
+            $listProductsRoute,
+            ['keywords' => ['Aisle 3']]
+        );
+
+        $this->assertResponseBodyValidJson(200);
+    }
+
     public function testItShouldReturnValidResponseWhenRequestingStockWithAttributes(): void
     {
         $listProductsRoute = $this->router->generate('api_stock_list_products');
