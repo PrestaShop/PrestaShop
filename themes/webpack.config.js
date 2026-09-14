@@ -33,7 +33,9 @@ module.exports = (env, argv) => {
     },
     devtool: mode === 'production' ? false : 'source-map',
     optimization: {
-      minimize: true,
+      // Development builds (npm run watch) skip minification: it is the dominant cost
+      // of a rebuild and the output is never shipped.
+      minimize: mode === 'production',
       minimizer: [new TerserPlugin({
         extractComments: false
       })],
