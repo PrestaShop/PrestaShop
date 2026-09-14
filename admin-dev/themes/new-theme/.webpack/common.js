@@ -47,8 +47,15 @@ module.exports = {
     type: 'filesystem',
     buildDependencies: {
       // webpack.config.js requires prod.js/dev.js, which require this file; webpack
-      // hashes each entry together with its dependencies, so this one covers them all.
-      config: [path.resolve(__dirname, '../webpack.config.js')],
+      // hashes each entry together with its dependencies, so it covers all three.
+      //
+      // tsconfig.json is listed separately: esbuild-loader reads it directly and never
+      // calls addDependency, so without this a change to compilerOptions would leave
+      // every cached TypeScript module valid and silently produce a stale build.
+      config: [
+        path.resolve(__dirname, '../webpack.config.js'),
+        path.resolve(__dirname, '../tsconfig.json'),
+      ],
     },
   },
   externals: {
