@@ -129,50 +129,40 @@ class ModuleOverrideChecker
         return false;
     }
 
-    /*
-     * This function parses php file content and gets a list of methods from its content.
+    /**
+     * Parses a PHP file content and returns the names of the methods it declares, lower-cased
+     * since method names are case-insensitive in PHP.
+     *
+     * @return string[]
      */
     private function getClassMethodsFromContent(string $content): array
     {
-        $methodPattern = '/(public|private|protected)\s+function\s+(\w+)/';
+        preg_match_all(ModuleOverrideDeclarationPattern::forAnyMethod(), $content, $matches);
 
-        $methods = [];
-
-        if (preg_match_all($methodPattern, $content, $matches)) {
-            $methods = $matches[2];
-        }
-
-        return $methods;
+        return array_map('strtolower', $matches['name']);
     }
 
-    /*
-    * This function parses php file content and gets a list of properties from its content.
-    */
+    /**
+     * Parses a PHP file content and returns the names of the properties it declares.
+     *
+     * @return string[]
+     */
     private function getClassPropertiesFromContent(string $content): array
     {
-        $propertyPattern = '/(public|private|protected)\s*(\w+)?\s+\$(\w+)/';
-        $properties = [];
+        preg_match_all(ModuleOverrideDeclarationPattern::forAnyProperty(), $content, $matches);
 
-        if (preg_match_all($propertyPattern, $content, $matches)) {
-            $properties = $matches[3];
-        }
-
-        return $properties;
+        return $matches['name'];
     }
 
-    /*
-    * This function parses php file content and gets a list of properties from its content.
-    */
+    /**
+     * Parses a PHP file content and returns the names of the constants it declares.
+     *
+     * @return string[]
+     */
     private function getClassConstantsFromContent(string $content): array
     {
-        $constantPattern = '/const\s+(\w+)/';
+        preg_match_all(ModuleOverrideDeclarationPattern::forAnyConstant(), $content, $matches);
 
-        $constants = [];
-
-        if (preg_match_all($constantPattern, $content, $matches)) {
-            $constants = $matches[1];
-        }
-
-        return $constants;
+        return $matches['name'];
     }
 }
