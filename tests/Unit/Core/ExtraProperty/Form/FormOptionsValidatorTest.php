@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use stdClass;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -188,6 +189,64 @@ class FormOptionsValidatorTest extends TestCase
 
         $this->assertCount(1, $errors);
         $this->assertStringContainsString('not_a_real_option', $errors[0]);
+    }
+
+    /**
+     * The policy gate runs before the throwaway form is built: options the form theme would render
+     * unsafely are refused with a message naming each of them, even though Symfony itself accepts
+     * them — exactly the options ExtraPropertiesFormBuilderModifier drops on read.
+     */
+    public function testUnsafeRenderingOptionsAreRefusedBeforeBuilding(): void
+    {
+        $errors = $this->buildValidator()->validate(
+            null,
+            ExtraPropertyType::STRING,
+            null,
+            ExtraPropertyScope::COMMON,
+            [
+                'label_subtitle' => '<img src=x onerror=alert(1)>',
+                'attr' => ['autofocus' => 'autofocus', 'onfocus' => 'alert(1)'],
+            ]
+        );
+
+        $this->assertCount(2, $errors);
+        $this->assertStringContainsString('"label_subtitle"', $errors[0]);
+        $this->assertStringContainsString('"onfocus"', $errors[1]);
+    }
+
+    /**
+     * Any form type may be declared — the danger is in the options: TextPreviewType only renders
+     * its value raw when allow_html is set, so the type passes and that option is refused.
+     */
+    public function testAnyFormTypeIsAcceptedButRawRenderingOptionsAreRefused(): void
+    {
+        $validator = $this->buildValidator();
+
+        $this->assertSame([], $validator->validate(TextPreviewType::class, ExtraPropertyType::STRING, null, ExtraPropertyScope::COMMON, null));
+
+        $errors = $validator->validate(TextPreviewType::class, ExtraPropertyType::STRING, null, ExtraPropertyScope::COMMON, ['allow_html' => true]);
+
+        $this->assertCount(1, $errors);
+        $this->assertStringContainsString('"allow_html"', $errors[0]);
+    }
+
+    /**
+     * The policy matches option names case-sensitively because Symfony does, so a case variant of
+     * a denied option is not that option: it reaches the form build, which refuses it as an
+     * undefined option. The pair of layers is what makes lowercasing option names unnecessary.
+     */
+    public function testACaseVariantOfADeniedOptionIsRefusedByTheFormBuild(): void
+    {
+        $errors = $this->buildValidator()->validate(
+            null,
+            ExtraPropertyType::STRING,
+            null,
+            ExtraPropertyScope::COMMON,
+            ['ALLOW_HTML' => true]
+        );
+
+        $this->assertCount(1, $errors);
+        $this->assertStringContainsString('ALLOW_HTML', $errors[0]);
     }
 
     private function buildValidator(): FormOptionsValidator
