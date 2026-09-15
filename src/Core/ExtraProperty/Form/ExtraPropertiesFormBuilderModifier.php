@@ -21,12 +21,14 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface;
 use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\FormBuilderModifier;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 /**
  * Adds extra properties fields into an identifiable object form builder.
@@ -60,6 +62,8 @@ class ExtraPropertiesFormBuilderModifier
         protected readonly FormBuilderModifier $formBuilderModifier,
         protected readonly ExtraPropertyFormTypeMap $formTypeMap,
         protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
+        // The read-side policy enforcement below logs every option/type it drops.
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
@@ -110,14 +114,54 @@ class ExtraPropertiesFormBuilderModifier
                 $typeOptions['data'] = $definition->getDefaultValue();
             }
 
+            // A field of that name already present in the target builder belongs to the host
+            // form: it is left alone — neither replaced nor resolved and dropped below.
             if (null === $formEntry || null === $formEntry['path']) {
                 $targetBuilder = $this->resolveOrCreateFallbackPath($formBuilder);
-                if (!$targetBuilder->has($formFieldName)) {
-                    $targetBuilder->add($formFieldName, $type, $typeOptions);
+                if ($targetBuilder->has($formFieldName)) {
+                    continue;
                 }
+                $targetBuilder->add($formFieldName, $type, $typeOptions);
             } else {
-                $this->addAtPosition($formBuilder, $formEntry, $formFieldName, $type, $typeOptions);
+                $targetBuilder = $this->addAtPosition($formBuilder, $formEntry, $formFieldName, $type, $typeOptions);
+                if (null === $targetBuilder) {
+                    continue;
+                }
             }
+
+            $this->resolveFieldOrDrop($targetBuilder, $formFieldName, $definition);
+        }
+    }
+
+    /**
+     * Resolves the field just added, so its options go through the form type's resolver and its
+     * buildForm() now rather than when the whole form is built, and drops it when that fails.
+     *
+     * The policy denies the options known to be unsafe; every other option — a custom type's own
+     * included — is validated by the type itself. On write that happens in FormOptionsValidator
+     * and refuses the definition. On read, a row written straight into the registry, a type
+     * whose options changed since the definition was saved, or a bug in a custom type must not
+     * take the whole entity form down: the offending field is removed and logged (with the
+     * exception), its siblings stay. Every throwable is caught on purpose — the type is module
+     * code, and a failing extra field is never worth a failing product or customer form.
+     * Placement errors (a container or anchor that does not exist) are thrown earlier, by
+     * addAtPosition(), outside this guard: they are a contract of the definition and keep failing.
+     */
+    protected function resolveFieldOrDrop(FormBuilderInterface $targetBuilder, string $formFieldName, ExtraPropertyDefinition $definition): void
+    {
+        try {
+            $targetBuilder->get($formFieldName);
+        } catch (Throwable $exception) {
+            $targetBuilder->remove($formFieldName);
+            $this->logger->error(
+                'Dropped the field of extra property "{property}": its form options do not build with form type "{type}" ({reason}).',
+                [
+                    'property' => $definition->getFieldName(),
+                    'type' => $definition->getFormType() ?? 'default',
+                    'reason' => $exception->getMessage(),
+                    'exception' => $exception,
+                ]
+            );
         }
     }
 
@@ -127,12 +171,31 @@ class ExtraPropertiesFormBuilderModifier
     protected function resolveFieldTypeAndOptions(ExtraPropertyDefinition $definition): array
     {
         $declaredType = $definition->getFormType();
-        $extraOptions = $definition->getFormOptions() ?? [];
+
+        // Read-side enforcement of ExtraPropertyFormOptionsPolicy — the very rules
+        // FormOptionsValidator applied when the definition was saved. A row written straight
+        // into the registry (bypassing the registry validation) must not render what its author
+        // could not have saved: refused options are dropped and logged. Options the policy does
+        // not know (a custom type's own) are checked by building the field, see apply().
+        $sanitized = ExtraPropertyFormOptionsPolicy::sanitize($definition->getFormOptions());
+        $extraOptions = $sanitized['options'];
+        if ([] !== $sanitized['dropped']) {
+            $this->logger->warning(
+                'Dropped form options ({options}) of extra property "{property}": not allowed by the extra property form options policy.',
+                ['options' => implode(', ', $sanitized['dropped']), 'property' => $definition->getFieldName()]
+            );
+        }
 
         if (null !== $declaredType && is_subclass_of($declaredType, FormTypeInterface::class)) {
             $baseType = $declaredType;
             $baseOptions = [];
         } else {
+            if (null !== $declaredType) {
+                $this->logger->warning(
+                    'Form type "{type}" of extra property "{property}" is not a Symfony form type: rendering the mapped default type instead.',
+                    ['type' => $declaredType, 'property' => $definition->getFieldName()]
+                );
+            }
             [$baseType, $baseOptions] = $this->formTypeMap->getDefaultFor($definition->getType(), $definition->getEnumValues());
         }
 
@@ -223,6 +286,9 @@ class ExtraPropertiesFormBuilderModifier
      * @param class-string<FormTypeInterface> $type
      * @param array<string, mixed> $typeOptions
      *
+     * @return FormBuilderInterface|null the builder the field was added to, or null when a field of
+     *                                   that name already existed there (left untouched)
+     *
      * @throws InvalidArgumentException when a path segment (container or anchor parent) does not exist
      */
     protected function addAtPosition(
@@ -231,18 +297,18 @@ class ExtraPropertiesFormBuilderModifier
         string $formFieldName,
         string $type,
         array $typeOptions,
-    ): void {
+    ): ?FormBuilderInterface {
         $targetBuilder = $this->resolvePath($rootBuilder, (string) $formEntry['path']);
 
         if ($targetBuilder->has($formFieldName)) {
-            return;
+            return null;
         }
 
         // Container placement (no mode): append the field directly inside the resolved node.
         if (null === $formEntry['anchor']) {
             $targetBuilder->add($formFieldName, $type, $typeOptions);
 
-            return;
+            return $targetBuilder;
         }
 
         // Anchor placement: insert relative to the anchor field inside the parent builder.
@@ -252,6 +318,8 @@ class ExtraPropertiesFormBuilderModifier
         } else {
             $this->formBuilderModifier->addAfter($targetBuilder, $formEntry['anchor'], $formFieldName, $type, $typeOptions);
         }
+
+        return $targetBuilder;
     }
 
     /**
