@@ -3,6 +3,9 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
+use PrestaShop\PrestaShop\Core\Requirement\PhpVersionRequirement;
+
 class ConfigurationTestCore
 {
     public static $test_files = [
@@ -80,7 +83,6 @@ class ConfigurationTestCore
     public static function getDefaultTestsOp()
     {
         return [
-            'new_phpversion' => false,
             'gz' => false,
             'mbstring' => false,
             'dom' => false,
@@ -117,9 +119,14 @@ class ConfigurationTestCore
         return 'fail';
     }
 
-    public static function test_phpversion()
+    /**
+     * @param int|null $versionId a PHP_VERSION_ID to test instead of the running one. ConfigurationTest::run()
+     *                            passes the test's own configuration value here, which is `false` for this
+     *                            test, so anything that is not an id is ignored
+     */
+    public static function test_phpversion($versionId = null)
     {
-        return version_compare(PHP_VERSION, '7.1.3', '>=');
+        return PhpVersionRequirement::isVersionSupported(is_int($versionId) ? $versionId : PHP_VERSION_ID);
     }
 
     public static function test_apache_mod_rewrite()
@@ -132,6 +139,10 @@ class ConfigurationTestCore
         return in_array('mod_rewrite', apache_get_modules());
     }
 
+    /**
+     * @deprecated since 9.2.0, use test_phpversion() instead. It answers the same question, and this one
+     *             is no longer part of getDefaultTestsOp() because it reported the same failure twice.
+     */
     public static function test_new_phpversion()
     {
         return static::test_phpversion();

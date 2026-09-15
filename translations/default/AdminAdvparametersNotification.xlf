@@ -987,11 +987,6 @@
         <target>Unknown tax rule group ID. You need to create a group with this ID first.</target>
         <note>File: src/Adapter/Import/Handler/ProductImportHandler.php [Line: 470]</note>
       </trans-unit>
-      <trans-unit id="4f32e16f17a3ba8527cd8160ad85de37">
-        <source>Update your PHP version.</source>
-        <target>Update your PHP version.</target>
-        <note>File: src/Adapter/Requirement/CheckRequirements.php [Line: 74]</note>
-      </trans-unit>
       <trans-unit id="b5871613cbf4ab8b21d528ff2576fcbf">
         <source>Updated files</source>
         <target>Updated files</target>
@@ -1031,11 +1026,6 @@
         <source>You are about to enable a feature that is not stable yet. This should only be done in a test environment or in full knowledge of the potential risks.</source>
         <target>You are about to enable a feature that is not stable yet. This should only be done in a test environment or in full knowledge of the potential risks.</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/FeatureFlag/index.html.twig [Line: 64]</note>
-      </trans-unit>
-      <trans-unit id="e567554b1238bc9e85e38b01e6b198e9">
-        <source>You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.6. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.6 now!</source>
-        <target>You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.6. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.6 now!</target>
-        <note>File: src/Adapter/Requirement/CheckRequirements.php [Line: 107]</note>
       </trans-unit>
       <trans-unit id="5bb701014490e33a37ecdc43ce578404">
         <source>You can't put this menu inside itself. </source>
@@ -1091,6 +1081,11 @@
         <source>Your file has been successfully imported into your shop. Don't forget to re-build the products' search index.</source>
         <target>Your file has been successfully imported into your shop. Don't forget to re-build the products' search index.</target>
         <note>File: controllers/admin/AdminImportController.php [Line: 548]</note>
+      </trans-unit>
+      <trans-unit id="4eb6efb26e37e7af6a1d63064406fccf">
+        <source>Your server runs PHP %current%. PrestaShop runs on PHP %minimum% to PHP %maximum%.</source>
+        <target>Your server runs PHP %current%. PrestaShop runs on PHP %minimum% to PHP %maximum%.</target>
+        <note>File: src/Adapter/Requirement/CheckRequirements.php [Line: 74]</note>
       </trans-unit>
       <trans-unit id="95fdb0ead4798ff27cce78fac3fd3c11">
         <source>[1]%percentage%[/1]% validated</source>
