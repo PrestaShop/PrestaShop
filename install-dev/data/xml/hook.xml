@@ -5938,5 +5938,10 @@
       <title>Action when a page is not found</title>
       <description>Allows modules to react when a page is not found - log it, redirect or perform other actions.</description>
     </hook>
+    <hook id="actionOrderStatusUpdateStockBefore">
+      <name>actionOrderStatusUpdateStockBefore</name>
+      <title>Before a status change adjusts the stock of a product</title>
+      <description>Allows modules to stop an order status change from adjusting the stock of one product, by returning false. Receives the order, the order detail row, the quantity delta, and the new and old order states.</description>
+    </hook>
   </entities>
 </entity_hook>
