@@ -729,7 +729,12 @@ class AdminCartRulesControllerCore extends AdminController
 
         $attribute_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
         $currencies = Currency::getCurrencies(false, true, true);
-        $languages = Language::getLanguages();
+        // Every other back office form builds its translatable fields from AdminController::getLanguages(),
+        // which lists all installed languages. Calling Language::getLanguages() here listed only the active
+        // ones, so a language that is installed but disabled got no tab and its name could never be entered
+        // -- while the list and the compatibility selector still read the name in the employee's language,
+        // which may be exactly that disabled one, and showed it blank.
+        $languages = $this->getLanguages();
         $countries = $current_object->getAssociatedRestrictions('country', true, true);
         $groups = $current_object->getAssociatedRestrictions('group', false, true);
         $shops = $current_object->getAssociatedRestrictions('shop', false, false);
