@@ -10,6 +10,7 @@ imports:
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/bundle/common.yml }
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/extra_property/common.yml }
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/core/shipping_cost.yml }
+    - { resource: ../../src/PrestaShopBundle/Resources/config/services/bundle/admin_bar.yml }
 
 services:
     _defaults:

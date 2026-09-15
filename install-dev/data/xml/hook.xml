@@ -811,6 +811,11 @@
       <title>Before HTML output</title>
       <description>This hook is used to filter the whole HTML page before it is rendered (only front)</description>
     </hook>
+    <hook id="actionAdminBarGetActions">
+      <name>actionAdminBarGetActions</name>
+      <title>Get Front Office Admin Bar actions</title>
+      <description>Allows modules to provide contextual Admin Bar actions for the current Front Office page</description>
+    </hook>
     <hook id="displayAfterProductThumbs">
       <name>displayAfterProductThumbs</name>
       <title>Display extra content below product thumbs</title>
