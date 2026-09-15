@@ -4,6 +4,7 @@
 > For cross-domain naming traps and identity gotchas, see [GOTCHAS.md](GOTCHAS.md).
 > For multi-store scoping (ShopConstraint, AbstractMultistoreConfiguration), see [MULTISTORE.md](MULTISTORE.md).
 > For the service-container / kernel topology (3 Symfony kernels vs the hand-built FO legacy container, and where service definitions live), see [CONTAINERS.md](CONTAINERS.md).
+> For the Docker environment, resetting to a clean shop and building the test database, see [LOCAL-ENV.md](LOCAL-ENV.md).
 
 ## Project overview
 
@@ -66,6 +67,7 @@ Breaking changes are only allowed in major versions. See [ADR 0017](https://gith
 | UI | Playwright | `tests/UI/` |
 
 - **New behavior / bug fix must come with a test.** Add or adjust a unit test on the class actually touched; prefer Behat for command/handler behavior; if an existing E2E covers the area, unskip it and re-run rather than leaving a `@todo`/skip in place.
+- Integration, Behat and UI suites need the test database: run `composer create-test-db`, never `tests/bin/create-test-db.php` on its own. It also deletes tracked fixtures under `tests/Resources/modules/`, so check `git status` afterwards. See [LOCAL-ENV.md](LOCAL-ENV.md).
 
 ## PR hygiene
 

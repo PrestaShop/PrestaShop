@@ -51,6 +51,7 @@ Each AI tool has its own configuration format (`CLAUDE.md`, `.cursorrules`, `.gi
 | `STRUCTURE.md` | This file — architecture documentation | N/A |
 | `GOTCHAS.md` | Cross-domain naming traps, identity pitfalls, and legacy mismatches | N/A |
 | `MULTISTORE.md` | Cross-cutting multi-store guide: ShopConstraint, scoped config, multi-shop repositories | N/A |
+| `LOCAL-ENV.md` | Docker environment, resetting to a clean shop, building the test database | N/A |
 
 ### CONTEXT.md template
 
