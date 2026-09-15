@@ -34,6 +34,7 @@ final class EditOrderReturnStateHandler extends AbstractOrderReturnStateHandler 
         $this->updateOrderReturnStateWithCommandData($orderReturnState, $command);
 
         $this->assertRequiredFieldsAreNotMissing($orderReturnState);
+        $this->assertNameIsNotDuplicate($orderReturnState, $orderReturnStateId->getValue());
 
         if (false === $orderReturnState->validateFields(false)) {
             throw new OrderReturnStateException('OrderReturnState contains invalid field values');

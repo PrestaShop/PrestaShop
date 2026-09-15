@@ -35,8 +35,9 @@ class OrderReturnStateType extends TranslatorAwareType
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Status name', 'Admin.Shopparameters.Feature'),
                 'help' => sprintf(
-                    '%s %s %s',
+                    '%s %s %s %s',
                     $this->trans('Status name', 'Admin.Shopparameters.Feature'),
+                    $this->trans('The status name must be unique.', 'Admin.Shopparameters.Help'),
                     $this->trans('Invalid characters: numbers and', 'Admin.Shopparameters.Feature'),
                     static::NAME_CHARS
                 ),
