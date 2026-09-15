@@ -19,14 +19,14 @@
 				{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
 				<tr class="product {$bgcolor_class}">
 
-					<td class="product left">
+					<td class="product left" width="25%">
 						{if empty($order_detail.product_reference)}
 							---
 						{else}
 							{$order_detail.product_reference}
 						{/if}
 					</td>
-					<td class="product left">
+					<td class="product left" width="65%">
 						{if $display_product_images}
 							<table width="100%">
 								<tr>
@@ -45,7 +45,7 @@
 							{$order_detail.product_name}
 						{/if}
 					</td>
-					<td class="product center">
+					<td class="product center" width="10%">
 						{$order_detail.product_quantity-$order_detail.product_quantity_refunded}
 					</td>
 
