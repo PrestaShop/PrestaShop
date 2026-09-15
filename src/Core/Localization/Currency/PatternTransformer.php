@@ -16,6 +16,7 @@ class PatternTransformer
 {
     public const NO_BREAK_SPACE = "\u{00A0}";
     public const RTL_CHARACTER = "\u{200F}";
+    public const LTR_CHARACTER = "\u{200E}";
     public const REGULAR_SPACE = ' ';
     public const CURRENCY_SYMBOL = '¤';
 
@@ -35,6 +36,7 @@ class PatternTransformer
         self::CURRENCY_SYMBOL .
         self::NO_BREAK_SPACE .
         self::REGULAR_SPACE .
+        self::LTR_CHARACTER .
         self::RTL_CHARACTER
     ;
 
@@ -76,7 +78,7 @@ class PatternTransformer
     public function getTransformationType(string $currencyPattern)
     {
         $patterns = explode(';', $currencyPattern);
-        $pattern = str_replace(self::RTL_CHARACTER, '', $patterns[0]);
+        $pattern = str_replace([self::RTL_CHARACTER, self::LTR_CHARACTER], '', $patterns[0]);
 
         $regexpList = [
             self::TYPE_LEFT_SYMBOL_WITH_SPACE => '/^¤[ ' . self::NO_BREAK_SPACE . ']+.+/',
@@ -122,6 +124,15 @@ class PatternTransformer
      */
     private function getRtlCharacter(string $currencyPattern): string
     {
-        return (str_contains($currencyPattern, self::RTL_CHARACTER)) ? self::RTL_CHARACTER : '';
+        // WHY both: CLDR marks the direction of a currency pattern with U+200F for locales such as
+        // Hebrew and with U+200E for Persian. Handling only the first left the Persian pattern
+        // unrecognised, so the back office could not tell where its symbol sits.
+        foreach ([self::RTL_CHARACTER, self::LTR_CHARACTER] as $character) {
+            if (str_contains($currencyPattern, $character)) {
+                return $character;
+            }
+        }
+
+        return '';
     }
 }
