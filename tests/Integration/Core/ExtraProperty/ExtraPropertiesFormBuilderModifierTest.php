@@ -24,11 +24,15 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyTypeCompati
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
 use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\FormBuilderModifier;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Tests\Integration\PrestaShopBundle\Form\AbstractFormTester;
+use Tests\Unit\Core\ExtraProperty\Catalog\Fixtures\BrokenFixtureType;
 
 /**
  * Integration test for the form placement of extra properties and the symmetry between the builder
@@ -47,6 +51,112 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
         $this->makeModifier($this->definition('product'))->apply($builder, 'product', null);
 
         $this->assertTrue($builder->has(self::FIELD_NAME), 'Field should be appended at root on a simple form.');
+    }
+
+    /**
+     * Read-side enforcement of ExtraPropertyFormOptionsPolicy: a definition carrying options the
+     * policy refuses (as a row written straight into the registry would) renders its declared type
+     * without the refused options, and says so in the log.
+     */
+    public function testDeniedOptionsAreDroppedAndLoggedOnRead(): void
+    {
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'is_dangerous',
+            scope: ExtraPropertyScope::COMMON,
+            moduleName: 'demoextrafield',
+            associatedForms: ['product'],
+            formType: TextPreviewType::class,
+            formOptions: ['allow_html' => true, 'attr' => ['class' => 'ok', 'onfocus' => 'alert(1)']],
+            labelWording: 'Dangerous product',
+        );
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())->method('warning');
+
+        $builder = $this->createSimpleFormBuilder();
+        $this->makeModifier($definition, $logger)->apply($builder, 'product', null);
+
+        $field = $builder->get(self::FIELD_NAME);
+        $this->assertInstanceOf(TextPreviewType::class, $field->getType()->getInnerType(), 'The declared type is kept: the danger is in the options.');
+        $this->assertSame(['class' => 'ok'], $field->getOption('attr'), 'Only the refused attribute is dropped.');
+        $this->assertFalse($field->getOption('allow_html'), 'allow_html is dropped, so the type falls back to its escaping default.');
+    }
+
+    /**
+     * An option the policy does not know is the declared type's business: when the type refuses it
+     * (a tampered row, or a type whose options changed since the definition was saved), the field is
+     * dropped and logged instead of taking the whole entity form down.
+     */
+    public function testAFieldWhoseOptionsDoNotBuildIsDroppedAndLoggedOnRead(): void
+    {
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'is_dangerous',
+            scope: ExtraPropertyScope::COMMON,
+            moduleName: 'demoextrafield',
+            associatedForms: ['product'],
+            formType: TextType::class,
+            formOptions: ['not_an_option_of_text_type' => true],
+            labelWording: 'Dangerous product',
+        );
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())->method('error');
+
+        $builder = $this->createSimpleFormBuilder();
+        $this->makeModifier($definition, $logger)->apply($builder, 'product', null);
+
+        $this->assertFalse($builder->has(self::FIELD_NAME), 'The unbuildable field is removed; the form itself survives.');
+    }
+
+    /**
+     * A custom form type is module code: a bug thrown while it builds (not an options-resolver
+     * error) must not take the host form down either.
+     */
+    public function testAFieldWhoseTypeThrowsWhileBuildingIsDroppedAndLoggedOnRead(): void
+    {
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'is_dangerous',
+            scope: ExtraPropertyScope::COMMON,
+            moduleName: 'demoextrafield',
+            associatedForms: ['product'],
+            formType: BrokenFixtureType::class,
+            labelWording: 'Dangerous product',
+        );
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())->method('error');
+
+        $builder = $this->createSimpleFormBuilder();
+        $this->makeModifier($definition, $logger)->apply($builder, 'product', null);
+
+        $this->assertFalse($builder->has(self::FIELD_NAME));
+    }
+
+    /**
+     * A field of the same name already present in the host form is never the extra property's:
+     * it is neither replaced, nor resolved and dropped, whatever the definition's options.
+     */
+    public function testAHostFieldWithTheSameNameIsLeftUntouched(): void
+    {
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'is_dangerous',
+            scope: ExtraPropertyScope::COMMON,
+            moduleName: 'demoextrafield',
+            associatedForms: ['product'],
+            formType: TextType::class,
+            formOptions: ['not_an_option_of_text_type' => true],
+            labelWording: 'Dangerous product',
+        );
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->never())->method('error');
+
+        $builder = $this->createSimpleFormBuilder();
+        $builder->add(self::FIELD_NAME, TextType::class, ['label' => 'Host field']);
+        $this->makeModifier($definition, $logger)->apply($builder, 'product', null);
+
+        $this->assertTrue($builder->has(self::FIELD_NAME));
+        $this->assertSame('Host field', $builder->get(self::FIELD_NAME)->getOption('label'));
     }
 
     public function testDefinitionConstraintsAreAttachedToTheFieldWithoutAutoNotBlank(): void
@@ -306,7 +416,7 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
         );
     }
 
-    private function makeModifier(ExtraPropertyDefinition $definition): ExtraPropertiesFormBuilderModifier
+    private function makeModifier(ExtraPropertyDefinition $definition, ?LoggerInterface $logger = null): ExtraPropertiesFormBuilderModifier
     {
         $translator = $this->createMock(\Symfony\Contracts\Translation\TranslatorInterface::class);
         $translator->method('trans')->willReturnArgument(0);
@@ -322,6 +432,7 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
             new FormBuilderModifier(),
             new ExtraPropertyFormTypeMap(),
             $definitionShopFilter,
+            $logger ?? new NullLogger(),
         );
     }
 
