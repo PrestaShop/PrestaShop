@@ -7,6 +7,7 @@
 namespace PrestaShopBundle\Install;
 
 use Contact;
+use DirectoryIterator;
 use Exception;
 use FileLogger as LegacyFileLogger;
 use Language as LanguageLegacy;
@@ -1215,6 +1216,30 @@ class Install extends AbstractInstall
         return true;
     }
 
+    /**
+     * Finds the admin folder by its contents, whatever it has been renamed to.
+     *
+     * `bootstrap.php` next to `init.php` is unique to the admin directory: of every directory in the
+     * shop root only the admin one carries both, and the root itself has no `bootstrap.php`.
+     *
+     * @return string|null the folder name, or null when no directory in the root looks like the admin one
+     */
+    protected static function findAdminFolderName(string $rootDir): ?string
+    {
+        foreach (new DirectoryIterator($rootDir) as $entry) {
+            if (!$entry->isDir() || $entry->isDot()) {
+                continue;
+            }
+
+            $path = $entry->getPathname();
+            if (is_file($path . '/bootstrap.php') && is_file($path . '/init.php')) {
+                return $entry->getFilename();
+            }
+        }
+
+        return null;
+    }
+
     public function finalize(?string $randomizedAdminFolderName = null): bool
     {
         $adminFolder = 'admin-dev';
@@ -1237,6 +1262,17 @@ class Install extends AbstractInstall
                 $this->setError($this->translator->trans('The admin folder could not be renamed into %folderName%', ['%folderName%' => $randomizedAdminFolderName], 'Install'));
 
                 return false;
+            }
+        }
+
+        // An automated environment may rename the admin folder BEFORE the installer runs - the official
+        // Docker image does exactly that with PS_FOLDER_ADMIN. Then /admin/ is gone, so the branch above
+        // is skipped, and the admin-dev default does not exist either. The CLI installer has no folder
+        // name to pass in, so look the folder up on disk rather than failing on the assumption.
+        if (!is_dir(_PS_ROOT_DIR_ . '/' . trim($adminFolder, '/'))) {
+            $existingAdminFolder = static::findAdminFolderName(_PS_ROOT_DIR_);
+            if (null !== $existingAdminFolder) {
+                $adminFolder = $existingAdminFolder;
             }
         }
 
