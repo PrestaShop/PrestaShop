@@ -164,4 +164,41 @@ class ColumnDefinitionMapperTest extends TestCase
         $this->assertSame('INT(11) NULL', ColumnDefinitionMapper::getSqlDefinition($options));
         $this->assertStringNotContainsString('DEFAULT', ColumnDefinitionMapper::getSqlDefinition($options));
     }
+
+    /**
+     * A value ending in a backslash must not escape the closing quote of the DEFAULT
+     * clause: MySQL runs without NO_BACKSLASH_ESCAPES by default, so the backslash is
+     * doubled and the literal stays closed instead of leaking into executable SQL.
+     */
+    public function testDefaultValueEscapesBackslash(): void
+    {
+        $options = new ExtraPropertyDefinition(
+            entityName: 'entity', propertyName: 'test',
+            type: ExtraPropertyType::STRING, nullable: true, defaultValue: 'a\\',
+        );
+
+        $this->assertSame("VARCHAR(255) NULL DEFAULT 'a\\\\'", ColumnDefinitionMapper::getSqlDefinition($options));
+    }
+
+    /**
+     * A crafted default that mixes a backslash and a quote to break out of the literal
+     * (a\' , ADD COLUMN ...) must be fully neutralised: both the backslash and the quote
+     * are doubled, so the injected text stays inside the string literal.
+     *
+     * The same escapeStringLiteral() builds the ENUM literals; enum values additionally refuse
+     * the backslash at construction (see ExtraPropertyDefinitionConstructorTest), so the DEFAULT
+     * clause is the only path a backslash can still reach the mapper through.
+     */
+    public function testDefaultValueNeutralisesLiteralBreakoutAttempt(): void
+    {
+        $options = new ExtraPropertyDefinition(
+            entityName: 'entity', propertyName: 'test',
+            type: ExtraPropertyType::STRING, nullable: true, defaultValue: "a\\' , ADD COLUMN pwned INT",
+        );
+
+        $this->assertSame(
+            "VARCHAR(255) NULL DEFAULT 'a\\\\'' , ADD COLUMN pwned INT'",
+            ColumnDefinitionMapper::getSqlDefinition($options)
+        );
+    }
 }
