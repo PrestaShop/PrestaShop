@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Resources;
 
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
 
@@ -40,7 +39,9 @@ use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
 )]
 class Language
 {
-    #[ApiProperty(identifier: true)]
+    // Deliberately removed #[ApiProperty(identifier: true)]: this resource only exposes a
+    // collection on the Core, and marking langId as the identifier makes API Platform auto-generate a
+    // single item route that is marked not implemented and not overridable by ps_apiresources.
     public int $langId;
 
     public string $name;
