@@ -55,6 +55,9 @@ class OrderMessageType extends AbstractType
             ->add('order_message', ChoiceType::class, [
                 'choices' => $this->orderMessageNameChoiceProvider->getChoices(),
                 'required' => false,
+                // A shop can define many predefined messages, so the list needs the same
+                // search box the other long dropdowns of the back office already have.
+                'autocomplete' => true,
             ])
             ->add('is_displayed_to_customer', CheckboxType::class, [
                 'required' => false,
