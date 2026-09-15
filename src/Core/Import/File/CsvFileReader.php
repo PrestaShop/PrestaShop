@@ -75,7 +75,13 @@ final class CsvFileReader implements FileReaderInterface
 
         while ($row = fgetcsv($handle, $this->length, $this->delimiter, $this->enclosure, $this->escape)) {
             if ($convertToUtf8) {
-                $row = array_map('utf8_encode', $row);
+                // utf8_encode() is deprecated since PHP 8.2; this is the conversion it performed.
+                $row = array_map(
+                    static function (?string $cell): string {
+                        return mb_convert_encoding((string) $cell, 'UTF-8', 'ISO-8859-1');
+                    },
+                    $row
+                );
             }
 
             yield DataRow::createFromArray($row);

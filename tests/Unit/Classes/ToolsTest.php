@@ -16,6 +16,48 @@ class ToolsTest extends TestCase
 {
     use ExtendedTestCaseMethodsTrait;
 
+    /**
+     * Truncating used to convert to ISO-8859-1 so a byte offset would match a character offset, then
+     * convert back. Anything outside Latin-1 does not survive that round trip, so a Cyrillic or CJK
+     * string came back as question marks.
+     *
+     * @dataProvider getStringsToTruncate
+     */
+    public function testTruncateKeepsCharactersOutsideLatin1(string $input, int $maxLength, string $expected, string $because): void
+    {
+        $this->assertSame($expected, Tools::truncate($input, $maxLength), $because);
+    }
+
+    public static function getStringsToTruncate(): array
+    {
+        return [
+            'shorter than the limit is returned untouched' => [
+                'Short', 20, 'Short',
+                'nothing is truncated below the limit, so nothing can be mangled',
+            ],
+            'latin text truncates as before' => [
+                'Ceci est une phrase assez longue', 20, 'Ceci est une phra...',
+                'the behaviour for Latin-1 text must not change',
+            ],
+            'cyrillic survives' => [
+                'Товары со скидкой в нашем магазине', 20, 'Товары со скидкой...',
+                'this used to come back as question marks',
+            ],
+            'greek survives' => [
+                'Ελληνικό κείμενο εδώ', 15, 'Ελληνικό κεί...',
+                'same round trip loss for Greek',
+            ],
+            'a string exactly at the limit is untouched' => [
+                'Ελληνικό κείμενο εδώ', 20, 'Ελληνικό κείμενο εδώ',
+                'the length check counts characters, so an exactly sized string is not truncated',
+            ],
+            'accented latin survives' => [
+                'Chaussures élégantes pour homme', 20, 'Chaussures élégan...',
+                'accented characters are inside Latin-1 and must stay correct too',
+            ],
+        ];
+    }
+
     private const PS_ROUND_UP = 0;
     private const PS_ROUND_DOWN = 1;
     private const PS_ROUND_HALF_UP = 2;
