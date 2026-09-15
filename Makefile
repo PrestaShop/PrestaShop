@@ -1,13 +1,18 @@
 # Executables (local)
 DOCKER_COMP = docker compose
+DOCKER_AS_WWW = prestashop-git runuser -u www-data -g www-data --
 PHP_CONT =
 PHP_CONT_WITH_LOGIN = bash
+WATCH_CONT = bash
 
 # Determine if we are using docker
 DOCKER_RUNNING := $(shell docker compose ps -q 2>/dev/null)
 ifneq ($(strip $(DOCKER_RUNNING)),)
-	PHP_CONT = $(DOCKER_COMP) exec -T prestashop-git runuser -u www-data -g www-data --
-	PHP_CONT_WITH_LOGIN = $(DOCKER_COMP) exec -T prestashop-git runuser -u www-data -g www-data -- bash -l
+	PHP_CONT = $(DOCKER_COMP) exec -T $(DOCKER_AS_WWW)
+	PHP_CONT_WITH_LOGIN = $(DOCKER_COMP) exec -T $(DOCKER_AS_WWW) bash -l
+	# Watch targets are long lived: keep stdin attached so Ctrl+C reaches webpack. No -t,
+	# which would make the target fail outright when no terminal is attached (CI, IDE tasks).
+	WATCH_CONT = $(DOCKER_COMP) exec -i $(DOCKER_AS_WWW) bash -l
 endif
 
 # Executables (local or docker)
@@ -17,7 +22,7 @@ SYMFONY  = $(PHP_CONT) bin/console
 
 # Misc
 .DEFAULT_GOAL = install
-.PHONY        : help docker-build docker-up docker-start docker-restart docker-down docker-logs docker-sh composer cc test test-unit test-integration test-integration-behaviour test-api-module assets wait-assets admin front admin-default admin-new-theme front-core front-classic front-hummingbird install install-prestashop cs-fixer cs-fixer-dry phpstan scss-fixer es-linter
+.PHONY        : help docker-build docker-up docker-start docker-restart docker-down docker-logs docker-sh composer cc test test-unit test-integration test-integration-behaviour test-api-module assets assets-clean wait-assets admin front admin-default admin-new-theme front-core front-classic front-hummingbird watch-admin-default watch-admin-new-theme watch-front-core watch-front-classic watch-front-hummingbird install install-prestashop cs-fixer cs-fixer-dry phpstan scss-fixer es-linter
 
 ## —— 🎵 🐳 PrestaShop Docker Makefile 🐳 🎵 ———————————————————————————————————
 help: ## Outputs this help screen
@@ -53,6 +58,9 @@ install-prestashop: ## Install fresh PrestaShop database (requires containers to
 assets: ## Build all assets
 	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh all --force
 
+assets-clean: ## Build all assets, forcing a clean reinstall of node_modules
+	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh all --force-install
+
 wait-assets: ## Wait for assets to be built
 	$(PHP_CONT_WITH_LOGIN) ./tools/assets/wait-build.sh
 
@@ -79,6 +87,21 @@ front-classic: ## Build assets for classic theme
 
 front-hummingbird: ## Build assets for hummingbird theme
 	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh front-hummingbird --force
+
+watch-admin-default: ## Watch and rebuild assets for default admin theme
+	$(WATCH_CONT) ./tools/assets/build.sh admin-default --watch
+
+watch-admin-new-theme: ## Watch and rebuild assets for new admin theme
+	$(WATCH_CONT) ./tools/assets/build.sh admin-new-theme --watch
+
+watch-front-core: ## Watch and rebuild assets for core theme
+	$(WATCH_CONT) ./tools/assets/build.sh front-core --watch
+
+watch-front-classic: ## Watch and rebuild assets for classic theme
+	$(WATCH_CONT) ./tools/assets/build.sh front-classic --watch
+
+watch-front-hummingbird: ## Watch and rebuild assets for hummingbird theme
+	$(WATCH_CONT) ./tools/assets/build.sh front-hummingbird --watch
 
 ## —— Composer & Symfony 🧙 ————————————————————————————————————————————————————
 composer: ## Install PHP dependencies

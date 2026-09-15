@@ -7,7 +7,7 @@
         "scss-lint": "stylelint \"**/*.scss\" --formatter verbose",
         "scss-fix": "stylelint \"**/*.scss\" --fix",
         "build": "webpack --bail --progress",
-        "watch": "webpack --bail --progress --watch --mode development",
+        "watch": "webpack --progress --watch --mode development",
         "lint": "eslint -c .eslintrc.js --ext .js,.vue .",
         "lint-fix": "eslint -c .eslintrc.js --ext .js,.vue . --fix",
         "example": "http-server ./example -o example.html -p 1000 & http-server ./public -p 1010 --cors"
