@@ -53,7 +53,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
      *
      * @var array<string, true>
      */
-    private array $reportedRejections = [];
+    protected array $reportedRejections = [];
 
     public function __construct(
         protected readonly Connection $connection,
@@ -78,10 +78,45 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             $this->enrichRowsWithColumnMetadata($qb->executeQuery()->fetchAllAssociative() ?: [])
         ));
 
-        return new ExtraPropertyDefinitionCollection(array_values(array_map(
-            static fn (array $row): ExtraPropertyDefinition => ExtraPropertyDefinition::fromRow($row),
+        return new ExtraPropertyDefinitionCollection(array_values(array_filter(array_map(
+            fn (array $row): ?ExtraPropertyDefinition => $this->hydrateRowSafely($row),
             $rows
-        )));
+        ))));
+    }
+
+    /**
+     * Hydrates one registry row into a definition, or skips it (returns null) when the row
+     * cannot be trusted — an invalid enum/type/scope value, an identifier that no longer
+     * passes the value-object contract, etc.
+     *
+     * Defence in depth, and the read-side counterpart of the write-time validation: this
+     * repository feeds every request (Admin API responses, BO grids/forms, front-office
+     * reads), so a single corrupt or tampered row — data drift, a downgrade, or a direct
+     * DB write bypassing the registry — must degrade to "this definition is ignored"
+     * instead of throwing and taking the whole page or endpoint down. A dropped row is
+     * logged once per id so a persistent bad row cannot flood the log.
+     *
+     * @param array<string, mixed> $row
+     */
+    protected function hydrateRowSafely(array $row): ?ExtraPropertyDefinition
+    {
+        try {
+            return ExtraPropertyDefinition::fromRow($row);
+        } catch (Throwable $exception) {
+            $id = isset($row['id_extra_property_definition']) ? (string) $row['id_extra_property_definition'] : '?';
+            $logKey = 'hydrate:' . $id;
+            if (!isset($this->reportedRejections[$logKey])) {
+                $this->reportedRejections[$logKey] = true;
+                // error, not warning: a definition silently disappearing from every surface is
+                // worth an operator's attention whether the row was tampered with or a bug hit.
+                $this->logger->error(
+                    'Skipping unreadable extra property definition row {id}: {reason}',
+                    ['id' => $id, 'reason' => $exception->getMessage(), 'exception' => $exception]
+                );
+            }
+
+            return null;
+        }
     }
 
     /**

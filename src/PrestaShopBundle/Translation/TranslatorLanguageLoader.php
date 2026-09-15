@@ -159,7 +159,20 @@ class TranslatorLanguageLoader
         if ($translator instanceof TranslatorBagInterface) {
             $catalogue = $translator->getCatalogue($locale);
             foreach ($messagesByDomain as $domain => $messages) {
-                $catalogue->add($messages, $domain);
+                // Never overwrite a wording another resource (core or module XLF, admin
+                // translations) already defines in that domain: a registry wording equal to an
+                // existing key must resolve to the existing translation, not replace it with its
+                // untranslated source — otherwise a definition author could un-translate core
+                // strings shop-wide by picking a core domain. Only genuinely new wordings are added.
+                $newMessages = [];
+                foreach ($messages as $id => $message) {
+                    if (!$catalogue->defines((string) $id, $domain)) {
+                        $newMessages[$id] = $message;
+                    }
+                }
+                if ([] !== $newMessages) {
+                    $catalogue->add($newMessages, $domain);
+                }
             }
         }
     }

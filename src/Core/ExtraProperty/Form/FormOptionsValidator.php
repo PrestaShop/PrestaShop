@@ -66,6 +66,16 @@ class FormOptionsValidator
             )];
         }
 
+        // Policy gate — the SAME rules ExtraPropertiesFormBuilderModifier enforces on read: an
+        // option the form theme could render unsafely, or that changes what the field maps to,
+        // is refused here with an explicit message naming it, so the author is told at save time
+        // instead of having it silently dropped at render time. The options that remain (the
+        // declared type's own included) are then checked by building the field below.
+        $policyErrors = ExtraPropertyFormOptionsPolicy::validate($formOptions);
+        if ([] !== $policyErrors) {
+            return $policyErrors;
+        }
+
         [$effectiveType, $mergedOptions] = $this->resolveEffectiveTypeAndOptions(
             $formTypeFqcn,
             $type,
