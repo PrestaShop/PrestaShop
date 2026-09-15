@@ -4,37 +4,37 @@
 		<currency name="Rial" iso_code="IRR" iso_code_num="364" sign="ریال" blank="1" format="4" decimals="0" />
 	</currencies>
 	<states>
-		<state name="آذربایجان شرقی" iso_code="AZS" country="IR" zone="Asia" />
-    <state name="آذربایجان غربی" iso_code="AZG" country="IR" zone="Asia" />
-    <state name="اردبیل" iso_code="ARD" country="IR" zone="Asia" />
-    <state name="البرز" iso_code="ALB" country="IR" zone="Asia" />
-    <state name="اصفهان" iso_code="ESF" country="IR" zone="Asia" />
-    <state name="ایلام" iso_code="ILM" country="IR" zone="Asia" />
-    <state name="بوشهر" iso_code="BUS" country="IR" zone="Asia" />
-    <state name="تهران" iso_code="TEH" country="IR" zone="Asia" />
-    <state name="چهارمحال و بختیاری" iso_code="CHB" country="IR" zone="Asia" />
-    <state name="خراسان جنوبی" iso_code="KHS" country="IR" zone="Asia" />
-    <state name="خراسان رضوی" iso_code="KHR" country="IR" zone="Asia" />
-    <state name="خراسان شمالی" iso_code="KHN" country="IR" zone="Asia" />
-    <state name="خوزستان" iso_code="KHZ" country="IR" zone="Asia" />
-    <state name="زنجان" iso_code="ZAN" country="IR" zone="Asia" />
-    <state name="سمنان" iso_code="SEM" country="IR" zone="Asia" />
-    <state name="سیستان و بلوچستان" iso_code="SBL" country="IR" zone="Asia" />
-    <state name="فارس" iso_code="FAR" country="IR" zone="Asia" />
-    <state name="قزوین" iso_code="QAZ" country="IR" zone="Asia" />
-    <state name="قم" iso_code="QOM" country="IR" zone="Asia" />
-    <state name="کردستان" iso_code="KRD" country="IR" zone="Asia" />
-    <state name="کرمان" iso_code="KRM" country="IR" zone="Asia" />
-    <state name="کرمانشاه" iso_code="KSH" country="IR" zone="Asia" />
-    <state name="کهگیلویه و بویراحمد" iso_code="KOH" country="IR" zone="Asia" />
-    <state name="گلستان" iso_code="GOL" country="IR" zone="Asia" />
-    <state name="گیلان" iso_code="GIL" country="IR" zone="Asia" />
-    <state name="لرستان" iso_code="LOR" country="IR" zone="Asia" />
-    <state name="مازندران" iso_code="MAZ" country="IR" zone="Asia" />
-    <state name="مرکزی" iso_code="MKZ" country="IR" zone="Asia" />
-    <state name="هرمزگان" iso_code="HRM" country="IR" zone="Asia" />
-    <state name="همدان" iso_code="HDN" country="IR" zone="Asia" />
-    <state name="یزد" iso_code="YZD" country="IR" zone="Asia" />
+		<state name="آذربایجان شرقی" iso_code="IR-03" country="IR" zone="Asia" />
+		<state name="آذربایجان غربی" iso_code="IR-04" country="IR" zone="Asia" />
+		<state name="اردبیل" iso_code="IR-24" country="IR" zone="Asia" />
+		<state name="البرز" iso_code="IR-30" country="IR" zone="Asia" />
+		<state name="اصفهان" iso_code="IR-10" country="IR" zone="Asia" />
+		<state name="ایلام" iso_code="IR-16" country="IR" zone="Asia" />
+		<state name="بوشهر" iso_code="IR-18" country="IR" zone="Asia" />
+		<state name="تهران" iso_code="IR-23" country="IR" zone="Asia" />
+		<state name="چهارمحال و بختیاری" iso_code="IR-14" country="IR" zone="Asia" />
+		<state name="خراسان جنوبی" iso_code="IR-29" country="IR" zone="Asia" />
+		<state name="خراسان رضوی" iso_code="IR-09" country="IR" zone="Asia" />
+		<state name="خراسان شمالی" iso_code="IR-28" country="IR" zone="Asia" />
+		<state name="خوزستان" iso_code="IR-06" country="IR" zone="Asia" />
+		<state name="زنجان" iso_code="IR-19" country="IR" zone="Asia" />
+		<state name="سمنان" iso_code="IR-20" country="IR" zone="Asia" />
+		<state name="سیستان و بلوچستان" iso_code="IR-11" country="IR" zone="Asia" />
+		<state name="فارس" iso_code="IR-07" country="IR" zone="Asia" />
+		<state name="قزوین" iso_code="IR-26" country="IR" zone="Asia" />
+		<state name="قم" iso_code="IR-25" country="IR" zone="Asia" />
+		<state name="کردستان" iso_code="IR-12" country="IR" zone="Asia" />
+		<state name="کرمان" iso_code="IR-08" country="IR" zone="Asia" />
+		<state name="کرمانشاه" iso_code="IR-05" country="IR" zone="Asia" />
+		<state name="کهگیلویه و بویراحمد" iso_code="IR-17" country="IR" zone="Asia" />
+		<state name="گلستان" iso_code="IR-27" country="IR" zone="Asia" />
+		<state name="گیلان" iso_code="IR-01" country="IR" zone="Asia" />
+		<state name="لرستان" iso_code="IR-15" country="IR" zone="Asia" />
+		<state name="مازندران" iso_code="IR-02" country="IR" zone="Asia" />
+		<state name="مرکزی" iso_code="IR-00" country="IR" zone="Asia" />
+		<state name="هرمزگان" iso_code="IR-22" country="IR" zone="Asia" />
+		<state name="همدان" iso_code="IR-13" country="IR" zone="Asia" />
+		<state name="یزد" iso_code="IR-21" country="IR" zone="Asia" />
 	</states>
 	<languages>
 		<language iso_code="fa" is_rtl="1" name="پارسی (Persian)" />
