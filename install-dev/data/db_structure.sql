@@ -3247,7 +3247,9 @@ CREATE TABLE `PREFIX_b2b_role_lang`
     `id_role`   INT UNSIGNED NOT NULL,
     `id_lang`   INT NOT NULL,
     `name`      VARCHAR(128) NOT NULL,
-    PRIMARY KEY (`id_role`, `id_lang`)
+    PRIMARY KEY (`id_role`, `id_lang`),
+    KEY `IDX_EAC6E018DC499668` (`id_role`),
+    KEY `IDX_EAC6E018BA299860` (`id_lang`)
 ) ENGINE = ENGINE_TYPE DEFAULT CHARSET = utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_b2b_role_authorization_role`
