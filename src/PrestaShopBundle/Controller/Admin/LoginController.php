@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Throwable;
@@ -69,7 +70,29 @@ class LoginController extends PrestaShopAdminController
         $loginForm = $loginFormHandler->getForm();
         $requestPasswordResetForm = $requestResetPasswordFormHandler->getForm();
 
-        if ($authenticationUtils->getLastAuthenticationError() instanceof AuthenticationException) {
+        $lastAuthenticationError = $authenticationUtils->getLastAuthenticationError();
+        if ($lastAuthenticationError instanceof CustomUserMessageAuthenticationException) {
+            /*
+             * WHY this branch: nothing in core throws this exception, so the only thing that reaches it
+             * is a module deliberately refusing the attempt through actionBackOfficeLoginCheck. Such a
+             * refusal has a reason of its own - a failed captcha, a blocked IP - and answering it with
+             * the credentials message would tell the employee their password is wrong when it is not.
+             * Every other authentication failure keeps the generic message, so a real credentials error
+             * still reveals nothing about whether the employee exists.
+             */
+            $this->addFlash('error', $this->trans(
+                $lastAuthenticationError->getMessageKey(),
+                /*
+                 * WHY the filter: the message data comes from a module and reaches the translator, which
+                 * interpolates it with strtr. A non-scalar value there raises "Array to string
+                 * conversion" or "Object of class X could not be converted to string" while the login
+                 * page renders, so a module mistake would turn a refused attempt into a 500 on the login
+                 * screen. Dropping those leaves the placeholder untouched in the message instead.
+                 */
+                array_filter($lastAuthenticationError->getMessageData(), 'is_scalar'),
+                'Admin.Login.Notification'
+            ));
+        } elseif ($lastAuthenticationError instanceof AuthenticationException) {
             $this->addFlash('error', $this->trans('The employee does not exist, or the password provided is incorrect.', [], 'Admin.Login.Notification'));
         }
 
