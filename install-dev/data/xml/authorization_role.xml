@@ -486,5 +486,12 @@
     <authorization_role id="TAB_DEFAULT_CREATE" slug="ROLE_MOD_TAB_DEFAULT_CREATE"/>
     <authorization_role id="TAB_DEFAULT_UPDATE" slug="ROLE_MOD_TAB_DEFAULT_UPDATE"/>
     <authorization_role id="TAB_DEFAULT_DELETE" slug="ROLE_MOD_TAB_DEFAULT_DELETE"/>
+    <!-- B2B customer permissions -->
+    <authorization_role id="B2B_BUSINESS_ENTITY_EDIT" slug="B2B_BUSINESS_ENTITY_EDIT"/>
+    <authorization_role id="B2B_BUSINESS_ENTITY_CUSTOMER_INVITE" slug="B2B_BUSINESS_ENTITY_CUSTOMER_INVITE"/>
+    <authorization_role id="B2B_BUSINESS_ENTITY_CUSTOMER_EDIT" slug="B2B_BUSINESS_ENTITY_CUSTOMER_EDIT"/>
+    <authorization_role id="B2B_BUSINESS_ENTITY_CUSTOMER_DELETE" slug="B2B_BUSINESS_ENTITY_CUSTOMER_DELETE"/>
+    <authorization_role id="B2B_ORDER_VIEW" slug="B2B_ORDER_VIEW"/>
+    <authorization_role id="B2B_ORDER_CREATE" slug="B2B_ORDER_CREATE"/>
   </entities>
 </entity_authorization_role>
