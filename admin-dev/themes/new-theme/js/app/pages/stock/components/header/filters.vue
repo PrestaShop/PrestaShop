@@ -130,7 +130,6 @@
 </template>
 
 <script lang="ts">
-  /* eslint-disable camelcase */
   import PSSelect from '@app/widgets/ps-select.vue';
   import PSDatePicker from '@app/widgets/ps-datepicker.vue';
   import PSRadio from '@app/widgets/ps-radio.vue';

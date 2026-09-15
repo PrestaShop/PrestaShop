@@ -21,7 +21,6 @@ export interface AttributeGroup {
   attributes: Array<Attribute>;
 }
 
-/* eslint-disable camelcase */
 export interface Attribute {
   id: number;
   color: string;
@@ -30,4 +29,3 @@ export interface Attribute {
   name: string;
   texture: string|null;
 }
-/* eslint-enable camelcase */

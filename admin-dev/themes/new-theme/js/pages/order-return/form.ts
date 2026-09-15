@@ -107,6 +107,5 @@ $(() => {
   if ($form.length === 0) {
     return;
   }
-  // eslint-disable-next-line no-new
   new OrderReturnDeletionStager($form);
 });
