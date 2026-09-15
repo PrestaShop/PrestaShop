@@ -59,6 +59,11 @@ abstract class ModuleCore implements ModuleInterface
      */
     public $confirmUninstall = '';
 
+    /**
+     * @var string Text to display when ask for confirmation on update action
+     */
+    public $confirmUpgrade = '';
+
     /** @var string author of the module */
     public $author;
 
