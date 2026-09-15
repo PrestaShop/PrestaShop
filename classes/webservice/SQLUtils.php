@@ -41,6 +41,14 @@ class SQLUtils
                         sort($matches3);
                         // @phpstan-ignore arrayValues.list
                         [$first, $last] = array_values($matches3); // reset-keys
+                        // When the upper bound is a date without time (YYYY-MM-DD), append end-of-day
+                        // so that BETWEEN includes the entire last day (fixes #10822)
+                        if (preg_match('/^\s*\d{4}-\d{2}-\d{2}\s*$/', $last)) {
+                            $last = trim($last) . ' 23:59:59';
+                        }
+                        if (preg_match('/^\s*\d{4}-\d{2}-\d{2}\s*$/', $first)) {
+                            $first = trim($first) . ' 00:00:00';
+                        }
                         $ret .= ' AND ' . $tableAlias . '`' . bqSQL($sqlId) . '` BETWEEN "' . pSQL($first) . '" AND "' . pSQL($last) . "\"\n";
                     }
                 } else {
