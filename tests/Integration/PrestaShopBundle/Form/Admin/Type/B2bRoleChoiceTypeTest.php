@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Form\Type\B2b;
+namespace Tests\Integration\PrestaShopBundle\Form\Admin\Type;
 
 use Doctrine\DBAL\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShopBundle\Entity\B2B\B2bRole;
 use PrestaShopBundle\Entity\Repository\B2bRoleRepository;
-use PrestaShopBundle\Form\Type\B2b\B2bRoleChoiceType;
+use PrestaShopBundle\Form\Admin\Type\B2bRoleChoiceType;
 use Symfony\Bridge\Doctrine\Middleware\Debug\DebugDataHolder;
 use Symfony\Bridge\Doctrine\Middleware\Debug\Middleware;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

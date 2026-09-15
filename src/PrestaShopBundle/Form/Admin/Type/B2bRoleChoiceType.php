@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Type\B2b;
+namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\B2bRole\Role;

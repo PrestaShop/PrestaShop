@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\Form\Type\B2b;
+namespace Tests\Unit\PrestaShopBundle\Form\Admin\Type;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -21,7 +21,7 @@ use PrestaShopBundle\Entity\B2B\B2bRole;
 use PrestaShopBundle\Entity\B2B\B2bRoleLang;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\B2bRoleRepository;
-use PrestaShopBundle\Form\Type\B2b\B2bRoleChoiceType;
+use PrestaShopBundle\Form\Admin\Type\B2bRoleChoiceType;
 use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\FormInterface;
