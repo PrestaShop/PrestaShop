@@ -20,6 +20,8 @@ final class IdToEntityTransformer implements DataTransformerInterface
 {
     /**
      * @param class-string<T> $class
+     *
+     * @throws LogicException if the identifier of the entity class is composite
      */
     public function __construct(
         private readonly EntityManagerInterface $manager,
@@ -30,6 +32,8 @@ final class IdToEntityTransformer implements DataTransformerInterface
 
     /**
      * @return T|null
+     *
+     * @throws TransformationFailedException
      */
     public function transform(mixed $value): ?object
     {
@@ -44,6 +48,9 @@ final class IdToEntityTransformer implements DataTransformerInterface
         return $entity;
     }
 
+    /**
+     * @throws TransformationFailedException
+     */
     public function reverseTransform(mixed $value): mixed
     {
         if (null === $value) {
@@ -70,6 +77,9 @@ final class IdToEntityTransformer implements DataTransformerInterface
         return $this->readId($id);
     }
 
+    /**
+     * @throws LogicException
+     */
     private function assertIsSingleColumnIdentifier(): void
     {
         if (!$this->manager->getClassMetadata($this->class)->isIdentifierComposite) {

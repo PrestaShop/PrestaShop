@@ -135,6 +135,9 @@ class B2bRole
         return $this->translations->get($languageId);
     }
 
+    /**
+     * @throws B2bRoleException
+     */
     public function addTranslation(B2bRoleLang $translation): static
     {
         $role = $translation->getRole();
