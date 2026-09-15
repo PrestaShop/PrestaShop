@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
@@ -663,6 +664,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             $bulkDisableRoute = 'admin_products_bulk_disable_shop';
             $bulkDuplicateRoute = 'admin_products_bulk_duplicate_shop';
             $bulkDeleteRoute = 'admin_products_bulk_delete_from_shop';
+            $bulkOutOfStockRoute = 'admin_products_bulk_set_out_of_stock_type_shop';
             $routeParams = [
                 'shopId' => $this->shopConstraintContext->getShopConstraint()->getShopId()->getValue(),
             ];
@@ -682,6 +684,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             $bulkDisableRoute = 'admin_products_bulk_disable_shop_group';
             $bulkDuplicateRoute = 'admin_products_bulk_duplicate_shop_group';
             $bulkDeleteRoute = 'admin_products_bulk_delete_from_shop_group';
+            $bulkOutOfStockRoute = 'admin_products_bulk_set_out_of_stock_type_shop_group';
             $routeParams = [
                 'shopGroupId' => $this->shopConstraintContext->getShopConstraint()->getShopGroupId()->getValue(),
             ];
@@ -694,6 +697,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             $bulkDisableRoute = 'admin_products_bulk_disable_all_shops';
             $bulkDuplicateRoute = 'admin_products_bulk_duplicate_all_shops';
             $bulkDeleteRoute = 'admin_products_bulk_delete_from_all_shops';
+            $bulkOutOfStockRoute = 'admin_products_bulk_set_out_of_stock_type_all_shops';
             $routeParams = [];
             $bulkEnableLabel = $this->trans('Activate selection for associated stores', [], 'Admin.Actions');
             $bulkDisableLabel = $this->trans('Deactivate selection for associated stores', [], 'Admin.Actions');
@@ -737,6 +741,36 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 $this->trans('Deleting %done% / %total% products', [], 'Admin.Actions'),
                 'delete',
                 $routeParams
+            ))
+            // The three out of stock behaviors are separate entries rather than one action with a
+            // value picker, because a bulk action posts the selection and nothing else. The labels are
+            // the ones the Stock tab already uses for the same setting.
+            ->add($this->buildAjaxBulkAction(
+                'bulk_deny_orders_ajax',
+                $bulkOutOfStockRoute,
+                $this->trans('Deny orders when out of stock for selection', [], 'Admin.Actions'),
+                $this->trans('Updating %total% products', [], 'Admin.Actions'),
+                $this->trans('Updating %done% / %total% products', [], 'Admin.Actions'),
+                'remove_shopping_cart',
+                $routeParams + ['outOfStockType' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE]
+            ))
+            ->add($this->buildAjaxBulkAction(
+                'bulk_allow_orders_ajax',
+                $bulkOutOfStockRoute,
+                $this->trans('Allow orders when out of stock for selection', [], 'Admin.Actions'),
+                $this->trans('Updating %total% products', [], 'Admin.Actions'),
+                $this->trans('Updating %done% / %total% products', [], 'Admin.Actions'),
+                'add_shopping_cart',
+                $routeParams + ['outOfStockType' => OutOfStockType::OUT_OF_STOCK_AVAILABLE]
+            ))
+            ->add($this->buildAjaxBulkAction(
+                'bulk_default_out_of_stock_ajax',
+                $bulkOutOfStockRoute,
+                $this->trans('Use the default out of stock behavior for selection', [], 'Admin.Actions'),
+                $this->trans('Updating %total% products', [], 'Admin.Actions'),
+                $this->trans('Updating %done% / %total% products', [], 'Admin.Actions'),
+                'settings_backup_restore',
+                $routeParams + ['outOfStockType' => OutOfStockType::OUT_OF_STOCK_DEFAULT]
             ))
         ;
     }
