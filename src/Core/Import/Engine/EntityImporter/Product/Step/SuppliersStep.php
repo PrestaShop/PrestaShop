@@ -18,9 +18,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetSuppliersComma
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\SupplierFinder;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -49,7 +49,7 @@ class SuppliersStep extends AbstractProductRowStep
         return $this->hasValue($row, 'supplier');
     }
 
-    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context): array
+    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportJobContext $context): array
     {
         $supplier = $row['supplier'] ?? '';
 

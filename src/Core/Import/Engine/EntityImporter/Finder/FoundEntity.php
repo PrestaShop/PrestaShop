@@ -34,10 +34,10 @@ class FoundEntity
      *                                                         first within a strategy. NOT deduplicated across strategies: the same
      *                                                         entity matched by id AND by reference appears twice, which is exactly
      *                                                         the collision information callers warn about
-     * @param int|null $forcedId id to force on creation (force IDs run option — generic:
+     * @param int|null $forcedId id to force on creation (force IDs job option — generic:
      *                           the legacy import consults forceIDs for every entity type);
      *                           only ever set on a miss
-     * @param bool $foundOutsideShopScope the term matches only OUTSIDE the run's shop
+     * @param bool $foundOutsideShopScope the term matches only OUTSIDE the job's shop
      *                                    scope (match_ref today) — creating would duplicate
      *                                    it, so callers fail the row
      */

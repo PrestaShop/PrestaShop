@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 
 /**
@@ -32,7 +32,7 @@ class DateAddStep extends AbstractProductRowStep
         return $this->hasValue($row, 'date_add');
     }
 
-    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context): array
+    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportJobContext $context): array
     {
         $dateAdd = $this->valueParser->parseDate($row['date_add'] ?? '');
         if (null !== $dateAdd) {

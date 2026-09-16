@@ -10,7 +10,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\Exception;
 
 /**
  * Thrown when a phase id does not match any phase declared by the importer
- * (e.g. a deploy changed the phase list mid-run).
+ * (e.g. a deploy changed the phase list mid-job).
  */
 class UnknownPhaseException extends ImportEngineException
 {

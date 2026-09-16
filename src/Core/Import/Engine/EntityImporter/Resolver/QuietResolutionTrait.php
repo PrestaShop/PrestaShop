@@ -11,17 +11,17 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver;
 /**
  * The resolve-or-create template every resolver follows: look the name up,
  * create the entity when nothing matches, and report what happened exactly
- * ONCE per run.
+ * ONCE per job.
  *
  * The "quiet" part is the subtle bit worth having in one place: what goes into
  * the cache is a STRIPPED ResolvedEntity carrying the id alone, so the first
  * caller learns that the entity was created (or that the name was ambiguous)
  * and every later row gets a plain id. That is what makes callers emit one
- * warning per run instead of one per row, without them having to track it.
+ * warning per job instead of one per row, without them having to track it.
  *
  * Unlike PositiveLookupCacheTrait, misses are cached too — and safely so: a
  * miss here always ends in a creation, so the cached entry is the id of the
- * entity this run just created, not the absence of one.
+ * entity this job just created, not the absence of one.
  *
  * The cache lives for the service lifetime, i.e. ONE batch request.
  */

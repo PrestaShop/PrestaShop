@@ -94,7 +94,7 @@ class ProductImporterImagesTest extends AbstractProductImportEngineTestCase
     public function testDeleteExistingImagesReplacesThePreviousOnes(): void
     {
         // fresh catalog: re-running the creation fixture on top of the first
-        // test's products would create a second IMG-P1, and the matchRef run
+        // test's products would create a second IMG-P1, and the matchRef import
         // below would then fail the row as an ambiguous reference
         ProductResetter::resetProducts();
         $this->runImport('product_images.csv', self::IMAGE_FIELDS);
@@ -130,8 +130,8 @@ class ProductImporterImagesTest extends AbstractProductImportEngineTestCase
 
     public function testNonVirtualReimportDoesNotTouchTheVirtualFile(): void
     {
-        // matchRef: VIRT-1 exists since the previous test — a plain run would
-        // CREATE a duplicate-reference product and every later matchRef run
+        // matchRef: VIRT-1 exists since the previous test — a plain import would
+        // CREATE a duplicate-reference product and every later matchRef import
         // would then fail the row as ambiguous
         $this->runImport('product_virtual.csv', self::VIRTUAL_FIELDS, ['matchRef' => true]);
         $productId = $this->getProductIdByReference('VIRT-1');
@@ -152,7 +152,7 @@ class ProductImporterImagesTest extends AbstractProductImportEngineTestCase
     }
 
     /**
-     * Unlike the test above, this one keeps file_url MAPPED on the second run.
+     * Unlike the test above, this one keeps file_url MAPPED on the second import.
      * That used to fail the whole row: AddVirtualProductFileCommand hit
      * ALREADY_HAS_A_FILE because a product can only hold one virtual file.
      */

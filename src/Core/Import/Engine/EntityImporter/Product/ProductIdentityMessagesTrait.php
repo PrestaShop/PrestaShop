@@ -25,7 +25,7 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 trait ProductIdentityMessagesTrait
 {
     /**
-     * The reference exists in the catalog but on none of the run's shops:
+     * The reference exists in the catalog but on none of the job's shops:
      * creating would duplicate it, updating is out of scope, so the row fails.
      */
     protected function referenceOutsideShopScopeMessage(string $reference, int $rowIndex, string $phaseId): ImportMessage
@@ -33,7 +33,7 @@ trait ProductIdentityMessagesTrait
         return new ImportMessage(
             ImportMessage::SEVERITY_ERROR,
             $phaseId,
-            $this->translator->trans('The reference "%value%" matches a product outside the run\'s shop scope; the row was skipped to avoid creating a duplicate product.', ['%value%' => $reference], 'Admin.Advparameters.Notification'),
+            $this->translator->trans('The reference "%value%" matches a product outside the job\'s shop scope; the row was skipped to avoid creating a duplicate product.', ['%value%' => $reference], 'Admin.Advparameters.Notification'),
             [$rowIndex],
             'reference'
         );

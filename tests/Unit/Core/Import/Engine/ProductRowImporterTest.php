@@ -19,13 +19,14 @@ use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\ProductRowStepInterface;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\InvalidResumeCursorException;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobOptions;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunOptions;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use RuntimeException;
@@ -43,6 +44,7 @@ class ProductRowImporterTest extends TestCase
     private const ROW_INDEX = 7;
     private const EXISTING_PRODUCT_ID = 42;
     private const LANGUAGE_ID = 1;
+    private const SHOP_ID = 1;
 
     public function testStepsRunInOrderWithTheResolvedRowValues(): void
     {
@@ -202,7 +204,21 @@ class ProductRowImporterTest extends TestCase
             $this->createMock(Tools::class),
             $this->buildTranslator(),
             $this->createMock(LoggerInterface::class),
+            $this->buildShopListResolver(),
         );
+    }
+
+    /**
+     * The importer only ever asks for the representative shop of the job scope,
+     * which for the single-shop constraint these tests build is that shop.
+     */
+    private function buildShopListResolver(): ShopListResolverInterface
+    {
+        $shopListResolver = $this->createMock(ShopListResolverInterface::class);
+        $shopListResolver->method('resolveRepresentativeShopId')->willReturn(self::SHOP_ID);
+        $shopListResolver->method('resolveShopIds')->willReturn([self::SHOP_ID]);
+
+        return $shopListResolver;
     }
 
     private function buildStep(callable $apply, bool $supports = true): ProductRowStepInterface
@@ -219,24 +235,24 @@ class ProductRowImporterTest extends TestCase
                 return $this->supportsRow;
             }
 
-            public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context): array
+            public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportJobContext $context): array
             {
                 return ($this->apply)($row, $rowIndex, $productId, $isCreation, $languageId, $context);
             }
         };
     }
 
-    private function buildContext(): ImportRunContext
+    private function buildContext(): ImportJobContext
     {
-        return new ImportRunContext(
+        return new ImportJobContext(
             'product',
             '/tmp/working-file.csv',
             10,
             'en',
             ',',
             [],
-            ImportRunOptions::fromArray([]),
-            ShopConstraint::shop(1)
+            ImportJobOptions::fromArray([]),
+            ShopConstraint::shop(self::SHOP_ID)
         );
     }
 

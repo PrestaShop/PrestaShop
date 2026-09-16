@@ -9,7 +9,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Configuration;
 /**
  * Class ImportConfig defines import configuration.
  *
- * @deprecated since 9.3, will be removed in the next major version - replaced by \PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext
+ * @deprecated since 9.3, will be removed in the next major version - replaced by \PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext
  */
 final class ImportConfig implements ImportConfigInterface
 {

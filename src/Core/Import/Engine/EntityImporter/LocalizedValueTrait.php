@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter;
 
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ImportEngineException;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
 /**
@@ -23,7 +23,7 @@ use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 trait LocalizedValueTrait
 {
     /**
-     * @var list<int>|null memoized: language installs cannot happen mid-run
+     * @var list<int>|null memoized: language installs cannot happen mid-job
      */
     protected ?array $allLanguageIds = null;
 
@@ -52,11 +52,11 @@ trait LocalizedValueTrait
     }
 
     /**
-     * Id of the run's file language.
+     * Id of the job's file language.
      *
      * @throws ImportEngineException when the iso code matches no installed language
      */
-    protected function getLanguageId(ImportRunContext $context): int
+    protected function getLanguageId(ImportJobContext $context): int
     {
         $language = $this->languageRepository->getOneByIsoCode($context->getLangIso());
         if (null === $language) {

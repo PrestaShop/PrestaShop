@@ -10,23 +10,22 @@ namespace Tests\Integration\Core\Import\Engine;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ProductImporter;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobOptions;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunOptions;
-use PrestaShop\PrestaShop\Core\Import\Engine\PhaseBatchResult;
 use Tests\Resources\Resetter\ProductResetter;
 
 /**
  * The whole batching design rests on being able to stop after N rows and pick up
- * where it left off IN A LATER HTTP REQUEST — where the run context is rebuilt
+ * where it left off IN A LATER HTTP REQUEST — where the job context is rebuilt
  * from the database row and every service is constructed afresh.
  *
  * The other tests drive the importer through the mini-sequencer, which keeps ONE
- * context and ONE set of services alive for the whole run; that exercises the
+ * context and ONE set of services alive for the whole job; that exercises the
  * byte-offset cursor but not the serialization boundary around it. This test
  * closes that gap: after each batch only (offset, resumeCursor) survive, the
- * kernel is rebooted so the importer and all its caches are new, and the run
- * still has to produce exactly the same result as a single-context run.
+ * kernel is rebooted so the importer and all its caches are new, and the job
+ * still has to produce exactly the same result as a single-context job.
  */
 class ProductImporterResumeTest extends AbstractProductImportEngineTestCase
 {
@@ -65,10 +64,10 @@ class ProductImporterResumeTest extends AbstractProductImportEngineTestCase
             self::bootKernel();
 
             $context = $this->buildResumableContext($workingFilePath, $recordCount);
-            $context->enterPhase(ImportPhaseDefinition::PHASE_DATABASE, $recordCount);
-            // replay the persisted progress the way the PR2 sequencer will:
-            // enterPhase() zeroes it, this puts back what the run row held
-            $context->applyBatchResult(new PhaseBatchResult($offset, [], [], $resumeCursor));
+            // replay the persisted progress the way the PR2 sequencer will,
+            // straight from what the job row holds — no phase entry, since
+            // enterPhase() would zero the offset it is about to restore
+            $context->restoreProgress(ImportPhaseDefinition::PHASE_DATABASE, $recordCount, $offset, $resumeCursor, []);
 
             $this->assertSame($offset, $context->getCurrentOffset());
             $this->assertSame($resumeCursor, $context->getResumeCursor());
@@ -76,7 +75,7 @@ class ProductImporterResumeTest extends AbstractProductImportEngineTestCase
             $importer = self::getContainer()->get(ProductImporter::class);
             $result = $importer->processPhaseBatch(ImportPhaseDefinition::PHASE_DATABASE, $context, self::BATCH_LIMIT);
 
-            $this->assertGreaterThan(0, $result->processedUnitCount, 'A batch must make progress or the run would never end');
+            $this->assertGreaterThan(0, $result->processedUnitCount, 'A batch must make progress or the job would never end');
             $this->assertNotNull($result->resumeCursor, 'Every batch must hand back a cursor for the next request');
 
             $offset += $result->processedUnitCount;
@@ -103,7 +102,7 @@ class ProductImporterResumeTest extends AbstractProductImportEngineTestCase
     }
 
     /**
-     * Normalizes the fixture once, the way StartImportRun will: the working file
+     * Normalizes the fixture once, the way StartImportJob will: the working file
      * outlives the request boundaries, only the cursor into it travels.
      */
     private function normalizeFixtureToWorkingFile(string $fixtureName): string
@@ -111,16 +110,16 @@ class ProductImporterResumeTest extends AbstractProductImportEngineTestCase
         return $this->buildContext($fixtureName, self::FIELDS)->getWorkingFilePath();
     }
 
-    private function buildResumableContext(string $workingFilePath, int $recordCount): ImportRunContext
+    private function buildResumableContext(string $workingFilePath, int $recordCount): ImportJobContext
     {
-        return new ImportRunContext(
+        return new ImportJobContext(
             ProductImporter::ENTITY_TYPE,
             $workingFilePath,
             $recordCount,
             static::DEFAULT_LANG_ISO,
             ',',
             self::FIELDS,
-            ImportRunOptions::fromArray([]),
+            ImportJobOptions::fromArray([]),
             ShopConstraint::shop(static::DEFAULT_SHOP_ID)
         );
     }

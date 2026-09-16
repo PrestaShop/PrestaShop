@@ -8,10 +8,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter;
 
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 
 /**
- * Applies the run's column-to-field mapping to a raw record. Entity-agnostic:
+ * Applies the job's column-to-field mapping to a raw record. Entity-agnostic:
  * the mapping only knows column indexes and field names, so every entity
  * importer shares this service.
  */
@@ -24,11 +24,11 @@ class RowMapper
      *                               columns dropped; when the same field is
      *                               mapped to several columns the last one wins
      */
-    public function map(array $record, ImportRunContext $context): array
+    public function map(array $record, ImportJobContext $context): array
     {
         $mappedRow = [];
         foreach ($context->getFieldMapping() as $columnIndex => $fieldName) {
-            if (ImportRunContext::COLUMN_IGNORED === $fieldName || '' === $fieldName) {
+            if (ImportJobContext::COLUMN_IGNORED === $fieldName || '' === $fieldName) {
                 continue;
             }
 

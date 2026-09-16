@@ -87,7 +87,7 @@ class ProductImporterValidationTest extends AbstractProductImportEngineTestCase
         $this->assertStringContainsString('"false" will be used', $booleanWarnings[0]->message);
 
         // skipped rows = the 5 error rows + the blank row
-        $this->assertSame([1, 2, 3, 4, 5, 7], $context->getSkippedRows(ImportPhaseDefinition::PHASE_VALIDATION));
+        $this->assertSame([1, 2, 3, 4, 5, 7], $context->getSkippedRows());
 
         // valid rows imported, invalid ones absent
         $this->assertNotNull($this->getProductIdByReference('INV-OK-1'));

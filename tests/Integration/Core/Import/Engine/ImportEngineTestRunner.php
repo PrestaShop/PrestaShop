@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\Import\Engine;
 
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use RuntimeException;
 
 /**
@@ -27,7 +27,7 @@ final class ImportEngineTestRunner
      *
      * @return list<ImportMessage>
      */
-    public function run(EntityImporterInterface $importer, ImportRunContext $context, int $batchLimit = 2, ?array $phaseIds = null): array
+    public function run(EntityImporterInterface $importer, ImportJobContext $context, int $batchLimit = 2, ?array $phaseIds = null): array
     {
         $messages = [];
 

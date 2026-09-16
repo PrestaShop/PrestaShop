@@ -11,7 +11,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\PositiveLookupCacheTrait;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 
 /**
  * MATCH-ONLY: resolves one shop cell entry (numeric id or name) to shop ids;
@@ -37,10 +37,10 @@ class ShopFinder implements EntityFinderInterface
     }
 
     /**
-     * Shop names are deliberately looked up GLOBALLY, so the run's scope plays
+     * Shop names are deliberately looked up GLOBALLY, so the job's scope plays
      * no part here — $context is only present to satisfy the shared contract.
      */
-    public function find(string $value, ImportRunContext $context): FoundEntity
+    public function find(string $value, ImportJobContext $context): FoundEntity
     {
         if (ctype_digit($value)) {
             return new FoundEntity(

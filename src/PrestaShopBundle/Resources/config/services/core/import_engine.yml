@@ -54,7 +54,6 @@ services:
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ShopFinder: ~
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\SupplierFinder: ~
 
-  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\RunShopIdsProvider: ~
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\ManufacturerResolver: ~
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\FeatureResolver: ~
 

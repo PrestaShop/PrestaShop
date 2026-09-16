@@ -19,7 +19,7 @@ use Tests\Resources\Resetter\ProductResetter;
 use Tests\Resources\Resetter\ShopResetter;
 
 /**
- * Multistore behavior of the run's frozen ShopConstraint: writes land on the
+ * Multistore behavior of the job's frozen ShopConstraint: writes land on the
  * constraint's shops, a match_ref reference living outside the scope fails
  * the row instead of creating a duplicate product, and a feature reused from
  * another shop gets its feature_shop association ensured (never duplicated).
@@ -83,7 +83,7 @@ class ProductImporterMultishopTest extends AbstractProductImportEngineTestCase
     {
         self::bootKernel();
 
-        // 1. a run scoped to shop 2 creates the product ON shop 2 only,
+        // 1. a job scoped to shop 2 creates the product ON shop 2 only,
         //    and the auto-created feature is associated to shop 2 only
         $context = $this->buildContext('product_multishop.csv', self::FIELDS, [], 1, ';', ',', ShopConstraint::shop(self::$secondShopId));
         $messages = (new ImportEngineTestRunner())->run($this->getEntityImporter(), $context);
@@ -92,29 +92,29 @@ class ProductImporterMultishopTest extends AbstractProductImportEngineTestCase
         $productId = $this->getProductIdByReference('MS-1');
         $this->assertNotNull($productId);
         $this->assertNotFalse($this->fetchOne('SELECT 1 FROM {p}product_shop WHERE id_product = :id AND id_shop = :shop', ['id' => $productId, 'shop' => self::$secondShopId]));
-        $this->assertFalse($this->fetchOne('SELECT 1 FROM {p}product_shop WHERE id_product = :id AND id_shop = 1', ['id' => $productId]), 'A run scoped to shop 2 must not associate the product with shop 1');
+        $this->assertFalse($this->fetchOne('SELECT 1 FROM {p}product_shop WHERE id_product = :id AND id_shop = 1', ['id' => $productId]), 'A job scoped to shop 2 must not associate the product with shop 1');
 
         $featureId = $this->getMultishopFeatureId();
         $this->assertSame([self::$secondShopId], $this->getFeatureShopIds($featureId));
 
         // 2. match_ref on shop 1: the reference exists in the catalog but on
-        //    none of the run's shops -> row ERROR, never a duplicate product
+        //    none of the job's shops -> row ERROR, never a duplicate product
         [, $messages] = $this->runImport('product_multishop.csv', self::FIELDS, ['matchRef' => true]);
         $scopeErrors = array_values(array_filter(
             $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_ERROR),
             static fn (ImportMessage $message): bool => 'reference' === $message->field
         ));
         $this->assertCount(1, $scopeErrors);
-        $this->assertStringContainsString("outside the run's shop scope", $scopeErrors[0]->message);
+        $this->assertStringContainsString("outside the job's shop scope", $scopeErrors[0]->message);
         $this->assertSame(1, (int) $this->fetchOne("SELECT COUNT(*) FROM {p}product WHERE reference = 'MS-1'"), 'The out-of-scope reference must not create a duplicate product');
 
-        // 3. a shop 1 run reusing the feature BY NAME must not duplicate it,
+        // 3. a shop 1 job reusing the feature BY NAME must not duplicate it,
         //    but must ensure its feature_shop association covers shop 1
         //    (feature reads INNER JOIN feature_shop: without the association
         //    the imported values would be invisible on shop 1).
         //    Fresh kernel first: each production batch request gets fresh
         //    services, while this test would otherwise reuse the resolver
-        //    whose run-lifetime caches still hold run 1's feature
+        //    whose job-lifetime caches still hold job 1's feature
         self::bootKernel();
         $GLOBALS['kernel'] = self::$kernel;
         [, $messages] = $this->runImport('product_multishop_shop1.csv', self::FIELDS);
@@ -140,7 +140,7 @@ class ProductImporterMultishopTest extends AbstractProductImportEngineTestCase
         $this->assertTrue($existenceChecker->exists('shop', self::$secondShopId));
 
         // the name lookup (ShopRepository::getShopIdsByName)
-        [$context, $messages] = $this->runImport('product_shop_deleted.csv', ['name', 'reference', 'shop']);
+        [, $messages] = $this->runImport('product_shop_deleted.csv', ['name', 'reference', 'shop']);
         $this->assertNoErrors($messages);
 
         $shopWarnings = array_values(array_filter(
@@ -150,14 +150,14 @@ class ProductImporterMultishopTest extends AbstractProductImportEngineTestCase
         $this->assertCount(1, $shopWarnings);
         $this->assertStringContainsString(self::DELETED_SHOP_NAME, $shopWarnings[0]->message);
 
-        // the entry was dropped, so the product falls back to the run's shop
+        // the entry was dropped, so the product falls back to the job's shop
         $productId = $this->getProductIdByReference('DEL-SHP-1');
         $this->assertNotNull($productId);
         $this->assertFalse(
             $this->fetchOne('SELECT 1 FROM {p}product_shop WHERE id_product = :id AND id_shop = :shop', ['id' => $productId, 'shop' => self::$deletedShopId]),
             'The product must never be associated with a soft-deleted shop'
         );
-        $this->assertNotFalse($this->fetchOne('SELECT 1 FROM {p}product_shop WHERE id_product = :id AND id_shop = :shop', ['id' => $productId, 'shop' => $context->getShopId()]));
+        $this->assertNotFalse($this->fetchOne('SELECT 1 FROM {p}product_shop WHERE id_product = :id AND id_shop = :shop', ['id' => $productId, 'shop' => static::DEFAULT_SHOP_ID]));
     }
 
     private function getMultishopFeatureId(): int

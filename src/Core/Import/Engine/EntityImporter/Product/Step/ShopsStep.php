@@ -11,16 +11,17 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ShopFinder;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
+use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Associates the product with the shops named in the shop cell. Runs
- * near-last: SetProductShopsCommand propagates the run shop's product row to
- * the other shops, so every write scoped to the run's shop must have happened
+ * near-last: SetProductShopsCommand propagates the source shop's product row to
+ * the other shops, so every write scoped to the job's shop must have happened
  * before it.
  */
 class ShopsStep extends AbstractProductRowStep
@@ -30,6 +31,7 @@ class ShopsStep extends AbstractProductRowStep
         protected readonly ShopFinder $shopFinder,
         protected readonly CommandBusInterface $commandBus,
         protected readonly TranslatorInterface $translator,
+        protected readonly ShopListResolverInterface $shopListResolver,
     ) {
         parent::__construct($valueParser);
     }
@@ -39,7 +41,7 @@ class ShopsStep extends AbstractProductRowStep
         return $this->hasValue($row, 'shop');
     }
 
-    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context): array
+    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportJobContext $context): array
     {
         $messages = [];
         $shopCell = $row['shop'] ?? '';
@@ -72,18 +74,20 @@ class ShopsStep extends AbstractProductRowStep
 
         $shopIds = array_values(array_unique($shopIds));
         // the source shop must be part of the association (command constraint);
-        // the run's shop holds the data that was just written. This also covers
-        // the "every entry was dropped" case: the list becomes exactly the run's
-        // shop, which the early return below then treats as nothing to do
-        if (!in_array($context->getShopId(), $shopIds, true)) {
-            $shopIds[] = $context->getShopId();
+        // it is the shop holding the data that was just written, which for a
+        // single-shop job is the job's shop. This also covers the "every entry
+        // was dropped" case: the list becomes exactly that shop, which the early
+        // return below then treats as nothing to do
+        $sourceShopId = $this->shopListResolver->resolveRepresentativeShopId($context->getShopConstraint());
+        if (!in_array($sourceShopId, $shopIds, true)) {
+            $shopIds[] = $sourceShopId;
         }
 
-        if ([$context->getShopId()] === $shopIds) {
+        if ([$sourceShopId] === $shopIds) {
             return $messages;
         }
 
-        $this->commandBus->handle(new SetProductShopsCommand($productId, $context->getShopId(), $shopIds));
+        $this->commandBus->handle(new SetProductShopsCommand($productId, $sourceShopId, $shopIds));
 
         return $messages;
     }

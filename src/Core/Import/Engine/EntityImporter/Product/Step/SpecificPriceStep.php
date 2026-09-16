@@ -21,7 +21,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddSpecificP
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
@@ -57,7 +57,7 @@ class SpecificPriceStep extends AbstractProductRowStep
         return $this->hasValue($row, 'reduction_price') || $this->hasValue($row, 'reduction_percent');
     }
 
-    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context): array
+    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportJobContext $context): array
     {
         if ($this->hasValue($row, 'reduction_price') && $this->hasValue($row, 'reduction_percent')) {
             return [];

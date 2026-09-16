@@ -16,8 +16,9 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 
 /**
  * Resolves feature NAMES and predefined feature VALUES to ids, auto-creating
@@ -36,7 +37,7 @@ class FeatureResolver
     use QuietResolutionTrait;
 
     /**
-     * @var array<int, true> feature ids whose shop association was already ensured this run
+     * @var array<int, true> feature ids whose shop association was already ensured this job
      */
     protected array $featureShopEnsured = [];
 
@@ -45,20 +46,20 @@ class FeatureResolver
         protected readonly FeatureRepository $featureRepository,
         protected readonly FeatureValueRepository $featureValueRepository,
         protected readonly LanguageRepositoryInterface $languageRepository,
-        protected readonly RunShopIdsProvider $runShopIdsProvider,
+        protected readonly ShopListResolverInterface $shopListResolver,
     ) {
     }
 
-    public function resolveFeature(string $name, int $languageId, ImportRunContext $context): ResolvedEntity
+    public function resolveFeature(string $name, int $languageId, ImportJobContext $context): ResolvedEntity
     {
         $resolved = $this->resolveThroughCache(
             'feature:' . $name,
             fn (): array => $this->featureRepository->getFeatureIdsByName($name, $languageId),
             function () use ($name, $context): int {
                 $featureId = $this->commandBus->handle(
-                    new AddFeatureCommand($this->localizeForCreation($name), $this->runShopIdsProvider->getRunShopIds($context))
+                    new AddFeatureCommand($this->localizeForCreation($name), $this->shopListResolver->resolveShopIds($context->getShopConstraint()))
                 )->getValue();
-                // created WITH the run's shops, so there is nothing to ensure
+                // created WITH the job's shops, so there is nothing to ensure
                 $this->featureShopEnsured[$featureId] = true;
 
                 return $featureId;
@@ -87,11 +88,11 @@ class FeatureResolver
      * SetProductFeatureValuesCommand writes feature_product but never
      * feature_shop, while every feature read INNER JOINs feature_shop: a
      * feature REUSED from another shop would make the imported values
-     * invisible on the run's shops. Ensure the association instead — a
+     * invisible on the job's shops. Ensure the association instead — a
      * feature is never duplicated per shop (the name lookup is deliberately
      * global).
      */
-    protected function ensureFeatureShopAssociation(int $featureId, ImportRunContext $context): void
+    protected function ensureFeatureShopAssociation(int $featureId, ImportJobContext $context): void
     {
         if (isset($this->featureShopEnsured[$featureId])) {
             return;
@@ -99,13 +100,13 @@ class FeatureResolver
         $this->featureShopEnsured[$featureId] = true;
 
         $currentShopIds = array_map('intval', $this->featureRepository->get(new FeatureId($featureId))->getAssociatedShops());
-        $runShopIds = $this->runShopIdsProvider->getRunShopIds($context);
-        if ([] === array_diff($runShopIds, $currentShopIds)) {
+        $jobShopIds = $this->shopListResolver->resolveShopIds($context->getShopConstraint());
+        if ([] === array_diff($jobShopIds, $currentShopIds)) {
             return;
         }
 
         $command = new EditFeatureCommand($featureId);
-        $command->setAssociatedShopIds(array_values(array_unique(array_merge($currentShopIds, $runShopIds))));
+        $command->setAssociatedShopIds(array_values(array_unique(array_merge($currentShopIds, $jobShopIds))));
         $this->commandBus->handle($command);
     }
 

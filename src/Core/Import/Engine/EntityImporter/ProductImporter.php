@@ -16,9 +16,9 @@ use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowValidator;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\PhaseBatchResult;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
@@ -205,7 +205,7 @@ class ProductImporter extends AbstractEntityImporter
         ];
     }
 
-    public function countPhaseUnits(string $phaseId, ImportRunContext $context): int
+    public function countPhaseUnits(string $phaseId, ImportJobContext $context): int
     {
         $this->assertKnownPhase($phaseId);
 
@@ -217,7 +217,7 @@ class ProductImporter extends AbstractEntityImporter
         return parent::countPhaseUnits($phaseId, $context);
     }
 
-    public function processPhaseBatch(string $phaseId, ImportRunContext $context, int $limit): PhaseBatchResult
+    public function processPhaseBatch(string $phaseId, ImportJobContext $context, int $limit): PhaseBatchResult
     {
         $this->assertKnownPhase($phaseId);
 
@@ -229,7 +229,7 @@ class ProductImporter extends AbstractEntityImporter
         };
     }
 
-    protected function processValidationBatch(ImportRunContext $context, int $limit): PhaseBatchResult
+    protected function processValidationBatch(ImportJobContext $context, int $limit): PhaseBatchResult
     {
         $messages = [];
 
@@ -269,7 +269,7 @@ class ProductImporter extends AbstractEntityImporter
         return new PhaseBatchResult($result->processedUnitCount, array_merge($messages, $result->messages), $result->newlySkippedRows, $result->resumeCursor);
     }
 
-    protected function processDatabaseBatch(ImportRunContext $context, int $limit): PhaseBatchResult
+    protected function processDatabaseBatch(ImportJobContext $context, int $limit): PhaseBatchResult
     {
         return $this->iterateBatch($context, $limit, function (array $row, int $rowIndex) use ($context): array {
             if ($context->isRowSkipped($rowIndex)) {
@@ -288,7 +288,7 @@ class ProductImporter extends AbstractEntityImporter
      * as the association phase (no cross-batch state, cursor-resumable).
      * Misses are warnings — the association phase will drop the links.
      */
-    protected function processAssociationValidationBatch(ImportRunContext $context, int $limit): PhaseBatchResult
+    protected function processAssociationValidationBatch(ImportJobContext $context, int $limit): PhaseBatchResult
     {
         return $this->iterateBatch($context, $limit, function (array $row, int $rowIndex) use ($context): array {
             if ($context->isRowSkipped($rowIndex)) {
@@ -299,7 +299,7 @@ class ProductImporter extends AbstractEntityImporter
         });
     }
 
-    protected function processAssociationBatch(ImportRunContext $context, int $limit): PhaseBatchResult
+    protected function processAssociationBatch(ImportJobContext $context, int $limit): PhaseBatchResult
     {
         return $this->iterateBatch($context, $limit, function (array $row, int $rowIndex) use ($context): array {
             if ($context->isRowSkipped($rowIndex)) {
@@ -321,7 +321,7 @@ class ProductImporter extends AbstractEntityImporter
      *
      * @return array{findings: list<array{kind: string, target: string, count: int}>, ownerId: int|null, clear: bool, accessoryIds: list<int>}
      */
-    protected function planAccessories(array $row, ImportRunContext $context): array
+    protected function planAccessories(array $row, ImportJobContext $context): array
     {
         $findings = [];
         $accessories = $row['accessories'] ?? '';
@@ -370,7 +370,7 @@ class ProductImporter extends AbstractEntityImporter
      *
      * @return list<ImportMessage>
      */
-    protected function checkAccessories(array $row, int $rowIndex, ImportRunContext $context): array
+    protected function checkAccessories(array $row, int $rowIndex, ImportJobContext $context): array
     {
         if ('' === ($row['accessories'] ?? '')) {
             return [];
@@ -379,7 +379,7 @@ class ProductImporter extends AbstractEntityImporter
         $messages = [];
         foreach ($this->planAccessories($row, $context)['findings'] as $finding) {
             // every finding is a WARNING here: nothing has been written yet, and
-            // this phase is pausing, so the run stops for review
+            // this phase is pausing, so the job stops for review
             $messages[] = $this->accessoryFindingMessage($finding, $rowIndex, self::PHASE_ASSOCIATION_VALIDATION);
         }
 
@@ -391,7 +391,7 @@ class ProductImporter extends AbstractEntityImporter
      *
      * @return list<ImportMessage>
      */
-    protected function associateAccessories(array $row, int $rowIndex, ImportRunContext $context): array
+    protected function associateAccessories(array $row, int $rowIndex, ImportJobContext $context): array
     {
         if ('' === ($row['accessories'] ?? '')) {
             return [];
@@ -486,7 +486,7 @@ class ProductImporter extends AbstractEntityImporter
      *
      * @param array<string, string> $row
      */
-    protected function resolveAssociationOwner(array $row, ImportRunContext $context): FoundEntity
+    protected function resolveAssociationOwner(array $row, ImportJobContext $context): FoundEntity
     {
         $id = $row['id'] ?? '';
         $usableId = $context->getOptions()->forceIds && ctype_digit($id) ? (int) $id : null;

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder;
 
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 
 /**
  * Contract of a MATCH-ONLY lookup: given one raw cell value, report which
@@ -24,5 +24,5 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
  */
 interface EntityFinderInterface
 {
-    public function find(string $value, ImportRunContext $context): FoundEntity;
+    public function find(string $value, ImportJobContext $context): FoundEntity;
 }

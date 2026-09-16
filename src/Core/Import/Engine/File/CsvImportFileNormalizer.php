@@ -17,25 +17,25 @@ use Symfony\Component\Filesystem\Filesystem;
 use Throwable;
 
 /**
- * Normalizes an uploaded import file once, at run start, into a run-scoped
+ * Normalizes an uploaded import file once, at job start, into a job-scoped
  * working file using one canonical CSV dialect. All downstream reading
- * (cursor-resumable batches) then needs no per-run dialect or encoding
+ * (cursor-resumable batches) then needs no per-job dialect or encoding
  * handling: the user-chosen CSV separator is consumed here and never again.
  *
  * Normalization guarantees on the working file:
  * - canonical dialect (CSV_* constants), UTF-8, no BOM
  * - the configured skip rows (header lines, already-processed leading rows)
  *   are stripped here, once: the working file contains DATA RECORDS ONLY,
- *   so the engine, the run context and the importers never deal with a
+ *   so the engine, the job context and the importers never deal with a
  *   skip count. Row indexes are 0-based data-record indexes; presenters
- *   add the run's skip count back when they need source-file line numbers.
+ *   add the job's skip count back when they need source-file line numbers.
  * - apart from that shift, 1:1 record mapping with the source (blank lines
  *   preserved)
  *
  * Replaces the per-batch whole-file encoding checks and the deprecated
  * utf8_encode() of the legacy path, and fixes the legacy Excel->CSV
  * converter's forced ';' separator and stale filename-keyed cache (the
- * caller provides a fresh target path per run, nothing is cached).
+ * caller provides a fresh target path per job, nothing is cached).
  */
 class CsvImportFileNormalizer
 {
@@ -57,7 +57,7 @@ class CsvImportFileNormalizer
 
     /**
      * @param SplFileInfo $sourceFile the uploaded file (CSV or spreadsheet)
-     * @param string $targetPath where to write the working file (fresh path per run)
+     * @param string $targetPath where to write the working file (fresh path per job)
      * @param string $sourceCsvDelimiter CSV separator of the SOURCE file (ignored for spreadsheets)
      * @param int $skipRows leading records to strip (header lines, already-imported leading rows)
      *

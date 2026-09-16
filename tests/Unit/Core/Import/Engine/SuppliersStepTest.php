@@ -19,9 +19,9 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\FoundEntity;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\SupplierFinder;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\SuppliersStep;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobOptions;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunOptions;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -174,16 +174,16 @@ class SuppliersStepTest extends TestCase
         $this->fail('No UpdateProductSuppliersCommand was dispatched');
     }
 
-    private function buildContext(): ImportRunContext
+    private function buildContext(): ImportJobContext
     {
-        return new ImportRunContext(
+        return new ImportJobContext(
             'product',
             '/tmp/working-file.csv',
             10,
             'en',
             ',',
             [],
-            ImportRunOptions::fromArray([]),
+            ImportJobOptions::fromArray([]),
             ShopConstraint::shop(1)
         );
     }

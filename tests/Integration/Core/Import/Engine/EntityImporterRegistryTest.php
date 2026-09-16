@@ -13,7 +13,7 @@ use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterRegistry;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\DuplicateEntityTypeException;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\UnknownEntityTypeException;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\PhaseBatchResult;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollectionInterface;
@@ -106,12 +106,12 @@ class EntityImporterRegistryTest extends KernelTestCase
                 return [];
             }
 
-            public function countPhaseUnits(string $phaseId, ImportRunContext $context): int
+            public function countPhaseUnits(string $phaseId, ImportJobContext $context): int
             {
                 return 0;
             }
 
-            public function processPhaseBatch(string $phaseId, ImportRunContext $context, int $limit): PhaseBatchResult
+            public function processPhaseBatch(string $phaseId, ImportJobContext $context, int $limit): PhaseBatchResult
             {
                 return new PhaseBatchResult(0, [], [], null);
             }

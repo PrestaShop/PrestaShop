@@ -16,7 +16,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
  * but importers may declare custom phases (e.g. an attribute-generation
  * pre-phase for combinations).
  *
- * A pausing phase that completes with at least one message stops the run as
+ * A pausing phase that completes with at least one message stops the job as
  * awaiting_confirmation so the client can review; a clean pausing phase
  * continues without pause.
  */

@@ -12,16 +12,16 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
 use PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobOptions;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunOptions;
 use SplFileInfo;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Tests\Integration\Utility\ContextMockerTrait;
 
 /**
- * Entity-agnostic harness: normalize a fixture, build a run context and drive
+ * Entity-agnostic harness: normalize a fixture, build a job context and drive
  * an importer through the mini batch sequencer. Entity-specific test cases
  * provide the importer (see AbstractProductImportEngineTestCase).
  *
@@ -92,7 +92,7 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
     }
 
     /**
-     * Normalizes a fixture into a working file and builds a run context for it.
+     * Normalizes a fixture into a working file and builds a job context for it.
      *
      * @param array<int, string> $fieldMapping column index => field name
      * @param array<string, bool> $options
@@ -105,7 +105,7 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
         string $sourceCsvSeparator = ';',
         string $multipleValueSeparator = ',',
         ?ShopConstraint $shopConstraint = null
-    ): ImportRunContext {
+    ): ImportJobContext {
         $fixturePath = $this->prepareFixture($fixtureName);
 
         // skip rows (fixture headers) are consumed here, like the separator:
@@ -115,14 +115,14 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
         $normalizer = new CsvImportFileNormalizer(new Filesystem());
         $normalizedFile = $normalizer->normalize(new SplFileInfo($fixturePath), $workingFilePath, $sourceCsvSeparator, $skipRows);
 
-        return new ImportRunContext(
+        return new ImportJobContext(
             $this->getEntityImporter()->getEntityType(),
             $workingFilePath,
             $normalizedFile->dataRecordCount,
             static::DEFAULT_LANG_ISO,
             $multipleValueSeparator,
             $fieldMapping,
-            ImportRunOptions::fromArray($options),
+            ImportJobOptions::fromArray($options),
             $shopConstraint ?? ShopConstraint::shop(static::DEFAULT_SHOP_ID)
         );
     }
@@ -134,7 +134,7 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
      * @param array<string, bool> $options
      * @param list<string>|null $phaseIds
      *
-     * @return array{0: ImportRunContext, 1: list<ImportMessage>}
+     * @return array{0: ImportJobContext, 1: list<ImportMessage>}
      */
     protected function runImport(
         string $fixtureName,

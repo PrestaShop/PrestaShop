@@ -10,8 +10,8 @@ namespace Tests\Integration\Core\Import\Engine;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunOptions;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobOptions;
 use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -74,7 +74,7 @@ class ProductImporterBenchmarkTest extends AbstractProductImportEngineTestCase
 
     /**
      * Association-heavy shape: 10 distinct auto-created categories, brands
-     * and feature values rotate across the file (so the run-lifetime caches
+     * and feature values rotate across the file (so the job-lifetime caches
      * work like on a real catalog), and every row references the PREVIOUS
      * row's product as an accessory (row 1 references the last one, proving
      * order independence) — the association_validation and association
@@ -98,7 +98,7 @@ class ProductImporterBenchmarkTest extends AbstractProductImportEngineTestCase
     /**
      * @param callable(int): array<int, string> $rowFactory generates row $i (1-based)
      */
-    private function buildBenchmarkContext(array $fields, callable $rowFactory): ImportRunContext
+    private function buildBenchmarkContext(array $fields, callable $rowFactory): ImportJobContext
     {
         $fixturePath = $this->createTemporaryFilePath('bench_', '.csv');
         $handle = fopen($fixturePath, 'wb');
@@ -111,14 +111,14 @@ class ProductImporterBenchmarkTest extends AbstractProductImportEngineTestCase
         $workingFilePath = $this->createTemporaryFilePath('bench_work_', '.csv');
         $normalizedFile = (new CsvImportFileNormalizer(new Filesystem()))->normalize(new SplFileInfo($fixturePath), $workingFilePath, ';', 1);
 
-        return new ImportRunContext(
+        return new ImportJobContext(
             'product',
             $workingFilePath,
             $normalizedFile->dataRecordCount,
             self::DEFAULT_LANG_ISO,
             ',',
             $fields,
-            new ImportRunOptions(),
+            new ImportJobOptions(),
             ShopConstraint::shop(self::DEFAULT_SHOP_ID)
         );
     }
@@ -127,7 +127,7 @@ class ProductImporterBenchmarkTest extends AbstractProductImportEngineTestCase
      * Same loop as ImportEngineTestRunner, with a stopwatch section per phase
      * so the report shows where the time goes.
      */
-    private function runTimedImport(string $label, ImportRunContext $context): void
+    private function runTimedImport(string $label, ImportJobContext $context): void
     {
         $importer = $this->getProductImporter();
         $stopwatch = new Stopwatch(true);
