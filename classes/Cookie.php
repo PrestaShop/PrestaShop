@@ -572,9 +572,15 @@ class CookieCore
      */
     public function getSession($sessionId)
     {
-        if ($this->session !== null) {
+        // The memoized session is only reusable when it actually holds the requested session.
+        // Keeping it otherwise returns a session that does not match $sessionId anymore, which
+        // happens as soon as registerSession() issues a new one during the request, or when a
+        // previous call memoized a session that could not be loaded (its id is null).
+        if ($this->session !== null && (int) $this->session->getId() === (int) $sessionId) {
             return $this->session;
         }
+
+        $this->session = null;
 
         if (isset($this->id_employee)) {
             $this->session = new EmployeeSession($sessionId);

@@ -14,15 +14,18 @@ services:
 
   # ─── Repository ──────────────────────────────────────────────────────────────
 
-  # The logger is taken through its interface on purpose: in the Symfony kernels (back office,
-  # Admin API) Psr\Log\LoggerInterface is Monolog, which writes to var/logs and never touches the
-  # database. The hand-built front-office container has no Monolog and aliases the interface to the
-  # legacy logger (ps_log) in config/services/front/services_prod.yml.
+  # The logger is taken through the core "logger" id, not through Psr\Log\LoggerInterface: module
+  # service files are merged into the Symfony containers and a module can redefine that interface id
+  # (ps_checkout does, with a factory that instantiates the module; its constructor calls $this->trans(),
+  # which needs the translator this repository is being built for -> circular reference). In the Symfony
+  # kernels "logger" is Monolog, which writes to var/logs and never touches the database. The hand-built
+  # legacy containers have no Monolog and alias "logger" to the legacy logger (ps_log) in
+  # config/services/common.yml.
   PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepository:
     arguments:
       $connection: '@doctrine.dbal.default_connection'
       $prefix: '%database_prefix%'
-      $logger: '@Psr\Log\LoggerInterface'
+      $logger: '@logger'
 
   # Note: the definition WRITER interface (ExtraPropertyDefinitionWriterInterface) is intentionally NOT aliased
   # here. Writing definitions (register/unregister) is a back-office-only concern, so the alias lives in
@@ -80,8 +83,7 @@ services:
       $prefix: '%database_prefix%'
       $shopListResolver: '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
       $definitionShopFilter: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface'
-      # Optional on purpose: absent from the hand-built FO legacy container.
-      $logger: '@?logger'
+      $logger: '@logger'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface:
     alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReader'

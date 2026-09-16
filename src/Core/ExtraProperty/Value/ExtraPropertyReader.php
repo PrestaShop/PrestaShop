@@ -35,8 +35,7 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
         protected readonly string $prefix,
         protected readonly ShopListResolverInterface $shopListResolver,
         protected readonly ExtraPropertyDefinitionShopFilterInterface $definitionShopFilter,
-        // Optional: the hand-built FO legacy container has no logger service.
-        protected readonly ?LoggerInterface $logger = null,
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
@@ -215,12 +214,10 @@ class ExtraPropertyReader implements ExtraPropertyReaderInterface
         } catch (Throwable $e) {
             // Reads must never break the page that displays them (FO especially), but a
             // failing query is a schema/definition bug: trace it instead of hiding it.
-            $message = sprintf('Extra property read failed on table %s: %s', $extraTableName, $e->getMessage());
-            if (null !== $this->logger) {
-                $this->logger->error($message, ['exception' => $e]);
-            } else {
-                error_log($message);
-            }
+            $this->logger->error(
+                sprintf('Extra property read failed on table %s: %s', $extraTableName, $e->getMessage()),
+                ['exception' => $e]
+            );
 
             return $result;
         }
