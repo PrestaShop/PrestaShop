@@ -52,6 +52,24 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     }
 
     /**
+     * Returns alternative language URLs for the current page of the product listing.
+     *
+     * @return array
+     */
+    protected function getAlternativeLangsUrl()
+    {
+        // Get the available language URLs for the current listing.
+        $alternativeLangs = parent::getAlternativeLangsUrl();
+
+        // Apply the same pagination rules as the canonical URL to each language.
+        foreach ($alternativeLangs as $languageCode => $url) {
+            $alternativeLangs[$languageCode] = $this->buildPaginatedUrl($url);
+        }
+
+        return $alternativeLangs;
+    }
+
+    /**
      * Takes an associative array with at least the "id_product" key
      * and returns an array containing all information necessary for
      * rendering the product in the template.

@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleOverrideChecker;
@@ -1236,16 +1237,16 @@ abstract class ModuleCore implements ModuleInterface
      * About BO label translations: store wording/domain pairs in the definition, and also call
      * $this->trans() in the module code so strings are discoverable by the BO translation UI.
      *
-     * Every failure throws (there is no false return): wrap the call in
-     * catch (PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException $e)
-     * in module install code to handle all failure reasons — the exception message carries
-     * the reason. A failed registration persists nothing (no definition row, no column).
+     * A failure returns false and adds its reason to the module errors, so install code can
+     * simply test the returned value like it does for every other register* method. A failed
+     * registration persists nothing (no definition row, no column). Registry failures are also
+     * logged. Handle the reason codes of ExtraPropertyRegistryException by calling
+     * ExtraPropertyRegistryInterface::register() directly instead.
      *
      * @param ExtraPropertyDefinition $definition definition
      *
-     * @return bool always true — failures throw
-     *
-     * @throws PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException on any failure: scope conflict, destructive schema change, invalid form options, missing base table, DDL or persistence failure (see the reason-code constants on ExtraPropertyRegistryException)
+     * @return bool false on any failure: scope conflict, destructive schema change, invalid form
+     *              options, missing base table, DDL or persistence failure
      */
     public function registerExtraProperty(ExtraPropertyDefinition $definition): bool
     {
@@ -1257,7 +1258,15 @@ abstract class ModuleCore implements ModuleInterface
         /** @var ExtraPropertyRegistryInterface $entityCustomFieldRegistry */
         $entityCustomFieldRegistry = $this->get(ExtraPropertyRegistryInterface::class);
 
-        $entityCustomFieldRegistry->register($definition);
+        try {
+            $entityCustomFieldRegistry->register($definition);
+        } catch (ExtraPropertyException $e) {
+            // The registry logged the reason already; carry it to whatever displays module errors
+            // (the module manager, and the shop installer through ModuleManager::getError()).
+            $this->_errors[] = $e->getMessage();
+
+            return false;
+        }
 
         return true;
     }
@@ -1271,9 +1280,8 @@ abstract class ModuleCore implements ModuleInterface
      * @param ExtraPropertyDefinition $definition Definition identifying the property to unregister
      * @param bool $dropData If true, also DROP the SQL column and its data from the *_extra table
      *
-     * @return bool always true — failures throw (no-op when nothing is registered)
-     *
-     * @throws PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException when deleting the definition row or dropping the column fails — catch it in module uninstall code
+     * @return bool false when deleting the definition row or dropping the column fails, the reason
+     *              being added to the module errors (no-op, and true, when nothing is registered)
      */
     public function unregisterExtraProperty(ExtraPropertyDefinition $definition, bool $dropData = false): bool
     {
@@ -1284,7 +1292,13 @@ abstract class ModuleCore implements ModuleInterface
         /** @var ExtraPropertyRegistryInterface $entityCustomFieldRegistry */
         $entityCustomFieldRegistry = $this->get(ExtraPropertyRegistryInterface::class);
 
-        $entityCustomFieldRegistry->unregister($definition, $dropData);
+        try {
+            $entityCustomFieldRegistry->unregister($definition, $dropData);
+        } catch (ExtraPropertyException $e) {
+            $this->_errors[] = $e->getMessage();
+
+            return false;
+        }
 
         return true;
     }

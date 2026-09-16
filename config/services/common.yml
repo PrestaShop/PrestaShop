@@ -16,10 +16,11 @@ services:
         public: true
 
     # This file is loaded by the hand-built legacy containers only (front, webservice), which have no
-    # Monolog: services taking Psr\Log\LoggerInterface (the extra property definition repository, for
-    # instance) get the legacy logger there, writing ps_log. The Symfony kernels never import this file
-    # and keep Monolog behind the interface.
-    Psr\Log\LoggerInterface:
+    # Monolog: services taking "@logger" (the extra property definition repository, for instance) get
+    # the legacy logger there, writing ps_log. The Symfony kernels never import this file and keep
+    # Monolog behind "logger". Deliberately not the Psr\Log\LoggerInterface id: modules redefine that
+    # id in the shared containers.
+    logger:
         alias: prestashop.adapter.legacy.logger
 
     PrestaShop\PrestaShop\Core\Crypto\Hashing: ~
