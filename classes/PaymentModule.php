@@ -457,6 +457,11 @@ abstract class PaymentModuleCore extends Module
                     $msg->id_order = (int) $order->id;
                     $msg->private = true;
                     $msg->add();
+
+                    // The order page reads customer messages, never `message` rows, so a message
+                    // left only in the latter is not visible anywhere in the Back Office. Keep it
+                    // private: it is addressed to the merchant, not to the customer.
+                    $this->copyMessageIntoCustomerThread($order, $msg->message, true);
                 }
             }
 
@@ -578,26 +583,7 @@ abstract class PaymentModuleCore extends Module
                 $update_message->update();
 
                 // Add this message in the customer thread
-                $customer_thread = new CustomerThread();
-                $customer_thread->id_contact = 0;
-                $customer_thread->id_customer = (int) $order->id_customer;
-                $customer_thread->id_shop = (int) $this->context->shop->id;
-                $customer_thread->id_order = (int) $order->id;
-                $customer_thread->id_lang = (int) $this->context->language->id;
-                $customer_thread->email = $this->context->customer->email;
-                $customer_thread->status = 'open';
-                $customer_thread->token = Tools::passwdGen(12);
-                $customer_thread->add();
-
-                $customer_message = new CustomerMessage();
-                $customer_message->id_customer_thread = $customer_thread->id;
-                $customer_message->id_employee = 0;
-                $customer_message->message = $update_message->message;
-                $customer_message->private = false;
-
-                if (!$customer_message->add()) {
-                    $this->_errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
-                }
+                $this->copyMessageIntoCustomerThread($order, $update_message->message, false);
             }
 
             if (self::DEBUG_MODE) {
@@ -1398,6 +1384,54 @@ abstract class PaymentModuleCore extends Module
             }
         }
         $orderShipmentCreator->addShipmentOrder($order, $physicalProductsByCarrier);
+    }
+
+    /**
+     * Copies a message attached to an order into that order's customer thread, which is what the
+     * Back Office order page displays.
+     *
+     * The thread is looked up by order rather than kept on the instance: validateOrder() runs this
+     * once per order, and a cart split across several carriers produces several orders, so a
+     * remembered thread would collect the messages of every order after the first.
+     *
+     * @param bool $private true for a message only employees should see
+     */
+    private function copyMessageIntoCustomerThread(Order $order, string $message, bool $private): void
+    {
+        $idCustomerThread = (int) CustomerThread::getIdCustomerThreadByEmailAndIdOrder(
+            $this->context->customer->email,
+            (int) $order->id
+        );
+
+        if (!$idCustomerThread) {
+            $customerThread = new CustomerThread();
+            $customerThread->id_contact = 0;
+            $customerThread->id_customer = (int) $order->id_customer;
+            $customerThread->id_shop = (int) $this->context->shop->id;
+            $customerThread->id_order = (int) $order->id;
+            $customerThread->id_lang = (int) $this->context->language->id;
+            $customerThread->email = $this->context->customer->email;
+            $customerThread->status = 'open';
+            $customerThread->token = Tools::passwdGen(12);
+
+            if (!$customerThread->add()) {
+                $this->_errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
+
+                return;
+            }
+
+            $idCustomerThread = (int) $customerThread->id;
+        }
+
+        $customerMessage = new CustomerMessage();
+        $customerMessage->id_customer_thread = $idCustomerThread;
+        $customerMessage->id_employee = 0;
+        $customerMessage->message = $message;
+        $customerMessage->private = $private;
+
+        if (!$customerMessage->add()) {
+            $this->_errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
+        }
     }
 
     private function isFeatureFlagIsEnabledForMultiShipment()
