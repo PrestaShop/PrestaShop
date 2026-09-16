@@ -49,6 +49,34 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
     {
         $this->addressForm->setAction($this->getCheckoutSession()->getCheckoutURL());
 
+        // The cart is still associated with a customer, but the current customer
+        // context is no longer valid. Redirect before displaying or processing
+        // the address form.
+        if (
+            (int) $this->context->cart->id_customer > 0
+            && (
+                !Validate::isLoadedObject($this->context->customer)
+                || (int) $this->context->cart->id_customer !== (int) $this->context->customer->id
+            )
+        ) {
+            $this->context->controller->errors[] = $this->getTranslator()->trans(
+                'Your session has expired. Please sign in again to continue your order.',
+                [],
+                'Shop.Notifications.Error'
+            );
+
+            $this->context->controller->redirectWithNotifications(
+                $this->context->link->getPageLink(
+                    'authentication',
+                    true,
+                    null,
+                    [
+                        'back' => $this->getCheckoutSession()->getCheckoutURL(),
+                    ]
+                )
+            );
+        }
+
         if (array_key_exists('use_same_address', $requestParams)) {
             $this->use_same_address = (bool) $requestParams['use_same_address'];
             if (!$this->use_same_address) {
@@ -74,6 +102,13 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         if (isset($requestParams['saveAddress'])) {
             $saved = $this->addressForm->fillWith($requestParams)->submit();
             if (!$saved) {
+                if (!$this->addressForm->hasErrors()) {
+                    $this->context->controller->errors[] = $this->getTranslator()->trans(
+                        'Could not save address.',
+                        [],
+                        'Shop.Notifications.Error'
+                    );
+                }
                 $this->setCurrent(true);
                 $this->getCheckoutProcess()->setHasErrors(true);
                 if ($requestParams['saveAddress'] === 'delivery') {
