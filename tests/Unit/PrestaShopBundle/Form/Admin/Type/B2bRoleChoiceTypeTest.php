@@ -16,7 +16,7 @@ use Doctrine\Persistence\Mapping\RuntimeReflectionService;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
-use PrestaShop\PrestaShop\Core\Domain\B2bRole\Role;
+use PrestaShop\PrestaShop\Core\Domain\B2bRole\DefaultRole;
 use PrestaShopBundle\Entity\B2B\B2bRole;
 use PrestaShopBundle\Entity\B2B\B2bRoleLang;
 use PrestaShopBundle\Entity\Lang;
@@ -171,11 +171,11 @@ class B2bRoleChoiceTypeTest extends TypeTestCase
     private function getRoles(): array
     {
         return $this->roles ??= [
-            $this->createRole(1, Role::ADMIN, [
+            $this->createRole(1, DefaultRole::ADMIN->value, [
                 1 => 'Administrator',
                 2 => 'Localized admin',
             ]),
-            $this->createRole(2, Role::BUYER, [
+            $this->createRole(2, DefaultRole::BUYER->value, [
                 2 => 'Localized buyer',
             ]),
             $this->createRole(4, 'CUSTOM_ROLE'),

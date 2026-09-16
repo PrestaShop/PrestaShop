@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
-use PrestaShop\PrestaShop\Core\Domain\B2bRole\Role;
+use PrestaShop\PrestaShop\Core\Domain\B2bRole\DefaultRole;
 use PrestaShopBundle\Entity\B2B\B2bRole;
 use PrestaShopBundle\Entity\Repository\B2bRoleRepository;
 use PrestaShopBundle\Form\DataTransformer\IdToEntityTransformer;
@@ -63,8 +63,8 @@ final class B2bRoleChoiceType extends AbstractType
 
     private static function humanizeRole(string $role): string
     {
-        if (str_starts_with($role, Role::PREFIX)) {
-            $role = \substr($role, \strlen(Role::PREFIX));
+        if (str_starts_with($role, DefaultRole::PREFIX)) {
+            $role = \substr($role, \strlen(DefaultRole::PREFIX));
         }
 
         return ucfirst(strtolower(str_replace('_', ' ', $role)));

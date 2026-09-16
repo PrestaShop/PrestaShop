@@ -8,15 +8,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\B2bRole;
 
-final class Role
+/**
+ * The B2B roles created on installation.
+ */
+enum DefaultRole: string
 {
     public const PREFIX = 'ROLE_B2B_';
 
-    public const SUPER_ADMIN = self::PREFIX . 'SUPER_ADMIN';
-    public const ADMIN = self::PREFIX . 'ADMIN';
-    public const BUYER = self::PREFIX . 'BUYER';
-
-    private function __construct()
-    {
-    }
+    case SUPER_ADMIN = self::PREFIX . 'SUPER_ADMIN';
+    case ADMIN = self::PREFIX . 'ADMIN';
+    case BUYER = self::PREFIX . 'BUYER';
 }
