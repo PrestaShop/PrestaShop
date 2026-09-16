@@ -13,7 +13,7 @@ use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 
 /**
@@ -39,7 +39,7 @@ class CategoryResolver
     ) {
     }
 
-    public function resolveChild(int $parentCategoryId, string $name, int $languageId, ImportRunContext $context): ResolvedEntity
+    public function resolveChild(int $parentCategoryId, string $name, int $languageId, ImportJobContext $context): ResolvedEntity
     {
         return $this->resolveThroughCache(
             $parentCategoryId . ':' . $name,

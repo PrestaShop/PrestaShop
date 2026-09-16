@@ -19,8 +19,8 @@ use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ImportEngineException;
  *
  * Only POSITIVE results are memoized (for the service lifetime — one batch
  * request — where the same ids repeat across many rows): the import itself
- * creates entities mid-run, so a miss can become a hit between two probes,
- * while an existing row never disappears during a run.
+ * creates entities mid-job, so a miss can become a hit between two probes,
+ * while an existing row never disappears during a job.
  */
 class ImportEntityExistenceChecker
 {

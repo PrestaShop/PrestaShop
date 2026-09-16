@@ -12,7 +12,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\PositiveLookupCacheTrait;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 
 /**
  * Product identity lookups shared by the phases — MATCH-ONLY: this finder
@@ -23,7 +23,7 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
  * findRowMatch() answers the option-gated update-vs-create question
  * (match_ref / force IDs); findByReferenceThenId() is the option-independent
  * lookup used to re-derive a product from its identity columns (association
- * phases — the row was already imported, so the run options must not gate
+ * phases — the row was already imported, so the job options must not gate
  * the lookup); findTarget() is the single decision point for product
  * association targets.
  */
@@ -51,11 +51,11 @@ class ProductFinder
      *   updating an arbitrary one of them is destructive, so first() must not
      *   be used as an update target;
      * - foundOutsideShopScope: the reference exists in the catalog but on
-     *   none of the run's shops — creating would duplicate it.
+     *   none of the job's shops — creating would duplicate it.
      *
      * @param array<string, string> $row mapped row values
      */
-    public function findRowMatch(array $row, ImportRunContext $context): FoundEntity
+    public function findRowMatch(array $row, ImportJobContext $context): FoundEntity
     {
         $options = $context->getOptions();
 
@@ -110,7 +110,7 @@ class ProductFinder
      * affects the link, so callers warn instead of failing (contrast
      * findRowMatch(), where ambiguity forbids choosing a target).
      */
-    public function findByReferenceThenId(string $reference, ?int $productId, ImportRunContext $context): FoundEntity
+    public function findByReferenceThenId(string $reference, ?int $productId, ImportJobContext $context): FoundEntity
     {
         if ('' !== $reference) {
             $existingIds = $this->productRepository->getProductIdsByReference($reference, $context->getShopConstraint());
@@ -146,7 +146,7 @@ class ProductFinder
      * with isAmbiguous() is a plain multi-product reference. Callers only
      * choose message wording and severity.
      */
-    public function findTarget(string $target, ImportRunContext $context): FoundEntity
+    public function findTarget(string $target, ImportJobContext $context): FoundEntity
     {
         // both accessory phases resolve every target of every row, and files
         // commonly repeat the same cross-sell set, so the reference lookup is

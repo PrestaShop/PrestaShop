@@ -9,10 +9,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Import\Engine;
 
 /**
- * One structured message produced while processing an import run.
+ * One structured message produced while processing an import job.
  *
  * Row indexes are 0-based data-record indexes in the working file (skip rows
- * were already stripped at normalization); presenters add the run's skip
+ * were already stripped at normalization); presenters add the job's skip
  * count back to display source-file line numbers. An empty row list means a
  * file-level message. The list is cumulative: coalesce() merges messages that
  * are equal on every field except the rows, so one message may carry the row

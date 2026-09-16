@@ -10,31 +10,35 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
 
 use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ImportEngineException;
 use SplFileInfo;
 
 /**
- * The single runtime object of an import run: frozen configuration plus the
- * mutable progress of the current phase. It mirrors the ImportRun entity's
+ * The single runtime object of an import job: frozen configuration plus the
+ * mutable progress of the current phase. It mirrors the ImportJob entity's
  * structure without depending on Doctrine; the adapter builds it from the
  * entity (tests build it directly).
  *
  * Importers only read from the context; the caller (batch sequencer) mutates
- * it through enterPhase() and applyBatchResult().
+ * it through enterPhase(), applyBatchResult() and, when resuming a persisted
+ * job, restoreProgress().
  *
  * Row indexes are 0-based DATA-RECORD indexes in the working file. The
  * working file is produced once by CsvImportFileNormalizer using the canonical
  * CSV dialect, with the configured skip rows already stripped: the original
  * CSV separator and the skip count are properties of the ORIGINAL upload,
  * consumed at normalization time only — the engine never sees either.
- * Presenters add the run's skip count back when they need source-file line
+ * Presenters add the job's skip count back when they need source-file line
  * numbers.
  *
- * The ShopConstraint is the run's frozen shop scope reference: every
- * shop-sensitive read (configuration, scoped entity lookups) and every shop
- * association written during the run derives from it.
+ * The ShopConstraint is the job's frozen shop scope reference and the ONLY
+ * shape shop scope travels in: every shop-sensitive read (configuration,
+ * scoped entity lookups) and every shop association written during the job
+ * derives from it. Code that needs concrete shop ids resolves the constraint
+ * through ShopListResolverInterface rather than asking the context for one, so
+ * that widening a job beyond a single shop stays a question the resolver and
+ * the caller answer together instead of one this object decides for them.
  */
-class ImportRunContext
+class ImportJobContext
 {
     /**
      * Field-mapping value marking a column as ignored: the mapping screen's
@@ -53,7 +57,16 @@ class ImportRunContext
     protected ?string $resumeCursor = null;
 
     /**
-     * @var array<string, array<int, true>> sparse skipped row indexes, per phase id
+     * Sparse set of the row indexes every phase so far has given up on, keyed
+     * by index so membership is a single lookup.
+     *
+     * Deliberately NOT split per phase: the only thing any importer asks is
+     * whether a row is dead, never which phase killed it, and the phase that
+     * rejected it is already recorded on the error message it produced. A flat
+     * set also makes the state one JSON array for the batch sequencer to
+     * persist and hand back through restoreProgress().
+     *
+     * @var array<int, true>
      */
     protected array $skippedRows = [];
 
@@ -67,7 +80,7 @@ class ImportRunContext
         protected readonly string $langIso,
         protected readonly string $multipleValueSeparator,
         protected readonly array $fieldMapping,
-        protected readonly ImportRunOptions $options,
+        protected readonly ImportJobOptions $options,
         protected readonly ShopConstraint $shopConstraint,
     ) {
     }
@@ -132,7 +145,7 @@ class ImportRunContext
         return false === $index ? null : $index;
     }
 
-    public function getOptions(): ImportRunOptions
+    public function getOptions(): ImportJobOptions
     {
         return $this->options;
     }
@@ -140,22 +153,6 @@ class ImportRunContext
     public function getShopConstraint(): ShopConstraint
     {
         return $this->shopConstraint;
-    }
-
-    /**
-     * Concrete shop id DERIVED from the constraint, for the few paths that
-     * genuinely need exactly one shop (stock reads, forced-id creation).
-     * Scope-aware code must use getShopConstraint() instead.
-     *
-     * @throws ImportEngineException when the run is not scoped to a single shop
-     */
-    public function getShopId(): int
-    {
-        if (!$this->shopConstraint->isSingleShopContext()) {
-            throw new ImportEngineException('This import run is not scoped to a single shop; use getShopConstraint() instead of getShopId()');
-        }
-
-        return $this->shopConstraint->getShopId()->getValue();
     }
 
     /**
@@ -170,7 +167,32 @@ class ImportRunContext
         $this->currentPhaseTotalUnits = $totalUnits;
         $this->currentOffset = 0;
         $this->resumeCursor = null;
-        $this->skippedRows[$phaseId] ??= [];
+    }
+
+    /**
+     * Replays the progress a previous request persisted, so a job resumed from
+     * the database continues exactly where it stopped.
+     *
+     * enterPhase() deliberately rewinds offset and cursor, which is right when
+     * a phase is entered for the first time and wrong when one is resumed, so
+     * the batch sequencer calls this instead of the two-step dance of entering
+     * the phase and then replaying a synthetic batch result. The skipped rows
+     * matter as much as the cursor: they are what later phases consult to leave
+     * invalid rows alone, and a job that lost them on resume would import rows
+     * its validation phase had already rejected.
+     *
+     * @param list<int> $skippedRows every row given up on so far, all phases together
+     */
+    public function restoreProgress(string $phaseId, int $totalUnits, int $offset, ?string $resumeCursor, array $skippedRows): void
+    {
+        $this->currentPhaseId = $phaseId;
+        $this->currentPhaseTotalUnits = $totalUnits;
+        $this->currentOffset = $offset;
+        $this->resumeCursor = $resumeCursor;
+        $this->skippedRows = [];
+        foreach ($skippedRows as $rowIndex) {
+            $this->skippedRows[$rowIndex] = true;
+        }
     }
 
     public function getCurrentPhaseId(): ?string
@@ -205,42 +227,28 @@ class ImportRunContext
         $this->currentOffset += $result->processedUnitCount;
         $this->resumeCursor = $result->resumeCursor;
         foreach ($result->newlySkippedRows as $rowIndex) {
-            $this->skippedRows[$this->currentPhaseId][$rowIndex] = true;
+            $this->skippedRows[$rowIndex] = true;
         }
     }
 
     /**
-     * Skipped row indexes of one phase, or of every phase when $phaseId is null.
+     * Every row index given up on so far, ascending.
      *
      * @return list<int>
      */
-    public function getSkippedRows(?string $phaseId = null): array
+    public function getSkippedRows(): array
     {
-        if (null !== $phaseId) {
-            return array_keys($this->skippedRows[$phaseId] ?? []);
-        }
+        $skippedRows = array_keys($this->skippedRows);
+        sort($skippedRows);
 
-        $allSkippedRows = [];
-        foreach ($this->skippedRows as $phaseSkippedRows) {
-            $allSkippedRows += $phaseSkippedRows;
-        }
-        $allSkippedRows = array_keys($allSkippedRows);
-        sort($allSkippedRows);
-
-        return $allSkippedRows;
+        return $skippedRows;
     }
 
     /**
-     * Whether the row was skipped by any phase so far.
+     * Whether any phase has given up on the row.
      */
     public function isRowSkipped(int $rowIndex): bool
     {
-        foreach ($this->skippedRows as $phaseSkippedRows) {
-            if (isset($phaseSkippedRows[$rowIndex])) {
-                return true;
-            }
-        }
-
-        return false;
+        return isset($this->skippedRows[$rowIndex]);
     }
 }

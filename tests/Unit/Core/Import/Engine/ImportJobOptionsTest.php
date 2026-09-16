@@ -9,13 +9,13 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Import\Engine;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunOptions;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobOptions;
 
-class ImportRunOptionsTest extends TestCase
+class ImportJobOptionsTest extends TestCase
 {
     public function testCoreOptionsAreTypedAndDefaultToFalse(): void
     {
-        $options = ImportRunOptions::fromArray(['forceIds' => '1', 'matchRef' => true]);
+        $options = ImportJobOptions::fromArray(['forceIds' => '1', 'matchRef' => true]);
 
         $this->assertTrue($options->forceIds, 'Truthy JSON values must be cast to bool');
         $this->assertTrue($options->matchRef);
@@ -26,7 +26,7 @@ class ImportRunOptionsTest extends TestCase
     }
 
     /**
-     * The whole point of keeping unknown keys: the run context is rebuilt from
+     * The whole point of keeping unknown keys: the job context is rebuilt from
      * the database on every batch request, so an option toArray() dropped would
      * silently vanish between two batches — and an importer shipped by a module
      * could never receive one.
@@ -40,7 +40,7 @@ class ImportRunOptionsTest extends TestCase
             'mymodule_flags' => ['a', 'b'],
         ];
 
-        $roundTripped = ImportRunOptions::fromArray(ImportRunOptions::fromArray($stored)->toArray())->toArray();
+        $roundTripped = ImportJobOptions::fromArray(ImportJobOptions::fromArray($stored)->toArray())->toArray();
 
         foreach ($stored as $key => $value) {
             $this->assertSame($value, $roundTripped[$key], sprintf('Option "%s" must survive being persisted and rebuilt', $key));
@@ -49,7 +49,7 @@ class ImportRunOptionsTest extends TestCase
 
     public function testUnknownOptionsAreReadableAndSeparableFromTheCoreOnes(): void
     {
-        $options = ImportRunOptions::fromArray(['truncate' => true, 'mymodule_strategy' => 'upsert']);
+        $options = ImportJobOptions::fromArray(['truncate' => true, 'mymodule_strategy' => 'upsert']);
 
         $this->assertSame(['mymodule_strategy' => 'upsert'], $options->getExtra(), 'getExtra() must not leak the core options');
 
@@ -70,7 +70,7 @@ class ImportRunOptionsTest extends TestCase
     {
         // 'truncate' is a core key, so it must land on the typed property and
         // NOT be duplicated into the extra bag
-        $options = new ImportRunOptions(truncate: true, extra: ['truncate' => false]);
+        $options = new ImportJobOptions(truncate: true, extra: ['truncate' => false]);
 
         $this->assertTrue($options->toArray()['truncate'], 'The typed core option must win over a stray extra key');
     }

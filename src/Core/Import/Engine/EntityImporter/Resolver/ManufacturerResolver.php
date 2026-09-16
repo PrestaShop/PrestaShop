@@ -11,11 +11,12 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
+use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 
 /**
  * Resolves a manufacturer NAME to an id, creating the manufacturer (associated
- * with the run's shops) when the name matches nothing. Numeric ids are not this
+ * with the job's shops) when the name matches nothing. Numeric ids are not this
  * resolver's business: an id is a MATCH-ONLY concern the caller probes through
  * ImportEntityExistenceChecker (creating a brand named "123" from an unknown id
  * would be nonsense).
@@ -29,17 +30,17 @@ class ManufacturerResolver implements EntityResolverInterface
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
         protected readonly ManufacturerRepository $manufacturerRepository,
-        protected readonly RunShopIdsProvider $runShopIdsProvider,
+        protected readonly ShopListResolverInterface $shopListResolver,
     ) {
     }
 
-    public function resolve(string $value, ImportRunContext $context): ResolvedEntity
+    public function resolve(string $value, ImportJobContext $context): ResolvedEntity
     {
         return $this->resolveThroughCache(
             $value,
             fn (): array => $this->manufacturerRepository->getManufacturerIdsByName($value),
             fn (): int => $this->commandBus->handle(
-                new AddManufacturerCommand($value, true, [], [], [], [], $this->runShopIdsProvider->getRunShopIds($context))
+                new AddManufacturerCommand($value, true, [], [], [], [], $this->shopListResolver->resolveShopIds($context->getShopConstraint()))
             )->getValue()
         );
     }

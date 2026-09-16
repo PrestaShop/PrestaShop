@@ -55,7 +55,7 @@ class ProductImporterUpdateTest extends AbstractProductImportEngineTestCase
 
         // the id 9955 does not exist anywhere in the file; row 1 (id 9911) must
         // have been created with an auto-increment id, NOT 9911 (already created
-        // by the previous test - so here we assert the second run created new
+        // by the previous test - so here we assert the second import created new
         // products instead of updating by id)
         $forcedProducts = $this->fetchAll("SELECT id_product FROM {p}product WHERE reference = 'FORCED-9911' ORDER BY id_product");
         $this->assertCount(2, $forcedProducts, 'force IDs off must create a NEW product, ignoring the id column');
@@ -63,7 +63,7 @@ class ProductImporterUpdateTest extends AbstractProductImportEngineTestCase
 
         // row 2 has id 1 but no reference: with force IDs off it must NOT update
         // product 1 but create a new product
-        $this->assertSame('Renamed By Id', $this->fetchOne('SELECT name FROM {p}product_lang WHERE id_product = 1 AND id_lang = 1 AND id_shop = 1'), 'Product 1 name must be unchanged from the previous run');
+        $this->assertSame('Renamed By Id', $this->fetchOne('SELECT name FROM {p}product_lang WHERE id_product = 1 AND id_lang = 1 AND id_shop = 1'), 'Product 1 name must be unchanged from the previous import');
     }
 
     public function testMatchRefUpdatesByReferenceAndCreatesUnknownReferences(): void

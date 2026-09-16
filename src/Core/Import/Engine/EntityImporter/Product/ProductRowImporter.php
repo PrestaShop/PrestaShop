@@ -19,11 +19,12 @@ use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\Step\ProductRowStepInterface;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ImportEngineException;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
@@ -69,6 +70,7 @@ class ProductRowImporter
         protected readonly Tools $tools,
         protected readonly TranslatorInterface $translator,
         protected readonly LoggerInterface $logger,
+        protected readonly ShopListResolverInterface $shopListResolver,
     ) {
     }
 
@@ -77,7 +79,7 @@ class ProductRowImporter
      *
      * @return list<ImportMessage> an ERROR severity means the row failed and must be skipped by later phases
      */
-    public function importRow(array $row, int $rowIndex, ImportRunContext $context): array
+    public function importRow(array $row, int $rowIndex, ImportJobContext $context): array
     {
         $messages = [];
 
@@ -147,7 +149,7 @@ class ProductRowImporter
     /**
      * @param array<string, string> $row
      */
-    protected function resolveTargetProduct(array $row, FoundEntity $match, ImportRunContext $context): int
+    protected function resolveTargetProduct(array $row, FoundEntity $match, ImportJobContext $context): int
     {
         if (null !== $match->first()) {
             return $match->first();
@@ -155,16 +157,21 @@ class ProductRowImporter
 
         $productType = $this->isVirtual($row) ? ProductType::TYPE_VIRTUAL : ProductType::TYPE_STANDARD;
         $localizedNames = $this->localizeForCreation($row['name'] ?? '');
+        // both creation paths write the product into ONE shop and associate it
+        // from there, so they take the constraint's representative shop; a job
+        // scoped to a single shop, which is all StartImportJob accepts today,
+        // resolves it to exactly that shop
+        $shopId = $this->shopListResolver->resolveRepresentativeShopId($context->getShopConstraint());
 
         if (null !== $match->forcedId) {
             $localizedLinkRewrites = array_map(fn (string $name): string => (string) $this->tools->linkRewrite($name), $localizedNames);
-            $this->productRepository->createWithForcedId($match->forcedId, $localizedNames, $localizedLinkRewrites, $productType, $context->getShopId());
+            $this->productRepository->createWithForcedId($match->forcedId, $localizedNames, $localizedLinkRewrites, $productType, $shopId);
 
             return $match->forcedId;
         }
 
         return $this->commandBus->handle(
-            new AddProductCommand($productType, $context->getShopId(), $localizedNames)
+            new AddProductCommand($productType, $shopId, $localizedNames)
         )->getValue();
     }
 }

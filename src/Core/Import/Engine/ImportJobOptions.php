@@ -9,14 +9,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Import\Engine;
 
 /**
- * Frozen per-run options: the typed view of the ImportRun entity's "options"
+ * Frozen per-job options: the typed view of the ImportJob entity's "options"
  * JSON column, and the serialization boundary for it (fromArray()/toArray()).
  *
- * It stays a separate object from ImportRunContext on purpose. The context is
- * the whole runtime state — frozen config AND the progress that moves as
+ * It stays a separate object from ImportJobContext on purpose. The context is
+ * the whole jobtime state — frozen config AND the progress that moves as
  * batches run (phase, offset, cursor, skipped rows); these options are exactly
  * ONE persisted column, so keeping them apart is what lets the adapter read and
- * write that column without knowing anything else about the run.
+ * write that column without knowing anything else about the job.
  *
  * OPEN BY DESIGN. The typed properties are the options the CORE engine knows
  * about, but the set is not closed: any other key travels in $extra and is
@@ -34,7 +34,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
  * the legacy one was inverted anyway — ticking it disabled in-place
  * regeneration). The BO checkbox disappears with it.
  */
-class ImportRunOptions
+class ImportJobOptions
 {
     /**
      * The keys backed by a typed property, i.e. everything NOT kept in $extra.

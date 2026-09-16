@@ -14,7 +14,7 @@ use SplFileInfo;
  * Result of normalizing an upload into a working file. The record count is
  * measured during the normalization pass itself (which reads every record
  * anyway), so nothing downstream ever re-reads the file just to count:
- * the count travels with the run's frozen config (ImportRunContext,
+ * the count travels with the job's frozen config (ImportJobContext,
  * ps_import_run.total_rows).
  */
 class NormalizedImportFile

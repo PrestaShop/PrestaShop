@@ -19,7 +19,7 @@ use Tests\Resources\Resetter\ProductResetter;
  * contents.
  *
  * The import does perform the conversion — it is what the file asked for — but
- * the pausing validation phase warns first, so the merchant can cancel the run
+ * the pausing validation phase warns first, so the merchant can cancel the job
  * before anything is written. These tests pin both halves: the warning is raised
  * with no writes, and the type is only touched when it actually changes.
  */
@@ -80,14 +80,14 @@ class ProductImporterTypeChangeTest extends AbstractProductImportEngineTestCase
     {
         $this->tagProductForConversion();
 
-        // first run converts it
+        // first import converts it
         $this->runImport('product_virtual_conversion.csv', self::FIELDS, ['matchRef' => true]);
         $this->assertSame('virtual', (string) $this->fetchOne(
             'SELECT product_type FROM {p}product WHERE id_product = :id',
             ['id' => self::COMBINATIONS_PRODUCT_ID]
         ));
 
-        // second run has nothing left to change
+        // second import has nothing left to change
         [, $messages] = $this->runImport('product_virtual_conversion.csv', self::FIELDS, ['matchRef' => true]);
         $this->assertNoErrors($messages);
 

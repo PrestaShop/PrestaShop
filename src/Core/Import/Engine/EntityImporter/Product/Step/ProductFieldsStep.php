@@ -19,9 +19,9 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\ManufacturerResolver;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -39,7 +39,7 @@ class ProductFieldsStep extends AbstractProductRowStep
      * @var array<int, DecimalNumber> memoized (1 + rate/100) per tax rules group.
      *                                Keyed on the group alone: the rate also depends
      *                                on getShopCountryId(), which is invariant as long
-     *                                as a request stays on a single shop's run
+     *                                as a request stays on a single shop's job
      */
     protected array $taxDivisors = [];
 
@@ -64,7 +64,7 @@ class ProductFieldsStep extends AbstractProductRowStep
         return true;
     }
 
-    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context): array
+    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportJobContext $context): array
     {
         $messages = [];
         $manufacturerId = $this->resolveManufacturer($row, $rowIndex, $context, $messages);
@@ -257,7 +257,7 @@ class ProductFieldsStep extends AbstractProductRowStep
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    protected function resolveManufacturer(array $row, int $rowIndex, ImportRunContext $context, array &$messages): ?int
+    protected function resolveManufacturer(array $row, int $rowIndex, ImportJobContext $context, array &$messages): ?int
     {
         $manufacturer = $row['manufacturer'] ?? '';
         if ('' === $manufacturer) {
@@ -306,7 +306,7 @@ class ProductFieldsStep extends AbstractProductRowStep
      *
      * @param array<string, string> $row
      */
-    protected function resolvePrice(array $row, ImportRunContext $context): ?DecimalNumber
+    protected function resolvePrice(array $row, ImportJobContext $context): ?DecimalNumber
     {
         $priceTaxExcluded = $row['price_tex'] ?? '';
         if ('' !== $priceTaxExcluded) {
@@ -333,10 +333,10 @@ class ProductFieldsStep extends AbstractProductRowStep
 
     /**
      * (1 + rate/100) for one tax rules group, memoized: the rate is invariant
-     * for the whole run (the country is fixed by getShopCountryId()), so a file
+     * for the whole job (the country is fixed by getShopCountryId()), so a file
      * with one id_tax_rules_group resolves it once instead of once per row.
      */
-    protected function getTaxDivisor(int $taxRulesGroupId, ImportRunContext $context): DecimalNumber
+    protected function getTaxDivisor(int $taxRulesGroupId, ImportJobContext $context): DecimalNumber
     {
         if (!isset($this->taxDivisors[$taxRulesGroupId])) {
             $rate = $this->taxComputer->getTaxRate(
@@ -353,7 +353,7 @@ class ProductFieldsStep extends AbstractProductRowStep
      * Legacy Shop::getAddress() country resolution — the country whose tax
      * rate de-taxes price_tin values.
      */
-    protected function getShopCountryId(ImportRunContext $context): int
+    protected function getShopCountryId(ImportJobContext $context): int
     {
         $shopCountryId = (int) $this->configuration->get('PS_SHOP_COUNTRY_ID', null, $context->getShopConstraint());
 

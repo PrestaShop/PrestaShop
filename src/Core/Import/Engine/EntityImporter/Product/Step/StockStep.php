@@ -14,14 +14,21 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAv
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
+use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 
 /**
  * Stock location, out-of-stock behavior and quantity. The stock command only
  * expresses deltas, so the file's absolute quantity is converted against the
  * current stock row — the step must therefore run after the product (and its
  * stock row) exists.
+ *
+ * The delta is arithmetic against ONE shop's stock row, so this step is one of
+ * the paths that only means something while a job is scoped to a single shop:
+ * with a wider scope the shops would hold different quantities and a single
+ * delta computed from the representative one would be wrong for the others.
+ * StartImportJob refuses wider scopes for exactly this reason.
  */
 class StockStep extends AbstractProductRowStep
 {
@@ -29,6 +36,7 @@ class StockStep extends AbstractProductRowStep
         ValueParser $valueParser,
         protected readonly StockAvailableRepository $stockAvailableRepository,
         protected readonly CommandBusInterface $commandBus,
+        protected readonly ShopListResolverInterface $shopListResolver,
     ) {
         parent::__construct($valueParser);
     }
@@ -40,7 +48,7 @@ class StockStep extends AbstractProductRowStep
         return true;
     }
 
-    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context): array
+    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportJobContext $context): array
     {
         $command = new UpdateProductStockAvailableCommand($productId, $context->getShopConstraint());
         $hasUpdate = false;
@@ -61,7 +69,8 @@ class StockStep extends AbstractProductRowStep
             // the stock command only expresses deltas: read the current
             // quantity and convert the file's absolute value (delta 0 is
             // illegal and means nothing to change)
-            $delta = $quantity - $this->getCurrentStockQuantity($productId, $context->getShopId());
+            $shopId = $this->shopListResolver->resolveRepresentativeShopId($context->getShopConstraint());
+            $delta = $quantity - $this->getCurrentStockQuantity($productId, $shopId);
             if (0 !== $delta) {
                 $command->setDeltaQuantity($delta);
                 $hasUpdate = true;

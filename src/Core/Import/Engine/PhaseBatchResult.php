@@ -10,7 +10,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
 
 /**
  * Outcome of one processPhaseBatch() call. Importers return it, the caller
- * (batch sequencer) applies it to the run context — importers never mutate
+ * (batch sequencer) applies it to the job context — importers never mutate
  * the context themselves.
  */
 class PhaseBatchResult
@@ -32,7 +32,7 @@ class PhaseBatchResult
      * @param string|null $resumeCursor opaque reader cursor to resume the next batch from.
      *                                  DELIBERATELY NOT OPTIONAL: applyBatchResult() stores it
      *                                  verbatim, so a batch that consumed nothing must hand back
-     *                                  the cursor it was given (ImportRunContext::getResumeCursor()).
+     *                                  the cursor it was given (ImportJobContext::getResumeCursor()).
      *                                  Defaulting it to null would let a plausible
      *                                  `new PhaseBatchResult(0)` rewind the reader to the start of
      *                                  the file while the phase offset stays put — the rows after

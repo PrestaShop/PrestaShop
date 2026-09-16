@@ -16,9 +16,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
 use PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -51,7 +51,7 @@ class ImagesStep extends AbstractProductRowStep
             || $this->hasValue($row, 'image');
     }
 
-    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context): array
+    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportJobContext $context): array
     {
         $messages = [];
 

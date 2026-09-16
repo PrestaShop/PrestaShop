@@ -32,7 +32,7 @@ abstract class AbstractProductRowStep implements ProductRowStepInterface
      * The import creates catalog entities the file only NAMES — brands,
      * categories, features and their values (legacy behavior, kept). That is
      * expected rather than wrong, so it is a NOTICE and not a warning: it
-     * records what the run added beyond the products themselves.
+     * records what the job added beyond the products themselves.
      *
      * A pausing phase could not help here — by the time wasCreated is true the
      * entity exists, and the database phase never pauses. The resolvers' quiet

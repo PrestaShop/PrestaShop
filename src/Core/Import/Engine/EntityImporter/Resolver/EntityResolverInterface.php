@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver;
 
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 
 /**
  * Contract of a RESOLVE-OR-CREATE lookup: given one raw cell value, always come
@@ -25,5 +25,5 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
  */
 interface EntityResolverInterface
 {
-    public function resolve(string $value, ImportRunContext $context): ResolvedEntity;
+    public function resolve(string $value, ImportJobContext $context): ResolvedEntity;
 }

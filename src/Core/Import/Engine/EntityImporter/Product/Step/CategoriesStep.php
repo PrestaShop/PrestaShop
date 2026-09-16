@@ -13,9 +13,9 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Resolver\CategoryResolver;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -42,7 +42,7 @@ class CategoriesStep extends AbstractProductRowStep
         return $this->hasValue($row, 'category');
     }
 
-    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context): array
+    public function apply(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportJobContext $context): array
     {
         $messages = [];
         $categories = $row['category'] ?? '';

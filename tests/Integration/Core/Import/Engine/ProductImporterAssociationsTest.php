@@ -53,7 +53,7 @@ class ProductImporterAssociationsTest extends AbstractProductImportEngineTestCas
         $this->assertCount(1, $precheckWarnings);
         $this->assertStringContainsString('UNKNOWN-TARGET-REF', $precheckWarnings[0]->message);
 
-        // the association phase reported the dropped link as an error, run completed
+        // the association phase reported the dropped link as an error, job completed
         $associationErrors = array_values(array_filter(
             $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_ERROR),
             static fn (ImportMessage $message): bool => ImportPhaseDefinition::PHASE_ASSOCIATION === $message->phase

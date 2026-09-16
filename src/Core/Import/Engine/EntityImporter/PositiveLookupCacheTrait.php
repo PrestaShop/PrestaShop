@@ -19,7 +19,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter;
  * features), and one batch budget may span a phase boundary, so a term that
  * matches nothing now can match something a few rows later. A cached miss would
  * turn that into a wrong answer, while a cached hit can never go stale — an
- * existing row is never deleted during a run.
+ * existing row is never deleted during a job.
  *
  * The cache lives for the service lifetime, i.e. ONE batch request.
  */

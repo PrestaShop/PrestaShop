@@ -10,9 +10,9 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter;
 
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\UnknownPhaseException;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\PhaseBatchResult;
 use PrestaShop\PrestaShop\Core\Import\File\ResumableFileReaderInterface;
 
@@ -32,8 +32,8 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
     protected ?array $knownPhaseIds = null;
 
     /**
-     * @param ResumableFileReaderInterface $fileReader reads the run's working file
-     * @param RowMapper $rowMapper applies the run's column-to-field mapping
+     * @param ResumableFileReaderInterface $fileReader reads the job's working file
+     * @param RowMapper $rowMapper applies the job's column-to-field mapping
      */
     public function __construct(
         protected readonly ResumableFileReaderInterface $fileReader,
@@ -47,7 +47,7 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
      * this reads nothing. Override to skip phases cheaply (return 0) or
      * count different units.
      */
-    public function countPhaseUnits(string $phaseId, ImportRunContext $context): int
+    public function countPhaseUnits(string $phaseId, ImportJobContext $context): int
     {
         $this->assertKnownPhase($phaseId);
 
@@ -61,7 +61,7 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
      *
      * @param callable(array<string, string>, int): array{messages: list<ImportMessage>, skipped: bool} $rowProcessor receives the MAPPED row and the 0-based data-record index
      */
-    protected function iterateBatch(ImportRunContext $context, int $limit, callable $rowProcessor): PhaseBatchResult
+    protected function iterateBatch(ImportJobContext $context, int $limit, callable $rowProcessor): PhaseBatchResult
     {
         $messages = [];
         $newlySkippedRows = [];

@@ -22,9 +22,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\FoundEntity;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder\ProductFinder;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -64,7 +64,7 @@ class ProductRowValidator
      *
      * @return list<ImportMessage>
      */
-    public function validate(array $row, int $rowIndex, ImportRunContext $context): array
+    public function validate(array $row, int $rowIndex, ImportJobContext $context): array
     {
         $messages = [];
 
@@ -104,7 +104,7 @@ class ProductRowValidator
      * combination and resets the stock, or empties the pack contents. The row
      * still goes through — the conversion is what the file asked for — but the
      * validation phase is pausing, so warning here is what lets the merchant
-     * cancel the run before anything is written.
+     * cancel the job before anything is written.
      *
      * The impact sentences are the ones the back office already shows in its
      * type-switch modal (HeaderType), reused verbatim.
@@ -148,7 +148,7 @@ class ProductRowValidator
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    protected function validateFormats(array $row, int $rowIndex, ImportRunContext $context, array &$messages): void
+    protected function validateFormats(array $row, int $rowIndex, ImportJobContext $context, array &$messages): void
     {
         // constraints mirrored from the VOs the database-phase commands will
         // build, so a bad value is a clear validation error instead of a
@@ -311,7 +311,7 @@ class ProductRowValidator
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    protected function validateCategories(array $row, int $rowIndex, ImportRunContext $context, array &$messages): void
+    protected function validateCategories(array $row, int $rowIndex, ImportJobContext $context, array &$messages): void
     {
         $categories = $row['category'] ?? '';
         if ('' === $categories) {

@@ -11,7 +11,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Finder;
 use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ImportEntityExistenceChecker;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\PositiveLookupCacheTrait;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 
 /**
  * MATCH-ONLY: suppliers are never auto-created by the import (a supplier
@@ -40,11 +40,11 @@ class SupplierFinder implements EntityFinderInterface
     }
 
     /**
-     * Supplier names are deliberately looked up GLOBALLY, so the run's scope
+     * Supplier names are deliberately looked up GLOBALLY, so the job's scope
      * plays no part here — $context is only present to satisfy the shared
      * contract.
      */
-    public function find(string $value, ImportRunContext $context): FoundEntity
+    public function find(string $value, ImportJobContext $context): FoundEntity
     {
         if (ctype_digit($value) && $this->existenceChecker->exists('supplier', (int) $value)) {
             return new FoundEntity([['id' => (int) $value, 'matchedBy' => FoundEntity::MATCHED_BY_ID]]);

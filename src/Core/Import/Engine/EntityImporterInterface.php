@@ -17,7 +17,7 @@ use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollectionInterface
  * An importer declares an ordered list of phases (validation, database,
  * association, ... — ids are open strings) and processes them batch by batch.
  * Importers dispatch existing CQRS commands for persistence and must never
- * mutate the run context: progress is reported through PhaseBatchResult and
+ * mutate the job context: progress is reported through PhaseBatchResult and
  * applied by the caller (the batch sequencer).
  *
  * Every autoconfigured service implementing this interface is automatically
@@ -60,12 +60,12 @@ interface EntityImporterInterface
 
     /**
      * Total unit count for a phase, computed once at phase entry (the caller
-     * stores it on the context, see ImportRunContext::enterPhase()); 0 means
+     * stores it on the context, see ImportJobContext::enterPhase()); 0 means
      * the phase is skipped.
      *
      * @throws UnknownPhaseException when the phase id is not one of getPhases()
      */
-    public function countPhaseUnits(string $phaseId, ImportRunContext $context): int;
+    public function countPhaseUnits(string $phaseId, ImportJobContext $context): int;
 
     /**
      * Processes up to $limit units from the phase's current position (row position
@@ -73,5 +73,5 @@ interface EntityImporterInterface
      *
      * @throws UnknownPhaseException when the phase id is not one of getPhases()
      */
-    public function processPhaseBatch(string $phaseId, ImportRunContext $context, int $limit): PhaseBatchResult;
+    public function processPhaseBatch(string $phaseId, ImportJobContext $context, int $limit): PhaseBatchResult;
 }
