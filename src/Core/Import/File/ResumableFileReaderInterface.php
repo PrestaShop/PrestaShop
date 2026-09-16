@@ -17,7 +17,7 @@ use SplFileInfo;
  * A file reader able to resume reading from an opaque cursor.
  *
  * The cursor is a string because it is persisted verbatim (the future
- * ImportRun entity stores it in a resume_cursor varchar column) and handed
+ * ImportJob entity stores it in a resume_cursor varchar column) and handed
  * back untouched: the engine never interprets it. Each reader encodes
  * whatever state it needs INTO the string — the CSV reader uses a byte
  * offset (O(1) fseek resume), a future reader may encode richer state

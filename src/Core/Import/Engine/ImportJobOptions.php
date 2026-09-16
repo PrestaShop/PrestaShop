@@ -13,7 +13,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
  * JSON column, and the serialization boundary for it (fromArray()/toArray()).
  *
  * It stays a separate object from ImportJobContext on purpose. The context is
- * the whole jobtime state — frozen config AND the progress that moves as
+ * the whole runtime state — frozen config AND the progress that moves as
  * batches run (phase, offset, cursor, skipped rows); these options are exactly
  * ONE persisted column, so keeping them apart is what lets the adapter read and
  * write that column without knowing anything else about the job.
