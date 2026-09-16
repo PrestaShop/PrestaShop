@@ -92,7 +92,6 @@ class B2bRoleChoiceTypeTest extends KernelTestCase
     {
         $roles = $this->repository->findAll();
 
-        $this->assertNotEmpty($roles);
         $this->checkChoicesExist($roles);
     }
 

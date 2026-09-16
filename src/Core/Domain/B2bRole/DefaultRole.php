@@ -18,4 +18,25 @@ enum DefaultRole: string
     case SUPER_ADMIN = self::PREFIX . 'SUPER_ADMIN';
     case ADMIN = self::PREFIX . 'ADMIN';
     case BUYER = self::PREFIX . 'BUYER';
+
+    /**
+     * @return DefaultPermission[]
+     */
+    public function getDefaultPermissions(): array
+    {
+        return match ($this) {
+            // The super admin is granted every permission the core defines.
+            self::SUPER_ADMIN => DefaultPermission::cases(),
+            self::ADMIN => [
+                DefaultPermission::BUSINESS_ENTITY_EDIT,
+                DefaultPermission::BUSINESS_ENTITY_CUSTOMER_INVITE,
+                DefaultPermission::BUSINESS_ENTITY_CUSTOMER_EDIT,
+                DefaultPermission::ORDER_VIEW,
+                DefaultPermission::ORDER_CREATE,
+            ],
+            self::BUYER => [
+                DefaultPermission::ORDER_CREATE,
+            ],
+        };
+    }
 }
