@@ -1,0 +1,50 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{{ form_start(grid_view_form, {action: form_action, attr: {class: 'js-grid-views-form'}}) }}
+
+<div class="modal-header">
+  <h5 class="modal-title">
+    {% if grid_view_form.vars.data.name is defined and grid_view_form.vars.data.name %}
+      {{ 'Edit view'|trans({}, 'Admin.Global') }}
+    {% else %}
+      {{ 'Save current view'|trans({}, 'Admin.Actions') }}
+    {% endif %}
+  </h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  {{ form_row(grid_view_form.name) }}
+  {{ form_row(grid_view_form.shared) }}
+
+  {% if grid_view_form.dynamic_date_rules is defined %}
+    <div class="alert alert-info" role="alert">
+      {{ 'The current filters contain dates. You can attach a rule to recompute them every time the filter is applied.'|trans({}, 'Admin.Global') }}
+    </div>
+    {% for date_rule_field in grid_view_form.dynamic_date_rules %}
+      <div class="js-grid-views-date-rule form-group d-flex align-items-center">
+        <div class="flex-grow-1 pr-2">{{ form_label(date_rule_field) }}</div>
+        <div class="flex-grow-1 pr-2">{{ form_widget(date_rule_field.date_rule) }}</div>
+        <div class="flex-grow-1">{{ form_widget(date_rule_field.custom_days) }}</div>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  {{ form_rest(grid_view_form) }}
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+    {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+  </button>
+  <button type="submit" class="btn btn-primary">
+    {{ 'Save'|trans({}, 'Admin.Actions') }}
+  </button>
+</div>
+
+{{ form_end(grid_view_form) }}
