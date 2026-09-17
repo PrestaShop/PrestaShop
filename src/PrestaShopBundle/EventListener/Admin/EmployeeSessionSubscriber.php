@@ -8,7 +8,6 @@ namespace PrestaShopBundle\EventListener\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 use PrestaShopBundle\Entity\Employee\Employee;
@@ -19,7 +18,6 @@ use PrestaShopBundle\Security\Admin\TokenAttributes;
 use PrestaShopBundle\Service\Routing\Router;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,8 +56,6 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         private readonly ConfigurationInterface $configuration,
         private readonly TranslatorInterface $translator,
         private readonly EmployeeContextBuilder $employeeContextBuilder,
-        #[Autowire(service: 'prestashop.adapter.legacy.logger')]
-        private readonly LegacyLogger $legacyLogger,
     ) {
     }
 
@@ -127,7 +123,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->legacyLogger->info(
+        $this->logger->info(
             $this->translator->trans(
                 'Back office connection from %ip%',
                 ['%ip%' => $event->getRequest()->getClientIp()],

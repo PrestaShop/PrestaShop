@@ -12,7 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 use PrestaShopBundle\Entity\Employee\Employee;
@@ -83,8 +82,8 @@ class EmployeeSessionSubscriberTest extends TestCase
             ->willReturn('Back office connection from ' . self::CLIENT_IP)
         ;
 
-        $legacyLogger = $this->createMock(LegacyLogger::class);
-        $legacyLogger
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
             ->expects(static::once())
             ->method('info')
             ->with(
@@ -96,7 +95,7 @@ class EmployeeSessionSubscriberTest extends TestCase
             )
         ;
 
-        $subscriber = $this->createSubscriber($translator, $legacyLogger);
+        $subscriber = $this->createSubscriber($translator, $logger);
 
         $subscriber->onLoginSuccess($event);
     }
@@ -132,20 +131,20 @@ class EmployeeSessionSubscriberTest extends TestCase
             ->method('trans')
         ;
 
-        $legacyLogger = $this->createMock(LegacyLogger::class);
-        $legacyLogger
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
             ->expects(static::never())
             ->method('info')
         ;
 
-        $subscriber = $this->createSubscriber($translator, $legacyLogger);
+        $subscriber = $this->createSubscriber($translator, $logger);
 
         $subscriber->onLoginSuccess($event);
     }
 
     private function createSubscriber(
         TranslatorInterface $translator,
-        LegacyLogger $legacyLogger,
+        LoggerInterface $logger,
     ): EmployeeSessionSubscriber|MockObject {
         $configuration = $this->createMock(ConfigurationInterface::class);
         $configuration
@@ -161,14 +160,13 @@ class EmployeeSessionSubscriberTest extends TestCase
                 $this->createMock(EmployeeRepository::class),
                 $this->createMock(EntityManagerInterface::class),
                 $this->createMock(Security::class),
-                $this->createMock(LoggerInterface::class),
+                $logger,
                 $this->createMock(LegacyContext::class),
                 $this->createMock(CsrfTokenManagerInterface::class),
                 $this->createMock(RouterInterface::class),
                 $configuration,
                 $translator,
                 $this->createMock(EmployeeContextBuilder::class),
-                $legacyLogger,
             ])
             ->onlyMethods(['updateLegacyCookie'])
             ->getMock()
