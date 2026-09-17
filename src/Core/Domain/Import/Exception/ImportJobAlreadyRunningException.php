@@ -9,8 +9,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Import\Exception;
 
 /**
- * Thrown when an import run cannot be started.
+ * Thrown when a batch is requested for a job that already has one running.
+ *
+ * Fails fast rather than queueing, so the job's offset cannot advance twice in parallel.
  */
-final class CannotStartImportRunException extends ImportException
+final class ImportJobAlreadyRunningException extends ImportException
 {
 }

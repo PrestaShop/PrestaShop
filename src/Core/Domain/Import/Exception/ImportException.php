@@ -8,11 +8,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Import\Exception;
 
-use RuntimeException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
  * Base exception for the Import domain.
+ *
+ * Engine failures (ImportEngineException) are outside this hierarchy; handlers convert them at the
+ * boundary.
  */
-class ImportException extends RuntimeException
+class ImportException extends DomainException
 {
 }

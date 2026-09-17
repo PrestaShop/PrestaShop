@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f278901ed9d40147630c42a8a03fe9ac",
+    "content-hash": "5e529c0ff4285c02c4169d975cb5c3b0",
     "packages": [
         {
             "name": "api-platform/core",
@@ -12147,6 +12147,89 @@
             "time": "2026-05-26T12:51:13+00:00"
         },
         {
+            "name": "symfony/polyfill-uuid",
+            "version": "v1.37.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-uuid.git",
+                "reference": "26dfec253c4cf3e51b541b52ddf7e42cb0908e94"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-uuid/zipball/26dfec253c4cf3e51b541b52ddf7e42cb0908e94",
+                "reference": "26dfec253c4cf3e51b541b52ddf7e42cb0908e94",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "provide": {
+                "ext-uuid": "*"
+            },
+            "suggest": {
+                "ext-uuid": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Uuid\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Grégoire Pineau",
+                    "email": "lyrixx@lyrixx.info"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for uuid functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "uuid"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-uuid/tree/v1.37.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-04-10T16:19:22+00:00"
+        },
+        {
             "name": "symfony/process",
             "version": "v6.4.46",
             "source": {
@@ -13727,6 +13810,84 @@
                 }
             ],
             "time": "2026-09-11T10:34:36+00:00"
+        },
+        {
+            "name": "symfony/uid",
+            "version": "v6.4.32",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/uid.git",
+                "reference": "6b973c385f00341b246f697d82dc01a09107acdd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/uid/zipball/6b973c385f00341b246f697d82dc01a09107acdd",
+                "reference": "6b973c385f00341b246f697d82dc01a09107acdd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "symfony/polyfill-uuid": "^1.15"
+            },
+            "require-dev": {
+                "symfony/console": "^5.4|^6.0|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Uid\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Grégoire Pineau",
+                    "email": "lyrixx@lyrixx.info"
+                },
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides an object-oriented API to generate and represent UIDs",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "UID",
+                "ulid",
+                "uuid"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/uid/tree/v6.4.32"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-12-23T15:07:59+00:00"
         },
         {
             "name": "symfony/ux-icons",
@@ -18613,5 +18774,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

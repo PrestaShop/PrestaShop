@@ -9,9 +9,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Import\Exception;
 
 /**
- * Thrown when an import run's persisted state cannot be updated (e.g. advancing the offset or
- * stashing the shared data after a batch).
+ * Thrown on an illegal status transition, e.g. continuing a job that was cancelled or has
+ * already finished.
  */
-final class CannotUpdateImportRunException extends ImportException
+final class ImportJobStatusException extends ImportException
 {
 }

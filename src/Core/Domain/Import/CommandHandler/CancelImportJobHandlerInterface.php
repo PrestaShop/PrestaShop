@@ -8,12 +8,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Import\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Import\Command\CancelImportRunCommand;
+use PrestaShop\PrestaShop\Core\Domain\Import\Command\CancelImportJobCommand;
 
 /**
- * Defines the contract for handling @see CancelImportRunCommand.
+ * Defines the contract for handling @see CancelImportJobCommand.
  */
-interface CancelImportRunHandlerInterface
+interface CancelImportJobHandlerInterface
 {
-    public function handle(CancelImportRunCommand $command): void;
+    public function handle(CancelImportJobCommand $command): void;
 }

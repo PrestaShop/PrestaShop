@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Import\Exception;
 
 /**
- * Thrown when an import run cannot be cancelled.
+ * Thrown when no import job matches the given UUID.
  */
-final class CannotCancelImportRunException extends ImportException
+final class ImportJobNotFoundException extends ImportException
 {
 }

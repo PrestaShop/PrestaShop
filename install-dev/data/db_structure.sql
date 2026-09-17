@@ -2319,29 +2319,27 @@ CREATE TABLE `PREFIX_import_match` (
   PRIMARY KEY (`id_import_match`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
-CREATE TABLE `PREFIX_import_run` (
-  `id_import_run` varchar(36) NOT NULL,
-  `entity_type` int(10) NOT NULL,
+CREATE TABLE `PREFIX_import_job` (
+  `import_job_uuid` char(36) NOT NULL,
+  `entity_type` varchar(64) NOT NULL,
+  `id_shop` int(10) UNSIGNED NOT NULL,
+  `status` varchar(32) NOT NULL,
   `filename` varchar(255) NOT NULL,
-  `lang_iso` varchar(8) NOT NULL,
-  `csv_separator` varchar(8) NOT NULL,
-  `multiple_value_separator` varchar(8) NOT NULL,
-  `skip_rows` int(10) NOT NULL,
-  `field_map` JSON NOT NULL,
-  `options` JSON NOT NULL,
-  `validate_only` tinyint(1) NOT NULL DEFAULT 0,
-  `batch_limit` int(10) NOT NULL,
+  `skip_rows` int(10) NOT NULL DEFAULT 0,
+  `data_record_count` int(10) NOT NULL DEFAULT 0,
+  `current_phase_id` varchar(64) DEFAULT NULL,
   `current_offset` int(10) NOT NULL DEFAULT 0,
-  `total_rows` int(10) NOT NULL DEFAULT 0,
-  `shared_data` JSON NOT NULL,
-  `status` varchar(16) NOT NULL,
-  `errors` JSON NOT NULL,
-  `warnings` JSON NOT NULL,
-  `notices` JSON NOT NULL,
-  `id_shop` int(10) UNSIGNED DEFAULT NULL,
+  `resume_cursor` varchar(255) DEFAULT NULL,
+  `skipped_row_count` int(10) NOT NULL DEFAULT 0,
+  `phase_totals` JSON NOT NULL,
+  `skipped_rows` JSON NOT NULL,
+  `messages` JSON NOT NULL,
+  `context` JSON NOT NULL,
+  `options` JSON NOT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
-  PRIMARY KEY (`id_import_run`)
+  PRIMARY KEY (`import_job_uuid`),
+  KEY `status_date_upd` (`status`, `date_upd`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_country_shop` (

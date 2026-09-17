@@ -8,52 +8,46 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Import\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Import\Exception\ImportRunConstraintException;
-use PrestaShop\PrestaShop\Core\Import\Entity;
+use PrestaShop\PrestaShop\Core\Domain\Import\Exception\ImportJobConstraintException;
 
 /**
- * The type of entity targeted by an import run (products, categories, …).
+ * The entity an import job targets, as declared by its importer (e.g. "product", "demo_note").
  *
- * Wraps the legacy {@see Entity} type constants so the domain carries a validated value.
+ * Shape only. Whether an importer is registered for it is checked by the Start handler: that
+ * changes with the installed modules, and a job whose module was uninstalled must still load to
+ * report why it cannot continue.
  */
 final class EntityType
 {
     /**
-     * @var int
+     * Matches the entity_type column.
      */
-    private $value;
+    public const MAX_LENGTH = 64;
+
+    private const PATTERN = '/^[a-z][a-z0-9_]*$/';
+
+    private readonly string $value;
 
     /**
-     * @throws ImportRunConstraintException
+     * @throws ImportJobConstraintException
      */
-    public function __construct(int $value)
+    public function __construct(string $value)
     {
-        if (!in_array($value, Entity::AVAILABLE_TYPES, true)) {
-            throw new ImportRunConstraintException(
-                sprintf('Import entity type "%d" is not supported.', $value),
-                ImportRunConstraintException::INVALID_ENTITY_TYPE
+        if (!preg_match(self::PATTERN, $value) || strlen($value) > self::MAX_LENGTH) {
+            throw new ImportJobConstraintException(
+                sprintf(
+                    'Import entity type "%s" is invalid: expected lowercase snake_case, %d characters at most.',
+                    $value,
+                    self::MAX_LENGTH
+                ),
+                ImportJobConstraintException::INVALID_ENTITY_TYPE
             );
         }
 
         $this->value = $value;
     }
 
-    /**
-     * @throws ImportRunConstraintException
-     */
-    public static function fromName(string $name): self
-    {
-        if (!array_key_exists($name, Entity::AVAILABLE_TYPES)) {
-            throw new ImportRunConstraintException(
-                sprintf('Import entity type with name "%s" is not supported.', $name),
-                ImportRunConstraintException::INVALID_ENTITY_TYPE
-            );
-        }
-
-        return new self(Entity::AVAILABLE_TYPES[$name]);
-    }
-
-    public function getValue(): int
+    public function getValue(): string
     {
         return $this->value;
     }
