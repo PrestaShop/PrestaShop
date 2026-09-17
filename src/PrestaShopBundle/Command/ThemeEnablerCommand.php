@@ -9,13 +9,13 @@ namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final class ThemeEnablerCommand extends Command
 {
@@ -31,9 +31,9 @@ final class ThemeEnablerCommand extends Command
 
     public function __construct(
         #[Autowire(service: 'prestashop.core.addon.theme.theme_manager')]
-        protected ThemeManager $themeManager,
-        protected readonly ContextBuilderPreparer $contextBuilderPreparer,
-        protected readonly Configuration $configuration,
+        private ThemeManager $themeManager,
+        private readonly ContextBuilderPreparer $contextBuilderPreparer,
+        private readonly Configuration $configuration,
     ) {
         parent::__construct();
         $this->themeManager = $themeManager;
