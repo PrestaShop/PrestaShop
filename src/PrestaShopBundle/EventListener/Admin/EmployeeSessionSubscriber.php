@@ -113,6 +113,11 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         // Update the cookie after successful login
         $this->updateLegacyCookie($event->getRequest(), true);
 
+        $this->logSuccessfulLogin($event);
+    }
+
+    private function logSuccessfulLogin(LoginSuccessEvent $event): void
+    {
         if (!($event->getAuthenticator() instanceof FormLoginAuthenticator)) {
             return;
         }

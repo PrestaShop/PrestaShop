@@ -22,9 +22,10 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Http\Authenticator\RememberMeAuthenticator;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -96,6 +97,14 @@ class EmployeeSessionSubscriberTest extends TestCase
         ;
 
         $subscriber = $this->createSubscriber($translator, $logger);
+        $subscriber
+            ->expects(static::once())
+            ->method('updateLegacyCookie')
+            ->with(
+                static::isInstanceOf(Request::class),
+                true
+            )
+        ;
 
         $subscriber->onLoginSuccess($event);
     }
@@ -122,7 +131,7 @@ class EmployeeSessionSubscriberTest extends TestCase
         ;
         $event
             ->method('getAuthenticator')
-            ->willReturn($this->createMock(AuthenticatorInterface::class))
+            ->willReturn($this->createMock(RememberMeAuthenticator::class))
         ;
 
         $translator = $this->createMock(TranslatorInterface::class);
@@ -138,6 +147,71 @@ class EmployeeSessionSubscriberTest extends TestCase
         ;
 
         $subscriber = $this->createSubscriber($translator, $logger);
+        $subscriber
+            ->expects(static::once())
+            ->method('updateLegacyCookie')
+            ->with(
+                static::isInstanceOf(Request::class),
+                true
+            )
+        ;
+
+        $subscriber->onLoginSuccess($event);
+    }
+
+    public function testFormLoginWithNonEmployeeUserIsNotLogged(): void
+    {
+        $request = Request::create(
+            '/admin/login',
+            'POST',
+            [],
+            [],
+            [],
+            ['REMOTE_ADDR' => self::CLIENT_IP]
+        );
+
+        $authenticator = $this->createMock(FormLoginAuthenticator::class);
+        $user = $this->createMock(UserInterface::class);
+
+        $event = $this->createMock(LoginSuccessEvent::class);
+        $event
+            ->method('getResponse')
+            ->willReturn(null)
+        ;
+        $event
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+        $event
+            ->method('getAuthenticator')
+            ->willReturn($authenticator)
+        ;
+        $event
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects(static::never())
+            ->method('trans')
+        ;
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects(static::never())
+            ->method('info')
+        ;
+
+        $subscriber = $this->createSubscriber($translator, $logger);
+        $subscriber
+            ->expects(static::once())
+            ->method('updateLegacyCookie')
+            ->with(
+                static::isInstanceOf(Request::class),
+                true
+            )
+        ;
 
         $subscriber->onLoginSuccess($event);
     }
@@ -170,15 +244,6 @@ class EmployeeSessionSubscriberTest extends TestCase
             ])
             ->onlyMethods(['updateLegacyCookie'])
             ->getMock()
-        ;
-
-        $subscriber
-            ->expects(static::once())
-            ->method('updateLegacyCookie')
-            ->with(
-                static::isInstanceOf(Request::class),
-                true
-            )
         ;
 
         return $subscriber;
