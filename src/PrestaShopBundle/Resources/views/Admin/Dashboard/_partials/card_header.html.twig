@@ -1,0 +1,26 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{#
+ # Optional reusable card-header for dashboard widgets: title/icon on the left, an optional
+ # "Configure" link on the right. Not required — modules own their full Twig template and may
+ # render their own header instead. `configUrl` is an opaque absolute admin URL supplied by the
+ # module; omit it to hide the link (e.g. when the current employee lacks permission).
+ #}
+{% macro renderCardHeader(title, icon, configUrl, configLabel) %}
+  {% if title or configUrl %}
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="card-header-title">
+        {% if icon %}<i class="material-icons">{{ icon }}</i>{% endif %}
+        {{ title }}
+      </h3>
+      {% if configUrl %}
+        <a href="{{ configUrl }}" title="{{ configLabel|default('Configure'|trans({}, 'Admin.Actions')) }}">
+          <i class="material-icons">settings</i>
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endmacro %}
