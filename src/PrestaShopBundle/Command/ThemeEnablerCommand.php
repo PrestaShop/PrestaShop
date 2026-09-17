@@ -36,7 +36,6 @@ final class ThemeEnablerCommand extends Command
         private readonly Configuration $configuration,
     ) {
         parent::__construct();
-        $this->themeManager = $themeManager;
     }
 
     /**
