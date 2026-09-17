@@ -45,6 +45,10 @@ module.exports = {
   // packager already excludes node_modules from the shipped archive.
   cache: {
     type: 'filesystem',
+    // Default maxAge is 60 days, which lets packs from long-gone branches pile up
+    // (dev and prod keep separate caches, so the directory grows twice as fast).
+    // A week is plenty to cover day-to-day work.
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     buildDependencies: {
       // webpack.config.js requires prod.js/dev.js, which require this file; webpack
       // hashes each entry together with its dependencies, so it covers all three.
