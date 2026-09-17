@@ -15,7 +15,7 @@ use RuntimeException;
 
 /**
  * Minimal phase sequencer for tests, mirroring the batch loop the PR2
- * RunImportBatchHandler will implement: enter each phase, recompute its unit
+ * ImportJobSequencer will implement: enter each phase, recompute its unit
  * count, process batches until the offset reaches the total. The default
  * batch limit is deliberately small so every test exercises cursor-based
  * resuming across batches.

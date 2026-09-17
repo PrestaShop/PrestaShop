@@ -25,9 +25,12 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
  * would silently disappear between batches, so an importer shipped by a module
  * could never receive one. Unknown keys therefore round-trip untouched.
  *
- * truncate, sendEmail and dryRun are consumed by the batch sequencer (PR2), not
- * by importers: truncate executes once at database-phase entry, dryRun truncates
- * the phase list after validation (API validate-only).
+ * Everything here describes what the JOB DOES, never how the file is read — that
+ * is the context's half. No option is consumed by importers: truncate fires once
+ * at database-phase entry, dryRun truncates the phase list after validation and
+ * batchLimit is the default unit budget of a Continue, all three in the batch
+ * sequencer; keepSourceFile is read by the Start handler, which otherwise deletes
+ * the source once normalization succeeded.
  *
  * The legacy "regenerate thumbnails" option has NO equivalent here: the CQRS
  * image pipeline always regenerates, so the flag would have no consumer (and
@@ -39,7 +42,9 @@ class ImportJobOptions
     /**
      * The keys backed by a typed property, i.e. everything NOT kept in $extra.
      */
-    protected const CORE_OPTIONS = ['truncate', 'forceIds', 'matchRef', 'sendEmail', 'dryRun'];
+    protected const CORE_OPTIONS = ['truncate', 'forceIds', 'matchRef', 'sendEmail', 'dryRun', 'keepSourceFile', 'batchLimit'];
+
+    public const DEFAULT_BATCH_LIMIT = 100;
 
     /**
      * @param array<string, mixed> $extra options the core engine does not know
@@ -52,6 +57,8 @@ class ImportJobOptions
         public readonly bool $matchRef = false,
         public readonly bool $sendEmail = false,
         public readonly bool $dryRun = false,
+        public readonly bool $keepSourceFile = false,
+        public readonly int $batchLimit = self::DEFAULT_BATCH_LIMIT,
         protected readonly array $extra = [],
     ) {
     }
@@ -67,6 +74,8 @@ class ImportJobOptions
             matchRef: (bool) ($options['matchRef'] ?? false),
             sendEmail: (bool) ($options['sendEmail'] ?? false),
             dryRun: (bool) ($options['dryRun'] ?? false),
+            keepSourceFile: (bool) ($options['keepSourceFile'] ?? false),
+            batchLimit: (int) ($options['batchLimit'] ?? self::DEFAULT_BATCH_LIMIT),
             extra: array_diff_key($options, array_flip(static::CORE_OPTIONS)),
         );
     }
@@ -85,6 +94,8 @@ class ImportJobOptions
             'matchRef' => $this->matchRef,
             'sendEmail' => $this->sendEmail,
             'dryRun' => $this->dryRun,
+            'keepSourceFile' => $this->keepSourceFile,
+            'batchLimit' => $this->batchLimit,
         ] + $this->extra;
     }
 

@@ -38,6 +38,29 @@ final class ImportDirectory
     }
 
     /**
+     * Directory holding the working files of import jobs.
+     *
+     * A subdirectory, not the import root: FileFinder lists the root at depth 0 and excludes only
+     * index.php, so a working file there would show up in the merchant's uploaded-file dropdown.
+     *
+     * @return string
+     */
+    public function getWorkingDir(): string
+    {
+        return $this->getDir() . 'work' . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * One job's working file: the normalized copy every batch reads from, named after the job.
+     *
+     * @return string
+     */
+    public function getWorkingFile(string $importJobUuid): string
+    {
+        return $this->getWorkingDir() . $importJobUuid . '.csv';
+    }
+
+    /**
      * Check if import directory exists.
      *
      * @return bool

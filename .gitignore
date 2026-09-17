@@ -104,6 +104,9 @@ tests-legacy/.phpunit.result.cache
 /admin-dev/import/*
 !/admin-dev/import/.htaccess
 !/admin-dev/import/index.php
+!/admin-dev/import/work/
+/admin-dev/import/work/*
+!/admin-dev/import/work/index.php
 
 /admin-dev/export/*
 !/admin-dev/export/.htaccess
