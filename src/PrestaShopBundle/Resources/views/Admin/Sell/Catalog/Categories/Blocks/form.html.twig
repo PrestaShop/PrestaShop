@@ -30,11 +30,31 @@
       </div>
     </div>
   </div>
-  <div class="card-footer">
+  <div class="card-footer d-flex">
     <a href="{{ path('admin_categories_index') }}" class="btn btn-outline-secondary">
       {{ 'Cancel'|trans({}, 'Admin.Actions') }}
     </a>
-    <button class="btn btn-primary float-right" id="save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+    {% if showPreview|default(false) %}
+      <div class="d-none d-lg-flex ml-auto">
+        <button type="submit" class="btn btn-primary" name="save-and-preview" id="save-and-preview-button">
+          {{ 'Save and preview'|trans({}, 'Admin.Actions') }}
+        </button>
+        <button type="submit" class="btn btn-primary ml-3" id="save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+      <div class="d-lg-none ml-auto">
+        <div class="btn-group dropup">
+          <button type="submit" class="btn btn-primary" id="save-button-mobile">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+          <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only">{{ 'Toggle dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right">
+            <button type="submit" class="dropdown-item" name="save-and-preview" id="save-and-preview-button-mobile">{{ 'Save and preview'|trans({}, 'Admin.Actions') }}</button>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <button type="submit" class="btn btn-primary ml-auto" id="save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+    {% endif %}
   </div>
 </div>
 {{ form_end(categoryForm) }}
