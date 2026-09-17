@@ -94,8 +94,13 @@ services:
 
   # --- ImportJob aggregate (Symfony migration step 2) ---
 
-  # Serializes concurrent batches of the SAME job. Per node only: cancellation is arbitrated by
-  # the status probe in the repository, not by this lock.
+  # Serializes concurrent batches of the SAME job, and nothing else: cancellation is arbitrated by
+  # the repository's status probe. Acquisition is always non-blocking, so PersistingStoreInterface
+  # is all the handlers need — a BlockingStoreInterface would only matter if a second batch were
+  # meant to queue, and it must fail fast instead.
+  #
+  # FlockStore is per node. This id is the seam: an integration test may alias it to an
+  # InMemoryStore, and a multi-node setup to a DoctrineDbalStore.
   prestashop.adapter.import.job.lock_store:
     class: 'Symfony\Component\Lock\Store\FlockStore'
     arguments:

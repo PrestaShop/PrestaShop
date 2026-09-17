@@ -92,6 +92,8 @@ class ImportJobStateTest extends TestCase
             '0198f1a4-0b3c-7c21-9a4e-1f2b3c4d5e6f',
             'product',
             $status,
+            'products.csv',
+            1,
             $currentPhaseId,
             $phases,
             200,

@@ -63,37 +63,20 @@ class ImportJobRepository extends EntityRepository
     }
 
     /**
-     * Deletes terminal jobs last touched before $limit and returns their uuids, which the caller
-     * needs to remove the working files of jobs that died on a fatal error.
+     * Deletes terminal jobs last touched before $limit.
      *
-     * @return list<string>
+     * Rows go first and the caller then sweeps working files that match no row, so a file left by
+     * a job that died before its row was ever written is collected too — which returning the
+     * deleted uuids would have missed.
      */
-    public function purgeTerminalOlderThan(DateTimeInterface $limit): array
+    public function purgeTerminalOlderThan(DateTimeInterface $limit): int
     {
-        $connection = $this->getEntityManager()->getConnection();
-        $table = $this->getClassMetadata()->getTableName();
-
-        $uuids = $connection->createQueryBuilder()
-            ->select('import_job_uuid')
-            ->from($table)
+        return (int) $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->delete($this->getClassMetadata()->getTableName())
             ->where('status IN (:statuses)')
             ->andWhere('date_upd < :limit')
             ->setParameter('statuses', ImportJobStatus::terminalValues(), ArrayParameterType::STRING)
             ->setParameter('limit', $limit, Types::DATETIME_MUTABLE)
-            ->orderBy('date_upd', 'ASC')
-            ->executeQuery()
-            ->fetchFirstColumn();
-
-        if ([] === $uuids) {
-            return [];
-        }
-
-        $connection->createQueryBuilder()
-            ->delete($table)
-            ->where('import_job_uuid IN (:uuids)')
-            ->setParameter('uuids', $uuids, ArrayParameterType::STRING)
             ->executeStatement();
-
-        return array_map('strval', $uuids);
     }
 }

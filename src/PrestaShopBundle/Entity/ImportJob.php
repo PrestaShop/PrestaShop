@@ -65,9 +65,12 @@ class ImportJob
      * Original upload name. The source is never read again — and may have been deleted after
      * normalization — so the report needs it here.
      *
-     * @ORM\Column(name="filename", type="string", length=255)
+     * The client controls this string through the multipart header, so it is not bound by the
+     * filesystem's 255 bytes and the Start handler truncates it to fit.
+     *
+     * @ORM\Column(name="file_name", type="string", length=255)
      */
-    private string $filename;
+    private string $fileName;
 
     /**
      * Header lines stripped at normalization. Kept because a presenter adds it back to record
@@ -183,7 +186,7 @@ class ImportJob
         string $uuid,
         string $entityType,
         int $shopId,
-        string $filename,
+        string $fileName,
         int $skipRows,
         array $context,
         array $options,
@@ -191,7 +194,7 @@ class ImportJob
         $this->uuid = $uuid;
         $this->entityType = $entityType;
         $this->shopId = $shopId;
-        $this->filename = $filename;
+        $this->fileName = $fileName;
         $this->skipRows = $skipRows;
         $this->context = $context;
         $this->options = $options;
@@ -241,9 +244,9 @@ class ImportJob
         return $this;
     }
 
-    public function getFilename(): string
+    public function getFileName(): string
     {
-        return $this->filename;
+        return $this->fileName;
     }
 
     public function getSkipRows(): int

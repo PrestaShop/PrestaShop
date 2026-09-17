@@ -61,6 +61,12 @@ class StartImportJobCommandTest extends TestCase
         $this->assertSame([], $command->getOptions());
     }
 
+    public function testAMultiCharacterMultipleValueSeparatorIsAllowed(): void
+    {
+        // unlike the csv separator, it is not handed to fgetcsv and no column bounds it
+        $this->assertSame('||', $this->buildCommand(['multipleValueSeparator' => '||'])->getMultipleValueSeparator());
+    }
+
     /**
      * @dataProvider provideInvalidConfigurations
      *
@@ -110,10 +116,6 @@ class StartImportJobCommandTest extends TestCase
         ];
         yield 'empty multiple value separator' => [
             ['multipleValueSeparator' => ''],
-            ImportJobConstraintException::INVALID_MULTIPLE_VALUE_SEPARATOR,
-        ];
-        yield 'multiple value separator longer than its column' => [
-            ['multipleValueSeparator' => str_repeat('-', 9)],
             ImportJobConstraintException::INVALID_MULTIPLE_VALUE_SEPARATOR,
         ];
         yield 'negative skipped rows' => [

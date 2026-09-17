@@ -68,9 +68,10 @@ final class StartImportJobCommand
                 ImportJobConstraintException::INVALID_CSV_SEPARATOR
             );
         }
-        if ('' === $multipleValueSeparator || strlen($multipleValueSeparator) > 8) {
+        // no length bound: it lives in a JSON blob, and str_getcsv takes whatever it is given
+        if ('' === $multipleValueSeparator) {
             throw new ImportJobConstraintException(
-                sprintf('Multiple value separator "%s" must be between 1 and 8 characters.', $multipleValueSeparator),
+                'Multiple value separator cannot be empty.',
                 ImportJobConstraintException::INVALID_MULTIPLE_VALUE_SEPARATOR
             );
         }

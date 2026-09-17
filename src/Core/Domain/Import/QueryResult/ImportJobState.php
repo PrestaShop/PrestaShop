@@ -34,6 +34,8 @@ final class ImportJobState
         private readonly string $importJobUuid,
         private readonly string $entityType,
         private readonly ImportJobStatus $status,
+        private readonly string $fileName,
+        private readonly int $skipRows,
         private readonly ?string $currentPhaseId,
         private readonly array $phases,
         private readonly int $dataRecordCount,
@@ -56,6 +58,20 @@ final class ImportJobState
     public function getEntityType(): string
     {
         return $this->entityType;
+    }
+
+    public function getFileName(): string
+    {
+        return $this->fileName;
+    }
+
+    /**
+     * Header lines stripped at normalization; add it to a message's row indexes to show
+     * source-file line numbers.
+     */
+    public function getSkipRows(): int
+    {
+        return $this->skipRows;
     }
 
     public function getStatus(): ImportJobStatus

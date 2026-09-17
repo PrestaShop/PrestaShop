@@ -2324,7 +2324,7 @@ CREATE TABLE `PREFIX_import_job` (
   `entity_type` varchar(64) NOT NULL,
   `id_shop` int(10) UNSIGNED NOT NULL,
   `status` varchar(32) NOT NULL,
-  `filename` varchar(255) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
   `skip_rows` int(10) NOT NULL DEFAULT 0,
   `data_record_count` int(10) NOT NULL DEFAULT 0,
   `current_phase_id` varchar(64) DEFAULT NULL,
