@@ -10,12 +10,12 @@ namespace PrestaShopBundle\Command;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
 use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final class ThemeEnablerCommand extends Command
 {
