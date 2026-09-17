@@ -34,6 +34,7 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 /**
  * This subscriber watches the various authentication events and saves or removes persisted
@@ -118,27 +119,31 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
 
     private function logSuccessfulLogin(LoginSuccessEvent $event): void
     {
-        if (!($event->getAuthenticator() instanceof FormLoginAuthenticator)) {
-            return;
+        try {
+            if (!($event->getAuthenticator() instanceof FormLoginAuthenticator)) {
+                return;
+            }
+
+            $employee = $event->getUser();
+
+            if (!$employee instanceof Employee) {
+                return;
+            }
+
+            $this->logger->info(
+                $this->translator->trans(
+                    'Back office connection from %ip%',
+                    ['%ip%' => $event->getRequest()->getClientIp()],
+                    'Admin.Advparameters.Feature'
+                ),
+                [
+                    'allow_duplicate' => true,
+                    'id_employee' => $employee->getId(),
+                ]
+            );
+        } catch (Throwable) {
+            // Logging must not prevent a successful login.
         }
-
-        $employee = $event->getUser();
-
-        if (!$employee instanceof Employee) {
-            return;
-        }
-
-        $this->logger->info(
-            $this->translator->trans(
-                'Back office connection from %ip%',
-                ['%ip%' => $event->getRequest()->getClientIp()],
-                'Admin.Advparameters.Feature'
-            ),
-            [
-                'allow_duplicate' => true,
-                'id_employee' => $employee->getId(),
-            ]
-        );
     }
 
     public function onKernelRequest(RequestEvent $event): void
