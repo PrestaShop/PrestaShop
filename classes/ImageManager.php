@@ -332,7 +332,6 @@ class ImageManagerCore
         }
         $writeFile = ImageManager::write($destinationFileType, $destImage, $destinationFile);
         Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $destinationFileType]);
-        @imagedestroy($srcImage);
 
         return $writeFile;
     }
@@ -387,7 +386,6 @@ class ImageManagerCore
             $temp = imagecreatetruecolor($dstW * $quality + 1, $dstH * $quality + 1);
             imagecopyresized($temp, $srcImage, 0, 0, $srcX, $srcY, $dstW * $quality + 1, $dstH * $quality + 1, $srcW, $srcH);
             imagecopyresampled($dstImage, $temp, $dstX, $dstY, 0, 0, $dstW, $dstH, $dstW * $quality, $dstH * $quality);
-            imagedestroy($temp);
         } else {
             imagecopyresampled($dstImage, $srcImage, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
         }
@@ -590,8 +588,6 @@ class ImageManagerCore
         imagecolortransparent($dest['ressource'], $white);
         $return = ImageManager::write($fileType, $dest['ressource'], $dstFile);
         Hook::exec('actionOnImageCutAfter', ['dst_file' => $dstFile, 'file_type' => $fileType]);
-        // @phpstan-ignore-next-line
-        @imagedestroy($src['ressource']);
 
         return $return;
     }
@@ -711,8 +707,6 @@ class ImageManagerCore
 
                 break;
         }
-        // @phpstan-ignore-next-line
-        imagedestroy($resource);
         @chmod($filename, 0664);
 
         return $success;
