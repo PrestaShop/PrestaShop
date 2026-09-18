@@ -1,4 +1,5 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -6,12 +7,15 @@
 
 namespace PrestaShopBundle\Command;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final class ThemeEnablerCommand extends Command
 {
@@ -25,15 +29,13 @@ final class ThemeEnablerCommand extends Command
      */
     public const RETURN_CODE_FAILED = 1;
 
-    /**
-     * @var ThemeManager
-     */
-    private $themeManager;
-
-    public function __construct(ThemeManager $themeManager)
-    {
+    public function __construct(
+        #[Autowire(service: 'prestashop.core.addon.theme.theme_manager')]
+        private ThemeManager $themeManager,
+        private readonly ContextBuilderPreparer $contextBuilderPreparer,
+        private readonly Configuration $configuration,
+    ) {
         parent::__construct();
-        $this->themeManager = $themeManager;
     }
 
     /**
@@ -53,6 +55,8 @@ final class ThemeEnablerCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->contextBuilderPreparer->prepareLanguageId($this->configuration->get('PS_LANG_DEFAULT'));
+
         $io = new SymfonyStyle($input, $output);
         $theme = $input->getArgument('theme');
 
