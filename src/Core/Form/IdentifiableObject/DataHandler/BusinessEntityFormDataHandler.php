@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\AddBusinessEntit
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\EditBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\AbstractBusinessEntityAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityGeneralInformation;
@@ -36,10 +37,11 @@ final class BusinessEntityFormDataHandler implements FormDataHandlerInterface
     public function create(array $data): int
     {
         $generalInformationData = $data[BusinessEntityType::GENERAL_INFORMATION];
+        $externalRef = $generalInformationData[BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF];
         $generalInformation = new BusinessEntityGeneralInformation(
             $generalInformationData[BusinessEntityGeneralInformationType::FIELD_NAME],
             $generalInformationData[BusinessEntityGeneralInformationType::FIELD_LEGAL_NAME],
-            $generalInformationData[BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF],
+            '' === $externalRef ? null : $externalRef,
             $generalInformationData[BusinessEntityGeneralInformationType::FIELD_DELIVERY_AUTHORIZED],
             $generalInformationData[BusinessEntityGeneralInformationType::FIELD_STATUS],
             (int) $data[BusinessEntityType::SHOP_ID],
@@ -113,8 +115,19 @@ final class BusinessEntityFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function update($id, array $data)
+    public function update($id, array $data): void
     {
-        // TODO: US2.1.3
+        $generalInformationData = $data[BusinessEntityType::GENERAL_INFORMATION];
+        $externalRef = $generalInformationData[BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF];
+
+        $command = (new EditBusinessEntityCommand((int) $id))
+            ->setName($generalInformationData[BusinessEntityGeneralInformationType::FIELD_NAME])
+            ->setLegalName($generalInformationData[BusinessEntityGeneralInformationType::FIELD_LEGAL_NAME])
+            ->setExternalRef('' === $externalRef ? null : $externalRef)
+            ->setDeliveryAuthorized((bool) $generalInformationData[BusinessEntityGeneralInformationType::FIELD_DELIVERY_AUTHORIZED])
+            ->setStatus($generalInformationData[BusinessEntityGeneralInformationType::FIELD_STATUS])
+            ->setCustomerGroupId((int) $generalInformationData[BusinessEntityGeneralInformationType::FIELD_CUSTOMER_GROUP_ID]);
+
+        $this->commandBus->handle($command);
     }
 }
