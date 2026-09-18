@@ -5,7 +5,7 @@ services:
   mariadb:
     image: mariadb:11.4
     ports:
-      - "3306:3306"
+      - "${DB_HOST_PORT:-3306}:3306"
     volumes:
       - db-data:/var/lib/mysql
     environment:
@@ -40,7 +40,7 @@ services:
       DB_NAME: ${DB_NAME:-prestashop}
       DB_SERVER: ${DB_SERVER:-mariadb}
       DB_PREFIX: ${DB_PREFIX:-ps_}
-      PS_DOMAIN: ${PS_DOMAIN:-localhost:8001}
+      PS_DOMAIN: ${PS_DOMAIN:-localhost:${HTTP_HOST_PORT:-8001}}
       PS_FOLDER_INSTALL: ${PS_FOLDER_INSTALL:-install-dev}
       PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
       PS_COUNTRY: ${PS_COUNTRY:-fr}
@@ -56,8 +56,8 @@ services:
       BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN:-0}
     command: /tmp/docker_run_git.sh
     ports:
-      - "8001:80"
-      - "8002:443"
+      - "${HTTP_HOST_PORT:-8001}:80"
+      - "${HTTPS_HOST_PORT:-8002}:443"
     depends_on:
       mariadb:
         condition: service_healthy
@@ -69,10 +69,11 @@ services:
   maildev:
     image: 'maildev/maildev'
     ports:
-      - "1080:1080"
+      - "${MAILDEV_UI_HOST_PORT:-1080}:1080"
+      - "${MAILDEV_SMTP_HOST_PORT:-1025}:1025"
     networks:
       - prestashop-network
 
 networks:
   prestashop-network:
-    name: prestashop-network
+    name: ${NETWORK_NAME:-prestashop-network}

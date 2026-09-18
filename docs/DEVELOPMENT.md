@@ -30,6 +30,7 @@ make docker-start
 
 ### 2. Access Your Installation
 
+**Default network addresses:**
 - **Frontend**: http://localhost:8001
 - **Backend**: http://localhost:8001/admin-dev
 - **MailDev**: http://localhost:1080 (email testing)
@@ -158,7 +159,14 @@ make help # Show all available commands
 | | `USER_ID` | `1000` | User ID for container |
 | | `GROUP_ID` | `1000` | Group ID for container |
 | | `DISABLE_MAKE` | `0` | Disable make commands |
-| | `PS_HOSTNAME` | `localhost` | Container hostname |
+| **Network** | `PS_HOSTNAME` | `localhost` | Container hostname |
+| | `DB_HOST_PORT` | `3306` | Port used to reach the SQL server from the Docker host |
+| | `HTTP_HOST_PORT` | `8001` | Port used to reach the web server HTTP protocol from the Docker host |
+| | `HTTPS_HOST_PORT` | `8002` | Port used to reach the web server HTTPS protocol from the Docker host |
+| | `MAILDEV_UI_HOST_PORT` | `1080` | Port used to reach the mail server (web interface) from the Docker host |
+| | `MAILDEV_SMTP_HOST_PORT` | `1025` | Port used to reach the SMTP server from the Docker host |
+| | `PHPMYADMIN_HOST_PORT` | `8080` | Port used to reach the PhpMyAdmin application |
+| | `NETWORK_NAME` | `prestashop-network` | Alias name of the network |
 
 ## Development Workflow
 
@@ -237,7 +245,7 @@ make admin-default
 
 #### Port Already in Use
 
-**Solutions:**
+**Solution 1:**
 
 1. **Check what's using the port:**
    ```bash
@@ -249,6 +257,10 @@ make admin-default
    docker ps
    docker stop <container-id>
    ```
+
+**Solution 2:**
+
+ Customize the ports used by the containers with the environment variables provided as explained in [The Docker documentation](https://docs.docker.com/compose/how-tos/environment-variables/envvars/).
 
 #### Image Build Fails
 
