@@ -38,15 +38,25 @@ Three levels, in increasing cost. Take the cheapest one that covers the symptom.
 
 Both halves are required, database and `parameters.php`:
 
+**`-v` destroys the shop database and nothing previews it.** `db-data` is the only named volume in this project (`docker compose config --volumes`), and it holds everything the shop accumulated: modules installed and configured, employee accounts, API clients and the secrets they were issued, feature flags toggled straight in `ps_feature_flag`, and every order or customer created while testing. None of that is in the repository. When in doubt, dump it first, to a path outside the checkout so a later `git clean` cannot take the file with it:
+
+```sh
+docker compose exec mysql sh -c 'mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' > ~/shop-backup.sql
+```
+
+Reading the values from the container covers a `DB_PASSWD` or `DB_NAME` set in `.env` or in the override file, which a hard coded command would miss. `root` is the only account the compose file provisions.
+
 ```sh
 docker compose down -v
 rm -f app/config/parameters.php app/config/parameters.yml
 docker compose up -d
 ```
 
+Whoever runs this against a checkout that is not their own, a setup script or an AI agent included, says what the database currently holds and waits for an explicit confirmation before `down -v`.
+
 To keep the volume instead, set `PS_ERASE_DB=1` and remove `parameters.php`: the bootstrap drops and recreates the database itself.
 
-`docker compose down` without `-v` removes the containers but keeps the named volume, so the shop database survives. That is the right choice when freeing resources rather than resetting.
+`docker compose down` without `-v` removes the containers but keeps the named volume, so the shop database survives. That is the right choice when freeing resources rather than resetting. It still costs the test dumps: `DatabaseDump` writes them to `sys_get_temp_dir()` inside the container (`tests/Resources/DatabaseDump.php:101`), which is neither a volume nor a bind mount, so removing the container takes them and the next integration or Behat run needs `composer create-test-db` again.
 
 ### Full rebuild
 
