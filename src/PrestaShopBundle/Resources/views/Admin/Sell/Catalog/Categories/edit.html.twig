@@ -7,7 +7,9 @@
 {% block content %}
   {{ include('@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/form.html.twig', {
     categoryForm: editCategoryForm,
+    showPreview: true,
   }) }}
+  <span class="js-preview-url" data-preview-url="{{ previewUrl }}"></span>
 {% endblock %}
 
 {% block javascripts %}
