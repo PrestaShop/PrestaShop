@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use Product;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProductLazyArrayTest extends TestCase
@@ -162,6 +163,87 @@ class ProductLazyArrayTest extends TestCase
             $this->mockConfiguration
         );
         $this->assertInstanceOf(ProductLazyArray::class, $productLazyArray);
+    }
+
+    public function testAllowOospUsesProvidedValue(): void
+    {
+        $this->setDefaultConfiguration();
+
+        $product = array_merge($this->baseProduct, [
+            'allow_oosp' => 1,
+        ]);
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            $product,
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        $this->assertSame(1, $productLazyArray->getAllowOosp());
+    }
+
+    public function testAllowOospIsComputedFromOutOfStock(): void
+    {
+        $this->setDefaultConfiguration();
+
+        $product = array_merge($this->baseProduct, [
+            'out_of_stock' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+        ]);
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            $product,
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        $this->assertSame(
+            Product::isAvailableWhenOutOfStock($product['out_of_stock']),
+            $productLazyArray->getAllowOosp()
+        );
+    }
+
+    public function testEmbeddedAttributesContainComputedAllowOosp(): void
+    {
+        $this->setDefaultConfiguration();
+
+        $product = array_merge($this->baseProduct, [
+            'out_of_stock' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+        ]);
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            $product,
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        $embeddedAttributes = $productLazyArray->getEmbeddedAttributes();
+
+        $this->assertArrayHasKey('allow_oosp', $embeddedAttributes);
+        $this->assertSame(
+            Product::isAvailableWhenOutOfStock($product['out_of_stock']),
+            $embeddedAttributes['allow_oosp']
+        );
     }
 
     /**
