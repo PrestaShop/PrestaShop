@@ -65,9 +65,15 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         private readonly TranslatorInterface $translator,
         private readonly EmployeeContextBuilder $employeeContextBuilder,
         private readonly ShopConfigurationInterface $shopConfiguration,
-        #[Autowire(service: 'prestashop.adapter.security.repository.employee_session_repository')]
+        #[Autowire(
+            service: 'prestashop.adapter.security.repository.employee_session_repository',
+            lazy: true,
+        )]
         private readonly EmployeeSessionRepository $employeeSessionRepository,
-        #[Autowire(service: 'prestashop.adapter.security.repository.customer_session_repository')]
+        #[Autowire(
+            service: 'prestashop.adapter.security.repository.customer_session_repository',
+            lazy: true,
+        )]
         private readonly CustomerSessionRepository $customerSessionRepository,
     ) {
     }
