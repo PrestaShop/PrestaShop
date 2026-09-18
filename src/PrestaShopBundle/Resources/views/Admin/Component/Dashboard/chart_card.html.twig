@@ -1,0 +1,12 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/Component/Dashboard/card.html.twig' %}
+
+{% block content %}
+  <div style="position: relative; height: {{ this.height }}px;">
+    <canvas id="{{ this.chartId }}" data-chart role="img"{% if this.title %} aria-label="{{ this.title }}"{% endif %}></canvas>
+  </div>
+  <script type="application/json" id="{{ this.chartId }}-data">{{ this.chartConfig|raw }}</script>
+{% endblock %}

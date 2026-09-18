@@ -5,6 +5,7 @@
 
 import Chart from 'chart.js/auto';
 import type {Plugin} from 'chart.js';
+import mountDashboardCharts from './dashboardCharts';
 
 /**
  * PrestaShop chart palette, mirroring the modern PrestaShop branding as published on
@@ -151,6 +152,12 @@ const psChart = {
     return getSeries();
   },
   withAlpha,
+  // Scans `root` for [data-chart] canvases and mounts them (see dashboardCharts.ts). Called by
+  // the DashboardChart component on page load, and reusable by any caller that injects new
+  // dashboard HTML afterwards (e.g. a future AJAX date-range reload).
+  mountCharts(root: ParentNode = document): void {
+    mountDashboardCharts(Chart, root);
+  },
 };
 
 export type PsChart = typeof psChart;
