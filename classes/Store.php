@@ -20,7 +20,7 @@ class StoreCore extends ObjectModel
     /** @var int Country id */
     public $id_country;
 
-    /** @var int State id */
+    /** @var int|null State id */
     public $id_state;
 
     /** @var string|array<string> Name */
@@ -38,10 +38,10 @@ class StoreCore extends ObjectModel
     /** @var string City */
     public $city;
 
-    /** @var float Latitude */
+    /** @var string|null Latitude */
     public $latitude;
 
-    /** @var float Longitude */
+    /** @var string|null Longitude */
     public $longitude;
 
     /** @var string|array Store hours (PHP serialized) */
