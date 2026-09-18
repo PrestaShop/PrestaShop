@@ -983,6 +983,34 @@ final class ExtraPropertyConstraintParserTest extends TestCase
     }
 
     /**
+     * A violation message is displayed to whoever triggers it (BO form errors, the legacy error
+     * banner, API 422 bodies), so it follows the display-text rule of every other author-controlled
+     * text: the offending token is refused, its valid siblings are kept.
+     */
+    public function testAMessageThatCouldOpenATagIsRejected(): void
+    {
+        $decoded = ExtraPropertyConstraintParser::parse(
+            "NotBlank(message: '<img src=x onerror=alert(1)>')\nLength(max: 5, maxMessage: 'Too <b>long</b>')\nEmail"
+        );
+
+        $this->assertCount(2, $decoded->getRejections());
+        $this->assertStringContainsString('"message"', $decoded->getRejections()[0]['reason']);
+        $this->assertStringContainsString('"maxMessage"', $decoded->getRejections()[1]['reason']);
+        $this->assertCount(1, $decoded->getConstraints());
+    }
+
+    public function testAPlainMessageIsAccepted(): void
+    {
+        $decoded = ExtraPropertyConstraintParser::parse("NotBlank(message: 'This value is required (> 0 chars).')");
+
+        $this->assertFalse($decoded->hasRejections());
+        $constraints = $decoded->getConstraints();
+        $this->assertNotNull($constraints);
+        $this->assertInstanceOf(Assert\NotBlank::class, $constraints[0]);
+        $this->assertSame('This value is required (> 0 chars).', $constraints[0]->message);
+    }
+
+    /**
      * Asserts the decoding reported exactly one rejection, located on the given token, whose reason
      * carries the expected substring.
      */
