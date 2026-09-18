@@ -52,12 +52,23 @@ To keep the volume instead, set `PS_ERASE_DB=1` and remove `parameters.php`: the
 
 Only when the image itself is suspect: the PHP version moved in `.docker/Dockerfile`, `USER_ID` or `GROUP_ID` changed, `INSTALL_XDEBUG` was toggled, or `vendor/` is in a state no `composer install` recovers from.
 
+**Preview the clean before running it, every time.** The two exclusions below are what this repository is known to need, not a complete list. Which files are gitignored depends on the local environment: another checkout may hold `.vscode/`, a personal `phpunit.xml`, a scratch SQL dump or fixtures that exist nowhere else, and nothing in git flags them as at risk. On a built checkout the raw dry run runs to several thousand lines, so read it by top level entry first:
+
+```sh
+LC_ALL=C git clean -dxn -e .idea -e docker-compose.override.yml \
+  | sed 's|^Would remove ||' | cut -d/ -f1 | sort -u
+```
+
+`LC_ALL=C` pins the `Would remove` prefix, which is translated in other locales. Add a `-e` for every entry worth keeping, then rebuild:
+
 ```sh
 git clean -dfx -e .idea -e docker-compose.override.yml
 docker compose down -v
 docker compose build --no-cache
 docker compose up -d --force-recreate
 ```
+
+Whoever runs this against a checkout that is not their own, a setup script or an AI agent included, shows that list and waits for an explicit confirmation before running the `git clean -dfx`. Nothing it removes can be restored from the repository.
 
 **Keep `docker-compose.override.yml` out of the `git clean`.** It is gitignored, so `-x` takes it, and `USER_ID`, `GROUP_ID`, the port mapping, `INSTALL_XDEBUG` and `DISABLE_MAKE` go with it. `USER_ID` and `GROUP_ID` are build args consumed by `groupmod` and `usermod` (`Dockerfile:12-13` and `:21-22`), so the `build` on the next line then bakes the default uid into the image and every file the container writes comes back owned by the wrong user. `.env.local` is gitignored too. `.env` is tracked, so it survives.
 
