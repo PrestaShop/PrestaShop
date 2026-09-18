@@ -8,6 +8,7 @@
 #   --force-install: Force a clean reinstall of node_modules (implies --force)
 #   --watch: Rebuild the given asset on every change instead of building once.
 #            Requires a single asset name, and writes development assets.
+#            Incompatible with --force, which a watch makes meaningless.
 #
 
 #http://redsymbol.net/articles/unofficial-bash-strict-mode/
@@ -19,12 +20,16 @@ ADMIN_DIR="${PROJECT_PATH}/${ADMIN_DIR:-admin-dev}"
 FORCE_BUILD=false
 FORCE_INSTALL=false
 WATCH_MODE=false
+# Tracked apart from FORCE_BUILD, which --force-install also sets: only an explicit --force
+# is meaningless next to --watch.
+FORCE_REQUESTED=false
 ASSET_NAME=""
 
 for arg in "$@"; do
   case $arg in
     --force)
       FORCE_BUILD=true
+      FORCE_REQUESTED=true
       ;;
     --watch)
       WATCH_MODE=true
@@ -49,6 +54,14 @@ for arg in "$@"; do
       ;;
   esac
 done
+
+# A watch always rebuilds, so --force says nothing. Reject the pair rather than ignore it,
+# the same way an unknown option is rejected. --force-install does apply: it reaches
+# install_dependencies before the watch starts.
+if [[ "$WATCH_MODE" == "true" && "$FORCE_REQUESTED" == "true" ]]; then
+  echo "--force has no meaning with --watch, which always rebuilds. Use --force-install to reinstall node_modules."
+  exit 1
+fi
 
 if [[ ! -d $ADMIN_DIR ]]; then
   echo "Could not find directory '$ADMIN_DIR'. Make sure to launch this script from the root directory of PrestaShop"

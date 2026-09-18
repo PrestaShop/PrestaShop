@@ -10,9 +10,13 @@ DOCKER_RUNNING := $(shell docker compose ps -q 2>/dev/null)
 ifneq ($(strip $(DOCKER_RUNNING)),)
 	PHP_CONT = $(DOCKER_COMP) exec -T $(DOCKER_AS_WWW)
 	PHP_CONT_WITH_LOGIN = $(DOCKER_COMP) exec -T $(DOCKER_AS_WWW) bash -l
-	# Watch targets are long lived: keep stdin attached so Ctrl+C reaches webpack. No -t,
-	# which would make the target fail outright when no terminal is attached (CI, IDE tasks).
-	WATCH_CONT = $(DOCKER_COMP) exec -i $(DOCKER_AS_WWW) bash -l
+	# Watch targets are long lived, and `docker exec` has no signal proxying: Ctrl+C only
+	# reaches webpack through the pty line discipline inside the container, so a TTY is
+	# allocated whenever there is one to attach. Without it (CI, IDE tasks) -t would make
+	# the target fail outright, so we fall back to -i alone -- and there an interrupt kills
+	# the local client only, leaving the watcher running inside the container.
+	WATCH_TTY := $(shell [ -t 0 ] && printf %s -it || printf %s -i)
+	WATCH_CONT = $(DOCKER_COMP) exec $(WATCH_TTY) $(DOCKER_AS_WWW) bash -l
 endif
 
 # Executables (local or docker)
@@ -88,20 +92,22 @@ front-classic: ## Build assets for classic theme
 front-hummingbird: ## Build assets for hummingbird theme
 	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh front-hummingbird --force
 
+# Ctrl+C is the expected way to stop a watch: it surfaces as exit code 130, which is not
+# a failure.
 watch-admin-default: ## Watch and rebuild assets for default admin theme
-	$(WATCH_CONT) ./tools/assets/build.sh admin-default --watch
+	$(WATCH_CONT) ./tools/assets/build.sh admin-default --watch || [ $$? -eq 130 ]
 
 watch-admin-new-theme: ## Watch and rebuild assets for new admin theme
-	$(WATCH_CONT) ./tools/assets/build.sh admin-new-theme --watch
+	$(WATCH_CONT) ./tools/assets/build.sh admin-new-theme --watch || [ $$? -eq 130 ]
 
 watch-front-core: ## Watch and rebuild assets for core theme
-	$(WATCH_CONT) ./tools/assets/build.sh front-core --watch
+	$(WATCH_CONT) ./tools/assets/build.sh front-core --watch || [ $$? -eq 130 ]
 
 watch-front-classic: ## Watch and rebuild assets for classic theme
-	$(WATCH_CONT) ./tools/assets/build.sh front-classic --watch
+	$(WATCH_CONT) ./tools/assets/build.sh front-classic --watch || [ $$? -eq 130 ]
 
 watch-front-hummingbird: ## Watch and rebuild assets for hummingbird theme
-	$(WATCH_CONT) ./tools/assets/build.sh front-hummingbird --watch
+	$(WATCH_CONT) ./tools/assets/build.sh front-hummingbird --watch || [ $$? -eq 130 ]
 
 ## —— Composer & Symfony 🧙 ————————————————————————————————————————————————————
 composer: ## Install PHP dependencies
