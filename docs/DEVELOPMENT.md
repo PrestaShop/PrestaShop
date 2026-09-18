@@ -183,12 +183,14 @@ The asset build system provides a simple and reliable way to build all assets:
 
 - **Always Fresh**: Assets are always rebuilt to ensure consistency
 - **Parallel Execution**: Multiple assets build in parallel for faster builds
-- **Clean Builds**: Node modules are cleaned and reinstalled for each build
+- **Incremental Installs**: `npm ci` only runs when a theme's dependencies actually changed, so repeated builds are much faster
 
 **Examples:**
 ```bash
 # Build all assets
 make assets
+# Build all assets, forcing a clean reinstall of node_modules
+make assets-clean
 # Build Admin default theme
 make admin-default
 
@@ -196,11 +198,15 @@ make admin-default
 
 # All assets
 ./tools/assets/build.sh # dry-run
-./tools/assets/build/sh --force
+./tools/assets/build.sh --force
 
 # Specific asset
 ./tools/assets/build.sh admin-default # dry-run
 ./tools/assets/build.sh admin-default --force
+
+# Force a clean reinstall of node_modules (implies --force)
+./tools/assets/build.sh --force-install
+./tools/assets/build.sh admin-default --force-install
 ```
 
 ### Performance Tips
