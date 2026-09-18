@@ -86,6 +86,7 @@ module.exports = {
     customer_thread: './js/pages/customer-thread/index',
     customer_thread_view: './js/pages/customer-thread/view',
     customer_threads: './scss/pages/customer_thread/customer_thread.scss',
+    dashboard: './js/pages/dashboard',
     discount: './js/pages/discount',
     discount_form: './js/pages/discount/form',
     email: './js/pages/email',
