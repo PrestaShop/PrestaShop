@@ -92,13 +92,22 @@ class DashboardController extends PrestaShopAdminController
             $dateRangeFormView = $dateRangeForm->createView();
         }
 
-        return $this->render('@PrestaShop/Admin/Dashboard/index.html.twig', [
-            'layoutTitle' => $this->trans('Dashboard', [], 'Admin.Navigation.Menu'),
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($legacyController),
+        $templateParameters = [
             'dateRangeForm' => $dateRangeFormView,
             'dateFrom' => $dateFrom->format('Y-m-d'),
             'dateTo' => $dateTo->format('Y-m-d'),
+        ];
+
+        // A date range change submits this same route via fetch(): only the dashboard content
+        // is re-rendered, not the full layout, so the client can swap it in without a page reload.
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('@PrestaShop/Admin/Dashboard/_dashboard_content.html.twig', $templateParameters);
+        }
+
+        return $this->render('@PrestaShop/Admin/Dashboard/index.html.twig', $templateParameters + [
+            'layoutTitle' => $this->trans('Dashboard', [], 'Admin.Navigation.Menu'),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
         ]);
     }
 

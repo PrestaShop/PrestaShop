@@ -126,4 +126,8 @@ export default {
   emailInput: {
     inputSelector: '.email-input',
   },
+  dashboard: {
+    container: '#dashboard',
+    dateRangeForm: '[data-dashboard-date-range-form]',
+  },
 };

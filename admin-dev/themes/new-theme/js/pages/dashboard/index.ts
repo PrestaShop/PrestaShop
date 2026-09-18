@@ -8,5 +8,5 @@ export {};
 const {$} = window;
 
 $(() => {
-  window.prestashop.component.initComponents(['DashboardChart']);
+  window.prestashop.component.initComponents(['DashboardChart', 'DashboardDateRange']);
 });
