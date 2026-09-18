@@ -24,4 +24,11 @@ interface ThemeProviderInterface
      * @return Theme[]
      */
     public function getNotUsedThemes();
+
+    /**
+     * Get themes names that cannot be deleted.
+     *
+     * @return array
+     */
+    public function getNotDeletableThemes();
 }
