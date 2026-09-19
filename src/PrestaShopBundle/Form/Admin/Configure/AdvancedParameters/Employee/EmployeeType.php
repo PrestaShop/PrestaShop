@@ -8,12 +8,14 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 
 use PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\EmployeeTotpVerificationCode;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as EmployeeEmail;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
+use PrestaShopBundle\Form\Admin\Type\CustomContentType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -25,6 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -228,15 +231,119 @@ final class EmployeeType extends AbstractType
                 ->remove('profile')
                 ->remove('shop_association')
             ;
+
+            $this->addTwoFactorFields($builder, $options);
         } else {
             $builder
                 ->remove('change_password')
             ;
+
+            if ($options['can_manage_two_factor_requirement'] && (bool) $this->configuration->get('PS_BACKOFFICE_2FA')) {
+                $builder->add('two_factor_required', SwitchType::class, [
+                    'label' => $this->trans('Require 2FA', [], 'Admin.Global'),
+                    'required' => false,
+                    'help' => $this->trans('Require this employee to configure and use two-factor authentication.', [], 'Admin.Advparameters.Help'),
+                ]);
+            }
+
             if (!$this->isMultistoreFeatureActive) {
                 $builder
                     ->remove('shop_association')
                 ;
             }
+        }
+    }
+
+    private function addTwoFactorFields(FormBuilderInterface $builder, array $options): void
+    {
+        if (!(bool) $this->configuration->get('PS_BACKOFFICE_2FA')) {
+            return;
+        }
+
+        $twoFactorEnabled = (bool) $options['data']['two_factor_enabled'];
+        $twoFactorRequired = (bool) ($options['data']['two_factor_required'] ?? false);
+        $twoFactorTotpEnabled = (bool) $options['data']['two_factor_totp_enabled'];
+
+        $builder
+            ->add('two_factor_enabled', SwitchType::class, [
+                'label' => $this->trans('Two-factor authentication (2FA)', [], 'Admin.Global'),
+                'required' => false,
+                'help' => $this->trans('Require a one-time code at login for this employee.', [], 'Admin.Global'),
+            ])
+            ->add('two_factor_totp_enabled', SwitchType::class, [
+                'label' => $this->trans('Use authenticator app (TOTP)', [], 'Admin.Global'),
+                'required' => false,
+                'help' => $this->trans('', [], 'Admin.Global'),
+            ])
+        ;
+
+        if (!$twoFactorEnabled && !$twoFactorTotpEnabled) {
+            $builder
+                ->add('two_factor_provisioning_uri', TextType::class, [
+                    'mapped' => false,
+                    'required' => false,
+                    'label' => $this->trans('2FA setup key', [], 'Admin.Global'),
+                    'help' => $this->trans('If you cannot scan the QR code, copy this key into your authenticator app.', [], 'Admin.Global'),
+                    'attr' => [
+                        'readonly' => true,
+                    ],
+                    'data' => $options['two_factor_totp_secret'],
+                ]);
+        }
+
+        $builder
+            ->add('two_factor_totp_qr', CustomContentType::class, [
+                'label' => false,
+                'mapped' => false,
+                'required' => false,
+                'template' => '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/qr_code.html.twig',
+                'data' => [
+                    'qrCodeSrc' => $options['qr_code_src'],
+                    'twoFactorTotpEnabled' => $twoFactorTotpEnabled,
+                ],
+            ])
+        ;
+
+        if (!$twoFactorTotpEnabled) {
+            $builder
+                ->add('two_factor_tot_verification_code', TextType::class, [
+                    'mapped' => false,
+                    'required' => false,
+                    'label' => $this->trans('Verification code (TOTP)', [], 'Admin.Global'),
+                    'help' => $this->trans('Enter the 6-digit code generated by your authenticator app to confirm the activation of two-factor authentication.', [], 'Admin.Global'),
+                    'constraints' => [
+                        new EmployeeTotpVerificationCode(),
+                    ],
+                ]);
+        }
+
+        $builder
+            ->add('two_factor_email_enabled', SwitchType::class, [
+                'label' => $this->trans('Receive code by email', [], 'Admin.Global'),
+                'required' => false,
+                'help' => $this->trans('A one-time code will be sent to the employee email address.', [], 'Admin.Global'),
+            ])
+        ;
+
+        if ($twoFactorRequired) {
+            $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event): void {
+                $form = $event->getForm();
+                $isTwoFactorEnabled = (bool) $form->get('two_factor_enabled')->getData();
+                $isTotpEnabled = (bool) $form->get('two_factor_totp_enabled')->getData();
+                $isEmailEnabled = (bool) $form->get('two_factor_email_enabled')->getData();
+
+                if ($isTwoFactorEnabled && ($isTotpEnabled || $isEmailEnabled)) {
+                    return;
+                }
+
+                $form->addError(new FormError(
+                    $this->trans(
+                        'Two-factor authentication is required for your account. Keep it enabled and configure at least one verification method.',
+                        [],
+                        'Admin.Advparameters.Notification'
+                    )
+                ));
+            });
         }
     }
 
@@ -256,9 +363,15 @@ final class EmployeeType extends AbstractType
 
                 // Is this form used for editing the employee.
                 'is_for_editing' => false,
+                'can_manage_two_factor_requirement' => false,
+                'qr_code_src' => '',
+                'two_factor_totp_secret' => '',
             ])
             ->setAllowedTypes('is_restricted_access', 'bool')
             ->setAllowedTypes('is_for_editing', 'bool')
+            ->setAllowedTypes('can_manage_two_factor_requirement', 'bool')
+            ->setAllowedTypes('qr_code_src', 'string')
+            ->setAllowedTypes('two_factor_totp_secret', 'string')
         ;
     }
 

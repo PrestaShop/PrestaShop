@@ -140,12 +140,20 @@ class SecurityController extends PrestaShopAdminController
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-            $saveErrors = $formHandler->save($data);
+            $saveMessages = $formHandler->save($data);
 
-            if (0 === count($saveErrors)) {
+            $hasErrors = false;
+            foreach ($saveMessages as $message) {
+                if (is_array($message) && isset($message['type'], $message['key'])) {
+                    $this->addFlash($message['type'], $this->getInfoMessageByKey($message['key']));
+                } elseif (is_string($message)) {
+                    $this->addFlash('error', $message);
+                    $hasErrors = true;
+                }
+            }
+
+            if (!$hasErrors) {
                 $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
-            } else {
-                $this->addFlashErrors($saveErrors);
             }
         }
 
@@ -346,6 +354,21 @@ class SecurityController extends PrestaShopAdminController
         }
 
         return $this->redirectToRoute('admin_security_sessions_employee_list');
+    }
+
+    /**
+     * Get translated info message by key.
+     */
+    private function getInfoMessageByKey(string $key): string
+    {
+        return match ($key) {
+            '2fa_data_reset' => $this->trans(
+                'Two-factor authentication has been disabled and all employee 2FA settings have been reset.',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            default => $key,
+        };
     }
 
     /**
