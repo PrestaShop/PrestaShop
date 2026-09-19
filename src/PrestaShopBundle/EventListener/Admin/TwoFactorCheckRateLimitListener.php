@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventListener\Admin;
 
-use DateTimeImmutable;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
@@ -37,12 +36,10 @@ final class TwoFactorCheckRateLimitListener implements EventSubscriberInterface
             return;
         }
 
-        $retryAfterInSeconds = max(1, $rateLimit->getRetryAfter()->getTimestamp() - (new DateTimeImmutable())->getTimestamp());
-
         throw new CustomUserMessageAuthenticationException(
             $this->translator->trans(
-                'Too many verification attempts. Please wait %seconds% seconds before trying again.',
-                ['%seconds%' => $retryAfterInSeconds],
+                'Too many verification attempts. Please retry in 15 minutes.',
+                [],
                 'Admin.Login.Notification'
             )
         );
