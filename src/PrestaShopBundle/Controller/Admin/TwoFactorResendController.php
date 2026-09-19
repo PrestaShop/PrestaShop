@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use DateTimeImmutable;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -41,13 +40,11 @@ class TwoFactorResendController extends PrestaShopAdminController
 
         $limit = $this->twoFactorResendLimiter->create($this->getRateLimitKey($request, $user))->consume();
         if (!$limit->isAccepted()) {
-            $retryAfterInSeconds = max(1, $limit->getRetryAfter()->getTimestamp() - (new DateTimeImmutable())->getTimestamp());
-
             $this->addFlash(
                 'error',
                 $this->trans(
-                    'Too many requests for a new authentication code. Please wait %seconds% seconds before trying again.',
-                    ['%seconds%' => $retryAfterInSeconds],
+                    'Too many requests for a new authentication code. Please retry in 15 minutes.',
+                    [],
                     'Admin.TwoFactor.Login'
                 )
             );
