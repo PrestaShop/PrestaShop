@@ -228,6 +228,7 @@ export default class EmployeeForm {
 
     this.toggleSwitchFormGroup(employeeFormMap.twoFactorTotpEnabledWrapper, is2faEnabled);
     this.toggleSwitchFormGroup(employeeFormMap.twoFactorEmailEnabledWrapper, is2faEnabled);
+    this.toggleInputFormGroup(employeeFormMap.backupCodesWrapper, is2faEnabled);
 
     if (!is2faEnabled) {
       this.toggleInputFormGroup(employeeFormMap.twoFactorProvisioningUriInput, false);
