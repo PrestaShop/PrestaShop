@@ -5,7 +5,7 @@
 {if isset($fields.title)}<h3>{$fields.title}</h3>{/if}
 
 {if isset($tabs) && $tabs|count}
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	var helper_tabs = {$tabs|json_encode};
 	var unique_field_id = '';
 </script>
@@ -95,7 +95,7 @@
 										{/if}
 												{if $input.type == 'tags'}
 													{literal}
-														<script type="text/javascript">
+														<script type="text/javascript" nonce="{$cspNonce}">
 															$().ready(function () {
 																var input_id = '{/literal}{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}{literal}';
 																$('#'+input_id).tagify({delimiters: [13,44], addTagPrompt: '{/literal}{l s='Add tag' js=1}{literal}'});
@@ -158,7 +158,7 @@
 										{/if}
 									{/foreach}
 									{if isset($input.maxchar) && $input.maxchar}
-									<script type="text/javascript">
+									<script type="text/javascript" nonce="{$cspNonce}">
 									$(function(){
 									{foreach from=$languages item=language}
 										countDown($("#{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"), $("#{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter"));
@@ -172,7 +172,7 @@
 									{else}
 										{if $input.type == 'tags'}
 											{literal}
-											<script type="text/javascript">
+											<script type="text/javascript" nonce="{$cspNonce}">
 												$().ready(function () {
 													var input_id = '{/literal}{if isset($input.id)}{$input.id}{else}{$input.name}{/if}{literal}';
 													$('#'+input_id).tagify({delimiters: [13,44], addTagPrompt: '{/literal}{l s='Add tag'}{literal}'});
@@ -219,7 +219,7 @@
 										</div>
 										{/if}
 										{if isset($input.maxchar) && $input.maxchar}
-										<script type="text/javascript">
+										<script type="text/javascript" nonce="{$cspNonce}">
 										$(function(){
 											countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
 										});
@@ -266,7 +266,7 @@
 										</div>
 									</div>
 									{if isset($input.maxchar) && $input.maxchar}
-									<script type="text/javascript">
+									<script type="text/javascript" nonce="{$cspNonce}">
 										$(function() {
 											countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
 										});
@@ -447,7 +447,7 @@
 											{/if}
 										{/foreach}
 										{if isset($input.maxchar) && $input.maxchar}
-											<script type="text/javascript">
+											<script type="text/javascript" nonce="{$cspNonce}">
 											$(function(){
 											{foreach from=$languages item=language}
 												countDown($("#{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"), $("#{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter"));
@@ -463,7 +463,7 @@
 										{/if}
 										<textarea{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if} name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" {if isset($input.cols)}cols="{$input.cols}"{/if} {if isset($input.rows)}rows="{$input.rows}"{/if} class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{else}textarea-autosize{/if}{if isset($input.class)} {$input.class}{/if}"{if isset($input.maxlength) && $input.maxlength} maxlength="{$input.maxlength|intval}"{/if}{if isset($input.maxchar) && $input.maxchar} data-maxchar="{$input.maxchar|intval}"{/if}>{$fields_value[$input.name]|default|escape:'html':'UTF-8'}</textarea>
 										{if isset($input.maxchar) && $input.maxchar}
-											<script type="text/javascript">
+											<script type="text/javascript" nonce="{$cspNonce}">
 											$(function(){
 												countDown($("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"), $("#{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter"));
 											});
@@ -710,7 +710,7 @@
 {block name="after"}{/block}
 
 {if isset($tinymce) && $tinymce}
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	var iso = '{$iso|addslashes}';
 	var pathCSS = '{$smarty.const._THEME_CSS_DIR_|addslashes}';
 	var ad = '{$ad|addslashes}';
@@ -725,12 +725,12 @@
 </script>
 {/if}
 {if isset($color) && $color}
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	$.fn.mColorPicker.defaults.imageFolder = baseDir + 'img/admin/';
 </script>
 {/if}
 {if $firstCall}
-	<script type="text/javascript">
+	<script type="text/javascript" nonce="{$cspNonce}">
 		var module_dir = '{$smarty.const._MODULE_DIR_}';
 		var id_language = {$defaultFormLanguage|intval};
 		var languages = new Array();
