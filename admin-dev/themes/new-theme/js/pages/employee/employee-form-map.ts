@@ -35,6 +35,7 @@ export default {
   twoFactorTotpEnabledWrapper: '#employee_two_factor_totp_enabled',
   twoFactorEmailEnabledWrapper: '#employee_two_factor_email_enabled',
   twoFactorProvisioningUriInput: '#employee_two_factor_provisioning_uri',
-  twoFactorTotQrCode: '#employee_two_factor_tot_qr_code',
+  twoFactorTotQrCode: '#employee_two_factor_totp_qr',
   twoFactorTotCode: '#employee_two_factor_tot_verification_code',
+  backupCodesWrapper: '#employee_backup_codes',
 };
