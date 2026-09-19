@@ -3,13 +3,14 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% set backupCodes = app.session.flashbag.get('backup_codes') %}
 
 {% block session_alert %}
   {{ parent() }}
 {% endblock %}
 
 {% block content %}
+  {% set backupCodes = app.session.flashbag.get('backup_codes') %}
+
   {% if backupCodes is not empty %}
     <div class="card mb-3 d-print-none">
       <h3 class="card-header">
@@ -71,50 +72,48 @@
   {{ parent() }}
 
   <script src="{{ asset('themes/new-theme/public/employee_form.bundle.js') }}"></script>
-  {% if backupCodes is not empty %}
-    <script>
-      (function () {
-        var copyButton = document.getElementById('copy-backup-codes-button');
+  <script>
+    (function () {
+      var copyButton = document.getElementById('copy-backup-codes-button');
 
-        if (!copyButton) {
-          return;
+      if (!copyButton) {
+        return;
+      }
+
+      var copyText = function (text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          return navigator.clipboard.writeText(text);
         }
 
-        var copyText = function (text) {
-          if (navigator.clipboard && window.isSecureContext) {
-            return navigator.clipboard.writeText(text);
-          }
+        return new Promise(function (resolve, reject) {
+          var input = document.createElement('textarea');
+          input.value = text;
+          input.setAttribute('readonly', '');
+          input.style.position = 'absolute';
+          input.style.left = '-9999px';
+          document.body.appendChild(input);
+          input.select();
+          input.setSelectionRange(0, input.value.length);
 
-          return new Promise(function (resolve, reject) {
-            var input = document.createElement('textarea');
-            input.value = text;
-            input.setAttribute('readonly', '');
-            input.style.position = 'absolute';
-            input.style.left = '-9999px';
-            document.body.appendChild(input);
-            input.select();
-            input.setSelectionRange(0, input.value.length);
-
-            try {
-              if (document.execCommand('copy')) {
-                resolve();
-              } else {
-                reject();
-              }
-            } catch (error) {
-              reject(error);
-            } finally {
-              document.body.removeChild(input);
+          try {
+            if (document.execCommand('copy')) {
+              resolve();
+            } else {
+              reject();
             }
-          });
-        };
-
-        copyButton.addEventListener('click', function () {
-          copyText(copyButton.dataset.backupCodes || '').then(function () {
-            copyButton.textContent = copyButton.dataset.successMessage;
-          });
+          } catch (error) {
+            reject(error);
+          } finally {
+            document.body.removeChild(input);
+          }
         });
-      }());
-    </script>
-  {% endif %}
+      };
+
+      copyButton.addEventListener('click', function () {
+        copyText(copyButton.dataset.backupCodes || '').then(function () {
+          copyButton.textContent = copyButton.dataset.successMessage;
+        });
+      });
+    }());
+  </script>
 {% endblock %}
