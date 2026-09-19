@@ -1,18 +1,18 @@
 /*!
- * jQuery UI Tooltip 1.10.3
- * http://jqueryui.com
+ * jQuery UI Tooltip 1.13.3
+ * https://jqueryui.com
  *
- * Copyright 2013 jQuery Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license.
- * http://jquery.org/license
+ * https://jquery.org/license
+ *
+ * https://api.jqueryui.com/tooltip/#theming
  */
 .ui-tooltip {
 	padding: 8px;
 	position: absolute;
 	z-index: 9999;
 	max-width: 300px;
-	-webkit-box-shadow: 0 0 5px #aaa;
-	box-shadow: 0 0 5px #aaa;
 }
 body .ui-tooltip {
 	border-width: 2px;
