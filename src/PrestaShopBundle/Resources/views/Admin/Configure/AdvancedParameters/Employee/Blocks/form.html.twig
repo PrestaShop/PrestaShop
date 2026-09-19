@@ -18,7 +18,7 @@
         {{ form_widget(employeeForm) }}
       </div>
       {% if canManageBackupCodes|default(false) %}
-        <div class="form-group row">
+        <div id="employee_backup_codes" class="form-group row">
           <label class="form-control-label">{{ 'Backup codes'|trans }}</label>
           <div class="col-sm input-container">
             <p class="mb-3">
