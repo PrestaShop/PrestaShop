@@ -58,6 +58,7 @@ use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -277,6 +278,8 @@ class EmployeeController extends PrestaShopAdminController
         EmployeeRepository $employeeRepository,
         TotpSecretEncryptor $totpSecretEncryptor,
         ConfigurationInterface $configuration,
+        EmployeeBackupCodeManager $employeeBackupCodeManager,
+        EntityManagerInterface $entityManager,
     ): Response {
         // If employee is editing his own profile - he doesn't need to have access to the edit form.
         if ($this->getEmployeeContext()->getEmployee()->getId() != $employeeId) {
@@ -305,6 +308,11 @@ class EmployeeController extends PrestaShopAdminController
 
         $isRestrictedAccess = $formAccessChecker->isRestrictedAccess((int) $employeeId);
 
+        /** @var Employee|null $employee */
+        $employee = $employeeRepository->findOneBy(['id' => $employeeId]);
+        $wasTotpAuthenticationEnabled = $employee?->isTotpAuthenticationEnabled() ?? false;
+        $hasBackupCodes = !empty($employee?->getTwoFactorBackupCodes());
+
         $twoFactorData = $this->buildTwoFactorFormData(
             $isRestrictedAccess,
             $configuration,
@@ -332,6 +340,18 @@ class EmployeeController extends PrestaShopAdminController
             $result = $formHandler->handleFor($employeeId, $employeeForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
+                if (null !== $employee) {
+                    $this->generateBackupCodesAfterTotpActivation(
+                        $employeeForm,
+                        $employee,
+                        $isRestrictedAccess,
+                        $wasTotpAuthenticationEnabled,
+                        $hasBackupCodes,
+                        $employeeBackupCodeManager,
+                        $entityManager,
+                    );
+                }
+
                 $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
@@ -345,9 +365,6 @@ class EmployeeController extends PrestaShopAdminController
         } catch (EmployeeNotFoundException) {
             return $this->redirectToRoute('admin_employees_index');
         }
-
-        /** @var Employee|null $employee */
-        $employee = $employeeRepository->findOneBy(['id' => $employeeId]);
 
         $templateVars = [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -375,6 +392,45 @@ class EmployeeController extends PrestaShopAdminController
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/edit.html.twig',
             $templateVars
+        );
+    }
+
+    private function generateBackupCodesAfterTotpActivation(
+        FormInterface $employeeForm,
+        Employee $employee,
+        bool $isRestrictedAccess,
+        bool $wasTotpAuthenticationEnabled,
+        bool $hasBackupCodes,
+        EmployeeBackupCodeManager $employeeBackupCodeManager,
+        EntityManagerInterface $entityManager,
+    ): void {
+        if (
+            !$isRestrictedAccess
+            || $wasTotpAuthenticationEnabled
+            || $hasBackupCodes
+            || !$employeeForm->has('two_factor_enabled')
+            || !$employeeForm->has('two_factor_totp_enabled')
+            || !$employeeForm->get('two_factor_enabled')->getData()
+            || !$employeeForm->get('two_factor_totp_enabled')->getData()
+        ) {
+            return;
+        }
+
+        $backupCodeSet = $employeeBackupCodeManager->generateBackupCodeSet();
+        $employee->setTwoFactorBackupCodes($backupCodeSet['hashedBackupCodes']);
+        $entityManager->persist($employee);
+        $entityManager->flush();
+
+        foreach ($backupCodeSet['plainBackupCodes'] as $backupCode) {
+            $this->addFlash('backup_codes', $backupCode);
+        }
+        $this->addFlash(
+            'success',
+            $this->trans(
+                'Backup codes generated successfully. Save them now: they will not be shown again.',
+                [],
+                'Admin.Notifications.Success'
+            )
         );
     }
 
