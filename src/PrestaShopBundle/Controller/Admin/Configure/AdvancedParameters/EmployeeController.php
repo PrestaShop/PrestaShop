@@ -370,7 +370,10 @@ class EmployeeController extends PrestaShopAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeForm' => $employeeForm->createView(),
             'isRestrictedAccess' => $isRestrictedAccess,
-            'canResetTwoFactor' => $this->getEmployeeContext()->isSuperAdmin() && $this->getEmployeeContext()->getEmployee()->getId() !== $employeeId,
+            'canResetTwoFactor' => $this->getEmployeeContext()->isSuperAdmin()
+                && $this->getEmployeeContext()->getEmployee()->getId() !== $employeeId
+                && null !== $employee
+                && ($employee->isTotpAuthenticationEnabled() || $employee->isEmailAuthEnabled()),
             'hasBackupCodes' => !empty($employee?->getTwoFactorBackupCodes()),
             'canManageBackupCodes' => $isRestrictedAccess
                 && null !== $employee
