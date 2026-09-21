@@ -50,6 +50,11 @@ class CheckoutPersonalInformationStepHookTest extends KernelTestCase
         $idHook = (int) $db->getValue('SELECT id_hook FROM ' . _DB_PREFIX_ . "hook WHERE name = 'actionSubmitAccountBefore'");
         $this->assertGreaterThan(0, $idHook, 'the actionSubmitAccountBefore hook is not registered in this shop');
 
+        // A run that died between setUp and tearDown leaves the fixture row behind, and the INSERT
+        // below then fails on ps_module.name_UNIQUE for every remaining test of the class. Clearing
+        // it first makes setUp idempotent instead of letting one aborted run poison the rest.
+        self::removeFixtureModule();
+
         // The fixture module is registered directly: Module::install() needs a translator that this
         // test case does not boot, and the hook execution path only reads these three tables.
         $db->execute('INSERT INTO ' . _DB_PREFIX_ . "module (name, active, version) VALUES ('" . self::MODULE . "', 1, '1.0.0')");
@@ -67,15 +72,27 @@ class CheckoutPersonalInformationStepHookTest extends KernelTestCase
 
     protected function tearDown(): void
     {
-        $db = Db::getInstance();
-        $db->execute('DELETE FROM ' . _DB_PREFIX_ . 'hook_module WHERE id_module = ' . $this->moduleId);
-        $db->execute('DELETE FROM ' . _DB_PREFIX_ . 'module_shop WHERE id_module = ' . $this->moduleId);
-        $db->execute('DELETE FROM ' . _DB_PREFIX_ . 'module WHERE id_module = ' . $this->moduleId);
+        // Deleting by NAME rather than by $this->moduleId: when setUp itself fails the id is still 0
+        // and a delete on it removes nothing, which is what makes a single failure cascade.
+        self::removeFixtureModule();
         SubmitAccountHookTest::$hookReturnValue = null;
 
         Cache::clean('*');
         Hook::resetStaticCache();
         parent::tearDown();
+    }
+
+    private static function removeFixtureModule(): void
+    {
+        $db = Db::getInstance();
+        $idModule = (int) $db->getValue('SELECT id_module FROM ' . _DB_PREFIX_ . "module WHERE name = '" . self::MODULE . "'");
+        if ($idModule <= 0) {
+            return;
+        }
+
+        $db->execute('DELETE FROM ' . _DB_PREFIX_ . 'hook_module WHERE id_module = ' . $idModule);
+        $db->execute('DELETE FROM ' . _DB_PREFIX_ . 'module_shop WHERE id_module = ' . $idModule);
+        $db->execute('DELETE FROM ' . _DB_PREFIX_ . 'module WHERE id_module = ' . $idModule);
     }
 
     /**
