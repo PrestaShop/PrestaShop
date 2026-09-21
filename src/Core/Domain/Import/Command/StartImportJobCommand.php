@@ -26,6 +26,12 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
  */
 final class StartImportJobCommand
 {
+    /**
+     * Mirrors the file_name column: the name is reported as it was uploaded, so a longer one is
+     * refused rather than silently shortened into something that names no real file.
+     */
+    private const MAX_FILE_NAME_LENGTH = 255;
+
     private readonly EntityType $entityType;
 
     private readonly FieldMapping $fieldMapping;
@@ -52,6 +58,12 @@ final class StartImportJobCommand
         if ('' === $sourceFilePath) {
             throw new ImportJobConstraintException(
                 'Import source file path cannot be empty.',
+                ImportJobConstraintException::INVALID_SOURCE_PATH
+            );
+        }
+        if (mb_strlen(basename($sourceFilePath)) > self::MAX_FILE_NAME_LENGTH) {
+            throw new ImportJobConstraintException(
+                sprintf('Import file name cannot exceed %d characters.', self::MAX_FILE_NAME_LENGTH),
                 ImportJobConstraintException::INVALID_SOURCE_PATH
             );
         }

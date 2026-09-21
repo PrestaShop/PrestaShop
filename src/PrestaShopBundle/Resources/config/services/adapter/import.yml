@@ -1,6 +1,9 @@
 services:
   _defaults:
     public: true
+    # dependencies are discovered by type; a definition below only spells out what autowiring
+    # cannot resolve on its own (scalars, expressions, legacy service ids)
+    autowire: true
 
   prestashop.adapter.import.data_match_saver:
     class: 'PrestaShop\PrestaShop\Adapter\Import\DataMatchSaver'
@@ -120,3 +123,23 @@ services:
     arguments:
       - '@prestashop.adapter.import.entity_deleter'
 
+  PrestaShop\PrestaShop\Adapter\Import\Job\ImportJobLock:
+    arguments:
+      $lockFactory: '@prestashop.adapter.import.job.lock_factory'
+
+  PrestaShop\PrestaShop\Adapter\Import\Job\ImportJobContextFactory: ~
+  PrestaShop\PrestaShop\Adapter\Import\Job\ImportJobStateFactory: ~
+  PrestaShop\PrestaShop\Adapter\Import\Job\ImportJobPurger: ~
+  PrestaShop\PrestaShop\Adapter\Import\Job\ImportJobSequencer: ~
+
+  PrestaShop\PrestaShop\Adapter\Import\CommandHandler\StartImportJobHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Import\CommandHandler\ContinueImportJobHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Import\CommandHandler\CancelImportJobHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Import\QueryHandler\GetImportJobStateHandler:
+    autoconfigure: true

@@ -86,7 +86,7 @@ class ImportJob
      *
      * @ORM\Column(name="data_record_count", type="integer", options={"default": 0})
      */
-    private int $dataRecordCount = 0;
+    private int $dataRecordCount;
 
     /**
      * Kept after a terminal status, so the report can name the phase the job stopped in.
@@ -188,6 +188,7 @@ class ImportJob
         int $shopId,
         string $fileName,
         int $skipRows,
+        int $dataRecordCount,
         array $context,
         array $options,
     ) {
@@ -196,6 +197,7 @@ class ImportJob
         $this->shopId = $shopId;
         $this->fileName = $fileName;
         $this->skipRows = $skipRows;
+        $this->dataRecordCount = $dataRecordCount;
         $this->context = $context;
         $this->options = $options;
     }
@@ -257,13 +259,6 @@ class ImportJob
     public function getDataRecordCount(): int
     {
         return $this->dataRecordCount;
-    }
-
-    public function setDataRecordCount(int $dataRecordCount): self
-    {
-        $this->dataRecordCount = $dataRecordCount;
-
-        return $this;
     }
 
     public function getCurrentPhaseId(): ?string
