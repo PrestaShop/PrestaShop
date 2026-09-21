@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Import\Job;
 use DateTimeImmutable;
 use DateTimeInterface;
 use DirectoryIterator;
+use PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\ImportJobPurgeSummary;
 use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use PrestaShopBundle\Entity\Repository\ImportJobRepository;
 use Symfony\Component\Filesystem\Filesystem;
@@ -36,17 +37,15 @@ final class ImportJobPurger
     /**
      * @param DateTimeInterface|null $expirationDate anything terminal and untouched since then is
      *                                               collected; defaults to the retention window
-     *
-     * @return array{jobs: int, files: int}
      */
-    public function purge(?DateTimeInterface $expirationDate = null): array
+    public function purge(?DateTimeInterface $expirationDate = null): ImportJobPurgeSummary
     {
         $expirationDate ??= (new DateTimeImmutable())->modify(sprintf('-%d days', self::RETENTION_DAYS));
 
-        return [
-            'jobs' => $this->importJobRepository->purgeTerminalOlderThan($expirationDate),
-            'files' => $this->removeOrphanWorkingFiles($expirationDate),
-        ];
+        return new ImportJobPurgeSummary(
+            $this->importJobRepository->purgeTerminalOlderThan($expirationDate),
+            $this->removeOrphanWorkingFiles($expirationDate)
+        );
     }
 
     /**

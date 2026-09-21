@@ -141,5 +141,8 @@ services:
   PrestaShop\PrestaShop\Adapter\Import\CommandHandler\CancelImportJobHandler:
     autoconfigure: true
 
+  PrestaShop\PrestaShop\Adapter\Import\CommandHandler\PurgeImportJobsHandler:
+    autoconfigure: true
+
   PrestaShop\PrestaShop\Adapter\Import\QueryHandler\GetImportJobStateHandler:
     autoconfigure: true
