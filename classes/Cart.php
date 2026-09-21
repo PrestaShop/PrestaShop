@@ -9,6 +9,7 @@ use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShop\PrestaShop\Adapter\Discount\Application\DiscountApplicationService;
+use PrestaShop\PrestaShop\Adapter\Discount\Application\PromoCodeLimitService;
 use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
@@ -1418,6 +1419,11 @@ class CartCore extends ObjectModel
             return false;
         }
 
+        $promoCodeLimit = $this->checkPromoCodeLimit($cartRule, false, true, $useOrderPrices);
+        if ($promoCodeLimit !== true) {
+            return $promoCodeLimit;
+        }
+
         // Check compatibility with existing cart rules
         $containerFinder = new ContainerFinder(Context::getContext());
         $container = $containerFinder->getContainer();
@@ -1476,6 +1482,48 @@ class CartCore extends ObjectModel
         }
 
         return true;
+    }
+
+    /**
+     * Ensure that at most one customer-entered promo code is attached to this cart.
+     * Code-less automatic cart rules are intentionally excluded from this limit.
+     *
+     * @param CartRule $cartRule Candidate cart rule
+     * @param bool $alreadyInCart Whether the candidate is already attached to the cart
+     * @param bool $displayError Whether to return a translated error message instead of false
+     * @param bool $useOrderPrices Whether the cart belongs to an already-placed order
+     *
+     * @return bool|string True when allowed, otherwise false or a translated error
+     */
+    public function checkPromoCodeLimit(CartRule $cartRule, bool $alreadyInCart, bool $displayError, bool $useOrderPrices = false)
+    {
+        if ($useOrderPrices || trim((string) $cartRule->code) === '') {
+            return true;
+        }
+
+        try {
+            $container = (new ContainerFinder(Context::getContext()))->getContainer();
+            $promoCodeLimitService = $container->get(PromoCodeLimitService::class);
+            $canApplyPromoCode = $promoCodeLimitService->canApplyPromoCode(
+                (int) $this->id,
+                (int) $this->id_shop,
+                (int) $cartRule->id,
+                $alreadyInCart
+            );
+        } catch (\Throwable) {
+            $canApplyPromoCode = null;
+        }
+
+        if ($canApplyPromoCode === true) {
+            return true;
+        }
+
+        $message = $canApplyPromoCode === false
+            ? 'Only one promo code can be used per cart.'
+            : 'Unable to verify promo code compatibility. Please try again.';
+        $message = Context::getContext()->getTranslator()->trans($message, [], 'Shop.Notifications.Error');
+
+        return $displayError ? $message : false;
     }
 
     /**

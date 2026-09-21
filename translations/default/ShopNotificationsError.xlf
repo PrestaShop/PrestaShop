@@ -112,6 +112,11 @@
         <target>Null quantity.</target>
         <note>File: controllers/front/CartController.php [Line: 371]</note>
       </trans-unit>
+      <trans-unit id="4a7ceca668f6538eb7f0050f7fdefbeb">
+        <source>Only one promo code can be used per cart.</source>
+        <target>Only one promo code can be used per cart.</target>
+        <note>File: classes/Cart.php [Line: 1522]</note>
+      </trans-unit>
       <trans-unit id="b55e152dc0683c3d315b6baabb98495d">
         <source>Order return not confirmed.</source>
         <target>Order return not confirmed.</target>
@@ -406,6 +411,11 @@
         <source>This voucher is not valid.</source>
         <target>This voucher is not valid.</target>
         <note>File: classes/CartRule.php [Line: 756]</note>
+      </trans-unit>
+      <trans-unit id="3fdc26565209473d229c3d31d827b1ba">
+        <source>Unable to verify promo code compatibility. Please try again.</source>
+        <target>Unable to verify promo code compatibility. Please try again.</target>
+        <note>File: classes/Cart.php [Line: 1523]</note>
       </trans-unit>
       <trans-unit id="ed939db0f58724536e02ee865759f6aa">
         <source>Unknown type of product restriction</source>
