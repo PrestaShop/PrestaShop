@@ -45,7 +45,7 @@
       <trans-unit id="3069f4d62ee6e4d1b1fe7e4dccf14ae7">
         <source>Activate new products by default</source>
         <target>Activate new products by default</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 142]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 151]</note>
       </trans-unit>
       <trans-unit id="e7446ea32216e8bf4fa8cb6460b725d6">
         <source>Add a category discount</source>
@@ -134,7 +134,7 @@
       <trans-unit id="be6be43cab36ddf8024d237c4a2414f7">
         <source>Allow ordering of out-of-stock products</source>
         <target>Allow ordering of out-of-stock products</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 80]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 86]</note>
       </trans-unit>
       <trans-unit id="e1bcd0aa73dbc610f1fc628499244d8f">
         <source>Allowed characters: letters, spaces and %s</source>
@@ -144,7 +144,7 @@
       <trans-unit id="a0ee51ab33d5ba89aafaa01217622395">
         <source>Alphabetical</source>
         <target>Alphabetical</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 108]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 116]</note>
       </trans-unit>
       <trans-unit id="dcc6fd9b580a958b3f42488265cb1300">
         <source>Ask for birth date</source>
@@ -203,7 +203,7 @@
       <trans-unit id="1be6f9eb563f3bf85c78b4219bf09de9">
         <source>Brand</source>
         <target>Brand</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 50]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 53]</note>
       </trans-unit>
       <trans-unit id="3474b76644954c739226a10127d83329">
         <source>Brand weight</source>
@@ -223,7 +223,7 @@
       <trans-unit id="bb98eaca8d91531f4ae177c9d395f1d4">
         <source>Catalog mode</source>
         <target>Catalog mode</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 52]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 54]</note>
       </trans-unit>
       <trans-unit id="c97b6c7f99c3c50efe826e657024d29b">
         <source>Category discount</source>
@@ -233,12 +233,12 @@
       <trans-unit id="8828ad294793ddeef2f6ac2018581508">
         <source>Category the product was accessed from</source>
         <target>Category the product was accessed from</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 130]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 138]</note>
       </trans-unit>
       <trans-unit id="05ff75ed9573ac461777235449a28f84">
         <source>Category used in breadcrumbs</source>
         <target>Category used in breadcrumbs</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 125]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 133]</note>
       </trans-unit>
       <trans-unit id="05cdca5b85ff26e596c3af66ed4820d5">
         <source>Category weight</source>
@@ -248,12 +248,12 @@
       <trans-unit id="63406c9482c644975f227cc93788e8fb">
         <source>Choose your country</source>
         <target>Choose your country</target>
-        <note>File: controllers/admin/AdminStoresController.php [Line: 428]</note>
+        <note>File: controllers/admin/AdminStoresController.php [Line: 442]</note>
       </trans-unit>
       <trans-unit id="ffea2d321be109fc7243cfeb515fe257">
         <source>Choose your state (if applicable)</source>
         <target>Choose your state (if applicable)</target>
-        <note>File: controllers/admin/AdminStoresController.php [Line: 433]</note>
+        <note>File: controllers/admin/AdminStoresController.php [Line: 447]</note>
       </trans-unit>
       <trans-unit id="cb5feb1b7314637725a2e73bdc9f7295">
         <source>Color</source>
@@ -277,7 +277,7 @@
       <trans-unit id="5dd532f0a63d89c5af0243b74732f63c">
         <source>Contact details</source>
         <target>Contact details</target>
-        <note>File: controllers/admin/AdminStoresController.php [Line: 540]</note>
+        <note>File: controllers/admin/AdminStoresController.php [Line: 554]</note>
       </trans-unit>
       <trans-unit id="3112209b2dd9b55cf5dbc4865dd15afd">
         <source>Creation date</source>
@@ -332,7 +332,7 @@ Customer service</target>
       <trans-unit id="83f9d4177b6b4ba69c27616545d4034a">
         <source>Default behavior for disabled products</source>
         <target>Default behavior for disabled products</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 164]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 174]</note>
       </trans-unit>
       <trans-unit id="4cd6d48d0fc07ca5526fd040edc982d0">
         <source>Default groups options</source>
@@ -342,22 +342,22 @@ Customer service</target>
       <trans-unit id="e29857ad6c4bbba99614831d7e3e5a3f">
         <source>Default order by</source>
         <target>Default order by</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 37]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 40]</note>
       </trans-unit>
       <trans-unit id="114a8ec626471fdc120f863a9fb25e4c">
         <source>Default order method</source>
         <target>Default order method</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 60]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 64]</note>
       </trans-unit>
       <trans-unit id="5510afe0669f5999cd623fafb911dd9f">
         <source>Default order of priority for specific prices</source>
         <target>Default order of priority for specific prices</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 153]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 163]</note>
       </trans-unit>
       <trans-unit id="17dd11b871387d18c8e64815ecd85d9b">
         <source>Default pack stock behavior</source>
         <target>Default pack stock behavior</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 40]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 43]</note>
       </trans-unit>
       <trans-unit id="532a7bf10fd5a4315e0dfefe7a110d43">
         <source>Default pages</source>
@@ -372,12 +372,12 @@ Customer service</target>
       <trans-unit id="480cb944a0974a27ec0f964de23a18f4">
         <source>Delivery time of in-stock products</source>
         <target>Delivery time of in-stock products</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 142]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 152]</note>
       </trans-unit>
       <trans-unit id="d8b9fadcb2c1164975877a18731b1f4a">
         <source>Delivery time of out-of-stock products with allowed backorders</source>
         <target>Delivery time of out-of-stock products with allowed backorders</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 163]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 174]</note>
       </trans-unit>
       <trans-unit id="f90f799bc686f5d6a731b1f8074b4580">
         <source>Description weight</source>
@@ -422,7 +422,7 @@ Customer service</target>
       <trans-unit id="b58704f2e2e18edc7c903342c2a42dfc">
         <source>Display available quantities on the product page</source>
         <target>Display available quantities on the product page</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 29]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 31]</note>
       </trans-unit>
       <trans-unit id="922256753aa354c111471e85d4809ec5">
         <source>Display best sellers</source>
@@ -437,17 +437,17 @@ Customer service</target>
       <trans-unit id="2bb07e2df83a5b9fe9d16e3f1fee9dd1">
         <source>Display notifications if the product is already in the cart</source>
         <target>Display notifications if the product is already in the cart</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 89]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 96]</note>
       </trans-unit>
       <trans-unit id="7afe5d98107dd5ece88fef732a89d8b0">
         <source>Display out-of-stock label on product listing pages</source>
         <target>Display out-of-stock label on product listing pages</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 184]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 196]</note>
       </trans-unit>
       <trans-unit id="f8f1f78351c2864c334a80b706a303b2">
         <source>Display remaining quantities when the quantity is lower than</source>
         <target>Display remaining quantities when the quantity is lower than</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 69]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 74]</note>
       </trans-unit>
       <trans-unit id="9fcc7a5ba2d12f5c77290e0bc6457a93">
         <source>Display suppliers</source>
@@ -457,17 +457,17 @@ Customer service</target>
       <trans-unit id="0437fc99d975a98ce5face0651102b15">
         <source>Display the discounted unit price</source>
         <target>Display the discounted unit price</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 78]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 84]</note>
       </trans-unit>
       <trans-unit id="b0053aee10f151b68406dff022c1c95b">
         <source>Display unavailable attributes on the product page</source>
         <target>Display unavailable attributes on the product page</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 58]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 62]</note>
       </trans-unit>
       <trans-unit id="de30ac479f8a73106c51739a0bc92cdc">
         <source>Displayed in emails and page titles.</source>
         <target>Displayed in emails and page titles.</target>
-        <note>File: controllers/admin/AdminStoresController.php [Line: 441]</note>
+        <note>File: controllers/admin/AdminStoresController.php [Line: 455]</note>
       </trans-unit>
       <trans-unit id="9ad759927e1113cfa25fca7a0edd6751">
         <source>Don't display this status to the customer on order tracking page.</source>
@@ -527,7 +527,7 @@ Customer service</target>
       <trans-unit id="69983ae81c0090a571d3f60aedbd0d46">
         <source>Enable stock management</source>
         <target>Enable stock management</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 33]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 35]</note>
       </trans-unit>
       <trans-unit id="26e5c98bfa62fe9b8091bdafe9a7adc6">
         <source>Enable store</source>
@@ -562,7 +562,7 @@ Customer service</target>
       <trans-unit id="52be3e936f99d9746870ca7d356b3f21">
         <source>Force update of friendly URL</source>
         <target>Force update of friendly URL</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 114]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 121]</note>
       </trans-unit>
       <trans-unit id="c33b138a163847cdb6caeeb7c9a126b4">
         <source>Friday</source>
@@ -729,17 +729,17 @@ Customer service</target>
       <trans-unit id="966c11f36eeb298187639eea581a7522">
         <source>Label of in-stock products</source>
         <target>Label of in-stock products</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 97]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 104]</note>
       </trans-unit>
       <trans-unit id="3385e522bc49e8f8fcb008788bc1762d">
         <source>Label of out-of-stock products with allowed backorders</source>
         <target>Label of out-of-stock products with allowed backorders</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 112]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 120]</note>
       </trans-unit>
       <trans-unit id="d79daa535ef1e90b7b1230b501b7b6c6">
         <source>Label of out-of-stock products with denied backorders</source>
         <target>Label of out-of-stock products with denied backorders</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 127]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 136]</note>
       </trans-unit>
       <trans-unit id="6f5373ad371f50f8d9846abf459e9770">
         <source>Latitude / Longitude</source>
@@ -749,7 +749,7 @@ Customer service</target>
       <trans-unit id="16a5534d559007de7e8f5b4f17112203">
         <source>Leave empty to disable</source>
         <target>Leave empty to disable</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 170]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 181]</note>
       </trans-unit>
       <trans-unit id="638dab2652b5c9fec7eeee0c8a12431b">
         <source>Limited to the first 100 customers.</source>
@@ -774,7 +774,7 @@ Customer service</target>
       <trans-unit id="9d980493b9016efc42443b1fdae49f33">
         <source>Max size of product summary</source>
         <target>Max size of product summary</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 89]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 94]</note>
       </trans-unit>
       <trans-unit id="5fdbecf393b6f7ae06d12280bfcbf395">
         <source>Maximum acceptable word difference</source>
@@ -874,7 +874,7 @@ Customer service</target>
       <trans-unit id="eb1cef1202fdc4d7954899fbf9f1734b">
         <source>Number of days for which the product is considered 'new'</source>
         <target>Number of days for which the product is considered 'new'</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 82]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 86]</note>
       </trans-unit>
       <trans-unit id="d2c8471bccf2bbf30151cf50a96c3877">
         <source>Offer gift wrapping</source>
@@ -889,7 +889,7 @@ Customer service</target>
       <trans-unit id="98f249d61a0dea100a2e64196dcc2711">
         <source>Order of feature values</source>
         <target>Order of feature values</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 100]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 108]</note>
       </trans-unit>
       <trans-unit id="57297718fdb439175177cf6b196172d1">
         <source>Order status</source>
@@ -954,12 +954,12 @@ Customer service</target>
       <trans-unit id="52f5e0bc3859bc5f5e25130b6c7e8881">
         <source>Position</source>
         <target>Position</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 109]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 117]</note>
       </trans-unit>
       <trans-unit id="3cfcde53f39184634bc7b2344479fbc4">
         <source>Position inside category</source>
         <target>Position inside category</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 49]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 52]</note>
       </trans-unit>
       <trans-unit id="e8c371079e194d26e5e912e8f5e60408">
         <source>Price display method</source>
@@ -974,7 +974,7 @@ Customer service</target>
       <trans-unit id="0cffebd3c32f4467e14759b2b7d3d515">
         <source>Product add date</source>
         <target>Product add date</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 47]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 50]</note>
       </trans-unit>
       <trans-unit id="43f098d58ceefef56f05ded453751319">
         <source>Product available for orders</source>
@@ -983,17 +983,17 @@ Customer service</target>
       <trans-unit id="bb899f004006bf6b7a1320afc5c775be">
         <source>Product default category</source>
         <target>Product default category</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 129]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 137]</note>
       </trans-unit>
       <trans-unit id="d920ec381c352d9d92a53ed3d261e8c6">
         <source>Product modified date</source>
         <target>Product modified date</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 48]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 51]</note>
       </trans-unit>
       <trans-unit id="df644ae155e79abf54175bd15d75f363">
         <source>Product name</source>
         <target>Product name</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 45]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 48]</note>
       </trans-unit>
       <trans-unit id="76a591808a254d4094e1c43f937b834f">
         <source>Product name weight</source>
@@ -1008,27 +1008,27 @@ Customer service</target>
       <trans-unit id="290b7c47045d269e2ccfa69e6477acfe">
         <source>Product price</source>
         <target>Product price</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 46]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 49]</note>
       </trans-unit>
       <trans-unit id="7b541de13ca0229406e134a373dd6382">
         <source>Product quantity</source>
         <target>Product quantity</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 51]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 54]</note>
       </trans-unit>
       <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
         <source>Product reference</source>
         <target>Product reference</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 52]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 55]</note>
       </trans-unit>
       <trans-unit id="aa690c7566fa052edf9db33d69db306f">
         <source>Product sales</source>
         <target>Product sales</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 53]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 56]</note>
       </trans-unit>
       <trans-unit id="7e1b4ee573c4ef023904fd90eb9ddea7">
         <source>Products per page</source>
         <target>Products per page</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 29]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 31]</note>
       </trans-unit>
       <trans-unit id="ff26a60315cd84533d5339ba26617988">
         <source>Products stock</source>
@@ -1038,7 +1038,7 @@ Customer service</target>
       <trans-unit id="b5069c99813cffc6933c18ab71fd6cd9">
         <source>Quantity discounts based on</source>
         <target>Quantity discounts based on</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 97]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 103]</note>
       </trans-unit>
       <trans-unit id="9897b2f361910e5188f231de872d8856">
         <source>Re-build the entire index</source>
@@ -1078,7 +1078,7 @@ Customer service</target>
       <trans-unit id="17e5b9e86108a7fd53884cfaa66ddb35">
         <source>Registration number</source>
         <target>Registration number</target>
-        <note>File: controllers/admin/AdminStoresController.php [Line: 454]</note>
+        <note>File: controllers/admin/AdminStoresController.php [Line: 468]</note>
       </trans-unit>
       <trans-unit id="a28735af01fbb1e35371cb120985ac47">
         <source>Registrations</source>
@@ -1173,37 +1173,37 @@ Customer service</target>
       <trans-unit id="1dc5f89ed6e4425ecef2613fda85e5c0">
         <source>Route to brand</source>
         <target>Route to brand</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 71]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 112]</note>
       </trans-unit>
       <trans-unit id="1092637069f4ebf1bee2b02fd280888b">
         <source>Route to category</source>
         <target>Route to category</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 55]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 70]</note>
       </trans-unit>
       <trans-unit id="4b9a9672a96a435f1d15ad934e093104">
         <source>Route to modules</source>
         <target>Route to modules</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 95]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 175]</note>
       </trans-unit>
       <trans-unit id="e175934d3418b2070a829183b2bfe294">
         <source>Route to page</source>
         <target>Route to page</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 79]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 133]</note>
       </trans-unit>
       <trans-unit id="01e4fd64862371a0f532b82e302d438d">
         <source>Route to page category</source>
         <target>Route to page category</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 87]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 154]</note>
       </trans-unit>
       <trans-unit id="5575f8bf467eba7499f22e78db6f3f56">
         <source>Route to products</source>
         <target>Route to products</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 47]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 49]</note>
       </trans-unit>
       <trans-unit id="08a551b84112995247355daf3b5d72ba">
         <source>Route to supplier</source>
         <target>Route to supplier</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 63]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php [Line: 91]</note>
       </trans-unit>
       <trans-unit id="49b28884b3ba83e6b5379973a3e1873f">
         <source>SEO options</source>
@@ -1277,7 +1277,7 @@ Customer service</target>
       <trans-unit id="0a91cf360875af4259f26bc7e2971132">
         <source>Separator of attribute anchor on the product links</source>
         <target>Separator of attribute anchor on the product links</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 65]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 70]</note>
       </trans-unit>
       <trans-unit id="9aa1b03934893d7134a660af4204f2a9">
         <source>Server</source>
@@ -1349,12 +1349,12 @@ Customer service</target>
       <trans-unit id="1b9a36c9acf2ab7a81d67a55432b6c8f">
         <source>Shop address line 1</source>
         <target>Shop address line 1</target>
-        <note>File: controllers/admin/AdminStoresController.php [Line: 462]</note>
+        <note>File: controllers/admin/AdminStoresController.php [Line: 476]</note>
       </trans-unit>
       <trans-unit id="1cdaa96d262fdea24b42a1fc28eb7564">
         <source>Shop address line 2</source>
         <target>Shop address line 2</target>
-        <note>File: controllers/admin/AdminStoresController.php [Line: 467]</note>
+        <note>File: controllers/admin/AdminStoresController.php [Line: 481]</note>
       </trans-unit>
       <trans-unit id="db309cb65c4220d02c0fd13927d315ae">
         <source>Shop domain</source>
@@ -1364,7 +1364,7 @@ Customer service</target>
       <trans-unit id="6dbec9966be60ecb814790443c2867f7">
         <source>Shop email</source>
         <target>Shop email</target>
-        <note>File: controllers/admin/AdminStoresController.php [Line: 447]</note>
+        <note>File: controllers/admin/AdminStoresController.php [Line: 461]</note>
       </trans-unit>
       <trans-unit id="4493e821e06072415518bd7ae4077996">
         <source>Shop group</source>
@@ -1389,7 +1389,7 @@ Customer service</target>
       <trans-unit id="f870b8a1af52a144a646db03f6f63f7d">
         <source>Show prices</source>
         <target>Show prices</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 60]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 63]</note>
       </trans-unit>
       <trans-unit id="02d29656d8379684796b01abfd2a9a13">
         <source>Show prices:</source>
@@ -1419,7 +1419,7 @@ Customer service</target>
       <trans-unit id="e72dca5d5a8a4706a206f3225324bf44">
         <source>Store name</source>
         <target>Store name</target>
-        <note>File: controllers/admin/AdminStoresController.php [Line: 440]</note>
+        <note>File: controllers/admin/AdminStoresController.php [Line: 454]</note>
       </trans-unit>
       <trans-unit id="cb6fd19e08242c75f1af9f4d15be875d">
         <source>Store name (e.g. City Center Mall Store).</source>
@@ -1484,7 +1484,7 @@ Customer service</target>
       <trans-unit id="779104889bbe58ef524087ad128a27f9">
         <source>This option allows you to choose which image to display in listings for products with combinations. By default, the cover image of the product will be used. If you enable this option and your filtering module is properly passing the required information, then the default image of the combination found will be displayed.</source>
         <target>This option allows you to choose which image to display in listings for products with combinations. By default, the cover image of the product will be used. If you enable this option and your filtering module is properly passing the required information, then the default image of the combination found will be displayed.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 58]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 62]</note>
       </trans-unit>
       <trans-unit id="78ae6f0cd191d25147e252dc54768238">
         <source>Thursday</source>
@@ -1519,7 +1519,7 @@ Customer service</target>
       <trans-unit id="b6b078b61ffe1889ac4f449f55864577">
         <source>Use combination image in listings</source>
         <target>Use combination image in listings</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 54]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 58]</note>
       </trans-unit>
       <trans-unit id="c9fb01bb38360f1f3f595b7ccf3d3abe">
         <source>Visitor</source>
@@ -1589,7 +1589,7 @@ Thanks for your patience.</target>
       <trans-unit id="73cdddd7730abfc13a55efb9f5685a3b">
         <source>hours</source>
         <target>hours</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 41]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 45]</note>
       </trans-unit>
       <trans-unit id="640fd0cc0ffa0316ae087652871f4486">
         <source>minutes</source>

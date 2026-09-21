@@ -60,7 +60,7 @@
       <trans-unit id="93ba210a7ea13de4214e57bf9d3f0096">
         <source>Deleted account</source>
         <target>Deleted account</target>
-        <note>File: modules/productcomments/controllers/front/ListComments.php [Line: 82]</note>
+        <note>File: modules/productcomments/controllers/front/ListComments.php [Line: 84]</note>
       </trans-unit>
       <trans-unit id="f62226fa53ce9746a0429163567ec862">
         <source>Go to page %pageCount%</source>

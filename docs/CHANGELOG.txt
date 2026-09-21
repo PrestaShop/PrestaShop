@@ -24,6 +24,128 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
+#   v9.2.0-rc.1 - (2026-09-11)
+####################################
+
+- Back Office:
+  - New feature:
+    - #42022: Improve the carrier domain and the Admin API for the new carrier endpoints (by @nicosomb)
+  - Improvement:
+    - #42350: Index new CMS pages by default (by @Hlavtox)
+    - #41942: Add shared stock help message to combination availability form (by @Codencode)
+    - #41932: Paginate the orders grid by id first to avoid a full-table sort (by @boo-code)
+    - #41703: Tax rules list apiAdd tax rules list API support to TaxRule grid query builder (by @nicosomb)
+    - #41409: Add multistore support to administration and product settings configuration forms (by @Codencode)
+  - Bug fix:
+    - #42768: Fix the theme selector in the Translations page (by @tblivet)
+    - #42600: Fix supplier ID type in SetSuppliersCommand (by @Codencode)
+    - #42475: Fix product ID type in product grid decorator (by @Codencode)
+    - #42411: Fix the Shipment domain defects that do not depend on the Admin API (by @mattgoud)
+    - #42400: Fix Carts page performance regression on connections query (by @Codencode)
+    - #42374: Order confirmation email ignores the order state's "Attach invoice PDF to email" setting (by @aomaxime)
+    - #42245: Fix tax rule groups grid duplicates in multistore context (by @Codencode)
+    - #42241: Offer the default route for every language in the SEO and URLs form (by @boo-code)
+    - #42203: Let a grid status menu show past the scrolling table (by @boo-code)
+    - #42197: Let the SMTP transport choose implicit TLS by port so 587 works (by @boo-code)
+    - #42057: Fix changing an employee role when the default page is specific to the new role (by @boo-code)
+    - #42032: Display the employee who created a back-office order in the Messages block (by @PrestaEdit)
+    - #42004: Fix UTF-8 string truncation in StringModifier::cutEnd() (by @Codencode)
+    - #42001: Guard order message name-uniqueness check on partial edit (backport 9.1.x) (by @mattgoud)
+    - #41950: Show an empty order status dropdown when the order has no status (by @boo-code)
+    - #41948: Fix manual order discount bug (by @tleon)
+    - #41944: Connect `GET /discount-types` to the BO (by @nicosomb)
+    - #41929: Fix catalog price rule links when feature flag is enabled (by @Codencode)
+    - #41919: Fix: Problem with manual special price setting with comma becoming dot (product page) (by @Codencode)
+    - #41871: Use the small_default thumbnail for product/combination cover URLs (by @boo-code)
+    - #41797: Fix: Color preview is still displayed after changing an attribute group from color to another type (by @Codencode)
+    - #41665: Display invoice prefix in employee language on order view page (by @PrestaEdit)
+    - #41652: Fix:  Changing an order's status throws "Duplicate entry '<idp>-<idpa>-0-0' for product_sqlstock" when the order contains a deleted combination (single-shop) (by @Codencode)
+    - #41468: Fix: Multishop: cache_default_attribute is not reset for all shops when changing a product with combinations to a standard product (by @Codencode)
+    - #41238: Fix: Inconsistent escaping of displayCustomization output (by @Codencode)
+  - Refactoring:
+    - #42284: Do not block working with order if it's shipped (by @Hlavtox)
+- Front Office:
+  - New feature:
+    - #41977: Add thumbnail fitment functionality (by @Hlavtox)
+    - #41824: Add hook actionNotFound (by @Hlavtox)
+  - Improvement:
+    - #42571: Improve structured data by adding product features and shop contact info (by @Hlavtox)
+    - #42058: Set stable version of Hummingbird in composer.json (by @Quetzacoalt91)
+    - #40977: Add prices in all variants to make displaying them easier in templates (by @Hlavtox)
+  - Bug fix:
+    - #42725: Preserve pagination in product listing hreflang URLs (by @Hlavtox)
+    - #42439: Fix PHP 8.5 null array offset deprecations (by @Codencode)
+    - #42396: Fix #42395: Prevent template variables from being overwritten (by @Codencode)
+    - #42189: Give the not found and checkout pages a breadcrumb entry of their own (by @boo-code)
+    - #42143: Fix delivery option cache for changed delivery addresses (by @Codencode)
+    - #42114: Backport #40575 to 9.2.x (by @Codencode)
+    - #42000: Fix ProductController::getProduct() nullable return type (by @Codencode)
+    - #41928: Use constant-time comparison for order secure_key checks (by @nabhan06)
+    - #40929: Update geoip2/geoip2 to fix deprecation warnings on PHP 8+ (by @Hlavtox)
+  - Refactoring:
+    - #42016: Finalize structured data (not found products etc.) (by @Hlavtox)
+    - #41845: Add simple HTML to text stripper, refactor getting meta (by @Hlavtox)
+    - #41699: Distinguish missing images of manufacturers and categories (by @Hlavtox)
+- Core:
+  - New feature:
+    - #41405: Add multilanguage routes for entities (by @Hlavtox)
+  - Improvement:
+    - #42826: Updated native modules (by @nicosomb)
+    - #42787: Carry extra property constraints as their DSL string on the CQRS boundary (by @jolelievre)
+    - #42726: Extra Property: store constraints as their DSL, dropping PHP serialization (by @Jeremie-Kiwik)
+    - #42538: Handle non-conventional entity naming, default value typing and the cart entity in extra properties (by @jolelievre)
+    - #42490: Allow restricting extra property definitions to a list of shops (by @jolelievre)
+    - #42478: Update Symfony components after 6.4.45 release (by @nicosomb)
+    - #42428: Update Symfony components after 6.4.44 release (by @nicosomb)
+    - #42421: Handle multishop across the Extra Properties feature (by @jolelievre)
+    - #42375: Add language ID to actionMailAlterMessageBeforeSend hook (by @Hlavtox)
+    - #42239: Update Symfony components after 6.4.43 release (by @nicosomb)
+    - #42145: Add version compatibility filtering for Admin API endpoints (by @jolelievre)
+    - #42071: Decouple EmployeePasswordResetter from the admin router (by @PrestaEdit)
+    - #41832: Cover getCustomerCartRules using the passed cart for product restrictions (by @boo-code)
+    - #41803: Guard stock movement when the context employee has no id (by @PrestaEdit)
+  - Bug fix:
+    - #42822: Take the extra property logger through the core "logger" id instead of Psr\Log\LoggerInterface (by @jolelievre)
+    - #42728: Prevent empty query strings in product URLs (by @Hlavtox)
+    - #42353: Throw EmployeeNotFoundException when password reset email is unknown (by @jolelievre)
+    - #42123: Fix Pack::getQuantity ignoring 'Decrement pack only' stock type (by @samilmarekrygula)
+    - #42115: Make extra property registration atomic and report failure reasons (by @jolelievre)
+    - #42024: Removed feature flag "state" (by @Progi1984)
+    - #41840: Keep word separation when stripping HTML for the search index (by @boo-code)
+    - #41447: Fix deprecated in LanguageList.php (by @jf-viguier)
+    - #41364: Fix `customerId` always returning `null` in Cart API responses (by @axel-paillaud)
+    - #40925: Fix precision of cart calculator (by @Hlavtox)
+  - Refactoring:
+    - #41713: Fix unit price ratio currency conversion and specific price issue (by @Hlavtox)
+- Installer:
+  - Improvement:
+    - #42829: Update default catalog build-920-rc1 (by @ps-jarvis)
+- Web Services:
+  - Improvement:
+    - #42011: Wrap plain list query results under _queryResult for non-collection operations (by @mattgoud)
+  - Bug fix:
+    - #41733: Improve management of forms in multipart when using Swagger API (by @Quetzacoalt91)
+- Tests:
+  - Improvement:
+    - #42269: API Theme : Use scalar rather VO (wo BC Breaks) (by @Progi1984)
+    - #42266: API WS : Fix WebserviceKey::add()/delete() PHP warning when no employee is in context (by @Progi1984)
+    - #42204: Functional Tests : Fixed some todos (by @Progi1984)
+    - #42134: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #42090: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #42070: Functional Tests : API : GET /search-engines (by @Progi1984)
+    - #42066: Functional Tests : API : GET /features (by @Progi1984)
+    - #42043: Functional Tests : API : GET /contacts (by @Progi1984)
+    - #42033: Add integration tests for ModuleHtmlAuthorizationChecker (by @Codencode)
+    - #41987: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+  - Bug fix:
+    - #42786: Make module version checks in UI tests resilient to module releases (by @jolelievre)
+    - #42112: Functional Tests : Fixed endpoints (by @Progi1984)
+    - #42031: Fix CI matrix generator crashing on backticks in PR description (by @boo-code)
+    - #41982: Pin maildev image to 2.2.1 in behaviour tests workflow (by @nicosomb)
+  - Refactoring:
+    - #41550: Functional tests - Add tests of Api address (by @nesrineabdmouleh)
+
+####################################
 #   v9.2.0-beta.1 - (2026-07-09)
 ####################################
 

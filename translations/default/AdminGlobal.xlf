@@ -15,7 +15,7 @@
       <trans-unit id="c131c3e08e3f4780e204fcbd8d0eb6e6">
         <source>%firstname% %lastname%</source>
         <target>%firstname% %lastname%</target>
-        <note>File: src/PrestaShopBundle/Security/Admin/EmployeePasswordResetter.php [Line: 137]</note>
+        <note>File: src/PrestaShopBundle/Security/Admin/EmployeePasswordResetter.php [Line: 128]</note>
       </trans-unit>
       <trans-unit id="cc973ce7eb8a96bbd24c66228e16343b">
         <source>%inputId% Maximum Input</source>
@@ -55,12 +55,12 @@
       <trans-unit id="c0cb5f0fcf239ab3d9c1fcd31fff1efc">
         <source>,</source>
         <target>,</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 70]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 75]</note>
       </trans-unit>
       <trans-unit id="336d5ebc5436534e61d16e63ddfca327">
         <source>-</source>
         <target>-</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 69]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php [Line: 74]</note>
       </trans-unit>
       <trans-unit id="76fe01ac61d9f0f66be40b3d3133f55e">
         <source>-0.12345</source>
@@ -86,6 +86,11 @@
         <source>?</source>
         <target>?</target>
         <note>File: controllers/admin/AdminSearchController.php [Line: 311]</note>
+      </trans-unit>
+      <trans-unit id="c4850e63b1a89896e2f452edb9c4bd7a">
+        <source>API Client</source>
+        <target>API Client</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/StockMovementType.php [Line: 36]</note>
       </trans-unit>
       <trans-unit id="54e85d70ea67acdcc86963b14d6223a8">
         <source>Abandoned Carts</source>
@@ -235,7 +240,7 @@
       <trans-unit id="cf3fb1ff52ea1eed3347ac5401ee7f0c">
         <source>Ascending</source>
         <target>Ascending</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 64]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 68]</note>
       </trans-unit>
       <trans-unit id="f2bbdf9f72c085adc4d0404e370f0f4c">
         <source>Attribute</source>
@@ -415,7 +420,7 @@
       <trans-unit id="254f642527b45bc260048e30704edb39">
         <source>Configuration</source>
         <target>Configuration</target>
-        <note>File: modules/ps_facetedsearch/views/templates/admin/manage.tpl [Line: 112]</note>
+        <note>File: modules/ps_facetedsearch/views/templates/admin/manage.tpl [Line: 116]</note>
       </trans-unit>
       <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
         <source>Configure</source>
@@ -565,7 +570,7 @@
       <trans-unit id="e3cf5ac19407b1a62c6fccaff675a53b">
         <source>Descending</source>
         <target>Descending</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 65]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 69]</note>
       </trans-unit>
       <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
         <source>Description</source>
@@ -609,27 +614,27 @@
       <trans-unit id="1ee0172bcf0f3fdebbf14665a52e92e4">
         <source>Display error page with 404 response</source>
         <target>Display error page with 404 response</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 172]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 182]</note>
       </trans-unit>
       <trans-unit id="19dd9924f309ca5c81b116cc788bc916">
         <source>Display error page with 410 response</source>
         <target>Display error page with 410 response</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 173]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 183]</note>
       </trans-unit>
       <trans-unit id="4c7e939c5a094d8d730219c7fc109945">
         <source>Display product as discontinued with 200 response</source>
         <target>Display product as discontinued with 200 response</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 174]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 184]</note>
       </trans-unit>
       <trans-unit id="e89ce144179dffb891b147ce3ecefab8">
         <source>Display product as discontinued with 404 response</source>
         <target>Display product as discontinued with 404 response</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 175]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 185]</note>
       </trans-unit>
       <trans-unit id="b7f9816a27ed99a176267ef5e5a3e746">
         <source>Display product as discontinued with 410 response</source>
         <target>Display product as discontinued with 410 response</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 176]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 186]</note>
       </trans-unit>
       <trans-unit id="86754577897acfb25deb69039d49d9a7">
         <source>Displayed</source>
@@ -689,7 +694,7 @@
       <trans-unit id="ddca0c6e78cb89057c42a7a60f72e489">
         <source>Enable gravatar</source>
         <target>Enable gravatar</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php [Line: 137]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php [Line: 136]</note>
       </trans-unit>
       <trans-unit id="00d23a76e43b46dae9ec7aa9dcbebb32">
         <source>Enabled</source>
@@ -719,7 +724,7 @@
       <trans-unit id="9f6dd9da2c428bf8c07a3f0974d2f89e">
         <source>Extra fields</source>
         <target>Extra fields</target>
-        <note>File: src/Core/ExtraProperty/Form/ExtraPropertiesFormBuilderModifier.php [Line: 241]</note>
+        <note>File: src/Core/ExtraProperty/Form/ExtraPropertiesFormBuilderModifier.php [Line: 273]</note>
       </trans-unit>
       <trans-unit id="9810aa2b9f44401be4bf73188ef2b67d">
         <source>Fax</source>
@@ -839,7 +844,7 @@
       <trans-unit id="eec6c4bdbd339edf8cbea68becb85244">
         <source>Height</source>
         <target>Height</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageTypeType.php [Line: 64]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageTypeType.php [Line: 67]</note>
       </trans-unit>
       <trans-unit id="6a26f548831e6a8c26bfbbd9f6ec61e0">
         <source>Help</source>
@@ -1189,7 +1194,7 @@
       <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
         <source>None</source>
         <target>None</target>
-        <note>File: modules/ps_facetedsearch/views/templates/admin/manage.tpl [Line: 291]</note>
+        <note>File: modules/ps_facetedsearch/views/templates/admin/manage.tpl [Line: 295]</note>
       </trans-unit>
       <trans-unit id="9efb2140b987180fbaf570cdf47ca878">
         <source>Not Required</source>
@@ -1623,7 +1628,7 @@
       <trans-unit id="60ad57221782cce8b7424a5c07ee1f79">
         <source>Store association</source>
         <target>Store association</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Supplier/SupplierType.php [Line: 307]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/Blocks/view_form.html.twig [Line: 29]</note>
       </trans-unit>
       <trans-unit id="c825336139ac0e0e4976cb55720bf70f">
         <source>Store(s)</source>
@@ -1813,7 +1818,7 @@
       <trans-unit id="1729a56cfc89021478498fe0c89a843a">
         <source>Visibility</source>
         <target>Visibility</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 47]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 72]</note>
       </trans-unit>
       <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
         <source>Visits</source>
@@ -1838,7 +1843,7 @@
       <trans-unit id="32954654ac8fe66a1d09be19001de2d4">
         <source>Width</source>
         <target>Width</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageTypeType.php [Line: 43]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageTypeType.php [Line: 46]</note>
       </trans-unit>
       <trans-unit id="bdbf300f36fdcc9d73bbb54a3e3775b0">
         <source>YYYY-MM-DD HH:mm:ss</source>

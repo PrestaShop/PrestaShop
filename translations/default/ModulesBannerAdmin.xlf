@@ -15,32 +15,32 @@
       <trans-unit id="46fae48f998058600248a16100acfb7e">
         <source>Banner Link</source>
         <target>Banner Link</target>
-        <note>File: modules/ps_banner/ps_banner.php [Line: 203]</note>
+        <note>File: modules/ps_banner/ps_banner.php [Line: 207]</note>
       </trans-unit>
       <trans-unit id="ff09729bee8a82c374f6b61e14a4af76">
         <source>Banner description</source>
         <target>Banner description</target>
-        <note>File: modules/ps_banner/ps_banner.php [Line: 210]</note>
+        <note>File: modules/ps_banner/ps_banner.php [Line: 214]</note>
       </trans-unit>
       <trans-unit id="137d2d6f01b4762e90938fbe1c053a74">
         <source>Banner image</source>
         <target>Banner image</target>
-        <note>File: modules/ps_banner/ps_banner.php [Line: 195]</note>
+        <note>File: modules/ps_banner/ps_banner.php [Line: 199]</note>
       </trans-unit>
       <trans-unit id="084fa1da897dfe3717efa184616ff91c">
         <source>Enter the link associated to your banner. When clicking on the banner, the link opens in the same window. If no link is entered, it redirects to the homepage.</source>
         <target>Enter the link associated to your banner. When clicking on the banner, the link opens in the same window. If no link is entered, it redirects to the homepage.</target>
-        <note>File: modules/ps_banner/ps_banner.php [Line: 205]</note>
+        <note>File: modules/ps_banner/ps_banner.php [Line: 209]</note>
       </trans-unit>
       <trans-unit id="112f6f9a1026d85f440e5ca68d8e2ec5">
         <source>Please enter a short but meaningful description for the banner.</source>
         <target>Please enter a short but meaningful description for the banner.</target>
-        <note>File: modules/ps_banner/ps_banner.php [Line: 212]</note>
+        <note>File: modules/ps_banner/ps_banner.php [Line: 216]</note>
       </trans-unit>
       <trans-unit id="154050410754c33dadde1a9c558ed349">
         <source>Upload an image for your top banner. The recommended dimensions are 1110 x 214px if you are using the default theme.</source>
         <target>Upload an image for your top banner. The recommended dimensions are 1110 x 214px if you are using the default theme.</target>
-        <note>File: modules/ps_banner/ps_banner.php [Line: 197]</note>
+        <note>File: modules/ps_banner/ps_banner.php [Line: 201]</note>
       </trans-unit>
     </body>
   </file>

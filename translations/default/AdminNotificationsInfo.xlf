@@ -105,7 +105,7 @@
       <trans-unit id="e9df95cdd14a4718719f351af1b50d46">
         <source>You have been automatically switched to your default store.</source>
         <target>You have been automatically switched to your default store.</target>
-        <note>File: src/PrestaShopBundle/EventListener/Admin/Context/ShopContextSubscriber.php [Line: 131]</note>
+        <note>File: src/PrestaShopBundle/EventListener/Admin/Context/ShopContextSubscriber.php [Line: 133]</note>
       </trans-unit>
     </body>
   </file>

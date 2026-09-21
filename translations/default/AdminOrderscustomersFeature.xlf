@@ -490,7 +490,7 @@
       <trans-unit id="f14b582c1b0eab88ed5904fb781568c0">
         <source>Discount name</source>
         <target>Discount name</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 153]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 155]</note>
       </trans-unit>
       <trans-unit id="b7623e931f082f027293f27dbfe7a8ea">
         <source>Display to customer?</source>
@@ -859,7 +859,7 @@ Best regards,</target>
       <trans-unit id="e49701f123af735cf327227e8ab09bac">
         <source>Manual order -- Employee:</source>
         <target>Manual order -- Employee:</target>
-        <note>File: src/Adapter/Order/CommandHandler/AddOrderFromBackOfficeHandler.php [Line: 76]</note>
+        <note>File: src/Adapter/Order/CommandHandler/AddOrderFromBackOfficeHandler.php [Line: 151]</note>
       </trans-unit>
       <trans-unit id="a7f50f36de1e47026a07b40670b50e1a">
         <source>Maximum number of payment days</source>
@@ -1224,7 +1224,7 @@ Best regards,</target>
       <trans-unit id="e78b6f4eb3be046f4d25c07ce54954d4">
         <source>Ref:</source>
         <target>Ref:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 94]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 96]</note>
       </trans-unit>
       <trans-unit id="5e1ce9eb796081fea13e0d0dd3c3d76f">
         <source>Reference number:</source>
@@ -1609,12 +1609,12 @@ Best regards,</target>
       <trans-unit id="79e21b5609402cd57d1dec7496771df8">
         <source>Total cost of gift wrapping:</source>
         <target>Total cost of gift wrapping:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 125]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 127]</note>
       </trans-unit>
       <trans-unit id="0bf157acdf9fe272c1379ff0b5442372">
         <source>Total cost of products:</source>
         <target>Total cost of products:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 112]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 114]</note>
       </trans-unit>
       <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
         <source>Total paid</source>
@@ -1634,7 +1634,7 @@ Best regards,</target>
       <trans-unit id="80fde97fb8929b8bea9ebcf5241be2f9">
         <source>Total shipping costs:</source>
         <target>Total shipping costs:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 132]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 134]</note>
       </trans-unit>
       <trans-unit id="5c63fcad7f3534fdcf4ee426a54a6e00">
         <source>Total spent since registration:</source>
@@ -1654,7 +1654,7 @@ Best regards,</target>
       <trans-unit id="3e69f668660d41b577a8da0fb53f6fa8">
         <source>Total value of vouchers:</source>
         <target>Total value of vouchers:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 118]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig [Line: 120]</note>
       </trans-unit>
       <trans-unit id="58a13b9a4e13f53cf70a60bf583321e1">
         <source>Total vouchers (Tax excl.)</source>

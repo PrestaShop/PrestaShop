@@ -157,6 +157,26 @@
         <target>Favicon image</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/Blocks/logo_configuration.html.twig [Line: 119]</note>
       </trans-unit>
+      <trans-unit id="b1abef6a2e101daa90a3fab4f45881fb">
+        <source>Fill and crop</source>
+        <target>Fill and crop</target>
+        <note>File: src/Core/Grid/Data/Factory/ImageTypeGridDataFactory.php [Line: 55]</note>
+      </trans-unit>
+      <trans-unit id="7bdb3115ae392f1a5abb822d7b9cf831">
+        <source>Fill the thumbnail and crop the rest</source>
+        <target>Fill the thumbnail and crop the rest</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageTypeType.php [Line: 92]</note>
+      </trans-unit>
+      <trans-unit id="6ca4bd24806151999d21da0cbacdb5a6">
+        <source>Fit the thumbnail and fill the rest with empty space</source>
+        <target>Fit the thumbnail and fill the rest with empty space</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageTypeType.php [Line: 91]</note>
+      </trans-unit>
+      <trans-unit id="b81c463a03cddd5d10be8b1e3d1c7d07">
+        <source>Fit to size</source>
+        <target>Fit to size</target>
+        <note>File: src/Core/Grid/Data/Factory/ImageTypeGridDataFactory.php [Line: 54]</note>
+      </trans-unit>
       <trans-unit id="2f75fd5bb638eb1353d6941aac58700e">
         <source>Front modules controller</source>
         <target>Front modules controller</target>
@@ -201,6 +221,11 @@
         <source>Hook to</source>
         <target>Hook to</target>
         <note>File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl [Line: 51]</note>
+      </trans-unit>
+      <trans-unit id="5111d5548d4c39ae13848c5ff66d1fdd">
+        <source>Image fitment</source>
+        <target>Image fitment</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageTypeType.php [Line: 88]</note>
       </trans-unit>
       <trans-unit id="b3bd27a90dda4251ad9942a56f5895b7">
         <source>Image formats to generate</source>
@@ -252,6 +277,16 @@
         <target>JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases, these thumbnails will have .jpg extension.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageSettingsType.php [Line: 58]</note>
       </trans-unit>
+      <trans-unit id="d9ad957c51e16de13a000eb614cc40ae">
+        <source>Keep ratio</source>
+        <target>Keep ratio</target>
+        <note>File: src/Core/Grid/Data/Factory/ImageTypeGridDataFactory.php [Line: 56]</note>
+      </trans-unit>
+      <trans-unit id="f2ccd70d95c7fcf97d0719b87761eb58">
+        <source>Keep the ratio of the original image</source>
+        <target>Keep the ratio of the original image</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageTypeType.php [Line: 93]</note>
+      </trans-unit>
       <trans-unit id="594092807cc252032c22d39dacab4d95">
         <source>List %theme% layouts</source>
         <target>List %theme% layouts</target>
@@ -290,7 +325,7 @@
       <trans-unit id="404dede45594c16ad5592b1091cc7ba8">
         <source>Name for the image type</source>
         <target>Name for the image type</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageTypeType.php [Line: 32]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageTypeType.php [Line: 35]</note>
       </trans-unit>
       <trans-unit id="05559f48f0ea41ebb03f6d08b95e1e25">
         <source>No side columns, ideal for distraction-free pages such as product pages.</source>
