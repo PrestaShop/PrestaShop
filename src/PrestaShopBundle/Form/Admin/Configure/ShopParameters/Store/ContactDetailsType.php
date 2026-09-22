@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\Store;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\Domain\Store\Configuration\StoreConstraint;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
@@ -22,9 +21,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface as FormFormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -89,25 +86,28 @@ final class ContactDetailsType extends TranslatorAwareType
                 'required' => false,
                 'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME])],
             ])
+            // Legacy applied isAddress() to address1/address2 and isGenericName() to
+            // postcode/city/phone/fax, with no length limit: these options are stored in
+            // ps_configuration, not in the ps_store columns. See AdminStoresController::getConfigFieldsShop().
             ->add('address1', TextType::class, [
                 'label' => $this->trans('Shop address line 1', 'Admin.Shopparameters.Feature'),
                 'required' => false,
-                'constraints' => $this->getAddressCommonConstraints(),
+                'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_ADDRESS])],
             ])
             ->add('address2', TextType::class, [
                 'label' => $this->trans('Shop address line 2', 'Admin.Shopparameters.Feature'),
                 'required' => false,
-                'constraints' => $this->getAddressCommonConstraints(),
+                'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_ADDRESS])],
             ])
             ->add('postcode', TextType::class, [
                 'label' => $this->trans('Zip/Postal code', 'Admin.Global'),
                 'required' => false,
-                'constraints' => $this->getGenericNameCommonConstraints(StoreConstraint::MAX_POSTCODE_LENGTH),
+                'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME])],
             ])
             ->add('city', TextType::class, [
                 'label' => $this->trans('City', 'Admin.Global'),
                 'required' => false,
-                'constraints' => $this->getGenericNameCommonConstraints(StoreConstraint::MAX_CITY_LENGTH),
+                'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME])],
             ])
             ->add('id_country', CountryChoiceType::class, [
                 'label' => $this->trans('Country', 'Admin.Global'),
@@ -120,12 +120,12 @@ final class ContactDetailsType extends TranslatorAwareType
             ->add('phone', TextType::class, [
                 'label' => $this->trans('Phone', 'Admin.Global'),
                 'required' => false,
-                'constraints' => $this->getGenericNameCommonConstraints(StoreConstraint::MAX_PHONE_LENGTH),
+                'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME])],
             ])
             ->add('fax', TextType::class, [
                 'label' => $this->trans('Fax', 'Admin.Global'),
                 'required' => false,
-                'constraints' => $this->getGenericNameCommonConstraints(StoreConstraint::MAX_PHONE_LENGTH),
+                'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME])],
             ])
         ;
 
@@ -139,47 +139,6 @@ final class ContactDetailsType extends TranslatorAwareType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
             $this->rebuildStateField($event->getForm(), (int) ($event->getData()['id_country'] ?? 0));
         });
-    }
-
-    /**
-     * Legacy validated address1/address2 with isAddress(); see AdminStoresController::getConfigFieldsShop().
-     *
-     * @return Constraint[]
-     */
-    private function getAddressCommonConstraints(): array
-    {
-        return [
-            new TypedRegex(['type' => TypedRegex::TYPE_ADDRESS]),
-            new Length([
-                'max' => StoreConstraint::MAX_ADDRESS_LENGTH,
-                'maxMessage' => $this->trans(
-                    'This field cannot be longer than %limit% characters',
-                    'Admin.Notifications.Error',
-                    ['%limit%' => StoreConstraint::MAX_ADDRESS_LENGTH]
-                ),
-            ]),
-        ];
-    }
-
-    /**
-     * Legacy validated postcode/city/phone/fax with isGenericName(), not the more specific
-     * isPostCode()/isCityName()/isPhoneNumber(); see AdminStoresController::getConfigFieldsShop().
-     *
-     * @return Constraint[]
-     */
-    private function getGenericNameCommonConstraints(int $maxLength): array
-    {
-        return [
-            new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME]),
-            new Length([
-                'max' => $maxLength,
-                'maxMessage' => $this->trans(
-                    'This field cannot be longer than %limit% characters',
-                    'Admin.Notifications.Error',
-                    ['%limit%' => $maxLength]
-                ),
-            ]),
-        ];
     }
 
     /**
