@@ -46,6 +46,7 @@ Breaking changes are only allowed in major versions. See [ADR 0017](https://gith
 - New repository/DBAL queries use the QueryBuilder (never string-built SQL, whatever the surrounding file's historical style); single-row lookups add `setMaxResults(1)`. When the matched column has no unique constraint, prefer returning ALL matches (`fetchFirstColumn()` + `ORDER BY <pk> ASC`) so the caller can detect ambiguity instead of silently picking the oldest row
 - No business logic in controllers — delegate to Handlers
 - Catch specific domain exceptions, not generic `\Exception`
+- A UUID primary key column is named `<entity>_uuid` (e.g. `import_job_uuid`), stored as `char(36)` and human-readable — the `id_` prefix signals the integer convention and misleads on a UUID, and the hand-written install schema is read directly by developers
 - Keep comments and docblocks minimal: never restate what the code says, and prefer making the code self-explanatory. Comment only where real complexity remains, and then explain the *why* in as few words as possible
 - Run `php vendor/bin/php-cs-fixer fix` to apply coding style (config: `.php-cs-fixer.dist.php`)
 - Run `php vendor/bin/phpstan analyse` for static analysis (config: `phpstan.neon.dist`)
@@ -57,6 +58,7 @@ Breaking changes are only allowed in major versions. See [ADR 0017](https://gith
 - **Handlers** — implement logic; never call other handlers (compose at controller level)
 - Handler interfaces in `src/Core/Domain/{Domain}/CommandHandler|QueryHandler/`
 - Concrete implementations in `src/Adapter/{Domain}/CommandHandler|QueryHandler/`
+- An identity value object wrapping a UUID is named `<Entity>Uuid` (e.g. `ImportJobUuid`), never `<Entity>Id`: the `Id` names wrap an auto-increment key and validate "positive integer", a UUID is an externally generated token with a different rule and no ordering guarantee. The name carries through constructor parameters, getters, DTO fields and repository lookups
 
 ## Testing
 
