@@ -1,0 +1,4 @@
+verb;phase;label
+ok;;first
+warning;validation;price was rounded
+ok;;third
