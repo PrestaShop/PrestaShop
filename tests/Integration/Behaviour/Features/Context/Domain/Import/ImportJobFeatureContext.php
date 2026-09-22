@@ -50,15 +50,27 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
     private const DEFAULT_SHOP_ID = 1;
 
     /**
+     * A file is read in one language; a scenario only names it when it matters.
+     */
+    private const DEFAULT_LANGUAGE_ISO = 'en';
+
+    /**
      * Copies the fixture where a real upload lands — the system temp directory, one of the two
      * roots a source may be read from — and starts the job in the same step, so no scenario
      * depends on a path some earlier step stashed away.
      *
      * @When I start an import job :reference for entity type :entityType from file :fixture
      * @When I start an import job :reference for entity type :entityType from file :fixture with following options:
+     * @When I start an import job :reference for entity type :entityType from file :fixture in language :langIso
+     * @When I start an import job :reference for entity type :entityType from file :fixture in language :langIso with following options:
      */
-    public function startImportJob(string $reference, string $entityType, string $fixture, ?TableNode $table = null): void
-    {
+    public function startImportJob(
+        string $reference,
+        string $entityType,
+        string $fixture,
+        ?string $langIso = null,
+        ?TableNode $table = null,
+    ): void {
         $source = sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::SOURCE_PREFIX . $reference . '.' . pathinfo($fixture, PATHINFO_EXTENSION);
         (new Filesystem())->copy(self::FIXTURE_DIR . $fixture, $source, true);
 
@@ -66,7 +78,7 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
             $importJobUuid = $this->getCommandBus()->handle(new StartImportJobCommand(
                 $source,
                 $entityType,
-                'en',
+                $langIso ?? self::DEFAULT_LANGUAGE_ISO,
                 ShopConstraint::shop(self::DEFAULT_SHOP_ID),
                 $this->readFieldMapping($source),
                 null === $table ? [] : $this->castOptions($table->getRowsHash())
