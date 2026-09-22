@@ -3,7 +3,9 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 
 class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManagementInterface
 {
@@ -872,6 +874,50 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     }
 
     /**
+     * Write the thumbnails of an image in every format the shop generates, as the back office uploaders do.
+     *
+     * @param string $source_path
+     * @param string $path_prefix thumbnail path before "-<image type>.<format>"
+     * @param array $image_types rows of ImageType::getImagesTypes()
+     *
+     * @return string[] names of the image types that could not be written
+     */
+    protected function writeThumbnails($source_path, $path_prefix, array $image_types)
+    {
+        $failed_types = [];
+        $formats = ServiceLocator::get(ImageFormatConfiguration::class)->getGenerationFormats();
+        foreach ($image_types as $image_type) {
+            foreach ($formats as $format) {
+                $error = 0;
+                $targetWidth = null;
+                $targetHeight = null;
+                $sourceWidth = null;
+                $sourceHeight = null;
+
+                if (!ImageManager::resize(
+                    $source_path,
+                    $path_prefix . '-' . stripslashes($image_type['name']) . '.' . $format,
+                    $image_type['width'],
+                    $image_type['height'],
+                    $format,
+                    false,
+                    $error,
+                    $targetWidth,
+                    $targetHeight,
+                    5,
+                    $sourceWidth,
+                    $sourceHeight,
+                    $image_type['image_fitment']
+                )) {
+                    $failed_types[] = stripslashes($image_type['name']);
+                }
+            }
+        }
+
+        return array_values(array_unique($failed_types));
+    }
+
+    /**
      * Write the image on disk.
      *
      * @param string $base_path
@@ -1002,23 +1048,24 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
         // Write image thumbnails if present
         if ($image_types) {
-            foreach ($image_types as $image_type) {
-                if ($this->defaultImage) {
-                    $thumbnail_path = $parent_path . $this->wsObject->urlSegment[3] . '-default-' . $image_type['name'] . '.jpg';
-                } else {
-                    if ($this->imageType == 'products') {
-                        $thumbnail_path = $parent_path . chunk_split($this->wsObject->urlSegment[3], 1, '/') . $this->wsObject->urlSegment[3] . '-' . $image_type['name'] . '.jpg';
-                    } else {
-                        $thumbnail_path = $parent_path . $this->wsObject->urlSegment[2] . '-' . $image_type['name'] . '.jpg';
-                    }
-                }
-                if (!$this->writeImageOnDisk($base_path, $thumbnail_path, $image_type['width'], $image_type['height'], null, null, $image_type['image_fitment'])) {
-                    throw new WebserviceException(sprintf('Unable to save the thumbnail "%s" of this image.', $image_type['name']), [71, 500]);
-                }
+            if ($this->defaultImage) {
+                $thumbnail_prefix = $parent_path . $this->wsObject->urlSegment[3] . '-default';
+            } elseif ($this->imageType == 'products') {
+                $thumbnail_prefix = $parent_path . chunk_split($this->wsObject->urlSegment[3], 1, '/') . $this->wsObject->urlSegment[3];
+            } else {
+                $thumbnail_prefix = $parent_path . $this->wsObject->urlSegment[2];
+            }
+            $failed_types = $this->writeThumbnails($base_path, $thumbnail_prefix, $image_types);
+            if ($failed_types) {
+                throw new WebserviceException(sprintf('Unable to save the thumbnail "%s" of this image.', $failed_types[0]), [71, 500]);
             }
         }
 
-        Hook::exec('actionWatermark', ['id_image' => $this->wsObject->urlSegment[3], 'id_product' => $this->wsObject->urlSegment[2]]);
+        // The watermark hook takes a product image, as on the POST path: other entities have no image id
+        // in the URL, and a "default" image's segments are a language and the word "default".
+        if ($this->imageType == 'products' && !$this->defaultImage) {
+            Hook::exec('actionWatermark', ['id_image' => $this->wsObject->urlSegment[3], 'id_product' => $this->wsObject->urlSegment[2]]);
+        }
 
         return $new_path;
     }
@@ -1137,31 +1184,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         } elseif (!ImageManager::resize($tmp_name, _PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format)) {
                             throw new WebserviceException('An error occurred while copying image', [76, 400]);
                         } else {
-                            $images_types = ImageType::getImagesTypes('products');
-                            foreach ($images_types as $imageType) {
-                                $error = 0;
-                                $targetWidth = null;
-                                $targetHeight = null;
-                                $sourceWidth = null;
-                                $sourceHeight = null;
-
-                                if (!ImageManager::resize(
-                                    $tmp_name,
-                                    _PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $image->image_format,
-                                    $imageType['width'],
-                                    $imageType['height'],
-                                    $image->image_format,
-                                    false,
-                                    $error,
-                                    $targetWidth,
-                                    $targetHeight,
-                                    5,
-                                    $sourceWidth,
-                                    $sourceHeight,
-                                    $imageType['image_fitment']
-                                )) {
-                                    $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
-                                }
+                            $failed_types = $this->writeThumbnails($tmp_name, _PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath(), ImageType::getImagesTypes('products'));
+                            foreach ($failed_types as $failed_type) {
+                                $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [$failed_type], 'Admin.Notifications.Error');
                             }
                         }
                         @unlink($tmp_name);
@@ -1179,31 +1204,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         } elseif (!ImageManager::resize($tmp_name, $reception_path)) {
                             throw new WebserviceException('An error occurred while copying image', [76, 400]);
                         }
-                        $images_types = ImageType::getImagesTypes($this->imageType);
-                        foreach ($images_types as $imageType) {
-                            $error = 0;
-                            $targetWidth = null;
-                            $targetHeight = null;
-                            $sourceWidth = null;
-                            $sourceHeight = null;
-
-                            if (!ImageManager::resize(
-                                $tmp_name,
-                                $parent_path . $this->wsObject->urlSegment[2] . '-' . stripslashes($imageType['name']) . '.jpg',
-                                $imageType['width'],
-                                $imageType['height'],
-                                'jpg',
-                                false,
-                                $error,
-                                $targetWidth,
-                                $targetHeight,
-                                5,
-                                $sourceWidth,
-                                $sourceHeight,
-                                $imageType['image_fitment']
-                            )) {
-                                $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
-                            }
+                        $failed_types = $this->writeThumbnails($tmp_name, $parent_path . $this->wsObject->urlSegment[2], ImageType::getImagesTypes($this->imageType));
+                        foreach ($failed_types as $failed_type) {
+                            $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [$failed_type], 'Admin.Notifications.Error');
                         }
                         @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);
                         $this->imgToDisplay = $reception_path;
