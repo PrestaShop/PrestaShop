@@ -160,6 +160,7 @@ class ShopContextSubscriberTest extends ContextEventListenerTestCase
             $this->mockSecurity($expectedShopConstraint),
             $this->mockLegacyContext(),
             $this->createMock(TranslatorInterface::class),
+            $this->mockShopListResolver(),
         );
 
         $warnings = [];
