@@ -20,11 +20,19 @@ final class ImportDirectory
     private $configuration;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @var string|null
      */
-    public function __construct(ConfigurationInterface $configuration)
+    private $adminDir;
+
+    /**
+     * @param ConfigurationInterface $configuration
+     * @param string|null $adminDir the container knows the admin folder even when _PS_ADMIN_DIR_ is
+     *                              undefined, which is the case under bin/console
+     */
+    public function __construct(ConfigurationInterface $configuration, ?string $adminDir = null)
     {
         $this->configuration = $configuration;
+        $this->adminDir = $adminDir;
     }
 
     /**
@@ -34,7 +42,7 @@ final class ImportDirectory
      */
     public function getDir()
     {
-        return $this->configuration->get('_PS_ADMIN_DIR_') . DIRECTORY_SEPARATOR . 'import' . DIRECTORY_SEPARATOR;
+        return ($this->adminDir ?? $this->configuration->get('_PS_ADMIN_DIR_')) . DIRECTORY_SEPARATOR . 'import' . DIRECTORY_SEPARATOR;
     }
 
     /**
