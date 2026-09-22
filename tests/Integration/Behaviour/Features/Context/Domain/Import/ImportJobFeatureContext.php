@@ -93,6 +93,34 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * Skips the upload copy and points straight at the fixture directory, which is neither the
+     * import directory nor the system temp — the only two roots a source may be read from. A
+     * fixture name that does not exist reaches the missing-file guard through the same step.
+     *
+     * @When I start an import job :reference for entity type :entityType from the unconfined file :fixture
+     */
+    public function startImportJobFromUnconfinedFile(string $reference, string $entityType, string $fixture): void
+    {
+        $source = self::FIXTURE_DIR . $fixture;
+
+        try {
+            $importJobUuid = $this->getCommandBus()->handle(new StartImportJobCommand(
+                $source,
+                $entityType,
+                self::DEFAULT_LANGUAGE_ISO,
+                ShopConstraint::shop(self::DEFAULT_SHOP_ID),
+                is_file($source) ? $this->readFieldMapping($source) : ['verb'],
+            ));
+        } catch (Exception $exception) {
+            $this->setLastException($exception);
+
+            return;
+        }
+
+        $this->getSharedStorage()->set($reference, $importJobUuid->getValue());
+    }
+
+    /**
      * @When I continue the import job :reference
      * @When I continue the import job :reference with a batch limit of :batchLimit
      */
@@ -360,6 +388,7 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
             'the file is empty' => CannotStartImportJobException::EMPTY_SOURCE_FILE,
             'the file is out of bounds' => CannotStartImportJobException::SOURCE_FILE_OUT_OF_BOUNDS,
             'the file was not found' => CannotStartImportJobException::SOURCE_FILE_NOT_FOUND,
+            'the language is not installed' => CannotStartImportJobException::UNKNOWN_LANGUAGE,
             'truncating is not supported' => CannotStartImportJobException::UNSUPPORTED_TRUNCATE,
             'a dry run is not supported' => CannotStartImportJobException::UNSUPPORTED_DRY_RUN,
         ];
