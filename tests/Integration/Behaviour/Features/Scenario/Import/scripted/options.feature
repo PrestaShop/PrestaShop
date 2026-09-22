@@ -50,3 +50,17 @@ Feature: Import job options
       | workingFile | absent   |
     # the working file goes with the job, the merchant's own upload does not
     And the source file of import job "job1" should exist
+
+  # an Admin API upload reaches the handler where PHP put it, and PHP removes it when the request
+  # ends; the handler must not delete anything there, whatever the option says
+  Scenario: A file in a temp directory is read but never deleted
+    When I start an import job "job1" for entity type "scripted" from an upload of "scripted/clean.csv"
+    Then import job "job1" should have the following properties:
+      | status      | pending |
+      | workingFile | present |
+    And the source file of import job "job1" should exist
+    When I continue the import job "job1" until it stops
+    Then import job "job1" should have the following properties:
+      | status      | finished |
+      | workingFile | absent   |
+    And the source file of import job "job1" should exist

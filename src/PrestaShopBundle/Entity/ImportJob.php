@@ -23,23 +23,27 @@ use Doctrine\ORM\Mapping as ORM;
  *   - "options" when it says what the job DOES — the only half modules may extend, which is why
  *     nothing core-defined about the file lives there and can be shadowed.
  *
- * Progress has to stay in columns for a second reason: a JSON blob would be rewritten whole on
- * every batch, and it is Doctrine's changed-fields-only UPDATE — a progress write never touching
- * the status column — that keeps a cancellation landing mid-batch from being erased by the batch
- * still running. There are no transactions (see ImportJobSequencer).
+ * The status column is not updatable through the ORM: every transition goes through
+ * ImportJobRepository::transitionStatus(), one conditional UPDATE, so a progress write can never
+ * erase a cancellation another request landed mid-batch. There are no transactions (see
+ * ImportJobSequencer).
  *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ImportJobRepository")
  *
- * @ORM\Table(indexes={@ORM\Index(name="status_date_upd", columns={"status", "date_upd"})})
+ * @ORM\Table(indexes={@ORM\Index(name="date_upd", columns={"date_upd"})})
  *
  * @ORM\HasLifecycleCallbacks
  */
 class ImportJob
 {
     /**
+     * Binary collation: ImportJobUuid canonicalises to lowercase, and the column must not let two
+     * spellings match one row should a raw string ever bypass it — the lock key and the working
+     * file name would not.
+     *
      * @ORM\Id
      *
-     * @ORM\Column(name="import_job_uuid", type="string", length=36, options={"fixed": true})
+     * @ORM\Column(name="import_job_uuid", type="string", length=36, options={"fixed": true, "collation": "utf8mb4_bin"})
      */
     private string $uuid;
 
@@ -57,16 +61,17 @@ class ImportJob
     private int $shopId;
 
     /**
-     * @ORM\Column(name="status", type="string", length=32, enumType="PrestaShopBundle\Entity\ImportJobStatus")
+     * Written by the INSERT only. setStatus() keeps the in-memory copy in step with what
+     * ImportJobRepository::transitionStatus() wrote; Doctrine never puts the column in an UPDATE.
+     *
+     * @ORM\Column(name="status", type="string", length=32, enumType="PrestaShopBundle\Entity\ImportJobStatus", updatable=false)
      */
     private ImportJobStatus $status = ImportJobStatus::PENDING;
 
     /**
-     * Original upload name. The source is never read again — and may have been deleted after
-     * normalization — so the report needs it here.
-     *
-     * The client controls this string through the multipart header, so it is not bound by the
-     * filesystem's 255 bytes and the Start handler truncates it to fit.
+     * The name the caller gave the upload, for the report: the source is never read again and may
+     * be gone. It is not bound by the filesystem's 255 bytes, so the Start command refuses a longer
+     * one rather than shortening it.
      *
      * @ORM\Column(name="file_name", type="string", length=255)
      */

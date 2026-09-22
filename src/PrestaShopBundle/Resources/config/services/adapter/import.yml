@@ -104,10 +104,14 @@ services:
   #
   # FlockStore is per node. This id is the seam: an integration test may alias it to an
   # InMemoryStore, and a multi-node setup to a DoctrineDbalStore.
+  #
+  # Not under kernel.cache_dir: cache:clear wipes it, and a second Continue would then flock a
+  # fresh inode while the first still holds the old one. The var/cache root is what
+  # CacheClearLocker uses too, and neither cache:clear nor the back-office clearer touch it.
   prestashop.adapter.import.job.lock_store:
     class: 'Symfony\Component\Lock\Store\FlockStore'
     arguments:
-      - '%kernel.cache_dir%'
+      - '%kernel.project_dir%/var/cache/locks/import'
 
   prestashop.adapter.import.job.lock_factory:
     class: 'Symfony\Component\Lock\LockFactory'

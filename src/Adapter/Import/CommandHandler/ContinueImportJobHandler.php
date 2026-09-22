@@ -23,7 +23,11 @@ use PrestaShopBundle\Entity\Repository\ImportJobRepository;
 /**
  * Handles @see ContinueImportJobCommand.
  *
- * Thin on purpose: check, lock, delegate, report. The loop belongs to the sequencer.
+ * Thin on purpose: lock, check, delegate, report. The loop belongs to the sequencer.
+ *
+ * The lock comes before the status probe. Probed first, the status could be stale by the time the
+ * lock is held, and a Cancel that squeezed in between would have removed the working file the
+ * sequencer is about to read.
  */
 #[AsCommandHandler]
 final class ContinueImportJobHandler implements ContinueImportJobHandlerInterface
@@ -45,23 +49,6 @@ final class ContinueImportJobHandler implements ContinueImportJobHandlerInterfac
             throw new ImportJobNotFoundException(sprintf('Import job "%s" was not found.', $importJobUuid));
         }
 
-        // the status the database holds, not the one this request happens to have loaded
-        $status = $this->importJobRepository->readStatus($importJobUuid);
-        if (null === $status) {
-            throw new ImportJobNotFoundException(sprintf('Import job "%s" was deleted.', $importJobUuid));
-        }
-        if ($status->isTerminal()) {
-            throw new ImportJobStatusException(sprintf(
-                'Import job "%s" is %s and cannot be continued.',
-                $importJobUuid,
-                $status->value
-            ));
-        }
-
-        // the loaded entity may predate a status another request wrote, and the sequencer decides
-        // what to do from it, so adopt the authoritative one before handing the job over
-        $importJob->setStatus($status);
-
         $lock = $this->importJobLock->acquire($importJobUuid);
         if (null === $lock) {
             throw new ImportJobAlreadyRunningException(sprintf(
@@ -71,6 +58,23 @@ final class ContinueImportJobHandler implements ContinueImportJobHandlerInterfac
         }
 
         try {
+            // the status the database holds, not the one this request happens to have loaded
+            $status = $this->importJobRepository->readStatus($importJobUuid);
+            if (null === $status) {
+                throw new ImportJobNotFoundException(sprintf('Import job "%s" was deleted.', $importJobUuid));
+            }
+            if ($status->isTerminal()) {
+                throw new ImportJobStatusException(sprintf(
+                    'Import job "%s" is %s and cannot be continued.',
+                    $importJobUuid,
+                    $status->value
+                ));
+            }
+
+            // the loaded entity may predate a status another request wrote, and the sequencer
+            // decides what to do from it
+            $importJob->setStatus($status);
+
             $this->sequencer->run($importJob, $command->getBatchLimit());
         } finally {
             $lock->release();

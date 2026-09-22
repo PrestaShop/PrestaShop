@@ -26,4 +26,5 @@ final class ImportJobConstraintException extends ImportException
     public const INVALID_SKIP_ROWS = 8;
     public const INVALID_BATCH_LIMIT = 9;
     public const INVALID_EXPIRATION_DATE = 10;
+    public const INVALID_FILE_NAME = 11;
 }

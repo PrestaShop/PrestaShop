@@ -13,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\MalformedImportFileException;
 use PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer;
+use PrestaShop\PrestaShop\Core\Import\Engine\File\ImportFileFormatDetector;
 use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -28,7 +29,7 @@ class CsvImportFileNormalizerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->normalizer = new CsvImportFileNormalizer(new Filesystem());
+        $this->normalizer = new CsvImportFileNormalizer(new Filesystem(), new ImportFileFormatDetector());
     }
 
     protected function tearDown(): void

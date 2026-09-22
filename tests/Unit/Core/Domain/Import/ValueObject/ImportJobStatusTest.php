@@ -36,16 +36,6 @@ class ImportJobStatusTest extends TestCase
         $this->assertTrue(ImportJobStatus::AWAITING_CONFIRMATION->canContinue());
     }
 
-    public function testTerminalValuesAreTheRawStringsAQueryCanUse(): void
-    {
-        $values = ImportJobStatus::terminalValues();
-
-        $this->assertTrue(array_is_list($values), 'The purge query binds a list, not a keyed array');
-
-        sort($values);
-        $this->assertSame(['cancelled', 'failed', 'finished'], $values);
-    }
-
     public function testStoredValuesRoundTrip(): void
     {
         foreach (ImportJobStatus::cases() as $status) {

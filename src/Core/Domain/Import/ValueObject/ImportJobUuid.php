@@ -18,6 +18,10 @@ use Symfony\Component\Uid\Uuid;
  * appears in URLs and polling calls where a sequential id would leak. Generated as v7 so the
  * time-ordered prefix appends to the clustered primary key instead of scattering inserts — free to
  * choose only while the table has no rows.
+ *
+ * Held in canonical form. RFC 4122 hex digits are case-insensitive on input and lowercase on
+ * output, and the lock key, the working file name and the primary key are all derived from this
+ * string: two spellings of one uuid must never reach them as two identities.
  */
 final class ImportJobUuid
 {
@@ -35,12 +39,12 @@ final class ImportJobUuid
             );
         }
 
-        $this->value = $value;
+        $this->value = Uuid::fromString($value)->toRfc4122();
     }
 
     public static function generate(): self
     {
-        return new self((string) Uuid::v7());
+        return new self(Uuid::v7()->toRfc4122());
     }
 
     public function getValue(): string

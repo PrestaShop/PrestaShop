@@ -23,9 +23,10 @@ final class ImportJobState
     /**
      * @param list<ImportJobPhaseState> $phases ordered as the importer declares them
      * @param list<ImportJobMessage> $messages
-     * @param array<string, int> $droppedMessageCounts per severity, the distinct messages the
-     *                                                 storage cap discarded; they are NOT
-     *                                                 in $messages, so a report can say the
+     * @param array<string, int> $droppedMessageCounts per severity, the occurrences the storage
+     *                                                 cap discarded (a capped message recurring
+     *                                                 in a later batch counts again); they are
+     *                                                 NOT in $messages, so a report can say the
      *                                                 list is partial
      * @param array<string, mixed> $context frozen inputs the job context is rebuilt from
      * @param array<string, mixed> $options what the job does, unknown keys included
@@ -159,11 +160,11 @@ final class ImportJobState
      */
     public function getProgressPercent(): int
     {
-        if ([] === $this->phases) {
-            return 0;
-        }
         if (ImportJobStatus::FINISHED === $this->status) {
             return 100;
+        }
+        if ([] === $this->phases) {
+            return 0;
         }
 
         $completedPhases = 0;

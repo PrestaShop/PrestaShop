@@ -17,17 +17,17 @@ use PrestaShopBundle\Entity\Repository\ImportJobRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * The two methods that are SQL rather than ORM, checked at the level they are written at.
+ * The methods that are SQL rather than ORM, checked at the level they are written at.
  *
- * readStatus() is here because no Behat scenario can cover it: a Continue and the Cancel it races
- * share a single EntityManager there, so both are handed the same entity instance and the
- * staleness the probe exists to defeat never happens. Only a test that changes the row behind
- * Doctrine's back can tell whether the probe reads the database or repeats what the request
- * already loaded — and if it stopped doing so, a cancellation would be silently ignored by the
+ * They are here because no Behat scenario can cover them: a Continue and the Cancel it races share
+ * a single EntityManager there, so both are handed the same entity instance and the staleness the
+ * probe and the compare-and-set exist to defeat never happens. Only a test that changes the row
+ * behind Doctrine's back can tell whether they read the database or repeat what the request
+ * already loaded — and if they stopped doing so, a cancellation would be silently ignored by the
  * batch it was meant to stop.
  *
  * The purge is covered by Behat too, but only through the retention window the purger applies;
- * here the boundary and the status filter are exercised directly.
+ * here the boundary is exercised directly.
  */
 class ImportJobRepositoryTest extends KernelTestCase
 {
@@ -59,27 +59,29 @@ class ImportJobRepositoryTest extends KernelTestCase
         parent::tearDown();
     }
 
-    public function testOnlyTerminalJobsOlderThanTheBoundaryAreCollected(): void
+    public function testEveryJobUntouchedSinceTheBoundaryIsCollectedWhateverItsStatus(): void
     {
         $staleFinished = $this->createImportJob(ImportJobStatus::FINISHED, 10);
-        $staleCancelled = $this->createImportJob(ImportJobStatus::CANCELLED, 10);
-        $recentFinished = $this->createImportJob(ImportJobStatus::FINISHED, 1);
         $staleRunning = $this->createImportJob(ImportJobStatus::RUNNING, 10);
+        $stalePaused = $this->createImportJob(ImportJobStatus::AWAITING_CONFIRMATION, 10);
+        $recentFinished = $this->createImportJob(ImportJobStatus::FINISHED, 1);
+        $recentRunning = $this->createImportJob(ImportJobStatus::RUNNING, 1);
 
-        $purged = $this->repository->purgeTerminalOlderThan(new DateTimeImmutable('-7 days'));
+        $purged = $this->repository->purgeUntouchedSince(new DateTimeImmutable('-7 days'));
 
-        $this->assertSame(2, $purged);
+        $this->assertSame(3, $purged);
         $this->assertNull($this->repository->readStatus($staleFinished));
-        $this->assertNull($this->repository->readStatus($staleCancelled));
+        $this->assertNull($this->repository->readStatus($staleRunning), 'A job nobody continued for a week was abandoned, not paused');
+        $this->assertNull($this->repository->readStatus($stalePaused));
         $this->assertNotNull($this->repository->readStatus($recentFinished), 'Inside the window, however terminal');
-        $this->assertNotNull($this->repository->readStatus($staleRunning), 'However old, a job still running is never collected');
+        $this->assertNotNull($this->repository->readStatus($recentRunning));
     }
 
     public function testAPurgeThatMatchesNothingDeletesNothing(): void
     {
         $this->createImportJob(ImportJobStatus::FINISHED, 1);
 
-        $this->assertSame(0, $this->repository->purgeTerminalOlderThan(new DateTimeImmutable('-7 days')));
+        $this->assertSame(0, $this->repository->purgeUntouchedSince(new DateTimeImmutable('-7 days')));
     }
 
     public function testTheStatusProbeSeesAWriteTheLoadedEntityKnowsNothingAbout(): void
@@ -108,13 +110,85 @@ class ImportJobRepositoryTest extends KernelTestCase
     public function testTheStatusProbeReportsNothingForAJobThatIsGone(): void
     {
         $importJobUuid = $this->createImportJob();
-
         $this->removeImportJob($importJobUuid);
 
         $this->assertNull(
             $this->repository->readStatus($importJobUuid),
             'A vanished row must be distinguishable from a job that simply is not terminal'
         );
+    }
+
+    /**
+     * The value object canonicalises to lowercase; the column's binary collation is the second
+     * line, for a raw string that bypassed it. Two spellings must never name one row when the lock
+     * key and the working file would not agree.
+     */
+    public function testTheSameUuidSpelledDifferentlyNamesNoRow(): void
+    {
+        $importJobUuid = $this->createImportJob();
+        $otherSpelling = strtoupper($importJobUuid);
+        $this->assertNotSame($importJobUuid, $otherSpelling);
+
+        $this->assertNull($this->repository->findByUuid($otherSpelling));
+        $this->assertNull($this->repository->readStatus($otherSpelling));
+    }
+
+    public function testATransitionFromAnAllowedStatusIsWon(): void
+    {
+        $importJobUuid = $this->createImportJob();
+
+        $this->assertSame(
+            ImportJobStatus::RUNNING,
+            $this->repository->transitionStatus($importJobUuid, ImportJobStatus::RUNNING, ImportJobStatus::nonTerminalCases())
+        );
+        $this->assertSame(ImportJobStatus::RUNNING, $this->repository->readStatus($importJobUuid));
+    }
+
+    /**
+     * The compare half: a status another request wrote first is left alone and handed back, so
+     * the loser knows what to adopt.
+     */
+    public function testATransitionLostToAStatusWrittenFirstChangesNothing(): void
+    {
+        $importJobUuid = $this->createImportJob();
+        $this->writeStatusBehindDoctrine($importJobUuid, ImportJobStatus::CANCELLED);
+
+        $this->assertSame(
+            ImportJobStatus::CANCELLED,
+            $this->repository->transitionStatus($importJobUuid, ImportJobStatus::RUNNING, ImportJobStatus::nonTerminalCases())
+        );
+        $this->assertSame(ImportJobStatus::CANCELLED, $this->repository->readStatus($importJobUuid));
+    }
+
+    public function testATransitionOnAVanishedRowReportsNothing(): void
+    {
+        $importJobUuid = $this->createImportJob();
+        $this->removeImportJob($importJobUuid);
+
+        $this->assertNull(
+            $this->repository->transitionStatus($importJobUuid, ImportJobStatus::RUNNING, ImportJobStatus::nonTerminalCases())
+        );
+    }
+
+    /**
+     * What makes the whole arbitration hold without transactions: whatever the in-memory copy
+     * believes, a progress write leaves the status column alone.
+     */
+    public function testAProgressWriteCannotTouchTheStatusColumn(): void
+    {
+        $importJobUuid = $this->createImportJob();
+        $loaded = $this->repository->findByUuid($importJobUuid);
+
+        // this request believes it moved the job to RUNNING; another request cancelled it meanwhile
+        $loaded->setStatus(ImportJobStatus::RUNNING);
+        $this->writeStatusBehindDoctrine($importJobUuid, ImportJobStatus::CANCELLED);
+
+        $loaded->setCurrentPhaseId('validation')->setCurrentOffset(20)->setResumeCursor('byte-420');
+        $this->repository->save($loaded);
+
+        $this->assertSame(ImportJobStatus::CANCELLED, $this->repository->readStatus($importJobUuid), 'The progress UPDATE carried no status');
+        $this->entityManager->clear();
+        $this->assertSame(20, $this->repository->findByUuid($importJobUuid)->getCurrentOffset(), 'The progress itself went in');
     }
 
     private function createImportJob(?ImportJobStatus $status = null, ?int $ageInDays = null): string
@@ -129,7 +203,7 @@ class ImportJobRepositoryTest extends KernelTestCase
             ['langIso' => 'en', 'multipleValueSeparator' => ',', 'fieldMapping' => [0 => 'name']],
             []
         );
-        $this->repository->add($importJob);
+        $this->repository->save($importJob);
         $this->createdUuids[] = $importJob->getUuid();
 
         if (null !== $status) {
@@ -179,7 +253,6 @@ class ImportJobRepositoryTest extends KernelTestCase
             ->where('import_job_uuid = :uuid')
             ->setParameter('uuid', $importJobUuid)
             ->executeStatement();
-
         $this->entityManager->clear();
     }
 }

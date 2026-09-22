@@ -25,6 +25,17 @@ class ImportJobUuidTest extends TestCase
     }
 
     /**
+     * RFC 4122 hex digits are case-insensitive on input; the lock key, the working file name and
+     * the primary key are all derived from the value, so one uuid must have one spelling.
+     */
+    public function testItCanonicalisesTheSpelling(): void
+    {
+        $uuid = new ImportJobUuid('0198F1A4-0B3C-7C21-9A4E-1F2B3C4D5E6F');
+
+        $this->assertSame('0198f1a4-0b3c-7c21-9a4e-1f2b3c4d5e6f', $uuid->getValue());
+    }
+
+    /**
      * @dataProvider provideMalformedValues
      */
     public function testItRefusesAnythingThatIsNotAUuid(string $value): void

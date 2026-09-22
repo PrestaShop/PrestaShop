@@ -17,7 +17,12 @@ use PrestaShopBundle\Entity\Repository\ImportJobRepository;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Collects finished jobs and the working files nothing owns any more.
+ * Collects abandoned jobs — untouched for the retention, whatever their status — and the working
+ * files nothing owns any more.
+ *
+ * Status is not a criterion: a merchant who closes the tab leaves a job pending, paused or running
+ * forever, and date_upd moves on every slice and every transition, so a job with a batch in flight
+ * is never stale.
  *
  * Rows go first and files second, so a file is judged an orphan against a table the purge has
  * already pruned. That also collects the file of a job whose row never existed — a crash between
@@ -35,15 +40,15 @@ final class ImportJobPurger
     }
 
     /**
-     * @param DateTimeInterface|null $expirationDate anything terminal and untouched since then is
-     *                                               collected; defaults to the retention window
+     * @param DateTimeInterface|null $expirationDate anything untouched since then is collected;
+     *                                               defaults to the retention window
      */
     public function purge(?DateTimeInterface $expirationDate = null): ImportJobPurgeSummary
     {
         $expirationDate ??= (new DateTimeImmutable())->modify(sprintf('-%d days', self::RETENTION_DAYS));
 
         return new ImportJobPurgeSummary(
-            $this->importJobRepository->purgeTerminalOlderThan($expirationDate),
+            $this->importJobRepository->purgeUntouchedSince($expirationDate),
             $this->removeOrphanWorkingFiles($expirationDate)
         );
     }

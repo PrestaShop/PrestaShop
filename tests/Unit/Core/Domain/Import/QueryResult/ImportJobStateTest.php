@@ -70,6 +70,15 @@ class ImportJobStateTest extends TestCase
         $this->assertSame(0, $this->buildState(null, [])->getProgressPercent());
     }
 
+    /**
+     * The phases come from the importer, which an uninstalled module no longer provides; the job
+     * still finished.
+     */
+    public function testAFinishedJobWhoseImporterIsGoneStillReadsComplete(): void
+    {
+        $this->assertSame(100, $this->buildState('database', [], ImportJobStatus::FINISHED)->getProgressPercent());
+    }
+
     public function testAMessageKnowsWhenItsRowListIsOnlyASample(): void
     {
         $sampled = new ImportJobMessage('warning', 'validation', 'Price was rounded', 'price', [1, 2, 3], 23402);

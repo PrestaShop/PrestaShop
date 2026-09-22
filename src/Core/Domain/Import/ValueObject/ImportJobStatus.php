@@ -32,15 +32,4 @@ enum ImportJobStatus: string
     {
         return !$this->isTerminal();
     }
-
-    /**
-     * @return list<string> for the purge query
-     */
-    public static function terminalValues(): array
-    {
-        return array_values(array_map(
-            static fn (self $status): string => $status->value,
-            array_filter(self::cases(), static fn (self $status): bool => $status->isTerminal())
-        ));
-    }
 }

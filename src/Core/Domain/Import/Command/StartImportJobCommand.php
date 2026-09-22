@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Import\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Import\Exception\ImportJobConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\BatchLimit;
 use PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\EntityType;
 use PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\FieldMapping;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -17,9 +18,9 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
  * Starts an import job from a source file and the wizard's frozen configuration.
  *
  * The source is a path, not a basename in the import directory, so one API operation can carry
- * file and configuration together. The handler confines it to the import directory plus system
- * temp: a path otherwise lets a caller read any file, and imported content is quoted back in
- * messages.
+ * file and configuration together. The handler confines it to the import directory and to PHP's
+ * upload directory: a path otherwise lets a caller read any file, and imported content is quoted
+ * back in messages.
  *
  * Validation is eager, so an instance is always well-formed; environment checks belong to the
  * handler.
@@ -27,33 +28,41 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 final class StartImportJobCommand
 {
     /**
-     * Mirrors the file_name column: the name is reported as it was uploaded, so a longer one is
+     * Mirrors the file_name column: the name is reported as the caller gave it, so a longer one is
      * refused rather than silently shortened into something that names no real file.
      */
     private const MAX_FILE_NAME_LENGTH = 255;
 
     private readonly EntityType $entityType;
 
+    private readonly string $langIso;
+
     private readonly FieldMapping $fieldMapping;
+
+    private readonly string $fileName;
 
     /**
      * @param array<int, string> $fieldMapping column index => field name, "no" for an ignored column
      * @param array<string, mixed> $options what the job does (truncate, dryRun, batchLimit, …).
      *                                      Unknown keys are kept verbatim, so a module importer's
      *                                      own options survive every batch
+     * @param string|null $fileName the name the report shows for the file, as the client uploaded
+     *                              it; defaults to the path's basename, which for an API upload is
+     *                              PHP's temp name
      *
      * @throws ImportJobConstraintException
      */
     public function __construct(
         private readonly string $sourceFilePath,
         string $entityType,
-        private readonly string $langIso,
+        string $langIso,
         private readonly ShopConstraint $shopConstraint,
         array $fieldMapping,
         private readonly array $options = [],
         private readonly string $csvSeparator = ';',
         private readonly string $multipleValueSeparator = ',',
         private readonly int $skipRows = 1,
+        ?string $fileName = null,
     ) {
         if ('' === $sourceFilePath) {
             throw new ImportJobConstraintException(
@@ -61,10 +70,11 @@ final class StartImportJobCommand
                 ImportJobConstraintException::INVALID_SOURCE_PATH
             );
         }
-        if (mb_strlen(basename($sourceFilePath)) > self::MAX_FILE_NAME_LENGTH) {
+        $fileName ??= basename($sourceFilePath);
+        if ('' === $fileName || mb_strlen($fileName) > self::MAX_FILE_NAME_LENGTH) {
             throw new ImportJobConstraintException(
-                sprintf('Import file name cannot exceed %d characters.', self::MAX_FILE_NAME_LENGTH),
-                ImportJobConstraintException::INVALID_SOURCE_PATH
+                sprintf('Import file name must be 1 to %d characters long.', self::MAX_FILE_NAME_LENGTH),
+                ImportJobConstraintException::INVALID_FILE_NAME
             );
         }
         if (!preg_match('/^[a-z]{2}$/i', $langIso)) {
@@ -94,16 +104,20 @@ final class StartImportJobCommand
             );
         }
         // the one option with a range: everything else in the bag is a flag or a module's own
-        if (array_key_exists('batchLimit', $options)
-            && (!is_int($options['batchLimit']) || $options['batchLimit'] < 1)) {
-            throw new ImportJobConstraintException(
-                'Import batch limit must be at least one unit.',
-                ImportJobConstraintException::INVALID_BATCH_LIMIT
-            );
+        if (array_key_exists('batchLimit', $options)) {
+            if (!is_int($options['batchLimit'])) {
+                throw new ImportJobConstraintException(
+                    'Import batch limit must be an integer.',
+                    ImportJobConstraintException::INVALID_BATCH_LIMIT
+                );
+            }
+            new BatchLimit($options['batchLimit']);
         }
 
         $this->entityType = new EntityType($entityType);
+        $this->langIso = strtolower($langIso);
         $this->fieldMapping = new FieldMapping($fieldMapping);
+        $this->fileName = $fileName;
 
         if (!$this->fieldMapping->hasMappedColumn()) {
             throw new ImportJobConstraintException(
@@ -116,6 +130,11 @@ final class StartImportJobCommand
     public function getSourceFilePath(): string
     {
         return $this->sourceFilePath;
+    }
+
+    public function getFileName(): string
+    {
+        return $this->fileName;
     }
 
     public function getEntityType(): EntityType

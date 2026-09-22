@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Entity\Repository;
 
+use DateTime;
 use DateTimeInterface;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Types\Types;
@@ -18,18 +19,12 @@ use PrestaShopBundle\Entity\ImportJobStatus;
 /**
  * The only class that loads and persists {@see ImportJob}; handlers never touch the EntityManager.
  *
- * No transactions and no row locks — deferred until the generic tooling lands. readStatus() is
- * what replaces them where it matters.
+ * No transactions and no row locks (deferred to the generic tooling, #42385). Two scalar queries
+ * stand in for them: readStatus() sees what another request wrote, transitionStatus() moves the
+ * status in one statement so two requests cannot both believe they won.
  */
 class ImportJobRepository extends EntityRepository
 {
-    public function add(ImportJob $importJob): void
-    {
-        $entityManager = $this->getEntityManager();
-        $entityManager->persist($importJob);
-        $entityManager->flush();
-    }
-
     public function save(ImportJob $importJob): void
     {
         $entityManager = $this->getEntityManager();
@@ -63,19 +58,52 @@ class ImportJobRepository extends EntityRepository
     }
 
     /**
-     * Deletes terminal jobs last touched before $limit.
+     * Compare-and-set: the WHERE is the compare, the SET the swap, and the row lock of a single
+     * UPDATE makes the pair atomic without a transaction. A request that lost the race writes
+     * nothing.
+     *
+     * Returns the status the row holds afterwards — $to when this call won, what the other request
+     * wrote when it did not, null when the row is gone. Read back rather than inferred from the
+     * affected-row count: PDO reports CHANGED rows, and date_upd has second precision.
+     *
+     * @param list<ImportJobStatus> $expectedStatuses the statuses the row must currently hold for
+     *                                                the write to happen
+     */
+    public function transitionStatus(string $importJobUuid, ImportJobStatus $to, array $expectedStatuses): ?ImportJobStatus
+    {
+        $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->update($this->getClassMetadata()->getTableName())
+            ->set('status', ':to')
+            ->set('date_upd', ':now')
+            ->where('import_job_uuid = :uuid')
+            ->andWhere('status IN (:expected)')
+            ->setParameter('to', $to->value)
+            ->setParameter('now', new DateTime(), Types::DATETIME_MUTABLE)
+            ->setParameter('uuid', $importJobUuid)
+            ->setParameter(
+                'expected',
+                array_map(static fn (ImportJobStatus $status): string => $status->value, $expectedStatuses),
+                ArrayParameterType::STRING
+            )
+            ->executeStatement();
+
+        return $this->readStatus($importJobUuid);
+    }
+
+    /**
+     * Deletes every job untouched since $limit, whatever its status: date_upd moves on every slice
+     * and every transition, so a job that stopped moving was abandoned — closed tab, dead request —
+     * and is not merely idle.
      *
      * Rows go first and the caller then sweeps working files that match no row, so a file left by
      * a job that died before its row was ever written is collected too — which returning the
      * deleted uuids would have missed.
      */
-    public function purgeTerminalOlderThan(DateTimeInterface $limit): int
+    public function purgeUntouchedSince(DateTimeInterface $limit): int
     {
         return (int) $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->delete($this->getClassMetadata()->getTableName())
-            ->where('status IN (:statuses)')
-            ->andWhere('date_upd < :limit')
-            ->setParameter('statuses', ImportJobStatus::terminalValues(), ArrayParameterType::STRING)
+            ->where('date_upd < :limit')
             ->setParameter('limit', $limit, Types::DATETIME_MUTABLE)
             ->executeStatement();
     }

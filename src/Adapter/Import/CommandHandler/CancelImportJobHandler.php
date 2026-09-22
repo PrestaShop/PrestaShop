@@ -22,9 +22,10 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Handles @see CancelImportJobCommand.
  *
- * Writes the status and nothing else, so a batch running right now cannot erase the cancellation
- * with the progress it is about to persist. That batch owns the working file until it notices,
- * which is why the lock is taken opportunistically: not getting it means someone else cleans up.
+ * One conditional write and nothing else, so a batch running right now can neither erase it nor be
+ * erased by it. That batch owns the working file until it notices, which is why the lock is taken
+ * opportunistically: not getting it means someone else cleans up. Cancelling twice is not an
+ * error — the second call finds what the first wrote.
  */
 #[AsCommandHandler]
 final class CancelImportJobHandler implements CancelImportJobHandlerInterface
@@ -46,12 +47,15 @@ final class CancelImportJobHandler implements CancelImportJobHandlerInterface
             throw new ImportJobNotFoundException(sprintf('Import job "%s" was not found.', $importJobUuid));
         }
 
-        // the status the database holds, not the one this request happens to have loaded
-        $status = $this->importJobRepository->readStatus($importJobUuid);
+        $status = $this->importJobRepository->transitionStatus(
+            $importJobUuid,
+            ImportJobStatus::CANCELLED,
+            ImportJobStatus::nonTerminalCases()
+        );
         if (null === $status) {
             throw new ImportJobNotFoundException(sprintf('Import job "%s" was deleted.', $importJobUuid));
         }
-        if ($status->isTerminal()) {
+        if (ImportJobStatus::CANCELLED !== $status) {
             throw new ImportJobStatusException(sprintf(
                 'Import job "%s" is already %s and cannot be cancelled.',
                 $importJobUuid,
@@ -59,8 +63,8 @@ final class CancelImportJobHandler implements CancelImportJobHandlerInterface
             ));
         }
 
+        // the same instance a batch running in this process may be holding
         $importJob->setStatus(ImportJobStatus::CANCELLED);
-        $this->importJobRepository->save($importJob);
 
         // getting the lock means no batch is running, so the working file is ours to remove;
         // failing to get it means a Continue owns it and will clean up at its next status probe

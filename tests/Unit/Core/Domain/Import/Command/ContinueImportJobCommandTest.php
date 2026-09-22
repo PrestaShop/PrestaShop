@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Import\Command\CancelImportJobCommand;
 use PrestaShop\PrestaShop\Core\Domain\Import\Command\ContinueImportJobCommand;
 use PrestaShop\PrestaShop\Core\Domain\Import\Exception\ImportJobConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\BatchLimit;
 
 class ContinueImportJobCommandTest extends TestCase
 {
@@ -36,6 +37,16 @@ class ContinueImportJobCommandTest extends TestCase
         $this->expectExceptionCode(ImportJobConstraintException::INVALID_BATCH_LIMIT);
 
         new ContinueImportJobCommand(self::UUID, 0);
+    }
+
+    public function testItRefusesABudgetAboveTheCap(): void
+    {
+        $this->assertSame(BatchLimit::MAX_VALUE, (new ContinueImportJobCommand(self::UUID, BatchLimit::MAX_VALUE))->getBatchLimit());
+
+        $this->expectException(ImportJobConstraintException::class);
+        $this->expectExceptionCode(ImportJobConstraintException::INVALID_BATCH_LIMIT);
+
+        new ContinueImportJobCommand(self::UUID, BatchLimit::MAX_VALUE + 1);
     }
 
     public function testItRefusesAMalformedJobIdentifier(): void

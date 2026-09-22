@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Import\Job;
 
-use DomainException;
 use PrestaShop\PrestaShop\Adapter\Import\ImportTruncator;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterRegistry;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ImportEngineException;
@@ -35,9 +35,11 @@ use Throwable;
  * interruption costs — at most one slice of rows written after a cancellation is observed, and at
  * most one slice of progress lost to a fatal — without shrinking the batch the caller asked for.
  *
- * There are no transactions (#42385). Cancellation is arbitrated by re-reading the status from the
- * database between slices: a progress write never touches the status column, so a cancellation
- * landing mid-batch cannot be erased by the batch still running.
+ * There are no transactions (#42385); the database arbitrates instead. Every status change is a
+ * compare-and-set (ImportJobRepository::transitionStatus()) that a concurrent Cancel wins by
+ * getting there first, a progress write cannot touch the status column at all, and the status is
+ * re-read between slices and right before truncating. A slice that raced a cancellation still
+ * persists its progress under the status the other request chose: the rows it wrote are real.
  */
 final class ImportJobSequencer
 {
@@ -114,15 +116,28 @@ final class ImportJobSequencer
             return;
         }
 
-        $importJob->setStatus(ImportJobStatus::RUNNING);
+        // false: a Cancel got there first and the job is already settled under it, or the row is gone
+        if (!$this->transition($importJob, $context, $ledger, ImportJobStatus::RUNNING)) {
+            return;
+        }
+
+        // the batch reads it from here on; a purge, or a hand, may have removed it
+        if (!$this->filesystem->exists($context->getWorkingFilePath())) {
+            $this->fail($importJob, $context, $ledger, $this->translator->trans(
+                'The working file of this import job is gone; the job cannot continue.',
+                [],
+                'Admin.Advparameters.Notification'
+            ));
+
+            return;
+        }
 
         // a paused phase is finished and was just reviewed; re-evaluating it would pause forever
-        if (null === $currentPhaseId || ImportJobStatus::AWAITING_CONFIRMATION === $entryStatus) {
-            if (!$this->enterNextPhase($importJob, $context, $importer, $phases, $options)) {
-                $this->terminate($importJob, $context, $ledger, ImportJobStatus::FINISHED);
+        if ((null === $currentPhaseId || ImportJobStatus::AWAITING_CONFIRMATION === $entryStatus)
+            && !$this->enterNextPhase($importJob, $context, $importer, $phases)) {
+            $this->transition($importJob, $context, $ledger, ImportJobStatus::FINISHED);
 
-                return;
-            }
+            return;
         }
 
         // not "while budget": closing a phase costs no units, and a job whose last unit was the
@@ -132,7 +147,7 @@ final class ImportJobSequencer
 
             // the phase is exhausted: finish the job, pause it for review, or step into the next one
             if ($remaining <= 0) {
-                if (!$this->closeCurrentPhase($importJob, $context, $ledger, $importer, $phases, $options)) {
+                if (!$this->closeCurrentPhase($importJob, $context, $ledger, $importer, $phases)) {
                     return;
                 }
 
@@ -144,6 +159,17 @@ final class ImportJobSequencer
                 $this->persist($importJob, $context, $ledger);
 
                 return;
+            }
+
+            // once, right before the first row of the database phase is written, never in a dry
+            // run — and with the last word left to the database, because nothing this destructive
+            // may trust a status probed at the top of the batch
+            if ($this->isAboutToTruncate($context, $options)) {
+                if (!$this->transition($importJob, $context, $ledger, ImportJobStatus::RUNNING)) {
+                    return;
+                }
+
+                $this->truncator->truncate($importJob->getEntityType(), $context->getShopConstraint());
             }
 
             // hand the importer one slice, never the whole budget
@@ -166,7 +192,8 @@ final class ImportJobSequencer
             if ($status->isTerminal()) {
                 // the rows this slice wrote are real, so the progress is recorded under the status
                 // the other request chose rather than thrown away
-                $this->terminate($importJob, $context, $ledger, $status);
+                $importJob->setStatus($status);
+                $this->settle($importJob, $context, $ledger);
 
                 return;
             }
@@ -186,7 +213,6 @@ final class ImportJobSequencer
         ImportJobMessageLedger $ledger,
         EntityImporterInterface $importer,
         array $phases,
-        ImportJobOptions $options,
     ): bool {
         $phaseIndex = (int) $this->indexOfPhase($phases, (string) $context->getCurrentPhaseId());
 
@@ -194,21 +220,24 @@ final class ImportJobSequencer
         // validate-only job whose last phase warns finishes instead of waiting for a confirmation
         // nobody will send
         if ($phaseIndex === count($phases) - 1) {
-            $this->terminate($importJob, $context, $ledger, ImportJobStatus::FINISHED);
+            $this->transition($importJob, $context, $ledger, ImportJobStatus::FINISHED);
 
             return false;
         }
 
-        // a pausing phase that produced something to review stops here; continuing accepts it
+        // a pausing phase that produced something to review stops here; continuing accepts it. A
+        // lost transition means a Cancel got there first, and transition() has then already
+        // persisted the progress under it — the progress is written either way, once
         if ($phases[$phaseIndex]->pausing && $this->hasBlockingMessages($ledger, $phases[$phaseIndex]->id)) {
-            $importJob->setStatus(ImportJobStatus::AWAITING_CONFIRMATION);
-            $this->persist($importJob, $context, $ledger);
+            if ($this->transition($importJob, $context, $ledger, ImportJobStatus::AWAITING_CONFIRMATION)) {
+                $this->persist($importJob, $context, $ledger);
+            }
 
             return false;
         }
 
-        if (!$this->enterNextPhase($importJob, $context, $importer, $phases, $options)) {
-            $this->terminate($importJob, $context, $ledger, ImportJobStatus::FINISHED);
+        if (!$this->enterNextPhase($importJob, $context, $importer, $phases)) {
+            $this->transition($importJob, $context, $ledger, ImportJobStatus::FINISHED);
 
             return false;
         }
@@ -286,7 +315,6 @@ final class ImportJobSequencer
         ImportJobContext $context,
         EntityImporterInterface $importer,
         array $phases,
-        ImportJobOptions $options,
     ): bool {
         $currentPhaseId = $context->getCurrentPhaseId();
         $next = null === $currentPhaseId ? 0 : (int) $this->indexOfPhase($phases, $currentPhaseId) + 1;
@@ -303,17 +331,20 @@ final class ImportJobSequencer
                 continue;
             }
 
-            // once, on the way in, and never in a dry run
-            if (ImportPhaseDefinition::PHASE_DATABASE === $phase->id && $options->truncate && !$options->dryRun) {
-                $this->truncator->truncate($importJob->getEntityType(), $context->getShopConstraint());
-            }
-
             $context->enterPhase($phase->id, $totalUnits);
 
             return true;
         }
 
         return false;
+    }
+
+    private function isAboutToTruncate(ImportJobContext $context, ImportJobOptions $options): bool
+    {
+        return $options->truncate
+            && !$options->dryRun
+            && ImportPhaseDefinition::PHASE_DATABASE === $context->getCurrentPhaseId()
+            && 0 === $context->getCurrentOffset();
     }
 
     private function hasBlockingMessages(ImportJobMessageLedger $ledger, string $phaseId): bool
@@ -336,40 +367,67 @@ final class ImportJobSequencer
         return null;
     }
 
-    private function persist(ImportJob $importJob, ImportJobContext $context, ImportJobMessageLedger $ledger): void
-    {
-        $importJob
-            ->setCurrentPhaseId($context->getCurrentPhaseId())
-            ->setCurrentOffset($context->getCurrentOffset())
-            ->setResumeCursor($context->getResumeCursor())
-            ->setSkippedRows($context->getSkippedRows())
-            ->setSkippedRowCount(count($context->getSkippedRows()))
-            ->setMessages($ledger->toArray());
-
-        $this->importJobRepository->save($importJob);
-    }
-
     /**
-     * Terminal states keep their messages and their skipped-row COUNT, drop the row list and the
-     * cursor nothing will read again, and take the working file with them.
+     * Moves the job to $to unless another request ended it first. A terminal outcome — the one
+     * asked for, or the one found — settles the job: progress persisted under it, working file
+     * removed. A vanished row is left alone, since saving would resurrect it.
+     *
+     * @return bool true when the job now holds $to; false when it is over — already settled here
+     *              under the status the other request wrote, or gone — and the caller must stop
      */
-    private function terminate(
+    private function transition(
         ImportJob $importJob,
         ImportJobContext $context,
         ImportJobMessageLedger $ledger,
-        ImportJobStatus $status,
-    ): void {
+        ImportJobStatus $to,
+    ): bool {
+        $status = $this->importJobRepository->transitionStatus(
+            $importJob->getUuid(),
+            $to,
+            ImportJobStatus::nonTerminalCases()
+        );
+        if (null === $status) {
+            $this->removeWorkingFile($importJob->getUuid());
+
+            return false;
+        }
+
+        $importJob->setStatus($status);
+        if ($status->isTerminal()) {
+            $this->settle($importJob, $context, $ledger);
+        }
+
+        return $status === $to;
+    }
+
+    /**
+     * The last write of a job: its progress under the status the row now holds, then the working
+     * file goes with it.
+     */
+    private function settle(ImportJob $importJob, ImportJobContext $context, ImportJobMessageLedger $ledger): void
+    {
+        $this->persist($importJob, $context, $ledger);
+        $this->removeWorkingFile($importJob->getUuid());
+    }
+
+    /**
+     * A finished job keeps nothing to resume from. A cancelled or failed one keeps its cursor and
+     * its row list along with the messages: bounded data, and what a later retry of the rest needs
+     * to tell what went in (#42424).
+     */
+    private function persist(ImportJob $importJob, ImportJobContext $context, ImportJobMessageLedger $ledger): void
+    {
+        $finished = ImportJobStatus::FINISHED === $importJob->getStatus();
+
         $importJob
-            ->setStatus($status)
             ->setCurrentPhaseId($context->getCurrentPhaseId())
             ->setCurrentOffset($context->getCurrentOffset())
-            ->setResumeCursor(null)
+            ->setResumeCursor($finished ? null : $context->getResumeCursor())
+            ->setSkippedRows($finished ? [] : $context->getSkippedRows())
             ->setSkippedRowCount(count($context->getSkippedRows()))
-            ->setSkippedRows([])
             ->setMessages($ledger->toArray());
 
         $this->importJobRepository->save($importJob);
-        $this->removeWorkingFile($importJob->getUuid());
     }
 
     private function fail(
@@ -384,7 +442,7 @@ final class ImportJobSequencer
             $reason,
         )]);
 
-        $this->terminate($importJob, $context, $ledger, ImportJobStatus::FAILED);
+        $this->transition($importJob, $context, $ledger, ImportJobStatus::FAILED);
     }
 
     private function removeWorkingFile(string $importJobUuid): void
@@ -393,9 +451,9 @@ final class ImportJobSequencer
     }
 
     /**
-     * Only exceptions that speak the shop's language reach the merchant. Anything else is a bug
-     * whose message could expose internals, so it goes to the log files and the report stays
-     * generic.
+     * Only exceptions that speak the shop's language reach the merchant — the same two the row
+     * importer quotes. Anything else is a bug whose message could expose internals, so it goes to
+     * the log files and the report stays generic.
      */
     private function describe(ImportJob $importJob, Throwable $throwable): string
     {

@@ -12,6 +12,7 @@ use Generator;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Import\Command\StartImportJobCommand;
 use PrestaShop\PrestaShop\Core\Domain\Import\Exception\ImportJobConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\BatchLimit;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
@@ -37,6 +38,7 @@ class StartImportJobCommandTest extends TestCase
         );
 
         $this->assertSame('/tmp/products.csv', $command->getSourceFilePath());
+        $this->assertSame('products.csv', $command->getFileName(), 'Defaults to the basename');
         $this->assertSame('product', $command->getEntityType()->getValue());
         $this->assertSame('en', $command->getLangIso());
         $this->assertSame(2, $command->getShopConstraint()->getShopId()->getValue());
@@ -68,6 +70,23 @@ class StartImportJobCommandTest extends TestCase
     }
 
     /**
+     * An API upload reaches the handler under PHP's temp name; the report shows what the client
+     * called it.
+     */
+    public function testTheReportedFileNameIsTheClientsNotThePaths(): void
+    {
+        $command = $this->buildCommand(['sourceFilePath' => '/tmp/phpAbC123', 'fileName' => 'Catalogue 2026.xlsx']);
+
+        $this->assertSame('/tmp/phpAbC123', $command->getSourceFilePath());
+        $this->assertSame('Catalogue 2026.xlsx', $command->getFileName());
+    }
+
+    public function testTheLanguageCodeIsStoredInLowerCase(): void
+    {
+        $this->assertSame('en', $this->buildCommand(['langIso' => 'EN'])->getLangIso());
+    }
+
+    /**
      * @dataProvider provideInvalidConfigurations
      *
      * @param array<string, mixed> $overrides
@@ -88,7 +107,15 @@ class StartImportJobCommandTest extends TestCase
         ];
         yield 'file name longer than its column' => [
             ['sourceFilePath' => '/tmp/' . str_repeat('a', 252) . '.csv'],
-            ImportJobConstraintException::INVALID_SOURCE_PATH,
+            ImportJobConstraintException::INVALID_FILE_NAME,
+        ];
+        yield 'client file name longer than its column' => [
+            ['fileName' => str_repeat('a', 256)],
+            ImportJobConstraintException::INVALID_FILE_NAME,
+        ];
+        yield 'empty client file name' => [
+            ['fileName' => ''],
+            ImportJobConstraintException::INVALID_FILE_NAME,
         ];
         yield 'empty entity type' => [
             ['entityType' => ''],
@@ -134,6 +161,10 @@ class StartImportJobCommandTest extends TestCase
             ['options' => ['batchLimit' => 'lots']],
             ImportJobConstraintException::INVALID_BATCH_LIMIT,
         ];
+        yield 'batch limit above the cap' => [
+            ['options' => ['batchLimit' => BatchLimit::MAX_VALUE + 1]],
+            ImportJobConstraintException::INVALID_BATCH_LIMIT,
+        ];
         yield 'empty column mapping' => [
             ['fieldMapping' => []],
             ImportJobConstraintException::INVALID_COLUMN_MAPPING,
@@ -170,7 +201,8 @@ class StartImportJobCommandTest extends TestCase
             $overrides['options'] ?? [],
             $overrides['csvSeparator'] ?? ';',
             $overrides['multipleValueSeparator'] ?? ',',
-            $overrides['skipRows'] ?? 1
+            $overrides['skipRows'] ?? 1,
+            $overrides['fileName'] ?? null
         );
     }
 }

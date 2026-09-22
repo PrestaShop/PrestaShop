@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Import\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Import\Exception\ImportJobConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\BatchLimit;
 use PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\ImportJobUuid;
 
 /**
@@ -20,6 +21,8 @@ final class ContinueImportJobCommand
 {
     private readonly ImportJobUuid $importJobUuid;
 
+    private readonly ?BatchLimit $batchLimit;
+
     /**
      * @param int|null $batchLimit unit budget for this call, null uses the job's frozen batchLimit
      *                             option. Bounds the call, not one importer call — the sequencer
@@ -27,16 +30,10 @@ final class ContinueImportJobCommand
      *
      * @throws ImportJobConstraintException
      */
-    public function __construct(string $importJobUuid, private readonly ?int $batchLimit = null)
+    public function __construct(string $importJobUuid, ?int $batchLimit = null)
     {
-        if (null !== $batchLimit && $batchLimit < 1) {
-            throw new ImportJobConstraintException(
-                'Import batch limit must be at least one unit.',
-                ImportJobConstraintException::INVALID_BATCH_LIMIT
-            );
-        }
-
         $this->importJobUuid = new ImportJobUuid($importJobUuid);
+        $this->batchLimit = null === $batchLimit ? null : new BatchLimit($batchLimit);
     }
 
     public function getImportJobUuid(): ImportJobUuid
@@ -46,6 +43,6 @@ final class ContinueImportJobCommand
 
     public function getBatchLimit(): ?int
     {
-        return $this->batchLimit;
+        return $this->batchLimit?->getValue();
     }
 }

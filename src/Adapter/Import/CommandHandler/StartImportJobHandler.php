@@ -87,7 +87,8 @@ final class StartImportJobHandler implements StartImportJobHandlerInterface
             );
         }
 
-        $sourceFile = $this->resolveSourceFile($command->getSourceFilePath());
+        $sourceIsOurs = $this->assertReadableSource($command->getSourceFilePath());
+        $sourceFile = new SplFileInfo((string) realpath($command->getSourceFilePath()));
         $importJobUuid = ImportJobUuid::generate();
         $workingFilePath = $this->importDirectory->getWorkingFile($importJobUuid->getValue());
 
@@ -114,7 +115,7 @@ final class StartImportJobHandler implements StartImportJobHandlerInterface
             $importJobUuid->getValue(),
             $entityType,
             $shopId,
-            $sourceFile->getFilename(),
+            $command->getFileName(),
             $command->getSkipRows(),
             $normalized->dataRecordCount,
             [
@@ -124,10 +125,12 @@ final class StartImportJobHandler implements StartImportJobHandlerInterface
             ],
             $options->toArray()
         );
-        $this->importJobRepository->add($importJob);
+        $this->importJobRepository->save($importJob);
 
-        // only now: a rejected file can be retried without being uploaded again
-        if (!$options->keepSourceFile) {
+        // only now, so a rejected file can be retried without being uploaded again — and only a
+        // file that is ours: an upload in a temp directory is PHP's to remove when the request
+        // ends, a file a script pointed at is the script's
+        if ($sourceIsOurs && !$options->keepSourceFile) {
             $this->filesystem->remove($sourceFile->getPathname());
         }
 
@@ -180,11 +183,25 @@ final class StartImportJobHandler implements StartImportJobHandlerInterface
 
     /**
      * A path lets a caller name any file PHP can read, and imported content is quoted back in
-     * messages — so it is confined to the import directory and the system temp directory, where
-     * uploads land. Working files are excluded: they belong to other jobs, and normalizing one
-     * would also delete it.
+     * messages, so only two kinds of root are allowed. The import directory, where the back office
+     * uploads land. And the temp directories PHP writes uploads to (upload_tmp_dir, the system
+     * temp), because the Admin API hands the command UploadedFile::getPathname() as is — nothing
+     * sits between the request and this handler that could move the file first. Under a web SAPI
+     * a source in a temp directory must be an upload of the current request (is_uploaded_file()),
+     * which rules out every other file the PHP user owns there, sessions included; under the CLI
+     * the check could never pass and adds nothing, since whoever runs a console command or a test
+     * already has the filesystem.
+     *
+     * Working files are excluded: they belong to other jobs, and normalizing one would also delete
+     * it.
+     *
+     * @return bool whether the file is also ours to delete once normalized — only a source inside
+     *              the import directory is: PHP removes a request upload itself when the request
+     *              ends, and a file a script pointed at is the script's
+     *
+     * @throws CannotStartImportJobException when the file may not be read at all
      */
-    private function resolveSourceFile(string $sourceFilePath): SplFileInfo
+    private function assertReadableSource(string $sourceFilePath): bool
     {
         $realPath = realpath($sourceFilePath);
         if (false === $realPath || !is_file($realPath)) {
@@ -194,18 +211,32 @@ final class StartImportJobHandler implements StartImportJobHandlerInterface
             );
         }
 
-        $workingDir = realpath($this->importDirectory->getWorkingDir());
-        if (false !== $workingDir && $this->isUnder($realPath, $workingDir)) {
+        if ($this->isUnder($realPath, $this->importDirectory->getWorkingDir())) {
             throw new CannotStartImportJobException(
                 'An import working file cannot be used as a source.',
                 CannotStartImportJobException::SOURCE_FILE_OUT_OF_BOUNDS
             );
         }
 
-        foreach ([realpath($this->importDirectory->getDir()), realpath(sys_get_temp_dir())] as $allowedRoot) {
-            if (false !== $allowedRoot && $this->isUnder($realPath, $allowedRoot)) {
-                return new SplFileInfo($realPath);
+        if ($this->isUnder($realPath, $this->importDirectory->getDir())) {
+            return true;
+        }
+
+        foreach (array_unique([(string) ini_get('upload_tmp_dir'), sys_get_temp_dir()]) as $temporaryDirectory) {
+            if ('' === $temporaryDirectory || !$this->isUnder($realPath, $temporaryDirectory)) {
+                continue;
             }
+
+            // the raw path first: realpath() rewrites a symlinked temp directory (macOS /var), and
+            // is_uploaded_file() matches the string PHP recorded
+            if ('cli' !== PHP_SAPI && !is_uploaded_file($sourceFilePath) && !is_uploaded_file($realPath)) {
+                throw new CannotStartImportJobException(
+                    'A file in a temp directory must have been uploaded by the current request.',
+                    CannotStartImportJobException::SOURCE_FILE_OUT_OF_BOUNDS
+                );
+            }
+
+            return false;
         }
 
         throw new CannotStartImportJobException(
@@ -214,9 +245,11 @@ final class StartImportJobHandler implements StartImportJobHandlerInterface
         );
     }
 
-    private function isUnder(string $path, string $root): bool
+    private function isUnder(string $realPath, string $directory): bool
     {
-        return str_starts_with($path, rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
+        $root = realpath($directory);
+
+        return false !== $root && str_starts_with($realPath, rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
     }
 
     /**

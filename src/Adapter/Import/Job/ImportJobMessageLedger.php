@@ -39,7 +39,9 @@ final class ImportJobMessageLedger
     private array $rowCountsByKey = [];
 
     /**
-     * @var array<string, int> severity => distinct messages the cap discarded
+     * @var array<string, int> severity => occurrences the cap discarded. A capped message that
+     *                         recurs in a later slice counts again: the discarded keys are not
+     *                         kept, or the cap would not be one
      */
     private array $droppedMessageCounts = [];
 
@@ -106,7 +108,7 @@ final class ImportJobMessageLedger
             $key = $message->coalesceKey();
 
             if (!isset($this->messagesByKey[$key])) {
-                if ($this->countStoredBySeverity($message->severity) >= self::MAX_DISTINCT_MESSAGES_PER_SEVERITY) {
+                if ($this->countBySeverity($message->severity) >= self::MAX_DISTINCT_MESSAGES_PER_SEVERITY) {
                     ++$this->droppedMessageCounts[$message->severity];
 
                     continue;
@@ -185,10 +187,5 @@ final class ImportJobMessageLedger
         }
 
         return new ImportMessage($message->severity, $message->phase, $message->message, $rows, $message->field);
-    }
-
-    private function countStoredBySeverity(string $severity): int
-    {
-        return $this->countBySeverity($severity);
     }
 }

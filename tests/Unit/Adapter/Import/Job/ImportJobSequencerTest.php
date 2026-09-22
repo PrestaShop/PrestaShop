@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Adapter\Import\ImportTruncator;
 use PrestaShop\PrestaShop\Adapter\Import\Job\ImportJobContextFactory;
 use PrestaShop\PrestaShop\Adapter\Import\Job\ImportJobSequencer;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterRegistry;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ImportEngineException;
@@ -42,6 +43,8 @@ class ImportJobSequencerTest extends TestCase
 
     private ?ImportEntityDeleterInterface $entityDeleter = null;
 
+    private bool $workingFileExists = true;
+
     public function testItWalksEveryPhaseAndFinishes(): void
     {
         $job = $this->buildJob();
@@ -60,7 +63,7 @@ class ImportJobSequencerTest extends TestCase
         $this->assertSame(ImportJobStatus::FINISHED, $job->getStatus());
         $this->assertSame([ImportPhaseDefinition::PHASE_VALIDATION, ImportPhaseDefinition::PHASE_DATABASE], $seen, 'A 10-unit phase fits in one slice, so one call each');
         $this->assertSame([ImportPhaseDefinition::PHASE_VALIDATION => 10, ImportPhaseDefinition::PHASE_DATABASE => 10], $job->getPhaseTotals());
-        $this->assertNull($job->getResumeCursor(), 'A terminal job keeps nothing to resume from');
+        $this->assertNull($job->getResumeCursor(), 'A finished job keeps nothing to resume from');
         $this->assertSame([], $job->getSkippedRows());
     }
 
@@ -212,6 +215,24 @@ class ImportJobSequencerTest extends TestCase
         $this->assertSame('The working file disappeared', $job->getMessages()['items'][0]['message']);
     }
 
+    /**
+     * The same rule ProductRowImporter applies to one row: a domain exception is written for a
+     * caller, so it is worth quoting.
+     */
+    public function testADomainExceptionIsQuotedToTheMerchant(): void
+    {
+        $job = $this->buildJob();
+
+        $this->sequence($job, $this->importer(
+            [$this->phase(ImportPhaseDefinition::PHASE_DATABASE)],
+            [ImportPhaseDefinition::PHASE_DATABASE => 5],
+            fn () => throw new DomainException('The product price is invalid')
+        ));
+
+        $this->assertSame(ImportJobStatus::FAILED, $job->getStatus());
+        $this->assertSame('The product price is invalid', $job->getMessages()['items'][0]['message']);
+    }
+
     public function testAnUnexpectedThrowableIsNotQuotedBackToTheMerchant(): void
     {
         $job = $this->buildJob();
@@ -224,6 +245,33 @@ class ImportJobSequencerTest extends TestCase
 
         $this->assertSame(ImportJobStatus::FAILED, $job->getStatus());
         $this->assertStringNotContainsString('ps_secret', $job->getMessages()['items'][0]['message']);
+    }
+
+    /**
+     * Bounded data, and what a retry of the rest needs to tell what went in: only a finished job
+     * has nothing left to resume.
+     */
+    public function testAFailedJobKeepsWhereItStoppedAndWhatItSkipped(): void
+    {
+        $job = $this->buildJob();
+        $calls = 0;
+
+        $this->sequence($job, $this->importer(
+            [$this->phase(ImportPhaseDefinition::PHASE_DATABASE)],
+            [ImportPhaseDefinition::PHASE_DATABASE => 100],
+            function (string $phaseId, ImportJobContext $context, int $limit) use (&$calls): PhaseBatchResult {
+                if (++$calls > 1) {
+                    throw new ImportEngineException('The second slice blew up');
+                }
+
+                return new PhaseBatchResult($limit, [], [3], 'byte-420');
+            }
+        ), batchLimit: 40);
+
+        $this->assertSame(ImportJobStatus::FAILED, $job->getStatus());
+        $this->assertSame(ImportJobSequencer::MAX_UNITS_PER_STEP, $job->getCurrentOffset(), 'The slice that failed is not counted');
+        $this->assertSame('byte-420', $job->getResumeCursor());
+        $this->assertSame([3], $job->getSkippedRows());
     }
 
     public function testAFileRejectingTooManyRowsIsTreatedAsMalformed(): void
@@ -270,9 +318,28 @@ class ImportJobSequencerTest extends TestCase
     }
 
     /**
+     * A purge, or a hand, removed the file the batch reads; the importer must not be asked to open
+     * it, and the report must say so without quoting a server path.
+     */
+    public function testAWorkingFileThatVanishedFailsTheJobWithAMessageTheMerchantCanRead(): void
+    {
+        $job = $this->buildJob();
+        $this->workingFileExists = false;
+
+        $this->sequence($job, $this->importer(
+            [$this->phase(ImportPhaseDefinition::PHASE_DATABASE)],
+            [ImportPhaseDefinition::PHASE_DATABASE => 5],
+            fn () => throw new LogicException('The importer must never be handed a file that is gone')
+        ));
+
+        $this->assertSame(ImportJobStatus::FAILED, $job->getStatus());
+        $this->assertStringContainsString('working file', $job->getMessages()['items'][0]['message']);
+    }
+
+    /**
      * The database is the arbiter. The rows this slice wrote before the cancellation was observed
-     * are real, so they are recorded under the status the other request chose — writing progress
-     * cannot clobber it, because a progress write never touches the status column.
+     * are real, so they are recorded under the status the other request chose — and a cancelled
+     * job keeps where it stopped and what it skipped, for a retry of the rest.
      */
     public function testACancellationObservedBetweenSlicesRecordsTheWorkAlreadyDone(): void
     {
@@ -281,7 +348,7 @@ class ImportJobSequencerTest extends TestCase
         $this->sequence($job, $this->importer(
             [$this->phase(ImportPhaseDefinition::PHASE_DATABASE)],
             [ImportPhaseDefinition::PHASE_DATABASE => 100],
-            fn (string $phaseId, ImportJobContext $context, int $limit) => new PhaseBatchResult($limit, [], [], 'cursor')
+            fn (string $phaseId, ImportJobContext $context, int $limit) => new PhaseBatchResult($limit, [], [$context->getCurrentOffset()], 'cursor')
         ), repository: $this->repository(ImportJobStatus::CANCELLED));
 
         $this->assertSame(ImportJobStatus::CANCELLED, $job->getStatus(), 'The reported status is the one the database holds');
@@ -290,7 +357,90 @@ class ImportJobSequencerTest extends TestCase
             $job->getCurrentOffset(),
             'The merchant has to be able to tell which rows made it in before the cancellation'
         );
-        $this->assertNull($job->getResumeCursor(), 'Nothing will resume a cancelled job');
+        $this->assertSame('cursor', $job->getResumeCursor());
+        $this->assertSame([0], $job->getSkippedRows());
+    }
+
+    /**
+     * A Cancel got there first — it took the lock before this Continue, wrote CANCELLED and removed
+     * the working file. The job has to end as the merchant asked, not as a failure on the file.
+     */
+    public function testACancelThatLandedBeforeTheBatchStartedSettlesTheJobAsCancelled(): void
+    {
+        $job = $this->buildJob();
+        $this->workingFileExists = false;
+        $repository = $this->repository(
+            ImportJobStatus::CANCELLED,
+            static fn (string $uuid, ImportJobStatus $to): ImportJobStatus => ImportJobStatus::CANCELLED
+        );
+        $repository->expects($this->once())->method('save');
+
+        $this->sequence($job, $this->importer(
+            [$this->phase(ImportPhaseDefinition::PHASE_DATABASE)],
+            [ImportPhaseDefinition::PHASE_DATABASE => 5],
+            fn () => throw new LogicException('Nothing may run for a job that is already over')
+        ), repository: $repository);
+
+        $this->assertSame(ImportJobStatus::CANCELLED, $job->getStatus());
+        $this->assertSame([], $job->getMessages()['items'] ?? [], 'A cancellation is not an error to report');
+    }
+
+    /**
+     * The cancel landed between the top-of-batch transition and the first row of the database
+     * phase. Truncation is the one step that has to re-ask right before acting, and a lost
+     * transition ends the job under the status the other request wrote instead of overwriting it.
+     */
+    public function testATransitionLostToAConcurrentCancelSettlesTheJobWithoutTruncating(): void
+    {
+        $job = $this->buildJob(options: ['truncate' => true]);
+        $this->entityDeleter = $this->createMock(ImportEntityDeleterInterface::class);
+        $this->entityDeleter->expects($this->never())->method('deleteAll');
+
+        $transitions = 0;
+        $repository = $this->repository(
+            ImportJobStatus::RUNNING,
+            static function (string $uuid, ImportJobStatus $to) use (&$transitions): ImportJobStatus {
+                // the first transition, at the top of the batch, is won; the second, right before
+                // truncating, meets the cancel
+                return 1 === ++$transitions ? $to : ImportJobStatus::CANCELLED;
+            }
+        );
+
+        $seen = [];
+        $this->sequence($job, $this->importer(
+            [$this->phase(ImportPhaseDefinition::PHASE_VALIDATION), $this->phase(ImportPhaseDefinition::PHASE_DATABASE)],
+            [ImportPhaseDefinition::PHASE_VALIDATION => 5, ImportPhaseDefinition::PHASE_DATABASE => 5],
+            function (string $phaseId, ImportJobContext $context, int $limit) use (&$seen): PhaseBatchResult {
+                $seen[] = $phaseId;
+
+                return new PhaseBatchResult($limit, [], [], 'cursor');
+            }
+        ), batchLimit: 100, repository: $repository);
+
+        $this->assertSame([ImportPhaseDefinition::PHASE_VALIDATION], $seen, 'Nothing of the database phase ran');
+        $this->assertSame(ImportJobStatus::CANCELLED, $job->getStatus());
+        $this->assertSame(ImportPhaseDefinition::PHASE_DATABASE, $job->getCurrentPhaseId());
+        $this->assertSame(0, $job->getCurrentOffset(), 'Entered, nothing written');
+    }
+
+    /**
+     * A budget can run out right after entering the database phase; the next call must still
+     * truncate before its first row, and only then.
+     */
+    public function testTruncateHappensBeforeTheFirstRowEvenWhenThePhaseWasEnteredByAnEarlierCall(): void
+    {
+        $job = $this->buildJob(options: ['truncate' => true], status: ImportJobStatus::RUNNING, currentPhaseId: ImportPhaseDefinition::PHASE_DATABASE);
+        $job->setPhaseTotals([ImportPhaseDefinition::PHASE_VALIDATION => 40, ImportPhaseDefinition::PHASE_DATABASE => 40]);
+        $this->entityDeleter = $this->createMock(ImportEntityDeleterInterface::class);
+        $this->entityDeleter->expects($this->once())->method('deleteAll');
+
+        $this->sequence($job, $this->importer(
+            [$this->phase(ImportPhaseDefinition::PHASE_VALIDATION), $this->phase(ImportPhaseDefinition::PHASE_DATABASE)],
+            [ImportPhaseDefinition::PHASE_VALIDATION => 40, ImportPhaseDefinition::PHASE_DATABASE => 40],
+            fn (string $phaseId, ImportJobContext $context, int $limit) => new PhaseBatchResult($limit, [], [], null)
+        ), batchLimit: 40);
+
+        $this->assertSame(ImportJobStatus::FINISHED, $job->getStatus());
     }
 
     /**
@@ -300,6 +450,7 @@ class ImportJobSequencerTest extends TestCase
     {
         $job = $this->buildJob();
         $repository = $this->createMock(ImportJobRepository::class);
+        $repository->method('transitionStatus')->willReturnCallback(static fn (string $uuid, ImportJobStatus $to): ImportJobStatus => $to);
         $repository->method('readStatus')->willReturn(null);
         $repository->expects($this->never())->method('save');
 
@@ -382,6 +533,8 @@ class ImportJobSequencerTest extends TestCase
     ): void {
         $importDirectory = new ImportDirectory($this->configuration());
         $deleter = $this->entityDeleter ?? $this->createMock(ImportEntityDeleterInterface::class);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->method('exists')->willReturn($this->workingFileExists);
 
         (new ImportJobSequencer(
             new EntityImporterRegistry([$importer]),
@@ -389,16 +542,23 @@ class ImportJobSequencerTest extends TestCase
             new ImportJobContextFactory($importDirectory),
             new ImportTruncator($deleter),
             $importDirectory,
-            $this->createMock(Filesystem::class),
+            $filesystem,
             $this->translator(),
             new NullLogger()
         ))->run($importJob, $batchLimit);
     }
 
-    private function repository(ImportJobStatus $probedStatus): ImportJobRepository&MockObject
+    /**
+     * @param ImportJobStatus $probedStatus what the between-slices probe reports
+     * @param callable|null $onTransition what a transition finds in the row; won by default
+     */
+    private function repository(ImportJobStatus $probedStatus, ?callable $onTransition = null): ImportJobRepository&MockObject
     {
         $repository = $this->createMock(ImportJobRepository::class);
         $repository->method('readStatus')->willReturn($probedStatus);
+        $repository->method('transitionStatus')->willReturnCallback(
+            $onTransition ?? static fn (string $uuid, ImportJobStatus $to): ImportJobStatus => $to
+        );
 
         return $repository;
     }

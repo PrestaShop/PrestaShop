@@ -30,7 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
  * at database-phase entry, dryRun truncates the phase list after validation and
  * batchLimit is the default unit budget of a Continue, all three in the batch
  * sequencer; keepSourceFile is read by the Start handler, which otherwise deletes
- * the source once normalization succeeded.
+ * a source sitting in the import directory once normalization succeeded (an
+ * upload in the temp directory is PHP's to remove).
  *
  * The legacy "regenerate thumbnails" option has NO equivalent here: the CQRS
  * image pipeline always regenerates, so the flag would have no consumer (and

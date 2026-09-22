@@ -2320,7 +2320,7 @@ CREATE TABLE `PREFIX_import_match` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_import_job` (
-  `import_job_uuid` char(36) NOT NULL,
+  `import_job_uuid` char(36) COLLATE utf8mb4_bin NOT NULL,
   `entity_type` varchar(64) NOT NULL,
   `id_shop` int(10) UNSIGNED NOT NULL,
   `status` varchar(32) NOT NULL,
@@ -2339,7 +2339,7 @@ CREATE TABLE `PREFIX_import_job` (
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`import_job_uuid`),
-  KEY `status_date_upd` (`status`, `date_upd`)
+  KEY `date_upd` (`date_upd`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_country_shop` (

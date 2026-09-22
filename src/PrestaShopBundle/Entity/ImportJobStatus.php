@@ -30,13 +30,10 @@ enum ImportJobStatus: string
     }
 
     /**
-     * @return list<string> for the purge query
+     * @return list<self> the statuses a transition may start from: a terminal one is final
      */
-    public static function terminalValues(): array
+    public static function nonTerminalCases(): array
     {
-        return array_values(array_map(
-            static fn (self $status): string => $status->value,
-            array_filter(self::cases(), static fn (self $status): bool => $status->isTerminal())
-        ));
+        return array_values(array_filter(self::cases(), static fn (self $status): bool => !$status->isTerminal()));
     }
 }

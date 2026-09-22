@@ -55,8 +55,8 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
     private const DEFAULT_LANGUAGE_ISO = 'en';
 
     /**
-     * Copies the fixture where a real upload lands — the system temp directory, one of the two
-     * roots a source may be read from — and starts the job in the same step, so no scenario
+     * Copies the fixture where a back-office upload lands — the import directory, the root whose
+     * files the handler owns and deletes — and starts the job in the same step, so no scenario
      * depends on a path some earlier step stashed away.
      *
      * @When I start an import job :reference for entity type :entityType from file :fixture
@@ -71,7 +71,30 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
         ?string $langIso = null,
         ?TableNode $table = null,
     ): void {
-        $source = sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::SOURCE_PREFIX . $reference . '.' . pathinfo($fixture, PATHINFO_EXTENSION);
+        $this->startImportJobFromCopy($this->getImportDirectory(), $reference, $entityType, $fixture, $langIso, $table);
+    }
+
+    /**
+     * Copies the fixture where an Admin API upload lands — a temp directory, the other kind of root
+     * a source may be read from, and one the handler never deletes from.
+     *
+     * @When I start an import job :reference for entity type :entityType from an upload of :fixture
+     * @When I start an import job :reference for entity type :entityType from an upload of :fixture with following options:
+     */
+    public function startImportJobFromUpload(string $reference, string $entityType, string $fixture, ?TableNode $table = null): void
+    {
+        $this->startImportJobFromCopy($this->getUploadDirectory(), $reference, $entityType, $fixture, null, $table);
+    }
+
+    private function startImportJobFromCopy(
+        string $directory,
+        string $reference,
+        string $entityType,
+        string $fixture,
+        ?string $langIso,
+        ?TableNode $table,
+    ): void {
+        $source = $directory . self::SOURCE_PREFIX . $reference . '.' . pathinfo($fixture, PATHINFO_EXTENSION);
         (new Filesystem())->copy(self::FIXTURE_DIR . $fixture, $source, true);
 
         try {
@@ -81,7 +104,8 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
                 $langIso ?? self::DEFAULT_LANGUAGE_ISO,
                 ShopConstraint::shop(self::DEFAULT_SHOP_ID),
                 $this->readFieldMapping($source),
-                null === $table ? [] : $this->castOptions($table->getRowsHash())
+                null === $table ? [] : $this->castOptions($table->getRowsHash()),
+                fileName: basename($fixture)
             ));
         } catch (Exception $exception) {
             $this->setLastException($exception);
@@ -94,22 +118,56 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * Skips the upload copy and points straight at the fixture directory, which is neither the
-     * import directory nor the system temp — the only two roots a source may be read from. A
-     * fixture name that does not exist reaches the missing-file guard through the same step.
+     * import directory nor a temp directory — the only roots a source may be read from. A fixture
+     * name that does not exist reaches the missing-file guard through the same step.
      *
      * @When I start an import job :reference for entity type :entityType from the unconfined file :fixture
      */
     public function startImportJobFromUnconfinedFile(string $reference, string $entityType, string $fixture): void
     {
-        $source = self::FIXTURE_DIR . $fixture;
+        $this->startImportJobFromPath($reference, $entityType, self::FIXTURE_DIR . $fixture);
+    }
 
+    /**
+     * Names another job's working file as the source: inside the import directory, yet refused,
+     * since normalizing it would also delete it under the job that owns it.
+     *
+     * @When I start an import job :reference for entity type :entityType from the working file of import job :otherReference
+     */
+    public function startImportJobFromWorkingFile(string $reference, string $entityType, string $otherReference): void
+    {
+        $this->startImportJobFromPath($reference, $entityType, $this->getWorkingFilePath($otherReference));
+    }
+
+    /**
+     * Plants a link inside the import directory to a file outside it: the roots are compared on
+     * real paths, so the link must not open what it points at.
+     *
+     * @When I start an import job :reference for entity type :entityType from a link in the import directory to the unconfined file :fixture
+     */
+    public function startImportJobFromLink(string $reference, string $entityType, string $fixture): void
+    {
+        $link = $this->getImportDirectory() . self::SOURCE_PREFIX . $reference . '.csv';
+        $filesystem = new Filesystem();
+        $filesystem->mkdir($this->getImportDirectory());
+        $filesystem->symlink(self::FIXTURE_DIR . $fixture, $link);
+
+        $this->startImportJobFromPath($reference, $entityType, $link);
+    }
+
+    /**
+     * The guard scenarios: the path is the point, so the mapping is the scripted importer's fixed
+     * one rather than read from a file that may not exist or have no header.
+     */
+    private function startImportJobFromPath(string $reference, string $entityType, string $source): void
+    {
         try {
             $importJobUuid = $this->getCommandBus()->handle(new StartImportJobCommand(
                 $source,
                 $entityType,
                 self::DEFAULT_LANGUAGE_ISO,
                 ShopConstraint::shop(self::DEFAULT_SHOP_ID),
-                is_file($source) ? $this->readFieldMapping($source) : ['verb'],
+                ['verb', 'phase', 'label'],
             ));
         } catch (Exception $exception) {
             $this->setLastException($exception);
@@ -199,7 +257,8 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * The retention window is days wide, so a scenario ages the row instead of waiting.
+     * The retention window is days wide, so a scenario ages the row instead of waiting — and the
+     * working file with it, since a real abandoned job's file is as old as its row.
      *
      * @Given the import job :reference was last updated :days days ago
      */
@@ -211,6 +270,11 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
             $days,
             pSQL($this->referenceToUuid($reference))
         ));
+
+        $workingFile = $this->getWorkingFilePath($reference);
+        if (file_exists($workingFile)) {
+            touch($workingFile, time() - $days * 86400);
+        }
     }
 
     /**
@@ -407,9 +471,11 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
     {
         $filesystem = new Filesystem();
 
-        // a source only survives when Start refused it: the handler deletes it on success
+        // a source in the import directory only survives when Start refused it or was told to keep
+        // it; one in a temp directory always does, the handler never deletes there
         $leftovers = array_merge(
-            glob(sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::SOURCE_PREFIX . '*') ?: [],
+            glob($this->getImportDirectory() . self::SOURCE_PREFIX . '*') ?: [],
+            glob($this->getUploadDirectory() . self::SOURCE_PREFIX . '*') ?: [],
             glob($this->getImportDirectory() . 'work' . DIRECTORY_SEPARATOR . '*.csv') ?: []
         );
 
@@ -423,7 +489,18 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
      */
     private function findSourceFiles(string $reference): array
     {
-        return glob(sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::SOURCE_PREFIX . $reference . '.*') ?: [];
+        return array_merge(
+            glob($this->getImportDirectory() . self::SOURCE_PREFIX . $reference . '.*') ?: [],
+            glob($this->getUploadDirectory() . self::SOURCE_PREFIX . $reference . '.*') ?: []
+        );
+    }
+
+    /**
+     * One of the temp directories PHP writes uploads to, which ImportSourceGuard reads from.
+     */
+    private function getUploadDirectory(): string
+    {
+        return sys_get_temp_dir() . DIRECTORY_SEPARATOR;
     }
 
     private function purge(?string $expirationDate): ?ImportJobPurgeSummary
