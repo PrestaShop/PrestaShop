@@ -26,7 +26,11 @@
 
 <table class="grid-table js-grid-table table {% if is_ordering_column(grid) %}grid-ordering-column{% endif %} {% if grid.attributes.is_empty_state %}border-0{% endif %}"
        id="{{ grid.id }}_grid_table"
+{%- if grid.sql_export_grid_factory_service_id %}
+       data-sql-export-grid-factory="{{ grid.sql_export_grid_factory_service_id }}"
+{%- elseif is_granted('create', 'AdminRequestSql') %}
        data-query="{{ grid.data.query }}"
+{%- endif %}
        data-limit="{{ grid.pagination.limit }}"
        data-offset="{{ grid.pagination.offset }}"
        data-total="{{ grid.data.records_total }}"

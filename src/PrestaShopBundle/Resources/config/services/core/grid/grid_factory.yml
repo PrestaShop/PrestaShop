@@ -2,6 +2,14 @@ services:
   _defaults:
     public: true
 
+  _instanceof:
+    PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface:
+      tags: [ 'core.grid_factory' ]
+
+  PrestaShop\PrestaShop\Core\Grid\GridFactoryProvider:
+    arguments:
+      $factories: !tagged_locator { tag: core.grid_factory }
+
   prestashop.core.grid.log_factory:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
