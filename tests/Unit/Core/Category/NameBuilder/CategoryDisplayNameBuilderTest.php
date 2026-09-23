@@ -154,7 +154,7 @@ class CategoryDisplayNameBuilderTest extends TestCase
         $mock = $this->getMockBuilder(CategoryRepository::class)
             ->onlyMethods([
                 'getDuplicateNameIds',
-                'getBreadcrumbParts',
+                'getBreadcrumbPartsForCategories',
             ])
             ->disableOriginalConstructor()
             ->getMock()
@@ -166,10 +166,10 @@ class CategoryDisplayNameBuilderTest extends TestCase
             }, array_keys($breadcrumbPartsByDuplicatedIds)))
         ;
 
-        $mock->method('getBreadcrumbParts')
+        $mock->method('getBreadcrumbPartsForCategories')
             ->willReturnCallback(
-                function (CategoryId $categoryId, LanguageId $languageId) use ($breadcrumbPartsByDuplicatedIds): array {
-                    return $breadcrumbPartsByDuplicatedIds[$categoryId->getValue()];
+                function (array $categoryIds, LanguageId $languageId) use ($breadcrumbPartsByDuplicatedIds): array {
+                    return array_intersect_key($breadcrumbPartsByDuplicatedIds, array_flip($categoryIds));
                 }
             )
         ;
