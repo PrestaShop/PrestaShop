@@ -61,6 +61,8 @@ class DeliveryOptionsFinderCore implements DeliveryOptionsInterface
 
         if (isset($delivery_option_list[$this->context->cart->id_address_delivery])) {
             foreach ($delivery_option_list[$this->context->cart->id_address_delivery] as $id_carriers_list => $carriers_list) {
+                $option_carrier_names = [];
+                $option_carrier_delays = [];
                 foreach ($carriers_list as $carriers) {
                     if (is_array($carriers)) {
                         foreach ($carriers as $carrier) {
@@ -111,9 +113,22 @@ class DeliveryOptionsFinderCore implements DeliveryOptionsInterface
                                 }
                             }
 
+                            $option_carrier_names[] = $carrier['name'];
+                            $option_carrier_delays[] = $carrier['delay'];
+
                             $carriers_available[$id_carriers_list] = $carrier;
                         }
                     }
+                }
+
+                // A delivery option covers one package per carrier and is priced for all of them, while
+                // the entry kept above is only the last carrier of the loop. Name it after every carrier
+                // it covers, so the name agrees with the price shown next to it. A single logo cannot
+                // stand for several carriers, so it is dropped rather than picked arbitrarily.
+                if (count($option_carrier_names) > 1 && isset($carriers_available[$id_carriers_list])) {
+                    $carriers_available[$id_carriers_list]['name'] = implode(', ', array_unique($option_carrier_names));
+                    $carriers_available[$id_carriers_list]['delay'] = implode(', ', array_unique($option_carrier_delays));
+                    $carriers_available[$id_carriers_list]['logo'] = false;
                 }
             }
         }
