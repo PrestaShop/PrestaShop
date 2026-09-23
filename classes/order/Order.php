@@ -2491,6 +2491,30 @@ class OrderCore extends ObjectModel
                 $tax_rates[$tax->id] = $tax->rate;
             }
 
+            /*
+             * A line carrying no tax never enters the loop below, so it never reaches
+             * $actual_total_base either, while $this->total_products counted it into
+             * $expected_total_base. The difference then looks like a rounding error and is added to
+             * the base of a rate this product does not belong to. Take the line back out, rounded
+             * the way the taxed lines below are, so the two totals stay comparable.
+             */
+            if (empty($tax_calculator->taxes)) {
+                switch ($round_type) {
+                    case Order::ROUND_ITEM:
+                        $expected_total_base -= $quantity * Tools::ps_round($discounted_price_tax_excl, Context::getContext()->getComputingPrecision(), $this->round_mode);
+
+                        break;
+                    case Order::ROUND_LINE:
+                        $expected_total_base -= Tools::ps_round($quantity * $discounted_price_tax_excl, Context::getContext()->getComputingPrecision(), $this->round_mode);
+
+                        break;
+                    case Order::ROUND_TOTAL:
+                        $expected_total_base -= $quantity * $discounted_price_tax_excl;
+
+                        break;
+                }
+            }
+
             foreach ($tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $unit_amount) {
                 $total_tax_base = $total_amount = 0;
                 switch ($round_type) {
