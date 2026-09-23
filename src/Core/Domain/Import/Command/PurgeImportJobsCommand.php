@@ -12,7 +12,8 @@ use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Domain\Import\Exception\ImportJobConstraintException;
 
 /**
- * Deletes terminal import jobs, and the working files nothing owns any more.
+ * Deletes import jobs untouched since a date, whatever their status, and the working files nothing
+ * owns any more.
  *
  * A command rather than a console-only routine: the same collection runs from the CLI, from a
  * Behat scenario, from the Admin API and from whatever the back office offers later.
@@ -20,15 +21,14 @@ use PrestaShop\PrestaShop\Core\Domain\Import\Exception\ImportJobConstraintExcept
 final class PurgeImportJobsCommand
 {
     /**
-     * @param DateTimeInterface|null $expirationDate anything terminal and untouched since then is
-     *                                               collected; null uses the retention window
+     * @param DateTimeInterface|null $expirationDate anything untouched since then is collected;
+     *                                               null uses the retention window
      *
      * @throws ImportJobConstraintException
      */
     public function __construct(private readonly ?DateTimeInterface $expirationDate = null)
     {
-        // a date ahead of now would collect every terminal job, including ones that finished
-        // seconds ago — "purge everything" is spelled with the current date, not a future one
+        // "purge everything" is spelled with the current date, not a future one
         if (null !== $expirationDate && $expirationDate->getTimestamp() > time()) {
             throw new ImportJobConstraintException(
                 'The import job expiration date cannot be in the future.',

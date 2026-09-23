@@ -16,7 +16,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Import\Exception;
  */
 final class ImportJobConstraintException extends ImportException
 {
-    public const INVALID_ID = 1;
+    public const INVALID_UUID = 1;
     public const INVALID_ENTITY_TYPE = 2;
     public const INVALID_SOURCE_PATH = 3;
     public const INVALID_LANG_ISO = 4;

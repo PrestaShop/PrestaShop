@@ -105,6 +105,10 @@ class StartImportJobCommandTest extends TestCase
             ['sourceFilePath' => ''],
             ImportJobConstraintException::INVALID_SOURCE_PATH,
         ];
+        yield 'source path with a null byte' => [
+            ['sourceFilePath' => "/tmp/products.csv\0.txt"],
+            ImportJobConstraintException::INVALID_SOURCE_PATH,
+        ];
         yield 'file name longer than its column' => [
             ['sourceFilePath' => '/tmp/' . str_repeat('a', 252) . '.csv'],
             ImportJobConstraintException::INVALID_FILE_NAME,

@@ -41,7 +41,7 @@ class ImportJobUuidTest extends TestCase
     public function testItRefusesAnythingThatIsNotAUuid(string $value): void
     {
         $this->expectException(ImportJobConstraintException::class);
-        $this->expectExceptionCode(ImportJobConstraintException::INVALID_ID);
+        $this->expectExceptionCode(ImportJobConstraintException::INVALID_UUID);
 
         new ImportJobUuid($value);
     }

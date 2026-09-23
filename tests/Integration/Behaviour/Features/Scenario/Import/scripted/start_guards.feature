@@ -30,6 +30,20 @@ Feature: Import job start guards
     When I start an import job "job1" for entity type "scripted" from a link in the import directory to the unconfined file "scripted/clean.csv"
     Then I should get an error that the import cannot start because "the file is out of bounds"
 
+  # only the files the back office lists are sources: the directory's own guards would otherwise be
+  # imported, then deleted, leaving the uploads next to them downloadable
+  Scenario: A dotfile of the import directory is refused
+    When I start an import job "job1" for entity type "scripted" from a file planted in the import directory as ".htaccess"
+    Then I should get an error that the import cannot start because "the file is out of bounds"
+
+  Scenario: The index file of the import directory is refused
+    When I start an import job "job1" for entity type "scripted" from a file planted in the import directory as "index.php"
+    Then I should get an error that the import cannot start because "the file is out of bounds"
+
+  Scenario: A file in a subdirectory of the import directory is refused
+    When I start an import job "job1" for entity type "scripted" from a file planted in the import directory as "nested/products.csv"
+    Then I should get an error that the import cannot start because "the file is out of bounds"
+
   Scenario: A file holding only a header is refused
     When I start an import job "job1" for entity type "scripted" from file "scripted/header_only.csv"
     Then I should get an error that the import cannot start because "the file is empty"
@@ -46,3 +60,16 @@ Feature: Import job start guards
   Scenario: A language that is not installed is refused
     When I start an import job "job1" for entity type "scripted" from file "scripted/clean.csv" in language "zz"
     Then I should get an error that the import cannot start because "the language is not installed"
+
+  # each scope gets a group of its own: the shop list resolver memoizes per group
+  Scenario: A shop scope resolving to no shop is refused
+    Given I add a shop group "emptyGroup" with name "Empty group"
+    When I start an import job "job1" for entity type "scripted" from file "scripted/clean.csv" for shop group "emptyGroup"
+    Then I should get an error that the import cannot start because "the shop scope is empty"
+
+  Scenario: A shop scope wider than one shop is refused
+    Given I add a shop group "twoShopGroup" with name "Two shop group"
+    And I add a shop "shop2" with name "Second shop" and color "red" for the group "twoShopGroup"
+    And I add a shop "shop3" with name "Third shop" and color "blue" for the group "twoShopGroup"
+    When I start an import job "job1" for entity type "scripted" from file "scripted/clean.csv" for shop group "twoShopGroup"
+    Then I should get an error that the import cannot start because "the shop scope is too wide"

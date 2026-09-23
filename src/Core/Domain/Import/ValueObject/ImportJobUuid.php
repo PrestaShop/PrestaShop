@@ -35,7 +35,7 @@ final class ImportJobUuid
         if (!Uuid::isValid($value)) {
             throw new ImportJobConstraintException(
                 sprintf('Import job uuid "%s" is not a valid UUID.', $value),
-                ImportJobConstraintException::INVALID_ID
+                ImportJobConstraintException::INVALID_UUID
             );
         }
 

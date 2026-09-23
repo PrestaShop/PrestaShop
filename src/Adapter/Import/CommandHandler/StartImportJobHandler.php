@@ -219,6 +219,13 @@ final class StartImportJobHandler implements StartImportJobHandlerInterface
         }
 
         if ($this->isUnder($realPath, $this->importDirectory->getDir())) {
+            if (!$this->isListedImportFile($realPath)) {
+                throw new CannotStartImportJobException(
+                    'This file of the import directory cannot be used as a source.',
+                    CannotStartImportJobException::SOURCE_FILE_OUT_OF_BOUNDS
+                );
+            }
+
             return true;
         }
 
@@ -243,6 +250,20 @@ final class StartImportJobHandler implements StartImportJobHandlerInterface
             'The import file is outside the directories imports may read.',
             CannotStartImportJobException::SOURCE_FILE_OUT_OF_BOUNDS
         );
+    }
+
+    /**
+     * Exactly what FileFinder offers the merchant: depth 0, no dotfile, no index.php. The rest is
+     * the directory's own — its guards would normalize into records and then be deleted, leaving
+     * the uploads next to them downloadable.
+     */
+    private function isListedImportFile(string $realPath): bool
+    {
+        $name = basename($realPath);
+
+        return dirname($realPath) === realpath($this->importDirectory->getDir())
+            && !str_starts_with($name, '.')
+            && 1 !== preg_match('/^index\.php/i', $name);
     }
 
     private function isUnder(string $realPath, string $directory): bool

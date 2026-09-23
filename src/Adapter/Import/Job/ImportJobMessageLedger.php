@@ -105,28 +105,42 @@ final class ImportJobMessageLedger
     public function addAll(array $messages): void
     {
         foreach ($messages as $message) {
-            $key = $message->coalesceKey();
+            $this->add($message, true);
+        }
+    }
 
-            if (!isset($this->messagesByKey[$key])) {
-                if ($this->countBySeverity($message->severity) >= self::MAX_DISTINCT_MESSAGES_PER_SEVERITY) {
-                    ++$this->droppedMessageCounts[$message->severity];
+    /**
+     * Stored past the cap: a file dirty enough to fail the job has usually filled it already, and
+     * the job would end failed with no reason shown.
+     */
+    public function addFailure(ImportMessage $message): void
+    {
+        $this->add($message, false);
+    }
 
-                    continue;
-                }
+    private function add(ImportMessage $message, bool $capped): void
+    {
+        $key = $message->coalesceKey();
 
-                $this->messagesByKey[$key] = $this->withCappedRows($message, []);
-                $this->rowCountsByKey[$key] = count($message->rows);
-                $this->droppedMessageCounts[$message->severity] ??= 0;
+        if (!isset($this->messagesByKey[$key])) {
+            if ($capped && $this->countBySeverity($message->severity) >= self::MAX_DISTINCT_MESSAGES_PER_SEVERITY) {
+                ++$this->droppedMessageCounts[$message->severity];
 
-                continue;
+                return;
             }
 
-            $stored = $this->messagesByKey[$key];
-            $this->messagesByKey[$key] = $this->withCappedRows($message, $stored->rows);
-            // a row is visited once per phase and the phase is part of the key, so incoming rows
-            // are always new — counting them is exact even past the row cap
-            $this->rowCountsByKey[$key] += count($message->rows);
+            $this->messagesByKey[$key] = $this->withCappedRows($message, []);
+            $this->rowCountsByKey[$key] = count($message->rows);
+            $this->droppedMessageCounts[$message->severity] ??= 0;
+
+            return;
         }
+
+        $stored = $this->messagesByKey[$key];
+        $this->messagesByKey[$key] = $this->withCappedRows($message, $stored->rows);
+        // a row is visited once per phase and the phase is part of the key, so incoming rows
+        // are always new — counting them is exact even past the row cap
+        $this->rowCountsByKey[$key] += count($message->rows);
     }
 
     /**

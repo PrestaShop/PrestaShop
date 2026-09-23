@@ -25,9 +25,9 @@ use PrestaShopBundle\Entity\Repository\ImportJobRepository;
  *
  * Thin on purpose: lock, check, delegate, report. The loop belongs to the sequencer.
  *
- * The lock comes before the status probe. Probed first, the status could be stale by the time the
- * lock is held, and a Cancel that squeezed in between would have removed the working file the
- * sequencer is about to read.
+ * The lock comes before the load, not just before the status probe. Loaded first, the job's
+ * progress — offset, cursor, skipped rows, messages — could predate a batch that released the lock
+ * in between, and resuming from it would re-import those rows and overwrite that batch's progress.
  */
 #[AsCommandHandler]
 final class ContinueImportJobHandler implements ContinueImportJobHandlerInterface
@@ -44,11 +44,6 @@ final class ContinueImportJobHandler implements ContinueImportJobHandlerInterfac
     {
         $importJobUuid = $command->getImportJobUuid()->getValue();
 
-        $importJob = $this->importJobRepository->findByUuid($importJobUuid);
-        if (null === $importJob) {
-            throw new ImportJobNotFoundException(sprintf('Import job "%s" was not found.', $importJobUuid));
-        }
-
         $lock = $this->importJobLock->acquire($importJobUuid);
         if (null === $lock) {
             throw new ImportJobAlreadyRunningException(sprintf(
@@ -58,7 +53,12 @@ final class ContinueImportJobHandler implements ContinueImportJobHandlerInterfac
         }
 
         try {
-            // the status the database holds, not the one this request happens to have loaded
+            $importJob = $this->importJobRepository->findByUuid($importJobUuid);
+            if (null === $importJob) {
+                throw new ImportJobNotFoundException(sprintf('Import job "%s" was not found.', $importJobUuid));
+            }
+
+            // the status the database holds, not the one this process's identity map may hold
             $status = $this->importJobRepository->readStatus($importJobUuid);
             if (null === $status) {
                 throw new ImportJobNotFoundException(sprintf('Import job "%s" was deleted.', $importJobUuid));

@@ -18,9 +18,12 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
  * Starts an import job from a source file and the wizard's frozen configuration.
  *
  * The source is a path, not a basename in the import directory, so one API operation can carry
- * file and configuration together. The handler confines it to the import directory and to PHP's
- * upload directory: a path otherwise lets a caller read any file, and imported content is quoted
- * back in messages.
+ * file and configuration together. The handler confines it to the files the import directory lists
+ * and to the temp directories PHP writes uploads to (upload_tmp_dir, the system temp): a path
+ * otherwise lets a caller read any file, and imported content is quoted back in messages.
+ *
+ * The "truncate" option is not permission-checked here: it deletes the entity's data in every shop,
+ * so the caller must restrict it to super admins, as the legacy page does.
  *
  * Validation is eager, so an instance is always well-formed; environment checks belong to the
  * handler.
@@ -64,9 +67,10 @@ final class StartImportJobCommand
         private readonly int $skipRows = 1,
         ?string $fileName = null,
     ) {
-        if ('' === $sourceFilePath) {
+        // realpath() throws a ValueError on a null byte rather than failing
+        if ('' === $sourceFilePath || str_contains($sourceFilePath, "\0")) {
             throw new ImportJobConstraintException(
-                'Import source file path cannot be empty.',
+                'Import source file path cannot be empty or contain a null byte.',
                 ImportJobConstraintException::INVALID_SOURCE_PATH
             );
         }

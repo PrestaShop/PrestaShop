@@ -463,6 +463,26 @@ class ImportJobSequencerTest extends TestCase
         $this->assertSame(ImportJobStatus::RUNNING, $job->getStatus());
     }
 
+    /**
+     * The status is written before the progress, so a job whose last write fails is already
+     * terminal, and nothing but the purge would ever come back for its working file.
+     */
+    public function testAFailingFinalWriteStillRemovesTheWorkingFile(): void
+    {
+        $repository = $this->repository(ImportJobStatus::RUNNING);
+        $repository->method('save')->willThrowException(new RuntimeException('The EntityManager is closed.'));
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->expects($this->atLeastOnce())->method('remove');
+
+        $this->expectException(RuntimeException::class);
+
+        $this->sequence($this->buildJob(), $this->importer(
+            [$this->phase(ImportPhaseDefinition::PHASE_DATABASE)],
+            [ImportPhaseDefinition::PHASE_DATABASE => 5],
+            fn (string $phaseId, ImportJobContext $context, int $limit) => new PhaseBatchResult($limit, [], [], null)
+        ), repository: $repository, filesystem: $filesystem);
+    }
+
     public function testTheImporterIsNeverHandedMoreThanOneSlice(): void
     {
         $job = $this->buildJob();
@@ -525,15 +545,19 @@ class ImportJobSequencerTest extends TestCase
         $this->assertSame(ImportJobStatus::FINISHED, $job->getStatus());
     }
 
+    /**
+     * @param (Filesystem&MockObject)|null $filesystem
+     */
     private function sequence(
         ImportJob $importJob,
         EntityImporterInterface $importer,
         ?int $batchLimit = null,
         ?ImportJobRepository $repository = null,
+        ?Filesystem $filesystem = null,
     ): void {
         $importDirectory = new ImportDirectory($this->configuration());
         $deleter = $this->entityDeleter ?? $this->createMock(ImportEntityDeleterInterface::class);
-        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem ??= $this->createMock(Filesystem::class);
         $filesystem->method('exists')->willReturn($this->workingFileExists);
 
         (new ImportJobSequencer(

@@ -21,14 +21,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Deletes finished import jobs and the working files nothing owns any more.
+ * Deletes import jobs untouched for a while, whatever their status, and the working files nothing
+ * owns any more.
  *
  * A thin wrapper: the collection itself is a CQRS command, so a cron running this is doing exactly
  * what the Admin API or a back-office button would do.
  */
 #[AsCommand(
     name: 'prestashop:import:purge-jobs',
-    description: 'Delete finished import jobs and their leftover working files.'
+    description: 'Delete stale import jobs and their leftover working files.'
 )]
 class ImportJobPurgeCommand extends Command
 {
@@ -44,7 +45,7 @@ class ImportJobPurgeCommand extends Command
             'days',
             null,
             InputOption::VALUE_REQUIRED,
-            'Keep jobs finished within the last N days. Defaults to the retention window.'
+            'Keep jobs touched within the last N days, at least 1. Defaults to the retention window.'
         );
     }
 
@@ -53,7 +54,8 @@ class ImportJobPurgeCommand extends Command
         $style = new SymfonyStyle($input, $output);
         $days = $input->getOption('days');
 
-        if (null !== $days && !ctype_digit((string) $days)) {
+        // 0 would also collect a job whose batch is running right now
+        if (null !== $days && (!ctype_digit((string) $days) || (int) $days < 1)) {
             $style->error('The --days option expects a positive number of days.');
 
             return self::INVALID;

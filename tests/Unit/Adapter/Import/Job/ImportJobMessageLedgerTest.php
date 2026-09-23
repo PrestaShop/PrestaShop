@@ -107,6 +107,22 @@ class ImportJobMessageLedgerTest extends TestCase
         $this->assertSame([], $ledger->getDroppedMessageCounts());
     }
 
+    public function testAJobFailureIsStoredEvenOnceItsSeverityIsFull(): void
+    {
+        $ledger = new ImportJobMessageLedger();
+        for ($i = 0; $i < ImportJobMessageLedger::MAX_DISTINCT_MESSAGES_PER_SEVERITY; ++$i) {
+            $ledger->addAll([$this->error(sprintf('Error %d', $i), [$i])]);
+        }
+
+        $ledger->addFailure($this->error('The file appears malformed', []));
+
+        $this->assertSame(
+            ImportJobMessageLedger::MAX_DISTINCT_MESSAGES_PER_SEVERITY + 1,
+            $ledger->countBySeverity(ImportMessage::SEVERITY_ERROR)
+        );
+        $this->assertSame([], $ledger->getDroppedMessageCounts());
+    }
+
     public function testCountingIsRestrictedToOnePhaseForThePausePredicate(): void
     {
         $ledger = new ImportJobMessageLedger();

@@ -19,6 +19,8 @@ default:
       contexts:
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Import\ImportJobFeatureContext
+        # the start guards build the shop scopes they refuse
+        - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         # the entity features assert what an import produced through the domain's own contexts,
         # so an importer is checked against the same expectations as the commands it dispatches
         - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext

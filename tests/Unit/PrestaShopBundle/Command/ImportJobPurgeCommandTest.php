@@ -52,7 +52,10 @@ class ImportJobPurgeCommandTest extends TestCase
         $this->assertGreaterThan(time() - 31 * 86400, $dispatched->getExpirationDate()->getTimestamp());
     }
 
-    public function testANonNumericWindowIsRefusedBeforeAnythingIsDispatched(): void
+    /**
+     * @dataProvider provideInvalidWindows
+     */
+    public function testAnInvalidWindowIsRefusedBeforeAnythingIsDispatched(string $days): void
     {
         $dispatched = false;
         $tester = $this->buildTester(
@@ -60,9 +63,16 @@ class ImportJobPurgeCommandTest extends TestCase
             function () use (&$dispatched): void { $dispatched = true; }
         );
 
-        $this->assertSame(Command::INVALID, $tester->execute(['--days' => 'lots']));
+        $this->assertSame(Command::INVALID, $tester->execute(['--days' => $days]));
         $this->assertFalse($dispatched, 'Nothing may be deleted on a typo');
         $this->assertStringContainsString('positive number of days', $tester->getDisplay());
+    }
+
+    public static function provideInvalidWindows(): iterable
+    {
+        yield 'not a number' => ['lots'];
+        // a batch running right now would be collected too
+        yield 'zero days' => ['0'];
     }
 
     public function testADomainFailureIsReportedInsteadOfCrashing(): void

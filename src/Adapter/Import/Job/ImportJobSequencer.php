@@ -402,12 +402,15 @@ final class ImportJobSequencer
 
     /**
      * The last write of a job: its progress under the status the row now holds, then the working
-     * file goes with it.
+     * file goes with it — even when that write fails, since the row is already terminal.
      */
     private function settle(ImportJob $importJob, ImportJobContext $context, ImportJobMessageLedger $ledger): void
     {
-        $this->persist($importJob, $context, $ledger);
-        $this->removeWorkingFile($importJob->getUuid());
+        try {
+            $this->persist($importJob, $context, $ledger);
+        } finally {
+            $this->removeWorkingFile($importJob->getUuid());
+        }
     }
 
     /**
@@ -436,11 +439,11 @@ final class ImportJobSequencer
         ImportJobMessageLedger $ledger,
         string $reason,
     ): void {
-        $ledger->addAll([new ImportMessage(
+        $ledger->addFailure(new ImportMessage(
             ImportMessage::SEVERITY_ERROR,
             (string) ($context->getCurrentPhaseId() ?? ''),
             $reason,
-        )]);
+        ));
 
         $this->transition($importJob, $context, $ledger, ImportJobStatus::FAILED);
     }

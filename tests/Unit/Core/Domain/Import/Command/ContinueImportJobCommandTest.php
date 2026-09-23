@@ -52,7 +52,7 @@ class ContinueImportJobCommandTest extends TestCase
     public function testItRefusesAMalformedJobIdentifier(): void
     {
         $this->expectException(ImportJobConstraintException::class);
-        $this->expectExceptionCode(ImportJobConstraintException::INVALID_ID);
+        $this->expectExceptionCode(ImportJobConstraintException::INVALID_UUID);
 
         new ContinueImportJobCommand('7');
     }
@@ -65,7 +65,7 @@ class ContinueImportJobCommandTest extends TestCase
     public function testCancellingRefusesAMalformedIdentifier(): void
     {
         $this->expectException(ImportJobConstraintException::class);
-        $this->expectExceptionCode(ImportJobConstraintException::INVALID_ID);
+        $this->expectExceptionCode(ImportJobConstraintException::INVALID_UUID);
 
         new CancelImportJobCommand('');
     }

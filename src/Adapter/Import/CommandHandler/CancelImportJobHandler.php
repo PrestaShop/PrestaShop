@@ -70,8 +70,11 @@ final class CancelImportJobHandler implements CancelImportJobHandlerInterface
         // failing to get it means a Continue owns it and will clean up at its next status probe
         $lock = $this->importJobLock->acquire($importJobUuid);
         if (null !== $lock) {
-            $this->filesystem->remove($this->importDirectory->getWorkingFile($importJobUuid));
-            $lock->release();
+            try {
+                $this->filesystem->remove($this->importDirectory->getWorkingFile($importJobUuid));
+            } finally {
+                $lock->release();
+            }
         }
     }
 }

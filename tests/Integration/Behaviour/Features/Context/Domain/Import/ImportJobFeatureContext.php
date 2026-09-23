@@ -75,6 +75,22 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I start an import job :reference for entity type :entityType from file :fixture for shop group :shopGroupReference
+     */
+    public function startImportJobForShopGroup(string $reference, string $entityType, string $fixture, string $shopGroupReference): void
+    {
+        $this->startImportJobFromCopy(
+            $this->getImportDirectory(),
+            $reference,
+            $entityType,
+            $fixture,
+            null,
+            null,
+            ShopConstraint::shopGroup($this->referenceToId($shopGroupReference))
+        );
+    }
+
+    /**
      * Copies the fixture where an Admin API upload lands — a temp directory, the other kind of root
      * a source may be read from, and one the handler never deletes from.
      *
@@ -93,6 +109,7 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
         string $fixture,
         ?string $langIso,
         ?TableNode $table,
+        ?ShopConstraint $shopConstraint = null,
     ): void {
         $source = $directory . self::SOURCE_PREFIX . $reference . '.' . pathinfo($fixture, PATHINFO_EXTENSION);
         (new Filesystem())->copy(self::FIXTURE_DIR . $fixture, $source, true);
@@ -102,7 +119,7 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
                 $source,
                 $entityType,
                 $langIso ?? self::DEFAULT_LANGUAGE_ISO,
-                ShopConstraint::shop(self::DEFAULT_SHOP_ID),
+                $shopConstraint ?? ShopConstraint::shop(self::DEFAULT_SHOP_ID),
                 $this->readFieldMapping($source),
                 null === $table ? [] : $this->castOptions($table->getRowsHash()),
                 fileName: basename($fixture)
@@ -153,6 +170,27 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
         $filesystem->symlink(self::FIXTURE_DIR . $fixture, $link);
 
         $this->startImportJobFromPath($reference, $entityType, $link);
+    }
+
+    /**
+     * Plants a fixture under a name the import directory keeps for itself — a guard, a subdirectory
+     * — and removes it in the same step, so nothing outlives the scenario.
+     *
+     * @When I start an import job :reference for entity type :entityType from a file planted in the import directory as :name
+     */
+    public function startImportJobFromPlantedFile(string $reference, string $entityType, string $name): void
+    {
+        $topLevelEntry = $this->getImportDirectory() . explode('/', $name)[0];
+        Assert::assertFileDoesNotExist($topLevelEntry, 'A scenario must never overwrite a real file');
+
+        $filesystem = new Filesystem();
+        $filesystem->copy(self::FIXTURE_DIR . 'scripted/clean.csv', $this->getImportDirectory() . $name);
+
+        try {
+            $this->startImportJobFromPath($reference, $entityType, $this->getImportDirectory() . $name);
+        } finally {
+            $filesystem->remove($topLevelEntry);
+        }
     }
 
     /**
@@ -496,7 +534,7 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * One of the temp directories PHP writes uploads to, which ImportSourceGuard reads from.
+     * One of the temp directories PHP writes uploads to, which the Start handler accepts as a root.
      */
     private function getUploadDirectory(): string
     {
