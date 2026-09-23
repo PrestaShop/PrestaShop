@@ -161,12 +161,8 @@ class StoreController extends PrestaShopAdminController
                     );
                 }
             } else {
-                // Every constraint of this form sits on a child field, and addFlashFormErrors()
-                // only reads root-level errors, so the merchant would get no feedback at all.
-                // The base helper itself is fixed globally in #42872.
-                foreach ($contactDetailsForm->getErrors(true) as $formError) {
-                    $this->addFlash('error', $formError->getMessage());
-                }
+                // Every constraint of this form sits on a child field, hence the deep collection.
+                $this->addFlashFormErrors($contactDetailsForm, true);
             }
         }
 
