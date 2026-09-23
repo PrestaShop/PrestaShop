@@ -3695,16 +3695,16 @@
         },
         {
             "name": "mobiledetect/mobiledetectlib",
-            "version": "3.74.3",
+            "version": "3.74.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "39582ab62f86b40e4edb698159f895929a29c346"
+                "reference": "e72098eba91e5f16278b17d42ca193ae71e4ae0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/39582ab62f86b40e4edb698159f895929a29c346",
-                "reference": "39582ab62f86b40e4edb698159f895929a29c346",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/e72098eba91e5f16278b17d42ca193ae71e4ae0a",
+                "reference": "e72098eba91e5f16278b17d42ca193ae71e4ae0a",
                 "shasum": ""
             },
             "require": {
@@ -3747,7 +3747,7 @@
             ],
             "support": {
                 "issues": "https://github.com/serbanghita/Mobile-Detect/issues",
-                "source": "https://github.com/serbanghita/Mobile-Detect/tree/3.74.3"
+                "source": "https://github.com/serbanghita/Mobile-Detect/tree/3.74.4"
             },
             "funding": [
                 {
@@ -3755,7 +3755,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-10-27T16:28:04+00:00"
+            "time": "2026-04-15T08:43:14+00:00"
         },
         {
             "name": "monolog/monolog",
