@@ -1237,6 +1237,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         $file = self::getPathToCachedTranslationPack($locale, $type);
         $url = (self::PACK_TYPE_EMAILS === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
+        // A shop hosting its own packs overrides these in Improve > International > Localization.
+        // WHY: the installer downloads packs before the database exists, when Configuration cannot be
+        // read, and no shop can have set an override before it is installed.
+        if (!defined('PS_INSTALLATION_IN_PROGRESS')) {
+            $url = Configuration::get(self::PACK_TYPE_EMAILS === $type ? 'PS_EMAILS_PACK_URL' : 'PS_LANGUAGE_PACK_URL') ?: $url;
+        }
         $url = str_replace(
             [
                 '%version%',
