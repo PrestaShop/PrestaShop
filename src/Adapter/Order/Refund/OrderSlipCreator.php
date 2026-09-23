@@ -7,7 +7,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\Refund;
 
 use Address;
-use Carrier;
 use Currency;
 use Customer;
 use Db;
@@ -23,7 +22,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use TaxCalculator;
 use TaxManagerFactory;
 use Tools;
 
@@ -179,25 +177,25 @@ class OrderSlipCreator
 
         if ($shipping_cost > 0) {
             $orderSlip->shipping_cost = true;
-            $carrier = new Carrier((int) $order->id_carrier);
-            // @todo: define if we use invoice or delivery address, or we use configuration PS_TAX_ADDRESS_TYPE
-            $address = Address::initialize($order->id_address_delivery, false);
-            $tax_calculator = $carrier->getTaxCalculator($address);
+            // Use the rate the order was charged with, not the one the carrier and the address
+            // resolve to today. Recomputing it puts tax on the slip that was never invoiced when the
+            // order was placed tax exempt, and the slip then totals more than the order. The credit
+            // slip PDF already reports $order->carrier_tax_rate, so this keeps the document
+            // consistent with the amounts stored for it.
+            $carrierTaxRate = (float) $order->carrier_tax_rate;
 
             if ($add_tax) {
                 $orderSlip->total_shipping_tax_excl = $shipping_cost;
-                if ($tax_calculator instanceof TaxCalculator) {
-                    $orderSlip->total_shipping_tax_incl = Tools::ps_round($tax_calculator->addTaxes($orderSlip->total_shipping_tax_excl), $precision);
-                } else {
-                    $orderSlip->total_shipping_tax_incl = $orderSlip->total_shipping_tax_excl;
-                }
+                $orderSlip->total_shipping_tax_incl = Tools::ps_round(
+                    $shipping_cost * (1 + $carrierTaxRate / 100),
+                    $precision
+                );
             } else {
                 $orderSlip->total_shipping_tax_incl = $shipping_cost;
-                if ($tax_calculator instanceof TaxCalculator) {
-                    $orderSlip->total_shipping_tax_excl = Tools::ps_round($tax_calculator->removeTaxes($orderSlip->total_shipping_tax_incl), $precision);
-                } else {
-                    $orderSlip->total_shipping_tax_excl = $orderSlip->total_shipping_tax_incl;
-                }
+                $orderSlip->total_shipping_tax_excl = Tools::ps_round(
+                    $shipping_cost / (1 + $carrierTaxRate / 100),
+                    $precision
+                );
             }
         } else {
             $orderSlip->shipping_cost = false;
