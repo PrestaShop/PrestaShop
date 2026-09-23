@@ -711,6 +711,7 @@ class CQRSApiSerializerTest extends KernelTestCase
             23,
             1,
             DateTimeImmutable::createFromFormat(DateTimeUtil::DEFAULT_DATETIME_FORMAT, '1969-07-11 00:00:00'),
+            51,
         );
         yield 'object with datetime' => [
             $virtualProduct,
@@ -721,6 +722,7 @@ class CQRSApiSerializerTest extends KernelTestCase
                 'accessDays' => 23,
                 'downloadTimesLimit' => 1,
                 'expirationDate' => '1969-07-11 00:00:00',
+                'productId' => 51,
             ],
         ];
 

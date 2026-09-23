@@ -544,7 +544,8 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             $virtualProductFile->display_filename,
             (int) $virtualProductFile->nb_days_accessible,
             (int) $virtualProductFile->nb_downloadable,
-            DateTimeUtil::buildDateTimeOrNull($virtualProductFile->date_expiration)
+            DateTimeUtil::buildDateTimeOrNull($virtualProductFile->date_expiration),
+            (int) $product->id
         );
     }
 
