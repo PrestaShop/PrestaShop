@@ -82,6 +82,11 @@ class PersonalInformation
     private $isActive;
 
     /**
+     * @var bool
+     */
+    private $isDeleted;
+
+    /**
      * @param string $firstName
      * @param string $lastName
      * @param string $email
@@ -111,7 +116,8 @@ class PersonalInformation
         $shopName,
         $languageName,
         Subscriptions $subscriptions,
-        $isActive
+        $isActive,
+        $isDeleted = false
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -127,6 +133,7 @@ class PersonalInformation
         $this->languageName = $languageName;
         $this->subscriptions = $subscriptions;
         $this->isActive = $isActive;
+        $this->isDeleted = $isDeleted;
     }
 
     /**
@@ -239,5 +246,16 @@ class PersonalInformation
     public function isActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * A soft deleted customer keeps its row, and its `active` flag keeps whatever value it had, so
+     * the two are independent and both are needed to describe the account.
+     *
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return $this->isDeleted;
     }
 }
