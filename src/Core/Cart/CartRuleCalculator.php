@@ -228,6 +228,23 @@ class CartRuleCalculator
                         $concernedRows->addCartRow($cartRow);
                     }
                 }
+            } elseif ($cartRule->reduction_product == 0 && $cartRule->product_restriction) {
+                // The fixed amount is restricted to specific products (a category, manufacturer, ...),
+                // so only the eligible products are concerned and the amount can't exceed their total,
+                // otherwise it would spill onto the non-eligible products of the cart.
+                // @see https://github.com/PrestaShop/PrestaShop/issues/41853
+                $selectedProducts = $cartRule->checkProductRestrictionsFromCart($cart, true, false);
+                if (is_array($selectedProducts)) {
+                    foreach ($this->cartRows as $cartRow) {
+                        $product = $cartRow->getRowData();
+                        if (in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selectedProducts)
+                            || in_array($product['id_product'] . '-0', $selectedProducts)) {
+                            $concernedRows->addCartRow($cartRow);
+                        }
+                    }
+                } else {
+                    $concernedRows = $this->cartRows;
+                }
             } elseif ($cartRule->reduction_product == 0) {
                 // Discount (¤) on the whole order, that will be applied with a weight ratio on all related products
                 $concernedRows = $this->cartRows;
