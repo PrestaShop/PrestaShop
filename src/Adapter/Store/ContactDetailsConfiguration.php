@@ -42,7 +42,10 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
         $countryId = (int) ($configuration['id_country'] ?? 0);
         $stateId = (int) ($configuration['id_state'] ?? 0);
 
-        $country = $countryId ? new Country($countryId) : null;
+        // Country names are multilingual: legacy loaded the country with a language id before
+        // storing PS_SHOP_COUNTRY, so loading it without one would store an array here.
+        $langId = (int) $this->configuration->get('PS_LANG_DEFAULT');
+        $country = $countryId ? new Country($countryId, $langId) : null;
         $state = ($stateId && $countryId) ? new State($stateId) : null;
 
         $errors = $this->collectValidationErrors($configuration, $state, $countryId);
@@ -62,7 +65,9 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
 
         if ($country !== null) {
             $this->configuration->set('PS_SHOP_COUNTRY_ID', $countryId);
-            $this->configuration->set('PS_SHOP_COUNTRY', $country->iso_code);
+            // The name, not the ISO code: legacy stored Country::$name here and this value is
+            // read by mail templates and third-party code as a display name.
+            $this->configuration->set('PS_SHOP_COUNTRY', $country->name);
         } else {
             $this->configuration->set('PS_SHOP_COUNTRY_ID', 0);
             $this->configuration->set('PS_SHOP_COUNTRY', '');
@@ -70,7 +75,7 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
 
         if ($state !== null) {
             $this->configuration->set('PS_SHOP_STATE_ID', $stateId);
-            $this->configuration->set('PS_SHOP_STATE', $state->iso_code);
+            $this->configuration->set('PS_SHOP_STATE', $state->name);
         } else {
             $this->configuration->set('PS_SHOP_STATE_ID', 0);
             $this->configuration->set('PS_SHOP_STATE', '');
