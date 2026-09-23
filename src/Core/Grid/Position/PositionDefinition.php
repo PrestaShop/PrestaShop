@@ -38,24 +38,44 @@ final class PositionDefinition implements PositionDefinitionInterface
     private $firstPosition;
 
     /**
+     * @var array<string, scalar> column => value the rows taking part in the sequence must match
+     */
+    private $filters;
+
+    /**
      * @param string $table
      * @param string $idField
      * @param string $positionField
      * @param string|null $parentIdField
      * @param int $firstPosition
+     * @param array<string, scalar> $filters restricts the sequence to the rows the grid displays,
+     *                                       for a table whose grid hides some of its rows
      */
     public function __construct(
         $table,
         $idField,
         $positionField,
         $parentIdField = null,
-        int $firstPosition = 0
+        int $firstPosition = 0,
+        array $filters = []
     ) {
         $this->table = $table;
         $this->idField = $idField;
         $this->positionField = $positionField;
         $this->parentIdField = $parentIdField;
         $this->firstPosition = $firstPosition;
+        $this->filters = $filters;
+    }
+
+    /**
+     * Not on PositionDefinitionInterface on purpose: adding a method there would break any module
+     * implementing it. The update handler asks for these only when the definition is this class.
+     *
+     * @return array<string, scalar>
+     */
+    public function getFilters(): array
+    {
+        return $this->filters;
     }
 
     /**
