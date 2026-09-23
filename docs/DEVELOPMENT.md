@@ -225,7 +225,7 @@ make watch-front-core
 ./tools/assets/build.sh --force-install
 ./tools/assets/build.sh admin-default --force-install
 
-# Watch a single asset (development build, cannot be combined with --force)
+# Watch a single asset (development build)
 ./tools/assets/build.sh admin-default --watch
 ```
 
