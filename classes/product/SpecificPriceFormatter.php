@@ -130,11 +130,9 @@ class SpecificPriceFormatterCore
                 $this->specificPrice['real_value'] = $this->specificPrice['reduction'] * 100;
                 $discountPrice = $initialPrice - $initialPrice * $this->specificPrice['reduction'];
                 if ($this->displayDiscountPrice) {
-                    if ($this->specificPrice['reduction_tax'] == 0) {
-                        $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - ($initialPrice * $this->specificPrice['reduction_with_tax']));
-                    } else {
-                        $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - ($initialPrice * $this->specificPrice['reduction']));
-                    }
+                    // A percentage reduction applies the same way whether it is expressed tax included
+                    // or excluded, so the discounted unit price is always the base price minus the percentage.
+                    $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - ($initialPrice * $this->specificPrice['reduction']));
                 } else {
                     $this->specificPrice['discount'] = $this->specificPrice['real_value'] . '%';
                 }
