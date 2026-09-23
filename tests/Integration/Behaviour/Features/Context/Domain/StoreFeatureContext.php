@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Configuration;
 use Country;
 use Language;
 use PHPUnit\Framework\Assert;
@@ -409,6 +410,9 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         /** @var ContactDetailsConfiguration $contactDetailsConfig */
         $contactDetailsConfig = $this->getContainer()->get(ContactDetailsConfiguration::class);
         Assert::assertSame($expectedCountryId, $contactDetailsConfig->getConfiguration()['id_country']);
+        // PS_SHOP_COUNTRY holds the display name, not the ISO code: it is read by mail templates
+        // and third-party code, and getConfiguration() above only ever reads the _ID key.
+        Assert::assertSame($countryName, Configuration::get('PS_SHOP_COUNTRY'));
     }
 
     /**
@@ -420,6 +424,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         /** @var ContactDetailsConfiguration $contactDetailsConfig */
         $contactDetailsConfig = $this->getContainer()->get(ContactDetailsConfiguration::class);
         Assert::assertSame($expectedStateId, $contactDetailsConfig->getConfiguration()['id_state']);
+        Assert::assertSame($stateName, Configuration::get('PS_SHOP_STATE'));
     }
 
     /**
@@ -430,6 +435,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         /** @var ContactDetailsConfiguration $contactDetailsConfig */
         $contactDetailsConfig = $this->getContainer()->get(ContactDetailsConfiguration::class);
         Assert::assertNull($contactDetailsConfig->getConfiguration()['id_state']);
+        Assert::assertSame('', Configuration::get('PS_SHOP_STATE'));
     }
 
     /**

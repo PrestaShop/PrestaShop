@@ -64,6 +64,26 @@ class ContactDetailsTypeTest extends FormListenerTestCase
         $this->assertStringContainsString('is invalid', implode(' ', $messages));
     }
 
+    /**
+     * Legacy parity: getConfigFieldsShop() rendered PS_SHOP_STATE_ID between PS_SHOP_COUNTRY_ID
+     * and PS_SHOP_PHONE. rebuildStateField() has to run inside the chain rather than after it,
+     * or the State select lands at the end of the block, below Fax.
+     */
+    public function testStateIsRenderedBetweenCountryAndPhone(): void
+    {
+        $form = $this->createForm(ContactDetailsType::class, ['csrf_protection' => false]);
+
+        // all() keeps insertion order, and re-adding an existing child replaces it in place, which
+        // is what makes calling rebuildStateField() inside the chain enough. createView() is not
+        // used here: it reaches for the session, which no form test has.
+        $names = array_keys($form->all());
+
+        $this->assertSame(
+            ['name', 'email', 'registration_number', 'address1', 'address2', 'postcode', 'city', 'id_country', 'id_state', 'phone', 'fax'],
+            $names
+        );
+    }
+
     private function submitContactDetails(array $overrides): FormInterface
     {
         // No request cycle here, so there is no CSRF token to send: without this the root form

@@ -116,7 +116,13 @@ final class ContactDetailsType extends TranslatorAwareType
                 'attr' => [
                     'data-states-url' => $this->router->generate('admin_country_states'),
                 ],
-            ])
+            ]);
+
+        // Added here so it keeps its position between Country and Phone, as legacy rendered it;
+        // the listeners below only refresh it in place.
+        $this->rebuildStateField($builder, $countryId);
+
+        $builder
             ->add('phone', TextType::class, [
                 'label' => $this->trans('Phone', 'Admin.Global'),
                 'required' => false,
@@ -128,8 +134,6 @@ final class ContactDetailsType extends TranslatorAwareType
                 'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME])],
             ])
         ;
-
-        $this->rebuildStateField($builder, $countryId);
 
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
             $data = $event->getData() ?? [];
