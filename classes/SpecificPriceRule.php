@@ -227,8 +227,19 @@ class SpecificPriceRuleCore extends ObjectModel
                     } elseif ($condition['type'] == 'manufacturer') {
                         $query->where('p.id_manufacturer = ' . (int) $condition['value']);
                     } elseif ($condition['type'] == 'category') {
-                        $query->leftJoin('category_product', 'cp' . (int) $id_condition, 'p.`id_product` = cp' . (int) $id_condition . '.`id_product`')
-                            ->where('cp' . (int) $id_condition . '.id_category = ' . (int) $condition['value']);
+                        // Use EXISTS instead of one JOIN per category: a group with many category
+                        // conditions would otherwise exceed the SQL engine's 61-table join limit
+                        // (MySQL/MariaDB error 1116). AND semantics are preserved (one EXISTS per
+                        // condition, all ANDed) — see the supplier condition below for the same pattern.
+                        $query->where('EXISTS(
+							SELECT
+								`cp' . (int) $id_condition . '`.`id_product`
+							FROM
+								`' . _DB_PREFIX_ . 'category_product` `cp' . (int) $id_condition . '`
+							WHERE
+								`p`.`id_product` = `cp' . (int) $id_condition . '`.`id_product`
+								AND `cp' . (int) $id_condition . '`.`id_category` = ' . (int) $condition['value'] . '
+						)');
                     } elseif ($condition['type'] == 'supplier') {
                         $query->where('EXISTS(
 							SELECT
