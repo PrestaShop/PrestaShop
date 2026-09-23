@@ -135,6 +135,26 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            if ('file_size' === $filterName) {
+                // A filter saved before this was a range arrives as a scalar; it cannot be honoured, and
+                // reading it as one bound or the other would answer a question nobody asked.
+                if (!is_array($value)) {
+                    continue;
+                }
+
+                if (isset($value['min_field']) && '' !== $value['min_field']) {
+                    $qb->andWhere($allowedFiltersMap[$filterName] . ' >= :file_size_min')
+                        ->setParameter('file_size_min', (int) $value['min_field']);
+                }
+
+                if (isset($value['max_field']) && '' !== $value['max_field']) {
+                    $qb->andWhere($allowedFiltersMap[$filterName] . ' <= :file_size_max')
+                        ->setParameter('file_size_max', (int) $value['max_field']);
+                }
+
+                continue;
+            }
+
             if ('products' === $filterName && $value === '0') {
                 $qb->andWhere($allowedFiltersMap[$filterName] . ' IS NULL');
 
