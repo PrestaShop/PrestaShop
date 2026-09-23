@@ -7,16 +7,19 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
+use Group;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\AddCustomerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use Validate;
 
 /**
  * Handles command that adds new customer
@@ -74,6 +77,7 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
 
         // Check if provided groups contain the correct data (the default group must be in group list)
         $this->assertCustomerCanAccessDefaultGroup($command);
+        $this->assertGroupsExist($command->getGroupIds(), $command->getDefaultGroupId());
 
         $customer->add();
         if (null !== $command->getGroupIds()) {
@@ -138,6 +142,34 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
         $customer->outstanding_allow_amount = $command->getAllowedOutstandingAmount();
         $customer->max_payment_days = $command->getMaxPaymentDays();
         $customer->id_risk = $command->getRiskId();
+    }
+
+    /**
+     * A group id that does not resolve is accepted by the database, and only fails later when
+     * something loads the group - the customer view being the first place that does.
+     *
+     * @param int[]|null $groupIds
+     * @param int|string|null $defaultGroupId
+     *
+     * @throws CustomerGroupNotFoundException
+     */
+    private function assertGroupsExist(?array $groupIds, $defaultGroupId): void
+    {
+        $idsToCheck = $groupIds ?? [];
+        if (null !== $defaultGroupId && '' !== $defaultGroupId) {
+            $idsToCheck[] = $defaultGroupId;
+        }
+
+        $missing = [];
+        foreach (array_unique(array_map('intval', $idsToCheck)) as $groupId) {
+            if (!Validate::isLoadedObject(new Group($groupId))) {
+                $missing[] = $groupId;
+            }
+        }
+
+        if (!empty($missing)) {
+            throw CustomerGroupNotFoundException::fromGroupIds($missing);
+        }
     }
 
     /**
