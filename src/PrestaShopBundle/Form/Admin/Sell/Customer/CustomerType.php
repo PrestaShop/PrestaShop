@@ -71,32 +71,29 @@ class CustomerType extends TranslatorAwareType
      */
     private $groupByIdChoiceProvider;
 
-    /**
-     * @var GenderByIdChoiceProvider
-     */
-    private $genderByIdChoiceProvider;
+    private GenderByIdChoiceProvider $genderByIdChoiceProvider;
 
     /**
      * @param TranslatorInterface $translator
      * @param GroupByIdChoiceProvider $groupByIdChoiceProvider
-     * @param GenderByIdChoiceProvider $genderByIdChoiceProvider
      * @param array $locales
      * @param array $riskChoices
      * @param bool $isB2bFeatureEnabled
      * @param bool $isPartnerOffersEnabled
      * @param ConfigurationInterface $configuration
      * @param FormCloner $formCloner
+     * @param GenderByIdChoiceProvider|null $genderByIdChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         GroupByIdChoiceProvider $groupByIdChoiceProvider,
-        GenderByIdChoiceProvider $genderByIdChoiceProvider,
         array $locales,
         array $riskChoices,
         $isB2bFeatureEnabled,
         $isPartnerOffersEnabled,
         ConfigurationInterface $configuration,
-        FormCloner $formCloner
+        FormCloner $formCloner,
+        ?GenderByIdChoiceProvider $genderByIdChoiceProvider = null
     ) {
         parent::__construct($translator, $locales);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
@@ -105,7 +102,7 @@ class CustomerType extends TranslatorAwareType
         $this->configuration = $configuration;
         $this->formCloner = $formCloner;
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
-        $this->genderByIdChoiceProvider = $genderByIdChoiceProvider;
+        $this->genderByIdChoiceProvider = $genderByIdChoiceProvider ?? new GenderByIdChoiceProvider();
     }
 
     /**
