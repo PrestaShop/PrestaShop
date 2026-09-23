@@ -60,6 +60,22 @@ class ProductDownloadCore extends ObjectModel
     ];
 
     /**
+     * @see ObjectModel::$webserviceParameters
+     *
+     * filename is the obfuscated name the file is stored under in download/, derived when the file is
+     * uploaded. It is exposed so a client can correlate a record with its file, but it is not settable:
+     * writing it would repoint a record at a file that was uploaded for another product.
+     */
+    protected $webserviceParameters = [
+        'objectsNodeName' => 'product_downloads',
+        'objectNodeName' => 'product_download',
+        'fields' => [
+            'id_product' => ['xlink_resource' => 'products'],
+            'filename' => ['setter' => false],
+        ],
+    ];
+
+    /**
      * Build a virtual product.
      *
      * @param int $idProductDownload Existing productDownload id in order to load object (optional)
