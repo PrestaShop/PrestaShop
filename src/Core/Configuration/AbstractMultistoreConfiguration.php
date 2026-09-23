@@ -112,6 +112,20 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
             $resolver->setRequired($definedOptions);
         }
 
+        /*
+         * WHY: the settings forms these classes back dispatch an action<Name>PageForm hook that hands
+         * the form builder to modules so they can add their own fields, and the submitted values then
+         * arrive here as part of the same array. Those keys belong to the module, which reads them
+         * from the matching action<Name>PageSave hook, so refusing them made the core reject input it
+         * had itself invited: the page answered a save with an UndefinedOptionsException instead of
+         * saving. Undefined keys are now left to their owner rather than being treated as an error.
+         *
+         * This does not loosen anything the configuration owns. Required options are still enforced -
+         * that check compares the required list against what was given, independently of this - and
+         * every defined option is still type checked.
+         */
+        $resolver->setIgnoreUndefined(true);
+
         $resolver->resolve($configurationInputValues);
 
         return true;

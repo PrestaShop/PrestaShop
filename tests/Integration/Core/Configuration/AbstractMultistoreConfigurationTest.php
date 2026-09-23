@@ -19,7 +19,7 @@ use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Shop;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Tests\Resources\DatabaseDump;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
@@ -113,19 +113,39 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
      *
      * @param ShopConstraint $shopConstraint
      */
-    public function testUndefinedOptionsException(ShopConstraint $shopConstraint): void
+    public function testIncompleteConfiguration(ShopConstraint $shopConstraint): void
     {
         $isAllShopContext = ($shopConstraint->getShopGroupId() === null && $shopConstraint->getShopId() === null);
         $testedObject = $this->getDummyMultistoreConfiguration($shopConstraint);
-        $this->expectException(UndefinedOptionsException::class);
 
         if ($isAllShopContext) {
-            // in all shop context, multistore field are not expected
+            // in all shop context every field is required, and the multistore field is not one of them
+            $this->expectException(MissingOptionsException::class);
             $testedObject->updateConfiguration(['test_conf_1' => true, MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'test_conf_1' => true]);
         } else {
-            // test in other shop contexts with an undefined field
-            $testedObject->updateConfiguration(['undefined_element' => true]);
+            // in the other shop contexts fields may be left out, so there is nothing to reject here
+            $this->assertTrue($testedObject->validateConfiguration(['test_conf_1' => true]));
         }
+    }
+
+    /**
+     * The forms these classes back let a module add its own fields through the action<Name>Form hook,
+     * and the values arrive here with the core ones. They belong to the module, which reads them from
+     * the matching action<Name>Save hook, so they must not be rejected.
+     *
+     * @dataProvider provideShopConstraints
+     *
+     * @param ShopConstraint $shopConstraint
+     */
+    public function testItAcceptsFieldsAModuleAddedToTheForm(ShopConstraint $shopConstraint): void
+    {
+        $testedObject = $this->getDummyMultistoreConfiguration($shopConstraint);
+
+        $this->assertTrue($testedObject->validateConfiguration([
+            'test_conf_1' => true,
+            'test_conf_2' => 'a value',
+            'a_module_field' => 'contributed through the form hook',
+        ]));
     }
 
     /**

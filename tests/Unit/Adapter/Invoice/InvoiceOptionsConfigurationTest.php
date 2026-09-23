@@ -13,7 +13,7 @@ use PrestaShop\PrestaShop\Adapter\Invoice\InvoiceOptionsConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class InvoiceOptionsConfigurationTest extends AbstractConfigurationTestCase
@@ -86,7 +86,9 @@ class InvoiceOptionsConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
+            // An unknown key is now left to the module that owns it, so what makes this input
+            // invalid is that every field the class does own is missing.
+            [MissingOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_invoices' => 'invalid_value_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_tax_breakdown' => 'invalid_value_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_product_images' => 'invalid_value_type'])],

@@ -12,6 +12,8 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Tests\Resources\DummyMultistoreConfiguration;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
@@ -56,6 +58,51 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
             [false, 1, 2, false],
             [false, 5, 7, false],
         ];
+    }
+
+    /**
+     * The settings forms these classes back let a module add its own fields through the
+     * action<Name>Form hook, and those values then arrive here with the core ones. Rejecting them made
+     * the page answer a save with an UndefinedOptionsException instead of saving.
+     */
+    public function testItAcceptsFieldsAModuleAddedToTheForm(): void
+    {
+        $configuration = $this->getTestableClass(false, null);
+
+        $this->assertTrue($configuration->validateConfiguration([
+            'test_conf_1' => true,
+            'test_conf_2' => 'a value',
+            'a_module_field' => 'contributed through the form hook',
+        ]));
+    }
+
+    /**
+     * Accepting a module's fields must not stop the class enforcing its own: in all shop context every
+     * defined option is required.
+     */
+    public function testItStillRejectsAMissingRequiredField(): void
+    {
+        $configuration = $this->getTestableClass(true, null);
+
+        $this->expectException(MissingOptionsException::class);
+        $configuration->validateConfiguration([
+            'test_conf_1' => true,
+            'a_module_field' => 'contributed through the form hook',
+        ]);
+    }
+
+    /**
+     * Nor stop it type checking them.
+     */
+    public function testItStillRejectsAFieldOfTheWrongType(): void
+    {
+        $configuration = $this->getTestableClass(false, null);
+
+        $this->expectException(InvalidOptionsException::class);
+        $configuration->validateConfiguration([
+            'test_conf_1' => 'not a bool',
+            'a_module_field' => 'contributed through the form hook',
+        ]);
     }
 
     /**

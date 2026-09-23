@@ -11,7 +11,7 @@ namespace Tests\Unit\Adapter\Shop;
 use PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class MaintenanceConfigurationTest extends AbstractConfigurationTestCase
@@ -74,7 +74,9 @@ class MaintenanceConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
+            // An unknown key is now left to the module that owns it, so what makes this input
+            // invalid is that every field the class does own is missing.
+            [MissingOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, ['enable_shop' => 'wrong_type', 'maintenance_allow_admins' => true, 'maintenance_ip' => 'test', 'maintenance_text' => ['fr' => 'test string']]],
             [InvalidOptionsException::class, ['enable_shop' => true, 'maintenance_allow_admins' => 'wrong_type', 'maintenance_ip' => 'test', 'maintenance_text' => ['fr' => 'test string']]],
             [InvalidOptionsException::class, ['enable_shop' => true, 'maintenance_allow_admins' => true, 'maintenance_ip' => ['wrong_type'], 'maintenance_text' => ['fr' => 'test string']]],
