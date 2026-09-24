@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Twig\Component\Dashboard;
+namespace PrestaShopBundle\Twig\Component;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -18,7 +18,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
  *   {% block content %}...{% endblock %}
  * {% endcomponent %}
  */
-#[AsTwigComponent(template: '@PrestaShop/Admin/Component/Dashboard/card.html.twig')]
+#[AsTwigComponent(template: '@PrestaShop/Admin/Component/card.html.twig')]
 class Card extends AbstractCard
 {
     public function mount(string $title = '', ?string $icon = null, ?string $configUrl = null, ?string $configLabel = null): void

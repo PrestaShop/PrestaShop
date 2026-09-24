@@ -4,7 +4,6 @@
  */
 
 import ComponentsMap from '@components/components-map';
-import type {PsChart} from '@js/libs/chartjs';
 
 import SubmitEvent = JQuery.SubmitEvent;
 
@@ -40,7 +39,7 @@ export default class DashboardDateRange {
         dashboard.outerHTML = html;
 
         const newDashboard = document.querySelector(ComponentsMap.dashboard.container);
-        (window as unknown as {psChart: PsChart}).psChart.mountCharts(newDashboard ?? document);
+        window.prestashop.instance.dashboardChart.mount(newDashboard ?? document);
       })
       .catch((error) => {
         // Never leave the date range picker stuck on a failed AJAX refresh (network error,

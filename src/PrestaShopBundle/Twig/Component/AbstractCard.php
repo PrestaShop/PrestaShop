@@ -6,12 +6,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Twig\Component\Dashboard;
+namespace PrestaShopBundle\Twig\Component;
 
 /**
- * Shared header props (title/icon/optional "Configure" link) for dashboard card components.
- * Not a component itself: extended by Card and its specializations (ChartCard, ...) so their
- * templates can all extend card.html.twig and rely on the same header markup.
+ * Shared header props (title/icon/optional "Configure" link) for card components. Not a
+ * component itself: extended by Card and its specializations (Dashboard\ChartCard, ...) so
+ * their templates can all extend card.html.twig and rely on the same header markup.
  */
 abstract class AbstractCard
 {
