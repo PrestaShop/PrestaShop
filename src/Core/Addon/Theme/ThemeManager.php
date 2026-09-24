@@ -464,6 +464,12 @@ class ThemeManager implements AddonManagerInterface
         $this->filesystem->mkdir($themePath);
         $this->filesystem->mirror($sandboxPath, $themePath);
 
+        // Remove the cached configuration of a previous installation so it is
+        // rebuilt from the newly installed theme configuration file
+        $this->filesystem->remove(
+            $this->configuration->get('_PS_CONFIG_DIR_') . 'themes/' . $theme->getName()
+        );
+
         $this->importTranslationToDatabase($theme);
 
         $this->filesystem->remove($sandboxPath);
