@@ -49,7 +49,7 @@ const init = function initDatePickers() {
   $.each($datePickers, (i, picker) => {
     $(picker)
       .datetimepicker({
-        locale: window.full_language_code,
+        locale: window.moment_language_code || window.full_language_code,
         format: $(picker).data('format')
           ? $(picker).data('format')
           : 'YYYY-MM-DD',
