@@ -6,12 +6,53 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
+use Context;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use Tools;
 
 class CartProductLazyArray extends ProductListingLazyArray
 {
+    /**
+     * Re-evaluate the discount-display fields per cart line.
+     *
+     * WHY: in the cart, `reduction`, `specific_prices` and `price_without_reduction` are filled by
+     * Product::getProductProperties() (see Cart::getProducts) and are therefore PER-COMBINATION, not
+     * per cart line. When the same combination appears on several lines (e.g. different customizations),
+     * a catalog price rule may apply to only some of them, yet the parent marks every line as discounted
+     * (`has_discount = 0 != reduction`) and renders a phantom badge ("-0", the rule's %, etc.). The line's
+     * actual paid price (`price_amount`, set line-specifically by Cart::getCartPrices) is reliable, so we
+     * derive `has_discount` from `price_amount` vs `regular_price_amount` and clear the stale labels on
+     * lines that did not actually receive a reduction. Correctly-discounted lines keep the parent's
+     * already line-specific amounts. (#41278)
+     *
+     * Note: `price_amount` and `regular_price_amount` come from two different price computations
+     * (getCartPriceFromCatalog vs Product::getProductProperties), so we compare them rounded to the
+     * currency precision — float noise between the two paths must not fabricate a discount, while any
+     * real reduction (>= the currency's smallest unit) is preserved.
+     */
+    protected function addPriceInformation(
+        ProductPresentationSettings $settings,
+        array $product
+    ): void {
+        parent::addPriceInformation($settings, $product);
+
+        $precision = (int) (Context::getContext()->currency->precision ?? 2);
+        $hasLineReduction = Tools::ps_round($this->product['regular_price_amount'], $precision)
+            > Tools::ps_round($this->product['price_amount'], $precision);
+        $this->product['has_discount'] = $hasLineReduction;
+
+        if (!$hasLineReduction) {
+            $this->product['discount_type'] = null;
+            $this->product['discount_percentage'] = null;
+            $this->product['discount_percentage_absolute'] = null;
+            $this->product['discount_amount'] = null;
+            $this->product['discount_amount_to_display'] = null;
+            $this->product['discount_to_display'] = $this->product['regular_price'];
+        }
+    }
+
     /**
      * Custom implementation of quantity information for cart products. In cart, we use the data
      * a bit differently than in product listing. We also have edge cases when some of the ordered
