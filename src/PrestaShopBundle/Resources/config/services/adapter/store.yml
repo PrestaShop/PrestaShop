@@ -44,3 +44,33 @@ services:
     deprecated:
       package: PrestaShop\PrestaShop
       version: 9.0
+
+  prestashop.adapter.store.command_handler.bulk_delete_store_handler:
+    alias: PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkDeleteStoreHandler
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.3
+
+  prestashop.adapter.store.command_handler.bulk_toggle_store_status_handler:
+    alias: PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkUpdateStoreStatusHandler
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.3
+
+  prestashop.adapter.store.command_handler.delete_store:
+    alias: PrestaShop\PrestaShop\Adapter\Store\CommandHandler\DeleteStoreHandler
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.3
+
+  prestashop.adapter.store.command_handler.toggle_store_status:
+    alias: PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.3
+
+  prestashop.adapter.store.query_handler.get_store_for_editing:
+    alias: PrestaShop\PrestaShop\Adapter\Store\QueryHandler\GetStoreForEditingHandler
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.3

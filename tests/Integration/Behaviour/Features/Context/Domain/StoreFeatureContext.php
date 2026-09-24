@@ -192,6 +192,12 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         if (!empty($data['state'])) {
             $command->setStateId((int) State::getIdByName($data['state']));
         }
+        if (!empty($data['note'])) {
+            $command->setLocalizedNotes($data['note']);
+        }
+        if (!empty($data['shop_association'])) {
+            $command->setShopAssociation($this->referencesToIds($data['shop_association']));
+        }
 
         try {
             /** @var StoreId $storeId */
@@ -256,6 +262,12 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
             $stateId = $data['state'] !== '' ? (int) State::getIdByName($data['state']) : null;
             $command->setStateId($stateId);
         }
+        if (isset($data['note'])) {
+            $command->setLocalizedNotes($data['note']);
+        }
+        if (isset($data['shop_association'])) {
+            $command->setShopAssociation($this->referencesToIds($data['shop_association']));
+        }
 
         try {
             $this->getCommandBus()->handle($command);
@@ -296,6 +308,27 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['active'])) {
             Assert::assertSame(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']), $storeForEditing->isActive(), 'active');
+        }
+        foreach (['address1' => $storeForEditing->getLocalizedAddress1(), 'note' => $storeForEditing->getLocalizedNotes()] as $field => $actualValues) {
+            foreach ($data[$field] ?? [] as $lid => $value) {
+                Assert::assertSame($value, $actualValues[$lid] ?? null, $field);
+            }
+        }
+        foreach (['latitude' => $storeForEditing->getLatitude(), 'longitude' => $storeForEditing->getLongitude()] as $field => $actualValue) {
+            if (isset($data[$field])) {
+                Assert::assertNotNull($actualValue, $field);
+                Assert::assertTrue(
+                    (new DecimalNumber($data[$field]))->equals($actualValue),
+                    sprintf('%s: expected %s, got %s', $field, $data[$field], (string) $actualValue)
+                );
+            }
+        }
+        if (isset($data['shop_association'])) {
+            $expectedShopIds = $this->referencesToIds($data['shop_association']);
+            $actualShopIds = array_map('intval', $storeForEditing->getShopAssociation());
+            sort($expectedShopIds);
+            sort($actualShopIds);
+            Assert::assertSame($expectedShopIds, $actualShopIds, 'shop_association');
         }
         if (isset($data['city'])) {
             Assert::assertSame($data['city'], $storeForEditing->getCity(), 'city');

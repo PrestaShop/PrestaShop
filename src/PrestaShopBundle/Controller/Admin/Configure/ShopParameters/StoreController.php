@@ -277,6 +277,11 @@ class StoreController extends PrestaShopAdminController
                 'Admin.Notifications.Error'
             ),
             StoreConstraintException::class => [
+                StoreConstraintException::INVALID_COUNTRY => $this->trans(
+                    'The selected country is invalid.',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
                 StoreConstraintException::STATE_COUNTRY_MISMATCH => $this->trans(
                     'You\'ve selected a state for a country that does not contain states.',
                     [],

@@ -9,6 +9,9 @@ Feature: store management
     Given language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
+    And shop "shop1" with name "test_shop" exists
+    And shop group "default_shop_group" with name "Default" exists
+    And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "default_shop_group"
 
   # ──────────────────────────────────────────────────────────────
   # Toggle
@@ -127,31 +130,73 @@ Feature: store management
 
   Scenario: Add a store via command with all fields
     When I add store "storeFrance" using command with the following properties:
-      | name[en-US]     | My shop              |
-      | name[fr-FR]     | Ma boutique          |
-      | active          | true                 |
-      | address1[en-US] | 1 peace street       |
-      | address1[fr-FR] | 1 rue de la paix     |
-      | address2[en-US] | building B           |
-      | address2[fr-FR] | bâtiment B           |
-      | city            | Paris                |
-      | postcode        | 75001                |
-      | latitude        | 48.856600            |
-      | longitude       | 2.352200             |
-      | country         | France               |
-      | phone           | 0612345678           |
-      | fax             | 0112345678           |
-      | email           | boutique@example.com |
+      | name[en-US]     | My shop                |
+      | name[fr-FR]     | Ma boutique            |
+      | active          | true                   |
+      | address1[en-US] | 1 peace street         |
+      | address1[fr-FR] | 1 rue de la paix       |
+      | address2[en-US] | building B             |
+      | address2[fr-FR] | bâtiment B             |
+      | city            | Paris                  |
+      | postcode        | 75001                  |
+      | latitude        | 48.856600              |
+      | longitude       | 2.352200               |
+      | country         | France                 |
+      | phone           | 0612345678             |
+      | fax             | 0112345678             |
+      | email           | boutique@example.com   |
+      | note[en-US]     | Closed on holidays     |
+      | note[fr-FR]     | Fermé les jours fériés |
     Then store "storeFrance" should have the following properties:
-      | name[en-US] | My shop              |
-      | name[fr-FR] | Ma boutique          |
-      | active      | true                 |
-      | city        | Paris                |
-      | postcode    | 75001                |
-      | country     | France               |
-      | phone       | 0612345678           |
-      | fax         | 0112345678           |
-      | email       | boutique@example.com |
+      | name[en-US]     | My shop                |
+      | name[fr-FR]     | Ma boutique            |
+      | active          | true                   |
+      | address1[en-US] | 1 peace street         |
+      | address1[fr-FR] | 1 rue de la paix       |
+      | city            | Paris                  |
+      | postcode        | 75001                  |
+      | latitude        | 48.8566                |
+      | longitude       | 2.3522                 |
+      | country         | France                 |
+      | phone           | 0612345678             |
+      | fax             | 0112345678             |
+      | email           | boutique@example.com   |
+      | note[en-US]     | Closed on holidays     |
+      | note[fr-FR]     | Fermé les jours fériés |
+
+  Scenario: Add a store with whole-number coordinates
+    When I add store "storeWholeCoordinates" using command with the following properties:
+      | name[en-US]     | Whole coordinates |
+      | address1[en-US] | 1 rue de la paix  |
+      | city            | Paris             |
+      | latitude        | 48                |
+      | longitude       | -2                |
+      | country         | France            |
+    Then store "storeWholeCoordinates" should have the following properties:
+      | latitude  | 48 |
+      | longitude | -2 |
+
+  Scenario: Add and edit the shop association of a store
+    When I add store "storeShops" using command with the following properties:
+      | name[en-US]      | Multistore store |
+      | address1[en-US]  | 1 rue de la paix |
+      | city             | Paris            |
+      | country          | France           |
+      | shop_association | shop1,shop2      |
+    Then store "storeShops" should have the following properties:
+      | shop_association | shop1,shop2 |
+    When I edit store "storeShops" with the following properties:
+      | shop_association | shop2 |
+    Then store "storeShops" should have the following properties:
+      | shop_association | shop2 |
+
+  Scenario: Adding a store for a country that does not exist raises an error
+    When I add store "storeUnknownCountry" using command with the following properties:
+      | name[en-US]     | Unknown country  |
+      | address1[en-US] | 1 rue de la paix |
+      | city            | Paris            |
+      | country         | Atlantis         |
+    Then I should get a store constraint error with code "INVALID_COUNTRY"
 
   Scenario: Add a store for a country that requires a state
     When I add store "storeUS" using command with the following properties:

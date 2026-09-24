@@ -10,11 +10,12 @@ namespace PrestaShop\PrestaShop\Adapter\Store\Validate;
 
 use Country;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
+use Validate;
 
 final class StoreValidator
 {
     /**
-     * Ensures the selected state is consistent with the selected country:
+     * Ensures the selected country exists and the selected state is consistent with the selected country:
      * a country containing states requires one, and a country without states must not have one.
      *
      * @throws StoreConstraintException
@@ -22,6 +23,12 @@ final class StoreValidator
     public function assertStateCountryConsistency(int $countryId, ?int $stateId): void
     {
         $country = new Country($countryId);
+        if (!Validate::isLoadedObject($country)) {
+            throw new StoreConstraintException(
+                sprintf('Country with id "%d" does not exist.', $countryId),
+                StoreConstraintException::INVALID_COUNTRY
+            );
+        }
 
         if ($country->contains_states && !$stateId) {
             throw new StoreConstraintException(
