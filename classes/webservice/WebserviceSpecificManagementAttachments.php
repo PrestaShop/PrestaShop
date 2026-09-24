@@ -10,7 +10,9 @@ use PrestaShop\PrestaShop\Core\File\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\File\Exception\MaximumSizeExceededException;
 use PrestaShop\PrestaShop\Core\File\FileUploader;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\String\UnicodeString;
 
 /**
  * This class is responsible for managing Attachement through webservice
@@ -101,7 +103,18 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
             // if displayFile is set, present the file (download)
             $this->getObjectOutput()->setHeaderParams('Content-Type', $this->displayFile['mime']);
             $this->getObjectOutput()->setHeaderParams('Content-Length', $this->displayFile['file_size']);
-            $this->getObjectOutput()->setHeaderParams('Content-Disposition', 'attachment; filename="' . utf8_decode($this->displayFile['file_name']) . '"');
+            // WHY HeaderUtils: the filename used to be pushed through utf8_decode(), which is deprecated
+            // since PHP 8.2 and which replaced every character outside Latin-1 with "?". makeDisposition
+            // emits the RFC 6266 pair - an ASCII fallback plus a UTF-8 filename* - so non Latin-1 names
+            // arrive intact instead of being mangled.
+            $this->getObjectOutput()->setHeaderParams(
+                'Content-Disposition',
+                HeaderUtils::makeDisposition(
+                    HeaderUtils::DISPOSITION_ATTACHMENT,
+                    (string) $this->displayFile['file_name'],
+                    (new UnicodeString((string) $this->displayFile['file_name']))->ascii()->toString()
+                )
+            );
 
             return file_get_contents($this->displayFile['file']);
         }
