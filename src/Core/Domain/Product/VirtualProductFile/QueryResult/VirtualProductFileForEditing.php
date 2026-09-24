@@ -46,12 +46,21 @@ class VirtualProductFileForEditing
     private $expirationDate;
 
     /**
+     * Optional so that the parameter could be appended without breaking the existing calls,
+     * it is always provided by the core handlers.
+     *
+     * @var int|null
+     */
+    private $productId;
+
+    /**
      * @param int $id
      * @param string $fileName
      * @param string $displayName
      * @param int $accessDays
      * @param int $downloadTimesLimit
      * @param DateTimeInterface|null $expirationDate
+     * @param int|null $productId
      */
     public function __construct(
         int $id,
@@ -59,7 +68,8 @@ class VirtualProductFileForEditing
         string $displayName,
         int $accessDays,
         int $downloadTimesLimit,
-        ?DateTimeInterface $expirationDate
+        ?DateTimeInterface $expirationDate,
+        ?int $productId = null
     ) {
         $this->id = $id;
         $this->fileName = $fileName;
@@ -67,6 +77,7 @@ class VirtualProductFileForEditing
         $this->accessDays = $accessDays;
         $this->downloadTimesLimit = $downloadTimesLimit;
         $this->expirationDate = $expirationDate;
+        $this->productId = $productId;
     }
 
     /**
@@ -115,5 +126,13 @@ class VirtualProductFileForEditing
     public function getExpirationDate(): ?DateTimeInterface
     {
         return $this->expirationDate;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getProductId(): ?int
+    {
+        return $this->productId;
     }
 }

@@ -36,3 +36,8 @@ services:
     autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater'
+
+  PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\QueryHandler\GetVirtualProductFileForEditingHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository'

@@ -32,6 +32,12 @@ Feature: Add virtual product file from BO (Back Office).
       | access days          | 7                        |
       | download times limit | 70                       |
       | expiration date      | 2020-10-10               |
+    # The updated details are readable from the file itself, without loading the product
+    And virtual product file "file1" should belong to product "product1" and have following details:
+      | display name         | puffin-logo-updated1.png |
+      | access days          | 7                        |
+      | download times limit | 70                       |
+      | expiration date      | 2020-10-10               |
     And file "file1" for product "product1" should exist in system
     # details were modified but not the file itself
     And file file1 for product product1 should have same file as app_icon.png
@@ -41,6 +47,11 @@ Feature: Add virtual product file from BO (Back Office).
       | download times limit | 5                        |
       | expiration date      | 2020-11-11               |
     Then product "product1" should have a virtual product file "file2" with following details:
+      | display name         | puffin-logo-updated3.png |
+      | access days          | 1                        |
+      | download times limit | 5                        |
+      | expiration date      | 2020-11-11               |
+    And virtual product file "file2" should belong to product "product1" and have following details:
       | display name         | puffin-logo-updated3.png |
       | access days          | 1                        |
       | download times limit | 5                        |

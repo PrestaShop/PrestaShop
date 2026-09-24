@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteV
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Query\GetVirtualProductFileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 use RuntimeException;
 use Tests\Resources\DummyFileUploader;
@@ -264,6 +265,30 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         // Set path for new reference used in other assertions
         $reference = $this->buildSystemFileReference($productReference, $fileReference);
         $this->getSharedStorage()->set($reference, _PS_DOWNLOAD_DIR_ . $actualFile->getFileName());
+    }
+
+    /**
+     * Reads the file on its own, without loading the product it belongs to.
+     *
+     * @Then virtual product file :fileReference should belong to product :productReference and have following details:
+     *
+     * @param string $fileReference
+     * @param string $productReference
+     * @param TableNode $dataTable
+     */
+    public function assertVirtualProductFileForEditing(string $fileReference, string $productReference, TableNode $dataTable): void
+    {
+        /** @var VirtualProductFileForEditing $actualFile */
+        $actualFile = $this->getQueryBus()->handle(new GetVirtualProductFileForEditing(
+            $this->getSharedStorage()->get($fileReference)
+        ));
+
+        Assert::assertEquals(
+            $this->getSharedStorage()->get($productReference),
+            $actualFile->getProductId(),
+            'Unexpected product for virtual product file'
+        );
+        $this->assertVirtualFile($actualFile, $dataTable);
     }
 
     private function assertVirtualFile(VirtualProductFileForEditing $actualFile, TableNode $dataTable): void
