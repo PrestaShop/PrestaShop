@@ -29,11 +29,15 @@ final class RawPurifiedExtension extends AbstractExtension
         ];
     }
 
-    public function rawPurifier(string $toPurify): string
+    public function rawPurifier(?string $toPurify): string
     {
-        $pureHtml = $this->htmlPurifier->purify($toPurify);
+        // Twig resolves an undefined or null variable to null, and a filter that renders markup has
+        // no reason to fail on that - it has nothing to purify and nothing to print.
+        if (null === $toPurify) {
+            return '';
+        }
 
-        return $pureHtml;
+        return $this->htmlPurifier->purify($toPurify);
     }
 
     public function getName(): string
