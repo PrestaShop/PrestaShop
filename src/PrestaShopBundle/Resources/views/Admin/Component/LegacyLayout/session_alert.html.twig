@@ -7,7 +7,7 @@
 <div class="bootstrap">
   <div class="alert alert-success">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ this.confirmationMessage }}
+    {{ this.confirmationMessage|raw_purified }}
   </div>
 </div>
 {% endif %}
@@ -16,7 +16,7 @@
 <div class="bootstrap">
   <div class="alert alert-danger">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ this.errorMessage }}
+    {{ this.errorMessage|raw_purified }}
   </div>
 </div>
 {% endif %}
@@ -26,13 +26,13 @@
   <div class="alert alert-danger">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     {% if this.errors|length == 1 %}
-      {{ this.errors|first }}
+      {{ this.errors|first|raw_purified }}
     {% else %}
       {{ 'There are %d errors.'|trans({'%d': this.errors|length}, 'Admin.Notifications.Error') }}
       <br/>
       <ol>
         {% for error in this.errors %}
-        <li>{{ error }}</li>
+        <li>{{ error|raw_purified }}</li>
         {% endfor %}
       </ol>
     {% endif %}
@@ -57,7 +57,7 @@
 <div class="bootstrap">
   <div class="alert alert-success" style="display:block;">
     {% for confirmation in this.confirmations %}
-    {{ confirmation }}
+    {{ confirmation|raw_purified }}
     {% endfor %}
   </div>
 </div>
