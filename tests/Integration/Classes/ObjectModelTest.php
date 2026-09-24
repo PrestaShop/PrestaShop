@@ -624,6 +624,35 @@ class ObjectModelTest extends TestCase
     }
 
     /**
+     * Object hydratation must not override internal properties
+     */
+    public function testHydrate()
+    {
+        $hydratePayload = [
+            'id_testable_object' => 42,
+            'id_lang' => 2, // id_lang field can be pulled from DB
+            'name' => [
+                1 => 'Test',
+                2 => 'Test',
+            ],
+            'quantity' => 36,
+            'enabled' => 0,
+        ];
+
+        // Multilang loaded object must have id_lang set as null
+        $hydratedObject = new TestableObjectModel();
+        $hydratedObject->hydrate($hydratePayload, null);
+
+        $this->assertNull($hydratedObject->getIdLang());
+
+        // Single lang loaded object must reflect proper id_lang
+        $hydratedObject = new TestableObjectModel();
+        $hydratedObject->hydrate($hydratePayload, 1);
+
+        $this->assertSame(1, $hydratedObject->getIdLang());
+    }
+
+    /**
      * @param TestableObjectModel $object
      * @param array $expectedProperties
      */
