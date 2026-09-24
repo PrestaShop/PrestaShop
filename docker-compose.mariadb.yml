@@ -17,7 +17,7 @@ services:
       interval: 5s
       timeout: 1s
       retries: 3
-    restart: unless-stopped
+    restart: on-failure
     networks:
       - prestashop-network
 
