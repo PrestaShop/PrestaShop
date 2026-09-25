@@ -190,7 +190,8 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             $combination->mpn,
             $combination->reference,
             $combination->upc,
-            $this->numberExtractor->extract($combination, 'weight')
+            $this->numberExtractor->extract($combination, 'weight'),
+            $this->numberExtractor->extract($combination, 'additional_shipping_cost')
         );
     }
 
