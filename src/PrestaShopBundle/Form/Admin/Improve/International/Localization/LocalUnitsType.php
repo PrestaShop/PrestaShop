@@ -9,6 +9,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * Class LocalUnitsType is responsible for building 'Improve > International > Localization' page
@@ -16,6 +17,13 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class LocalUnitsType extends TranslatorAwareType
 {
+    /**
+     * The longest unit shipped by any of the 96 localization packs is 9 characters, so this leaves room
+     * for an uncommon one while keeping the value short enough for the carrier and product shipping forms
+     * that print it next to a field.
+     */
+    public const MAX_UNIT_LENGTH = 20;
+
     /**
      * {@inheritdoc}
      */
@@ -31,6 +39,16 @@ class LocalUnitsType extends TranslatorAwareType
                     'The default weight unit for your shop (e.g. "kg" for kilograms, "lbs" for pound-mass, etc.).',
                     'Admin.International.Help'
                 ),
+                'constraints' => [
+                    new Length([
+                        'max' => self::MAX_UNIT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::MAX_UNIT_LENGTH]
+                        ),
+                    ]),
+                ],
             ])
             ->add('distance_unit', TextType::class, [
                 'label' => $this->trans(
@@ -41,6 +59,16 @@ class LocalUnitsType extends TranslatorAwareType
                     'The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).',
                     'Admin.International.Help'
                 ),
+                'constraints' => [
+                    new Length([
+                        'max' => self::MAX_UNIT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::MAX_UNIT_LENGTH]
+                        ),
+                    ]),
+                ],
             ])
             ->add('volume_unit', TextType::class, [
                 'label' => $this->trans(
@@ -51,6 +79,16 @@ class LocalUnitsType extends TranslatorAwareType
                     'The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).',
                     'Admin.International.Help'
                 ),
+                'constraints' => [
+                    new Length([
+                        'max' => self::MAX_UNIT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::MAX_UNIT_LENGTH]
+                        ),
+                    ]),
+                ],
             ])
             ->add('dimension_unit', TextType::class, [
                 'label' => $this->trans(
@@ -61,6 +99,16 @@ class LocalUnitsType extends TranslatorAwareType
                     'The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).',
                     'Admin.International.Help'
                 ),
+                'constraints' => [
+                    new Length([
+                        'max' => self::MAX_UNIT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::MAX_UNIT_LENGTH]
+                        ),
+                    ]),
+                ],
             ]);
     }
 }
