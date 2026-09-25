@@ -32,7 +32,7 @@ There are many resources (good and bad) on the web offering information, advice,
 
 ### Open Source Conferences and User Groups
 
-* [OSCON](<http://conferences.oreillynet.com/oscon/). Note that O'Reilly Media put on many other conferences, most of which have strong open source components and/or constitutents.
+* [OSCON](<http://conferences.oreillynet.com/oscon/). Note that O'Reilly Media put on many other conferences, most of which have strong open source components and/or constituents.
 * [FOSS4G](http://www.foss4g2007.org/). Free and Open Source Geospatial Information Systems conference.
 * [Blender Conference](http://www.blender3d.com/cms/Blender_Conference.52.0.html). There are other regional versions of this conference that can be found at the [blender.org](<a href="http://blender.org/">) website.
 * The Ottawa [Linux Symposium](http://www.linuxsymposium.org/2006/). A premier event for [hackers](http://en.wikipedia.org/wiki/Hacker) to discuss implementation experiences and chart the future of Linux.

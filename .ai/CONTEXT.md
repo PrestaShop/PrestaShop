@@ -101,12 +101,12 @@ Components: AdminAPI, BackOfficeHelp, Behat, Configuration, Console, Context, Co
 
 ## Generated indexes
 
-Pre-built snapshots in `generated/` — useful when no PHP runtime is available (web-based assistants, CI contexts). Regenerate with `bash bin/generate-ai-index.sh`.
+Pre-built snapshots in `generated/` — useful when no PHP runtime is available (web-based assistants, CI contexts). Regenerate with `bash .ai/bin/generate-ai-index.sh`.
 
 When PHP is available, prefer the authoritative live sources:
 - CQRS commands/queries: `./bin/console prestashop:list:commands-and-queries`
 - Routes: `./bin/console debug:router`
-- Hooks: `app/Resources/hooks/hook.xml`
+- Hooks: `install-dev/data/xml/hook.xml`
 - Entities: read Doctrine entity files directly under `src/PrestaShopBundle/Entity/`
 
 | File | Contents | When to use |
