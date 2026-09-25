@@ -33,6 +33,10 @@ security:
         username_parameter: email
         password_parameter: passwd
         success_handler: PrestaShopBundle\Security\Admin\AdminAuthenticationSuccessHandler
+      two_factor:
+        auth_form_path: 2fa_login
+        check_path: 2fa_login_check
+        enable_csrf: true
       remember_me:
         secret: "%kernel.secret%"
         lifetime: "%prestashop.admin_cookie_lifetime%"
@@ -43,6 +47,9 @@ security:
         target: admin_login
 
   access_control:
+    - { route: '2fa_login', roles: IS_AUTHENTICATED_2FA_IN_PROGRESS }
+    - { route: '2fa_login_check', roles: IS_AUTHENTICATED_2FA_IN_PROGRESS }
+    - { route: '2fa_resend', roles: IS_AUTHENTICATED_2FA_IN_PROGRESS }
     - { route: 'admin_login', roles: PUBLIC_ACCESS }
     - { route: 'admin_homepage', roles: PUBLIC_ACCESS }
     - { route: 'admin_request_password_reset', roles: PUBLIC_ACCESS }
