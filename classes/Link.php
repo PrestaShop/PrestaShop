@@ -247,7 +247,7 @@ class LinkCore
              * We will use all categories in the path of the default category,
              * with two exceptions - the root category and the home category.
              */
-            foreach ($product->getParentCategories($idLang) as $cat) {
+            foreach ($product->getParentCategories($idLang, $idShop) as $cat) {
                 if (!in_array($cat['id_category'], Link::$category_disable_rewrite)) {
                     $cats[] = $cat['link_rewrite'];
                 }
@@ -400,18 +400,20 @@ class LinkCore
      *
      * @param Category|array|int $category
      * @param int $idLang
+     * @param int|null $idShop Load the category for this shop, so multishop-specific fields
+     *                         (e.g. link_rewrite) match the shop the link is generated for
      *
      * @return Category
      *
      * @throws PrestaShopException
      */
-    public function getCategoryObject($category, $idLang)
+    public function getCategoryObject($category, $idLang, $idShop = null)
     {
         if (!is_object($category)) {
             if (isset($category['id_category'])) {
-                $category = new Category($category['id_category'], $idLang);
+                $category = new Category($category['id_category'], $idLang, $idShop);
             } elseif ((int) $category) {
-                $category = new Category((int) $category, $idLang);
+                $category = new Category((int) $category, $idLang, $idShop);
             } else {
                 throw new PrestaShopException('Invalid category vars');
             }
@@ -467,21 +469,21 @@ class LinkCore
         $rule = 'category_rule';
 
         if (!$alias) {
-            $category = $this->getCategoryObject($category, $idLang);
+            $category = $this->getCategoryObject($category, $idLang, $idShop);
         }
         $params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
 
         // Only pass the meta title parameter when the active route uses it
         if ($dispatcher->hasKeyword($rule, $idLang, 'meta_title', $idShop)) {
-            $category = $this->getCategoryObject($category, $idLang);
+            $category = $this->getCategoryObject($category, $idLang, $idShop);
             $params['meta_title'] = Tools::str2url($category->getFieldByLang('meta_title'));
         }
 
         // Only pass the categories parameter when the active route uses it
         if ($dispatcher->hasKeyword($rule, $idLang, 'categories', $idShop)) {
-            $category = $this->getCategoryObject($category, $idLang);
+            $category = $this->getCategoryObject($category, $idLang, $idShop);
             $cats = [];
-            foreach (array_reverse($category->getParentsCategories($idLang)) as $cat) {
+            foreach (array_reverse($category->getParentsCategories($idLang, $idShop)) as $cat) {
                 if ($cat['id_category'] == $category->id) {
                     continue;
                 }
