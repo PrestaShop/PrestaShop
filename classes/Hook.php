@@ -621,7 +621,13 @@ class HookCore extends ObjectModel
             ]);
 
             // Get hook id
-            $id_hook = Hook::getIdByName($hook_name, false);
+            // WHY: aliases are resolved here too. Ignoring them made an alias look like a hook nobody
+            // had declared, so the branch below created a second hook row carrying the alias as its
+            // name and registered the module against that. Everything that reads the registration
+            // resolves the alias to its canonical hook instead, and so never found the module again.
+            // Calling the listener is unaffected: callHookOn() tries the canonical method name and
+            // then every alias of it, so a module that only implements the aliased name still runs.
+            $id_hook = Hook::getIdByName($hook_name);
 
             // If hook does not exist, we create it
             if (!$id_hook) {
@@ -733,7 +739,10 @@ class HookCore extends ObjectModel
             }
         } else {
             // If we received hook name as a string, we try to find it's ID
-            $hook_id = Hook::getIdByName($hook_identifier, false);
+            // WHY: resolved the same way registerHook() resolves it. If one of the two honoured
+            // aliases and the other did not, a module could register under a name it could never
+            // unregister under, and the row would outlive the module that owns it.
+            $hook_id = Hook::getIdByName($hook_identifier);
             $hook_name = $hook_identifier;
         }
 
