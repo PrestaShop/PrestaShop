@@ -5,6 +5,8 @@ admin_email_body_translation_index:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\EmailBodyTranslationController::indexAction
     _legacy_controller: AdminTranslations
     _legacy_feature_flag: email_body_translation
+    _legacy_parameters:
+      lang: locale
 
 admin_email_body_translation_search:
   path: /{locale}/search
