@@ -2385,7 +2385,9 @@ class OrderCore extends ObjectModel
         $orderCarrier = new OrderCarrier($idOrderCarrier);
         $orderCarrier->tracking_number = $shipping_number;
 
-        return $orderCarrier->update();
+        // Writing the number through the orders resource must behave as writing it through the
+        // order_carriers resource, which the webservice routes to updateWs().
+        return $orderCarrier->updateWs();
     }
 
     public function setWsCurrentState($state)
