@@ -85,7 +85,10 @@ class CustomerAddressType extends TranslatorAwareType
             'Invalid characters:',
             'Admin.Notifications.Info'
         ) . ' ' . TypedRegexValidator::GENERIC_NAME_CHARS;
-        $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
+        $stateChoices = $this->stateChoiceProvider->getChoices([
+            'id_country' => $countryId,
+            'kept_state_id' => (int) ($data['id_state'] ?? 0),
+        ]);
         $showStates = !empty($stateChoices);
         $requiredFields = $options['requiredFields'];
 
