@@ -617,6 +617,24 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get a cart rule validity error saying :message
+     *
+     * @param string $message
+     */
+    public function assertLastCartRuleValidityError(string $message)
+    {
+        $exception = $this->assertLastErrorIs(CartRuleValidityException::class);
+
+        if (!str_contains($exception->getMessage(), $message)) {
+            throw new RuntimeException(sprintf(
+                'Expected a cart rule validity error containing "%s", got "%s" instead',
+                $message,
+                $exception->getMessage()
+            ));
+        }
+    }
+
+    /**
      * @When I use a voucher :voucherCode which provides a gift product :productName on the cart :cartReference
      *
      * @param string $voucherCode
@@ -675,6 +693,37 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         } catch (CartException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I use an automatic voucher :voucherName which provides a gift product :productName on the cart :cartReference
+     *
+     * An automatic voucher is a cart rule without a code, which CartRule::autoAddToCart() applies to
+     * every cart on its own. It is what the back office "Add new voucher" form creates by default.
+     *
+     * @param string $voucherName
+     * @param string $giftProductName
+     * @param string $cartReference
+     */
+    public function useAutomaticGiftVoucherOnCart(string $voucherName, string $giftProductName, string $cartReference)
+    {
+        $productId = $this->getProductIdByName($giftProductName);
+        $cartRule = $this->createCommonCartRule($voucherName);
+        $cartRule->code = '';
+        $cartRule->gift_product = $productId;
+
+        $this->addCartRule($cartRule);
+        $cartRuleId = (int) $cartRule->id;
+
+        $this->getCommandBus()->handle(
+            new AddCartRuleToCartCommand(
+                $this->getSharedStorage()->get($cartReference),
+                $cartRuleId
+            )
+        );
+
+        $this->getSharedStorage()->set($voucherName, $cartRuleId);
+        $this->getSharedStorage()->set($giftProductName, $productId);
     }
 
     /**

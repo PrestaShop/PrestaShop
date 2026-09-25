@@ -59,7 +59,16 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
         $errorMessage = $this->validateCartRule($cartRule, $cart);
 
         if ($errorMessage) {
+            // A voucher without a code is automatic: CartRule::autoAddToCart() attaches it to every cart
+            // on its own, so the back office asking for it explicitly is refused with "This voucher is
+            // already in your cart" even though the discount is applied. The requested state already
+            // holds, so report success instead of an error the employee cannot act on.
+            $alreadyApplied = $this->isCartRuleInCart($cart, (int) $cartRule->id);
             $this->contextStateManager->restorePreviousContext();
+
+            if ($alreadyApplied) {
+                return;
+            }
 
             throw new CartRuleValidityException($errorMessage);
         }
@@ -80,6 +89,23 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
         }
 
         $this->contextStateManager->restorePreviousContext();
+    }
+
+    /**
+     * @param Cart $cart
+     * @param int $cartRuleId
+     *
+     * @return bool
+     */
+    private function isCartRuleInCart(Cart $cart, int $cartRuleId): bool
+    {
+        foreach ($cart->getCartRules(CartRule::FILTER_ACTION_ALL, false) as $appliedCartRule) {
+            if ((int) $appliedCartRule['id_cart_rule'] === $cartRuleId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
