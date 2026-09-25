@@ -5486,7 +5486,14 @@ class ProductCore extends ObjectModel
         // Tax
         $usetax = Configuration::get('PS_TAX');
 
-        $cache_key = $row['id_product'] . '-' . $id_product_attribute . '-' . $id_lang . '-' . (int) $usetax;
+        /*
+         * The shop belongs in the key: the presented row carries per-shop values - price first of all -
+         * so without it a request that presents the same product for two shops, which is what a
+         * cross-shop listing or a loop over Shop::getContextListShopID() does, serves the first shop's
+         * row to every later one.
+         */
+        $cache_key = $row['id_product'] . '-' . $id_product_attribute . '-' . $id_lang . '-' . (int) $usetax
+            . '-' . (int) $context->shop->id;
         if (isset($row['id_product_pack'])) {
             $cache_key .= '-pack' . $row['id_product_pack'];
         }
