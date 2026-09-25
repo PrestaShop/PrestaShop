@@ -73,9 +73,13 @@ class CustomerLoginFormCore extends AbstractForm
     public function fillWith(array $params = [])
     {
         if (!empty($params['email'])) {
-            // In some cases, browsers convert non ASCII chars (from input type="email") to "punycode",
-            // we need to convert it back
-            $params['email'] = $this->IDNConverter->emailToUtf8($params['email']);
+            if (!is_string($params['email'])) {
+                $params['email'] = '';
+            } else {
+                // In some cases, browsers convert non ASCII chars (from input type="email") to "punycode",
+                // we need to convert it back
+                $params['email'] = $this->IDNConverter->emailToUtf8($params['email']);
+            }
         }
 
         return parent::fillWith($params);
