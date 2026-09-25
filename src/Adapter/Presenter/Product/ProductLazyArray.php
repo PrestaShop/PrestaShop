@@ -12,7 +12,6 @@ use Combination;
 use Context;
 use Customization;
 use DateTime;
-use Db;
 use Language;
 use Link;
 use Manufacturer;
@@ -648,16 +647,10 @@ class ProductLazyArray extends AbstractLazyArray
     public function getCategoryName()
     {
         if (!isset($this->product['category_name'])) {
-            $categoryName = (string) Db::getInstance()->getValue(
-                'SELECT name FROM ' .
-                    _DB_PREFIX_ .
-                    'category_lang
-                WHERE id_shop = ' .
-                    (int) Context::getContext()->shop->id .
-                    ' AND id_lang = ' .
-                    (int) $this->language->id .
-                    ' AND id_category = ' .
-                    (int) $this->product['id_category_default']
+            $categoryName = (string) Category::getNameById(
+                (int) $this->product['id_category_default'],
+                (int) $this->language->id,
+                (int) Context::getContext()->shop->id
             );
             $this->product['category_name'] = !empty($categoryName)
                 ? $categoryName
