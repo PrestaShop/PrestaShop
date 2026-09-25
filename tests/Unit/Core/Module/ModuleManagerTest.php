@@ -47,11 +47,25 @@ class ModuleManagerTest extends TestCase
         $adminModuleDataProvider->method('isAllowedAccess')->willReturn(true);
 
         $this->module = $this->getModuleMock();
+        $this->moduleManager = $this->createModuleManagerFor($this->module);
+    }
+
+    /**
+     * Builds a ModuleManager whose repository serves the given module, so a test can install a module
+     * that fails without disturbing the shared one every other test relies on.
+     */
+    private function createModuleManagerFor(Module $module): ModuleManager
+    {
+        $translatorMock = $this->createMock(TranslatorInterface::class);
+        $translatorMock->method('trans')->willReturnArgument(0);
+
+        $adminModuleDataProvider = $this->createMock(AdminModuleDataProvider::class);
+        $adminModuleDataProvider->method('isAllowedAccess')->willReturn(true);
 
         $moduleRepository = $this->createMock(ModuleRepository::class);
-        $moduleRepository->method('getModule')->willReturn($this->module);
+        $moduleRepository->method('getModule')->willReturn($module);
 
-        $this->moduleManager = $this->getMockBuilder(ModuleManager::class)
+        $moduleManager = $this->getMockBuilder(ModuleManager::class)
             ->setConstructorArgs([
                 $moduleRepository,
                 $this->getModuleDataProviderMock(),
@@ -67,12 +81,56 @@ class ModuleManagerTest extends TestCase
             ->onlyMethods(['upgradeMigration'])
             ->getMock()
         ;
-        $this->moduleManager->method('upgradeMigration')->willReturn(true);
+        $moduleManager->method('upgradeMigration')->willReturn(true);
+
+        return $moduleManager;
     }
 
     public function testInstall(): void
     {
         $this->assertTrue($this->moduleManager->install(self::INSTALLED_MODULE_NAME));
+        $this->assertTrue($this->moduleManager->install(self::UNINSTALLED_MODULE_NAME));
+    }
+
+    /**
+     * A module that reports failure must not stay registered: leaving the registration behind made the
+     * next attempt match the isInstalled() branch of install(), which answers with upgrade() and
+     * reports success without ever running the module's install() again.
+     */
+    public function testAnInstallationThatReturnsFalseIsRolledBack(): void
+    {
+        [$module, $legacyModule] = $this->getFailingModuleMock(null);
+        $legacyModule->expects($this->once())->method('uninstallCoreRegistration');
+
+        $moduleManager = $this->createModuleManagerFor($module);
+
+        $this->assertFalse($moduleManager->install(self::UNINSTALLED_MODULE_NAME));
+    }
+
+    /**
+     * A module's install() can fail by throwing rather than by returning false - registerHook() does
+     * that for a hook the module never implements. The registration must be undone in that case too,
+     * and the error must still reach the caller.
+     */
+    public function testAnInstallationThatThrowsIsRolledBackAndKeepsTheError(): void
+    {
+        [$module, $legacyModule] = $this->getFailingModuleMock(new Exception('hook has no method'));
+        $legacyModule->expects($this->once())->method('uninstallCoreRegistration');
+
+        $moduleManager = $this->createModuleManagerFor($module);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('hook has no method');
+        $moduleManager->install(self::UNINSTALLED_MODULE_NAME);
+    }
+
+    /**
+     * The rollback deletes rows, so it must be unreachable for an installation that worked.
+     */
+    public function testASuccessfulInstallationIsNotRolledBack(): void
+    {
+        $this->legacyModule->expects($this->never())->method('uninstallCoreRegistration');
+
         $this->assertTrue($this->moduleManager->install(self::UNINSTALLED_MODULE_NAME));
     }
 
@@ -181,7 +239,7 @@ class ModuleManagerTest extends TestCase
             ->disableOriginalConstructor()
             ->enableOriginalClone()
             ->addMethods(['reset'])
-            ->onlyMethods(['getErrors'])
+            ->onlyMethods(['getErrors', 'uninstallOverrides', 'uninstallCoreRegistration'])
             ->getMock()
         ;
         $this->legacyModule->method('reset')->willReturn(true);
@@ -197,6 +255,40 @@ class ModuleManagerTest extends TestCase
         $module->method('getInstance')->willReturn($this->legacyModule);
 
         return $module;
+    }
+
+    /**
+     * @param Exception|null $throwable what the module's install() does instead of succeeding:
+     *                                  throw it, or return false when null
+     *
+     * @return array{0: Module&MockObject, 1: LegacyModule&MockObject}
+     */
+    private function getFailingModuleMock(?Exception $throwable): array
+    {
+        /** @var Module&MockObject $module */
+        $module = $this->getMockBuilder(Module::class)
+            ->disableOriginalConstructor()
+            ->enableOriginalClone()
+            ->getMock()
+        ;
+
+        /** @var LegacyModule&MockObject $legacyModule */
+        $legacyModule = $this->getMockBuilder(LegacyModule::class)
+            ->disableOriginalConstructor()
+            ->enableOriginalClone()
+            ->onlyMethods(['getErrors', 'uninstallOverrides', 'uninstallCoreRegistration'])
+            ->getMock()
+        ;
+
+        $module->method('get')->with('version')->willReturn('1.0.0');
+        $module->method('getInstance')->willReturn($legacyModule);
+        if ($throwable === null) {
+            $module->method('onInstall')->willReturn(false);
+        } else {
+            $module->method('onInstall')->willThrowException($throwable);
+        }
+
+        return [$module, $legacyModule];
     }
 
     private function getModuleDataProviderMock(): ModuleDataProvider
