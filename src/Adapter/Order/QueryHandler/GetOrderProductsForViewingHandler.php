@@ -148,7 +148,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
 
             // if rounding type is set to "per item" we must round the unit price now, otherwise values won't match
             // the totals in the order summary
-            if ((int) $order->round_type === Order::ROUND_ITEM) {
+            $roundsPerItem = (int) $order->round_type === Order::ROUND_ITEM;
+            if ($roundsPerItem) {
                 $unitPrice = (new DecimalNumber((string) $unitPrice))->round($precision, $this->getNumberRoundMode());
             }
 
@@ -229,8 +230,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $totalPriceFormatted,
                 $product['current_stock'],
                 $imagePath,
-                (new DecimalNumber((string) $product['unit_price_tax_excl']))->round($precision, $this->getNumberRoundMode()),
-                (new DecimalNumber((string) $product['unit_price_tax_incl']))->round($precision, $this->getNumberRoundMode()),
+                $this->roundUnitPriceIfNeeded((string) $product['unit_price_tax_excl'], $roundsPerItem, $precision),
+                $this->roundUnitPriceIfNeeded((string) $product['unit_price_tax_incl'], $roundsPerItem, $precision),
                 (string) $product['tax_rate'],
                 $this->locale->formatPrice($product['amount_refunded'], $currency->iso_code),
                 $product['product_quantity_refunded'] + $product['product_quantity_return'],
@@ -264,6 +265,22 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
     /**
      * @param array $pack_item
      */
+    /**
+     * These two are handed to the refund form, which multiplies them by a quantity. Rounding them when
+     * the order does not round per item makes that product miss the stored line total by a cent or more,
+     * so the same condition the displayed unit price uses applies here.
+     */
+    private function roundUnitPriceIfNeeded(string $unitPrice, bool $roundsPerItem, int $precision): string
+    {
+        // The column is decimal(20,6), so the stored value arrives with trailing zeros; DecimalNumber
+        // normalises them away without touching the value itself.
+        if (!$roundsPerItem) {
+            return (string) new DecimalNumber($unitPrice);
+        }
+
+        return (string) (new DecimalNumber($unitPrice))->round($precision, $this->getNumberRoundMode());
+    }
+
     private function setProductImageInformation(&$pack_item): void
     {
         if (isset($pack_item['id_product_attribute']) && $pack_item['id_product_attribute']) {
