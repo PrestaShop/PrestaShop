@@ -134,6 +134,26 @@ class ObjectModelTest extends TestCase
         $this->assertEquals($localizedNames[$this->secondLanguageId], $secondLangObject->name);
     }
 
+    public function testAddPreservesZeroMultilangValue(): void
+    {
+        // Add an object containing an explicit zero in the non-default language
+        $localizedNames = [
+            $this->defaultLanguageId => '10',
+            $this->secondLanguageId => '0',
+        ];
+        $newObject = new TestableObjectModel();
+        $newObject->quantity = 1;
+        $newObject->enabled = true;
+        $newObject->name = $localizedNames;
+
+        $this->assertTrue((bool) $newObject->add());
+        $this->assertNotNull($newObject->id);
+
+        // Verify that persistence did not replace zero with the default language value
+        $savedObject = new TestableObjectModel((int) $newObject->id);
+        $this->assertSame($localizedNames, $savedObject->name);
+    }
+
     /**
      * @depends testAdd
      */
