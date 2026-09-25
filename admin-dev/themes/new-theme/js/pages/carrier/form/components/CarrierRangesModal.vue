@@ -35,6 +35,13 @@
         >
           {{ $t('modal.negativeRangeAlert') }}
         </div>
+        <div
+          class="alert alert-danger"
+          v-if="invalidRangeAlert"
+          role="alert"
+        >
+          {{ $t('modal.invalidRangeAlert') }}
+        </div>
         <div class="table-container">
           <table class="table table-carrier-ranges-modal">
             <thead>
@@ -127,6 +134,8 @@
     refreshKey: number, // force the refresh of the table by incrementing this key
     errors: boolean, // define if there are errors in the ranges
     overlappingAlert: boolean, // define if there are overlapping ranges (and display an alert)
+    negativeRangeAlert: boolean, // define if a bound is negative (and display an alert)
+    invalidRangeAlert: boolean, // define if a range ends before it starts (and display an alert)
     symbol: string, // define the current symbol used in function of the shipping method
   }
 
@@ -142,6 +151,7 @@
         errors: false,
         overlappingAlert: false,
         negativeRangeAlert: false,
+        invalidRangeAlert: false,
         symbol: '',
       };
     },
@@ -179,6 +189,7 @@
         this.errors = false;
         this.overlappingAlert = false;
         this.negativeRangeAlert = false;
+        this.invalidRangeAlert = false;
       },
       closeModal() {
         // We remove the class to allow scrolling
@@ -214,6 +225,7 @@
         this.errors = false;
         this.overlappingAlert = false;
         this.negativeRangeAlert = false;
+        this.invalidRangeAlert = false;
         // We remove the error class from all inputs already in error
         table.querySelectorAll('input.is-invalid').forEach((input) => {
           input.classList.remove('is-invalid');
@@ -263,6 +275,7 @@
                 input.classList.add('is-invalid');
               });
             this.errors = true;
+            this.invalidRangeAlert = true;
           }
 
           saveMax = range.to;
