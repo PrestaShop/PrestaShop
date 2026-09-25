@@ -7,6 +7,12 @@ services:
       autoconfigure: true
       autowire: true
 
+    # autoconfigure tags it as an entity importer, so the registry collects it exactly as it
+    # collects a module's own importer
+    Tests\Resources\ImportEngine\ScriptedEntityImporter:
+      autoconfigure: true
+      autowire: true
+
     prestashop.bundle.routing.converter.cache:
         class: Symfony\Component\Cache\Adapter\ArrayAdapter
 

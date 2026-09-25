@@ -10,6 +10,7 @@ namespace Tests\Integration\Core\Import\Engine;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer;
+use PrestaShop\PrestaShop\Core\Import\Engine\File\ImportFileFormatDetector;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobOptions;
 use SplFileInfo;
@@ -109,7 +110,7 @@ class ProductImporterBenchmarkTest extends AbstractProductImportEngineTestCase
         fclose($handle);
 
         $workingFilePath = $this->createTemporaryFilePath('bench_work_', '.csv');
-        $normalizedFile = (new CsvImportFileNormalizer(new Filesystem()))->normalize(new SplFileInfo($fixturePath), $workingFilePath, ';', 1);
+        $normalizedFile = (new CsvImportFileNormalizer(new Filesystem(), new ImportFileFormatDetector()))->normalize(new SplFileInfo($fixturePath), $workingFilePath, ';', 1);
 
         return new ImportJobContext(
             'product',

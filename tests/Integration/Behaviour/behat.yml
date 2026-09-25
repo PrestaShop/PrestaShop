@@ -13,6 +13,33 @@ default:
       contexts:
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\ContactFeatureContext
+    import:
+      paths:
+        - "%paths.base%/Features/Scenario/Import"
+      contexts:
+        - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Import\ImportJobFeatureContext
+        # the start guards build the shop scopes they refuse
+        - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+        # the entity features assert what an import produced through the domain's own contexts,
+        # so an importer is checked against the same expectations as the commands it dispatches
+        - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\LanguageFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Product\DetailsAssertionFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Product\PricesAssertionFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Product\RelatedProductsFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPriceContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockAssertionFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
+        # the product assertion steps take transformed arguments, not raw tables
+        - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
+        - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
+        - Tests\Integration\Behaviour\Features\Transform\StringToArrayTransformContext
+        - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
     database:
       paths:
         - "%paths.base%/Features/Scenario/Database"

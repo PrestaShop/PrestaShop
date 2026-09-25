@@ -29,6 +29,7 @@ services:
     public: false
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '%prestashop.admin_dir%'
 
   prestashop.core.import.dir:
     alias: 'PrestaShop\PrestaShop\Core\Import\ImportDirectory'

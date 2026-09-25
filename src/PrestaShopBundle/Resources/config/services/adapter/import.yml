@@ -1,6 +1,9 @@
 services:
   _defaults:
     public: true
+    # dependencies are discovered by type; a definition below only spells out what autowiring
+    # cannot resolve on its own (scalars, expressions, legacy service ids)
+    autowire: true
 
   prestashop.adapter.import.data_match_saver:
     class: 'PrestaShop\PrestaShop\Adapter\Import\DataMatchSaver'
@@ -91,3 +94,59 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Tools'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       - '@prestashop.core.hook.dispatcher'
+
+  # --- ImportJob aggregate (Symfony migration step 2) ---
+
+  # Serializes concurrent batches of the SAME job, and nothing else: cancellation is arbitrated by
+  # the repository's status probe. Acquisition is always non-blocking, so PersistingStoreInterface
+  # is all the handlers need — a BlockingStoreInterface would only matter if a second batch were
+  # meant to queue, and it must fail fast instead.
+  #
+  # FlockStore is per node. This id is the seam: an integration test may alias it to an
+  # InMemoryStore, and a multi-node setup to a DoctrineDbalStore.
+  #
+  # Not under kernel.cache_dir: cache:clear wipes it, and a second Continue would then flock a
+  # fresh inode while the first still holds the old one. The var/cache root is what
+  # CacheClearLocker uses too, and neither cache:clear nor the back-office clearer touch it.
+  prestashop.adapter.import.job.lock_store:
+    class: 'Symfony\Component\Lock\Store\FlockStore'
+    arguments:
+      - '%kernel.project_dir%/var/cache/locks/import'
+
+  prestashop.adapter.import.job.lock_factory:
+    class: 'Symfony\Component\Lock\LockFactory'
+    arguments:
+      - '@prestashop.adapter.import.job.lock_store'
+
+  PrestaShopBundle\Entity\Repository\ImportJobRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\ImportJob
+
+  PrestaShop\PrestaShop\Adapter\Import\ImportTruncator:
+    arguments:
+      - '@prestashop.adapter.import.entity_deleter'
+
+  PrestaShop\PrestaShop\Adapter\Import\Job\ImportJobLock:
+    arguments:
+      $lockFactory: '@prestashop.adapter.import.job.lock_factory'
+
+  PrestaShop\PrestaShop\Adapter\Import\Job\ImportJobContextFactory: ~
+  PrestaShop\PrestaShop\Adapter\Import\Job\ImportJobStateFactory: ~
+  PrestaShop\PrestaShop\Adapter\Import\Job\ImportJobPurger: ~
+  PrestaShop\PrestaShop\Adapter\Import\Job\ImportJobSequencer: ~
+
+  PrestaShop\PrestaShop\Adapter\Import\CommandHandler\StartImportJobHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Import\CommandHandler\ContinueImportJobHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Import\CommandHandler\CancelImportJobHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Import\CommandHandler\PurgeImportJobsHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Import\QueryHandler\GetImportJobStateHandler:
+    autoconfigure: true

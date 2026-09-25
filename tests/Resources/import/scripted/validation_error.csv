@@ -1,0 +1,4 @@
+verb;phase;label
+ok;;first
+error;validation;reference is missing
+ok;;third

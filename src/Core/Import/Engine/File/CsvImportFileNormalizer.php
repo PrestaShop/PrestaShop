@@ -52,11 +52,12 @@ class CsvImportFileNormalizer
 
     public function __construct(
         protected readonly Filesystem $filesystem,
+        protected readonly ImportFileFormatDetector $formatDetector,
     ) {
     }
 
     /**
-     * @param SplFileInfo $sourceFile the uploaded file (CSV or spreadsheet)
+     * @param SplFileInfo $sourceFile the uploaded file (CSV or spreadsheet, told apart by content)
      * @param string $targetPath where to write the working file (fresh path per job)
      * @param string $sourceCsvDelimiter CSV separator of the SOURCE file (ignored for spreadsheets)
      * @param int $skipRows leading records to strip (header lines, already-imported leading rows)
@@ -70,10 +71,10 @@ class CsvImportFileNormalizer
             throw new UnreadableFileException(sprintf('Import file "%s" is not readable', $sourceFile->getPathname()));
         }
 
-        if (preg_match('/\.csv$/i', $sourceFile->getFilename())) {
-            $dataRecordCount = $this->normalizeCsv($sourceFile, $targetPath, $sourceCsvDelimiter, $skipRows);
-        } else {
+        if (ImportFileFormatDetector::FORMAT_SPREADSHEET === $this->formatDetector->detect($sourceFile)) {
             $dataRecordCount = $this->convertSpreadsheet($sourceFile, $targetPath, $skipRows);
+        } else {
+            $dataRecordCount = $this->normalizeCsv($sourceFile, $targetPath, $sourceCsvDelimiter, $skipRows);
         }
 
         return new NormalizedImportFile(new SplFileInfo($targetPath), $dataRecordCount);

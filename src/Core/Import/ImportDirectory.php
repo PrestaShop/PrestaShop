@@ -20,11 +20,19 @@ final class ImportDirectory
     private $configuration;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @var string|null
      */
-    public function __construct(ConfigurationInterface $configuration)
+    private $adminDir;
+
+    /**
+     * @param ConfigurationInterface $configuration
+     * @param string|null $adminDir the container knows the admin folder even when _PS_ADMIN_DIR_ is
+     *                              undefined, which is the case under bin/console
+     */
+    public function __construct(ConfigurationInterface $configuration, ?string $adminDir = null)
     {
         $this->configuration = $configuration;
+        $this->adminDir = $adminDir;
     }
 
     /**
@@ -34,7 +42,30 @@ final class ImportDirectory
      */
     public function getDir()
     {
-        return $this->configuration->get('_PS_ADMIN_DIR_') . DIRECTORY_SEPARATOR . 'import' . DIRECTORY_SEPARATOR;
+        return ($this->adminDir ?? $this->configuration->get('_PS_ADMIN_DIR_')) . DIRECTORY_SEPARATOR . 'import' . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Directory holding the working files of import jobs.
+     *
+     * A subdirectory, not the import root: FileFinder lists the root at depth 0 and excludes only
+     * index.php, so a working file there would show up in the merchant's uploaded-file dropdown.
+     *
+     * @return string
+     */
+    public function getWorkingDir(): string
+    {
+        return $this->getDir() . 'work' . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * One job's working file: the normalized copy every batch reads from, named after the job.
+     *
+     * @return string
+     */
+    public function getWorkingFile(string $importJobUuid): string
+    {
+        return $this->getWorkingDir() . $importJobUuid . '.csv';
     }
 
     /**

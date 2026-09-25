@@ -12,6 +12,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
 use PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer;
+use PrestaShop\PrestaShop\Core\Import\Engine\File\ImportFileFormatDetector;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportJobOptions;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
@@ -112,7 +113,7 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
         // the working file contains data records only, and the record count
         // is measured by the same pass
         $workingFilePath = $this->createTemporaryFilePath('work_', '.csv');
-        $normalizer = new CsvImportFileNormalizer(new Filesystem());
+        $normalizer = new CsvImportFileNormalizer(new Filesystem(), new ImportFileFormatDetector());
         $normalizedFile = $normalizer->normalize(new SplFileInfo($fixturePath), $workingFilePath, $sourceCsvSeparator, $skipRows);
 
         return new ImportJobContext(

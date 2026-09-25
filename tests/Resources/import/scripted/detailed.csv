@@ -1,0 +1,11 @@
+verb;phase;label
+ok;;row 1
+ok;;row 2
+ok;;row 3
+ok;;row 4
+warning;validation;price was rounded
+error;validation;reference is missing
+notice;validation;category was created
+ok;;row 8
+ok;;row 9
+ok;;row 10
