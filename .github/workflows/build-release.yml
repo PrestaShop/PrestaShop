@@ -15,7 +15,7 @@ jobs:
     name: Build Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.inputs.ref }}
           path: prestashop-src
@@ -30,7 +30,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           # Commit builds can't determine PS version from ref; we assume that builds from commits will be v9+ only, so fallback is Node 20
           node-version: ${{ startsWith(github.event.inputs.ref, '8.') && '16' || '20' }}

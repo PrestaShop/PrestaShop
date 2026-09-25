@@ -65,14 +65,14 @@ jobs:
 
     steps:
       - name: Checkout core (${{ matrix.BRANCH }})
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
           token: ${{ secrets.JARVIS_TOKEN }}
 
       - name: Checkout LocalizationFiles
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: PrestaShop/LocalizationFiles
           ref: ${{ env.LF_BRANCH }}

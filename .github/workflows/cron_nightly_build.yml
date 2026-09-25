@@ -41,7 +41,7 @@ jobs:
       ZIP_FILE: ${{ matrix.BRANCH == 'develop' && 'nightly.zip' || format('nightly_{0}.zip', matrix.BRANCH)}}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
@@ -55,7 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
 

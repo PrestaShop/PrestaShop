@@ -60,7 +60,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Checkout starting point
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ github.event.inputs.starting_point }}
           fetch-depth: 0

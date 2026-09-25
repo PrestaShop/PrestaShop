@@ -53,7 +53,7 @@ jobs:
     outputs:
       campaigns: ${{ steps.campaigns.outputs.campaigns }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.BRANCH }}
           fetch-depth: 1
@@ -183,7 +183,7 @@ jobs:
       CLIENT_SECRET_API: 18c7b983c2eaa22a111609ce2b1c435e
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
@@ -295,7 +295,7 @@ jobs:
       COMBINED_REPORT_DIR: 'combined_reports'  # Where to store the combined report
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
@@ -308,7 +308,7 @@ jobs:
           merge-multiple: true
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.NODE_VERSION }}
 
