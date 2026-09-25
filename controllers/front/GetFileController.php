@@ -263,10 +263,33 @@ class GetFileControllerCore extends FrontController
             ob_end_clean();
         }
 
+        $fileSize = (int) filesize($file);
+        $start = 0;
+        $end = $fileSize - 1;
+
+        /*
+         * A download of several hundred megabytes is regularly interrupted, and without range support the
+         * customer has to start again from the beginning, which also spends another slot of their download
+         * quota's worth of traffic. Announcing ranges lets the client ask for the remaining bytes instead.
+         */
+        $range = $this->parseRangeHeader($_SERVER['HTTP_RANGE'] ?? null, $fileSize);
+        if ($range === false) {
+            header('HTTP/1.1 416 Range Not Satisfiable');
+            header('Content-Range: bytes */' . $fileSize);
+
+            exit;
+        }
+        if ($range !== null) {
+            [$start, $end] = $range;
+            header('HTTP/1.1 206 Partial Content');
+            header('Content-Range: bytes ' . $start . '-' . $end . '/' . $fileSize);
+        }
+
         /* Set headers for download */
         header('Content-Transfer-Encoding: binary');
         header('Content-Type: ' . $this->getMimeType($file, $filename));
-        header('Content-Length: ' . filesize($file));
+        header('Accept-Ranges: bytes');
+        header('Content-Length: ' . ($end - $start + 1));
         if ($forceDownload) {
             header('Content-Disposition: attachment; filename="' . $filename . '"');
         }
@@ -275,12 +298,75 @@ class GetFileControllerCore extends FrontController
         $fp = fopen($file, 'rb');
 
         if ($fp && is_resource($fp)) {
-            while (!feof($fp)) {
-                echo fgets($fp, 16384);
+            if ($start > 0) {
+                fseek($fp, $start);
             }
+            /*
+             * fread is used rather than fgets: fgets stops at the first line break, and binary content
+             * contains those at random, so it returned chunks far smaller than the requested length and
+             * looped a lot more than needed for the same bytes.
+             */
+            $remaining = $end - $start + 1;
+            while ($remaining > 0 && !feof($fp)) {
+                $chunk = fread($fp, (int) min(16384, $remaining));
+                if ($chunk === false || $chunk === '') {
+                    break;
+                }
+                echo $chunk;
+                $remaining -= strlen($chunk);
+            }
+            fclose($fp);
         }
 
         exit;
+    }
+
+    /**
+     * Reads a single byte range out of a Range header.
+     *
+     * Only one range is honoured; a request for several is answered with the whole file, which the
+     * specification allows, rather than building a multipart response.
+     *
+     * @param string|null $rangeHeader
+     * @param int $fileSize
+     *
+     * @return array{0: int, 1: int}|false|null the range to serve, null to serve the whole file,
+     *                                          false when the range cannot be satisfied
+     */
+    private function parseRangeHeader(?string $rangeHeader, int $fileSize)
+    {
+        if ($fileSize <= 0 || !is_string($rangeHeader)) {
+            return null;
+        }
+
+        if (!preg_match('/^bytes=(\d*)-(\d*)$/', trim($rangeHeader), $matches)) {
+            return null;
+        }
+
+        [, $firstByte, $lastByte] = $matches;
+
+        if ($firstByte === '' && $lastByte === '') {
+            return null;
+        }
+
+        if ($firstByte === '') {
+            // "bytes=-500" asks for the last 500 bytes
+            $length = (int) $lastByte;
+            if ($length <= 0) {
+                return false;
+            }
+            $start = max(0, $fileSize - $length);
+            $end = $fileSize - 1;
+        } else {
+            $start = (int) $firstByte;
+            $end = $lastByte === '' ? $fileSize - 1 : (int) $lastByte;
+        }
+
+        if ($start > $end || $start >= $fileSize) {
+            return false;
+        }
+
+        return [$start, min($end, $fileSize - 1)];
     }
 
     private function getMimeType(string $file, string $filename): string
