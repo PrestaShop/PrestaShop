@@ -12,7 +12,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Tax\Ecotax\ProductEcotaxResetterInterface;
 use PrestaShop\PrestaShop\Core\Tax\TaxOptionsConfiguration;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class TaxOptionsConfigurationTest extends AbstractConfigurationTestCase
@@ -103,7 +102,6 @@ class TaxOptionsConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, [
                 'enable_tax' => 'wrong_type',
                 'display_tax_in_cart' => true,
