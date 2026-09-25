@@ -994,7 +994,7 @@ class FrontControllerCore extends Controller
         $this->registerJavascript('theme-main', '/assets/js/theme.js', ['position' => 'bottom', 'priority' => 50]);
         $this->registerJavascript('theme-custom', '/assets/js/custom.js', ['position' => 'bottom', 'priority' => 1000]);
 
-        $assets = $this->context->shop->theme->getPageSpecificAssets($this->php_self);
+        $assets = $this->context->shop->theme->getPageSpecificAssets($this->getThemePageIdentifier());
         if (!empty($assets)) {
             foreach ($assets['css'] as $css) {
                 $this->registerStylesheet($css['id'], $css['path'], $css);
@@ -1408,6 +1408,21 @@ class FrontControllerCore extends Controller
     }
 
     /**
+     * The identifier a theme addresses this page by, in theme.yml's `layouts` and `assets` keys.
+     *
+     * WHY: php_self is the primary identifier, but a module front controller never sets it - it
+     * identifies itself through page_name, 'module-<module>-<controller>'. getLayout() has always
+     * fallen back to that, while setMedia() asked for php_self alone, so a theme could pick a layout
+     * for a module page but never register a stylesheet or a script for one.
+     *
+     * @return string
+     */
+    protected function getThemePageIdentifier()
+    {
+        return !empty($this->php_self) ? $this->php_self : $this->getPageName();
+    }
+
+    /**
      * Returns the layout's full path corresponding to the current page by using the override system
      * Ex:
      * On the url: http://localhost/index.php?id_product=1&controller=product, this method will
@@ -1420,12 +1435,7 @@ class FrontControllerCore extends Controller
      */
     public function getLayout()
     {
-        // Primary identifier to search for a template is php_self property,
-        // For modules, we will use page_name
-        $entity = $this->php_self;
-        if (empty($entity)) {
-            $entity = $this->getPageName();
-        }
+        $entity = $this->getThemePageIdentifier();
 
         // Get layout set in prestashop configuration
         $layout = $this->context->shop->theme->getLayoutNameForPage($entity);
