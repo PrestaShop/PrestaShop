@@ -6,9 +6,11 @@
 
 namespace Tests\Integration\Classes\controller;
 
+use AdminNotFoundController;
 use Context;
 use Controller;
 use Cookie;
+use Currency;
 use Employee;
 use Language;
 use Link;
@@ -121,6 +123,56 @@ class AdminControllerTest extends TestCase
         }
 
         $this->assertNull($testedController->run());
+    }
+
+    /**
+     * A missing back office page has to answer 404, otherwise nothing downstream - a browser, a crawler,
+     * an uptime check - can tell it apart from a page that exists.
+     *
+     * WHY a separate process: since PHP 8.5 the CLI refuses to set a response code once output has
+     * started, and in a shared test run the runner has always printed something by then.
+     *
+     * @runInSeparateProcess
+     *
+     * @preserveGlobalState disabled
+     */
+    public function testAdminNotFoundControllerAnswersWithA404Status(): void
+    {
+        $testedController = new AdminNotFoundController();
+        $refController = new ReflectionObject($testedController);
+        $refProperty = $refController->getProperty('container');
+        $refProperty->setAccessible(true);
+        $refProperty->setValue($testedController, $this->getMockContainerBuilder());
+
+        if (!defined('_PS_BASE_URL_')) {
+            define('_PS_BASE_URL_', '');
+            define('__PS_BASE_URI__', '');
+            define('_PS_BASE_URL_SSL_', '');
+        }
+
+        if (!defined('PS_INSTALLATION_IN_PROGRESS')) {
+            define('PS_INSTALLATION_IN_PROGRESS', true);
+        }
+
+        // This class mocks the entity mapper, so a currency loaded from the database comes back empty and
+        // the price specifications prepared for the header get a null currency code. The locale is a mock
+        // as well, so any code will do.
+        $currency = new Currency();
+        $currency->iso_code = 'USD';
+        Context::getContext()->currency = $currency;
+
+        try {
+            $testedController->run();
+        } finally {
+            // WHY: init() pushes Controller::myErrorHandler in debug mode and nothing pops it. PHPUnit then
+            // removes that handler instead of its own when this isolated test ends, and its own handler, left
+            // installed, fails on the next warning raised outside any test (PHP 8.5 CI).
+            if (_PS_MODE_DEV_) {
+                restore_error_handler();
+            }
+        }
+
+        $this->assertSame(404, http_response_code());
     }
 
     /**
