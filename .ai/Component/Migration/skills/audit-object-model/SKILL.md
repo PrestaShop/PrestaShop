@@ -4,6 +4,8 @@ description: >
   Read the legacy ObjectModel class for the domain and extract its database
   schema, field definitions, multilingual fields, and validation rules. This is
   the authoritative source for what columns the Doctrine repository must handle.
+  Trigger: "audit the Xxx ObjectModel", "which columns does Xxx have", before
+  writing the repository or handlers of a legacy entity.
 produces: "DB schema map, relation list, multilingual field list, validation rules from ObjectModel"
 subagent: recommended
 ---
