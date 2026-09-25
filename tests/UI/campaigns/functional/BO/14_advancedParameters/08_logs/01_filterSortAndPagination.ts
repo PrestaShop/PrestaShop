@@ -207,7 +207,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             filterType: 'input',
             filterBy: 'severity',
             filterValue: 'Informative Only',
-            expectedCount: 0,
+            expectedCount: 11,
           },
       },
       {
@@ -217,7 +217,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             filterType: 'input',
             filterBy: 'severity',
             filterValue: 'Debug',
-            expectedCount: 'numberOfLogs',
+            expectedCount: 'numberOfLogsWithoutLoginLogs',
           },
       },
       {
@@ -292,7 +292,18 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
           testValue,
         );
 
-        const expectedCount = test.args.expectedCount === 'numberOfLogs' ? numberOfLogs : test.args.expectedCount;
+        let expectedCount;
+
+        if (test.args.expectedCount === 'numberOfLogs') {
+          expectedCount = numberOfLogs;
+        } else if (test.args.expectedCount === 'numberOfLogsWithoutLoginLogs') {
+          // Each successful Back Office login now creates one Informative Only log,
+          // so exclude the 11 login logs when checking Debug entries.
+          expectedCount = numberOfLogs - 11;
+        } else {
+          expectedCount = test.args.expectedCount;
+        }
+
         const numberOfLogsAfterFilter = await boLogsPage.getNumberOfElementInGrid(page);
 
         // If expected count is null, we don't expect any particular value
