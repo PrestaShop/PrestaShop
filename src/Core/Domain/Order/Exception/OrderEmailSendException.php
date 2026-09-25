@@ -20,4 +20,9 @@ class OrderEmailSendException extends OrderException
      * When order process email sending failed
      */
     public const FAILED_SEND_PROCESS_ORDER = 2;
+
+    /**
+     * When sending the order invoice to the customer failed
+     */
+    public const FAILED_SEND_INVOICE = 3;
 }

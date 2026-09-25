@@ -87,6 +87,12 @@
                 {{ 'Edit note'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </button>
             {% endif %}
+            <form method="POST" class="d-inline-block"
+                  action="{{ path('admin_orders_send_invoice', {orderId: orderForViewing.id}) }}">
+              <button type="submit" class="btn btn-primary btn-sm">
+                {{ 'Send to customer'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              </button>
+            </form>
           {% endif %}
         </td>
       </tr>
