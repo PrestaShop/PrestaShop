@@ -47,6 +47,16 @@ class AbstractFormTest extends TestCase
                     'field' => ['Required field'],
                 ],
             ],
+            // Required field but whitespace-only (issue #9871)
+            [
+                ['field' => (new FormField())->setName('field')->setRequired(true)],
+                ['field' => '   '],
+                false,
+                [
+                    '' => [],
+                    'field' => ['Required field'],
+                ],
+            ],
             // Required field (min length)
             [
                 ['field' => (new FormField())->setName('field')->setRequired(true)->setMinLength(5)],
