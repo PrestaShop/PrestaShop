@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Store\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
 
 /**
  * Creates a new store.
@@ -249,8 +250,15 @@ class AddStoreCommand
         return $this;
     }
 
+    /**
+     * @throws StoreConstraintException
+     */
     public function setShopAssociation(?array $shopAssociation): self
     {
+        if ([] === $shopAssociation) {
+            throw new StoreConstraintException('Shop association cannot be empty', StoreConstraintException::INVALID_SHOP_ASSOCIATION);
+        }
+
         $this->shopAssociation = $shopAssociation;
 
         return $this;

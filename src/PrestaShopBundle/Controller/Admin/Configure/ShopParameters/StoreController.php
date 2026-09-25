@@ -13,15 +13,20 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotAddStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotDeleteStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotToggleStoreStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotUpdateStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface as IdentifiableFormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\StoreFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
@@ -249,11 +254,21 @@ class StoreController extends PrestaShopAdminController
     }
 
     /**
-     * @return array<class-string<StoreException>, string|array<StoreException::*, string>>
+     * @return array<class-string<Exception>, string|array<int, string>>
      */
     private function getErrorMessages(): array
     {
         return [
+            CannotAddStoreException::class => $this->trans(
+                'An error occurred while creating an object.',
+                [],
+                'Admin.Notifications.Error'
+            ),
+            CannotUpdateStoreException::class => $this->trans(
+                'An error occurred while updating an object.',
+                [],
+                'Admin.Notifications.Error'
+            ),
             CannotToggleStoreStatusException::class => $this->trans(
                 'An error occurred while updating the status.',
                 [],
@@ -291,6 +306,50 @@ class StoreController extends PrestaShopAdminController
                     'An address located in a country containing states must have a state selected.',
                     [],
                     'Admin.Shopparameters.Notification'
+                ),
+                StoreConstraintException::STATE_NOT_IN_COUNTRY => $this->trans(
+                    'The selected state does not belong to the selected country.',
+                    [],
+                    'Admin.Shopparameters.Notification'
+                ),
+                StoreConstraintException::INVALID_SHOP_ASSOCIATION => $this->trans(
+                    'The %s field is not valid',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Store association', [], 'Admin.Global')
+                        ),
+                    ],
+                    'Admin.Notifications.Error',
+                ),
+            ],
+            MemoryLimitException::class => $this->trans(
+                'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',
+                [],
+                'Admin.Notifications.Error'
+            ),
+            ImageUploadException::class => $this->trans(
+                'An error occurred while uploading the image.',
+                [],
+                'Admin.Notifications.Error'
+            ),
+            ImageOptimizationException::class => $this->trans(
+                'Unable to resize one or more of your pictures.',
+                [],
+                'Admin.Catalog.Notification'
+            ),
+            UploadedImageConstraintException::class => [
+                UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
+                    'Max file size allowed is "%s" bytes.',
+                    [
+                        $this->getIniConfiguration()->getUploadMaxSizeInBytes(),
+                    ],
+                    'Admin.Notifications.Error',
+                ),
+                UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
+                    'Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp',
+                    [],
+                    'Admin.Notifications.Error'
                 ),
             ],
         ];

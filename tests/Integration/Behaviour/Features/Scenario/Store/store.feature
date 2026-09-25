@@ -189,6 +189,11 @@ Feature: store management
       | shop_association | shop2 |
     Then store "storeShops" should have the following properties:
       | shop_association | shop2 |
+    When I edit store "storeShops" with the following properties:
+      | shop_association | |
+    Then I should get a store constraint error with code "INVALID_SHOP_ASSOCIATION"
+    And store "storeShops" should have the following properties:
+      | shop_association | shop2 |
 
   Scenario: Adding a store for a country that does not exist raises an error
     When I add store "storeUnknownCountry" using command with the following properties:
@@ -225,6 +230,17 @@ Feature: store management
       | country         | France           |
       | state           | Alabama          |
     Then I should get a store constraint error with code "STATE_COUNTRY_MISMATCH"
+
+  Scenario: Adding a store with a state belonging to another country raises an error
+    When I add store "storeWrongState" using command with the following properties:
+      | name[en-US]     | Wrong State Store |
+      | active          | true              |
+      | address1[en-US] | 100 Main Street   |
+      | city            | Montgomery        |
+      | postcode        | 36101             |
+      | country         | United States     |
+      | state           | Ontario           |
+    Then I should get a store constraint error with code "STATE_NOT_IN_COUNTRY"
 
   # ──────────────────────────────────────────────────────────────
   # Edit via CQRS command

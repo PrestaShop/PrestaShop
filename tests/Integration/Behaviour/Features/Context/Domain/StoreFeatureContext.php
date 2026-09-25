@@ -265,11 +265,10 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['note'])) {
             $command->setLocalizedNotes($data['note']);
         }
-        if (isset($data['shop_association'])) {
-            $command->setShopAssociation($this->referencesToIds($data['shop_association']));
-        }
-
         try {
+            if (isset($data['shop_association'])) {
+                $command->setShopAssociation($this->referencesToIds($data['shop_association']));
+            }
             $this->getCommandBus()->handle($command);
         } catch (StoreConstraintException $e) {
             $this->setLastException($e);

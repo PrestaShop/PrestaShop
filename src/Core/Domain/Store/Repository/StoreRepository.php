@@ -29,8 +29,6 @@ class StoreRepository extends AbstractObjectModelRepository
         private Connection $connection,
         private string $dbPrefix,
     ) {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
     }
 
     /**
@@ -86,7 +84,7 @@ class StoreRepository extends AbstractObjectModelRepository
     /**
      * Replaces the shop associations for the given store.
      *
-     * @param int[] $shopIds
+     * @param non-empty-array<int> $shopIds
      *
      * @throws PrestaShopDatabaseException
      */
@@ -97,9 +95,7 @@ class StoreRepository extends AbstractObjectModelRepository
             ['id_store' => $store->id]
         );
 
-        if ($shopIds) {
-            $store->associateTo($shopIds);
-        }
+        $store->associateTo($shopIds);
     }
 
     /**

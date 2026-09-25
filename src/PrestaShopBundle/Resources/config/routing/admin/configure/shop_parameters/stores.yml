@@ -33,7 +33,7 @@ admin_stores_edit:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::editAction'
     _legacy_controller: AdminStores
-    _legacy_link: AdminStores:editstore
+    _legacy_link: AdminStores:updatestore
     _legacy_feature_flag: store
     _legacy_parameters:
       id_store: storeId
