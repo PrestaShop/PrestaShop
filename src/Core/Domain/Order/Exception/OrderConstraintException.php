@@ -25,4 +25,10 @@ class OrderConstraintException extends OrderException
      * Used in add payment from BO when the payment method is invalid.
      */
     public const INVALID_PAYMENT_METHOD = 3;
+
+    /**
+     * Code is used when the cart rule name given when adding a discount to an order is longer than
+     * the column can hold.
+     */
+    public const INVALID_CART_RULE_NAME = 4;
 }
