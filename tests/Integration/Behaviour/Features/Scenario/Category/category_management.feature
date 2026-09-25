@@ -575,6 +575,36 @@ Feature: Category Management
     Then category "category16" position should be "2"
     Then category "category14" position should be "3"
 
+  Scenario: Update category position with the found first flag
+    Given I add new category "category-700" with following details:
+      | name[en-US]         | not important  |
+      | name[fr-FR]         | not important  |
+      | active              | true           |
+      | parent category     | home           |
+      | link rewrite[en-US] | not-important7 |
+    Given I add new category "category21" with following details:
+      | name[en-US]         | PC parts 21    |
+      | name[fr-FR]         | PC parts 21 fr |
+      | active              | true           |
+      | parent category     | category-700   |
+      | link rewrite[en-US] | pc-parts21     |
+    And I add new category "category22" with following details:
+      | name[en-US]         | PC parts 22    |
+      | name[fr-FR]         | PC parts 22 fr |
+      | active              | true           |
+      | parent category     | category-700   |
+      | link rewrite[en-US] | pc-parts22     |
+    And I add new category "category23" with following details:
+      | name[en-US]         | PC parts 23    |
+      | name[fr-FR]         | PC parts 23 fr |
+      | active              | true           |
+      | parent category     | category-700   |
+      | link rewrite[en-US] | pc-parts23     |
+    # "up" with a target below the current position is a combination the back office never produces,
+    # but nothing stops an API client from sending it together with the found first flag.
+    When I move category "category21" up to a position "2" with the found first flag
+    Then categories sharing the parent of "category21" should have contiguous positions
+
   Scenario: Edit home category
     When I edit home category "home" with following details:
       | name[en-US]                   | PC parts                       |
