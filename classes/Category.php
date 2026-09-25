@@ -517,13 +517,34 @@ class CategoryCore extends ObjectModel
         if (isset($categoriesArray[0]['subcategories'][0])) {
             $queries = Category::computeNTreeInfos($categoriesArray, $categoriesArray[0]['subcategories'][0], $n);
 
-            // update by batch of 5000 categories
+            /*
+             * Every id here was read out of the category table a few lines above, so there is nothing to
+             * insert. The statement used to be an INSERT ... ON DUPLICATE KEY UPDATE naming only
+             * id_category, nleft and nright, which a strict SQL mode rejects outright - id_parent,
+             * date_add and date_upd are NOT NULL with no default - even when every row is a duplicate and
+             * nothing would actually be inserted.
+             *
+             * update by batch of 5000 categories
+             */
             $chunks = array_chunk($queries, 5000);
             foreach ($chunks as $chunk) {
-                $sqlChunk = array_map(function ($value) { return '(' . rtrim(implode(',', $value)) . ')'; }, $chunk);
-                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'category` (id_category, nleft, nright)
-                VALUES ' . rtrim(implode(',', $sqlChunk), ',') . '
-                ON DUPLICATE KEY UPDATE nleft=VALUES(nleft), nright=VALUES(nright)');
+                $ids = [];
+                $nleftCases = '';
+                $nrightCases = '';
+
+                foreach ($chunk as $categoryNTreeInfos) {
+                    [$idCategory, $left, $right] = $categoryNTreeInfos;
+                    $idCategory = (int) $idCategory;
+
+                    $ids[] = $idCategory;
+                    $nleftCases .= ' WHEN ' . $idCategory . ' THEN ' . (int) $left;
+                    $nrightCases .= ' WHEN ' . $idCategory . ' THEN ' . (int) $right;
+                }
+
+                Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'category`
+                SET `nleft` = CASE `id_category`' . $nleftCases . ' END,
+                    `nright` = CASE `id_category`' . $nrightCases . ' END
+                WHERE `id_category` IN (' . implode(',', $ids) . ')');
             }
         }
     }
