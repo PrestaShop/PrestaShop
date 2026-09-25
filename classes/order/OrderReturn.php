@@ -29,6 +29,9 @@ class OrderReturnCore extends ObjectModel
     /** @var string Object last modification date */
     public $date_upd;
 
+    /** @var Order * */
+    protected $order;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -122,6 +125,15 @@ class OrderReturnCore extends ObjectModel
         }
 
         return (int) $data['total'];
+    }
+
+    public function getOrder()
+    {
+        if (!$this->order) {
+            $this->order = new Order($this->id_order);
+        }
+
+        return $this->order;
     }
 
     public static function getOrdersReturn($customer_id, $order_id = false, $no_denied = false, ?Context $context = null, ?int $idOrderReturn = null)

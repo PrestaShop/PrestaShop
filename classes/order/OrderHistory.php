@@ -24,6 +24,9 @@ class OrderHistoryCore extends ObjectModel
     /** @var string Object last modification date */
     public $date_upd;
 
+    /** @var Order * */
+    protected $order;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -52,6 +55,15 @@ class OrderHistoryCore extends ObjectModel
             'add' => 'addWs',
         ],
     ];
+
+    public function getOrder()
+    {
+        if (!$this->order) {
+            $this->order = new Order($this->id_order);
+        }
+
+        return $this->order;
+    }
 
     /**
      * Sets the new state of the given order.
