@@ -34,7 +34,7 @@ jobs:
           REPOSITORY_NAME=${{ github.event.repository.name }}
           echo "DOCKER_PREFIX=${REPOSITORY_NAME@L}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup Environment
         timeout-minutes: 15

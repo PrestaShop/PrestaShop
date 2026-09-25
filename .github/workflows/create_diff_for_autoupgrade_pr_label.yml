@@ -36,7 +36,7 @@ jobs:
     env:
       DUMP_TABLES_FOR_DIFF: "ps_hook ps_feature_flag ps_tab"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: ${{ matrix.branch == 'head' && '0' || '1' }}
           ref: ${{ matrix.branch == 'base' && github.event.pull_request.base.ref || github.event.pull_request.head.ref }}
