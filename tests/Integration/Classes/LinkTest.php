@@ -18,10 +18,18 @@ class LinkTest extends TestCase
 {
     private $originalUseRoutes;
 
+    /** @var array */
+    private $originalGet;
+
+    /** @var string|null */
+    private $originalController;
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->originalUseRoutes = $this->getUseRoutesProperty()->getValue(Dispatcher::getInstance());
+        $this->originalGet = $_GET;
+        $this->originalController = $this->getControllerProperty()->getValue(Dispatcher::getInstance());
     }
 
     protected function tearDown(): void
@@ -29,7 +37,17 @@ class LinkTest extends TestCase
         // Restore the Dispatcher singleton state mutated by the tests, otherwise the forced
         // use_routes value leaks into other test classes and changes their generated URLs.
         $this->getUseRoutesProperty()->setValue(Dispatcher::getInstance(), $this->originalUseRoutes);
+        $_GET = $this->originalGet;
+        $this->getControllerProperty()->setValue(Dispatcher::getInstance(), $this->originalController);
         parent::tearDown();
+    }
+
+    private function getControllerProperty(): ReflectionProperty
+    {
+        $property = (new ReflectionClass('Dispatcher'))->getProperty('controller');
+        $property->setAccessible(true);
+
+        return $property;
     }
 
     private function getUseRoutesProperty(): ReflectionProperty
@@ -118,5 +136,47 @@ class LinkTest extends TestCase
         );
 
         $this->assertArrayNotHasKey('ean13', $query);
+    }
+
+    /**
+     * getLanguageLink() builds the hreflang alternates from the ids in the query string, so it sees whatever
+     * the visitor typed. getProductLink() and getCategoryObject() throw on an id that casts to 0, which used
+     * to turn a URL such as /0-some-product.html into a 500 instead of a 404.
+     *
+     * @see https://github.com/PrestaShop/PrestaShop/issues/33306
+     *
+     * @dataProvider provideInvalidEntityIds
+     */
+    public function testLanguageLinkDoesNotThrowOnAnIdThatCastsToZero(string $controller, string $key, string $value): void
+    {
+        $_GET = ['controller' => $controller, $key => $value];
+        $this->getControllerProperty()->setValue(Dispatcher::getInstance(), $controller);
+
+        $link = Context::getContext()->link->getLanguageLink(Context::getContext()->language->id);
+
+        $this->assertNotEmpty($link);
+    }
+
+    public static function provideInvalidEntityIds(): array
+    {
+        return [
+            'product id zero' => ['product', 'id_product', '0'],
+            'product id empty' => ['product', 'id_product', ''],
+            'product id not a number' => ['product', 'id_product', 'abc'],
+            'product id below one' => ['product', 'id_product', '0.5'],
+            'category id zero' => ['category', 'id_category', '0'],
+            'category id empty' => ['category', 'id_category', ''],
+            'category id not a number' => ['category', 'id_category', 'abc'],
+        ];
+    }
+
+    public function testLanguageLinkStillPointsAtTheProductForAValidId(): void
+    {
+        $_GET = ['controller' => 'product', 'id_product' => '1'];
+        $this->getControllerProperty()->setValue(Dispatcher::getInstance(), 'product');
+
+        $link = Context::getContext()->link->getLanguageLink(Context::getContext()->language->id);
+
+        $this->assertStringContainsString('hummingbird-printed-t-shirt', $link);
     }
 }
