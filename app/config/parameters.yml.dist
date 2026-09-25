@@ -4,6 +4,8 @@
 parameters:
     database_host:     127.0.0.1
     database_port:     ~
+    # Absolute path to a MySQL unix socket. When set it replaces host/port.
+    database_unix_socket: ~
     database_name:     prestashop
     database_user:     root
     database_password: ~
