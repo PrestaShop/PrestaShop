@@ -2463,6 +2463,25 @@ class ProductCore extends ObjectModel
         foreach ($features as $tab) {
             // Delete product custom features
             if ($tab['custom']) {
+                // A custom value is meant to belong to one product, but nothing enforces that:
+                // setWsProductFeatures() inserts whichever id_feature_value the webservice sends, so an
+                // integration that copies features between products makes several of them share one.
+                // Deleting it unconditionally here then emptied the feature on every other product still
+                // pointing at it, and left their feature_product rows referencing a row that is gone.
+                // Only drop the value once nothing else uses it -- the same rule the migrated back office
+                // path already applies in ProductFeatureValueUpdater::cleanOrphanCustomFeatureValues().
+                // This product's own rows are still present at this point, hence the id_product exclusion.
+                $usedByAnotherProduct = (bool) Db::getInstance()->getValue(
+                    'SELECT 1
+                    FROM `' . _DB_PREFIX_ . 'feature_product`
+                    WHERE `id_feature_value` = ' . (int) $tab['id_feature_value'] . '
+                    AND `id_product` != ' . (int) $this->id
+                );
+
+                if ($usedByAnotherProduct) {
+                    continue;
+                }
+
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'feature_value` WHERE `id_feature_value` = ' . (int) $tab['id_feature_value']);
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'feature_value_lang` WHERE `id_feature_value` = ' . (int) $tab['id_feature_value']);
             }
