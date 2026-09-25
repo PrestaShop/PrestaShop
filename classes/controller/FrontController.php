@@ -11,6 +11,7 @@ use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Image\ImageDimensions;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -1745,7 +1746,7 @@ class FrontControllerCore extends Controller
             return [];
         }
 
-        list($logoWidth, $logoHeight) = getimagesize($logoFileDir);
+        [$logoWidth, $logoHeight] = ImageDimensions::of($logoFileDir);
 
         return [
             'src' => ($this->getTemplateVarUrls()['img_ps_url'] ?? _PS_IMG_) . $logoFileName,

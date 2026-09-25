@@ -3,6 +3,8 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Core\Image\ImageDimensions;
+
 abstract class HTMLTemplateCore
 {
     /**
@@ -116,7 +118,7 @@ abstract class HTMLTemplateCore
         $width = 0;
         $height = 0;
         if (!empty($logo)) {
-            list($width, $height) = getimagesize(_PS_IMG_DIR_ . $logo);
+            [$width, $height] = ImageDimensions::of(_PS_IMG_DIR_ . $logo);
         }
 
         // Limit the height of the logo for the PDF render
