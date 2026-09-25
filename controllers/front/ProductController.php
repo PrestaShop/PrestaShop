@@ -1238,6 +1238,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequestOrDefault();
 
+        /*
+         * Stock location of the combination being shown. Product::loadStockData() asks StockAvailable
+         * for the product level row only, so a product with combinations reported the same location
+         * whichever combination was selected - and nothing at all when only the combinations carry one.
+         * The product level value stays as the fallback for combinations that have none of their own.
+         *
+         * @todo Migrate into the lazy array with the properties below, so listings get it too.
+         */
+        if ($product['id_product_attribute']) {
+            $product['location'] = StockAvailable::getLocation(
+                (int) $this->product->id,
+                (int) $product['id_product_attribute']
+            ) ?: $this->product->location;
+        }
+
         // @todo These three properties should be migrated into the lazy array, so they are available also in listings
         // Minimal quantity setting of this product or combination
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
