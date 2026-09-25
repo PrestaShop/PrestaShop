@@ -80,7 +80,6 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('cl.`name` AS `category`')
             ->addSelect('img_shop.`id_image`')
             ->addSelect('img_lang.legend')
-            ->addSelect('p.`id_tax_rules_group`')
         ;
 
         // When ecotax is enabled the real final price is the sum of price and ecotax so we fetch an extra alias column that is used for sorting

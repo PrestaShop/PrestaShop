@@ -42,29 +42,48 @@ class MultiShopProductControllerTest extends GridControllerTestCase
     protected const DEFAULT_SHOP_GROUP = 'Default';
     protected const SHARED_STOCK_SHOP_GROUP = 'Shared stock Group';
 
+    protected const ALL_SHOP_TAX_RULES_GROUPS = [
+        self::DEFAULT_SHOP_NAME => [
+            'id_tax_rules_group' => 1,
+        ],
+        self::INDEPENDENT_SHOP_NAME => [
+            'id_tax_rules_group' => 2,
+        ],
+        self::SHARED_SHOP_NAME => [
+            'id_tax_rules_group' => 3,
+        ],
+        self::SECOND_SHARED_SHOP_NAME => [
+            'id_tax_rules_group' => 4,
+        ],
+    ];
+
     protected const ALL_SHOPS_PRODUCT_DATA = [
         self::DEFAULT_SHOP_NAME => [
             'name' => 'All shops Product - Default',
             'reference' => 'product-all-shops',
             'price_tax_excluded' => '$51.00',
+            'price_tax_included' => '$53.04',
             'quantity' => 51,
         ],
         self::INDEPENDENT_SHOP_NAME => [
             'name' => 'All shops Product - independent shop',
             'reference' => 'product-all-shops',
             'price_tax_excluded' => '$69.00',
+            'price_tax_included' => '$69.00',
             'quantity' => 69,
         ],
         self::SHARED_SHOP_NAME => [
             'name' => 'All shops Product - Shared stock',
             'reference' => 'product-all-shops',
             'price_tax_excluded' => '$13.00',
+            'price_tax_included' => '$13.86',
             'quantity' => 21,
         ],
         self::SECOND_SHARED_SHOP_NAME => [
             'name' => 'All shops Product - Second shared stock',
             'reference' => 'product-all-shops',
             'price_tax_excluded' => '$14.00',
+            'price_tax_included' => '$14.84',
             'quantity' => 21,
         ],
     ];
@@ -566,6 +585,7 @@ class MultiShopProductControllerTest extends GridControllerTestCase
                 ->setLocalizedNames([static::DEFAULT_LANG_ID => $shopProductData['name']])
                 ->setReference($shopProductData['reference'])
                 ->setPrice(str_replace('$', '', $shopProductData['price_tax_excluded']))
+                ->setTaxRulesGroupId(static::ALL_SHOP_TAX_RULES_GROUPS[$shopName]['id_tax_rules_group'])
             ;
             $commandBus->handle($updateCommand);
 
