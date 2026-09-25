@@ -64,9 +64,23 @@ export default class CarrierFormManager {
       this.refreshFreeShipping();
       this.onChangeZones();
     });
-    this.$shippingMethodInput.on('change', () => this.refreshCurrentShippingSymbol());
+    this.$shippingMethodInput.on('change', () => this.onChangeShippingMethod());
     $(CarrierFormMap.zonesContainer).on('click', CarrierFormMap.deleteZoneButton, (e:Event) => this.onDeleteZone(e));
     this.eventEmitter.on(CarrierFormEventMap.rangesUpdated, (ranges: Range[]) => this.onChangeRanges(ranges));
+  }
+
+  private onChangeShippingMethod(): void {
+    // WHY: the ranges and their prices are expressed in the unit of the shipping method that was
+    // selected when they were entered, so switching the method makes them meaningless - a 2kg to 6kg
+    // range is otherwise silently relabelled as a currency range holding the same numbers.
+    // Emitting rangesUpdated with no range reuses the single path that owns the ranges: the hidden
+    // data input is rewritten and every zone's rows, prices included, are rebuilt empty.
+    this.eventEmitter.emit(CarrierFormEventMap.rangesUpdated, []);
+
+    // WHY: this clearing belongs to the change listener and NOT to refreshCurrentShippingSymbol(),
+    // which also runs from initForm() on every page load - clearing there would wipe the ranges of
+    // the carrier being edited before the merchant touched anything.
+    this.refreshCurrentShippingSymbol();
   }
 
   private refreshFreeShipping(): void {
