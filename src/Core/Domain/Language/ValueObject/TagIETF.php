@@ -45,6 +45,23 @@ class TagIETF
     }
 
     /**
+     * The locale this tag stands for, in the `language-REGION` shape `Validate::isLocale()` accepts.
+     *
+     * A tag carrying a region gives it directly - `de-ch` is `de-CH`. A tag without one has no
+     * region to offer, so the language is repeated as the region: `de` becomes `de-DE`. That is the
+     * same shape PrestaShop's own list uses for such languages - `fr` is stored as `fr-FR` - and it
+     * is a defined answer rather than a guess at the country the merchant meant.
+     *
+     * @return string
+     */
+    public function toLocale(): string
+    {
+        [$language, $region] = array_pad(explode('-', $this->tagIETF, 2), 2, null);
+
+        return strtolower($language) . '-' . strtoupper($region ?? $language);
+    }
+
+    /**
      * @param string $tagIETF
      *
      * @throws LanguageConstraintException

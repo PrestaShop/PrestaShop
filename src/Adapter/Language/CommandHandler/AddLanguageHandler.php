@@ -106,9 +106,11 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
         $language = new Language();
         $language->name = $command->getName();
         $language->iso_code = $command->getIsoCode()->getValue();
-        if (false !== ($languageDetails = Language::getLangDetails($command->getIsoCode()->getValue()))) {
-            $language->locale = $languageDetails['locale'];
-        }
+        // PrestaShop only knows the locale of the ISO codes it ships with. For any other one the
+        // language used to be stored with an empty locale, so derive it from the IETF tag the
+        // merchant supplied instead.
+        $languageDetails = Language::getLangDetails($command->getIsoCode()->getValue());
+        $language->locale = false !== $languageDetails ? $languageDetails['locale'] : $command->getTagIETF()->toLocale();
         $language->language_code = $command->getTagIETF()->getValue();
         $language->date_format_lite = $command->getShortDateFormat();
         $language->date_format_full = $command->getFullDateFormat();
