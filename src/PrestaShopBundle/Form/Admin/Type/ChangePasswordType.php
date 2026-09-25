@@ -59,6 +59,11 @@ class ChangePasswordType extends AbstractType
             ->add('old_password', PasswordType::class, [
                 'label' => $this->trans('Current password', [], 'Admin.Advparameters.Feature'),
                 'required' => true,
+                'attr' => [
+                    // The employee's existing password: the browser should offer to fill it, not
+                    // to generate a replacement.
+                    'autocomplete' => 'current-password',
+                ],
             ])
             ->add('new_password', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -76,6 +81,7 @@ class ChangePasswordType extends AbstractType
                         'Admin.Advparameters.Help'
                     ),
                     'attr' => [
+                        'autocomplete' => 'new-password',
                         'data-minscore' => $minScore,
                         'data-minlength' => $minLength,
                         'data-maxlength' => $maxLength,
@@ -85,6 +91,7 @@ class ChangePasswordType extends AbstractType
                     'label' => $this->trans('Confirm password', [], 'Admin.Advparameters.Feature'),
                     'help' => '',
                     'attr' => [
+                        'autocomplete' => 'new-password',
                         'data-invalid-password' => $this->trans(
                             'The confirmation password doesn\'t match.',
                             [],
