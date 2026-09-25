@@ -39,10 +39,10 @@
     {cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
     <tr class="product {$bgcolor_class}">
 
-      <td class="product center">
+      <td class="product center" width="{$layout.reference.width}%">
         {$order_detail.product_reference}
       </td>
-      <td class="product left">
+      <td class="product left" width="{$widthColProduct}%">
         {if $display_product_images}
           <table width="100%">
             <tr>
@@ -63,13 +63,13 @@
 
       </td>
       {if $isTaxEnabled}
-        <td class="product center">
+        <td class="product center" width="{$layout.tax_code.width}%">
           {$order_detail.order_detail_tax_label}
         </td>
       {/if}
 
       {if isset($layout.before_discount)}
-        <td class="product center">
+        <td class="product center" width="{$layout.unit_price_tax_excl.width}%">
           {if isset($order_detail.unit_price_tax_excl_before_specific_price)}
             {displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl_before_specific_price}
           {else}
@@ -78,17 +78,17 @@
         </td>
       {/if}
 
-      <td class="product right">
+      <td class="product right" width="{$layout.unit_price_tax_excl.width}%">
         {displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl_including_ecotax}
         {if $order_detail.ecotax_tax_excl > 0}
           <br>
           <small>{{displayPrice currency=$order->id_currency price=$order_detail.ecotax_tax_excl}|string_format:{l s='ecotax: %s' d='Shop.Pdf' pdf='true'}}</small>
         {/if}
       </td>
-      <td class="product center">
+      <td class="product center" width="{$layout.quantity.width}%">
         {$order_detail.product_quantity}
       </td>
-      <td  class="product right">
+      <td class="product right" width="{$layout.total_tax_excl.width}%">
         {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl_including_ecotax}
       </td>
     </tr>
