@@ -53,6 +53,11 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
     private $modulesDir;
 
     /**
+     * @var string
+     */
+    private $overrideModulesDir;
+
+    /**
      * @var array<int, string>
      */
     private $moduleExtractorExcludedDirs = ['vendor', 'lib', 'tests'];
@@ -75,6 +80,7 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
          */
         $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
         $this->modulesDir = self::$kernel->getContainer()->getParameter('translations_modules_dir');
+        $this->overrideModulesDir = self::$kernel->getContainer()->getParameter('override_modules_dir');
 
         $this->legacyModuleExtractor = $this->createMock(LegacyModuleExtractorInterface::class);
         $this->legacyModuleExtractor->method('extract')
@@ -159,7 +165,8 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
             $smartyExtractor,
             $twigExtractor,
             $this->modulesDir,
-            $this->moduleExtractorExcludedDirs
+            $this->moduleExtractorExcludedDirs,
+            $this->overrideModulesDir
         );
 
         $providerDefinition = new ModuleProviderDefinition('translationtest');
@@ -248,7 +255,8 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
             $smartyExtractor,
             $twigExtractor,
             $this->modulesDir,
-            $this->moduleExtractorExcludedDirs
+            $this->moduleExtractorExcludedDirs,
+            $this->overrideModulesDir
         );
         $providerDefinition = new ModuleProviderDefinition('translationtest');
         $provider = new ModuleCatalogueLayersProvider(
@@ -284,11 +292,12 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
                 ],
             ],
             'ModulesTranslationtestTranslationtest' => [
-                'count' => 3,
+                'count' => 4,
                 'translations' => [
                     'Hello World' => 'Hello World',
                     'An error occured, please check your zip file' => 'An error occured, please check your zip file',
                     'his wording belongs to the module file' => 'his wording belongs to the module file',
+                    'Wording from module override' => 'Wording from module override',
                 ],
             ],
         ];
