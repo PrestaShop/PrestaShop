@@ -215,7 +215,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
                 if (!$module->canBeUpgraded()) {
                     unset($urls['upgrade']);
-                } elseif ($moduleAttributes->get('download_url') !== null) {
+                } elseif ($module->hasNewVersionAvailable() && $moduleAttributes->get('download_url') !== null) {
                     // If the module can be upgraded and has a download URL,
                     // we also generate an upload URL to be used for uploading the archive during the module upgrade process.
                     $upload_url = $this->router->generate('admin_module_manage_action', [
