@@ -49,6 +49,14 @@ class ProductShopsQueryBuilder extends ProductQueryBuilder
     }
 
     /**
+     * One row per shop, so the same product id appears once for each shop it is associated with.
+     */
+    protected function resolvesThePageByProductId(): bool
+    {
+        return false;
+    }
+
+    /**
      * We perform no filtering on the shops since the purpose is to get all the details.
      *
      * @param string $sql
