@@ -102,21 +102,44 @@ class ModuleController extends ModuleAbstractController
     public function configureModuleAction(
         string $module_name,
         LegacyContext $legacyContext,
+        Request $request,
     ): Response {
+        // When the back office security tokens are disabled, generated admin links no longer
+        // contain a query string. Modules that build their configuration form action by
+        // concatenating extra query parameters (e.g. the official GDPR module appends
+        // "&page=...") then glue those parameters onto the {module_name} route placeholder
+        // instead of the query string, leading to a "module not found" 500 error.
+        // We extract the real module name so the configuration page keeps working, and re-inject
+        // the glued parameters into the request query so the module's own getContent() sees them
+        // via Tools::getValue(). See #41314.
+        if (preg_match('/^(?P<name>[a-zA-Z0-9_-]+)(?P<tail>.*)$/s', $module_name, $matches)) {
+            $module_name = $matches['name'];
+            parse_str(ltrim($matches['tail'], '&?'), $gluedParameters);
+            if (!empty($gluedParameters)) {
+                $request->query->add($gluedParameters);
+            }
+        } else {
+            $module_name = '';
+        }
+
         // Get accessed module object
         /** @var ModuleAdapter $module */
         $module = $this->getModuleRepository()->getModule($module_name);
         if (!$module->getInstance()) {
+            // The configure page relies on the module instance (getContent, translation links,
+            // toolbar buttons, ...) so it cannot be rendered for a missing module. We redirect
+            // back to the module manager with an explicit error instead of failing with a 500.
             $this->addFlash('error', $this->trans(
                 'The module "%modulename%" cannot be found',
                 ['%modulename%' => $module_name],
                 'Admin.Modules.Notification'
             ));
-            $layoutSubTitle = null;
-        } else {
-            $this->saveModuleHistory($module);
-            $layoutSubTitle = $module->getInstance()->displayName;
+
+            return $this->redirectToRoute('admin_module_manage');
         }
+
+        $this->saveModuleHistory($module);
+        $layoutSubTitle = $module->getInstance()->displayName;
 
         // This controller is not purely migrated, in the sense that it still relies on the legacy layout because module implementing
         // getContent need the default theme to be working as expected
