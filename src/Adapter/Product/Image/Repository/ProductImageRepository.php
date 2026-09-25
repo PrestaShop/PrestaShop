@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\Repository;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Generator;
 use Image;
 use ImageType;
@@ -255,7 +256,12 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
      *
      * @return array<int, ImageId[]> [(int) id_combination => [ImageId]]
      */
-    public function getImageIdsForCombinations(array $combinationIds): array
+    /**
+     * @param CombinationId[] $combinationIds
+     * @param ShopConstraint|null $shopConstraint Null returns the associations of every shop, which
+     *                                            is what callers without a shop context expect
+     */
+    public function getImageIdsForCombinations(array $combinationIds, ?ShopConstraint $shopConstraint = null): array
     {
         if (empty($combinationIds)) {
             return [];
@@ -278,6 +284,11 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
             ->orderBy('i.position', 'asc')
         ;
+
+        // WHY: an association names an image, and images are scoped by image_shop. Without this a
+        // shop lists the images another shop picked for the same combination, and the form would
+        // then offer them as its own selection.
+        $this->restrictToShopImages($qb, $shopConstraint);
 
         $results = $qb->executeQuery()->fetchAllAssociative();
 
@@ -755,11 +766,68 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->orderBy('i.cover', 'DESC')
             ->setMaxResults(1)
             ->setParameter('productAttribute', $combinationId->getValue());
+
         $data = $qb->executeQuery()->fetchOne();
         if ($data > 0) {
             return new ImageId((int) $data);
         }
 
         return null;
+    }
+
+    /**
+     * Restricts a query over product_attribute_image (aliased pai) to the images the constrained
+     * shops actually hold. A null or all-shops constraint leaves the query untouched.
+     */
+    private function restrictToShopImages(QueryBuilder $qb, ?ShopConstraint $shopConstraint): void
+    {
+        if (null === $shopConstraint || $shopConstraint->forAllShops()) {
+            return;
+        }
+
+        $qb->innerJoin(
+            'pai',
+            $this->dbPrefix . 'image_shop',
+            'pai_img_shop',
+            'pai_img_shop.id_image = pai.id_image'
+        );
+
+        if ($shopConstraint->getShopGroupId()) {
+            $qb
+                ->innerJoin(
+                    'pai_img_shop',
+                    $this->dbPrefix . 'shop',
+                    'pai_shop',
+                    'pai_shop.id_shop = pai_img_shop.id_shop AND pai_shop.id_shop_group = :paiShopGroupId'
+                )
+                ->setParameter('paiShopGroupId', $shopConstraint->getShopGroupId()->getValue())
+            ;
+
+            return;
+        }
+
+        if ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+            $qb
+                ->andWhere('pai_img_shop.id_shop IN (:paiShopIds)')
+                ->setParameter(
+                    'paiShopIds',
+                    array_map(fn (ShopId $shopId) => $shopId->getValue(), $shopConstraint->getShopIds()),
+                    ArrayParameterType::INTEGER
+                )
+            ;
+
+            return;
+        }
+
+        if ($shopConstraint->getShopId()) {
+            $qb
+                ->andWhere('pai_img_shop.id_shop = :paiShopId')
+                ->setParameter('paiShopId', $shopConstraint->getShopId()->getValue())
+            ;
+
+            return;
+        }
+
+        throw new InvalidShopConstraintException('Cannot handle this kind of ShopConstraint');
     }
 }
