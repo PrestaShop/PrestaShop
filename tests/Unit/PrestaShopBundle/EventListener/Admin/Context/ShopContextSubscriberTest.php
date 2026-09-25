@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
+use PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PermissionController;
 use PrestaShopBundle\EventListener\Admin\Context\ShopContextSubscriber;
 use PrestaShopBundle\Routing\LegacyControllerConstants;
 use PrestaShopBundle\Security\Admin\TokenAttributes;
@@ -99,6 +100,61 @@ class ShopContextSubscriberTest extends ContextEventListenerTestCase
         $this->assertEquals($expectedShopId, $this->getPrivateField($shopContextBuilder, 'shopId'));
         $this->assertEquals($expectedShopConstraint, $this->getPrivateField($shopContextBuilder, 'shopConstraint'));
         $this->assertEquals($expectedShopConstraint, $event->getRequest()->attributes->get('shopConstraint'));
+    }
+
+    /**
+     * @dataProvider getNonMethodControllerValues
+     *
+     * @param string $controller
+     * @param ShopConstraint|null $tokenShopConstraint
+     * @param ShopConstraint $expectedShopConstraint
+     */
+    public function testMultiShopWithNonMethodController(string $controller, ?ShopConstraint $tokenShopConstraint, ShopConstraint $expectedShopConstraint): void
+    {
+        $request = new Request();
+        $request->attributes->set('_controller', $controller);
+        $event = $this->createRequestEvent($request);
+
+        $shopContextBuilder = new ShopContextBuilder(
+            $this->mockShopRepository(self::DEFAULT_SHOP_ID),
+            $this->mockContextStateManager(),
+            $this->mockMultistoreFeature(true),
+        );
+
+        $listener = new ShopContextSubscriber(
+            $shopContextBuilder,
+            $this->mockEmployeeContext(),
+            $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
+            $this->mockMultistoreFeature(true),
+            $this->mockRouter(),
+            $this->mockSecurity($tokenShopConstraint),
+            $this->mockLegacyContext(),
+            $this->createMock(TranslatorInterface::class),
+            $this->mockShopListResolver(),
+        );
+        $listener->initShopContext($event);
+
+        $this->assertEquals($expectedShopConstraint, $this->getPrivateField($shopContextBuilder, 'shopConstraint'));
+        $this->assertEquals($expectedShopConstraint, $event->getRequest()->attributes->get('shopConstraint'));
+    }
+
+    public static function getNonMethodControllerValues(): iterable
+    {
+        yield 'service id controller, falls back to token constraint' => [
+            'api_platform.action.something',
+            ShopConstraint::allShops(),
+            ShopConstraint::allShops(),
+        ];
+        yield 'class name controller with all shop attribute' => [
+            PermissionController::class,
+            null,
+            ShopConstraint::allShops(),
+        ];
+        yield 'class name controller without all shop attribute' => [
+            ShopContextSubscriber::class,
+            ShopConstraint::shop(3),
+            ShopConstraint::shop(3),
+        ];
     }
 
     public function testLegacyControllerForceMultiShop(): void

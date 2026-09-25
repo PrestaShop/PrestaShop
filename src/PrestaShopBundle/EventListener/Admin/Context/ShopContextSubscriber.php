@@ -363,13 +363,23 @@ class ShopContextSubscriber implements EventSubscriberInterface
             if (empty($controller)) {
                 // If the attribute is not present yet we handle the matching ourselves and get the controller via routing info
                 $routeInfo = $this->router->matchRequest($request);
-                $controller = $routeInfo['_controller'];
+                $controller = $routeInfo['_controller'] ?? null;
             }
-            [$className, $methodName] = explode('::', $controller);
+            if (!is_string($controller) || empty($controller)) {
+                return null;
+            }
+
+            // The controller is not always a "Class::method" string: service ids and invokable
+            // class names carry no separator, so we fall back on the __invoke method
+            [$className, $methodName] = str_contains($controller, '::')
+                ? explode('::', $controller, 2)
+                : [$controller, '__invoke'];
 
             $reflectionClass = new ReflectionClass($className);
             $classAttributes = $reflectionClass->getAttributes(AllShopContext::class);
-            $methodAttributes = $reflectionClass->getMethod($methodName)->getAttributes(AllShopContext::class);
+            $methodAttributes = $reflectionClass->hasMethod($methodName)
+                ? $reflectionClass->getMethod($methodName)->getAttributes(AllShopContext::class)
+                : [];
 
             $attributes = array_merge($classAttributes, $methodAttributes);
             if (!empty($attributes)) {
