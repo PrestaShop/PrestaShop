@@ -89,7 +89,30 @@ class StockAvailableCore extends ObjectModel
      */
     public function updateWs()
     {
-        return $this->update();
+        // The webservice writes this row directly, which bypasses setQuantity() and therefore the
+        // notification it sends, so modules watching stock never hear about a change made this way.
+        $previousQuantity = (int) Db::getInstance()->getValue(
+            'SELECT `quantity`
+            FROM `' . _DB_PREFIX_ . 'stock_available`
+            WHERE `id_stock_available` = ' . (int) $this->id
+        );
+
+        if (!$this->update()) {
+            return false;
+        }
+
+        Hook::exec(
+            'actionUpdateQuantity',
+            [
+                'id_product' => (int) $this->id_product,
+                'id_product_attribute' => (int) $this->id_product_attribute,
+                'quantity' => (int) $this->quantity,
+                'delta_quantity' => (int) $this->quantity - $previousQuantity,
+                'id_shop' => (int) $this->id_shop,
+            ]
+        );
+
+        return true;
     }
 
     public static function getStockAvailableIdByProductId($id_product, $id_product_attribute = null, $id_shop = null)
