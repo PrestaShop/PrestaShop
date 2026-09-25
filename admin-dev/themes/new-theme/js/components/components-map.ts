@@ -52,6 +52,7 @@ export default {
     specificLocale: (selectedLocale: string): string => `.nav-item a[data-locale="${selectedLocale}"]`,
   },
   entitySearchInput: {
+    widgetSelector: '.entity-search-widget',
     searchInputSelector: '.entity-search-input',
     entitiesContainerSelector: '.entities-list',
     listContainerSelector: '.entities-list-container',
