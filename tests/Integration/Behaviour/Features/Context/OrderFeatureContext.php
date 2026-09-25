@@ -9,6 +9,8 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use AdminKernel;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
+use Customer;
+use CustomerThread;
 use Exception;
 use Order;
 use OrderCarrier;
@@ -30,8 +32,9 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 
     /**
      * @When /^I validate my cart using payment module (fake)$/
+     * @When /^I validate my cart using payment module (fake) with message "(.+)"$/
      */
-    public function validateCartWithPaymentModule($paymentModuleName)
+    public function validateCartWithPaymentModule($paymentModuleName, $message = null)
     {
         switch ($paymentModuleName) {
             case 'fake':
@@ -56,7 +59,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             (int) Configuration::get('PS_OS_CHEQUE'), // PS_OS_PAYMENT for payment-validated order
             0,
             'Unknown',
-            null,
+            $message,
             [],
             null,
             false,
@@ -67,6 +70,39 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $this->orders[] = $order;
 
         $kernel = $previousKernel;
+    }
+
+    /**
+     * @Then /^the order should have a private customer message "(.+)"$/
+     */
+    public function checkOrderHasPrivateCustomerMessage($expectedMessage)
+    {
+        $order = $this->getCurrentCartOrder();
+        $customer = new Customer((int) $order->id_customer);
+        $idCustomerThread = (int) CustomerThread::getIdCustomerThreadByEmailAndIdOrder(
+            $customer->email,
+            (int) $order->id
+        );
+
+        if (!$idCustomerThread) {
+            throw new RuntimeException(sprintf('No customer thread was created for order %d', $order->id));
+        }
+
+        foreach (CustomerThread::getMessageCustomerThreads($idCustomerThread) as $customerMessage) {
+            if ($customerMessage['message'] === $expectedMessage) {
+                Assert::assertEquals(
+                    1,
+                    (int) $customerMessage['private'],
+                    'A message left by a payment module is addressed to the merchant and must stay private'
+                );
+
+                return;
+            }
+        }
+
+        throw new RuntimeException(
+            sprintf('Order %d has no customer message "%s"', $order->id, $expectedMessage)
+        );
     }
 
     /**
