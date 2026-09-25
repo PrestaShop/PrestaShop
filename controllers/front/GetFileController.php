@@ -5,6 +5,20 @@
  */
 class GetFileControllerCore extends FrontController
 {
+    public $php_self = 'get-file';
+
+    /**
+     * A download is identified by its `key` query parameter, not by a canonical page URL.
+     * The canonical built from $php_self in FrontController::init() carries no key, so
+     * redirecting to it would turn an existing download link (e.g. from an order email)
+     * into a keyless request once a friendly URL is configured for the get-file page.
+     * $php_self must stay set for Meta::getPages() to register the friendly URL under
+     * the same name used by ProductDownload::getTextLink(), hence the no-op override here.
+     */
+    protected function canonicalRedirection(string $canonical_url = '')
+    {
+    }
+
     protected const MIME_TYPES = [
         'ez' => 'application/andrew-inset',
         'hqx' => 'application/mac-binhex40',
