@@ -58,7 +58,7 @@ class TabCore extends ObjectModel
             'route_name' => ['type' => self::TYPE_STRING, 'required' => false, 'size' => 256],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'icon' => ['type' => self::TYPE_STRING, 'size' => 64],
+            'icon' => ['type' => self::TYPE_STRING, 'size' => 32],
             'wording' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
             'wording_domain' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
             /* Lang fields */
