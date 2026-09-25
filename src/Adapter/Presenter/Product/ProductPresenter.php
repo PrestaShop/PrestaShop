@@ -54,6 +54,11 @@ class ProductPresenter
      */
     protected $translator;
 
+    /**
+     * @var ProductPresentationContext|null
+     */
+    protected $presentationContext;
+
     public function __construct(
         ImageRetriever $imageRetriever,
         Link $link,
@@ -72,6 +77,16 @@ class ProductPresenter
         $this->configuration = $configuration ?? new Configuration();
     }
 
+    /**
+     * Provide the set of products that will be presented together so that per-product
+     * lookups in the lazy array can be resolved from a single batched query. Optional:
+     * when left unset, the presenter falls back to resolving each product on its own.
+     */
+    public function setPresentationContext(?ProductPresentationContext $presentationContext): void
+    {
+        $this->presentationContext = $presentationContext;
+    }
+
     public function present(
         ProductPresentationSettings $settings,
         array $product,
@@ -87,7 +102,8 @@ class ProductPresenter
             $this->productColorsRetriever,
             $this->translator,
             $this->hookManager,
-            $this->configuration
+            $this->configuration,
+            $this->presentationContext
         );
 
         Hook::exec('actionPresentProduct',
