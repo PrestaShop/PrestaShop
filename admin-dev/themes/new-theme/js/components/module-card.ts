@@ -4,6 +4,10 @@
  */
 import {EventEmitter} from 'events';
 import ConfirmModal from '@components/modal';
+import {
+  buildUpdateConfirmMessage,
+  escapeHtml,
+} from '@app/utils/module-update-message';
 import ComponentsMap from './components-map';
 
 const ModuleCardMap = ComponentsMap.moduleCard;
@@ -160,6 +164,7 @@ export default class ModuleCard {
       event.preventDefault();
       const modal = $(`#${$(this).data('confirm_modal')}`);
       const isMaintenanceMode = window.isShopMaintenance;
+      const moduleMessage = <string>$(this).data('confirm-message') || '';
 
       if (modal.length !== 1) {
         // Modal body element
@@ -180,9 +185,12 @@ export default class ModuleCard {
             confirmButtonClass: isMaintenanceMode
               ? 'btn-primary'
               : 'btn-secondary',
-            confirmMessage: isMaintenanceMode
-              ? ''
-              : window.moduleTranslations.moduleModalUpdateConfirmMessage,
+            confirmMessage: buildUpdateConfirmMessage(
+              isMaintenanceMode
+                ? ''
+                : window.moduleTranslations.moduleModalUpdateConfirmMessage,
+              escapeHtml(moduleMessage),
+            ),
             closable: true,
             customButtons: isMaintenanceMode ? [] : [maintenanceLink],
           },

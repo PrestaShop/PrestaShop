@@ -4,6 +4,10 @@
  */
 
 import ConfirmModal from '@components/modal';
+import {
+  buildUpdateConfirmMessage,
+  formatModuleUpdateMessage,
+} from '@app/utils/module-update-message';
 
 const {$} = window;
 
@@ -876,7 +880,10 @@ class AdminModuleController {
             ? window.moduleTranslations.moduleModalUpdateUpgrade
             : window.moduleTranslations.upgradeAnywayButtonText,
           confirmButtonClass: isMaintenanceMode ? 'btn-primary' : 'btn-secondary',
-          confirmMessage: isMaintenanceMode ? '' : window.moduleTranslations.moduleModalUpdateConfirmMessage,
+          confirmMessage: buildUpdateConfirmMessage(
+            isMaintenanceMode ? '' : window.moduleTranslations.moduleModalUpdateConfirmMessage,
+            self.collectModuleUpdateMessages(),
+          ),
           closable: true,
           customButtons: isMaintenanceMode ? [] : [maintenanceLink],
         },
@@ -979,6 +986,28 @@ class AdminModuleController {
       // eslint-disable-next-line
       $(this.addonItemListSelector).toggle(modulesCount !== this.modulesList.length / 2);
     }
+  }
+
+  /**
+   * Collects the confirmation messages the modules about to be updated attached to their
+   * update button, so "Update all" warns about the same things a single update does.
+   */
+  collectModuleUpdateMessages() {
+    return $(this.upgradeAllTargets)
+      .map(function moduleUpdateMessage() {
+        const message = $(this).data('confirm-message');
+
+        if (!message) {
+          return null;
+        }
+
+        return formatModuleUpdateMessage(
+          $(this).closest('.module-item-list').data('name'),
+          message,
+        );
+      })
+      .get()
+      .join('<br>');
   }
 
   isModulesPage() {
