@@ -198,7 +198,9 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ($filterName === 'employee') {
-                $builder->andWhere('CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`) LIKE :' . $filterName);
+                // The column is displayed abbreviated, but a merchant searching it types the real
+                // first name, so match the full name here - as the customer filter above already does.
+                $builder->andWhere('CONCAT(e.`firstname`," ",e.`lastname`) LIKE :' . $filterName);
                 $builder->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }

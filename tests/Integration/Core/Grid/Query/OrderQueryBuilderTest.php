@@ -150,6 +150,77 @@ class OrderQueryBuilderTest extends KernelTestCase
         return array_map('intval', array_column($rows, 'id_order'));
     }
 
+    /**
+     * The customer column is rendered abbreviated ("J. Doe"), and the filter used to match that same
+     * expression, so searching the grid for a customer's real first name returned nothing. The
+     * filter has to match the full name while the column keeps its narrow display form.
+     */
+    public function testCustomerFilterMatchesTheFullFirstName(): void
+    {
+        $address = $this->insertAddress(1);
+        $searched = $this->insertCustomer('Zzjonathan', 'Zzsmith');
+        $other = $this->insertCustomer('Zzmarianne', 'Zzjones');
+        $searchedOrder = $this->insertOrder($address, 1, $searched);
+        $otherOrder = $this->insertOrder($address, 1, $other);
+
+        try {
+            // The first name is only present in full in the underlying column, never in "Z. Zzsmith".
+            $this->assertSame(
+                [$searchedOrder],
+                $this->fetchOrderIds($this->createSearchCriteria(['customer' => 'Zzjonathan'], 'id_order', 'DESC', 50, 0))
+            );
+
+            // The other customer must not come along: proves the filter still discriminates.
+            $this->assertSame(
+                [$otherOrder],
+                $this->fetchOrderIds($this->createSearchCriteria(['customer' => 'Zzmarianne'], 'id_order', 'DESC', 50, 0))
+            );
+
+            // Searching by last name kept working before the fix and must keep working after it.
+            $this->assertSame(
+                [$searchedOrder],
+                $this->fetchOrderIds($this->createSearchCriteria(['customer' => 'Zzsmith'], 'id_order', 'DESC', 50, 0))
+            );
+        } finally {
+            $this->deleteOrders([$searchedOrder, $otherOrder]);
+            $this->deleteCustomers([$searched, $other]);
+            $this->deleteAddresses([$address]);
+        }
+    }
+
+    private function insertCustomer(string $firstname, string $lastname): int
+    {
+        $this->connection->executeStatement(
+            'INSERT INTO ' . $this->dbPrefix . 'customer
+                (id_shop_group, id_shop, id_gender, id_default_group, id_lang, firstname, lastname,
+                 email, passwd, active, date_add, date_upd)
+             VALUES (1, :shop, 0, 3, :lang, :firstname, :lastname, :email, :passwd, 1, NOW(), NOW())',
+            [
+                'shop' => self::CONTEXT_SHOP_ID,
+                'lang' => self::CONTEXT_LANG_ID,
+                'firstname' => $firstname,
+                'lastname' => $lastname,
+                'email' => strtolower($firstname . '.' . $lastname) . '@order-grid-test.invalid',
+                'passwd' => 'order-grid-test',
+            ]
+        );
+
+        return (int) $this->connection->lastInsertId();
+    }
+
+    private function deleteCustomers(array $customerIds): void
+    {
+        if (empty($customerIds)) {
+            return;
+        }
+
+        $this->connection->executeStatement(
+            'DELETE FROM ' . $this->dbPrefix . 'customer WHERE id_customer IN (:ids)',
+            ['ids' => $customerIds],
+            ['ids' => Connection::PARAM_INT_ARRAY]
+        );
+    }
+
     private function insertAddress(int $countryId): int
     {
         $this->connection->executeStatement(
@@ -170,7 +241,7 @@ class OrderQueryBuilderTest extends KernelTestCase
         return (int) $this->connection->lastInsertId();
     }
 
-    private function insertOrder(int $addressId, int $orderStateId = 1): int
+    private function insertOrder(int $addressId, int $orderStateId = 1, ?int $customerId = null): int
     {
         $this->connection->executeStatement(
             'INSERT INTO ' . $this->dbPrefix . 'orders
@@ -185,7 +256,7 @@ class OrderQueryBuilderTest extends KernelTestCase
                 'orderState' => $orderStateId,
                 'currency' => 1,
                 'lang' => self::CONTEXT_LANG_ID,
-                'customer' => self::DEMO_CUSTOMER_ID,
+                'customer' => $customerId ?? self::DEMO_CUSTOMER_ID,
                 'payment' => 'Test payment',
                 'reference' => 'ORDERGRIDTEST',
                 'shop' => self::CONTEXT_SHOP_ID,
