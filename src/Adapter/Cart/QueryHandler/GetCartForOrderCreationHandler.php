@@ -13,8 +13,10 @@ use Cart;
 use CartRule;
 use Currency;
 use Customer;
+use Hook;
 use Link;
 use Message;
+use Module;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -386,13 +388,40 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
                 $deliveryOptions[(int) $carrier->id] = new CartDeliveryOption(
                     (int) $carrier->id,
                     $carrier->name,
-                    $carrier->delay[$this->contextLangId]
+                    $carrier->delay[$this->contextLangId],
+                    $this->getCarrierExtraContent($carrier)
                 );
             }
         }
 
         // make sure array is not associative
         return array_values($deliveryOptions);
+    }
+
+    /**
+     * Same hook, same guards, as the front office delivery step, so a carrier module can offer
+     * the merchant the picker it already offers the customer.
+     *
+     * No module-HTML allowlist here on purpose: the other back office call sites that use one
+     * render module markup persisted in the database, which can outlive the module being
+     * disabled. This markup is produced on the spot, and `Hook::exec` builds its module list by
+     * joining `module_shop`, a row `Module::disable()` deletes - so a disabled module cannot
+     * reach this code at all.
+     */
+    private function getCarrierExtraContent(Carrier $carrier): string
+    {
+        if (!$carrier->is_module) {
+            return '';
+        }
+
+        // Dispatch to the carrier's own module. Without an id the hook would go to every module
+        // registered on it, which is not what the front office does.
+        $moduleId = (int) Module::getModuleIdByName($carrier->external_module_name);
+        if (!$moduleId) {
+            return '';
+        }
+
+        return (string) Hook::exec('displayCarrierExtraContent', ['carrier' => (array) $carrier], $moduleId);
     }
 
     /**
