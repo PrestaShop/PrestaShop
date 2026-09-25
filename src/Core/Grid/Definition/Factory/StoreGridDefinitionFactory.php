@@ -121,16 +121,15 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
-                        // @todo: uncomment when edit action is implemented
-                        // ->add((new LinkRowAction('edit'))
-                        // ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                        // ->setIcon('edit')
-                        // ->setOptions([
-                            // 'route' => 'admin_stores_edit',
-                            // 'route_param_name' => 'storeId',
-                            // 'route_param_field' => 'id_store',
-                        // ])
-                        // )
+                        ->add((new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_stores_edit',
+                                'route_param_name' => 'storeId',
+                                'route_param_field' => 'id_store',
+                            ])
+                        )
                         ->add(
                             $this->buildDeleteAction(
                                 'admin_stores_delete',
