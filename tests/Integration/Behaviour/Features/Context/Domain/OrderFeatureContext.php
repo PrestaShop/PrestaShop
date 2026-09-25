@@ -13,6 +13,7 @@ use AdminController;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Cart;
+use Combination;
 use Configuration;
 use Context;
 use Currency;
@@ -1858,6 +1859,28 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $foundProduct = $this->getProductByName($productReference);
         $product = new Product($foundProduct->getProductId());
         $product->delete();
+    }
+
+    /**
+     * @When I delete combination :combinationReference of product :productReference from catalogue
+     *
+     * @param string $combinationReference
+     * @param string $productReference
+     */
+    public function removeCombinationFromCatalogue(string $combinationReference, string $productReference)
+    {
+        $foundProduct = $this->getProductByName($productReference);
+        $product = new Product($foundProduct->getProductId());
+
+        foreach ($product->getAttributeCombinations() as $attributeCombination) {
+            if ($attributeCombination['reference'] === $combinationReference) {
+                (new Combination((int) $attributeCombination['id_product_attribute']))->delete();
+
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf('Combination "%s" of product "%s" was not found', $combinationReference, $productReference));
     }
 
     /**

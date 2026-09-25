@@ -361,6 +361,12 @@ class OrderCore extends ObjectModel
         $cart_base_product_quantity = [];
         $products = $this->getProducts();
         foreach ($products as &$product) {
+            // Order detail rows are presented as cart rows. `id_product` is read from the product
+            // table, which getProductsDetail() reaches through a LEFT JOIN, so it is null once the
+            // product has been deleted from the catalogue - while the order detail still knows which
+            // product the line was for. Map it like the two fields below, otherwise the line is
+            // dropped from the list and every consumer prices it as product 0.
+            $product['id_product'] = $product['product_id'];
             $product['id_product_attribute'] = $product['product_attribute_id'];
             $product['cart_quantity'] = $product['product_quantity'];
             $product_id_list[] = $this->id_address_delivery . '_'
