@@ -281,31 +281,18 @@ class OrderHistoryCore extends ObjectModel
             }
 
             $invoices = $order->getInvoicesCollection();
-            foreach ($invoices as $invoice) {
-                /** @var OrderInvoice $invoice */
-                $rest_paid = $invoice->getRestPaid();
-                if ($rest_paid > 0) {
-                    $payment = new OrderPayment();
-                    $payment->order_reference = Tools::substr($order->reference, 0, 9);
-                    $payment->id_currency = $order->id_currency;
-                    $payment->amount = $rest_paid;
-                    $payment->payment_method = isset($payment_method) && $payment_method instanceof Module ? $payment_method->displayName : null;
-                    $payment->conversion_rate = $order->conversion_rate;
-                    $payment->save();
 
-                    // Update total_paid_real value for backward compatibility reasons
-                    $order->total_paid_real += $rest_paid;
-                    $order->save();
-
-                    Db::getInstance()->insert(
-                        'order_invoice_payment',
-                        [
-                            'id_order_invoice' => (int) $invoice->id,
-                            'id_order_payment' => (int) $payment->id,
-                            'id_order' => (int) $order->id,
-                        ]
-                    );
+            if ($invoices->count() > 0) {
+                foreach ($invoices as $invoice) {
+                    /** @var OrderInvoice $invoice */
+                    $rest_paid = $invoice->getRestPaid();
+                    $this->recordPayment($order, $rest_paid, $payment_method ?? null, $invoice);
                 }
+            } else {
+                // A status can mark an order as paid without invoicing it, and a shop that has
+                // delegated invoicing to another system never issues one at all. The payment still
+                // belongs to the order, so what is left to pay is read from the order itself.
+                $this->recordPayment($order, $order->total_paid - $order->getTotalPaid(), $payment_method ?? null, null);
             }
         }
 
@@ -332,6 +319,46 @@ class OrderHistoryCore extends ObjectModel
         );
 
         ShopUrl::resetMainDomainCache();
+    }
+
+    /**
+     * Record what is still owed as a payment on the order.
+     *
+     * @param OrderCore $order
+     * @param float $restPaid amount left to pay, either on the invoice or on the order
+     * @param Module|null $paymentMethod
+     * @param OrderInvoice|null $invoice invoice the payment settles, null when the order has none
+     */
+    private function recordPayment($order, $restPaid, $paymentMethod, $invoice)
+    {
+        if ($restPaid <= 0) {
+            return;
+        }
+
+        $payment = new OrderPayment();
+        $payment->order_reference = Tools::substr($order->reference, 0, 9);
+        $payment->id_currency = $order->id_currency;
+        $payment->amount = $restPaid;
+        $payment->payment_method = $paymentMethod instanceof Module ? $paymentMethod->displayName : null;
+        $payment->conversion_rate = $order->conversion_rate;
+        $payment->save();
+
+        // Update total_paid_real value for backward compatibility reasons
+        $order->total_paid_real += $restPaid;
+        $order->save();
+
+        // The table ties a payment to the invoice it settles, so there is nothing to write when the
+        // order was never invoiced.
+        if ($invoice !== null) {
+            Db::getInstance()->insert(
+                'order_invoice_payment',
+                [
+                    'id_order_invoice' => (int) $invoice->id,
+                    'id_order_payment' => (int) $payment->id,
+                    'id_order' => (int) $order->id,
+                ]
+            );
+        }
     }
 
     /**
