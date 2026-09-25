@@ -1526,7 +1526,8 @@ class OrderController extends PrestaShopAdminController
                             $data['name'],
                             $data['type'],
                             $data['value'] ?? null,
-                            empty($data['invoice_id']) ? null : (int) $data['invoice_id']
+                            empty($data['invoice_id']) ? null : (int) $data['invoice_id'],
+                            !isset($data['value_tax_included']) || (bool) $data['value_tax_included']
                         )
                     );
 
