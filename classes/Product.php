@@ -5498,11 +5498,16 @@ class ProductCore extends ObjectModel
         /*
          * Now, to get proper prices, we need to calculate them for a specific quantity, because
          * there can be quantity discount. The variable to use is different for different contexts.
+         * If the caller resolved the quantity to price for itself, we use it. A product page does
+         * this: its quantity input says how many MORE to add, so the quantity that decides the price
+         * is the one the cart line will end up with, not the number in the box.
          * If a specific quantity_wanted is set, we use it. Usually a product page.
          * If cart_quantity is defined, we use it. Usually cart context.
          * Otherwise, we use minimal_quantity, if nothing was passed - on listings.
          */
-        if (isset($row['quantity_wanted'])) {
+        if (isset($row['quantity_to_price'])) {
+            $quantityToUseForPriceCalculations = max((int) $row['minimal_quantity'], (int) $row['quantity_to_price']);
+        } elseif (isset($row['quantity_wanted'])) {
             $quantityToUseForPriceCalculations = max((int) $row['minimal_quantity'], (int) $row['quantity_wanted']);
         } elseif (isset($row['cart_quantity'])) {
             $quantityToUseForPriceCalculations = max((int) $row['minimal_quantity'], (int) $row['cart_quantity']);
