@@ -459,6 +459,41 @@ discover_module_skills() {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
+# 7. check_skill_descriptions — flag skills whose description has no trigger phrase
+# ─────────────────────────────────────────────────────────────────────────────
+# Agents pick a skill from its frontmatter description alone, so one without a
+# trigger phrase is rarely invoked (see STRUCTURE.md → Description rule). Warn only.
+check_skill_descriptions() {
+    local total=0 missing=0
+    local list=""
+
+    while IFS= read -r skill_md; do
+        local description
+        total=$((total + 1))
+        # description value: same line, or the indented lines of a folded/literal block
+        description="$(awk '
+            NR == 1 && $0 == "---" { in_fm = 1; next }
+            in_fm && $0 == "---" { exit }
+            in_fm && /^description:/ { sub(/^description:[ ]*[>|]?-?[ ]*/, ""); print; grab = 1; next }
+            in_fm && grab && /^[ ]+/ { print; next }
+            in_fm && grab { exit }
+        ' "$skill_md")"
+
+        if ! grep -qi "trigger" <<< "$description"; then
+            missing=$((missing + 1))
+            list+="    - ${skill_md#${REPO_ROOT}/}"$'\n'
+        fi
+    done < <(find -L "$REPO_ROOT/.ai" -iname "skill.md" | sort)
+
+    if [[ $missing -gt 0 ]]; then
+        echo "  ⚠ skill descriptions ($total found, $missing without a trigger phrase):"
+        printf "%s" "$list"
+    else
+        echo "  ✓ skill descriptions ($total found, all with a trigger phrase)"
+    fi
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
 # RUN ALL
 # ─────────────────────────────────────────────────────────────────────────────
 cd "$REPO_ROOT"
@@ -469,6 +504,7 @@ generate_entities
 generate_hooks
 discover_module_skills
 sync_skill_symlinks
+check_skill_descriptions
 
 echo ""
 echo "Done. Files written to $OUTPUT_DIR/"
