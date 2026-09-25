@@ -120,26 +120,19 @@ export default class OrderProductCancel {
 
       if (productQuantity <= 0) {
         $productAmount.val(0);
+        $productAmount.removeData('suggestedAmount');
         this.updateVoucherRefund();
 
         return;
       }
-      const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
-      const productUnitPrice = parseFloat($productQuantityInput.data(priceFieldName));
-      const amountRefundable = parseFloat($productQuantityInput.data('amountRefundable'));
-      const guessedAmount = productUnitPrice * productQuantity < amountRefundable
-        ? productUnitPrice * productQuantity
-        : amountRefundable;
-      const amountValue = parseFloat(<string>$productAmount.val());
 
       if (this.useAmountInputs) {
         this.updateAmountInput($productQuantityInput);
+      } else {
+        this.suggestAmount($productQuantityInput, $productAmount, productQuantity);
       }
 
-      if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
-        $productAmount.val(guessedAmount);
-        this.updateVoucherRefund();
-      }
+      this.updateVoucherRefund();
     });
 
     $(document).on('change', OrderViewPageMap.cancelProduct.inputs.amount, () => {
@@ -169,10 +162,21 @@ export default class OrderProductCancel {
 
     if (productQuantity <= 0) {
       $productAmount.val(0);
+      $productAmount.removeData('suggestedAmount');
 
       return;
     }
 
+    this.suggestAmount($productQuantityInput, $productAmount, productQuantity);
+  }
+
+  /*
+   * The amount follows the quantity unless the merchant typed a figure of their own, which is why the
+   * suggestion is remembered: an untouched field still holds the last suggestion, so it can be replaced,
+   * while anything else is left alone. Comparing against the suggestion rather than only replacing a
+   * value that is too high is what lets the amount grow again when the quantity is raised back up.
+   */
+  private suggestAmount($productQuantityInput: JQuery, $productAmount: JQuery, productQuantity: number): void {
     const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
     const productUnitPrice = parseFloat($productQuantityInput.data(priceFieldName));
     const amountRefundable = parseFloat($productQuantityInput.data('amountRefundable'));
@@ -180,9 +184,12 @@ export default class OrderProductCancel {
       ? productUnitPrice * productQuantity
       : amountRefundable;
     const amountValue = parseFloat(<string>$productAmount.val());
+    const previousSuggestion = parseFloat($productAmount.data('suggestedAmount'));
+    const isUntouched = !Number.isNaN(previousSuggestion) && amountValue === previousSuggestion;
 
-    if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
+    if ($productAmount.val() === '' || amountValue === 0 || isUntouched || amountValue > guessedAmount) {
       $productAmount.val(guessedAmount);
+      $productAmount.data('suggestedAmount', guessedAmount);
     }
   }
 
