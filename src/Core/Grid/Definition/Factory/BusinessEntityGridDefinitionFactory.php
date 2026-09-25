@@ -126,6 +126,16 @@ final class BusinessEntityGridDefinitionFactory extends AbstractGridDefinitionFa
                                         'route_param_field' => 'id_business_entity',
                                         'clickable_row' => true,
                                     ])
+                            )
+                            ->add(
+                                (new LinkRowAction('edit'))
+                                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                    ->setIcon('edit')
+                                    ->setOptions([
+                                        'route' => 'admin_business_entities_edit',
+                                        'route_param_name' => 'businessEntityId',
+                                        'route_param_field' => 'id_business_entity',
+                                    ])
                             ),
                     ])
             );

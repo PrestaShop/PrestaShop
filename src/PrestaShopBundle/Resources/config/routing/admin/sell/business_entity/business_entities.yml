@@ -25,3 +25,12 @@ admin_business_entities_create:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::createAction
     _parent: admin_business_entities_list
+
+admin_business_entities_edit:
+  path: /{businessEntityId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::editAction
+    _parent: admin_business_entities_list
+  requirements:
+    businessEntityId: \d+
