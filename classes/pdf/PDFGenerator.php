@@ -68,6 +68,12 @@ class PDFGeneratorCore extends TCPDF
         'tw' => 'cid0cs',
         'th' => 'freeserif',
         'hy' => 'freeserif',
+        // Shipped languages whose alphabet the default font cannot encode: it is a core font,
+        // limited to cp1252, so anything outside it comes out as a question mark.
+        'hu' => 'dejavusans',
+        'bs' => 'dejavusans',
+        'hi' => 'freeserif',
+        'bn' => 'freeserif',
     ];
 
     /**
