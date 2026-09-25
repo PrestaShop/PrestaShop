@@ -151,7 +151,10 @@ class StockManager
 
         $updateReservedQuantityQuery .= '
             SET sa.reserved_quantity = (
-                SELECT SUM(od.product_quantity - od.product_quantity_refunded)
+                -- Both columns are UNSIGNED, so a line refunded beyond its ordered quantity would make
+                -- the subtraction underflow and raise "BIGINT UNSIGNED value is out of range"
+                -- instead of returning a quantity. Such a line reserves nothing.
+                SELECT SUM(GREATEST(CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED), 0))
                 FROM {table_prefix}orders o
                 INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
                 INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
