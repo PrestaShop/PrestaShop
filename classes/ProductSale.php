@@ -46,10 +46,13 @@ class ProductSaleCore
      * @param int $idLang Language id
      * @param int $pageNumber Start from (optional)
      * @param int $nbProducts Number of products to return (optional)
+     * @param string|null $orderBy Legacy order by field (optional)
+     * @param string|null $orderWay Legacy order way (optional)
+     * @param bool $random Return one page of randomly picked best sellers instead of an ordered one
      *
      * @return array|bool
      */
-    public static function getBestSales($idLang, $pageNumber = 0, $nbProducts = 10, $orderBy = null, $orderWay = null)
+    public static function getBestSales($idLang, $pageNumber = 0, $nbProducts = 10, $orderBy = null, $orderWay = null, $random = false)
     {
         $context = Context::getContext();
         if ($pageNumber < 1) {
@@ -121,7 +124,12 @@ class ProductSaleCore
             WHERE cp.`id_product` = p.`id_product`)';
         }
 
-        if ($finalOrderBy != 'price') {
+        if ($random) {
+            // Same shape as Category::getProducts() in random mode: one page of randomly picked products.
+            $sql .= '
+					ORDER BY RAND()
+					LIMIT ' . (int) $nbProducts;
+        } elseif ($finalOrderBy != 'price') {
             $sql .= '
 					ORDER BY ' . (!empty($orderTable) ? '`' . pSQL($orderTable) . '`.' : '') . '`' . pSQL($orderBy) . '` ' . pSQL($orderWay) . '
 					LIMIT ' . (int) (($pageNumber - 1) * $nbProducts) . ', ' . (int) $nbProducts;
