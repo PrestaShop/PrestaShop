@@ -25,6 +25,9 @@
     },
   },
   "ts-node": {
+    // Load the ambient declarations in js/@types with the program, so a component required from a
+    // mocha spec compiles with the same globals it has under webpack (window.$ and friends).
+    "files": true,
     "compilerOptions": {
       "module": "commonjs"
     }
