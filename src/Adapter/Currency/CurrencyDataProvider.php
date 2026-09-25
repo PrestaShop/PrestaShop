@@ -45,7 +45,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      */
     public function getCurrencies($object = false, $active = true, $group_by = false)
     {
-        return Currency::getCurrencies($object = false, $active = true, $group_by = false);
+        return Currency::getCurrencies($object, $active, $group_by);
     }
 
     /**
