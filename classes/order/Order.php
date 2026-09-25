@@ -642,6 +642,9 @@ class OrderCore extends ObjectModel
         }
 
         $result_array = [];
+        // Resolve the order-constant reduction context once instead of reloading the customer per line.
+        $reductionCountryId = (int) Address::initialize($this->id_address_delivery, true)->id_country;
+        $reductionCustomerGroupId = (int) (new Customer($this->id_customer))->id_default_group;
         foreach ($products as $row) {
             // Change qty if selected
             if ($selected_qty) {
@@ -660,7 +663,7 @@ class OrderCore extends ObjectModel
 
             $this->setProductImageInformations($row);
             $this->setProductCurrentStock($row);
-            $row = $this->setProductReduction($row);
+            $row = $this->setProductReduction($row, $reductionCountryId, $reductionCustomerGroupId);
 
             // Backward compatibility 1.4 -> 1.5
             $this->setProductPrices($row);
@@ -688,16 +691,21 @@ class OrderCore extends ObjectModel
      *
      * @return array
      */
-    protected function setProductReduction(array $product): array
+    protected function setProductReduction(array $product, ?int $idCountry = null, ?int $customerGroupId = null): array
     {
-        $address = Address::initialize($this->id_address_delivery, true);
-        $id_country = (int) $address->id_country;
-        $customerGroupId = (int) (new Customer($this->id_customer))->id_default_group;
+        // Both values are constant for the whole order, so getProducts() resolves them once and
+        // passes them in; only fall back to loading them here for direct/legacy callers.
+        if (null === $idCountry) {
+            $idCountry = (int) Address::initialize($this->id_address_delivery, true)->id_country;
+        }
+        if (null === $customerGroupId) {
+            $customerGroupId = (int) (new Customer($this->id_customer))->id_default_group;
+        }
         $specific_price = SpecificPrice::getSpecificPrice(
             $product['product_id'],
             $product['id_shop'],
             $this->id_currency,
-            $id_country,
+            $idCountry,
             $customerGroupId,
             $product['product_quantity'],
             $product['product_attribute_id']
