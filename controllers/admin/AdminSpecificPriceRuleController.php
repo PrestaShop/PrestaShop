@@ -372,10 +372,33 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         }
     }
 
+    /**
+     * Actions that only read data, so they cannot invalidate anything the front office has cached.
+     */
+    private const NON_MUTATING_ACTIONS = [
+        'new',
+        'view',
+        'details',
+        'export',
+        'reset_filters',
+    ];
+
     public function postProcess()
     {
-        Tools::clearSmartyCache();
+        $return = parent::postProcess();
 
-        return parent::postProcess();
+        // A catalog price rule changes front office prices, which templates cache, so the Smarty cache
+        // has to be dropped whenever one is created, edited, toggled or deleted. It does not have to be
+        // dropped to merely look at the list: doing that on every request meant opening this page wiped
+        // the whole cache, which on a shop with a large one is slow enough to time the page out.
+        //
+        // Deliberately a deny list rather than an allow list. Missing a mutating action here would leave
+        // customers looking at stale prices, while missing a read-only one only costs a needless cache
+        // clear, which is what this controller did on every request until now.
+        if (!empty($this->action) && !in_array($this->action, self::NON_MUTATING_ACTIONS, true)) {
+            Tools::clearSmartyCache();
+        }
+
+        return $return;
     }
 }
