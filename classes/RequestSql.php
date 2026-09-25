@@ -51,9 +51,18 @@ class RequestSqlCore extends ObjectModel
         ],
     ];
 
+    /**
+     * Columns whose value is replaced by the placeholder in an execution result. Matching is by
+     * column name, so a name has to be unambiguous across the schema: `token` only ever names a
+     * session or thread secret, while `key` also names ordinary data (translation keys) and is
+     * deliberately left out.
+     */
     public $attributes = [
         'passwd' => '*******************',
         'secure_key' => '*******************',
+        'reset_password_token' => '*******************',
+        'token' => '*******************',
+        'client_secret' => '*******************',
     ];
 
     /** @var array : list of errors */
