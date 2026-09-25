@@ -163,6 +163,7 @@ class ShopCore extends ObjectModel
             'module_currency' => ['type' => 'fk_shop'],
             'module_country' => ['type' => 'fk_shop'],
             'module_group' => ['type' => 'fk_shop'],
+            'module_carrier' => ['type' => 'fk_shop'],
             'product' => ['type' => 'shop'],
             'product_attribute' => ['type' => 'shop'],
             'product_lang' => ['type' => 'fk_shop'],
@@ -1245,6 +1246,7 @@ class ShopCore extends ObjectModel
             $tables_import['module_currency'] = true;
             $tables_import['module_country'] = true;
             $tables_import['module_group'] = true;
+            $tables_import['module_carrier'] = true;
         }
 
         if (isset($tables_import['hook_module'])) {
