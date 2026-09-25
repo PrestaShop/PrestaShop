@@ -125,6 +125,10 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
             $orderState->shipped = $command->isShipped();
         }
 
+        if (null !== $command->reservesProducts()) {
+            $orderState->reserve_products = $command->reservesProducts();
+        }
+
         if (null !== $command->isPaid()) {
             $orderState->paid = $command->isPaid();
         }

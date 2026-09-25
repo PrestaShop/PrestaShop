@@ -74,6 +74,11 @@ class EditOrderStateCommand
     /**
      * @var bool|null
      */
+    private $reserveProducts;
+
+    /**
+     * @var bool|null
+     */
     private $paid;
 
     /**
@@ -282,6 +287,24 @@ class EditOrderStateCommand
     public function setShipped(?bool $shipped)
     {
         $this->shipped = $shipped;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function reservesProducts(): ?bool
+    {
+        return $this->reserveProducts;
+    }
+
+    /**
+     * @return self
+     */
+    public function setReserveProducts(?bool $reserveProducts)
+    {
+        $this->reserveProducts = $reserveProducts;
 
         return $this;
     }

@@ -39,6 +39,11 @@ class OrderStateCore extends ObjectModel
     /** @var bool Shipped */
     public $shipped;
 
+    /**
+     * @var bool Whether an order in this state holds its products in reserved_quantity
+     */
+    public $reserve_products = true;
+
     /** @var bool Paid */
     public $paid;
 
@@ -65,6 +70,7 @@ class OrderStateCore extends ObjectModel
             'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32],
             'logable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'shipped' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'reserve_products' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'unremovable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'delivery' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'hidden' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
