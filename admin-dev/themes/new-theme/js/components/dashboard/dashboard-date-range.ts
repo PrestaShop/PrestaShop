@@ -21,6 +21,10 @@ export default class DashboardDateRange {
       method: form.method,
       body: new FormData(form),
       headers: {'X-Requested-With': 'XMLHttpRequest'},
+      // An expired session gets a 302 to the login page rather than a 401; without this, fetch
+      // would follow it and resolve with a misleading 200 (the login page HTML). "manual" turns
+      // any redirect into an opaque, not-ok response instead, caught by the check below.
+      redirect: 'manual',
     })
       .then((response) => {
         if (!response.ok) {
