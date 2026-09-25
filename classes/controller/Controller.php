@@ -5,7 +5,7 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -127,7 +127,7 @@ abstract class ControllerCore
     public $php_self;
 
     /**
-     * @var TranslatorComponent
+     * @var TranslatorInterface
      */
     protected $translator;
 
