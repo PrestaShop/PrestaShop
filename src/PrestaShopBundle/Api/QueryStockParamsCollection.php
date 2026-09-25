@@ -17,7 +17,12 @@ class QueryStockParamsCollection extends QueryParamsCollection
     {
         $queryParams = parent::parseOrderParams($queryParams);
 
-        if (array_key_exists('low_stock', $queryParams) && 1 == $queryParams['low_stock']) {
+        // The stock page sends this flag as a stringified boolean, so comparing it to 1 never matched
+        // and the option silently did nothing. Read it as a flag instead, which also accepts the 1 that
+        // any other client would send.
+        if (array_key_exists('low_stock', $queryParams)
+            && filter_var($queryParams['low_stock'], FILTER_VALIDATE_BOOLEAN)
+        ) {
             array_unshift($queryParams['order'], 'product_low_stock_alert desc');
         }
 
