@@ -115,7 +115,13 @@ else
   echo "error_log=/var/www/html/var/logs/php.log" >> /usr/local/etc/php/php.ini
 fi
 
-if [ ! -f ./app/config/parameters.php ]; then
+# app/config/parameters.php is written by the installer's FIRST step, so on its own it only says that
+# an install was started. var/.install.prestashop is created at that same moment and removed by
+# Install::finalize(), so a leftover lock means the previous attempt stopped partway - before
+# processConfigureShop(), which is what creates the administrator - and the shop cannot be logged into.
+# Running the installer again is what the user wants there; it defaults to --db_clear=1, so it starts
+# from a clean schema.
+if [ ! -f ./app/config/parameters.php ] || [ -f ./var/.install.prestashop ]; then
     if [ $PS_INSTALL_AUTO = 1 ]; then
 
         echo "\n* Installing PrestaShop, this may take a while ...";
@@ -140,14 +146,17 @@ if [ ! -f ./app/config/parameters.php ]; then
         fi
 
         echo "\n* Launching the installer script..."
-        runuser -g www-data -u www-data -- php /var/www/html/$PS_FOLDER_INSTALL/index_cli.php \
+        # `set -e` is in effect, so testing $? after the command could never report anything - the shell
+        # had already left. Test the command itself so a failed install says why it failed.
+        if ! runuser -g www-data -u www-data -- php /var/www/html/$PS_FOLDER_INSTALL/index_cli.php \
         --domain="$PS_DOMAIN" --db_server=$DB_SERVER:$DB_PORT --db_name="$DB_NAME" --db_user=$DB_USER \
         --db_password=$DB_PASSWD --prefix="$DB_PREFIX" --firstname="Marc" --lastname="Beier" \
         --password="$ADMIN_PASSWD" --email="$ADMIN_MAIL" --language=$PS_LANGUAGE --country=$PS_COUNTRY \
-        --all_languages=$PS_ALL_LANGUAGES --newsletter=0 --send_email=0 --ssl=$PS_ENABLE_SSL --fixtures=$PS_INSTALL_DEMO_PRODUCTS
-
-        if [ $? -ne 0 ]; then
-            echo 'warning: PrestaShop installation failed.'
+        --all_languages=$PS_ALL_LANGUAGES --newsletter=0 --send_email=0 --ssl=$PS_ENABLE_SSL --fixtures=$PS_INSTALL_DEMO_PRODUCTS; then
+            echo >&2 'error: PrestaShop installation failed. No administrator account exists yet, so the'
+            echo >&2 '  credentials printed by this script would not work. Fix the cause above and run'
+            echo >&2 '  "docker compose up" again - the installer will start over.'
+            exit 1
         fi
     fi
 else
