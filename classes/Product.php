@@ -7950,8 +7950,12 @@ class ProductCore extends ObjectModel
         foreach ((is_array($ids_or_refs) ? $ids_or_refs : [$ids_or_refs]) as $id_or_ref) {
             if (is_numeric($id_or_ref)) {
                 $ids[] = (int) $id_or_ref;
-            } elseif (is_string($id_or_ref)) {
-                $refs[] = '\'' . pSQL($id_or_ref) . '\'';
+            }
+            // A value made of digits is ambiguous: it can be an identifier or a reference that
+            // happens to be numeric. The caller cannot tell them apart, so both are looked up,
+            // otherwise a numeric reference matches nothing at all.
+            if (is_string($id_or_ref) || is_numeric($id_or_ref)) {
+                $refs[] = '\'' . pSQL((string) $id_or_ref) . '\'';
             }
         }
 
