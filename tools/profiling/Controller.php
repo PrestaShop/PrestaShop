@@ -101,11 +101,19 @@ abstract class Controller extends ControllerCore
         // Process all profiling data
         $this->profiler->processData();
 
+        if (Tools::getValue('_profiling_report') === 'md') {
+            header('Content-Type: text/markdown; charset=utf-8');
+            header('Content-Disposition: attachment; filename="profiling-report.md"');
+
+            return $this->profiler->getMarkdownReport();
+        }
+
         // Add some specific style for profiling information
 
         $this->context->smarty->assign(
             $this->profiler->getSmartyVariables()
         );
+        $this->context->smarty->assign('profilingMarkdownUrl', $this->getProfilingMarkdownUrl());
 
         if (strpos($content, '{$content}') === false) {
             return str_replace(
@@ -125,5 +133,19 @@ abstract class Controller extends ControllerCore
 
         // Return empty string since we change the outPutHtml
         return '';
+    }
+
+    /**
+     * Current page URL with the profiling report marker appended, used to
+     * re-run the page and download its Markdown profiling report.
+     *
+     * @return string
+     */
+    private function getProfilingMarkdownUrl(): string
+    {
+        $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+        $separator = strpos($requestUri, '?') === false ? '?' : '&';
+
+        return $requestUri . $separator . '_profiling_report=md';
     }
 }
