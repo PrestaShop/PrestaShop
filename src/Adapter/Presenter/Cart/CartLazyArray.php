@@ -558,8 +558,20 @@ class CartLazyArray extends AbstractLazyArray
             }
         }
 
-        $rawProduct['price'] = Tools::ps_round($rawProduct['price'], Context::getContext()->getComputingPrecision());
-        $rawProduct['price_wt'] = Tools::ps_round($rawProduct['price_wt'], Context::getContext()->getComputingPrecision());
+        $computingPrecision = Context::getContext()->getComputingPrecision();
+        $rawProduct['price'] = Tools::ps_round($rawProduct['price'], $computingPrecision);
+        $rawProduct['price_wt'] = Tools::ps_round($rawProduct['price_wt'], $computingPrecision);
+
+        /*
+         * The price before reduction has to be rounded here too. It ends up in regular_price, next to the
+         * price rounded above, and PriceFormatter rounds with the locale's rule rather than the shop's, so
+         * an unrounded value shown beside a rounded one can differ by a cent - visibly, on the same line.
+         */
+        foreach (['price_without_reduction', 'price_without_reduction_without_tax'] as $priceBeforeReduction) {
+            if (isset($rawProduct[$priceBeforeReduction])) {
+                $rawProduct[$priceBeforeReduction] = Tools::ps_round($rawProduct[$priceBeforeReduction], $computingPrecision);
+            }
+        }
 
         if ($this->cartPresenter->includeTaxes()) {
             $rawProduct['price_amount'] = $rawProduct['price'] = $rawProduct['price_wt'];
