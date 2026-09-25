@@ -1638,7 +1638,8 @@ class OrderCore extends ObjectModel
             `unit_price_tax_incl`,
             `unit_price_tax_excl`
             FROM `' . _DB_PREFIX_ . 'order_detail`
-            WHERE id_order = ' . (int) $this->id;
+            WHERE id_order = ' . (int) $this->id . '
+            ORDER BY `id_order_detail` ASC';
         $result = Db::getInstance()->executeS($query);
 
         return $result;
