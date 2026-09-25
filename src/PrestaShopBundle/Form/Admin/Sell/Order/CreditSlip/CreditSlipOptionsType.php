@@ -24,6 +24,7 @@ final class CreditSlipOptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('slip_prefix', TranslatableType::class, [
+            'multistore_configuration_key' => 'PS_CREDIT_SLIP_PREFIX',
             'label' => $this->trans('Credit slip prefix', 'Admin.Orderscustomers.Feature'),
             'help' => $this->trans('Prefix used for credit slips.', 'Admin.Orderscustomers.Help'),
             'required' => false,
