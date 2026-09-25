@@ -17,8 +17,8 @@
 	var enableAllSteps = {if $enableAllSteps|intval == 1}true{else}false{/if};
 	var need_to_validate = '{l s='Please validate the last range before creating a new one.' js=1 d='Admin.Shipping.Notification'}';
 	var delete_range_confirm = '{l s='Are you sure to delete this range ?' js=1 d='Admin.Shipping.Notification'}';
-	var currency_sign = '{$currency_sign}';
-	var PS_WEIGHT_UNIT = '{$PS_WEIGHT_UNIT}';
+	var currency_sign = '{$currency_sign|addslashes}';
+	var PS_WEIGHT_UNIT = '{$PS_WEIGHT_UNIT|addslashes}';
 	var invalid_range = '{l s='This range is not valid' js=1 d='Admin.Shipping.Notification'}';
 	var overlapping_range = '{l s='Ranges are overlapping' js=1 d='Admin.Shipping.Notification'}';
 	var range_is_overlapping = '{l s='Ranges are overlapping' js=1 d='Admin.Shipping.Notification'}';
