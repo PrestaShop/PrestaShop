@@ -399,7 +399,24 @@ abstract class PaymentModuleCore extends Module
             $this->context->country = $context_country;
         }
 
-        if (!$this->context->country->active) {
+        /*
+         * Check the country of the address the order is taxed on, not the one of the current context.
+         * An off-session call, typically the notification a payment gateway sends from its own server,
+         * carries the country of whoever made the request, and geolocation resolves that to a country
+         * the shop may have disabled - which aborts an order the customer paid for.
+         * AbstractOrderCommandHandler::getCartTaxCountry() resolves the same address, and
+         * AddOrderFromBackOfficeHandler already seeds the context from the cart before calling this,
+         * with a comment saying this check should rely on the cart address instead.
+         * With multi shipping the cart carries no single delivery address; each order's own address is
+         * already validated in createOrderFromCart().
+         */
+        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
+        $taxAddressId = property_exists($this->context->cart, $taxAddressType)
+            ? $this->context->cart->{$taxAddressType}
+            : $this->context->cart->id_address_delivery;
+        $taxAddress = new Address((int) $taxAddressId);
+
+        if (Validate::isLoadedObject($taxAddress) && !(new Country((int) $taxAddress->id_country))->active) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Country is not active', 3, null, 'Cart', (int) $id_cart, true);
 
             throw new PrestaShopException('The order address country is not active.');
