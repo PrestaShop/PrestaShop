@@ -143,10 +143,17 @@ class PDFGeneratorCore extends TCPDF
             $this->font = self::DEFAULT_FONT;
         }
 
-        $this->setHeaderFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', false]);
-        $this->setFooterFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', false]);
+        // Embed only the glyphs the document actually uses. Embedding the whole face made an invoice
+        // 462 KB in a language mapped to dejavusans and 1.9 MB in one mapped to freeserif, while a
+        // language falling back to helvetica stayed at 7 KB because a core font is never embedded at all.
+        // Subsetting is TCPDF's own default, which this call was overriding; it does not change which
+        // characters render, and TCPDF disables it by itself in PDF/A mode.
+        // Note TCPDF reads only the first three entries of the header and footer font arrays, so the flag
+        // is inert there and kept only so the three calls say the same thing.
+        $this->setHeaderFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', true]);
+        $this->setFooterFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', true]);
 
-        $this->setFont($this->font, '', PDF_FONT_SIZE_MAIN, '', false);
+        $this->setFont($this->font, '', PDF_FONT_SIZE_MAIN, '', true);
     }
 
     /**
