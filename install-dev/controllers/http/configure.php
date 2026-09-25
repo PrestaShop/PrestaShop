@@ -206,6 +206,19 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             }
         }
 
+        // Default SSL to the scheme the installer is itself being served over. A shop
+        // configured for HTTP behind a host that force-redirects to HTTPS ends up in a
+        // redirect loop, and mirroring the installer's own scheme is the least surprising
+        // default. The merchant can still switch it off on this same screen.
+        //
+        // WHY isset() rather than the falsy check used for the country just below: `false`
+        // is a legitimate stored answer here, so `!$this->session->enable_ssl` would be true
+        // both when the question has never been asked AND when the merchant answered "No" -
+        // re-applying the default on every redisplay and silently overwriting that answer.
+        if (!isset($this->session->enable_ssl)) {
+            $this->session->enable_ssl = Tools::usingSecureMode();
+        }
+
         // Try to detect default country
         if (!$this->session->shop_country) {
             $detect_language = $this->language->detectLanguage();
