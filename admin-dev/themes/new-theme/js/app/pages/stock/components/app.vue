@@ -42,7 +42,6 @@
   import LowFilter from './header/filters/low-filter.vue';
   import {FiltersInstanceType} from './header/filters.vue';
 
-  /* eslint-disable camelcase */
   export interface StockFilters {
     active?: string;
     suppliers?: Array<number>;
@@ -56,7 +55,6 @@
     keywords?: any;
     low_stock?: number | boolean | string;
   }
-  /* eslint-enable camelcase */
 
   const FIRST_PAGE = 1;
 

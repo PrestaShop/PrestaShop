@@ -5,13 +5,11 @@
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-/* eslint-disable */
 interface SearchParams extends Record<string, any> {
   search_phrase: string;
   currency_id?: number;
   order_id?: number;
 }
-/* eslint-enable */
 
 const {$} = window;
 
@@ -64,7 +62,7 @@ export default class OrderProductAutocomplete {
     /**
      * Permit to link to each value of dropdown a callback after item is clicked
      */
-    // eslint-disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.onItemClickedCallback = () => {};
   }
 
