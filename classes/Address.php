@@ -540,15 +540,20 @@ class AddressCore extends ObjectModel
         $cache_id = 'Address::initialize_' . $context_hash;
 
         if (!Cache::isStored($cache_id)) {
-            /*
-             * Case 1 - Specific address ID is provided. We just load it.
-             */
-            if ($id_address) {
-                $address = new Address((int) $id_address);
+            $requestedAddress = $id_address ? new Address((int) $id_address) : null;
 
-                if (!Validate::isLoadedObject($address)) {
-                    throw new PrestaShopException('Invalid address #' . (int) $id_address);
-                }
+            /*
+             * Case 1 - Specific address ID is provided and the address still exists. We just load it.
+             *
+             * A cart or an order keeps the id of the address it was placed with, and that row can be
+             * gone - deleted directly, or by something that did not clean up after itself. We fall
+             * through to the cases below rather than refusing, because the address is wanted for tax
+             * and geolocation data and no caller is better off with the whole page failing over one
+             * unpriceable line. Cart::getOrderTotal() already caught the exception and did exactly
+             * this, so this makes the behaviour consistent rather than new.
+             */
+            if (null !== $requestedAddress && Validate::isLoadedObject($requestedAddress)) {
+                $address = $requestedAddress;
             /*
              * Case 2 - We try to use geolocation information if allowed. However, geoloc_id_country
              * is not set to the customer anywhere in the current codebase. Most geolocation logic either
