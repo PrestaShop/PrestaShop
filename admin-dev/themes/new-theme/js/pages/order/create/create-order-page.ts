@@ -309,6 +309,12 @@ export default class CreateOrderPage {
     this.$container.on('blur', createOrderMap.giftMessageField, () => this.cartEditor.updateDeliveryOptions(<number> this.cartId),
     );
 
+    this.$container.on('blur', createOrderMap.orderMessageField, (e: JQueryEventObject) => this.cartEditor.changeOrderMessage(
+      <number> this.cartId,
+      String($(e.currentTarget).val() ?? ''),
+    ),
+    );
+
     this.$container.on('click', createOrderMap.addToCartButton, () => this.productManager.addProductToCart(<number> this.cartId),
     );
 
