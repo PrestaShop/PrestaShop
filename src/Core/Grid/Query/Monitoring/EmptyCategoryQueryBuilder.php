@@ -75,7 +75,7 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('c.id_category, c.active, cl.name, cl.description');
+        $qb->select('c.id_category, cs.active, cl.name, cl.description');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -153,7 +153,7 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $allowedFiltersAliasMap = [
             'id_category' => 'c.id_category',
-            'active' => 'c.active',
+            'active' => 'cs.active',
             'name' => 'cl.name',
             'description' => 'cl.description',
         ];

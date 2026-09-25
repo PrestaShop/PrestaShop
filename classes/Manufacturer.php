@@ -397,7 +397,7 @@ class ManufacturerCore extends ObjectModel
 					SELECT 1
 					FROM `' . _DB_PREFIX_ . 'category_group` cg
 					LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON (cp.`id_category` = cg.`id_category`)' .
-                    ($activeCategory ? ' INNER JOIN `' . _DB_PREFIX_ . 'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '') . '
+                    ($activeCategory ? ' INNER JOIN `' . _DB_PREFIX_ . 'category_shop` ca ON cp.`id_category` = ca.`id_category` AND ca.`id_shop` = ' . (int) $context->shop->id . ' AND ca.`active` = 1' : '') . '
 					WHERE p.`id_product` = cp.`id_product` AND cg.`id_group` ' . $sqlGroups . '
 				)';
 
@@ -458,7 +458,7 @@ class ManufacturerCore extends ObjectModel
                 $sql .= 'JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.`id_category` = cg.`id_category` AND cg.`id_group` ' . $sqlGroups . ')';
             }
             if ($activeCategory) {
-                $sql .= 'JOIN `' . _DB_PREFIX_ . 'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1';
+                $sql .= 'JOIN `' . _DB_PREFIX_ . 'category_shop` ca ON cp.`id_category` = ca.`id_category` AND ca.`id_shop` = ' . (int) $context->shop->id . ' AND ca.`active` = 1';
             }
         }
 
