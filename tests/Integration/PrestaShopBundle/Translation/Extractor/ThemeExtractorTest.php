@@ -99,6 +99,23 @@ class ThemeExtractorTest extends KernelTestCase
         $this->assertTrue($isFilesExists);
     }
 
+    /**
+     * A theme may override a third-party module's template, and strings added in that override have to
+     * reach the translation catalogue under the module's own domain — otherwise they cannot be
+     * translated anywhere. Reported as #13392.
+     */
+    public function testExtractsStringsFromAModuleTemplateOverriddenByTheTheme(): void
+    {
+        $this->themeExtractor
+            ->setOutputPath(self::$xliffFolder)
+            ->extract($this->getFakeTheme());
+
+        $this->assertTrue(
+            $this->filesystem->exists(self::$xliffFolder . '/en-US/Modules/Fakemodule/Shop.xlf'),
+            'The theme override of a module template should be extracted under the module domain'
+        );
+    }
+
     private function getFakeTheme(): Theme
     {
         $configFile = self::$rootDir . '/config/theme.yml';
