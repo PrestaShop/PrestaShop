@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Twig\Component;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -112,7 +113,7 @@ class NavBar
 
         if (!empty($subTabHref)) {
             $tab['href'] = $subTabHref;
-        } elseif ($tab['id_parent'] === 0 && empty($tab['icon'])) {
+        } elseif ($this->isUnreachableTopLevelSection($tab)) {
             return [];
         } elseif (empty($tab['icon'])) {
             $tab['icon'] = 'extension';
@@ -127,6 +128,23 @@ class NavBar
         }
 
         return $tab;
+    }
+
+    /**
+     * A top level entry with no linkable child leads nowhere. An icon is enough to keep one that
+     * owns a page, but the catch-all parent that module tabs attach to owns none - linking to it
+     * lands on a controller that does not exist.
+     *
+     * @param array<string, mixed> $tab
+     */
+    protected function isUnreachableTopLevelSection(array $tab): bool
+    {
+        if ($tab['id_parent'] !== 0) {
+            return false;
+        }
+
+        return empty($tab['icon'])
+            || ModuleTabRegister::DEFAULT_PARENT_CLASS_NAME === $tab['class_name'];
     }
 
     protected function getTabLinkFromSubTabs(array $subtabs)
