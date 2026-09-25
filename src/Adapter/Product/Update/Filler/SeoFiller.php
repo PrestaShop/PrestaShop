@@ -70,6 +70,11 @@ class SeoFiller implements ProductFillerInterface
             );
         }
 
+        if (null !== $command->getIndexation()) {
+            $product->indexation = $command->getIndexation();
+            $updatableProperties[] = 'indexation';
+        }
+
         $localizedMetaDescriptions = $command->getLocalizedMetaDescriptions();
         if (null !== $localizedMetaDescriptions) {
             $this->fillLocalizedValues($product, 'meta_description', $localizedMetaDescriptions, $updatableProperties);

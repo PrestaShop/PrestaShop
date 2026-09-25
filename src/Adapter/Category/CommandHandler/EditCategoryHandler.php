@@ -63,6 +63,10 @@ final class EditCategoryHandler extends AbstractEditCategoryHandler implements E
             $category->active = $command->isActive();
         }
 
+        if (null !== $command->getIndexation()) {
+            $category->indexation = $command->getIndexation();
+        }
+
         if (null !== $command->getParentCategoryId()) {
             $category->id_parent = $command->getParentCategoryId();
         }
