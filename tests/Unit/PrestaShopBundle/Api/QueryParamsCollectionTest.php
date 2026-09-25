@@ -276,7 +276,8 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_mpn} LIKE :keyword_0 OR ' .
                         '{combination_mpn} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
-                        '{combination_name} LIKE :keyword_0' .
+                        '{combination_name} LIKE :keyword_0 OR ' .
+                        '{product_location} LIKE :keyword_0' .
                         ')',
                 ],
                 $keywordsFilterMessage,
@@ -297,7 +298,8 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_mpn} LIKE :keyword_0 OR ' .
                         '{combination_mpn} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
-                        '{combination_name} LIKE :keyword_0' .
+                        '{combination_name} LIKE :keyword_0 OR ' .
+                        '{product_location} LIKE :keyword_0' .
                         ')',
                 ],
                 $keywordsFilterMessage,
@@ -318,7 +320,8 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_mpn} LIKE :keyword_0 OR ' .
                         '{combination_mpn} LIKE :keyword_0 OR ' .
                         '{product_name} LIKE :keyword_0 OR ' .
-                        '{combination_name} LIKE :keyword_0' .
+                        '{combination_name} LIKE :keyword_0 OR ' .
+                        '{product_location} LIKE :keyword_0' .
                         ')' . "\n" .
                         'AND (' .
                         '{supplier_name} LIKE :keyword_1 OR ' .
@@ -332,7 +335,8 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_mpn} LIKE :keyword_1 OR ' .
                         '{combination_mpn} LIKE :keyword_1 OR ' .
                         '{product_name} LIKE :keyword_1 OR ' .
-                        '{combination_name} LIKE :keyword_1' .
+                        '{combination_name} LIKE :keyword_1 OR ' .
+                        '{product_location} LIKE :keyword_1' .
                         ')' . "\n" .
                         'AND (' .
                         '{supplier_name} LIKE :keyword_2 OR ' .
@@ -346,7 +350,8 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_mpn} LIKE :keyword_2 OR ' .
                         '{combination_mpn} LIKE :keyword_2 OR ' .
                         '{product_name} LIKE :keyword_2 OR ' .
-                        '{combination_name} LIKE :keyword_2' .
+                        '{combination_name} LIKE :keyword_2 OR ' .
+                        '{product_location} LIKE :keyword_2' .
                         ')',
                 ],
                 $keywordsFilterMessage,
