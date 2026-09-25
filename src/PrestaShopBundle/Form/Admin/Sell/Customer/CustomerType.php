@@ -158,7 +158,7 @@ class CustomerType extends TranslatorAwareType
             ->add('first_name', TextType::class, [
                 'label' => $this->trans('First name', 'Admin.Global'),
                 'help' => $this->trans(
-                    'Only letters and the dot (.) character, followed by a space, are allowed.',
+                    'Letters, spaces, hyphens (-) and apostrophes (\') are allowed. Numbers are not, and a dot (.) must be followed by a space.',
                     'Admin.Orderscustomers.Help'
                 ),
                 'constraints' => [
@@ -184,7 +184,7 @@ class CustomerType extends TranslatorAwareType
             ->add('last_name', TextType::class, [
                 'label' => $this->trans('Last name', 'Admin.Global'),
                 'help' => $this->trans(
-                    'Only letters and the dot (.) character, followed by a space, are allowed.',
+                    'Letters, spaces, hyphens (-) and apostrophes (\') are allowed. Numbers are not, and a dot (.) must be followed by a space.',
                     'Admin.Orderscustomers.Help'
                 ),
                 'constraints' => [
