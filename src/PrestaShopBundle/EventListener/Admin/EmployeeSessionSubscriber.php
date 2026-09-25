@@ -8,8 +8,12 @@ namespace PrestaShopBundle\EventListener\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Session\Repository\CustomerSessionRepository;
+use PrestaShop\PrestaShop\Adapter\Session\Repository\EmployeeSessionRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Employee\EmployeeSession;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
@@ -18,6 +22,7 @@ use PrestaShopBundle\Security\Admin\TokenAttributes;
 use PrestaShopBundle\Service\Routing\Router;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +38,7 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 /**
  * This subscriber watches the various authentication event and saves or removes the persisted
@@ -42,6 +48,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class EmployeeSessionSubscriber implements EventSubscriberInterface
 {
     use TargetPathTrait;
+
+    private const SESSION_LAST_CLEANUP_CONFIGURATION_KEY = 'PS_SESSION_LAST_CLEANUP';
+    private const SESSION_CLEANUP_INTERVAL = 86400;
 
     public function __construct(
         private readonly EmployeeProvider $employeeProvider,
@@ -55,6 +64,17 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         private readonly ConfigurationInterface $configuration,
         private readonly TranslatorInterface $translator,
         private readonly EmployeeContextBuilder $employeeContextBuilder,
+        private readonly ShopConfigurationInterface $shopConfiguration,
+        #[Autowire(
+            service: 'prestashop.adapter.security.repository.employee_session_repository',
+            lazy: true,
+        )]
+        private readonly EmployeeSessionRepository $employeeSessionRepository,
+        #[Autowire(
+            service: 'prestashop.adapter.security.repository.customer_session_repository',
+            lazy: true,
+        )]
+        private readonly CustomerSessionRepository $customerSessionRepository,
     ) {
     }
 
@@ -73,6 +93,8 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
 
     public function createEmployeeSession(AuthenticationTokenCreatedEvent $event): void
     {
+        $this->clearOutdatedSessions();
+
         // Load doctrine employee because the event may contain an unserialized object not recognized by the Entity manager
         $employee = $this->employeeRepository->loadEmployeeByIdentifier($event->getAuthenticatedToken()->getUserIdentifier());
 
@@ -185,6 +207,79 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
 
         // Logout cookie for backward compatibility
         $this->legacyContext->getContext()->cookie->logout();
+    }
+
+    private function clearOutdatedSessions(): void
+    {
+        // Session cleanup is triggered by Back Office logins and, after a successful cleanup,
+        // is skipped for the next 24 hours to avoid running maintenance queries on every authentication.
+        if (!$this->shouldClearOutdatedSessions()) {
+            return;
+        }
+
+        $cleanupSucceeded = true;
+
+        try {
+            $this->employeeSessionRepository->clearOutdatedSessions();
+        } catch (Throwable $e) {
+            $cleanupSucceeded = false;
+            $this->logger->warning(
+                'Failed to clear outdated employee sessions.',
+                ['exception' => $e],
+            );
+        }
+
+        try {
+            $this->customerSessionRepository->clearOutdatedSessions();
+        } catch (Throwable $e) {
+            $cleanupSucceeded = false;
+            $this->logger->warning(
+                'Failed to clear outdated customer sessions.',
+                ['exception' => $e],
+            );
+        }
+
+        // Update the last cleanup time only if both employee and customer cleanups succeeded,
+        // so a failed cleanup can be retried on the next Back Office login.
+        if (!$cleanupSucceeded) {
+            return;
+        }
+
+        try {
+            // Store the cleanup timestamp globally because session cleanup is installation-wide,
+            // regardless of the current multistore context.
+            $this->shopConfiguration->set(
+                self::SESSION_LAST_CLEANUP_CONFIGURATION_KEY,
+                time(),
+                ShopConstraint::allShops(),
+            );
+        } catch (Throwable $e) {
+            $this->logger->warning(
+                'Failed to update the last session cleanup time.',
+                ['exception' => $e],
+            );
+        }
+    }
+
+    private function shouldClearOutdatedSessions(): bool
+    {
+        try {
+            $lastCleanup = (int) $this->shopConfiguration->get(
+                self::SESSION_LAST_CLEANUP_CONFIGURATION_KEY,
+                0,
+                ShopConstraint::allShops(),
+            );
+        } catch (Throwable $e) {
+            $this->logger->warning(
+                'Failed to read the last session cleanup time.',
+                ['exception' => $e],
+            );
+
+            return true;
+        }
+
+        return $lastCleanup === 0
+            || time() - $lastCleanup >= self::SESSION_CLEANUP_INTERVAL;
     }
 
     protected function logoutAndStopEvent(RequestEvent $event): void
