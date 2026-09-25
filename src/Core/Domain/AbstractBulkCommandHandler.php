@@ -14,11 +14,6 @@ use Throwable;
 abstract class AbstractBulkCommandHandler
 {
     /**
-     * @var Throwable[]
-     */
-    protected $exceptions;
-
-    /**
      * @param array $ids
      * @param string $exceptionToCatch when cought this exception will allow the loop to continue
      *                                 and show bulk error at the end of the loop, instead of breaking it on first error.
@@ -28,6 +23,12 @@ abstract class AbstractBulkCommandHandler
      */
     protected function handleBulkAction(array $ids, string $exceptionToCatch, mixed $command = null): void
     {
+        // WHY local and not a property: handlers are registered as services and are reused for every
+        // dispatch in the process, so a property outlived the call that filled it - a later bulk action
+        // that failed on nothing still threw, replaying the earlier call's failures. Nothing outside
+        // this method ever read it, so the state does not need to exist rather than needing a reset.
+        $exceptions = [];
+
         foreach ($ids as $id) {
             try {
                 if (!$this->supports($id)) {
@@ -41,12 +42,12 @@ abstract class AbstractBulkCommandHandler
                     throw $e;
                 }
 
-                $this->exceptions[] = $e;
+                $exceptions[] = $e;
             }
         }
 
-        if (!empty($this->exceptions)) {
-            throw $this->buildBulkException($this->exceptions);
+        if (!empty($exceptions)) {
+            throw $this->buildBulkException($exceptions);
         }
     }
 
