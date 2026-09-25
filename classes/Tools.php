@@ -4129,6 +4129,41 @@ exit;
                         'src' => 'URI',
                         'type' => 'Text',
                     ]);
+                    $def->addElement('audio', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common', [
+                        'src' => 'URI',
+                        'type' => 'Text',
+                        'preload' => 'Enum#auto,metadata,none',
+                        'controls' => 'Bool',
+                        'autoplay' => 'Bool',
+                        'loop' => 'Bool',
+                        'muted' => 'Bool',
+                    ]);
+                    $def->addElement('picture', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common');
+                    $def->addElement('track', 'Block', 'Empty', 'Common', [
+                        'src' => 'URI',
+                        'kind' => 'Enum#subtitles,captions,descriptions,chapters,metadata',
+                        'srclang' => 'Text',
+                        'label' => 'Text',
+                        'default' => 'Bool',
+                    ]);
+
+                    // HTML Purifier ships an XHTML 1.0 definition, so every HTML5 element is unknown to it and
+                    // its tags are dropped on save -- the content survives but the structure does not. These are
+                    // the sectioning, grouping and text-level elements, which carry no scripting or embedding
+                    // surface of their own: they are declared here rather than left to each merchant, because the
+                    // markup above already extends the same definition for the media elements.
+                    foreach (['section', 'article', 'aside', 'nav', 'header', 'footer', 'main', 'figure', 'figcaption'] as $sectioningElement) {
+                        $def->addElement($sectioningElement, 'Block', 'Flow', 'Common');
+                    }
+                    foreach (['mark', 'bdi'] as $textLevelElement) {
+                        $def->addElement($textLevelElement, 'Inline', 'Inline', 'Common');
+                    }
+                    $def->addElement('time', 'Inline', 'Inline', 'Common', ['datetime' => 'Text']);
+                    $def->addElement('data', 'Inline', 'Inline', 'Common', ['value' => 'Text']);
+                    $def->addElement('wbr', 'Inline', 'Empty', 'Common');
+                    $def->addElement('details', 'Block', 'Flow', 'Common', ['open' => 'Bool']);
+                    $def->addElement('summary', 'Block', 'Flow', 'Common');
+
                     if ($allow_style) {
                         $def->addElement('style', 'Block', 'Flow', 'Common', ['type' => 'Text']);
                     }
