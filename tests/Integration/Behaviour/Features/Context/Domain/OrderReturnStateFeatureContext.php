@@ -16,15 +16,31 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\DeleteOrderReturn
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\EditOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\BulkDeleteOrderReturnStateException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\DeleteOrderReturnStateException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\DuplicateOrderReturnStateNameException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query\GetOrderReturnStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryResult\EditableOrderReturnState;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Resources\DatabaseDump;
 
 class OrderReturnStateFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * WHY: per scenario and not per feature, for the same reason as
+     * OrderStateFeatureContext::restoreOrderStatesTables() - the Background re-adds the same rows for
+     * every scenario and the names are unique.
+     *
+     * @BeforeScenario @restore-order-return-states-before-scenario
+     *
+     * @AfterFeature @restore-order-return-states-after-feature
+     */
+    public static function restoreOrderReturnStatesTables(): void
+    {
+        DatabaseDump::restoreTables(['order_return_state', 'order_return_state_lang']);
+    }
+
     /**
      * @Given I add a new order return state :orderReturnStateReference with the following details:
      *
@@ -117,6 +133,14 @@ class OrderReturnStateFeatureContext extends AbstractDomainFeatureContext
         } catch (BulkDeleteOrderReturnStateException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @Then I should get an error that the order return state name is already used
+     */
+    public function assertLastErrorIsDuplicateOrderReturnStateName(): void
+    {
+        $this->assertLastErrorIs(DuplicateOrderReturnStateNameException::class);
     }
 
     /**
