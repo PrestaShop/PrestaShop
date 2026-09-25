@@ -256,9 +256,22 @@ class OrderAmountUpdater
         $orderProducts = $order->getCartProducts();
 
         $carrierId = $order->id_carrier;
-        $order->total_discounts = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts, $carrierId, false, $this->keepOrderPrices));
-        $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts, $carrierId, false, $this->keepOrderPrices));
-        $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts, $carrierId, false, $this->keepOrderPrices));
+        // WHY: when a discount is attached to a single invoice it only reduces that invoice, so the order total
+        // is the sum of what each rule actually took off - the recorded values, which updateOrderCartRules() has
+        // just scoped. Orders with no invoice-scoped rule keep the whole-cart calculation unchanged.
+        $invoiceScopedDiscounts = $this->getInvoiceScopedDiscountTotals($order);
+        if (null !== $invoiceScopedDiscounts) {
+            // abs() for the same reason the whole-cart branch below uses it: the free shipping
+            // adjustment made a few lines down in updateOrderCartRules() can leave a recorded value
+            // negative, and a discount total is carried as a positive amount.
+            $order->total_discounts_tax_incl = abs($invoiceScopedDiscounts['tax_incl']);
+            $order->total_discounts_tax_excl = abs($invoiceScopedDiscounts['tax_excl']);
+            $order->total_discounts = $order->total_discounts_tax_incl;
+        } else {
+            $order->total_discounts = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts, $carrierId, false, $this->keepOrderPrices));
+            $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts, $carrierId, false, $this->keepOrderPrices));
+            $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts, $carrierId, false, $this->keepOrderPrices));
+        }
 
         // We should always use Cart::BOTH for the order total since it contains all products, shipping fees and cart rules
         $order->total_paid = Tools::ps_round(
@@ -304,6 +317,21 @@ class OrderAmountUpdater
             $order->total_shipping = $totalShippingTaxIncluded;
             $order->total_shipping_tax_incl = $totalShippingTaxIncluded;
             $order->total_shipping_tax_excl = $totalShippingTaxExcluded;
+        }
+
+        if (null !== $invoiceScopedDiscounts) {
+            // Cart::BOTH applied every rule to every product, which is what must not happen when a rule belongs
+            // to a single invoice, so the paid totals are rebuilt from the parts that are now correct. This runs
+            // last, once shipping and wrapping have been recomputed and the free shipping adjustment applied.
+            $order->total_paid_tax_excl = Tools::ps_round(
+                $order->total_products + $order->total_shipping_tax_excl + $order->total_wrapping_tax_excl - $order->total_discounts_tax_excl,
+                $computingPrecision
+            );
+            $order->total_paid_tax_incl = Tools::ps_round(
+                $order->total_products_wt + $order->total_shipping_tax_incl + $order->total_wrapping_tax_incl - $order->total_discounts_tax_incl,
+                $computingPrecision
+            );
+            $order->total_paid = $order->total_paid_tax_incl;
         }
     }
 
@@ -428,6 +456,8 @@ class OrderAmountUpdater
         $calculator = $cart->newCalculator($cart->getProducts(), $newCartRules, $order->id_carrier, $computingPrecision, $this->keepOrderPrices);
         $calculator->processCalculation();
 
+        $invoiceProducts = $this->getProductsByInvoice($order);
+
         foreach ($order->getCartRules() as $orderCartRuleData) {
             /** @var CartRuleData $cartRuleData */
             foreach ($calculator->getCartRulesData() as $cartRuleData) {
@@ -438,8 +468,41 @@ class OrderAmountUpdater
                     $orderCartRule->id_order = $order->id;
                     $orderCartRule->name = $cartRule->name;
                     $orderCartRule->free_shipping = $cartRule->free_shipping;
-                    $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
-                    $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
+                    $scopedInvoiceId = (int) $orderCartRuleData['id_order_invoice'];
+                    if ($scopedInvoiceId > 0) {
+                        // WHY: this rule was attached to one invoice, so the amount recorded for it is the amount it
+                        // actually takes off that invoice. Recording the whole-cart amount made the order disagree
+                        // with the sum of its own invoices.
+                        $scopedProducts = $invoiceProducts[$scopedInvoiceId] ?? [];
+                        $scopedValue = $this->getCartRuleValueForProducts($cart, $order, (int) $cartRule->id, $scopedProducts, true);
+
+                        if (0.0 === (float) $scopedValue) {
+                            // WHY: the products a rule reduces can be moved to another invoice, and the rule has to
+                            // follow them - a product-restricted discount belongs to the invoice actually carrying
+                            // the product, not to the one it was first recorded against. Only an invoice where the
+                            // rule now takes something off qualifies, so a rule that stopped applying stays put.
+                            foreach ($invoiceProducts as $candidateInvoiceId => $candidateProducts) {
+                                if ((int) $candidateInvoiceId === $scopedInvoiceId) {
+                                    continue;
+                                }
+
+                                $candidateValue = $this->getCartRuleValueForProducts($cart, $order, (int) $cartRule->id, $candidateProducts, true);
+                                if (0.0 !== (float) $candidateValue) {
+                                    $scopedInvoiceId = (int) $candidateInvoiceId;
+                                    $scopedProducts = $candidateProducts;
+                                    $scopedValue = $candidateValue;
+                                    $orderCartRule->id_order_invoice = $scopedInvoiceId;
+                                    break;
+                                }
+                            }
+                        }
+
+                        $orderCartRule->value = Tools::ps_round($scopedValue, $computingPrecision);
+                        $orderCartRule->value_tax_excl = Tools::ps_round($this->getCartRuleValueForProducts($cart, $order, (int) $cartRule->id, $scopedProducts, false), $computingPrecision);
+                    } else {
+                        $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
+                        $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
+                    }
 
                     if ($orderCartRule->free_shipping && !$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
                         $orderCartRule->value = $orderCartRule->value - $calculator->getFees()->getInitialShippingFees()->getTaxIncluded() + $order->total_shipping;
@@ -477,8 +540,14 @@ class OrderAmountUpdater
             $orderCartRule->id_order_invoice = $orderInvoiceId ?? 0;
             $orderCartRule->name = $cartRule->name;
             $orderCartRule->free_shipping = $cartRule->free_shipping;
-            $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
-            $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
+            if (null !== $orderInvoiceId) {
+                $scopedProducts = $invoiceProducts[$orderInvoiceId] ?? [];
+                $orderCartRule->value = Tools::ps_round($this->getCartRuleValueForProducts($cart, $order, (int) $cartRule->id, $scopedProducts, true), $computingPrecision);
+                $orderCartRule->value_tax_excl = Tools::ps_round($this->getCartRuleValueForProducts($cart, $order, (int) $cartRule->id, $scopedProducts, false), $computingPrecision);
+            } else {
+                $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
+                $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
+            }
             $orderCartRule->save();
         }
     }
@@ -492,6 +561,105 @@ class OrderAmountUpdater
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
+    /**
+     * Cart rules that must be applied when computing one invoice's totals: the ones attached to that
+     * invoice, plus the ones attached to no invoice at all, which apply to the whole order.
+     *
+     * @param Order $order
+     * @param int $invoiceId
+     *
+     * @return int[]
+     */
+    /**
+     * Order products grouped by the invoice they belong to.
+     *
+     * @param Order $order
+     *
+     * @return array<int, array>
+     */
+    /**
+     * Discount totals summed from the recorded cart rule amounts, or null when no rule is attached to a single
+     * invoice - in which case the caller keeps the whole-cart calculation it has always used.
+     *
+     * @param Order $order
+     *
+     * @return array{tax_incl: float, tax_excl: float}|null
+     */
+    private function getInvoiceScopedDiscountTotals(Order $order): ?array
+    {
+        $orderCartRules = $order->getCartRules();
+        $hasInvoiceScopedRule = false;
+        $taxIncluded = 0.0;
+        $taxExcluded = 0.0;
+
+        foreach ($orderCartRules as $orderCartRule) {
+            if ((int) $orderCartRule['id_order_invoice'] > 0) {
+                $hasInvoiceScopedRule = true;
+            }
+            $taxIncluded += (float) $orderCartRule['value'];
+            $taxExcluded += (float) $orderCartRule['value_tax_excl'];
+        }
+
+        if (!$hasInvoiceScopedRule) {
+            return null;
+        }
+
+        return ['tax_incl' => $taxIncluded, 'tax_excl' => $taxExcluded];
+    }
+
+    private function getProductsByInvoice(Order $order): array
+    {
+        $invoiceProducts = [];
+        foreach ($order->getCartProducts() as $orderProduct) {
+            if (!empty($orderProduct['id_order_invoice'])) {
+                $invoiceProducts[(int) $orderProduct['id_order_invoice']][] = $orderProduct;
+            }
+        }
+
+        return $invoiceProducts;
+    }
+
+    /**
+     * Amount a single cart rule takes off the given products.
+     *
+     * @param Cart $cart
+     * @param Order $order
+     * @param int $cartRuleId
+     * @param array $products
+     * @param bool $withTaxes
+     *
+     * @return float
+     */
+    private function getCartRuleValueForProducts(Cart $cart, Order $order, int $cartRuleId, array $products, bool $withTaxes): float
+    {
+        if (empty($products)) {
+            return 0.0;
+        }
+
+        return (float) $cart->getOrderTotal(
+            $withTaxes,
+            Cart::ONLY_DISCOUNTS,
+            $products,
+            $order->id_carrier,
+            false,
+            $this->keepOrderPrices,
+            [$cartRuleId]
+        );
+    }
+
+    private function getCartRuleIdsForInvoice(Order $order, int $invoiceId): array
+    {
+        $cartRuleIds = [];
+        foreach ($order->getCartRules() as $orderCartRule) {
+            $ruleInvoiceId = (int) $orderCartRule['id_order_invoice'];
+            if (0 === $ruleInvoiceId || $ruleInvoiceId === $invoiceId) {
+                $cartRuleIds[] = (int) $orderCartRule['id_cart_rule'];
+            }
+        }
+
+        return $cartRuleIds;
+    }
+
     private function updateOrderInvoices(Order $order, Cart $cart, int $computingPrecision): void
     {
         $invoiceProducts = [];
@@ -507,16 +675,17 @@ class OrderAmountUpdater
         foreach ($invoiceCollection as $invoice) {
             // If all the invoice's products have been removed the offset won't exist
             $currentInvoiceProducts = isset($invoiceProducts[$invoice->id]) ? $invoiceProducts[$invoice->id] : [];
+            $currentInvoiceCartRuleIds = $this->getCartRuleIdsForInvoice($order, (int) $invoice->id);
 
             // Shipping are computed on first invoice only
             $carrierId = $order->id_carrier;
             $totalMethod = ($firstInvoice === false || $firstInvoice->id == $invoice->id) ? Cart::BOTH : Cart::BOTH_WITHOUT_SHIPPING;
             $invoice->total_paid_tax_excl = Tools::ps_round(
-                (float) $cart->getOrderTotal(false, $totalMethod, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices),
+                (float) $cart->getOrderTotal(false, $totalMethod, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices, $currentInvoiceCartRuleIds),
                 $computingPrecision
             );
             $invoice->total_paid_tax_incl = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, $totalMethod, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices),
+                (float) $cart->getOrderTotal(true, $totalMethod, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices, $currentInvoiceCartRuleIds),
                 $computingPrecision
             );
 
@@ -530,12 +699,12 @@ class OrderAmountUpdater
             );
 
             $invoice->total_discount_tax_excl = Tools::ps_round(
-                (float) $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices),
+                (float) $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices, $currentInvoiceCartRuleIds),
                 $computingPrecision
             );
 
             $invoice->total_discount_tax_incl = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices),
+                (float) $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices, $currentInvoiceCartRuleIds),
                 $computingPrecision
             );
 
