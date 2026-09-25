@@ -7197,9 +7197,19 @@ class ProductCore extends ObjectModel
      */
     public static function resetEcoTax()
     {
-        return ObjectModel::updateMultishopTable('product', [
+        $productsReset = ObjectModel::updateMultishopTable('product', [
             'ecotax' => 0,
         ]);
+
+        // WHY combinations too: priceCalculation() prefers the combination's ecotax over the
+        // product's, so a value left on product_attribute keeps being added to the price after the
+        // feature is switched off - and the back office hides the ecotax inputs at that point, so
+        // there is no way left to clear it.
+        $combinationsReset = ObjectModel::updateMultishopTable('Combination', [
+            'ecotax' => 0,
+        ]);
+
+        return $productsReset && $combinationsReset;
     }
 
     /**
