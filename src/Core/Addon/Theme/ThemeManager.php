@@ -114,6 +114,12 @@ class ThemeManager implements AddonManagerInterface
 
         $this->filesystem->remove($theme->getDirectory());
 
+        // The parsed configuration is cached per shop outside the theme directory, and the repository
+        // reads it in preference to config/theme.yml. Removing only the theme leaves that cache behind,
+        // so installing the theme again - which is how a theme is upgraded, since installing over an
+        // existing directory is refused - serves the previous version's data.
+        $this->filesystem->remove($this->configuration->get('_PS_CONFIG_DIR_') . 'themes/' . $name);
+
         return true;
     }
 
