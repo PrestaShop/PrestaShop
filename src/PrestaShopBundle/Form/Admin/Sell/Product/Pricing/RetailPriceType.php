@@ -221,6 +221,9 @@ class RetailPriceType extends TranslatorAwareType
             if ($this->isTaxEnabled) {
                 $helpMessage = $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecotaxRate->round(2)]);
             }
+            // No modify_all_shops here on purpose: only ecotax_tax_excluded is sent to the command
+            // (UpdateProductCommandsBuilder maps it to setEcotax), so a checkbox on this field would
+            // control nothing, exactly as price_tax_included has none either.
             $builder->add('ecotax_tax_included', MoneyType::class, [
                 'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
                 'help' => $helpMessage,
@@ -230,7 +233,6 @@ class RetailPriceType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'currency' => $this->defaultCurrency->iso_code,
-                'modify_all_shops' => true,
                 'attr' => [
                     'data-tax-rate' => (string) $ecotaxRate,
                 ],
