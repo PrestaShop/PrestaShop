@@ -151,7 +151,7 @@ services:
     arguments:
       $paymentModules: '@=service("prestashop.adapter.module.payment_module_provider").getPaymentModuleList()'
       $countryChoices: '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
-      $groupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+      $groupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id_shop_filtered").getChoices()'
       $carrierChoices: '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
       $countryDataProvider: '@prestashop.adapter.data_provider.country'
 
