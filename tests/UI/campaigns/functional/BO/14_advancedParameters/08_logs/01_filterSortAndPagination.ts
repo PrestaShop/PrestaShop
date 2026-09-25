@@ -29,7 +29,9 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfLogs: number = 0;
-  const today = utilsDate.getDateFormat('mm/dd/yyyy');
+  // Read when the logs start being written rather than when this file is imported: the run can cross
+  // local midnight, and a date captured at import then matches none of the rows the run just created.
+  let firstLogDate: string = '';
 
   // before and after functions
   before(async function () {
@@ -69,6 +71,8 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
 
     const numberOfElements = await boLogsPage.getNumberOfElementInGrid(page);
     expect(numberOfElements).to.be.equal(0);
+
+    firstLogDate = utilsDate.getDateFormat('mm/dd/yyyy');
   });
 
   it('should set the log minimum severity to Debug or the login logs will not be created', async function () {
@@ -319,14 +323,18 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     it('should filter logs by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
 
-      await boLogsPage.filterLogsByDate(page, today, today);
+      // The logs were written between the erase and now, which is one day unless the run crossed
+      // local midnight, so the window has to span both ends rather than a single captured day.
+      const lastLogDate: string = utilsDate.getDateFormat('mm/dd/yyyy');
+
+      await boLogsPage.filterLogsByDate(page, firstLogDate, lastLogDate);
 
       const numberOfLogsAfterFilter = await boLogsPage.getNumberOfElementInGrid(page);
       expect(numberOfLogsAfterFilter).to.be.at.greaterThanOrEqual(11);
 
       for (let row: number = 1; row <= await boLogsPage.getNumberOfRowsInGrid(page); row++) {
         const textColumn = await boLogsPage.getTextColumn(page, row, 'date_add');
-        expect(textColumn).to.contains(today);
+        expect([firstLogDate, lastLogDate]).to.include(textColumn.substring(0, 10));
       }
     });
 
