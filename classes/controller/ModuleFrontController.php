@@ -25,6 +25,64 @@ class ModuleFrontControllerCore extends FrontController
     }
 
     /**
+     * Front controllers redirect to their friendly URL when reached through the parameter form, but
+     * that is driven by `php_self`, which a module controller does not have - so module pages were
+     * reachable under both URLs with neither pointing at the other.
+     *
+     * The redirect is limited to requests carrying nothing but the routing parameters. Module
+     * controllers are also the payment and callback endpoints, and those arrive with parameters
+     * that must not be dropped by a redirect; leaving them alone costs only the canonical URL of
+     * pages that were never indexable anyway.
+     */
+    public function init()
+    {
+        parent::init();
+
+        if (!$this->shouldRedirectToCanonicalModuleUrl()) {
+            return;
+        }
+
+        $this->canonicalRedirection($this->context->link->getModuleLink(
+            $this->module->name,
+            Dispatcher::getInstance()->getController(),
+            [],
+            $this->ssl,
+            $this->context->language->id
+        ));
+    }
+
+    /**
+     * A module controller is also a payment or callback endpoint, and those arrive carrying
+     * parameters that a redirect would drop. Only a request that carries nothing but the routing
+     * parameters is safe to send to the friendly URL.
+     */
+    protected function shouldRedirectToCanonicalModuleUrl(): bool
+    {
+        if (Tools::getValue('ajax') || Tools::isPHPCLI()) {
+            return false;
+        }
+
+        if ('GET' !== strtoupper($_SERVER['REQUEST_METHOD'] ?? '')) {
+            return false;
+        }
+
+        return $this->carriesOnlyRoutingParameters($_GET);
+    }
+
+    /**
+     * True when the query holds nothing but what routed the request, so nothing is lost by sending
+     * it to the friendly URL.
+     *
+     * @param array $query
+     */
+    protected function carriesOnlyRoutingParameters(array $query): bool
+    {
+        $routingParameters = ['controller', 'fc', 'module', 'id_lang', 'isolang'];
+
+        return empty(array_diff_key($query, array_flip($routingParameters)));
+    }
+
+    /**
      * Assigns module template for page content.
      *
      * @param string $template Template filename
