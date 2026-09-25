@@ -18,13 +18,14 @@ class GroupDataProvider
      * Return available groups.
      *
      * @param int $id_lang
-     * @param bool $id_shop
+     * @param bool $filterByShop When true, restricts the result to the groups of the current shop
+     *                           context. The value is a flag, not a shop id.
      *
      * @return array Groups
      */
-    public function getGroups($id_lang, $id_shop = false)
+    public function getGroups($id_lang, $filterByShop = false)
     {
-        return Group::getGroups($id_lang, $id_shop);
+        return Group::getGroups($id_lang, $filterByShop);
     }
 
     /**
