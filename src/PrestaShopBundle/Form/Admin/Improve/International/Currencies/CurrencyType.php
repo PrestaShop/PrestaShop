@@ -8,6 +8,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -32,6 +33,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class CurrencyType extends TranslatorAwareType
 {
+    /**
+     * The longest currency symbol CLDR ships for any locale is 5 characters, so this leaves ample room
+     * for a custom one while keeping the value short enough for the grids and price blocks that print it.
+     */
+    public const MAX_SYMBOL_LENGTH = 20;
+
     /**
      * @var array
      */
@@ -130,12 +137,13 @@ class CurrencyType extends TranslatorAwareType
                 'required' => false,
                 'options' => [
                     'constraints' => [
+                        // The longest currency symbol CLDR ships for any of its locales is 5 characters.
                         new Length([
-                            'max' => 255,
+                            'max' => self::MAX_SYMBOL_LENGTH,
                             'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
                                 'Admin.Notifications.Error',
-                                ['%limit%' => 255]
+                                ['%limit%' => self::MAX_SYMBOL_LENGTH]
                             ),
                         ]),
                     ],
@@ -222,18 +230,14 @@ class CurrencyType extends TranslatorAwareType
                             ]
                         ),
                     ]),
-                    /*
-                     * I added this constraint because if range is too big it causes an "out of range" error in Vue.
-                     * I chose maximum precision based on this
-                     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Precision_range
-                     */
+                    // Every price column is decimal(20,6), so digits past the sixth are always zero.
                     new LessThanOrEqual([
-                        'value' => 20,
+                        'value' => Precision::MAX_PRECISION,
                         'message' => $this->trans(
                             'This value should be less than or equal to %value%.',
                             'Admin.Notifications.Error',
                             [
-                                '%value%' => 20,
+                                '%value%' => Precision::MAX_PRECISION,
                             ]
                         ),
                     ]),
