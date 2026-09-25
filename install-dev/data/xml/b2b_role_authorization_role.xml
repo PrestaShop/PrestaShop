@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_b2b_role_authorization_role>
+  <fields primary="id_role, id_authorization_role">
+    <field name="id_role" relation="b2b_role"/>
+    <field name="id_authorization_role" relation="authorization_role"/>
+  </fields>
+  <entities>
+    <b2b_role_authorization_role id="b2b_role_ar_1_1" id_role="SuperAdmin" id_authorization_role="B2B_BUSINESS_ENTITY_EDIT"/>
+    <b2b_role_authorization_role id="b2b_role_ar_1_2" id_role="SuperAdmin" id_authorization_role="B2B_BUSINESS_ENTITY_CUSTOMER_INVITE"/>
+    <b2b_role_authorization_role id="b2b_role_ar_1_3" id_role="SuperAdmin" id_authorization_role="B2B_BUSINESS_ENTITY_CUSTOMER_EDIT"/>
+    <b2b_role_authorization_role id="b2b_role_ar_1_4" id_role="SuperAdmin" id_authorization_role="B2B_BUSINESS_ENTITY_CUSTOMER_DELETE"/>
+    <b2b_role_authorization_role id="b2b_role_ar_1_5" id_role="SuperAdmin" id_authorization_role="B2B_ORDER_VIEW"/>
+    <b2b_role_authorization_role id="b2b_role_ar_1_6" id_role="SuperAdmin" id_authorization_role="B2B_ORDER_CREATE"/>
+
+    <b2b_role_authorization_role id="b2b_role_ar_2_1" id_role="Admin" id_authorization_role="B2B_BUSINESS_ENTITY_EDIT"/>
+    <b2b_role_authorization_role id="b2b_role_ar_2_2" id_role="Admin" id_authorization_role="B2B_BUSINESS_ENTITY_CUSTOMER_INVITE"/>
+    <b2b_role_authorization_role id="b2b_role_ar_2_3" id_role="Admin" id_authorization_role="B2B_BUSINESS_ENTITY_CUSTOMER_EDIT"/>
+    <b2b_role_authorization_role id="b2b_role_ar_2_5" id_role="Admin" id_authorization_role="B2B_ORDER_VIEW"/>
+    <b2b_role_authorization_role id="b2b_role_ar_2_6" id_role="Admin" id_authorization_role="B2B_ORDER_CREATE"/>
+
+    <b2b_role_authorization_role id="b2b_role_ar_3_6" id_role="Buyer" id_authorization_role="B2B_ORDER_CREATE"/>
+  </entities>
+</entity_b2b_role_authorization_role>
