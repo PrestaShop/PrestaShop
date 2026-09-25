@@ -1,9 +1,11 @@
 ---
 name: write-upgrade-sql-script
 description: >
-  Author a SQL upgrade script for shops upgrading to a target PrestaShop version.
-  Covers schema changes, default fixtures / configuration row updates, and
-  feature-flag state transitions.
+  Author a SQL upgrade script in the autoupgrade module (`upgrade/sql/{version}.sql`)
+  for shops upgrading to a target PrestaShop version. Covers schema changes,
+  default fixtures / configuration row updates, and feature-flag state
+  transitions. Trigger: "write the upgrade SQL for 9.x", "add this to
+  upgrade/sql", "the new column / configuration / flag needs an upgrade script".
 produces: "An idempotent SQL script in the autoupgrade module's upgrade/sql/ directory"
 ---
 
