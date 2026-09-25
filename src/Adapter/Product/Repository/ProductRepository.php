@@ -860,7 +860,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
         );
         $qb
             ->addSelect('p.id_product, pl.name, p.reference, i.id_image, p.product_type')
-            ->addSelect('ps.available_for_order, ps.minimal_quantity, ps.customizable')
+            ->addSelect('ps.active, ps.available_for_order, ps.minimal_quantity, ps.customizable')
             ->addSelect('sa.quantity as stock_quantity, sa.out_of_stock')
             ->leftJoin('p', $this->dbPrefix . 'stock_available', 'sa', 'sa.id_product = p.id_product AND sa.id_shop = :shopId AND sa.id_product_attribute = 0')
             ->addGroupBy('p.id_product')
