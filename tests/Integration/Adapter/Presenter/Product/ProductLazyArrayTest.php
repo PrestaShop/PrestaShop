@@ -140,7 +140,9 @@ class ProductLazyArrayTest extends TestCase
         $this->mockTranslatorInterface
             ->method('trans')
             ->willReturnCallback(function ($id, array $parameters = [], $domain = null, $locale = null) {
-                return $id;
+                // Substitute like the real translator does, otherwise a message that carries a
+                // placeholder is asserted against its untranslated source and the value is never checked.
+                return empty($parameters) ? $id : strtr($id, $parameters);
             })
         ;
     }
@@ -223,6 +225,73 @@ class ProductLazyArrayTest extends TestCase
         );
 
         $this->assertEquals($availabilityMessage, $productLazyArray->availability_message);
+    }
+
+    /**
+     * The low-stock label. No case in this file reached it before: lastRemainingItems is left null on
+     * the settings mock, and "0 < null" is false, so the branch never fired.
+     *
+     * @param array $product
+     * @param int $lastRemainingItems
+     * @param string $expectedMessage
+     *
+     * @dataProvider providerLastRemainingItemsCases
+     */
+    public function testLastRemainingItemsMessageCarriesTheStock(
+        array $product,
+        int $lastRemainingItems,
+        string $expectedMessage
+    ): void {
+        $this->setDefaultConfiguration();
+
+        $this->mockProductPresentationSettings
+            ->method('shouldShowPrice')
+            ->willReturn(true);
+        $this->mockProductPresentationSettings->showLabelOOSListingPages = true;
+        $this->mockProductPresentationSettings->stock_management_enabled = true;
+        $this->mockProductPresentationSettings->showPrices = true;
+        $this->mockProductPresentationSettings->catalog_mode = false;
+        $this->mockProductPresentationSettings->lastRemainingItems = $lastRemainingItems;
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            $product,
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        $this->assertSame($expectedMessage, $productLazyArray->availability_message);
+    }
+
+    public function providerLastRemainingItemsCases(): iterable
+    {
+        $lowStock = array_merge($this->baseProduct, [
+            'show_price' => 1,
+            'quantity' => 3,
+            'stock_quantity' => 3,
+            'quantity_wanted' => 1,
+            'show_availability' => 1,
+            'available_date' => false,
+            'available_now' => self::PRODUCT_AVAILABLE_NOW,
+            'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+        ]);
+
+        // The number shown is the stock, not the stock minus what the visitor is about to add: with a
+        // quantity of 2 wanted the shop still has 3.
+        yield 'stock below the threshold' => [$lowStock, 5, 'Only 3 left in stock'];
+        yield 'quantity wanted does not change the number' => [
+            array_merge($lowStock, ['quantity_wanted' => 2]),
+            5,
+            'Only 3 left in stock',
+        ];
+        // Above the threshold the usual in-stock label wins.
+        yield 'stock above the threshold' => [$lowStock, 2, self::PRODUCT_AVAILABLE_NOW];
     }
 
     /**

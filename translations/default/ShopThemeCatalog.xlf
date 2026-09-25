@@ -299,11 +299,6 @@
         <target>Items</target>
         <note>File: controllers/front/ProductController.php [Line: 1253]</note>
       </trans-unit>
-      <trans-unit id="348325afced7f3da215310efbe21f1c1">
-        <source>Last items in stock</source>
-        <target>Last items in stock</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1398]</note>
-      </trans-unit>
       <trans-unit id="160b4798999cb85c815beeb40ac268cc">
         <source>Last time this product was added to a cart: %date_last_cart%</source>
         <target>Last time this product was added to a cart: %date_last_cart%</target>
@@ -458,6 +453,11 @@
         <source>Online only</source>
         <target>Online only</target>
         <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 701]</note>
+      </trans-unit>
+      <trans-unit id="9674d821f60baf95c0f672322692b26a">
+        <source>Only %quantity% left in stock</source>
+        <target>Only %quantity% left in stock</target>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1436]</note>
       </trans-unit>
       <trans-unit id="99f0c07c3b8b3bc78f5f9733019ec3d5">
         <source>Order totals</source>
