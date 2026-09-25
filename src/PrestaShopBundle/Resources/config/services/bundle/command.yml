@@ -45,6 +45,8 @@ services:
 
   PrestaShopBundle\Command\ModuleCommand:
     autowire: true
+    arguments:
+      $queryBus: '@prestashop.core.query_bus'
     tags:
       - 'console.command'
 
