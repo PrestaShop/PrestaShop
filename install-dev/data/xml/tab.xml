@@ -278,6 +278,11 @@
             <wording>Carriers</wording>
             <wording_domain>Admin.Navigation.Menu</wording_domain>
         </tab>
+        <tab id="Shipments" id_parent="Shipping" active="0" enabled="1" route_name="admin_shipments_index">
+            <class_name>AdminShipments</class_name>
+            <wording>Shipments</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
         <tab id="Shipping_1" id_parent="Shipping" active="1" enabled="1">
             <class_name>AdminShipping</class_name>
             <wording>Preferences</wording>

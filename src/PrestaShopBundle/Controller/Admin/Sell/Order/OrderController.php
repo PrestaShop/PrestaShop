@@ -91,7 +91,7 @@ use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
-use PrestaShop\PrestaShop\Core\Search\Filters\ShipmentFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\OrderShipmentFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Exception\InvalidModuleException;
@@ -495,10 +495,10 @@ class OrderController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.adapter.order.order_sibling_provider')] OrderSiblingProviderInterface $orderSiblingProvider,
         CurrencyDataProvider $currencyDataProvider,
         FeatureFlagStateCheckerInterface $featureFlagStateChecker,
-        #[Autowire(service: 'PrestaShop\PrestaShop\Core\Grid\Factory\ShipmentFactory')] GridFactoryInterface $shipmentGridFactory,
+        #[Autowire(service: 'PrestaShop\PrestaShop\Core\Grid\Factory\OrderShipmentFactory')] GridFactoryInterface $shipmentGridFactory,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.add_product_form_builder')] FormBuilderInterface $addProductFormBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.edit_order_product_form_builder')] FormBuilderInterface $editProductFormBuilder,
-        ShipmentFilters $filters,
+        OrderShipmentFilters $filters,
         Tools $tools,
     ): Response {
         try {
@@ -510,7 +510,7 @@ class OrderController extends PrestaShopAdminController
             return $this->redirectToRoute('admin_orders_index');
         }
 
-        $filters = new ShipmentFilters(['filters' => ['order_id' => $orderId]] + $filters->all());
+        $filters = new OrderShipmentFilters(['filters' => ['order_id' => $orderId]] + $filters->all());
         $shipmentsGrid = $shipmentGridFactory->getGrid($filters);
 
         $updateOrderStatusForm = $this->formFactory->createNamed(
@@ -1301,10 +1301,10 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', 'AdminOrders')", message: 'You do not have permission to show this.')]
     public function getShipmentsAction(
         int $orderId,
-        #[Autowire(service: 'PrestaShop\PrestaShop\Core\Grid\Factory\ShipmentFactory')] GridFactoryInterface $shipmentGridFactory,
-        ShipmentFilters $filters
+        #[Autowire(service: 'PrestaShop\PrestaShop\Core\Grid\Factory\OrderShipmentFactory')] GridFactoryInterface $shipmentGridFactory,
+        OrderShipmentFilters $filters
     ) {
-        $filters = new ShipmentFilters(['filters' => ['order_id' => $orderId]] + $filters->all());
+        $filters = new OrderShipmentFilters(['filters' => ['order_id' => $orderId]] + $filters->all());
         $shipmentsGrid = $shipmentGridFactory->getGrid($filters);
 
         return $this->json([
