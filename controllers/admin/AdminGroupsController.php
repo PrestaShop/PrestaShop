@@ -525,13 +525,17 @@ class AdminGroupsControllerCore extends AdminController
     {
         if (!$this->validateDiscount(Tools::getValue('reduction'))) {
             $this->errors[] = $this->trans('The discount value is incorrect (must be a percentage).', [], 'Admin.Shopparameters.Notification');
-        } else {
-            $this->updateCategoryReduction();
-            $object = parent::processSave();
-            $this->updateRestrictions();
+            // Stay on the form to display the error instead of redirecting to the list
+            $this->display = 'edit';
 
-            return $object;
+            return false;
         }
+
+        $this->updateCategoryReduction();
+        $object = parent::processSave();
+        $this->updateRestrictions();
+
+        return $object;
     }
 
     protected function validateDiscount($reduction)
