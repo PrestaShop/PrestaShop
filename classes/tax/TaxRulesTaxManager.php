@@ -86,6 +86,10 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 					OR (tr.`zipcode_to` = 0 AND tr.`zipcode_from` IN(0, \'' . pSQL($postcode) . '\')))
 				ORDER BY tr.`zipcode_from` DESC, tr.`zipcode_to` DESC, tr.`id_state` DESC, tr.`id_country` DESC');
 
+            if (empty($rows) && empty($postcode)) {
+                $rows = $this->getCountryRuleWithoutZipcodeRestriction();
+            }
+
             $behavior = 0;
             $first_row = true;
 
@@ -111,5 +115,34 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
         }
 
         return Cache::retrieve($cache_id);
+    }
+
+    /**
+     * A visitor with no address has no postcode, and the postcode predicate above is a string
+     * comparison, so it excludes every zipcode restricted rule - even one written as 00000 to 99999,
+     * because '0' does not sort between them. A shop whose rules are all zipcode restricted therefore
+     * showed untaxed prices to everyone who was not logged in.
+     *
+     * Only one row is taken. The ranges of a country are usually disjoint, so matching them all would
+     * stack unrelated taxes on top of each other whenever the rules are set to be combined.
+     *
+     * The state restriction is deliberately left in place: a country that splits its rate by state
+     * genuinely has no applicable rate until the state is known, whereas a country that splits its
+     * single rate into postcode ranges does.
+     *
+     * @return array at most one tax rule row
+     */
+    protected function getCountryRuleWithoutZipcodeRestriction(): array
+    {
+        return Db::getInstance()->executeS('
+			SELECT tr.*
+			FROM `' . _DB_PREFIX_ . 'tax_rule` tr
+			JOIN `' . _DB_PREFIX_ . 'tax_rules_group` trg ON (tr.`id_tax_rules_group` = trg.`id_tax_rules_group`)
+			WHERE trg.`active` = 1
+			AND tr.`id_country` = ' . (int) $this->address->id_country . '
+			AND tr.`id_tax_rules_group` = ' . (int) $this->type . '
+			AND tr.`id_state` IN (0, ' . (int) $this->address->id_state . ')
+			ORDER BY tr.`zipcode_from` DESC, tr.`zipcode_to` DESC, tr.`id_state` DESC, tr.`id_country` DESC
+			LIMIT 1') ?: [];
     }
 }
