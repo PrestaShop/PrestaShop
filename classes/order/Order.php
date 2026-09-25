@@ -760,7 +760,9 @@ class OrderCore extends ObjectModel
                 FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai' .
                 Shop::addSqlAssociation('image', 'pai', true) . '
                 LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
-                WHERE id_product_attribute = ' . (int) $product['product_attribute_id'] . ' ORDER by i.position ASC');
+                WHERE id_product_attribute = ' . (int) $product['product_attribute_id'] . '
+                AND pai.id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ')
+                ORDER by i.position ASC');
         }
 
         if (!isset($id_image) || !$id_image) {
