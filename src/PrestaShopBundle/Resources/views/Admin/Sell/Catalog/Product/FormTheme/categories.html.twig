@@ -110,7 +110,7 @@
   </div>
   {% if form.vars.data is not empty %}
   <button class="btn btn-link category_tree_filter_reset" type="button">
-    <i class="material-icons">clear</i> Clear filter
+    <i class="material-icons">clear</i> {{ 'Clear filter'|trans({}, 'Admin.Actions') }}
   </button>
   {% endif %}
 {% endblock %}
