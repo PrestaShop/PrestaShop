@@ -19,9 +19,11 @@ class StatisticsControllerCore extends FrontController
             die;
         }
 
-        if ($_POST['type'] == 'navinfo') {
+        $type = Tools::getValue('type');
+
+        if ($type == 'navinfo') {
             $this->processNavigationStats();
-        } elseif ($_POST['type'] == 'pagetime') {
+        } elseif ($type == 'pagetime') {
             $this->processPageTime();
         } else {
             exit;
