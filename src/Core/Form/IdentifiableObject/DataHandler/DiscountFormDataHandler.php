@@ -183,6 +183,8 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
         } else {
             throw new RuntimeException('Unknown discount value type ' . $reduction['type']);
         }
+
+        $command->setAllowPartialUse((bool) ($data['value']['allow_partial_use'] ?? true));
     }
 
     private function updateDiscountConditions(AddDiscountCommand|UpdateDiscountCommand $command, array $data): void
