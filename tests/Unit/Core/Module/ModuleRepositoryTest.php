@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Module\OverriddenModulesProvider;
 
 class ModuleRepositoryTest extends TestCase
 {
@@ -62,6 +63,7 @@ class ModuleRepositoryTest extends TestCase
                 $this->createMock(HookManager::class),
                 dirname(__DIR__, 3) . '/Resources/modules',
                 $this->createMock(LanguageContext::class),
+                new OverriddenModulesProvider(dirname(__DIR__, 3) . '/Resources/module_overrides_tests/'),
             ])
             ->onlyMethods(['getModule'])
             ->getMock()

@@ -58,6 +58,7 @@ class ModulePresenter implements PresenterInterface
             'attributes' => $attributes,
             'disk' => $module->disk->all(),
             'database' => $module->database->all(),
+            'overrides' => $module->overrides->all(),
         ];
 
         Hook::exec('actionPresentModule',

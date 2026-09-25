@@ -56,6 +56,7 @@ excludedFiles:
   - 'themes/hummingbird'
   - 'themes/_libraries/font-awesome'
   # tests folders (ignore resources mainly, PHPUnit classes still need to be fixed for example)
+  - 'tests/Resources/module_overrides_tests'
   - 'tests/Resources/modules'
   - 'tests/Resources/modules_tests/override'
   - 'tests/Resources/themes'

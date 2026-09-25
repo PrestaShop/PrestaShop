@@ -33,6 +33,8 @@ class GetModuleInfosHandler implements GetModuleInfosHandlerInterface
             $module->database->get('version', null),
             $module->isActive(),
             $module->isInstalled(),
+            $module->overrides->get('is_overridden'),
+            $module->overrides->get('files'),
         );
     }
 }
