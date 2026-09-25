@@ -669,13 +669,46 @@ class SpecificPriceCore extends ObjectModel
 					`from_quantity` = 1 AND
 					`reduction` > 0
 		' . $query_extra);
-        $ids_product = [];
+        // A catalog price rule with no condition is stored as a single row holding id_product = 0,
+        // which the price engine reads as "every product of the shop" (see couldHaveSpecificPrice).
+        // Callers of this method filter on the ids returned here, so the sentinel has to be expanded
+        // or it filters on a product id that cannot exist. Detecting it in the result set rather than
+        // in the table keeps the expansion bound to the shop, currency, country, group and date
+        // range already applied by the query above.
+        $rows = [];
+        $has_global_rule = false;
         foreach ($results as $value) {
+            if ((int) $value['id_product'] === 0) {
+                $has_global_rule = true;
+
+                continue;
+            }
+
+            $rows[(int) $value['id_product'] . '-' . (int) $value['id_product_attribute']] = [
+                (int) $value['id_product'],
+                (int) $value['id_product_attribute'],
+            ];
+        }
+
+        if ($has_global_rule) {
+            $shop_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT `id_product`
+			FROM `' . _DB_PREFIX_ . 'product_shop`
+			WHERE `id_shop` = ' . (int) $id_shop);
+
+            foreach ($shop_products as $shop_product) {
+                // id_product_attribute stays 0: the rule applies to the product as a whole.
+                $rows[(int) $shop_product['id_product'] . '-0'] = [(int) $shop_product['id_product'], 0];
+            }
+        }
+
+        $ids_product = [];
+        foreach ($rows as list($id_product, $id_product_attribute)) {
             $ids_product[] = $with_combination_id ?
                 [
-                    'id_product' => (int) $value['id_product'],
-                    'id_product_attribute' => (int) $value['id_product_attribute'],
-                ] : (int) $value['id_product'];
+                    'id_product' => $id_product,
+                    'id_product_attribute' => $id_product_attribute,
+                ] : $id_product;
         }
 
         return $ids_product;
