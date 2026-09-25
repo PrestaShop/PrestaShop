@@ -3443,8 +3443,11 @@ class ProductCore extends ObjectModel
 
         $cart_quantity = 0;
         if ((int) $id_cart) {
+            // The value cached here is the quantity of this product in this cart, which does not depend
+            // on the quantity being priced. Comparing the two re-ran the query for nearly every call -
+            // and `!=` binds tighter than `=`, so the assignment stored a boolean rather than the count.
             $cache_id = 'Product::getPriceStatic_' . (int) $id_product . '-' . (int) $id_cart;
-            if (!Cache::isStored($cache_id) || ($cart_quantity = Cache::retrieve($cache_id) != (int) $quantity)) {
+            if (!Cache::isStored($cache_id)) {
                 $sql = 'SELECT SUM(`quantity`)
                 FROM `' . _DB_PREFIX_ . 'cart_product`
                 WHERE `id_product` = ' . (int) $id_product . '
@@ -3452,7 +3455,7 @@ class ProductCore extends ObjectModel
                 $cart_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
                 Cache::store($cache_id, $cart_quantity);
             } else {
-                $cart_quantity = Cache::retrieve($cache_id);
+                $cart_quantity = (int) Cache::retrieve($cache_id);
             }
         }
 
