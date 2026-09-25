@@ -30,7 +30,7 @@ class CustomerFilters extends Filters
             'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_customer_session',
-            'sortOrder' => 'asc',
+            'sortOrder' => 'desc',
             'filters' => [],
         ];
     }
