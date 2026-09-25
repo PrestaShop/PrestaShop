@@ -7487,11 +7487,45 @@ class ProductCore extends ObjectModel
     public function addWs($autodate = true, $null_values = false)
     {
         $success = $this->add($autodate, $null_values);
-        if ($success && Configuration::get('PS_SEARCH_INDEXATION')) {
-            Search::indexation(false, $this->id);
+        if ($success) {
+            $this->addSupplierReferenceFromWebservice();
+            if (Configuration::get('PS_SEARCH_INDEXATION')) {
+                Search::indexation(false, $this->id);
+            }
         }
 
         return $success;
+    }
+
+    /**
+     * Creates the supplier association the webservice was given but never wrote.
+     *
+     * id_supplier, supplier_reference and wholesale_price are columns of the product row, so they were
+     * stored and the call answered success while product_supplier - the association the back office and
+     * the supplier pages read - stayed empty. addCombinationEntity() above already writes it at the
+     * combination level, and the CSV import does it too (AdminImportController::attributeImportOne()).
+     *
+     * Strictly additive: an existing association is left exactly as it is. A webservice request hydrates
+     * the entity from the database before applying the payload, so a call that says nothing about
+     * suppliers still arrives carrying the product row's values; writing those back would overwrite a
+     * reference and a cost price the back office owns - and the back office syncs the product row FROM
+     * the default association (ProductSupplierUpdater::updateDefaultSupplierDataForProduct()), not the
+     * other way round.
+     */
+    protected function addSupplierReferenceFromWebservice(): void
+    {
+        $idSupplier = (int) $this->id_supplier;
+
+        if ($idSupplier <= 0 || ProductSupplier::getIdByProductAndSupplier((int) $this->id, 0, $idSupplier)) {
+            return;
+        }
+
+        $this->addSupplierReference(
+            $idSupplier,
+            0,
+            $this->supplier_reference,
+            null !== $this->wholesale_price ? (float) $this->wholesale_price : null
+        );
     }
 
     /**
@@ -7510,8 +7544,11 @@ class ProductCore extends ObjectModel
         }
 
         $success = parent::update($null_values);
-        if ($success && Configuration::get('PS_SEARCH_INDEXATION')) {
-            Search::indexation(false, $this->id);
+        if ($success) {
+            $this->addSupplierReferenceFromWebservice();
+            if (Configuration::get('PS_SEARCH_INDEXATION')) {
+                Search::indexation(false, $this->id);
+            }
         }
         Hook::exec('actionProductUpdate', ['id_product' => (int) $this->id]);
 
