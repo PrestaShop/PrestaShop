@@ -60,6 +60,14 @@ Feature: Update product tags from Back Office (BO)
       | locale | value            |
       | en-US  | mechanic,watch   |
       | fr-FR  | montre,mécanique |
+    # A tag made of special characters only is stripped by search indexation and can never be found, so it is rejected
+    When I update product "productTags" tags with following values:
+      | tags[en-US] | ++++ |
+    Then I should get error that product tag is invalid
+    And product "productTags" localized "tags" should be:
+      | locale | value            |
+      | en-US  | mechanic,watch   |
+      | fr-FR  | montre,mécanique |
 
   Scenario: Remove all product tags
     When I update product "productTags" tags with following values:

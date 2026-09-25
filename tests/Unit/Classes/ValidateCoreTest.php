@@ -390,4 +390,8 @@ class ValidateCoreTest extends TestCase
             [false, [45, true, 9]],
         ];
     }
+
+    // Validate::isSearchableName() delegates to Search::extractKeyWords(), which reads the
+    // search blacklist from Configuration and therefore needs a booted shop. Its coverage
+    // lives in tests/Integration/Classes/ValidateSearchableNameTest.
 }
