@@ -98,6 +98,14 @@ class TinyMceMaxLengthValidatorTest extends ConstraintValidatorTestCase
             [$this->generateRandomTinyMceText(0), 0],
             [$this->generateRandomTinyMceText(154), 200],
             ['Valid text', self::MAX_LENGTH],
+            // The editor's counter reads decoded text, so an entity is one character there. These stay
+            // valid only if the validator decodes too - "Café & crème brûlée" is 19 characters, while the
+            // raw entities are 55. @see https://github.com/PrestaShop/PrestaShop/issues/37229
+            ['<p>Caf&eacute; &amp; cr&egrave;me&nbsp;br&ucirc;l&eacute;e</p>', 19],
+            ['<p>A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B</p>', 7],
+            // An escaped tag is content, not markup: it must survive strip_tags and then be counted as
+            // the three characters the editor shows.
+            ['&lt;p&gt;', 3],
             ['Valid text too long only because of HTML', self::MAX_LENGTH],
             ['<p>Valid text too long only because of HTML</p>', self::MAX_LENGTH],
             [
