@@ -220,14 +220,23 @@ class StockMovementRepository extends StockManagementRepository
      */
     public function getEmployees()
     {
+        // Each movement keeps the name the employee had when it was recorded, so DISTINCT over the
+        // name would list somebody once per name they have ever used. Group by the employee instead,
+        // and prefer their current name, falling back to the recorded one for employees who are gone.
         $query = str_replace(
             '{table_prefix}',
             $this->tablePrefix,
-            'SELECT DISTINCT sm.id_employee, CONCAT(sm.employee_lastname, \' \', sm.employee_firstname) AS name
+            'SELECT sm.id_employee, TRIM(CONCAT(
+                COALESCE(e.lastname, MAX(sm.employee_lastname)),
+                \' \',
+                COALESCE(e.firstname, MAX(sm.employee_firstname))
+            )) AS name
             FROM {table_prefix}stock_mvt sm
             INNER JOIN {table_prefix}stock_available sa ON (sa.id_stock_available = sm.id_stock)
+            LEFT JOIN {table_prefix}employee e ON (e.id_employee = sm.id_employee)
             WHERE
             sa.id_shop = :shop_id
+            GROUP BY sm.id_employee, e.lastname, e.firstname
             ORDER BY name ASC'
         );
 
