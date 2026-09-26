@@ -39,6 +39,12 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetCustomerForEditingHandler'
     autoconfigure: true
 
+  prestashop.adapter.customer.query_handler.get_customer_shop_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetCustomerShopIdHandler'
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository'
+
   prestashop.adapter.customer.command_handler.edit_customer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\EditCustomerHandler'
     autoconfigure: true
