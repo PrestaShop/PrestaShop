@@ -36,7 +36,26 @@ class EditableCarrier
         private array $zones,
         private ?string $logoPath = null,
         private int $ordersCount = 0,
+        private bool $module = false,
+        private bool $needRange = false,
     ) {
+    }
+
+    /**
+     * True when the carrier is fully or partially managed by a module.
+     */
+    public function isModule(): bool
+    {
+        return $this->module;
+    }
+
+    /**
+     * True when the carrier is priced from the ranges configured in the back office. Only a module
+     * carrier can turn this off.
+     */
+    public function needsRange(): bool
+    {
+        return $this->needRange;
     }
 
     public function getZones(): array
