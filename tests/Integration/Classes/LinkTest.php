@@ -167,6 +167,37 @@ class LinkTest extends TestCase
         ];
     }
 
+    /**
+     * The supplier, manufacturer and CMS builders accept such an id but return a URL naming no entity
+     * (/supplier/-), which answers 404: the alternate link has to be the page being served instead.
+     *
+     * @dataProvider provideIdsWithoutAnEntity
+     */
+    public function testLanguageLinkPointsAtThePageForAnIdThatCastsToZero(string $controller, string $key, string $value): void
+    {
+        $_GET = ['controller' => $controller, $key => $value];
+        $this->getControllerProperty()->setValue(Dispatcher::getInstance(), $controller);
+        $link = Context::getContext()->link;
+        $idLang = (int) Context::getContext()->language->id;
+        $allow = (new ReflectionClass('Link'))->getProperty('allow');
+        $allow->setAccessible(true);
+        $params = $allow->getValue($link) ? [$key => $value] : [$key => $value, 'id_lang' => $idLang];
+
+        $this->assertSame($link->getPageLink($controller, null, $idLang, $params), $link->getLanguageLink($idLang));
+    }
+
+    public static function provideIdsWithoutAnEntity(): array
+    {
+        return [
+            'supplier id zero' => ['supplier', 'id_supplier', '0'],
+            'supplier id not a number' => ['supplier', 'id_supplier', 'abc'],
+            'manufacturer id zero' => ['manufacturer', 'id_manufacturer', '0'],
+            'manufacturer id not a number' => ['manufacturer', 'id_manufacturer', 'abc'],
+            'cms page id zero' => ['cms', 'id_cms', '0'],
+            'cms category id zero' => ['cms', 'id_cms_category', '0'],
+        ];
+    }
+
     public function testLanguageLinkStillPointsAtTheProductForAValidId(): void
     {
         $_GET = ['controller' => 'product', 'id_product' => '1'];

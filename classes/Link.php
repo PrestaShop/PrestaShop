@@ -1239,19 +1239,20 @@ class LinkCore
             $controller = $context->controller->php_self;
         }
 
-        // The ids come from the query string. getProductLink() and getCategoryLink() throw on an id that casts
-        // to 0 ('0', '', 'abc'), and this runs while a 404 page builds its hreflang links, turning it into a 500.
+        // The ids come from the query string. For an id that casts to 0 ('0', '', 'abc'), getProductLink() and
+        // getCategoryLink() throw while a 404 page builds its hreflang links (a 500), and the other builders
+        // return a URL naming no entity (/supplier/-): such an id gets the plain page link below.
         if ($controller == 'product' && (int) ($params['id_product'] ?? 0) > 0) {
             return $this->getProductLink((int) $params['id_product'], null, null, null, (int) $idLang);
         } elseif ($controller == 'category' && (int) ($params['id_category'] ?? 0) > 0) {
             return $this->getCategoryLink((int) $params['id_category'], null, (int) $idLang);
-        } elseif ($controller == 'supplier' && isset($params['id_supplier'])) {
+        } elseif ($controller == 'supplier' && (int) ($params['id_supplier'] ?? 0) > 0) {
             return $this->getSupplierLink((int) $params['id_supplier'], null, (int) $idLang);
-        } elseif ($controller == 'manufacturer' && isset($params['id_manufacturer'])) {
+        } elseif ($controller == 'manufacturer' && (int) ($params['id_manufacturer'] ?? 0) > 0) {
             return $this->getManufacturerLink((int) $params['id_manufacturer'], null, (int) $idLang);
-        } elseif ($controller == 'cms' && isset($params['id_cms'])) {
+        } elseif ($controller == 'cms' && (int) ($params['id_cms'] ?? 0) > 0) {
             return $this->getCMSLink((int) $params['id_cms'], null, null, (int) $idLang, (int) $context->shop->id);
-        } elseif ($controller == 'cms' && isset($params['id_cms_category'])) {
+        } elseif ($controller == 'cms' && (int) ($params['id_cms_category'] ?? 0) > 0) {
             return $this->getCMSCategoryLink((int) $params['id_cms_category'], null, (int) $idLang, (int) $context->shop->id);
         } elseif (isset($params['fc']) && $params['fc'] == 'module') {
             $module = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
