@@ -143,4 +143,41 @@ class StockManagerReservedQuantityUnderflowTest extends KernelTestCase
         $this->assertSame('0', (string) $row['reserved_quantity']);
         $this->assertSame('10', (string) $row['physical_quantity']);
     }
+
+    /**
+     * A shared stock row (id_shop = 0, id_shop_group = group) holds the reservations of the orders of
+     * every shop in the group, as StockManager computes them, so they must not be recomputed to 0.
+     *
+     * @dataProvider provideStockScopes
+     */
+    public function testRepositoryRecomputeKeepsTheReservationOfTheStockScope(int $shopId, int $shopGroupId): void
+    {
+        $db = Db::getInstance();
+        // An open line reserving 2 units, on stock of 8 available.
+        $db->update('order_detail', ['product_quantity' => 2, 'product_quantity_refunded' => 0], 'id_order = ' . $this->orderId);
+        $db->update(
+            'stock_available',
+            ['id_shop' => $shopId, 'id_shop_group' => $shopGroupId, 'quantity' => 8, 'reserved_quantity' => 2, 'physical_quantity' => 10],
+            'id_product = ' . self::PRODUCT_ID
+        );
+        $stockId = (int) $db->getValue('SELECT id_stock_available FROM ' . _DB_PREFIX_ . 'stock_available WHERE id_product = ' . self::PRODUCT_ID);
+
+        /** @var StockAvailableRepository $repository */
+        $repository = self::getContainer()->get(StockAvailableRepository::class);
+        $repository->updatePhysicalProductQuantity(
+            new StockId($stockId),
+            new OrderStateId((int) Configuration::get('PS_OS_ERROR')),
+            new OrderStateId((int) Configuration::get('PS_OS_CANCELED'))
+        );
+
+        $row = $db->getRow('SELECT reserved_quantity, physical_quantity FROM ' . _DB_PREFIX_ . 'stock_available WHERE id_stock_available = ' . $stockId);
+        $this->assertSame('2', (string) $row['reserved_quantity']);
+        $this->assertSame('10', (string) $row['physical_quantity']);
+    }
+
+    public static function provideStockScopes(): iterable
+    {
+        yield 'stock of the shop' => [1, 0];
+        yield 'stock shared by the shop group' => [0, 1];
+    }
 }
