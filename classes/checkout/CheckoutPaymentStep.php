@@ -40,8 +40,26 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         $this->conditionsToApproveFinder = $conditionsToApproveFinder;
     }
 
+    public function getDataToPersist()
+    {
+        return [
+            'selected_payment_option' => $this->selected_payment_option,
+        ];
+    }
+
+    public function restorePersistedData(array $data)
+    {
+        if (array_key_exists('selected_payment_option', $data)) {
+            $this->selected_payment_option = $data['selected_payment_option'];
+        }
+
+        return $this;
+    }
+
     public function handleRequest(array $requestParams = [])
     {
+        // WHY the request still wins: OrderController restores the persisted data first and then hands
+        // the request over, so a customer who picks another option overwrites what was remembered.
         if (isset($requestParams['select_payment_option'])) {
             $this->selected_payment_option = $requestParams['select_payment_option'];
         }
