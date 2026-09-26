@@ -50,6 +50,11 @@ services:
     arguments:
       $cache: '@prestashop.static_cache.adapter'
 
+  PrestaShopBundle\Twig\CspNonceExtension:
+    autowire: true
+    tags:
+      - { name: twig.extension }
+
   PrestaShopBundle\Twig\ContextIsoCodeProviderExtension:
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getContext().language ? service('prestashop.adapter.legacy.context').getContext().language.iso_code : 'en'"

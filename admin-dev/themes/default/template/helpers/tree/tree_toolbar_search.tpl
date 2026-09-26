@@ -14,7 +14,7 @@
 
 {if isset($typeahead_source) && isset($id) && isset($name)}
 
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	$(
 		function()
 		{
