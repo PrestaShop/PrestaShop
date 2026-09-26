@@ -90,6 +90,8 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetCartShopIdHandler:
     autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository'
 
   prestashop.adapter.command_handler.add_customization_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddCustomizationHandler'
