@@ -2571,8 +2571,11 @@ class ToolsCore
 
     public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
     {
+        // The test guard is about not rewriting the shop's own .htaccess. A caller that names a
+        // path is not touching it, so it is allowed through and the generation stays testable -
+        // the same shape as the installation guard on the next line.
         if (
-            defined('_PS_IN_TEST_')
+            (defined('_PS_IN_TEST_') && $path === null)
             || (defined('PS_INSTALLATION_IN_PROGRESS') && $rewrite_settings === null)
         ) {
             return true;
@@ -2681,11 +2684,19 @@ class ToolsCore
         fwrite($write_fd, "RewriteCond %{HTTP:Authorization} .\n");
         fwrite($write_fd, "RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]\n\n");
 
+        // A value given by the caller applies to the whole file; without one, every shop URL
+        // resolves its own setting below. Kept apart from the loop variable so that one shop's
+        // setting cannot carry over to the next.
+        $forced_rewrite_settings = $rewrite_settings;
+
         foreach ($domains as $domain => $list_uri) {
             // As we use regex in the htaccess, ipv6 surrounded by brackets must be escaped
             $domain = str_replace(['[', ']'], ['\[', '\]'], $domain);
 
             $domain_rewrite_cond = '';
+            // The dispatcher rules below are written once per domain, so they apply as soon as any
+            // shop served by that domain rewrites its URLs.
+            $domain_rewrite_settings = false;
             foreach ($list_uri as $uri) {
                 fwrite($write_fd, PHP_EOL . PHP_EOL . '#Domain: ' . $domain . PHP_EOL);
                 if (Shop::isFeatureActive()) {
@@ -2698,14 +2709,13 @@ class ToolsCore
                 // upload folder
                 fwrite($write_fd, 'RewriteRule ^upload/.+$ %{ENV:REWRITEBASE}index.php [QSA,L]' . "\n\n");
 
-                if (!$rewrite_settings) {
-                    $rewrite_settings = (int) Configuration::get('PS_REWRITING_SETTINGS', null, null, (int) $uri['id_shop']);
-                }
+                $uri_rewrite_settings = $forced_rewrite_settings ?? (int) Configuration::get('PS_REWRITING_SETTINGS', null, null, (int) $uri['id_shop']);
+                $domain_rewrite_settings = $domain_rewrite_settings || $uri_rewrite_settings;
 
                 $domain_rewrite_cond = 'RewriteCond %{HTTP_HOST} ^' . $domain . '$' . PHP_EOL;
                 // Rewrite virtual multishop uri
                 if ($uri['virtual']) {
-                    if (!$rewrite_settings) {
+                    if (!$uri_rewrite_settings) {
                         fwrite($write_fd, $media_domains);
                         fwrite($write_fd, $domain_rewrite_cond);
                         fwrite($write_fd, 'RewriteRule ^' . trim($uri['virtual'], '/') . '/?$ ' . $uri['physical'] . $uri['virtual'] . "index.php [L,R]\n");
@@ -2719,7 +2729,7 @@ class ToolsCore
                     fwrite($write_fd, 'RewriteRule ^' . ltrim($uri['virtual'], '/') . '(.*) ' . $uri['physical'] . "$1 [L]\n\n");
                 }
 
-                if ($rewrite_settings) {
+                if ($uri_rewrite_settings) {
                     // Compatibility with the old image filesystem
                     fwrite($write_fd, "# Rewrites for product images (support up to < 10 million images)\n");
 
@@ -2750,7 +2760,7 @@ class ToolsCore
             }
 
             // Redirections to dispatcher
-            if ($rewrite_settings) {
+            if ($domain_rewrite_settings) {
                 fwrite($write_fd, "\n# Send all other traffic to dispatcher\n");
                 fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\n");
                 fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -l [OR]\n");
