@@ -286,7 +286,7 @@ class OrderHistoryCore extends ObjectModel
                 $rest_paid = $invoice->getRestPaid();
                 if ($rest_paid > 0) {
                     $payment = new OrderPayment();
-                    $payment->order_reference = Tools::substr($order->reference, 0, 9);
+                    $payment->order_reference = $order->reference;
                     $payment->id_currency = $order->id_currency;
                     $payment->amount = $rest_paid;
                     $payment->payment_method = isset($payment_method) && $payment_method instanceof Module ? $payment_method->displayName : null;
