@@ -57,6 +57,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCom
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderShopId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
@@ -75,8 +76,10 @@ use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetOrderShipments;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentsForOrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\ListAvailableShipmentsForProduct;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\OrderShipment;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Exception\MultiShopAccessDeniedException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider;
@@ -309,6 +312,8 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         #[Autowire(service: 'prestashop.adapter.pdf.order_invoice_pdf_generator')] OrderInvoicePdfGenerator $invoicePdfGenerator,
     ): Response {
+        $this->assertOrderShopAuthorization($orderId);
+
         $generatedPdf = $invoicePdfGenerator->generatePDFForResponse([$orderId]);
 
         $response = new Response($generatedPdf->getContent());
@@ -332,6 +337,8 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         #[Autowire(service: 'prestashop.adapter.pdf.delivery_slip_pdf_generator')] DeliverySlipPdfGenerator $deliverySlipPdfGenerator,
     ): Response {
+        $this->assertOrderShopAuthorization($orderId);
+
         $generatedPdf = $deliverySlipPdfGenerator->generatePDFForResponse([$orderId]);
 
         $response = new Response($generatedPdf->getContent());
@@ -408,6 +415,10 @@ class OrderController extends PrestaShopAdminController
         $data = $changeOrdersStatusForm->getData();
 
         try {
+            foreach ($data['order_ids'] as $orderId) {
+                $this->assertOrderShopAuthorization((int) $orderId);
+            }
+
             $this->dispatchCommand(
                 new BulkChangeOrderStatusCommand($data['order_ids'], (int) $data['new_order_status_id'])
             );
@@ -501,6 +512,8 @@ class OrderController extends PrestaShopAdminController
         ShipmentFilters $filters,
         Tools $tools,
     ): Response {
+        $this->assertOrderShopAuthorization($orderId);
+
         try {
             /** @var OrderForViewing $orderForViewing */
             $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId, QuerySorting::DESC));
@@ -995,6 +1008,8 @@ class OrderController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.partial_refund_form_handler')] FormHandlerInterface $formHandler,
     ) {
+        $this->assertOrderShopAuthorization($orderId);
+
         $form = $formBuilder->getFormFor($orderId);
 
         try {
@@ -1029,6 +1044,8 @@ class OrderController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.standard_refund_form_handler')] FormHandlerInterface $formHandler,
     ) {
+        $this->assertOrderShopAuthorization($orderId);
+
         $form = $formBuilder->getFormFor($orderId);
 
         try {
@@ -1063,6 +1080,8 @@ class OrderController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.return_product_form_handler')] FormHandlerInterface $formHandler,
     ) {
+        $this->assertOrderShopAuthorization($orderId);
+
         $form = $formBuilder->getFormFor($orderId);
 
         try {
@@ -1324,6 +1343,8 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function updateShippingAction(int $orderId, Request $request): RedirectResponse
     {
+        $this->assertOrderShopAuthorization($orderId);
+
         $form = $this->createForm(UpdateOrderShippingType::class, [], [
             'order_id' => $orderId,
         ]);
@@ -1510,6 +1531,8 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function addCartRuleAction(int $orderId, Request $request): RedirectResponse
     {
+        $this->assertOrderShopAuthorization($orderId);
+
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
         ]);
@@ -1555,6 +1578,8 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function updateStatusAction(int $orderId, Request $request): RedirectResponse
     {
+        $this->assertOrderShopAuthorization($orderId);
+
         $form = $this->formFactory->createNamed(
             'update_order_status',
             UpdateOrderStatusType::class
@@ -1590,6 +1615,8 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function updateStatusFromListAction(int $orderId, Request $request): RedirectResponse
     {
+        $this->assertOrderShopAuthorization($orderId);
+
         $this->handleOrderStatusUpdate($orderId, $request->request->getInt('value'));
 
         return $this->redirectToRoute('admin_orders_index');
@@ -1606,6 +1633,8 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         Request $request,
     ): RedirectResponse {
+        $this->assertOrderShopAuthorization($orderId);
+
         $form = $this->createForm(OrderPaymentType::class, [], [
             'id_order' => $orderId,
         ]);
@@ -1824,6 +1853,8 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
     public function changeCurrencyAction(int $orderId, Request $request): RedirectResponse
     {
+        $this->assertOrderShopAuthorization($orderId);
+
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class);
         $changeOrderCurrencyForm->handleRequest($request);
 
@@ -2269,6 +2300,21 @@ class OrderController extends PrestaShopAdminController
             $this->handleChangeOrderStatusException($e);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+    }
+
+    /**
+     * Checks that the employee is authorized to access the order shop.
+     *
+     * @param int $orderId
+     */
+    private function assertOrderShopAuthorization(int $orderId): void
+    {
+        $shopId = $this->dispatchQuery(new GetOrderShopId($orderId));
+        $shopConstraint = ShopConstraint::shop($shopId->getValue());
+
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
         }
     }
 
