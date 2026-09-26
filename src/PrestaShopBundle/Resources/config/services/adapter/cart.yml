@@ -88,6 +88,9 @@ services:
       - '@prestashop.adapter.context_state_manager'
       - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_CARRIER_DEFAULT")'
 
+  PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetCartShopIdHandler:
+    autoconfigure: true
+
   prestashop.adapter.command_handler.add_customization_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddCustomizationHandler'
     autoconfigure: true
