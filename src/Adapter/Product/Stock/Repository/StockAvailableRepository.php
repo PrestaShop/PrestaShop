@@ -332,16 +332,32 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->addSelect('SUM(od.product_quantity - od.product_quantity_refunded) AS reserved_quantity')
+            // WHY: product_quantity and product_quantity_refunded are UNSIGNED, so an over-refunded
+            // order line (refunded > ordered) makes the subtraction underflow and MySQL aborts the
+            // query with "BIGINT UNSIGNED value is out of range". Clamp each line to >= 0 (such a line
+            // reserves nothing) by casting to SIGNED before subtracting.
+            // @see https://github.com/PrestaShop/PrestaShop/issues/37338
+            ->addSelect('SUM(GREATEST(CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED), 0)) AS reserved_quantity')
             ->from($this->dbPrefix . 'orders', 'o')
             ->innerJoin('o', $this->dbPrefix . 'order_detail', 'od', 'od.id_order = o.id_order')
             ->innerJoin('o', $this->dbPrefix . 'order_state', 'os', 'os.id_order_state = o.current_state')
             ->innerJoin(
                 'od', $this->dbPrefix . 'stock_available', 'sa',
-                'od.product_id = sa.id_product AND od.product_attribute_id = sa.id_product_attribute AND od.id_shop = sa.id_shop'
+                'od.product_id = sa.id_product AND od.product_attribute_id = sa.id_product_attribute'
             )
             ->where($qb->expr()->and(
-                $qb->expr()->eq('o.id_shop', 'sa.id_shop'),
+                // WHY: as in StockManager, a stock shared by a shop group (id_shop = 0) reserves the
+                // orders of every shop in the group, and a stock of one shop those of that shop only.
+                $qb->expr()->or(
+                    $qb->expr()->and(
+                        $qb->expr()->eq('sa.id_shop', 0),
+                        $qb->expr()->eq('o.id_shop_group', 'sa.id_shop_group')
+                    ),
+                    $qb->expr()->and(
+                        $qb->expr()->gt('sa.id_shop', 0),
+                        $qb->expr()->eq('o.id_shop', 'sa.id_shop')
+                    )
+                ),
                 $qb->expr()->neq('os.shipped', 1),
                 $qb->expr()->or(
                     $qb->expr()->eq('o.valid', 1),
@@ -363,15 +379,16 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
         $result = $qb->executeQuery()->fetchAssociative();
         $reservedQuantity = (int) ($result['reserved_quantity'] ?? 0);
 
-        if ($reservedQuantity > 0) {
-            $updateQb = $this->connection->createQueryBuilder();
-            $updateQb
-                ->update($this->dbPrefix . 'stock_available', 'sa')
-                ->set('reserved_quantity', (string) $reservedQuantity)
-                ->where('sa.id_stock_available = :stockId')
-                ->setParameter('stockId', $stockId->getValue())
-            ;
-            $updateQb->executeStatement();
-        }
+        // WHY: written even when it is 0, as StockManager does: once the last open order line ships,
+        // is cancelled or is refunded, nothing is reserved any more, and skipping the write would keep
+        // the previous reservation (and a physical quantity inflated by it) for good.
+        $updateQb = $this->connection->createQueryBuilder();
+        $updateQb
+            ->update($this->dbPrefix . 'stock_available', 'sa')
+            ->set('reserved_quantity', (string) $reservedQuantity)
+            ->where('sa.id_stock_available = :stockId')
+            ->setParameter('stockId', $stockId->getValue())
+        ;
+        $updateQb->executeStatement();
     }
 }
