@@ -57,8 +57,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCom
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderShopId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderShopId;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
