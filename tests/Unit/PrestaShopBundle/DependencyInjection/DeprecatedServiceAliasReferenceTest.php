@@ -56,14 +56,12 @@ class DeprecatedServiceAliasReferenceTest extends TestCase
         $offenders = [];
         foreach ($this->configFiles() as $file) {
             foreach (file($file) as $number => $line) {
-                if (preg_match('#^\s*alias:\s#', $line)) {
-                    // the alias declaration itself, not a reference to one
-                    continue;
-                }
-
                 foreach ($deprecatedAliases as $alias) {
-                    if (preg_match('#@\??' . preg_quote($alias, '#') . '(?![\w.\\\\])#', $line)) {
-                        $offenders[] = sprintf('%s:%d references @%s', basename($file), $number + 1, $alias);
+                    $quotedAlias = preg_quote($alias, '#');
+                    // A service argument, another alias pointing at it, or a bundle option naming a service (monolog's id:)
+                    if (preg_match('#@\??' . $quotedAlias . '(?![\w.\\\\])#', $line)
+                        || preg_match('#^\s*(alias|id):\s*[\'"]?' . $quotedAlias . '[\'"]?\s*$#', $line)) {
+                        $offenders[] = sprintf('%s:%d references %s', basename($file), $number + 1, $alias);
                     }
                 }
             }
@@ -89,7 +87,9 @@ class DeprecatedServiceAliasReferenceTest extends TestCase
 
                 foreach (file($file->getPathname()) as $number => $line) {
                     foreach ($deprecatedAliases as $alias) {
-                        if (preg_match('#->(get|has)\(\s*[\'"]' . preg_quote($alias, '#') . '[\'"]\s*\)#', $line)) {
+                        $quotedAlias = preg_quote($alias, '#');
+                        if (preg_match('#->(get|has)\(\s*[\'"]' . $quotedAlias . '[\'"]\s*\)#', $line)
+                            || preg_match('#Autowire\(\s*service:\s*[\'"]' . $quotedAlias . '[\'"]#', $line)) {
                             $offenders[] = sprintf('%s:%d fetches %s', $file->getFilename(), $number + 1, $alias);
                         }
                     }
