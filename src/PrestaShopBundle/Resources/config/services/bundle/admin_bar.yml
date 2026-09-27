@@ -7,6 +7,61 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Security\AdminPathProvider: ~
 
+  # // TODO <cnc> ===== Front admin bar ===== AdminBarPageContextFactory service definition - TODO
+  # Remove "public: true" when the bar will no longer retrieve the service from the FrontController.
+  PrestaShop\PrestaShop\Adapter\AdminBar\AdminBarActionUrlProvider:
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Security\AdminPathProvider'
+    public: true
+
+  PrestaShop\PrestaShop\Adapter\AdminBar\ProductAdminBarResourceProvider:
+    tags:
+      - { name: 'prestashop.admin_bar.resource_provider', controller: ProductController }
+
+  PrestaShop\PrestaShop\Adapter\AdminBar\CategoryAdminBarResourceProvider:
+    tags:
+      - { name: 'prestashop.admin_bar.resource_provider', controller: CategoryController }
+
+  PrestaShop\PrestaShop\Adapter\AdminBar\CmsAdminBarResourceProvider:
+    tags:
+      - { name: 'prestashop.admin_bar.resource_provider', controller: CmsController }
+
+  # // TODO <cnc> ===== Front admin bar ===== AdminBarPageContextFactory service definition - TODO
+  # Remove "public: true" when the bar will no longer retrieve the service from the FrontController.
+  PrestaShop\PrestaShop\Adapter\AdminBar\AdminBarPageContextFactory:
+    arguments:
+      $resourceProviders: !tagged_locator { tag: prestashop.admin_bar.resource_provider, index_by: controller }
+    public: true
+
+  PrestaShop\PrestaShop\Adapter\AdminBar\AdminBarPermissionChecker:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\AdminBar\ProductAdminBarActionProvider:
+    tags: [ 'prestashop.admin_bar.action_provider' ]
+    arguments:
+      $translator: '@=service("prestashop.adapter.legacy.context").getContext().getTranslator()'
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\AdminBar\CategoryAdminBarActionProvider:
+    tags: [ 'prestashop.admin_bar.action_provider' ]
+    arguments:
+      $translator: '@=service("prestashop.adapter.legacy.context").getContext().getTranslator()'
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\AdminBar\CmsAdminBarActionProvider:
+    tags: [ 'prestashop.admin_bar.action_provider' ]
+    arguments:
+      $translator: '@=service("prestashop.adapter.legacy.context").getContext().getTranslator()'
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\AdminBar\AdminBarActionResolver:
+    arguments:
+      $providers: !tagged_iterator prestashop.admin_bar.action_provider
+      $hookManager: '@PrestaShop\PrestaShop\Adapter\HookManager'
+    public: true
+
   PrestaShop\PrestaShop\Core\Security\AdminSessionReaderInterface:
     alias: PrestaShop\PrestaShop\Adapter\Security\NativeAdminSessionReader
 

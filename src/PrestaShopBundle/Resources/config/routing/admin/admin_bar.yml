@@ -1,0 +1,35 @@
+_admin_bar_product_edit:
+  path: /product/{productId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\AdminBar\ProductAdminBarController::editAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
+_admin_bar_category_edit:
+  path: /category/{categoryId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\AdminBar\CategoryAdminBarController::editAction
+    _legacy_controller: AdminCategories
+  requirements:
+    categoryId: \d+
+
+_admin_bar_cms_edit:
+  path: /cms/{cmsId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\AdminBar\CmsAdminBarController::editAction
+    _legacy_controller: AdminCmsContent
+  requirements:
+    cmsId: \d+
+
+_admin_bar_cms_category_edit:
+  path: /cms-category/{cmsCategoryId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\AdminBar\CmsCategoryAdminBarController::editAction
+    _legacy_controller: AdminCmsContent
+  requirements:
+    cmsCategoryId: \d+

@@ -8,6 +8,9 @@ namespace PrestaShopBundle\Security\Admin;
 
 class TokenAttributes
 {
+    /** Last authenticated BO activity; FO readers must never update this value. */
+    public const LAST_ADMIN_ACTIVITY = '_last_admin_activity';
+
     /**
      * Used to store the IP address as an integer to compare if it changed (to avoid copying/stealing the cookie session)
      */

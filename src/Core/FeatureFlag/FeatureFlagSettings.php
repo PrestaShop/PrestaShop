@@ -33,6 +33,7 @@ class FeatureFlagSettings
     public const FEATURE_FLAG_ADMIN_API_MULTISTORE = 'admin_api_multistore';
     public const FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS = 'admin_api_experimental_endpoints';
     public const FEATURE_FLAG_FRONT_CONTAINER_V2 = 'front_container_v2';
+    public const FEATURE_FLAG_FRONT_OFFICE_ADMIN_BAR = 'front_office_admin_bar';
     public const FEATURE_FLAG_IMPROVED_SHIPMENT = 'improved_shipment';
     public const FEATURE_FLAG_DISCOUNT = 'discount';
     public const FEATURE_FLAG_IMPROVED_B2B = 'improved_b2b';
