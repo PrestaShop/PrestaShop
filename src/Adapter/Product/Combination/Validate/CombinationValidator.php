@@ -42,6 +42,7 @@ class CombinationValidator extends AbstractObjectModelValidator
         $this->validateCombinationProperty($combination, 'reference', ProductConstraintException::INVALID_REFERENCE);
         $this->validateCombinationProperty($combination, 'upc', ProductConstraintException::INVALID_UPC);
         $this->validateCombinationProperty($combination, 'weight', ProductConstraintException::INVALID_WEIGHT);
+        $this->validateCombinationProperty($combination, 'additional_shipping_cost', ProductConstraintException::INVALID_ADDITIONAL_SHIPPING_COST);
     }
 
     /**

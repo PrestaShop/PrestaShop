@@ -167,6 +167,10 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         if (isset($dataRows['impact on weight'])) {
             $command->setImpactOnWeight($dataRows['impact on weight']);
         }
+
+        if (isset($dataRows['impact on shipping fees'])) {
+            $command->setImpactOnShippingCost($dataRows['impact on shipping fees']);
+        }
         if (isset($dataRows['eco tax'])) {
             $command->setEcoTax($dataRows['eco tax']);
         }

@@ -67,6 +67,7 @@ class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInte
             ->addMultiShopField('[price_impact][unit_price_tax_excluded]', 'setImpactOnUnitPrice', DataField::TYPE_STRING)
             ->addMultiShopField('[price_impact][wholesale_price]', 'setWholesalePrice', DataField::TYPE_STRING)
             ->addMultiShopField('[price_impact][weight]', 'setImpactOnWeight', DataField::TYPE_STRING)
+            ->addMultiShopField('[price_impact][additional_shipping_cost]', 'setImpactOnShippingCost', DataField::TYPE_STRING)
         ;
 
         return $this;

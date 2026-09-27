@@ -53,6 +53,11 @@ class DetailsFiller implements CombinationFillerInterface
             $updatableProperties[] = 'weight';
         }
 
+        if (null !== $command->getImpactOnShippingCost()) {
+            $combination->additional_shipping_cost = (float) (string) $command->getImpactOnShippingCost();
+            $updatableProperties[] = 'additional_shipping_cost';
+        }
+
         return $updatableProperties;
     }
 }
