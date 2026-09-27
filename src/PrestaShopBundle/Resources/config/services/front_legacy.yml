@@ -54,4 +54,4 @@ services:
   prestashop.translation.translator_language_loader:
     class: PrestaShopBundle\Translation\TranslatorLanguageLoader
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository'
+      - '@prestashop.adapter.module.repository.module_repository'

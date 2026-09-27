@@ -40,9 +40,17 @@ class DeprecatedServiceAliasReferenceTest extends TestCase
         'prestashop.user_provider',
     ];
 
+    /**
+     * ModuleRepository is a private service whose public alias legacy code fetches. Referencing it by class
+     * gives the translation loader a second instance next to the one the alias serves, so the alias stays.
+     */
+    private const ALIASES_SERVICE_DEFINITIONS_STILL_REFERENCE = [
+        'prestashop.adapter.module.repository.module_repository',
+    ];
+
     public function testNoServiceDefinitionReferencesADeprecatedAlias(): void
     {
-        $deprecatedAliases = $this->findDeprecatedAliases();
+        $deprecatedAliases = array_diff($this->findDeprecatedAliases(), self::ALIASES_SERVICE_DEFINITIONS_STILL_REFERENCE);
         $this->assertNotEmpty($deprecatedAliases, 'no deprecated aliases were found at all, so this test would pass vacuously');
 
         $offenders = [];
