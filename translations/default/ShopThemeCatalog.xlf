@@ -464,6 +464,11 @@
         <target>Order totals</target>
         <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 163]</note>
       </trans-unit>
+      <trans-unit id="1f10d603fdf22ee6bbaacd9664980969">
+        <source>Other product variations available</source>
+        <target>Other product variations available</target>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1516]</note>
+      </trans-unit>
       <trans-unit id="4492081ca02b059f9e8af4ddaf0f7292">
         <source>Pack</source>
         <target>Pack</target>
@@ -533,11 +538,6 @@
         <source>Product Details</source>
         <target>Product Details</target>
         <note>File: themes/hummingbird/templates/catalog/_partials/product-details.tpl [Line: 13]</note>
-      </trans-unit>
-      <trans-unit id="cb3c718c905f00adbb6735f55bfb38ef">
-        <source>Product available with different options</source>
-        <target>Product available with different options</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 1480]</note>
       </trans-unit>
       <trans-unit id="04c06765e76fdf5efd32d865bb1e9210">
         <source>Product brand: %brand_name%</source>
