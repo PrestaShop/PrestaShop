@@ -24,6 +24,22 @@ class DeprecatedServiceAliasReferenceTest extends TestCase
         __DIR__ . '/../../../../app/config',
     ];
 
+    private const PHP_DIRECTORIES = [
+        __DIR__ . '/../../../../classes',
+        __DIR__ . '/../../../../controllers',
+        __DIR__ . '/../../../../src',
+    ];
+
+    /**
+     * The class these point at is a private service, so the alias is still the only public way for legacy
+     * code to reach it.
+     */
+    private const ALIASES_LEGACY_CODE_STILL_FETCHES = [
+        'prestashop.adapter.module.repository.module_repository',
+        'prestashop.core.grid.presenter.grid_presenter',
+        'prestashop.user_provider',
+    ];
+
     public function testNoServiceDefinitionReferencesADeprecatedAlias(): void
     {
         $deprecatedAliases = $this->findDeprecatedAliases();
@@ -46,6 +62,34 @@ class DeprecatedServiceAliasReferenceTest extends TestCase
         }
 
         $this->assertSame([], $offenders, "Use the class these aliases point at instead:\n" . implode("\n", $offenders));
+    }
+
+    /**
+     * Fetching a deprecated alias from the container raises the same notice at runtime, on every call.
+     */
+    public function testNoPhpCodeFetchesADeprecatedAlias(): void
+    {
+        $deprecatedAliases = array_diff($this->findDeprecatedAliases(), self::ALIASES_LEGACY_CODE_STILL_FETCHES);
+        $this->assertNotEmpty($deprecatedAliases);
+
+        $offenders = [];
+        foreach (self::PHP_DIRECTORIES as $directory) {
+            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
+                if (!$file->isFile() || 'php' !== $file->getExtension()) {
+                    continue;
+                }
+
+                foreach (file($file->getPathname()) as $number => $line) {
+                    foreach ($deprecatedAliases as $alias) {
+                        if (preg_match('#->(get|has)\(\s*[\'"]' . preg_quote($alias, '#') . '[\'"]\s*\)#', $line)) {
+                            $offenders[] = sprintf('%s:%d fetches %s', $file->getFilename(), $number + 1, $alias);
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->assertSame([], $offenders, "Fetch the class these aliases point at instead:\n" . implode("\n", $offenders));
     }
 
     /**
