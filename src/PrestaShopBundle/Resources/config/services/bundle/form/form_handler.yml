@@ -638,3 +638,33 @@ services:
       - 'PrestaShopBundle\Form\Admin\Login\ResetPasswordType'
       - 'EmployeeResetPassword'
       - 'reset_password'
+
+  prestashop.admin.search_preferences.indexation.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.search_preferences.indexation.data_provider'
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\IndexationType'
+      - 'SearchPreferencesPageIndexation'
+      - 'indexation'
+
+  prestashop.admin.search_preferences.search_options.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.search_preferences.search_options.data_provider'
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\SearchOptionsType'
+      - 'SearchPreferencesPageSearchOptions'
+      - 'search_options'
+
+  prestashop.admin.search_preferences.weight.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.search_preferences.weight.data_provider'
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\WeightType'
+      - 'SearchPreferencesPageWeight'
+      - 'weight'

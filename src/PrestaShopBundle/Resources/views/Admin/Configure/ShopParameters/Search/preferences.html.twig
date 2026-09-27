@@ -1,0 +1,27 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain 'Admin.Shopparameters.Feature' %}
+
+{% block content %}
+  {# Indexation block — form_start/form_end live inside the partial to avoid nesting with the action forms #}
+  {{ include('@PrestaShop/Admin/Configure/ShopParameters/Search/Blocks/indexation.html.twig') }}
+
+  {# Search options block #}
+  {{ form_start(searchOptionsForm, {attr: {class: 'form', id: 'search_options_form'}, action: path('admin_search_options_save')}) }}
+    {{ include('@PrestaShop/Admin/Configure/ShopParameters/Search/Blocks/search_options.html.twig') }}
+  {{ form_end(searchOptionsForm) }}
+
+  {# Weight block #}
+  {{ form_start(weightForm, {attr: {class: 'form', id: 'search_weight_form'}, action: path('admin_search_weight_save')}) }}
+    {{ include('@PrestaShop/Admin/Configure/ShopParameters/Search/Blocks/weight.html.twig') }}
+  {{ form_end(weightForm) }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/search.bundle.js') }}"></script>
+{% endblock %}
