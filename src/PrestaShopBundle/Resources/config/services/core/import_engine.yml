@@ -15,6 +15,7 @@ services:
     alias: prestashop.core.import.engine.csv_file_reader
 
   PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\File\ImportFileFormatDetector: ~
   PrestaShop\PrestaShop\Core\Import\Engine\ValueParser: ~
 
   # Local file_url/image paths are confined to the shop CONTENT directories (a

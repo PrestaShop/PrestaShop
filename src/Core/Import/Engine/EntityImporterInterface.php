@@ -71,6 +71,12 @@ interface EntityImporterInterface
      * Processes up to $limit units from the phase's current position (row position
      * + opaque resume cursor carried by the context).
      *
+     * A problem with a row is returned as an ImportMessage, never thrown: throwing
+     * ends the whole job as failed, and only an ImportEngineException or a Domain
+     * exception has its message quoted in the report — anything else is logged in
+     * full and replaced by a generic text, because it may carry implementation
+     * detail.
+     *
      * @throws UnknownPhaseException when the phase id is not one of getPhases()
      */
     public function processPhaseBatch(string $phaseId, ImportJobContext $context, int $limit): PhaseBatchResult;

@@ -101,9 +101,15 @@ tests-legacy/.phpunit.result.cache
 /admin-dev/backups/*
 !/admin-dev/backups/.htaccess
 
+# the Behat admin directory: an import scenario writes uploads and working files here
+/tests/Integration/Behaviour/import/
+
 /admin-dev/import/*
 !/admin-dev/import/.htaccess
 !/admin-dev/import/index.php
+!/admin-dev/import/work/
+/admin-dev/import/work/*
+!/admin-dev/import/work/index.php
 
 /admin-dev/export/*
 !/admin-dev/export/.htaccess

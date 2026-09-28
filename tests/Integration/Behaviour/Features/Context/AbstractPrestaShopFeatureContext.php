@@ -56,6 +56,22 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
     }
 
     /**
+     * Same as referenceToId for the identities that are not integers.
+     *
+     * @param string $reference
+     *
+     * @return string
+     */
+    protected function referenceToUuid(string $reference): string
+    {
+        if (!$this->getSharedStorage()->exists($reference)) {
+            throw new RuntimeException(sprintf('Reference %s does not exist in shared storage', $reference));
+        }
+
+        return $this->getSharedStorage()->get($reference);
+    }
+
+    /**
      * @param string $references
      *
      * @return int[]
@@ -78,6 +94,33 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
         }
 
         return $ids;
+    }
+
+    /**
+     * Same as referencesToIds for the identities that are not integers.
+     *
+     * @param string $references
+     *
+     * @return string[]
+     */
+    protected function referencesToUuids(string $references): array
+    {
+        if (empty($references)) {
+            return [];
+        }
+
+        $uuids = [];
+        foreach (explode(',', $references) as $reference) {
+            $reference = trim($reference);
+
+            if (!$this->getSharedStorage()->exists($reference)) {
+                throw new RuntimeException(sprintf('Reference %s does not exist in shared storage', $reference));
+            }
+
+            $uuids[] = $this->getSharedStorage()->get($reference);
+        }
+
+        return $uuids;
     }
 
     /**

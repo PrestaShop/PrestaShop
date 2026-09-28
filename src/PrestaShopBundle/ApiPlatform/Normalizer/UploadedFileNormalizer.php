@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -45,6 +46,9 @@ class UploadedFileNormalizer implements DenormalizerInterface, NormalizerInterfa
             'realPath' => $object->getRealPath(),
             'mimeType' => $object->getMimeType(),
             'size' => $object->getSize(),
+            // the name the client gave the upload: pathName is PHP's random temp name, so a command
+            // that reports on the file has nothing else to show
+            'clientOriginalName' => $object instanceof UploadedFile ? $object->getClientOriginalName() : null,
         ];
     }
 

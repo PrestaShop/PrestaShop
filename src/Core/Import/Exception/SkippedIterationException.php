@@ -8,6 +8,8 @@ namespace PrestaShop\PrestaShop\Core\Import\Exception;
 
 /**
  * Class SkippedIterationException thrown when an import iteration is skipped.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by the import engine, which skips rows through PhaseBatchResult::$newlySkippedRows
  */
 class SkippedIterationException extends ImportException
 {

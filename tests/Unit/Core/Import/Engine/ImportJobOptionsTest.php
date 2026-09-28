@@ -22,6 +22,8 @@ class ImportJobOptionsTest extends TestCase
         $this->assertFalse($options->truncate);
         $this->assertFalse($options->sendEmail);
         $this->assertFalse($options->dryRun);
+        $this->assertFalse($options->keepSourceFile, 'Deleting the source after normalization is the default');
+        $this->assertSame(ImportJobOptions::DEFAULT_BATCH_LIMIT, $options->batchLimit, 'batchLimit is the one non-boolean option');
         $this->assertSame([], $options->getExtra());
     }
 

@@ -15,7 +15,7 @@ use SplFileInfo;
  * measured during the normalization pass itself (which reads every record
  * anyway), so nothing downstream ever re-reads the file just to count:
  * the count travels with the job's frozen config (ImportJobContext,
- * ps_import_run.total_rows).
+ * ps_import_job.data_record_count).
  */
 class NormalizedImportFile
 {
