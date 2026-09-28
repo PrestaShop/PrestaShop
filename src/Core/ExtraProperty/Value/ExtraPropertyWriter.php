@@ -260,10 +260,14 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
         if (ExtraPropertyScope::LANG === $scope) {
             $keyColumns['id_lang'] = $langId;
         }
-        $currentValue = $this->fetchCurrentBoolValue($fullTableName, $primaryKeyName, $entityId, $keyColumns, $columnName);
-        if (null === $currentValue) {
-            $currentValue = (bool) ($definition->getDefaultValue() ?? false);
-        }
+        $currentValue = $this->fetchCurrentBoolValue(
+            $fullTableName,
+            $primaryKeyName,
+            $entityId,
+            $keyColumns,
+            $columnName,
+            (bool) ($definition->getDefaultValue() ?? false),
+        );
 
         $targetValue = $currentValue ? 0 : 1;
 
@@ -286,12 +290,18 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
 
     /**
      * Reads the current boolean value of one storage row. A missing row or a NULL value
-     * returns null so the caller can fall back to the definition default.
+     * falls back to the provided default value.
      *
      * @param array<string, int> $keyColumns Additional key columns pinning the row (id_shop / id_lang)
      */
-    protected function fetchCurrentBoolValue(string $fullTableName, string $primaryKeyName, int $entityId, array $keyColumns, string $columnName): ?bool
-    {
+    protected function fetchCurrentBoolValue(
+        string $fullTableName,
+        string $primaryKeyName,
+        int $entityId,
+        array $keyColumns,
+        string $columnName,
+        bool $defaultValue = false,
+    ): bool {
         $qb = $this->connection->createQueryBuilder()
             ->select($this->connection->quoteIdentifier($columnName))
             ->from($this->connection->quoteIdentifier($fullTableName))
@@ -304,7 +314,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
 
         $currentValue = $this->connection->fetchOne($qb->getSQL(), $qb->getParameters());
         if (false === $currentValue || null === $currentValue) {
-            return null;
+            return $defaultValue;
         }
 
         return (bool) $currentValue;
