@@ -251,8 +251,8 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
             }
         }
 
-        // A missing row or a NULL value toggles to enabled, like the previous
-        // "1 - IFNULL(col, 0)" upsert did.
+        // Read the persisted value when available; otherwise fall back to the
+        // definition default so the toggle always inverts the effective value.
         $keyColumns = [];
         if (null !== $readShopId) {
             $keyColumns['id_shop'] = $readShopId;
@@ -260,7 +260,12 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
         if (ExtraPropertyScope::LANG === $scope) {
             $keyColumns['id_lang'] = $langId;
         }
-        $targetValue = $this->fetchCurrentBoolValue($fullTableName, $primaryKeyName, $entityId, $keyColumns, $columnName) ? 0 : 1;
+        $currentValue = $this->fetchCurrentBoolValue($fullTableName, $primaryKeyName, $entityId, $keyColumns, $columnName);
+        if (null === $currentValue) {
+            $currentValue = (bool) ($definition->getDefaultValue() ?? false);
+        }
+
+        $targetValue = $currentValue ? 0 : 1;
 
         $rows = [];
         foreach ($isMultiShop ? $shopIds : [null] as $shopId) {
@@ -281,11 +286,11 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
 
     /**
      * Reads the current boolean value of one storage row. A missing row or a NULL value
-     * reads as false (the toggle target is then "enabled").
+     * returns null so the caller can fall back to the definition default.
      *
      * @param array<string, int> $keyColumns Additional key columns pinning the row (id_shop / id_lang)
      */
-    protected function fetchCurrentBoolValue(string $fullTableName, string $primaryKeyName, int $entityId, array $keyColumns, string $columnName): bool
+    protected function fetchCurrentBoolValue(string $fullTableName, string $primaryKeyName, int $entityId, array $keyColumns, string $columnName): ?bool
     {
         $qb = $this->connection->createQueryBuilder()
             ->select($this->connection->quoteIdentifier($columnName))
@@ -297,7 +302,12 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
                 ->setParameter($keyColumn, $keyValue);
         }
 
-        return (bool) $this->connection->fetchOne($qb->getSQL(), $qb->getParameters());
+        $currentValue = $this->connection->fetchOne($qb->getSQL(), $qb->getParameters());
+        if (false === $currentValue || null === $currentValue) {
+            return null;
+        }
+
+        return (bool) $currentValue;
     }
 
     /**
