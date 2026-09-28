@@ -1,5 +1,5 @@
-# Routes Index (generated 2026-04-25)
-# ~812 routes across admin / admin-api / api
+# Routes Index (generated 2026-10-02)
+# ~879 routes across admin / admin-api / api
 #
 # Paths are relative to the routing file's prefix (see parent _*.yml for full prefix).
 # Route name is the canonical identifier — use it with $this->generateUrl() or $router->generate().
@@ -20,9 +20,9 @@ POST          /api-clients/{apiClientId}/regenerate-secret  admin_api_clients_re
 ### admin/configure/advanced_parameters/administration
 ```
 GET           /                                         admin_administration  [AdministrationController::indexAction]
-POST          /general                                  admin_administration_general_save  [AdministrationController::processGeneralFormAction]
-POST          /upload-quota                             admin_administration_upload_quota_save  [AdministrationController::processUploadQuotaFormAction]
-POST          /notifications                            admin_administration_notifications_save  [AdministrationController::processNotificationsFormAction]
+PATCH,POST    /general                                  admin_administration_general_save  [AdministrationController::processGeneralFormAction]
+PATCH,POST    /upload-quota                             admin_administration_upload_quota_save  [AdministrationController::processUploadQuotaFormAction]
+PATCH,POST    /notifications                            admin_administration_notifications_save  [AdministrationController::processNotificationsFormAction]
 ```
 
 ### admin/configure/advanced_parameters/backup
@@ -34,6 +34,18 @@ GET           /view/{downloadFileName}                  admin_backups_download_v
 GET           /download/{downloadFileName}              admin_backup_download  [BackupController::downloadContentAction]
 DELETE,POST   /{deleteFileName}                         admin_backups_delete  [BackupController::deleteAction]
 POST          /bulk-delete/                             admin_backups_bulk_delete  [BackupController::bulkDeleteAction]
+```
+
+### admin/configure/advanced_parameters/csp
+```
+GET           /                                         admin_security_csp_index  [CspController::indexAction]
+POST          /                                         admin_security_csp_search  [CommonController::searchGridAction]
+POST          /settings                                 admin_security_csp_save  [CspController::saveAction]
+GET,POST      /allow-list/add                           admin_security_csp_add  [CspController::addAction]
+GET           /clear-log                                admin_security_csp_clear_log  [CspController::clearLogAction]
+GET           /allow/{cspLogId}                         admin_security_csp_allow  [CspController::allowAction]
+GET           /revoke/{cspRuleId}                       admin_security_csp_revoke  [CspController::revokeAction]
+POST          /bulk-revoke                              admin_security_csp_bulk_revoke  [CspController::bulkRevokeAction]
 ```
 
 ### admin/configure/advanced_parameters/email
@@ -64,6 +76,20 @@ POST          /toggle-navigation                        admin_employees_toggle_n
 POST          /change-form-language                     admin_employees_change_form_language  [EmployeeController::changeFormLanguageAction]
 GET           /tabs                                     admin_employees_get_tabs  [EmployeeController::getAccessibleTabsAction]
 GET           /password_generated                       admin_employees_get_password_generated  [EmployeeController::generatePasswordAction]
+```
+
+### admin/configure/advanced_parameters/extra_property_definition
+```
+GET           /                                         admin_extra_property_definitions_index  [ExtraPropertyDefinitionController::indexAction]
+POST          /                                         admin_extra_property_definitions_search  [CommonController::searchGridAction]
+GET           /form-fields/{formId}                     admin_extra_property_definitions_form_fields  [ExtraPropertyDefinitionController::formFieldsAction]
+GET,POST      /new                                      admin_extra_property_definitions_create  [ExtraPropertyDefinitionController::createAction]
+GET,POST      /{extraPropertyDefinitionId}/edit         admin_extra_property_definitions_edit  [ExtraPropertyDefinitionController::editAction]
+GET,POST      /{extraPropertyDefinitionId}/view         admin_extra_property_definitions_view  [ExtraPropertyDefinitionController::viewAction]
+DELETE,POST   /{extraPropertyDefinitionId}/delete       admin_extra_property_definitions_delete  [ExtraPropertyDefinitionController::deleteAction]
+DELETE,POST   /{extraPropertyDefinitionId}/delete-drop-column  admin_extra_property_definitions_delete_drop_column  [ExtraPropertyDefinitionController::deleteDropColumnAction]
+POST          /bulk-delete                              admin_extra_property_definitions_bulk_delete  [ExtraPropertyDefinitionController::bulkDeleteAction]
+POST          /bulk-delete-drop-column                  admin_extra_property_definitions_bulk_delete_drop_column  [ExtraPropertyDefinitionController::bulkDeleteDropColumnAction]
 ```
 
 ### admin/configure/advanced_parameters/feature_flags
@@ -128,6 +154,19 @@ GET,POST      /new                                      admin_profiles_create  [
 GET,POST      /{profileId}/edit                         admin_profiles_edit  [ProfileController::editAction]
 POST          /{profileId}/delete                       admin_profiles_delete  [ProfileController::deleteAction]
 POST          /delete/bulk                              admin_profiles_bulk_delete  [ProfileController::bulkDeleteAction]
+```
+
+### admin/configure/advanced_parameters/quick_access
+```
+GET           /                                         admin_quick_accesses_index  [QuickAccessController::indexAction]
+POST          /                                         admin_quick_accesses_search  [CommonController::searchGridAction]
+DELETE,POST   /{quickAccessId}/delete                   admin_quick_accesses_delete  [QuickAccessController::deleteAction]
+POST          /bulk-delete                              admin_quick_accesses_bulk_delete  [QuickAccessController::bulkDeleteAction]
+GET,POST      /new                                      admin_quick_accesses_create  [QuickAccessController::createAction]
+GET,POST      /{quickAccessId}/edit                     admin_quick_accesses_edit  [QuickAccessController::editAction]
+POST          /ajax/add                                 admin_quick_accesses_ajax_add  [QuickAccessController::ajaxAddQuickLinkAction]
+POST          /ajax/delete                              admin_quick_accesses_ajax_delete  [QuickAccessController::ajaxDeleteQuickLinkAction]
+POST          /{quickAccessId}/toggle-new-window        admin_quick_accesses_toggle_new_window  [QuickAccessController::toggleNewWindowAction]
 ```
 
 ### admin/configure/advanced_parameters/security
@@ -268,10 +307,10 @@ POST          preferences                               admin_preferences_save  
 ### admin/configure/shop_parameters/product_preferences
 ```
 GET           /                                         admin_product_preferences  [ProductPreferencesController::indexAction]
-POST          /general                                  admin_product_preferences_general_save  [ProductPreferencesController::processGeneralFormAction]
-POST          /pagination                               admin_product_preferences_pagination_save  [ProductPreferencesController::processPaginationFormAction]
-POST          /page                                     admin_product_preferences_page_save  [ProductPreferencesController::processPageFormAction]
-POST          /stock                                    admin_product_preferences_stock_save  [ProductPreferencesController::processStockFormAction]
+PATCH,POST    /general                                  admin_product_preferences_general_save  [ProductPreferencesController::processGeneralFormAction]
+PATCH,POST    /pagination                               admin_product_preferences_pagination_save  [ProductPreferencesController::processPaginationFormAction]
+PATCH,POST    /page                                     admin_product_preferences_page_save  [ProductPreferencesController::processPageFormAction]
+PATCH,POST    /stock                                    admin_product_preferences_stock_save  [ProductPreferencesController::processStockFormAction]
 ```
 
 ### admin/configure/shop_parameters/search_engines
@@ -298,6 +337,9 @@ GET,POST      /{searchTerm}/edit                        admin_search_alias_edit 
 ```
 GET           /                                         admin_stores_index  [StoreController::indexAction]
 POST          /                                         admin_stores_search  [CommonController::searchGridAction]
+GET,POST      /new                                      admin_stores_add  [StoreController::createAction]
+GET,POST      /{storeId}/edit                           admin_stores_edit  [StoreController::editAction]
+POST          /contact-details/save                     admin_stores_save_contact_details  [StoreController::saveContactDetailsAction]
 POST          /{storeId}/toggle-status                  admin_stores_toggle_status  [StoreController::toggleStatusAction]
 POST,DELETE   /{storeId}/delete                         admin_stores_delete  [StoreController::deleteAction]
 POST,DELETE   /bulk-delete                              admin_stores_bulk_delete  [StoreController::bulkDeleteAction]
@@ -323,6 +365,11 @@ GET,POST      /new                                      admin_title_create  [Tit
 GET,POST      /{titleId}/edit                           admin_title_edit  [TitleController::editAction]
 POST,DELETE   /{titleId}/delete                         admin_title_delete  [TitleController::deleteAction]
 POST          /bulk-delete                              admin_title_bulk_delete  [TitleController::bulkDeleteAction]
+```
+
+### admin/dashboard
+```
+GET,POST      /                                         admin_dashboard_index  [DashboardController::indexAction]
 ```
 
 ### admin/improve/design/cms_pages
@@ -381,6 +428,9 @@ POST          /translate-body                           admin_mail_theme_transla
 GET           /                                         admin_modules_positions  [PositionsController::indexAction]
 POST,GET      /unhook                                   admin_modules_positions_unhook  [PositionsController::unhookAction]
 POST          /toggle-status                            admin_modules_positions_toggle_status  [PositionsController::toggleStatusAction]
+GET,POST      /hook-module                              admin_modules_positions_hook_module  [PositionsController::hookModuleAction]
+GET,POST      /edit-hook                                admin_modules_positions_edit_hook  [PositionsController::editHookedModuleAction]
+POST          /possible-hooks                           admin_modules_positions_possible_hooks  [PositionsController::getPossibleHooksForModuleAction]
 ```
 
 ### admin/improve/design/theme
@@ -403,6 +453,12 @@ POST          /                                         admin_countries_search  
 GET,POST      /new                                      admin_countries_create  [CountryController::createAction]
 GET,POST      /{countryId}/edit                         admin_countries_edit  [CountryController::editAction]
 POST,DELETE   /{countryId}/delete                       admin_countries_delete  [CountryController::deleteAction]
+POST          /options                                  admin_countries_save_options  [CountryController::saveOptionsAction]
+POST          /bulk-status-enable                       admin_countries_bulk_enable_status  [CountryController::bulkEnableAction]
+POST          /bulk-status-disable                      admin_countries_bulk_disable_status  [CountryController::bulkDisableAction]
+POST          /bulk-update-zone                         admin_countries_bulk_update_zone  [CountryController::bulkUpdateZoneAction]
+POST          /bulk-delete                              admin_countries_bulk_delete  [CountryController::bulkDeleteAction]
+POST          /{countryId}/toggle-status                admin_countries_toggle_status  [CountryController::toggleStatusAction]
 ```
 
 ### admin/improve/international/currencies
@@ -418,6 +474,13 @@ POST          /refresh-exchange-rates                   admin_currencies_refresh
 GET           /reference-data/{currencyIsoCode}         admin_currencies_get_reference_data  [CurrencyController::getReferenceDataAction]
 POST,DELETE   /bulk-delete                              admin_currencies_bulk_delete  [CurrencyController::bulkDeleteAction]
 POST          /bulk-toggle-status/{status}              admin_currencies_bulk_toggle_status  [CurrencyController::bulkToggleStatusAction]
+```
+
+### admin/improve/international/email_body_translation
+```
+GET           /{locale}                                 admin_email_body_translation_index  [EmailBodyTranslationController::indexAction]
+POST          /{locale}/search                          admin_email_body_translation_search  [EmailBodyTranslationController::searchAction]
+GET,POST      /{locale}/{source}/{templateName}/edit    admin_email_body_translation_edit  [EmailBodyTranslationController::editAction]
 ```
 
 ### admin/improve/international/geolocation
@@ -490,6 +553,13 @@ POST          /{taxRulesGroupId}/toggle-status          admin_tax_rules_groups_t
 POST          /bulk-enable-status                       admin_tax_rules_groups_bulk_enable_status  [TaxRulesGroupController::bulkEnableStatusAction]
 POST          /bulk-disable-status                      admin_tax_rules_groups_bulk_disable_status  [TaxRulesGroupController::bulkDisableStatusAction]
 POST          /bulk-delete                              admin_tax_rules_groups_bulk_delete  [TaxRulesGroupController::bulkDeleteAction]
+GET           /tax-rules/states/{countryId}             admin_tax_rules_states_for_country  [TaxRulesGroupController::getStatesForCountryAction]
+POST          /{taxRulesGroupId}/tax-rules              admin_tax_rules_search  [TaxRulesGroupController::searchTaxRulesAction]
+GET           /{taxRulesGroupId}/tax-rules/list         admin_tax_rules_list  [TaxRulesGroupController::listTaxRulesAction]
+GET,POST      /{taxRulesGroupId}/tax-rules/new          admin_tax_rules_create  [TaxRulesGroupController::createTaxRuleAction]
+GET,POST      /{taxRulesGroupId}/tax-rules/{taxRuleId}/edit  admin_tax_rules_edit  [TaxRulesGroupController::editTaxRuleAction]
+POST,DELETE   /{taxRulesGroupId}/tax-rules/{taxRuleId}/delete  admin_tax_rules_delete  [TaxRulesGroupController::deleteTaxRuleAction]
+POST          /tax-rules/bulk-delete                    admin_tax_rules_bulk_delete  [TaxRulesGroupController::bulkDeleteTaxRulesAction]
 ```
 
 ### admin/improve/international/translations
@@ -550,6 +620,9 @@ PATCH,POST    /carrier-options                          admin_shipping_preferenc
 ### admin/sell/business_entity/business_entities
 ```
 GET           /                                         admin_business_entities_list  [BusinessEntitiesController::listAction]
+POST          /                                         admin_business_entities_search  [BusinessEntitiesController::searchAction]
+GET           /{businessEntityId}/view                  admin_business_entities_view  [BusinessEntitiesController::viewAction]
+GET,POST      /new                                      admin_business_entities_create  [BusinessEntitiesController::createAction]
 ```
 
 ### admin/sell/business_entity/customer_b2b
@@ -641,6 +714,7 @@ POST          /bulk-status-enable                       admin_discount_bulk_enab
 POST          /bulk-status-disable                      admin_discount_bulk_disable_status  [DiscountController::bulkDisableStatusAction]
 POST          /bulk-delete                              admin_discount_bulk_delete  [DiscountController::bulkDeleteAction]
 POST          /{discountId}/duplicate                   admin_discounts_duplicate  [DiscountController::duplicateAction]
+GET           /search-gift-products                     admin_discounts_search_gift_products  [DiscountController::searchGiftProductsAction]
 POST,DELETE   /{discountId}/delete                      admin_discounts_delete  [DiscountController::deleteAction]
 ```
 
@@ -846,15 +920,6 @@ POST,DELETE   /{customerThreadId}/delete                admin_customer_threads_d
 POST,DELETE   /bulk_delete                              admin_customer_threads_bulk_delete  [CustomerThreadController::bulkDeleteAction]
 ```
 
-### admin/sell/customer_service/merchandise_return
-```
-GET           /                                         admin_merchandise_returns_index  [MerchandiseReturnController::indexAction]
-PATCH,POST    /options                                  admin_merchandise_returns_save_options  [MerchandiseReturnController::indexAction]
-POST          /                                         admin_merchandise_returns_filter  [CommonController::searchGridAction]
-GET,POST      /{orderReturnId}/edit                     admin_order_returns_edit  [MerchandiseReturnController::editAction]
-POST          /{orderReturnId}/update                   admin_order_returns_update  [MerchandiseReturnController::editAction]
-```
-
 ### admin/sell/customer_service/order_message
 ```
 GET           /                                         admin_order_messages_index  [OrderMessageController::indexAction]
@@ -863,6 +928,18 @@ GET,POST      /new                                      admin_order_messages_cre
 GET,POST      /{orderMessageId}/edit                    admin_order_messages_edit  [OrderMessageController::editAction]
 POST          /{orderMessageId}/delete                  admin_order_messages_delete  [OrderMessageController::deleteAction]
 POST          /bulk-delete                              admin_order_messages_bulk_delete  [OrderMessageController::bulkDeleteAction]
+```
+
+### admin/sell/customer_service/order_return
+```
+GET           /                                         admin_merchandise_returns_index  [OrderReturnController::indexAction]
+PATCH,POST    /options                                  admin_merchandise_returns_save_options  [OrderReturnController::indexAction]
+POST          /                                         admin_merchandise_returns_filter  [CommonController::searchGridAction]
+GET,POST      /{orderReturnId}/edit                     admin_order_returns_edit  [OrderReturnController::editAction]
+POST          /{orderReturnId}/update                   admin_order_returns_update  [OrderReturnController::editAction]
+GET           /{orderReturnId}/pdf                      admin_order_returns_pdf  [OrderReturnController::downloadPdfAction]
+POST          /{orderReturnId}/delete                   admin_order_returns_delete  [OrderReturnController::deleteAction]
+POST          /bulk-delete                              admin_order_returns_bulk_delete  [OrderReturnController::bulkDeleteAction]
 ```
 
 ### admin/sell/orders/carts
@@ -920,6 +997,8 @@ POST          /place                                    admin_orders_place  [Ord
 POST          /                                         admin_orders_search  [CommonController::searchGridAction]
 GET           /{orderId}/generate-invoice-pdf           admin_orders_generate_invoice_pdf  [OrderController::generateInvoicePdfAction]
 GET           /{orderId}/generate-delivery-slip-pdf     admin_orders_generate_delivery_slip_pdf  [OrderController::generateDeliverySlipPdfAction]
+GET           /shipment/{shipmentId}/generate-delivery-slip-pdf  admin_orders_generate_shipment_delivery_slip_pdf  [OrderController::generateShipmentDeliverySlipPdfAction]
+GET,POST      /{orderId}/shipments/generate-delivery-slip-pdf  admin_orders_generate_shipments_delivery_slip_pdf  [OrderController::generateShipmentsDeliverySlipPdfAction]
 POST          /change-orders-status                     admin_orders_change_orders_status  [OrderController::changeOrdersStatusAction]
 GET           /export                                   admin_orders_export  [OrderController::exportAction]
 GET,POST      /{orderId}/view                           admin_orders_view  [OrderController::viewAction]
@@ -936,11 +1015,13 @@ GET           /{orderId}/preview                        admin_orders_preview  [O
 POST          /{orderId}/shipping                       admin_orders_update_shipping  [OrderController::updateShippingAction]
 POST          /{orderId}/invoice/{orderInvoiceId}/note  admin_orders_update_invoice_note  [OrderController::updateInvoiceNoteAction]
 POST          /{orderId}/shipment/{shipmentId}/split    admin_orders_split_shipment  [OrderController::splitShipmentAction]
-GET           /{orderId}/shipment/split-form            admin_orders_shipment_get_split_form  [OrderController::getSplitShipmentForm]
+GET           /{orderId}/shipment/{shipmentId}/split-form  admin_orders_shipment_get_split_form  [OrderController::getSplitShipmentForm]
 POST          /{orderId}/invoice                        admin_orders_generate_invoice  [OrderController::generateInvoiceAction]
-GET           /{orderId}/shipment/merge-form            admin_orders_shipment_get_merge_form  [OrderController::getMergeShipmentForm]
+GET           /{orderId}/shipment/{shipmentId}/merge-form  admin_orders_shipment_get_merge_form  [OrderController::getMergeShipmentForm]
 GET           /{orderId}/shipment/{shipmentId}/edit-form  admin_orders_shipment_get_edit_form  [OrderController::getEditShipmentForm]
-POST          /{orderId}/shipment/merge                 admin_orders_merge_shipment  [OrderController::mergeShipmentAction]
+GET           /{orderId}/shipment/{shipmentId}/fulfill-form  admin_orders_shipment_get_fulfill_form  [OrderController::getFulfillShipmentForm]
+POST          /{orderId}/shipment/{shipmentId}/merge    admin_orders_merge_shipment  [OrderController::mergeShipmentAction]
+POST          /{orderId}/shipment/{shipmentId}/fulfill  admin_orders_fulfill_shipment  [OrderController::fulfillShipmentAction]
 GET           /{orderId}/product/add                    admin_orders_get_add_product_form  [OrderController::getAddProductForm]
 GET           /{orderId}/product/{orderDetailId}/edit   admin_orders_get_edit_product_form  [OrderController::getEditProductForm]
 PUT           /{orderId}/shipment/{shipmentId}/edit     admin_orders_edit_shipment  [OrderController::editShipmentAction]

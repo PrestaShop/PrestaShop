@@ -1,0 +1,18 @@
+services:
+  _defaults:
+    public: true
+
+  PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder:
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\RecordCspViolationHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\ClearCspLogHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder'
+      - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'

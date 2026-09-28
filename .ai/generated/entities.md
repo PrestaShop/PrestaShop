@@ -1,5 +1,5 @@
-# Doctrine Entities Index (generated 2026-04-25)
-# 24 entities in src/PrestaShopBundle/Entity/
+# Doctrine Entities Index (generated 2026-10-02)
+# 28 entities in src/PrestaShopBundle/Entity/
 #
 # Columns: scalar DB-mapped fields. Relations: association targets.
 
@@ -25,11 +25,20 @@
   columns: name 
   relations: ManyToOne→Attribute ManyToOne→Lang 
 
+## CspLog
+  columns: id shopId directive source documentUri hits dateAdd dateUpd 
+
+## CspRule
+  columns: id shopId directive source dateAdd 
+
 ## FeatureFlag
   columns: id name type state labelWording labelDomain descriptionWording descriptionDomain stability 
 
 ## ImageType
-  columns: id name width height products categories manufacturers suppliers stores 
+  columns: id name width height imageFitment products categories manufacturers suppliers stores 
+
+## ImportJob
+  columns: uuid entityType shopId status fileName skipRows dataRecordCount currentPhaseId currentOffset resumeCursor skippedRowCount phaseTotals skippedRows messages context options dateAdd dateUpd 
 
 ## Lang
   columns: id name active isoCode languageCode locale dateFormatLite dateFormatFull isRtl 
