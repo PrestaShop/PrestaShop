@@ -154,6 +154,11 @@ services:
     arguments:
       - PrestaShopBundle\Entity\ApiClient
 
+  PrestaShopBundle\Entity\Repository\CspLogRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\CspLog
+
   PrestaShopBundle\Entity\Repository\ShipmentRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
