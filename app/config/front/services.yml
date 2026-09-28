@@ -4,3 +4,7 @@ services:
     public: false
     autowire: true
     autoconfigure: true
+
+  # Sends the CSP headers on FrontKernel (PS_FF_FRONT_CONTAINER_V2) responses; the default legacy
+  # dispatch is covered by a delegate in FrontController. autoconfigure tags it as an event subscriber.
+  PrestaShop\PrestaShop\Adapter\Csp\CspHeaderSubscriber: ~
