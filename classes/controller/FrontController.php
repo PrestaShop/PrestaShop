@@ -7,6 +7,7 @@
 
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+use PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
@@ -776,7 +777,38 @@ class FrontControllerCore extends Controller
 
         Hook::exec('actionOutputHTMLBefore', ['html' => &$html]);
         Hook::exec('actionOutput' . $this->getControllerName() . 'HTMLBefore', ['html' => &$html]);
+        $this->sendContentSecurityPolicyHeaders();
         echo trim($html);
+    }
+
+    /**
+     * Sends the storefront Content Security Policy headers, if the feature is enabled for the shop.
+     *
+     * This is the only point on the default front-office path where the response is known to be HTML
+     * and the headers are not yet sent, and core cannot listen to the legacy actionOutputHTMLBefore
+     * hook (Hook::exec dispatches to modules only). Precedent for a header sent from the legacy
+     * controller: Controller::init() sends X-UA-Compatible. All the logic lives in CspHeaderBuilder.
+     *
+     * smartyOutputContent() only ever renders the HTML page body, so — unlike the FrontKernel
+     * response subscriber, which sees arbitrary responses — no content-type guard is needed here.
+     */
+    private function sendContentSecurityPolicyHeaders(): void
+    {
+        if (headers_sent()) {
+            return;
+        }
+
+        try {
+            /** @var CspHeaderBuilder $cspHeaderBuilder */
+            $cspHeaderBuilder = $this->get(CspHeaderBuilder::class);
+        } catch (Throwable) {
+            return;
+        }
+
+        $reportUri = $this->context->link->getPageLink('cspreport', null);
+        foreach ($cspHeaderBuilder->build((int) $this->context->shop->id, $reportUri) as $name => $value) {
+            header($name . ': ' . $value);
+        }
     }
 
     protected function prepareNotifications()

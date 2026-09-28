@@ -19,3 +19,10 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
       - '@prestashop.adapter.legacy.configuration'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider: ~
+
+  PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder:
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider'
