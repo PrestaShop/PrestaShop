@@ -62,6 +62,10 @@ _security:
   resource: "security.yml"
   prefix: /security
 
+_csp:
+  resource: "csp.yml"
+  prefix: /security/csp
+
 _permission:
   resource: "permission.yml"
   prefix: /permissions

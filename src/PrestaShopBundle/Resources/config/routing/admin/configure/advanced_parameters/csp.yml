@@ -1,0 +1,12 @@
+admin_security_csp_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::indexAction'
+
+admin_security_csp_save:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::saveAction'
+    _parent: admin_security_csp_index

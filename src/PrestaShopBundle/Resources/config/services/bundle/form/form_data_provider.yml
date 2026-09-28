@@ -17,6 +17,11 @@ services:
     arguments:
       - '@prestashop.adapter.country.country_options_configuration'
 
+  prestashop.admin.csp.settings.data_provider:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Csp\CspFormDataProvider'
+    arguments:
+      - '@prestashop.adapter.csp.settings_configuration'
+
   prestashop.admin.order.invoices.by_date.data_provider:
     class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider'
     arguments:
