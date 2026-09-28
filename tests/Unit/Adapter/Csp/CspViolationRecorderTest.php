@@ -34,7 +34,7 @@ class CspViolationRecorderTest extends TestCase
             )
             ->willReturn(true);
         $repository->method('countByShop')->willReturn(0);
-        $repository->expects($this->never())->method('deleteOldestByShop');
+        $repository->expects($this->never())->method('deleteLeastReportedByShop');
 
         $this->recorder($repository)->record(
             self::SHOP_ID,
@@ -46,7 +46,7 @@ class CspViolationRecorderTest extends TestCase
 
     public function testItTruncatesAnOverlongDocumentUri(): void
     {
-        $longUri = 'https://shop.example.com/?q=' . str_repeat('a', 3000);
+        $longUri = 'https://shop.example.com/' . str_repeat('a', 3000);
         $captured = null;
 
         $repository = $this->repository();
@@ -63,6 +63,32 @@ class CspViolationRecorderTest extends TestCase
 
         $this->assertNotNull($captured);
         $this->assertSame(2048, mb_strlen($captured), 'The document-uri is capped at 2048 chars');
+    }
+
+    public function testItStripsTheQueryStringAndFragmentFromTheDocumentUri(): void
+    {
+        $captured = null;
+
+        $repository = $this->repository();
+        $repository->method('countByShop')->willReturn(0);
+        $repository->expects($this->once())
+            ->method('upsert')
+            ->willReturnCallback(function (int $shopId, string $directive, string $source, ?string $documentUri) use (&$captured): bool {
+                $captured = $documentUri;
+
+                return true;
+            });
+
+        // A documentURL carrying a reset token and an email must be reduced to scheme+host+path so it
+        // never lands in the merchant-visible, exportable log.
+        $this->recorder($repository)->record(
+            self::SHOP_ID,
+            'script-src',
+            'https://cdn.example.com/app.js',
+            'https://shop.example.com/password-reset?token=secret123&email=a@b.com#step2'
+        );
+
+        $this->assertSame('https://shop.example.com/password-reset', $captured);
     }
 
     public function testItDropsAnUnknownDirectiveWithoutWriting(): void
@@ -88,7 +114,7 @@ class CspViolationRecorderTest extends TestCase
         $repository->method('upsert')->willReturn(true);
         $repository->method('countByShop')->willReturn(CspViolationRecorder::DEFAULT_ROW_CAP + 5);
         $repository->expects($this->once())
-            ->method('deleteOldestByShop')
+            ->method('deleteLeastReportedByShop')
             ->with(self::SHOP_ID, 5);
 
         $this->recorder($repository)->record(self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', null);
@@ -99,7 +125,7 @@ class CspViolationRecorderTest extends TestCase
         $repository = $this->repository();
         $repository->method('upsert')->willReturn(true);
         $repository->method('countByShop')->willReturn(CspViolationRecorder::DEFAULT_ROW_CAP);
-        $repository->expects($this->never())->method('deleteOldestByShop');
+        $repository->expects($this->never())->method('deleteLeastReportedByShop');
 
         $this->recorder($repository)->record(self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', null);
     }
@@ -109,9 +135,32 @@ class CspViolationRecorderTest extends TestCase
         $repository = $this->repository();
         $repository->method('upsert')->willReturn(false);
         $repository->expects($this->never())->method('countByShop');
-        $repository->expects($this->never())->method('deleteOldestByShop');
+        $repository->expects($this->never())->method('deleteLeastReportedByShop');
 
         $this->recorder($repository)->record(self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', null);
+    }
+
+    public function testABatchCallerCanDeferTheRowCapAndRunItOnceForTheRequest(): void
+    {
+        $repository = $this->repository();
+        $repository->method('upsert')->willReturn(true);
+        // With $enforceCap = false the per-report path never touches the cap...
+        $repository->expects($this->never())->method('countByShop');
+        $repository->expects($this->never())->method('deleteLeastReportedByShop');
+
+        $recorder = $this->recorder($repository);
+        $recorder->record(self::SHOP_ID, 'script-src', 'https://a.example.com/x.js', null, false);
+        $recorder->record(self::SHOP_ID, 'script-src', 'https://b.example.com/x.js', null, false);
+    }
+
+    public function testEnforceRowCapCanBeCalledOnceForAWholeBatch(): void
+    {
+        $repository = $this->repository();
+        $repository->method('countByShop')->willReturn(CspViolationRecorder::DEFAULT_ROW_CAP + 3);
+        // ...and the collector enforces it exactly once for the request.
+        $repository->expects($this->once())->method('deleteLeastReportedByShop')->with(self::SHOP_ID, 3);
+
+        $this->recorder($repository)->enforceRowCap(self::SHOP_ID);
     }
 
     public function testClearDelegatesToDeleteByShop(): void

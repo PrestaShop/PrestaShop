@@ -1,0 +1,21 @@
+services:
+  _defaults:
+    public: true
+
+  # Front-office-shared CSP services: registered here (not in bundle/repository.yml or adapter/csp.yml)
+  # because config/services/common.yml imports this file into the hand-built front-office container,
+  # which serves the storefront header builder and the report collector. Every dependency below must
+  # resolve in that container too.
+  PrestaShopBundle\Entity\Repository\CspLogRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\CspLog
+
+  PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder:
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker:
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@prestashop.adapter.legacy.configuration'

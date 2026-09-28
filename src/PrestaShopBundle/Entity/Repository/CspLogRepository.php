@@ -64,10 +64,15 @@ class CspLogRepository extends EntityRepository
     }
 
     /**
-     * Prunes the least-recently-updated rows of a shop, keeping the table bounded. Returns the
-     * number of rows removed.
+     * Prunes the least significant rows of a shop, keeping the table bounded. Returns the number of
+     * rows removed.
+     *
+     * Rows are ordered by hit count first, then by last-seen date, so the single-hit noise a report
+     * flood produces is evicted before a source the storefront reports repeatedly. This stops an
+     * unauthenticated flood of distinct made-up hosts from pushing the merchant's real, recurring
+     * violations out of the capped log.
      */
-    public function deleteOldestByShop(int $shopId, int $limit): int
+    public function deleteLeastReportedByShop(int $shopId, int $limit): int
     {
         if ($limit <= 0) {
             return 0;
@@ -80,7 +85,8 @@ class CspLogRepository extends EntityRepository
             ->select('id_csp_log')
             ->from($table)
             ->where('id_shop = :shopId')
-            ->orderBy('date_upd', 'ASC')
+            ->orderBy('hits', 'ASC')
+            ->addOrderBy('date_upd', 'ASC')
             ->addOrderBy('id_csp_log', 'ASC')
             ->setMaxResults($limit)
             ->setParameter('shopId', $shopId)
