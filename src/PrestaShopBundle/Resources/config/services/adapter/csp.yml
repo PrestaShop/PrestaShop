@@ -2,10 +2,8 @@ services:
   _defaults:
     public: true
 
-  PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder:
-    arguments:
-      - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
-
+  # CspViolationRecorder and CspLogRepository are registered in adapter/csp_common.yml so the
+  # front-office collector can resolve them too; the command handlers below are back-office only.
   PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\RecordCspViolationHandler:
     autoconfigure: true
     arguments:
