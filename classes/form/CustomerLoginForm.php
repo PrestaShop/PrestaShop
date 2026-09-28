@@ -82,6 +82,10 @@ class CustomerLoginFormCore extends AbstractForm
             }
         }
 
+        if (isset($params['password']) && !is_string($params['password'])) {
+            $params['password'] = '';
+        }
+
         return parent::fillWith($params);
     }
 
