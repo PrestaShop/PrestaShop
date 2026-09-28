@@ -807,6 +807,7 @@ final class ExtraPropertyDefinition
 
     /**
      * Returns the parsed Admin API placement entries.
+     * Unused by the core (matchesApi() parses on the fly), kept as public API for modules.
      *
      * @return list<array{path: string, methods: list<string>|null}>
      */

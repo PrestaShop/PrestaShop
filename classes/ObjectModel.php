@@ -1103,7 +1103,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             return true;
         }
 
-        // B6: check definitions first (avoids loading bag when entity has no extra fields).
+        // Check definitions first (avoids loading bag when entity has no extra fields).
         $collection = $this->getDefinitionCollection();
         if ($collection->isEmpty()) {
             return true;
@@ -2325,7 +2325,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             return true;
         }
 
-        // B6: check definitions before bag to avoid a container lookup + DB read when no extras are registered.
+        // Check definitions before bag to avoid a container lookup + DB read when no extras are registered.
         $collection = $this->getDefinitionCollection();
         if ($collection->isEmpty()) {
             return true;
