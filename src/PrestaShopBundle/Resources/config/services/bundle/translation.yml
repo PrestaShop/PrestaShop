@@ -231,6 +231,9 @@ services:
 
   prestashop.translation.extractor.extra_property:
     class: PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ExtraPropertyTranslationExtractor
+    # Lazy: the translator depends on it and instantiating the DB connection connects right away,
+    # so the translator could not be built without a reachable database
+    lazy: true
     arguments:
       - '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
 

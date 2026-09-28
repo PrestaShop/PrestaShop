@@ -128,7 +128,9 @@ abstract class InstallControllerConsole
         $this->language = LanguageList::getInstance();
         Context::getContext()->language = $this->language->getLanguage($this->datas->language);
 
-        $this->translator = Context::getContext()->getTranslator();
+        // Installer translator, not the Symfony one: a settings file left by a previous run may point to an
+        // unreachable database, and building the Symfony translator needs a connection
+        $this->translator = Context::getContext()->getTranslator(true);
 
         if (!$this->datas->language) {
             die('No language defined');
