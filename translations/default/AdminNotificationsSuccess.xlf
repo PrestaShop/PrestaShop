@@ -195,7 +195,7 @@
       <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
         <source>Your theme has been correctly exported: %path%</source>
         <target>Your theme has been correctly exported: %path%</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 154]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 153]</note>
       </trans-unit>
       <trans-unit id="abb8738509cd73014d30de00b1b16ebe">
         <source>[1] products were successfully added.</source>

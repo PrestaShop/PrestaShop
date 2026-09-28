@@ -5,7 +5,7 @@
       <trans-unit id="763538d192c0e4a3a341c1c7d0db9240">
         <source>%1$s (tax incl.)</source>
         <target>%1$s (tax incl.)</target>
-        <note>File: modules/ps_wirepayment/ps_wirepayment.php [Line: 420]</note>
+        <note>File: modules/ps_wirepayment/ps_wirepayment.php [Line: 439]</note>
       </trans-unit>
       <trans-unit id="4e1fb9f4b46556d64db55d50629ee301">
         <source>(order processing will be longer)</source>

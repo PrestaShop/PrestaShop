@@ -79,7 +79,6 @@ abstract class AbstractDomainFeatureContext extends AbstractPrestaShopFeatureCon
                 $dirImage . $objectId . self::JPG_IMAGE_TYPE,
                 0
             );
-            imagedestroy($im);
         }
 
         return $imageName;

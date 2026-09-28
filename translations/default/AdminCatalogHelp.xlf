@@ -70,7 +70,7 @@
       <trans-unit id="4b2747d59329d8164554a3f6330b5977">
         <source>Choose what should happen when this product is not in stock. Can it be ordered? Use the default store setting or override it for this product.</source>
         <target>Choose what should happen when this product is not in stock. Can it be ordered? Use the default store setting or override it for this product.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/AvailabilityType.php [Line: 145]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/AvailabilityType.php [Line: 151]</note>
       </trans-unit>
       <trans-unit id="458ad9c2eeb0f07135e0a34635952080">
         <source>Controls how you want stock of the pack to be calculated. You can decide, if you want to manage the stock of pack manually, or if it should be calculated automatically depending on stock of the products inside. In that case, the quantity of the pack is ignored.</source>
@@ -447,17 +447,17 @@
       <trans-unit id="e997b584e38bc9e3a34f92c46ef737cf">
         <source>This will be the default displayed availability of a product, if it's not in stock and backordering it is denied. If you don't enter anything, nothing will be displayed. Further customization is possible for each product.</source>
         <target>This will be the default displayed availability of a product, if it's not in stock and backordering it is denied. If you don't enter anything, nothing will be displayed. Further customization is possible for each product.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 138]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 147]</note>
       </trans-unit>
       <trans-unit id="2b39a1e77e6bd2f3c0afe07f105c7f5a">
         <source>This will be the default displayed availability of a product, if it's not in stock and backordering it is enabled. If you don't enter anything, nothing will be displayed. Further customization is possible for each product.</source>
         <target>This will be the default displayed availability of a product, if it's not in stock and backordering it is enabled. If you don't enter anything, nothing will be displayed. Further customization is possible for each product.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 123]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 131]</note>
       </trans-unit>
       <trans-unit id="dbb5df5ca2112e0125b866522e062df5">
         <source>This will be the default displayed availability of a product, if there is at least 1 in stock. If you don't enter anything, nothing will be displayed. Further customization is possible for each product.</source>
         <target>This will be the default displayed availability of a product, if there is at least 1 in stock. If you don't enter anything, nothing will be displayed. Further customization is possible for each product.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 108]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 115]</note>
       </trans-unit>
       <trans-unit id="4dae4d27021765208ae8fba5a45a9fde">
         <source>This will be the displayed availability of the combination, if it's not in stock. If you don't enter anything, the base value set on the product will be used.</source>
@@ -472,12 +472,12 @@
       <trans-unit id="84d1664447cfb64f77eb58f8ecc7ab42">
         <source><![CDATA[This will be the displayed availability of the product, if it's not in stock. If you don't enter anything, value from [1]Shop Parameters > Product Settings[/1] will be used.]]></source>
         <target><![CDATA[This will be the displayed availability of the product, if it's not in stock. If you don't enter anything, value from [1]Shop Parameters > Product Settings[/1] will be used.]]></target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/AvailabilityType.php [Line: 118]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/AvailabilityType.php [Line: 124]</note>
       </trans-unit>
       <trans-unit id="2a06390040d49692fb8fa7584e1ea111">
         <source><![CDATA[This will be the displayed availability of the product, if there is at least 1 in stock. If you don't enter anything, value from [1]Shop Parameters > Product Settings[/1] will be used.]]></source>
         <target><![CDATA[This will be the displayed availability of the product, if there is at least 1 in stock. If you don't enter anything, value from [1]Shop Parameters > Product Settings[/1] will be used.]]></target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/AvailabilityType.php [Line: 89]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/AvailabilityType.php [Line: 95]</note>
       </trans-unit>
       <trans-unit id="d87fdec724af7ed0338f394852787788">
         <source>To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].</source>

@@ -15,7 +15,7 @@
       <trans-unit id="58b3d8603dffe8484e90c0ca371921ac">
         <source>Add a message</source>
         <target>Add a message</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-messages.tpl [Line: 32]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-messages.tpl [Line: 33]</note>
       </trans-unit>
       <trans-unit id="13c26452d76c3098204adbc07ff6ef6d">
         <source>Add a new address to your account.</source>
@@ -175,7 +175,7 @@
       <trans-unit id="d93651d012e77dac5581b08db33195b2">
         <source>If you would like to add a comment about your order, please write it in the field below.</source>
         <target>If you would like to add a comment about your order, please write it in the field below.</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-messages.tpl [Line: 35]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-messages.tpl [Line: 36]</note>
       </trans-unit>
       <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
         <source>Information</source>

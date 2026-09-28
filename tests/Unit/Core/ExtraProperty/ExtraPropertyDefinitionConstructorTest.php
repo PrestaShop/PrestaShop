@@ -11,6 +11,7 @@ namespace Tests\Unit\Core\ExtraProperty;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
 use stdClass;
 
@@ -185,8 +186,171 @@ class ExtraPropertyDefinitionConstructorTest extends TestCase
     }
 
     // -------------------------------------------------------------------------
+    // Author-controlled display texts and translation domains
+    // -------------------------------------------------------------------------
+
+    /**
+     * @dataProvider unsafeDisplayTextProvider
+     */
+    public function testLabelWordingThatCouldOpenATagThrows(string $text): void
+    {
+        $this->expectException(InvalidExtraPropertyDefinitionException::class);
+        $this->expectExceptionMessageMatches('/labelWording must not contain/');
+
+        new ExtraPropertyDefinition(entityName: 'product', propertyName: 'video_link', labelWording: $text);
+    }
+
+    /**
+     * @dataProvider unsafeDisplayTextProvider
+     */
+    public function testDescriptionWordingThatCouldOpenATagThrows(string $text): void
+    {
+        $this->expectException(InvalidExtraPropertyDefinitionException::class);
+        $this->expectExceptionMessageMatches('/descriptionWording must not contain/');
+
+        new ExtraPropertyDefinition(entityName: 'product', propertyName: 'video_link', descriptionWording: $text);
+    }
+
+    /**
+     * @dataProvider unsafeDisplayTextProvider
+     */
+    public function testEnumValueThatCouldOpenATagThrows(string $text): void
+    {
+        $this->expectException(InvalidExtraPropertyDefinitionException::class);
+        $this->expectExceptionMessageMatches('/enum value .* must not contain/');
+
+        new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'size',
+            type: ExtraPropertyType::CHOICE,
+            enumValues: ['ok', $text],
+        );
+    }
+
+    public function testPlainWordingsAreAccepted(): void
+    {
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'video_link',
+            labelWording: "Video link (it's > 5 chars, éàü)",
+            descriptionWording: "Line one\nline two\ttabbed",
+        );
+
+        $this->assertSame("Video link (it's > 5 chars, éàü)", $definition->getLabelWording());
+        $this->assertSame("Line one\nline two\ttabbed", $definition->getDescriptionWording());
+    }
+
+    /**
+     * @dataProvider invalidTranslationDomainProvider
+     */
+    public function testMalformedTranslationDomainThrows(string $domain): void
+    {
+        $this->expectException(InvalidExtraPropertyDefinitionException::class);
+        $this->expectExceptionMessageMatches('/labelDomain .* must be a translation domain/');
+
+        new ExtraPropertyDefinition(entityName: 'product', propertyName: 'video_link', labelWording: 'Video link', labelDomain: $domain);
+    }
+
+    public function testAModuleOwnedDefinitionCannotDeclareACoreDomain(): void
+    {
+        $this->expectException(InvalidExtraPropertyDefinitionException::class);
+        $this->expectExceptionMessageMatches('/must belong to the module/');
+
+        new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'video_link',
+            moduleName: 'demoextrafield',
+            labelWording: 'Save',
+            labelDomain: 'Admin.Actions',
+        );
+    }
+
+    public function testAModuleOwnedDefinitionCannotDeclareAnotherModulesDomain(): void
+    {
+        $this->expectException(InvalidExtraPropertyDefinitionException::class);
+        $this->expectExceptionMessageMatches('/must belong to the module \("Modules\.Demoextrafield\./');
+
+        new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'video_link',
+            moduleName: 'demoextrafield',
+            labelWording: 'Filter',
+            labelDomain: 'Modules.Facetedsearch.Admin',
+        );
+    }
+
+    /**
+     * Enum literals are read back from the live SQL ENUM column, where a backslash does not
+     * round-trip: it is refused up front, like a "<".
+     */
+    public function testEnumValueWithABackslashThrows(): void
+    {
+        $this->expectException(InvalidExtraPropertyDefinitionException::class);
+        $this->expectExceptionMessageMatches('/enum value .* must not contain/');
+
+        new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'size',
+            type: ExtraPropertyType::CHOICE,
+            enumValues: ['ok', 'a\\b'],
+        );
+    }
+
+    public function testDomainsAreAcceptedWhereTheyBelong(): void
+    {
+        $module = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'a',
+            moduleName: 'demoextrafield',
+            labelWording: 'Video link',
+            labelDomain: 'Modules.Demoextrafield.Admin',
+            descriptionDomain: 'Modules.Demoextrafield.Help',
+        );
+        $this->assertSame('Modules.Demoextrafield.Admin', $module->getLabelDomain());
+
+        // A core-owned definition may reuse a core domain: its wording then resolves to the
+        // existing translation instead of overriding it (see TranslatorLanguageLoader).
+        $core = new ExtraPropertyDefinition(entityName: 'product', propertyName: 'b', labelWording: 'Name', labelDomain: 'Admin.Global');
+        $this->assertSame('Admin.Global', $core->getLabelDomain());
+    }
+
+    // -------------------------------------------------------------------------
     // Data providers
     // -------------------------------------------------------------------------
+
+    /**
+     * Texts that could open a tag or carry a control character, refused wherever an author controls
+     * a displayed text (wording, enum literal, choice label, constraint message).
+     *
+     * @return array<string, array{string}>
+     */
+    public static function unsafeDisplayTextProvider(): array
+    {
+        return [
+            'image with event handler' => ['<img src=x onerror=alert(1)>'],
+            'opening angle bracket only' => ['5 < 6'],
+            'script tag' => ['<script>alert(1)</script>'],
+            'NUL byte' => ["Video\0link"],
+            'escape sequence' => ["Video\x1b[31mlink"],
+        ];
+    }
+
+    /**
+     * @return array<string, array{string}>
+     */
+    public static function invalidTranslationDomainProvider(): array
+    {
+        return [
+            'ICU formatter suffix' => ['Admin.Global+intl-icu'],
+            'single segment' => ['Admin'],
+            'too many segments' => ['A.B.C.D'],
+            'lowercase segment' => ['admin.global'],
+            'space' => ['Admin. Global'],
+            'slash' => ['Admin/Global'],
+            'path traversal' => ['../Admin.Global'],
+            'trailing dot' => ['Admin.Global.'],
+        ];
+    }
 
     /**
      * Values that are empty or contain characters outside [a-zA-Z0-9_-] and therefore must be rejected.

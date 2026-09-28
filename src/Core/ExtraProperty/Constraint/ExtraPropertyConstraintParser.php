@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Constraint;
 
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyConstraintException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\UnknownExtraPropertyConstraintException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints as Assert;
 use Throwable;
@@ -385,6 +386,17 @@ class ExtraPropertyConstraintParser
                     'groups' === $option
                         ? 'only the default validation group applies to an extra property constraint'
                         : 'an extra property constraint carries no payload'
+                ));
+            }
+            // A violation message is displayed to whoever triggers it (BO form errors, the legacy
+            // error banner, API 422 bodies): it follows the same display-text rule as every other
+            // author-controlled text of a definition. Enforced here, on parse, so a stored token
+            // is refused on read exactly like a submitted one on write.
+            if (is_string($value) && str_ends_with(strtolower($option), 'message') && !ExtraPropertyValidator::isSafeDisplayText($value)) {
+                throw new InvalidExtraPropertyConstraintException(sprintf(
+                    'Option "%s" of constraint "%s" must not contain "<" or control characters.',
+                    $option,
+                    $token
                 ));
             }
         }
