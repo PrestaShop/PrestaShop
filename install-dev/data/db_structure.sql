@@ -3124,7 +3124,19 @@ CREATE TABLE `PREFIX_csp_log` (
   `date_upd`     DATETIME                   NOT NULL,
   UNIQUE INDEX `csp_log_shop_directive_source_idx` (`id_shop`, `directive`, `source`),
   INDEX `csp_log_shop_prune_idx` (`id_shop`, `hits`, `date_upd`),
+  INDEX `csp_log_shop_id_idx` (`id_shop`, `id_csp_log`),
+  INDEX `csp_log_shop_date_add_idx` (`id_shop`, `date_add`),
   PRIMARY KEY (`id_csp_log`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_csp_rule` (
+  `id_csp_rule`  INT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `id_shop`      INT UNSIGNED               NOT NULL,
+  `directive`    VARCHAR(64)                NOT NULL,
+  `source`       VARCHAR(255)               NOT NULL,
+  `date_add`     DATETIME                   NOT NULL,
+  UNIQUE INDEX `csp_rule_shop_directive_source_idx` (`id_shop`, `directive`, `source`),
+  PRIMARY KEY (`id_csp_rule`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_stock_mvt` (

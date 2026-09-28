@@ -11,6 +11,11 @@ services:
     arguments:
       - PrestaShopBundle\Entity\CspLog
 
+  PrestaShopBundle\Entity\Repository\CspRuleRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\CspRule
+
   PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder:
     arguments:
       - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
