@@ -182,7 +182,7 @@ final class ImportJobSequencer
             $budget -= $result->processedUnitCount;
 
             // the database is the arbiter: another request may have cancelled the job mid-slice
-            $status = $this->importJobRepository->readStatus($importJob->getUuid());
+            $status = $this->importJobRepository->findStatusByUuid($importJob->getUuid());
             if (null === $status) {
                 // the row is gone; saving would resurrect it
                 $this->removeWorkingFile($importJob->getUuid());

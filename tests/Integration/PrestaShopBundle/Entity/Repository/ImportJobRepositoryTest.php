@@ -70,11 +70,11 @@ class ImportJobRepositoryTest extends KernelTestCase
         $purged = $this->repository->purgeUntouchedSince(new DateTimeImmutable('-7 days'));
 
         $this->assertSame(3, $purged);
-        $this->assertNull($this->repository->readStatus($staleFinished));
-        $this->assertNull($this->repository->readStatus($staleRunning), 'A job nobody continued for a week was abandoned, not paused');
-        $this->assertNull($this->repository->readStatus($stalePaused));
-        $this->assertNotNull($this->repository->readStatus($recentFinished), 'Inside the window, however terminal');
-        $this->assertNotNull($this->repository->readStatus($recentRunning));
+        $this->assertNull($this->repository->findStatusByUuid($staleFinished));
+        $this->assertNull($this->repository->findStatusByUuid($staleRunning), 'A job nobody continued for a week was abandoned, not paused');
+        $this->assertNull($this->repository->findStatusByUuid($stalePaused));
+        $this->assertNotNull($this->repository->findStatusByUuid($recentFinished), 'Inside the window, however terminal');
+        $this->assertNotNull($this->repository->findStatusByUuid($recentRunning));
     }
 
     public function testAPurgeThatMatchesNothingDeletesNothing(): void
@@ -102,8 +102,8 @@ class ImportJobRepositoryTest extends KernelTestCase
         );
         $this->assertSame(
             ImportJobStatus::CANCELLED,
-            $this->repository->readStatus($importJobUuid),
-            'readStatus() must read the database, not the identity map'
+            $this->repository->findStatusByUuid($importJobUuid),
+            'findStatusByUuid() must read the database, not the identity map'
         );
     }
 
@@ -113,7 +113,7 @@ class ImportJobRepositoryTest extends KernelTestCase
         $this->removeImportJob($importJobUuid);
 
         $this->assertNull(
-            $this->repository->readStatus($importJobUuid),
+            $this->repository->findStatusByUuid($importJobUuid),
             'A vanished row must be distinguishable from a job that simply is not terminal'
         );
     }
@@ -130,7 +130,7 @@ class ImportJobRepositoryTest extends KernelTestCase
         $this->assertNotSame($importJobUuid, $otherSpelling);
 
         $this->assertNull($this->repository->findByUuid($otherSpelling));
-        $this->assertNull($this->repository->readStatus($otherSpelling));
+        $this->assertNull($this->repository->findStatusByUuid($otherSpelling));
     }
 
     public function testATransitionFromAnAllowedStatusIsWon(): void
@@ -141,7 +141,7 @@ class ImportJobRepositoryTest extends KernelTestCase
             ImportJobStatus::RUNNING,
             $this->repository->transitionStatus($importJobUuid, ImportJobStatus::RUNNING, ImportJobStatus::nonTerminalCases())
         );
-        $this->assertSame(ImportJobStatus::RUNNING, $this->repository->readStatus($importJobUuid));
+        $this->assertSame(ImportJobStatus::RUNNING, $this->repository->findStatusByUuid($importJobUuid));
     }
 
     /**
@@ -157,7 +157,7 @@ class ImportJobRepositoryTest extends KernelTestCase
             ImportJobStatus::CANCELLED,
             $this->repository->transitionStatus($importJobUuid, ImportJobStatus::RUNNING, ImportJobStatus::nonTerminalCases())
         );
-        $this->assertSame(ImportJobStatus::CANCELLED, $this->repository->readStatus($importJobUuid));
+        $this->assertSame(ImportJobStatus::CANCELLED, $this->repository->findStatusByUuid($importJobUuid));
     }
 
     public function testATransitionOnAVanishedRowReportsNothing(): void
@@ -186,7 +186,7 @@ class ImportJobRepositoryTest extends KernelTestCase
         $loaded->setCurrentPhaseId('validation')->setCurrentOffset(20)->setResumeCursor('byte-420');
         $this->repository->save($loaded);
 
-        $this->assertSame(ImportJobStatus::CANCELLED, $this->repository->readStatus($importJobUuid), 'The progress UPDATE carried no status');
+        $this->assertSame(ImportJobStatus::CANCELLED, $this->repository->findStatusByUuid($importJobUuid), 'The progress UPDATE carried no status');
         $this->entityManager->clear();
         $this->assertSame(20, $this->repository->findByUuid($importJobUuid)->getCurrentOffset(), 'The progress itself went in');
     }

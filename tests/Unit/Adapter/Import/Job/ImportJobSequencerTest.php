@@ -451,7 +451,7 @@ class ImportJobSequencerTest extends TestCase
         $job = $this->buildJob();
         $repository = $this->createMock(ImportJobRepository::class);
         $repository->method('transitionStatus')->willReturnCallback(static fn (string $uuid, ImportJobStatus $to): ImportJobStatus => $to);
-        $repository->method('readStatus')->willReturn(null);
+        $repository->method('findStatusByUuid')->willReturn(null);
         $repository->expects($this->never())->method('save');
 
         $this->sequence($job, $this->importer(
@@ -579,7 +579,7 @@ class ImportJobSequencerTest extends TestCase
     private function repository(ImportJobStatus $probedStatus, ?callable $onTransition = null): ImportJobRepository&MockObject
     {
         $repository = $this->createMock(ImportJobRepository::class);
-        $repository->method('readStatus')->willReturn($probedStatus);
+        $repository->method('findStatusByUuid')->willReturn($probedStatus);
         $repository->method('transitionStatus')->willReturnCallback(
             $onTransition ?? static fn (string $uuid, ImportJobStatus $to): ImportJobStatus => $to
         );

@@ -20,7 +20,7 @@ use PrestaShopBundle\Entity\ImportJobStatus;
  * The only class that loads and persists {@see ImportJob}; handlers never touch the EntityManager.
  *
  * No transactions and no row locks (deferred to the generic tooling, #42385). Two scalar queries
- * stand in for them: readStatus() sees what another request wrote, transitionStatus() moves the
+ * stand in for them: findStatusByUuid() sees what another request wrote, transitionStatus() moves the
  * status in one statement so two requests cannot both believe they won.
  */
 class ImportJobRepository extends EntityRepository
@@ -43,7 +43,7 @@ class ImportJobRepository extends EntityRepository
      *
      * Null means the row is gone: a reason to stop, not "not cancelled".
      */
-    public function readStatus(string $importJobUuid): ?ImportJobStatus
+    public function findStatusByUuid(string $importJobUuid): ?ImportJobStatus
     {
         $status = $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('status')
@@ -87,7 +87,7 @@ class ImportJobRepository extends EntityRepository
             )
             ->executeStatement();
 
-        return $this->readStatus($importJobUuid);
+        return $this->findStatusByUuid($importJobUuid);
     }
 
     /**

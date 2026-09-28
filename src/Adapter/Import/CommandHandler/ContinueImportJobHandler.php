@@ -59,7 +59,7 @@ final class ContinueImportJobHandler implements ContinueImportJobHandlerInterfac
             }
 
             // the status the database holds, not the one this process's identity map may hold
-            $status = $this->importJobRepository->readStatus($importJobUuid);
+            $status = $this->importJobRepository->findStatusByUuid($importJobUuid);
             if (null === $status) {
                 throw new ImportJobNotFoundException(sprintf('Import job "%s" was deleted.', $importJobUuid));
             }
