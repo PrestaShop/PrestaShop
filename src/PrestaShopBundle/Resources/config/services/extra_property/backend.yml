@@ -66,6 +66,8 @@ services:
       $formBuilderModifier: '@PrestaShopBundle\Form\FormBuilderModifier'
       $formTypeMap: '@PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap'
       $definitionShopFilter: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionShopFilterInterface'
+      # Logs the form options / form type the read-side policy drops at render time.
+      $logger: '@logger'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister:
     arguments:

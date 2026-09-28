@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefin
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
+use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use ReflectionProperty;
 use Symfony\Component\Validator\Constraint;
 use Throwable;
@@ -412,6 +413,67 @@ final class ExtraPropertyDefinition
                 $entityName,
                 $propertyName
             ));
+        }
+
+        // Author-controlled display texts (label/help wording, enum literals) are rendered to
+        // every employee opening a form or grid the property is placed on, and the translation
+        // domains select a catalogue. Both are validated HERE, at construction — the one path
+        // every definition goes through, registered (write) or hydrated from a registry row
+        // (read) — so a value written straight into the table cannot render what a
+        // registration would have refused: on read the offending row is skipped and logged
+        // (see ExtraPropertyDefinitionRepository::hydrateRowSafely()).
+        foreach (['labelWording' => $labelWording, 'descriptionWording' => $descriptionWording] as $parameterName => $text) {
+            if (null !== $text && !ExtraPropertyValidator::isSafeDisplayText($text)) {
+                throw new InvalidExtraPropertyDefinitionException(sprintf(
+                    'ExtraPropertyDefinition: %s must not contain "<" or control characters (entity "%s", property "%s").',
+                    $parameterName,
+                    $entityName,
+                    $propertyName
+                ));
+            }
+        }
+        // Enum literals are display texts AND SQL ENUM literals read back from the live column
+        // (SHOW COLUMNS), where a backslash does not round-trip: refuse it as well.
+        foreach ($enumValues ?? [] as $enumValue) {
+            if (is_string($enumValue) && (!ExtraPropertyValidator::isSafeDisplayText($enumValue) || str_contains($enumValue, '\\'))) {
+                throw new InvalidExtraPropertyDefinitionException(sprintf(
+                    'ExtraPropertyDefinition: enum value "%s" must not contain "<", "\\" or control characters (entity "%s", property "%s").',
+                    $enumValue,
+                    $entityName,
+                    $propertyName
+                ));
+            }
+        }
+        foreach (['labelDomain' => $labelDomain, 'descriptionDomain' => $descriptionDomain] as $parameterName => $domain) {
+            if (null === $domain || '' === $domain) {
+                continue;
+            }
+            if (!ExtraPropertyValidator::isTranslationDomain($domain)) {
+                throw new InvalidExtraPropertyDefinitionException(sprintf(
+                    'ExtraPropertyDefinition: %s "%s" must be a translation domain of 2 or 3 dot-separated PascalCase segments, e.g. "Modules.Mymodule.Admin" (entity "%s", property "%s").',
+                    $parameterName,
+                    $domain,
+                    $entityName,
+                    $propertyName
+                ));
+            }
+            // A module owns its own "Modules.<Module>.*" domains only (the same base domain the
+            // translation system derives for it): declaring a core domain — or another module's —
+            // would let its wordings shadow that catalogue shop-wide.
+            if (null !== $resolvedModuleName) {
+                $moduleBaseDomain = DomainHelper::buildModuleBaseDomain($resolvedModuleName, true) . '.';
+                if (!str_starts_with($domain, $moduleBaseDomain)) {
+                    throw new InvalidExtraPropertyDefinitionException(sprintf(
+                        'ExtraPropertyDefinition: %s "%s" of a module-owned definition must belong to the module ("%s…") (entity "%s", property "%s", module "%s").',
+                        $parameterName,
+                        $domain,
+                        $moduleBaseDomain,
+                        $entityName,
+                        $propertyName,
+                        $resolvedModuleName
+                    ));
+                }
+            }
         }
     }
 

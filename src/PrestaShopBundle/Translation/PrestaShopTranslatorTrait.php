@@ -9,6 +9,7 @@ namespace PrestaShopBundle\Translation;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Localization\LegacyTranslator;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
+use ValueError;
 
 trait PrestaShopTranslatorTrait
 {
@@ -42,7 +43,7 @@ trait PrestaShopTranslatorTrait
         $translated = parent::trans($id, $isSprintf ? [] : $parameters, $this->normalizeDomain($domain), $locale);
 
         if ($isSprintf) {
-            $translated = vsprintf($translated, $parameters);
+            $translated = $this->formatWithParameters($translated, $parameters, $id);
         }
 
         return $translated;
@@ -99,7 +100,47 @@ trait PrestaShopTranslatorTrait
             return parent::trans($id, array_merge($parameters, ['%count%' => $number]), $domain, $locale);
         }
 
-        return vsprintf(parent::trans($id, ['%count%' => $number], $domain, $locale), $parameters);
+        return $this->formatWithParameters(parent::trans($id, ['%count%' => $number], $domain, $locale), $parameters, $id);
+    }
+
+    /**
+     * Applies sprintf parameters to a translated string without ever letting a
+     * malformed translation crash the request.
+     *
+     * A translation coming from the translation platform can carry the wrong
+     * number of placeholders (e.g. a stray "%" turning "%s" into "%s%"). PHP 8's
+     * vsprintf() then throws a ValueError, which on the front office takes down
+     * every page that renders the string (category, manufacturer, supplier…).
+     * Instead of fataling, we flag the broken translation and degrade
+     * gracefully: fall back to the source string — whose placeholders match the
+     * parameters — and, failing that, to the unformatted translation.
+     *
+     * @param string $translated the (possibly malformed) translated string
+     * @param array $parameters sprintf parameters
+     * @param string|null $source source string to fall back to (placeholders match $parameters)
+     *
+     * @return string
+     */
+    private function formatWithParameters(string $translated, array $parameters, ?string $source = null): string
+    {
+        try {
+            return vsprintf($translated, $parameters);
+        } catch (ValueError $e) {
+            // error_log() rather than trigger_error(): in debug mode PHP renders warnings into the
+            // HTTP response, and this message embeds the malformed translation, so it would corrupt
+            // the markup whenever the string is rendered inside an HTML attribute.
+            error_log(sprintf('Malformed translation "%s" does not match its placeholders (%s); falling back.', $translated, $e->getMessage()));
+
+            if (null !== $source && $source !== $translated) {
+                try {
+                    return vsprintf($source, $parameters);
+                } catch (ValueError $e) {
+                    // Source is also malformed — fall through to the raw translation.
+                }
+            }
+
+            return $translated;
+        }
     }
 
     /**

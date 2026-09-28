@@ -275,7 +275,7 @@
       <trans-unit id="5aca31cb4d1fbb543b716cbaaf35c65f">
         <source>Core (no theme selected)</source>
         <target>Core (no theme selected)</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 71]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 70]</note>
       </trans-unit>
       <trans-unit id="d43522f215ed8be730a542c8e1fdcff1">
         <source>Core emails</source>
@@ -805,7 +805,7 @@
       <trans-unit id="4dca8188ef80c1e68c7cfc96fdeb3abe">
         <source>Select the type of email content</source>
         <target>Select the type of email content</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 96]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 88]</note>
       </trans-unit>
       <trans-unit id="c96f531c0eda2dece593a2f8df3a58a8">
         <source>Select your language</source>
@@ -815,12 +815,12 @@
       <trans-unit id="dd317a8b9f3ecfc5317c2cb586274145">
         <source>Select your module</source>
         <target>Select your module</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 116]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 108]</note>
       </trans-unit>
       <trans-unit id="84a63a234d9b35094275bfb41ad46b47">
         <source>Select your theme</source>
         <target>Select your theme</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 107]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 99]</note>
       </trans-unit>
       <trans-unit id="e93c6cb824cab26f82d9b3446dc8e563">
         <source>Set default country from browser language</source>
@@ -945,7 +945,7 @@
       <trans-unit id="021257190c6e64120915e008a94a06f8">
         <source>Type of translation</source>
         <target>Type of translation</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 88]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 80]</note>
       </trans-unit>
       <trans-unit id="892a326e935b414a79a1eb938afd6ba5">
         <source>Units (e.g. weight, volume, distance)</source>

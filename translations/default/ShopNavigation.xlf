@@ -5,7 +5,7 @@
       <trans-unit id="c62420fe56ba1bd9be3bad2d6203a28e">
         <source>404 error</source>
         <target>404 error</target>
-        <note>File: classes/lang/KeysReference/MetaLang.php [Line: 7]</note>
+        <note>File: controllers/front/PageNotFoundController.php [Line: 34]</note>
       </trans-unit>
       <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
         <source>Address</source>

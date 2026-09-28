@@ -27,17 +27,19 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 /**
- * This subscriber watches the various authentication event and saves or removes the persisted
- * Employee sessions accordingly. It is also in charge of maintaining some backward compatibility
- * with the legacy cookie.
+ * This subscriber watches the various authentication events and saves or removes persisted
+ * Employee sessions accordingly. It also handles successful login logging and maintains
+ * backward compatibility with the legacy cookie.
  */
 class EmployeeSessionSubscriber implements EventSubscriberInterface
 {
@@ -111,6 +113,37 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
 
         // Update the cookie after successful login
         $this->updateLegacyCookie($event->getRequest(), true);
+
+        $this->logSuccessfulLogin($event);
+    }
+
+    private function logSuccessfulLogin(LoginSuccessEvent $event): void
+    {
+        try {
+            if (!($event->getAuthenticator() instanceof FormLoginAuthenticator)) {
+                return;
+            }
+
+            $employee = $event->getUser();
+
+            if (!$employee instanceof Employee) {
+                return;
+            }
+
+            $this->logger->info(
+                $this->translator->trans(
+                    'Back office connection from %ip%',
+                    ['%ip%' => $event->getRequest()->getClientIp()],
+                    'Admin.Advparameters.Feature'
+                ),
+                [
+                    'allow_duplicate' => true,
+                    'id_employee' => $employee->getId(),
+                ]
+            );
+        } catch (Throwable) {
+            // Logging must not prevent a successful login.
+        }
     }
 
     public function onKernelRequest(RequestEvent $event): void

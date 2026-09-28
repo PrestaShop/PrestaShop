@@ -100,7 +100,7 @@ class ColumnDefinitionMapper
     }
 
     /**
-     * Builds an ENUM SQL definition from a list of allowed values, with proper single-quote escaping.
+     * Builds an ENUM SQL definition from a list of allowed values, with proper string-literal escaping.
      *
      * @param list<string> $enumValues
      *
@@ -109,11 +109,28 @@ class ColumnDefinitionMapper
     private static function buildEnumDefinition(array $enumValues): string
     {
         $quotedValues = array_map(
-            static fn (string $v): string => "'" . str_replace("'", "''", $v) . "'",
+            static fn (string $v): string => "'" . self::escapeStringLiteral($v) . "'",
             $enumValues
         );
 
         return 'ENUM(' . implode(',', $quotedValues) . ')';
+    }
+
+    /**
+     * Escapes a value for embedding inside a single-quoted MySQL string literal.
+     *
+     * Doubling the single quote is NOT enough: unless the session runs with
+     * NO_BACKSLASH_ESCAPES (not the default), MySQL treats the backslash as an escape
+     * character, so a value ending in "\" would escape the closing quote and let the
+     * following characters break out of the literal into executable SQL. The enum
+     * literals and the DEFAULT clause are built by string concatenation here (this mapper
+     * is static and has no DBAL connection to delegate quoting to), so every literal must
+     * neutralise the backslash as well as the quote. The backslash is escaped FIRST so it
+     * never doubles the escaping introduced for the quote.
+     */
+    private static function escapeStringLiteral(string $value): string
+    {
+        return str_replace(['\\', "'"], ['\\\\', "''"], $value);
     }
 
     /**
@@ -140,7 +157,7 @@ class ColumnDefinitionMapper
             ExtraPropertyType::DATE,
             ExtraPropertyType::HTML,
             ExtraPropertyType::JSON,
-            ExtraPropertyType::CHOICE => "'" . str_replace("'", "''", $stringValue) . "'",
+            ExtraPropertyType::CHOICE => "'" . self::escapeStringLiteral($stringValue) . "'",
         };
     }
 }

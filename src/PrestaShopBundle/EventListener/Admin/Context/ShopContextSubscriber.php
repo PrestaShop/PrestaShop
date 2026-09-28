@@ -365,7 +365,13 @@ class ShopContextSubscriber implements EventSubscriberInterface
                 $routeInfo = $this->router->matchRequest($request);
                 $controller = $routeInfo['_controller'];
             }
-            [$className, $methodName] = explode('::', $controller);
+            $controllerParts = explode('::', $controller);
+            if (2 !== count($controllerParts)) {
+                // Invokable or service-id controllers (e.g. the API Platform docs action) have no
+                // "Class::method" form, so they cannot declare the AllShopContext attribute this way. (#39468)
+                return null;
+            }
+            [$className, $methodName] = $controllerParts;
 
             $reflectionClass = new ReflectionClass($className);
             $classAttributes = $reflectionClass->getAttributes(AllShopContext::class);

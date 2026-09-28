@@ -40,12 +40,12 @@
       <trans-unit id="05c176b8092b42c554d570513026207c">
         <source>Cannot adapt theme to RTL languages.</source>
         <target>Cannot adapt theme to RTL languages.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 509]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 512]</note>
       </trans-unit>
       <trans-unit id="febd6362f6c35dbaf3f7297a2bbb7427">
         <source>Cannot download the theme from the given URL. Please check the URL and try again.</source>
         <target>Cannot download the theme from the given URL. Please check the URL and try again.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 447]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 450]</note>
       </trans-unit>
       <trans-unit id="8b772dad7cc4ed15eaf0c433f861e55c">
         <source>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</source>
@@ -65,12 +65,12 @@
       <trans-unit id="2cca9f161ea0cc1102ad4be82b15cbfb">
         <source>Failed to delete theme. Make sure you have permissions and theme is not used.</source>
         <target>Failed to delete theme. Make sure you have permissions and theme is not used.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 492]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 495]</note>
       </trans-unit>
       <trans-unit id="985b5b995c4574ae5eba2062a13ef168">
         <source>Failed to resize image file (%filepath%)</source>
         <target>Failed to resize image file (%filepath%)</target>
-        <note>File: src/Adapter/ImageThumbnailsRegenerator.php [Line: 156]</note>
+        <note>File: src/Adapter/ImageThumbnailsRegenerator.php [Line: 170]</note>
       </trans-unit>
       <trans-unit id="f031a290ace03a9f5d5dce82aefa86c6">
         <source>If you delete this image format, the theme won't be able to use it anymore. This will result in a degraded experience on your front office.</source>
@@ -95,12 +95,12 @@
       <trans-unit id="103d86044b78fa59e02ff8480a3a2f46">
         <source>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</source>
         <target>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</target>
-        <note>File: src/Adapter/ImageThumbnailsRegenerator.php [Line: 192]</note>
+        <note>File: src/Adapter/ImageThumbnailsRegenerator.php [Line: 220]</note>
       </trans-unit>
       <trans-unit id="2934958a3f658892ee502aaf8258a6f7">
         <source>Original image is missing or empty (%filename%) for product ID %id%</source>
         <target>Original image is missing or empty (%filename%) for product ID %id%</target>
-        <note>File: src/Adapter/ImageThumbnailsRegenerator.php [Line: 205]</note>
+        <note>File: src/Adapter/ImageThumbnailsRegenerator.php [Line: 233]</note>
       </trans-unit>
       <trans-unit id="6d2d8a4592271225573b378ea6d12eeb">
         <source>Regenerate thumbnails for the selected images? With the "erase" option enabled, the previously selected thumbnails will be deleted.</source>
@@ -125,7 +125,7 @@
       <trans-unit id="0933caade58197a4ff60c27077f67604">
         <source>There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.</source>
         <target>There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 427]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 430]</note>
       </trans-unit>
       <trans-unit id="e8be55bf3a30501aef09d2e74de97976">
         <source>This name already exists.</source>
@@ -145,7 +145,7 @@
       <trans-unit id="4a9fdf95b29176bd9260016655a80852">
         <source>Your RTL stylesheets has been generated successfully</source>
         <target>Your RTL stylesheets has been generated successfully</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 318]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 321]</note>
       </trans-unit>
       <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
         <source>Your theme has been correctly exported: %path%</source>
@@ -155,7 +155,7 @@
       <trans-unit id="c5d36cf23559e659323adbcb32e2b6d3">
         <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the '%regenerate_label%' button.]]></source>
         <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the '%regenerate_label%' button.]]></target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 341]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 344]</note>
       </trans-unit>
     </body>
   </file>

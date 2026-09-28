@@ -40,7 +40,7 @@
       <trans-unit id="a951bd27ed3722e63e13ff4c73a3749a">
         <source>Allow or deny this employee's access to the Admin panel.</source>
         <target>Allow or deny this employee's access to the Admin panel.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php [Line: 186]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php [Line: 185]</note>
       </trans-unit>
       <trans-unit id="a27780d9bb7b3595998465aadcaaeed7">
         <source>Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots</source>
@@ -50,7 +50,7 @@
       <trans-unit id="c8d06889e023d3130c1bf60009d5417b">
         <source>Allows you to declare if your cookie should be restricted to a first-party or same-site context.</source>
         <target>Allows you to declare if your cookie should be restricted to a first-party or same-site context.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 45]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 50]</note>
       </trans-unit>
       <trans-unit id="7d6044f9c5ec3bb7b89ac9328a871b2f">
         <source>At the top of the screen, please select the "Import" tab</source>
@@ -110,7 +110,7 @@
       <trans-unit id="0f81567617bb8ebc23f48e74d8ae8acf">
         <source>Check the IP address of the cookie in order to prevent your cookie from being stolen.</source>
         <target>Check the IP address of the cookie in order to prevent your cookie from being stolen.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 31]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 33]</note>
       </trans-unit>
       <trans-unit id="3a86c87939c6bbaba4cb2e44e4734146">
         <source>Check the backup integrity: Look for errors, incomplete file, etc... Be sure to verify all of your data.</source>
@@ -190,12 +190,12 @@
       <trans-unit id="dae623d110235f2837ca0a6e753305b8">
         <source>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
         <target>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 90]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 93]</note>
       </trans-unit>
       <trans-unit id="2a59c5a630e01a9a88e9bcb2863fd69f">
         <source>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
         <target>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 122]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 126]</note>
       </trans-unit>
       <trans-unit id="2dc09c116021fe75dd928d368a35e9d7">
         <source>Download the backup from the list below or from your FTP server (in the folder "admin/backups").</source>
@@ -343,6 +343,11 @@
         <target>Enabling multi-statements queries increases the risk of SQL injection vulnerabilities being exploited.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/RequestSql/SqlRequestSettingsType.php [Line: 43]</note>
       </trans-unit>
+      <trans-unit id="eaa93d46f6f13f8a30e57da7614aab9e">
+        <source>Entity or ObjectModel table name (e.g. product, customer, order, combination, attribute).</source>
+        <target>Entity or ObjectModel table name (e.g. product, customer, order, combination, attribute).</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 59]</note>
+      </trans-unit>
       <trans-unit id="902b0d55fddef6f8d651fe1035b7d4bd">
         <source>Error</source>
         <target>Error</target>
@@ -356,7 +361,7 @@
       <trans-unit id="9801b5b0fd3f6e9dd65fe57fc5414b03">
         <source>Expose this field in front-office presenters (Smarty templates).</source>
         <target>Expose this field in front-office presenters (Smarty templates).</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 31]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 42]</note>
       </trans-unit>
       <trans-unit id="1978b25a26b9b14b908d39cf95e627c1">
         <source>Extra options merged into the Symfony form type constructor, as a JSON object. Example: {"attr": {"class": "my-class"}, "row_attr": {"data-toggle": "tooltip"}}</source>
@@ -467,6 +472,21 @@
         <target>Leave blank if not applicable.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/SmtpConfigurationType.php [Line: 56]</note>
       </trans-unit>
+      <trans-unit id="0160220cb7ffdabbf65ab9628c3992a2">
+        <source>Leave empty to follow the module's store association (currently: %stores%).</source>
+        <target>Leave empty to follow the module's store association (currently: %stores%).</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionShopsType.php [Line: 85]</note>
+      </trans-unit>
+      <trans-unit id="ab4ea187261018530663c29fffe4b8d9">
+        <source>Leave empty to follow the module's store association.</source>
+        <target>Leave empty to follow the module's store association.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionShopsType.php [Line: 81]</note>
+      </trans-unit>
+      <trans-unit id="47a636ae564deade7959d78321beb2ca">
+        <source>Leave empty to make this property available in all stores.</source>
+        <target>Leave empty to make this property available in all stores.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 57]</note>
+      </trans-unit>
       <trans-unit id="f88eb52dea2a0d6eb6d90304a91be4a0">
         <source>Log alerts will be sent to these emails. Please use a comma to separate them (e.g. pub@prestashop.com, anonymous@psgdpr.com).</source>
         <target>Log alerts will be sent to these emails. Please use a comma to separate them (e.g. pub@prestashop.com, anonymous@psgdpr.com).</target>
@@ -480,7 +500,7 @@
       <trans-unit id="a2e5956fbf71415db2731d4a42a312ad">
         <source>Mark the field as required in the BO form and in the Admin API schema. This only drives the HTML/OpenAPI "required" flag — it never adds a server-side validation constraint by itself.</source>
         <target>Mark the field as required in the BO form and in the Admin API schema. This only drives the HTML/OpenAPI "required" flag — it never adds a server-side validation constraint by itself.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 36]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 47]</note>
       </trans-unit>
       <trans-unit id="1e4e1915fcb0b296ce2ffb029b27d730">
         <source>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</source>
@@ -515,7 +535,6 @@
       <trans-unit id="63516ccf290d2c29026e49372588fc26">
         <source>ObjectModel table name (e.g. product, customer, order).</source>
         <target>ObjectModel table name (e.g. product, customer, order).</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 59]</note>
       </trans-unit>
       <trans-unit id="26b63f278101527e06a5547719568bb5">
         <source>Okay</source>
@@ -595,7 +614,7 @@
       <trans-unit id="7774f7ea613f49f5246f9ff5e96d29de">
         <source>Select the stores the employee is allowed to access.</source>
         <target>Select the stores the employee is allowed to access.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php [Line: 203]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php [Line: 202]</note>
       </trans-unit>
       <trans-unit id="3671c56ff8fdb767b599fa7f0942de2a">
         <source>Serialized as All[…]</source>
@@ -610,12 +629,12 @@
       <trans-unit id="20d6b6498eab9f749d55c9b53151e00a">
         <source>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</source>
         <target>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 35]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 38]</note>
       </trans-unit>
       <trans-unit id="eb191ef572b6d5c4e7a86734ba10fb5e">
         <source>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower than or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
         <target>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower than or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 58]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php [Line: 60]</note>
       </trans-unit>
       <trans-unit id="3979bb684920e9e9dc86e266f93d8c87">
         <source>Severity levels</source>
@@ -700,7 +719,7 @@
       <trans-unit id="c4e326fcaa83c6b1ca3856175bb86d2e">
         <source>This page will be displayed just after login.</source>
         <target>This page will be displayed just after login.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php [Line: 212]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php [Line: 342]</note>
       </trans-unit>
       <trans-unit id="021007c7da195ab112330b846e0b1cbb">
         <source>This will add directives to your .htaccess file, which should improve caching and compression.</source>
@@ -770,7 +789,7 @@
       <trans-unit id="b67a6169f1139b421eabe8278277b0ae">
         <source>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</source>
         <target>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 40]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/GeneralType.php [Line: 44]</note>
       </trans-unit>
       <trans-unit id="e6f52e23510fd010aa5460c96fd67142">
         <source>Where customers send messages from the order page.</source>
@@ -850,7 +869,7 @@
       <trans-unit id="8f721ea172bf088a113e7ba6a62f381d">
         <source>no options</source>
         <target>no options</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 347]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 350]</note>
       </trans-unit>
       <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
         <source>or</source>

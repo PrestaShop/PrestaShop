@@ -70,6 +70,54 @@ class ExtraPropertyValidator implements ExtraPropertyValidatorInterface
     }
 
     /**
+     * Whether a text controlled by a definition author (label/description wording, enum
+     * literals, choice labels, constraint messages) is safe to display to other employees:
+     * no "<", so it can never open a tag whatever the rendering sink does, and no control
+     * character other than tab/newline.
+     *
+     * The ONE rule for author-controlled display texts, enforced at construction of the
+     * value object — i.e. both when a definition is registered (write, refused with an
+     * error) and when it is hydrated from a registry row (read, the row is skipped and
+     * logged) — so a value written straight into the table cannot bypass it.
+     *
+     * Static (not part of the interface): called by the ExtraPropertyDefinition constructor
+     * and the constraint DSL parser, which cannot receive injected services.
+     */
+    public static function isSafeDisplayText(string $value): bool
+    {
+        return 1 !== preg_match('/[<\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', $value);
+    }
+
+    /**
+     * Whether a value is a well-formed PrestaShop translation domain: 2 or 3 dot-separated
+     * PascalCase segments ("Admin.Actions", "Modules.Demoextrafield.Admin"). Anything that
+     * could reach another subsystem is refused — the "+intl-icu" suffix (which would route
+     * the wording through the ICU formatter, where a malformed pattern throws on every
+     * render), path or separator characters, whitespace.
+     *
+     * Static (not part of the interface): called by the ExtraPropertyDefinition constructor.
+     */
+    public static function isTranslationDomain(string $value): bool
+    {
+        return 1 === preg_match('/^[A-Z][A-Za-z0-9_]*(?:\.[A-Z][A-Za-z0-9_]*){1,2}$/', $value);
+    }
+
+    /**
+     * Whether a value controlled by a definition author may be used as a link target: an
+     * absolute http(s) URL or a root-relative path. Attribute escaping does not neutralise a
+     * "javascript:" or "data:" scheme inside href, so the scheme is what is checked. Whitespace
+     * and quote characters are refused, and so is the backslash: browsers normalise "\" to "/"
+     * in URLs with a special scheme, so "/\evil.example" would navigate off-site exactly like the
+     * protocol-relative "//evil.example" this rule refuses.
+     *
+     * Static (not part of the interface): called by ExtraPropertyFormOptionsPolicy.
+     */
+    public static function isSafeUrl(string $value): bool
+    {
+        return 1 === preg_match('#^(?:https?://[^\s"\'<>\\\\]+|/(?![/\\\\])[^\s"\'<>\\\\]*)$#i', $value);
+    }
+
+    /**
      * The single rule-set for "can this value be stored under the declared type" — shared
      * by the registry (default values, ExtraPropertyRegistry::isDefaultValueCompatible())
      * and by validateValue() (every regular write), so what is refused as a default is

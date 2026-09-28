@@ -487,7 +487,17 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
     protected function processBulkDeleteTaxRules()
     {
-        $this->deleteTaxRule(Tools::getValue('tax_ruleBox'));
+        // WHY: the bulk "Delete" action can reach this handler with no tax_ruleBox in the request
+        // (e.g. the form is submitted without any row checked). Tools::getValue() then returns false,
+        // which violated the array type hint of deleteTaxRule() and threw a TypeError. With nothing
+        // selected there is nothing to delete, so bail out instead of reporting a false success.
+        // @see https://github.com/PrestaShop/PrestaShop/issues/31351
+        $taxRuleBox = Tools::getValue('tax_ruleBox');
+        if (!is_array($taxRuleBox) || empty($taxRuleBox)) {
+            return;
+        }
+
+        $this->deleteTaxRule($taxRuleBox);
     }
 
     protected function processDeleteTaxRule()
