@@ -60,6 +60,11 @@ services:
       # FeatureInterface has several implementations — not autowirable by type.
       $multistoreFeature: '@prestashop.adapter.feature.multistore'
 
+  prestashop.core.grid.definition.factory.csp_log:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CspLogGridDefinitionFactory'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    public: true
+
   prestashop.core.grid.definition.factory.meta:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MetaGridDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory

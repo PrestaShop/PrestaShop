@@ -8,25 +8,35 @@ use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
 use PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder;
 use PrestaShop\PrestaShop\Core\Csp\CspReportParser;
 
-/**
- * Public, unauthenticated endpoint that receives browser CSP violation reports and hands them to
- * the recorder. It holds no logic of its own: read the body, record, answer 204. Kept as a legacy
- * front controller so it works on both the default dispatch and the FrontKernel fallback, and so
- * the report-uri never points inside the admin directory.
- */
+/** Public, unauthenticated endpoint that receives browser CSP violation reports: read the body, record, answer 204. */
 class CspReportControllerCore extends FrontController
 {
-    /**
-     * Browsers send small JSON documents; anything larger is not a genuine report and is ignored.
-     */
     private const MAX_BODY_SIZE = 65536;
+
+    /**
+     * The row-cap prune (COUNT + DELETE) runs on a sample of inserting requests, not every one: under a
+     * report flood this stops concurrent DELETEs on one shop's log from piling up, while the cap still
+     * holds on average (it is approximate by design, and a prune removes all overflow when it runs).
+     */
+    private const ROW_CAP_PRUNE_SAMPLING = 10;
+
+    /** Keep recording during maintenance, which is often exactly when a merchant tests enforcement. */
+    protected function displayMaintenancePage()
+    {
+    }
 
     public function postProcess()
     {
         $this->collectReports();
 
         // No body, no template: the browser ignores the response, and a 204 keeps the endpoint cheap.
-        header('HTTP/1.1 204 No Content', true, 204);
+        $this->terminateResponse(204);
+    }
+
+    /** Sends the status and ends the request. Isolated so a test can observe the code without exiting the runner. */
+    protected function terminateResponse(int $statusCode): void
+    {
+        http_response_code($statusCode);
         exit;
     }
 
@@ -36,31 +46,47 @@ class CspReportControllerCore extends FrontController
             return;
         }
 
-        $shopId = (int) $this->context->shop->id;
+        try {
+            $shopId = (int) $this->context->shop->id;
 
-        /** @var CspFeatureChecker $featureChecker */
-        $featureChecker = $this->get(CspFeatureChecker::class);
-        if (!$featureChecker->isEnabledForShop($shopId)) {
-            return;
-        }
+            /** @var CspFeatureChecker $featureChecker */
+            $featureChecker = $this->get(CspFeatureChecker::class);
+            if (!$featureChecker->isEnabledForShop($shopId)) {
+                return;
+            }
 
-        // Read at most one byte past the cap so an oversized body is rejected without ever holding
-        // the whole payload in memory on this public, unauthenticated write path.
-        $body = file_get_contents('php://input', false, null, 0, self::MAX_BODY_SIZE + 1);
-        if (!is_string($body) || $body === '' || strlen($body) > self::MAX_BODY_SIZE) {
-            return;
-        }
+            // Read one byte past the cap so an oversized body is rejected without holding the whole payload in memory.
+            $body = file_get_contents('php://input', false, null, 0, self::MAX_BODY_SIZE + 1);
+            if (!is_string($body) || $body === '' || strlen($body) > self::MAX_BODY_SIZE) {
+                return;
+            }
 
-        $contentType = isset($_SERVER['CONTENT_TYPE']) ? (string) $_SERVER['CONTENT_TYPE'] : '';
-        $reports = CspReportParser::parse($contentType, $body);
-        if ($reports === []) {
-            return;
-        }
+            $contentType = isset($_SERVER['CONTENT_TYPE']) ? (string) $_SERVER['CONTENT_TYPE'] : '';
+            $reports = CspReportParser::parse($contentType, $body);
+            if ($reports === []) {
+                return;
+            }
 
-        /** @var CspViolationRecorder $recorder */
-        $recorder = $this->get(CspViolationRecorder::class);
-        foreach ($reports as $report) {
-            $recorder->record($shopId, $report['directive'], $report['blockedUri'], $report['documentUri']);
+            /** @var CspViolationRecorder $recorder */
+            $recorder = $this->get(CspViolationRecorder::class);
+            $anyInserted = false;
+            foreach ($reports as $report) {
+                $anyInserted = $recorder->record($shopId, $report['directive'], $report['blockedUri'], $report['documentUri'], false) || $anyInserted;
+            }
+
+            // Enforce the row cap once per batch, only when a new row was inserted (bumped counters
+            // can't exceed the cap), and only on a sample of requests (see ROW_CAP_PRUNE_SAMPLING).
+            if ($anyInserted && 1 === random_int(1, self::ROW_CAP_PRUNE_SAMPLING)) {
+                $recorder->enforceRowCap($shopId);
+            }
+        } catch (Throwable $e) {
+            // This public endpoint must never 500 on a DB hiccup: skip recording, still answer 204, but log it.
+            try {
+                PrestaShopLogger::addLog('CSP report not recorded: ' . $e->getMessage(), 2, null, 'CspReport');
+            } catch (Throwable) {
+                // The DB-backed logger can fail the same way; fall back to the error log.
+                error_log('CSP report not recorded: ' . $e->getMessage());
+            }
         }
     }
 }

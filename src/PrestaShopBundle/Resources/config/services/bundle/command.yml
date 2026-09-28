@@ -10,6 +10,14 @@ services:
     tags:
       - 'console.command'
 
+  PrestaShopBundle\Command\PruneCspLogCommand:
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder'
+      - '@prestashop.adapter.legacy.configuration'
+    tags:
+      - 'console.command'
+
   PrestaShopBundle\Command\ExportThemeCommand:
     arguments:
       - '@prestashop.core.addon.theme.repository'

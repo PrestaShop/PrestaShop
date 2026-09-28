@@ -1,0 +1,87 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace Tests\Unit\PrestaShopBundle\Command;
+
+use DateTimeInterface;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShopBundle\Command\PruneCspLogCommand;
+use PrestaShopBundle\Entity\Repository\CspLogRepository;
+use Symfony\Component\Console\Tester\CommandTester;
+
+/**
+ * CspViolationRecorder is final, so the real one is used over the mocked repository; its
+ * enforceRowCap() calls countByShop(), which the tests assert as the cap-enforcement signal.
+ */
+class PruneCspLogCommandTest extends TestCase
+{
+    public function testItAgePrunesEveryShopWithLogsAndEnforcesTheCap(): void
+    {
+        $logRepository = $this->createMock(CspLogRepository::class);
+        $logRepository->method('distinctShopIds')->willReturn([1, 2]);
+        // Shop 1 has a 30-day retention, shop 2 keeps everything (0), so delete runs only for shop 1.
+        $logRepository->expects($this->once())
+            ->method('deleteOlderThanByShop')
+            ->with(1, $this->isInstanceOf(DateTimeInterface::class))
+            ->willReturn(3);
+        // enforceRowCap() runs for both shops (via countByShop).
+        $logRepository->expects($this->exactly(2))->method('countByShop')->willReturn(0);
+
+        $configuration = $this->createMock(ShopConfigurationInterface::class);
+        $configuration->method('get')->willReturnCallback(
+            fn (string $key, $default, $shopConstraint) => 1 === $shopConstraint->getShopId()->getValue() ? 30 : 0
+        );
+
+        $tester = new CommandTester(new PruneCspLogCommand(
+            $logRepository,
+            new CspViolationRecorder($logRepository),
+            $configuration
+        ));
+        $exitCode = $tester->execute([]);
+
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('Shop 1: deleted 3 report(s) older than 30 day(s)', $tester->getDisplay());
+    }
+
+    public function testTheOlderThanOptionOverridesTheRetentionSetting(): void
+    {
+        $logRepository = $this->createMock(CspLogRepository::class);
+        $logRepository->expects($this->once())
+            ->method('deleteOlderThanByShop')
+            ->with(5, $this->isInstanceOf(DateTimeInterface::class))
+            ->willReturn(0);
+        $logRepository->method('countByShop')->willReturn(0);
+
+        $configuration = $this->createMock(ShopConfigurationInterface::class);
+        // The override is used, so the stored retention is never read.
+        $configuration->expects($this->never())->method('get');
+
+        $tester = new CommandTester(new PruneCspLogCommand(
+            $logRepository,
+            new CspViolationRecorder($logRepository),
+            $configuration
+        ));
+
+        $this->assertSame(0, $tester->execute(['--shop' => '5', '--older-than' => '7']));
+    }
+
+    public function testItRejectsANonNumericOlderThan(): void
+    {
+        $logRepository = $this->createMock(CspLogRepository::class);
+
+        $tester = new CommandTester(new PruneCspLogCommand(
+            $logRepository,
+            new CspViolationRecorder($logRepository),
+            $this->createMock(ShopConfigurationInterface::class)
+        ));
+
+        $this->assertSame(2, $tester->execute(['--older-than' => 'soon']));
+    }
+}

@@ -4,9 +4,25 @@ admin_security_csp_index:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::indexAction'
 
-admin_security_csp_save:
+admin_security_csp_search:
   path: /
   methods: [ POST ]
   defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::searchGridAction'
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.csp_log
+    redirectRoute: admin_security_csp_index
+    _parent: admin_security_csp_index
+
+admin_security_csp_save:
+  path: /settings
+  methods: [ POST ]
+  defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::saveAction'
+    _parent: admin_security_csp_index
+
+admin_security_csp_clear_log:
+  path: /clear-log
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::clearLogAction'
     _parent: admin_security_csp_index
