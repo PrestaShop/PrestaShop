@@ -5,6 +5,11 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/csp.bundle.js') }}"></script>
+{% endblock %}
+
 {% block content %}
   {{ form_start(cspForm, {attr: {class: 'form'}, action: path('admin_security_csp_save')}) }}
     <div class="card" id="configuration_fieldset_csp">
@@ -24,4 +29,6 @@
       </div>
     </div>
   {{ form_end(cspForm) }}
+
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: cspLogGrid}) }}
 {% endblock %}
