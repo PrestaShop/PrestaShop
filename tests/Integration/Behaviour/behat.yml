@@ -835,3 +835,9 @@ default:
       contexts:
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\BusinessEntityFeatureContext
+    csp:
+      paths:
+        - "%paths.base%/Features/Scenario/Csp"
+      contexts:
+        - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\CspFeatureContext
