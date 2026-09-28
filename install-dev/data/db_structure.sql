@@ -3113,6 +3113,20 @@ CREATE TABLE `PREFIX_api_client` (
   PRIMARY KEY (`id_api_client`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
+CREATE TABLE `PREFIX_csp_log` (
+  `id_csp_log`   INT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `id_shop`      INT UNSIGNED               NOT NULL,
+  `directive`    VARCHAR(64)                NOT NULL,
+  `source`       VARCHAR(255)               NOT NULL,
+  `document_uri` VARCHAR(2048) DEFAULT NULL,
+  `hits`         INT UNSIGNED  DEFAULT 1    NOT NULL,
+  `date_add`     DATETIME                   NOT NULL,
+  `date_upd`     DATETIME                   NOT NULL,
+  UNIQUE INDEX `csp_log_shop_directive_source_idx` (`id_shop`, `directive`, `source`),
+  INDEX `csp_log_shop_prune_idx` (`id_shop`, `hits`, `date_upd`),
+  PRIMARY KEY (`id_csp_log`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 CREATE TABLE `PREFIX_stock_mvt` (
   `id_stock_mvt`        BIGINT AUTO_INCREMENT NOT NULL,
   `id_stock`            INT                      NOT NULL,
