@@ -93,7 +93,7 @@ final class ExtraPropertiesBag implements ArrayAccess, IteratorAggregate, JsonSe
             if ($forFrontOffice) {
                 $definitions = $definitions->filterForFrontOffice();
             }
-            // X2: skip the DB read entirely when no matching fields are registered.
+            // Skip the DB read entirely when no matching fields are registered.
             if ($definitions->isEmpty()) {
                 return [];
             }
