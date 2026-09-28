@@ -30,7 +30,7 @@
       <trans-unit id="1412f7dcbcbe951b817f3f65b77b8e57">
         <source>Address details:</source>
         <target>Address details:</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/address-selector-block.tpl [Line: 30]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/address-selector-block.tpl [Line: 31]</note>
       </trans-unit>
       <trans-unit id="9639e32cab248434a17ab32237cb3b71">
         <source>Apply</source>
@@ -372,12 +372,12 @@
       <trans-unit id="a5e6d898ad3fae1dba64143c1848ba54">
         <source>Select address: %addressAlias%</source>
         <target>Select address: %addressAlias%</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/address-selector-block.tpl [Line: 19]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/address-selector-block.tpl [Line: 20]</note>
       </trans-unit>
       <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3">
         <source>Send</source>
         <target>Send</target>
-        <note>File: themes/hummingbird/templates/customer/guest-login.tpl [Line: 52]</note>
+        <note>File: themes/hummingbird/templates/customer/guest-login.tpl [Line: 56]</note>
       </trans-unit>
       <trans-unit id="733ae3eecadd5777cea5ce9a32379d7a">
         <source>Send reset link</source>

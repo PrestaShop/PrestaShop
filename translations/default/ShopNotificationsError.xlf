@@ -545,7 +545,7 @@
       <trans-unit id="ea34b5c6cf6511c7c9e23cf7bf5d6792">
         <source>Your address is incomplete, please update it.</source>
         <target>Your address is incomplete, please update it.</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/addresses.tpl [Line: 93]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/steps/addresses.tpl [Line: 102]</note>
       </trans-unit>
     </body>
   </file>

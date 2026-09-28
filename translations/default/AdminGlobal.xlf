@@ -724,7 +724,7 @@
       <trans-unit id="9f6dd9da2c428bf8c07a3f0974d2f89e">
         <source>Extra fields</source>
         <target>Extra fields</target>
-        <note>File: src/Core/ExtraProperty/Form/ExtraPropertiesFormBuilderModifier.php [Line: 273]</note>
+        <note>File: src/Core/ExtraProperty/Form/ExtraPropertiesFormBuilderModifier.php [Line: 341]</note>
       </trans-unit>
       <trans-unit id="9810aa2b9f44401be4bf73188ef2b67d">
         <source>Fax</source>
