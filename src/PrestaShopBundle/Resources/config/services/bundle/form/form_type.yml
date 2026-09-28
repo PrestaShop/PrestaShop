@@ -592,6 +592,8 @@ services:
 
   PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryOptionsType:
 
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Csp\CspType:
+
   PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderReturn\OrderReturnOptionsType:
 
   PrestaShopBundle\Form\Admin\Type\CarrierChoiceType:

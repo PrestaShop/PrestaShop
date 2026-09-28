@@ -1,0 +1,27 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+{% block content %}
+  {{ form_start(cspForm, {attr: {class: 'form'}, action: path('admin_security_csp_save')}) }}
+    <div class="card" id="configuration_fieldset_csp">
+      <h3 class="card-header">
+        <i class="material-icons">security</i> {{ 'Content Security Policy'|trans({}, 'Admin.Advparameters.Feature') }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_widget(cspForm) }}
+          {{ form_rest(cspForm) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
+    </div>
+  {{ form_end(cspForm) }}
+{% endblock %}

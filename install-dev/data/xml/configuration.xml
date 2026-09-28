@@ -924,5 +924,14 @@ Country</value>
     <configuration id="PS_MIN_LOGGER_LEVEL_IN_DB" name="PS_MIN_LOGGER_LEVEL_IN_DB">
       <value>1</value>
     </configuration>
+    <configuration id="PS_CSP_ENABLED" name="PS_CSP_ENABLED">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_CSP_REPORT_ONLY" name="PS_CSP_REPORT_ONLY">
+      <value>1</value>
+    </configuration>
+    <configuration id="PS_CSP_RETENTION_DAYS" name="PS_CSP_RETENTION_DAYS">
+      <value>0</value>
+    </configuration>
   </entities>
 </entity_configuration>

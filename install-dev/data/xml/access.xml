@@ -477,5 +477,9 @@
     <access id="access_1_525" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINEXTRAPROPERTYDEFINITIONS_READ"/>
     <access id="access_1_526" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINEXTRAPROPERTYDEFINITIONS_UPDATE"/>
     <access id="access_1_527" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINEXTRAPROPERTYDEFINITIONS_DELETE"/>
+    <access id="access_1_528" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITYCSP_CREATE"/>
+    <access id="access_1_529" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITYCSP_READ"/>
+    <access id="access_1_530" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITYCSP_UPDATE"/>
+    <access id="access_1_531" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITYCSP_DELETE"/>
   </entities>
 </entity_access>
