@@ -75,6 +75,18 @@ class ExtraPropertiesGridDefinitionModifierTest extends TestCase
         yield 'choice' => [ExtraPropertyType::CHOICE, DataColumn::class, TextType::class];
     }
 
+    public function testFormTypeOverrideDoesNotChangeTheColumnClass(): void
+    {
+        $extraDefinition = $this->definition('flag', type: ExtraPropertyType::BOOL)
+            ->withOverrides(['formType' => TextType::class]);
+        $grid = $this->buildGrid();
+
+        $this->buildModifier($extraDefinition)->apply($grid, self::GRID_ID);
+
+        $this->assertInstanceOf(ToggleColumn::class, $this->findColumn($grid, 'extra_mymodule_flag'));
+        $this->assertSame(YesAndNoChoiceType::class, $grid->getFilters()->all()['extra_mymodule_flag']->getType());
+    }
+
     public function testBoolColumnTargetsToggleEndpointWithoutClientControlledScopeParams(): void
     {
         $grid = $this->buildGrid();

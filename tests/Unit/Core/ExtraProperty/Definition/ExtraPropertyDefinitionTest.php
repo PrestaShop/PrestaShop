@@ -1020,6 +1020,24 @@ final class ExtraPropertyDefinitionTest extends TestCase
         (new ExtraPropertyDefinition(entityName: 'product', propertyName: 'video_link'))->withModuleName('my module');
     }
 
+    public function testWithOverridesReResolvesTheStorageOfANewEntity(): void
+    {
+        $definition = (new ExtraPropertyDefinition(entityName: 'product', propertyName: 'video_link'))
+            ->withOverrides(['entityName' => 'category']);
+
+        $this->assertSame('category', $definition->getTableName());
+        $this->assertSame('id_category', $definition->getPrimaryKeyName());
+        $this->assertSame('category_extra', $definition->getExtraTableName());
+    }
+
+    public function testWithOverridesKeepsAnExplicitTableAlongANewEntity(): void
+    {
+        $definition = (new ExtraPropertyDefinition(entityName: 'product', propertyName: 'video_link'))
+            ->withOverrides(['entityName' => 'category', 'tableName' => 'my_table']);
+
+        $this->assertSame('my_table', $definition->getTableName());
+    }
+
     /**
      * @dataProvider overrideProvider
      */

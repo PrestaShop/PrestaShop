@@ -55,7 +55,7 @@ class ExtraPropertyValidator implements ExtraPropertyValidatorInterface
      */
     public static function isTableOrIdentifier(string $value): bool
     {
-        return (bool) preg_match('/^[a-zA-Z0-9_-]{1,64}$/', $value);
+        return (bool) preg_match('/^[a-zA-Z0-9_-]{1,64}$/D', $value);
     }
 
     /**
@@ -66,7 +66,7 @@ class ExtraPropertyValidator implements ExtraPropertyValidatorInterface
      */
     public static function isModuleName(string $value): bool
     {
-        return (bool) preg_match('/^[a-zA-Z0-9_-]+$/', $value);
+        return (bool) preg_match('/^[a-zA-Z0-9_-]+$/D', $value);
     }
 
     /**
@@ -99,7 +99,7 @@ class ExtraPropertyValidator implements ExtraPropertyValidatorInterface
      */
     public static function isTranslationDomain(string $value): bool
     {
-        return 1 === preg_match('/^[A-Z][A-Za-z0-9_]*(?:\.[A-Z][A-Za-z0-9_]*){1,2}$/', $value);
+        return 1 === preg_match('/^[A-Z][A-Za-z0-9_]*(?:\.[A-Z][A-Za-z0-9_]*){1,2}$/D', $value);
     }
 
     /**
@@ -114,7 +114,7 @@ class ExtraPropertyValidator implements ExtraPropertyValidatorInterface
      */
     public static function isSafeUrl(string $value): bool
     {
-        return 1 === preg_match('#^(?:https?://[^\s"\'<>\\\\]+|/(?![/\\\\])[^\s"\'<>\\\\]*)$#i', $value);
+        return 1 === preg_match('#^(?:https?://[^\s"\'<>\\\\]+|/(?![/\\\\])[^\s"\'<>\\\\]*)$#iD', $value);
     }
 
     /**
@@ -138,7 +138,7 @@ class ExtraPropertyValidator implements ExtraPropertyValidatorInterface
 
         return match ($type) {
             ExtraPropertyType::INT => is_int($value)
-                || (is_string($value) && 1 === preg_match('/^-?\d+$/', $value)),
+                || (is_string($value) && 1 === preg_match('/^-?\d+$/D', $value)),
             ExtraPropertyType::FLOAT => is_int($value) || is_float($value)
                 || (is_string($value) && is_numeric($value)),
             ExtraPropertyType::BOOL => is_bool($value) || in_array($value, [0, 1, '0', '1'], true),
