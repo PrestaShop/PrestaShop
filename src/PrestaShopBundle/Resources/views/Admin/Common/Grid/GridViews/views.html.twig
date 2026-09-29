@@ -1,0 +1,64 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% block grid_views_list %}
+  {% for view in grid_views %}
+    {% block grid_view_item %}
+      {% set is_selected = selected_view_id == view.id %}
+
+      <div class="btn-group mr-2 my-1">
+        <a href="{{ view.url }}"
+           class="btn btn-sm btn-{{ is_selected ? 'primary' : 'outline-secondary' }} js-grid-view-link"
+           data-grid-id="{{ grid_id }}"
+           data-view-id="{{ view.id }}">
+          {% if view.is_shared %}
+            <i class="material-icons">group</i>
+          {% endif %}
+          {{ view.name }}
+          <span class="js-grid-view-total">{{ display_totals|default(false) ? '(…)' : '' }}</span>
+        </a>
+
+        <button type="button"
+                class="btn btn-sm btn-{{ is_selected ? 'primary' : 'outline-secondary' }} dropdown-toggle dropdown-toggle-split"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+        </button>
+
+        <div class="dropdown-menu">
+          {% if view.is_own %}
+            <button class="dropdown-item js-grid-view-edit"
+                    type="button"
+                    data-ajax-url="{{ path('admin_grid_views_edit', {gridViewId: view.id}) }}">
+              <i class="material-icons mr-1">edit</i>
+              {{ 'Edit'|trans({}, 'Admin.Actions') }}
+            </button>
+          {% endif %}
+
+          <button class="dropdown-item js-grid-view-duplicate"
+                  type="button"
+                  data-ajax-url="{{ path('admin_grid_views_duplicate', {gridViewId: view.id}) }}">
+            <i class="material-icons mr-1">content_copy</i>
+            {{ 'Duplicate'|trans({}, 'Admin.Actions') }}
+          </button>
+
+          {% if view.is_own %}
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item text-danger js-grid-view-delete"
+                    type="button"
+                    data-confirm-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
+                    data-confirm-message="{{ 'Delete selected item?'|trans({}, 'Admin.Notifications.Warning') }}"
+                    data-confirm-button-label="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
+                    data-close-button-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
+                    data-ajax-url="{{ path('admin_grid_views_delete', {gridViewId: view.id}) }}">
+              <i class="material-icons mr-1">delete</i>
+              {{ 'Delete'|trans({}, 'Admin.Actions') }}
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    {% endblock %}
+  {% endfor %}
+{% endblock %}

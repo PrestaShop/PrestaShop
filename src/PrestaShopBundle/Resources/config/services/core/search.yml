@@ -29,6 +29,15 @@ services:
       - '@prestashop.adapter.data_provider.employee'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
 
+  prestashop.core.search.builder.grid_view:
+    class: 'PrestaShop\PrestaShop\Core\Grid\View\GridViewFiltersBuilder'
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\AdminGridViewRepository'
+      - '@PrestaShop\PrestaShop\Core\Grid\View\DynamicDateRuleApplier'
+      - '@PrestaShop\PrestaShop\Core\Context\EmployeeContext'
+      - '@PrestaShop\PrestaShop\Core\Context\ShopContext'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+
   prestashop.core.search.builder.event:
     class: 'PrestaShop\PrestaShop\Core\Search\Builder\EventFiltersBuilder'
     arguments:
@@ -47,6 +56,7 @@ services:
       - - '@prestashop.core.search.builder.typed'
         - '@prestashop.core.search.builder.repository'
         - '@prestashop.core.search.builder.request'
+        - '@prestashop.core.search.builder.grid_view'
         - '@prestashop.core.search.builder.event'
         - '@prestashop.core.search.builder.persist'
 
