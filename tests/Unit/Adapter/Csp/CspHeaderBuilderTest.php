@@ -12,8 +12,11 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
 use PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder;
 use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider;
+use PrestaShop\PrestaShop\Core\Csp\CspPolicyHookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShopBundle\Entity\Repository\CspRuleRepository;
+use Psr\Log\LoggerInterface;
 
 class CspHeaderBuilderTest extends TestCase
 {
@@ -53,9 +56,16 @@ class CspHeaderBuilderTest extends TestCase
         $configuration = $this->createMock(ShopConfigurationInterface::class);
         $configuration->method('get')->willReturn($cspEnabled);
 
+        $ruleRepository = $this->createMock(CspRuleRepository::class);
+        $ruleRepository->method('getRulesByShop')->willReturn([]);
+
         return new CspHeaderBuilder(
             new CspFeatureChecker($featureFlagChecker, $configuration),
-            new CspPolicyProvider()
+            new CspPolicyProvider(
+                $ruleRepository,
+                $this->createMock(CspPolicyHookDispatcherInterface::class),
+                $this->createMock(LoggerInterface::class)
+            )
         );
     }
 }
