@@ -11,8 +11,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\Csp\Exception;
 /**
  * Thrown when a single CSP value fails format validation in its value object.
  */
-class CspConstraintException extends CspException
+final class CspConstraintException extends CspException
 {
     public const INVALID_DIRECTIVE = 1;
     public const INVALID_SOURCE = 2;
+    public const INVALID_ID = 3;
+    public const DUPLICATE_RULE = 4;
 }
