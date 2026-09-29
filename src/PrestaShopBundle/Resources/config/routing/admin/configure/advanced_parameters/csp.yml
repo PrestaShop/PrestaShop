@@ -20,9 +20,41 @@ admin_security_csp_save:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::saveAction'
     _parent: admin_security_csp_index
 
+admin_security_csp_add:
+  path: /allow-list/add
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::addAction'
+    _parent: admin_security_csp_index
+
 admin_security_csp_clear_log:
   path: /clear-log
   methods: [ GET ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::clearLogAction'
+    _parent: admin_security_csp_index
+
+admin_security_csp_allow:
+  path: /allow/{cspLogId}
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::allowAction'
+    _parent: admin_security_csp_index
+  requirements:
+    cspLogId: \d+
+
+admin_security_csp_revoke:
+  path: /revoke/{cspRuleId}
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::revokeAction'
+    _parent: admin_security_csp_index
+  requirements:
+    cspRuleId: \d+
+
+admin_security_csp_bulk_revoke:
+  path: /bulk-revoke
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::bulkRevokeAction'
     _parent: admin_security_csp_index

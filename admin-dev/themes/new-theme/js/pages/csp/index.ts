@@ -15,4 +15,7 @@ $(() => {
   cspLogGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
   cspLogGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
   cspLogGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  cspLogGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  cspLogGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  cspLogGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
 });

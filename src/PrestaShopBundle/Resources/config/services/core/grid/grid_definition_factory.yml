@@ -63,6 +63,7 @@ services:
   prestashop.core.grid.definition.factory.csp_log:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CspLogGridDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    autowire: true
     public: true
 
   prestashop.core.grid.definition.factory.meta:
