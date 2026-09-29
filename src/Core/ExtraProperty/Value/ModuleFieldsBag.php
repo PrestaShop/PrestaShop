@@ -23,8 +23,8 @@ use Traversable;
  * map — scope routing and storage column resolution happen inside the writer.
  *
  * Usage (via parent ExtraPropertiesBag):
- *   $product->extra_properties['demoextrafield']['is_dangerous']       // read
- *   $product->extra_properties['demoextrafield']['is_dangerous'] = 1   // write + mark dirty
+ *   $product->extra_properties['demoextraproperty']['is_dangerous']       // read
+ *   $product->extra_properties['demoextraproperty']['is_dangerous'] = 1   // write + mark dirty
  */
 final class ModuleFieldsBag implements ArrayAccess, IteratorAggregate, JsonSerializable
 {

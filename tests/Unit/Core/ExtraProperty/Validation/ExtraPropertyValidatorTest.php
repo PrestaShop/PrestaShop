@@ -179,6 +179,7 @@ class ExtraPropertyValidatorTest extends TestCase
         yield 'int string' => [ExtraPropertyType::INT, '-7', true];
         yield 'int refuses letters' => [ExtraPropertyType::INT, 'abc', false];
         yield 'int refuses float string' => [ExtraPropertyType::INT, '1.5', false];
+        yield 'int refuses trailing newline' => [ExtraPropertyType::INT, "1\n", false];
 
         yield 'float native' => [ExtraPropertyType::FLOAT, 1.5, true];
         yield 'float numeric string' => [ExtraPropertyType::FLOAT, '1.5', true];
@@ -296,6 +297,7 @@ class ExtraPropertyValidatorTest extends TestCase
         yield 'backslash' => ['a\\b', false];
         yield 'null byte' => ["a\0b", false];
         yield 'inner newline' => ["a\nb", false];
+        yield 'trailing newline' => ["product\n", false];
         yield 'unicode letter' => ['produit_é', false];
         yield 'fullwidth letter' => ['ａbc', false];
     }
@@ -326,6 +328,7 @@ class ExtraPropertyValidatorTest extends TestCase
         yield 'single quote' => ["mod'ule", false];
         yield 'semicolon' => ['mod;ule', false];
         yield 'null byte' => ["mod\0ule", false];
+        yield 'trailing newline' => ["mymodule\n", false];
         yield 'unicode' => ['modulé', false];
         yield 'html' => ['<script>', false];
     }
@@ -388,6 +391,7 @@ class ExtraPropertyValidatorTest extends TestCase
         yield 'slash' => ['Admin/Global', false];
         yield 'hyphen' => ['Admin.Global-Extra', false];
         yield 'unicode' => ['Admin.Glöbal', false];
+        yield 'trailing newline' => ["Admin.Global\n", false];
     }
 
     /**
@@ -426,6 +430,7 @@ class ExtraPropertyValidatorTest extends TestCase
         yield 'empty' => ['', false];
         yield 'space' => ['https://example.com/a b', false];
         yield 'newline inside' => ["https://example.com/\nx", false];
+        yield 'trailing newline' => ["https://example.com\n", false];
         yield 'double quote attribute breakout' => ['https://example.com/" onmouseover="alert(1)', false];
         yield 'single quote attribute breakout' => ["https://example.com/' onmouseover='alert(1)", false];
         yield 'tag' => ['https://example.com/<script>', false];
