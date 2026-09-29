@@ -1,5 +1,5 @@
-# CQRS Index (generated 2026-10-02)
-# 400 commands · 141 queries · 67 top-level domains
+# CQRS Index (generated 2026-04-25)
+# 360 commands · 126 queries · 62 top-level domains
 #
 # Sub-domain shown in [brackets] when command/query lives below the top-level domain dir.
 
@@ -69,13 +69,6 @@
 - GetAttributeGroupForEditing
 - GetAttributeGroupList
 
-## BusinessEntity
-### Commands
-- AddBusinessEntityCommand
-### Queries
-- GetBusinessEntityForViewing
-- GetPendingBusinessEntitiesCount
-
 ## Carrier
 ### Commands
 - AddCarrierCommand
@@ -114,7 +107,6 @@
 ### Queries
 - GetCartForOrderCreation
 - GetCartForViewing
-- GetCartTotalForViewing
 - GetLastEmptyCustomerCart
 
 ## CartRule
@@ -196,12 +188,8 @@
 ## Country
 ### Commands
 - AddCountryCommand
-- BulkDeleteCountriesCommand
-- BulkToggleCountriesStatusCommand
-- BulkUpdateCountryZoneCommand
 - DeleteCountryCommand
 - EditCountryCommand
-- ToggleCountryStatusCommand
 ### Queries
 - GetCountryForEditing
 - GetCountryRequiredFields
@@ -302,15 +290,6 @@
 - GetEmployeeEmailById
 - GetEmployeeForEditing
 
-## ExtraProperty
-### Commands
-- AddExtraPropertyDefinitionCommand
-- BulkDeleteExtraPropertyDefinitionCommand
-- DeleteExtraPropertyDefinitionCommand
-- UpdateExtraPropertyDefinitionCommand
-### Queries
-- GetExtraPropertyDefinitionForEditing
-
 ## Feature
 ### Commands
 - AddFeatureCommand
@@ -327,13 +306,10 @@
 
 ## Hook
 ### Commands
-- EditHookedModuleCommand
-- HookModuleCommand
 - UpdateHookStatusCommand
 ### Queries
 - GetHook
 - GetHookStatus
-- GetPossibleHooksForModule
 
 ## ImageSettings
 ### Commands
@@ -348,15 +324,6 @@
 - GetImageSettingsForEditing
 - GetImageTypeForEditing
 
-## Import
-### Commands
-- CancelImportJobCommand
-- ContinueImportJobCommand
-- PurgeImportJobsCommand
-- StartImportJobCommand
-### Queries
-- GetImportJobState
-
 ## Language
 ### Commands
 - AddLanguageCommand
@@ -370,11 +337,7 @@
 
 ## MailTemplate
 ### Commands
-- EditEmailBodyTemplateCommand
 - GenerateThemeMailTemplatesCommand
-### Queries
-- GetEmailBodyTemplateForEditing
-- GetEmailBodyTemplatesForListing
 
 ## Manufacturer
 ### Commands
@@ -459,14 +422,9 @@
 
 ## OrderReturn
 ### Commands
-- BulkDeleteOrderReturnsCommand
-- BulkDeleteProductsFromOrderReturnCommand
-- DeleteOrderReturnCommand
-- DeleteProductFromOrderReturnCommand
 - UpdateOrderReturnStateCommand
 ### Queries
 - GetOrderReturnForEditing
-- GetOrderReturnProducts
 
 ## OrderReturnState
 ### Commands
@@ -498,8 +456,6 @@
 - UpdateCombinationCommand  [Combination]
 - UpdateCombinationStockAvailableCommand  [Combination]
 - UpdateCombinationSuppliersCommand  [Combination]
-- RemoveAllFeatureValuesFromCombinationCommand  [Combination/FeatureValue]
-- SetCombinationFeatureValuesCommand  [Combination/FeatureValue]
 - AddProductCommand
 - AssignProductToCategoryCommand
 - BulkDeleteProductCommand
@@ -544,7 +500,6 @@
 - UpdateVirtualProductFileCommand  [VirtualProductFile]
 ### Queries
 - GetProductAttributeGroups  [AttributeGroup]
-- GetCombinationFeatureValues  [Combination/FeatureValue]
 - GetCombinationForEditing  [Combination]
 - GetCombinationIds  [Combination]
 - GetCombinationSuppliers  [Combination]
@@ -562,14 +517,12 @@
 - GetRelatedProducts
 - SearchProducts
 - SearchProductsForAssociation
-- SearchProductsForFreeGift
 - GetSpecificPriceForEditing  [SpecificPrice]
 - GetSpecificPriceList  [SpecificPrice]
 - GetCombinationStockMovements  [Stock]
 - GetProductStockMovements  [Stock]
 - GetAssociatedSuppliers  [Supplier]
 - GetProductSupplierOptions  [Supplier]
-- GetVirtualProductFileForEditing  [VirtualProductFile]
 
 ## Profile
 ### Commands
@@ -583,16 +536,6 @@
 ### Queries
 - GetPermissionsForConfiguration  [Permission]
 - GetProfileForEditing
-
-## QuickAccess
-### Commands
-- AddQuickAccessCommand
-- BulkDeleteQuickAccessCommand
-- DeleteQuickAccessCommand
-- EditQuickAccessCommand
-- ToggleQuickAccessNewWindowCommand
-### Queries
-- GetQuickAccessForEditing
 
 ## Search
 ### Commands
@@ -622,7 +565,6 @@
 - CreateShipment
 - DeleteProductFromShipment
 - EditShipment
-- FulfillShipmentCommand
 - MergeProductsToShipment
 - SplitShipment
 - SwitchShipmentCarrierCommand
@@ -676,11 +618,9 @@
 
 ## Store
 ### Commands
-- AddStoreCommand
 - BulkDeleteStoreCommand
 - BulkUpdateStoreStatusCommand
 - DeleteStoreCommand
-- EditStoreCommand
 - ToggleStoreStatusCommand
 ### Queries
 - GetStoreForEditing
@@ -732,14 +672,8 @@
 - DeleteTaxRulesGroupCommand
 - EditTaxRulesGroupCommand
 - SetTaxRulesGroupStatusCommand
-- AddTaxRuleCommand  [TaxRule]
-- BulkDeleteTaxRuleCommand  [TaxRule]
-- DeleteTaxRuleCommand  [TaxRule]
-- EditTaxRuleCommand  [TaxRule]
 ### Queries
 - GetTaxRulesGroupForEditing
-- GetTaxRuleForEditing  [TaxRule]
-- GetTaxRuleList  [TaxRule]
 
 ## Theme
 ### Commands

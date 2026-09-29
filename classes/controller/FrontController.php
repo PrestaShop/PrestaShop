@@ -775,22 +775,17 @@ class FrontControllerCore extends Controller
             $html = $this->context->smarty->fetch($content, null, $theme . $this->getLayout());
         }
 
+        // Before the output hooks: once a hook echoes, headers_sent() is true and the header is dropped.
+        $this->sendContentSecurityPolicyHeaders();
+
         Hook::exec('actionOutputHTMLBefore', ['html' => &$html]);
         Hook::exec('actionOutput' . $this->getControllerName() . 'HTMLBefore', ['html' => &$html]);
-        $this->sendContentSecurityPolicyHeaders();
         echo trim($html);
     }
 
     /**
-     * Sends the storefront Content Security Policy headers, if the feature is enabled for the shop.
-     *
-     * This is the only point on the default front-office path where the response is known to be HTML
-     * and the headers are not yet sent, and core cannot listen to the legacy actionOutputHTMLBefore
-     * hook (Hook::exec dispatches to modules only). Precedent for a header sent from the legacy
-     * controller: Controller::init() sends X-UA-Compatible. All the logic lives in CspHeaderBuilder.
-     *
-     * smartyOutputContent() only ever renders the HTML page body, so — unlike the FrontKernel
-     * response subscriber, which sees arbitrary responses — no content-type guard is needed here.
+     * Sends the storefront CSP headers on the default FO path (HTML, headers not yet sent). Mirror on
+     * the FrontKernel path: CspHeaderSubscriber. Logic lives in CspHeaderBuilder.
      */
     private function sendContentSecurityPolicyHeaders(): void
     {
@@ -798,16 +793,26 @@ class FrontControllerCore extends Controller
             return;
         }
 
-        try {
-            /** @var CspHeaderBuilder $cspHeaderBuilder */
-            $cspHeaderBuilder = $this->get(CspHeaderBuilder::class);
-        } catch (Throwable) {
+        // Mirror the subscriber's guards: a broken context (CLI, test, module) must not fatal.
+        if (null === $this->context->link || null === $this->context->shop || null === $this->context->shop->theme) {
             return;
         }
 
-        $reportUri = $this->context->link->getPageLink('cspreport', null);
-        foreach ($cspHeaderBuilder->build((int) $this->context->shop->id, $reportUri) as $name => $value) {
-            header($name . ': ' . $value);
+        // Guard build() too (csp_rule query + actionCspPolicyModifier hook): never 500 a page over a header.
+        try {
+            /** @var CspHeaderBuilder $cspHeaderBuilder */
+            $cspHeaderBuilder = $this->get(CspHeaderBuilder::class);
+            $reportUri = $this->context->link->getPageLink('cspreport', null);
+            $themeContributions = $this->context->shop->theme->get('global_settings.csp', []);
+            foreach ($cspHeaderBuilder->build((int) $this->context->shop->id, $reportUri, is_array($themeContributions) ? $themeContributions : []) as $name => $value) {
+                header($name . ': ' . $value);
+            }
+        } catch (Throwable $e) {
+            try {
+                PrestaShopLogger::addLog('CSP header not sent: ' . $e->getMessage(), 2, null, 'Csp');
+            } catch (Throwable) {
+                error_log('CSP header not sent: ' . $e->getMessage());
+            }
         }
     }
 

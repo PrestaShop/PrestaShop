@@ -40,6 +40,7 @@
 - actionClearCompileCache
 - actionClearSf2Cache
 - actionConfigurationUpdateValueBefore
+- actionCspPolicyModifier
 - actionCustomerAccountAdd
 - actionCustomerAccountUpdate
 - actionCustomerAddGroups

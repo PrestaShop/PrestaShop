@@ -25,9 +25,12 @@ final class CspHeaderBuilder
     }
 
     /**
+     * @param array<string, list<string>> $themeContributions the active theme's global_settings.csp, passed in by
+     *                                                        the caller so the builder stays Context-free
+     *
      * @return array<string, string> header name => value (empty when CSP is disabled for the shop)
      */
-    public function build(int $shopId, string $reportUri): array
+    public function build(int $shopId, string $reportUri, array $themeContributions = []): array
     {
         if (!$this->featureChecker->isEnabledForShop($shopId)) {
             return [];
@@ -37,7 +40,7 @@ final class CspHeaderBuilder
             // Reporting API endpoint group referenced by "report-to" below.
             'Reporting-Endpoints' => sprintf('csp-endpoint="%s"', $reportUri),
             // Always report-only in this phase; enforcement (Content-Security-Policy) arrives in phase C.
-            'Content-Security-Policy-Report-Only' => $this->renderPolicy($this->policyProvider->getPolicy($shopId), $reportUri),
+            'Content-Security-Policy-Report-Only' => $this->renderPolicy($this->policyProvider->getPolicy($shopId, $themeContributions), $reportUri),
         ];
     }
 
