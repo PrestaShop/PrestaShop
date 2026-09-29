@@ -11,6 +11,18 @@
 {% endblock %}
 
 {% block content %}
+  {% if cspHasWeakeningSources %}
+    <div class="alert alert-warning" role="alert">
+      <p class="alert-text">
+        {% if cspIsEnforcing %}
+          {{ 'Your allow-list contains sources that weaken the policy (such as \'unsafe-inline\' or \'unsafe-eval\'). While the policy is enforced with these, it gives limited protection against cross-site scripting.'|trans({}, 'Admin.Advparameters.Notification') }}
+        {% else %}
+          {{ 'Your allow-list contains sources that weaken the policy (such as \'unsafe-inline\' or \'unsafe-eval\'). If you enforce it as is, it will give limited protection against cross-site scripting.'|trans({}, 'Admin.Advparameters.Notification') }}
+        {% endif %}
+      </p>
+    </div>
+  {% endif %}
+
   {{ form_start(cspForm, {attr: {class: 'form'}, action: path('admin_security_csp_save')}) }}
     <div class="card" id="configuration_fieldset_csp">
       <h3 class="card-header">

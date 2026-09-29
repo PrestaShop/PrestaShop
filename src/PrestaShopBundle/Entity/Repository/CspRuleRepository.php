@@ -8,12 +8,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Entity\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityRepository;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CannotAddCspRuleException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CannotDeleteCspRuleException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspRuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspDirective;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspSource;
 use PrestaShopBundle\Entity\CspRule;
 
 /**
@@ -65,8 +68,6 @@ class CspRuleRepository extends EntityRepository
     }
 
     /**
-     * Returns the curated rules of a shop as a flat list, for the policy builder to merge.
-     *
      * @return list<array{directive: string, source: string}>
      */
     public function getRulesByShop(int $shopId): array
@@ -81,5 +82,34 @@ class CspRuleRepository extends EntityRepository
             ->fetchAllAssociative();
 
         return $rows;
+    }
+
+    /** Whether the shop has any curated rule; for the baseline check, which only needs existence. */
+    public function existsByShop(int $shopId): bool
+    {
+        return (bool) $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('1')
+            ->from($this->getClassMetadata()->getTableName())
+            ->where('id_shop = :shopId')
+            ->setMaxResults(1)
+            ->setParameter('shopId', $shopId)
+            ->executeQuery()
+            ->fetchOne();
+    }
+
+    /** Counts a shop's allowed sources that weaken the policy, using the same rule as the grid's is_weakening. */
+    public function countWeakeningRulesByShop(int $shopId): int
+    {
+        return (int) $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('COUNT(1)')
+            ->from($this->getClassMetadata()->getTableName())
+            ->where('id_shop = :shopId')
+            ->andWhere("source IN (:weakeningSources) OR source LIKE '%*%' OR (directive IN (:scriptStyleDirectives) AND source IN (:broadeningSchemes))")
+            ->setParameter('shopId', $shopId)
+            ->setParameter('weakeningSources', CspSource::WEAKENING_KEYWORDS, ArrayParameterType::STRING)
+            ->setParameter('scriptStyleDirectives', [CspDirective::SCRIPT_SRC->value, CspDirective::STYLE_SRC->value], ArrayParameterType::STRING)
+            ->setParameter('broadeningSchemes', CspSource::BROADENING_SCHEMES, ArrayParameterType::STRING)
+            ->executeQuery()
+            ->fetchOne();
     }
 }
