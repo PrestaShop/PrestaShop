@@ -23,18 +23,32 @@ class CspHeaderBuilderTest extends TestCase
     private const SHOP_ID = 1;
     private const REPORT_URI = 'https://shop.example.com/?controller=cspreport';
 
-    public function testItBuildsReportOnlyHeadersWhenEnabled(): void
+    public function testItBuildsReportOnlyHeadersWhenReportOnlyIsOn(): void
     {
-        $headers = $this->builder(flagEnabled: true, cspEnabled: true)->build(self::SHOP_ID, self::REPORT_URI);
+        $headers = $this->builder(flagEnabled: true, cspEnabled: true, reportOnly: true)->build(self::SHOP_ID, self::REPORT_URI);
 
         $this->assertArrayHasKey('Content-Security-Policy-Report-Only', $headers);
-        $this->assertArrayNotHasKey('Content-Security-Policy', $headers, 'This phase never enforces');
+        $this->assertArrayNotHasKey('Content-Security-Policy', $headers, 'Report-only mode must not enforce');
 
         $policy = $headers['Content-Security-Policy-Report-Only'];
         $this->assertStringContainsString("default-src 'self'", $policy);
         $this->assertStringContainsString('report-uri ' . self::REPORT_URI, $policy);
         $this->assertStringContainsString('report-to csp-endpoint', $policy);
 
+        $this->assertSame('csp-endpoint="' . self::REPORT_URI . '"', $headers['Reporting-Endpoints']);
+    }
+
+    public function testItBuildsTheEnforcedHeaderWhenReportOnlyIsOff(): void
+    {
+        $headers = $this->builder(flagEnabled: true, cspEnabled: true, reportOnly: false)->build(self::SHOP_ID, self::REPORT_URI);
+
+        $this->assertArrayHasKey('Content-Security-Policy', $headers);
+        $this->assertArrayNotHasKey('Content-Security-Policy-Report-Only', $headers, 'Enforcement must not use the report-only header');
+
+        // Reports are still collected under enforcement.
+        $policy = $headers['Content-Security-Policy'];
+        $this->assertStringContainsString('report-uri ' . self::REPORT_URI, $policy);
+        $this->assertStringContainsString('report-to csp-endpoint', $policy);
         $this->assertSame('csp-endpoint="' . self::REPORT_URI . '"', $headers['Reporting-Endpoints']);
     }
 
@@ -48,13 +62,32 @@ class CspHeaderBuilderTest extends TestCase
         $this->assertSame([], $this->builder(flagEnabled: false, cspEnabled: true)->build(self::SHOP_ID, self::REPORT_URI));
     }
 
-    private function builder(bool $flagEnabled, bool $cspEnabled): CspHeaderBuilder
+    public function testItStripsHeaderBreakingCharactersFromTheReportUri(): void
+    {
+        // A URI carrying quotes, semicolons, commas or whitespace must never corrupt a header line
+        // or inject an extra directive.
+        $headers = $this->builder(flagEnabled: true, cspEnabled: true, reportOnly: true)
+            ->build(self::SHOP_ID, 'https://shop.example.com/r";script-src *, evil');
+
+        $cleanUri = 'https://shop.example.com/rscript-src*evil';
+        $this->assertSame('csp-endpoint="' . $cleanUri . '"', $headers['Reporting-Endpoints']);
+        $this->assertStringContainsString('report-uri ' . $cleanUri, $headers['Content-Security-Policy-Report-Only']);
+        $this->assertStringNotContainsString('";', $headers['Content-Security-Policy-Report-Only']);
+    }
+
+    private function builder(bool $flagEnabled, bool $cspEnabled, bool $reportOnly = true): CspHeaderBuilder
     {
         $featureFlagChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
         $featureFlagChecker->method('isEnabled')->willReturn($flagEnabled);
 
         $configuration = $this->createMock(ShopConfigurationInterface::class);
-        $configuration->method('get')->willReturn($cspEnabled);
+        $configuration->method('get')->willReturnCallback(
+            static fn (string $key, $default = null) => match ($key) {
+                'PS_CSP_ENABLED' => $cspEnabled,
+                'PS_CSP_REPORT_ONLY' => $reportOnly,
+                default => $default,
+            }
+        );
 
         $ruleRepository = $this->createMock(CspRuleRepository::class);
         $ruleRepository->method('getRulesByShop')->willReturn([]);
