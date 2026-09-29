@@ -10,12 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Csp;
 
 use PrestaShop\PrestaShop\Core\Csp\CspPolicy;
 
-/**
- * Builds the CSP response headers for a shop. Context-free: the caller passes the shop id and the
- * absolute report endpoint, so the same builder serves the legacy front controller and the
- * FrontKernel response subscriber. Returns an empty map when CSP is off for the shop, so a caller
- * can send nothing without special-casing.
- */
+/** Builds the CSP response headers for a shop (Context-free), or an empty map when CSP is off for the shop. */
 final class CspHeaderBuilder
 {
     public function __construct(
@@ -25,8 +20,7 @@ final class CspHeaderBuilder
     }
 
     /**
-     * @param array<string, list<string>> $themeContributions the active theme's global_settings.csp, passed in by
-     *                                                        the caller so the builder stays Context-free
+     * @param array<string, list<string>> $themeContributions the active theme's global_settings.csp
      *
      * @return array<string, string> header name => value (empty when CSP is disabled for the shop)
      */
@@ -36,19 +30,28 @@ final class CspHeaderBuilder
             return [];
         }
 
+        // Report-only reports without blocking; enforcement blocks. Both still send reports.
+        $headerName = $this->featureChecker->isReportOnlyForShop($shopId)
+            ? 'Content-Security-Policy-Report-Only'
+            : 'Content-Security-Policy';
+
+        // The URI is built internally from the shop's link, but strip control characters, whitespace,
+        // quotes and the header/directive delimiters anyway so it can never corrupt a header line.
+        $reportUri = (string) preg_replace('/[\x00-\x20\x7F";,]/', '', $reportUri);
+
         return [
             // Reporting API endpoint group referenced by "report-to" below.
             'Reporting-Endpoints' => sprintf('csp-endpoint="%s"', $reportUri),
-            // Always report-only in this phase; enforcement (Content-Security-Policy) arrives in phase C.
-            'Content-Security-Policy-Report-Only' => $this->renderPolicy($this->policyProvider->getPolicy($shopId, $themeContributions), $reportUri),
+            $headerName => $this->renderPolicy($this->policyProvider->getPolicy($shopId, $themeContributions), $reportUri),
         ];
     }
 
     private function renderPolicy(CspPolicy $policy, string $reportUri): string
     {
         $parts = [];
+        // CspPolicy never stores a directive without at least one source.
         foreach ($policy->getDirectives() as $directive => $sources) {
-            $parts[] = $sources === [] ? $directive : $directive . ' ' . implode(' ', $sources);
+            $parts[] = $directive . ' ' . implode(' ', $sources);
         }
 
         // Dual emission: report-to for modern browsers, report-uri for Firefox/Safari.

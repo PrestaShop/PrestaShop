@@ -13,11 +13,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 
-/**
- * Decides whether CSP is active, shared by the storefront header builder and the report collector
- * so both no-op under exactly the same conditions. Lives in services the hand-built front-office
- * container can resolve.
- */
+/** Decides whether CSP is active, shared by the header builder and the report collector so both no-op under the same conditions. */
 final class CspFeatureChecker
 {
     public function __construct(
@@ -35,5 +31,11 @@ final class CspFeatureChecker
     {
         return $this->isFeatureFlagEnabled()
             && (bool) $this->configuration->get('PS_CSP_ENABLED', false, ShopConstraint::shop($shopId));
+    }
+
+    /** Whether the shop only reports violations; defaults to report-only so a shop never blocks without an explicit opt-in. */
+    public function isReportOnlyForShop(int $shopId): bool
+    {
+        return (bool) $this->configuration->get('PS_CSP_REPORT_ONLY', true, ShopConstraint::shop($shopId));
     }
 }

@@ -244,6 +244,8 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.shop.context'
       - '@prestashop.adapter.multistore_feature'
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@translator'
 
   prestashop.core.email.email_configurator:
     class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'
