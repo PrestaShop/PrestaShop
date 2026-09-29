@@ -38,6 +38,8 @@ class ConnectionIsBotTest extends TestCase
         yield 'googlebot' => ['Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'];
         yield 'msnbot' => ['msnbot/2.0b (+http://search.msn.com/msnbot.htm)'];
         yield 'YandexBot' => ['Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)'];
+        yield 'Motor' => ['Motor/0.2 libwww-perl/5.64'];
+        yield 'webs' => ['webs@recruit.co.jp'];
 
         // Search engine crawlers
         yield 'bingbot' => ['Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'];
@@ -83,6 +85,9 @@ class ConnectionIsBotTest extends TestCase
         yield 'Firefox on Linux' => ['Mozilla/5.0 (X11; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0'];
         yield 'Safari on macOS' => ['Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15'];
         yield 'Mobile Chrome on Android' => ['Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'];
+        yield 'Instagram in-app browser on Motorola' => ['Mozilla/5.0 (Linux; Android 16; moto g77 Build/W2WIS36.43-92-1; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/153.0.8010.26 Mobile Safari/537.36 Instagram 446.0.0.49.77 Android (36/16; 390dpi; 1080x2352; motorola; moto g77; naples; mt6835; it_IT; 1061744266; IABMV/1)'];
+        yield 'Facebook in-app browser on Motorola' => ['Mozilla/5.0 (Linux; Android 14; moto g54 5G Build/U1TDS34.94-12-9-10; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/124.0.6367.179 Mobile Safari/537.36 [FB_IAB/FB4A;FBAV/464.0.0.46.101;FBBV/593823425;FBDM/{density=2.0,width=720,height=1472};FBLC/it_IT;FBRV/0;FBCR/;FBMF/motorola;FBBD/motorola;FBPN/com.facebook.katana;FBDV/moto g54 5G;FBSV/14;FBOP/1;FBCA/arm64-v8a:;]'];
+        yield 'WeChat in-app browser' => ['Mozilla/5.0 (Linux; Android 13; V2227A Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/111.0.5563.116 Mobile Safari/537.36 XWEB/1110017 MMWEBSDK/20230805 MMWEBID/2580 MicroMessenger/8.0.42.2460(0x28002A3B) WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64'];
         yield 'empty string' => [''];
     }
 }
