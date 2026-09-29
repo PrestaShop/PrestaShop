@@ -193,6 +193,29 @@ class ModuleExtraPropertyRegistrationTest extends KernelTestCase
         );
     }
 
+    /**
+     * The domain check only runs once the module name is injected: it must fail like any other
+     * registry error, on both wrappers.
+     */
+    public function testForeignLabelDomainReturnsFalseWithError(): void
+    {
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'reg_foreign_domain',
+            labelWording: 'Label',
+            labelDomain: 'Modules.Othermodule.Admin',
+        );
+
+        $this->assertFalse($this->module->registerExtraProperty($definition));
+        $this->assertFalse($this->module->unregisterExtraProperty($definition, true));
+
+        $errors = $this->module->getErrors();
+        $this->assertCount(2, $errors);
+        $this->assertStringContainsString('must belong to the module', $errors[0]);
+        $this->assertStringContainsString('must belong to the module', $errors[1]);
+        $this->assertSame(0, $this->countModuleRows());
+    }
+
     public function testUnregisterUnknownPropertyIsANoOp(): void
     {
         $this->assertTrue($this->module->unregisterExtraProperty(
