@@ -14,3 +14,34 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder'
       - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CspRuleValidator:
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AddCspRuleHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspRuleValidator'
+      - '@doctrine.orm.entity_manager'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AllowCspSourceHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\RevokeCspSourceHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\BulkRevokeCspSourceHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
