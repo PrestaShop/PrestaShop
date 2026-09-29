@@ -12,6 +12,11 @@ use Db;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
+use PrestaShopBundle\Translation\TranslatorComponent;
+use RuntimeException;
+use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 use Tests\Resources\DatabaseDump;
 
 /**
@@ -26,6 +31,7 @@ use Tests\Resources\DatabaseDump;
  *   5. Shop-theme override wins over core entry for the same key, theme set
  *   6. Multishop: all active shop themes loaded in a single query regardless of theme context
  *   7. Inactive shop theme rows are never included in the catalogue
+ *   8. Translations are queried once per catalogue build, and again outside a build
  *
  * Run:
  *   docker compose exec prestashop-git php ./vendor/phpunit/phpunit/phpunit \
@@ -212,7 +218,90 @@ class SqlTranslationLoaderTest extends TestCase
         );
     }
 
+    // ── scenario 8 — one query per catalogue build ────────────────────────────
+
+    public function testTranslatorBuildsItsCatalogueWithASingleQuery(): void
+    {
+        $loader = new QueryCountingSqlTranslationLoader();
+        $translator = new TranslatorComponent(self::$locale);
+        $translator->addLoader('db', $loader);
+        $translator->addResource('db', 'ShopThemeGlobal.' . self::$locale . '.db', self::$locale, 'ShopThemeGlobal');
+        $translator->addResource('db', 'ShopThemeCheckout.' . self::$locale . '.db', self::$locale, 'ShopThemeCheckout');
+
+        $catalogue = $translator->getCatalogue(self::$locale);
+
+        $this->assertSame(1, $loader->queries);
+        $this->assertSame('Core only value', $catalogue->get(self::KEY_CORE_ONLY, self::DOMAIN_GLOBAL));
+        $this->assertSame('Theme A only value', $catalogue->get(self::KEY_THEME_A_EXCLUSIVE, self::DOMAIN_CHECKOUT));
+    }
+
+    public function testTranslationsAreQueriedAgainOutsideACatalogueBuild(): void
+    {
+        $loader = new SqlTranslationLoader();
+        SqlTranslationLoader::startCatalogueBuild();
+        try {
+            $loader->load('', self::$locale);
+        } finally {
+            SqlTranslationLoader::endCatalogueBuild();
+        }
+
+        try {
+            $this->updateCoreOnlyTranslation('Updated value');
+            $this->assertSame('Updated value', $loader->load('', self::$locale)->get(self::KEY_CORE_ONLY, self::DOMAIN_GLOBAL));
+        } finally {
+            $this->updateCoreOnlyTranslation('Core only value');
+        }
+    }
+
+    public function testTranslationsAreQueriedAgainAfterAFailedCatalogueBuild(): void
+    {
+        $loader = new QueryCountingSqlTranslationLoader();
+        $translator = new TranslatorComponent(self::$locale);
+        $translator->addLoader('db', $loader);
+        $translator->addLoader('failing', new class() implements LoaderInterface {
+            public function load(mixed $resource, string $locale, string $domain = 'messages'): MessageCatalogue
+            {
+                throw new RuntimeException('Loading failed');
+            }
+        });
+        $translator->addResource('db', 'ShopThemeGlobal.' . self::$locale . '.db', self::$locale, 'ShopThemeGlobal');
+        $translator->addResource('failing', 'ShopThemeGlobal.' . self::$locale . '.failing', self::$locale, 'ShopThemeGlobal');
+
+        try {
+            $translator->getCatalogue(self::$locale);
+            $this->fail('The catalogue build should have failed');
+        } catch (RuntimeException) {
+        }
+        $loader->load('', self::$locale);
+
+        $this->assertSame(2, $loader->queries);
+    }
+
+    public function testReusedTranslationsAreNotAlteredByCallers(): void
+    {
+        $loader = new SqlTranslationLoader();
+        SqlTranslationLoader::startCatalogueBuild();
+        try {
+            $loader->load('', self::$locale)->set(self::KEY_CORE_ONLY, 'Altered value', self::DOMAIN_GLOBAL);
+            $loader->load('', self::$locale)->set(self::KEY_CORE_ONLY, 'Altered value', self::DOMAIN_GLOBAL);
+            $catalogue = $loader->load('', self::$locale);
+        } finally {
+            SqlTranslationLoader::endCatalogueBuild();
+        }
+
+        $this->assertSame('Core only value', $catalogue->get(self::KEY_CORE_ONLY, self::DOMAIN_GLOBAL));
+    }
+
     // ── helpers ───────────────────────────────────────────────────────────────
+
+    private function updateCoreOnlyTranslation(string $translation): void
+    {
+        Db::getInstance()->update(
+            'translation',
+            ['translation' => pSQL($translation)],
+            '`key` = "' . pSQL(self::KEY_CORE_ONLY) . '" AND `id_lang` = ' . self::$langId
+        );
+    }
 
     private function mockTheme(): Theme
     {
@@ -254,5 +343,16 @@ class SqlTranslationLoaderTest extends TestCase
                      ' . $themeSQL . ')'
             );
         }
+    }
+}
+
+final class QueryCountingSqlTranslationLoader extends SqlTranslationLoader
+{
+    public int $queries = 0;
+
+    protected function addTranslationsToCatalogue(array $translations, MessageCatalogueInterface $catalogue)
+    {
+        ++$this->queries;
+        parent::addTranslationsToCatalogue($translations, $catalogue);
     }
 }
