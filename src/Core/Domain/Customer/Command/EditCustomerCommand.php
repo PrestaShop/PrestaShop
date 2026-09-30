@@ -296,7 +296,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
     public function isEnabled()
     {
