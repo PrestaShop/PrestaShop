@@ -6,6 +6,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
       - ' > '
+      - '@prestashop.core.category.cache'
 
   prestashop.core.category.name_builder.category_display_name_builder:
     alias: PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder
@@ -18,3 +19,7 @@ services:
     public: false
     arguments:
       - !php/const _PS_CAT_IMG_DIR_
+
+  PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameCacheInvalidator:
+    arguments:
+      $cache: '@prestashop.core.category.cache'

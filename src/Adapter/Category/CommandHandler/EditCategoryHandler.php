@@ -42,6 +42,10 @@ final class EditCategoryHandler extends AbstractEditCategoryHandler implements E
 
         $this->updateCategoryFromCommandData($category, $command);
 
+        if ($this->affectsDisplayNameCache($command)) {
+            $this->categoryDisplayNameCacheInvalidator->invalidate();
+        }
+
         $this->categoryImageUploader->uploadImages(
             $command->getCategoryId(),
             $command->getCoverImage(),
@@ -114,5 +118,12 @@ final class EditCategoryHandler extends AbstractEditCategoryHandler implements E
         if ($command->getAssociatedShopIds()) {
             $this->associateWithShops($category, $command->getAssociatedShopIds());
         }
+    }
+
+    private function affectsDisplayNameCache(EditCategoryCommand $command): bool
+    {
+        return null !== $command->getLocalizedNames()
+            || null !== $command->getParentCategoryId()
+            || null !== $command->getAssociatedShopIds();
     }
 }

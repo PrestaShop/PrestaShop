@@ -66,6 +66,8 @@ framework:
     pools:
       '%cache.driver%':
         adapter: '%cache.adapter%'
+      prestashop.core.category.cache:
+        adapter: '%cache.driver%'
 
 # Monolog configuration
 monolog:
