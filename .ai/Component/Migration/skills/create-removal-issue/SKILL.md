@@ -3,7 +3,9 @@ name: create-removal-issue
 description: >
   Create a GitHub issue that targets the actual removal of the legacy controller
   in the next major version. The issue tracks readiness prerequisites and
-  assigns a major release milestone.
+  assigns a major release milestone. Trigger: "create the removal issue for
+  AdminXxx", "track the removal of the legacy controller", once a migrated page
+  is promoted to stable.
 produces: "GitHub issue tracking the actual removal of Admin{Domain}sController in the next major version"
 ---
 
