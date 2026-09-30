@@ -6,6 +6,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
+use PrestaShop\PrestaShop\Core\Shop\ShopThemesNamesProviderInterface;
+
 /**
  * Class ThemeProvider
  */
@@ -22,13 +24,19 @@ final class ThemeProvider implements ThemeProviderInterface
     private $theme;
 
     /**
+     * @var ShopThemesNamesProviderInterface
+     */
+    private $shopThemesRepository;
+
+    /**
      * @param ThemeRepository $themeRepository
      * @param Theme $theme
      */
-    public function __construct(ThemeRepository $themeRepository, Theme $theme)
+    public function __construct(ThemeRepository $themeRepository, Theme $theme, ShopThemesNamesProviderInterface $shopThemesRepository)
     {
         $this->themeRepository = $themeRepository;
         $this->theme = $theme;
+        $this->shopThemesRepository = $shopThemesRepository;
     }
 
     /**
@@ -47,5 +55,20 @@ final class ThemeProvider implements ThemeProviderInterface
         return $this->themeRepository->getListExcluding([
             $this->getCurrentlyUsedTheme()->getName(),
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNotDeletableThemes(): array
+    {
+        // Get all parent themes because they are not deletable
+        $parentThemes = $this->themeRepository->getParentThemes();
+        // Add the themes used by shop(s)
+        $shopThemes = $this->shopThemesRepository->getShopThemesNames();
+
+        $notDeletableThemes = array_merge($parentThemes, $shopThemes);
+
+        return array_unique($notDeletableThemes);
     }
 }
