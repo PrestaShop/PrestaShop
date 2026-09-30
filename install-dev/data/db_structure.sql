@@ -1038,6 +1038,17 @@ CREATE TABLE `PREFIX_product_carrier` (
   )
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
+/* Specify a carrier for a given combination, overriding the product ones */
+CREATE TABLE `PREFIX_product_attribute_carrier` (
+  `id_product_attribute` int(10) unsigned NOT NULL,
+  `id_carrier_reference` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL,
+  PRIMARY KEY (
+    `id_product_attribute`, `id_carrier_reference`,
+    `id_shop`
+  )
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 /* Stats from guest user */
 CREATE TABLE `PREFIX_guest` (
   `id_guest` int(10) unsigned NOT NULL auto_increment,

@@ -2752,12 +2752,15 @@ class CartCore extends ObjectModel
             $product['id_address_delivery'] = (int) $this->id_address_delivery;
 
             // Get product's carriers - the product can have some specific limitations
+            $error = [];
             $product['carrier_list'] = Carrier::getAvailableCarrierList(
                 new Product($product['id_product']),
                 0,
                 (int) $this->id_address_delivery,
                 null,
-                $this
+                $this,
+                $error,
+                (int) $product['id_product_attribute']
             );
 
             // Apply fallback if no carrier is found
