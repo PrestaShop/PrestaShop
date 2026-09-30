@@ -6,10 +6,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectOption;
 
@@ -29,7 +32,8 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      * @param CommandBusInterface $commandBus
      */
     public function __construct(
-        CommandBusInterface $commandBus
+        CommandBusInterface $commandBus,
+        private readonly GroupDataProvider $groupDataProvider,
     ) {
         $this->commandBus = $commandBus;
     }
@@ -52,6 +56,23 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      */
     public function update($categoryId, array $data)
     {
+        /** @var EditableCategory $editableCategory */
+        $editableCategory = $this->commandBus->handle(
+            new GetCategoryForEditing((int) $categoryId)
+        );
+
+        $contextGroupIds = $this->groupDataProvider->getAllGroupIds(true);
+
+        $outOfContextGroupIds = array_diff(
+            $editableCategory->getGroupAssociationIds(),
+            $contextGroupIds
+        );
+
+        $data['group_association'] = array_values(array_unique(array_merge(
+            $data['group_association'],
+            $outOfContextGroupIds
+        )));
+
         $command = $this->createEditCategoryCommand((int) $categoryId, $data);
 
         $this->commandBus->handle($command);
