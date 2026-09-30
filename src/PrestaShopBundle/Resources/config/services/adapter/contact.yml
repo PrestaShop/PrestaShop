@@ -1,6 +1,9 @@
 services:
   _defaults:
     public: true
+    bind:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
 
   prestashop.adapter.contact.repository:
     class: 'PrestaShop\PrestaShop\Adapter\Support\ContactRepository'
@@ -31,3 +34,17 @@ services:
     autoconfigure: true
     arguments:
       - '@validator'
+
+  PrestaShop\PrestaShop\Adapter\Contact\Repository\ContactRepository:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler\DeleteContactHandler:
+    autowire: true
+    public: false
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler\BulkDeleteContactHandler:
+    autowire: true
+    public: false
+    autoconfigure: true

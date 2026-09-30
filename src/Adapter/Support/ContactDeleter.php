@@ -10,6 +10,8 @@ use Contact;
 use PrestaShopCollection;
 
 /**
+ * @deprecated since 9.0.2 and will be removed in 10.0
+ *
  * Class ContactDeleter deletes contact records, using legacy code.
  */
 final class ContactDeleter
