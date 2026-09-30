@@ -8,6 +8,7 @@ Feature: Cart calculation with cart rules giving gift
   Background:
     Given I have an empty default cart
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    And shop configuration for "PS_CART_RULE_ALLOW_MULTIPLE_CODES" is set to 1
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     And there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock

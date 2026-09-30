@@ -21,6 +21,7 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
     private const VALID_CONFIGURATION = [
         'enable_final_summary' => true,
         'enable_guest_checkout' => true,
+        'allow_multiple_promo_codes' => true,
         'disable_reordering_option' => true,
         'purchase_minimum_value' => 3.0,
         'recalculate_shipping_cost' => true,
@@ -53,6 +54,7 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
                 [
                     ['PS_FINAL_SUMMARY_ENABLED', false, $shopConstraint, true],
                     ['PS_GUEST_CHECKOUT_ENABLED', false, $shopConstraint, true],
+                    ['PS_CART_RULE_ALLOW_MULTIPLE_CODES', true, $shopConstraint, true],
                     ['PS_DISALLOW_HISTORY_REORDERING', false, $shopConstraint, true],
                     ['PS_PURCHASE_MINIMUM', 0, $shopConstraint, 3.0],
                     ['PS_ORDER_RECALCULATE_SHIPPING', false, $shopConstraint, true],
@@ -94,6 +96,7 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_final_summary' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_guest_checkout' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['allow_multiple_promo_codes' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['disable_reordering_option' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['purchase_minimum_value' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['recalculate_shipping_cost' => 'wrong_type'])],
@@ -106,15 +109,28 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
 
     public function testSuccessfulUpdate(): void
     {
+        $allowMultiplePromoCodesUpdated = false;
+        $this->mockConfiguration
+            ->expects($this->atLeastOnce())
+            ->method('set')
+            ->willReturnCallback(function (string $key, $value) use (&$allowMultiplePromoCodesUpdated): void {
+                if ($key === 'PS_CART_RULE_ALLOW_MULTIPLE_CODES') {
+                    $this->assertFalse($value);
+                    $allowMultiplePromoCodesUpdated = true;
+                }
+            });
+
         $generalConfiguration = new GeneralConfiguration(
             $this->mockConfiguration,
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature
         );
 
-        $res = $generalConfiguration->updateConfiguration(self::VALID_CONFIGURATION);
+        $configuration = array_merge(self::VALID_CONFIGURATION, ['allow_multiple_promo_codes' => false]);
+        $res = $generalConfiguration->updateConfiguration($configuration);
 
         $this->assertSame([], $res);
+        $this->assertTrue($allowMultiplePromoCodesUpdated);
     }
 
     /**

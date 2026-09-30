@@ -73,6 +73,15 @@ class GeneralType extends TranslatorAwareType
                 'help' => $this->trans('Allow guest visitors to place an order without registering.', 'Admin.Shopparameters.Help'),
                 'multistore_configuration_key' => 'PS_GUEST_CHECKOUT_ENABLED',
             ])
+            ->add('allow_multiple_promo_codes', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans('Allow multiple promo codes in one cart', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans(
+                    'Enable this option to let customers use multiple promo codes. Existing shops keep their current behavior after upgrading.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'multistore_configuration_key' => 'PS_CART_RULE_ALLOW_MULTIPLE_CODES',
+            ])
             ->add('disable_reordering_option', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Disable reordering option', 'Admin.Shopparameters.Feature'),

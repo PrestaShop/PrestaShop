@@ -57,6 +57,18 @@ services:
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
 
+  PrestaShop\PrestaShop\Adapter\Discount\Repository\CartPromoCodeRepository:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Discount\Application\PromoCodeLimitService:
+    public: true
+    arguments:
+      $cartPromoCodeRepository: '@PrestaShop\PrestaShop\Adapter\Discount\Repository\CartPromoCodeRepository'
+      $configuration: '@PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface'
+      $featureFlagStateChecker: '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+
   PrestaShop\PrestaShop\Adapter\Discount\Application\DiscountApplicationService:
     public: true
     arguments:
