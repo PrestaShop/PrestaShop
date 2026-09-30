@@ -59,6 +59,9 @@ final class AddCategoryHandler extends AbstractEditCategoryHandler implements Ad
         $category = new Category();
         $category->id_parent = $command->getParentCategoryId();
         $category->active = $command->isActive();
+        if (null !== $command->getIndexation()) {
+            $category->indexation = $command->getIndexation();
+        }
 
         if (null !== $command->getLocalizedNames()) {
             $category->name = $command->getLocalizedNames();

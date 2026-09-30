@@ -104,6 +104,14 @@ class ProductCore extends ObjectModel
     /** @var bool online_only */
     public $online_only = false;
 
+    /**
+     * Whether search engines may index this product's page. Not to be confused with the
+     * `indexed` column, which tracks the shop's own search index.
+     *
+     * @var bool
+     */
+    public $indexation = true;
+
     /** @var string unity */
     public $unity = null;
 
@@ -479,6 +487,7 @@ class ProductCore extends ObjectModel
             'id_tax_rules_group' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'],
             'on_sale' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'online_only' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
+            'indexation' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'ecotax' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
             'minimal_quantity' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isPositiveInt'],
             'low_stock_threshold' => ['type' => self::TYPE_INT, 'shop' => true, 'allow_null' => true, 'validate' => 'isInt'],

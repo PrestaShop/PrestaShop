@@ -342,6 +342,10 @@ class CategoryControllerCore extends ProductListingFrontController
             $page['body_classes']['category-' . $this->category->name] = true;
             $page['body_classes']['category-id-parent-' . $this->category->id_parent] = true;
             $page['body_classes']['category-depth-level-' . $this->category->level_depth] = true;
+
+            if (!$this->category->indexation) {
+                $page['meta']['robots'] = 'noindex';
+            }
         }
 
         return $page;

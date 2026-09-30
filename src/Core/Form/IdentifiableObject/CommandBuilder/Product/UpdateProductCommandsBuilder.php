@@ -133,6 +133,7 @@ class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
             ->addMultiShopField('[seo][meta_title]', 'setLocalizedMetaTitles', DataField::TYPE_ARRAY)
             ->addMultiShopField('[seo][meta_description]', 'setLocalizedMetaDescriptions', DataField::TYPE_ARRAY)
             ->addMultiShopField('[seo][link_rewrite]', 'setLocalizedLinkRewrites', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[seo][indexation]', 'setIndexation', DataField::TYPE_BOOL)
             ->addMultiShopCompoundField('setRedirectOption', [
                 '[seo][redirect_option][type]' => DataField::TYPE_STRING,
                 '[seo][redirect_option][target][id]' => [
