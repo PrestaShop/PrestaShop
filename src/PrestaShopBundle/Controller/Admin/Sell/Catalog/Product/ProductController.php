@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\BulkUpdateProductOutOfStockTypeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -1431,6 +1432,69 @@ class ProductController extends PrestaShopAdminController
      *
      * @return JsonResponse
      */
+    /**
+     * Set the out of stock behavior of products in bulk action, for all associated stores.
+     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index', message: 'You do not have permission to edit this.', jsonResponse: true)]
+    public function bulkSetOutOfStockTypeAllShopsAction(Request $request, int $outOfStockType): JsonResponse
+    {
+        $shopConstraint = ShopConstraint::allShops();
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkUpdateProductOutOfStockType($request, $outOfStockType, $shopConstraint);
+    }
+
+    /**
+     * Set the out of stock behavior of products in bulk action, for one store.
+     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index', message: 'You do not have permission to edit this.', jsonResponse: true)]
+    public function bulkSetOutOfStockTypeShopAction(Request $request, int $shopId, int $outOfStockType): JsonResponse
+    {
+        $shopConstraint = ShopConstraint::shop($shopId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkUpdateProductOutOfStockType($request, $outOfStockType, $shopConstraint);
+    }
+
+    /**
+     * Set the out of stock behavior of products in bulk action, for one store group.
+     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index', message: 'You do not have permission to edit this.', jsonResponse: true)]
+    public function bulkSetOutOfStockTypeShopGroupAction(Request $request, int $shopGroupId, int $outOfStockType): JsonResponse
+    {
+        $shopConstraint = ShopConstraint::shopGroup($shopGroupId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkUpdateProductOutOfStockType($request, $outOfStockType, $shopConstraint);
+    }
+
+    private function bulkUpdateProductOutOfStockType(Request $request, int $outOfStockType, ShopConstraint $shopConstraint): JsonResponse
+    {
+        try {
+            $this->dispatchCommand(
+                new BulkUpdateProductOutOfStockTypeCommand(
+                    $this->getBulkActionIds($request, self::BULK_PRODUCT_IDS_KEY),
+                    $outOfStockType,
+                    $shopConstraint
+                )
+            );
+        } catch (Exception $e) {
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            }
+
+            return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages())], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json(['success' => true]);
+    }
+
     private function bulkUpdateProductStatus(Request $request, bool $newStatus, ShopConstraint $shopConstraint): JsonResponse
     {
         try {

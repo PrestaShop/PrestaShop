@@ -11,6 +11,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\BulkUpdateProductOutOfStockTypeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
@@ -19,6 +20,40 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateStockFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * @When /^I bulk change out of stock type to be "(default|available|not_available)" for following products:$/
+     */
+    public function bulkUpdateOutOfStockTypeForDefaultShop(string $outOfStockType, TableNode $productsList): void
+    {
+        $this->bulkUpdateOutOfStockType($outOfStockType, $productsList, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @When /^I bulk change out of stock type to be "(default|available|not_available)" for following products for all shops:$/
+     */
+    public function bulkUpdateOutOfStockTypeForAllShops(string $outOfStockType, TableNode $productsList): void
+    {
+        $this->bulkUpdateOutOfStockType($outOfStockType, $productsList, ShopConstraint::allShops());
+    }
+
+    private function bulkUpdateOutOfStockType(string $outOfStockType, TableNode $productsList, ShopConstraint $shopConstraint): void
+    {
+        $productIds = [];
+        foreach ($productsList->getColumnsHash() as $productInfo) {
+            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkUpdateProductOutOfStockTypeCommand(
+                $productIds,
+                $this->convertOutOfStockToInt($outOfStockType),
+                $shopConstraint
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
     /**
      * @When I update product :productReference stock with following information:
      */

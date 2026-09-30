@@ -273,6 +273,11 @@ services:
     arguments:
       $productUpdatablePropertyFiller: '@PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFiller'
 
+  PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\BulkUpdateProductOutOfStockTypeHandler:
+    autowire: true
+    public: false
+    autoconfigure: true
+
   PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockAvailableHandler:
     autowire: true
     public: false
