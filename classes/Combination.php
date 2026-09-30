@@ -104,6 +104,16 @@ class CombinationCore extends ObjectModel
         'associations' => [
             'product_option_values' => ['resource' => 'product_option_value'],
             'images' => ['resource' => 'image', 'api' => 'images/products'],
+            'product_features' => [
+                'resource' => 'product_feature',
+                'fields' => [
+                    'id' => ['required' => true],
+                    'id_feature_value' => [
+                        'required' => true,
+                        'xlink_resource' => 'product_feature_values',
+                    ],
+                ],
+            ],
         ],
     ];
 
@@ -418,6 +428,42 @@ class CombinationCore extends ObjectModel
         }
 
         return $this->setImages($idsImages);
+    }
+
+    /**
+     * @return array<array{id: string, id_feature_value: string}>
+     */
+    public function getWsProductFeatures()
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            SELECT fpa.`id_feature` AS id, fpa.`id_feature_value`
+            FROM `' . _DB_PREFIX_ . 'feature_product_attribute` fpa
+            WHERE fpa.`id_product_attribute` = ' . (int) $this->id . '
+            ORDER BY fpa.`id_feature` ASC, fpa.`id_feature_value` ASC
+        ');
+    }
+
+    /**
+     * @param array<array{id: int, id_feature_value: int}> $values
+     *
+     * @return bool
+     */
+    public function setWsProductFeatures($values)
+    {
+        if (!Db::getInstance()->delete('feature_product_attribute', '`id_product_attribute` = ' . (int) $this->id)) {
+            return false;
+        }
+
+        $rows = [];
+        foreach ($values as $value) {
+            $rows[] = [
+                'id_feature' => (int) $value['id'],
+                'id_product_attribute' => (int) $this->id,
+                'id_feature_value' => (int) $value['id_feature_value'],
+            ];
+        }
+
+        return Db::getInstance()->insert('feature_product_attribute', $rows, false, true, Db::INSERT_IGNORE);
     }
 
     /**
