@@ -99,7 +99,7 @@ class SqlTranslationLoader implements LoaderInterface
             AND ' . $this->buildThemeCondition() . '
             ORDER BY theme IS NOT NULL';
 
-        $buildResultKey = spl_object_id($this) . $locale . $selectTranslationsQuery;
+        $buildResultKey = spl_object_id($this) . '|' . $locale . '|' . $selectTranslationsQuery;
         if (isset(self::$catalogueBuildResults[$buildResultKey])) {
             return clone self::$catalogueBuildResults[$buildResultKey];
         }
