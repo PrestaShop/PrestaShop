@@ -69,6 +69,7 @@ final class AddOrderStateHandler extends AbstractOrderStateHandler implements Ad
         $orderState->pdf_invoice = $command->isPdfInvoice();
         $orderState->pdf_delivery = $command->isPdfDelivery();
         $orderState->shipped = $command->isShipped();
+        $orderState->reserve_products = $command->reservesProducts();
         $orderState->paid = $command->isPaid();
         $orderState->delivery = $command->isDelivery();
         if ($command->isSendEmailEnabled()) {

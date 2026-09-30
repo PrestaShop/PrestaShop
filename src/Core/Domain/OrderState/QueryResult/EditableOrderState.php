@@ -59,6 +59,11 @@ class EditableOrderState
      * @var bool
      */
     private $shipped;
+
+    /**
+     * @var bool
+     */
+    private $reserveProducts;
     /**
      * @var bool
      */
@@ -91,7 +96,8 @@ class EditableOrderState
         bool $paid,
         bool $delivery,
         array $localizedTemplates,
-        bool $isDeleted
+        bool $isDeleted,
+        bool $reserveProducts = true
     ) {
         $this->orderStateId = $orderStateId;
         $this->localizedNames = $name;
@@ -108,6 +114,7 @@ class EditableOrderState
         $this->delivery = $delivery;
         $this->localizedTemplates = $localizedTemplates;
         $this->isDeleted = $isDeleted;
+        $this->reserveProducts = $reserveProducts;
     }
 
     /**
@@ -196,6 +203,14 @@ class EditableOrderState
     public function isShipped()
     {
         return $this->shipped;
+    }
+
+    /**
+     * @return bool
+     */
+    public function reservesProducts(): bool
+    {
+        return $this->reserveProducts;
     }
 
     /**

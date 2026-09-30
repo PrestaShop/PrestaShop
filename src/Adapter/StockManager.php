@@ -120,9 +120,13 @@ class StockManager
     }
 
     /**
+     * Which orders hold their products in reserve is decided by the order state's own
+     * `reserve_products` flag, so $errorState and $cancellationState are no longer read here. They stay
+     * in the signature because updatePhysicalProductQuantity() is public and called from modules.
+     *
      * @param int $shopId
-     * @param int $errorState
-     * @param int $cancellationState
+     * @param int $errorState no longer used
+     * @param int $cancellationState no longer used
      * @param int|null $idProduct
      * @param int|null $idOrder
      *
@@ -156,12 +160,8 @@ class StockManager
                 INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
                 INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
                 WHERE ' . $orderScopeCondition . ' AND
-                os.shipped != 1 AND (
-                    o.valid = 1 OR (
-                        os.id_order_state != :error_state AND
-                        os.id_order_state != :cancellation_state
-                    )
-                ) AND sa.id_product = od.product_id AND
+                os.reserve_products = 1 AND
+                sa.id_product = od.product_id AND
                 sa.id_product_attribute = od.product_attribute_id
                 GROUP BY od.product_id, od.product_attribute_id
             )
@@ -174,8 +174,6 @@ class StockManager
             '{table_prefix}' => _DB_PREFIX_,
             ':stock_shop_id' => (int) $stockContext['shopId'],
             ':stock_shop_group_id' => (int) $stockContext['shopGroupId'],
-            ':error_state' => (int) $errorState,
-            ':cancellation_state' => (int) $cancellationState,
         ];
 
         if ($idProduct) {
