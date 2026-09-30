@@ -352,6 +352,17 @@ final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefiniti
                         'category_id_field' => 'id_category',
                         'category_delete_route' => 'admin_categories_delete',
                     ])
+            )
+            ->add(
+                (new LinkRowAction('preview'))
+                    ->setName($this->trans('Preview', [], 'Admin.Actions'))
+                    ->setIcon('remove_red_eye')
+                    ->setOptions([
+                        'route' => 'admin_categories_preview',
+                        'route_param_name' => 'categoryId',
+                        'route_param_field' => 'id_category',
+                        'target' => '_blank',
+                    ])
             );
     }
 }
