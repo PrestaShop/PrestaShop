@@ -1320,17 +1320,77 @@ function createSqlQueryName()
   return name.trim();
 }
 
-function confirm_link(head_text, display_text, confirm_text, cancel_text, confirm_link, cancel_link)
+/**
+ * Displays a confirmation modal and browses to `confirm_link` when it is accepted,
+ * to `cancel_link` otherwise.
+ *
+ * The markup follows the back office UI kit modal used by the migrated pages, see
+ * ConfirmModal in admin-dev/themes/new-theme/js/components/modal/confirm-modal.ts.
+ *
+ * @param {string} head_text modal title, the header only holds the close icon when empty
+ * @param {string} display_text message, inserted as text, "\n" is rendered as a line break
+ * @param {string} confirm_text label of the confirm button
+ * @param {string} cancel_text label of the cancel button
+ * @param {string} confirm_link location to browse to when confirmed
+ * @param {string} cancel_link location to browse to when cancelled
+ * @param {string} [confirm_button_class] modifier of the confirm button, defaults to btn-primary
+ */
+function confirm_link(head_text, display_text, confirm_text, cancel_text, confirm_link, cancel_link, confirm_button_class)
 {
-  $.alerts.okButton = confirm_text;
-  $.alerts.cancelButton = cancel_text;
-  jConfirm(display_text, head_text, function(confirm){
-    if (confirm === true)
+  // popup_cancel and popup_ok are the ids the jQuery Alert Dialogs plugin used to generate.
+  // They are kept so that the UI tests and the modules targeting them keep working, new code
+  // should rely on the .btn-confirm-submit class instead.
+  var $modal = $(
+    '<div class="bootstrap modal fade" tabindex="-1" role="dialog">'
+      + '<div class="modal-dialog" role="document">'
+        + '<div class="modal-content">'
+          + '<div class="modal-header">'
+            + '<button type="button" class="close" data-dismiss="modal">&times;</button>'
+            + '<h4 class="modal-title"></h4>'
+          + '</div>'
+          + '<div class="modal-body">'
+            + '<p class="confirm-message"></p>'
+          + '</div>'
+          + '<div class="modal-footer">'
+            + '<button type="button" id="popup_cancel" class="btn btn-default btn-lg" data-dismiss="modal"></button>'
+            + '<button type="button" id="popup_ok" class="btn btn-lg btn-confirm-submit"></button>'
+          + '</div>'
+        + '</div>'
+      + '</div>'
+    + '</div>'
+  );
+  var confirmed = false;
+
+  if (head_text)
+    $modal.find('.modal-title').text(head_text);
+  else
+    $modal.find('.modal-title').remove();
+
+  // The message is escaped first, then its line breaks are restored: callers append the
+  // name of the record to delete after a "\n\n" and that name is not trusted markup.
+  var $message = $modal.find('.confirm-message');
+  $message.text(display_text);
+  $message.html($message.html().replace(/\n/g, '<br />'));
+
+  $modal.find('.modal-footer .btn-default').text(cancel_text);
+  $modal.find('.btn-confirm-submit')
+    .addClass(confirm_button_class || 'btn-primary')
+    .text(confirm_text)
+    .on('click', function () {
+      confirmed = true;
+      $modal.modal('hide');
       document.location = confirm_link;
-    else
+    });
+
+  // Covers the cancel button, the close icon, the backdrop and the escape key.
+  $modal.on('hidden.bs.modal', function () {
+    $modal.remove();
+    if (!confirmed)
       document.location = cancel_link;
   });
 
+  $('body').append($modal);
+  $modal.modal('show');
 }
 
 function TogglePackage(detail)
