@@ -69,7 +69,7 @@ class Theme implements AddonInterface
 
         $attributes['directory'] = rtrim($attributes['directory'], '/') . '/';
 
-        if (file_exists($themesDirectory . $attributes['name'] . '/preview.png')) {
+        if (isset($attributes['name']) && file_exists($themesDirectory . $attributes['name'] . '/preview.png')) {
             $attributes['preview'] = 'themes/' . $attributes['name'] . '/preview.png';
         }
 

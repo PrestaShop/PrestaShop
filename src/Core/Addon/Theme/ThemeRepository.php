@@ -127,7 +127,12 @@ class ThemeRepository implements AddonRepositoryInterface
         $themes = [];
         foreach ($themeDirectories as $directory) {
             $name = basename(substr($directory, 0, -strlen($suffix)));
-            $themes[$name] = $this->getInstanceByName($name);
+            $theme = $this->getInstanceByName($name);
+            // Without a name, a theme can be neither enabled nor deleted from the back office
+            if (empty($theme->getName())) {
+                continue;
+            }
+            $themes[$name] = $theme;
         }
 
         return $themes;
