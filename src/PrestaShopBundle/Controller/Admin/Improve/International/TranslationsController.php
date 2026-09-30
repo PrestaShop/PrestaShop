@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Language\Pack\Import\LanguagePackImporterInterface;
+use PrestaShop\PrestaShop\Core\Language\Pack\Import\UploadedLanguagePackImporterInterface;
 use PrestaShop\PrestaShop\Core\Translation\Export\TranslationCatalogueExporter;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
@@ -23,6 +24,7 @@ use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Translation\Exporter\ThemeExporter;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -100,6 +102,8 @@ class TranslationsController extends PrestaShopAdminController
         FormHandlerInterface $exportTranslationCataloguesFormHandler,
         #[Autowire(service: 'prestashop.admin.translations_settings.copy_language.form_handler')]
         FormHandlerInterface $copyLanguageFormHandler,
+        #[Autowire(service: 'prestashop.admin.translations_settings.import_language_pack.form_handler')]
+        FormHandlerInterface $importLanguagePackFormHandler,
         LegacyContext $legacyContext,
         #[Autowire(service: 'prestashop.core.kpi_row.factory.translations_page')]
         HookableKpiRowFactory $kpiRowFactory
@@ -109,6 +113,7 @@ class TranslationsController extends PrestaShopAdminController
         $addUpdateLanguageForm = $addUpdateLanguageFormHandler->getForm();
         $exportCataloguesForm = $exportTranslationCataloguesFormHandler->getForm();
         $copyLanguageForm = $copyLanguageFormHandler->getForm();
+        $importLanguagePackForm = $importLanguagePackFormHandler->getForm();
 
         return $this->render('@PrestaShop/Admin/Improve/International/Translations/translations_settings.html.twig', [
             'layoutTitle' => $this->trans('Translations', [], 'Admin.Navigation.Menu'),
@@ -117,6 +122,7 @@ class TranslationsController extends PrestaShopAdminController
             'kpiRow' => $kpiRowFactory->build(),
             'copyLanguageForm' => $copyLanguageForm->createView(),
             'exportCataloguesForm' => $exportCataloguesForm->createView(),
+            'importLanguagePackForm' => $importLanguagePackForm->createView(),
             'addUpdateLanguageForm' => $addUpdateLanguageForm->createView(),
             'modifyTranslationsForm' => $modifyTranslationsForm->createView(),
             'addLanguageUrl' => $legacyContext->getAdminLink('AdminLanguages', true, ['addlang' => '']),
@@ -323,6 +329,44 @@ class TranslationsController extends PrestaShopAdminController
                 $this->addFlash(
                     'success',
                     $this->trans('The translation was successfully copied.', [], 'Admin.International.Notification')
+                );
+            }
+        }
+
+        return $this->redirectToRoute('admin_international_translations_show_settings');
+    }
+
+    /**
+     * Install a language pack the merchant supplies, rather than one fetched from the translation
+     * service by addUpdateLanguageAction().
+     */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    public function importLanguagePackAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.translations_settings.import_language_pack.form_handler')]
+        FormHandlerInterface $formHandler,
+        #[Autowire(service: 'prestashop.adapter.language.pack.uploaded_importer')]
+        UploadedLanguagePackImporterInterface $languagePackImporter
+    ): RedirectResponse {
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if (!$form->isValid()) {
+                $this->addFlashFormErrors($form);
+
+                return $this->redirectToRoute('admin_international_translations_show_settings');
+            }
+
+            /** @var UploadedFile $pack */
+            $pack = $form->getData()['pack'];
+
+            if ($errors = $languagePackImporter->import($pack->getPathname())) {
+                $this->addFlashErrors($errors);
+            } else {
+                $this->addFlash(
+                    'success',
+                    $this->trans('The language pack was successfully imported.', [], 'Admin.International.Notification')
                 );
             }
         }

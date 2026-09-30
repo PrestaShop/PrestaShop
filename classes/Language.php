@@ -1309,6 +1309,47 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
+     * Installs a translation pack the shop already holds on disk instead of one fetched from the
+     * translation service. The archive is placed where a downloaded pack is cached, so the
+     * installation step and everything it refreshes afterwards are exactly the same.
+     *
+     * The archive is expected to have been checked already - see
+     * PrestaShop\PrestaShop\Core\Language\Pack\Import\TranslationPackValidator - because
+     * installSfLanguagePack() extracts whatever it is given into the translations directory.
+     *
+     * @param string $locale IETF language tag
+     * @param string $archivePath path to a translation pack archive
+     * @param array $errors
+     *
+     * @return bool
+     */
+    public static function importSfLanguagePack(string $locale, string $archivePath, &$errors = [])
+    {
+        if (!Validate::isLocale($locale)) {
+            $errors[] = Context::getContext()->getTranslator()->trans('Sorry this language is not available', [], 'Admin.International.Notification');
+
+            return false;
+        }
+
+        if (!is_file($archivePath)) {
+            $errors[] = Context::getContext()->getTranslator()->trans('Cannot store the translation pack.', [], 'Admin.International.Notification');
+
+            return false;
+        }
+
+        // Re-installing the pack already cached for this locale is a valid thing to ask for, and
+        // copy() refuses a file onto itself.
+        $cachedPack = self::getPathToCachedTranslationPack($locale);
+        if (realpath($archivePath) !== realpath($cachedPack) && !@copy($archivePath, $cachedPack)) {
+            $errors[] = Context::getContext()->getTranslator()->trans('Cannot store the translation pack.', [], 'Admin.International.Notification');
+
+            return false;
+        }
+
+        return static::installSfLanguagePack($locale, $errors);
+    }
+
+    /**
      * @param array $langPack
      * @param array $errors
      * @param bool $overwriteTemplates
