@@ -45,7 +45,17 @@
       </span>
     {% endif %}
   </td>
-  <td class="cellProductUnitPrice">{{ product.unitPrice }}</td>
+  {# The displayed price stays this cell's first text node: the UI tests read the whole
+     cell and take the number off the front of it. #}
+  <td class="cellProductUnitPrice">
+    <span class="js-product-unit-price">{{ product.unitPrice }}</span>
+    {% if product.unitPriceOtherTaxMethod is not null %}
+      <small class="d-block text-muted">
+        <span class="js-product-unit-price-other-tax-method">{{ product.unitPriceOtherTaxMethod }}</span>
+        {{ (orderForViewing.isTaxIncluded ? 'Tax excluded' : 'Tax included')|trans({}, 'Admin.Global') }}
+      </small>
+    {% endif %}
+  </td>
   <td class="cellProductQuantity text-center">
     {% if product.quantity > 1 %}
       <span class="badge badge-dark rounded-circle">{{ product.quantity }}</span>
