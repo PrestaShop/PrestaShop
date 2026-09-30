@@ -24,6 +24,21 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
+#   v9.2.0 - (2026-09-29)
+####################################
+
+- Core:
+  - New feature:
+    - #42972: Update composer for hummingbird v2.1.2 (by @tblivet)
+  - Improvement:
+    - #43018: Update missing hooks (by @jolelievre)
+    - #42856: Update Symfony components after 6.4.46 release (by @nicosomb)
+    - #42851: Harden extra property definitions on the write and read paths (by @jolelievre)
+- Installer:
+  - Improvement:
+    - #43020: Update default catalog build-920 (by @ps-jarvis)
+
+####################################
 #   v9.2.0-rc.1 - (2026-09-11)
 ####################################
 

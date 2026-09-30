@@ -15,7 +15,7 @@
       <trans-unit id="8d11ea42eb87c7c24779e8d020ceff31">
         <source>%label%</source>
         <target>%label%</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 169]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 170]</note>
       </trans-unit>
       <trans-unit id="c24cf2abae9286b8f69a8ccdf7ed8d5e">
         <source>%nb_people% people are currently watching this product.</source>
@@ -40,7 +40,7 @@
       <trans-unit id="c02b687d04b8e1704093d84fc7dc7e28">
         <source>%price% tax excluded</source>
         <target>%price% tax excluded</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/product-prices.tpl [Line: 87]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/product-prices.tpl [Line: 91]</note>
       </trans-unit>
       <trans-unit id="3605da2a04dbf2ce98fe0f265a5696e5">
         <source>%product_price% (x%product_quantity%)</source>
@@ -74,7 +74,7 @@
       <trans-unit id="a134618182b99ff9151d7e0b6b92410a">
         <source>(not impacted by the discount)</source>
         <target>(not impacted by the discount)</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/product-prices.tpl [Line: 78]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/product-prices.tpl [Line: 81]</note>
       </trans-unit>
       <trans-unit id="035749e4c50392a661c0f1b220ae0516">
         <source>1 person is currently watching this product.</source>
@@ -149,7 +149,7 @@
       <trans-unit id="9ae7041cc2d967d00a6c820b4b7ef239">
         <source>Available quantity to return:</source>
         <target>Available quantity to return:</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 138]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 139]</note>
       </trans-unit>
       <trans-unit id="ae72a3080c4fbfedb628ead607dbbcdc">
         <source>Back to Home page</source>
@@ -273,7 +273,7 @@
       <trans-unit id="489ef62b62d7146babc052a5fc3ec9b5">
         <source>If this is a recurring problem, please [1]contact us[/1].</source>
         <target>If this is a recurring problem, please [1]contact us[/1].</target>
-        <note>File: themes/hummingbird/templates/errors/410.tpl [Line: 26]</note>
+        <note>File: themes/hummingbird/templates/errors/410.tpl [Line: 24]</note>
       </trans-unit>
       <trans-unit id="be53a0541a6d36f6ecb879fa2c584b08">
         <source>Image</source>
@@ -287,7 +287,7 @@
       <trans-unit id="98508b5a9b590896cc627beb46d86b96">
         <source>Including %amount% for ecotax</source>
         <target>Including %amount% for ecotax</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/product-prices.tpl [Line: 76]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/product-prices.tpl [Line: 79]</note>
       </trans-unit>
       <trans-unit id="a72a454b308052ed277f7b69ab307caa">
         <source>Instead of %price%</source>
@@ -447,7 +447,7 @@
       <trans-unit id="6f3455d187a23443796efdcbe044096b">
         <source>No tax</source>
         <target>No tax</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/product-prices.tpl [Line: 61]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/product-prices.tpl [Line: 66]</note>
       </trans-unit>
       <trans-unit id="39c08f79d381c6292bb9323232680fb7">
         <source>Nothing to search for</source>
@@ -472,7 +472,7 @@
       <trans-unit id="99f0c07c3b8b3bc78f5f9733019ec3d5">
         <source>Order totals</source>
         <target>Order totals</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 163]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 164]</note>
       </trans-unit>
       <trans-unit id="4492081ca02b059f9e8af4ddaf0f7292">
         <source>Pack</source>
@@ -576,7 +576,7 @@
       <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
         <source>Quantity</source>
         <target>Quantity</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 135]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 136]</note>
       </trans-unit>
       <trans-unit id="c874fc2a4f2ea4c93c8b66532a27bd3c">
         <source>Quantity inside the pack: %quantity%.</source>
@@ -641,7 +641,7 @@
       <trans-unit id="fdfac28b5ad628f25649d9c2eb4fc62e">
         <source>Returned</source>
         <target>Returned</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 153]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 154]</note>
       </trans-unit>
       <trans-unit id="b56ffaa1656269759857ba14573dc144">
         <source>Sales, highest to lowest</source>
@@ -705,7 +705,7 @@
       <trans-unit id="a1ab8a6719008b1b5b146dc898c8e9f0">
         <source>Select quantity to return</source>
         <target>Select quantity to return</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 143]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 144]</note>
       </trans-unit>
       <trans-unit id="fb526aaa0add86e4e124263db50438c8">
         <source>Showing %from%-%to% of %total% item(s)</source>
@@ -765,7 +765,7 @@
       <trans-unit id="0eede552438475bdfe820c13f24c9399">
         <source>Total price</source>
         <target>Total price</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 178]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 179]</note>
       </trans-unit>
       <trans-unit id="5fe40c576fdbea0d2cc25192a1d5c29f">
         <source>Try a more general or different keyword.</source>
@@ -780,7 +780,7 @@
       <trans-unit id="6c957f72dc8cdacc75762f2cbdcdfaf2">
         <source>Unit price</source>
         <target>Unit price</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 155]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 156]</note>
       </trans-unit>
       <trans-unit id="019d1ca7d50cc54b995f60d456435e87">
         <source>Used</source>
@@ -875,7 +875,7 @@
       <trans-unit id="4f4adcbf8c6f66dcfc8a3282ac2bf10a">
         <source>404</source>
         <target>404</target>
-        <note>File: themes/hummingbird/templates/errors/404.tpl [Line: 14]</note>
+        <note>File: themes/hummingbird/templates/errors/404.tpl [Line: 12]</note>
       </trans-unit>
     </body>
   </file>
