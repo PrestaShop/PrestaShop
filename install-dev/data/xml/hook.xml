@@ -461,6 +461,11 @@
       <title>Order detail</title>
       <description>This hook is displayed within the order's details in Front Office</description>
     </hook>
+    <hook id="displayOrderDetailProductLine">
+      <name>displayOrderDetailProductLine</name>
+      <title>Order detail product line</title>
+      <description>This hook is displayed on every product line of an order in Front Office. Receives the order, the order detail row and the product identifiers.</description>
+    </hook>
     <hook id="actionPaymentCCAdd">
       <name>actionPaymentCCAdd</name>
       <title>Payment CC added</title>
@@ -2150,6 +2155,11 @@
       <name>displayAdminOrderMainBottom</name>
       <title>Admin Order Main Column Bottom</title>
       <description>This hook displays content in the order view page at the bottom of the main column</description>
+    </hook>
+    <hook id="displayAdminOrderProductLine">
+      <name>displayAdminOrderProductLine</name>
+      <title>Admin Order Product Line</title>
+      <description>This hook displays content on every product line of the order view page. Receives the order, the order detail row and the product identifiers.</description>
     </hook>
     <hook id="displayAdminOrderTabLink">
       <name>displayAdminOrderTabLink</name>
