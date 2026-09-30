@@ -22,6 +22,38 @@ class SqlTranslationLoader implements LoaderInterface
     protected $theme;
 
     /**
+     * Query results reused while a catalogue is being built, null otherwise
+     *
+     * @var array<string, MessageCatalogue>|null
+     */
+    private static ?array $catalogueBuildResults = null;
+
+    private static int $catalogueBuildDepth = 0;
+
+    /**
+     * Translators register one resource per domain, but each load returns every domain of the language:
+     * while a catalogue is being built, the query runs only once.
+     *
+     * @internal
+     */
+    public static function startCatalogueBuild(): void
+    {
+        if (0 === self::$catalogueBuildDepth++) {
+            self::$catalogueBuildResults = [];
+        }
+    }
+
+    /**
+     * @internal
+     */
+    public static function endCatalogueBuild(): void
+    {
+        if (self::$catalogueBuildDepth > 0 && 0 === --self::$catalogueBuildDepth) {
+            self::$catalogueBuildResults = null;
+        }
+    }
+
+    /**
      * @param Theme $theme the theme
      *
      * @return $this
@@ -67,10 +99,19 @@ class SqlTranslationLoader implements LoaderInterface
             AND ' . $this->buildThemeCondition() . '
             ORDER BY theme IS NOT NULL';
 
+        $buildResultKey = spl_object_id($this) . '|' . $locale . '|' . $selectTranslationsQuery;
+        if (isset(self::$catalogueBuildResults[$buildResultKey])) {
+            return clone self::$catalogueBuildResults[$buildResultKey];
+        }
+
         $translations = Db::getInstance()->executeS($selectTranslationsQuery) ?: [];
 
         $catalogue = new MessageCatalogue($locale);
         $this->addTranslationsToCatalogue($translations, $catalogue);
+
+        if (null !== self::$catalogueBuildResults) {
+            self::$catalogueBuildResults[$buildResultKey] = clone $catalogue;
+        }
 
         return $catalogue;
     }

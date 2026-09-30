@@ -6,6 +6,7 @@
 
 namespace PrestaShopBundle\Translation;
 
+use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use Symfony\Component\Translation\Translator as BaseTranslatorComponent;
 
 /**
@@ -15,4 +16,17 @@ class TranslatorComponent extends BaseTranslatorComponent implements TranslatorI
 {
     use PrestaShopTranslatorTrait;
     use TranslatorLanguageTrait;
+
+    /**
+     * @return void
+     */
+    protected function initializeCatalogue(string $locale)
+    {
+        SqlTranslationLoader::startCatalogueBuild();
+        try {
+            parent::initializeCatalogue($locale);
+        } finally {
+            SqlTranslationLoader::endCatalogueBuild();
+        }
+    }
 }
