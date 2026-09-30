@@ -60,11 +60,25 @@ In suggested order:
 - Form theme overrides may be declared either via `{% form_theme %}` in the Twig file or via the PrestaShop-specific `'form_theme'` form option (preferred today). Pick one location per form.
 - Tab layout is the exception: only invoke `create-form-tab-layout` when the manifest's complexity decision called for it. The default form is single-column, no tabs.
 
+## Parity pass
+
+"The page renders and saves" does not show that it behaves like the page it replaces. Before the gate, run each line of the manifest's behaviour parity checklist on both pages, the legacy one with the feature flag off and the migrated one with it on, and read the result **from the database**, not from the flash message: a save that changed nothing still reports success. At least:
+
+- save an untouched edit form: the stored row, and any serialized field, is identical byte for byte
+- clear each optional field and save: the stored value is empty on both sides
+- the boundary inputs of the checklist: a whole number where decimals are expected, a locale decimal (`48,8566`), `0`, a value the widget cannot render (more slots than it shows)
+- submit the form without the JavaScript, with a required field removed from the payload: a field error, not a generic flash and not a 500
+- save the options block: every configuration key reads back with the same value format on both sides
+- the legacy URLs (`index.php?controller=Admin{Domain}&update{table}&{identifier}=1`, `&add{table}`) land on the migrated pages
+
+A difference is either fixed, or it is a **change** line of the checklist, listed in the PR description.
+
 ## Gate to next step
 
 - [ ] With flag enabled, the create page renders and saves
 - [ ] With flag enabled, the edit page renders, prefills, and saves
 - [ ] Validation errors map to translatable flash messages
 - [ ] Sub-resource updates (if any) persist through the appropriate sub-resource commands
-- [ ] File uploads (if any) work and survive a re-edit
+- [ ] File uploads (if any) work and survive a re-edit, in every image format the legacy page generated
+- [ ] Parity pass run: every checklist line matches legacy, or is a **change** line listed in the PR description
 - [ ] With flag disabled, the legacy form still loads (no regression)

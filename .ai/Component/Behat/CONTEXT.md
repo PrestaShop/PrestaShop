@@ -80,6 +80,8 @@ When I query the product "product1" I should get the following properties:
 
 The key principle: each step must independently load its data from the database. Never store query results in memory for a later step to assert — this hides which data is actually being checked and leads to false positives when a previous step's state leaks into the assertion.
 
+**A properties table fails on a key it does not know.** A `Then ... should have the following properties:` step that handles `name`, `city`, … and silently skips any other row turns every unhandled key into an assertion that cannot fail. Throw on an unknown key, so a scenario written for a new field fails until the step supports it.
+
 ### Command bus / Query bus access
 
 - `$this->getCommandBus()->handle(...)` for write operations

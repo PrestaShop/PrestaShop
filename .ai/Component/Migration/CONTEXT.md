@@ -52,6 +52,24 @@ The migration is the occasion to do things cleanly — replicating the legacy st
 - **Keep shared-component changes out of scope.** Don't modify shared JS components (`modal.ts`, `confirm-modal.ts`, `Link.php`, generic legacy list behavior) to make one page work — it risks side effects on every other consumer. If a shared component genuinely needs a change, do it in a dedicated PR; otherwise adapt at the call site
 - **Don't replicate legacy bugs as features.** When the legacy page did something dubious, flag it rather than faithfully porting it; a pre-existing legacy-wide bug is a separate dedicated fix, not part of the migration
 
+## Behaviour parity
+
+Structural parity (same fields, columns and actions) is not enough: most regressions of a migration come from legacy behaviour that no field map shows. Each item below is either ported, or listed in the PR description as an intentional change with its reason:
+
+- **Code around the save.** `postProcess()`, `processAdd()` / `processUpdate()` overrides, `beforeUpdateOptions()`, every `updateOption{Key}()` callback, `postImage()`, `afterAdd()` / `afterUpdate()`. They normalise values, add validations and write extra keys the ObjectModel definition does not show
+- **Stored shape.** Formatting applied before persistence (`number_format($value, 8)` before a validator that requires a decimal point, the separator of a serialized field). Port the shape exactly: a value that renders the same but is stored differently changes what the front office reads
+- **Validations outside the ObjectModel.** Checks against a related record (postcode format of the selected country, state belonging to the country and active), required fields driven by configuration
+- **Configuration keys.** The exact value an options block writes (a display name, not an ISO code), and the language a multilingual source is read in
+- **Defaults and emptied fields.** Create-form defaults (preselected country, active switch), and what saving an emptied optional field stores (legacy usually stores `''`)
+- **Images.** Every format and image type the legacy upload loop generated, not only what the shared uploader defaults to
+- **Legacy URLs.** `_legacy_link` uses the legacy action names, built from the legacy controller's `$this->table`: `add{table}`, `update{table}`, `delete{table}`, `status{table}`, `view{table}` (`AdminController::initProcess()`), so bookmarks and `Link::getAdminLink()` callers still land on the migrated page
+- **Field order** of the legacy form
+
+### Backward compatibility of what the migration replaces
+
+- A service id that disappears (typically a handler re-registered under its FQCN) keeps a deprecated alias (`alias` + `deprecated: {package, version}`), as in the `# deprecated` blocks of `services/adapter/*.yml`
+- `@deprecated since X` on the legacy controller names the version the migration ships in (the PR milestone), not the version of the branch being copied from
+
 ## Lifecycle rules
 
 ### GA (promote to stable)
