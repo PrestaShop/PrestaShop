@@ -19,6 +19,7 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     private const ALLOWED_FILTERS = [
         'id_carrier',
+        'id_reference',
         'name',
         'delay',
         'active',
@@ -69,7 +70,7 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getCarrierQueryBuilder($searchCriteria)
-            ->select('c.id_carrier, c.name, cl.delay, c.active, c.is_free, c.position, c.external_module_name')
+            ->select('c.id_carrier, c.id_reference, c.name, cl.delay, c.active, c.is_free, c.position, c.external_module_name')
             ->groupBy('c.id_carrier');
 
         $this->searchCriteriaApplicator
