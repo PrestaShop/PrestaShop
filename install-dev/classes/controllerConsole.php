@@ -6,7 +6,7 @@
 
 use PrestaShopBundle\Install\AbstractInstall;
 use PrestaShopBundle\Install\LanguageList;
-use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopBundle\Translation\TranslatorInterface;
 
 abstract class InstallControllerConsole
 {
@@ -55,7 +55,7 @@ abstract class InstallControllerConsole
     public $datas;
 
     /**
-     * @var TranslatorComponent|null
+     * @var TranslatorInterface
      */
     public $translator;
 

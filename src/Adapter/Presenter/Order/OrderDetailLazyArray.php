@@ -17,7 +17,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
-use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use PrestaShopException;
 use Tools;
 
@@ -39,7 +39,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
     private $context;
 
     /**
-     * @var TranslatorComponent
+     * @var TranslatorInterface
      */
     private $translator;
 
