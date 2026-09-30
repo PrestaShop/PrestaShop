@@ -1,0 +1,22 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<div class="card">
+  {% if this.title or this.configUrl %}
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="card-header-title">
+        {% if this.icon %}<i class="material-icons">{{ this.icon }}</i>{% endif %}
+        {{ this.title }}
+      </h3>
+      {% if this.configUrl %}
+        <a href="{{ this.configUrl }}" title="{{ this.configLabel|default('Configure'|trans({}, 'Admin.Actions')) }}">
+          <i class="material-icons">settings</i>
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+  <div class="card-body">
+    {% block content %}{% endblock %}
+  </div>
+</div>

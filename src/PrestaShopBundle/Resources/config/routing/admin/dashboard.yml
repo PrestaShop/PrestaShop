@@ -8,3 +8,13 @@ admin_dashboard_index:
     _legacy_feature_flag: dashboard
   options:
     expose: true
+
+admin_dashboard_toggle_simulation:
+  path: /toggle-simulation
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\DashboardController::toggleSimulationAction'
+    _legacy_controller: AdminDashboard
+    _legacy_feature_flag: dashboard
+  options:
+    expose: true

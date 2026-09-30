@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Form\Admin\Dashboard\DashboardDateRangeType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -92,14 +93,41 @@ class DashboardController extends PrestaShopAdminController
             $dateRangeFormView = $dateRangeForm->createView();
         }
 
-        return $this->render('@PrestaShop/Admin/Dashboard/index.html.twig', [
-            'layoutTitle' => $this->trans('Dashboard', [], 'Admin.Navigation.Menu'),
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($legacyController),
+        $templateParameters = [
             'dateRangeForm' => $dateRangeFormView,
             'dateFrom' => $dateFrom->format('Y-m-d'),
             'dateTo' => $dateTo->format('Y-m-d'),
+        ];
+
+        // A date range change submits this same route via fetch(): only the dashboard content
+        // is re-rendered, not the full layout, so the client can swap it in without a page reload.
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('@PrestaShop/Admin/Dashboard/_dashboard_content.html.twig', $templateParameters);
+        }
+
+        return $this->render('@PrestaShop/Admin/Dashboard/index.html.twig', $templateParameters + [
+            'layoutTitle' => $this->trans('Dashboard', [], 'Admin.Navigation.Menu'),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
+            'layoutHeaderToolbarBtn' => [
+                'switch_demo' => $this->getSimulationToggleButton(),
+            ],
         ]);
+    }
+
+    /**
+     * Toggle the "demo mode" that makes every dash* module display sample data instead of the
+     * shop's real figures (legacy equivalent: AdminDashboardController::ajaxProcessSetSimulationMode()).
+     * A plain redirect back to the dashboard, not AJAX: simpler, and independent of the ongoing
+     * discussion on the date range's own AJAX refresh (#42981).
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function toggleSimulationAction(): RedirectResponse
+    {
+        $configuration = $this->getConfiguration();
+        $configuration->set('PS_DASHBOARD_SIMULATION', (int) !$configuration->get('PS_DASHBOARD_SIMULATION'));
+
+        return $this->redirectToRoute('admin_dashboard_index');
     }
 
     /**
@@ -114,5 +142,20 @@ class DashboardController extends PrestaShopAdminController
         }
 
         return false;
+    }
+
+    /**
+     * @return array{icon: string, desc: string, help: string, href: string}
+     */
+    private function getSimulationToggleButton(): array
+    {
+        $enabled = (bool) $this->getConfiguration()->get('PS_DASHBOARD_SIMULATION');
+
+        return [
+            'icon' => $enabled ? 'toggle_on' : 'toggle_off',
+            'desc' => $this->trans('Demo mode', [], 'Admin.Dashboard.Feature'),
+            'help' => $this->trans('This mode displays sample data so you can try your dashboard without real numbers.', [], 'Admin.Dashboard.Help'),
+            'href' => $this->generateUrl('admin_dashboard_toggle_simulation'),
+        ];
     }
 }
