@@ -5,3 +5,7 @@ _preferences:
 _carriers:
   resource: "carriers.yml"
   prefix: /carriers
+
+_shipments:
+  resource: "shipments.yml"
+  prefix: /shipments
