@@ -253,13 +253,10 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
      * Retrieves a list of image ids ordered by position for each provided combination id
      *
      * @param CombinationId[] $combinationIds
-     *
-     * @return array<int, ImageId[]> [(int) id_combination => [ImageId]]
-     */
-    /**
-     * @param CombinationId[] $combinationIds
      * @param ShopConstraint|null $shopConstraint Null returns the associations of every shop, which
      *                                            is what callers without a shop context expect
+     *
+     * @return array<int, ImageId[]> [(int) id_combination => [ImageId]]
      */
     public function getImageIdsForCombinations(array $combinationIds, ?ShopConstraint $shopConstraint = null): array
     {
@@ -756,7 +753,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
         return $imageTypes;
     }
 
-    public function getPreviewCombinationProduct(CombinationId $combinationId): ?ImageId
+    public function getPreviewCombinationProduct(CombinationId $combinationId, ?ShopConstraint $shopConstraint = null): ?ImageId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('pai.id_image')
@@ -766,6 +763,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->orderBy('i.cover', 'DESC')
             ->setMaxResults(1)
             ->setParameter('productAttribute', $combinationId->getValue());
+        $this->restrictToShopImages($qb, $shopConstraint);
 
         $data = $qb->executeQuery()->fetchOne();
         if ($data > 0) {

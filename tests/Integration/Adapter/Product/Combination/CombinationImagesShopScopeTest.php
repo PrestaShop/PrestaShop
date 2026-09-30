@@ -165,6 +165,20 @@ class CombinationImagesShopScopeTest extends KernelTestCase
         self::assertSame([self::SHOP_2_IMAGE_ID], $shop2ImageIds, 'the second shop sees only its own image');
     }
 
+    public function testEachShopPreviewsItsOwnImage(): void
+    {
+        self::bootKernel();
+        $this->associateOneImagePerShop(self::getContainer()->get('prestashop.core.command_bus'));
+        $repository = self::getContainer()->get(ProductImageRepository::class);
+        $combinationId = new CombinationId(self::COMBINATION_ID);
+
+        $shop1Preview = $repository->getPreviewCombinationProduct($combinationId, ShopConstraint::shop(1));
+        $shop2Preview = $repository->getPreviewCombinationProduct($combinationId, ShopConstraint::shop(self::$secondShopId));
+
+        self::assertSame(self::SHOP_1_IMAGE_ID, $shop1Preview?->getValue(), 'the first shop previews its own image');
+        self::assertSame(self::SHOP_2_IMAGE_ID, $shop2Preview?->getValue(), 'the second shop previews its own image');
+    }
+
     /**
      * Scoping the delete must not make a row unreachable. An association naming an image of the
      * first shop is the first shop's to remove, whichever shop happened to write it.
