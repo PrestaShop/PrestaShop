@@ -46,7 +46,9 @@ final class GetCmsPageCategoryNameForListingHandler implements GetCmsPageCategor
      */
     public function handle(GetCmsPageCategoryNameForListing $query)
     {
-        $cmsCategory = new CMSCategory($this->getCmsCategoryIdFromRequest());
+        $explicitId = $query->getCmsPageCategoryId();
+        $categoryId = null !== $explicitId ? $explicitId->getValue() : $this->getCmsCategoryIdFromRequest();
+        $cmsCategory = new CMSCategory($categoryId);
 
         return isset($cmsCategory->name[$this->contextLanguageId]) ? $cmsCategory->name[$this->contextLanguageId] : '';
     }
