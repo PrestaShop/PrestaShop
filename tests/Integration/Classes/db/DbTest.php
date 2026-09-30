@@ -58,6 +58,39 @@ class DbTest extends TestCase
         $this->assertTwoCallsOnFirst_ThenOneOnSecondSlave();
     }
 
+    /**
+     * Insert_ID() is PDO::lastInsertId(), a per-connection property: only the connection that
+     * performed the INSERT knows the generated id. Reading it from a slave instance yields 0,
+     * silently losing the id — which is why an INSERT and its Insert_ID() must share a connection.
+     *
+     * No replication is needed to show this: the slave here points at the same server, so the
+     * result depends solely on which connection is asked.
+     */
+    public function testInsertIdIsOnlyKnownByTheConnectionThatInserted(): void
+    {
+        $this->loadSlaves(1);
+
+        $master = Db::getInstance();
+        $slave = Db::getInstance((bool) _PS_USE_SQL_SLAVE_);
+        $this->assertNotSame($master, $slave);
+
+        $table = _DB_PREFIX_ . 'test_insert_id';
+        $master->execute('DROP TABLE IF EXISTS `' . $table . '`');
+        $master->execute(
+            'CREATE TABLE `' . $table . '` (`id` INT AUTO_INCREMENT PRIMARY KEY, `label` VARCHAR(8))'
+            . ' ENGINE=' . _MYSQL_ENGINE_
+        );
+
+        try {
+            $master->execute('INSERT INTO `' . $table . "` (`label`) VALUES ('a')");
+
+            $this->assertGreaterThan(0, (int) $master->Insert_ID());
+            $this->assertSame(0, (int) $slave->Insert_ID());
+        } finally {
+            $master->execute('DROP TABLE IF EXISTS `' . $table . '`');
+        }
+    }
+
     private function assertTwoCallsOnFirst_ThenOneOnSecondSlave(): void
     {
         // Third and fourth calls are on first slave
