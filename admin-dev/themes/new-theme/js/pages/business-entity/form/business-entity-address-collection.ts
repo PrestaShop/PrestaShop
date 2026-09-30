@@ -106,6 +106,7 @@ export default class BusinessEntityAddressCollection {
         }
 
         this.addRequiredToggler(addressCard);
+        this.addDeleteLink(input);
 
         if (addressCard.dataset.addressIndex !== defaultValue) {
           this.addSetAsDefaultBtn(input);
@@ -130,6 +131,7 @@ export default class BusinessEntityAddressCollection {
         }
 
         this.addRequiredToggler(addressCard);
+        this.addDeleteLink(input);
 
         if (addressCard.dataset.addressIndex !== defaultValue) {
           this.addSetAsDefaultBtn(input);
