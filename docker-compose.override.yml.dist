@@ -2,7 +2,7 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
-      - "8080:80"
+      - "${PHPMYADMIN_HOST_PORT:-8080}:80"
     environment:
       PMA_HOST: mysql
       PMA_USER: root
