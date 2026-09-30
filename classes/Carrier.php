@@ -1551,12 +1551,13 @@ class CarrierCore extends ObjectModel
      * @param int|null $id_shop Shop ID
      * @param CartCore|null $cart Cart object
      * @param array|null $error contain an error message if an error occurs
+     * @param int $id_product_attribute Combination ID, its own carriers override the product ones
      *
      * @return array Available Carriers
      *
      * @throws PrestaShopDatabaseException
      */
-    public static function getAvailableCarrierList(Product $product, $id_warehouse = 0, $id_address_delivery = null, $id_shop = null, $cart = null, &$error = [])
+    public static function getAvailableCarrierList(Product $product, $id_warehouse = 0, $id_address_delivery = null, $id_shop = null, $cart = null, &$error = [], $id_product_attribute = 0)
     {
         if (null === $id_shop) {
             $id_shop = Context::getContext()->shop->id;
@@ -1599,6 +1600,25 @@ class CarrierCore extends ObjectModel
             Cache::store($cache_id, $carriers_for_product);
         } else {
             $carriers_for_product = Cache::retrieve($cache_id);
+        }
+
+        if ($id_product_attribute && Product::isCombinationFeatureValuesEnabled()) {
+            $cache_id = 'Carrier::getAvailableCarrierList_' . (int) $product->id . '-' . (int) $id_product_attribute . '-' . (int) $id_shop;
+            if (!Cache::isStored($cache_id)) {
+                $query = new DbQuery();
+                $query->select('id_carrier');
+                $query->from('product_attribute_carrier', 'pac');
+                $query->innerJoin(
+                    'carrier',
+                    'c',
+                    'c.id_reference = pac.id_carrier_reference AND c.deleted = 0 AND c.active = 1'
+                );
+                $query->where('pac.id_product_attribute = ' . (int) $id_product_attribute);
+                $query->where('pac.id_shop = ' . (int) $id_shop);
+
+                Cache::store($cache_id, Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query));
+            }
+            $carriers_for_product = Cache::retrieve($cache_id) ?: $carriers_for_product;
         }
 
         $carrier_list = [];
