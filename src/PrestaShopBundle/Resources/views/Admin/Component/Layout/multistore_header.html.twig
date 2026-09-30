@@ -10,6 +10,10 @@
       {% if this.contextShopId %}data-shop-id="{{ this.contextShopId }}"{% elseif this.contextShopGroupId %}data-group-id="{{ this.contextShopGroupId }}"{% else %}data-all-shops="1"{% endif %}
       {% if this.colorConfigLink is not empty %}data-header-color-notification="{{ 'Customize your multistore header, [1]pick a color[/1] for this store context.'|trans({'[1]': '<a href="' ~ this.colorConfigLink ~ '">', '[/1]': '</a>'}, 'Admin.Navigation.Header') }}"{% endif %}
       data-checkbox-notification="{{ 'To apply specific settings to a store or a group of stores, select the parameter to modify, make your changes and save.'|trans({}, 'Admin.Navigation.Header') ~ ' ' }}"
+      data-switch-context-title="{{ 'Switch context?'|trans({}, 'Admin.Notifications.Warning') }}"
+      data-switch-context-message="{{ 'Switching context now will discard all unsaved changes.'|trans({}, 'Admin.Notifications.Warning') }}"
+      data-switch-context-confirm="{{ 'Switch context anyway'|trans({}, 'Admin.Actions') }}"
+      data-switch-context-cancel="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
     >
       <div class="header-multishop-top-bar"{% if this.contextColor is not empty %} style="background-color: {{ this.contextColor }};"{% endif %}>
         <div class="header-multishop-center js-header-multishop-open-modal">
