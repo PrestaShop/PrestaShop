@@ -372,6 +372,13 @@ class AdminControllerCore extends Controller
     /** @var bool */
     public $multishop_context_group = true;
 
+    /**
+     * @var bool Whether the multistore shop selector is displayed in the header on this controller's pages.
+     *           Set it to false in a controller whose page is unrelated to multistore, so no shop context
+     *           switch is offered where switching would change nothing.
+     */
+    public $display_multishop_selector = true;
+
     /** @var array|null Current breadcrumb position as an array of tab names */
     protected $breadcrumbs;
 
