@@ -264,6 +264,11 @@ class CartRuleCore extends ObjectModel
         );
 
         $r = Db::getInstance()->delete('cart_cart_rule', '`id_cart_rule` = ' . (int) $this->id);
+        // This strips the rule from every cart's cart_cart_rule with no id_cart
+        // filter, bypassing Cart::removeCartRule(), so reset Cart's static caches
+        // (incl. the whole-cart total memo) to keep any live re-priced cart in this
+        // request consistent.
+        Cart::resetStaticCache();
         $r &= Db::getInstance()->delete('cart_rule_carrier', '`id_cart_rule` = ' . (int) $this->id);
         $r &= Db::getInstance()->delete('cart_rule_shop', '`id_cart_rule` = ' . (int) $this->id);
         $r &= Db::getInstance()->delete('cart_rule_group', '`id_cart_rule` = ' . (int) $this->id);
