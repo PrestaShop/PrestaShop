@@ -16,6 +16,8 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductPreviewProvider;
+use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivity;
+use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
@@ -539,6 +541,14 @@ class ProductController extends PrestaShopAdminController
             }
 
             $this->dispatchCommand(new DeleteProductCommand($productId, $shopConstraint));
+
+            $this->logAdminActivity(new AdminActivity(
+                AdminActivityType::DELETE,
+                'Product',
+                $productId,
+                $productId
+            ));
+
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
@@ -566,6 +576,14 @@ class ProductController extends PrestaShopAdminController
             }
 
             $this->dispatchCommand(new DeleteProductCommand($productId, $shopConstraint));
+
+            $this->logAdminActivity(new AdminActivity(
+                AdminActivityType::DELETE,
+                'Product',
+                $productId,
+                $productId
+            ));
+
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
@@ -593,6 +611,14 @@ class ProductController extends PrestaShopAdminController
             }
 
             $this->dispatchCommand(new DeleteProductCommand($productId, $shopConstraint));
+
+            $this->logAdminActivity(new AdminActivity(
+                AdminActivityType::DELETE,
+                'Product',
+                $productId,
+                $productId
+            ));
+
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
@@ -885,24 +911,22 @@ class ProductController extends PrestaShopAdminController
     {
         try {
             $shopConstraint = ShopConstraint::allShops();
+
             if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
                 throw new MultiShopAccessDeniedException($shopConstraint);
             }
 
-            $this->bulkDeleteByShopConstraint($request, $shopConstraint);
-            $this->addFlash(
-                'success',
-                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
-            );
+            return $this->bulkDeleteByShopConstraint($request, $shopConstraint);
         } catch (Exception $e) {
             if ($e instanceof BulkProductException) {
                 return $this->jsonBulkErrors($e);
-            } else {
-                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages())], Response::HTTP_BAD_REQUEST);
             }
-        }
 
-        return $this->json(['success' => true]);
+            return $this->json(
+                ['error' => $this->getErrorMessageForException($e, $this->getErrorMessages())],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 
     /**
@@ -1269,14 +1293,20 @@ class ProductController extends PrestaShopAdminController
     private function bulkDuplicateByShopConstraint(Request $request, ShopConstraint $shopConstraint): JsonResponse
     {
         try {
-            $this->dispatchCommand(
+            /** @var array<int, ProductId> $duplicatedProductIds */
+            $duplicatedProductIds = $this->dispatchCommand(
                 new BulkDuplicateProductCommand(
                     $this->getBulkActionIds($request, self::BULK_PRODUCT_IDS_KEY),
                     $shopConstraint
                 )
             );
+            $this->logBulkDuplicateActivities($duplicatedProductIds);
         } catch (Exception $e) {
             if ($e instanceof BulkProductException) {
+                /** @var array<int, ProductId> $successfulResults */
+                $successfulResults = $e->getSuccessfulResults();
+                $this->logBulkDuplicateActivities($successfulResults);
+
                 return $this->jsonBulkErrors($e);
             } else {
                 return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages())], Response::HTTP_BAD_REQUEST);
@@ -1302,6 +1332,13 @@ class ProductController extends PrestaShopAdminController
                 $productId,
                 $shopConstraint
             ));
+            $this->logAdminActivity(new AdminActivity(
+                AdminActivityType::DUPLICATE,
+                'Product',
+                $productId,
+                0,
+                $newProductId->getValue()
+            ));
             $this->addFlash(
                 'success',
                 $this->trans('Successful duplication', [], 'Admin.Notifications.Success')
@@ -1325,17 +1362,22 @@ class ProductController extends PrestaShopAdminController
      */
     private function bulkDeleteByShopConstraint(Request $request, ShopConstraint $shopConstraint): JsonResponse
     {
+        $productIds = $this->getBulkActionIds($request, self::BULK_PRODUCT_IDS_KEY);
+
         try {
-            $this->dispatchCommand(new BulkDeleteProductCommand(
-                $this->getBulkActionIds($request, self::BULK_PRODUCT_IDS_KEY),
-                $shopConstraint
-            ));
+            $this->dispatchCommand(new BulkDeleteProductCommand($productIds, $shopConstraint));
+            $this->logBulkDeleteActivities($productIds);
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             if ($e instanceof BulkProductException) {
+                $this->logBulkDeleteActivities(array_diff(
+                    $productIds,
+                    array_keys($e->getBulkExceptions())
+                ));
+
                 return $this->jsonBulkErrors($e);
             } else {
                 return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages())], Response::HTTP_BAD_REQUEST);
@@ -1343,6 +1385,45 @@ class ProductController extends PrestaShopAdminController
         }
 
         return $this->json(['success' => true]);
+    }
+
+    /**
+     * @param int[] $productIds
+     */
+    private function logBulkDeleteActivities(array $productIds): void
+    {
+        $activities = [];
+        foreach ($productIds as $productId) {
+            $activities[] = new AdminActivity(
+                AdminActivityType::DELETE,
+                'Product',
+                $productId,
+                $productId,
+                bulk: true
+            );
+        }
+
+        $this->logAdminActivities($activities);
+    }
+
+    /**
+     * @param array<int, ProductId> $duplicatedProductIds
+     */
+    private function logBulkDuplicateActivities(array $duplicatedProductIds): void
+    {
+        $activities = [];
+        foreach ($duplicatedProductIds as $sourceProductId => $newProductId) {
+            $activities[] = new AdminActivity(
+                AdminActivityType::DUPLICATE,
+                'Product',
+                $sourceProductId,
+                0,
+                $newProductId->getValue(),
+                bulk: true
+            );
+        }
+
+        $this->logAdminActivities($activities);
     }
 
     /**
@@ -1388,6 +1469,7 @@ class ProductController extends PrestaShopAdminController
             $command = new UpdateProductCommand($productId, $shopConstraint);
             $command->setActive($isEnabled);
             $this->dispatchCommand($command);
+            $this->logProductStatusActivity($productId, $isEnabled);
             $this->addFlash('success', $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -1405,10 +1487,13 @@ class ProductController extends PrestaShopAdminController
             $this->getLanguageContext()->getId()
         ));
 
+        $newStatus = !$productForEditing->isActive();
+
         try {
             $command = new UpdateProductCommand($productId, $shopConstraint);
-            $command->setActive(!$productForEditing->isActive());
+            $command->setActive($newStatus);
             $this->dispatchCommand($command);
+            $this->logProductStatusActivity($productId, $newStatus);
         } catch (Exception $e) {
             return $this->json([
                 'status' => false,
@@ -1433,16 +1518,24 @@ class ProductController extends PrestaShopAdminController
      */
     private function bulkUpdateProductStatus(Request $request, bool $newStatus, ShopConstraint $shopConstraint): JsonResponse
     {
+        $productIds = $this->getBulkActionIds($request, self::BULK_PRODUCT_IDS_KEY);
+
         try {
             $this->dispatchCommand(
                 new BulkUpdateProductStatusCommand(
-                    $this->getBulkActionIds($request, self::BULK_PRODUCT_IDS_KEY),
+                    $productIds,
                     $newStatus,
                     $shopConstraint
                 )
             );
+            $this->logBulkProductStatusActivities($productIds, $newStatus);
         } catch (Exception $e) {
             if ($e instanceof BulkProductException) {
+                $this->logBulkProductStatusActivities(array_diff(
+                    $productIds,
+                    array_keys($e->getBulkExceptions())
+                ), $newStatus);
+
                 return $this->jsonBulkErrors($e);
             } else {
                 return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages())], Response::HTTP_BAD_REQUEST);
@@ -1450,6 +1543,36 @@ class ProductController extends PrestaShopAdminController
         }
 
         return $this->json(['success' => true]);
+    }
+
+    private function logProductStatusActivity(int $productId, bool $isEnabled, bool $bulk = false): void
+    {
+        $this->logAdminActivity(new AdminActivity(
+            $isEnabled ? AdminActivityType::ACTIVATE : AdminActivityType::DEACTIVATE,
+            'Product',
+            $productId,
+            $productId,
+            bulk: $bulk
+        ));
+    }
+
+    /**
+     * @param int[] $productIds
+     */
+    private function logBulkProductStatusActivities(array $productIds, bool $isEnabled): void
+    {
+        $activities = [];
+        foreach ($productIds as $productId) {
+            $activities[] = new AdminActivity(
+                $isEnabled ? AdminActivityType::ACTIVATE : AdminActivityType::DEACTIVATE,
+                'Product',
+                $productId,
+                $productId,
+                bulk: true
+            );
+        }
+
+        $this->logAdminActivities($activities);
     }
 
     /**
