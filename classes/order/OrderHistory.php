@@ -199,14 +199,16 @@ class OrderHistoryCore extends ObjectModel
                     if ($new_os->logable && !$old_os->logable) {
                         ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
                         if (!Pack::isPack($product['product_id'])
-                            && in_array($old_os->id, $error_or_canceled_statuses)) {
+                            && in_array($old_os->id, $error_or_canceled_statuses)
+                            && $this->shouldUpdateStock($order, $product, -(int) $product['product_quantity'], $new_os, $old_os)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
                         }
                     } elseif (!$new_os->logable && $old_os->logable) {
                         // if becoming unlogable => removes sale
                         ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
                         if (!Pack::isPack($product['product_id'])
-                            && in_array($new_os->id, $error_or_canceled_statuses)) {
+                            && in_array($new_os->id, $error_or_canceled_statuses)
+                            && $this->shouldUpdateStock($order, $product, (int) $product['product_quantity'], $new_os, $old_os)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
                         }
                     } elseif (!$new_os->logable && !$old_os->logable
@@ -214,13 +216,17 @@ class OrderHistoryCore extends ObjectModel
                         && !in_array($old_os->id, $error_or_canceled_statuses)
                     ) {
                         // Status is changed from not loggable status as Processing in progress etc. to Payment error/Canceled
-                        StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
+                        if ($this->shouldUpdateStock($order, $product, (int) $product['product_quantity'], $new_os, $old_os)) {
+                            StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
+                        }
                     } elseif (!$new_os->logable && !$old_os->logable
                         && !in_array($new_os->id, $error_or_canceled_statuses)
                         && in_array($old_os->id, $error_or_canceled_statuses)
                     ) {
                         // Status is changed from Payment error/Canceled to not loggable status as Processing in progress etc.
-                        StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
+                        if ($this->shouldUpdateStock($order, $product, -(int) $product['product_quantity'], $new_os, $old_os)) {
+                            StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
+                        }
                     }
                 }
                 // From here, there is 2 cases : $old_os exists, and we can test shipped state evolution,
@@ -513,5 +519,62 @@ class OrderHistoryCore extends ObjectModel
         } else {
             return $this->add();
         }
+    }
+
+    /**
+     * Lets a module stop this status change from adjusting the stock of one product, by returning
+     * false from actionOrderStatusUpdateStockBefore.
+     *
+     * A merchant who cancels an order whose goods already shipped, and is not expecting them back,
+     * has no way to keep the stock as it is today, and an override cannot serve two modules at once.
+     *
+     * The delta is passed rather than only the fact of a cancellation, because a module that
+     * suppresses a restock has to suppress the matching decrease if the order later leaves the
+     * cancelled state, or the stock drifts.
+     *
+     * @param OrderCore $order the order being moved, as changeIdOrderState() declares it
+     * @param array $product row from Order::getProductsDetail()
+     * @param int $deltaQuantity negative when stock is taken, positive when it is given back
+     * @param OrderStateCore $newOrderState
+     * @param OrderStateCore $oldOrderState
+     *
+     * @return bool
+     */
+    protected function shouldUpdateStock($order, array $product, $deltaQuantity, $newOrderState, $oldOrderState): bool
+    {
+        $results = $this->dispatchStockUpdateVeto([
+            'order' => $order,
+            'product' => $product,
+            'delta_quantity' => $deltaQuantity,
+            'new_order_state' => $newOrderState,
+            'old_order_state' => $oldOrderState,
+        ]);
+
+        // Anything other than a module answering false leaves the stock update alone, so a shop with
+        // no module listening behaves exactly as before, and a hook that cannot be dispatched cannot
+        // silently stop stock from being given back.
+        if (!is_array($results)) {
+            return true;
+        }
+
+        return array_reduce(
+            $results,
+            function ($carry, $item) {
+                return false === $item ? false : $carry;
+            },
+            true
+        );
+    }
+
+    /**
+     * Isolated so it can be replaced in tests.
+     *
+     * @param array $params
+     *
+     * @return array|null one entry per listening module
+     */
+    protected function dispatchStockUpdateVeto(array $params)
+    {
+        return Hook::exec('actionOrderStatusUpdateStockBefore', $params, null, true);
     }
 }
