@@ -23,12 +23,12 @@ use Traversable;
 /**
  * Lazy-loading grouped value bag for extra properties on an ObjectModel instance.
  *
- * Keys are module names (e.g. 'demoextrafield', '_core'). Values are ModuleFieldsBag
+ * Keys are module names (e.g. 'demoextraproperty', '_core'). Values are ModuleFieldsBag
  * instances keyed by field name. Data is loaded from the DB on first access.
  *
  * Usage:
- *   $product->extra_properties['demoextrafield']['date_last_seen']         // read
- *   $product->extra_properties['demoextrafield']['date_last_seen'] = $val  // write + mark dirty
+ *   $product->extra_properties['demoextraproperty']['date_last_seen']         // read
+ *   $product->extra_properties['demoextraproperty']['date_last_seen'] = $val  // write + mark dirty
  *   foreach ($product->extra_properties as $module => $fields) { ... }    // iterate (triggers load)
  *   json_encode($product->extra_properties)                                // serialize
  */
@@ -93,7 +93,7 @@ final class ExtraPropertiesBag implements ArrayAccess, IteratorAggregate, JsonSe
             if ($forFrontOffice) {
                 $definitions = $definitions->filterForFrontOffice();
             }
-            // X2: skip the DB read entirely when no matching fields are registered.
+            // Skip the DB read entirely when no matching fields are registered.
             if ($definitions->isEmpty()) {
                 return [];
             }

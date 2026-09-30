@@ -179,6 +179,7 @@ class ExtraPropertyValidatorTest extends TestCase
         yield 'int string' => [ExtraPropertyType::INT, '-7', true];
         yield 'int refuses letters' => [ExtraPropertyType::INT, 'abc', false];
         yield 'int refuses float string' => [ExtraPropertyType::INT, '1.5', false];
+        yield 'int refuses trailing newline' => [ExtraPropertyType::INT, "1\n", false];
 
         yield 'float native' => [ExtraPropertyType::FLOAT, 1.5, true];
         yield 'float numeric string' => [ExtraPropertyType::FLOAT, '1.5', true];
@@ -260,5 +261,179 @@ class ExtraPropertyValidatorTest extends TestCase
 
         $this->assertCount(1, $violations);
         $this->assertStringNotContainsString('field type', $violations->get(0)->getMessage());
+    }
+
+    /**
+     * @dataProvider tableOrIdentifierProvider
+     */
+    public function testIsTableOrIdentifier(string $value, bool $expected): void
+    {
+        $this->assertSame($expected, ExtraPropertyValidator::isTableOrIdentifier($value));
+    }
+
+    public static function tableOrIdentifierProvider(): iterable
+    {
+        yield 'lowercase' => ['product', true];
+        yield 'snake case' => ['product_attribute', true];
+        yield 'mixed case and digits' => ['Mod2_Field', true];
+        // MySQL accepts a leading digit in an identifier as long as it is not all digits.
+        yield 'leading digit' => ['1field', true];
+        yield 'hyphen' => ['my-field', true];
+        yield 'single char' => ['a', true];
+        yield '64 chars (MySQL limit)' => [str_repeat('a', 64), true];
+        yield '65 chars' => [str_repeat('a', 65), false];
+        yield 'empty' => ['', false];
+        yield 'space' => ['my field', false];
+        yield 'dot (qualified name)' => ['ps_product.id', false];
+        yield 'backtick' => ['field`', false];
+        yield 'backtick breakout' => ['a` INT; DROP TABLE ps_product; --', false];
+        yield 'single quote' => ["a'b", false];
+        yield 'double quote' => ['a"b', false];
+        yield 'semicolon' => ['a;b', false];
+        yield 'double hyphen' => ['a--', true];
+        yield 'hash comment' => ['a#b', false];
+        yield 'parenthesis' => ['a()', false];
+        yield 'slash' => ['a/b', false];
+        yield 'backslash' => ['a\\b', false];
+        yield 'null byte' => ["a\0b", false];
+        yield 'inner newline' => ["a\nb", false];
+        yield 'trailing newline' => ["product\n", false];
+        yield 'unicode letter' => ['produit_é', false];
+        yield 'fullwidth letter' => ['ａbc', false];
+    }
+
+    /**
+     * @dataProvider moduleNameProvider
+     */
+    public function testIsModuleName(string $value, bool $expected): void
+    {
+        $this->assertSame($expected, ExtraPropertyValidator::isModuleName($value));
+    }
+
+    public static function moduleNameProvider(): iterable
+    {
+        yield 'lowercase' => ['demoextrafield', true];
+        yield 'underscore' => ['ps_apiresources', true];
+        yield 'hyphen' => ['my-module', true];
+        yield 'mixed case' => ['MyModule', true];
+        yield 'leading digit' => ['1module', true];
+        // No length cap here: the 64-char storage column check of the definition bounds it.
+        yield 'long' => [str_repeat('a', 100), true];
+        yield 'empty' => ['', false];
+        yield 'space' => ['my module', false];
+        yield 'dot' => ['my.module', false];
+        yield 'path traversal' => ['../ps_mbo', false];
+        yield 'slash' => ['vendor/module', false];
+        yield 'backtick' => ['mod`ule', false];
+        yield 'single quote' => ["mod'ule", false];
+        yield 'semicolon' => ['mod;ule', false];
+        yield 'null byte' => ["mod\0ule", false];
+        yield 'trailing newline' => ["mymodule\n", false];
+        yield 'unicode' => ['modulé', false];
+        yield 'html' => ['<script>', false];
+    }
+
+    /**
+     * @dataProvider safeDisplayTextProvider
+     */
+    public function testIsSafeDisplayText(string $value, bool $expected): void
+    {
+        $this->assertSame($expected, ExtraPropertyValidator::isSafeDisplayText($value));
+    }
+
+    public static function safeDisplayTextProvider(): iterable
+    {
+        yield 'plain' => ['Video link', true];
+        yield 'empty' => ['', true];
+        yield 'unicode' => ['Lien vidéo — 日本語', true];
+        yield 'tab and newline' => ["Line 1\n\tLine 2", true];
+        yield 'greater than' => ['a > b', true];
+        yield 'ampersand entity' => ['Tom &amp; Jerry', true];
+        yield 'quotes' => ['"quoted" \'text\'', true];
+        yield 'placeholder' => ['%count% items', true];
+        // Tags are what is refused: "<" can never open one, whatever the sink.
+        yield 'script tag' => ['<script>alert(1)</script>', false];
+        yield 'img onerror' => ['<img src=x onerror=alert(1)>', false];
+        yield 'less than alone' => ['a < b', false];
+        yield 'closing tag' => ['</label>', false];
+        yield 'html comment' => ['<!-- x -->', false];
+        yield 'null byte' => ["a\0b", false];
+        yield 'bell' => ["a\x07b", false];
+        yield 'vertical tab' => ["a\x0Bb", false];
+        yield 'form feed' => ["a\x0Cb", false];
+        yield 'escape' => ["a\x1Bb", false];
+        yield 'delete' => ["a\x7Fb", false];
+    }
+
+    /**
+     * @dataProvider translationDomainProvider
+     */
+    public function testIsTranslationDomain(string $value, bool $expected): void
+    {
+        $this->assertSame($expected, ExtraPropertyValidator::isTranslationDomain($value));
+    }
+
+    public static function translationDomainProvider(): iterable
+    {
+        yield 'two segments' => ['Admin.Actions', true];
+        yield 'three segments' => ['Modules.Demoextrafield.Admin', true];
+        yield 'underscore and digits' => ['Modules.Ps_apiresources2.Admin', true];
+        yield 'single segment' => ['Admin', false];
+        yield 'four segments' => ['Modules.Demo.Admin.Extra', false];
+        yield 'empty' => ['', false];
+        yield 'lowercase segment' => ['Admin.global', false];
+        yield 'leading digit segment' => ['Admin.1Global', false];
+        yield 'empty segment' => ['Admin..Global', false];
+        yield 'trailing dot' => ['Admin.Global.', false];
+        yield 'intl-icu suffix' => ['Admin.Global+intl-icu', false];
+        yield 'space' => ['Admin. Global', false];
+        yield 'path traversal' => ['../Admin.Global', false];
+        yield 'slash' => ['Admin/Global', false];
+        yield 'hyphen' => ['Admin.Global-Extra', false];
+        yield 'unicode' => ['Admin.Glöbal', false];
+        yield 'trailing newline' => ["Admin.Global\n", false];
+    }
+
+    /**
+     * @dataProvider safeUrlProvider
+     */
+    public function testIsSafeUrl(string $value, bool $expected): void
+    {
+        $this->assertSame($expected, ExtraPropertyValidator::isSafeUrl($value));
+    }
+
+    public static function safeUrlProvider(): iterable
+    {
+        yield 'https' => ['https://www.prestashop.com/doc?x=1#y', true];
+        yield 'http' => ['http://example.com', true];
+        yield 'scheme is case insensitive' => ['HTTPS://EXAMPLE.COM', true];
+        yield 'root relative' => ['/admin-dev/index.php?controller=AdminProducts', true];
+        yield 'root' => ['/', true];
+        yield 'root relative with colon' => ['/javascript:alert(1)', true];
+        yield 'scheme without host' => ['https://', false];
+        yield 'javascript' => ['javascript:alert(1)', false];
+        yield 'javascript mixed case' => ['JaVaScRiPt:alert(1)', false];
+        yield 'javascript leading space' => [' javascript:alert(1)', false];
+        yield 'javascript after tab' => ["\tjavascript:alert(1)", false];
+        yield 'data' => ['data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==', false];
+        yield 'vbscript' => ['vbscript:msgbox(1)', false];
+        yield 'file' => ['file:///etc/passwd', false];
+        yield 'ftp' => ['ftp://example.com', false];
+        yield 'mailto' => ['mailto:a@example.com', false];
+        yield 'http without slashes' => ['http:example.com', false];
+        yield 'protocol relative' => ['//evil.example', false];
+        yield 'backslash protocol relative' => ['/\\evil.example', false];
+        yield 'backslash in absolute url' => ['https://good.example\\@evil.example', false];
+        yield 'relative path' => ['relative/path', false];
+        yield 'query only' => ['?q=1', false];
+        yield 'fragment only' => ['#top', false];
+        yield 'empty' => ['', false];
+        yield 'space' => ['https://example.com/a b', false];
+        yield 'newline inside' => ["https://example.com/\nx", false];
+        yield 'trailing newline' => ["https://example.com\n", false];
+        yield 'double quote attribute breakout' => ['https://example.com/" onmouseover="alert(1)', false];
+        yield 'single quote attribute breakout' => ["https://example.com/' onmouseover='alert(1)", false];
+        yield 'tag' => ['https://example.com/<script>', false];
+        yield 'greater than' => ['/a>b', false];
     }
 }
