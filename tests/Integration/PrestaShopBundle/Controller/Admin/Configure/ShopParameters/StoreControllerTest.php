@@ -48,6 +48,51 @@ class StoreControllerTest extends GridControllerTestCase
     }
 
     /**
+     * A contact details field the page refuses must produce a message. Every constraint of that
+     * form sits on a child field, and the base addFlashFormErrors() only reads root-level errors,
+     * so the save used to come back with no success message and no error message at all.
+     */
+    public function testSavingRefusedContactDetailsShowsAnError(): void
+    {
+        $crawler = $this->client->request('GET', $this->router->generate('admin_stores_index'));
+        $this->assertResponseIsSuccessful();
+
+        $form = $crawler->filter('#save-contact-details-button')->form();
+        $storedCity = $form['stores-contact-details[city]']->getValue();
+        // Braces are refused by isGenericName(), in the legacy page as well as here, and unlike
+        // angle brackets they survive the purifier the flash message is rendered through.
+        $refusedCity = 'Paris {75}';
+        $form['stores-contact-details[city]'] = $refusedCity;
+
+        $this->client->submit($form);
+        $crawler = $this->client->followRedirect();
+
+        $errors = $crawler->filter('.alert-danger .alert-text');
+        $this->assertGreaterThan(
+            0,
+            $errors->count(),
+            'A refused contact details save must tell the merchant why, not fail silently.'
+        );
+        $this->assertStringContainsString(
+            $refusedCity,
+            $errors->text(),
+            'The error must name the value that was refused.'
+        );
+        $this->assertStringContainsString(
+            'is invalid',
+            $errors->text(),
+            'The error must say what is wrong with it, not just that something happened.'
+        );
+        $this->assertCount(0, $crawler->filter('.alert-success .alert-text'));
+
+        // The refused value is not stored: the field still offers what the shop had.
+        $this->assertSame(
+            $storedCity,
+            $crawler->filter('#save-contact-details-button')->form()['stores-contact-details[city]']->getValue()
+        );
+    }
+
+    /**
      * @depends testIndex
      *
      * Testing filters by using already existing entities from fixtures

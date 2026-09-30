@@ -4,6 +4,12 @@
  */
 
 $(() => {
+  new window.prestashop.component.CountryStateSelectionToggler(
+    '#stores-contact-details_id_country',
+    '#stores-contact-details_id_state',
+    '.js-store-state-row',
+  );
+
   const grid = new window.prestashop.component.Grid('store');
 
   grid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());

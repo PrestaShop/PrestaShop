@@ -7,6 +7,8 @@
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 
 /**
+ * @deprecated since 9.3 and will be removed in 10.0 - This controller was migrated in 9.3
+ *
  * @property Store $object
  */
 class AdminStoresControllerCore extends AdminController

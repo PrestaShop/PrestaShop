@@ -367,9 +367,12 @@ class PrestaShopAdminController extends AbstractController
         }
     }
 
-    protected function addFlashFormErrors(FormInterface $form): void
+    /**
+     * @param bool $deep Whether to also collect the errors of the form's children
+     */
+    protected function addFlashFormErrors(FormInterface $form, bool $deep = false): void
     {
-        foreach ($form->getErrors() as $formError) {
+        foreach ($form->getErrors($deep) as $formError) {
             $this->addFlash('error', $formError->getMessage());
         }
     }
