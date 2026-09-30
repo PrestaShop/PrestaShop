@@ -43,6 +43,15 @@ use Validate;
 class ProductLazyArray extends AbstractLazyArray
 {
     /**
+     * Request-scoped cache of default-category names, keyed "<id_shop>-<id_lang>-<id_category>",
+     * primed in batch by cacheCategoryNames() so a cart of N products runs one category-name query
+     * instead of N (issue #14979).
+     *
+     * @var array<string, string>
+     */
+    private static $categoryNamesCache = [];
+
+    /**
      * @var ImageRetriever
      */
     protected $imageRetriever;
@@ -649,23 +658,75 @@ class ProductLazyArray extends AbstractLazyArray
     public function getCategoryName()
     {
         if (!isset($this->product['category_name'])) {
-            $categoryName = (string) Db::getInstance()->getValue(
-                'SELECT name FROM ' .
-                    _DB_PREFIX_ .
-                    'category_lang
-                WHERE id_shop = ' .
-                    (int) Context::getContext()->shop->id .
-                    ' AND id_lang = ' .
-                    (int) $this->language->id .
-                    ' AND id_category = ' .
-                    (int) $this->product['id_category_default']
-            );
+            $idShop = (int) Context::getContext()->shop->id;
+            $idLang = (int) $this->language->id;
+            $idCategory = (int) $this->product['id_category_default'];
+            $cacheKey = $idShop . '-' . $idLang . '-' . $idCategory;
+
+            // Served from the batch primed by CartLazyArray::getProducts() when available (issue
+            // #14979); otherwise the original single-row query, so the value is unchanged either way.
+            if (array_key_exists($cacheKey, self::$categoryNamesCache)) {
+                $categoryName = self::$categoryNamesCache[$cacheKey];
+            } else {
+                $categoryName = (string) Db::getInstance()->getValue(
+                    'SELECT name FROM ' .
+                        _DB_PREFIX_ .
+                        'category_lang
+                    WHERE id_shop = ' .
+                        $idShop .
+                        ' AND id_lang = ' .
+                        $idLang .
+                        ' AND id_category = ' .
+                        $idCategory
+                );
+            }
             $this->product['category_name'] = !empty($categoryName)
                 ? $categoryName
                 : null;
         }
 
         return $this->product['category_name'];
+    }
+
+    /**
+     * Primes self::$categoryNamesCache for a set of default categories in a single query, so the
+     * per-product getCategoryName() lookups above are served from memory (issue #14979). The cached
+     * value is exactly what the per-product `(string) getValue()` would return (missing rows memoize
+     * to '' which getCategoryName() then maps to null), so the result stays byte-identical.
+     *
+     * @param int[] $idCategories default category ids
+     * @param int $idLang
+     * @param int $idShop
+     */
+    public static function cacheCategoryNames(array $idCategories, $idLang, $idShop)
+    {
+        $idLang = (int) $idLang;
+        $idShop = (int) $idShop;
+
+        $missing = [];
+        foreach (array_unique(array_map('intval', $idCategories)) as $idCategory) {
+            if (!array_key_exists($idShop . '-' . $idLang . '-' . $idCategory, self::$categoryNamesCache)) {
+                $missing[] = $idCategory;
+            }
+        }
+        if (empty($missing)) {
+            return;
+        }
+        // Pre-seed '' so categories with no matching lang row stay cached and map to null identically.
+        foreach ($missing as $idCategory) {
+            self::$categoryNamesCache[$idShop . '-' . $idLang . '-' . $idCategory] = '';
+        }
+
+        $rows = Db::getInstance()->executeS(
+            'SELECT id_category, name FROM ' . _DB_PREFIX_ . 'category_lang
+            WHERE id_shop = ' . $idShop . ' AND id_lang = ' . $idLang . '
+            AND id_category IN (' . implode(',', $missing) . ')'
+        );
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
+                self::$categoryNamesCache[$idShop . '-' . $idLang . '-' . (int) $row['id_category']] = (string) $row['name'];
+            }
+        }
     }
 
     /**
