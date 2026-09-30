@@ -106,7 +106,7 @@
 		</div>
 	</div>
 </form>
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	//<![CDATA
 	function position_exception_textchange() {
 		// TODO : Add & Remove automatically the "custom pages" in the "em_list_x"

@@ -36,7 +36,7 @@
 </div>
 
 
-	<script type="text/javascript">
+	<script type="text/javascript" nonce="{$cspNonce}">
 	$(function(){
 		$('#move_to_right').on('click', function(){
 			return !$('#select_left option:selected').remove().appendTo('#select_right');

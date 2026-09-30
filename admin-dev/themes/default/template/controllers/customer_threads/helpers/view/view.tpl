@@ -114,7 +114,7 @@
 	</div>
 </div>
 {/if}
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	var timer;
 		$(function(){
 			$('select[name=id_employee_forward]').on('change', function(){

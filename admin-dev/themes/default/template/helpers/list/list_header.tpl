@@ -4,7 +4,7 @@
  *}
 
 {if $ajax}
-	<script type="text/javascript">
+	<script type="text/javascript" nonce="{$cspNonce}">
 		$(function () {
 			$(".ajax_table_link").on('click', function () {
 				var link = $(this);
@@ -40,14 +40,14 @@
 {* Display column names and arrows for ordering (ASC, DESC) *}
 {if $is_order_position}
 	<script type="text/javascript" src="{$js_dir}jquery/plugins/jquery.tablednd.js"></script>
-	<script type="text/javascript">
+	<script type="text/javascript" nonce="{$cspNonce}">
 		var come_from = '{$list_id|addslashes}';
 		var alternate = {if $order_way == 'DESC'}'1'{else}'0'{/if};
 	</script>
 	<script type="text/javascript" src="{$js_dir}admin/dnd.js"></script>
 {/if}
 {if !$simple_header}
-	<script type="text/javascript">
+	<script type="text/javascript" nonce="{$cspNonce}">
 		$(function() {
 			$('table.{$list_id} .filter').on('keypress', function(e){
 				var key = (e.keyCode ? e.keyCode : e.which);
@@ -161,7 +161,7 @@
 			{/if}
 		</div>
 		{if $show_toolbar}
-			<script type="text/javascript">
+			<script type="text/javascript" nonce="{$cspNonce}">
 				//<![CDATA[
 				var submited = false;
 				$(function() {
@@ -348,7 +348,7 @@
 												<i class="icon-calendar"></i>
 											</span>
 										</div>
-										<script>
+										<script nonce="{$cspNonce}">
 											$(function() {
 												var dateStart = parseDate($("#{$params.id_date}_0").val());
 												var dateEnd = parseDate($("#{$params.id_date}_1").val());

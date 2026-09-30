@@ -35,3 +35,8 @@ services:
     autowire: true
     tags:
       - { name: doctrine.orm.entity_listener, event: postUpdate, entity: PrestaShopBundle\Entity\FeatureFlag, lazy: true }
+
+  prestashop.bundle.event_listener.csp_header:
+    class: PrestaShopBundle\EventListener\CspHeaderSubscriber
+    tags:
+      - { name: kernel.event_subscriber }

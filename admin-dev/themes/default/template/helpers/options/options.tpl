@@ -5,7 +5,7 @@
 
 <div class="leadin">{block name="leadin"}{/block}</div>
 
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	id_language = Number({$current_id_lang});
 	{if isset($tabs) && $tabs|count}
 		var helper_tabs= {$tabs|json_encode};
@@ -270,7 +270,7 @@
 
 													</div>
 												{/foreach}
-												<script type="text/javascript">
+												<script type="text/javascript" nonce="{$cspNonce}">
 													$(function() {
 														$(".textarea-autosize").autosize();
 													});
@@ -356,7 +356,7 @@
 {/block}
 {block name="after"}
 {if isset($tinymce) && $tinymce}
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	var iso = '{$iso|addslashes}';
 	var pathCSS = '{$smarty.const._THEME_CSS_DIR_|addslashes}';
 	var ad = '{$ad|addslashes}';
@@ -372,7 +372,7 @@
 {/if}
 {/block}
 {if $has_color_field}
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
   $.fn.mColorPicker.defaults.imageFolder = baseDir + 'img/admin/';
 </script>
 {/if}
