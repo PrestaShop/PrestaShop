@@ -45,9 +45,7 @@ final class SqlRequestFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $sqlRequestId = new SqlRequestId($id);
-
-        $command = (new EditSqlRequestCommand($sqlRequestId))
+        $command = (new EditSqlRequestCommand((int) $id))
             ->setName($data['name'])
             ->setSql($data['sql']);
 
