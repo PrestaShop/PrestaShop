@@ -93,6 +93,38 @@ Feature: Module
       | enabled           | true                 |
       | installed         | true                 |
 
+  Scenario: Get module infos of a module which is not overridden
+    Then module ps_emailsubscription has following infos:
+      | technical_name   | ps_emailsubscription |
+      | overridden       | false                |
+      | overridden_files |                      |
+
+  Scenario: Get module infos of a module overridden by its main class
+    Given module ps_emailsubscription is overridden by file "ps_emailsubscription.php"
+    Then module ps_emailsubscription has following infos:
+      | technical_name   | ps_emailsubscription                                           |
+      | overridden       | true                                                           |
+      | overridden_files | override/modules/ps_emailsubscription/ps_emailsubscription.php |
+    # Overriding a module says nothing about its status
+    And module ps_emailsubscription has following infos:
+      | enabled   | true |
+      | installed | true |
+
+  Scenario: Get module infos of a module overridden by several files
+    Given module ps_emailsubscription is overridden by file "ps_emailsubscription.php"
+    And module ps_emailsubscription is overridden by file "controllers/front/verification.php"
+    Then module ps_emailsubscription has following infos:
+      | overridden       | true                                                                                                                             |
+      | overridden_files | override/modules/ps_emailsubscription/controllers/front/verification.php, override/modules/ps_emailsubscription/ps_emailsubscription.php |
+
+  Scenario: Overriding a module does not override another one
+    Given module ps_emailsubscription is overridden by file "ps_emailsubscription.php"
+    Then module ps_emailsubscription has following infos:
+      | overridden | true |
+    And module ps_featuredproducts has following infos:
+      | overridden       | false |
+      | overridden_files |       |
+
   Scenario: Get module not present
     When module ps_notthere has following infos:
       | technical_name    | ps_notthere |
