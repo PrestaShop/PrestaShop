@@ -174,15 +174,10 @@ class Install extends AbstractInstall
         $secret = Tools::passwdGen(64);
         $cookie_key = defined('_COOKIE_KEY_') ? _COOKIE_KEY_ : Tools::passwdGen(64);
         $cookie_iv = defined('_COOKIE_IV_') ? _COOKIE_IV_ : Tools::passwdGen(32);
-        $database_port = null;
-
-        $splits = preg_split('#:#', $database_host);
-        $nbSplits = count($splits);
-
-        if ($nbSplits >= 2) {
-            $database_port = array_pop($splits);
-            $database_host = implode(':', $splits);
-        }
+        $databaseServer = self::parseDatabaseServer($database_host);
+        $database_host = $databaseServer['host'];
+        $database_port = $databaseServer['port'];
+        $database_unix_socket = $databaseServer['socket'];
 
         $key = PhpEncryption::createNewRandomKey();
         $privateKey = openssl_pkey_new([
@@ -196,6 +191,7 @@ class Install extends AbstractInstall
             'parameters' => [
                 'database_host' => $database_host,
                 'database_port' => $database_port,
+                'database_unix_socket' => $database_unix_socket,
                 'database_user' => $database_user,
                 'database_password' => $database_password,
                 'database_name' => $database_name,
@@ -226,6 +222,31 @@ class Install extends AbstractInstall
         }
 
         return true;
+    }
+
+    /**
+     * Split a server string of the form "host", "host:port" or "host:/path/to/socket".
+     *
+     * A unix socket is recognised by its leading slash, which is what DbPDO keys on when it
+     * parses _DB_SERVER_, so the installer and the legacy connection agree on what a socket is.
+     * Popping the path off as the port instead leaves Doctrine on the default socket while the
+     * legacy layer uses the configured one.
+     *
+     * @return array{host: string, port: string|null, socket: string|null}
+     */
+    public static function parseDatabaseServer(string $databaseServer): array
+    {
+        // These are the two patterns DbPDO applies to _DB_SERVER_, in its order, so a server
+        // string can never mean one thing to the installer and another to the connection.
+        if (preg_match('/^(.*):([0-9]+)$/', $databaseServer, $matches)) {
+            return ['host' => $matches[1], 'port' => $matches[2], 'socket' => null];
+        }
+
+        if (preg_match('#^(.*):(/.*)$#', $databaseServer, $matches)) {
+            return ['host' => $matches[1], 'port' => null, 'socket' => $matches[2]];
+        }
+
+        return ['host' => $databaseServer, 'port' => null, 'socket' => null];
     }
 
     /**
