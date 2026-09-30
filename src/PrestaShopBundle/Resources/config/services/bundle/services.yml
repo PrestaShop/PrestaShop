@@ -4,6 +4,7 @@ parameters:
   translations_dir: "%kernel.project_dir%/translations"
   themes_translations_dir: "%kernel.cache_dir%/themes"
   modules_dir: "%kernel.project_dir%/modules"
+  override_modules_dir: "%kernel.project_dir%/override/modules"
   themes_dir: "%kernel.project_dir%/themes"
   translation_catalogues_export_dir: "%kernel.cache_dir%/export"
   translations_catalogue_extract_excluded_dirs: [ 'vendor', 'lib', 'tests' ]
