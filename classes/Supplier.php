@@ -303,7 +303,7 @@ class SupplierCore extends ObjectModel
 				SELECT cp.`id_product`
 				FROM `' . _DB_PREFIX_ . 'category_product` cp
 				' . (Group::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.`id_category` = cg.`id_category`)' : '') . '
-				' . ($activeCategory ? ' INNER JOIN `' . _DB_PREFIX_ . 'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '') . '
+				' . ($activeCategory ? ' INNER JOIN `' . _DB_PREFIX_ . 'category_shop` ca ON cp.`id_category` = ca.`id_category` AND ca.`id_shop` = ' . (int) $context->shop->id . ' AND ca.`active` = 1' : '') . '
 				' . $sqlGroups . '
 			)');
         }
@@ -358,7 +358,7 @@ class SupplierCore extends ObjectModel
                 $sql .= 'JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.`id_category` = cg.`id_category` AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1') . ')';
             }
             if ($activeCategory) {
-                $sql .= 'JOIN `' . _DB_PREFIX_ . 'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1';
+                $sql .= 'JOIN `' . _DB_PREFIX_ . 'category_shop` ca ON cp.`id_category` = ca.`id_category` AND ca.`id_shop` = ' . (int) $context->shop->id . ' AND ca.`active` = 1';
             }
         }
 
