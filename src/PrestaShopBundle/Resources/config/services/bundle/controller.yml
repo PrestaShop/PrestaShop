@@ -109,5 +109,7 @@ services:
     autoconfigure: true
 
   PrestaShopBundle\Controller\Admin\SecuredFileReaderController:
+    autowire: true
+    autoconfigure: true
     arguments:
       $uploadDir: !php/const _PS_UPLOAD_DIR_
