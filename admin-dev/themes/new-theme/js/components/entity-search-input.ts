@@ -139,6 +139,10 @@ export default class EntitySearchInput {
     // Apply special options to components when needed
     if (optionName === 'remoteUrl' && this.entityRemoteSource) {
       (<Record<string, any>> this.entityRemoteSource).remote.url = this.options.remoteUrl;
+    } else if (optionName === 'filteredIdentities') {
+      // Cast all IDs into string to avoid not matching because of different types, the same way
+      // buildOptions does it, since identities are compared with the string cast response identifier
+      this.options.filteredIdentities = Array.isArray(value) ? value.map(String) : [];
     }
   }
 
