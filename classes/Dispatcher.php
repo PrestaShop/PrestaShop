@@ -389,23 +389,25 @@ class DispatcherCore
                 // Only proceed if module exists and is active
                 if (Validate::isLoadedObject($module) && $module->active) {
                     // Load module controllers
-                    $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . "$module_name/controllers/front/");
-                    if (isset($controllers[strtolower($this->controller)])) {
-                        // Include base controller file
-                        include_once _PS_MODULE_DIR_ . "$module_name/controllers/front/{$this->controller}.php";
+                    $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . $module_name . '/controllers/front/');
+                    $controller_name = $controllers[strtolower($this->controller)] ?? null;
 
-                        // If override exists, load it and use override class and it's naming convention
-                        if (file_exists(
-                            _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php"
-                        )) {
-                            include_once _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php";
-                            $controller_class = $module_name . $this->controller . 'ModuleFrontControllerOverride';
-                        } else {
-                            // Otherwise use default module controller class naming convention
-                            $controller_class = $module_name . $this->controller . 'ModuleFrontController';
+                    if ($controller_name !== null) {
+                        // Include base controller file, using the filename as it is on disk
+                        $controller_file = $module_name . '/controllers/front/' . $controller_name . '.php';
+                        include_once _PS_MODULE_DIR_ . $controller_file;
+
+                        // Default module controller class naming convention
+                        $controller_class = $module_name . $controller_name . 'ModuleFrontController';
+
+                        // If an override exists, load it and use the override naming convention instead
+                        if (file_exists(_PS_OVERRIDE_DIR_ . 'modules/' . $controller_file)) {
+                            include_once _PS_OVERRIDE_DIR_ . 'modules/' . $controller_file;
+                            $controller_class = $module_name . $controller_name . 'ModuleFrontControllerOverride';
                         }
                     }
                 }
+
                 $params_hook_action_dispatcher = [
                     'controller_type' => self::FC_FRONT,
                     'controller_class' => $controller_class,
