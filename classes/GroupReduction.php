@@ -202,14 +202,20 @@ class GroupReductionCore extends ObjectModel
             return true;
         }
 
-        $query = '';
-
+        // One statement per row made this a multi statement query, which the connection is asked to
+        // refuse: config/defines.inc.php sets _PS_ALLOW_MULTI_STATEMENTS_QUERIES_ to false and DbPDO
+        // passes it to the driver. A single insert with one tuple per row does the same work without
+        // depending on that capability.
+        $values = [];
         foreach ($res as $row) {
-            $query .= 'INSERT INTO `' . _DB_PREFIX_ . 'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`) VALUES ';
-            $query .= '(' . (int) $id_product . ', ' . (int) $row['id_group'] . ', ' . (float) $row['reduction'] . ') ON DUPLICATE KEY UPDATE `reduction` = ' . (float) $row['reduction'] . ';';
+            $values[] = '(' . (int) $id_product . ', ' . (int) $row['id_group'] . ', ' . (float) $row['reduction'] . ')';
         }
 
-        return Db::getInstance()->execute($query);
+        return Db::getInstance()->execute(
+            'INSERT INTO `' . _DB_PREFIX_ . 'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`)
+            VALUES ' . implode(', ', $values) . '
+            ON DUPLICATE KEY UPDATE `reduction` = VALUES(`reduction`)'
+        );
     }
 
     public static function deleteCategory($id_category)
