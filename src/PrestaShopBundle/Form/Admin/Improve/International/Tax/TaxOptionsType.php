@@ -78,7 +78,7 @@ class TaxOptionsType extends TranslatorAwareType
                     'attr' => [
                         'class' => 'js-enable-tax',
                     ],
-                    'multistore_configuration_key' => 'PS_USE_ECOTAX',
+                    'multistore_configuration_key' => 'PS_TAX',
                 ]
             )
             ->add(
