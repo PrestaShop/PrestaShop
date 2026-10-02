@@ -175,13 +175,94 @@ class StockRepository extends StockManagementRepository
      */
     public function getData(QueryParamsCollection $queryParams)
     {
-        $this->stockManager->updatePhysicalProductQuantity(
-            $this->getContextualShopId(),
-            $this->orderStates['error'],
-            $this->orderStates['cancellation']
-        );
+        return $this->refreshQuantitiesOfDisplayedProducts(parent::getData($queryParams));
+    }
 
-        return parent::getData($queryParams);
+    /**
+     * The reserved and physical quantities held in stock_available are already maintained by every
+     * path that can change them - order creation, order status change, order product edits, product
+     * and combination stock edits - and each of those scopes the update to the order or product it
+     * touches. This grid ran the same update unscoped on every page load as a repair pass, which
+     * makes MySQL evaluate one correlated sub-select over orders, order_detail and order_state for
+     * every stock_available row of the shop. That cost grows with both the catalogue and the order
+     * history, until the page stops loading.
+     *
+     * Only the rows about to be displayed have to be accurate, so the repair pass is scoped to their
+     * products and the refreshed values are read back into the rows.
+     *
+     * @param array $rows
+     *
+     * @return array
+     */
+    private function refreshQuantitiesOfDisplayedProducts(array $rows)
+    {
+        $productIds = array_values(array_unique(array_map('intval', array_column($rows, 'product_id'))));
+
+        if (empty($productIds)) {
+            return $rows;
+        }
+
+        $shopId = $this->getContextualShopId();
+
+        foreach ($productIds as $productId) {
+            $this->stockManager->updatePhysicalProductQuantity(
+                $shopId,
+                $this->orderStates['error'],
+                $this->orderStates['cancellation'],
+                $productId
+            );
+        }
+
+        return $this->applyStoredQuantities($rows, $productIds);
+    }
+
+    /**
+     * Reads back the two columns the repair pass writes, for the displayed products only, and copies
+     * them into the rows already fetched. Without this the grid would show the values as they were
+     * before the refresh.
+     *
+     * @param array $rows
+     * @param int[] $productIds
+     *
+     * @return array
+     */
+    private function applyStoredQuantities(array $rows, array $productIds)
+    {
+        $shop = $this->getCurrentShop();
+        $shopGroup = $shop->getGroup();
+
+        // Same scoping as the grid's own query: a group sharing its stock stores it under id_shop 0.
+        $stockShopId = $shopGroup->share_stock ? 0 : $shop->getContextualShopId();
+        $stockGroupId = $shopGroup->share_stock ? (int) $shopGroup->id : 0;
+
+        $refreshed = $this->connection->executeQuery(
+            'SELECT id_product, id_product_attribute, physical_quantity, reserved_quantity
+             FROM ' . $this->tablePrefix . 'stock_available
+             WHERE id_shop = :stockShopId AND id_shop_group = :stockGroupId AND id_product IN (:productIds)',
+            [
+                'stockShopId' => $stockShopId,
+                'stockGroupId' => $stockGroupId,
+                'productIds' => $productIds,
+            ],
+            ['productIds' => Connection::PARAM_INT_ARRAY]
+        )->fetchAllAssociative();
+
+        $quantitiesByProduct = [];
+        foreach ($refreshed as $quantities) {
+            $quantitiesByProduct[(int) $quantities['id_product']][(int) $quantities['id_product_attribute']] = $quantities;
+        }
+
+        foreach ($rows as &$row) {
+            $quantities = $quantitiesByProduct[(int) $row['product_id']][(int) $row['combination_id']] ?? null;
+
+            if (null !== $quantities) {
+                $row['product_physical_quantity'] = (int) $quantities['physical_quantity'];
+                $row['product_reserved_quantity'] = (int) $quantities['reserved_quantity'];
+            }
+        }
+        unset($row);
+
+        return $rows;
     }
 
     /**
