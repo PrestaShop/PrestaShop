@@ -24,6 +24,16 @@ class StockAvailableCore extends ObjectModel
     /** @var int the group shop associated to the current product and corresponding quantity */
     public $id_shop_group;
 
+    /**
+     * @var int Quantity in stock, orders awaiting shipment included. Maintained by the stock system
+     */
+    public $physical_quantity = 0;
+
+    /**
+     * @var int Quantity held by orders that are not shipped yet. Maintained by the stock system
+     */
+    public $reserved_quantity = 0;
+
     /** @var int the quantity available for sale */
     public $quantity = 0;
 
@@ -60,6 +70,8 @@ class StockAvailableCore extends ObjectModel
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true, 'range' => ['min' => StockSettings::INT_32_MAX_NEGATIVE, 'max' => StockSettings::INT_32_MAX_POSITIVE]],
+            'physical_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'range' => ['min' => StockSettings::INT_32_MAX_NEGATIVE, 'max' => StockSettings::INT_32_MAX_POSITIVE]],
+            'reserved_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'range' => ['min' => StockSettings::INT_32_MAX_NEGATIVE, 'max' => StockSettings::INT_32_MAX_POSITIVE]],
             'depends_on_stock' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
             'out_of_stock' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
             'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
@@ -75,6 +87,11 @@ class StockAvailableCore extends ObjectModel
             'id_product_attribute' => ['xlink_resource' => 'combinations'],
             'id_shop' => ['xlink_resource' => 'shops'],
             'id_shop_group' => ['xlink_resource' => 'shop_groups'],
+            // Readable but not writable: both are derived from the orders and the stock movements,
+            // physical_quantity being quantity plus reserved_quantity. A client setting either one
+            // directly would be overwritten by the next movement and inconsistent until then.
+            'physical_quantity' => ['setter' => false],
+            'reserved_quantity' => ['setter' => false],
         ],
         'hidden_fields' => [
         ],
