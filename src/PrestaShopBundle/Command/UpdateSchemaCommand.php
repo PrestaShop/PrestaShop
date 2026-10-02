@@ -52,6 +52,34 @@ class UpdateSchemaCommand extends Command
     }
 
     /**
+     * Rolls the schema update back after a query failed, without letting that get in the way of the
+     * error that caused it.
+     *
+     * WHY: the statements being run are DDL, and MySQL commits the open transaction implicitly as soon
+     * as it executes one. By the time a later statement fails there is usually nothing left to roll
+     * back, so rolling back unconditionally threw "There is no active transaction" - and threw it from
+     * inside the catch block, so it replaced the query error on its way out and the caller was told
+     * nothing about what had actually gone wrong. The same check already guards the rollback at the end
+     * of the run; this is the one place that was missing it.
+     *
+     * The rollback is attempted rather than assumed, so a driver that reports no transaction while
+     * holding one still gets one, and a failure to roll back still cannot replace the original error.
+     */
+    private function rollBackWithoutHidingTheError(Connection $connection): void
+    {
+        $nativeConnection = $connection->getNativeConnection();
+        if ($nativeConnection instanceof PDO && !$nativeConnection->inTransaction()) {
+            return;
+        }
+
+        try {
+            $connection->rollBack();
+        } catch (Exception $rollBackFailure) {
+            // Deliberately swallowed: the caller needs the query error that started this, not this one.
+        }
+    }
+
+    /**
      * @param InputInterface $input
      * @param OutputInterface $output
      */
@@ -88,7 +116,7 @@ class UpdateSchemaCommand extends Command
             try {
                 $this->executeUpdateQuery($connection, $sql);
             } catch (Exception $e) {
-                $connection->rollBack();
+                $this->rollBackWithoutHidingTheError($connection);
 
                 throw $e;
             }
