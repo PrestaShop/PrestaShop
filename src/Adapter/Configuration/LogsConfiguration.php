@@ -102,6 +102,10 @@ class LogsConfiguration implements DataConfigurationInterface
     {
         $resolver = new OptionsResolver();
         $resolver
+            // WHY: the Logs form dispatches actionLogsPageForm, so a module can add its own fields to
+            // it and they arrive here alongside the core ones. They belong to the module, which reads
+            // them from actionLogsPageSave, so they are left to it instead of being rejected.
+            ->setIgnoreUndefined(true)
             ->setRequired(['logs_by_email', 'logs_email_receivers'])
             ->resolve($configuration);
 
