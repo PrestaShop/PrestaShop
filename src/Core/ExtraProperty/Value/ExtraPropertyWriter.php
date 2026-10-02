@@ -229,7 +229,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
             $shopIds = $this->definitionShopFilter->getAvailableShopIds($definition, $shopIds);
             if (ExtraPropertyScope::SHOP === $scope) {
                 // Same association rule as writeAll(): broad scopes only touch associated shops.
-                $shopIds = $this->filterShopScopeByAssociations($definition->getEntityName(), $primaryKeyName, $entityId, $shopConstraint, $shopIds);
+                $shopIds = $this->filterShopScopeByAssociations($definition->getTableName(), $primaryKeyName, $entityId, $shopConstraint, $shopIds);
             }
             if ([] === $shopIds) {
                 return;
