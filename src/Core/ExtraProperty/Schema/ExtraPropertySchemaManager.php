@@ -340,11 +340,7 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
         }
 
         $className = Inflector::getInflector()->classify($definition->getEntityName());
-        if (!class_exists('ObjectModelCore')
-            || !class_exists($className)
-            || !is_subclass_of($className, ObjectModelCore::class)
-            || !ObjectModelCore::isClassLangMultishop($className)
-        ) {
+        if (!is_subclass_of($className, ObjectModelCore::class) || !ObjectModelCore::isClassLangMultishop($className)) {
             return;
         }
 

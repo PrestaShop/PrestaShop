@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\ExtraProperty\Schema;
 
+use Closure;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
@@ -93,15 +94,10 @@ class ExtraPropertySchemaManagerLangCoherenceTest extends TestCase
             static fn (string $identifier): string => '`' . $identifier . '`'
         );
 
-        $createdTables = &$this->createdTables;
-
         // The base lang table exists, the extra lang table does not: the coherence check runs,
         // then the table and column creation are recorded instead of executed.
-        return new class($connection, 'ps_', new NullLogger(), $createdTables) extends ExtraPropertySchemaManager {
-            /**
-             * @param list<string> $createdTables
-             */
-            public function __construct(Connection $connection, string $prefix, NullLogger $logger, private array &$createdTables)
+        return new class($connection, 'ps_', new NullLogger(), fn (string $table) => $this->createdTables[] = $table) extends ExtraPropertySchemaManager {
+            public function __construct(Connection $connection, string $prefix, NullLogger $logger, private readonly Closure $recordTableCreation)
             {
                 parent::__construct($connection, $prefix, $logger);
             }
@@ -118,7 +114,7 @@ class ExtraPropertySchemaManagerLangCoherenceTest extends TestCase
 
             protected function createExtraTableFromBaseTable(string $baseTableName, string $extraTableName): void
             {
-                $this->createdTables[] = $baseTableName . ' => ' . $extraTableName;
+                ($this->recordTableCreation)($baseTableName . ' => ' . $extraTableName);
             }
 
             protected function syncExtraColumnIndex(string $extraTableName, string $columnName, ExtraPropertySqlIndex $sqlIndex): void
