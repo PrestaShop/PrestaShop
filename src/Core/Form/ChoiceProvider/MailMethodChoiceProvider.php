@@ -33,21 +33,13 @@ final class MailMethodChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $choices = [];
-
-        $choices[
-            $this->trans('Use /usr/sbin/sendmail (recommended; works in most cases)', [], 'Admin.Advparameters.Feature')
-        ] = MailOption::METHOD_NATIVE;
-
-        $choices[
-            $this->trans('Set my own SMTP parameters (for advanced users ONLY)', [], 'Admin.Advparameters.Feature')
-        ] = MailOption::METHOD_SMTP;
-
-        $choices[
-            $this->trans('Never send emails (may be useful for testing purposes)', [], 'Admin.Advparameters.Feature')
-        ] = MailOption::METHOD_NONE;
-
-        return $choices;
+        // Offer sendmail, PHP's native mail transport, SMTP and disabled delivery
+        return [
+            $this->trans('Use /usr/sbin/sendmail (recommended; works in most cases)', [], 'Admin.Advparameters.Feature') => MailOption::METHOD_NATIVE,
+            $this->trans('Use PHP mail() function', [], 'Admin.Advparameters.Feature') => MailOption::METHOD_PHP_MAIL,
+            $this->trans('Set my own SMTP parameters (for advanced users ONLY)', [], 'Admin.Advparameters.Feature') => MailOption::METHOD_SMTP,
+            $this->trans('Never send emails (may be useful for testing purposes)', [], 'Admin.Advparameters.Feature') => MailOption::METHOD_NONE,
+        ];
     }
 
     /**

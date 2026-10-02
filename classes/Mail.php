@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+use PrestaShop\PrestaShop\Core\Email\MailOption;
+use PrestaShop\PrestaShop\Core\Email\PhpMailTransport;
 use Symfony\Component\Mailer\Exception\ExceptionInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport\SendmailTransport;
@@ -349,7 +351,7 @@ class MailCore extends ObjectModel
 
         // Initialization of the mail transport
         try {
-            // Connect with the appropriate configuration, either SMTP or sendmail
+            // Connect with the appropriate configuration, using SMTP, PHP mail() or sendmail()
             if ($configuration['PS_MAIL_METHOD'] == self::METHOD_SMTP) {
                 // Setup TLS configuration
                 $useImplicitTls = self::useImplicitTls($configuration['PS_MAIL_SMTP_ENCRYPTION'] ?? 'off');
@@ -375,6 +377,8 @@ class MailCore extends ObjectModel
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD'])
                 ;
+            } elseif ($configuration['PS_MAIL_METHOD'] == MailOption::METHOD_PHP_MAIL) {
+                $transport = new PhpMailTransport();
             } else {
                 $transport = new SendmailTransport();
             }
@@ -759,6 +763,7 @@ class MailCore extends ObjectModel
      * @param string $smtpPassword SMTP password
      * @param int $smtpPort SMTP Port
      * @param bool|string $smtpEncryption Encryption type. "off" or false disable encryption.
+     * @param bool $phpMail Use PHP mail() when SMTP is not selected
      *
      * @return bool|string True if succeeded, otherwise the error message
      */
@@ -777,11 +782,13 @@ class MailCore extends ObjectModel
         bool $dkimEnable = false,
         string $dkimKey = '',
         string $dkimDomain = '',
-        string $dkimSelector = ''
+        string $dkimSelector = '',
+        bool $phpMail = false
     ) {
         $result = false;
 
         try {
+            // Select SMTP, PHP mail() or sendmail() for the email settings being tested
             if ($smtpChecked) {
                 $useImplicitTls = self::useImplicitTls($smtpEncryption);
                 $esmtpTransportParameter = $useImplicitTls ? null : false;
@@ -793,6 +800,8 @@ class MailCore extends ObjectModel
                     ->setUsername($smtpLogin)
                     ->setPassword($smtpPassword)
                 ;
+            } elseif ($phpMail) {
+                $transport = new PhpMailTransport();
             } else {
                 $transport = new SendmailTransport();
             }
