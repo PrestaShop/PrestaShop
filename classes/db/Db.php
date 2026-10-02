@@ -589,8 +589,7 @@ abstract class DbCore
         // This method must be used only with queries which display results
         if (
             !preg_match('#^\s*\(?\s*(select|show|explain|describe|desc|checksum)\s#i', $sql)
-            || stripos($sql, 'outfile') !== false
-            || stripos($sql, 'dumpfile') !== false
+            || $this->hasWriteToFileClause($sql)
         ) {
             throw new PrestaShopDatabaseException('Db->executeS() must be used only with select, show, explain or describe queries');
         }
@@ -614,6 +613,37 @@ abstract class DbCore
         }
 
         return $result;
+    }
+
+    /**
+     * Tells whether the query contains a MySQL "INTO OUTFILE"/"INTO DUMPFILE" clause, which would
+     * let a read query write to the filesystem. Quoted string literals are ignored first, so a
+     * legitimate value such as a product searched with the term "outfile" no longer trips the guard;
+     * the real write clause never sits inside a literal, so it is still detected.
+     *
+     * @param string $sql
+     *
+     * @return bool
+     */
+    protected function hasWriteToFileClause($sql)
+    {
+        // Fast path: keep the hot query path as cheap as before when neither keyword is present.
+        if (stripos($sql, 'outfile') === false && stripos($sql, 'dumpfile') === false) {
+            return false;
+        }
+
+        // Strip single/double/backtick quoted spans (honouring backslash escaping) so the keyword
+        // is only matched when it is part of the SQL itself, not a searched/stored value. The
+        // possessive quantifier prevents catastrophic backtracking on hostile input.
+        $sqlOutsideLiterals = preg_replace('#([\'"`])(?:\\\\.|(?!\1).)*+\1#s', ' ', $sql);
+
+        // Fail closed: if the literals could not be stripped (e.g. a PCRE error), keep blocking.
+        if ($sqlOutsideLiterals === null) {
+            return true;
+        }
+
+        return stripos($sqlOutsideLiterals, 'outfile') !== false
+            || stripos($sqlOutsideLiterals, 'dumpfile') !== false;
     }
 
     /**
