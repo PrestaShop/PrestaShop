@@ -65,7 +65,14 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
             "\n\r",
             "\r\n",
         ];
-        $str = str_replace($replaceArray, [''], strip_tags($value));
+        // WHY: the editor's counter reads editor.getBody().textContent (see updateCount() in
+        // admin-dev/themes/new-theme/js/components/tinymce-editor.js), which returns DECODED text, so
+        // "&eacute;" is one character there. strip_tags() leaves the entity intact, so the same content
+        // was counted as eight - a description of accented text could be rejected while the counter still
+        // showed it well inside the limit. Decode after stripping the tags, never before, or an escaped
+        // "&lt;p&gt;" would turn into markup and be removed.
+        // @see https://github.com/PrestaShop/PrestaShop/issues/37229
+        $str = str_replace($replaceArray, [''], html_entity_decode(strip_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
 
         if (iconv_strlen($str) > $constraint->max) {
             $message = $constraint->message ?? $this->translator->trans(
