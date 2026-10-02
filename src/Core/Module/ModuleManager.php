@@ -401,10 +401,14 @@ class ModuleManager implements ModuleManagerInterface
         }
 
         $databaseData = $this->moduleDataProvider->findByName($name);
+        if (empty($databaseData['installed'])) {
+            return false;
+        }
+
         $module = new stdClass();
         $module->name = $legacyInstance->name;
-        $module->installed = !empty($databaseData['installed']);
-        $module->database_version = $databaseData['version'] ?? 0;
+        $module->installed = true;
+        $module->database_version = $databaseData['version'];
         $module->version = LegacyModule::getModuleVersion($legacyInstance);
 
         if (LegacyModule::initUpgradeModule($module)) {
