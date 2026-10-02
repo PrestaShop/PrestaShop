@@ -64,6 +64,16 @@ class ThemeValidatorTest extends TestCase
         $this->assertFalse($isValid, self::NOTICE . sprintf('expected isValid to return false when theme is invalid, got %s', gettype($isValid)));
     }
 
+    public function testIsValidWithInvalidThemeMissingName(): void
+    {
+        $themeDir = __DIR__ . '/../../../../Resources/themes/minimal-valid-theme/';
+        $config = (new Parser())->parse(file_get_contents($themeDir . 'config/theme.yml'));
+        unset($config['name']);
+        $config['directory'] = $themeDir;
+
+        $this->assertFalse($this->validator->isValid(new Theme($config)));
+    }
+
     private function getTheme(string $name = 'valid'): Theme
     {
         $options = ['valid', 'missfiles', 'missconfig'];
