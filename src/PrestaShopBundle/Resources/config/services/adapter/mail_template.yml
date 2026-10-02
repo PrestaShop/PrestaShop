@@ -8,6 +8,7 @@ services:
       - '@prestashop.core.mail_template.variables_builder'
       - '@prestashop.core.hook.dispatcher'
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_GIFT_WRAPPING')"
+      - '%modules_dir%'
     calls:
       - method: 'addTransformation'
         arguments:
