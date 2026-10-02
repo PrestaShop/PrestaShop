@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Throwable;
 use Twig\Environment;
 
 /**
@@ -429,10 +430,15 @@ class ModuleController extends ModuleAbstractController
                 ],
                 'Admin.Modules.Notification',
             );
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            // Throwable, not Exception: a broken module already sitting in modules/ raises an Error while
+            // the list is rebuilt, which escaped this catch and left the request to die as a 500. The
+            // uploader can only render the JSON contract, so an HTML error page reaches it as an
+            // unreadable blob - which is what "Oops... Upload failed." with nothing behind
+            // "What happened?" actually is.
             try {
                 $moduleManager->disable($moduleName);
-            } catch (Exception) {
+            } catch (Throwable) {
             }
             $installationResponse['status'] = false;
             $installationResponse['msg'] = $this->trans(
