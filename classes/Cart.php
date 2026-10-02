@@ -3745,12 +3745,12 @@ class CartCore extends ObjectModel
         }
 
         // If we have a specific carrier ID, check if it is in range for the given zone, if not, reset it
-        if ($id_carrier && !$this->isCarrierInRange((int) $id_carrier, (int) $id_zone)) {
+        if ($id_carrier && !$this->isCarrierInRange((int) $id_carrier, (int) $id_zone, $product_list)) {
             $id_carrier = '';
         }
 
         // If we have no carrier ID, we try to use the default one first, if it's in range for the given zone
-        if (empty($id_carrier) && $this->isCarrierInRange((int) Configuration::get('PS_CARRIER_DEFAULT'), (int) $id_zone)) {
+        if (empty($id_carrier) && $this->isCarrierInRange((int) Configuration::get('PS_CARRIER_DEFAULT'), (int) $id_zone, $product_list)) {
             $id_carrier = (int) Configuration::get('PS_CARRIER_DEFAULT');
         }
 
@@ -3791,8 +3791,10 @@ class CartCore extends ObjectModel
                 // If out-of-range behavior carrier is set to "Deactivate the carrier", we skip this carrier
                 if ($row['range_behavior'] == OutOfRangeBehavior::DISABLED) {
                     // If the carrier has weight based shipping, remove the carrier if it does not have a compatible range
+                    // The range applies to the package being shipped, which is the same scoping
+                    // $order_total already uses for the price range just below.
                     if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT
-                        && Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $this->getTotalWeight(), (int) $id_zone) === false) {
+                        && Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $this->getTotalWeight($product_list), (int) $id_zone) === false) {
                         unset($result[$k]);
 
                         continue;
@@ -3960,7 +3962,7 @@ class CartCore extends ObjectModel
         // Get shipping cost using correct method
         $shipping_method = $carrier->getShippingMethod();
         if ($carrier->range_behavior == OutOfRangeBehavior::DISABLED) {
-            if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int) $id_zone) === false)
+            if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight($product_list), (int) $id_zone) === false)
                 || (
                     $shipping_method == Carrier::SHIPPING_METHOD_PRICE && Carrier::checkDeliveryPriceByPrice($carrier->id, $order_total, $id_zone, (int) $this->id_currency) === false
                 )) {
@@ -4885,7 +4887,7 @@ class CartCore extends ObjectModel
      * @param int $id_carrier
      * @param int $id_zone
      */
-    public function isCarrierInRange($id_carrier, $id_zone)
+    public function isCarrierInRange($id_carrier, $id_zone, $product_list = null)
     {
         // Instantiate the Carrier object to get the shipping method
         $carrier = new Carrier((int) $id_carrier, (int) Configuration::get('PS_LANG_DEFAULT'));
@@ -4902,12 +4904,12 @@ class CartCore extends ObjectModel
         }
 
         if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT
-            && Carrier::checkDeliveryPriceByWeight((int) $id_carrier, $this->getTotalWeight(), $id_zone) !== false) {
+            && Carrier::checkDeliveryPriceByWeight((int) $id_carrier, $this->getTotalWeight($product_list), $id_zone) !== false) {
             return true;
         }
 
         if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
-            && Carrier::checkDeliveryPriceByPrice((int) $id_carrier, $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, (int) $this->id_currency) !== false) {
+            && Carrier::checkDeliveryPriceByPrice((int) $id_carrier, $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list), $id_zone, (int) $this->id_currency) !== false) {
             return true;
         }
 
