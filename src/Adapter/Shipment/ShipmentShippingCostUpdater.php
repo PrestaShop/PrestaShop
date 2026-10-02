@@ -60,8 +60,12 @@ class ShipmentShippingCostUpdater
             }
 
             $quantity = $shipmentProduct->getQuantity();
-            $unitPriceTaxExcl = (float) ($product['unit_price_tax_excl'] ?? 0);
-            $shipmentTotalProducts += $unitPriceTaxExcl * $quantity;
+            // WHY: this total selects the carrier's price range and is compared against the free
+            // shipping threshold. The cart does both with a tax included total
+            // (Cart::getPackageShippingCost uses getOrderTotal(true, ...)), so summing tax excluded
+            // prices here would pick a different range than the one the customer was charged.
+            $unitPriceTaxIncl = (float) ($product['unit_price_tax_incl'] ?? 0);
+            $shipmentTotalProducts += $unitPriceTaxIncl * $quantity;
 
             $products[] = [
                 'id_product' => (int) $product['product_id'],
