@@ -313,7 +313,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
             'from_quantity' => (($value = $this->getFieldValue($this->object, 'from_quantity')) ? $value : 1),
             'reduction' => number_format(($value = $this->getFieldValue($this->object, 'reduction')) ? $value : 0, 6),
             'leave_bprice_on' => $price ? 0 : 1,
-            'shop_id' => (($value = $this->getFieldValue($this->object, 'id_shop')) ? $value : 1),
+            'shop_id' => (($value = $this->getFieldValue($this->object, 'id_shop')) ? $value : (int) Shop::getContextShopID()),
         ];
 
         $attribute_groups = [];
@@ -343,6 +343,12 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
             'categories' => Category::getSimpleCategories((int) $this->context->language->id),
             'conditions' => $this->object->getConditions(),
             'is_multishop' => Shop::isFeatureActive(),
+            /*
+             * WHY: with a single shop the form has no store selector, so it posts the id itself. That id
+             * has to be the shop being worked on - it is not necessarily 1, because the original shop can
+             * have been deleted after a multistore setup was folded back into one.
+             */
+            'current_shop_id' => (int) Shop::getContextShopID(),
         ];
 
         return parent::renderForm();
