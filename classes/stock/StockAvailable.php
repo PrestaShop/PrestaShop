@@ -89,7 +89,30 @@ class StockAvailableCore extends ObjectModel
      */
     public function updateWs()
     {
-        return $this->update();
+        $previousQuantity = (int) Db::getInstance()->getValue(
+            'SELECT `quantity` FROM `' . _DB_PREFIX_ . 'stock_available` WHERE `id_stock_available` = ' . (int) $this->id
+        );
+
+        if (!$this->update()) {
+            return false;
+        }
+
+        // A stock change is normally announced by setQuantity(), but the webservice writes the row
+        // through the model, so listeners such as the customer availability alerts of ps_emailalerts
+        // never heard about a restock made this way.
+        Hook::exec(
+            'actionUpdateQuantity',
+            [
+                'id_product' => (int) $this->id_product,
+                'id_product_attribute' => (int) $this->id_product_attribute,
+                'quantity' => (int) $this->quantity,
+                'delta_quantity' => (int) $this->quantity - $previousQuantity,
+                'id_shop' => (int) $this->id_shop,
+            ]
+        );
+        Cache::clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $this->id_product . '*');
+
+        return true;
     }
 
     public static function getStockAvailableIdByProductId($id_product, $id_product_attribute = null, $id_shop = null)
