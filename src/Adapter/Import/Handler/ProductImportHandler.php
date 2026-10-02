@@ -1159,7 +1159,7 @@ final class ProductImportHandler extends AbstractImportHandler
             $position = isset($feature[2]) ? (int) $feature[2] - 1 : false;
             $custom = isset($feature[3]) ? (int) $feature[3] : false;
 
-            if (!empty($featureName) && !empty($featureValue)) {
+            if (!empty($featureName) && $featureValue !== '') {
                 $featureId = (int) Feature::addFeatureImport($featureName, $position);
                 $productId = null;
                 if ($importConfig->forceIds() || $importConfig->matchReferences()) {
