@@ -9,34 +9,16 @@ import {EventEmitter} from '@components/event-emitter';
 import {
   omitBy, isNil,
 } from 'lodash';
+import stockQueryParams from '@app/pages/stock/store/query-params';
 
 const isParamInvalid = (value: any) => isNil(value) || value.length <= 0;
 
 export const getStock = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
   const url = new URL(window.data.apiStockUrl, window.location.origin);
-  const queryParams = omitBy({
-    order: payload.order,
-    page_size: payload.page_size,
-    page_index: payload.page_index,
-    keywords: payload.keywords,
-    active: payload.active,
-    low_stock: payload.low_stock,
-  }, isParamInvalid);
 
-  Object.entries(queryParams).forEach(([key, value]) => {
-    url.searchParams.append(key, String(value));
+  stockQueryParams(payload).forEach((value, key) => {
+    url.searchParams.append(key, value);
   });
-
-  if (payload.suppliers) {
-    payload.suppliers.forEach((v: string) => {
-      url.searchParams.append('supplier_id[]', v);
-    });
-  }
-  if (payload.categories) {
-    payload.categories.forEach((v: string) => {
-      url.searchParams.append('category_id[]', v);
-    });
-  }
 
   try {
     const response = await fetch(url);
