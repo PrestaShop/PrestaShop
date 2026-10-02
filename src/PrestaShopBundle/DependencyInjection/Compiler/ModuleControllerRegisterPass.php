@@ -6,7 +6,9 @@
 
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
+use FilesystemIterator;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use RecursiveCallbackFilterIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
@@ -25,6 +27,11 @@ use Symfony\Component\DependencyInjection\Definition;
 class ModuleControllerRegisterPass implements CompilerPassInterface
 {
     /**
+     * Top-level module directories that never contain the module's own controllers.
+     */
+    private const EXCLUDED_ROOT_DIRECTORIES = ['vendor', 'node_modules', 'tests', 'test', '.git', '_dev', 'views', 'translations', 'mails', 'upgrade'];
+
+    /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container): void
@@ -33,7 +40,15 @@ class ModuleControllerRegisterPass implements CompilerPassInterface
         $moduleDir = $container->getParameter('prestashop.module_dir');
 
         foreach ($installedModules as $moduleName) {
-            $fileIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($moduleDir . $moduleName));
+            $directoryIterator = new RecursiveCallbackFilterIterator(
+                new RecursiveDirectoryIterator($moduleDir . $moduleName, FilesystemIterator::SKIP_DOTS),
+                static function ($current, $key, RecursiveDirectoryIterator $iterator): bool {
+                    return !$iterator->hasChildren()
+                        || $iterator->getSubPath() !== ''
+                        || !in_array(strtolower($current->getFilename()), self::EXCLUDED_ROOT_DIRECTORIES, true);
+                }
+            );
+            $fileIterator = new RecursiveIteratorIterator($directoryIterator);
             $phpFiles = new RegexIterator($fileIterator, '/\.php$/');
 
             foreach ($phpFiles as $file) {
