@@ -1061,7 +1061,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $subject = '';
             }
             // Creating an md5 to check if message has been allready processed
-            $md5 = md5($overview->date . $overview->from . $subject . $overview->msgno);
+            // WHY: date and from come from the message headers and a malformed mail can omit
+            // either, so they are coalesced rather than assumed. A missing property already
+            // stringified to '' here, so the resulting key is unchanged for every mail.
+            $md5 = md5(($overview->date ?? '') . ($overview->from ?? '') . $subject . $overview->msgno);
             $exist = Db::getInstance()->getValue(
                 'SELECT `md5_header`
 						 FROM `' . _DB_PREFIX_ . 'customer_message_sync_imap`
