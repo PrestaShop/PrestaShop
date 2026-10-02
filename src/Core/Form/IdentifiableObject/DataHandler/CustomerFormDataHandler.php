@@ -121,7 +121,8 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             $defaultGroupId,
             $groupIds,
             $this->contextShopId,
-            (int) $data['gender_id'],
+            // The social title field is not part of the form when no social title exists
+            (int) ($data['gender_id'] ?? 0),
             $isEnabled,
             (bool) $data['is_partner_offers_subscribed'],
             $data['birthday'] ?: Birthday::EMPTY_BIRTHDAY,
@@ -157,7 +158,7 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
         }, $data['group_ids']);
 
         $command = (new EditCustomerCommand($customerId))
-            ->setGenderId($data['gender_id'])
+            ->setGenderId($data['gender_id'] ?? null)
             ->setEmail($data['email'])
             ->setFirstName($data['first_name'])
             ->setLastName($data['last_name'])
