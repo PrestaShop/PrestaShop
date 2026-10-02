@@ -113,6 +113,14 @@ class ToolsCore
      */
     protected static $untrusted_url_resolve_cache = [];
 
+    /**
+     * @deprecated Since 9.2.0. Never read by the core: PS_PRICE_ROUND_MODE is shop scoped, and
+     *             caching it here for the whole process made every shop after the first round with
+     *             the first one's mode. ps_round() resolves it from Configuration, which is itself
+     *             an in-memory cache and is shop aware.
+     *
+     * @var int|null
+     */
     public static $round_mode = null;
 
     /**
@@ -1662,24 +1670,24 @@ class ToolsCore
     }
 
     /**
-     * Returns the rounded value of $value to specified precision, according to your configuration.
+     * Returns the rounded value of $value, using the rounding mode configured for the current shop.
+     *
+     * Only the rounding mode comes from the configuration. The number of decimals is $precision,
+     * which the caller supplies and which defaults to none - price code usually passes
+     * Context::getContext()->getComputingPrecision().
      *
      * Warning - this method accepts our own PS rounding constants with different integer values.
      *
      * @param float $value
-     * @param int $precision
-     * @param int<0,5>|null $round_mode
+     * @param int $precision number of decimals to keep, 0 by default
+     * @param int<0,5>|null $round_mode PS_ROUND_* constant, or null to use PS_PRICE_ROUND_MODE
      *
      * @return float
      */
     public static function ps_round($value, $precision = 0, $round_mode = null)
     {
         if ($round_mode === null) {
-            if (Tools::$round_mode == null) {
-                Tools::$round_mode = (int) Configuration::get('PS_PRICE_ROUND_MODE');
-            }
-
-            $round_mode = Tools::$round_mode;
+            $round_mode = (int) Configuration::get('PS_PRICE_ROUND_MODE');
         }
 
         switch ($round_mode) {
