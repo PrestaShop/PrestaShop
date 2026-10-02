@@ -140,8 +140,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             $this->session->database_engine
         );
 
-        if (!$success) {
-            $this->ajaxJsonAnswer(false);
+        if (!$success || $this->model_install->getErrors()) {
+            $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
         $this->session->process_validated = array_merge($this->session->process_validated, ['generateSettingsFile' => true]);
         $this->ajaxJsonAnswer(true);
