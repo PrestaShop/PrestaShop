@@ -1069,6 +1069,8 @@ class CustomerCore extends ObjectModel
      */
     public function cleanGroups()
     {
+        unset(self::$_customer_groups[(int) $this->id]);
+
         return Db::getInstance()->delete('customer_group', 'id_customer = ' . (int) $this->id);
     }
 
@@ -1084,6 +1086,7 @@ class CustomerCore extends ObjectModel
             $row = ['id_customer' => (int) $this->id, 'id_group' => (int) $group];
             Db::getInstance()->insert('customer_group', $row, false, true, Db::INSERT_IGNORE);
         }
+        unset(self::$_customer_groups[(int) $this->id]);
     }
 
     /**
