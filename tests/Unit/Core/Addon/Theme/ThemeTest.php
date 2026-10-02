@@ -57,6 +57,53 @@ class ThemeTest extends TestCase
         $this->assertSame('For testing purposes', $theme->get('display_name'));
     }
 
+    public function testChildGlobalSettingsAreMergedWithParentOnes(): void
+    {
+        $theme = new Theme(
+            [
+                'name' => 'foo',
+                'parent' => 'fake-theme',
+                'directory' => 'a/',
+                'global_settings' => [
+                    'hooks' => [
+                        'modules_to_hook' => [
+                            'displayHome' => ['ps_customtext'],
+                        ],
+                    ],
+                ],
+            ],
+            sys_get_temp_dir() . '/ThemeTest',
+            dirname(__DIR__, 4) . '/Resources/themes/'
+        );
+
+        $this->assertSame(['ps_customtext'], $theme->get('global_settings.hooks.modules_to_hook.displayHome'));
+        $this->assertSame(80, $theme->get('global_settings.image_types.cart_default.width'));
+        $this->assertSame(960, $theme->get('global_settings.image_types.category_default.width'));
+    }
+
+    public function testChildGlobalSettingsSectionReplacesParentOne(): void
+    {
+        $theme = new Theme(
+            [
+                'name' => 'foo',
+                'parent' => 'fake-theme',
+                'directory' => 'a/',
+                'global_settings' => [
+                    'image_types' => [
+                        'cart_default' => ['width' => 50, 'height' => 50, 'scope' => ['products']],
+                    ],
+                ],
+            ],
+            sys_get_temp_dir() . '/ThemeTest',
+            dirname(__DIR__, 4) . '/Resources/themes/'
+        );
+
+        $this->assertSame(
+            ['cart_default' => ['width' => 50, 'height' => 50, 'scope' => ['products']]],
+            $theme->get('global_settings.image_types')
+        );
+    }
+
     public function testGetPageLayouts(): void
     {
         $theme = new Theme(
