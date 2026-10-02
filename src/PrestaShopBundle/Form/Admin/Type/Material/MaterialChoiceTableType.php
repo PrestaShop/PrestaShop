@@ -27,6 +27,8 @@ class MaterialChoiceTableType extends AbstractType
             'multiple' => true,
             'display_total_items' => false,
         ]);
+
+        $resolver->setAllowedValues('multiple', [true]);
     }
 
     /**
