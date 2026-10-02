@@ -1520,8 +1520,7 @@ class CustomerCore extends ObjectModel
      */
     public function stampResetPasswordToken()
     {
-        $salt = $this->id . '-' . $this->secure_key;
-        $this->reset_password_token = sha1(time() . $salt);
+        $this->reset_password_token = bin2hex(random_bytes(20));
         $validity = (int) Configuration::get('PS_PASSWD_RESET_VALIDITY') ?: 1440;
         $this->reset_password_validity = date('Y-m-d H:i:s', strtotime('+' . $validity . ' minutes'));
     }
