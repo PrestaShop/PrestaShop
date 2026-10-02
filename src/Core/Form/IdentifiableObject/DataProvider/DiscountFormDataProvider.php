@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder;
+use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Form\Admin\Sell\Discount\CartConditionsType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DeliveryConditionsType;
@@ -50,7 +50,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         private readonly CommandBusInterface $queryBus,
         private readonly ProductRepository $productRepository,
         private readonly CombinationRepository $combinationRepository,
-        private readonly CombinationNameBuilder $combinationNameBuilder,
+        private readonly CombinationNameBuilderInterface $combinationNameBuilder,
         private readonly ProductImageProviderInterface $productImageProvider,
         private readonly LanguageContext $languageContext,
         private readonly AttributeRepository $attributeRepository,
