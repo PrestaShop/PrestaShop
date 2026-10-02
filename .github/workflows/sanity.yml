@@ -26,6 +26,13 @@ jobs:
     name: Sanity
     needs: workflow_matrix_generator
     strategy:
+      # The browsers, PHP versions and databases come from
+      # .github/workflows/workflow-matrix/{default,complete}-sanity-matrix.json.
+      # webkit is deliberately absent from both: it was parked because it turned the job red roughly
+      # two runs out of three, and the leg was carried here as a commented entry until the matrix moved
+      # to JSON, which cannot hold a comment. Tracked by
+      # https://github.com/PrestaShop/PrestaShop/issues/37680 - add the entry back to the JSON files once
+      # that issue concludes it is stable enough.
       matrix: ${{ fromJSON(needs.workflow_matrix_generator.outputs.dynamic_matrix) }}
       fail-fast: false
     steps:
