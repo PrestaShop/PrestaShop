@@ -26,6 +26,15 @@
     "language_code": "ar-sa",
     "locale": "ar-SA"
   },
+  "at": {
+    "name": "Deutsch AT (German)",
+    "iso_code": "at",
+    "date_format_lite": "d.m.Y",
+    "date_format_full": "d.m.Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "de-at",
+    "locale": "de-AT"
+  },
   "az": {
     "name": "Azərbaycan dili (Azerbaijani)",
     "iso_code": "az",
