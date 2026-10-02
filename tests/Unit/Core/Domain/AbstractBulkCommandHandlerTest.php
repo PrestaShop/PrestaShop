@@ -93,6 +93,51 @@ class AbstractBulkCommandHandlerTest extends TestCase
 
         $this->assertInstanceOf(TestCommand::class, $handler->getCommand());
     }
+
+    /**
+     * Handlers are services, so one instance serves every dispatch in a long running process (Behat,
+     * a CLI command, a Messenger consumer). What one call collects must not still be there for the next.
+     */
+    public function testEachCallReportsOnlyItsOwnFailures(): void
+    {
+        $firstFailure = new FailingId(1, new FeatureException('first'));
+        $secondFailure = new FailingId(2, new FeatureException('second'));
+        $handler = new TestAbstractBulkCommandHandler([$firstFailure, $secondFailure], IdInterface::class);
+
+        try {
+            $handler->handle([$firstFailure, new ExampleId(10)], FeatureException::class);
+            Assert::fail('the failing id should have produced a bulk exception');
+        } catch (BulkCommandExceptionInterface $e) {
+            Assert::assertCount(1, $e->getExceptions());
+        }
+
+        try {
+            $handler->handle([$secondFailure, new ExampleId(11)], FeatureException::class);
+            Assert::fail('the failing id should have produced a bulk exception');
+        } catch (BulkCommandExceptionInterface $e) {
+            Assert::assertCount(
+                1,
+                $e->getExceptions(),
+                'the second call reported the first call failures as well'
+            );
+        }
+    }
+
+    public function testACallThatFailsOnNothingDoesNotThrow(): void
+    {
+        $failingId = new FailingId(1, new FeatureException('first'));
+        $handler = new TestAbstractBulkCommandHandler([$failingId], IdInterface::class);
+
+        try {
+            $handler->handle([$failingId], FeatureException::class);
+        } catch (BulkCommandExceptionInterface $e) {
+            // expected; this call is only here to leave a failure behind
+        }
+
+        // Every id below succeeds, so reaching the end without an exception is the assertion.
+        $handler->handle([new ExampleId(2), new ExampleId(3)], FeatureException::class);
+        $this->addToAssertionCount(1);
+    }
 }
 
 class TestAbstractBulkCommandHandler extends AbstractBulkCommandHandler
