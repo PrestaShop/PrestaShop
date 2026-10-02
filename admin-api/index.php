@@ -34,13 +34,16 @@ if (_PS_MODE_DEV_) {
 }
 require_once __DIR__ . '/../autoload.php';
 
-// Loads .env file from the root of project
+// Loads .env file from the root of project if present: every variable it sets has a default, so a shop
+// without the file (removed, or not brought over by an update) still starts
 $dotEnvFile = dirname(__FILE__, 2) . '/.env';
-(new Dotenv())
-    // DO NOT use putEnv
-    ->usePutenv(false)
-    ->loadEnv($dotEnvFile)
-;
+if (is_file($dotEnvFile) || is_file($dotEnvFile . '.dist')) {
+    (new Dotenv())
+        // DO NOT use putEnv
+        ->usePutenv(false)
+        ->loadEnv($dotEnvFile)
+    ;
+}
 
 // Block the process until the cache clear is in progress, this must be done before the kernel is created so it doesn't
 // try to use the old container

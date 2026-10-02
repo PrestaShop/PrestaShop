@@ -71,13 +71,16 @@ if ((!is_dir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'vendor') ||
 require_once _PS_CORE_DIR_ . '/config/defines.inc.php';
 require_once _PS_CORE_DIR_ . '/config/autoload.php';
 
-// Loads .env file from the root of project
+// Loads .env file from the root of project if present: every variable it sets has a default, so a shop
+// without the file (removed, or not brought over by an update) still starts
 $dotEnvFile = dirname(__FILE__, 2) . '/.env';
-(new Dotenv())
-    // DO NOT use putEnv
-    ->usePutenv(false)
-    ->loadEnv($dotEnvFile)
-;
+if (is_file($dotEnvFile) || is_file($dotEnvFile . '.dist')) {
+    (new Dotenv())
+        // DO NOT use putEnv
+        ->usePutenv(false)
+        ->loadEnv($dotEnvFile)
+    ;
+}
 
 if (file_exists(_PS_CORE_DIR_ . '/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_ . '/config/bootstrap.php';
