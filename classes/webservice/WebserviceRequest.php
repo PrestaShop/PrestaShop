@@ -1596,7 +1596,14 @@ class WebserviceRequestCore
                     $this->setError(400, 'parameter "' . $fieldName . '" required', 41);
 
                     return false;
-                } elseif ((!isset($fieldProperties['required']) || !$fieldProperties['required']) && property_exists($object, $sqlId)) {
+                } elseif (
+                    (!isset($fieldProperties['required']) || !$fieldProperties['required'])
+                    // A field the client is not allowed to write must survive its own absence: sending it is
+                    // rejected by the setter check above, so nulling it here leaves no request shape that
+                    // updates the resource and keeps the stored value.
+                    && (!isset($fieldProperties['setter']) || false !== $fieldProperties['setter'])
+                    && property_exists($object, $sqlId)
+                ) {
                     $object->$sqlId = null;
                 }
                 if (isset($fieldProperties['i18n']) && $fieldProperties['i18n']) {
