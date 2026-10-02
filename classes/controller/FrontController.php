@@ -463,14 +463,6 @@ class FrontControllerCore extends Controller
             $this->context->cart->checkAndUpdateAddresses();
         }
 
-        /*
-         * We also need to run automatic cart rule actions.
-         * autoAddToCart is required to automatically assigning newly created cart rules with no code (automatic).
-         * autoRemoveFromCart is needed to verify, if the cart rules already in a cart are still valid.
-         */
-        CartRule::autoRemoveFromCart($this->context);
-        CartRule::autoAddToCart($this->context);
-
         $this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
         // Automatically redirect to the canonical URL if needed
@@ -488,6 +480,17 @@ class FrontControllerCore extends Controller
             $infos = Address::getCountryAndState((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
             $this->context->country = new Country((int) $infos['id_country']);
         }
+
+        /*
+         * We also need to run automatic cart rule actions.
+         * autoAddToCart is required to automatically assigning newly created cart rules with no code (automatic).
+         * autoRemoveFromCart is needed to verify, if the cart rules already in a cart are still valid.
+         *
+         * These calls must be here, after context country initialization. Inside these CartRule methods, $cart->getProducts is called
+         * and cached for later use. If the context country is not set 100% correctly before these calls, the cart data may be partial or incorrect.
+         */
+        CartRule::autoRemoveFromCart($this->context);
+        CartRule::autoAddToCart($this->context);
 
         if (!Tools::isPHPCLI()) {
             $this->displayMaintenancePage();
