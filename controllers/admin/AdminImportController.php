@@ -908,6 +908,35 @@ class AdminImportControllerCore extends AdminController
         return $tab;
     }
 
+    /**
+     * Resolves the country column of an imported row to an existing country id.
+     *
+     * WHY the name is tried before the ISO code: a shop is free to name a country with two letters,
+     * and that name has always won here. Looking the name up first keeps every import that already
+     * resolved resolving to the same country, so this only rescues the rows that would otherwise
+     * fall through to creating a duplicate country.
+     *
+     * WHY the ISO code is validated before it is used: Country::getByIso() throws on anything that
+     * is not an ISO code, and a country column holding a free-text name is the normal case here
+     * rather than an exceptional one.
+     *
+     * @param string $field the raw country column, either a name or an ISO code
+     *
+     * @return int the matching country id, or 0 when the column matches no existing country
+     */
+    protected static function resolveCountryId($field)
+    {
+        if ($id_country = Country::getIdByName(null, $field)) {
+            return (int) $id_country;
+        }
+
+        if (Validate::isLanguageIsoCode($field) && ($id_country = Country::getByIso($field))) {
+            return (int) $id_country;
+        }
+
+        return 0;
+    }
+
     protected static function createMultiLangField($field)
     {
         $res = [];
@@ -2917,7 +2946,7 @@ class AdminImportControllerCore extends AdminController
                 $address->id_country = (int) $address->country;
             }
         } elseif (!empty($address->country) && is_string($address->country)) {
-            if ($id_country = Country::getIdByName(null, $address->country)) {
+            if ($id_country = AdminImportController::resolveCountryId($address->country)) {
                 $address->id_country = (int) $id_country;
             } else {
                 $country = new Country();
@@ -2926,6 +2955,7 @@ class AdminImportControllerCore extends AdminController
                 $country->id_zone = 0; // Default zone for country to create
                 $country->iso_code = Tools::strtoupper(Tools::substr($address->country, 0, 2)); // Default iso for country to create
                 $country->contains_states = false; // Default value for country to create
+                $country->need_identification_number = false; // Required field, default value for country to create
                 $lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true);
                 if (($field_error = $country->validateFields(UNFRIENDLY_ERROR, true)) === true
                     && ($lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
@@ -3552,7 +3582,7 @@ class AdminImportControllerCore extends AdminController
                 $store->id_country = (int) $store->country;
             }
         } elseif (isset($store->country) && is_string($store->country) && !empty($store->country)) {
-            if ($id_country = Country::getIdByName(null, $store->country)) {
+            if ($id_country = AdminImportController::resolveCountryId($store->country)) {
                 $store->id_country = (int) $id_country;
             } else {
                 $country = new Country();
@@ -3561,6 +3591,7 @@ class AdminImportControllerCore extends AdminController
                 $country->id_zone = 0; // Default zone for country to create
                 $country->iso_code = Tools::strtoupper(Tools::substr($store->country, 0, 2)); // Default iso for country to create
                 $country->contains_states = false; // Default value for country to create
+                $country->need_identification_number = false; // Required field, default value for country to create
                 $lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true);
                 if (($field_error = $country->validateFields(UNFRIENDLY_ERROR, true)) === true
                     && ($lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
