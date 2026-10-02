@@ -25,31 +25,31 @@
 	{foreach $supply_order_details as $supply_order_detail}
 		{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
 		<tr class="product {$bgcolor_class}">
-			<td class="product left">
+			<td class="product left" width="14%">
 				{$supply_order_detail->supplier_reference}
 			</td>
-			<td class="product left">
+			<td class="product left" width="21%">
 				{$supply_order_detail->name}
 			</td>
-			<td  class="product right">
+			<td class="product right" width="5%">
 				{$supply_order_detail->quantity_expected}
 			</td>
-			<td  class="product right">
+			<td class="product right" width="10%">
 				{$currency->prefix} {$supply_order_detail->unit_price_te} {$currency->suffix}
 			</td>
-			<td  class="product right">
+			<td class="product right" width="11%">
 				{$currency->prefix} {$supply_order_detail->price_te} {$currency->suffix}
 			</td>
-			<td  class="product right">
+			<td class="product right" width="9%">
 				{$supply_order_detail->discount_rate}
 			</td>
-			<td  class="product right">
+			<td class="product right" width="11%">
 				{$currency->prefix} {$supply_order_detail->price_with_discount_te} {$currency->suffix}
 			</td>
-			<td  class="product right">
+			<td class="product right" width="9%">
 				{$supply_order_detail->tax_rate}
 			</td>
-			<td  class="product right">
+			<td class="product right" width="10%">
 				{$currency->prefix} {$supply_order_detail->price_ti} {$currency->suffix}
 			</td>
 		</tr>
