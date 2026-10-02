@@ -109,6 +109,38 @@ class ModuleTest extends TestCase
 
         Module::getInstanceByName('bankwire')->uninstall();
     }
+
+    public function testLookupsFollowModuleLifecycle(): void
+    {
+        if (Module::isInstalled('bankwire')) {
+            Module::getInstanceByName('bankwire')->uninstall();
+        }
+
+        $this->assertGreaterThan(0, Module::getModuleIdByName('ps_featuredproducts'));
+        $this->assertSame(0, Module::getModuleIdByName('bankwire'));
+        $this->assertFalse(Module::isInstalled('bankwire'));
+        $this->assertFalse(Module::isEnabled('bankwire'));
+        $this->assertSame(0, Module::getModuleIdByName('not_a_module'));
+
+        $this->assertTrue(ModuleManagerBuilder::getInstance()->build()->install('bankwire'));
+        $module = Module::getInstanceByName('bankwire');
+        $this->assertSame((int) $module->id, Module::getModuleIdByName('bankwire'));
+        $this->assertSame((int) $module->id, Module::getModuleIdByName('BankWire'));
+        $this->assertTrue(Module::isInstalled('bankwire'));
+        $this->assertTrue(Module::isEnabled('bankwire'));
+
+        $this->assertTrue($module->disable());
+        $this->assertTrue(Module::isInstalled('bankwire'));
+        $this->assertFalse(Module::isEnabled('bankwire'));
+
+        $this->assertTrue($module->enable());
+        $this->assertTrue(Module::isEnabled('bankwire'));
+
+        $this->assertTrue($module->uninstall());
+        $this->assertSame(0, Module::getModuleIdByName('bankwire'));
+        $this->assertFalse(Module::isInstalled('bankwire'));
+        $this->assertFalse(Module::isEnabled('bankwire'));
+    }
 }
 
 define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__, 4) . '/Resources/modules_tests/'));
