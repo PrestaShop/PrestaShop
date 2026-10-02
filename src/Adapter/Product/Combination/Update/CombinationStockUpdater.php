@@ -142,7 +142,7 @@ class CombinationStockUpdater
             $deltaQuantity = $stockModification->getFixedQuantity() - $previousQuantity;
         }
 
-        $movementReasonId = $this->movementReasonRepository->getEmployeeEditionReasonId($deltaQuantity > $previousQuantity);
+        $movementReasonId = $this->movementReasonRepository->getEmployeeEditionReasonId($deltaQuantity > 0);
 
         $this->stockManager->saveMovement(
             $stockAvailable->id_product,
