@@ -23,6 +23,13 @@ class RouterPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        // Only the Admin app defines prestashop.router, since the CSRF token in the URL is part of
+        // the back office security model. The front office and the Admin API keep Symfony's router,
+        // so the URLs they generate - an API Location header, for instance - carry no admin token.
+        if (!$container->hasDefinition('prestashop.router')) {
+            return;
+        }
+
         $container->setAlias('router', 'prestashop.router')->setPublic(true);
     }
 }
