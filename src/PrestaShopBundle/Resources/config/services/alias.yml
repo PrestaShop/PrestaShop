@@ -10,13 +10,13 @@ services:
     alias: prestashop.core.api.stock_movement.controller
 
   prestashop.twig.extension.dataFormatter:
-    alias: prestashop.twig.extension.data_formatter
+    alias: PrestaShopBundle\Twig\DataFormatterExtension
 
   hashing:
     alias: prestashop.core.crypto.hashing
 
   hook_provider:
-    alias: prestashop.adapter.legacy.hook
+    alias: PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider
 
   theme_manager:
     alias: prestashop.core.addon.theme.theme_manager

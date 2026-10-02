@@ -14,8 +14,8 @@ services:
     lazy: true
     autowire: true
     arguments:
-      - '@prestashop.adapter.data_provider.module'
-      - '@prestashop.adapter.admin.data_provider.module'
+      - '@PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider'
+      - '@PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider'
       - '@doctrine.cache.provider'
       - '@PrestaShop\PrestaShop\Adapter\HookManager'
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
@@ -24,15 +24,15 @@ services:
     class: PrestaShop\PrestaShop\Core\Module\EventSubscriber
     arguments:
       - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
-      - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+      - '@PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer'
     tags:
       - { name: kernel.event_subscriber }
 
   PrestaShop\PrestaShop\Core\Module\ModuleManager:
     autowire: true
     arguments:
-      $moduleDataProvider: '@prestashop.adapter.data_provider.module'
-      $adminModuleDataProvider: '@prestashop.core.admin.data_provider.module_interface'
+      $moduleDataProvider: '@PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider'
+      $adminModuleDataProvider: '@PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface'
       $hookManager: '@prestashop.adapter.hook.manager'
       $modulesDir: '%prestashop.module_dir%'
       $xliffFileLoader: '@translation.loader.xliff'

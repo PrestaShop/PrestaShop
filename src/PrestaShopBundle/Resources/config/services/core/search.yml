@@ -25,7 +25,7 @@ services:
   prestashop.core.search.builder.repository:
     class: 'PrestaShop\PrestaShop\Core\Search\Builder\RepositoryFiltersBuilder'
     arguments:
-      - '@prestashop.core.admin.admin_filter.repository'
+      - '@PrestaShopBundle\Entity\Repository\AdminFilterRepository'
       - '@prestashop.adapter.data_provider.employee'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
 
@@ -37,7 +37,7 @@ services:
   prestashop.core.search.builder.persist:
     class: 'PrestaShop\PrestaShop\Core\Search\Builder\PersistFiltersBuilder'
     arguments:
-      - '@prestashop.core.admin.admin_filter.repository'
+      - '@PrestaShopBundle\Entity\Repository\AdminFilterRepository'
       - '@prestashop.adapter.data_provider.employee'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
 

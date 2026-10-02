@@ -6,9 +6,9 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Grid\Search\Factory\SearchCriteriaWithCategoryParentIdFilterFactory'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.shop.context'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Context'
       - '@prestashop.adapter.feature.multistore'
-      - '@prestashop.adapter.shop.context'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Context'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
       - '@request_stack'
 
