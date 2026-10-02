@@ -78,7 +78,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         ;
         $paginatedIdsQb = $this->applyNewCustomerFilter($paginatedIdsQb, $searchCriteria->getFilters());
         // WHY: no `customer` SELECT alias exists in the id-only query, so sort by its expression.
-        $this->applySorting($paginatedIdsQb, $searchCriteria, $this->getCustomerField());
+        $this->applySorting($paginatedIdsQb, $searchCriteria, $this->getCustomerField(false));
         $this->criteriaApplicator
             ->applyPagination($searchCriteria, $paginatedIdsQb)
             ->applyDeterministicSorting($searchCriteria, $paginatedIdsQb, 'o', 'id_order')
@@ -86,7 +86,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
 
         $qb = $this->connection
             ->createQueryBuilder()
-            ->select($this->getCustomerField() . ' AS `customer`')
+            ->select($this->getCustomerField(false) . ' AS `customer`')
             ->addSelect('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname')
             ->addSelect('o.id_currency, cur.iso_code')
             ->addSelect('o.current_state, o.id_customer')
@@ -258,10 +258,17 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
     }
 
     /**
+     * The customer column is displayed abbreviated to keep it narrow, but a merchant searching it
+     * types the real first name, so the filter has to match the full name.
+     *
      * @return string
      */
-    private function getCustomerField()
+    private function getCustomerField(bool $includeFullFirstname = true)
     {
+        if ($includeFullFirstname) {
+            return 'CONCAT(cu.`firstname`, \' \', cu.`lastname`)';
+        }
+
         return 'CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`)';
     }
 

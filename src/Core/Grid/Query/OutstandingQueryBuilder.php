@@ -68,7 +68,7 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
     {
         $qb = $this->getBaseQueryBuilder($searchCriteria)
             ->addSelect('oi.id_order_invoice AS id_invoice, oi.date_add')
-            ->addSelect('CONCAT(LEFT(c.`firstname`, 1), \'. \' , c.`lastname`) AS customer')
+            ->addSelect($this->getCustomerField(false) . ' AS customer')
             ->addSelect('c.company, rl.name AS risk, r.color')
             ->addSelect('c.outstanding_allow_amount')
             ->addSelect('c.id_customer, o.id_order')
@@ -127,7 +127,7 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
         ];
 
         $likeComparisonFilters = [
-            'customer' => 'CONCAT(LEFT(c.firstname, 1), \'. \' , c.lastname)',
+            'customer' => $this->getCustomerField(),
             'company' => 'c.company',
         ];
 
@@ -185,7 +185,7 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
         $sortableFields = [
             'id_invoice' => 'oi.id_order_invoice',
             'date_add' => 'oi.date_add',
-            'customer' => 'CONCAT(LEFT(c.firstname, 1), \'. \' , c.lastname)',
+            'customer' => $this->getCustomerField(false),
             'company' => 'c.company',
             'risk' => 'r.id_risk',
             'outstanding_allow_amount' => 'c.outstanding_allow_amount',
@@ -194,5 +194,20 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
         if (isset($sortableFields[$criteria->getOrderBy()])) {
             $qb->orderBy($sortableFields[$criteria->getOrderBy()], $criteria->getOrderWay());
         }
+    }
+
+    /**
+     * The customer column is displayed abbreviated to keep it narrow, but a merchant searching it
+     * types the real first name, so the filter has to match the full name.
+     *
+     * @return string
+     */
+    private function getCustomerField(bool $includeFullFirstname = true): string
+    {
+        if ($includeFullFirstname) {
+            return 'CONCAT(c.`firstname`, \' \', c.`lastname`)';
+        }
+
+        return 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`)';
     }
 }
