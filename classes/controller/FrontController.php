@@ -420,16 +420,7 @@ class FrontControllerCore extends Controller
                 && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 || !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0)
                 && $this->context->cookie->id_customer
             ) {
-                $to_update = false;
-                if ($this->automaticallyAllocateDeliveryAddress && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0)) {
-                    $to_update = true;
-                    $cart->id_address_delivery = (int) Address::getFirstCustomerAddressId($cart->id_customer);
-                }
-                if ($this->automaticallyAllocateInvoiceAddress && (!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0)) {
-                    $to_update = true;
-                    $cart->id_address_invoice = (int) Address::getFirstCustomerAddressId($cart->id_customer);
-                }
-                if ($to_update) {
+                if ($this->assignFirstCustomerAddresses($cart)) {
                     $cart->update();
                 }
             }
@@ -504,6 +495,41 @@ class FrontControllerCore extends Controller
             ]
         );
         Hook::exec('action' . $this->getControllerName() . 'InitAfter', ['controller' => $this]);
+    }
+
+    /**
+     * Assigns the customer's first address to the cart addresses that are still empty.
+     *
+     * A customer who has no address at all resolves to zero, which is the value those fields already
+     * hold, so nothing changes. Reporting an update in that case made the caller write the cart on
+     * every single page request of such a customer, each write resetting the product caches and
+     * firing actionCartSave.
+     *
+     * @param Cart $cart
+     *
+     * @return bool whether an address was assigned and the cart therefore needs saving
+     */
+    protected function assignFirstCustomerAddresses(Cart $cart)
+    {
+        $assigned = false;
+
+        if ($this->automaticallyAllocateDeliveryAddress && empty($cart->id_address_delivery)) {
+            $idAddress = (int) Address::getFirstCustomerAddressId($cart->id_customer);
+            if ($idAddress) {
+                $cart->id_address_delivery = $idAddress;
+                $assigned = true;
+            }
+        }
+
+        if ($this->automaticallyAllocateInvoiceAddress && empty($cart->id_address_invoice)) {
+            $idAddress = (int) Address::getFirstCustomerAddressId($cart->id_customer);
+            if ($idAddress) {
+                $cart->id_address_invoice = $idAddress;
+                $assigned = true;
+            }
+        }
+
+        return $assigned;
     }
 
     /**
