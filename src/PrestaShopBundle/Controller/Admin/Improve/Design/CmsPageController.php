@@ -110,6 +110,13 @@ class CmsPageController extends PrestaShopAdminController
                 'cmsCategoryGrid' => $this->presentGrid($cmsCategoryGrid),
                 'cmsGrid' => $this->presentGrid($cmsGrid),
                 'cmsPageView' => $viewData,
+                // "Back to list" climbs one level; the root listing takes no parameter, as in the breadcrumb
+                'backToListUrl' => $this->generateUrl(
+                    'admin_cms_pages_index',
+                    CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID === $viewData['parent_category_id']
+                        ? []
+                        : ['id_cms_category' => $viewData['parent_category_id']]
+                ),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'helperDocLink' => $helperBlockLinkProvider->getLink('cms_pages'),
