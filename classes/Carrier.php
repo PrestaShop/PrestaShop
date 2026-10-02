@@ -1643,16 +1643,24 @@ class CarrierCore extends ObjectModel
             foreach ($carrier_list as $key => $id_carrier) {
                 $carrier = new Carrier($id_carrier);
 
-                // Get the sizes of the carrier and the product and sort them to check if the carrier can take the product.
+                /*
+                 * Get the sizes of the carrier and the product to check if the carrier can take the product.
+                 *
+                 * WHY float and not int: the product dimensions are decimal(20,6) columns, so casting them
+                 * to int truncated a 2.5 cm product to 2 and let a carrier limited to 2 cm accept it. The
+                 * carrier limits are integer columns today and are cast the same way for symmetry, so that
+                 * widening them later changes nothing here. max_weight below is already compared as it is
+                 * stored, which is the behaviour these three were missing.
+                 */
                 $carrier_sizes = [
-                    'width' => (int) $carrier->max_width,
-                    'height' => (int) $carrier->max_height,
-                    'depth' => (int) $carrier->max_depth,
+                    'width' => (float) $carrier->max_width,
+                    'height' => (float) $carrier->max_height,
+                    'depth' => (float) $carrier->max_depth,
                 ];
                 $product_sizes = [
-                    'width' => (int) $product->width,
-                    'height' => (int) $product->height,
-                    'depth' => (int) $product->depth,
+                    'width' => (float) $product->width,
+                    'height' => (float) $product->height,
+                    'depth' => (float) $product->depth,
                 ];
 
                 if (($carrier_sizes['width'] > 0 && $carrier_sizes['width'] < $product_sizes['width'])
