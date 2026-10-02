@@ -690,6 +690,17 @@ class WebserviceRequestCore
             return true;
         }
 
+        // WHY: a deprecation notice (e.g. PHP 8.x "Creation of dynamic property ...") must not turn a
+        // webservice call into a 500 error. Without this guard such notices fell through to the default
+        // branch below and were reported as "[PHP Unknown error #8192] ..." with a 500 status, breaking
+        // otherwise valid POST/PUT requests. Log them like the other levels but let the request proceed.
+        // @see https://github.com/PrestaShop/PrestaShop/issues/39703
+        if (in_array($errno, [E_DEPRECATED, E_USER_DEPRECATED], true)) {
+            error_log('[PHP Deprecated #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')');
+
+            return true;
+        }
+
         $errortype = [
             E_ERROR => 'Error',
             E_WARNING => 'Warning',
