@@ -180,10 +180,14 @@ class OrderProductQuantityUpdater
             $updatedCombinationId = $updatedProduct->getCombinationId() !== null
                 ? $updatedProduct->getCombinationId()->getValue()
                 : 0;
+            $updatedCustomizationId = $updatedProduct->getCustomizationId() !== null
+                ? $updatedProduct->getCustomizationId()->getValue()
+                : 0;
             $updatedOrderDetail = null;
             foreach ($orderDetails as $orderDetailData) {
                 if ((int) $orderDetailData['product_id'] === $updatedProduct->getProductId()->getValue()
-                    && (int) $orderDetailData['product_attribute_id'] === $updatedCombinationId) {
+                    && (int) $orderDetailData['product_attribute_id'] === $updatedCombinationId
+                    && (int) $orderDetailData['id_customization'] === $updatedCustomizationId) {
                     $updatedOrderDetail = new OrderDetail($orderDetailData['id_order_detail']);
                     break;
                 }
