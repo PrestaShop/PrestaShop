@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -167,12 +168,21 @@ final class AttachmentGridDefinitionFactory extends AbstractFilterableGridDefini
                     ->setAssociatedColumn('name')
             )
             ->add(
-                (new Filter('file_size', NumberType::class))
+                // The column shows a converted size, so no value read off it can match the stored byte
+                // count. A range over that byte count is what the numeric columns of other grids use.
+                (new Filter('file_size', IntegerMinMaxFilterType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'placeholder' => $this->trans('Search file size', [], 'Admin.Actions'),
-                        ],
                         'required' => false,
+                        'min_field_options' => [
+                            'attr' => [
+                                'placeholder' => $this->trans('Min (bytes)', [], 'Admin.Actions'),
+                            ],
+                        ],
+                        'max_field_options' => [
+                            'attr' => [
+                                'placeholder' => $this->trans('Max (bytes)', [], 'Admin.Actions'),
+                            ],
+                        ],
                     ])
                     ->setAssociatedColumn('file_size')
             )
