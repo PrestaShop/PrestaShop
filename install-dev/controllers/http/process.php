@@ -99,7 +99,12 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             } elseif (Tools::getValue('finalize') && !empty($this->session->process_validated['postInstall'])) {
                 $this->processFinalize();
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            // WHY: Throwable, not Exception. An install step fails with a PHP Error - a TypeError, a
+            // call on null, a class that will not load - as readily as with an Exception, and catching
+            // only Exception let those escape as an uncaught fatal. The step then answered HTTP 500
+            // with no body, so the wizard had nothing to show but the status code. The console entry
+            // point, index_cli.php, already catches Throwable for the same reason.
             if (_PS_MODE_DEV_) {
                 // display stack trace
                 $message = (string) $e;
