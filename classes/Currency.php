@@ -451,13 +451,25 @@ class CurrencyCore extends ObjectModel
      */
     public function delete()
     {
-        if ($this->id == Currency::getDefaultCurrencyId()) {
+        // Reassign the default currency for every scope (global, group or shop) whose default
+        // points at the currency being deleted, not only the current context's default — otherwise
+        // a per-shop override is left pointing at a deleted currency.
+        $defaultScopes = Db::getInstance()->executeS('SELECT `id_shop_group`, `id_shop` FROM ' . _DB_PREFIX_ . 'configuration WHERE `name` = "PS_CURRENCY_DEFAULT" AND `value` = ' . (int) $this->id);
+        if (!empty($defaultScopes)) {
             $result = Db::getInstance()->getRow('SELECT `id_currency` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` != ' . (int) $this->id . ' AND `deleted` = 0');
             if (empty($result['id_currency'])) {
                 return false;
             }
 
-            Configuration::updateValue('PS_CURRENCY_DEFAULT', $result['id_currency']);
+            foreach ($defaultScopes as $scope) {
+                Configuration::updateValue(
+                    'PS_CURRENCY_DEFAULT',
+                    (int) $result['id_currency'],
+                    false,
+                    isset($scope['id_shop_group']) ? (int) $scope['id_shop_group'] : null,
+                    isset($scope['id_shop']) ? (int) $scope['id_shop'] : null
+                );
+            }
         }
 
         // Remove currency restrictions
