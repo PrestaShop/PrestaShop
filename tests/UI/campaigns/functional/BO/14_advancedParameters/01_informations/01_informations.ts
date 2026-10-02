@@ -84,14 +84,16 @@ describe('BO - Advanced Parameters: Informations', async () => {
     expect(hasOverrides).to.equal(false);
   });
 
-  it('should check there are no changed files', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkNoChangedFiles', baseContext);
+  it('should check the changed files block', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkChangedFiles', baseContext);
 
     const isBlockListChangedFilesVisible = await boInformationPage.isBlockListChangedFilesVisible(page);
     expect(isBlockListChangedFilesVisible).to.equal(true);
 
+    // The result depends on the md5 list published for the current version on api.prestashop.com:
+    // a dev checkout (post-release fixes) differs from it (eg. 9.2.x is different than 9.2), so only check the scan completes
     const hasChangedFiles = await boInformationPage.hasChangedFiles(page);
-    expect(hasChangedFiles).to.equal(false);
+    expect(hasChangedFiles).to.be.a('boolean');
   });
 
   it('should open the help side bar and check the document language', async function () {
