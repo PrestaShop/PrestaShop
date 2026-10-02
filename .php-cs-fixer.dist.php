@@ -16,6 +16,9 @@ $finder = PhpCsFixer\Finder::create()->in([
     'Unit/Resources/parsed-modules/fqcn-const.php',
     'Resources/modules_tests/testtrickyconflict/override/classes/Cart.php',
     'Resources/modules_tests/override_for_unit_test/classes/Cart.php',
+    // Expected output of an override merge, compared byte for byte by ModuleManagerBuilderTest.
+    // Its import is unused on purpose: it is the assertion that the merge keeps a module's imports.
+    'Resources/modules_tests/override/controllers/admin/DummyAdminController.php',
 ]);
 
 return (new PhpCsFixer\Config())
