@@ -137,7 +137,7 @@ class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'route' => 'admin_import',
                     'route_params' => [
-                        'import_type' => 'features',
+                        'import_type' => 'products',
                     ],
                 ])
             )

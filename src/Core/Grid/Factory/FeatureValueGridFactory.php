@@ -155,7 +155,7 @@ class FeatureValueGridFactory extends GridFactory
                 ->setOptions([
                     'route' => 'admin_import',
                     'route_params' => [
-                        'import_type' => 'features',
+                        'import_type' => 'products',
                     ],
                 ])
             )
