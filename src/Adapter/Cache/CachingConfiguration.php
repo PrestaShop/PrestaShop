@@ -92,11 +92,13 @@ class CachingConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        return isset(
-            $configuration['use_cache'],
-            $configuration['caching_system'],
-            $configuration['servers']
-        );
+        // WHY: caching_system is null whenever no system is selectable - a disabled radio is not
+        // posted - and that has to stay a saveable state, or a shop whose caching system its
+        // adapter refuses cannot turn caching back off from this form. Rejecting it here made the
+        // save a silent no-op, since updateConfiguration() reports no error when this returns
+        // false; updatePhpCacheConfiguration() already guards the value for null on its own.
+        return isset($configuration['use_cache'], $configuration['servers'])
+            && array_key_exists('caching_system', $configuration);
     }
 
     /**
@@ -108,10 +110,11 @@ class CachingConfiguration implements DataConfigurationInterface
     {
         $errors = [];
 
-        if (
-            $configuration['use_cache'] !== $this->isCachingEnabled
-            && null !== $configuration['caching_system']
-        ) {
+        // WHY: turning the cache on or off is independent of which system is selected. Requiring a
+        // system here used to keep a shop from enabling caching it could not run, but the driver is
+        // now chosen on whether the adapter can actually be built, so the only thing this coupling
+        // still did was trap a shop with no selectable system into leaving caching enabled.
+        if ($configuration['use_cache'] !== $this->isCachingEnabled) {
             $this->phpParameters->setProperty('parameters.ps_cache_enable', $configuration['use_cache']);
         }
 
