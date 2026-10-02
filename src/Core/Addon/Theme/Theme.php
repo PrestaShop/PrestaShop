@@ -64,6 +64,9 @@ class Theme implements AddonInterface
             $parentAttributes = $yamlParser->parse($themesDirectory . '/' . $attributes['parent'] . '/config/theme.yml');
             $parentAttributes['preview'] = 'themes/' . $attributes['parent'] . '/preview.png';
             $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/') . '/';
+            if (isset($parentAttributes['global_settings'], $attributes['global_settings'])) {
+                $attributes['global_settings'] = array_merge($parentAttributes['global_settings'], $attributes['global_settings']);
+            }
             $attributes = array_merge($parentAttributes, $attributes);
         }
 
