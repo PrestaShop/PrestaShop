@@ -279,6 +279,8 @@ class StockAvailableCore extends ObjectModel
      */
     public function add($autodate = true, $null_values = false)
     {
+        $this->applySharedStockShopConstraint();
+
         if (!parent::add($autodate, $null_values)) {
             return false;
         }
@@ -293,11 +295,43 @@ class StockAvailableCore extends ObjectModel
      */
     public function update($null_values = false)
     {
+        $this->applySharedStockShopConstraint();
+
         if (!parent::update($null_values)) {
             return false;
         }
 
         return $this->postSave();
+    }
+
+    /**
+     * When the shop group shares its stock, a stock_available row must be stored once for the
+     * whole group (id_shop = 0, id_shop_group = group), never tied to a single shop. Callers
+     * that set a concrete id_shop on a shared-stock row — typically the Webservice, which writes
+     * the id_shop coming from the request body — would otherwise orphan the row from the group's
+     * shared-stock lookups: the quantity then reads 0 for every shop and the combination the row
+     * belongs to looks like it vanished from the product.
+     *
+     * @see https://github.com/PrestaShop/PrestaShop/issues/38049
+     */
+    protected function applySharedStockShopConstraint(): void
+    {
+        if (!Shop::isFeatureActive()) {
+            return;
+        }
+
+        $idShopGroup = $this->id_shop
+            ? (int) Shop::getGroupFromShop((int) $this->id_shop)
+            : (int) $this->id_shop_group;
+
+        if (!$idShopGroup) {
+            return;
+        }
+
+        if ((bool) (new ShopGroup($idShopGroup))->share_stock) {
+            $this->id_shop = 0;
+            $this->id_shop_group = $idShopGroup;
+        }
     }
 
     /**
