@@ -45,6 +45,7 @@ final class AddOrderStateHandler extends AbstractOrderStateHandler implements Ad
 
         $this->fillOrderStateWithCommandData($orderState, $command);
         $this->assertRequiredFieldsAreNotMissing($orderState);
+        $this->assertNameIsNotDuplicate($orderState);
 
         if (false === $orderState->validateFields(false)) {
             throw new OrderStateException('Order status contains invalid field values');

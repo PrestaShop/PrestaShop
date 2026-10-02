@@ -16,15 +16,31 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\DeleteOrderStateCommand
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\BulkDeleteOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\DeleteOrderStateException;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\DuplicateOrderStateNameException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Query\GetOrderStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\QueryResult\EditableOrderState;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Resources\DatabaseDump;
 
 class OrderStateFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * WHY: per scenario and not per feature. The Background re-adds the same two order states for
+     * every scenario, and order state names are unique, so a feature scoped restore would make the
+     * second scenario collide with the rows the first one left behind.
+     *
+     * @BeforeScenario @restore-order-states-before-scenario
+     *
+     * @AfterFeature @restore-order-states-after-feature
+     */
+    public static function restoreOrderStatesTables(): void
+    {
+        DatabaseDump::restoreTables(['order_state', 'order_state_lang']);
+    }
+
     /**
      * @Given I add a new order state :orderStateReference with the following details:
      *
@@ -152,6 +168,14 @@ class OrderStateFeatureContext extends AbstractDomainFeatureContext
         } catch (BulkDeleteOrderStateException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @Then I should get an error that the order state name is already used
+     */
+    public function assertLastErrorIsDuplicateOrderStateName(): void
+    {
+        $this->assertLastErrorIs(DuplicateOrderStateNameException::class);
     }
 
     /**
