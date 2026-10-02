@@ -1621,7 +1621,7 @@ class AdminControllerCore extends Controller
                 if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name})) {
                     array_pop($this->toolbar_title);
                     array_pop($this->meta_title);
-                    $this->toolbar_title[] = is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name};
+                    $this->toolbar_title[] = $this->getObjectNameForToolbar($obj);
                     $this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
                 }
 
@@ -1634,11 +1634,7 @@ class AdminControllerCore extends Controller
                     $this->toolbar_title[] = $this->trans(
                         'Edit: %s',
                         [
-                            (is_array($obj->{$this->identifier_name})
-                                && isset($obj->{$this->identifier_name}[$this->context->employee->id_lang])
-                            )
-                                ? htmlspecialchars($obj->{$this->identifier_name}[$this->context->employee->id_lang])
-                                : htmlspecialchars($obj->{$this->identifier_name}),
+                            htmlspecialchars($this->getObjectNameForToolbar($obj)),
                         ],
                         'Admin.Actions'
                     );
@@ -1661,6 +1657,47 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign('help_link', 'https://help.prestashop-project.org/' . Language::getIsoById($this->context->employee->id_lang) . '/doc/'
             . Tools::getValue('controller') . '?version=' . _PS_VERSION_ . '&country=' . Language::getIsoById($this->context->employee->id_lang));
+    }
+
+    /**
+     * Reads the object's display name for the page header, whatever language rows it happens to have.
+     *
+     * WHY: a multilang field is keyed by the languages that actually have a row in the *_lang table,
+     * which is not guaranteed to include the employee's. When it does not, the edit branch used to hand
+     * the whole array to htmlspecialchars() - a TypeError on PHP 8 - and the view branch indexed it
+     * blindly, which is an undefined key. A shop reaches that state whenever a language is installed
+     * without the rows for an entity, or an employee keeps a language that was removed.
+     *
+     * @param ObjectModel $object
+     *
+     * @return string
+     */
+    protected function getObjectNameForToolbar($object)
+    {
+        $name = $object->{$this->identifier_name};
+
+        if (!is_array($name)) {
+            return (string) $name;
+        }
+
+        $preferredLanguageIds = [
+            (int) $this->context->employee->id_lang,
+            (int) Configuration::get('PS_LANG_DEFAULT'),
+        ];
+
+        foreach ($preferredLanguageIds as $idLang) {
+            if (isset($name[$idLang]) && is_scalar($name[$idLang]) && '' !== (string) $name[$idLang]) {
+                return (string) $name[$idLang];
+            }
+        }
+
+        foreach ($name as $translation) {
+            if (is_scalar($translation) && '' !== (string) $translation) {
+                return (string) $translation;
+            }
+        }
+
+        return '';
     }
 
     /**
