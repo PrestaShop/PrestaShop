@@ -402,7 +402,7 @@ export default class OrderViewPage {
       container = OrderViewPageMap.productEditModal;
     }
 
-    const modal = document.querySelector(container) as HTMLDivElement;
+    const modal = document.querySelector<HTMLDivElement>(container);
 
     if (!modal) {
       throw new Error(`${type} product modal not found`);
@@ -463,7 +463,7 @@ export default class OrderViewPage {
       if (!response.ok) {
         throw new Error(await response.text());
       }
-      const formContainer = document.querySelector(OrderViewPageMap.editProductModalContainer) as HTMLElement;
+      const formContainer = document.querySelector<HTMLElement>(OrderViewPageMap.editProductModalContainer);
       formContainer!.innerHTML = await response.text();
       modal.dataset.state = 'loaded';
     } catch (error) {
