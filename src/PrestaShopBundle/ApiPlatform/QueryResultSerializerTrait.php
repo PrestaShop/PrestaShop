@@ -43,11 +43,16 @@ trait QueryResultSerializerTrait
         $normalizedQueryResult = $this->domainSerializer->normalize($CQRSQueryResult, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
 
         if ($operation instanceof CollectionOperationInterface) {
-            foreach ($normalizedQueryResult as $key => $result) {
-                $normalizedQueryResult[$key] = $this->domainSerializer->denormalize(array_merge($extraParameters, $result), $operation->getClass(), null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation)]);
+            // The keys of the query result must not survive into the collection: a CQRS query is free to
+            // index its result by entity id (SearchCustomers does), and keeping those keys makes the
+            // endpoint answer with a JSON object keyed by id instead of the JSON array every other
+            // collection returns.
+            $denormalizedItems = [];
+            foreach ($normalizedQueryResult as $result) {
+                $denormalizedItems[] = $this->domainSerializer->denormalize(array_merge($extraParameters, $result), $operation->getClass(), null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation)]);
             }
 
-            return $normalizedQueryResult;
+            return $denormalizedItems;
         } else {
             $normalizedQueryResult = array_merge($extraParameters, $normalizedQueryResult);
 
