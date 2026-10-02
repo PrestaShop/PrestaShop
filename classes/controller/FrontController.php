@@ -430,6 +430,17 @@ class FrontControllerCore extends Controller
                     $cart->id_address_invoice = (int) Address::getFirstCustomerAddressId($cart->id_customer);
                 }
                 if ($to_update) {
+                    /*
+                     * Cart::update() fires actionCartSave, which is a front office hook: modules listening on it
+                     * expect the context to hold the cart being saved, exactly as they do everywhere else in the
+                     * front office. Without it, anything that asks for a price - Product::getPriceStatic(),
+                     * Cart::getProducts() - throws, because with no cart in the context and no employee there is
+                     * no address to resolve taxes and country scoped prices against.
+                     *
+                     * The cart update a few lines above already assigns the context before saving for the same
+                     * reason; this was the one place that did not.
+                     */
+                    $this->context->cart = $cart;
                     $cart->update();
                 }
             }
