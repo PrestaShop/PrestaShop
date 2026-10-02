@@ -115,9 +115,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         if ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_PERCENT) {
             $cartRuleObj->reduction_percent = (float) (string) $command->getDiscountValue();
         } elseif ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_AMOUNT) {
-            $discountValueTaxIncluded = (float) (string) $command->getDiscountValue();
-            $cartRuleObj->reduction_amount = $discountValueTaxIncluded;
-            $cartRuleObj->reduction_tax = true;
+            $cartRuleObj->reduction_amount = (float) (string) $command->getDiscountValue();
+            $cartRuleObj->reduction_tax = $command->isValueTaxIncluded();
         } elseif ($command->getCartRuleType() === OrderDiscountType::FREE_SHIPPING) {
             $cartRuleObj->free_shipping = true;
         }

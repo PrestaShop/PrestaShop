@@ -45,9 +45,11 @@
                     </div>
                     {{ form_widget(addOrderCartRuleForm.value) }}
                   </div>
-                  <small class="text-muted js-cart-rule-value-help d-none">
-                    {{ 'This value must include taxes.'|trans({}, 'Admin.Orderscustomers.Notification') }}
-                  </small>
+                  <div class="js-cart-rule-value-help d-none mt-1">
+                    {{ form_widget(addOrderCartRuleForm.value_tax_included, {attr: {
+                      'aria-label': 'Tax'|trans({}, 'Admin.Global'),
+                    }}) }}
+                  </div>
                 </div>
               </div>
             </div>
