@@ -182,8 +182,7 @@ describe('API : POST /admin-api/discounts', async () => {
       expect(jsonResponse.productConditions).to.deep.equal([]);
       expect(jsonResponse.minimumProductQuantity).to.equals(0);
       expect(jsonResponse.minimumAmount).to.deep.equals({
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/41199
-        shippingIncluded: true,
+        shippingIncluded: false,
         amount: dataDiscount.minimumAmountValue,
         currencyId: dataCurrencies.euro.id,
         taxIncluded: dataDiscount.minimumAmountTax === 'Tax included',
@@ -383,8 +382,7 @@ describe('API : POST /admin-api/discounts', async () => {
       } else if (cartConditionType === 'minimum_amount') {
         expect(jsonResponse.minimumProductQuantity).to.equals(0);
         expect(jsonResponse.minimumAmount).to.deep.equals({
-          // @todo : https://github.com/PrestaShop/PrestaShop/issues/41199
-          shippingIncluded: true,
+          shippingIncluded: false,
           amount: minimalAmount,
           currencyId: minimalAmountCurrency,
           taxIncluded: minimalAmountIncludeTax === '1',
