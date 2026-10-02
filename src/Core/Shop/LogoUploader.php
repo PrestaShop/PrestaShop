@@ -10,6 +10,7 @@ use Configuration;
 use Context;
 use ImageManager;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
+use PrestaShop\PrestaShop\Core\Image\ImageDimensions;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfigurationInterface;
 use PrestaShopException;
 use Shop;
@@ -35,7 +36,7 @@ class LogoUploader
     public function updateHeader()
     {
         if ($this->update('PS_LOGO', 'logo')) {
-            [$width, $height] = getimagesize($this->imageDirection . Configuration::get('PS_LOGO'));
+            [$width, $height] = ImageDimensions::of($this->imageDirection . Configuration::get('PS_LOGO'));
             Configuration::updateValue('SHOP_LOGO_HEIGHT', (int) round($height));
             Configuration::updateValue('SHOP_LOGO_WIDTH', (int) round($width));
         }
