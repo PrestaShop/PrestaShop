@@ -400,6 +400,27 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
+     * Returns the cart rules that apply to this invoice.
+     *
+     * A discount added from the order page can be attached to one invoice, which is stored in
+     * order_cart_rule.id_order_invoice. A rule with 0 there was not attached to any invoice - it
+     * came with the cart, so it belongs to the order as a whole and applies to every invoice.
+     *
+     * @return array|false
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function getCartRules()
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        SELECT *
+        FROM `' . _DB_PREFIX_ . 'order_cart_rule` ocr
+        WHERE ocr.`deleted` = 0
+            AND ocr.`id_order` = ' . (int) $this->id_order . '
+            AND (ocr.`id_order_invoice` = 0 OR ocr.`id_order_invoice` = ' . (int) $this->id . ')');
+    }
+
+    /**
      * Returns the shipping taxes breakdown.
      *
      * @param Order $order
