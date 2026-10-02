@@ -1909,7 +1909,14 @@ class AdminImportControllerCore extends AdminController
                 }
             }
 
-            if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0)) {
+            if (self::csvRemovesTheDiscount($info)) {
+                // An explicit zero means "no discount any more". Only the row this importer creates is
+                // removed, matched on the exact scope written below, so specific prices a merchant set
+                // for a customer, group, currency, country or quantity tier are left alone.
+                if (!$validateOnly) {
+                    $this->deleteImportedSpecificPrices((int) $product->id, $id_shop_list);
+                }
+            } elseif ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0)) {
                 foreach ($id_shop_list as $id_shop) {
                     $specific_price = SpecificPrice::getSpecificPrice($product->id, $id_shop, 0, 0, 0, 1, 0, 0, 0, 0);
 
@@ -4081,6 +4088,68 @@ class AdminImportControllerCore extends AdminController
         $iso_lang = trim(Tools::getValue('iso_lang'));
         setlocale(LC_COLLATE, strtolower($iso_lang) . '_' . strtoupper($iso_lang) . '.UTF-8');
         setlocale(LC_CTYPE, strtolower($iso_lang) . '_' . strtoupper($iso_lang) . '.UTF-8');
+    }
+
+    /**
+     * Whether the row asks for the discount to be removed.
+     *
+     * Only an explicit zero does. An empty cell means the column was left alone and must not be read
+     * as "delete", which is the difference between updating one column of a catalogue and wiping the
+     * discounts off every product in the file. The empty check is kept explicit rather than left to
+     * the comparison: `'' == 0` is false on PHP 8 but was true before it, and the intent should not
+     * depend on that.
+     *
+     * @param array $info
+     *
+     * @return bool
+     */
+    protected static function csvRemovesTheDiscount(array $info)
+    {
+        foreach (['reduction_price', 'reduction_percent'] as $field) {
+            if (!isset($info[$field]) || $info[$field] === '') {
+                continue;
+            }
+
+            if ($info[$field] == 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Removes the specific price this importer owns for a product, on the given shops.
+     *
+     * The scope is the one written when a discount is imported: no combination, currency, country,
+     * group or customer, quantity 1, not produced by a catalog price rule. Anything else on the
+     * product was configured elsewhere and is left untouched.
+     *
+     * @param int $idProduct
+     * @param array $idShopList
+     */
+    protected function deleteImportedSpecificPrices($idProduct, array $idShopList)
+    {
+        foreach ($idShopList as $idShop) {
+            $query = new DbQuery();
+            $query->select('id_specific_price')
+                ->from('specific_price')
+                ->where('id_product = ' . (int) $idProduct)
+                ->where('id_shop = ' . (int) $idShop)
+                ->where('id_product_attribute = 0')
+                ->where('id_currency = 0')
+                ->where('id_country = 0')
+                ->where('id_group = 0')
+                ->where('id_customer = 0')
+                ->where('from_quantity = 1')
+                ->where('id_specific_price_rule = 0')
+                ->where('price = -1');
+
+            foreach (Db::getInstance()->executeS($query) ?: [] as $row) {
+                $specificPrice = new SpecificPrice((int) $row['id_specific_price']);
+                $specificPrice->delete();
+            }
+        }
     }
 
     protected function addProductWarning($product_name, $product_id = null, $message = '')
