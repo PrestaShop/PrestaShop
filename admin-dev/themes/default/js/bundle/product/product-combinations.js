@@ -6,7 +6,7 @@
  * Function for removing bad characters from localization formating.
  */
 function replaceBadLocaleCharacters() {
-  // eslint-disable-next-line
+  // eslint-disable-next-line max-len
   $.each($('input.attribute_wholesale_price, input.attribute_priceTE, input.attribute_priceTI, input.attribute_unity, input.attribute_weight'), function () {
     $(this).val($(this).val().replace('−', '-')); // replace U+002D with U+2212
   });
@@ -22,7 +22,6 @@ window.combinations = (function () {
   function remove(elem) {
     const combinationElem = $(`#attribute_${elem.attr('data')}`);
 
-    // eslint-disable-next-line
     window.modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
       onContinue() {
         // We need this because there is a specific data="smthg" attribute so we can't use data() function
@@ -216,7 +215,7 @@ window.combinations = (function () {
                   onContinue() {
                     $.ajax({
                       type: 'GET',
-                      // eslint-disable-next-line
+                      // eslint-disable-next-line max-len
                       url: $('#accordion_combinations').attr('data-action-delete-all').replace(/\/\d+(?=\?.*)?/, `/${$('#form_id_product').val()}`),
                       success() {
                         combinationsList.remove();
@@ -277,7 +276,7 @@ window.combinations = (function () {
           }
 
           const number = $(`#combination_form_${contentElem.attr('data')} .number-of-images`);
-          // eslint-disable-next-line
+          // eslint-disable-next-line max-len
           const allProductCombination = $(`#combination_form_${contentElem.attr('data')} .product-combination-image`).length;
 
           number.text(`${countSelectedProducts()}/${allProductCombination}`);

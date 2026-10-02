@@ -52,7 +52,7 @@
     };
 
     if (!$.support.transition) {
-      // eslint-disable-next-line
+      // eslint-disable-next-line consistent-return
       return complete.call(this);
     }
 
@@ -84,7 +84,7 @@
     };
 
     if (!$.support.transition) {
-      // eslint-disable-next-line
+      // eslint-disable-next-line consistent-return
       return complete.call(this);
     }
 
@@ -106,7 +106,7 @@
       const options = $.extend({}, Sidebar.DEFAULTS, $this.data(), typeof this.options === 'object' && option);
 
       if (!data && options.toggle && option === 'show') {
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-param-reassign
         option = !option;
       }
       if (!data) {
@@ -128,7 +128,7 @@
   $(document).on('click.bs.sidebar.data-api', '[data-toggle="sidebar"]', function (e) {
     const $this = $(this);
     let href;
-    // eslint-disable-next-line
+    // eslint-disable-next-line max-len, no-mixed-operators
     const target = $this.attr('data-target') || e.preventDefault() || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '');
     const $target = $(target);
     const data = $target.data('bs.sidebar');
