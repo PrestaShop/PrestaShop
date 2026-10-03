@@ -20,6 +20,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountPriority;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Pricing\Product\ProductPrice;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
@@ -1026,6 +1027,8 @@ class CartCore extends ObjectModel
             $row = array_merge($row, $cartPrices);
         }
 
+        // Round product totals using the cart currency's computing precision
+        $computePrecision = (new ComputingPrecision())->getPrecision(Currency::getCurrencyInstance((int) $this->id_currency)->precision);
         switch (Configuration::get('PS_ROUND_TYPE')) {
             case Order::ROUND_TOTAL:
                 $row['total'] = $row['price_with_reduction_without_tax'] * $productQuantity;
@@ -1035,11 +1038,11 @@ class CartCore extends ObjectModel
             case Order::ROUND_LINE:
                 $row['total'] = Tools::ps_round(
                     $row['price_with_reduction_without_tax'] * $productQuantity,
-                    Context::getContext()->getComputingPrecision()
+                    $computePrecision
                 );
                 $row['total_wt'] = Tools::ps_round(
                     $row['price_with_reduction'] * $productQuantity,
-                    Context::getContext()->getComputingPrecision()
+                    $computePrecision
                 );
 
                 break;
@@ -1048,11 +1051,11 @@ class CartCore extends ObjectModel
             default:
                 $row['total'] = Tools::ps_round(
                     $row['price_with_reduction_without_tax'],
-                    Context::getContext()->getComputingPrecision()
+                    $computePrecision
                 ) * $productQuantity;
                 $row['total_wt'] = Tools::ps_round(
                     $row['price_with_reduction'],
-                    Context::getContext()->getComputingPrecision()
+                    $computePrecision
                 ) * $productQuantity;
 
                 break;
@@ -2336,7 +2339,8 @@ class CartCore extends ObjectModel
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
         }
 
-        $computePrecision = Context::getContext()->getComputingPrecision();
+        // Calculate and round cart totals using the cart currency's computing precision
+        $computePrecision = (new ComputingPrecision())->getPrecision(Currency::getCurrencyInstance((int) $this->id_currency)->precision);
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier, $computePrecision, $keepOrderPrices);
         switch ($type) {
             case Cart::ONLY_SHIPPING:
@@ -2416,7 +2420,7 @@ class CartCore extends ObjectModel
 
         // set cart rows (products)
         $useEcotax = $this->configuration->get('PS_USE_ECOTAX');
-        $precision = Context::getContext()->getComputingPrecision();
+        $precision = (new ComputingPrecision())->getPrecision(Currency::getCurrencyInstance((int) $this->id_currency)->precision);
         $configRoundType = $this->configuration->get('PS_ROUND_TYPE');
         $roundTypes = [
             Order::ROUND_TOTAL => CartRow::ROUND_MODE_TOTAL,
@@ -2663,7 +2667,7 @@ class CartCore extends ObjectModel
         // With PS_ATCP_SHIPWRAP on the gift wrapping cost computation calls getOrderTotal
         // with $type === Cart::ONLY_PRODUCTS, so the flag below prevents an infinite recursion.
         $includeGiftWrapping = (!$this->configuration->get('PS_ATCP_SHIPWRAP') || $type !== Cart::ONLY_PRODUCTS);
-        $computePrecision = Context::getContext()->getComputingPrecision();
+        $computePrecision = (new ComputingPrecision())->getPrecision(Currency::getCurrencyInstance((int) $this->id_currency)->precision);
 
         if ($this->gift && $includeGiftWrapping) {
             $wrapping_fees = Tools::convertPrice(
@@ -2732,11 +2736,14 @@ class CartCore extends ObjectModel
                 $wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
             }
         } elseif (Configuration::get('PS_ATCP_SHIPWRAP')) {
+            // Resolve computing precision from the cart currency
+            $computePrecision = (new ComputingPrecision())->getPrecision(Currency::getCurrencyInstance((int) $this->id_currency)->precision);
+
             // With PS_ATCP_SHIPWRAP, wrapping fee is by default tax included, so we convert it
             // when asked for the pre tax price.
             $wrapping_fees = Tools::ps_round(
                 $wrapping_fees / (1 + $this->getAverageProductsTaxRate()),
-                Context::getContext()->getComputingPrecision()
+                $computePrecision
             );
         }
 
@@ -3718,6 +3725,9 @@ class CartCore extends ObjectModel
             return 0;
         }
 
+        // Round shipping charges using the cart currency's computing precision
+        $computePrecision = (new ComputingPrecision())->getPrecision(Currency::getCurrencyInstance((int) $this->id_currency)->precision);
+
         if (!$default_country) {
             $default_country = Context::getContext()->country;
         }
@@ -3968,7 +3978,7 @@ class CartCore extends ObjectModel
                 }
             }
 
-            $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, Context::getContext()->getComputingPrecision());
+            $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, $computePrecision);
             Cache::store($cache_id, $shipping_cost);
 
             return $shipping_cost;
@@ -4006,7 +4016,7 @@ class CartCore extends ObjectModel
                 }
             }
 
-            $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, Context::getContext()->getComputingPrecision());
+            $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, $computePrecision);
             Cache::store($cache_id, $shipping_cost);
 
             return $shipping_cost;
@@ -4071,7 +4081,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, Context::getContext()->getComputingPrecision());
+        $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, $computePrecision);
         Cache::store($cache_id, $shipping_cost);
 
         return $shipping_cost;
@@ -5176,8 +5186,9 @@ class CartCore extends ObjectModel
      */
     private function alterSummaryForDisplay(array $summary, bool $refresh = false): array
     {
-        $context = Context::getContext();
-        $currency = new Currency($this->id_currency);
+        // Round summary amounts using the cart currency's decimal setting and computing precision
+        $currency = Currency::getCurrencyInstance((int) $this->id_currency);
+        $computePrecision = (int) $currency->decimals * (new ComputingPrecision())->getPrecision($currency->precision);
 
         $gift_products = [];
         $products = $summary['products'];
@@ -5195,8 +5206,8 @@ class CartCore extends ObjectModel
             if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^' . CartRule::BO_ORDER_CODE_PREFIX . '[0-9]+/', $cart_rule['code']))) {
                 $cart_rule['value_real'] -= $total_shipping;
                 $cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
-                $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], $computePrecision);
+                $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], $computePrecision);
                 if ($total_discounts > $cart_rule['value_real']) {
                     $total_discounts -= $total_shipping;
                 }
@@ -5213,20 +5224,20 @@ class CartCore extends ObjectModel
                 foreach ($products as $key => &$product) {
                     if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
                         // Update total products
-                        $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        $total_products = Tools::ps_round($total_products - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], $computePrecision);
+                        $total_products = Tools::ps_round($total_products - $product['price'], $computePrecision);
 
                         // Update total discounts
-                        $total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        $total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], $computePrecision);
+                        $total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], $computePrecision);
 
                         // Update cart rule value
-                        $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], $computePrecision);
+                        $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], $computePrecision);
 
                         // Update product quantity
-                        $product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
-                        $product['total'] = Tools::ps_round($product['total'] - $product['price'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
+                        $product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], $computePrecision);
+                        $product['total'] = Tools::ps_round($product['total'] - $product['price'], $computePrecision);
                         --$product['cart_quantity'];
 
                         if (!$product['cart_quantity']) {
