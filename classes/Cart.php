@@ -21,6 +21,7 @@ use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountPriority;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Pricing\Product\ProductPrice;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 class CartCore extends ObjectModel
@@ -912,7 +913,9 @@ class CartCore extends ObjectModel
                     $product['is_gift'] = false;
                 }
 
-                $props = Product::getProductProperties((int) $this->id_lang, $product);
+                // Associate product properties and tax-rule cache entries with the product's shop
+                $cart_shop_context->shop = new Shop((int) $product['id_shop']);
+                $props = Product::getProductProperties((int) $this->id_lang, $product, $cart_shop_context);
                 $product['reduction'] = $props['reduction'];
                 $product['reduction_without_tax'] = $props['reduction_without_tax'];
                 $product['price_without_reduction'] = $props['price_without_reduction'];
@@ -984,7 +987,8 @@ class CartCore extends ObjectModel
             $row['weight'] += $customization_weight;
         }
 
-        if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice') {
+        // Select the tax address according to the cart's shop configuration
+        if (Configuration::get('PS_TAX_ADDRESS_TYPE', null, (int) $this->id_shop_group, (int) $this->id_shop) == 'id_address_invoice') {
             $address_id = (int) $this->id_address_invoice;
         } else {
             $address_id = (int) $this->id_address_delivery;
@@ -993,12 +997,8 @@ class CartCore extends ObjectModel
             $address_id = null;
         }
 
-        if ($shopContext->shop->id != $row['id_shop']) {
-            $shopContext->shop = new Shop((int) $row['id_shop']);
-        }
-
         $specific_price_output = null;
-        // Specify the orderId if needed so that Product::getPriceStatic returns the prices saved in OrderDetails
+        // Find the order whose saved product prices should be used
         $orderId = null;
         if ($keepOrderPrices) {
             $orderId = Order::getIdByCartId($this->id);
@@ -1006,10 +1006,23 @@ class CartCore extends ObjectModel
         }
 
         if (!empty($orderId)) {
-            $orderPrices = $this->getOrderPrices($row, $orderId, $productQuantity, $address_id, $shopContext, $specific_price_output);
+            // Load the product prices saved in the order
+            $orderPrices = $this->getOrderPrices($row, $orderId);
+
+            // If the product price was not found in the order, use cart prices as fallback
+            if (false !== array_search(null, $orderPrices)) {
+                $cartPrices = $this->getCartPrices($row, $productQuantity, $address_id, $specific_price_output);
+                foreach ($orderPrices as $orderPrice => $value) {
+                    if (null === $value) {
+                        $orderPrices[$orderPrice] = $cartPrices[$orderPrice];
+                    }
+                }
+            }
+
+            // Apply the resolved order prices to the product
             $row = array_merge($row, $orderPrices);
         } else {
-            $cartPrices = $this->getCartPrices($row, $productQuantity, $address_id, $shopContext, $specific_price_output);
+            $cartPrices = $this->getCartPrices($row, $productQuantity, $address_id, $specific_price_output);
             $row = array_merge($row, $cartPrices);
         }
 
@@ -1085,7 +1098,6 @@ class CartCore extends ObjectModel
      * @param array $productRow
      * @param int $productQuantity
      * @param int|null $addressId Customer's address id (for tax calculation)
-     * @param Context $shopContext
      * @param array|false|null $specificPriceOutput
      *
      * @return array
@@ -1094,9 +1106,9 @@ class CartCore extends ObjectModel
         array $productRow,
         int $productQuantity,
         ?int $addressId,
-        Context $shopContext,
         &$specificPriceOutput
     ): array {
+        // Get the catalog price with taxes and without product reductions
         $cartPrices = [];
         $cartPrices['price_without_reduction'] = $this->getCartPriceFromCatalog(
             (int) $productRow['id_product'],
@@ -1107,10 +1119,10 @@ class CartCore extends ObjectModel
             true,
             $productQuantity,
             $addressId,
-            $shopContext,
             $specificPriceOutput
         );
 
+        // Get the catalog price without taxes or product reductions
         $cartPrices['price_without_reduction_without_tax'] = $this->getCartPriceFromCatalog(
             (int) $productRow['id_product'],
             isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
@@ -1120,10 +1132,10 @@ class CartCore extends ObjectModel
             true,
             $productQuantity,
             $addressId,
-            $shopContext,
             $specificPriceOutput
         );
 
+        // Get the catalog price with taxes and product reductions
         $cartPrices['price_with_reduction'] = $this->getCartPriceFromCatalog(
             (int) $productRow['id_product'],
             isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
@@ -1133,10 +1145,10 @@ class CartCore extends ObjectModel
             true,
             $productQuantity,
             $addressId,
-            $shopContext,
             $specificPriceOutput
         );
 
+        // Get the catalog price with product reductions and without taxes
         $cartPrices['price'] = $cartPrices['price_with_reduction_without_tax'] = $this->getCartPriceFromCatalog(
             (int) $productRow['id_product'],
             isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
@@ -1146,7 +1158,6 @@ class CartCore extends ObjectModel
             true,
             $productQuantity,
             $addressId,
-            $shopContext,
             $specificPriceOutput
         );
 
@@ -1162,7 +1173,6 @@ class CartCore extends ObjectModel
      * @param bool $withEcoTax
      * @param int $productQuantity
      * @param int|null $addressId Customer's address id (for tax calculation)
-     * @param Context $shopContext
      * @param array|false|null $specificPriceOutput
      *
      * @return float|null
@@ -1176,27 +1186,92 @@ class CartCore extends ObjectModel
         bool $withEcoTax,
         int $productQuantity,
         ?int $addressId,
-        Context $shopContext,
         &$specificPriceOutput
     ): ?float {
-        return Product::getPriceStatic(
+        // Reject invalid product identifiers before calculating prices
+        if (!Validate::isUnsignedId($productId)) {
+            throw new PrestaShopException('Product ID is invalid.');
+        }
+
+        // Resolve the optional pricing engine from the application container
+        $featureFlagManager = null;
+        try {
+            $container = (new ContainerFinder(Context::getContext()))->getContainer();
+            $featureFlagManager = $container->get(FeatureFlagStateCheckerInterface::class);
+        } catch (Throwable) {
+            // Catalog pricing is available when the application container cannot be resolved
+        }
+
+        // The new pricing engine computes base prices without taxes, discounts or ecotax
+        if ($featureFlagManager !== null && $featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_NEW_PRICING)) {
+            $productPrice = ProductPrice::create($productId, $combinationId, $productQuantity);
+            $container->get('prestashop.pricing.cart.product_calculator')->compute($productPrice);
+            $specificPriceOutput = null;
+
+            return Tools::ps_round((float) (string) $productPrice->getFinalPrice()->getTaxExcluded(), 6);
+        }
+
+        // Resolve the customer group from the cart, using the shop's visitor group for an anonymous cart
+        $groupId = 0;
+        if ($this->id_customer) {
+            $groupId = Group::isFeatureActive()
+                ? (int) Customer::getDefaultGroupId((int) $this->id_customer)
+                : (int) Configuration::get('PS_CUSTOMER_GROUP', null, (int) $this->id_shop_group, (int) $this->id_shop);
+        }
+
+        // Use an anonymous customer group associated with the cart's shop when no customer group is available
+        if (!$groupId) {
+            $groupId = (int) Configuration::get('PS_UNIDENTIFIED_GROUP', null, (int) $this->id_shop_group, (int) $this->id_shop);
+            if (!(new Group($groupId))->isAssociatedToShop((int) $this->id_shop)) {
+                $groupId = (int) Configuration::get('PS_CUSTOMER_GROUP', null, (int) $this->id_shop_group, (int) $this->id_shop);
+            }
+        }
+
+        // Count all combinations and customizations of this product for quantity discounts
+        $cartQuantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            SELECT SUM(`quantity`)
+            FROM `' . _DB_PREFIX_ . 'cart_product`
+            WHERE `id_product` = ' . $productId . ' AND `id_cart` = ' . (int) $this->id
+        );
+
+        // Resolve the tax location, including country, state and postcode, from the cart address
+        $address = Address::initialize($addressId, true);
+
+        // Disable taxes when tax calculation is disabled for the cart's shop
+        if (!Configuration::get('PS_TAX', null, (int) $this->id_shop_group, (int) $this->id_shop)) {
+            $withTaxes = false;
+        }
+
+        // VAT-number exemption uses the tax address and the VAT module settings without validating the number
+        if ($withTaxes && !empty($address->vat_number)
+            && $address->id_country != Configuration::get('VATNUMBER_COUNTRY', null, (int) $this->id_shop_group, (int) $this->id_shop)
+            && Configuration::get('VATNUMBER_MANAGEMENT', null, (int) $this->id_shop_group, (int) $this->id_shop)
+        ) {
+            $withTaxes = false;
+        }
+
+        // Calculate catalog prices with the cart's currency, customer, tax location and quantities
+        return Product::priceCalculation(
+            (int) $this->id_shop,
             $productId,
-            $withTaxes,
             $combinationId,
+            (int) $address->id_country,
+            (int) $address->id_state,
+            $address->postcode,
+            (int) $this->id_currency,
+            $groupId,
+            $productQuantity,
+            $withTaxes,
             6,
-            null,
             false,
             $useReduction,
-            $productQuantity,
-            false,
-            (int) $this->id_customer ? (int) $this->id_customer : null,
-            (int) $this->id,
-            $addressId,
-            $specificPriceOutput,
             $withEcoTax,
+            $specificPriceOutput,
             true,
-            $shopContext,
+            (int) $this->id_customer,
             true,
+            (int) $this->id,
+            $cartQuantity,
             $customizationId
         );
     }
@@ -1204,21 +1279,11 @@ class CartCore extends ObjectModel
     /**
      * @param array $productRow
      * @param int $orderId
-     * @param int $productQuantity
-     * @param int|null $addressId Customer's address id (for tax calculation)
-     * @param Context $shopContext
-     * @param array|false|null $specificPriceOutput
      *
      * @return array
      */
-    private function getOrderPrices(
-        array $productRow,
-        int $orderId,
-        int $productQuantity,
-        ?int $addressId,
-        Context $shopContext,
-        &$specificPriceOutput
-    ): array {
+    private function getOrderPrices(array $productRow, int $orderId): array
+    {
         $orderPrices = [];
         $orderPrices['price_without_reduction'] = Product::getPriceFromOrder(
             $orderId,
@@ -1259,22 +1324,6 @@ class CartCore extends ObjectModel
             true,
             isset($productRow['id_customization']) ? (int) $productRow['id_customization'] : 0
         );
-
-        // If the product price was not found in the order, use cart prices as fallback
-        if (false !== array_search(null, $orderPrices)) {
-            $cartPrices = $this->getCartPrices(
-                $productRow,
-                $productQuantity,
-                $addressId,
-                $shopContext,
-                $specificPriceOutput
-            );
-            foreach ($orderPrices as $orderPrice => $value) {
-                if (null === $value) {
-                    $orderPrices[$orderPrice] = $cartPrices[$orderPrice];
-                }
-            }
-        }
 
         return $orderPrices;
     }
