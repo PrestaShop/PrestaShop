@@ -20,7 +20,9 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountPriority;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Pricing\Product\ProductPrice;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 class CartCore extends ObjectModel
@@ -720,7 +722,7 @@ class CartCore extends ObjectModel
 
         // Build SELECT
         $sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, cp.`id_customization`, pl.`name`, p.`is_virtual`,
-                        pl.`description_short`, pl.`available_now`, pl.`available_later`, product_shop.`id_category_default`, p.`id_supplier`,
+                        pl.`description_short`, pl.`available_now`, pl.`available_later`, product_shop.`id_category_default`, product_shop.`id_tax_rules_group`, p.`id_supplier`,
                         p.`id_manufacturer`, m.`name` AS manufacturer_name, product_shop.`on_sale`, product_shop.`ecotax`, product_shop.`additional_shipping_cost`,
                         product_shop.`available_for_order`, product_shop.`show_price`, product_shop.`price`, product_shop.`active`, product_shop.`unity`, product_shop.`unit_price`,
                         stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
@@ -912,7 +914,9 @@ class CartCore extends ObjectModel
                     $product['is_gift'] = false;
                 }
 
-                $props = Product::getProductProperties((int) $this->id_lang, $product);
+                // Associate product properties and tax-rule cache entries with the product's shop
+                $cart_shop_context->shop = new Shop((int) $product['id_shop']);
+                $props = Product::getProductProperties((int) $this->id_lang, $product, $cart_shop_context);
                 $product['reduction'] = $props['reduction'];
                 $product['reduction_without_tax'] = $props['reduction_without_tax'];
                 $product['price_without_reduction'] = $props['price_without_reduction'];
@@ -954,7 +958,7 @@ class CartCore extends ObjectModel
 
     /**
      * @param array $row
-     * @param Context $shopContext
+     * @param Context $shopContext Unused parameter required for backward compatibility
      * @param int|null $productQuantity
      * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
@@ -984,7 +988,8 @@ class CartCore extends ObjectModel
             $row['weight'] += $customization_weight;
         }
 
-        if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice') {
+        // Select the tax address according to the cart's shop configuration
+        if (Configuration::get('PS_TAX_ADDRESS_TYPE', null, (int) $this->id_shop_group, (int) $this->id_shop) == 'id_address_invoice') {
             $address_id = (int) $this->id_address_invoice;
         } else {
             $address_id = (int) $this->id_address_delivery;
@@ -993,12 +998,8 @@ class CartCore extends ObjectModel
             $address_id = null;
         }
 
-        if ($shopContext->shop->id != $row['id_shop']) {
-            $shopContext->shop = new Shop((int) $row['id_shop']);
-        }
-
         $specific_price_output = null;
-        // Specify the orderId if needed so that Product::getPriceStatic returns the prices saved in OrderDetails
+        // Find the order whose saved product prices should be used
         $orderId = null;
         if ($keepOrderPrices) {
             $orderId = Order::getIdByCartId($this->id);
@@ -1006,13 +1007,28 @@ class CartCore extends ObjectModel
         }
 
         if (!empty($orderId)) {
-            $orderPrices = $this->getOrderPrices($row, $orderId, $productQuantity, $address_id, $shopContext, $specific_price_output);
+            // Load the product prices saved in the order
+            $orderPrices = $this->getOrderPrices($row, $orderId);
+
+            // If the product price was not found in the order, use cart prices as fallback
+            if (false !== array_search(null, $orderPrices)) {
+                $cartPrices = $this->getCartPrices($row, $productQuantity, $address_id, $specific_price_output);
+                foreach ($orderPrices as $orderPrice => $value) {
+                    if (null === $value) {
+                        $orderPrices[$orderPrice] = $cartPrices[$orderPrice];
+                    }
+                }
+            }
+
+            // Apply the resolved order prices to the product
             $row = array_merge($row, $orderPrices);
         } else {
-            $cartPrices = $this->getCartPrices($row, $productQuantity, $address_id, $shopContext, $specific_price_output);
+            $cartPrices = $this->getCartPrices($row, $productQuantity, $address_id, $specific_price_output);
             $row = array_merge($row, $cartPrices);
         }
 
+        // Round product totals using the cart currency's computing precision
+        $computePrecision = (new ComputingPrecision())->getPrecision(Currency::getCurrencyInstance((int) $this->id_currency)->precision);
         switch (Configuration::get('PS_ROUND_TYPE')) {
             case Order::ROUND_TOTAL:
                 $row['total'] = $row['price_with_reduction_without_tax'] * $productQuantity;
@@ -1022,11 +1038,11 @@ class CartCore extends ObjectModel
             case Order::ROUND_LINE:
                 $row['total'] = Tools::ps_round(
                     $row['price_with_reduction_without_tax'] * $productQuantity,
-                    Context::getContext()->getComputingPrecision()
+                    $computePrecision
                 );
                 $row['total_wt'] = Tools::ps_round(
                     $row['price_with_reduction'] * $productQuantity,
-                    Context::getContext()->getComputingPrecision()
+                    $computePrecision
                 );
 
                 break;
@@ -1035,11 +1051,11 @@ class CartCore extends ObjectModel
             default:
                 $row['total'] = Tools::ps_round(
                     $row['price_with_reduction_without_tax'],
-                    Context::getContext()->getComputingPrecision()
+                    $computePrecision
                 ) * $productQuantity;
                 $row['total_wt'] = Tools::ps_round(
                     $row['price_with_reduction'],
-                    Context::getContext()->getComputingPrecision()
+                    $computePrecision
                 ) * $productQuantity;
 
                 break;
@@ -1072,14 +1088,19 @@ class CartCore extends ObjectModel
             self::$_attributesLists[$productAttributeKey] ?? self::DEFAULT_ATTRIBUTES_KEYS
         );
 
-        return Product::getTaxesInformations($row, $shopContext);
+        // Calculate tax information using the cart's tax address and the product's shop-specific tax rules group
+        $taxManager = TaxManagerFactory::getManager(Address::initialize($address_id), (int) $row['id_tax_rules_group']);
+        $taxCalculator = $taxManager->getTaxCalculator();
+        $row['rate'] = $taxCalculator->getTotalRate();
+        $row['tax_name'] = $taxCalculator->getTaxesName();
+
+        return $row;
     }
 
     /**
      * @param array $productRow
      * @param int $productQuantity
      * @param int|null $addressId Customer's address id (for tax calculation)
-     * @param Context $shopContext
      * @param array|false|null $specificPriceOutput
      *
      * @return array
@@ -1088,9 +1109,9 @@ class CartCore extends ObjectModel
         array $productRow,
         int $productQuantity,
         ?int $addressId,
-        Context $shopContext,
         &$specificPriceOutput
     ): array {
+        // Get the catalog price with taxes and without product reductions
         $cartPrices = [];
         $cartPrices['price_without_reduction'] = $this->getCartPriceFromCatalog(
             (int) $productRow['id_product'],
@@ -1101,10 +1122,10 @@ class CartCore extends ObjectModel
             true,
             $productQuantity,
             $addressId,
-            $shopContext,
             $specificPriceOutput
         );
 
+        // Get the catalog price without taxes or product reductions
         $cartPrices['price_without_reduction_without_tax'] = $this->getCartPriceFromCatalog(
             (int) $productRow['id_product'],
             isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
@@ -1114,10 +1135,10 @@ class CartCore extends ObjectModel
             true,
             $productQuantity,
             $addressId,
-            $shopContext,
             $specificPriceOutput
         );
 
+        // Get the catalog price with taxes and product reductions
         $cartPrices['price_with_reduction'] = $this->getCartPriceFromCatalog(
             (int) $productRow['id_product'],
             isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
@@ -1127,10 +1148,10 @@ class CartCore extends ObjectModel
             true,
             $productQuantity,
             $addressId,
-            $shopContext,
             $specificPriceOutput
         );
 
+        // Get the catalog price with product reductions and without taxes
         $cartPrices['price'] = $cartPrices['price_with_reduction_without_tax'] = $this->getCartPriceFromCatalog(
             (int) $productRow['id_product'],
             isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
@@ -1140,7 +1161,6 @@ class CartCore extends ObjectModel
             true,
             $productQuantity,
             $addressId,
-            $shopContext,
             $specificPriceOutput
         );
 
@@ -1156,7 +1176,6 @@ class CartCore extends ObjectModel
      * @param bool $withEcoTax
      * @param int $productQuantity
      * @param int|null $addressId Customer's address id (for tax calculation)
-     * @param Context $shopContext
      * @param array|false|null $specificPriceOutput
      *
      * @return float|null
@@ -1170,27 +1189,92 @@ class CartCore extends ObjectModel
         bool $withEcoTax,
         int $productQuantity,
         ?int $addressId,
-        Context $shopContext,
         &$specificPriceOutput
     ): ?float {
-        return Product::getPriceStatic(
+        // Reject invalid product identifiers before calculating prices
+        if (!Validate::isUnsignedId($productId)) {
+            throw new PrestaShopException('Product ID is invalid.');
+        }
+
+        // Resolve the optional pricing engine from the application container
+        $featureFlagManager = null;
+        try {
+            $container = (new ContainerFinder(Context::getContext()))->getContainer();
+            $featureFlagManager = $container->get(FeatureFlagStateCheckerInterface::class);
+        } catch (Throwable) {
+            // Catalog pricing is available when the application container cannot be resolved
+        }
+
+        // The new pricing engine computes base prices without taxes, discounts or ecotax
+        if ($featureFlagManager !== null && $featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_NEW_PRICING)) {
+            $productPrice = ProductPrice::create($productId, $combinationId, $productQuantity);
+            $container->get('prestashop.pricing.cart.product_calculator')->compute($productPrice);
+            $specificPriceOutput = null;
+
+            return Tools::ps_round((float) (string) $productPrice->getFinalPrice()->getTaxExcluded(), 6);
+        }
+
+        // Resolve the customer group from the cart, using the shop's visitor group for an anonymous cart
+        $groupId = 0;
+        if ($this->id_customer) {
+            $groupId = Group::isFeatureActive()
+                ? (int) Customer::getDefaultGroupId((int) $this->id_customer)
+                : (int) Configuration::get('PS_CUSTOMER_GROUP', null, (int) $this->id_shop_group, (int) $this->id_shop);
+        }
+
+        // Use an anonymous customer group associated with the cart's shop when no customer group is available
+        if (!$groupId) {
+            $groupId = (int) Configuration::get('PS_UNIDENTIFIED_GROUP', null, (int) $this->id_shop_group, (int) $this->id_shop);
+            if (!(new Group($groupId))->isAssociatedToShop((int) $this->id_shop)) {
+                $groupId = (int) Configuration::get('PS_CUSTOMER_GROUP', null, (int) $this->id_shop_group, (int) $this->id_shop);
+            }
+        }
+
+        // Count all combinations and customizations of this product for quantity discounts
+        $cartQuantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            SELECT SUM(`quantity`)
+            FROM `' . _DB_PREFIX_ . 'cart_product`
+            WHERE `id_product` = ' . $productId . ' AND `id_cart` = ' . (int) $this->id
+        );
+
+        // Resolve the tax location, including country, state and postcode, from the cart address
+        $address = Address::initialize($addressId, true);
+
+        // Disable taxes when tax calculation is disabled for the cart's shop
+        if (!Configuration::get('PS_TAX', null, (int) $this->id_shop_group, (int) $this->id_shop)) {
+            $withTaxes = false;
+        }
+
+        // VAT-number exemption uses the tax address and the VAT module settings without validating the number
+        if ($withTaxes && !empty($address->vat_number)
+            && $address->id_country != Configuration::get('VATNUMBER_COUNTRY', null, (int) $this->id_shop_group, (int) $this->id_shop)
+            && Configuration::get('VATNUMBER_MANAGEMENT', null, (int) $this->id_shop_group, (int) $this->id_shop)
+        ) {
+            $withTaxes = false;
+        }
+
+        // Calculate catalog prices with the cart's currency, customer, tax location and quantities
+        return Product::priceCalculation(
+            (int) $this->id_shop,
             $productId,
-            $withTaxes,
             $combinationId,
+            (int) $address->id_country,
+            (int) $address->id_state,
+            $address->postcode,
+            (int) $this->id_currency,
+            $groupId,
+            $productQuantity,
+            $withTaxes,
             6,
-            null,
             false,
             $useReduction,
-            $productQuantity,
-            false,
-            (int) $this->id_customer ? (int) $this->id_customer : null,
-            (int) $this->id,
-            $addressId,
-            $specificPriceOutput,
             $withEcoTax,
+            $specificPriceOutput,
             true,
-            $shopContext,
+            (int) $this->id_customer,
             true,
+            (int) $this->id,
+            $cartQuantity,
             $customizationId
         );
     }
@@ -1198,21 +1282,11 @@ class CartCore extends ObjectModel
     /**
      * @param array $productRow
      * @param int $orderId
-     * @param int $productQuantity
-     * @param int|null $addressId Customer's address id (for tax calculation)
-     * @param Context $shopContext
-     * @param array|false|null $specificPriceOutput
      *
      * @return array
      */
-    private function getOrderPrices(
-        array $productRow,
-        int $orderId,
-        int $productQuantity,
-        ?int $addressId,
-        Context $shopContext,
-        &$specificPriceOutput
-    ): array {
+    private function getOrderPrices(array $productRow, int $orderId): array
+    {
         $orderPrices = [];
         $orderPrices['price_without_reduction'] = Product::getPriceFromOrder(
             $orderId,
@@ -1253,22 +1327,6 @@ class CartCore extends ObjectModel
             true,
             isset($productRow['id_customization']) ? (int) $productRow['id_customization'] : 0
         );
-
-        // If the product price was not found in the order, use cart prices as fallback
-        if (false !== array_search(null, $orderPrices)) {
-            $cartPrices = $this->getCartPrices(
-                $productRow,
-                $productQuantity,
-                $addressId,
-                $shopContext,
-                $specificPriceOutput
-            );
-            foreach ($orderPrices as $orderPrice => $value) {
-                if (null === $value) {
-                    $orderPrices[$orderPrice] = $cartPrices[$orderPrice];
-                }
-            }
-        }
 
         return $orderPrices;
     }
@@ -2281,7 +2339,8 @@ class CartCore extends ObjectModel
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
         }
 
-        $computePrecision = Context::getContext()->getComputingPrecision();
+        // Calculate and round cart totals using the cart currency's computing precision
+        $computePrecision = (new ComputingPrecision())->getPrecision(Currency::getCurrencyInstance((int) $this->id_currency)->precision);
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier, $computePrecision, $keepOrderPrices);
         switch ($type) {
             case Cart::ONLY_SHIPPING:
@@ -2361,7 +2420,7 @@ class CartCore extends ObjectModel
 
         // set cart rows (products)
         $useEcotax = $this->configuration->get('PS_USE_ECOTAX');
-        $precision = Context::getContext()->getComputingPrecision();
+        $precision = (new ComputingPrecision())->getPrecision(Currency::getCurrencyInstance((int) $this->id_currency)->precision);
         $configRoundType = $this->configuration->get('PS_ROUND_TYPE');
         $roundTypes = [
             Order::ROUND_TOTAL => CartRow::ROUND_MODE_TOTAL,
@@ -2608,7 +2667,7 @@ class CartCore extends ObjectModel
         // With PS_ATCP_SHIPWRAP on the gift wrapping cost computation calls getOrderTotal
         // with $type === Cart::ONLY_PRODUCTS, so the flag below prevents an infinite recursion.
         $includeGiftWrapping = (!$this->configuration->get('PS_ATCP_SHIPWRAP') || $type !== Cart::ONLY_PRODUCTS);
-        $computePrecision = Context::getContext()->getComputingPrecision();
+        $computePrecision = (new ComputingPrecision())->getPrecision(Currency::getCurrencyInstance((int) $this->id_currency)->precision);
 
         if ($this->gift && $includeGiftWrapping) {
             $wrapping_fees = Tools::convertPrice(
@@ -2677,11 +2736,14 @@ class CartCore extends ObjectModel
                 $wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
             }
         } elseif (Configuration::get('PS_ATCP_SHIPWRAP')) {
+            // Resolve computing precision from the cart currency
+            $computePrecision = (new ComputingPrecision())->getPrecision(Currency::getCurrencyInstance((int) $this->id_currency)->precision);
+
             // With PS_ATCP_SHIPWRAP, wrapping fee is by default tax included, so we convert it
             // when asked for the pre tax price.
             $wrapping_fees = Tools::ps_round(
                 $wrapping_fees / (1 + $this->getAverageProductsTaxRate()),
-                Context::getContext()->getComputingPrecision()
+                $computePrecision
             );
         }
 
@@ -3663,6 +3725,9 @@ class CartCore extends ObjectModel
             return 0;
         }
 
+        // Round shipping charges using the cart currency's computing precision
+        $computePrecision = (new ComputingPrecision())->getPrecision(Currency::getCurrencyInstance((int) $this->id_currency)->precision);
+
         if (!$default_country) {
             $default_country = Context::getContext()->country;
         }
@@ -3913,7 +3978,7 @@ class CartCore extends ObjectModel
                 }
             }
 
-            $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, Context::getContext()->getComputingPrecision());
+            $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, $computePrecision);
             Cache::store($cache_id, $shipping_cost);
 
             return $shipping_cost;
@@ -3951,7 +4016,7 @@ class CartCore extends ObjectModel
                 }
             }
 
-            $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, Context::getContext()->getComputingPrecision());
+            $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, $computePrecision);
             Cache::store($cache_id, $shipping_cost);
 
             return $shipping_cost;
@@ -4016,7 +4081,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, Context::getContext()->getComputingPrecision());
+        $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, $computePrecision);
         Cache::store($cache_id, $shipping_cost);
 
         return $shipping_cost;
@@ -5121,8 +5186,9 @@ class CartCore extends ObjectModel
      */
     private function alterSummaryForDisplay(array $summary, bool $refresh = false): array
     {
-        $context = Context::getContext();
-        $currency = new Currency($this->id_currency);
+        // Round summary amounts using the cart currency's decimal setting and computing precision
+        $currency = Currency::getCurrencyInstance((int) $this->id_currency);
+        $computePrecision = (int) $currency->decimals * (new ComputingPrecision())->getPrecision($currency->precision);
 
         $gift_products = [];
         $products = $summary['products'];
@@ -5140,8 +5206,8 @@ class CartCore extends ObjectModel
             if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^' . CartRule::BO_ORDER_CODE_PREFIX . '[0-9]+/', $cart_rule['code']))) {
                 $cart_rule['value_real'] -= $total_shipping;
                 $cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
-                $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], $computePrecision);
+                $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], $computePrecision);
                 if ($total_discounts > $cart_rule['value_real']) {
                     $total_discounts -= $total_shipping;
                 }
@@ -5158,20 +5224,20 @@ class CartCore extends ObjectModel
                 foreach ($products as $key => &$product) {
                     if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
                         // Update total products
-                        $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        $total_products = Tools::ps_round($total_products - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], $computePrecision);
+                        $total_products = Tools::ps_round($total_products - $product['price'], $computePrecision);
 
                         // Update total discounts
-                        $total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        $total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], $computePrecision);
+                        $total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], $computePrecision);
 
                         // Update cart rule value
-                        $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], $computePrecision);
+                        $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], $computePrecision);
 
                         // Update product quantity
-                        $product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
-                        $product['total'] = Tools::ps_round($product['total'] - $product['price'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
+                        $product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], $computePrecision);
+                        $product['total'] = Tools::ps_round($product['total'] - $product['price'], $computePrecision);
                         --$product['cart_quantity'];
 
                         if (!$product['cart_quantity']) {
