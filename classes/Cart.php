@@ -957,7 +957,7 @@ class CartCore extends ObjectModel
 
     /**
      * @param array $row
-     * @param Context $shopContext
+     * @param Context $shopContext Unused parameter required for backward compatibility
      * @param int|null $productQuantity
      * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
