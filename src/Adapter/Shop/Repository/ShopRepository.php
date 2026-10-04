@@ -136,6 +136,17 @@ class ShopRepository extends AbstractObjectModelRepository
         return array_map(fn (array $shopRow) => (int) $shopRow['id_shop'], $result);
     }
 
+    public function countActiveShops(): int
+    {
+        return (int) $this->connection->createQueryBuilder()
+            ->select('COUNT(s.id_shop)')
+            ->from($this->dbPrefix . 'shop', 's')
+            ->where('s.deleted = 0')
+            ->andWhere('s.active = 1')
+            ->executeQuery()
+            ->fetchOne();
+    }
+
     public function getAllShopIds(): array
     {
         $qb = $this
