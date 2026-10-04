@@ -1702,7 +1702,7 @@ class ProductCore extends ObjectModel
             FROM `' . _DB_PREFIX_ . 'product` p
             ' . Shop::addSqlAssociation('product', 'p') . '
             WHERE p.id_product = ' . (int) $idProduct . '
-            AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_add`) < ' . $nbDaysNewProduct;
+            AND product_shop.`date_add` >= DATE_SUB("' . date('Y-m-d') . ' 00:00:00", INTERVAL ' . ((int) $nbDaysNewProduct - 1) . ' DAY)';
 
         return (bool) Db::getInstance()->getValue($query, false);
     }
@@ -2802,13 +2802,14 @@ class ProductCore extends ObjectModel
         }
 
         $nb_days_new_product = (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
+        $min_date_add = 'DATE_SUB("' . $now . '", INTERVAL ' . ($nb_days_new_product - 1) . ' DAY)';
 
         if ($count) {
             $sql = 'SELECT COUNT(p.`id_product`) AS nb
                     FROM `' . _DB_PREFIX_ . 'product` p
                     ' . Shop::addSqlAssociation('product', 'p') . '
                     WHERE product_shop.`active` = 1
-                    AND DATEDIFF(product_shop.`date_add`, DATE_SUB("' . $now . '", INTERVAL ' . $nb_days_new_product . ' DAY)) > 0
+                    AND product_shop.`date_add` >= ' . $min_date_add . '
                     ' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
                     ' . $sql_groups;
 
@@ -2818,12 +2819,7 @@ class ProductCore extends ObjectModel
         $sql->select(
             'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
             pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
-            (DATEDIFF(product_shop.`date_add`,
-                DATE_SUB(
-                    "' . $now . '",
-                    INTERVAL ' . $nb_days_new_product . ' DAY
-                )
-            ) > 0) as new'
+            (product_shop.`date_add` >= ' . $min_date_add . ') as new'
         );
 
         $sql->from('product', 'p');
@@ -2843,12 +2839,7 @@ class ProductCore extends ObjectModel
         if ($front) {
             $sql->where('product_shop.`visibility` IN ("both", "catalog")');
         }
-        $sql->where('DATEDIFF(product_shop.`date_add`,
-            DATE_SUB(
-                "' . $now . '",
-                INTERVAL ' . $nb_days_new_product . ' DAY
-            )
-        ) > 0');
+        $sql->where('product_shop.`date_add` >= ' . $min_date_add);
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sql->where('EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
@@ -2981,9 +2972,9 @@ class ProductCore extends ObjectModel
             $sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
                         pl.`link_rewrite`, pl.`meta_description`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
                         p.`ean13`, p.`isbn`, p.`upc`, p.`mpn`, image_shop.`id_image` id_image, il.`legend`,
-                        DATEDIFF(product_shop.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
-                        INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . '
-                            DAY)) > 0 AS new
+                        product_shop.`date_add` >= DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
+                        INTERVAL ' . ((Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) - 1) . '
+                            DAY) AS new
                     FROM `' . _DB_PREFIX_ . 'product` p
                     LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
                         p.`id_product` = pl.`id_product`
@@ -3112,13 +3103,10 @@ class ProductCore extends ObjectModel
             IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
             pl.`link_rewrite`, pl.`meta_description`, pl.`meta_title`,
             pl.`name`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
-            DATEDIFF(
-                p.`date_add`,
-                DATE_SUB(
-                    "' . date('Y-m-d') . ' 00:00:00",
-                    INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-                )
-            ) > 0 AS new
+            p.`date_add` >= DATE_SUB(
+                "' . date('Y-m-d') . ' 00:00:00",
+                INTERVAL ' . ((Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) - 1) . ' DAY
+            ) AS new
         FROM `' . _DB_PREFIX_ . 'product` p
         ' . Shop::addSqlAssociation('product', 'p') . '
         LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
@@ -4501,13 +4489,10 @@ class ProductCore extends ObjectModel
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
                     pl.`meta_description`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
                     image_shop.`id_image` id_image, il.`legend`, m.`name` as manufacturer_name, cl.`name` AS category_default, IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
-                    DATEDIFF(
-                        p.`date_add`,
-                        DATE_SUB(
-                            "' . date('Y-m-d') . ' 00:00:00",
-                            INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-                        )
-                    ) > 0 AS new
+                    p.`date_add` >= DATE_SUB(
+                        "' . date('Y-m-d') . ' 00:00:00",
+                        INTERVAL ' . ((Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) - 1) . ' DAY
+                    ) AS new
                 FROM `' . _DB_PREFIX_ . 'accessory`
                 LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.`id_product` = `id_product_2`
                 ' . Shop::addSqlAssociation('product', 'p') . '
