@@ -184,6 +184,8 @@ module.exports = {
     security: './js/pages/security',
     shipping_preferences: './js/pages/shipping-preferences',
     specific_price_form: './js/pages/product/specific-price/form',
+    shop_group: './js/pages/shop-group',
+    shop_group_form: './js/pages/shop-group/form',
     sql_manager: './js/pages/sql-manager',
     quick_access: './js/pages/quick-access',
     state: './js/pages/state',
