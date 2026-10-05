@@ -124,3 +124,8 @@ services:
     autowire: true
     tags:
       - 'console.command'
+
+  PrestaShopBundle\Command\BulkModuleCommand:
+    autowire: true
+    tags:
+      - 'console.command'
