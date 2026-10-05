@@ -545,9 +545,16 @@ class MailCore extends ObjectModel
                 }
             }
             ShopUrl::cacheMainDomainForShop((int) $idShop);
-            if (isset($logo) && $configuration['PS_MAIL_TYPE'] != Mail::TYPE_TEXT) {
+            if (isset($logo)
+                && $configuration['PS_MAIL_TYPE'] != Mail::TYPE_TEXT
+                && self::templateShowsShopLogo($templateHtml)
+            ) {
                 $templateVars['{shop_logo}'] = 'cid:shop_logo';
                 $email->embedFromPath($logo, 'shop_logo');
+            } else {
+                // Nothing will display it, so the file is not attached and the placeholder resolves
+                // to nothing rather than to a cid that points at an attachment we did not add.
+                $templateVars['{shop_logo}'] = '';
             }
 
             // Now, we add common links that are available in every template
@@ -1055,5 +1062,28 @@ class MailCore extends ObjectModel
         }
 
         return Tools::strtolower((string) $smtpEncryption) !== 'off';
+    }
+
+    /**
+     * Whether the html body has anywhere to show the shop logo.
+     *
+     * The logo used to be attached to every message as soon as one was configured, so a template
+     * that does not display it still carried the image, which mail clients then show as an
+     * attachment. This is checked after actionEmailAddAfterContent so a module that adds the
+     * placeholder still gets the logo.
+     *
+     * @param string $templateHtml
+     *
+     * @return bool
+     */
+    private static function templateShowsShopLogo($templateHtml)
+    {
+        if (!is_string($templateHtml) || '' === $templateHtml) {
+            return false;
+        }
+
+        // Either the placeholder, or the content id itself for a template that writes the img tag.
+        return false !== strpos($templateHtml, '{shop_logo}')
+            || false !== strpos($templateHtml, 'cid:shop_logo');
     }
 }
