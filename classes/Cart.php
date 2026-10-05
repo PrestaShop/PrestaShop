@@ -1383,6 +1383,8 @@ class CartCore extends ObjectModel
      */
     public static function getNbProducts($id)
     {
+        $id = (int) $id;
+
         // Must be strictly compared to NULL, or else an empty cart will bypass the cache and add dozens of queries
         if (isset(self::$_nbProducts[$id]) && self::$_nbProducts[$id] !== null) {
             return self::$_nbProducts[$id];
@@ -1391,7 +1393,7 @@ class CartCore extends ObjectModel
         self::$_nbProducts[$id] = (int) Db::getInstance()->getValue(
             'SELECT SUM(`quantity`)
             FROM `' . _DB_PREFIX_ . 'cart_product`
-            WHERE `id_cart` = ' . (int) $id
+            WHERE `id_cart` = ' . $id
         );
 
         return self::$_nbProducts[$id];
