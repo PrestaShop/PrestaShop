@@ -79,7 +79,7 @@ class AttachmentFileUploader implements AttachmentFileUploaderInterface
     {
         try {
             $attachment = new Attachment($attachmentId);
-            $fileLink = _PS_DOWNLOAD_DIR_ . $attachment->file;
+            $fileLink = _PS_DOWNLOAD_DIR_ . basename($attachment->file);
 
             try {
                 unlink($fileLink);

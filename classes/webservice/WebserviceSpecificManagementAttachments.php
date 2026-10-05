@@ -253,6 +253,19 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         }
 
         // Physical file location
+        if ($attachment->file !== basename($attachment->file) || in_array($attachment->file, ['.', '..'], true)) {
+            throw new WebserviceException(
+                sprintf(
+                    'Invalid attachment file for attachment %d',
+                    $attachmentId
+                ),
+                [
+                    1,
+                    Response::HTTP_INTERNAL_SERVER_ERROR,
+                ]
+            );
+        }
+
         $file = _PS_DOWNLOAD_DIR_ . $attachment->file;
         // Check if file exists
         if (!file_exists($file)) {
@@ -312,7 +325,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         try {
             $file = $uploader->upload($fileToUpload);
             if (!empty($attachment->id)) {
-                unlink(_PS_DOWNLOAD_DIR_ . $attachment->file);
+                unlink(_PS_DOWNLOAD_DIR_ . basename($attachment->file));
             }
 
             $defaultLanguage = Configuration::get('PS_LANG_DEFAULT');

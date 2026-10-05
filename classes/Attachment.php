@@ -29,7 +29,7 @@ class AttachmentCore extends ObjectModel
         'primary' => 'id_attachment',
         'multilang' => true,
         'fields' => [
-            'file' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 40],
+            'file' => ['type' => self::TYPE_STRING, 'validate' => 'isFileName', 'required' => true, 'size' => 40],
             'mime' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 128],
             'file_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
             'file_size' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
@@ -68,7 +68,7 @@ class AttachmentCore extends ObjectModel
      */
     public function add($autoDate = true, $nullValues = false)
     {
-        if (file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
+        if (basename($this->file) === $this->file && file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
             $this->file_size = filesize(_PS_DOWNLOAD_DIR_ . $this->file);
         }
 
@@ -80,7 +80,7 @@ class AttachmentCore extends ObjectModel
      */
     public function update($nullValues = false)
     {
-        if (file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
+        if (basename($this->file) === $this->file && file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
             $this->file_size = filesize(_PS_DOWNLOAD_DIR_ . $this->file);
         }
 

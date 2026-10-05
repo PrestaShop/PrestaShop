@@ -14,6 +14,10 @@ class AttachmentControllerCore extends FrontController
 
         Hook::exec('actionDownloadAttachment', ['attachment' => &$attachment]);
 
+        if ($attachment->file !== basename($attachment->file) || in_array($attachment->file, ['.', '..'], true)) {
+            Tools::redirect('index.php');
+        }
+
         if (ob_get_level() && ob_get_length() > 0) {
             ob_end_clean();
         }
