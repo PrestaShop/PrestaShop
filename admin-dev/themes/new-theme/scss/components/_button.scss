@@ -10,6 +10,12 @@
   }
 }
 
+// Primary buttons
+.btn-primary {
+  background-color: var(--#{$cdk}blue-700);
+  border-color: var(--#{$cdk}blue-700);
+}
+
 a.btn.auto-pointer-events {
   pointer-events: auto;
 }
