@@ -933,6 +933,9 @@ Country</value>
     <configuration id="PS_CSP_RETENTION_DAYS" name="PS_CSP_RETENTION_DAYS">
       <value>0</value>
     </configuration>
+    <configuration id="PS_CSP_REPORT_URI" name="PS_CSP_REPORT_URI">
+      <value></value>
+    </configuration>
     <configuration id="PS_CSP_ADMIN_ENABLED" name="PS_CSP_ADMIN_ENABLED">
       <value>0</value>
     </configuration>
@@ -941,6 +944,9 @@ Country</value>
     </configuration>
     <configuration id="PS_CSP_ADMIN_RETENTION_DAYS" name="PS_CSP_ADMIN_RETENTION_DAYS">
       <value>0</value>
+    </configuration>
+    <configuration id="PS_CSP_ADMIN_REPORT_URI" name="PS_CSP_ADMIN_REPORT_URI">
+      <value></value>
     </configuration>
     <configuration id="PS_SEC_NOSNIFF" name="PS_SEC_NOSNIFF">
       <value>1</value>

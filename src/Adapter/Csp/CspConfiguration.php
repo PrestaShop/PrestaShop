@@ -24,7 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class CspConfiguration extends AbstractMultistoreConfiguration
 {
-    private const CONFIGURATION_FIELDS = ['enabled', 'report_only', 'retention_days'];
+    private const CONFIGURATION_FIELDS = ['enabled', 'report_only', 'retention_days', 'report_uri'];
 
     public function __construct(
         Configuration $configuration,
@@ -44,6 +44,7 @@ final class CspConfiguration extends AbstractMultistoreConfiguration
             'enabled' => (bool) $this->configuration->get('PS_CSP_ENABLED', false, $shopConstraint),
             'report_only' => (bool) $this->configuration->get('PS_CSP_REPORT_ONLY', true, $shopConstraint),
             'retention_days' => (int) $this->configuration->get('PS_CSP_RETENTION_DAYS', 0, $shopConstraint),
+            'report_uri' => (string) $this->configuration->get('PS_CSP_REPORT_URI', '', $shopConstraint),
         ];
     }
 
@@ -71,9 +72,14 @@ final class CspConfiguration extends AbstractMultistoreConfiguration
             ];
         }
 
+        if (array_key_exists('report_uri', $configuration)) {
+            $configuration['report_uri'] = trim((string) $configuration['report_uri']);
+        }
+
         $this->updateConfigurationValue('PS_CSP_ENABLED', 'enabled', $configuration, $shopConstraint);
         $this->updateConfigurationValue('PS_CSP_REPORT_ONLY', 'report_only', $configuration, $shopConstraint);
         $this->updateConfigurationValue('PS_CSP_RETENTION_DAYS', 'retention_days', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_CSP_REPORT_URI', 'report_uri', $configuration, $shopConstraint);
 
         return [];
     }
@@ -121,6 +127,7 @@ final class CspConfiguration extends AbstractMultistoreConfiguration
             ->setAllowedTypes('enabled', 'bool')
             ->setAllowedTypes('report_only', 'bool')
             ->setAllowedTypes('retention_days', 'int')
+            ->setAllowedTypes('report_uri', 'string')
             ->setNormalizer('retention_days', static fn ($resolver, int $value): int => max(0, $value));
     }
 }

@@ -63,6 +63,27 @@ class CspHeaderBuilderTest extends TestCase
         $this->assertSame([], $this->builder(flagEnabled: false, cspEnabled: true)->build(CspContext::FRONT, self::SHOP_ID, self::REPORT_URI));
     }
 
+    public function testAnExternalReportingEndpointReplacesTheBuiltInCollector(): void
+    {
+        $external = 'https://o1.ingest.example.com/api/9/security/?key=abc';
+        $headers = $this->builder(flagEnabled: true, cspEnabled: true, reportOnly: true, externalReportUri: $external)
+            ->build(CspContext::FRONT, self::SHOP_ID, self::REPORT_URI);
+
+        $this->assertSame('csp-endpoint="' . $external . '"', $headers['Reporting-Endpoints']);
+        $policy = $headers['Content-Security-Policy-Report-Only'];
+        $this->assertStringContainsString('report-uri ' . $external, $policy);
+        $this->assertStringNotContainsString(self::REPORT_URI, $policy, 'The internal collector must not be emitted when an endpoint is configured');
+    }
+
+    public function testAnInvalidExternalEndpointFallsBackToTheCollector(): void
+    {
+        $headers = $this->builder(flagEnabled: true, cspEnabled: true, reportOnly: true, externalReportUri: 'not a url')
+            ->build(CspContext::FRONT, self::SHOP_ID, self::REPORT_URI);
+
+        $this->assertSame('csp-endpoint="' . self::REPORT_URI . '"', $headers['Reporting-Endpoints']);
+        $this->assertStringContainsString('report-uri ' . self::REPORT_URI, $headers['Content-Security-Policy-Report-Only']);
+    }
+
     public function testItStripsHeaderBreakingCharactersFromTheReportUri(): void
     {
         // A URI carrying quotes, semicolons, commas or whitespace must never corrupt a header line
@@ -76,7 +97,7 @@ class CspHeaderBuilderTest extends TestCase
         $this->assertStringNotContainsString('";', $headers['Content-Security-Policy-Report-Only']);
     }
 
-    private function builder(bool $flagEnabled, bool $cspEnabled, bool $reportOnly = true): CspHeaderBuilder
+    private function builder(bool $flagEnabled, bool $cspEnabled, bool $reportOnly = true, string $externalReportUri = ''): CspHeaderBuilder
     {
         $featureFlagChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
         $featureFlagChecker->method('isEnabled')->willReturn($flagEnabled);
@@ -86,6 +107,7 @@ class CspHeaderBuilderTest extends TestCase
             static fn (string $key, $default = null) => match ($key) {
                 'PS_CSP_ENABLED' => $cspEnabled,
                 'PS_CSP_REPORT_ONLY' => $reportOnly,
+                'PS_CSP_REPORT_URI' => $externalReportUri,
                 default => $default,
             }
         );

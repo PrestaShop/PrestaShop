@@ -29,7 +29,7 @@ class CspConfigurationTest extends TestCase
         $configuration->expects($this->never())->method('set');
 
         $errors = $this->cspConfiguration($configuration)
-            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0]);
+            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0, 'report_uri' => '']);
 
         $this->assertNotEmpty($errors, 'Enforcing with no baseline (no allowed sources) must be rejected with an error');
     }
@@ -42,7 +42,7 @@ class CspConfigurationTest extends TestCase
         $configuration->expects($this->never())->method('set');
 
         $errors = $this->cspConfiguration($configuration)
-            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0]);
+            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0, 'report_uri' => '']);
 
         $this->assertNotEmpty($errors, 'Reports alone must not let a shop enforce without an allow-list');
     }
@@ -50,11 +50,11 @@ class CspConfigurationTest extends TestCase
     public function testItAllowsEnablingReportOnlyModeWithNoReports(): void
     {
         $configuration = $this->createMock(Configuration::class);
-        $configuration->expects($this->exactly(3))->method('set');
+        $configuration->expects($this->exactly(4))->method('set');
 
         // The safe path (report-only on) must not be blocked even with an empty log.
         $errors = $this->cspConfiguration($configuration)
-            ->updateConfiguration(['enabled' => true, 'report_only' => true, 'retention_days' => 0]);
+            ->updateConfiguration(['enabled' => true, 'report_only' => true, 'retention_days' => 0, 'report_uri' => '']);
 
         $this->assertSame([], $errors);
     }
@@ -71,10 +71,10 @@ class CspConfigurationTest extends TestCase
                 default => $default,
             }
         );
-        $configuration->expects($this->exactly(3))->method('set');
+        $configuration->expects($this->exactly(4))->method('set');
 
         $errors = $this->cspConfiguration($configuration)
-            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0]);
+            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0, 'report_uri' => '']);
 
         $this->assertSame([], $errors);
     }
@@ -82,12 +82,12 @@ class CspConfigurationTest extends TestCase
     public function testItLetsAShopEnforceWhenItHasCuratedRulesButAnEmptyLog(): void
     {
         $configuration = $this->createMock(Configuration::class);
-        $configuration->expects($this->exactly(3))->method('set');
+        $configuration->expects($this->exactly(4))->method('set');
 
         // Log is empty (e.g. cleared after curating, or sources added manually), but an allow-list
         // exists — enforcement must not be blocked.
         $errors = $this->cspConfiguration($configuration, ruleCount: 3)
-            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0]);
+            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0, 'report_uri' => '']);
 
         $this->assertSame([], $errors);
     }
@@ -114,7 +114,7 @@ class CspConfigurationTest extends TestCase
             $translator
         );
 
-        $errors = $config->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0]);
+        $errors = $config->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0, 'report_uri' => '']);
 
         $this->assertNotEmpty($errors, 'Enforcing across all shops at once must be refused');
     }
@@ -137,7 +137,7 @@ class CspConfigurationTest extends TestCase
             $this->createMock(TranslatorInterface::class)
         );
 
-        $errors = $config->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0]);
+        $errors = $config->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0, 'report_uri' => '']);
 
         $this->assertNotEmpty($errors, 'Enforcing across a group of shops must be refused');
     }
@@ -164,7 +164,7 @@ class CspConfigurationTest extends TestCase
         $configuration->expects($this->never())->method('set');
 
         $errors = $this->cspConfiguration($configuration)
-            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0]);
+            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0, 'report_uri' => '']);
 
         $this->assertNotEmpty($errors, 'Inherited enforcement must not bypass the per-shop baseline guard');
     }
@@ -174,7 +174,7 @@ class CspConfigurationTest extends TestCase
         $configuration = $this->createMock(Configuration::class);
         // The baseline guard only fences the enforce transition; the safe report-only save across all
         // shops must still go through to the store.
-        $configuration->expects($this->exactly(3))->method('set');
+        $configuration->expects($this->exactly(4))->method('set');
 
         $shopContext = $this->createMock(Context::class);
         $shopContext->method('getShopConstraint')->willReturn(ShopConstraint::allShops());
@@ -187,9 +187,24 @@ class CspConfigurationTest extends TestCase
             $this->createMock(TranslatorInterface::class)
         );
 
-        $errors = $config->updateConfiguration(['enabled' => true, 'report_only' => true, 'retention_days' => 0]);
+        $errors = $config->updateConfiguration(['enabled' => true, 'report_only' => true, 'retention_days' => 0, 'report_uri' => '']);
 
         $this->assertSame([], $errors);
+    }
+
+    public function testItStoresAndTrimsTheExternalReportTarget(): void
+    {
+        $written = [];
+        $configuration = $this->createMock(Configuration::class);
+        $configuration->method('set')->willReturnCallback(function (string $key, $value) use (&$written): void {
+            $written[$key] = $value;
+        });
+
+        // report-only (the safe path) so the enforce guard does not block the save.
+        $this->cspConfiguration($configuration)
+            ->updateConfiguration(['enabled' => true, 'report_only' => true, 'retention_days' => 0, 'report_uri' => '  https://front-monitor.example.com/csp  ']);
+
+        $this->assertSame('https://front-monitor.example.com/csp', $written['PS_CSP_REPORT_URI']);
     }
 
     private function cspConfiguration(Configuration $configuration, int $ruleCount = 0): CspConfiguration

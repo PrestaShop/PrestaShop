@@ -47,6 +47,24 @@ final class CspFeatureChecker
         return (bool) $this->configuration->get($this->reportOnlyKey($context), true, $this->scope($context, $shopId));
     }
 
+    /**
+     * The external endpoint reports are routed to instead of the built-in collector, or '' to use the
+     * collector. Only a valid absolute http(s) URL overrides it; anything else falls back to the collector.
+     */
+    public function reportTargetForContext(CspContext $context, int $shopId): string
+    {
+        $value = trim((string) $this->configuration->get($this->reportUriKey($context), '', $this->scope($context, $shopId)));
+
+        if ('' === $value
+            || false === filter_var($value, FILTER_VALIDATE_URL)
+            || !in_array(parse_url($value, PHP_URL_SCHEME), ['http', 'https'], true)
+        ) {
+            return '';
+        }
+
+        return $value;
+    }
+
     public function isEnabledForShop(int $shopId): bool
     {
         return $this->isEnabledForContext(CspContext::FRONT, $shopId);
@@ -65,6 +83,11 @@ final class CspFeatureChecker
     private function reportOnlyKey(CspContext $context): string
     {
         return $context->isPerShop() ? 'PS_CSP_REPORT_ONLY' : 'PS_CSP_ADMIN_REPORT_ONLY';
+    }
+
+    private function reportUriKey(CspContext $context): string
+    {
+        return $context->isPerShop() ? 'PS_CSP_REPORT_URI' : 'PS_CSP_ADMIN_REPORT_URI';
     }
 
     /** The storefront reads per-shop; the back office is global, so it reads the all-shops value. */

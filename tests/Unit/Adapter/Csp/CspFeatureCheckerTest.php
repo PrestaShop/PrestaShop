@@ -65,6 +65,33 @@ class CspFeatureCheckerTest extends TestCase
         $this->assertTrue($this->checker(flagEnabled: true, config: [])->isReportOnlyForContext(CspContext::ADMIN, 0));
     }
 
+    public function testItReturnsAConfiguredExternalReportTarget(): void
+    {
+        $url = 'https://o1.ingest.example.com/api/9/security/?key=abc';
+
+        $this->assertSame($url, $this->checker(flagEnabled: true, config: ['PS_CSP_REPORT_URI' => $url])->reportTargetForContext(CspContext::FRONT, 1));
+    }
+
+    public function testItHasNoExternalReportTargetByDefault(): void
+    {
+        $this->assertSame('', $this->checker(flagEnabled: true, config: [])->reportTargetForContext(CspContext::FRONT, 1));
+    }
+
+    public function testItRejectsAReportTargetThatIsNotAnAbsoluteHttpUrl(): void
+    {
+        foreach (['not a url', 'ftp://example.com/r', 'javascript:alert(1)', '/relative/path'] as $bad) {
+            $this->assertSame('', $this->checker(flagEnabled: true, config: ['PS_CSP_REPORT_URI' => $bad])->reportTargetForContext(CspContext::FRONT, 1));
+        }
+    }
+
+    public function testTheBackOfficeReadsItsOwnReportTargetKey(): void
+    {
+        $admin = 'https://admin-monitor.example.com/csp';
+        $checker = $this->checker(flagEnabled: true, config: ['PS_CSP_REPORT_URI' => 'https://front.example.com/csp', 'PS_CSP_ADMIN_REPORT_URI' => $admin]);
+
+        $this->assertSame($admin, $checker->reportTargetForContext(CspContext::ADMIN, 0));
+    }
+
     /**
      * @param array<string, string> $config
      */
