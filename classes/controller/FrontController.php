@@ -8,11 +8,12 @@
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder;
-use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -778,6 +779,7 @@ class FrontControllerCore extends Controller
 
         // Before the output hooks: once a hook echoes, headers_sent() is true and the header is dropped.
         $this->sendContentSecurityPolicyHeaders();
+        $this->sendSecurityHeaders();
 
         Hook::exec('actionOutputHTMLBefore', ['html' => &$html]);
         Hook::exec('actionOutput' . $this->getControllerName() . 'HTMLBefore', ['html' => &$html]);
@@ -813,6 +815,31 @@ class FrontControllerCore extends Controller
                 PrestaShopLogger::addLog('CSP header not sent: ' . $e->getMessage(), 2, null, 'Csp');
             } catch (Throwable) {
                 error_log('CSP header not sent: ' . $e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Sends the static security headers on the default FO path (HTML, headers not yet sent). Mirror on
+     * the FrontKernel path: SecurityHeadersSubscriber. Logic lives in SecurityHeadersProvider.
+     */
+    private function sendSecurityHeaders(): void
+    {
+        if (headers_sent()) {
+            return;
+        }
+
+        try {
+            /** @var SecurityHeadersProvider $securityHeadersProvider */
+            $securityHeadersProvider = $this->get(SecurityHeadersProvider::class);
+            foreach ($securityHeadersProvider->getHeaders(Tools::usingSecureMode()) as $name => $value) {
+                header($name . ': ' . $value);
+            }
+        } catch (Throwable $e) {
+            try {
+                PrestaShopLogger::addLog('Security headers not sent: ' . $e->getMessage(), 2, null, 'SecurityHeaders');
+            } catch (Throwable) {
+                error_log('Security headers not sent: ' . $e->getMessage());
             }
         }
     }

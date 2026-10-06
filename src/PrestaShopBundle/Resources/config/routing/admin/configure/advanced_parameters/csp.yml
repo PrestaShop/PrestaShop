@@ -20,6 +20,13 @@ admin_security_csp_save:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::saveAction'
     _parent: admin_security_csp_index
 
+admin_security_headers_save:
+  path: /headers
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::saveSecurityHeadersAction'
+    _parent: admin_security_csp_index
+
 admin_security_csp_add:
   path: /allow-list/add
   methods: [ GET, POST ]

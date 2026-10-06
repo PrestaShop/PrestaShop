@@ -45,3 +45,11 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker'
       - '@PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider'
+
+  # Static security headers (non-CSP). Public so FrontController can fetch it for the legacy dispatch,
+  # like CspHeaderBuilder; the two kernel subscribers inject it.
+  PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersProvider:
+    public: true
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'

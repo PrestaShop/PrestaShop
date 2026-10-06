@@ -54,6 +54,8 @@ class CspController extends PrestaShopAdminController
         FormHandlerInterface $cspFormHandler,
         #[Autowire(service: 'prestashop.admin.csp.admin_settings.form_handler')]
         FormHandlerInterface $adminCspFormHandler,
+        #[Autowire(service: 'prestashop.admin.security_headers.form_handler')]
+        FormHandlerInterface $securityHeadersFormHandler,
         #[Autowire(service: 'prestashop.core.grid.factory.csp_log')]
         GridFactoryInterface $cspLogGridFactory,
     ): Response {
@@ -130,8 +132,9 @@ class CspController extends PrestaShopAdminController
                 'cspContextParams' => $contextParams,
                 'enableSidebar' => true,
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'layoutTitle' => $this->trans('Content Security Policy', [], 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Security headers', [], 'Admin.Navigation.Menu'),
                 'help_link' => $this->generateSidebarLink('AdminSecurityCsp'),
+                'securityHeadersForm' => $securityHeadersFormHandler->getForm()->createView(),
                 'cspForm' => $cspForm->createView(),
                 'cspLogGrid' => $this->presentGrid($cspLogGridFactory->getGrid($filters)),
             ]
@@ -289,6 +292,31 @@ class CspController extends PrestaShopAdminController
         }
 
         return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
+    #[AdminSecurity("is_granted('update', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
+    public function saveSecurityHeadersAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.security_headers.form_handler')]
+        FormHandlerInterface $securityHeadersFormHandler,
+    ): RedirectResponse {
+        $this->assertFeatureEnabled();
+
+        $form = $securityHeadersFormHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $saveErrors = $securityHeadersFormHandler->save($form->getData());
+
+            if (0 === count($saveErrors)) {
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
+            } else {
+                $this->addFlashErrors($saveErrors);
+            }
+        }
+
+        return $this->redirectToRoute('admin_security_csp_index');
     }
 
     /** The page shows one surface at a time, selected by ?context (default the storefront). */
