@@ -435,7 +435,6 @@ class ImageManagerCore
         if (!$mimeType && function_exists('finfo_open')) {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mimeType = finfo_file($finfo, $filename);
-            finfo_close($finfo);
         }
         // Try with Mime
         if (!$mimeType && function_exists('mime_content_type')) {

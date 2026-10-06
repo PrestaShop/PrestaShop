@@ -288,7 +288,6 @@ class GetFileControllerCore extends FrontController
         if (function_exists('finfo_open')) {
             $finfo = @finfo_open(FILEINFO_MIME);
             $mimeType = @finfo_file($finfo, $file);
-            @finfo_close($finfo);
         } elseif (function_exists('mime_content_type')) {
             $mimeType = @mime_content_type($file);
         } elseif (function_exists('exec') && function_exists('escapeshellarg')) {
