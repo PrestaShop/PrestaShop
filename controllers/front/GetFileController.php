@@ -5,6 +5,8 @@
  */
 class GetFileControllerCore extends FrontController
 {
+    public $php_self = 'get-file';
+
     protected const MIME_TYPES = [
         'ez' => 'application/andrew-inset',
         'hqx' => 'application/mac-binhex40',
