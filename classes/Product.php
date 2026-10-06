@@ -736,7 +736,7 @@ class ProductCore extends ObjectModel
         $this->fillUnitRatio($ecotaxEnabled);
 
         if ($this->id_category_default) {
-            $this->category = Category::getLinkRewrite((int) $this->id_category_default, (int) $id_lang);
+            $this->category = Category::getLinkRewrite((int) $this->id_category_default, (int) $id_lang, $id_shop ? (int) $id_shop : null);
         }
     }
 

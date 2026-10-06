@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Classes;
 
+use Cache;
 use Category;
 use Configuration;
 use Context;
@@ -39,6 +40,8 @@ class LinkMultishopTest extends TestCase
         'category',
         'category_shop',
         'category_lang',
+        'product_shop',
+        'product_lang',
     ];
 
     /**
@@ -127,6 +130,9 @@ class LinkMultishopTest extends TestCase
         // other test classes and changes their generated URLs.
         $this->getUseRoutesProperty()->setValue(Dispatcher::getInstance(), $this->originalUseRoutes);
         DatabaseDump::restoreTables(self::TABLES);
+        // Rows were restored with SQL: drop what the test cached on top of them.
+        Cache::clean('objectmodel_Product_*');
+        Category::resetStaticCache();
         Shop::resetContext();
         parent::tearDown();
     }
@@ -211,5 +217,32 @@ class LinkMultishopTest extends TestCase
             'category-shop-two',
             $slugFor($product->getParentCategories($idLang, $this->secondShopId), $this->categoryId)
         );
+    }
+
+    /**
+     * Product::$category feeds the {category} route keyword and the category parameter of a product
+     * link, so a product loaded for another shop has to carry that shop's slug, not the context shop's.
+     */
+    public function testProductLoadedForAnotherShopCarriesThatShopsCategorySlug(): void
+    {
+        $idLang = (int) Configuration::get('PS_LANG_DEFAULT');
+        $productId = 1;
+
+        $row = Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'product_shop WHERE id_product = ' . $productId . ' AND id_shop = 1');
+        $row['id_category_default'] = $this->categoryId;
+        Db::getInstance()->update('product_shop', ['id_category_default' => $this->categoryId], 'id_product = ' . $productId . ' AND id_shop = 1');
+        $row['id_shop'] = $this->secondShopId;
+        Db::getInstance()->insert('product_shop', $row, false, true, Db::INSERT_IGNORE);
+        // Product is multilang per shop: without its lang row in the second shop it does not load there at all.
+        $columns = array_keys(Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'product_lang WHERE id_product = ' . $productId));
+        $selected = array_map(fn (string $column): string => $column === 'id_shop' ? (string) $this->secondShopId : '`' . $column . '`', $columns);
+        Db::getInstance()->execute(
+            'INSERT IGNORE INTO ' . _DB_PREFIX_ . 'product_lang (`' . implode('`, `', $columns) . '`)
+             SELECT ' . implode(', ', $selected) . ' FROM ' . _DB_PREFIX_ . 'product_lang
+             WHERE id_product = ' . $productId . ' AND id_shop = 1 AND id_lang = ' . $idLang
+        );
+
+        $this->assertSame('category-shop-one', (new Product($productId, false, $idLang, 1))->category);
+        $this->assertSame('category-shop-two', (new Product($productId, false, $idLang, $this->secondShopId))->category);
     }
 }
