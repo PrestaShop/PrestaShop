@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /** Builds the grid definition for the collected CSP violation log with its allow/revoke curation actions. */
 final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
@@ -42,8 +43,23 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
         private readonly CspLogAllowAccessibilityChecker $allowAccessibilityChecker,
         private readonly CspLogWeakeningAllowAccessibilityChecker $weakeningAllowAccessibilityChecker,
         private readonly CspLogRevokeAccessibilityChecker $revokeAccessibilityChecker,
+        private readonly RequestStack $requestStack,
     ) {
         parent::__construct($hookDispatcher);
+    }
+
+    /** The back office is a single global surface; the grid shows it when ?context=admin. */
+    private function isAdminContext(): bool
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        return null !== $request && 'admin' === $request->query->get('context');
+    }
+
+    /** Curation links keep the current surface (?context=admin) so a back-office action stays in the back office. */
+    private function contextRouteParams(): array
+    {
+        return $this->isAdminContext() ? ['context' => 'admin'] : [];
     }
 
     protected function getId(): string
@@ -58,7 +74,7 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     protected function getColumns(): ColumnCollection
     {
-        return (new ColumnCollection())
+        $columns = (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('bulk_action'))
                     ->setOptions(['bulk_field' => 'id_csp_rule', 'disabled_field' => 'is_not_allowed'])
@@ -72,12 +88,18 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new DataColumn('source'))
                     ->setName($this->trans('Blocked source', [], 'Admin.Advparameters.Feature'))
                     ->setOptions(['field' => 'source'])
-            )
-            ->add(
+            );
+
+        // The back office is one global surface, so the Shop column is only meaningful on the storefront.
+        if (!$this->isAdminContext()) {
+            $columns->add(
                 (new DataColumn('shop_name'))
                     ->setName($this->trans('Shop', [], 'Admin.Global'))
                     ->setOptions(['field' => 'shop_name'])
-            )
+            );
+        }
+
+        return $columns
             ->add(
                 (new BooleanColumn('is_weakening'))
                     ->setName($this->trans('Weakens policy', [], 'Admin.Advparameters.Feature'))
@@ -126,6 +148,7 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                                         'route' => 'admin_security_csp_allow',
                                         'route_param_name' => 'cspLogId',
                                         'route_param_field' => 'id_csp_log',
+                                        'extra_route_params' => $this->contextRouteParams(),
                                         'accessibility_checker' => $this->allowAccessibilityChecker,
                                     ])
                             )
@@ -137,6 +160,7 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                                         'route' => 'admin_security_csp_allow',
                                         'route_param_name' => 'cspLogId',
                                         'route_param_field' => 'id_csp_log',
+                                        'extra_route_params' => $this->contextRouteParams(),
                                         'accessibility_checker' => $this->weakeningAllowAccessibilityChecker,
                                         'confirm_message' => $this->trans('This source weakens the Content Security Policy for the whole shop. Allow it anyway?', [], 'Admin.Advparameters.Feature'),
                                     ])
@@ -149,6 +173,7 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                                         'route' => 'admin_security_csp_revoke',
                                         'route_param_name' => 'cspRuleId',
                                         'route_param_field' => 'id_csp_rule',
+                                        'extra_route_params' => $this->contextRouteParams(),
                                         'accessibility_checker' => $this->revokeAccessibilityChecker,
                                         'confirm_message' => $this->trans('Revoke this allowed source?', [], 'Admin.Advparameters.Feature'),
                                     ])

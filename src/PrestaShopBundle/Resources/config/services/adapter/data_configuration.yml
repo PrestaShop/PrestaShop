@@ -247,6 +247,13 @@ services:
       - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
       - '@translator'
 
+  prestashop.adapter.csp.admin_settings_configuration:
+    class: 'PrestaShop\PrestaShop\Adapter\Csp\AdminCspConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@translator'
+
   prestashop.core.email.email_configurator:
     class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'
     arguments:

@@ -11,19 +11,40 @@
 {% endblock %}
 
 {% block content %}
+  <ul class="nav nav-tabs mb-2" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link{{ cspSelectedContext == 'front' ? ' active' : '' }}" href="{{ path('admin_security_csp_index') }}">
+        {{ 'Storefront'|trans({}, 'Admin.Shopparameters.Feature') }}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{{ cspSelectedContext == 'admin' ? ' active' : '' }}" href="{{ path('admin_security_csp_index', {context: 'admin'}) }}">
+        {{ 'Back office'|trans({}, 'Admin.Advparameters.Feature') }}
+      </a>
+    </li>
+  </ul>
+
+  {% if cspShowEnforceNudge %}
+    <div class="alert alert-info" role="alert">
+      <p class="alert-text">
+        {{ '%count% reported source(s) are not yet on your allow-list. If you turn off report-only mode now, they will be blocked. Review them in the log below and allow the ones your site needs first.'|trans({'%count%': cspUnreviewedCount}, 'Admin.Advparameters.Notification') }}
+      </p>
+    </div>
+  {% endif %}
+
   {% if cspHasWeakeningSources %}
     <div class="alert alert-warning" role="alert">
       <p class="alert-text">
         {% if cspIsEnforcing %}
-          {{ 'Your allow-list contains sources that weaken the policy (such as \'unsafe-inline\' or \'unsafe-eval\'). While the policy is enforced with these, it gives limited protection against cross-site scripting.'|trans({}, 'Admin.Advparameters.Notification') }}
+          {{ 'Your allow-list contains sources that weaken the policy (such as \'unsafe-inline\' or \'unsafe-eval\'). The policy is enforced, but allowing \'unsafe-inline\' means it no longer protects against inline-script cross-site scripting.'|trans({}, 'Admin.Advparameters.Notification') }}
         {% else %}
-          {{ 'Your allow-list contains sources that weaken the policy (such as \'unsafe-inline\' or \'unsafe-eval\'). If you enforce it as is, it will give limited protection against cross-site scripting.'|trans({}, 'Admin.Advparameters.Notification') }}
+          {{ 'Your allow-list contains sources that weaken the policy (such as \'unsafe-inline\' or \'unsafe-eval\'). If you enforce it as is, allowing \'unsafe-inline\' means it will not protect against inline-script cross-site scripting.'|trans({}, 'Admin.Advparameters.Notification') }}
         {% endif %}
       </p>
     </div>
   {% endif %}
 
-  {{ form_start(cspForm, {attr: {class: 'form'}, action: path('admin_security_csp_save')}) }}
+  {{ form_start(cspForm, {attr: {class: 'form'}, action: path('admin_security_csp_save', cspContextParams)}) }}
     <div class="card" id="configuration_fieldset_csp">
       <h3 class="card-header">
         <i class="material-icons">security</i> {{ 'Content Security Policy'|trans({}, 'Admin.Advparameters.Feature') }}

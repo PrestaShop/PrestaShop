@@ -21,12 +21,14 @@ use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspLogNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspRuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CspLogFilters;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Entity\Repository\CspLogRepository;
 use PrestaShopBundle\Entity\Repository\CspRuleRepository;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Csp\AddCspRuleType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
@@ -42,60 +44,79 @@ class CspController extends PrestaShopAdminController
 {
     #[AdminSecurity("is_granted('read', 'AdminSecurityCsp')")]
     public function indexAction(
+        Request $request,
         CspLogFilters $filters,
         CspFeatureChecker $featureChecker,
         CspRuleRepository $cspRuleRepository,
+        CspLogRepository $cspLogRepository,
         ShopListResolverInterface $shopListResolver,
         #[Autowire(service: 'prestashop.admin.csp.settings.form_handler')]
         FormHandlerInterface $cspFormHandler,
+        #[Autowire(service: 'prestashop.admin.csp.admin_settings.form_handler')]
+        FormHandlerInterface $adminCspFormHandler,
         #[Autowire(service: 'prestashop.core.grid.factory.csp_log')]
         GridFactoryInterface $cspLogGridFactory,
     ): Response {
         $this->assertFeatureEnabled();
 
-        $cspForm = $cspFormHandler->getForm();
+        $context = $this->resolveContext($request);
+        $isAdmin = CspContext::ADMIN === $context;
 
-        // Warn when the policy has weakening sources: under enforcement they give little XSS protection.
-        // In an all-shops/group scope (no single shop id) the warning covers every shop in the scope.
-        $shopConstraint = $this->getShopContext()->getShopConstraint();
-        $shopId = $shopConstraint->getShopId()?->getValue();
+        // The storefront and back office each have their own settings form (per-shop vs global).
+        $cspForm = ($isAdmin ? $adminCspFormHandler : $cspFormHandler)->getForm();
+
+        // Warn when the selected surface's allow-list has weakening sources: under enforcement they give
+        // little XSS protection. In a storefront all-shops/group scope the warning covers the whole scope.
         $isEnforcing = false;
         $hasWeakeningSources = false;
-        $scopedShopIds = null !== $shopId ? [$shopId] : $shopListResolver->resolveShopIds($shopConstraint);
-        foreach ($scopedShopIds as $scopedShopId) {
-            if (!$featureChecker->isEnabledForShop($scopedShopId)) {
-                continue;
+        // Pre-enforcement nudge: reported sources not yet on the allow-list, i.e. what enforcing would block.
+        $unreviewedCount = 0;
+        if ($isAdmin) {
+            $unreviewedCount = $cspLogRepository->countUnreviewedByShop(CspContext::ADMIN, 0);
+            if ($featureChecker->isEnabledForContext(CspContext::ADMIN, 0)) {
+                $isEnforcing = !$featureChecker->isReportOnlyForContext(CspContext::ADMIN, 0);
+                $hasWeakeningSources = $cspRuleRepository->countWeakeningRulesByShop(CspContext::ADMIN, 0) > 0;
             }
-            if (!$featureChecker->isReportOnlyForShop($scopedShopId)) {
-                $isEnforcing = true;
-            }
-            if ($cspRuleRepository->countWeakeningRulesByShop($scopedShopId) > 0) {
-                $hasWeakeningSources = true;
+        } else {
+            $shopConstraint = $this->getShopContext()->getShopConstraint();
+            $shopId = $shopConstraint->getShopId()?->getValue();
+            $scopedShopIds = null !== $shopId ? [$shopId] : $shopListResolver->resolveShopIds($shopConstraint);
+            foreach ($scopedShopIds as $scopedShopId) {
+                $unreviewedCount += $cspLogRepository->countUnreviewedByShop(CspContext::FRONT, $scopedShopId);
+                if (!$featureChecker->isEnabledForShop($scopedShopId)) {
+                    continue;
+                }
+                if (!$featureChecker->isReportOnlyForShop($scopedShopId)) {
+                    $isEnforcing = true;
+                }
+                if ($cspRuleRepository->countWeakeningRulesByShop(CspContext::FRONT, $scopedShopId) > 0) {
+                    $hasWeakeningSources = true;
+                }
             }
         }
 
-        // A rule can only be added for a single shop, so the toolbar button is hidden in an
-        // all-shops/group scope where AddCspRuleHandler would reject the command.
+        // Only nudge while still report-only (not yet enforcing); once enforced the weakening banner applies.
+        $showEnforceNudge = !$isEnforcing && $unreviewedCount > 0;
+
+        $contextParams = $this->contextRedirectParams($context);
+
+        // A rule can only be added for a single shop; the back office is one global surface, so "Add" is
+        // always available there, and hidden only in a storefront all-shops/group scope.
+        $canAdd = $isAdmin || null !== $this->getShopContext()->getShopConstraint()->getShopId();
         $toolbarButtons = [];
-        if (null !== $shopId) {
+        if ($canAdd) {
             $toolbarButtons['add'] = [
-                'href' => $this->generateUrl('admin_security_csp_add'),
+                'href' => $this->generateUrl('admin_security_csp_add', $contextParams),
                 'desc' => $this->trans('Add allowed source', [], 'Admin.Advparameters.Feature'),
                 'icon' => 'add_circle_outline',
             ];
         }
         $toolbarButtons['clear_log'] = [
-            'href' => $this->generateUrl('admin_security_csp_clear_log'),
+            'href' => $this->generateUrl('admin_security_csp_clear_log', $contextParams),
             'desc' => $this->trans('Clear log', [], 'Admin.Advparameters.Feature'),
             'icon' => 'delete',
-            // json_encode builds a safe JS string literal;
-            // the toolbar template HTML-escapes the onclick around it. "Clear log" clears every shop
-            // resolved from the current scope, so an all-shops/group view warns that it wipes all of them.
-            'js' => 'return confirm(' . json_encode(
-                null === $shopId
-                    ? $this->trans('Clear the Content Security Policy log for all shops? Allowed sources are kept.', [], 'Admin.Advparameters.Notification')
-                    : $this->trans('Clear the Content Security Policy log? Allowed sources are kept.', [], 'Admin.Advparameters.Notification')
-            ) . ');',
+            // json_encode builds a safe JS string literal; the toolbar template HTML-escapes the onclick.
+            'js' => 'return confirm(' . json_encode($this->clearLogConfirmMessage($isAdmin)) . ');',
         ];
 
         return $this->render(
@@ -103,6 +124,10 @@ class CspController extends PrestaShopAdminController
             [
                 'cspHasWeakeningSources' => $hasWeakeningSources,
                 'cspIsEnforcing' => $isEnforcing,
+                'cspShowEnforceNudge' => $showEnforceNudge,
+                'cspUnreviewedCount' => $unreviewedCount,
+                'cspSelectedContext' => $context->value,
+                'cspContextParams' => $contextParams,
                 'enableSidebar' => true,
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'layoutTitle' => $this->trans('Content Security Policy', [], 'Admin.Navigation.Menu'),
@@ -113,20 +138,37 @@ class CspController extends PrestaShopAdminController
         );
     }
 
+    private function clearLogConfirmMessage(bool $isAdmin): string
+    {
+        if ($isAdmin) {
+            return $this->trans('Clear the back-office Content Security Policy log? Allowed sources are kept.', [], 'Admin.Advparameters.Notification');
+        }
+
+        // "Clear log" clears every shop resolved from the current scope, so an all-shops/group view warns.
+        return null === $this->getShopContext()->getShopConstraint()->getShopId()
+            ? $this->trans('Clear the Content Security Policy log for all shops? Allowed sources are kept.', [], 'Admin.Advparameters.Notification')
+            : $this->trans('Clear the Content Security Policy log? Allowed sources are kept.', [], 'Admin.Advparameters.Notification');
+    }
+
     #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
     #[AdminSecurity("is_granted('update', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
     public function saveAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.csp.settings.form_handler')]
         FormHandlerInterface $cspFormHandler,
+        #[Autowire(service: 'prestashop.admin.csp.admin_settings.form_handler')]
+        FormHandlerInterface $adminCspFormHandler,
     ): RedirectResponse {
         $this->assertFeatureEnabled();
 
-        $form = $cspFormHandler->getForm();
+        $context = $this->resolveContext($request);
+        $formHandler = CspContext::ADMIN === $context ? $adminCspFormHandler : $cspFormHandler;
+
+        $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $saveErrors = $cspFormHandler->save($form->getData());
+            $saveErrors = $formHandler->save($form->getData());
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
@@ -135,7 +177,7 @@ class CspController extends PrestaShopAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_security_csp_index');
+        return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
     }
 
     #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
@@ -144,6 +186,7 @@ class CspController extends PrestaShopAdminController
     {
         $this->assertFeatureEnabled();
 
+        $context = $this->resolveContext($request);
         $form = $this->createForm(AddCspRuleType::class);
         $form->handleRequest($request);
 
@@ -154,11 +197,12 @@ class CspController extends PrestaShopAdminController
                 $this->dispatchCommand(new AddCspRuleCommand(
                     (string) $data['directive'],
                     (string) $data['source'],
-                    $this->getShopContext()->getShopConstraint()
+                    $this->getShopContext()->getShopConstraint(),
+                    $context
                 ));
                 $this->addFlash('success', $this->trans('The source has been added to the allow-list.', [], 'Admin.Advparameters.Notification'));
 
-                return $this->redirectToRoute('admin_security_csp_index');
+                return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
             } catch (CspException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
             }
@@ -174,46 +218,49 @@ class CspController extends PrestaShopAdminController
 
     #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
     #[AdminSecurity("is_granted('delete', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
-    public function clearLogAction(): RedirectResponse
+    public function clearLogAction(Request $request): RedirectResponse
     {
         $this->assertFeatureEnabled();
 
-        $this->dispatchCommand(new ClearCspLogCommand($this->getShopContext()->getShopConstraint()));
+        $context = $this->resolveContext($request);
+        $this->dispatchCommand(new ClearCspLogCommand($this->getShopContext()->getShopConstraint(), $context));
         $this->addFlash('success', $this->trans('The Content Security Policy log has been cleared. Allowed sources were kept.', [], 'Admin.Advparameters.Notification'));
 
-        return $this->redirectToRoute('admin_security_csp_index');
+        return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
     }
 
     #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
     #[AdminSecurity("is_granted('create', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
-    public function allowAction(int $cspLogId): RedirectResponse
+    public function allowAction(int $cspLogId, Request $request): RedirectResponse
     {
         $this->assertFeatureEnabled();
 
+        $context = $this->resolveContext($request);
         try {
-            $this->dispatchCommand(new AllowCspSourceCommand($cspLogId, $this->getShopContext()->getShopConstraint()));
+            $this->dispatchCommand(new AllowCspSourceCommand($cspLogId, $this->getShopContext()->getShopConstraint(), $context));
             $this->addFlash('success', $this->trans('The source has been added to the allow-list.', [], 'Admin.Advparameters.Notification'));
         } catch (CspException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_security_csp_index');
+        return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
     }
 
     #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
     #[AdminSecurity("is_granted('delete', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
-    public function revokeAction(int $cspRuleId): RedirectResponse
+    public function revokeAction(int $cspRuleId, Request $request): RedirectResponse
     {
         $this->assertFeatureEnabled();
 
+        $context = $this->resolveContext($request);
         try {
-            $this->dispatchCommand(new RevokeCspSourceCommand($cspRuleId, $this->getShopContext()->getShopConstraint()));
+            $this->dispatchCommand(new RevokeCspSourceCommand($cspRuleId, $this->getShopContext()->getShopConstraint(), $context));
             $this->addFlash('success', $this->trans('The source has been removed from the allow-list.', [], 'Admin.Advparameters.Notification'));
         } catch (CspException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_security_csp_index');
+        return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
     }
 
     #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
@@ -222,6 +269,8 @@ class CspController extends PrestaShopAdminController
     {
         $this->assertFeatureEnabled();
 
+        $context = $this->resolveContext($request);
+
         // The POST field is "{gridId}_{bulkColumnId}" = 'csp_log_bulk_action[]' (see CspLogGridDefinitionFactory).
         $cspRuleIds = array_values(array_filter(array_map('intval', $request->request->all('csp_log_bulk_action'))));
 
@@ -229,17 +278,29 @@ class CspController extends PrestaShopAdminController
             // Only allowed rows carry a rule id, so an un-allowed (or empty) selection means nothing was done.
             $this->addFlash('warning', $this->trans('Select at least one allowed source to revoke.', [], 'Admin.Advparameters.Notification'));
 
-            return $this->redirectToRoute('admin_security_csp_index');
+            return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
         }
 
         try {
-            $this->dispatchCommand(new BulkRevokeCspSourceCommand($cspRuleIds, $this->getShopContext()->getShopConstraint()));
+            $this->dispatchCommand(new BulkRevokeCspSourceCommand($cspRuleIds, $this->getShopContext()->getShopConstraint(), $context));
             $this->addFlash('success', $this->trans('The selected sources have been removed from the allow-list.', [], 'Admin.Advparameters.Notification'));
         } catch (CspException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_security_csp_index');
+        return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
+    }
+
+    /** The page shows one surface at a time, selected by ?context (default the storefront). */
+    private function resolveContext(Request $request): CspContext
+    {
+        return 'admin' === $request->query->get('context') ? CspContext::ADMIN : CspContext::FRONT;
+    }
+
+    /** @return array<string, string> the query params that keep the current surface on a redirect back to the page */
+    private function contextRedirectParams(CspContext $context): array
+    {
+        return CspContext::ADMIN === $context ? ['context' => 'admin'] : [];
     }
 
     private function assertFeatureEnabled(): void
