@@ -26,6 +26,7 @@ use OrderSlip;
 use OrderState;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Address\AddressFormatter;
+use PrestaShop\PrestaShop\Adapter\Carrier\TrackingUrlFormatter;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
@@ -593,7 +594,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 $trackingNumber = $item['tracking_number'];
 
                 if ($item['url'] && $trackingNumber) {
-                    $trackingUrl = str_replace('@', $trackingNumber, $item['url']);
+                    $trackingUrl = TrackingUrlFormatter::format($item['url'], $trackingNumber, $order);
                 }
 
                 $weight = sprintf('%.3f %s', $item['weight'], $this->configuration->get('PS_WEIGHT_UNIT'));

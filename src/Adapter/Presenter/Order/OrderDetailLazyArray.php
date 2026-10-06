@@ -13,6 +13,7 @@ use Context;
 use Currency;
 use HistoryController;
 use Order;
+use PrestaShop\PrestaShop\Adapter\Carrier\TrackingUrlFormatter;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
@@ -212,7 +213,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
         foreach ($shipments as &$shipment) {
             if ($shipment['carrier_tracking_url']) {
-                $shipment['carrier_tracking_url'] = str_replace('@', $shipment['tracking_number'], $shipment['carrier_tracking_url']);
+                $shipment['carrier_tracking_url'] = TrackingUrlFormatter::format($shipment['carrier_tracking_url'], $shipment['tracking_number'], $this->order);
             }
 
             $shipment['date_add'] = Tools::displayDate($shipment['date_add'], false);
@@ -254,10 +255,10 @@ class OrderDetailLazyArray extends AbstractLazyArray
                 $tracking_line = '-';
                 if ($shipping['tracking_number']) {
                     if ($shipping['url']) {
-                        $tracking_line = '<a href="' . str_replace(
-                            '@',
+                        $tracking_line = '<a href="' . TrackingUrlFormatter::format(
+                            $shipping['url'],
                             $shipping['tracking_number'],
-                            $shipping['url']
+                            $this->order
                         ) . '" target="_blank">' . $shipping['tracking_number'] . '</a>';
                     } else {
                         $tracking_line = $shipping['tracking_number'];

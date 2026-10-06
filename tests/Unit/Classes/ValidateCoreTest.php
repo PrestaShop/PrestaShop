@@ -138,6 +138,25 @@ class ValidateCoreTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider isCarrierTrackingUrlDataProvider
+     */
+    public function testIsCarrierTrackingUrl(bool $expected, ?string $url): void
+    {
+        $this->assertSame($expected, Validate::isCarrierTrackingUrl($url));
+    }
+
+    public static function isCarrierTrackingUrlDataProvider(): iterable
+    {
+        yield 'empty' => [true, ''];
+        yield 'null' => [true, null];
+        yield 'placeholder only' => [false, '{order_id}'];
+        yield 'tracking number' => [true, 'https://example.com/track.php?num=@'];
+        yield 'all placeholders' => [true, 'https://example.com/{country_iso}/track/@?order={order_id}&ref={order_reference}&zip={postcode}'];
+        yield 'unknown placeholder' => [false, 'https://example.com/track.php?num=@&name={lastname}'];
+        yield 'relative' => [false, 'track.php?num=@'];
+    }
+
     public function isIp2LongDataProvider()
     {
         return [

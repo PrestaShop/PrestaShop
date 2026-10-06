@@ -12,6 +12,7 @@ use Context;
 use Order;
 use OrderHistory;
 use OrderState;
+use PrestaShop\PrestaShop\Adapter\Carrier\TrackingUrlFormatter;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\BulkChangeOrderStatusHandlerInterface;
@@ -62,7 +63,7 @@ final class BulkChangeOrderStatusHandler implements BulkChangeOrderStatusHandler
             $templateVars = [];
 
             if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->getShippingNumber()) {
-                $templateVars['{followup}'] = str_replace('@', $order->getShippingNumber(), $carrier->url);
+                $templateVars['{followup}'] = TrackingUrlFormatter::format($carrier->url, $order->getShippingNumber(), $order);
             }
 
             if (!$history->add()) {

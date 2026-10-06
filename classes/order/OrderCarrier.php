@@ -3,6 +3,8 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Adapter\Carrier\TrackingUrlFormatter;
+
 class OrderCarrierCore extends ObjectModel
 {
     /** @var int */
@@ -114,7 +116,7 @@ class OrderCarrierCore extends ObjectModel
 
         $orderLanguage = new Language((int) $orderLanguageId);
         $templateVars = [
-            '{followup}' => str_replace('@', $this->tracking_number, $carrier->url),
+            '{followup}' => TrackingUrlFormatter::format($carrier->url, $this->tracking_number, $order),
             '{firstname}' => $customer->firstname,
             '{lastname}' => $customer->lastname,
             '{id_order}' => $order->id,

@@ -6,6 +6,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
+use PrestaShop\PrestaShop\Adapter\Carrier\TrackingUrlFormatter;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider;
@@ -112,11 +113,12 @@ class GeneralSettings extends TranslatorAwareType
             ->add('tracking_url', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Tracking URL', 'Admin.Shipping.Feature'),
-                'label_help_box' => $this->trans('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will be automatically replaced by the tracking number.', 'Admin.Shipping.Help'),
+                'label_help_box' => $this->trans('Delivery tracking URL: Type \'@\' where the tracking number should appear. You can also use {order_id}, {order_reference}, {postcode} and {country_iso} for the order ID, the order reference, the delivery postcode and the delivery country ISO code.', 'Admin.Shipping.Help'),
                 'help' => $this->trans('For example: \'http://example.com/track.php?num=@\' with \'@\' where the tracking number should appear.', 'Admin.Shipping.Help'),
                 'constraints' => [
                     new Url([
                         'message' => $this->trans('Please enter a valid URL.', 'Admin.Notifications.Error'),
+                        'normalizer' => [TrackingUrlFormatter::class, 'fillWithSampleValues'],
                     ]),
                 ],
             ])
