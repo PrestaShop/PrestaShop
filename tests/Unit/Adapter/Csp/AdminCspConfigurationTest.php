@@ -27,7 +27,7 @@ class AdminCspConfigurationTest extends TestCase
         $configuration->expects($this->never())->method('set');
 
         $errors = $this->adminConfiguration($configuration, hasAdminRule: false)
-            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0]);
+            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0, 'report_uri' => '']);
 
         $this->assertNotEmpty($errors, 'Enforcing the back office without a curated allow-list must be refused');
     }
@@ -35,10 +35,10 @@ class AdminCspConfigurationTest extends TestCase
     public function testItAllowsEnforcementOnceTheAdminAllowListHasARule(): void
     {
         $configuration = $this->createMock(ConfigurationInterface::class);
-        $configuration->expects($this->exactly(3))->method('set');
+        $configuration->expects($this->exactly(4))->method('set');
 
         $errors = $this->adminConfiguration($configuration, hasAdminRule: true)
-            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0]);
+            ->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0, 'report_uri' => '']);
 
         $this->assertSame([], $errors);
     }
@@ -46,10 +46,10 @@ class AdminCspConfigurationTest extends TestCase
     public function testItAllowsReportOnlyWithNoAllowList(): void
     {
         $configuration = $this->createMock(ConfigurationInterface::class);
-        $configuration->expects($this->exactly(3))->method('set');
+        $configuration->expects($this->exactly(4))->method('set');
 
         $errors = $this->adminConfiguration($configuration, hasAdminRule: false)
-            ->updateConfiguration(['enabled' => true, 'report_only' => true, 'retention_days' => 0]);
+            ->updateConfiguration(['enabled' => true, 'report_only' => true, 'retention_days' => 0, 'report_uri' => '']);
 
         $this->assertSame([], $errors);
     }
@@ -65,7 +65,21 @@ class AdminCspConfigurationTest extends TestCase
         $translator->method('trans')->willReturn('error message');
 
         $config = new AdminCspConfiguration($configuration, $ruleRepository, $translator);
-        $config->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0]);
+        $config->updateConfiguration(['enabled' => true, 'report_only' => false, 'retention_days' => 0, 'report_uri' => '']);
+    }
+
+    public function testItStoresAndTrimsTheExternalReportTarget(): void
+    {
+        $written = [];
+        $configuration = $this->createMock(ConfigurationInterface::class);
+        $configuration->method('set')->willReturnCallback(function (string $key, $value) use (&$written): void {
+            $written[$key] = $value;
+        });
+
+        $this->adminConfiguration($configuration, hasAdminRule: false)
+            ->updateConfiguration(['enabled' => true, 'report_only' => true, 'retention_days' => 0, 'report_uri' => '  https://monitor.example.com/csp  ']);
+
+        $this->assertSame('https://monitor.example.com/csp', $written['PS_CSP_ADMIN_REPORT_URI']);
     }
 
     private function adminConfiguration(ConfigurationInterface $configuration, bool $hasAdminRule): AdminCspConfiguration

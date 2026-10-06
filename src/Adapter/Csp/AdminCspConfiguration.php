@@ -38,6 +38,7 @@ final class AdminCspConfiguration implements DataConfigurationInterface
             'enabled' => (bool) $this->configuration->get('PS_CSP_ADMIN_ENABLED'),
             'report_only' => $this->isReportOnly(),
             'retention_days' => (int) $this->configuration->get('PS_CSP_ADMIN_RETENTION_DAYS'),
+            'report_uri' => (string) $this->configuration->get('PS_CSP_ADMIN_REPORT_URI'),
         ];
     }
 
@@ -62,6 +63,7 @@ final class AdminCspConfiguration implements DataConfigurationInterface
         $this->configuration->set('PS_CSP_ADMIN_ENABLED', $configuration['enabled'] ? '1' : '0');
         $this->configuration->set('PS_CSP_ADMIN_REPORT_ONLY', $configuration['report_only'] ? '1' : '0');
         $this->configuration->set('PS_CSP_ADMIN_RETENTION_DAYS', (string) max(0, (int) $configuration['retention_days']));
+        $this->configuration->set('PS_CSP_ADMIN_REPORT_URI', trim((string) $configuration['report_uri']));
 
         return [];
     }
@@ -69,10 +71,11 @@ final class AdminCspConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration): bool
     {
         (new OptionsResolver())
-            ->setRequired(['enabled', 'report_only', 'retention_days'])
+            ->setRequired(['enabled', 'report_only', 'retention_days', 'report_uri'])
             ->setAllowedTypes('enabled', 'bool')
             ->setAllowedTypes('report_only', 'bool')
             ->setAllowedTypes('retention_days', 'int')
+            ->setAllowedTypes('report_uri', 'string')
             ->resolve($configuration);
 
         return true;

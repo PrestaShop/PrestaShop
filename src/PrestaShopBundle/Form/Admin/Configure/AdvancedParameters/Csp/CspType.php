@@ -12,9 +12,11 @@ use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\Url;
 
 /** Settings block of the "Advanced parameters > Security > Content Security Policy" page. */
 final class CspType extends TranslatorAwareType
@@ -46,6 +48,15 @@ final class CspType extends TranslatorAwareType
                     new GreaterThanOrEqual(0),
                 ],
                 'attr' => ['min' => 0],
+            ])
+            ->add('report_uri', TextType::class, [
+                'required' => false,
+                'multistore_configuration_key' => 'PS_CSP_REPORT_URI',
+                'label' => $this->trans('External reporting endpoint', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Leave empty to collect reports in PrestaShop. To send this shop\'s violation reports to your own CSP monitoring service instead, enter its URL (https://…); the report log on this page then stays empty.', 'Admin.Advparameters.Help'),
+                'constraints' => [
+                    new Url(['protocols' => ['http', 'https']]),
+                ],
             ]);
     }
 

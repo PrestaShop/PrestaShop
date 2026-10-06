@@ -36,8 +36,15 @@ final class CspHeaderBuilder
             ? 'Content-Security-Policy-Report-Only'
             : 'Content-Security-Policy';
 
-        // The URI is built internally from the shop's link, but strip control characters, whitespace,
-        // quotes and the header/directive delimiters anyway so it can never corrupt a header line.
+        // A merchant can route reports to their own monitoring endpoint instead of the built-in collector.
+        $override = $this->featureChecker->reportTargetForContext($context, $shopId);
+        if ('' !== $override) {
+            $reportUri = $override;
+        }
+
+        // The URI is built internally from the shop's link (or the configured endpoint), but strip control
+        // characters, whitespace, quotes and the header/directive delimiters anyway so it can never corrupt
+        // a header line.
         $reportUri = (string) preg_replace('/[\x00-\x20\x7F";,]/', '', $reportUri);
 
         return [
