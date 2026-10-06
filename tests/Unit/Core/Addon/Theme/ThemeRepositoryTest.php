@@ -33,6 +33,21 @@ class ThemeRepositoryTest extends TestCase
 
     public function testGetListSkipsThemesWithoutName(): void
     {
+        $this->assertSame(['named'], array_keys($this->getThemeList()));
+    }
+
+    public function testThemeIsListedOnceItsNameIsAdded(): void
+    {
+        $this->getThemeList();
+        $this->assertFileDoesNotExist($this->workDirectory . '/config/themes/nameless/theme.json');
+
+        (new Filesystem())->dumpFile($this->workDirectory . '/themes/nameless/config/theme.yml', "name: nameless\ndisplay_name: Nameless\n");
+
+        $this->assertSame(['named', 'nameless'], $this->sortedKeys($this->getThemeList()));
+    }
+
+    private function getThemeList(): array
+    {
         $configuration = $this->createMock(ConfigurationInterface::class);
         $configuration->method('get')->willReturnMap([
             ['_PS_ALL_THEMES_DIR_', $this->workDirectory . '/themes/'],
@@ -44,11 +59,17 @@ class ThemeRepositoryTest extends TestCase
             throw new ErrorException($message, 0, $severity);
         });
         try {
-            $themes = $repository->getList();
+            return $repository->getList();
         } finally {
             restore_error_handler();
         }
+    }
 
-        $this->assertSame(['named'], array_keys($themes));
+    private function sortedKeys(array $themes): array
+    {
+        $keys = array_keys($themes);
+        sort($keys);
+
+        return $keys;
     }
 }

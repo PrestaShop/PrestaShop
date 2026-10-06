@@ -64,8 +64,11 @@ class ThemeRepository implements AddonRepositoryInterface
         } else {
             $data = $this->getConfigFromFile($dir . '/config/theme.yml');
 
-            // Write parsed yml data into json conf (faster parsing next time)
-            $this->filesystem->dumpFile($jsonConf, json_encode($data));
+            // Write parsed yml data into json conf (faster parsing next time).
+            // A theme without a name is not listed, so leave it uncached until its yml is fixed.
+            if (!empty($data['name'])) {
+                $this->filesystem->dumpFile($jsonConf, json_encode($data));
+            }
         }
 
         $data['directory'] = $dir;
