@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\DeleteThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotDeleteThemeException;
@@ -23,11 +24,18 @@ final class DeleteThemeHandler implements DeleteThemeHandlerInterface
     private $themeManager;
 
     /**
-     * @param ThemeManager $themeManager
+     * @var ThemeProviderInterface
      */
-    public function __construct(ThemeManager $themeManager)
+    private $themeProvider;
+
+    /**
+     * @param ThemeManager $themeManager
+     * @param ThemeProviderInterface $themeProvider
+     */
+    public function __construct(ThemeManager $themeManager, ThemeProviderInterface $themeProvider)
     {
         $this->themeManager = $themeManager;
+        $this->themeProvider = $themeProvider;
     }
 
     /**
@@ -36,6 +44,10 @@ final class DeleteThemeHandler implements DeleteThemeHandlerInterface
     public function handle(DeleteThemeCommand $command)
     {
         $plainThemeName = $command->getThemeName()->getValue();
+
+        if (in_array($plainThemeName, $this->themeProvider->getNotDeletableThemes())) {
+            throw new CannotDeleteThemeException(sprintf('Theme "%s" is used and thus cannot be deleted.', $plainThemeName));
+        }
 
         if (!$this->themeManager->uninstall($plainThemeName)) {
             throw new CannotDeleteThemeException(sprintf('Theme "%s" is used and thus cannot be deleted.', $plainThemeName));
