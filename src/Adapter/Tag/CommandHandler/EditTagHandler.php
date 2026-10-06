@@ -55,7 +55,8 @@ class EditTagHandler implements EditTagCommandHandlerInterface
     ): void {
         if (null !== $command->getName()) {
             $idLang = null !== $command->getLanguageId() ? (int) $command->getLanguageId() : (int) $tag->id_lang;
-            if (!Validate::isSearchableName($command->getName(), $idLang, (string) Language::getIsoById($idLang))) {
+            // An unchanged name is not new input: a tag saved before this check can still be edited
+            if ($command->getName() !== $tag->name && !Validate::isSearchableName($command->getName(), $idLang, (string) Language::getIsoById($idLang))) {
                 throw new TagConstraintException(
                     sprintf('Tag "%s" cannot be found by the search engine', $command->getName()),
                     TagConstraintException::INVALID_NAME

@@ -215,7 +215,7 @@ class TagController extends PrestaShopAdminController
             ),
             TagConstraintException::class => [
                 TagConstraintException::INVALID_NAME => $this->trans(
-                    'The tag must contain at least one letter or number so it can be found by the search.',
+                    'This tag cannot be found by the search engine, which ignores it. Use a tag containing a word.',
                     [],
                     'Admin.Advparameters.Notification'
                 ),

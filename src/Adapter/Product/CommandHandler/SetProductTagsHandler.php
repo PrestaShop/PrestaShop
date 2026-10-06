@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductTagsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
+use Tag;
 use Validate;
 
 /**
@@ -51,8 +52,11 @@ final class SetProductTagsHandler implements UpdateProductTagsHandlerInterface
      */
     public function handle(SetProductTagsCommand $command): void
     {
+        // Tags already on the product are resubmitted untouched by the form: only new ones are checked,
+        // so a product carrying a tag saved before this check still saves
+        $storedTags = Tag::getProductTags($command->getProductId()->getValue()) ?: [];
         foreach ($command->getLocalizedTagsList() as $localizedTags) {
-            $this->assertTagsAreSearchable($localizedTags);
+            $this->assertNewTagsAreSearchable($localizedTags, $storedTags[$localizedTags->getLanguageId()->getValue()] ?? []);
         }
 
         $product = $this->productRepository->getProductByDefaultShop($command->getProductId());
@@ -60,18 +64,25 @@ final class SetProductTagsHandler implements UpdateProductTagsHandlerInterface
     }
 
     /**
-     * Rejects tags that the search engine strips to nothing at indexation.
+     * Rejects new tags that the search engine strips to nothing at indexation.
      * Kept here (not in the LocalizedTags value object) because the check delegates
      * to the indexer, which needs a booted shop - the value object stays pure.
      *
+     * @param string[] $storedTags tags of the product in this language before the update
+     *
      * @throws ProductConstraintException
      */
-    private function assertTagsAreSearchable(LocalizedTags $localizedTags): void
+    private function assertNewTagsAreSearchable(LocalizedTags $localizedTags, array $storedTags): void
     {
         $idLang = $localizedTags->getLanguageId()->getValue();
         $isoCode = (string) Language::getIsoById($idLang);
+        $storedTags = array_map(static fn (string $tag): string => mb_strtolower(trim($tag)), $storedTags);
 
         foreach ($localizedTags->getTags() as $tag) {
+            if (in_array(mb_strtolower(trim($tag)), $storedTags, true)) {
+                continue;
+            }
+
             if (!Validate::isSearchableName($tag, $idLang, $isoCode)) {
                 throw new ProductConstraintException(
                     sprintf(
@@ -79,7 +90,7 @@ final class SetProductTagsHandler implements UpdateProductTagsHandlerInterface
                         $tag,
                         $idLang
                     ),
-                    ProductConstraintException::INVALID_TAG
+                    ProductConstraintException::UNSEARCHABLE_TAG
                 );
             }
         }
