@@ -151,6 +151,16 @@ services:
       - 'AdminCspSettings'
       - 'csp-admin-settings'
 
+  prestashop.admin.security_headers.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.security_headers.data_provider'
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SecurityHeaders\SecurityHeadersType'
+      - 'SecurityHeaders'
+      - 'security-headers'
+
   prestashop.admin.order.invoices.by_date.form_handler:
     class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByDateFormHandler'
     arguments:

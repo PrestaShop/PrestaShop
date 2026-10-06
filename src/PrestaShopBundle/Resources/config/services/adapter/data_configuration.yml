@@ -254,6 +254,11 @@ services:
       - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
       - '@translator'
 
+  prestashop.adapter.security_headers.configuration:
+    class: 'PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+
   prestashop.core.email.email_configurator:
     class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'
     arguments:

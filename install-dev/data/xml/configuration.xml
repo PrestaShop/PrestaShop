@@ -942,5 +942,29 @@ Country</value>
     <configuration id="PS_CSP_ADMIN_RETENTION_DAYS" name="PS_CSP_ADMIN_RETENTION_DAYS">
       <value>0</value>
     </configuration>
+    <configuration id="PS_SEC_NOSNIFF" name="PS_SEC_NOSNIFF">
+      <value>1</value>
+    </configuration>
+    <configuration id="PS_SEC_FRAME_OPTIONS" name="PS_SEC_FRAME_OPTIONS">
+      <value>SAMEORIGIN</value>
+    </configuration>
+    <configuration id="PS_SEC_REFERRER_POLICY" name="PS_SEC_REFERRER_POLICY">
+      <value>strict-origin-when-cross-origin</value>
+    </configuration>
+    <configuration id="PS_SEC_HSTS" name="PS_SEC_HSTS">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_SEC_HSTS_MAX_AGE" name="PS_SEC_HSTS_MAX_AGE">
+      <value>15552000</value>
+    </configuration>
+    <configuration id="PS_SEC_HSTS_SUBDOMAINS" name="PS_SEC_HSTS_SUBDOMAINS">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_SEC_HSTS_PRELOAD" name="PS_SEC_HSTS_PRELOAD">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_SEC_PERMISSIONS_POLICY" name="PS_SEC_PERMISSIONS_POLICY">
+      <value></value>
+    </configuration>
   </entities>
 </entity_configuration>
