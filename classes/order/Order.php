@@ -1345,26 +1345,29 @@ class OrderCore extends ObjectModel
                 WHERE `id_order` = ' . (int) $order_invoice->id_order);
 
             // Update order payment
-            if ($use_existing_payment) {
-                $id_order_payments = Db::getInstance()->executeS('
-                    SELECT DISTINCT op.id_order_payment
-                    FROM `' . _DB_PREFIX_ . 'order_payment` op
-                    INNER JOIN `' . _DB_PREFIX_ . 'orders` o ON (o.reference = op.order_reference)
-                    LEFT JOIN `' . _DB_PREFIX_ . 'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)
-                    WHERE (oip.id_order != ' . (int) $order_invoice->id_order . ' OR oip.id_order IS NULL) AND o.id_order = ' . (int) $order_invoice->id_order);
+            // WHY: a payment received before the order had an invoice is linked to no invoice at all, and the
+            // invoice issued now is the one it settles. Left unlinked, the paid status that issues the invoice
+            // reads the whole amount as still due and records it a second time. Payments already linked to
+            // another order's invoice under the same reference are only reused when the caller asks for it.
+            $id_order_payments = Db::getInstance()->executeS('
+                SELECT DISTINCT op.id_order_payment
+                FROM `' . _DB_PREFIX_ . 'order_payment` op
+                INNER JOIN `' . _DB_PREFIX_ . 'orders` o ON (o.reference = op.order_reference)
+                LEFT JOIN `' . _DB_PREFIX_ . 'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)
+                WHERE (oip.id_order IS NULL' . ($use_existing_payment ? ' OR oip.id_order != ' . (int) $order_invoice->id_order : '') . ')
+                AND o.id_order = ' . (int) $order_invoice->id_order);
 
-                if (count($id_order_payments)) {
-                    foreach ($id_order_payments as $order_payment) {
-                        Db::getInstance()->execute('
-                            INSERT INTO `' . _DB_PREFIX_ . 'order_invoice_payment`
-                            SET
-                                `id_order_invoice` = ' . (int) $order_invoice->id . ',
-                                `id_order_payment` = ' . (int) $order_payment['id_order_payment'] . ',
-                                `id_order` = ' . (int) $order_invoice->id_order);
-                    }
-                    // Clear cache
-                    Cache::clean('order_invoice_paid_*');
+            if (count($id_order_payments)) {
+                foreach ($id_order_payments as $order_payment) {
+                    Db::getInstance()->execute('
+                        INSERT INTO `' . _DB_PREFIX_ . 'order_invoice_payment`
+                        SET
+                            `id_order_invoice` = ' . (int) $order_invoice->id . ',
+                            `id_order_payment` = ' . (int) $order_payment['id_order_payment'] . ',
+                            `id_order` = ' . (int) $order_invoice->id_order);
                 }
+                // Clear cache
+                Cache::clean('order_invoice_paid_*');
             }
 
             // Update order cart rule
