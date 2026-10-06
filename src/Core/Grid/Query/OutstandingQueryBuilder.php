@@ -127,7 +127,6 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
         ];
 
         $likeComparisonFilters = [
-            'customer' => $this->getCustomerField(),
             'company' => 'c.company',
         ];
 
@@ -136,6 +135,15 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
         ];
 
         foreach ($filters as $filterName => $filterValue) {
+            if ('customer' === $filterName) {
+                // The column shows the abbreviated name (J. DOE) and a merchant may copy it from there, or type
+                // the real first name: either form matches.
+                $qb->andWhere(sprintf('(%s LIKE :customer OR %s LIKE :customer)', $this->getCustomerField(), $this->getCustomerField(false)));
+                $qb->setParameter('customer', '%' . $filterValue . '%');
+
+                continue;
+            }
+
             if (isset($strictComparisonFilters[$filterName])) {
                 $alias = $strictComparisonFilters[$filterName];
 

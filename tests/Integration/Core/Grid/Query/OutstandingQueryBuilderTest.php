@@ -58,6 +58,13 @@ class OutstandingQueryBuilderTest extends KernelTestCase
             $this->assertSame([$otherInvoice], $this->fetchInvoiceIds('Zzmarianne'));
             // Searching by last name worked before the fix and must keep working.
             $this->assertSame([$searchedInvoice], $this->fetchInvoiceIds('Zzsmith'));
+            // The name as the column displays it, and the full name, both find the customer.
+            $this->assertSame([$searchedInvoice], $this->fetchInvoiceIds('Z. Zzsmith'));
+            $this->assertSame([$searchedInvoice], $this->fetchInvoiceIds('Zzjonathan Zzsmith'));
+            $this->assertSame(1, (int) $this->queryBuilder
+                ->getCountQueryBuilder($this->createSearchCriteria(['customer' => 'Z. Zzsmith']))
+                ->executeQuery()
+                ->fetchOne());
         } finally {
             $this->connection->executeStatement(
                 'DELETE FROM ' . $this->dbPrefix . 'order_invoice WHERE id_order_invoice IN (:ids)',

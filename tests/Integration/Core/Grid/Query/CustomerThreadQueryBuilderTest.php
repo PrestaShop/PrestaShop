@@ -57,6 +57,9 @@ class CustomerThreadQueryBuilderTest extends KernelTestCase
             $this->assertSame([$otherThread], $this->fetchThreadIds('Zzmarianne'));
             // Searching by last name worked before the fix and must keep working.
             $this->assertSame([$searchedThread], $this->fetchThreadIds('Zzsmith'));
+            // The name as the column displays it, and the full name, both find the employee.
+            $this->assertSame([$searchedThread], $this->fetchThreadIds('Z. Zzsmith'));
+            $this->assertSame([$searchedThread], $this->fetchThreadIds('Zzjonathan Zzsmith'));
         } finally {
             $this->deleteFrom('customer_message', 'id_customer_message', [$searchedMessage, $otherMessage]);
             $this->deleteFrom('customer_thread', 'id_customer_thread', [$searchedThread, $otherThread]);

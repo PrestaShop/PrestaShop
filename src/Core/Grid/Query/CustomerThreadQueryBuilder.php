@@ -198,9 +198,10 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ($filterName === 'employee') {
-                // The column is displayed abbreviated, but a merchant searching it types the real
-                // first name, so match the full name here - as the customer filter above already does.
-                $builder->andWhere('CONCAT(e.`firstname`," ",e.`lastname`) LIKE :' . $filterName);
+                // The column shows the abbreviated name (M. Beier) and a merchant may copy it from there, or type
+                // the real first name: either form matches.
+                $builder->andWhere('(CONCAT(e.`firstname`," ",e.`lastname`) LIKE :' . $filterName
+                    . ' OR CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`) LIKE :' . $filterName . ')');
                 $builder->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }

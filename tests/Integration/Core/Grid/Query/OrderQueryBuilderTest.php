@@ -181,6 +181,20 @@ class OrderQueryBuilderTest extends KernelTestCase
                 [$searchedOrder],
                 $this->fetchOrderIds($this->createSearchCriteria(['customer' => 'Zzsmith'], 'id_order', 'DESC', 50, 0))
             );
+
+            // The name as the column displays it, and the full name, both find the customer.
+            foreach (['Z. Zzsmith', 'Zzjonathan Zzsmith'] as $search) {
+                $this->assertSame(
+                    [$searchedOrder],
+                    $this->fetchOrderIds($this->createSearchCriteria(['customer' => $search], 'id_order', 'DESC', 50, 0)),
+                    $search
+                );
+                // The grid paginates on the count query, which takes the filter through the same path.
+                $this->assertSame(1, (int) $this->queryBuilder
+                    ->getCountQueryBuilder($this->createSearchCriteria(['customer' => $search], 'id_order', 'DESC', 50, 0))
+                    ->executeQuery()
+                    ->fetchOne(), $search);
+            }
         } finally {
             $this->deleteOrders([$searchedOrder, $otherOrder]);
             $this->deleteCustomers([$searched, $other]);
