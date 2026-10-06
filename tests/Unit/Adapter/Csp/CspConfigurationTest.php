@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Csp\CspConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Entity\Repository\CspRuleRepository;
@@ -202,7 +203,7 @@ class CspConfigurationTest extends TestCase
 
         // The baseline is the curated allow-list only: a shop may enforce once it has at least one rule.
         $ruleRepository = $this->createMock(CspRuleRepository::class);
-        $ruleRepository->method('existsByShop')->with(self::SHOP_ID)->willReturn($ruleCount > 0);
+        $ruleRepository->method('existsByShop')->with(CspContext::FRONT, self::SHOP_ID)->willReturn($ruleCount > 0);
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator->method('trans')->willReturn('error message');

@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Csp;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Entity\Repository\CspRuleRepository;
@@ -110,7 +111,7 @@ final class CspConfiguration extends AbstractMultistoreConfiguration
 
         // A safe baseline is a curated allow-list. Collected (but unreviewed) violations do not count:
         // enforcing then would block every reported source that was never allowed.
-        return $this->cspRuleRepository->existsByShop($shopId);
+        return $this->cspRuleRepository->existsByShop(CspContext::FRONT, $shopId);
     }
 
     protected function buildResolver(): OptionsResolver

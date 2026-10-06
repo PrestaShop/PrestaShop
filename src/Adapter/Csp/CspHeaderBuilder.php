@@ -9,8 +9,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Csp;
 
 use PrestaShop\PrestaShop\Core\Csp\CspPolicy;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 
-/** Builds the CSP response headers for a shop (Context-free), or an empty map when CSP is off for the shop. */
+/** Builds the CSP response headers for a surface (Context-free), or an empty map when CSP is off for it. */
 final class CspHeaderBuilder
 {
     public function __construct(
@@ -22,16 +23,16 @@ final class CspHeaderBuilder
     /**
      * @param array<string, list<string>> $themeContributions the active theme's global_settings.csp
      *
-     * @return array<string, string> header name => value (empty when CSP is disabled for the shop)
+     * @return array<string, string> header name => value (empty when CSP is disabled for the surface)
      */
-    public function build(int $shopId, string $reportUri, array $themeContributions = []): array
+    public function build(CspContext $context, int $shopId, string $reportUri, array $themeContributions = []): array
     {
-        if (!$this->featureChecker->isEnabledForShop($shopId)) {
+        if (!$this->featureChecker->isEnabledForContext($context, $shopId)) {
             return [];
         }
 
         // Report-only reports without blocking; enforcement blocks. Both still send reports.
-        $headerName = $this->featureChecker->isReportOnlyForShop($shopId)
+        $headerName = $this->featureChecker->isReportOnlyForContext($context, $shopId)
             ? 'Content-Security-Policy-Report-Only'
             : 'Content-Security-Policy';
 
@@ -42,7 +43,7 @@ final class CspHeaderBuilder
         return [
             // Reporting API endpoint group referenced by "report-to" below.
             'Reporting-Endpoints' => sprintf('csp-endpoint="%s"', $reportUri),
-            $headerName => $this->renderPolicy($this->policyProvider->getPolicy($shopId, $themeContributions), $reportUri),
+            $headerName => $this->renderPolicy($this->policyProvider->getPolicy($context, $shopId, $themeContributions), $reportUri),
         ];
     }
 

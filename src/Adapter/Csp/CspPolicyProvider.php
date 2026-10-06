@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Csp;
 
 use PrestaShop\PrestaShop\Core\Csp\CspPolicy;
 use PrestaShop\PrestaShop\Core\Csp\CspPolicyHookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspDirective;
 use PrestaShopBundle\Entity\Repository\CspRuleRepository;
 use Psr\Log\LoggerInterface;
@@ -30,16 +31,21 @@ final class CspPolicyProvider
 
     /**
      * @param array<string, list<string>> $themeContributions directive => sources from the active theme's
-     * global_settings.csp
+     *                                                        global_settings.csp
      */
-    public function getPolicy(int $shopId, array $themeContributions = []): CspPolicy
+    public function getPolicy(CspContext $context, int $shopId, array $themeContributions = []): CspPolicy
     {
         $policy = new CspPolicy();
 
         $this->addBasePolicy($policy);
-        $this->addCuratedRules($policy, $shopId);
-        $this->addThemeContributions($policy, $themeContributions);
-        $this->hookDispatcher->dispatch($policy);
+        $this->addCuratedRules($policy, $context, $shopId);
+
+        // Theme contributions and the storefront policy hook only apply to the front office; the back
+        // office is a core-owned surface whose policy is the base plus its own curated rules.
+        if (CspContext::FRONT === $context) {
+            $this->addThemeContributions($policy, $themeContributions);
+            $this->hookDispatcher->dispatch($policy);
+        }
 
         return $policy;
     }
@@ -72,9 +78,9 @@ final class CspPolicyProvider
         $policy->addSource('worker-src', "'self'");
     }
 
-    private function addCuratedRules(CspPolicy $policy, int $shopId): void
+    private function addCuratedRules(CspPolicy $policy, CspContext $context, int $shopId): void
     {
-        foreach ($this->ruleRepository->getRulesByShop($shopId) as $rule) {
+        foreach ($this->ruleRepository->getRulesByShop($context, $shopId) as $rule) {
             $policy->addSource($rule['directive'], $rule['source']);
         }
     }

@@ -11,6 +11,7 @@ namespace Tests\Unit\Adapter\Csp;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder;
 use PrestaShop\PrestaShop\Adapter\Csp\CspHeaderSubscriber;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use ReflectionClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -80,7 +81,7 @@ class CspHeaderSubscriberTest extends TestCase
         // collaborators; reaching build() on this bare instance would error and fail the test.
         $builder = (new ReflectionClass(CspHeaderBuilder::class))->newInstanceWithoutConstructor();
 
-        return new CspHeaderSubscriber($builder);
+        return new CspHeaderSubscriber($builder, CspContext::FRONT);
     }
 
     private function assertNoCspHeader(Response $response): void

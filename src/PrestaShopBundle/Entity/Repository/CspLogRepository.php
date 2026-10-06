@@ -15,6 +15,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\RetryableException;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShopBundle\Entity\CspLog;
 use PrestaShopBundle\Entity\CspRule;
 
@@ -31,22 +32,23 @@ class CspLogRepository extends EntityRepository
     private const DELETE_RETRY_BASE_DELAY_US = 50000;
 
     /**
-     * Records one violation for (shop, directive, source): inserts on first sight, else bumps hits/date_upd.
+     * Records one violation for (context, shop, directive, source): inserts on first sight, else bumps hits/date_upd.
      * Uses INSERT ... ON DUPLICATE KEY UPDATE since a SELECT-then-write races under a flood (MySQL/MariaDB-specific).
      *
      * @return bool true on insert, false when an existing row was bumped, so a batch caller can skip the row-cap COUNT
      */
-    public function upsert(int $shopId, string $directive, string $source, ?string $documentUri): bool
+    public function upsert(CspContext $context, int $shopId, string $directive, string $source, ?string $documentUri): bool
     {
         $table = $this->getClassMetadata()->getTableName();
         $now = (new DateTimeImmutable())->format('Y-m-d H:i:s');
 
-        $sql = 'INSERT INTO ' . $table . ' (id_shop, directive, source, document_uri, hits, date_add, date_upd)'
-            . ' VALUES (:shopId, :directive, :source, :documentUri, 1, :dateAdd, :dateUpd)'
+        $sql = 'INSERT INTO ' . $table . ' (id_shop, context, directive, source, document_uri, hits, date_add, date_upd)'
+            . ' VALUES (:shopId, :context, :directive, :source, :documentUri, 1, :dateAdd, :dateUpd)'
             . ' ON DUPLICATE KEY UPDATE hits = hits + 1, date_upd = :dateUpdOnDuplicate';
 
         $affectedRows = $this->getEntityManager()->getConnection()->executeStatement($sql, [
             'shopId' => $shopId,
+            'context' => $context->value,
             'directive' => $directive,
             'source' => $source,
             'documentUri' => $documentUri,
@@ -60,17 +62,18 @@ class CspLogRepository extends EntityRepository
     }
 
     /** Seeds a log row (hits = 0) for a directly-added source so it shows in the log-driven grid; a no-op if a row exists. */
-    public function insertPlaceholderIfAbsent(int $shopId, string $directive, string $source): void
+    public function insertPlaceholderIfAbsent(CspContext $context, int $shopId, string $directive, string $source): void
     {
         $table = $this->getClassMetadata()->getTableName();
         $now = (new DateTimeImmutable())->format('Y-m-d H:i:s');
 
-        $sql = 'INSERT INTO ' . $table . ' (id_shop, directive, source, document_uri, hits, date_add, date_upd)'
-            . ' VALUES (:shopId, :directive, :source, NULL, 0, :dateAdd, :dateUpd)'
+        $sql = 'INSERT INTO ' . $table . ' (id_shop, context, directive, source, document_uri, hits, date_add, date_upd)'
+            . ' VALUES (:shopId, :context, :directive, :source, NULL, 0, :dateAdd, :dateUpd)'
             . ' ON DUPLICATE KEY UPDATE id_csp_log = id_csp_log';
 
         $this->getEntityManager()->getConnection()->executeStatement($sql, [
             'shopId' => $shopId,
+            'context' => $context->value,
             'directive' => $directive,
             'source' => $source,
             'dateAdd' => $now,
@@ -78,32 +81,57 @@ class CspLogRepository extends EntityRepository
         ]);
     }
 
-    public function countByShop(int $shopId): int
+    public function countByShop(CspContext $context, int $shopId): int
     {
         return (int) $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('COUNT(1)')
             ->from($this->getClassMetadata()->getTableName())
             ->where('id_shop = :shopId')
+            ->andWhere('context = :context')
             ->setParameter('shopId', $shopId)
+            ->setParameter('context', $context->value)
             ->executeQuery()
             ->fetchOne();
     }
 
-    /** Whether the shop has any log row; cheaper than countByShop() when only existence matters (the baseline check). */
-    public function existsByShop(int $shopId): bool
+    /**
+     * Counts a scope's reported sources that are not yet on the allow-list (no matching rule). Drives the
+     * pre-enforcement nudge: these are exactly what would be blocked if the surface switched to enforcing.
+     */
+    public function countUnreviewedByShop(CspContext $context, int $shopId): int
+    {
+        $ruleTable = $this->getEntityManager()->getClassMetadata(CspRule::class)->getTableName();
+
+        return (int) $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('COUNT(1)')
+            ->from($this->getClassMetadata()->getTableName(), 'l')
+            ->leftJoin('l', $ruleTable, 'r', 'r.id_shop = l.id_shop AND r.context = l.context AND r.directive = l.directive AND r.source = l.source')
+            ->where('l.id_shop = :shopId')
+            ->andWhere('l.context = :context')
+            ->andWhere('r.id_csp_rule IS NULL')
+            ->setParameter('shopId', $shopId)
+            ->setParameter('context', $context->value)
+            ->executeQuery()
+            ->fetchOne();
+    }
+
+    /** Whether the scope has any log row; cheaper than countByShop() when only existence matters (the baseline check). */
+    public function existsByShop(CspContext $context, int $shopId): bool
     {
         return (bool) $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('1')
             ->from($this->getClassMetadata()->getTableName())
             ->where('id_shop = :shopId')
+            ->andWhere('context = :context')
             ->setMaxResults(1)
             ->setParameter('shopId', $shopId)
+            ->setParameter('context', $context->value)
             ->executeQuery()
             ->fetchOne();
     }
 
-    /** Prunes a shop's lowest-hit, oldest rows to keep the table bounded; allow-list-backed rows are never evicted. Returns the count removed. */
-    public function deleteLeastReportedByShop(int $shopId, int $limit): int
+    /** Prunes a scope's lowest-hit, oldest rows to keep the table bounded; allow-list-backed rows are never evicted. Returns the count removed. */
+    public function deleteLeastReportedByShop(CspContext $context, int $shopId, int $limit): int
     {
         if ($limit <= 0) {
             return 0;
@@ -114,18 +142,20 @@ class CspLogRepository extends EntityRepository
         $ruleTable = $this->getEntityManager()->getClassMetadata(CspRule::class)->getTableName();
 
         // Re-select the victims inside the retry so a deadlock rollback never reuses stale ids.
-        return $this->retryOnDeadlock(function () use ($connection, $table, $ruleTable, $shopId, $limit): int {
+        return $this->retryOnDeadlock(function () use ($connection, $table, $ruleTable, $context, $shopId, $limit): int {
             $ids = $connection->createQueryBuilder()
                 ->select('l.id_csp_log')
                 ->from($table, 'l')
-                ->leftJoin('l', $ruleTable, 'r', 'r.id_shop = l.id_shop AND r.directive = l.directive AND r.source = l.source')
+                ->leftJoin('l', $ruleTable, 'r', 'r.id_shop = l.id_shop AND r.context = l.context AND r.directive = l.directive AND r.source = l.source')
                 ->where('l.id_shop = :shopId')
+                ->andWhere('l.context = :context')
                 ->andWhere('r.id_csp_rule IS NULL')
                 ->orderBy('l.hits', 'ASC')
                 ->addOrderBy('l.date_upd', 'ASC')
                 ->addOrderBy('l.id_csp_log', 'ASC')
                 ->setMaxResults($limit)
                 ->setParameter('shopId', $shopId)
+                ->setParameter('context', $context->value)
                 ->executeQuery()
                 ->fetchFirstColumn();
 
@@ -133,29 +163,46 @@ class CspLogRepository extends EntityRepository
         });
     }
 
-    /** Clears a shop's violation log but keeps rows backed by an allow-list rule, so curated rules stay in the grid. Returns the count removed. */
-    public function deleteByShop(int $shopId): int
+    /** Clears a scope's violation log but keeps rows backed by an allow-list rule, so curated rules stay in the grid. Returns the count removed. */
+    public function deleteByShop(CspContext $context, int $shopId): int
     {
-        return $this->deletePrunableRowsInChunks($shopId);
+        return $this->deletePrunableRowsInChunks($context, $shopId);
     }
 
-    /** Deletes a shop's reports older than $before, keeping rows backed by an allow-list rule. Returns the count removed. */
-    public function deleteOlderThanByShop(int $shopId, DateTimeInterface $before): int
+    /** Deletes a scope's reports older than $before, keeping rows backed by an allow-list rule. Returns the count removed. */
+    public function deleteOlderThanByShop(CspContext $context, int $shopId, DateTimeInterface $before): int
     {
-        return $this->deletePrunableRowsInChunks($shopId, static function (QueryBuilder $qb) use ($before): void {
+        return $this->deletePrunableRowsInChunks($context, $shopId, static function (QueryBuilder $qb) use ($before): void {
             $qb->andWhere('l.date_add < :before')
                 ->setParameter('before', $before->format('Y-m-d H:i:s'));
         });
     }
 
     /**
-     * Deletes every prunable (not allow-list-backed) row for a shop in bounded chunks, so a large log
+     * Shop ids that currently have at least one log row in the scope, so a cleanup command only visits
+     * shops that need it. The global (admin) context always uses shop id 0.
+     *
+     * @return list<int>
+     */
+    public function distinctShopIds(CspContext $context): array
+    {
+        return array_map('intval', $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('DISTINCT id_shop')
+            ->from($this->getClassMetadata()->getTableName())
+            ->where('context = :context')
+            ->setParameter('context', $context->value)
+            ->executeQuery()
+            ->fetchFirstColumn());
+    }
+
+    /**
+     * Deletes every prunable (not allow-list-backed) row for a scope in bounded chunks, so a large log
      * never builds one oversized IN() statement or holds a single long delete. Each chunk retries on
      * a transient deadlock.
      *
      * @param (callable(QueryBuilder): void)|null $addConditions extra WHERE on the id selection (alias l)
      */
-    private function deletePrunableRowsInChunks(int $shopId, ?callable $addConditions = null): int
+    private function deletePrunableRowsInChunks(CspContext $context, int $shopId, ?callable $addConditions = null): int
     {
         $connection = $this->getEntityManager()->getConnection();
         $table = $this->getClassMetadata()->getTableName();
@@ -163,16 +210,18 @@ class CspLogRepository extends EntityRepository
 
         $total = 0;
         do {
-            $deleted = $this->retryOnDeadlock(function () use ($connection, $table, $ruleTable, $shopId, $addConditions): int {
+            $deleted = $this->retryOnDeadlock(function () use ($connection, $table, $ruleTable, $context, $shopId, $addConditions): int {
                 $idQuery = $connection->createQueryBuilder()
                     ->select('l.id_csp_log')
                     ->from($table, 'l')
-                    ->leftJoin('l', $ruleTable, 'r', 'r.id_shop = l.id_shop AND r.directive = l.directive AND r.source = l.source')
+                    ->leftJoin('l', $ruleTable, 'r', 'r.id_shop = l.id_shop AND r.context = l.context AND r.directive = l.directive AND r.source = l.source')
                     ->where('l.id_shop = :shopId')
+                    ->andWhere('l.context = :context')
                     ->andWhere('r.id_csp_rule IS NULL')
                     ->orderBy('l.id_csp_log', 'ASC')
                     ->setMaxResults(self::DELETE_CHUNK_SIZE)
-                    ->setParameter('shopId', $shopId);
+                    ->setParameter('shopId', $shopId)
+                    ->setParameter('context', $context->value);
 
                 if (null !== $addConditions) {
                     $addConditions($idQuery);
@@ -222,19 +271,5 @@ class CspLogRepository extends EntityRepository
                 usleep(self::DELETE_RETRY_BASE_DELAY_US * $attempt);
             }
         }
-    }
-
-    /**
-     * Shop ids that currently have at least one log row, so a cleanup command only visits shops that need it.
-     *
-     * @return list<int>
-     */
-    public function distinctShopIds(): array
-    {
-        return array_map('intval', $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->select('DISTINCT id_shop')
-            ->from($this->getClassMetadata()->getTableName())
-            ->executeQuery()
-            ->fetchFirstColumn());
     }
 }

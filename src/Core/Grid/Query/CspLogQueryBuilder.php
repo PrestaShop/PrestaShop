@@ -11,12 +11,14 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspDirective;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspLogStatusFilter;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspSource;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\ShopSearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Builds search and count queries for the CSP violation log grid, scoped to the criteria's ShopConstraint.
@@ -35,6 +37,7 @@ final class CspLogQueryBuilder extends AbstractDoctrineQueryBuilder
         string $dbPrefix,
         private readonly DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         private readonly ShopListResolverInterface $shopListResolver,
+        private readonly RequestStack $requestStack,
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->cspLogTable = $dbPrefix . 'csp_log';
@@ -102,7 +105,7 @@ final class CspLogQueryBuilder extends AbstractDoctrineQueryBuilder
 
     private function joinRuleTable(QueryBuilder $qb): void
     {
-        $qb->leftJoin('c', $this->cspRuleTable, 'r', 'r.id_shop = c.id_shop AND r.directive = c.directive AND r.source = c.source');
+        $qb->leftJoin('c', $this->cspRuleTable, 'r', 'r.id_shop = c.id_shop AND r.context = c.context AND r.directive = c.directive AND r.source = c.source');
     }
 
     /**
@@ -150,6 +153,18 @@ final class CspLogQueryBuilder extends AbstractDoctrineQueryBuilder
 
     private function applyShopRestriction(QueryBuilder $qb, SearchCriteriaInterface $searchCriteria): void
     {
+        $context = $this->resolveContext();
+        $qb->andWhere('c.context = :cspContext')
+            ->setParameter('cspContext', $context->value);
+
+        // The back office is a single global surface stored under shop id 0; the storefront grid is
+        // scoped to the shops in context. Admin rows never leak into the storefront view and vice versa.
+        if (!$context->isPerShop()) {
+            $qb->andWhere('c.id_shop = 0');
+
+            return;
+        }
+
         $shopConstraint = $searchCriteria instanceof ShopSearchCriteriaInterface ? $searchCriteria->getShopConstraint() : null;
         $shopIds = null !== $shopConstraint ? $this->shopListResolver->resolveShopIds($shopConstraint) : [];
 
@@ -162,5 +177,13 @@ final class CspLogQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb->andWhere('c.id_shop IN (:shopIds)');
         $qb->setParameter('shopIds', $shopIds, ArrayParameterType::INTEGER);
+    }
+
+    /** The surface the grid shows is selected by the ?context query param (default front). */
+    private function resolveContext(): CspContext
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        return null !== $request && 'admin' === $request->query->get('context') ? CspContext::ADMIN : CspContext::FRONT;
     }
 }

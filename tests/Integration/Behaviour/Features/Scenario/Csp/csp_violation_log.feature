@@ -56,6 +56,20 @@ Feature: Collect CSP violation reports
     And the CSP log for shop 41 should not contain violation "script-src" from "https://a2.example.com"
     And violation "script-src" from "https://a5.example.com" for shop 41 should have 1 hit
 
+  Scenario: The unreviewed count excludes sources that are already allow-listed
+    When I record a CSP violation for shop 71 with directive "script-src" and blocked source "https://a.example.com"
+    And I record a CSP violation for shop 71 with directive "script-src" and blocked source "https://b.example.com"
+    And I add a CSP rule "r1" for shop 71 with directive "script-src" and source "https://a.example.com"
+    Then the unreviewed CSP count for shop 71 should be 1
+
+  Scenario: Back-office and storefront violations are kept in separate surfaces
+    When I record a CSP violation for shop 61 with directive "script-src" and blocked source "https://front.example.com"
+    And I record a back-office CSP violation with directive "script-src" and blocked source "https://admin.example.com"
+    Then the CSP log for shop 61 should contain 1 row
+    And the CSP log for shop 61 should not contain violation "script-src" from "https://admin.example.com"
+    And the back-office CSP log should contain 1 row
+    And the back-office CSP log should contain violation "script-src" from "https://admin.example.com"
+
   Scenario: Pruning old reports deletes stale rows but keeps recent and allow-listed ones
     When I record a CSP violation for shop 51 with directive "script-src" and blocked source "https://old.example.com"
     And I backdate the CSP log for shop 51 source "https://old.example.com" by 60 days

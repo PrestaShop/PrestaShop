@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder;
 use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider;
 use PrestaShop\PrestaShop\Core\Csp\CspPolicyHookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Entity\Repository\CspRuleRepository;
 use Psr\Log\LoggerInterface;
@@ -25,7 +26,7 @@ class CspHeaderBuilderTest extends TestCase
 
     public function testItBuildsReportOnlyHeadersWhenReportOnlyIsOn(): void
     {
-        $headers = $this->builder(flagEnabled: true, cspEnabled: true, reportOnly: true)->build(self::SHOP_ID, self::REPORT_URI);
+        $headers = $this->builder(flagEnabled: true, cspEnabled: true, reportOnly: true)->build(CspContext::FRONT, self::SHOP_ID, self::REPORT_URI);
 
         $this->assertArrayHasKey('Content-Security-Policy-Report-Only', $headers);
         $this->assertArrayNotHasKey('Content-Security-Policy', $headers, 'Report-only mode must not enforce');
@@ -40,7 +41,7 @@ class CspHeaderBuilderTest extends TestCase
 
     public function testItBuildsTheEnforcedHeaderWhenReportOnlyIsOff(): void
     {
-        $headers = $this->builder(flagEnabled: true, cspEnabled: true, reportOnly: false)->build(self::SHOP_ID, self::REPORT_URI);
+        $headers = $this->builder(flagEnabled: true, cspEnabled: true, reportOnly: false)->build(CspContext::FRONT, self::SHOP_ID, self::REPORT_URI);
 
         $this->assertArrayHasKey('Content-Security-Policy', $headers);
         $this->assertArrayNotHasKey('Content-Security-Policy-Report-Only', $headers, 'Enforcement must not use the report-only header');
@@ -54,12 +55,12 @@ class CspHeaderBuilderTest extends TestCase
 
     public function testItBuildsNothingWhenTheSettingIsOff(): void
     {
-        $this->assertSame([], $this->builder(flagEnabled: true, cspEnabled: false)->build(self::SHOP_ID, self::REPORT_URI));
+        $this->assertSame([], $this->builder(flagEnabled: true, cspEnabled: false)->build(CspContext::FRONT, self::SHOP_ID, self::REPORT_URI));
     }
 
     public function testItBuildsNothingWhenTheFeatureFlagIsOff(): void
     {
-        $this->assertSame([], $this->builder(flagEnabled: false, cspEnabled: true)->build(self::SHOP_ID, self::REPORT_URI));
+        $this->assertSame([], $this->builder(flagEnabled: false, cspEnabled: true)->build(CspContext::FRONT, self::SHOP_ID, self::REPORT_URI));
     }
 
     public function testItStripsHeaderBreakingCharactersFromTheReportUri(): void
@@ -67,7 +68,7 @@ class CspHeaderBuilderTest extends TestCase
         // A URI carrying quotes, semicolons, commas or whitespace must never corrupt a header line
         // or inject an extra directive.
         $headers = $this->builder(flagEnabled: true, cspEnabled: true, reportOnly: true)
-            ->build(self::SHOP_ID, 'https://shop.example.com/r";script-src *, evil');
+            ->build(CspContext::FRONT, self::SHOP_ID, 'https://shop.example.com/r";script-src *, evil');
 
         $cleanUri = 'https://shop.example.com/rscript-src*evil';
         $this->assertSame('csp-endpoint="' . $cleanUri . '"', $headers['Reporting-Endpoints']);

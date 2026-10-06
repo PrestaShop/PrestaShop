@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Csp\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspRuleId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
@@ -17,7 +18,13 @@ final class RevokeCspSourceCommand
     public function __construct(
         private readonly int $cspRuleId,
         private readonly ShopConstraint $shopConstraint,
+        private readonly CspContext $context = CspContext::FRONT,
     ) {
+    }
+
+    public function getContext(): CspContext
+    {
+        return $this->context;
     }
 
     public function getCspRuleId(): CspRuleId

@@ -9,17 +9,24 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Csp;
 
 use Context;
+use Link;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShopLogger;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Throwable;
 
-/** Sends the CSP headers on FrontKernel storefront responses (PS_FF_FRONT_CONTAINER_V2); the legacy path is covered in FrontController. */
+/**
+ * Sends the CSP headers on Symfony-kernel responses for one surface. Registered twice: in the Front
+ * app container for the storefront (the legacy path is covered by FrontController) and in the Admin
+ * app container for the back office. The surface is injected as $cspContext.
+ */
 final class CspHeaderSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly CspHeaderBuilder $headerBuilder,
+        private readonly CspContext $cspContext,
     ) {
     }
 
@@ -49,16 +56,24 @@ final class CspHeaderSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $context = Context::getContext();
-        if (null === $context || null === $context->shop || null === $context->link || null === $context->shop->theme) {
+        $psContext = Context::getContext();
+        if (null === $psContext || null === $psContext->shop || null === $psContext->link) {
             return;
         }
 
-        // A DB error or a throwing module must skip the header, never turn a storefront response into a 500.
+        $isFront = CspContext::FRONT === $this->cspContext;
+        // The storefront policy is per shop and may carry theme contributions; the back office is a
+        // single global surface (shop id 0) and has no theme contributions.
+        if ($isFront && null === $psContext->shop->theme) {
+            return;
+        }
+
+        // A DB error or a throwing module must skip the header, never turn a response into a 500.
         try {
-            $reportUri = $context->link->getPageLink('cspreport', null);
-            $themeContributions = $context->shop->theme->get('global_settings.csp', []);
-            foreach ($this->headerBuilder->build((int) $context->shop->id, $reportUri, is_array($themeContributions) ? $themeContributions : []) as $name => $value) {
+            $shopId = $isFront ? (int) $psContext->shop->id : 0;
+            $reportUri = $this->reportUri($psContext->link);
+            $themeContributions = $isFront ? $psContext->shop->theme->get('global_settings.csp', []) : [];
+            foreach ($this->headerBuilder->build($this->cspContext, $shopId, $reportUri, is_array($themeContributions) ? $themeContributions : []) as $name => $value) {
                 $response->headers->set($name, $value);
             }
         } catch (Throwable $e) {
@@ -68,5 +83,17 @@ final class CspHeaderSubscriber implements EventSubscriberInterface
                 error_log('CSP header not sent: ' . $e->getMessage());
             }
         }
+    }
+
+    /** The public collector lives on the storefront; a back-office report tags itself with context=admin. */
+    private function reportUri(Link $link): string
+    {
+        $reportUri = $link->getPageLink('cspreport', null);
+
+        if (CspContext::ADMIN === $this->cspContext) {
+            $reportUri .= (str_contains($reportUri, '?') ? '&' : '?') . 'context=admin';
+        }
+
+        return $reportUri;
     }
 }

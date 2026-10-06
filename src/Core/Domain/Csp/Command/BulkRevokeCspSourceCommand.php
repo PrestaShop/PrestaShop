@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Csp\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /** Removes several sources from the curated allow-list in one action (the grid bulk "Revoke"). */
@@ -24,8 +25,14 @@ final class BulkRevokeCspSourceCommand
     public function __construct(
         array $cspRuleIds,
         private readonly ShopConstraint $shopConstraint,
+        private readonly CspContext $context = CspContext::FRONT,
     ) {
         $this->cspRuleIds = array_map('intval', $cspRuleIds);
+    }
+
+    public function getContext(): CspContext
+    {
+        return $this->context;
     }
 
     /**

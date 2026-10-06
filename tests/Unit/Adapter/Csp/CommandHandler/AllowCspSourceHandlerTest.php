@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AllowCspSourceHandler;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AllowCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspLogNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use PrestaShopBundle\Entity\CspLog;
@@ -50,6 +51,40 @@ class AllowCspSourceHandlerTest extends TestCase
 
         $this->handler($logRepository, $this->createMock(CspRuleRepository::class), resolvedShopIds: [1])
             ->handle(new AllowCspSourceCommand(42, ShopConstraint::shop(1)));
+    }
+
+    public function testItAllowsABackOfficeLogUnderTheGlobalShopZero(): void
+    {
+        $log = (new CspLog())->setShopId(0)->setContext('admin')->setDirective('script-src')->setSource('https://admin.example.com');
+
+        $logRepository = $this->createMock(CspLogRepository::class);
+        $logRepository->method('find')->with(42)->willReturn($log);
+
+        $ruleRepository = $this->createMock(CspRuleRepository::class);
+        $ruleRepository->method('findOneByShopDirectiveSource')->willReturn(null);
+        $ruleRepository->expects($this->once())->method('add')->willReturn(7);
+
+        $ruleId = $this->handler($logRepository, $ruleRepository, resolvedShopIds: [])
+            ->handle(new AllowCspSourceCommand(42, ShopConstraint::allShops(), CspContext::ADMIN));
+
+        $this->assertSame(7, $ruleId->getValue());
+    }
+
+    public function testItTreatsAStorefrontLogAsNotFoundOnTheBackOfficeSurface(): void
+    {
+        // A storefront log (shop id >= 1) must not be curatable from the back office (global shop id 0).
+        $log = (new CspLog())->setShopId(2)->setContext('front')->setDirective('script-src')->setSource('https://cdn.example.com');
+
+        $logRepository = $this->createMock(CspLogRepository::class);
+        $logRepository->method('find')->willReturn($log);
+
+        $ruleRepository = $this->createMock(CspRuleRepository::class);
+        $ruleRepository->expects($this->never())->method('add');
+
+        $this->expectException(CspLogNotFoundException::class);
+
+        $this->handler($logRepository, $ruleRepository, resolvedShopIds: [])
+            ->handle(new AllowCspSourceCommand(42, ShopConstraint::allShops(), CspContext::ADMIN));
     }
 
     /**

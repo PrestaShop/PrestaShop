@@ -11,6 +11,7 @@ namespace Tests\Unit\Adapter\Csp;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 
 /**
@@ -49,6 +50,19 @@ class CspFeatureCheckerTest extends TestCase
     public function testAShopCanTurnReportOnlyOff(): void
     {
         $this->assertFalse($this->checker(flagEnabled: true, config: ['PS_CSP_REPORT_ONLY' => '0'])->isReportOnlyForShop(1));
+    }
+
+    public function testTheBackOfficeReadsItsOwnGlobalEnabledKeyIndependentOfTheStorefront(): void
+    {
+        $checker = $this->checker(flagEnabled: true, config: ['PS_CSP_ENABLED' => '0', 'PS_CSP_ADMIN_ENABLED' => '1']);
+
+        $this->assertTrue($checker->isEnabledForContext(CspContext::ADMIN, 0));
+        $this->assertFalse($checker->isEnabledForShop(1), 'The admin toggle must not enable the storefront');
+    }
+
+    public function testTheBackOfficeIsReportOnlyByDefault(): void
+    {
+        $this->assertTrue($this->checker(flagEnabled: true, config: [])->isReportOnlyForContext(CspContext::ADMIN, 0));
     }
 
     /**

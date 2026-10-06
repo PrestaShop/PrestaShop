@@ -12,6 +12,7 @@ use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShopBundle\Command\PruneCspLogCommand;
 use PrestaShopBundle\Entity\Repository\CspLogRepository;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -25,11 +26,14 @@ class PruneCspLogCommandTest extends TestCase
     public function testItAgePrunesEveryShopWithLogsAndEnforcesTheCap(): void
     {
         $logRepository = $this->createMock(CspLogRepository::class);
-        $logRepository->method('distinctShopIds')->willReturn([1, 2]);
+        // Two storefront shops have logs; the back office has none in this test.
+        $logRepository->method('distinctShopIds')->willReturnCallback(
+            fn (CspContext $context) => CspContext::FRONT === $context ? [1, 2] : []
+        );
         // Shop 1 has a 30-day retention, shop 2 keeps everything (0), so delete runs only for shop 1.
         $logRepository->expects($this->once())
             ->method('deleteOlderThanByShop')
-            ->with(1, $this->isInstanceOf(DateTimeInterface::class))
+            ->with(CspContext::FRONT, 1, $this->isInstanceOf(DateTimeInterface::class))
             ->willReturn(3);
         // enforceRowCap() runs for both shops (via countByShop).
         $logRepository->expects($this->exactly(2))->method('countByShop')->willReturn(0);
@@ -55,7 +59,7 @@ class PruneCspLogCommandTest extends TestCase
         $logRepository = $this->createMock(CspLogRepository::class);
         $logRepository->expects($this->once())
             ->method('deleteOlderThanByShop')
-            ->with(5, $this->isInstanceOf(DateTimeInterface::class))
+            ->with(CspContext::FRONT, 5, $this->isInstanceOf(DateTimeInterface::class))
             ->willReturn(0);
         $logRepository->method('countByShop')->willReturn(0);
 

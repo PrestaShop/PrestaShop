@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\Csp\Command\RecordCspViolationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\RevokeCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspException;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspRuleId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Search\Filters\CspLogFilters;
@@ -54,6 +55,57 @@ class CspFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * The back office is a single global surface, so its violations are stored under shop id 0 and
+     * must never mix with any storefront's log.
+     *
+     * @When /^I record a back-office CSP violation with directive "([^"]*)" and blocked source "([^"]*)"$/
+     */
+    public function recordBackOfficeViolation(string $directive, string $source): void
+    {
+        $this->getCommandBus()->handle(new RecordCspViolationCommand(
+            $directive,
+            $source,
+            null,
+            0,
+            CspContext::ADMIN,
+        ));
+    }
+
+    /**
+     * @Then /^the back-office CSP log should contain (\d+) rows?$/
+     */
+    public function assertBackOfficeRowCount(string $expectedCount): void
+    {
+        $actual = $this->getCspLogRepository()->countByShop(CspContext::ADMIN, 0);
+
+        if ($actual !== (int) $expectedCount) {
+            throw new RuntimeException(sprintf('Expected %d row(s) in the back-office CSP log, found %d', (int) $expectedCount, $actual));
+        }
+    }
+
+    /**
+     * @Then /^the unreviewed CSP count for shop (\d+) should be (\d+)$/
+     */
+    public function assertUnreviewedCount(string $shopId, string $expectedCount): void
+    {
+        $actual = $this->getCspLogRepository()->countUnreviewedByShop(CspContext::FRONT, (int) $shopId);
+
+        if ($actual !== (int) $expectedCount) {
+            throw new RuntimeException(sprintf('Expected %d unreviewed CSP report(s) for shop %d, found %d', (int) $expectedCount, (int) $shopId, $actual));
+        }
+    }
+
+    /**
+     * @Then /^the back-office CSP log should contain violation "([^"]*)" from "([^"]*)"$/
+     */
+    public function assertBackOfficeContainsViolation(string $directive, string $source): void
+    {
+        if (null === $this->findLog(0, $directive, $source, CspContext::ADMIN)) {
+            throw new RuntimeException(sprintf('Expected the back-office CSP log to contain "%s" from "%s"', $directive, $source));
+        }
+    }
+
+    /**
      * Records several violations in order through a recorder with a custom row cap. The cap is a
      * constructor argument of the recorder and never reachable through the command bus (which always
      * uses the default cap), so the collaborator is built here against the real repository. This is
@@ -66,7 +118,7 @@ class CspFeatureContext extends AbstractDomainFeatureContext
         $recorder = new CspViolationRecorder($this->getCspLogRepository(), (int) $cap);
 
         foreach ($table->getColumnsHash() as $row) {
-            $recorder->record((int) $shopId, $row['directive'], $row['source'], null);
+            $recorder->record(CspContext::FRONT, (int) $shopId, $row['directive'], $row['source'], null);
         }
     }
 
@@ -75,7 +127,7 @@ class CspFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertRowCount(string $shopId, string $expectedCount): void
     {
-        $actual = $this->getCspLogRepository()->countByShop((int) $shopId);
+        $actual = $this->getCspLogRepository()->countByShop(CspContext::FRONT, (int) $shopId);
 
         if ($actual !== (int) $expectedCount) {
             throw new RuntimeException(sprintf(
@@ -255,7 +307,7 @@ class CspFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertRuleExists(string $shopId, string $directive, string $source): void
     {
-        if (null === $this->getCspRuleRepository()->findOneByShopDirectiveSource((int) $shopId, $directive, $source)) {
+        if (null === $this->getCspRuleRepository()->findOneByShopDirectiveSource(CspContext::FRONT, (int) $shopId, $directive, $source)) {
             throw new RuntimeException(sprintf(
                 'Expected a CSP rule "%s" from "%s" for shop %d, none was found',
                 $directive,
@@ -270,7 +322,7 @@ class CspFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertRuleNotExists(string $shopId, string $directive, string $source): void
     {
-        if (null !== $this->getCspRuleRepository()->findOneByShopDirectiveSource((int) $shopId, $directive, $source)) {
+        if (null !== $this->getCspRuleRepository()->findOneByShopDirectiveSource(CspContext::FRONT, (int) $shopId, $directive, $source)) {
             throw new RuntimeException(sprintf(
                 'Expected no CSP rule "%s" from "%s" for shop %d, but one was found',
                 $directive,
@@ -285,7 +337,7 @@ class CspFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertRuleCountForShop(string $shopId, string $expectedCount): void
     {
-        $actual = count($this->getCspRuleRepository()->getRulesByShop((int) $shopId));
+        $actual = count($this->getCspRuleRepository()->getRulesByShop(CspContext::FRONT, (int) $shopId));
 
         if ($actual !== (int) $expectedCount) {
             throw new RuntimeException(sprintf(
@@ -329,7 +381,7 @@ class CspFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertRulesByShopExclude(string $shopId, string $directive, string $source): void
     {
-        foreach ($this->getCspRuleRepository()->getRulesByShop((int) $shopId) as $rule) {
+        foreach ($this->getCspRuleRepository()->getRulesByShop(CspContext::FRONT, (int) $shopId) as $rule) {
             if ($rule['directive'] === $directive && $rule['source'] === $source) {
                 throw new RuntimeException(sprintf(
                     'Expected shop %d rules not to include "%s" from "%s", but it was returned by getRulesByShop',
@@ -396,15 +448,17 @@ class CspFeatureContext extends AbstractDomainFeatureContext
     public function pruneOlderThan(string $shopId, string $days): void
     {
         $this->getCspLogRepository()->deleteOlderThanByShop(
+            CspContext::FRONT,
             (int) $shopId,
             (new DateTimeImmutable())->modify(sprintf('-%d days', (int) $days))
         );
     }
 
-    private function findLog(int $shopId, string $directive, string $source): ?CspLog
+    private function findLog(int $shopId, string $directive, string $source, CspContext $context = CspContext::FRONT): ?CspLog
     {
         return $this->getCspLogRepository()->findOneBy([
             'shopId' => $shopId,
+            'context' => $context->value,
             'directive' => $directive,
             'source' => $source,
         ]);

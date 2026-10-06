@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AllowCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\CommandHandler\AllowCspSourceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CannotAddCspRuleException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspLogNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspRuleId;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use PrestaShopBundle\Entity\CspRule;
@@ -38,19 +39,25 @@ final class AllowCspSourceHandler implements AllowCspSourceHandlerInterface
     public function handle(AllowCspSourceCommand $command): CspRuleId
     {
         $log = $this->cspLogRepository->find($command->getCspLogId());
-        // A log outside the caller's shop scope is treated as missing,
-        // so a crafted id can't curate another shop's policy.
-        if (null === $log || !in_array($log->getShopId(), $this->shopListResolver->resolveShopIds($command->getShopConstraint()), true)) {
+        // The back office is the single global surface (shop id 0); the storefront resolves to the shops
+        // in scope. A log outside the caller's surface is treated as missing, so a crafted id can't curate
+        // another surface's policy.
+        $shopIds = CspContext::ADMIN === $command->getContext() ? [0] : $this->shopListResolver->resolveShopIds($command->getShopConstraint());
+        if (null === $log || !in_array($log->getShopId(), $shopIds, true)) {
             throw new CspLogNotFoundException(sprintf('CSP log entry #%d was not found.', $command->getCspLogId()));
         }
 
-        $existing = $this->cspRuleRepository->findOneByShopDirectiveSource($log->getShopId(), $log->getDirective(), $log->getSource());
+        // The new rule inherits the surface (front/admin) of the violation it was promoted from.
+        $context = CspContext::from($log->getContext());
+
+        $existing = $this->cspRuleRepository->findOneByShopDirectiveSource($context, $log->getShopId(), $log->getDirective(), $log->getSource());
         if (null !== $existing) {
             return new CspRuleId($existing->getId());
         }
 
         $rule = (new CspRule())
             ->setShopId($log->getShopId())
+            ->setContext($log->getContext())
             ->setDirective($log->getDirective())
             ->setSource($log->getSource())
             ->setDateAdd(new DateTimeImmutable());
@@ -59,7 +66,7 @@ final class AllowCspSourceHandler implements AllowCspSourceHandlerInterface
             return new CspRuleId($this->cspRuleRepository->add($rule));
         } catch (CannotAddCspRuleException $e) {
             // Two concurrent clicks race on the unique key; the loser returns the rule the winner inserted.
-            $winner = $this->cspRuleRepository->findOneByShopDirectiveSource($log->getShopId(), $log->getDirective(), $log->getSource());
+            $winner = $this->cspRuleRepository->findOneByShopDirectiveSource($context, $log->getShopId(), $log->getDirective(), $log->getSource());
             if (null !== $winner) {
                 return new CspRuleId($winner->getId());
             }
