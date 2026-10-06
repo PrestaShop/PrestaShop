@@ -1309,10 +1309,22 @@ parameters:
 			path: src/PrestaShopBundle/Command/ModuleCommand.php
 
 		-
+			message: '#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
+			identifier: disallowed.class
+			count: 1
+			path: src/PrestaShopBundle/Command/AbstractModuleCommand.php
+
+		-
 			message: '#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
 			identifier: disallowed.namespace
 			count: 1
 			path: src/PrestaShopBundle/Command/ModuleCommand.php
+
+		-
+			message: '#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
+			identifier: disallowed.namespace
+			count: 1
+			path: src/PrestaShopBundle/Command/AbstractModuleCommand.php
 
 		-
 			message: '#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
