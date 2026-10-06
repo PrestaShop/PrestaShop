@@ -118,7 +118,7 @@
     "dotenv": "^18.0.5",
     "mocha": "^11.8.0",
     "mochawesome": "^7.1.4",
-    "mysql2": "^3.24.4",
+    "mysql2": "^3.24.5",
     "semver": "^7.8.5"
   },
   "devDependencies": {
