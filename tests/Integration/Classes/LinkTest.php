@@ -35,7 +35,6 @@ class LinkTest extends TestCase
     private function getUseRoutesProperty(): ReflectionProperty
     {
         $property = (new ReflectionClass('Dispatcher'))->getProperty('use_routes');
-        $property->setAccessible(true);
 
         return $property;
     }
@@ -48,7 +47,6 @@ class LinkTest extends TestCase
     ): array {
         $reflectionDispatcher = new ReflectionClass('Dispatcher');
         $property = $reflectionDispatcher->getProperty('use_routes');
-        $property->setAccessible(true);
         $property->setValue(Dispatcher::getInstance(), $statusUseRoutes);
 
         $url = Context::getContext()->link->getProductLink(
@@ -101,7 +99,6 @@ class LinkTest extends TestCase
     {
         $reflectionDispatcher = new ReflectionClass('Dispatcher');
         $property = $reflectionDispatcher->getProperty('use_routes');
-        $property->setAccessible(true);
         $property->setValue(Dispatcher::getInstance(), true);
 
         $url = Context::getContext()->link->getSupplierLink(1);
