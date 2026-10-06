@@ -21,6 +21,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @deprecated since 9.3, use the dedicated prestashop:module:* commands instead.
+ */
 class ModuleCommand extends Command
 {
     private $allowedActions = [
@@ -59,7 +62,7 @@ class ModuleCommand extends Command
     {
         $this
             ->setName('prestashop:module')
-            ->setDescription('Manage your modules via command line')
+            ->setDescription('[DEPRECATED] Manage your modules via command line')
             ->addArgument('action', InputArgument::REQUIRED, sprintf('Action to execute (Allowed actions: %s).', implode(' / ', $this->allowedActions)))
             ->addArgument('module name', InputArgument::REQUIRED, 'Module on which the action will be executed')
             ->addArgument('file path', InputArgument::OPTIONAL, 'YML file path for configuration')
@@ -83,6 +86,13 @@ class ModuleCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        trigger_deprecation(
+            'prestashop/prestashop',
+            '9.3',
+            'The "%s" command is deprecated, use the dedicated "prestashop:module:*" commands instead.',
+            $this->getName()
+        );
+
         $this->init($input, $output);
 
         $skipOverrides = (bool) $input->getOption('skip-overrides');
