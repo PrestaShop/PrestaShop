@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\CreateEmptyCustomerCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShopException;
 
 /**
@@ -27,7 +28,13 @@ final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHan
      */
     public function handle(CreateEmptyCustomerCartCommand $command)
     {
-        $customer = new Customer($command->getCustomerId()->getValue());
+        $customerId = $command->getCustomerId()->getValue();
+        $customer = new Customer($customerId);
+
+        // Without this check, an unknown id creates a cart that belongs to no customer
+        if ((int) $customer->id !== $customerId) {
+            throw new CustomerNotFoundException(sprintf('Customer with id "%d" was not found.', $customerId));
+        }
 
         $lastEmptyCartId = $customer->getLastEmptyCart(false);
 
