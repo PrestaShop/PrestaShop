@@ -18,6 +18,12 @@ services:
     tags:
       - 'console.command'
 
+  PrestaShopBundle\Command\CspAdminReportOnlyCommand:
+    arguments:
+      - '@prestashop.adapter.csp.admin_settings_configuration'
+    tags:
+      - 'console.command'
+
   PrestaShopBundle\Command\ExportThemeCommand:
     arguments:
       - '@prestashop.core.addon.theme.repository'

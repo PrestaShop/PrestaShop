@@ -141,6 +141,16 @@ services:
       - 'CspSettings'
       - 'csp-settings'
 
+  prestashop.admin.csp.admin_settings.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.csp.admin_settings.data_provider'
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Csp\AdminCspType'
+      - 'AdminCspSettings'
+      - 'csp-admin-settings'
+
   prestashop.admin.order.invoices.by_date.form_handler:
     class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByDateFormHandler'
     arguments:
