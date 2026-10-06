@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider;
 use PrestaShop\PrestaShop\Core\Csp\CspPolicy;
 use PrestaShop\PrestaShop\Core\Csp\CspPolicyHookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShopBundle\Entity\Repository\CspRuleRepository;
 use Psr\Log\LoggerInterface;
 
@@ -21,7 +22,7 @@ class CspPolicyProviderTest extends TestCase
 
     public function testItReturnsTheBaseCollectionPolicyWithNoRulesOrTheme(): void
     {
-        $directives = $this->provider()->getPolicy(self::SHOP_ID)->getDirectives();
+        $directives = $this->provider()->getPolicy(CspContext::FRONT, self::SHOP_ID)->getDirectives();
 
         $this->assertSame(
             [
@@ -47,7 +48,7 @@ class CspPolicyProviderTest extends TestCase
 
     public function testTheBasePolicyRestrictsTheDirectivesThatDoNotFallBackToDefaultSrc(): void
     {
-        $directives = $this->provider()->getPolicy(self::SHOP_ID)->getDirectives();
+        $directives = $this->provider()->getPolicy(CspContext::FRONT, self::SHOP_ID)->getDirectives();
 
         // base-uri, frame-ancestors and form-action have no default-src fallback, so they must be
         // set explicitly or they stay unrestricted under enforcement; object-src is locked to 'none'.
@@ -64,7 +65,7 @@ class CspPolicyProviderTest extends TestCase
             ['directive' => 'connect-src', 'source' => 'https://api.example.com'],
         ];
 
-        $directives = $this->provider($rules)->getPolicy(self::SHOP_ID)->getDirectives();
+        $directives = $this->provider($rules)->getPolicy(CspContext::FRONT, self::SHOP_ID)->getDirectives();
 
         // Both augment the base 'self' rather than replacing it.
         $this->assertSame(["'self'", 'https://cdn.example.com'], $directives['script-src']);
@@ -75,7 +76,7 @@ class CspPolicyProviderTest extends TestCase
     {
         $theme = ['script-src' => ["'unsafe-eval'"]];
 
-        $directives = $this->provider()->getPolicy(self::SHOP_ID, $theme)->getDirectives();
+        $directives = $this->provider()->getPolicy(CspContext::FRONT, self::SHOP_ID, $theme)->getDirectives();
 
         $this->assertSame(["'self'", "'unsafe-eval'"], $directives['script-src']);
     }
@@ -90,7 +91,7 @@ class CspPolicyProviderTest extends TestCase
             ['directive' => 'style-src', 'source' => "'unsafe-inline'"],
         ];
 
-        $directives = $this->provider($rules)->getPolicy(self::SHOP_ID)->getDirectives();
+        $directives = $this->provider($rules)->getPolicy(CspContext::FRONT, self::SHOP_ID)->getDirectives();
 
         $this->assertSame(["'self'", "'unsafe-inline'"], $directives['script-src']);
         $this->assertSame(["'self'", "'unsafe-inline'"], $directives['style-src']);
@@ -102,7 +103,7 @@ class CspPolicyProviderTest extends TestCase
         $logger->expects($this->once())->method('warning');
 
         $theme = ['not-a-directive' => ["'self'"]];
-        $directives = $this->provider([], $logger)->getPolicy(self::SHOP_ID, $theme)->getDirectives();
+        $directives = $this->provider([], $logger)->getPolicy(CspContext::FRONT, self::SHOP_ID, $theme)->getDirectives();
 
         $this->assertArrayNotHasKey('not-a-directive', $directives);
     }
@@ -113,7 +114,7 @@ class CspPolicyProviderTest extends TestCase
         $logger->expects($this->once())->method('warning');
 
         $theme = ['script-src' => ['has space']];
-        $directives = $this->provider([], $logger)->getPolicy(self::SHOP_ID, $theme)->getDirectives();
+        $directives = $this->provider([], $logger)->getPolicy(CspContext::FRONT, self::SHOP_ID, $theme)->getDirectives();
 
         // The invalid source is skipped; the base 'self' remains on script-src.
         $this->assertSame(["'self'"], $directives['script-src']);
@@ -124,7 +125,20 @@ class CspPolicyProviderTest extends TestCase
         $hookDispatcher = $this->createMock(CspPolicyHookDispatcherInterface::class);
         $hookDispatcher->expects($this->once())->method('dispatch')->with($this->isInstanceOf(CspPolicy::class));
 
-        $this->provider([], null, $hookDispatcher)->getPolicy(self::SHOP_ID);
+        $this->provider([], null, $hookDispatcher)->getPolicy(CspContext::FRONT, self::SHOP_ID);
+    }
+
+    public function testTheBackOfficePolicySkipsThemeContributionsAndTheStorefrontHook(): void
+    {
+        // The back office is a core-owned surface: no theme CSP, and the storefront policy hook (which
+        // lets modules add storefront sources) must not run for it.
+        $hookDispatcher = $this->createMock(CspPolicyHookDispatcherInterface::class);
+        $hookDispatcher->expects($this->never())->method('dispatch');
+
+        $theme = ['script-src' => ['https://theme.example.com']];
+        $directives = $this->provider([], null, $hookDispatcher)->getPolicy(CspContext::ADMIN, 0, $theme)->getDirectives();
+
+        $this->assertSame(["'self'"], $directives['script-src'], 'A theme contribution must not reach the admin policy');
     }
 
     /**

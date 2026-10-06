@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Domain\Csp\CommandHandler\BulkRevokeCspSourceHand
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CannotBulkRevokeCspRuleException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspRuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspRuleId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
@@ -44,9 +45,10 @@ final class BulkRevokeCspSourceHandler extends AbstractBulkCommandHandler implem
         $ruleId = (new CspRuleId((int) $id))->getValue();
         $rule = $this->repository->getById($ruleId);
 
-        // A rule outside the caller's shop scope is treated as missing,
-        // so a crafted id can't reach another shop's rules.
-        if (!in_array($rule->getShopId(), $this->shopListResolver->resolveShopIds($command->getShopConstraint()), true)) {
+        // A rule outside the caller's surface (global back office = shop id 0, storefront = shops in
+        // scope) is treated as missing, so a crafted id can't reach another surface's rules.
+        $shopIds = CspContext::ADMIN === $command->getContext() ? [0] : $this->shopListResolver->resolveShopIds($command->getShopConstraint());
+        if (!in_array($rule->getShopId(), $shopIds, true)) {
             throw new CspRuleNotFoundException(sprintf('CSP rule #%d was not found.', $ruleId));
         }
 

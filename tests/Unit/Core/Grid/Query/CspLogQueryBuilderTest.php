@@ -18,6 +18,8 @@ use PrestaShop\PrestaShop\Core\Grid\Query\CspLogQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\ShopSearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * The CSP log grid is scoped to the current shop and must never leak another shop's violations.
@@ -119,7 +121,8 @@ class CspLogQueryBuilderTest extends TestCase
             $connection,
             'ps_',
             $this->createMock(DoctrineSearchCriteriaApplicatorInterface::class),
-            $shopResolver
+            $shopResolver,
+            $this->frontRequestStack()
         );
 
         return $queryBuilder->getCountQueryBuilder($searchCriteria)->getSQL();
@@ -148,8 +151,16 @@ class CspLogQueryBuilderTest extends TestCase
         $applicator->method('applyDeterministicSorting')->willReturnSelf();
         $applicator->method('applyPagination')->willReturnSelf();
 
-        $queryBuilder = new CspLogQueryBuilder($connection, 'ps_', $applicator, $shopResolver);
+        $queryBuilder = new CspLogQueryBuilder($connection, 'ps_', $applicator, $shopResolver, $this->frontRequestStack());
 
         return $queryBuilder->getSearchQueryBuilder($searchCriteria)->getSQL();
+    }
+
+    private function frontRequestStack(): RequestStack
+    {
+        $stack = new RequestStack();
+        $stack->push(new Request());
+
+        return $stack;
     }
 }

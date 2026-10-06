@@ -7,6 +7,7 @@
 use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
 use PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder;
 use PrestaShop\PrestaShop\Core\Csp\CspReportParser;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 
 /** Public, unauthenticated endpoint that receives browser CSP violation reports: read the body, record, answer 204. */
 class CspReportControllerCore extends FrontController
@@ -47,11 +48,14 @@ class CspReportControllerCore extends FrontController
         }
 
         try {
-            $shopId = (int) $this->context->shop->id;
+            // The storefront reports per shop; a back-office report tags itself context=admin and is
+            // stored globally (shop id 0).
+            $context = 'admin' === Tools::getValue('context') ? CspContext::ADMIN : CspContext::FRONT;
+            $shopId = $context->isPerShop() ? (int) $this->context->shop->id : 0;
 
             /** @var CspFeatureChecker $featureChecker */
             $featureChecker = $this->get(CspFeatureChecker::class);
-            if (!$featureChecker->isEnabledForShop($shopId)) {
+            if (!$featureChecker->isEnabledForContext($context, $shopId)) {
                 return;
             }
 
@@ -71,13 +75,13 @@ class CspReportControllerCore extends FrontController
             $recorder = $this->get(CspViolationRecorder::class);
             $anyInserted = false;
             foreach ($reports as $report) {
-                $anyInserted = $recorder->record($shopId, $report['directive'], $report['blockedUri'], $report['documentUri'], false) || $anyInserted;
+                $anyInserted = $recorder->record($context, $shopId, $report['directive'], $report['blockedUri'], $report['documentUri'], false) || $anyInserted;
             }
 
             // Enforce the row cap once per batch, only when a new row was inserted (bumped counters
             // can't exceed the cap), and only on a sample of requests (see ROW_CAP_PRUNE_SAMPLING).
             if ($anyInserted && 1 === random_int(1, self::ROW_CAP_PRUNE_SAMPLING)) {
-                $recorder->enforceRowCap($shopId);
+                $recorder->enforceRowCap($context, $shopId);
             }
         } catch (Throwable $e) {
             // This public endpoint must never 500 on a DB hiccup: skip recording, still answer 204, but log it.

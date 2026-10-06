@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\RevokeCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\CommandHandler\RevokeCspSourceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspRuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use PrestaShopBundle\Entity\Repository\CspRuleRepository;
 
@@ -32,9 +33,10 @@ final class RevokeCspSourceHandler implements RevokeCspSourceHandlerInterface
         $ruleId = $command->getCspRuleId()->getValue();
         $rule = $this->repository->getById($ruleId);
 
-        // A rule outside the caller's shop scope is treated as missing,
-        // so a crafted id can't revoke another shop's rule.
-        if (!in_array($rule->getShopId(), $this->shopListResolver->resolveShopIds($command->getShopConstraint()), true)) {
+        // A rule outside the caller's surface (global back office = shop id 0, storefront = shops in
+        // scope) is treated as missing, so a crafted id can't revoke another surface's rule.
+        $shopIds = CspContext::ADMIN === $command->getContext() ? [0] : $this->shopListResolver->resolveShopIds($command->getShopConstraint());
+        if (!in_array($rule->getShopId(), $shopIds, true)) {
             throw new CspRuleNotFoundException(sprintf('CSP rule #%d was not found.', $ruleId));
         }
 

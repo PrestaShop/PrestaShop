@@ -29,6 +29,7 @@ final class RecordCspViolationHandler implements RecordCspViolationHandlerInterf
     public function handle(RecordCspViolationCommand $command): void
     {
         $this->recorder->record(
+            $command->getContext(),
             $command->getShopId(),
             $command->getDirective(),
             $command->getSource(),

@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AddCspRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\CommandHandler\AddCspRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CannotAddCspRuleException;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspRuleId;
 use PrestaShopBundle\Entity\CspRule;
 use PrestaShopBundle\Entity\Repository\CspLogRepository;
@@ -36,9 +37,18 @@ final class AddCspRuleHandler implements AddCspRuleHandlerInterface
 
     public function handle(AddCspRuleCommand $command): CspRuleId
     {
-        $shopId = $command->getShopConstraint()->getShopId();
-        if (null === $shopId) {
-            throw new CannotAddCspRuleException('A CSP rule can only be added for a single shop.');
+        $context = $command->getContext();
+
+        // The back office is one global surface stored under shop id 0; a storefront rule needs a single
+        // shop (the toolbar hides "Add" in an all-shops/group scope).
+        if (CspContext::ADMIN === $context) {
+            $shopId = 0;
+        } else {
+            $shopIdValue = $command->getShopConstraint()->getShopId();
+            if (null === $shopIdValue) {
+                throw new CannotAddCspRuleException('A CSP rule can only be added for a single shop.');
+            }
+            $shopId = $shopIdValue->getValue();
         }
 
         // Coarsen here too, so a granular directive reaching this command directly (e.g. via the Admin API)
@@ -46,13 +56,14 @@ final class AddCspRuleHandler implements AddCspRuleHandlerInterface
         $directive = $command->getDirective()->coarsen()->value;
         $source = $command->getSource()->getValue();
 
-        $this->validator->assertSourceIsNotAlreadyAllowed($shopId->getValue(), $directive, $source);
+        $this->validator->assertSourceIsNotAlreadyAllowed($context, $shopId, $directive, $source);
 
         // Wrap both writes in a transaction: a rule without its log placeholder is invisible in the log-driven grid.
         /** @var CspRuleId $ruleId */
-        $ruleId = $this->entityManager->getConnection()->transactional(function () use ($shopId, $directive, $source): CspRuleId {
+        $ruleId = $this->entityManager->getConnection()->transactional(function () use ($context, $shopId, $directive, $source): CspRuleId {
             $rule = (new CspRule())
-                ->setShopId($shopId->getValue())
+                ->setShopId($shopId)
+                ->setContext($context->value)
                 ->setDirective($directive)
                 ->setSource($source)
                 ->setDateAdd(new DateTimeImmutable());
@@ -60,7 +71,7 @@ final class AddCspRuleHandler implements AddCspRuleHandlerInterface
             $ruleId = new CspRuleId($this->repository->add($rule));
 
             // A manually added source has no log row; seed a placeholder so it is visible and revocable in the grid.
-            $this->logRepository->insertPlaceholderIfAbsent($shopId->getValue(), $directive, $source);
+            $this->logRepository->insertPlaceholderIfAbsent($context, $shopId, $directive, $source);
 
             return $ruleId;
         });

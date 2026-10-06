@@ -8,10 +8,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Csp\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
+
 /**
  * Records a single browser-reported CSP violation from raw report fields;
  * the recorder normalizes, filters and validates.
- * Takes a concrete $shopId, not a ShopConstraint: a report always belongs to the single storefront that fired it.
+ * Takes a concrete $shopId, not a ShopConstraint: a report always belongs to the single surface that fired it
+ * (the global back office always uses shop id 0).
  */
 final class RecordCspViolationCommand
 {
@@ -20,7 +23,13 @@ final class RecordCspViolationCommand
         private readonly string $source,
         private readonly ?string $documentUri,
         private readonly int $shopId,
+        private readonly CspContext $context = CspContext::FRONT,
     ) {
+    }
+
+    public function getContext(): CspContext
+    {
+        return $this->context;
     }
 
     public function getDirective(): string

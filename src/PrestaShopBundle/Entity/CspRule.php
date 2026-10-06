@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\CspRuleRepository")
  *
- * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="csp_rule_shop_directive_source_idx", fields={"shopId", "directive", "source"})})
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="csp_rule_shop_directive_source_idx", fields={"shopId", "context", "directive", "source"})})
  */
 class CspRule
 {
@@ -33,6 +33,11 @@ class CspRule
      * @ORM\Column(name="id_shop", type="integer", options={"unsigned": true})
      */
     private int $shopId;
+
+    /**
+     * @ORM\Column(name="context", type="string", length=10, options={"default": "front"})
+     */
+    private string $context = 'front';
 
     /**
      * @ORM\Column(name="directive", type="string", length=64)
@@ -62,6 +67,18 @@ class CspRule
     public function setShopId(int $shopId): self
     {
         $this->shopId = $shopId;
+
+        return $this;
+    }
+
+    public function getContext(): string
+    {
+        return $this->context;
+    }
+
+    public function setContext(string $context): self
+    {
+        $this->context = $context;
 
         return $this;
     }

@@ -17,8 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\CspLogRepository")
  *
  * @ORM\Table(
- *     uniqueConstraints={@ORM\UniqueConstraint(name="csp_log_shop_directive_source_idx", fields={"shopId", "directive", "source"})},
- *     indexes={@ORM\Index(name="csp_log_shop_prune_idx", columns={"id_shop", "hits", "date_upd"})}
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="csp_log_shop_directive_source_idx", fields={"shopId", "context", "directive", "source"})},
+ *     indexes={@ORM\Index(name="csp_log_shop_prune_idx", columns={"id_shop", "context", "hits", "date_upd"})}
  * )
  */
 class CspLog
@@ -36,6 +36,11 @@ class CspLog
      * @ORM\Column(name="id_shop", type="integer", options={"unsigned": true})
      */
     private int $shopId;
+
+    /**
+     * @ORM\Column(name="context", type="string", length=10, options={"default": "front"})
+     */
+    private string $context = 'front';
 
     /**
      * @ORM\Column(name="directive", type="string", length=64)
@@ -80,6 +85,18 @@ class CspLog
     public function setShopId(int $shopId): self
     {
         $this->shopId = $shopId;
+
+        return $this;
+    }
+
+    public function getContext(): string
+    {
+        return $this->context;
+    }
+
+    public function setContext(string $context): self
+    {
+        $this->context = $context;
 
         return $this;
     }

@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Csp;
 
 use PrestaShop\PrestaShop\Core\Csp\CspReportNormalizer;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspDirective;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspSource;
 use PrestaShopBundle\Entity\Repository\CspLogRepository;
@@ -33,7 +34,7 @@ final class CspViolationRecorder
      *
      * @return bool whether a new row was inserted, so a batch caller can enforce the cap once
      */
-    public function record(int $shopId, string $rawDirective, string $rawSource, ?string $documentUri, bool $enforceCap = true): bool
+    public function record(CspContext $context, int $shopId, string $rawDirective, string $rawSource, ?string $documentUri, bool $enforceCap = true): bool
     {
         $directiveName = CspReportNormalizer::normalizeDirective($rawDirective);
         if (null === $directiveName) {
@@ -56,19 +57,19 @@ final class CspViolationRecorder
             return false;
         }
 
-        $inserted = $this->repository->upsert($shopId, $directive->value, $source->getValue(), $this->normalizeDocumentUri($documentUri));
+        $inserted = $this->repository->upsert($context, $shopId, $directive->value, $source->getValue(), $this->normalizeDocumentUri($documentUri));
 
         // Only a fresh insert can exceed the cap, so a repeat-report flood (bumped counter) skips the COUNT.
         if ($inserted && $enforceCap) {
-            $this->enforceRowCap($shopId);
+            $this->enforceRowCap($context, $shopId);
         }
 
         return $inserted;
     }
 
-    public function clear(int $shopId): void
+    public function clear(CspContext $context, int $shopId): void
     {
-        $this->repository->deleteByShop($shopId);
+        $this->repository->deleteByShop($context, $shopId);
     }
 
     private function normalizeDocumentUri(?string $documentUri): ?string
@@ -98,12 +99,12 @@ final class CspViolationRecorder
         return mb_substr($documentUri, 0, self::MAX_DOCUMENT_URI_LENGTH);
     }
 
-    public function enforceRowCap(int $shopId): void
+    public function enforceRowCap(CspContext $context, int $shopId): void
     {
         // Approximate by design: COUNT-then-DELETE isn't transactional, so the table can briefly sit over the cap.
-        $count = $this->repository->countByShop($shopId);
+        $count = $this->repository->countByShop($context, $shopId);
         if ($count > $this->rowCap) {
-            $this->repository->deleteLeastReportedByShop($shopId, $count - $this->rowCap);
+            $this->repository->deleteLeastReportedByShop($context, $shopId, $count - $this->rowCap);
         }
     }
 }

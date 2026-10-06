@@ -8,6 +8,7 @@
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
@@ -804,7 +805,7 @@ class FrontControllerCore extends Controller
             $cspHeaderBuilder = $this->get(CspHeaderBuilder::class);
             $reportUri = $this->context->link->getPageLink('cspreport', null);
             $themeContributions = $this->context->shop->theme->get('global_settings.csp', []);
-            foreach ($cspHeaderBuilder->build((int) $this->context->shop->id, $reportUri, is_array($themeContributions) ? $themeContributions : []) as $name => $value) {
+            foreach ($cspHeaderBuilder->build(CspContext::FRONT, (int) $this->context->shop->id, $reportUri, is_array($themeContributions) ? $themeContributions : []) as $name => $value) {
                 header($name . ': ' . $value);
             }
         } catch (Throwable $e) {
