@@ -19,6 +19,12 @@ services:
     arguments:
       $entityManager: '@doctrine.orm.default_entity_manager'
 
+  # Sends the back-office CSP headers (report-only until enforced). The back office is a single global
+  # surface, so this is the same subscriber as the storefront, registered with CspContext::ADMIN.
+  PrestaShop\PrestaShop\Adapter\Csp\CspHeaderSubscriber:
+    arguments:
+      $cspContext: !php/enum PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext::ADMIN
+
   # Priority 40 to be called before the RouterListener (which has priority 32)
   PrestaShopBundle\EventListener\Admin\LegacyUrlListener:
     arguments:
