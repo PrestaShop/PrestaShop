@@ -44,7 +44,7 @@ class ConfigureModuleCommand extends AbstractModuleCommand
                 'config-file',
                 null,
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Configuration file. For multiple modules use "module=/path/to/config.yml".'
+                'Configuration file. For multiple modules use "module:/path/to/config.yml".'
             );
     }
 
@@ -60,7 +60,6 @@ class ConfigureModuleCommand extends AbstractModuleCommand
         }
 
         $hasErrors = false;
-
         foreach ($moduleNames as $moduleName) {
             try {
                 if (!$this->configureModule($moduleName, $configFiles[$moduleName] ?? null)) {
@@ -68,7 +67,6 @@ class ConfigureModuleCommand extends AbstractModuleCommand
                 }
             } catch (Throwable $e) {
                 $hasErrors = true;
-
                 $this->displayMessage(
                     $this->translator->trans(
                         'Cannot configure module %module%. %error_details%',
@@ -100,18 +98,21 @@ class ConfigureModuleCommand extends AbstractModuleCommand
 
         // Keep the convenient single-module syntax:
         // prestashop:module:configure module --config-file=/path/to/config.yml
-        if (count($moduleNames) === 1 && count($configFileOptions) === 1 && !str_contains($configFileOptions[0], '=')) {
+        if (
+            count($moduleNames) === 1
+            && count($configFileOptions) === 1
+            && !str_starts_with($configFileOptions[0], $moduleNames[0] . ':')
+        ) {
             return [$moduleNames[0] => $configFileOptions[0]];
         }
 
         $configFiles = [];
 
         foreach ($configFileOptions as $configFileOption) {
-            $separatorPosition = strpos($configFileOption, '=');
-
+            $separatorPosition = strpos($configFileOption, ':');
             if ($separatorPosition === false) {
                 $this->displayMessage(
-                    'When configuring multiple modules, use --config-file=module=/path/to/config.yml.',
+                    'When configuring multiple modules, use --config-file=module:/path/to/config.yml.',
                     'error'
                 );
 
@@ -120,10 +121,9 @@ class ConfigureModuleCommand extends AbstractModuleCommand
 
             $moduleName = substr($configFileOption, 0, $separatorPosition);
             $filePath = substr($configFileOption, $separatorPosition + 1);
-
             if ($moduleName === '' || $filePath === '') {
                 $this->displayMessage(
-                    'Invalid --config-file value. Expected module=/path/to/config.yml.',
+                    'Invalid --config-file value. Expected module:/path/to/config.yml.',
                     'error'
                 );
 
@@ -161,7 +161,6 @@ class ConfigureModuleCommand extends AbstractModuleCommand
         // module cannot leak into the next one in a bulk operation.
         $moduleSelfConfigurator = clone $this->moduleSelfConfigurator;
         $moduleSelfConfigurator->module($moduleName);
-
         if ($filePath !== null) {
             $moduleSelfConfigurator->file($filePath);
         }
@@ -172,7 +171,6 @@ class ConfigureModuleCommand extends AbstractModuleCommand
             $errors = array_map(static function ($error) {
                 return '- ' . $error;
             }, $errors);
-
             array_unshift(
                 $errors,
                 $this->translator->trans(
