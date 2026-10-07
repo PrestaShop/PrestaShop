@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
 use PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder;
 use PrestaShop\PrestaShop\Core\Csp\CspReportParser;

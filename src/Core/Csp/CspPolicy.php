@@ -26,7 +26,7 @@ final class CspPolicy
 
     /**
      * @return bool false only when the directive or source is malformed;
-     * a valid no-op (duplicate, redundant 'none') still returns true
+     *              a valid no-op (duplicate, redundant 'none') still returns true
      */
     public function addSource(string $directive, string $source): bool
     {
