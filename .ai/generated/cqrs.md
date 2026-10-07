@@ -1,5 +1,5 @@
 # CQRS Index (generated 2026-04-25)
-# 360 commands · 126 queries · 62 top-level domains
+# 366 commands · 126 queries · 63 top-level domains
 #
 # Sub-domain shown in [brackets] when command/query lives below the top-level domain dir.
 
