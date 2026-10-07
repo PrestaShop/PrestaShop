@@ -632,6 +632,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         /** @todo (RM) should only get groups and not all combinations ? */
         $attributes_groups = $this->product->getAttributesGroups($this->context->language->id);
+        $isCombinationStatusEnabled = Product::isCombinationStatusEnabled();
+        $hideDisabledCombinations = $isCombinationStatusEnabled && !Configuration::get('PS_DISP_UNAVAILABLE_ATTR');
+        if ($hideDisabledCombinations && is_array($attributes_groups)) {
+            $attributes_groups = array_filter($attributes_groups, fn (array $row): bool => (bool) $row['active']);
+        }
         if (is_array($attributes_groups) && $attributes_groups) {
             $combination_images = $this->product->getCombinationImages($this->context->language->id);
             $combination_prices_set = [];
@@ -696,6 +701,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->combinations[$row['id_product_attribute']]['isbn'] = $row['isbn'];
                 $this->combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
                 $this->combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
+                $this->combinations[$row['id_product_attribute']]['active'] = !$isCombinationStatusEnabled || (bool) $row['active'];
                 if (!empty($row['available_date']) && $row['available_date'] != '0000-00-00' && Validate::isDate($row['available_date'])) {
                     $this->combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];
                     $this->combinations[$row['id_product_attribute']]['date_formatted'] = Tools::displayDate($row['available_date']);
@@ -767,6 +773,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         FROM `' . _DB_PREFIX_ . 'product_attribute_combination` pac
                         INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
                         WHERE id_product = ' . $this->product->id . ' AND id_attribute IN (' . implode(',', array_map('intval', $current_selected_attributes)) . ')
+                        ' . ($hideDisabledCombinations ? 'AND pac.id_product_attribute IN (SELECT id_product_attribute FROM `' . _DB_PREFIX_ . 'product_attribute_shop` WHERE id_shop = ' . (int) $this->context->shop->id . ' AND active = 1)' : '') . '
                         GROUP BY id_product_attribute
                         HAVING COUNT(id_product) = ' . count($current_selected_attributes);
                     if ($results = Db::getInstance()->executeS($query)) {
@@ -1129,6 +1136,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             } else {
                 $availableProductAttributes = $productCombinations;
             }
+            if (Product::isCombinationStatusEnabled()) {
+                $availableProductAttributes = array_filter($availableProductAttributes, fn (array $elem): bool => (bool) $elem['active']);
+            }
 
             $availableProductAttribute = array_filter(
                 $availableProductAttributes,
@@ -1239,6 +1249,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
          */
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequestOrDefault();
+        $product['combination_active'] = !Combination::isDisabledInShop((int) $product['id_product_attribute'], (int) $this->context->shop->id);
 
         // @todo These three properties should be migrated into the lazy array, so they are available also in listings
         // Minimal quantity setting of this product or combination

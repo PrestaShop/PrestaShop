@@ -15,6 +15,7 @@ use PrestaShopBundle\Form\Admin\Sell\Product\Combination\Feature\CombinationFeat
 use PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -97,6 +98,13 @@ class CombinationFormType extends TranslatorAwareType
             && $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES)
         ) {
             $builder->add('features', CombinationFeaturesType::class);
+        }
+
+        if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_STATUS)) {
+            $builder->get('header')->add('active', SwitchType::class, [
+                'label' => $this->trans('Enabled', 'Admin.Global'),
+                'modify_all_shops' => true,
+            ]);
         }
 
         /*

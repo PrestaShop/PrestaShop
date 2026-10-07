@@ -643,6 +643,7 @@ class CombinationController extends PrestaShopAdminController
                 'impact_on_price_te' => (string) $combination->getImpactOnPrice(),
                 'quantity' => $combination->getQuantity(),
                 'is_default' => $combination->isDefault(),
+                'active' => $combination->isActive(),
                 'image_url' => $combination->getImageUrl() ?: $fallbackImageUrl,
                 'eco_tax' => (string) $combination->getEcoTax(),
             ];

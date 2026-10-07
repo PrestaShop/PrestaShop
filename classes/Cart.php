@@ -792,6 +792,9 @@ class CartCore extends ObjectModel
 
             $sql->leftJoin('product_attribute', 'pa', 'pa.`id_product_attribute` = cp.`id_product_attribute`');
             $sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.`id_shop` = cp.`id_shop` AND product_attribute_shop.`id_product_attribute` = pa.`id_product_attribute`)');
+            if (Product::isCombinationStatusEnabled()) {
+                $sql->select('IFNULL(product_attribute_shop.`active`, 1) AS combination_active');
+            }
         } else {
             $sql->select(
                 'p.`reference` AS reference, p.`ean13`, p.`isbn`,
@@ -4287,6 +4290,7 @@ class CartCore extends ObjectModel
             if (
                 !$product['active']
                 || !$product['available_for_order']
+                || !($product['combination_active'] ?? true)
             ) {
                 return $returnProductOnFailure ? $product : false;
             }
@@ -4965,7 +4969,7 @@ class CartCore extends ObjectModel
             }
 
             // Check if product is still active and possible to order
-            if (!$product['active'] || !$product['available_for_order']) {
+            if (!$product['active'] || !$product['available_for_order'] || !($product['combination_active'] ?? true)) {
                 return false;
             }
         }

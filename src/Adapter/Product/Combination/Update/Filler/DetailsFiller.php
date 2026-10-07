@@ -48,6 +48,11 @@ class DetailsFiller implements CombinationFillerInterface
             $updatableProperties[] = 'upc';
         }
 
+        if (null !== $command->isActive()) {
+            $combination->active = $command->isActive();
+            $updatableProperties[] = 'active';
+        }
+
         if (null !== $command->getImpactOnWeight()) {
             $combination->weight = (float) (string) $command->getImpactOnWeight();
             $updatableProperties[] = 'weight';

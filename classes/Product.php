@@ -4344,6 +4344,7 @@ class ProductCore extends ObjectModel
             JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $id_lang . ')
             JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON (a.id_attribute_group = ag.`id_attribute_group`)
             WHERE pa.`id_product` IN (' . implode(',', array_map('intval', $products)) . ') AND ag.`is_color_group` = 1
+            ' . ($check_stock && Product::isCombinationStatusEnabled() ? 'AND product_attribute_shop.`active` = 1' : '') . '
             GROUP BY pa.`id_product`, a.`id_attribute`, `group_by`
             ' . ($check_stock ? 'HAVING qty > 0' : '') . '
             ORDER BY a.`position` ASC;'
@@ -4391,7 +4392,7 @@ class ProductCore extends ObjectModel
 
         $query = new DbQuery();
 
-        $query->select('ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name, a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, product_attribute_shop.`id_product_attribute`, IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, product_attribute_shop.`weight`, product_attribute_shop.`default_on`, pa.`reference`, pa.`ean13`, pa.`mpn`, pa.`upc`, pa.`isbn`, product_attribute_shop.`unit_price_impact`, product_attribute_shop.`minimal_quantity`, product_attribute_shop.`available_date`, ag.`group_type`, pal.`available_now`, pal.`available_later`');
+        $query->select('ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name, a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, product_attribute_shop.`id_product_attribute`, IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, product_attribute_shop.`weight`, product_attribute_shop.`default_on`, pa.`reference`, pa.`ean13`, pa.`mpn`, pa.`upc`, pa.`isbn`, product_attribute_shop.`unit_price_impact`, product_attribute_shop.`minimal_quantity`, product_attribute_shop.`available_date`, product_attribute_shop.`active`, ag.`group_type`, pal.`available_now`, pal.`available_later`');
 
         $query->from('product_attribute', 'pa');
         $query->join(Shop::addSqlAssociation('product_attribute', 'pa'));
@@ -8292,6 +8293,13 @@ class ProductCore extends ObjectModel
         $manager = self::getFeatureFlagManager();
 
         return $manager !== null && $manager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES);
+    }
+
+    public static function isCombinationStatusEnabled(): bool
+    {
+        $manager = self::getFeatureFlagManager();
+
+        return $manager !== null && $manager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_STATUS);
     }
 
     protected static function getFeatureFlagManager(): ?FeatureFlagStateCheckerInterface
