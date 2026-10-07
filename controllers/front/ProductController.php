@@ -119,6 +119,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             return '';
         }
 
+        if ($this->id_product_attribute && $this->context->link->getCombinationLinkRewrite($this->id_product_attribute)) {
+            return $this->context->link->getProductLink($this->product, idProductAttribute: $this->id_product_attribute, addAnchor: false);
+        }
+
         return $this->getTemplateVarProduct()->getCanonicalUrl();
     }
 

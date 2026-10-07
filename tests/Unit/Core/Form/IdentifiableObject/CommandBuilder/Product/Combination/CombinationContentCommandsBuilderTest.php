@@ -46,6 +46,7 @@ class CombinationContentCommandsBuilderTest extends TestCase
                 'content' => [
                     'description' => $localizedValues,
                     'description_short' => $localizedValues,
+                    'link_rewrite' => $localizedValues,
                     'meta_description' => $localizedValues,
                     'meta_title' => $localizedValues,
                 ],
@@ -54,6 +55,7 @@ class CombinationContentCommandsBuilderTest extends TestCase
                 (new UpdateCombinationContentCommand(self::COMBINATION_ID, ShopConstraint::shop(self::SHOP_ID)))
                     ->setLocalizedDescriptions($localizedValues)
                     ->setLocalizedShortDescriptions($localizedValues)
+                    ->setLocalizedLinkRewrites($localizedValues)
                     ->setLocalizedMetaDescriptions($localizedValues)
                     ->setLocalizedMetaTitles($localizedValues),
             ],

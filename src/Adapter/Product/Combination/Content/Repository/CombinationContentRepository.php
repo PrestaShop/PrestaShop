@@ -17,7 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
  */
 class CombinationContentRepository
 {
-    public const FIELDS = ['description', 'description_short', 'meta_description', 'meta_title'];
+    public const FIELDS = ['description', 'description_short', 'link_rewrite', 'meta_description', 'meta_title'];
 
     public function __construct(
         private readonly Connection $connection,
@@ -49,6 +49,24 @@ class CombinationContentRepository
         }
 
         return $localizedValues;
+    }
+
+    /**
+     * @return array<int, string> non empty link rewrites indexed by language id
+     */
+    public function getLinkRewrites(CombinationId $combinationId, ShopId $shopId): array
+    {
+        return $this->connection->createQueryBuilder()
+            ->select('pac.id_lang, pac.link_rewrite')
+            ->from($this->dbPrefix . 'product_attribute_content', 'pac')
+            ->where('pac.id_product_attribute = :combinationId')
+            ->andWhere('pac.id_shop = :shopId')
+            ->andWhere("pac.link_rewrite <> ''")
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+            ->executeQuery()
+            ->fetchAllKeyValue()
+        ;
     }
 
     /**

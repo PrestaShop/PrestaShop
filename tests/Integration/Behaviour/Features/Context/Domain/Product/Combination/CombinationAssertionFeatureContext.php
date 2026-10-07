@@ -181,6 +181,7 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
         $actualValues = [
             'description' => $content->getLocalizedDescriptions(),
             'description_short' => $content->getLocalizedShortDescriptions(),
+            'link_rewrite' => $content->getLocalizedLinkRewrites(),
             'meta_description' => $content->getLocalizedMetaDescriptions(),
             'meta_title' => $content->getLocalizedMetaTitles(),
         ];

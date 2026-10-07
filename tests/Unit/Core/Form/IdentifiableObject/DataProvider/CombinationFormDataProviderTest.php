@@ -142,6 +142,7 @@ class CombinationFormDataProviderTest extends TestCase
             $this->createQueryBusMock([
                 'description' => $localizedValues,
                 'description_short' => [],
+                'link_rewrite' => $localizedValues,
                 'meta_description' => [],
                 'meta_title' => $localizedValues,
             ]),
@@ -154,6 +155,7 @@ class CombinationFormDataProviderTest extends TestCase
         $this->assertSame([
             'description' => $localizedValues,
             'description_short' => [],
+            'link_rewrite' => $localizedValues,
             'meta_description' => [],
             'meta_title' => $localizedValues,
         ], $provider->getData(self::COMBINATION_ID)['content']);
@@ -560,6 +562,7 @@ class CombinationFormDataProviderTest extends TestCase
                 return new CombinationContent(
                     $combinationData['description'] ?? [],
                     $combinationData['description_short'] ?? [],
+                    $combinationData['link_rewrite'] ?? [],
                     $combinationData['meta_description'] ?? [],
                     $combinationData['meta_title'] ?? []
                 );
