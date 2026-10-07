@@ -114,7 +114,7 @@ class NotificationCore
                 break;
 
             case 'customer_message':
-                // The customer thread is joined here and not in $joins because the WHERE clause filters on it.
+                // ct stays in $from: the WHERE clause filters on it.
                 $from = '
 					FROM `' . _DB_PREFIX_ . 'customer_message` as c
 					LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)';
@@ -150,11 +150,8 @@ class NotificationCore
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
-        // A dedicated COUNT() is used instead of SQL_CALC_FOUND_ROWS: the latter is deprecated since
-        // MySQL 8.0.17, and it forces the optimizer to resolve every matching row even though the
-        // displayed list is capped at 5. $from and $where are shared with the query above, so both
-        // statements always see the same set of rows. Presentation-only joins are left out of the
-        // count: they all match at most one row on a primary key, so they cannot change the total.
+        // SQL_CALC_FOUND_ROWS is deprecated since MySQL 8.0.17. The presentation joins match at most one row
+        // each (primary key lookups), so they are left out of the count.
         $total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*)' . $from . $where, false);
         $json = ['total' => $total, 'results' => []];
         foreach ($result as $value) {

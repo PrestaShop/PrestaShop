@@ -19,11 +19,7 @@ use Tools;
 
 class NotificationTest extends KernelTestCase
 {
-    /**
-     * The notification panel only ever displays five elements, so the number of
-     * customers created here has to be greater than that for the total to be
-     * distinguishable from the size of the returned list.
-     */
+    // More than DISPLAYED_ELEMENTS, so the total differs from the size of the list
     private const NEW_CUSTOMERS = 8;
 
     private const DISPLAYED_ELEMENTS = 5;
@@ -52,10 +48,7 @@ class NotificationTest extends KernelTestCase
         }
     }
 
-    /**
-     * The badge shows how many elements are new, not how many of them fit in the
-     * dropdown, so the total has to keep counting past the LIMIT of the list query.
-     */
+    /** The badge counts every new element, not only the ones that fit in the list. */
     public function testTotalCountsEveryNewElementBeyondTheDisplayedOnes(): void
     {
         $lastSeenCustomerId = $this->getLastCustomerId();
@@ -79,9 +72,6 @@ class NotificationTest extends KernelTestCase
     }
 
     /**
-     * Every type builds its own list and count statements; this makes sure all of
-     * them are valid SQL and agree with each other.
-     *
      * @dataProvider provideNotificationTypes
      */
     public function testEveryTypeReturnsATotalConsistentWithItsResults(string $type): void
