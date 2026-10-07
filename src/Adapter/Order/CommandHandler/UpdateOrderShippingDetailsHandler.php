@@ -21,6 +21,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderShippingDe
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
 use PrestaShopLogger;
+use Shop;
 use Validate;
 
 /**
@@ -59,6 +60,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         $oldTrackingNumber = $order->getShippingNumber();
 
         $this->contextStateManager
+            ->setShop(new Shop((int) $order->id_shop))
             ->setLanguage(new Language($order->id_lang));
 
         try {
@@ -120,10 +122,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         }
     }
 
-    /**
-     * Changing the carrier of an order changes what the customer is charged for shipping, but
-     * nothing recorded who did it. Keep a trace of it next to the other employee actions.
-     */
+    /** Records the carrier change in the employee log. */
     private function logCarrierChange(int $orderId, int $oldCarrierId, int $newCarrierId): void
     {
         $oldCarrier = new Carrier($oldCarrierId);
