@@ -46,23 +46,18 @@ $(function()
 			},
             error: function(xhr)
             {
-            	var re = /<([a-z]+)(.*?>.*?<\/\1>|.*?\/>)/img;
-            	var str = xhr.responseText;
-            	var m;
-
-            	while ((m = re.exec(str)) != null) {
-				    if (m.index === re.lastIndex) {
-				        re.lastIndex++;
-				    }
-				    if (m)
-				    	var html = true;
-				}
+            	var str = xhr.responseText || '';
+            	var isHtml = /<[a-z][\s\S]*>/i.test(str);
+            	var detail = isHtml
+            		? ('HTTP ' + xhr.status + ': expected JSON, got HTML (' + str.length + ' bytes). First chars: '
+            			+ $('<div>').text(str.replace(/\s+/g, ' ').slice(0, 180)).html())
+            		: str;
 
                 $("#dbResultCheck")
                     .addClass('errorBlock')
 					.removeClass('waitBlock')
                     .removeClass('okBlock')
-                    .html('An error occurred:<br /><br />' + (html ? 'Can you please reload the page' : xhr.responseText))
+                    .html('An error occurred:<br /><br />' + detail)
             }
 		});
 	});
