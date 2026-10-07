@@ -7,9 +7,12 @@ use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Manufacturer\ManufacturerPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Content\Repository\CombinationContentRepository;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Pricing\Product\Calculator\ProductCalculatorInterface;
@@ -63,6 +66,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * is an expensive method that should not be called twice during the same request.
      */
     protected $templateVarProductCache = null;
+
+    /**
+     * @var array<string, string>|null
+     */
+    private ?array $combinationContent = null;
 
     public function canonicalRedirection(string $canonical_url = ''): void
     {
@@ -481,7 +489,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(json_encode([
+        $response = [
             'product_prices' => $this->render('catalog/_partials/product-prices'),
             'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails'),
             'product_customization' => $this->render(
@@ -521,7 +529,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'id_customization' => $product['id_customization'],
             'product_title' => $this->getTemplateVarPage()['meta']['title'],
             'is_quick_view' => $this->isQuickView(),
-        ]));
+        ];
+        if ($this->isCombinationSeoEnabled()) {
+            $response['product_description'] = $product['description'];
+            $response['product_description_short'] = $product['description_short'];
+        }
+
+        $this->ajaxRender(json_encode($response));
     }
 
     /**
@@ -1227,7 +1241,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product = $this->objectPresenter->present($this->product);
 
         // Assign several product properties to the array
-        $product['description'] = $this->transformDescriptionWithImg($this->product->description);
+        $combinationContent = $this->getCombinationContent();
+        $product['description'] = $this->transformDescriptionWithImg($combinationContent['description'] ?? $this->product->description);
+        if (isset($combinationContent['description_short'])) {
+            $product['description_short'] = $combinationContent['description_short'];
+        }
 
         /*
          * This property is not a product property, but value from stock_available table. It must be here because on this page,
@@ -1758,9 +1776,48 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $page['body_classes']['product-customizable'] = true;
         }
         $page['admin_notifications'] = array_merge($page['admin_notifications'], $this->adminNotifications);
-        $page['meta']['title'] = $this->getProductPageTitle($page['meta']);
+        $combinationContent = $this->getCombinationContent();
+        $page['meta']['title'] = $combinationContent['meta_title'] ?? $this->getProductPageTitle($page['meta']);
+        if (isset($combinationContent['meta_description'])) {
+            $page['meta']['description'] = $combinationContent['meta_description'];
+        }
 
         return $page;
+    }
+
+    /**
+     * @return array<string, string> non empty values of the displayed combination overriding the product ones
+     */
+    private function getCombinationContent(): array
+    {
+        if (null !== $this->combinationContent) {
+            return $this->combinationContent;
+        }
+
+        $this->combinationContent = [];
+        $combinationId = $this->isCombinationSeoEnabled() ? (int) $this->getIdProductAttributeByGroupOrRequestOrDefault() : 0;
+        if ($combinationId) {
+            $localizedValues = $this->getContainer()->get(CombinationContentRepository::class)->getLocalizedValues(
+                new CombinationId($combinationId),
+                new ShopId((int) $this->context->shop->id)
+            );
+            $languageId = (int) $this->context->language->id;
+            $this->combinationContent = array_filter(array_map(
+                static fn (array $values): string => $values[$languageId] ?? '',
+                $localizedValues
+            ));
+        }
+
+        return $this->combinationContent;
+    }
+
+    private function isCombinationSeoEnabled(): bool
+    {
+        try {
+            return $this->container->get(FeatureFlagStateCheckerInterface::class)->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_SEO);
+        } catch (Throwable) {
+            return false;
+        }
     }
 
     /**
