@@ -99,7 +99,10 @@ class CookieCore
         $this->_path = rawurlencode($this->_path);
         $this->_path = str_replace(['%2F', '%7E', '%2B', '%26'], ['/', '~', '+', '&'], $this->_path);
         $this->_domain = $this->getDomain($shared_urls);
-        $this->_sameSite = Configuration::get('PS_COOKIE_SAMESITE');
+        // Standalone cookies (installer) must not query Configuration: _DB_PREFIX_ is not defined yet.
+        $this->_sameSite = $this->_standalone
+            ? Cookie::SAMESITE_LAX
+            : Configuration::get('PS_COOKIE_SAMESITE');
         $this->_name = 'PrestaShop-' . md5(($this->_standalone ? '' : _PS_VERSION_) . $name . $this->_domain);
         $this->_allow_writing = true;
         $this->_salt = $this->_standalone ? str_pad('', 32, md5('ps' . __FILE__)) : _COOKIE_IV_;
