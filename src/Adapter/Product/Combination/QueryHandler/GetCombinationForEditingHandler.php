@@ -158,7 +158,8 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             $this->getStock($combination),
             $images,
             $this->getCoverUrl($images, $productId, $shopConstraint),
-            (bool) $combination->default_on
+            (bool) $combination->default_on,
+            (bool) $combination->active
         );
     }
 

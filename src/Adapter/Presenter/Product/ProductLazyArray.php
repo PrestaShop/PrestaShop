@@ -526,7 +526,7 @@ class ProductLazyArray extends AbstractLazyArray
     public function getSeoAvailability()
     {
         // Availability for displaying discontinued products, if enabled
-        if ($this->product['active'] != 1) {
+        if ($this->isDiscontinued($this->product)) {
             return 'https://schema.org/Discontinued';
         // If product is in stock or stock management is disabled (= we have everything in stock)
         } elseif (
@@ -1213,7 +1213,7 @@ class ProductLazyArray extends AbstractLazyArray
         ProductPresentationSettings $settings,
     ) {
         // If the product is disabled, we disable add to cart button
-        if ($product['active'] != 1) {
+        if ($this->isDiscontinued($product)) {
             return false;
         }
 
@@ -1399,7 +1399,7 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         // If the product is disabled, but still displayed, we display a proper message
-        if ($this->product['active'] != 1) {
+        if ($this->isDiscontinued($this->product)) {
             $this->product['availability_message'] = $this->translator->trans(
                 'This product is no longer available for sale.',
                 [],
@@ -1542,6 +1542,11 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         return (float) $this->product['attribute_price'];
+    }
+
+    private function isDiscontinued(array $product): bool
+    {
+        return $product['active'] != 1 || !($product['combination_active'] ?? true);
     }
 
     /**

@@ -93,6 +93,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\CombinationFieldsProvider'
     arguments:
       - '@translator'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
 
   prestashop.core.import.fields_provider.customer:
     class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\CustomerFieldsProvider'

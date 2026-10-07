@@ -55,6 +55,9 @@ class CombinationCore extends ObjectModel
 
     public $available_date = '0000-00-00';
 
+    /** @var bool|null */
+    public $active = true;
+
     /** @var string|array Text when in stock or array of text by id_lang */
     public $available_now;
 
@@ -88,6 +91,7 @@ class CombinationCore extends ObjectModel
             'low_stock_alert' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'default_on' => ['type' => self::TYPE_BOOL, 'allow_null' => true, 'shop' => true, 'validate' => 'isBool'],
             'available_date' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'],
+            'active' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
 
             /* Lang fields */
             'available_now' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => CombinationSettings::MAX_AVAILABLE_NOW_LABEL_LENGTH],
@@ -198,6 +202,9 @@ class CombinationCore extends ObjectModel
      */
     public function add($autoDate = true, $nullValues = false)
     {
+        // The webservice nulls the fields missing from the request, which would disable the combination
+        $this->active ??= true;
+
         if ($this->default_on) {
             $this->default_on = true;
         } else {
@@ -229,6 +236,7 @@ class CombinationCore extends ObjectModel
         SpecificPriceRule::applyAllRules([(int) $this->id_product]);
 
         Product::updateDefaultAttribute($this->id_product);
+        $this->moveDefaultIfDisabled();
 
         return true;
     }
@@ -245,6 +253,8 @@ class CombinationCore extends ObjectModel
      */
     public function update($nullValues = false)
     {
+        $this->active ??= true;
+
         if ($this->default_on) {
             $this->default_on = true;
         } else {
@@ -253,8 +263,61 @@ class CombinationCore extends ObjectModel
 
         $return = parent::update($nullValues);
         Product::updateDefaultAttribute($this->id_product);
+        if ($return) {
+            $this->moveDefaultIfDisabled();
+        }
 
         return $return;
+    }
+
+    /**
+     * In each shop where this disabled combination is the default one, the first active combination becomes the default.
+     * The default stays in place when the product has no active combination left in the shop.
+     */
+    private function moveDefaultIfDisabled(): void
+    {
+        if ($this->active) {
+            return;
+        }
+
+        $db = Db::getInstance();
+        $shopIds = array_column($db->executeS(
+            'SELECT `id_shop` FROM `' . _DB_PREFIX_ . 'product_attribute_shop`
+            WHERE `id_product_attribute` = ' . (int) $this->id . ' AND `default_on` = 1 AND `active` = 0'
+        ), 'id_shop');
+        if (empty($shopIds)) {
+            return;
+        }
+
+        $productCondition = '`id_product` = ' . (int) $this->id_product;
+        $productDefaultShopId = (int) $db->getValue('SELECT `id_shop_default` FROM `' . _DB_PREFIX_ . 'product` WHERE ' . $productCondition);
+
+        foreach (array_map('intval', $shopIds) as $shopId) {
+            $newDefaultId = (int) $db->getValue(
+                'SELECT `id_product_attribute` FROM `' . _DB_PREFIX_ . 'product_attribute_shop`
+                WHERE ' . $productCondition . ' AND `id_shop` = ' . $shopId . ' AND `active` = 1
+                ORDER BY `id_product_attribute`'
+            );
+            if (!$newDefaultId) {
+                continue;
+            }
+
+            $shopCondition = ' AND `id_shop` = ' . $shopId;
+            $db->update('product_attribute_shop', ['default_on' => null], $productCondition . $shopCondition, 0, true);
+            $db->update('product_attribute_shop', ['default_on' => 1], '`id_product_attribute` = ' . $newDefaultId . $shopCondition);
+            $db->update('product_shop', ['cache_default_attribute' => $newDefaultId], $productCondition . $shopCondition);
+            if ($shopId === $productDefaultShopId) {
+                $db->update('product_attribute', ['default_on' => null], $productCondition, 0, true);
+                $db->update('product_attribute', ['default_on' => 1], '`id_product_attribute` = ' . $newDefaultId);
+                $db->update('product', ['cache_default_attribute' => $newDefaultId], $productCondition);
+            }
+
+            Hook::exec('actionUpdateDefaultCombinationAfter', [
+                'id_product' => (int) $this->id_product,
+                'id_product_attribute' => $newDefaultId,
+                'id_shop' => $shopId,
+            ]);
+        }
     }
 
     /**
@@ -432,6 +495,18 @@ class CombinationCore extends ObjectModel
 			FROM ' . _DB_PREFIX_ . 'product_attribute_combination pac
 			JOIN ' . _DB_PREFIX_ . 'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang=' . (int) $idLang . ')
 			WHERE pac.id_product_attribute=' . (int) $this->id);
+    }
+
+    /**
+     * A disabled combination cannot be ordered. Always false while the combination status feature flag is off.
+     */
+    public static function isDisabledInShop(int $idProductAttribute, int $idShop): bool
+    {
+        if (!$idProductAttribute || !Product::isCombinationStatusEnabled()) {
+            return false;
+        }
+
+        return !(new Combination($idProductAttribute, (int) Context::getContext()->language->id, $idShop))->active;
     }
 
     /**

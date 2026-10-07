@@ -6,6 +6,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -25,8 +27,10 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
     /**
      * @param TranslatorInterface $translator
      */
-    public function __construct(TranslatorInterface $translator)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        private FeatureFlagStateCheckerInterface $featureFlagStateChecker
+    ) {
         $this->translator = $translator;
     }
 
@@ -58,6 +62,7 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
             ),
             new EntityField('weight', $this->trans('Impact on weight', 'Admin.Catalog.Feature')),
             new EntityField('default_on', $this->trans('Default (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
+            new EntityField('active', $this->trans('Active (0/1)', 'Admin.Advparameters.Feature')),
             new EntityField('available_date', $this->trans('Combination availability date', 'Admin.Advparameters.Feature')),
             new EntityField('image_position', $this->trans('Choose among product images by position (1,2,3...)', 'Admin.Advparameters.Feature')),
             new EntityField('image_url', $this->trans('Image URLs (x,y,z...)', 'Admin.Advparameters.Feature')),
@@ -68,6 +73,10 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
                 $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', 'Admin.Advparameters.Help')
             ),
         ];
+
+        if (!$this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_STATUS)) {
+            $fields = array_filter($fields, fn (EntityField $field): bool => $field->getName() !== 'active');
+        }
 
         return EntityFieldCollection::createFromArray($fields);
     }
