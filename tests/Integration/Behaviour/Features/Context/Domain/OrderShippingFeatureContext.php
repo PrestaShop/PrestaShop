@@ -49,22 +49,19 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then order :orderReference should have a logged carrier change from :oldCarrierReference to :newCarrierReference
-     *
-     * @param string $orderReference
-     * @param string $oldCarrierReference
-     * @param string $newCarrierReference
      */
     public function orderShouldHaveALoggedCarrierChange(
         string $orderReference,
         string $oldCarrierReference,
         string $newCarrierReference
-    ) {
+    ): void {
         $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
         $oldCarrier = new Carrier(SharedStorage::getStorage()->get($oldCarrierReference));
         $newCarrier = new Carrier(SharedStorage::getStorage()->get($newCarrierReference));
 
         $logs = Db::getInstance()->executeS(
-            'SELECT `message`, `id_employee` FROM `' . _DB_PREFIX_ . 'log`
+            'SELECT `message`, `id_employee`, `id_shop` FROM `' . _DB_PREFIX_ . 'log`
             WHERE `object_type` = "Order" AND `object_id` = ' . (int) $orderId
         );
 
@@ -86,6 +83,7 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
 
         foreach ($matching as $log) {
             Assert::assertNotEmpty($log['id_employee'], 'The carrier change was logged without the employee who made it');
+            Assert::assertSame((int) $order->id_shop, (int) $log['id_shop'], 'The carrier change was logged under another shop than the order shop');
         }
     }
 
