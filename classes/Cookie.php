@@ -99,7 +99,6 @@ class CookieCore
         $this->_path = rawurlencode($this->_path);
         $this->_path = str_replace(['%2F', '%7E', '%2B', '%26'], ['/', '~', '+', '&'], $this->_path);
         $this->_domain = $this->getDomain($shared_urls);
-        // Standalone cookies (installer) must not query Configuration: _DB_PREFIX_ is not defined yet.
         $this->_sameSite = $this->_standalone
             ? Cookie::SAMESITE_LAX
             : Configuration::get('PS_COOKIE_SAMESITE');

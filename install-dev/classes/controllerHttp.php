@@ -242,8 +242,6 @@ class InstallControllerHttp
             $session->step = self::getSteps()->current()->getName();
         }
 
-        // AJAX DB probes must run even when session step is not "database"
-        // (jQuery cache:false adds "_"; wrong step would otherwise return HTML).
         if (Tools::getValue('checkDb') || Tools::getValue('createDb')) {
             self::getSteps()->setOffsetFromStepName('database');
             self::getSteps()->current()->getControllerInstance()->process();

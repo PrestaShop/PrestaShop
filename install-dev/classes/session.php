@@ -60,14 +60,14 @@ class InstallSession
     {
         session_name('install_' . substr(md5($_SERVER['HTTP_HOST']), 0, 12));
         $session_started = session_start();
-        if (!($session_started)
-        || (!isset($_SESSION['session_mode']) && (isset($_GET['_']) || isset($_POST['submitNext']) || isset($_POST['submitPrevious']) || isset($_POST['language'])))) {
+        if (!$session_started) {
             static::$_cookie_mode = true;
             static::$_cookie = new Cookie('ps_install', '', time() + 7200, null, true);
+
+            return;
         }
-        if ($session_started && !isset($_SESSION['session_mode'])) {
+        if (!isset($_SESSION['session_mode'])) {
             $_SESSION['session_mode'] = 'session';
-            session_write_close();
         }
     }
 
