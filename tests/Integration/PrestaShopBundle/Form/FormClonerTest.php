@@ -219,10 +219,8 @@ class FormClonerTest extends AbstractFormTester
     private function getTransformerChoiceList(DataTransformerInterface $transformer): ChoiceListInterface
     {
         $reflectionProperty = new ReflectionProperty(ChoiceToValueTransformer::class, 'choiceList');
-        $reflectionProperty->setAccessible(true);
 
         $choiceList = $reflectionProperty->getValue($transformer);
-        $reflectionProperty->setAccessible(false);
 
         return $choiceList;
     }

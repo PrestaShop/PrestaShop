@@ -62,7 +62,6 @@ class EmptyBreadcrumbPagesTest extends TestCase
         // Called through reflection so the test measures what the breadcrumb holds rather than
         // the visibility the method happens to be declared with.
         $method = new ReflectionMethod($controllerClass, 'getBreadcrumbLinks');
-        $method->setAccessible(true);
 
         return $method->invoke($controller)['links'];
     }
@@ -75,7 +74,6 @@ class EmptyBreadcrumbPagesTest extends TestCase
     private function setProperty(Controller $controller, string $name, $value): void
     {
         $property = new ReflectionProperty(Controller::class, $name);
-        $property->setAccessible(true);
         $property->setValue($controller, $value);
     }
 }

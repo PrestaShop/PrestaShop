@@ -30,7 +30,6 @@ class MailShopLogoEmbeddingTest extends TestCase
     public function testTheLogoIsAttachedOnlyWhenTheBodyCanShowIt($templateHtml, bool $expected): void
     {
         $method = new ReflectionMethod(Mail::class, 'templateShowsShopLogo');
-        $method->setAccessible(true);
 
         $this->assertSame($expected, $method->invoke(null, $templateHtml));
     }
@@ -60,7 +59,6 @@ class MailShopLogoEmbeddingTest extends TestCase
     public function testTheShippedHeaderComponentStillAsksForTheLogo(): void
     {
         $method = new ReflectionMethod(Mail::class, 'templateShowsShopLogo');
-        $method->setAccessible(true);
 
         foreach (['classic', 'modern'] as $theme) {
             $header = _PS_ROOT_DIR_ . '/mails/themes/' . $theme . '/components/header.html.twig';

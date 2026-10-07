@@ -30,7 +30,6 @@ class AdminTaxRulesGroupBulkDeleteTest extends TestCase
 
         $controller = (new ReflectionClass(AdminTaxRulesGroupController::class))->newInstanceWithoutConstructor();
         $method = new ReflectionMethod($controller, 'processBulkDeleteTaxRules');
-        $method->setAccessible(true);
 
         // Before the fix this threw a TypeError (false passed to deleteTaxRule(array)); any throw
         // here fails the test, so the call itself is the assertion. With nothing selected the

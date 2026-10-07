@@ -24,13 +24,11 @@ class DispatcherTest extends TestCase
         $reflection = new ReflectionClass(DispatcherCore::class);
         $dispatcher = $reflection->newInstanceWithoutConstructor();
         $property = $reflection->getProperty('use_routes');
-        $property->setAccessible(true);
         $property->setValue($dispatcher, $useRoutes);
 
         // Compile the supplied rule with product keywords, including for a module route
         $route = $dispatcher->computeRoute($rule, 'product', $dispatcher->default_routes['product_rule']['keywords']);
         $property = $reflection->getProperty('routes');
-        $property->setAccessible(true);
         $property->setValue($dispatcher, [1 => [1 => [$routeName => $route]]]);
 
         // Preserve the anchor after the path and any encoded query parameters
@@ -98,7 +96,6 @@ class DispatcherTest extends TestCase
         // Inject default_routes property
         $reflection = new ReflectionClass($dispatcher);
         $property = $reflection->getProperty('default_routes');
-        $property->setAccessible(true);
         $property->setValue($dispatcher, $defaultRoutes);
 
         $errors = [];
