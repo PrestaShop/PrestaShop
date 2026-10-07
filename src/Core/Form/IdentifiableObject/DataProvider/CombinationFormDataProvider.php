@@ -126,6 +126,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             $data['content'] = [
                 'description' => $content->getLocalizedDescriptions(),
                 'description_short' => $content->getLocalizedShortDescriptions(),
+                'link_rewrite' => $content->getLocalizedLinkRewrites(),
                 'meta_description' => $content->getLocalizedMetaDescriptions(),
                 'meta_title' => $content->getLocalizedMetaTitles(),
             ];

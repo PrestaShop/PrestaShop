@@ -8,11 +8,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
@@ -64,6 +66,18 @@ final class CombinationContentType extends TranslatorAwareType
                 'help' => $this->trans('Leave empty to use the product meta description.', 'Admin.Catalog.Help'),
                 'type' => TextWithLengthCounterType::class,
                 'options' => $this->getLengthCounterOptions('textarea', ProductSettings::MAX_META_DESCRIPTION_LENGTH),
+                'modify_all_shops' => true,
+            ])
+            ->add('link_rewrite', TranslatableType::class, [
+                'label' => $this->trans('Friendly URL', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Gives this combination its own URL, used as its canonical URL. Leave empty to keep the product URL.', 'Admin.Catalog.Help'),
+                'type' => TextType::class,
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_LINK_REWRITE),
+                        new Length(['max' => ProductSettings::MAX_LINK_REWRITE_LENGTH]),
+                    ],
+                ],
                 'modify_all_shops' => true,
             ])
         ;

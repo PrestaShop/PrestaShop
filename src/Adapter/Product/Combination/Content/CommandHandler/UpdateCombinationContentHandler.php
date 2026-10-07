@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Content\CommandHandler;
 
+use Cache;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Content\Repository\CombinationContentRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
@@ -35,6 +36,7 @@ final class UpdateCombinationContentHandler implements UpdateCombinationContentH
             array_filter([
                 'description' => $command->getLocalizedDescriptions(),
                 'description_short' => $command->getLocalizedShortDescriptions(),
+                'link_rewrite' => $command->getLocalizedLinkRewrites(),
                 'meta_description' => $command->getLocalizedMetaDescriptions(),
                 'meta_title' => $command->getLocalizedMetaTitles(),
             ], static fn (?array $values): bool => null !== $values)
@@ -52,6 +54,9 @@ final class UpdateCombinationContentHandler implements UpdateCombinationContentH
             $this->combinationRepository->getShopIdsByConstraint($combinationId, $command->getShopConstraint()),
             $localizedValues
         );
+        if (isset($localizedValues['link_rewrite'])) {
+            Cache::clean('Link::getCombinationLinkRewrite_*_' . $combinationId->getValue());
+        }
     }
 
     /**
@@ -63,16 +68,21 @@ final class UpdateCombinationContentHandler implements UpdateCombinationContentH
     {
         $allowIframe = (bool) $this->configuration->get('PS_ALLOW_HTML_IFRAME');
         $rules = [
-            'description' => [true, ProductSettings::MAX_DESCRIPTION_LENGTH, ProductConstraintException::INVALID_DESCRIPTION],
-            'description_short' => [true, ProductSettings::MAX_DESCRIPTION_LENGTH, ProductConstraintException::INVALID_SHORT_DESCRIPTION],
-            'meta_description' => [false, ProductSettings::MAX_META_DESCRIPTION_LENGTH, ProductConstraintException::INVALID_META_DESCRIPTION],
-            'meta_title' => [false, ProductSettings::MAX_META_TITLE_LENGTH, ProductConstraintException::INVALID_META_TITLE],
+            'description' => [ProductSettings::MAX_DESCRIPTION_LENGTH, ProductConstraintException::INVALID_DESCRIPTION],
+            'description_short' => [ProductSettings::MAX_DESCRIPTION_LENGTH, ProductConstraintException::INVALID_SHORT_DESCRIPTION],
+            'link_rewrite' => [ProductSettings::MAX_LINK_REWRITE_LENGTH, ProductConstraintException::INVALID_LINK_REWRITE],
+            'meta_description' => [ProductSettings::MAX_META_DESCRIPTION_LENGTH, ProductConstraintException::INVALID_META_DESCRIPTION],
+            'meta_title' => [ProductSettings::MAX_META_TITLE_LENGTH, ProductConstraintException::INVALID_META_TITLE],
         ];
 
         foreach ($localizedValues as $field => $values) {
-            [$isHtml, $maxLength, $errorCode] = $rules[$field];
+            [$maxLength, $errorCode] = $rules[$field];
             foreach ($values as $value) {
-                $isValid = $isHtml ? Validate::isCleanHtml($value, $allowIframe) : Validate::isGenericName($value);
+                $isValid = match ($field) {
+                    'description', 'description_short' => Validate::isCleanHtml($value, $allowIframe),
+                    'link_rewrite' => '' === $value || Validate::isLinkRewrite($value),
+                    default => Validate::isGenericName($value),
+                };
                 if (!$isValid || mb_strlen($value) > $maxLength) {
                     throw new ProductConstraintException(sprintf('Invalid combination %s "%s"', $field, $value), $errorCode);
                 }

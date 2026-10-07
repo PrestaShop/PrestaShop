@@ -29,6 +29,7 @@ Feature: Update product combination descriptions and meta tags in Back Office (B
     Then combination "product1Black" should have following content:
       | description[en-US]       |  |
       | description_short[en-US] |  |
+      | link_rewrite[en-US]      |  |
       | meta_description[en-US]  |  |
       | meta_title[en-US]        |  |
 
@@ -37,6 +38,7 @@ Feature: Update product combination descriptions and meta tags in Back Office (B
       | description[en-US]       | <p>The black one</p>       |
       | description[fr-FR]       | <p>Le noir</p>             |
       | description_short[en-US] | <p>Black summary</p>       |
+      | link_rewrite[en-US]      | black-t-shirt              |
       | meta_description[en-US]  | Black T-shirt, no stains   |
       | meta_title[en-US]        | Black universal T-shirt    |
       | meta_title[fr-FR]        | T-shirt universel noir     |
@@ -45,6 +47,8 @@ Feature: Update product combination descriptions and meta tags in Back Office (B
       | description[fr-FR]       | <p>Le noir</p>             |
       | description_short[en-US] | <p>Black summary</p>       |
       | description_short[fr-FR] |                            |
+      | link_rewrite[en-US]      | black-t-shirt              |
+      | link_rewrite[fr-FR]      |                            |
       | meta_description[en-US]  | Black T-shirt, no stains   |
       | meta_title[en-US]        | Black universal T-shirt    |
       | meta_title[fr-FR]        | T-shirt universel noir     |
@@ -66,3 +70,6 @@ Feature: Update product combination descriptions and meta tags in Back Office (B
     When I update combination "product1Black" content with following values:
       | description[en-US] | <script>alert(1)</script> |
     Then I should get error that product "description" is invalid
+    When I update combination "product1Black" content with following values:
+      | link_rewrite[en-US] | black t-shirt |
+    Then I should get error that product "link_rewrite" is invalid

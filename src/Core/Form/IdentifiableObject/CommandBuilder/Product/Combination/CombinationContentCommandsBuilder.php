@@ -28,6 +28,7 @@ final class CombinationContentCommandsBuilder implements CombinationCommandsBuil
         $config
             ->addMultiShopField('[content][description]', 'setLocalizedDescriptions', DataField::TYPE_ARRAY)
             ->addMultiShopField('[content][description_short]', 'setLocalizedShortDescriptions', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[content][link_rewrite]', 'setLocalizedLinkRewrites', DataField::TYPE_ARRAY)
             ->addMultiShopField('[content][meta_description]', 'setLocalizedMetaDescriptions', DataField::TYPE_ARRAY)
             ->addMultiShopField('[content][meta_title]', 'setLocalizedMetaTitles', DataField::TYPE_ARRAY)
         ;

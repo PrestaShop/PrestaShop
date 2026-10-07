@@ -16,12 +16,14 @@ final class CombinationContent
     /**
      * @param string[] $localizedDescriptions
      * @param string[] $localizedShortDescriptions
+     * @param string[] $localizedLinkRewrites
      * @param string[] $localizedMetaDescriptions
      * @param string[] $localizedMetaTitles
      */
     public function __construct(
         private readonly array $localizedDescriptions,
         private readonly array $localizedShortDescriptions,
+        private readonly array $localizedLinkRewrites,
         private readonly array $localizedMetaDescriptions,
         private readonly array $localizedMetaTitles,
     ) {
@@ -41,6 +43,14 @@ final class CombinationContent
     public function getLocalizedShortDescriptions(): array
     {
         return $this->localizedShortDescriptions;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedLinkRewrites(): array
+    {
+        return $this->localizedLinkRewrites;
     }
 
     /**

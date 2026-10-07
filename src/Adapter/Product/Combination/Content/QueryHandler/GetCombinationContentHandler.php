@@ -35,6 +35,7 @@ final class GetCombinationContentHandler implements GetCombinationContentHandler
         return new CombinationContent(
             $localizedValues['description'],
             $localizedValues['description_short'],
+            $localizedValues['link_rewrite'],
             $localizedValues['meta_description'],
             $localizedValues['meta_title']
         );

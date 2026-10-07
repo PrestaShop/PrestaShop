@@ -235,6 +235,9 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         if (isset($data['description_short'])) {
             $command->setLocalizedShortDescriptions($data['description_short']);
         }
+        if (isset($data['link_rewrite'])) {
+            $command->setLocalizedLinkRewrites($data['link_rewrite']);
+        }
         if (isset($data['meta_description'])) {
             $command->setLocalizedMetaDescriptions($data['meta_description']);
         }

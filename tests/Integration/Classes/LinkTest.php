@@ -8,8 +8,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Classes;
 
+use Cache;
 use Context;
 use Dispatcher;
+use Link;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionProperty;
@@ -29,6 +31,8 @@ class LinkTest extends TestCase
         // Restore the Dispatcher singleton state mutated by the tests, otherwise the forced
         // use_routes value leaks into other test classes and changes their generated URLs.
         $this->getUseRoutesProperty()->setValue(Dispatcher::getInstance(), $this->originalUseRoutes);
+        $this->setCombinationSeoEnabled(null);
+        Cache::clean('Link::getCombinationLinkRewrite_*');
         parent::tearDown();
     }
 
@@ -38,6 +42,13 @@ class LinkTest extends TestCase
         $property->setAccessible(true);
 
         return $property;
+    }
+
+    private function setCombinationSeoEnabled(?bool $isEnabled): void
+    {
+        $property = (new ReflectionClass(Link::class))->getProperty('isCombinationSeoEnabled');
+        $property->setAccessible(true);
+        $property->setValue(null, $isEnabled);
     }
 
     private function getProductLink(
@@ -72,6 +83,18 @@ class LinkTest extends TestCase
         $filename = basename($this->getProductLink(true, 1, 2)['path']);
 
         $this->assertEquals('1-2-hummingbird-printed-t-shirt.html', $filename);
+    }
+
+    public function testUrlUsesTheCombinationLinkRewrite(): void
+    {
+        $this->setCombinationSeoEnabled(true);
+        $cacheKeyPrefix = 'Link::getCombinationLinkRewrite_' . Context::getContext()->shop->id . '_';
+        Cache::store($cacheKeyPrefix . '2', [Context::getContext()->language->id => 'blue-t-shirt']);
+        Cache::store($cacheKeyPrefix . '3', []);
+
+        $this->assertEquals('1-2-blue-t-shirt.html', basename($this->getProductLink(true, 1, 2)['path']));
+        $this->assertEquals('1-3-hummingbird-printed-t-shirt.html', basename($this->getProductLink(true, 1, 3)['path']));
+        $this->assertEquals('1-hummingbird-printed-t-shirt.html', basename($this->getProductLink(true, 1, null)['path']));
     }
 
     public function testUrlIgnoresVariantIfNotSpecifiedWithUrlRewriting(): void

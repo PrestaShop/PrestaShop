@@ -31,6 +31,11 @@ class UpdateCombinationContentCommand
     /**
      * @var string[]|null
      */
+    private ?array $localizedLinkRewrites = null;
+
+    /**
+     * @var string[]|null
+     */
     private ?array $localizedMetaDescriptions = null;
 
     /**
@@ -87,6 +92,24 @@ class UpdateCombinationContentCommand
     public function setLocalizedShortDescriptions(array $localizedShortDescriptions): self
     {
         $this->localizedShortDescriptions = $localizedShortDescriptions;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedLinkRewrites(): ?array
+    {
+        return $this->localizedLinkRewrites;
+    }
+
+    /**
+     * @param string[] $localizedLinkRewrites
+     */
+    public function setLocalizedLinkRewrites(array $localizedLinkRewrites): self
+    {
+        $this->localizedLinkRewrites = $localizedLinkRewrites;
 
         return $this;
     }
