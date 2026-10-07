@@ -316,13 +316,19 @@ class CspController extends PrestaShopAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_security_csp_index');
+        // The headers block is global but shown on both tabs; keep the merchant on the tab they saved from.
+        return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($this->resolveContext($request)));
     }
 
-    /** The page shows one surface at a time, selected by ?context (default the storefront). */
+    /**
+     * The page shows one surface at a time, selected by ?context (default the storefront). The bulk-revoke
+     * POST has no query string, so it carries the surface as a route default instead (request attributes).
+     */
     private function resolveContext(Request $request): CspContext
     {
-        return 'admin' === $request->query->get('context') ? CspContext::ADMIN : CspContext::FRONT;
+        $context = $request->query->get('context') ?? $request->attributes->get('context');
+
+        return 'admin' === $context ? CspContext::ADMIN : CspContext::FRONT;
     }
 
     /** @return array<string, string> the query params that keep the current surface on a redirect back to the page */

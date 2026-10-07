@@ -11,6 +11,9 @@ admin_security_csp_search:
     _controller: 'PrestaShopBundle\Controller\Admin\CommonController::searchGridAction'
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.csp_log
     redirectRoute: admin_security_csp_index
+    # Keep the current surface (?context=admin) when the grid filter redirects back to the page.
+    redirectQueryParamsToKeep:
+      - 'context'
     _parent: admin_security_csp_index
 
 admin_security_csp_save:
@@ -65,3 +68,13 @@ admin_security_csp_bulk_revoke:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::bulkRevokeAction'
     _parent: admin_security_csp_index
+
+# The bulk-action modal posts to a bare route (the shared bulk template drops route params),
+# so the back-office surface gets its own route that carries the context as a route default.
+admin_security_csp_bulk_revoke_admin:
+  path: /bulk-revoke/admin
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::bulkRevokeAction'
+    _parent: admin_security_csp_index
+    context: admin
