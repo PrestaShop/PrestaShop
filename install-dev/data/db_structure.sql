@@ -1836,6 +1836,17 @@ CREATE TABLE `PREFIX_product_attribute_lang` (
   PRIMARY KEY (`id_product_attribute`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
+CREATE TABLE `PREFIX_product_attribute_content` (
+  `id_product_attribute` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL,
+  `id_lang` int(10) unsigned NOT NULL,
+  `description` MEDIUMTEXT,
+  `description_short` MEDIUMTEXT,
+  `meta_description` varchar(512) DEFAULT NULL,
+  `meta_title` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id_product_attribute`, `id_shop`, `id_lang`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 /* shop specific attribute info */
 CREATE TABLE `PREFIX_product_attribute_shop` (
   `id_product` int(10) unsigned NOT NULL,
