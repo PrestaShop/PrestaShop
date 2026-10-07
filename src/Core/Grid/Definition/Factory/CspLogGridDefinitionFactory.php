@@ -221,6 +221,8 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                             'filterId' => self::GRID_ID,
                         ],
                         'redirect_route' => 'admin_security_csp_index',
+                        // Keep the current surface so Reset stays on the back-office tab.
+                        'redirect_route_params' => $this->contextRouteParams(),
                     ])
                     ->setAssociatedColumn('actions')
             );
@@ -253,7 +255,9 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('revoke_selection'))
                     ->setName($this->trans('Revoke selected', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
-                        'submit_route' => 'admin_security_csp_bulk_revoke',
+                        // The bulk modal posts to a bare route (params are dropped), so the back office
+                        // uses a context-carrying route; otherwise the revoke would run on the storefront surface.
+                        'submit_route' => $this->isAdminContext() ? 'admin_security_csp_bulk_revoke_admin' : 'admin_security_csp_bulk_revoke',
                         'confirm_message' => $this->trans('Revoke the selected allowed sources?', [], 'Admin.Advparameters.Feature'),
                         'modal_options' => new ModalOptions([
                             'title' => $this->trans('Revoke selection', [], 'Admin.Advparameters.Feature'),

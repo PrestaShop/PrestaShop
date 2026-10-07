@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AddCspRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspRuleId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
@@ -87,6 +88,56 @@ class CspControllerTest extends GridControllerTestCase
         $this->assertRuleCount(0, 'Bulk revoke posted with the grid\'s own field name must delete the rule');
     }
 
+    public function testAdminBulkRevokeRunsOnTheBackOfficeSurface(): void
+    {
+        // Seed one curated rule on the ADMIN surface (stored at shop id 0, context=admin).
+        /** @var CspRuleId $ruleId */
+        $ruleId = $this->client->getContainer()->get('prestashop.core.command_bus')->handle(
+            new AddCspRuleCommand(self::DIRECTIVE, self::SOURCE, ShopConstraint::shop(self::SHOP_ID), CspContext::ADMIN)
+        );
+        $ruleId = $ruleId->getValue();
+
+        // The seeded admin rule must render a bulk checkbox on the admin grid, and the bulk action must
+        // target the context-carrying admin route; the bulk modal posts to a bare route with no query
+        // string, so without it the revoke would resolve against the storefront surface and silently fail.
+        $crawler = $this->client->request('GET', $this->generateGridUrl(['context' => 'admin']));
+        $this->assertResponseIsSuccessful();
+
+        $checkbox = $crawler->filter('.js-bulk-action-checkbox')->reduce(
+            fn (Crawler $node) => (int) $node->attr('value') === $ruleId
+        );
+        $this->assertSame(1, $checkbox->count(), 'The seeded admin rule must render a bulk checkbox on the admin grid');
+        $this->assertStringContainsString(
+            $this->router->generate('admin_security_csp_bulk_revoke_admin'),
+            (string) $this->client->getResponse()->getContent(),
+            'The admin grid bulk action must target the admin-context route'
+        );
+
+        $this->client->request('POST', $this->router->generate('admin_security_csp_bulk_revoke_admin'), ['csp_log_bulk_action' => [$ruleId]]);
+        $this->assertResponseRedirects();
+
+        $this->assertAdminRuleCount(0, 'Admin bulk revoke must delete the admin rule, not run on the storefront surface');
+    }
+
+    public function testAdminGridFilterSearchKeepsTheBackOfficeSurface(): void
+    {
+        // The grid filter form has no explicit action, so it posts to the current URL (which carries
+        // ?context=admin). The search redirect must keep that param, or filtering the back-office log
+        // bounces the merchant to the storefront tab.
+        $this->client->request(
+            'POST',
+            $this->router->generate('admin_security_csp_search', ['context' => 'admin']),
+            ['csp_log' => ['directive' => 'script-src']]
+        );
+
+        $this->assertResponseRedirects();
+        $this->assertStringContainsString(
+            'context=admin',
+            (string) $this->client->getResponse()->headers->get('Location'),
+            'Filtering the admin grid must redirect back to the back-office surface'
+        );
+    }
+
     public function testRevokingAnInvalidIdShowsTheNotFoundMessageNotTheDuplicateMessage(): void
     {
         // id 0 fails CspRuleId validation (INVALID_ID). Before the code-keyed error map this showed
@@ -109,6 +160,19 @@ class CspControllerTest extends GridControllerTestCase
         $count = (int) $connection->fetchOne(
             'SELECT COUNT(*) FROM ' . $prefix . 'csp_rule WHERE id_shop = :shop AND directive = :directive AND source = :source',
             ['shop' => self::SHOP_ID, 'directive' => self::DIRECTIVE, 'source' => self::SOURCE]
+        );
+
+        $this->assertSame($expected, $count, $message);
+    }
+
+    private function assertAdminRuleCount(int $expected, string $message): void
+    {
+        $connection = $this->client->getContainer()->get('doctrine.dbal.default_connection');
+        $prefix = $this->client->getContainer()->getParameter('database_prefix');
+
+        $count = (int) $connection->fetchOne(
+            'SELECT COUNT(*) FROM ' . $prefix . "csp_rule WHERE id_shop = 0 AND context = 'admin' AND directive = :directive AND source = :source",
+            ['directive' => self::DIRECTIVE, 'source' => self::SOURCE]
         );
 
         $this->assertSame($expected, $count, $message);
