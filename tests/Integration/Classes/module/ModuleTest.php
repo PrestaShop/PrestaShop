@@ -7,10 +7,13 @@
 namespace Tests\Integration\Classes\module;
 
 use Cache;
+use Context;
+use Db;
 use Module;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use ReflectionMethod;
+use Shop;
 use Tests\Integration\Utility\ContextMockerTrait;
 
 /**
@@ -136,10 +139,47 @@ class ModuleTest extends TestCase
         $this->assertTrue($module->enable());
         $this->assertTrue(Module::isEnabled('bankwire'));
 
+        // Another process removes the shop association, the lookups are only reset by clearing the cache
+        Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $module->id);
+        Cache::clear();
+        $this->assertTrue(Module::isInstalled('bankwire'));
+        $this->assertFalse(Module::isEnabled('bankwire'));
+
+        $this->assertTrue($module->enable());
+        $this->assertTrue(Module::isEnabled('bankwire'));
+
         $this->assertTrue($module->uninstall());
         $this->assertSame(0, Module::getModuleIdByName('bankwire'));
         $this->assertFalse(Module::isInstalled('bankwire'));
         $this->assertFalse(Module::isEnabled('bankwire'));
+    }
+
+    public function testIsEnabledFollowsContextShop(): void
+    {
+        if (Module::isInstalled('bankwire')) {
+            Module::getInstanceByName('bankwire')->uninstall();
+        }
+        $this->assertTrue(ModuleManagerBuilder::getInstance()->build()->install('bankwire'));
+        $module = Module::getInstanceByName('bankwire');
+        $context = Context::getContext();
+        $contextShop = $context->shop;
+
+        try {
+            // Enabled in shop 1 only
+            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $module->id . ' AND `id_shop` <> 1');
+            Cache::clear();
+            $this->assertSame(1, (int) $contextShop->id);
+            $this->assertTrue(Module::isEnabled('bankwire'));
+
+            $otherShop = new Shop();
+            $otherShop->id = 2;
+            $context->shop = $otherShop;
+            $this->assertFalse(Module::isEnabled('bankwire'));
+            $this->assertTrue(Module::isInstalled('bankwire'));
+        } finally {
+            $context->shop = $contextShop;
+            $module->uninstall();
+        }
     }
 }
 
