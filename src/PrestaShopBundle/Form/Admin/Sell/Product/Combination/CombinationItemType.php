@@ -11,6 +11,8 @@ use Currency;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\ButtonCollectionType;
 use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
@@ -55,7 +57,8 @@ class CombinationItemType extends TranslatorAwareType
         array $locales,
         Currency $defaultCurrency,
         FeatureInterface $multiStoreFeature,
-        int $contextShopId
+        int $contextShopId,
+        private ?FeatureFlagStateCheckerInterface $featureFlagStateChecker = null
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
@@ -204,6 +207,18 @@ class CombinationItemType extends TranslatorAwareType
                 'delta_label' => false,
                 'label' => $this->trans('Quantity', 'Admin.Global'),
             ])
+        ;
+
+        if ($this->featureFlagStateChecker?->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_STATUS)) {
+            $builder->add('active', CheckboxType::class, [
+                'label' => $this->trans('Enabled', 'Admin.Global'),
+                'attr' => [
+                    'class' => 'combination-active-input',
+                ],
+            ]);
+        }
+
+        $builder
             ->add('is_default', RadioType::class, [
                 'label' => $this->trans('Default combination', 'Admin.Catalog.Feature'),
                 'attr' => [

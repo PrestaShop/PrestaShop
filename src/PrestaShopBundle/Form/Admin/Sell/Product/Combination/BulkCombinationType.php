@@ -7,16 +7,27 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\AccordionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * For combination update in bulk action
  */
 class BulkCombinationType extends TranslatorAwareType
 {
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        private ?FeatureFlagStateCheckerInterface $featureFlagStateChecker = null
+    ) {
+        parent::__construct($translator, $locales);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -35,6 +46,10 @@ class BulkCombinationType extends TranslatorAwareType
                 'product_id' => $options['product_id'],
             ])
         ;
+
+        if ($this->featureFlagStateChecker?->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_STATUS)) {
+            $builder->add('status', BulkCombinationStatusType::class);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

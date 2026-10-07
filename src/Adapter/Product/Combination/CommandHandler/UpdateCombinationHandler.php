@@ -62,8 +62,9 @@ class UpdateCombinationHandler implements UpdateCombinationHandlerInterface
             CannotUpdateCombinationException::FAILED_UPDATE_COMBINATION
         );
 
-        // Only update default if the property is set AND is true
-        if (true === $command->isDefault()) {
+        // The forms send is_default again for the current default combination: when the same command disables it,
+        // the default has just been moved to an active combination and must not be written back
+        if (true === $command->isDefault() && false !== $command->isActive()) {
             $this->defaultCombinationUpdater->setDefaultCombination(
                 $command->getCombinationId(),
                 $command->getShopConstraint()
