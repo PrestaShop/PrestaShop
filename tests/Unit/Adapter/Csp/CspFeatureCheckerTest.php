@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Csp;
 
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
@@ -63,6 +65,22 @@ class CspFeatureCheckerTest extends TestCase
     public function testTheBackOfficeIsReportOnlyByDefault(): void
     {
         $this->assertTrue($this->checker(flagEnabled: true, config: [])->isReportOnlyForContext(CspContext::ADMIN, 0));
+    }
+
+    /**
+     * The lockout kill-switch runs in a separate process: defining the constant cannot be undone, so it
+     * must not leak into the other tests in this class.
+     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function testTheKillSwitchForcesTheBackOfficeOffWithoutAffectingTheStorefront(): void
+    {
+        define('_PS_CSP_ADMIN_DISABLE_', true);
+
+        $checker = $this->checker(flagEnabled: true, config: ['PS_CSP_ADMIN_ENABLED' => '1', 'PS_CSP_ENABLED' => '1']);
+
+        $this->assertFalse($checker->isEnabledForContext(CspContext::ADMIN, 0), 'The kill-switch must disable the back office even with the admin toggle on');
+        $this->assertTrue($checker->isEnabledForShop(1), 'The admin kill-switch must not affect the storefront');
     }
 
     public function testItReturnsAConfiguredExternalReportTarget(): void
