@@ -35,11 +35,13 @@ RUN mkdir -p $NVM_DIR \
 ENV NODE_PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin
 ENV PATH=$PATH:$NODE_PATH
 
-# Old version of base image use Archived repository of Debian (Buster)
-RUN if [ "$VERSION" = "7.2-apache" ]; then \
-    sed -ie "s/deb.debian.org/archive.debian.org/g" /etc/apt/sources.list \
-    && sed -ie "s/security.debian.org/archive.debian.org/g" /etc/apt/sources.list \
-    && echo 'Sources list updated'; \
+# Base images on an end-of-life Debian (Buster for 7.2, Bullseye for 7.3 to 8.0) must use the archived repository
+RUN . /etc/os-release \
+  && if [ "$VERSION_CODENAME" = "buster" ] || [ "$VERSION_CODENAME" = "bullseye" ]; then \
+    for f in /etc/apt/sources.list /etc/apt/sources.list.d/*.list; do \
+      [ -f "$f" ] && sed -i -e "s/deb.debian.org/archive.debian.org/g" -e "s/security.debian.org/archive.debian.org/g" "$f"; \
+    done; \
+    echo "Sources list updated to archive.debian.org for $VERSION_CODENAME"; \
   fi
 # Install mailutils to make sendmail work
 RUN apt update && apt install -y mailutils
