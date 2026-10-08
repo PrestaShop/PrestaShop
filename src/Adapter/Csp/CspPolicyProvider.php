@@ -22,6 +22,24 @@ use Psr\Log\LoggerInterface;
  */
 final class CspPolicyProvider
 {
+    /**
+     * First-party sources the back office itself loads, so the base admin policy pre-allows them and a
+     * merchant never has to curate PrestaShop's own resources: the Addons marketplace and project sites
+     * (`*.prestashop.com`, `*.prestashop-project.org`), hosted assets (`assets.prestashop3.com`,
+     * `storage.googleapis.com`), Google Fonts and employee avatars (`*.gravatar.com`). Only hosts are
+     * listed: weakening keywords (`'unsafe-inline'`, `'unsafe-eval'`) that the back office also uses are
+     * deliberately left to curation, so enabling admin CSP does not silently weaken script-src.
+     *
+     * @var array<string, list<string>>
+     */
+    private const ADMIN_FIRST_PARTY_SOURCES = [
+        'script-src' => ['https://storage.googleapis.com', 'https://assets.prestashop3.com'],
+        'style-src' => ['https://fonts.googleapis.com'],
+        'font-src' => ['https://fonts.gstatic.com'],
+        'img-src' => ['https://*.prestashop.com', 'https://*.prestashop-project.org', 'https://*.gravatar.com'],
+        'frame-src' => ['https://*.prestashop.com'],
+    ];
+
     public function __construct(
         private readonly CspRuleRepository $ruleRepository,
         private readonly CspPolicyHookDispatcherInterface $hookDispatcher,
@@ -38,6 +56,13 @@ final class CspPolicyProvider
         $policy = new CspPolicy();
 
         $this->addBasePolicy($policy);
+
+        // The back office pulls a handful of PrestaShop-owned resources; pre-allow them so admin CSP is
+        // usable without curating core's own first-party domains. The storefront keeps the tight base.
+        if (CspContext::ADMIN === $context) {
+            $this->addAdminFirstPartySources($policy);
+        }
+
         $this->addCuratedRules($policy, $context, $shopId);
 
         // Theme contributions and the storefront policy hook only apply to the front office; the back
@@ -76,6 +101,15 @@ final class CspPolicyProvider
         $policy->addSource('manifest-src', "'self'");
         $policy->addSource('media-src', "'self'");
         $policy->addSource('worker-src', "'self'");
+    }
+
+    private function addAdminFirstPartySources(CspPolicy $policy): void
+    {
+        foreach (self::ADMIN_FIRST_PARTY_SOURCES as $directive => $sources) {
+            foreach ($sources as $source) {
+                $policy->addSource($directive, $source);
+            }
+        }
     }
 
     private function addCuratedRules(CspPolicy $policy, CspContext $context, int $shopId): void
