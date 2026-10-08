@@ -445,6 +445,14 @@ services:
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ShopGroupFormDataProvider'
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ShopGroupFormOptionsProvider'
 
+  prestashop.core.form.identifiable_object.builder.shop_url_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ShopUrl\ShopUrlType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ShopUrlFormDataProvider'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ShopUrlFormOptionsProvider'
+
   prestashop.core.form.identifiable_object.builder.store_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
