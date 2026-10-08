@@ -7,12 +7,9 @@
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
-use Symfony\Component\Config\Resource\DirectoryResource;
-use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -26,110 +23,116 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $installedModules = $container->getParameter('prestashop.installed_modules');
-        $compilerPassList = $this->getCompilerPassList($installedModules);
-        /** @var CompilerPassInterface $compilerPass */
-        foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {
+        $compilerPassList = self::getCompilerPassList(
+            $container->getParameter('prestashop.installed_modules'),
+            $container->getParameter('prestashop.module_dir')
+        );
+
+        foreach ($compilerPassList as $compilerResource => $compilerPass) {
             $compilerPass->process($container);
-            $container->addResource(
-                is_dir($compilerResourcePath) ?
-                new DirectoryResource($compilerResourcePath) :
-                new FileResource($compilerResourcePath)
-            );
+            /*
+             * Because this method gets installed_modules and api_platform does only with active_modules
+             * if src/Entity DirectoryResource is not added previously by PrestaShopExtension
+             * add it here if required.
+             *
+             */
+            $container->fileExists($compilerResource, '/\.(xml|ya?ml|php)$/');
         }
     }
 
     /**
-     * Returns a list of CompilerPassInterface indexed with their associated resource.
+     * Returns a list of DoctrineOrmMappingsPass instances, indexed by their associated /src/Entity directory resource.
      *
-     * @param array $activeModules
+     * @param array $installedModules
+     * @param string $modulesDir
      *
-     * @return array
+     * @return array<string, DoctrineOrmMappingsPass>
      */
-    private function getCompilerPassList(array $activeModules)
+    private function getCompilerPassList(array $installedModules, string $modulesDir): array
     {
+        /*
+         * Retrieves a list of paths to all `/src/Entity` directories found across installed modules.
+         */
+        $modulesDirectoriesWithEntities = Finder::create()->directories()->in($modulesDir)->depth(0)->filter(
+            fn (SplFileInfo $moduleFolderWithEntity): bool => in_array($moduleFolderWithEntity->getFilename(), $installedModules) && is_dir($moduleFolderWithEntity->getRealPath() . '/src/Entity')
+        );
+
         $mappingsPassList = [];
-        /** @var SplFileInfo $moduleFolder */
-        foreach ($this->getModulesFolders() as $moduleFolder) {
-            if (in_array($moduleFolder->getFilename(), $activeModules)
-                && is_dir($moduleFolder . '/src/Entity')
-            ) {
-                $moduleEntityDirectory = realpath($moduleFolder . '/src/Entity');
-                if ($moduleEntityDirectory === false) {
-                    continue;
-                }
-                $moduleNamespace = $this->getModuleNamespace($moduleEntityDirectory);
-                if (empty($moduleNamespace)) {
-                    continue;
-                }
-                $mappingPass = $this->createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory);
-                $mappingsPassList[$moduleEntityDirectory] = $mappingPass;
+
+        foreach ($modulesDirectoriesWithEntities as $moduleDirectoryWithEntity) {
+            $moduleEntityDirectory = $moduleDirectoryWithEntity->getRealPath() . '/src/Entity';
+
+            /*
+             * Recursively removes index.php files from '/src/Entity' directories.
+             *
+             * Note: `PrestaShopBundle\DependencyInjection\PrestaShopExtension::prependApiConfig()`
+             * already handles the deletion of all index files.
+             *
+             */
+            (new Filesystem())->remove(Finder::create()->files()->in($moduleEntityDirectory)->name('index.php'));
+
+            $moduleNamespace = self::parseEntityDirectory($moduleEntityDirectory);
+
+            if (empty($moduleNamespace)) {
+                continue;
             }
+
+            $mappingsPassList[$moduleEntityDirectory] = $moduleNamespace['has_attributes'] ?
+                DoctrineOrmMappingsPass::createAttributeMappingDriver(
+                    [$moduleNamespace['namespace']],
+                    [$moduleEntityDirectory],
+                    [],
+                    false,
+                    []
+                ) :
+                DoctrineOrmMappingsPass::createAnnotationMappingDriver(
+                    [$moduleNamespace['namespace']],
+                    [$moduleEntityDirectory],
+                    [],
+                    false,
+                    []
+                );
         }
 
         return $mappingsPassList;
     }
 
     /**
-     * This method is derived from DoctrineOrmMappingsPass::createAnnotationMappingDriver, sadly the driver includes
-     * ALL the files present in the folder and as modules include an index.php file containing an exit statement the
-     * whole process was stopped. So we manually create the DoctrineOrmMappingsPass so that AnnotationDriver ignores
-     * the index.php file.
-     *
-     * @param string $moduleNamespace
      * @param string $moduleEntityDirectory
      *
-     * @return DoctrineOrmMappingsPass
+     * @return array
      */
-    private function createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory)
+    private function parseEntityDirectory(string $moduleEntityDirectory): array
     {
-        $reader = new Reference('annotation_reader');
-        $driverDefinition = new Definition('Doctrine\ORM\Mapping\Driver\AnnotationDriver', [$reader, [$moduleEntityDirectory]]);
-        $indexFile = $moduleEntityDirectory . '/index.php';
-        if (file_exists($indexFile)) {
-            $driverDefinition->addMethodCall('addExcludePaths', [[$indexFile]]);
-        }
+        foreach ((new Finder())->files()->in($moduleEntityDirectory)->name('*.php') as $phpFile) {
+            $content = $phpFile->getContents();
 
-        return new DoctrineOrmMappingsPass($driverDefinition, [$moduleNamespace], [], false, []);
-    }
-
-    /**
-     * @param string $moduleEntityDirectory
-     *
-     * @return string
-     */
-    private function getModuleNamespace(string $moduleEntityDirectory)
-    {
-        $finder = new Finder();
-        $finder->files()->in($moduleEntityDirectory)->name('*.php');
-
-        foreach ($finder as $phpFile) {
-            if (preg_match('~namespace[ \t]+(.*)[ \t]*;~Um', $phpFile->getContents(), $matches)) {
+            if (preg_match('~namespace[ \t]+(.*)[ \t]*;~Um', $content, $matches)) {
                 if (($namespace = trim($matches[1])) === '') {
                     continue;
                 }
+
+                $hasAttributes = str_contains($content, '#[ORM\\') || str_contains($content, '#[\\Doctrine\\ORM\\');
 
                 // We strip the last part of the namespace to get the namespace matching with the entity folder
                 // This is required in case you have sub-folders like src/Entity/Category/Category.php
                 // The first matching PHP file would be in a sub namespace and be returned, thus the Entity
                 // namespace would not be parsed completely
                 if (($pos = strpos($namespace, '\\Entity')) !== false) {
-                    return substr($namespace, 0, $pos + strlen('\\Entity'));
+                    return [
+                        'namespace' => substr($namespace, 0, $pos + strlen('\\Entity')),
+                        'has_attributes' => $hasAttributes,
+                    ];
                 }
 
                 // Fallback: if for some reason there's no '\Entity', I'll use what was found anyway
-                return $namespace;
+                return [
+                    'namespace' => $namespace,
+                    'has_attributes' => $hasAttributes,
+                ];
             }
         }
 
-        return '';
-    }
-
-    /**
-     * @return Finder
-     */
-    private function getModulesFolders()
-    {
-        return Finder::create()->directories()->in(_PS_MODULE_DIR_)->depth(0);
+        return [];
     }
 }
