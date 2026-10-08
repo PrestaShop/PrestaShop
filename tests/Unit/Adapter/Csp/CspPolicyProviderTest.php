@@ -138,7 +138,32 @@ class CspPolicyProviderTest extends TestCase
         $theme = ['script-src' => ['https://theme.example.com']];
         $directives = $this->provider([], null, $hookDispatcher)->getPolicy(CspContext::ADMIN, 0, $theme)->getDirectives();
 
-        $this->assertSame(["'self'"], $directives['script-src'], 'A theme contribution must not reach the admin policy');
+        // The theme source is absent; the predefined first-party hosts remain (see the dedicated test).
+        $this->assertNotContains('https://theme.example.com', $directives['script-src'], 'A theme contribution must not reach the admin policy');
+        $this->assertContains("'self'", $directives['script-src']);
+    }
+
+    public function testTheBackOfficePolicyPreAllowsPrestaShopFirstPartyResources(): void
+    {
+        // The back office loads a handful of PrestaShop-owned resources; the admin base pre-allows them
+        // so a merchant does not have to curate core's own first-party domains.
+        $admin = $this->provider()->getPolicy(CspContext::ADMIN, 0)->getDirectives();
+
+        $this->assertSame(["'self'", 'https://storage.googleapis.com', 'https://assets.prestashop3.com'], $admin['script-src']);
+        $this->assertSame(["'self'", 'https://fonts.googleapis.com'], $admin['style-src']);
+        $this->assertSame(["'self'", 'data:', 'https://fonts.gstatic.com'], $admin['font-src']);
+        $this->assertSame(["'self'", 'data:', 'https://*.prestashop.com', 'https://*.prestashop-project.org', 'https://*.gravatar.com'], $admin['img-src']);
+        $this->assertSame(["'self'", 'https://*.prestashop.com'], $admin['frame-src']);
+
+        // No weakening keyword is pre-baked: admin script-src stays host-only, inline/eval are curated.
+        $this->assertNotContains("'unsafe-inline'", $admin['script-src']);
+        $this->assertNotContains("'unsafe-eval'", $admin['script-src']);
+
+        // The storefront keeps the tight base: none of these first-party hosts leak onto it.
+        $front = $this->provider()->getPolicy(CspContext::FRONT, self::SHOP_ID)->getDirectives();
+        $this->assertSame(["'self'"], $front['script-src']);
+        $this->assertSame(["'self'", 'data:'], $front['img-src']);
+        $this->assertSame(["'self'"], $front['frame-src']);
     }
 
     /**
