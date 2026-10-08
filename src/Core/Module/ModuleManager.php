@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Event\ModuleManagementEvent;
+use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -394,26 +395,31 @@ class ModuleManager implements ModuleManagerInterface
 
     protected function upgradeMigration(string $name): bool
     {
-        $module_list = LegacyModule::getModulesOnDisk();
-
-        foreach ($module_list as $module) {
-            if ($module->name != $name) {
-                continue;
-            }
-
-            if (LegacyModule::initUpgradeModule($module)) {
-                $legacy_instance = LegacyModule::getInstanceByName($name);
-                $legacy_instance->runUpgradeModule();
-
-                LegacyModule::upgradeModuleVersion($name, $module->version);
-
-                return !count($legacy_instance->getErrors());
-            }
-
-            return true;
+        $legacyInstance = LegacyModule::getInstanceByName($name);
+        if (!$legacyInstance) {
+            return false;
         }
 
-        return false;
+        $databaseData = $this->moduleDataProvider->findByName($name);
+        if (empty($databaseData['installed'])) {
+            return false;
+        }
+
+        $module = new stdClass();
+        $module->name = $legacyInstance->name;
+        $module->installed = true;
+        $module->database_version = $databaseData['version'];
+        $module->version = LegacyModule::getModuleVersion($legacyInstance);
+
+        if (LegacyModule::initUpgradeModule($module)) {
+            $legacyInstance->runUpgradeModule();
+
+            LegacyModule::upgradeModuleVersion($name, $module->version);
+
+            return !count($legacyInstance->getErrors());
+        }
+
+        return true;
     }
 
     private function assertIsInstalled(string $name): void
