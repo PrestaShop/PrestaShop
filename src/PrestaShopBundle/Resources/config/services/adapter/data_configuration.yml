@@ -258,6 +258,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.core.email.email_configurator:
     class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'

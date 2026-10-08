@@ -26,8 +26,10 @@ services:
       $cspContext: !php/enum PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext::ADMIN
 
   # Static (non-CSP) security headers on back-office responses (also covers legacy admin pages via the
-  # Symfony LegacyController). Same subscriber as the storefront.
-  PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersSubscriber: ~
+  # Symfony LegacyController). Same subscriber as the storefront, reading the all-shops value.
+  PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersSubscriber:
+    arguments:
+      $allShopsScope: true
 
   # Priority 40 to be called before the RouterListener (which has priority 32)
   PrestaShopBundle\EventListener\Admin\LegacyUrlListener:

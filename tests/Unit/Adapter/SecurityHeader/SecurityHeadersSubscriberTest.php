@@ -11,7 +11,8 @@ namespace Tests\Unit\Adapter\SecurityHeader;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersProvider;
 use PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersSubscriber;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -96,12 +97,47 @@ class SecurityHeadersSubscriberTest extends TestCase
         $this->assertFalse($plain->headers->has('Strict-Transport-Security'));
     }
 
+    public function testTheBackOfficeScopeReadsTheAllShopsValueAndTheStorefrontTheCurrentContext(): void
+    {
+        // The back office is a single global surface; the storefront reads the shop being served
+        // (null constraint = current context).
+        $this->assertEquals(ShopConstraint::allShops(), $this->scopeReadWith(allShopsScope: true));
+        $this->assertNull($this->scopeReadWith(allShopsScope: false));
+    }
+
+    /** Drives the subscriber once and returns the ShopConstraint its reads were scoped with. */
+    private function scopeReadWith(bool $allShopsScope): ?ShopConstraint
+    {
+        $seen = [];
+        $configuration = $this->createMock(ShopConfigurationInterface::class);
+        $configuration->method('get')->willReturnCallback(
+            function (string $key, $default = null, ?ShopConstraint $shopConstraint = null) use (&$seen) {
+                $seen[] = $shopConstraint;
+
+                return self::DEFAULTS[$key] ?? $default;
+            }
+        );
+
+        $flagChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
+        $flagChecker->method('isEnabled')->willReturn(true);
+
+        $subscriber = new SecurityHeadersSubscriber(new SecurityHeadersProvider($configuration, $flagChecker), $allShopsScope);
+        $subscriber->onKernelResponse($this->event(HttpKernelInterface::MAIN_REQUEST, new Response()));
+
+        $this->assertNotEmpty($seen, 'The provider must read the configuration at least once');
+        foreach ($seen as $shopConstraint) {
+            $this->assertEquals($seen[0], $shopConstraint, 'Every read must use the same scope');
+        }
+
+        return $seen[0];
+    }
+
     /**
      * @param array<string, string> $config
      */
     private function subscriber(array $config, bool $flagEnabled = true): SecurityHeadersSubscriber
     {
-        $configuration = $this->createMock(ConfigurationInterface::class);
+        $configuration = $this->createMock(ShopConfigurationInterface::class);
         $configuration->method('get')->willReturnCallback(fn (string $key) => $config[$key] ?? null);
 
         $flagChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);

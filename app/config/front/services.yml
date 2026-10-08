@@ -12,6 +12,7 @@ services:
     arguments:
       $cspContext: !php/enum PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext::FRONT
 
-  # Static (non-CSP) security headers on storefront FrontKernel responses; the legacy dispatch is in
-  # FrontController. The same class serves the back office, registered in app/config/admin.
+  # Static (non-CSP) security headers on storefront FrontKernel responses, read for the shop being
+  # served (current context); the legacy dispatch is in FrontController. The same class serves the
+  # back office, registered in app/config/admin with the all-shops scope.
   PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersSubscriber: ~

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\SecurityHeader;
 
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopLogger;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -17,11 +18,14 @@ use Throwable;
 /**
  * Adds the static security headers to Symfony-kernel responses. Registered in both the Front and Admin
  * app containers; the default legacy storefront dispatch is covered by a delegate in FrontController.
+ * The back-office registration reads the all-shops value ($allShopsScope); the storefront reads the
+ * shop being served (current context).
  */
 final class SecurityHeadersSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly SecurityHeadersProvider $provider,
+        private readonly bool $allShopsScope = false,
     ) {
     }
 
@@ -38,9 +42,12 @@ final class SecurityHeadersSubscriber implements EventSubscriberInterface
 
         $response = $event->getResponse();
 
+        // The back office is a single global surface; the storefront reads the shop being served.
+        $shopConstraint = $this->allShopsScope ? ShopConstraint::allShops() : null;
+
         // Static headers must never turn a page into a 500; a broken configuration read is swallowed.
         try {
-            foreach ($this->provider->getHeaders($event->getRequest()->isSecure()) as $name => $value) {
+            foreach ($this->provider->getHeaders($event->getRequest()->isSecure(), $shopConstraint) as $name => $value) {
                 $response->headers->set($name, $value);
             }
         } catch (Throwable $e) {
