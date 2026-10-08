@@ -228,6 +228,7 @@ class ExtraPropertyDefinitionNamingTest extends TestCase
         yield 'cart_rule legacy spelling' => ['cart_rule', 'discount', 'cart_rule'];
         yield 'cms_page' => ['cms_page', 'cms_page', 'cms'];
         yield 'cms legacy spelling' => ['cms', 'cms_page', 'cms'];
+        yield 'CMS uppercase acronym spelling' => ['CMS', 'cms_page', 'cms'];
         yield 'cms_page_category' => ['cms_page_category', 'cms_page_category', 'cms_category'];
         yield 'cms_category legacy spelling' => ['cms_category', 'cms_page_category', 'cms_category'];
         yield 'credit_slip' => ['credit_slip', 'credit_slip', 'order_slip'];

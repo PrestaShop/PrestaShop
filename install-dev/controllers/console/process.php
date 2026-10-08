@@ -114,23 +114,29 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         }
 
         if (in_array('database', $steps)) {
-            if (!$this->processGenerateSettingsFile()) {
-                $this->printErrors('processGenerateSettingsFile');
-            }
-
             if ($this->datas->database_create) {
                 $this->model_database->createDatabase($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password);
             }
 
-            if (!$this->model_database->testDatabaseSettings(
+            $databaseErrors = $this->model_database->testDatabaseSettings(
                 $this->datas->database_server,
                 $this->datas->database_name,
                 $this->datas->database_login,
                 $this->datas->database_password,
                 $this->datas->database_prefix,
                 $this->datas->database_clear
-            )) {
+            );
+            if (!empty($databaseErrors)) {
                 $this->printErrors('testDatabaseSettings');
+            }
+
+            if (!$this->checkExistingSettingsFile()) {
+                $this->printErrors('checkExistingSettingsFile');
+            }
+
+            // Written only once the settings are validated, a file with a wrong server would break the next run
+            if (!$this->processGenerateSettingsFile()) {
+                $this->printErrors('processGenerateSettingsFile');
             }
 
             // Deferred Kernel Init
@@ -195,6 +201,28 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     /**
      * PROCESS : generateSettingsFile
      */
+    /**
+     * The DB constants come from a settings file left by a previous run (init.php loads it) and cannot be
+     * redefined, so the installation would keep using them. Only blocking when they cannot connect, the
+     * same server may be written differently (e.g. with its default port).
+     */
+    private function checkExistingSettingsFile(): bool
+    {
+        if (!defined('_DB_SERVER_')
+            || (_DB_SERVER_ === $this->datas->database_server && _DB_NAME_ === $this->datas->database_name)
+            || Db::checkConnection(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_) === 0) {
+            return true;
+        }
+
+        $this->model_install->setError($this->translator->trans(
+            'The file app/config/parameters.php from a previous installation targets the database "%name%" on "%server%", which cannot be reached. Delete it and the var/cache folder, then run the installation again.',
+            ['%name%' => _DB_NAME_, '%server%' => _DB_SERVER_],
+            'Install'
+        ));
+
+        return false;
+    }
+
     public function processGenerateSettingsFile()
     {
         return $this->model_install->generateSettingsFile(

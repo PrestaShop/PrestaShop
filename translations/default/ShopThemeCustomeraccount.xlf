@@ -130,7 +130,7 @@
       <trans-unit id="92dbb751eb9457441af82a53f3cfae54">
         <source>For example: QIIXJXNUI or QIIXJXNUI#1</source>
         <target>For example: QIIXJXNUI or QIIXJXNUI#1</target>
-        <note>File: themes/hummingbird/templates/customer/guest-login.tpl [Line: 33]</note>
+        <note>File: themes/hummingbird/templates/customer/guest-login.tpl [Line: 37]</note>
       </trans-unit>
       <trans-unit id="01a569ddc6cf67ddec2a683f0a5f5956">
         <source>Forgot your password?</source>
@@ -170,7 +170,7 @@
       <trans-unit id="bef8403608dc4cb3ade799f63dd4bf59">
         <source>If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.</source>
         <target>If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 202]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 203]</note>
       </trans-unit>
       <trans-unit id="d93651d012e77dac5581b08db33195b2">
         <source>If you would like to add a comment about your order, please write it in the field below.</source>
@@ -215,7 +215,7 @@
       <trans-unit id="3956298bcfc047e15b0e0d218492ce09">
         <source>Merchandise return</source>
         <target>Merchandise return</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 188]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 189]</note>
       </trans-unit>
       <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
         <source>Merchandise returns</source>
@@ -315,7 +315,7 @@
       <trans-unit id="99f0c07c3b8b3bc78f5f9733019ec3d5">
         <source>Order totals</source>
         <target>Order totals</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-no-return.tpl [Line: 139]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-no-return.tpl [Line: 140]</note>
       </trans-unit>
       <trans-unit id="11035a6e3e5aceb6563c44c6e464e577">
         <source>Order tracking</source>
@@ -379,7 +379,7 @@
       <trans-unit id="1af342a10e8238b722ba844facf5768b">
         <source>Request a return</source>
         <target>Request a return</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 208]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 209]</note>
       </trans-unit>
       <trans-unit id="32fe59513f5bbdd353b4527cc6af55ce">
         <source>Reset your password</source>
@@ -434,7 +434,7 @@
       <trans-unit id="d2948a89e47a4ad7eb8412c1c260ea88">
         <source>To track your order, please enter the following information:</source>
         <target>To track your order, please enter the following information:</target>
-        <note>File: themes/hummingbird/templates/customer/guest-login.tpl [Line: 17]</note>
+        <note>File: themes/hummingbird/templates/customer/guest-login.tpl [Line: 21]</note>
       </trans-unit>
       <trans-unit id="31d01d88284078b770b76117e306bbdf">
         <source>Toggle your account links</source>

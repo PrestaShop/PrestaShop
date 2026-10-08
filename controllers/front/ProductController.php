@@ -887,15 +887,17 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $productBrandUrl = null;
 
         if (!empty($this->product->id_manufacturer)) {
-            $manufacturerPresenter = new ManufacturerPresenter($this->context->link);
-            $productManufacturer = $manufacturerPresenter->present(
-                new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id),
-                $this->context->language
-            );
+            $manufacturer = new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id);
 
-            // These two variables are deprecated are kept just for backward compatibility and will be removed in v10
-            $manufacturerImageUrl = $productManufacturer['image']['small']['url'] ?? null;
-            $productBrandUrl = $productManufacturer['url'];
+            // The product can still point to a brand that has been deleted in the meantime
+            if (Validate::isLoadedObject($manufacturer)) {
+                $manufacturerPresenter = new ManufacturerPresenter($this->context->link);
+                $productManufacturer = $manufacturerPresenter->present($manufacturer, $this->context->language);
+
+                // These two variables are deprecated are kept just for backward compatibility and will be removed in v10
+                $manufacturerImageUrl = $productManufacturer['image']['small']['url'] ?? null;
+                $productBrandUrl = $productManufacturer['url'];
+            }
         }
 
         $this->context->smarty->assign([
@@ -1613,9 +1615,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 continue;
             }
 
-            // Normalize grouped values into one human-readable schema value
+            // Normalize grouped values into one human-readable schema value using UTF-8-aware line break matching
             $featureName = trim((string) $feature['name']);
-            $featureValue = preg_replace('/\R+/', ', ', trim((string) $feature['value']));
+            $featureValue = (string) preg_replace('/\R+/u', ', ', trim((string) $feature['value']));
             if ($featureName === '' || $featureValue === '') {
                 continue;
             }
