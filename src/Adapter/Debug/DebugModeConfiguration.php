@@ -55,7 +55,10 @@ class DebugModeConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = [];
+        $errors = $this->getDebugCookieErrors($configuration);
+        if (!empty($errors)) {
+            return $errors;
+        }
 
         if ($this->validateConfiguration($configuration)) {
             // Set configuration
@@ -144,7 +147,37 @@ class DebugModeConfiguration implements DataConfigurationInterface
         ];
         $array_keys = array_keys($configuration);
 
-        return count(array_intersect($keys, $array_keys)) === count($keys);
+        if (count(array_intersect($keys, $array_keys)) !== count($keys)) {
+            return false;
+        }
+
+        return empty($this->getDebugCookieErrors($configuration));
+    }
+
+    /**
+     * Checks that the debug cookie name and value only contain allowed characters.
+     *
+     * @return array<int, array{key: string, domain: string, parameters: array<int, string>}>
+     */
+    private function getDebugCookieErrors(array $configuration): array
+    {
+        $errors = [];
+        $fields = [
+            'debug_cookie_name' => 'Debug cookie name',
+            'debug_cookie_value' => 'Debug cookie value',
+        ];
+
+        foreach ($fields as $key => $label) {
+            if (!empty($configuration[$key]) && !DebugMode::isValidDebugCookieString((string) $configuration[$key])) {
+                $errors[] = [
+                    'key' => 'The %s field is invalid.',
+                    'domain' => 'Admin.Notifications.Error',
+                    'parameters' => [$label],
+                ];
+            }
+        }
+
+        return $errors;
     }
 
     /**
