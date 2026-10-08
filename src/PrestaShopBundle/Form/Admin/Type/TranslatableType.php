@@ -282,6 +282,10 @@ class TranslatableType extends TranslatorAwareType
 
             if ($doesLocaleExistForInvalidForm) {
                 foreach ($formErrors as $formError) {
+                    if (!$formError instanceof FormError) {
+                        continue;
+                    }
+
                     if ($this->doesErrorFormAndCurrentFormMatches($formError->getOrigin(), $formItem)) {
                         $errorsByLocale[] = [
                             'locale_name' => $locales[$iteration]['name'],
