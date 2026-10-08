@@ -979,12 +979,16 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
         /** @var ModuleGraph|false $graph */
         $graph = Module::getInstanceByName($module);
-        if (false === $graph) {
-            $this->ajaxRender($this->trans(
-                'Graph module could not be loaded.',
-                [],
-                'Admin.Notifications.Error'
-            ));
+        if (false === $graph || !array_filter(Shop::getContextListShopID(), [$graph, 'isEnabledForShop'])) {
+            $this->ajaxRender(json_encode([
+                'error' => $this->trans(
+                    'Graph module could not be loaded.',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
+                'axisLabels' => ['xAxis' => null, 'yAxis' => null],
+                'data' => [],
+            ]));
 
             return;
         }
@@ -1023,12 +1027,18 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
         /** @var ModuleGrid|false $grid */
         $grid = Module::getInstanceByName($module);
-        if (false === $grid) {
-            $this->ajaxRender($this->trans(
-                'Grid module could not be loaded.',
-                [],
-                'Admin.Notifications.Error'
-            ));
+        if (false === $grid || !array_filter(Shop::getContextListShopID(), [$grid, 'isEnabledForShop'])) {
+            $this->ajaxRender(json_encode([
+                'error' => $this->trans(
+                    'Grid module could not be loaded.',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
+                'from' => 0,
+                'to' => 0,
+                'total' => 0,
+                'values' => [],
+            ]));
 
             return;
         }
