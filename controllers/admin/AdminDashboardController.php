@@ -422,13 +422,12 @@ class AdminDashboardControllerCore extends AdminController
             $return['errors'][] = 'This module is not enabled.';
             die(json_encode($return));
         }
-        if (Validate::isModuleName($module)) {
-            $return['errors'] = $module_obj->validateDashConfig($configs);
-            if (count($return['errors'])) {
-                $return['has_errors'] = true;
-            } else {
-                $return['has_errors'] = $module_obj->saveDashConfig($configs);
-            }
+
+        $return['errors'] = $module_obj->validateDashConfig($configs);
+        if (count($return['errors'])) {
+            $return['has_errors'] = true;
+        } else {
+            $return['has_errors'] = $module_obj->saveDashConfig($configs);
         }
 
         if (method_exists($module_obj, $hook)) {
