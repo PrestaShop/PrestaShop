@@ -108,6 +108,28 @@ class ModuleTest extends TestCase
 
         Module::getInstanceByName('bankwire')->uninstall();
     }
+
+    public function testIsEnabledForShopFollowsEnableAndDisable(): void
+    {
+        if (Module::isInstalled('bankwire')) {
+            Module::getInstanceByName('bankwire')->uninstall();
+        }
+        $this->assertTrue(ModuleManagerBuilder::getInstance()->build()->install('bankwire'));
+        $module = Module::getInstanceByName('bankwire');
+
+        try {
+            $this->assertTrue($module->isEnabledForShop(1));
+            $this->assertFalse($module->isEnabledForShop(2));
+
+            $this->assertTrue($module->disable());
+            $this->assertFalse($module->isEnabledForShop(1));
+
+            $this->assertTrue($module->enable());
+            $this->assertTrue($module->isEnabledForShop(1));
+        } finally {
+            $module->uninstall();
+        }
+    }
 }
 
 define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__, 4) . '/Resources/modules_tests/'));
