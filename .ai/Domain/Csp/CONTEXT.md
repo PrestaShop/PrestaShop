@@ -13,7 +13,7 @@ Collects browser Content-Security-Policy violation reports, lets the merchant cu
 | Adapter | `src/Adapter/Csp/` — command handlers, `CspHeaderBuilder`, `CspPolicyProvider`, `CspViolationRecorder`, `CspFeatureChecker`, `CspConfiguration`, `CspHeaderSubscriber`, `CspPolicyHookDispatcher`, `CspRuleValidator` |
 | Doctrine entities | `src/PrestaShopBundle/Entity/CspRule.php`, `CspLog.php` + repositories (`csp_rule`, `csp_log` tables). No legacy ObjectModel — integer ids throughout |
 | Storefront emission | `classes/controller/FrontController.php` (`sendContentSecurityPolicyHeaders()` delegate), `src/Adapter/Csp/CspHeaderSubscriber.php` (FrontKernel); public collector `controllers/front/CspReportController.php` |
-| Back-office UI | `src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/CspController.php`, `src/Core/Grid/Definition/Factory/CspLogGridDefinitionFactory.php`, `src/Core/Grid/Query/CspLogQueryBuilder.php`, grid row accessibility checkers |
+| Back-office UI | `src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SecurityHeadersController.php`, `src/Core/Grid/Definition/Factory/CspLogGridDefinitionFactory.php`, `src/Core/Grid/Query/CspLogQueryBuilder.php`, grid row accessibility checkers |
 
 ## Non-obvious patterns
 

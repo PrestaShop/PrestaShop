@@ -36,12 +36,12 @@
   <h2 class="mt-2">{{ 'Content Security Policy'|trans({}, 'Admin.Advparameters.Feature') }}</h2>
   <ul class="nav nav-tabs mb-2" role="tablist">
     <li class="nav-item">
-      <a class="nav-link{{ cspSelectedContext == 'front' ? ' active' : '' }}" href="{{ path('admin_security_csp_index') }}">
+      <a class="nav-link{{ cspSelectedContext == 'front' ? ' active' : '' }}" href="{{ path('admin_security_headers_index') }}">
         {{ 'Storefront'|trans({}, 'Admin.Shopparameters.Feature') }}
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{{ cspSelectedContext == 'admin' ? ' active' : '' }}" href="{{ path('admin_security_csp_index', {context: 'admin'}) }}">
+      <a class="nav-link{{ cspSelectedContext == 'admin' ? ' active' : '' }}" href="{{ path('admin_security_headers_index', {context: 'admin'}) }}">
         {{ 'Back office'|trans({}, 'Admin.Advparameters.Feature') }}
       </a>
     </li>
@@ -67,7 +67,7 @@
     </div>
   {% endif %}
 
-  {{ form_start(cspForm, {attr: {class: 'form'}, action: path('admin_security_csp_save', cspContextParams)}) }}
+  {{ form_start(cspForm, {attr: {class: 'form'}, action: path('admin_security_headers_csp_save', cspContextParams)}) }}
     <div class="card" id="configuration_fieldset_csp">
       <h3 class="card-header">
         <i class="material-icons">security</i> {{ 'Content Security Policy'|trans({}, 'Admin.Advparameters.Feature') }}

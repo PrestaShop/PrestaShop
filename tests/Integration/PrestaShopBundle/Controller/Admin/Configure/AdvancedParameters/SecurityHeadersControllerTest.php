@@ -26,7 +26,7 @@ use Tests\Resources\DatabaseDump;
  * (csp_log_bulk vs csp_log_bulk_action). This test posts the bulk-revoke form using the name read
  * straight out of the rendered grid, so grid and controller are verified against each other.
  */
-class CspControllerTest extends GridControllerTestCase
+class SecurityHeadersControllerTest extends GridControllerTestCase
 {
     private const SHOP_ID = 1;
     private const DIRECTIVE = 'script-src';
@@ -80,7 +80,7 @@ class CspControllerTest extends GridControllerTestCase
 
         $this->client->request(
             'POST',
-            $this->router->generate('admin_security_csp_bulk_revoke'),
+            $this->router->generate('admin_security_headers_bulk_revoke'),
             [$fieldName => [$ruleId]]
         );
         $this->assertResponseRedirects();
@@ -108,12 +108,12 @@ class CspControllerTest extends GridControllerTestCase
         );
         $this->assertSame(1, $checkbox->count(), 'The seeded admin rule must render a bulk checkbox on the admin grid');
         $this->assertStringContainsString(
-            $this->router->generate('admin_security_csp_bulk_revoke_admin'),
+            $this->router->generate('admin_security_headers_bulk_revoke_admin'),
             (string) $this->client->getResponse()->getContent(),
             'The admin grid bulk action must target the admin-context route'
         );
 
-        $this->client->request('POST', $this->router->generate('admin_security_csp_bulk_revoke_admin'), ['csp_log_bulk_action' => [$ruleId]]);
+        $this->client->request('POST', $this->router->generate('admin_security_headers_bulk_revoke_admin'), ['csp_log_bulk_action' => [$ruleId]]);
         $this->assertResponseRedirects();
 
         $this->assertAdminRuleCount(0, 'Admin bulk revoke must delete the admin rule, not run on the storefront surface');
@@ -126,7 +126,7 @@ class CspControllerTest extends GridControllerTestCase
         // bounces the merchant to the storefront tab.
         $this->client->request(
             'POST',
-            $this->router->generate('admin_security_csp_search', ['context' => 'admin']),
+            $this->router->generate('admin_security_headers_search', ['context' => 'admin']),
             ['csp_log' => ['directive' => 'script-src']]
         );
 
@@ -142,7 +142,7 @@ class CspControllerTest extends GridControllerTestCase
     {
         // id 0 fails CspRuleId validation (INVALID_ID). Before the code-keyed error map this showed
         // the DUPLICATE_RULE "already allowed" message; it must now show the not-found message.
-        $this->client->request('GET', $this->router->generate('admin_security_csp_revoke', ['cspRuleId' => 0]));
+        $this->client->request('GET', $this->router->generate('admin_security_headers_revoke', ['cspRuleId' => 0]));
         $this->assertResponseRedirects();
 
         $this->client->followRedirect();
@@ -180,7 +180,7 @@ class CspControllerTest extends GridControllerTestCase
 
     protected function generateGridUrl(array $routeParams = []): string
     {
-        return $this->router->generate('admin_security_csp_index', $routeParams);
+        return $this->router->generate('admin_security_headers_index', $routeParams);
     }
 
     protected function getGridSelector(): string
