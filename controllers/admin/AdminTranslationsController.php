@@ -3035,9 +3035,11 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $array_files = [];
         $initial_root_dir = $root_dir;
+        $installed_modules = $this->getListModules();
         foreach ($modules as $module) {
             $root_dir = $initial_root_dir;
-            if (isset($module[0]) && $module[0] == '.') {
+            // Only installed modules can have their translation files loaded
+            if (!in_array($module, $installed_modules, true)) {
                 continue;
             }
 
