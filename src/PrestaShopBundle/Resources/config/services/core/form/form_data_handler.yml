@@ -322,3 +322,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ShopGroupFormDataHandler:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ShopUrlFormDataHandler:
+    autowire: true
+    public: false

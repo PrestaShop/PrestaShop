@@ -30,6 +30,10 @@ _shop_groups:
   resource: "shop_groups.yml"
   prefix: /shop-groups
 
+_shop_urls:
+  resource: "shop_urls.yml"
+  prefix: /shop-urls
+
 _sql_manager:
   resource: "sql_request.yml"
   prefix: /sql-requests/
