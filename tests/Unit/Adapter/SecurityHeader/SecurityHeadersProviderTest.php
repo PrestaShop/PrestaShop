@@ -10,7 +10,8 @@ namespace Tests\Unit\Adapter\SecurityHeader;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersProvider;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 
 class SecurityHeadersProviderTest extends TestCase
@@ -83,12 +84,35 @@ class SecurityHeadersProviderTest extends TestCase
         $this->assertStringNotContainsString("\n", $headers['Permissions-Policy']);
     }
 
+    public function testItReadsForTheGivenShopScope(): void
+    {
+        $seen = [];
+        $configuration = $this->createMock(ShopConfigurationInterface::class);
+        $configuration->method('get')->willReturnCallback(
+            function (string $key, $default = null, ?ShopConstraint $shopConstraint = null) use (&$seen) {
+                $seen[] = $shopConstraint;
+
+                return self::DEFAULTS[$key] ?? $default;
+            }
+        );
+        $flagChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
+        $flagChecker->method('isEnabled')->willReturn(true);
+
+        $constraint = ShopConstraint::shop(2);
+        (new SecurityHeadersProvider($configuration, $flagChecker))->getHeaders(true, $constraint);
+
+        $this->assertNotEmpty($seen);
+        foreach ($seen as $passed) {
+            $this->assertSame($constraint, $passed);
+        }
+    }
+
     /**
      * @param array<string, string> $config
      */
     private function provider(array $config, bool $flagEnabled = true): SecurityHeadersProvider
     {
-        $configuration = $this->createMock(ConfigurationInterface::class);
+        $configuration = $this->createMock(ShopConfigurationInterface::class);
         $configuration->method('get')->willReturnCallback(fn (string $key) => $config[$key] ?? null);
 
         $flagChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);

@@ -8,66 +8,76 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\SecurityHeader;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Loads and saves the static security-header settings. These are global (one policy for the whole
- * installation, applied to both the storefront and the back office).
+ * Loads and saves the static security-header settings
+ * (Advanced parameters > Security > Security headers). Per-shop: the storefront applies the shop's
+ * own values, and the back office uses the all-shops value.
  */
-final class SecurityHeadersConfiguration implements DataConfigurationInterface
+final class SecurityHeadersConfiguration extends AbstractMultistoreConfiguration
 {
-    public function __construct(
-        private readonly ConfigurationInterface $configuration,
-    ) {
-    }
+    private const CONFIGURATION_FIELDS = [
+        'nosniff',
+        'frame_options',
+        'referrer_policy',
+        'hsts',
+        'hsts_max_age',
+        'hsts_subdomains',
+        'hsts_preload',
+        'permissions_policy',
+    ];
 
     public function getConfiguration(): array
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'nosniff' => (bool) $this->configuration->get('PS_SEC_NOSNIFF'),
-            'frame_options' => (string) $this->configuration->get('PS_SEC_FRAME_OPTIONS'),
-            'referrer_policy' => (string) $this->configuration->get('PS_SEC_REFERRER_POLICY'),
-            'hsts' => (bool) $this->configuration->get('PS_SEC_HSTS'),
-            'hsts_max_age' => (int) $this->configuration->get('PS_SEC_HSTS_MAX_AGE'),
-            'hsts_subdomains' => (bool) $this->configuration->get('PS_SEC_HSTS_SUBDOMAINS'),
-            'hsts_preload' => (bool) $this->configuration->get('PS_SEC_HSTS_PRELOAD'),
-            'permissions_policy' => (string) $this->configuration->get('PS_SEC_PERMISSIONS_POLICY'),
+            'nosniff' => (bool) $this->configuration->get('PS_SEC_NOSNIFF', false, $shopConstraint),
+            'frame_options' => (string) $this->configuration->get('PS_SEC_FRAME_OPTIONS', '', $shopConstraint),
+            'referrer_policy' => (string) $this->configuration->get('PS_SEC_REFERRER_POLICY', '', $shopConstraint),
+            'hsts' => (bool) $this->configuration->get('PS_SEC_HSTS', false, $shopConstraint),
+            'hsts_max_age' => (int) $this->configuration->get('PS_SEC_HSTS_MAX_AGE', 0, $shopConstraint),
+            'hsts_subdomains' => (bool) $this->configuration->get('PS_SEC_HSTS_SUBDOMAINS', false, $shopConstraint),
+            'hsts_preload' => (bool) $this->configuration->get('PS_SEC_HSTS_PRELOAD', false, $shopConstraint),
+            'permissions_policy' => (string) $this->configuration->get('PS_SEC_PERMISSIONS_POLICY', '', $shopConstraint),
         ];
     }
 
     public function updateConfiguration(array $configuration): array
     {
+        // validateConfiguration() throws on invalid input, so this branch is effectively unreachable (kept for parity).
         if (!$this->validateConfiguration($configuration)) {
             return [];
         }
 
-        $this->configuration->set('PS_SEC_NOSNIFF', $configuration['nosniff'] ? '1' : '0');
-        $this->configuration->set('PS_SEC_FRAME_OPTIONS', (string) $configuration['frame_options']);
-        $this->configuration->set('PS_SEC_REFERRER_POLICY', (string) $configuration['referrer_policy']);
-        $this->configuration->set('PS_SEC_HSTS', $configuration['hsts'] ? '1' : '0');
-        $this->configuration->set('PS_SEC_HSTS_MAX_AGE', (string) max(0, (int) $configuration['hsts_max_age']));
-        $this->configuration->set('PS_SEC_HSTS_SUBDOMAINS', $configuration['hsts_subdomains'] ? '1' : '0');
-        $this->configuration->set('PS_SEC_HSTS_PRELOAD', $configuration['hsts_preload'] ? '1' : '0');
-        $this->configuration->set('PS_SEC_PERMISSIONS_POLICY', trim((string) $configuration['permissions_policy']));
+        if (array_key_exists('hsts_max_age', $configuration)) {
+            $configuration['hsts_max_age'] = max(0, (int) $configuration['hsts_max_age']);
+        }
+        if (array_key_exists('permissions_policy', $configuration)) {
+            // Strip CR/LF so a stored value can never inject another header downstream.
+            $configuration['permissions_policy'] = trim((string) preg_replace('/[\r\n]+/', '', (string) $configuration['permissions_policy']));
+        }
+
+        $shopConstraint = $this->getShopConstraint();
+
+        $this->updateConfigurationValue('PS_SEC_NOSNIFF', 'nosniff', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_SEC_FRAME_OPTIONS', 'frame_options', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_SEC_REFERRER_POLICY', 'referrer_policy', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_SEC_HSTS', 'hsts', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_SEC_HSTS_MAX_AGE', 'hsts_max_age', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_SEC_HSTS_SUBDOMAINS', 'hsts_subdomains', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_SEC_HSTS_PRELOAD', 'hsts_preload', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_SEC_PERMISSIONS_POLICY', 'permissions_policy', $configuration, $shopConstraint);
 
         return [];
     }
 
-    public function validateConfiguration(array $configuration): bool
+    protected function buildResolver(): OptionsResolver
     {
-        (new OptionsResolver())
-            ->setRequired([
-                'nosniff',
-                'frame_options',
-                'referrer_policy',
-                'hsts',
-                'hsts_max_age',
-                'hsts_subdomains',
-                'hsts_preload',
-                'permissions_policy',
-            ])
+        return (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
             ->setAllowedTypes('nosniff', 'bool')
             ->setAllowedTypes('frame_options', 'string')
             ->setAllowedTypes('referrer_policy', 'string')
@@ -76,8 +86,6 @@ final class SecurityHeadersConfiguration implements DataConfigurationInterface
             ->setAllowedTypes('hsts_subdomains', 'bool')
             ->setAllowedTypes('hsts_preload', 'bool')
             ->setAllowedTypes('permissions_policy', 'string')
-            ->resolve($configuration);
-
-        return true;
+            ->setNormalizer('hsts_max_age', static fn ($resolver, int $value): int => max(0, $value));
     }
 }
