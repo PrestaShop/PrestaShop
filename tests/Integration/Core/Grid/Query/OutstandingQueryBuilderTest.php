@@ -161,21 +161,33 @@ class OutstandingQueryBuilderTest extends KernelTestCase
             {
             }
 
+            /**
+             * @return string Return order by or null to disable ordering
+             */
             public function getOrderBy()
             {
                 return 'id_invoice';
             }
 
+            /**
+             * @return string Return order by or null to disable ordering
+             */
             public function getOrderWay()
             {
                 return 'DESC';
             }
 
+            /**
+             * @return int Return offset or null to disable offset
+             */
             public function getOffset()
             {
                 return 0;
             }
 
+            /**
+             * @return int Return limit or null to disable limiting
+             */
             public function getLimit()
             {
                 return 50;
