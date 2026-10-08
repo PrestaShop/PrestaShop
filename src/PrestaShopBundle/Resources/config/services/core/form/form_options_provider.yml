@@ -22,3 +22,8 @@ services:
     public: false
     arguments:
       - '@prestashop.core.query_bus'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ShopUrlFormOptionsProvider:
+    public: false
+    arguments:
+      - '@prestashop.core.query_bus'

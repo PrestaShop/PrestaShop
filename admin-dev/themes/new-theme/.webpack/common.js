@@ -186,6 +186,8 @@ module.exports = {
     specific_price_form: './js/pages/product/specific-price/form',
     shop_group: './js/pages/shop-group',
     shop_group_form: './js/pages/shop-group/form',
+    shop_url: './js/pages/shop-url',
+    shop_url_form: './js/pages/shop-url/form',
     sql_manager: './js/pages/sql-manager',
     quick_access: './js/pages/quick-access',
     state: './js/pages/state',

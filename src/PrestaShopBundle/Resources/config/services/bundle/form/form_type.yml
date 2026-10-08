@@ -294,6 +294,10 @@ services:
     arguments:
       $shopChoiceProvider: '@prestashop.adapter.form.choice_provider.shop_name_by_id'
 
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ShopUrl\ShopUrlType:
+    arguments:
+      $shopChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShopByGroupChoiceProvider'
+
   PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageCategoryType:
     arguments:
       $allCmsCategories: '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
