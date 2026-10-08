@@ -56,7 +56,6 @@ class MailSmtpTlsTest extends TestCase
         $transport = new EsmtpTransport('smtp.example.com', $port, self::esmtpTransportParameter($setting));
 
         $getStream = new ReflectionMethod($transport, 'getStream');
-        $getStream->setAccessible(true);
         /** @var SocketStream $socket */
         $socket = $getStream->invoke($transport);
 
@@ -98,7 +97,6 @@ class MailSmtpTlsTest extends TestCase
     private static function useImplicitTls($smtpEncryption): bool
     {
         $method = new ReflectionMethod(Mail::class, 'useImplicitTls');
-        $method->setAccessible(true);
 
         return $method->invoke(null, $smtpEncryption);
     }

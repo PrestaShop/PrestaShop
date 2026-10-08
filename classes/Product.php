@@ -5476,7 +5476,15 @@ class ProductCore extends ObjectModel
         if (
             Combination::isFeatureActive()
             && $id_product_attribute === null
-            && ($ipa_default = isset($row['cache_default_attribute']) ? $row['cache_default_attribute'] : Product::getDefaultAttribute($row['id_product'], (int) !$row['allow_oosp']))
+            && (
+                // Use the cached default combination directly only when unavailable combinations
+                // may be shown (PS_DISP_UNAVAILABLE_ATTR on, or the product is still sold when out
+                // of stock). Otherwise resolve an availability-aware default so a listing does not
+                // surface an out-of-stock default combination — mirroring the product page. (#41558)
+                $ipa_default = (Configuration::get('PS_DISP_UNAVAILABLE_ATTR') || $row['allow_oosp']) && isset($row['cache_default_attribute'])
+                    ? $row['cache_default_attribute']
+                    : Product::getDefaultAttribute($row['id_product'], (int) !$row['allow_oosp'])
+            )
         ) {
             $id_product_attribute = $row['id_product_attribute'] = $ipa_default;
         }
