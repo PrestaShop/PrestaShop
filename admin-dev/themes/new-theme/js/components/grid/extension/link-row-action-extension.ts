@@ -66,19 +66,25 @@ export default class LinkRowActionExtension {
             $parentCell,
           );
           let isDragging = false;
+          let isPressed = false;
           clickableCells.addClass('cursor-pointer').on('mousedown', () => {
-            $(window).on('mousemove', () => {
+            isPressed = true;
+            $(window).one('mousemove.linkRowAction', () => {
               isDragging = true;
-              $(window).off('mousemove');
+            });
+            // Reset the state wherever the press is released, not only over a clickable cell, so the
+            // next click is not ignored; it runs after the cell's mouseup, which still needs the state
+            $(document).one('mouseup.linkRowAction', () => {
+              $(window).off('mousemove.linkRowAction');
+              isDragging = false;
+              isPressed = false;
             });
           });
 
           clickableCells.on('mouseup', () => {
-            const wasDragging = isDragging;
-            isDragging = false;
-            $(window).off('mousemove');
-
-            if (!wasDragging) {
+            // A click needs the press to start on a clickable cell: a position drag starts on the
+            // handle, so releasing it over a clickable cell must not open the link
+            if (isPressed && !isDragging) {
               const confirmMessage = $rowAction.data('confirm-message');
 
               if (
