@@ -6,7 +6,7 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block content %}
-  {{ form_start(addCspRuleForm, {attr: {class: 'form'}, action: path('admin_security_csp_add')}) }}
+  {{ form_start(addCspRuleForm, {attr: {class: 'form'}, action: path('admin_security_headers_add')}) }}
     <div class="card">
       <h3 class="card-header">
         <i class="material-icons">add_circle_outline</i> {{ 'Add allowed source'|trans({}, 'Admin.Advparameters.Feature') }}
@@ -19,7 +19,7 @@
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-between">
-          <a href="{{ path('admin_security_csp_index') }}" class="btn btn-outline-secondary">
+          <a href="{{ path('admin_security_headers_index') }}" class="btn btn-outline-secondary">
             {{ 'Cancel'|trans({}, 'Admin.Actions') }}
           </a>
           <button type="submit" class="btn btn-primary">{{ 'Add'|trans({}, 'Admin.Advparameters.Feature') }}</button>

@@ -40,9 +40,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 /** The "Advanced parameters > Security > Content Security Policy" page: a native page gated behind the 'csp' feature flag. */
-class CspController extends PrestaShopAdminController
+class SecurityHeadersController extends PrestaShopAdminController
 {
-    #[AdminSecurity("is_granted('read', 'AdminSecurityCsp')")]
+    #[AdminSecurity("is_granted('read', 'AdminSecurityHeaders')")]
     public function indexAction(
         Request $request,
         CspLogFilters $filters,
@@ -108,13 +108,13 @@ class CspController extends PrestaShopAdminController
         $toolbarButtons = [];
         if ($canAdd) {
             $toolbarButtons['add'] = [
-                'href' => $this->generateUrl('admin_security_csp_add', $contextParams),
+                'href' => $this->generateUrl('admin_security_headers_add', $contextParams),
                 'desc' => $this->trans('Add allowed source', [], 'Admin.Advparameters.Feature'),
                 'icon' => 'add_circle_outline',
             ];
         }
         $toolbarButtons['clear_log'] = [
-            'href' => $this->generateUrl('admin_security_csp_clear_log', $contextParams),
+            'href' => $this->generateUrl('admin_security_headers_clear_log', $contextParams),
             'desc' => $this->trans('Clear log', [], 'Admin.Advparameters.Feature'),
             'icon' => 'delete',
             // json_encode builds a safe JS string literal; the toolbar template HTML-escapes the onclick.
@@ -133,7 +133,7 @@ class CspController extends PrestaShopAdminController
                 'enableSidebar' => true,
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'layoutTitle' => $this->trans('Security headers', [], 'Admin.Navigation.Menu'),
-                'help_link' => $this->generateSidebarLink('AdminSecurityCsp'),
+                'help_link' => $this->generateSidebarLink('AdminSecurityHeaders'),
                 'securityHeadersForm' => $securityHeadersFormHandler->getForm()->createView(),
                 'cspForm' => $cspForm->createView(),
                 'cspLogGrid' => $this->presentGrid($cspLogGridFactory->getGrid($filters)),
@@ -153,8 +153,8 @@ class CspController extends PrestaShopAdminController
             : $this->trans('Clear the Content Security Policy log? Allowed sources are kept.', [], 'Admin.Advparameters.Notification');
     }
 
-    #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
-    #[AdminSecurity("is_granted('update', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
+    #[DemoRestricted(redirectRoute: 'admin_security_headers_index')]
+    #[AdminSecurity("is_granted('update', 'AdminSecurityHeaders')", redirectRoute: 'admin_security_headers_index')]
     public function saveAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.csp.settings.form_handler')]
@@ -180,11 +180,11 @@ class CspController extends PrestaShopAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
+        return $this->redirectToRoute('admin_security_headers_index', $this->contextRedirectParams($context));
     }
 
-    #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
-    #[AdminSecurity("is_granted('create', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
+    #[DemoRestricted(redirectRoute: 'admin_security_headers_index')]
+    #[AdminSecurity("is_granted('create', 'AdminSecurityHeaders')", redirectRoute: 'admin_security_headers_index')]
     public function addAction(Request $request): Response
     {
         $this->assertFeatureEnabled();
@@ -205,7 +205,7 @@ class CspController extends PrestaShopAdminController
                 ));
                 $this->addFlash('success', $this->trans('The source has been added to the allow-list.', [], 'Admin.Advparameters.Notification'));
 
-                return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
+                return $this->redirectToRoute('admin_security_headers_index', $this->contextRedirectParams($context));
             } catch (CspException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
             }
@@ -214,13 +214,13 @@ class CspController extends PrestaShopAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Csp/add.html.twig', [
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Add allowed source', [], 'Admin.Advparameters.Feature'),
-            'help_link' => $this->generateSidebarLink('AdminSecurityCsp'),
+            'help_link' => $this->generateSidebarLink('AdminSecurityHeaders'),
             'addCspRuleForm' => $form->createView(),
         ]);
     }
 
-    #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
-    #[AdminSecurity("is_granted('delete', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
+    #[DemoRestricted(redirectRoute: 'admin_security_headers_index')]
+    #[AdminSecurity("is_granted('delete', 'AdminSecurityHeaders')", redirectRoute: 'admin_security_headers_index')]
     public function clearLogAction(Request $request): RedirectResponse
     {
         $this->assertFeatureEnabled();
@@ -229,11 +229,11 @@ class CspController extends PrestaShopAdminController
         $this->dispatchCommand(new ClearCspLogCommand($this->getShopContext()->getShopConstraint(), $context));
         $this->addFlash('success', $this->trans('The Content Security Policy log has been cleared. Allowed sources were kept.', [], 'Admin.Advparameters.Notification'));
 
-        return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
+        return $this->redirectToRoute('admin_security_headers_index', $this->contextRedirectParams($context));
     }
 
-    #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
-    #[AdminSecurity("is_granted('create', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
+    #[DemoRestricted(redirectRoute: 'admin_security_headers_index')]
+    #[AdminSecurity("is_granted('create', 'AdminSecurityHeaders')", redirectRoute: 'admin_security_headers_index')]
     public function allowAction(int $cspLogId, Request $request): RedirectResponse
     {
         $this->assertFeatureEnabled();
@@ -246,11 +246,11 @@ class CspController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
+        return $this->redirectToRoute('admin_security_headers_index', $this->contextRedirectParams($context));
     }
 
-    #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
-    #[AdminSecurity("is_granted('delete', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
+    #[DemoRestricted(redirectRoute: 'admin_security_headers_index')]
+    #[AdminSecurity("is_granted('delete', 'AdminSecurityHeaders')", redirectRoute: 'admin_security_headers_index')]
     public function revokeAction(int $cspRuleId, Request $request): RedirectResponse
     {
         $this->assertFeatureEnabled();
@@ -263,11 +263,11 @@ class CspController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
+        return $this->redirectToRoute('admin_security_headers_index', $this->contextRedirectParams($context));
     }
 
-    #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
-    #[AdminSecurity("is_granted('delete', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
+    #[DemoRestricted(redirectRoute: 'admin_security_headers_index')]
+    #[AdminSecurity("is_granted('delete', 'AdminSecurityHeaders')", redirectRoute: 'admin_security_headers_index')]
     public function bulkRevokeAction(Request $request): RedirectResponse
     {
         $this->assertFeatureEnabled();
@@ -281,7 +281,7 @@ class CspController extends PrestaShopAdminController
             // Only allowed rows carry a rule id, so an un-allowed (or empty) selection means nothing was done.
             $this->addFlash('warning', $this->trans('Select at least one allowed source to revoke.', [], 'Admin.Advparameters.Notification'));
 
-            return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
+            return $this->redirectToRoute('admin_security_headers_index', $this->contextRedirectParams($context));
         }
 
         try {
@@ -291,11 +291,11 @@ class CspController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
+        return $this->redirectToRoute('admin_security_headers_index', $this->contextRedirectParams($context));
     }
 
-    #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
-    #[AdminSecurity("is_granted('update', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
+    #[DemoRestricted(redirectRoute: 'admin_security_headers_index')]
+    #[AdminSecurity("is_granted('update', 'AdminSecurityHeaders')", redirectRoute: 'admin_security_headers_index')]
     public function saveSecurityHeadersAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.security_headers.form_handler')]
@@ -317,7 +317,7 @@ class CspController extends PrestaShopAdminController
         }
 
         // The headers block is global but shown on both tabs; keep the merchant on the tab they saved from.
-        return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($this->resolveContext($request)));
+        return $this->redirectToRoute('admin_security_headers_index', $this->contextRedirectParams($this->resolveContext($request)));
     }
 
     /**

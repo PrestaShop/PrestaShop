@@ -18,7 +18,7 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 final class CspTabToggler
 {
-    public const TAB_CLASS_NAME = 'AdminSecurityCsp';
+    public const TAB_CLASS_NAME = 'AdminSecurityHeaders';
 
     public function __construct(
         private readonly FeatureFlagStateCheckerInterface $featureFlagChecker,
