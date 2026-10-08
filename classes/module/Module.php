@@ -1072,6 +1072,7 @@ abstract class ModuleCore implements ModuleInterface
 
         // set active to 1 in the module table
         Db::getInstance()->update('module', ['active' => 1], 'id_module = ' . (int) $this->id);
+        Cache::clean('Module::isEnabled*');
 
         if ($moduleActivated) {
             $this->loadBuiltInTranslations();
@@ -1190,6 +1191,8 @@ abstract class ModuleCore implements ModuleInterface
         if (!$this->hasShopAssociations()) {
             $result &= Db::getInstance()->update('module', ['active' => 0], 'id_module = ' . (int) $this->id);
         }
+
+        Cache::clean('Module::isEnabled*');
 
         return (bool) $result;
     }
@@ -2327,6 +2330,27 @@ abstract class ModuleCore implements ModuleInterface
             GROUP BY `id_module`
             HAVING COUNT(*)=' . (int) count(Shop::getContextListShopID())
         );
+    }
+
+    /**
+     * Whether the module has a module_shop row for the given shop. Unlike $this->active, which is read once
+     * for the context shop when the instance is built, this answers for the given shop and follows
+     * enable()/disable() within the same request.
+     */
+    public function isEnabledForShop(int $idShop): bool
+    {
+        if (!$this->id) {
+            return false;
+        }
+
+        $cacheKey = 'Module::isEnabledForShop_' . (int) $this->id . '_' . $idShop;
+        if (!Cache::isStored($cacheKey)) {
+            Cache::store($cacheKey, (bool) Db::getInstance()->getValue(
+                'SELECT 1 FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $this->id . ' AND `id_shop` = ' . $idShop
+            ));
+        }
+
+        return Cache::retrieve($cacheKey);
     }
 
     /**
