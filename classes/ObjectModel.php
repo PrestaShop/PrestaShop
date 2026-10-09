@@ -384,7 +384,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             // Get field value, if value is multilang and field is empty, use value from default lang
             $value = $this->$field;
             if ($type == self::FORMAT_LANG && $id_lang && is_array($value)) {
-                if (!empty($value[$id_lang])) {
+                if (!Tools::isEmpty($value[$id_lang] ?? null)) {
                     $value = $value[$id_lang];
                 } elseif (!empty($data['required']) || in_array(
                     Tools::strtolower($data['validate'] ?? ''),
