@@ -20,6 +20,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCo
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderShippingDetailsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
+use PrestaShopLogger;
+use Shop;
 use Validate;
 
 /**
@@ -58,6 +60,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         $oldTrackingNumber = $order->getShippingNumber();
 
         $this->contextStateManager
+            ->setShop(new Shop((int) $order->id_shop))
             ->setLanguage(new Language($order->id_lang));
 
         try {
@@ -85,6 +88,8 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
 
                 $order->id_carrier = $carrierId;
                 $this->orderAmountUpdater->update($order, $cart);
+
+                $this->logCarrierChange((int) $order->id, $oldCarrierId, $carrierId);
             }
 
             // load fresh order carrier because updated just before
@@ -115,5 +120,27 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         } finally {
             $this->contextStateManager->restorePreviousContext();
         }
+    }
+
+    /** Records the carrier change in the employee log. */
+    private function logCarrierChange(int $orderId, int $oldCarrierId, int $newCarrierId): void
+    {
+        $oldCarrier = new Carrier($oldCarrierId);
+        $newCarrier = new Carrier($newCarrierId);
+
+        PrestaShopLogger::addLog(
+            sprintf(
+                'Order carrier updated: from "%s" (#%d) to "%s" (#%d)',
+                $oldCarrier->name,
+                $oldCarrierId,
+                $newCarrier->name,
+                $newCarrierId
+            ),
+            PrestaShopLogger::LOG_SEVERITY_LEVEL_INFORMATIVE,
+            null,
+            'Order',
+            $orderId,
+            true
+        );
     }
 }
