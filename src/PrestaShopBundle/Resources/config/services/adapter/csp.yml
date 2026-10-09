@@ -25,6 +25,7 @@ services:
       - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
       - '@PrestaShop\PrestaShop\Adapter\Csp\CspRuleValidator'
       - '@PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface'
+      - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
 
   PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AllowCspSourceHandler:
     autoconfigure: true
