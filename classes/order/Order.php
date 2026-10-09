@@ -641,6 +641,10 @@ class OrderCore extends ObjectModel
             return $products;
         }
 
+        // Resolve every line's image id in two queries instead of once per line during the loop below.
+        $combinationImageIds = $this->getProductsCombinationImageIds($products);
+        $coverImageIds = $this->getProductsCoverImageIds($products);
+
         $result_array = [];
         foreach ($products as $row) {
             // Change qty if selected
@@ -658,7 +662,7 @@ class OrderCore extends ObjectModel
                 }
             }
 
-            $this->setProductImageInformations($row);
+            $this->setProductImageInformations($row, $combinationImageIds, $coverImageIds);
             $this->setProductCurrentStock($row);
             $row = $this->setProductReduction($row);
 
@@ -752,24 +756,41 @@ class OrderCore extends ObjectModel
      *
      * @param array $product
      */
-    protected function setProductImageInformations(&$product)
+    /**
+     * @param array<string, mixed> $product
+     * @param array<int, int>|null $combinationImageIds prefetched [id_product_attribute => id_image] map
+     * @param array<int, int>|null $coverImageIds prefetched [id_product => id_image] map
+     */
+    protected function setProductImageInformations(&$product, ?array $combinationImageIds = null, ?array $coverImageIds = null)
     {
+        $id_image = null;
+
         if (isset($product['product_attribute_id']) && $product['product_attribute_id']) {
-            $id_image = Db::getInstance()->getValue('
-                SELECT `image_shop`.id_image
-                FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai' .
-                Shop::addSqlAssociation('image', 'pai', true) . '
-                LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
-                WHERE id_product_attribute = ' . (int) $product['product_attribute_id'] . ' ORDER by i.position ASC');
+            $idProductAttribute = (int) $product['product_attribute_id'];
+            if ($combinationImageIds !== null) {
+                $id_image = $combinationImageIds[$idProductAttribute] ?? null;
+            } else {
+                $id_image = Db::getInstance()->getValue('
+                    SELECT `image_shop`.id_image
+                    FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai' .
+                    Shop::addSqlAssociation('image', 'pai', true) . '
+                    LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
+                    WHERE id_product_attribute = ' . $idProductAttribute . ' ORDER by i.position ASC');
+            }
         }
 
-        if (!isset($id_image) || !$id_image) {
-            $id_image = Db::getInstance()->getValue(
-                'SELECT `image_shop`.id_image
-                FROM `' . _DB_PREFIX_ . 'image` i' .
-                Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
-                WHERE i.id_product = ' . (int) $product['product_id']
-            );
+        if (!$id_image) {
+            $idProduct = (int) $product['product_id'];
+            if ($coverImageIds !== null) {
+                $id_image = $coverImageIds[$idProduct] ?? null;
+            } else {
+                $id_image = Db::getInstance()->getValue(
+                    'SELECT `image_shop`.id_image
+                    FROM `' . _DB_PREFIX_ . 'image` i' .
+                    Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
+                    WHERE i.id_product = ' . $idProduct
+                );
+            }
         }
 
         $product['image'] = null;
@@ -778,6 +799,77 @@ class OrderCore extends ObjectModel
         if ($id_image) {
             $product['image'] = new Image((int) $id_image);
         }
+    }
+
+    /**
+     * Resolves, in a single query, the combination image id (lowest position) for a set of order lines,
+     * so setProductImageInformations() does not run one query per line.
+     *
+     * @param array<int, array<string, mixed>> $products
+     *
+     * @return array<int, int> [id_product_attribute => id_image]
+     */
+    protected function getProductsCombinationImageIds(array $products): array
+    {
+        $idProductAttributes = array_unique(array_filter(array_map(static function (array $product): int {
+            return (int) ($product['product_attribute_id'] ?? 0);
+        }, $products)));
+
+        if (empty($idProductAttributes)) {
+            return [];
+        }
+
+        $rows = Db::getInstance()->executeS('
+            SELECT pai.`id_product_attribute`, `image_shop`.id_image
+            FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai' .
+            Shop::addSqlAssociation('image', 'pai', true) . '
+            LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
+            WHERE pai.`id_product_attribute` IN (' . implode(',', $idProductAttributes) . ')
+            ORDER BY pai.`id_product_attribute`, i.position ASC') ?: [];
+
+        $imageIds = [];
+        foreach ($rows as $row) {
+            $idProductAttribute = (int) $row['id_product_attribute'];
+            // The result is ordered by position, so keep the first (lowest position) image per combination.
+            if (!isset($imageIds[$idProductAttribute])) {
+                $imageIds[$idProductAttribute] = (int) $row['id_image'];
+            }
+        }
+
+        return $imageIds;
+    }
+
+    /**
+     * Resolves, in a single query, the cover image id for a set of order lines, so
+     * setProductImageInformations() does not run one query per line.
+     *
+     * @param array<int, array<string, mixed>> $products
+     *
+     * @return array<int, int> [id_product => id_image]
+     */
+    protected function getProductsCoverImageIds(array $products): array
+    {
+        $idProducts = array_unique(array_filter(array_map(static function (array $product): int {
+            return (int) ($product['product_id'] ?? 0);
+        }, $products)));
+
+        if (empty($idProducts)) {
+            return [];
+        }
+
+        $rows = Db::getInstance()->executeS(
+            'SELECT i.`id_product`, `image_shop`.id_image
+            FROM `' . _DB_PREFIX_ . 'image` i' .
+            Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
+            WHERE i.`id_product` IN (' . implode(',', $idProducts) . ')'
+        ) ?: [];
+
+        $imageIds = [];
+        foreach ($rows as $row) {
+            $imageIds[(int) $row['id_product']] = (int) $row['id_image'];
+        }
+
+        return $imageIds;
     }
 
     public function getTaxesAverageUsed()
