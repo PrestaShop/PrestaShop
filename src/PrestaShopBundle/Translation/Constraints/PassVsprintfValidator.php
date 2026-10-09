@@ -25,6 +25,14 @@ class PassVsprintfValidator extends ConstraintValidator
             throw new UnexpectedTypeException($translation, 'PrestaShopBundle\Entity\Translation');
         }
 
+        // WHY: a blank translation removes the wording altogether, so there is nothing left for
+        // vsprintf to format and the placeholders it no longer carries cannot break anything.
+        // Refusing it is what stopped a merchant from hiding a sentence that happens to take
+        // parameters, which is the documented way of removing an unwanted text.
+        if ('' === trim((string) $translation->getTranslation())) {
+            return;
+        }
+
         if ($this->countArgumentsOfTranslation($translation->getKey()) != $this->countArgumentsOfTranslation($translation->getTranslation())) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
