@@ -3,6 +3,7 @@ parameters:
   test_translations_dir: "%resources_dir%/translations"
   translations_theme_dir: "%resources_dir%/themes"
   translations_modules_dir: "%resources_dir%/modules"
+  override_modules_dir: "%resources_dir%/override/modules"
   prestashop.security.voter.product.class: Tests\Integration\Utility\PageVoter
 
 imports:
