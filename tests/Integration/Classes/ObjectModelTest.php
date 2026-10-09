@@ -88,7 +88,6 @@ class ObjectModelTest extends TestCase
     {
         $newObject = new TestableObjectModel();
         $transMethod = new ReflectionMethod($newObject, 'trans');
-        $transMethod->setAccessible(true);
         $trans = $transMethod->invoke($newObject, '<a href="test">%d Succesful deletion "%s"</a>', [10, '<b>stringTest</b>'], 'Admin.Notifications.Success');
         $this->assertEquals('<a href="test">10 Succesful deletion "<b>stringTest</b>"</a>', $trans);
 

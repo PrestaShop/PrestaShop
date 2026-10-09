@@ -287,12 +287,15 @@ final class ExtraPropertyDefinition
             : array_values(array_unique(array_map('intval', $associatedShopIds)));
 
         // Entity names are SQL identifier fragments (tables + primary key column):
-        // normalize to lower snake_case before validating and storing — tableize()
-        // converts CamelCase (ProductAttribute → product_attribute), then hyphens
-        // become underscores. Known irregular spellings then converge onto their
-        // canonical entity name ('orders' → 'order', 'product_attribute' →
-        // 'combination') so every spelling of one entity yields one stored definition.
-        $normalizedEntityName = str_replace('-', '_', Inflector::getInflector()->tableize($entityName));
+        // normalize to lower snake_case before validating and storing. Fully uppercase
+        // identifiers are lowercased first so acronyms (CMS → cms) are not split by
+        // tableize(); CamelCase names still follow the regular inflector conversion
+        // (ProductAttribute → product_attribute). Hyphens then become underscores.
+        // Known irregular spellings finally converge onto their canonical entity name
+        // ('orders' → 'order', 'product_attribute' → 'combination') so every spelling
+        // of one entity yields one stored definition.
+        $entityNameForNormalization = strtoupper($entityName) === $entityName ? strtolower($entityName) : $entityName;
+        $normalizedEntityName = str_replace('-', '_', Inflector::getInflector()->tableize($entityNameForNormalization));
         $normalizedEntityName = self::CANONICAL_ENTITY_NAMES[$normalizedEntityName] ?? $normalizedEntityName;
         if (!ExtraPropertyValidator::isTableOrIdentifier($normalizedEntityName)) {
             throw new InvalidExtraPropertyDefinitionException(sprintf(

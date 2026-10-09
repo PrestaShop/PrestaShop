@@ -63,7 +63,7 @@ class SmartyLazyRegister
 
     public static function getInstance($smarty)
     {
-        $hash = spl_object_hash($smarty);
+        $hash = spl_object_id($smarty);
 
         if (!isset(self::$instances[$hash])) {
             self::$instances[$hash] = new self();

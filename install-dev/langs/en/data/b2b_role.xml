@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<entity_b2b_role>
+  <b2b_role id="SuperAdmin">
+    <name>Super Admin</name>
+  </b2b_role>
+  <b2b_role id="Admin">
+    <name>Admin</name>
+  </b2b_role>
+  <b2b_role id="Buyer">
+    <name>Buyer</name>
+  </b2b_role>
+</entity_b2b_role>

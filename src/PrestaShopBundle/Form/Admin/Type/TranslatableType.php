@@ -223,7 +223,7 @@ class TranslatableType extends TranslatorAwareType
      * Gets single error excluding the default locales error since for default locale a language name prefix is not
      * required.
      *
-     * @param FormErrorIterator $formErrors
+     * @param FormErrorIterator<FormError> $formErrors
      * @param FormInterface $form
      * @param array $locales
      *
@@ -262,7 +262,7 @@ class TranslatableType extends TranslatorAwareType
     /**
      * Gets translatable errors ready for popover display and assigned to each language
      *
-     * @param FormErrorIterator $formErrors
+     * @param FormErrorIterator<FormError> $formErrors
      * @param FormInterface $form
      * @param array $locales
      *
@@ -282,6 +282,10 @@ class TranslatableType extends TranslatorAwareType
 
             if ($doesLocaleExistForInvalidForm) {
                 foreach ($formErrors as $formError) {
+                    if (!$formError instanceof FormError) {
+                        continue;
+                    }
+
                     if ($this->doesErrorFormAndCurrentFormMatches($formError->getOrigin(), $formItem)) {
                         $errorsByLocale[] = [
                             'locale_name' => $locales[$iteration]['name'],
