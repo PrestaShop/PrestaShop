@@ -22,19 +22,25 @@ jobs:
             const baseBranch = pr.base.ref;
             const action = context.payload.action;
 
-            // Only attempt to set a milestone on opened, or on edited when the
-            // base branch changed. Other activity types (reopened, milestoned,
-            // demilestoned) must not retrigger milestone selection.
-            if (action !== 'opened' && action !== 'edited') {
-              console.log(`Skipping set-milestone for event action: ${action}`);
+            // Decide from the pull request state rather than from the activity type.
+            // Keying on 'opened' alone loses the milestone for good whenever that run
+            // does not survive: the concurrency group is shared by every
+            // pull_request_target activity, so an edit arriving while the opened run
+            // is still going cancels it, and every later event took the skip branch.
+            const changes = context.payload.changes;
+            const baseChanged = action === 'edited' && !!(changes && changes.base);
+
+            // A removal is deliberate, so it is never undone.
+            if (action === 'demilestoned') {
+              console.log('Milestone was removed deliberately, not restoring it.');
               return;
             }
-            if (action === 'edited') {
-              const changes = context.payload.changes;
-              if (!changes || !changes.base) {
-                console.log('Edit event but base branch did not change, skipping.');
-                return;
-              }
+            // A milestone already chosen at triage is never overwritten. Re-selecting
+            // it when the base branch changes stays the one exception, and this also
+            // stops the write below from looping through its own milestoned event.
+            if (pr.milestone && !baseChanged) {
+              console.log(`Pull request already carries milestone "${pr.milestone.title}", nothing to do.`);
+              return;
             }
 
             // Fetch all open milestones
