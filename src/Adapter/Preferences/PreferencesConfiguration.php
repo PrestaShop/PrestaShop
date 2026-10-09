@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\Feature\ShopModeFeature;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType;
 use PrestaShopLogger;
+use ProductSale;
 
 /**
  * This class will provide Shop Preferences configuration.
@@ -46,6 +47,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             'display_suppliers' => $this->configuration->getBoolean('PS_DISPLAY_SUPPLIERS'),
             'display_manufacturers' => $this->configuration->getBoolean('PS_DISPLAY_MANUFACTURERS'),
             'display_best_sellers' => $this->configuration->getBoolean('PS_DISPLAY_BEST_SELLERS'),
+            'best_sellers_days' => $this->configuration->getInt('PS_BEST_SELLERS_DAYS'),
             'multishop_feature_active' => $this->configuration->getBoolean('PS_MULTISHOP_FEATURE_ACTIVE'),
         ];
     }
@@ -96,6 +98,8 @@ class PreferencesConfiguration implements DataConfigurationInterface
             );
         }
 
+        $previousBestSellerDays = $this->configuration->getInt('PS_BEST_SELLERS_DAYS');
+
         $this->configuration->set('PS_SSL_ENABLED', $configuration['enable_ssl']);
         $this->configuration->set('PS_TOKEN_ENABLE', $configuration['enable_token']);
         $this->configuration->set(ShopModeFeature::CONFIGURATION_NAME, $newShopModeValue->value);
@@ -106,7 +110,12 @@ class PreferencesConfiguration implements DataConfigurationInterface
         $this->configuration->set('PS_DISPLAY_SUPPLIERS', $configuration['display_suppliers']);
         $this->configuration->set('PS_DISPLAY_MANUFACTURERS', $configuration['display_manufacturers']);
         $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
+        $this->configuration->set('PS_BEST_SELLERS_DAYS', $configuration['best_sellers_days']);
         $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
+
+        if ($previousBestSellerDays != (int) $configuration['best_sellers_days']) {
+            ProductSale::recalculateBestSellers(true);
+        }
 
         return [];
     }
@@ -140,6 +149,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             $configuration['display_suppliers'],
             $configuration['display_manufacturers'],
             $configuration['display_best_sellers'],
+            $configuration['best_sellers_days'],
             $configuration['multishop_feature_active']
         );
     }

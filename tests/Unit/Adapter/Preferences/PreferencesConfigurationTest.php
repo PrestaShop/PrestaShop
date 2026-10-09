@@ -32,7 +32,7 @@ class PreferencesConfigurationTest extends TestCase
     protected function setUp(): void
     {
         $this->mockConfiguration = $this->getMockBuilder(Configuration::class)
-            ->onlyMethods(['get', 'getBoolean', 'set', 'getEnum'])
+            ->onlyMethods(['get', 'getBoolean', 'set', 'getEnum', 'getInt'])
             ->disableOriginalConstructor()
             ->getMock();
         $this->object = new PreferencesConfiguration($this->mockConfiguration);
@@ -71,7 +71,13 @@ class PreferencesConfigurationTest extends TestCase
                     [ShopModeFeature::CONFIGURATION_NAME, ShopModeEnum::class, ShopModeFeature::DEFAULT_SHOP_MODE, ShopModeEnum::SHOP_MODE_B2C_ONLY],
                 ]
             );
-
+        $this->mockConfiguration
+            ->method('getInt')
+            ->willReturnMap(
+                [
+                    ['PS_BEST_SELLERS_DAYS', 0, 0],
+                ]
+            );
         $result = $this->object->getConfiguration();
         $this->assertSame(
             [
@@ -85,6 +91,7 @@ class PreferencesConfigurationTest extends TestCase
                 'display_suppliers' => false,
                 'display_manufacturers' => true,
                 'display_best_sellers' => false,
+                'best_sellers_days' => 0,
                 'multishop_feature_active' => true,
             ],
             $result
@@ -136,6 +143,7 @@ class PreferencesConfigurationTest extends TestCase
                     'display_suppliers' => false,
                     'display_manufacturers' => true,
                     'display_best_sellers' => false,
+                    'best_sellers_days' => 0,
                     'multishop_feature_active' => true,
                 ]
             )
@@ -166,6 +174,7 @@ class PreferencesConfigurationTest extends TestCase
                     ['PS_DISPLAY_BEST_SELLERS', false],
                     ['PS_MULTISHOP_FEATURE_ACTIVE', true],
                     ['PS_PRICE_ROUND_MODE', 'test'],
+                    ['PS_BEST_SELLERS_DAYS', 0],
                     ['PS_ROUND_TYPE', 'test'],
                 ]
             );
@@ -184,6 +193,7 @@ class PreferencesConfigurationTest extends TestCase
                     'display_suppliers' => false,
                     'display_manufacturers' => true,
                     'display_best_sellers' => false,
+                    'best_sellers_days' => 0,
                     'multishop_feature_active' => true,
                 ]
             )
