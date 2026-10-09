@@ -318,6 +318,7 @@ class WebserviceRequestCore
             'shop_urls' => ['description' => 'Shop URLs from multi-shop feature', 'class' => 'ShopUrl'],
             'product_customization_fields' => ['description' => 'Customization Field', 'class' => 'CustomizationField'],
             'customizations' => ['description' => 'Customization values', 'class' => 'Customization'],
+            'product_downloads' => ['description' => 'The downloadable files of virtual products', 'class' => 'ProductDownload'],
         ];
 
         // An array [module_name => module_output] will be returned
