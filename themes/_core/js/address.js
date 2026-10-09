@@ -13,33 +13,50 @@ import prestashop from 'prestashop';
  */
 function handleCountryChange(selectors) {
   $('body').on('change', selectors.country, (event) => {
-    const requestData = {
-      id_country: $(selectors.country).val(),
-      id_address: $(`${selectors.address} form`).data('id-address'),
-    };
-    const getFormViewUrl = $(`${selectors.address} form`).data('refresh-url');
-    const formFieldsSelector = `${selectors.address} input`;
     const target = $(event.target);
 
-    const submitButton = $(`${selectors.address} [type="submit"]`);
+    // The checkout shows the delivery and the invoice address form at the same time,
+    // so every lookup below has to be scoped to the form that actually changed. A
+    // page-wide selector reads the first form on the page instead, which is why
+    // changing the country on the invoice form used the delivery form's country.
+    const addressForm = target.closest(selectors.address);
+
+    // In the checkout the address partial renders inside the step's own <form> and
+    // browsers drop the nested start tag, so the data attributes end up on the
+    // enclosing form. On the my-account address page they stay inside the wrapper.
+    const dataHolder = addressForm.find('form').first().length
+      ? addressForm.find('form').first()
+      : target.closest('form');
+
+    const requestData = {
+      id_country: target.val(),
+      id_address: dataHolder.data('id-address'),
+      // Which form this is. Without it the controller cannot tell the delivery form
+      // from the invoice one and renders both as 'delivery'.
+      type: addressForm.find('[name="saveAddress"]').val(),
+    };
+    const getFormViewUrl = dataHolder.data('refresh-url');
+
+    const submitButton = addressForm.find('[type="submit"]');
     submitButton.prop('disabled', true);
 
     $.post(getFormViewUrl, requestData).then((resp) => {
       const inputs = [];
 
       // Store fields values before updating form
-      $(formFieldsSelector).each(function () {
+      addressForm.find('input').each(function () {
         inputs[$(this).prop('name')] = $(this).val();
       });
 
-      $(target.closest(selectors.address)).replaceWith(resp.address_form);
+      const updatedForm = $(resp.address_form);
+      addressForm.replaceWith(updatedForm);
 
       // Restore fields values
-      $(formFieldsSelector).each(function () {
+      updatedForm.find('input').each(function () {
         $(this).val(inputs[$(this).prop('name')]);
       });
 
-      prestashop.emit('updatedAddressForm', {target: $(selectors.address), resp});
+      prestashop.emit('updatedAddressForm', {target: updatedForm, resp});
     }).fail((resp) => {
       submitButton.prop('disabled', false);
       prestashop.emit('handleError', {eventType: 'updateAddressForm', resp});

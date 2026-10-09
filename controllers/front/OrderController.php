@@ -330,6 +330,11 @@ class OrderControllerCore extends FrontController
     {
         $addressForm = $this->makeAddressForm();
 
+        // The form being refreshed may be the delivery or the invoice one. Rendering it
+        // always as 'delivery' turns an edited invoice address into the delivery address
+        // on submit, because this type drives the saveAddress hidden input.
+        $addressType = Tools::getValue('type') === 'invoice' ? 'invoice' : 'delivery';
+
         if (Tools::getIsset('id_address') && ($id_address = (int) Tools::getValue('id_address'))) {
             $addressForm->loadAddressById($id_address);
         }
@@ -345,10 +350,21 @@ class OrderControllerCore extends FrontController
             }
         }
 
+        $extraParams = ['type' => $addressType];
+
+        if ($addressType === 'invoice') {
+            // This request carries only the country change, so the step recomputes
+            // form_has_continue_button as false and the refreshed markup downgrades
+            // "Continue" to "Save". The submit then omits confirm-addresses and the
+            // address step can never complete. The invoice form is always last in the
+            // step, which is exactly when CheckoutAddressesStep sets this itself.
+            $extraParams['form_has_continue_button'] = true;
+        }
+
         $templateParams = array_merge(
             $addressForm->getTemplateVariables(),
             $stepTemplateParameters,
-            ['type' => 'delivery']
+            $extraParams
         );
 
         ob_end_clean();
