@@ -38,22 +38,33 @@ class CspReportControllerCore extends FrontController
     }
 
     /**
-     * The current shop's own hosts (every active shop_url domain + domain_ssl), lower-cased. A genuine
-     * report's document-uri is always on one of these, so this sheds junk and misdirected reports (crawlers,
-     * other sites' pages). It is not an authenticity check: the body is public and the shop's domain is
-     * known, so a determined sender can still spoof the host. Everything downstream treats the report as
-     * untrusted regardless.
+     * The hosts a genuine report's document-uri can be on (every active shop_url domain + domain_ssl),
+     * lower-cased, so the collector can shed junk and misdirected reports (crawlers, other sites' pages).
+     * The storefront is per shop, so only the shop being served counts; the back office is one global
+     * surface a merchant reaches on any shop's domain, so every active shop's hosts count. It is not an
+     * authenticity check: the body is public and the shop's domain is known, so a determined sender can
+     * still spoof the host. Everything downstream treats the report as untrusted regardless.
      *
      * @return array<string, true> host set, keyed for O(1) lookup
      */
-    private function shopHosts(): array
+    private function shopHosts(CspContext $context): array
     {
+        $shops = [$this->context->shop];
+        if (CspContext::ADMIN === $context) {
+            $shops = [];
+            foreach (Shop::getShops(true, null, true) as $shopId) {
+                $shops[] = new Shop((int) $shopId);
+            }
+        }
+
         $hosts = [];
-        foreach ($this->context->shop->getUrls() as $url) {
-            foreach ([$url['domain'] ?? '', $url['domain_ssl'] ?? ''] as $domain) {
-                $domain = Tools::strtolower(trim((string) $domain));
-                if ('' !== $domain) {
-                    $hosts[$domain] = true;
+        foreach ($shops as $shop) {
+            foreach ($shop->getUrls() as $url) {
+                foreach ([$url['domain'] ?? '', $url['domain_ssl'] ?? ''] as $domain) {
+                    $domain = Tools::strtolower(trim((string) $domain));
+                    if ('' !== $domain) {
+                        $hosts[$domain] = true;
+                    }
                 }
             }
         }
@@ -126,7 +137,7 @@ class CspReportControllerCore extends FrontController
             // Drop reports whose document-uri is not on a shop host: a genuine report comes from a page we
             // served, so this sheds junk and misdirected pages. It is not an authenticity check (see
             // shopHosts()); the body stays untrusted and is validated field by field below.
-            $shopHosts = $this->shopHosts();
+            $shopHosts = $this->shopHosts($context);
 
             /** @var CspViolationRecorder $recorder */
             $recorder = $this->get(CspViolationRecorder::class);
