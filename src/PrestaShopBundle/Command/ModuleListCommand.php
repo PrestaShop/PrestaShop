@@ -101,9 +101,9 @@ class ModuleListCommand extends Command
     {
         // We need an employee or some legacy module hooks blow up (see LegacyHookSubscriber).
         // The permission filter on ModuleRepository::filterModulesByPermissions() is
-        // bypassed in CLI by PHPCli::isPHPCli(), so a non-existing employee is harmless.
+        // bypassed in CLI by PHPCli::isPHPCli(), so an anonymous employee (without id) is enough.
         if (!$this->context->getContext()->employee) {
-            $this->context->getContext()->employee = new Employee(42);
+            $this->context->getContext()->employee = new Employee();
         }
 
         // ModuleRepository keys its cache by language; the language context must be initialised.
