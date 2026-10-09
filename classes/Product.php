@@ -4408,7 +4408,11 @@ class ProductCore extends ObjectModel
         }
 
         $query->groupBy('id_attribute_group, id_product_attribute');
-        $query->orderBy('ag.position ASC, a.position ASC, agl.name ASC');
+        // The combination id is the tie-breaker that makes this order total. Without it, rows sharing a
+        // group and attribute position come back in whatever order the engine chooses, which differs
+        // between MySQL and MariaDB - and the front office picks the first matching combination, so the
+        // size preselected for a colour changed with the database engine.
+        $query->orderBy('ag.position ASC, a.position ASC, agl.name ASC, product_attribute_shop.id_product_attribute ASC');
 
         Hook::exec('actionProductGetAttributesGroupsBefore', [
             'product' => $this,
