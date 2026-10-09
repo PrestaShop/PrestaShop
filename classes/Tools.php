@@ -2773,8 +2773,10 @@ class ToolsCore
         fwrite($write_fd, "AddType application/vnd.ms-fontobject .eot\n");
         fwrite($write_fd, "AddType font/ttf .ttf\n");
         fwrite($write_fd, "AddType font/otf .otf\n");
-        fwrite($write_fd, "AddType application/font-woff .woff\n");
+        fwrite($write_fd, "AddType font/woff .woff\n");
         fwrite($write_fd, "AddType font/woff2 .woff2\n");
+        fwrite($write_fd, "AddType image/webp .webp\n");
+        fwrite($write_fd, "AddType image/avif .avif\n");
         fwrite($write_fd, "<IfModule mod_headers.c>
     <FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
         Header set Access-Control-Allow-Origin \"*\"
@@ -2802,7 +2804,6 @@ class ToolsCore
             $cache_control = "# Cache control for static files
 <IfModule mod_expires.c>
     ExpiresActive On
-    AddType image/webp .webp
     ExpiresByType image/webp \"access plus 1 month\"
     ExpiresByType image/avif \"access plus 1 month\"
     ExpiresByType image/gif \"access plus 1 month\"
