@@ -62,6 +62,8 @@ class ModuleControllerTest extends WebTestCase
             '_PS_ALL_THEMES_DIR_' => dirname(__DIR__, 6) . '/themes/',
             'PS_SHOP_DEFAULT' => '1',
             'PS_COOKIE_CHECKIP' => '1',
+            'PS_COOKIE_LIFETIME_BO' => 480,
+            'PS_COOKIE_LIFETIME_FO' => 480,
             'PS_LANG_DEFAULT' => '1',
             'PS_SSL_ENABLED' => '0',
             'PS_CURRENCY_DEFAULT' => '1',
