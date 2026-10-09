@@ -34,3 +34,17 @@ admin_business_entities_edit:
     _parent: admin_business_entities_list
   requirements:
     businessEntityId: \d+
+
+admin_business_entities_delete:
+  path: /{businessEntityId}/delete
+  methods: [ DELETE, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::deleteAction
+  requirements:
+    businessEntityId: \d+
+
+admin_business_entities_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::bulkDeleteAction
