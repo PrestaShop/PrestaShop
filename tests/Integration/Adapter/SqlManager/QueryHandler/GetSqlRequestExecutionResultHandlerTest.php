@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Adapter\SqlManager\QueryHandler;
 
+use Db;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
@@ -44,6 +45,7 @@ class GetSqlRequestExecutionResultHandlerTest extends KernelTestCase
     {
         DatabaseDump::restoreTables([
             'request_sql',
+            'employee',
         ]);
     }
 
@@ -84,6 +86,48 @@ class GetSqlRequestExecutionResultHandlerTest extends KernelTestCase
         /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
         $sqlRequestExecutionResult = $this->queryBus->handle($query);
         self::assertEquals('*******************', $sqlRequestExecutionResult->getRows()[0]['MyStrongPassword']);
+    }
+
+    /**
+     * The list used to be passwd and secure_key only, so every other credential the schema carries
+     * came back in clear text - which matters more now the same handler answers an API endpoint.
+     *
+     * @dataProvider getSecretColumns
+     */
+    public function testEveryKnownSecretColumnIsHidden(string $column, string $sql, string $selected): void
+    {
+        // hideSensitiveData() skips a null value, so the column has to hold something to be a test
+        Db::getInstance()->execute(sprintf(
+            'UPDATE `%semployee` SET `%s` = \'a-real-secret\' WHERE `id_employee` = 1',
+            _DB_PREFIX_,
+            $column
+        ));
+
+        /** @var SqlRequestId $sqlRequestId */
+        $sqlRequestId = $this->commandBus->handle(new AddSqlRequestCommand('secret_request', $sql));
+        /** @var SqlRequestExecutionResult $result */
+        $result = $this->queryBus->handle(new GetSqlRequestExecutionResult($sqlRequestId->getValue()));
+
+        self::assertEquals(
+            '*******************',
+            $result->getRows()[0][$selected],
+            sprintf('%s was returned in clear text', $selected)
+        );
+    }
+
+    public function getSecretColumns(): iterable
+    {
+        yield 'reset token' => [
+            'reset_password_token',
+            'SELECT e.id_employee, e.reset_password_token FROM ps_employee e WHERE e.id_employee = 1;',
+            'reset_password_token',
+        ];
+        // the alias path has to keep working for the names added alongside passwd
+        yield 'reset token behind an alias' => [
+            'reset_password_token',
+            'SELECT e.id_employee, e.reset_password_token AS session_token FROM ps_employee e WHERE e.id_employee = 1;',
+            'session_token',
+        ];
     }
 
     public function testUnauthorizedFunctionInSelect(): void
