@@ -191,6 +191,20 @@ class QueryParamsCollectionTest extends TestCase
                     'first_result' => 4,
                 ],
             ]],
+            ['reserved_quantity', null, null, [
+                'ORDER BY {reserved_quantity} ',
+                [
+                    'max_results' => 100,
+                    'first_result' => 0,
+                ],
+            ]],
+            ['reserved_quantity DESC', null, null, [
+                'ORDER BY {reserved_quantity} DESC ',
+                [
+                    'max_results' => 100,
+                    'first_result' => 0,
+                ],
+            ]],
             ['physical_quantity', '3', '3', [
                 'ORDER BY {physical_quantity} ',
                 [
