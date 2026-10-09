@@ -53,18 +53,18 @@ Feature: Collect CSP violation reports
     And the CSP log for shop 32 should contain 1 row
     And violation "script-src" from "https://b.example.com" for shop 32 should have 1 hit
 
-  Scenario: The per-shop row cap prunes the oldest rows beyond the cap
+  Scenario: At the per-shop row cap new sources are refused but known ones keep counting
     When I record the following CSP violations for shop 41 through a recorder capped at 3:
       | directive  | source                 |
       | script-src | https://a1.example.com |
       | script-src | https://a2.example.com |
       | script-src | https://a3.example.com |
       | script-src | https://a4.example.com |
-      | script-src | https://a5.example.com |
+      | script-src | https://a1.example.com |
     Then the CSP log for shop 41 should contain 3 rows
-    And the CSP log for shop 41 should not contain violation "script-src" from "https://a1.example.com"
-    And the CSP log for shop 41 should not contain violation "script-src" from "https://a2.example.com"
-    And violation "script-src" from "https://a5.example.com" for shop 41 should have 1 hit
+    And the CSP log for shop 41 should not contain violation "script-src" from "https://a4.example.com"
+    And violation "script-src" from "https://a1.example.com" for shop 41 should have 2 hits
+    And violation "script-src" from "https://a3.example.com" for shop 41 should have 1 hit
 
   Scenario: The unreviewed count excludes sources that are already allow-listed
     When I record a CSP violation for shop 71 with directive "script-src" and blocked source "https://a.example.com"

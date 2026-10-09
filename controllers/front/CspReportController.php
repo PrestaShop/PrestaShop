@@ -17,13 +17,6 @@ class CspReportControllerCore extends FrontController
     // Real reports are a few KB; cap the body before parsing so an oversized payload is rejected cheaply.
     private const MAX_BODY_SIZE = 32768;
 
-    /**
-     * The row-cap prune (COUNT + DELETE) runs on a sample of inserting requests, not every one: under a
-     * report flood this stops concurrent DELETEs on one shop's log from piling up, while the cap still
-     * holds on average (it is approximate by design, and a prune removes all overflow when it runs).
-     */
-    private const ROW_CAP_PRUNE_SAMPLING = 10;
-
     /** Keep recording during maintenance, which is often exactly when a merchant tests enforcement. */
     protected function displayMaintenancePage()
     {
@@ -141,13 +134,14 @@ class CspReportControllerCore extends FrontController
 
             /** @var CspViolationRecorder $recorder */
             $recorder = $this->get(CspViolationRecorder::class);
-            $anyInserted = false;
             foreach ($reports as $report) {
                 if (!$this->isOnShopHost($report['documentUri'], $shopHosts)) {
                     continue;
                 }
 
-                $anyInserted = $recorder->record(
+                // The recorder holds the per-shop row cap itself (new sources are refused once it is full),
+                // so the collector just records; no COUNT or prune runs on this public, flood-exposed path.
+                $recorder->record(
                     $context,
                     $shopId,
                     $report['directive'],
@@ -156,14 +150,7 @@ class CspReportControllerCore extends FrontController
                     $report['sample'],
                     $report['sourceFile'],
                     $report['lineNumber'],
-                    false
-                ) || $anyInserted;
-            }
-
-            // Enforce the row cap once per batch, only when a new row was inserted (bumped counters
-            // can't exceed the cap), and only on a sample of requests (see ROW_CAP_PRUNE_SAMPLING).
-            if ($anyInserted && 1 === random_int(1, self::ROW_CAP_PRUNE_SAMPLING)) {
-                $recorder->enforceRowCap($context, $shopId);
+                );
             }
         } catch (Throwable $e) {
             // This public endpoint must never 500 on a DB hiccup: skip recording, still answer 204, but log it.
