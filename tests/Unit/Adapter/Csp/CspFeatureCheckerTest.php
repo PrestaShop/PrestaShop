@@ -102,12 +102,13 @@ class CspFeatureCheckerTest extends TestCase
         }
     }
 
-    public function testTheBackOfficeReadsItsOwnReportTargetKey(): void
+    public function testTheBackOfficeNeverHasAnExternalReportTarget(): void
     {
-        $admin = 'https://admin-monitor.example.com/csp';
-        $checker = $this->checker(flagEnabled: true, config: ['PS_CSP_REPORT_URI' => 'https://front.example.com/csp', 'PS_CSP_ADMIN_REPORT_URI' => $admin]);
+        // Back-office reports carry the admin URL (CSRF token, secret folder), so they always go to the
+        // built-in collector; no stored value can route them to a third party.
+        $checker = $this->checker(flagEnabled: true, config: ['PS_CSP_ADMIN_REPORT_URI' => 'https://admin-monitor.example.com/csp']);
 
-        $this->assertSame($admin, $checker->reportTargetForContext(CspContext::ADMIN, 0));
+        $this->assertSame('', $checker->reportTargetForContext(CspContext::ADMIN, 0));
     }
 
     /**
