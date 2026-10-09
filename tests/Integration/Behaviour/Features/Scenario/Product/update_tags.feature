@@ -60,6 +60,32 @@ Feature: Update product tags from Back Office (BO)
       | locale | value            |
       | en-US  | mechanic,watch   |
       | fr-FR  | montre,mécanique |
+    # A new tag made of special characters only is stripped by search indexation and can never be found, so it is rejected
+    When I update product "productTags" tags with following values:
+      | tags[en-US] | mechanic,watch,++++ |
+    Then I should get error that product searchable_tag is invalid
+    And product "productTags" localized "tags" should be:
+      | locale | value            |
+      | en-US  | mechanic,watch   |
+      | fr-FR  | montre,mécanique |
+
+  Scenario: A tag saved before the search check does not block the product
+    Given product "productTags" has tag "++++" in "en-US" saved before tags were checked for the search
+    And product "productTags" localized "tags" should be:
+      | locale | value |
+      | en-US  | ++++  |
+    # The form resubmits the stored tags: the product still saves, and only the new tags are checked
+    When I update product "productTags" tags with following values:
+      | tags[en-US] | ++++,mechanic |
+    Then product "productTags" localized "tags" should be:
+      | locale | value         |
+      | en-US  | mechanic,++++ |
+    When I update product "productTags" tags with following values:
+      | tags[en-US] | ++++,mechanic,*** |
+    Then I should get error that product searchable_tag is invalid
+    And product "productTags" localized "tags" should be:
+      | locale | value         |
+      | en-US  | mechanic,++++ |
 
   Scenario: Remove all product tags
     When I update product "productTags" tags with following values:

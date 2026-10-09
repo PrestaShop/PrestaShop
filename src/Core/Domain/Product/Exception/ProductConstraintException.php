@@ -271,4 +271,9 @@ class ProductConstraintException extends ProductException
      * while the "Allow iframes on HTML fields" option is disabled.
      */
     public const INVALID_DESCRIPTION_CONTAINS_EMBEDDED_HTML = 510;
+
+    /**
+     * When a new product tag is stripped to nothing by the search indexation, so it could never be found
+     */
+    public const UNSEARCHABLE_TAG = 520;
 }

@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags as LocalizedTagsDto;
 use RuntimeException;
+use Tag;
 
 class UpdateTagsFeatureContext extends AbstractProductFeatureContext
 {
@@ -40,6 +41,26 @@ class UpdateTagsFeatureContext extends AbstractProductFeatureContext
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * Simulates a tag stored before unsearchable tags were rejected: the tag row is created
+     * directly, then linked through Tag::addTags(), which accepts existing tags.
+     *
+     * @Given product :productReference has tag :tag in :locale saved before tags were checked for the search
+     */
+    public function addTagSavedBeforeSearchCheck(string $productReference, string $tag, string $locale): void
+    {
+        $productId = (int) $this->getSharedStorage()->get($productReference);
+        $langId = (int) Language::getIdByLocale($locale, true);
+
+        Tag::deleteTagsForProduct($productId);
+        $legacyTag = new Tag();
+        $legacyTag->name = $tag;
+        $legacyTag->id_lang = $langId;
+        $legacyTag->add();
+
+        Assert::assertTrue(Tag::addTags($langId, $productId, [$tag]));
     }
 
     /**
