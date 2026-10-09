@@ -12,12 +12,13 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * A collected CSP violation report, one row per distinct (shop, directive, source); collisions bump "hits".
+ * A collected CSP violation report, one row per distinct (shop, directive, source, page); collisions bump "hits".
+ * Keeping the document URI in the key gives the merchant a per-page view of where each source is blocked.
  *
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\CspLogRepository")
  *
  * @ORM\Table(
- *     uniqueConstraints={@ORM\UniqueConstraint(name="csp_log_shop_directive_source_idx", fields={"shopId", "context", "directive", "source"})},
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="csp_log_shop_directive_source_doc_idx", fields={"shopId", "context", "directive", "source", "documentUri"})},
  *     indexes={@ORM\Index(name="csp_log_shop_prune_idx", columns={"id_shop", "context", "hits", "date_upd"})}
  * )
  */
@@ -53,9 +54,27 @@ class CspLog
     private string $source;
 
     /**
-     * @ORM\Column(name="document_uri", type="string", length=2048, nullable=true)
+     * @ORM\Column(name="document_uri", type="string", length=255, options={"default": ""})
      */
-    private ?string $documentUri = null;
+    private string $documentUri = '';
+
+    /**
+     * A short sample of the offending inline code (script/style), when the browser supplies one. Informational
+     * only: not part of the unique key, refreshed to the latest report for the (shop, directive, source, page).
+     *
+     * @ORM\Column(name="sample", type="string", length=64, nullable=true)
+     */
+    private ?string $sample = null;
+
+    /**
+     * @ORM\Column(name="source_file", type="string", length=255, nullable=true)
+     */
+    private ?string $sourceFile = null;
+
+    /**
+     * @ORM\Column(name="line_number", type="integer", nullable=true, options={"unsigned": true})
+     */
+    private ?int $lineNumber = null;
 
     /**
      * @ORM\Column(name="hits", type="integer", options={"unsigned": true, "default": 1})
@@ -125,14 +144,50 @@ class CspLog
         return $this;
     }
 
-    public function getDocumentUri(): ?string
+    public function getDocumentUri(): string
     {
         return $this->documentUri;
     }
 
-    public function setDocumentUri(?string $documentUri): self
+    public function setDocumentUri(string $documentUri): self
     {
         $this->documentUri = $documentUri;
+
+        return $this;
+    }
+
+    public function getSample(): ?string
+    {
+        return $this->sample;
+    }
+
+    public function setSample(?string $sample): self
+    {
+        $this->sample = $sample;
+
+        return $this;
+    }
+
+    public function getSourceFile(): ?string
+    {
+        return $this->sourceFile;
+    }
+
+    public function setSourceFile(?string $sourceFile): self
+    {
+        $this->sourceFile = $sourceFile;
+
+        return $this;
+    }
+
+    public function getLineNumber(): ?int
+    {
+        return $this->lineNumber;
+    }
+
+    public function setLineNumber(?int $lineNumber): self
+    {
+        $this->lineNumber = $lineNumber;
 
         return $this;
     }

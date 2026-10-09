@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Command;
 
 use DateTimeImmutable;
+use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
 use PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
@@ -23,7 +24,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Cleans the CSP violation log: deletes reports older than the per-shop retention setting
  * (PS_CSP_RETENTION_DAYS, or the --older-than override) and enforces the per-shop row cap. Schedule
- * it from system cron. Allowed sources are never deleted.
+ * it from system cron. Allowed sources are never deleted. Surfaces where CSP is disabled are skipped,
+ * so turning the feature off stops all of its background deletions.
  */
 #[AsCommand(
     name: 'prestashop:csp:prune-log',
@@ -35,6 +37,7 @@ final class PruneCspLogCommand extends Command
         private readonly CspLogRepository $cspLogRepository,
         private readonly CspViolationRecorder $cspViolationRecorder,
         private readonly ShopConfigurationInterface $configuration,
+        private readonly CspFeatureChecker $featureChecker,
     ) {
         parent::__construct();
     }
@@ -74,6 +77,18 @@ final class PruneCspLogCommand extends Command
         }
 
         foreach ($targets as [$context, $shopId]) {
+            // Disabling the feature stops all of its background work: when CSP is off for a surface, run no
+            // pruning or row-cap deletion on its log, so an owner who turned it off gets no silent deletions.
+            if (!$this->featureChecker->isEnabledForContext($context, $shopId)) {
+                $output->writeln(sprintf(
+                    '%s%s: skipped (Content Security Policy is disabled).',
+                    CspContext::ADMIN === $context ? 'Back office' : 'Shop ',
+                    CspContext::ADMIN === $context ? '' : (string) $shopId
+                ));
+
+                continue;
+            }
+
             $days = $overrideDays ?? $this->retentionDays($context, $shopId);
 
             $deletedByAge = 0;

@@ -10,33 +10,29 @@ namespace Tests\Unit\Core\Grid\Action\Row\AccessibilityChecker;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\CspLogAllowAccessibilityChecker;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\CspLogRevokeAccessibilityChecker;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\CspLogWeakeningAllowAccessibilityChecker;
 
 /**
- * The three row-action checkers must be mutually exclusive per row: a source shows exactly one of
- * Allow / Allow-weakening / Revoke.
+ * The violations grid lists only not-yet-allowed sources, so each row offers exactly one of the two
+ * "Allow" actions: the plain one for safe sources, the confirm-guarded one for weakening sources.
  */
 class CspLogAccessibilityCheckerTest extends TestCase
 {
     /**
      * @dataProvider provideRecords
      */
-    public function testExactlyTheRightActionIsGranted(int $isAllowed, int $isWeakening, bool $allow, bool $weakeningAllow, bool $revoke): void
+    public function testExactlyOneAllowActionIsGranted(int $isWeakening, bool $allow, bool $weakeningAllow): void
     {
-        $record = ['is_allowed' => $isAllowed, 'is_weakening' => $isWeakening];
+        $record = ['is_weakening' => $isWeakening];
 
         $this->assertSame($allow, (new CspLogAllowAccessibilityChecker())->isGranted($record));
         $this->assertSame($weakeningAllow, (new CspLogWeakeningAllowAccessibilityChecker())->isGranted($record));
-        $this->assertSame($revoke, (new CspLogRevokeAccessibilityChecker())->isGranted($record));
     }
 
     public static function provideRecords(): iterable
     {
-        //                            is_allowed, is_weakening, allow, weakeningAllow, revoke
-        yield 'not allowed, safe' => [0, 0, true, false, false];
-        yield 'not allowed, weakening' => [0, 1, false, true, false];
-        yield 'allowed, safe' => [1, 0, false, false, true];
-        yield 'allowed, weakening' => [1, 1, false, false, true];
+        //                 is_weakening, allow, weakeningAllow
+        yield 'safe' => [0, true, false];
+        yield 'weakening' => [1, false, true];
     }
 }

@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Csp\CommandHandler;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AddCspRuleHandler;
 use PrestaShop\PrestaShop\Adapter\Csp\CspRuleValidator;
@@ -17,7 +15,6 @@ use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AddCspRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CannotAddCspRuleException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShopBundle\Entity\Repository\CspLogRepository;
 use PrestaShopBundle\Entity\Repository\CspRuleRepository;
 
 class AddCspRuleHandlerTest extends TestCase
@@ -30,12 +27,7 @@ class AddCspRuleHandlerTest extends TestCase
 
         // CspRuleValidator is final and is not reached on the all-shops path, so a real instance over a
         // mocked repository is enough.
-        $handler = new AddCspRuleHandler(
-            $repository,
-            $this->createMock(CspLogRepository::class),
-            new CspRuleValidator($repository),
-            $this->createMock(EntityManagerInterface::class)
-        );
+        $handler = new AddCspRuleHandler($repository, new CspRuleValidator($repository));
 
         $this->expectException(CannotAddCspRuleException::class);
 
@@ -49,15 +41,7 @@ class AddCspRuleHandlerTest extends TestCase
         $repository->method('findOneByShopDirectiveSource')->willReturn(null);
         $repository->expects($this->once())->method('add')->willReturn(9);
 
-        $logRepository = $this->createMock(CspLogRepository::class);
-        $logRepository->expects($this->once())->method('insertPlaceholderIfAbsent')->with(CspContext::ADMIN, 0, 'script-src', 'https://admin.example.com');
-
-        $connection = $this->createMock(Connection::class);
-        $connection->method('transactional')->willReturnCallback(fn (callable $operation) => $operation());
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->method('getConnection')->willReturn($connection);
-
-        $handler = new AddCspRuleHandler($repository, $logRepository, new CspRuleValidator($repository), $entityManager);
+        $handler = new AddCspRuleHandler($repository, new CspRuleValidator($repository));
 
         $ruleId = $handler->handle(new AddCspRuleCommand('script-src', 'https://admin.example.com', ShopConstraint::allShops(), CspContext::ADMIN));
 

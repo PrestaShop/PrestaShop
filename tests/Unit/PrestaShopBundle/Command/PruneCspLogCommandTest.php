@@ -10,19 +10,34 @@ namespace Tests\Unit\PrestaShopBundle\Command;
 
 use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
 use PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Command\PruneCspLogCommand;
 use PrestaShopBundle\Entity\Repository\CspLogRepository;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * CspViolationRecorder is final, so the real one is used over the mocked repository; its
- * enforceRowCap() calls countByShop(), which the tests assert as the cap-enforcement signal.
+ * CspViolationRecorder and CspFeatureChecker are final, so real instances are used over mocked
+ * dependencies; the recorder's enforceRowCap() calls countByShop(), which the tests assert as the
+ * cap-enforcement signal.
  */
 class PruneCspLogCommandTest extends TestCase
 {
+    /** A real (final) CspFeatureChecker reporting the feature flag + per-surface enabled state as $enabled. */
+    private function featureChecker(bool $enabled): CspFeatureChecker
+    {
+        $flagChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
+        $flagChecker->method('isEnabled')->willReturn($enabled);
+
+        $configuration = $this->createMock(ShopConfigurationInterface::class);
+        $configuration->method('get')->willReturn($enabled);
+
+        return new CspFeatureChecker($flagChecker, $configuration);
+    }
+
     public function testItAgePrunesEveryShopWithLogsAndEnforcesTheCap(): void
     {
         $logRepository = $this->createMock(CspLogRepository::class);
@@ -46,7 +61,8 @@ class PruneCspLogCommandTest extends TestCase
         $tester = new CommandTester(new PruneCspLogCommand(
             $logRepository,
             new CspViolationRecorder($logRepository),
-            $configuration
+            $configuration,
+            $this->featureChecker(true)
         ));
         $exitCode = $tester->execute([]);
 
@@ -70,10 +86,34 @@ class PruneCspLogCommandTest extends TestCase
         $tester = new CommandTester(new PruneCspLogCommand(
             $logRepository,
             new CspViolationRecorder($logRepository),
-            $configuration
+            $configuration,
+            $this->featureChecker(true)
         ));
 
         $this->assertSame(0, $tester->execute(['--shop' => '5', '--older-than' => '7']));
+    }
+
+    public function testItSkipsSurfacesWhereTheFeatureIsDisabledAndDeletesNothing(): void
+    {
+        $logRepository = $this->createMock(CspLogRepository::class);
+        $logRepository->method('distinctShopIds')->willReturnCallback(
+            fn (CspContext $context) => CspContext::FRONT === $context ? [1] : []
+        );
+        // Disabling the feature must stop all background deletion: no age-prune and no row-cap COUNT.
+        $logRepository->expects($this->never())->method('deleteOlderThanByShop');
+        $logRepository->expects($this->never())->method('countByShop');
+
+        $tester = new CommandTester(new PruneCspLogCommand(
+            $logRepository,
+            new CspViolationRecorder($logRepository),
+            $this->createMock(ShopConfigurationInterface::class),
+            $this->featureChecker(false)
+        ));
+
+        $exitCode = $tester->execute([]);
+
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('skipped (Content Security Policy is disabled)', $tester->getDisplay());
     }
 
     public function testItRejectsANonNumericOlderThan(): void
@@ -83,7 +123,8 @@ class PruneCspLogCommandTest extends TestCase
         $tester = new CommandTester(new PruneCspLogCommand(
             $logRepository,
             new CspViolationRecorder($logRepository),
-            $this->createMock(ShopConfigurationInterface::class)
+            $this->createMock(ShopConfigurationInterface::class),
+            $this->featureChecker(true)
         ));
 
         $this->assertSame(2, $tester->execute(['--older-than' => 'soon']));

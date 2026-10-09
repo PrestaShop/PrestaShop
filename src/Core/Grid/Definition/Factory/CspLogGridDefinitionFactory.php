@@ -8,32 +8,26 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspLogStatusFilter;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\CspLogAllowAccessibilityChecker;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\CspLogRevokeAccessibilityChecker;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\CspLogWeakeningAllowAccessibilityChecker;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BooleanColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/** Builds the grid definition for the collected CSP violation log with its allow/revoke curation actions. */
+/** Builds the grid definition for the collected CSP violations (one row per source per page), with the Allow action. */
 final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     public const GRID_ID = 'csp_log';
@@ -42,7 +36,6 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
         HookDispatcherInterface $hookDispatcher,
         private readonly CspLogAllowAccessibilityChecker $allowAccessibilityChecker,
         private readonly CspLogWeakeningAllowAccessibilityChecker $weakeningAllowAccessibilityChecker,
-        private readonly CspLogRevokeAccessibilityChecker $revokeAccessibilityChecker,
         private readonly RequestStack $requestStack,
     ) {
         parent::__construct($hookDispatcher);
@@ -69,16 +62,12 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     protected function getName(): string
     {
-        return $this->trans('Reported sources', [], 'Admin.Advparameters.Feature');
+        return $this->trans('Reported violations', [], 'Admin.Advparameters.Feature');
     }
 
     protected function getColumns(): ColumnCollection
     {
         $columns = (new ColumnCollection())
-            ->add(
-                (new BulkActionColumn('bulk_action'))
-                    ->setOptions(['bulk_field' => 'id_csp_rule', 'disabled_field' => 'is_not_allowed'])
-            )
             ->add(
                 (new DataColumn('directive'))
                     ->setName($this->trans('Directive', [], 'Admin.Advparameters.Feature'))
@@ -111,19 +100,21 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new BooleanColumn('is_allowed'))
-                    ->setName($this->trans('Allowed', [], 'Admin.Advparameters.Feature'))
-                    ->setOptions([
-                        'field' => 'is_allowed',
-                        'true_name' => $this->trans('Yes', [], 'Admin.Global'),
-                        'false_name' => $this->trans('No', [], 'Admin.Global'),
-                        'clickable' => false,
-                    ])
-            )
-            ->add(
                 (new DataColumn('document_uri'))
                     ->setName($this->trans('Page', [], 'Admin.Advparameters.Feature'))
                     ->setOptions(['field' => 'document_uri'])
+            )
+            // Inline violations only report the keyword ('unsafe-inline'); the sample and location
+            // identify which inline block triggered it.
+            ->add(
+                (new DataColumn('sample'))
+                    ->setName($this->trans('Blocked code', [], 'Admin.Advparameters.Feature'))
+                    ->setOptions(['field' => 'sample'])
+            )
+            ->add(
+                (new DataColumn('source_location'))
+                    ->setName($this->trans('Location', [], 'Admin.Advparameters.Feature'))
+                    ->setOptions(['field' => 'source_location'])
             )
             ->add(
                 (new DataColumn('hits'))
@@ -141,41 +132,45 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'actions' => (new RowActionCollection())
                             ->add(
-                                (new LinkRowAction('allow'))
+                                (new SubmitRowAction('allow'))
                                     ->setIcon('check')
                                     ->setName($this->trans('Allow', [], 'Admin.Advparameters.Feature'))
                                     ->setOptions([
+                                        'method' => 'POST',
                                         'route' => 'admin_security_csp_allow',
                                         'route_param_name' => 'cspLogId',
                                         'route_param_field' => 'id_csp_log',
                                         'extra_route_params' => $this->contextRouteParams(),
                                         'accessibility_checker' => $this->allowAccessibilityChecker,
+                                        'confirm_message' => $this->trans('Add this source to your allow-list?', [], 'Admin.Advparameters.Feature'),
+                                        'modal_options' => new ModalOptions([
+                                            'title' => $this->trans('Allow source', [], 'Admin.Advparameters.Feature'),
+                                            'confirm_button_label' => $this->trans('Allow', [], 'Admin.Advparameters.Feature'),
+                                            'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+                                            'confirm_button_class' => 'btn-primary',
+                                        ]),
                                     ])
                             )
                             ->add(
-                                (new LinkRowAction('allow_weakening'))
-                                    ->setIcon('warning')
+                                // Same "Allow" icon as the safe action so the column reads consistently; the
+                                // risk is carried by the "Weakens policy" column and a danger-styled confirm modal.
+                                (new SubmitRowAction('allow_weakening'))
+                                    ->setIcon('check')
                                     ->setName($this->trans('Allow (weakens policy)', [], 'Admin.Advparameters.Feature'))
                                     ->setOptions([
+                                        'method' => 'POST',
                                         'route' => 'admin_security_csp_allow',
                                         'route_param_name' => 'cspLogId',
                                         'route_param_field' => 'id_csp_log',
                                         'extra_route_params' => $this->contextRouteParams(),
                                         'accessibility_checker' => $this->weakeningAllowAccessibilityChecker,
                                         'confirm_message' => $this->trans('This source weakens the Content Security Policy for the whole shop. Allow it anyway?', [], 'Admin.Advparameters.Feature'),
-                                    ])
-                            )
-                            ->add(
-                                (new LinkRowAction('revoke'))
-                                    ->setIcon('close')
-                                    ->setName($this->trans('Revoke', [], 'Admin.Advparameters.Feature'))
-                                    ->setOptions([
-                                        'route' => 'admin_security_csp_revoke',
-                                        'route_param_name' => 'cspRuleId',
-                                        'route_param_field' => 'id_csp_rule',
-                                        'extra_route_params' => $this->contextRouteParams(),
-                                        'accessibility_checker' => $this->revokeAccessibilityChecker,
-                                        'confirm_message' => $this->trans('Revoke this allowed source?', [], 'Admin.Advparameters.Feature'),
+                                        'modal_options' => new ModalOptions([
+                                            'title' => $this->trans('Allow a weakening source', [], 'Admin.Advparameters.Feature'),
+                                            'confirm_button_label' => $this->trans('Allow', [], 'Admin.Advparameters.Feature'),
+                                            'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+                                            'confirm_button_class' => 'btn-warning',
+                                        ]),
                                     ])
                             ),
                     ])
@@ -202,18 +197,6 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('source')
             )
             ->add(
-                (new Filter('status', ChoiceType::class))
-                    ->setTypeOptions([
-                        'required' => false,
-                        'choices' => [
-                            $this->trans('Violations only', [], 'Admin.Advparameters.Feature') => CspLogStatusFilter::VIOLATIONS->value,
-                            $this->trans('Allowed', [], 'Admin.Advparameters.Feature') => CspLogStatusFilter::ALLOWED->value,
-                        ],
-                        'placeholder' => $this->trans('All', [], 'Admin.Advparameters.Feature'),
-                    ])
-                    ->setAssociatedColumn('is_allowed')
-            )
-            ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
                         'reset_route' => 'admin_common_reset_search_by_filter_id',
@@ -230,41 +213,13 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     protected function getGridActions()
     {
+        // Only "Refresh list": a curation surface has no use for the developer "Show SQL query" /
+        // "Export to SQL Manager" actions, and this matches the allow-list grid.
         return (new GridActionCollection())
             ->add(
                 (new SimpleGridAction('common_refresh_list'))
                     ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
                     ->setIcon('refresh')
-            )
-            ->add(
-                (new SimpleGridAction('common_show_query'))
-                    ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
-                    ->setIcon('code')
-            )
-            ->add(
-                (new SimpleGridAction('common_export_sql_manager'))
-                    ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
-                    ->setIcon('storage')
-            );
-    }
-
-    protected function getBulkActions()
-    {
-        return (new BulkActionCollection())
-            ->add(
-                (new SubmitBulkAction('revoke_selection'))
-                    ->setName($this->trans('Revoke selected', [], 'Admin.Advparameters.Feature'))
-                    ->setOptions([
-                        // The bulk modal posts to a bare route (params are dropped), so the back office
-                        // uses a context-carrying route; otherwise the revoke would run on the storefront surface.
-                        'submit_route' => $this->isAdminContext() ? 'admin_security_csp_bulk_revoke_admin' : 'admin_security_csp_bulk_revoke',
-                        'confirm_message' => $this->trans('Revoke the selected allowed sources?', [], 'Admin.Advparameters.Feature'),
-                        'modal_options' => new ModalOptions([
-                            'title' => $this->trans('Revoke selection', [], 'Admin.Advparameters.Feature'),
-                            'confirm_button_label' => $this->trans('Revoke', [], 'Admin.Advparameters.Feature'),
-                            'confirm_button_class' => 'btn-danger',
-                        ]),
-                    ])
             );
     }
 }

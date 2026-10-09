@@ -59,6 +59,11 @@ final class CspHeaderBuilder
         $parts = [];
         // CspPolicy never stores a directive without at least one source.
         foreach ($policy->getDirectives() as $directive => $sources) {
+            // Ask the browser to include a sample of the offending inline code in the report
+            // (reporting-only; it never changes what a source list allows).
+            if (in_array($directive, ['script-src', 'style-src'], true)) {
+                $sources[] = "'report-sample'";
+            }
             $parts[] = $directive . ' ' . implode(' ', $sources);
         }
 

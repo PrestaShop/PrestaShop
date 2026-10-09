@@ -34,6 +34,9 @@ final class RecordCspViolationHandler implements RecordCspViolationHandlerInterf
             $command->getDirective(),
             $command->getSource(),
             $command->getDocumentUri(),
+            $command->getSample(),
+            $command->getSourceFile(),
+            $command->getLineNumber(),
         );
     }
 }

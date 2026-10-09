@@ -21,6 +21,16 @@ Feature: Collect CSP violation reports
     Then the CSP log for shop 12 should contain 1 row
     And violation "script-src" from "https://cdn.example.com" for shop 12 should have 2 hits
 
+  Scenario: The same source reported on two different pages is kept as two rows
+    When I record a CSP violation for shop 15 with directive "script-src" and blocked source "https://cdn.example.com" on page "https://shop.example.com/"
+    And I record a CSP violation for shop 15 with directive "script-src" and blocked source "https://cdn.example.com" on page "https://shop.example.com/category/3-clothes"
+    Then the CSP log for shop 15 should contain 2 rows
+
+  Scenario: The same source on the same page increments the hit counter instead of adding a row
+    When I record a CSP violation for shop 16 with directive "script-src" and blocked source "https://cdn.example.com" on page "https://shop.example.com/"
+    And I record a CSP violation for shop 16 with directive "script-src" and blocked source "https://cdn.example.com" on page "https://shop.example.com/"
+    Then the CSP log for shop 16 should contain 1 row
+
   Scenario: A junk browser-extension source is dropped and nothing is recorded
     When I record a CSP violation for shop 13 with directive "script-src" and blocked source "chrome-extension://abcdefghijklmnop/inject.js"
     Then the CSP log for shop 13 should be empty
@@ -70,13 +80,13 @@ Feature: Collect CSP violation reports
     And the back-office CSP log should contain 1 row
     And the back-office CSP log should contain violation "script-src" from "https://admin.example.com"
 
-  Scenario: Pruning old reports deletes stale rows but keeps recent and allow-listed ones
+  Scenario: Pruning old reports deletes stale rows, keeps recent ones, and never touches the allow-list
     When I record a CSP violation for shop 51 with directive "script-src" and blocked source "https://old.example.com"
     And I backdate the CSP log for shop 51 source "https://old.example.com" by 60 days
     And I record a CSP violation for shop 51 with directive "script-src" and blocked source "https://recent.example.com"
     And I add a CSP rule "rule1" for shop 51 with directive "script-src" and source "https://ruled.example.com"
-    And I backdate the CSP log for shop 51 source "https://ruled.example.com" by 60 days
     And I prune CSP reports for shop 51 older than 30 days
     Then shop 51 should have 1 CSP rule
-    And the CSP log for shop 51 should contain 2 rows
+    And the CSP log for shop 51 should contain 1 row
     And the CSP log for shop 51 should not contain violation "script-src" from "https://old.example.com"
+    And violation "script-src" from "https://recent.example.com" for shop 51 should have 1 hit

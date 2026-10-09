@@ -36,6 +36,12 @@ class CspHeaderBuilderTest extends TestCase
         $this->assertStringContainsString('report-uri ' . self::REPORT_URI, $policy);
         $this->assertStringContainsString('report-to csp-endpoint', $policy);
 
+        // script-src/style-src carry 'report-sample' so browsers include a snippet of the offending inline
+        // code in the report; it is reporting-only and must not appear on any other directive.
+        $this->assertStringContainsString("script-src 'self' 'report-sample'", $policy);
+        $this->assertStringContainsString("style-src 'self' 'report-sample'", $policy);
+        $this->assertStringNotContainsString("default-src 'self' 'report-sample'", $policy);
+
         $this->assertSame('csp-endpoint="' . self::REPORT_URI . '"', $headers['Reporting-Endpoints']);
     }
 

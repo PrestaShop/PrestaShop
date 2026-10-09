@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Csp\CommandHandler;
 
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Adapter\Csp\CspRuleValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AddCspRuleCommand;
@@ -18,7 +17,6 @@ use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CannotAddCspRuleException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspRuleId;
 use PrestaShopBundle\Entity\CspRule;
-use PrestaShopBundle\Entity\Repository\CspLogRepository;
 use PrestaShopBundle\Entity\Repository\CspRuleRepository;
 
 /**
@@ -29,9 +27,7 @@ final class AddCspRuleHandler implements AddCspRuleHandlerInterface
 {
     public function __construct(
         private readonly CspRuleRepository $repository,
-        private readonly CspLogRepository $logRepository,
         private readonly CspRuleValidator $validator,
-        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -58,24 +54,13 @@ final class AddCspRuleHandler implements AddCspRuleHandlerInterface
 
         $this->validator->assertSourceIsNotAlreadyAllowed($context, $shopId, $directive, $source);
 
-        // Wrap both writes in a transaction: a rule without its log placeholder is invisible in the log-driven grid.
-        /** @var CspRuleId $ruleId */
-        $ruleId = $this->entityManager->getConnection()->transactional(function () use ($context, $shopId, $directive, $source): CspRuleId {
-            $rule = (new CspRule())
-                ->setShopId($shopId)
-                ->setContext($context->value)
-                ->setDirective($directive)
-                ->setSource($source)
-                ->setDateAdd(new DateTimeImmutable());
+        $rule = (new CspRule())
+            ->setShopId($shopId)
+            ->setContext($context->value)
+            ->setDirective($directive)
+            ->setSource($source)
+            ->setDateAdd(new DateTimeImmutable());
 
-            $ruleId = new CspRuleId($this->repository->add($rule));
-
-            // A manually added source has no log row; seed a placeholder so it is visible and revocable in the grid.
-            $this->logRepository->insertPlaceholderIfAbsent($context, $shopId, $directive, $source);
-
-            return $ruleId;
-        });
-
-        return $ruleId;
+        return new CspRuleId($this->repository->add($rule));
     }
 }

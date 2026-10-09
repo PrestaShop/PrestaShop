@@ -127,7 +127,9 @@ final class CspConfiguration extends AbstractMultistoreConfiguration
             ->setAllowedTypes('enabled', 'bool')
             ->setAllowedTypes('report_only', 'bool')
             ->setAllowedTypes('retention_days', 'int')
-            ->setAllowedTypes('report_uri', 'string')
+            // The report-uri text field is optional, so an empty submission arrives as null; updateConfiguration
+            // trims it to a string before storing.
+            ->setAllowedTypes('report_uri', ['string', 'null'])
             ->setNormalizer('retention_days', static fn ($resolver, int $value): int => max(0, $value));
     }
 }

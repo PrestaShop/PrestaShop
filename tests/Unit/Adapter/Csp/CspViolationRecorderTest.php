@@ -32,7 +32,10 @@ class CspViolationRecorderTest extends TestCase
                 self::SHOP_ID,
                 'script-src',                 // directive lowercased
                 'https://cdn.example.com',    // source reduced to origin
-                'https://shop.example.com/page'
+                'https://shop.example.com/page',
+                null,                         // no sample/source-file/line for a host violation
+                null,
+                null
             )
             ->willReturn(true);
         $repository->method('countByShop')->willReturn(0);
@@ -65,7 +68,7 @@ class CspViolationRecorderTest extends TestCase
         $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', $longUri);
 
         $this->assertNotNull($captured);
-        $this->assertSame(2048, mb_strlen($captured), 'The document-uri is capped at 2048 chars');
+        $this->assertSame(255, mb_strlen($captured), 'The document-uri is capped at 255 chars (the stored column width)');
     }
 
     public function testItStripsTheQueryStringAndFragmentFromTheDocumentUri(): void
@@ -93,6 +96,59 @@ class CspViolationRecorderTest extends TestCase
         );
 
         $this->assertSame('https://shop.example.com/password-reset', $captured);
+    }
+
+    public function testItCapturesTheSampleSourceFileAndLineNumber(): void
+    {
+        $captured = [];
+
+        $repository = $this->repository();
+        $repository->method('countByShop')->willReturn(0);
+        $repository->expects($this->once())
+            ->method('upsert')
+            ->willReturnCallback(function (CspContext $context, int $shopId, string $directive, string $source, string $documentUri, ?string $sample, ?string $sourceFile, ?int $lineNumber) use (&$captured): bool {
+                $captured = ['sample' => $sample, 'sourceFile' => $sourceFile, 'lineNumber' => $lineNumber];
+
+                return true;
+            });
+
+        // An inline violation: the blocked source is the keyword, and the sample + source-file + line
+        // tell the merchant which inline block fired. The sample is capped and the source file is stripped
+        // of its query string, like the document URI.
+        $this->recorder($repository)->record(
+            CspContext::FRONT,
+            self::SHOP_ID,
+            'script-src',
+            'inline',
+            'https://shop.example.com/page',
+            str_repeat('a', 300),
+            'https://shop.example.com/page?token=secret#x',
+            1481
+        );
+
+        $this->assertSame(64, mb_strlen((string) $captured['sample']), 'The sample is capped at 64 chars');
+        $this->assertSame('https://shop.example.com/page', $captured['sourceFile'], 'The source file is query/fragment-stripped');
+        $this->assertSame(1481, $captured['lineNumber']);
+    }
+
+    public function testItDropsANonPositiveLineNumber(): void
+    {
+        $captured = ['set' => false];
+
+        $repository = $this->repository();
+        $repository->method('countByShop')->willReturn(0);
+        $repository->expects($this->once())
+            ->method('upsert')
+            ->willReturnCallback(function (CspContext $context, int $shopId, string $directive, string $source, string $documentUri, ?string $sample, ?string $sourceFile, ?int $lineNumber) use (&$captured): bool {
+                $captured = ['set' => true, 'lineNumber' => $lineNumber];
+
+                return true;
+            });
+
+        $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'inline', null, null, null, 0);
+
+        $this->assertTrue($captured['set']);
+        $this->assertNull($captured['lineNumber'], 'A line number of 0 means "unknown" and is not stored');
     }
 
     public function testItDropsAnUnknownDirectiveWithoutWriting(): void
@@ -153,8 +209,8 @@ class CspViolationRecorderTest extends TestCase
         $repository->expects($this->never())->method('deleteLeastReportedByShop');
 
         $recorder = $this->recorder($repository);
-        $recorder->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://a.example.com/x.js', null, false);
-        $recorder->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://b.example.com/x.js', null, false);
+        $recorder->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://a.example.com/x.js', null, null, null, null, false);
+        $recorder->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://b.example.com/x.js', null, null, null, null, false);
     }
 
     public function testEnforceRowCapCanBeCalledOnceForAWholeBatch(): void

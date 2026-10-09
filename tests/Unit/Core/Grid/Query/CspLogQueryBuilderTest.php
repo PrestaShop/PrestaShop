@@ -12,7 +12,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspLogStatusFilter;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Grid\Query\CspLogQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
@@ -23,8 +22,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * The CSP log grid is scoped to the current shop and must never leak another shop's violations.
- * These cover the shop restriction (including the fail-closed branch) and the status filter on the
- * generated count query, without a database.
+ * These cover the shop restriction (including the fail-closed branch) and the allow-list exclusion
+ * on the generated queries, without a database.
  */
 class CspLogQueryBuilderTest extends TestCase
 {
@@ -43,20 +42,6 @@ class CspLogQueryBuilderTest extends TestCase
 
         $this->assertStringContainsString('1 = 0', $sql);
         $this->assertStringNotContainsString('c.id_shop IN', $sql);
-    }
-
-    public function testTheViolationsStatusFilterKeepsOnlyRowsWithoutARule(): void
-    {
-        $sql = $this->countSql(resolvedShopIds: [1], filters: ['status' => CspLogStatusFilter::VIOLATIONS->value]);
-
-        $this->assertStringContainsString('r.id_csp_rule IS NULL', $sql);
-    }
-
-    public function testTheAllowedStatusFilterKeepsOnlyRowsWithARule(): void
-    {
-        $sql = $this->countSql(resolvedShopIds: [1], filters: ['status' => CspLogStatusFilter::ALLOWED->value]);
-
-        $this->assertStringContainsString('r.id_csp_rule IS NOT NULL', $sql);
     }
 
     public function testATextFilterMatchesTheColumnWithLike(): void
@@ -78,17 +63,20 @@ class CspLogQueryBuilderTest extends TestCase
         $this->assertStringContainsString(':broadeningSchemes', $sql);
     }
 
-    public function testTheCountQuerySkipsTheAllowListJoinWithoutAStatusFilter(): void
+    public function testTheCountQueryAlwaysExcludesAllowedSources(): void
     {
+        // The violations grid never shows a source that is already on the allow-list.
         $sql = $this->countSql(resolvedShopIds: [1], filters: ['source' => 'cdn']);
 
-        $this->assertStringNotContainsString('ps_csp_rule', $sql);
+        $this->assertStringContainsString('NOT EXISTS', $sql);
+        $this->assertStringContainsString('ps_csp_rule', $sql);
     }
 
-    public function testTheCountQueryJoinsTheAllowListOnlyForAStatusFilter(): void
+    public function testTheSearchQueryAlsoExcludesAllowedSources(): void
     {
-        $sql = $this->countSql(resolvedShopIds: [1], filters: ['status' => CspLogStatusFilter::ALLOWED->value]);
+        $sql = $this->searchSql(resolvedShopIds: [1]);
 
+        $this->assertStringContainsString('NOT EXISTS', $sql);
         $this->assertStringContainsString('ps_csp_rule', $sql);
     }
 
@@ -98,6 +86,17 @@ class CspLogQueryBuilderTest extends TestCase
 
         $this->assertStringContainsString('AS shop_name', $sql);
         $this->assertStringContainsString('ps_shop', $sql);
+    }
+
+    public function testTheSearchQuerySelectsTheSampleAndTheSourceLocation(): void
+    {
+        $sql = $this->searchSql(resolvedShopIds: [1]);
+
+        $this->assertStringContainsString('c.sample', $sql);
+        $this->assertStringContainsString('AS source_location', $sql);
+        // The location combines the source file and (when present) the line number.
+        $this->assertStringContainsString('c.source_file', $sql);
+        $this->assertStringContainsString('c.line_number', $sql);
     }
 
     /**

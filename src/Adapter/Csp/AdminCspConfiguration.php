@@ -75,7 +75,9 @@ final class AdminCspConfiguration implements DataConfigurationInterface
             ->setAllowedTypes('enabled', 'bool')
             ->setAllowedTypes('report_only', 'bool')
             ->setAllowedTypes('retention_days', 'int')
-            ->setAllowedTypes('report_uri', 'string')
+            // The report-uri text field is optional, so an empty submission arrives as null; it is trimmed
+            // to a string before storing.
+            ->setAllowedTypes('report_uri', ['string', 'null'])
             ->resolve($configuration);
 
         return true;

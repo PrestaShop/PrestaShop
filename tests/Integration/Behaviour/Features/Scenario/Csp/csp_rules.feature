@@ -14,17 +14,17 @@ Feature: Curate the CSP allow-list
     Then a CSP rule for shop 51 with directive "script-src" and source "https://cdn.example.com" should exist
     And shop 51 should have 1 CSP rule
 
-  Scenario: Adding a source that was never reported still makes it visible in the log-driven grid
+  Scenario: Adding a source that was never reported stores it on the allow-list without a log row
     When I add a CSP rule "rule1" for shop 62 with directive "script-src" and source "https://pre.example.com"
     Then shop 62 should have 1 CSP rule
-    And the CSP log for shop 62 should contain 1 row
-    And violation "script-src" from "https://pre.example.com" for shop 62 should have 0 hits
+    And a CSP rule for shop 62 with directive "script-src" and source "https://pre.example.com" should exist
+    And the CSP log for shop 62 should be empty
 
-  Scenario: Clearing the violation log keeps curated rules visible and revocable
+  Scenario: Clearing the violation log leaves curated rules untouched
     When I add a CSP rule "rule1" for shop 63 with directive "script-src" and source "https://pre.example.com"
     And I clear the CSP log for shop 63
     Then shop 63 should have 1 CSP rule
-    And the CSP log for shop 63 should contain 1 row
+    And the CSP log for shop 63 should be empty
 
   Scenario: The grid flags a broad scheme as weakening on script-src but not on img-src
     When I record a CSP violation for shop 64 with directive "script-src" and blocked source "data"
