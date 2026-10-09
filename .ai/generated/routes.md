@@ -46,11 +46,12 @@ POST          /save                                     admin_security_headers_s
 ```
 GET           /                                         admin_security_csp_index  [CspController::indexAction]
 POST          /                                         admin_security_csp_search  [CommonController::searchGridAction]
+POST          /allow-list                               admin_security_csp_rules_search  [CommonController::searchGridAction]
 POST          /settings                                 admin_security_csp_save  [CspController::saveAction]
 GET,POST      /allow-list/add                           admin_security_csp_add  [CspController::addAction]
 GET           /clear-log                                admin_security_csp_clear_log  [CspController::clearLogAction]
-GET           /allow/{cspLogId}                         admin_security_csp_allow  [CspController::allowAction]
-GET           /revoke/{cspRuleId}                       admin_security_csp_revoke  [CspController::revokeAction]
+POST          /allow/{cspLogId}                         admin_security_csp_allow  [CspController::allowAction]
+POST          /revoke/{cspRuleId}                       admin_security_csp_revoke  [CspController::revokeAction]
 POST          /bulk-revoke                              admin_security_csp_bulk_revoke  [CspController::bulkRevokeAction]
 POST          /bulk-revoke/admin                        admin_security_csp_bulk_revoke_admin  [CspController::bulkRevokeAction]
 ```

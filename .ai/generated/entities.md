@@ -26,10 +26,10 @@
   relations: ManyToOne→Attribute ManyToOne→Lang 
 
 ## CspLog
-  columns: id shopId directive source documentUri hits dateAdd dateUpd 
+  columns: id shopId context directive source documentUri sample sourceFile lineNumber hits dateAdd dateUpd 
 
 ## CspRule
-  columns: id shopId directive source dateAdd 
+  columns: id shopId context directive source dateAdd 
 
 ## FeatureFlag
   columns: id name type state labelWording labelDomain descriptionWording descriptionDomain stability 
