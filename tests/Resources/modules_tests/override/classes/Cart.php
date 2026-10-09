@@ -208,4 +208,83 @@ class Cart extends CartCore
         'const_key1' => 'const_value1',
         'const_key2' => 'const_value2',
     ];
+
+    /*
+    * module: testmodifiersoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    final public const TEST_FINAL_CONSTANT = 'final';
+
+    /*
+    * module: testmodifiersoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    private const TEST_PRIVATE_CONSTANT = 42;
+
+    /*
+    * module: testmodifiersoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    public static ?int $testNullableStaticProperty = null;
+
+    /*
+    * module: testmodifiersoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    protected readonly string $testReadonlyProperty;
+
+    /*
+    * module: testmodifiersoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    public int|string $testUnionProperty = 1;
+
+    /*
+    * module: testmodifiersoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    public ?DateTimeInterface $testFqcnProperty = null;
+
+    /*
+    * module: testmodifiersoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    private static array $testReferenceStorage = [];
+
+    /*
+    * module: testmodifiersoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    final public static function testFinalStaticMethod(): string
+    {
+        return 'final static';
+    }
+
+    /*
+    * module: testmodifiersoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    protected static function testStaticMethod(): void
+    {
+        self::$testReferenceStorage = [];
+    }
+
+    /*
+    * module: testmodifiersoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    public function &testReferenceMethod(): array
+    {
+        return self::$testReferenceStorage;
+    }
 }
