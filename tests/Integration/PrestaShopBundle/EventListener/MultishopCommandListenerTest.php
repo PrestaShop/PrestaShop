@@ -6,23 +6,17 @@
 
 namespace Tests\Integration\PrestaShopBundle\EventListener;
 
-use LogicException;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
-use PrestaShopBundle\EventListener\Console\MultishopCommandListener;
+use PrestaShopBundle\Console\PrestaShopApplication;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 class MultishopCommandListenerTest extends KernelTestCase
 {
-    /**
-     * @var MultishopCommandListener
-     */
-    public $commandListener;
-
     /**
      * @var Context
      */
@@ -33,9 +27,9 @@ class MultishopCommandListenerTest extends KernelTestCase
         parent::setUp();
 
         self::bootKernel();
+        Shop::resetContext();
 
         $this->multishopContext = self::$kernel->getContainer()->get('prestashop.adapter.shop.context');
-        $this->commandListener = new MultishopCommandListener($this->multishopContext, self::$kernel->getProjectDir());
     }
 
     public function testDefaultMultishopContext(): void
@@ -48,47 +42,110 @@ class MultishopCommandListenerTest extends KernelTestCase
 
     public function testSetShopID(): void
     {
-        // Prepare ...
-        $command = new Command('Fake');
-        $input = new StringInput('--id_shop=1');
-        $output = new NullOutput();
-        $event = new ConsoleCommandEvent($command, $input, $output);
+        [$status] = $this->runApplication('multishop:probe --id_shop=1');
 
-        // Call ...
-        $this->commandListener->onConsoleCommand($event);
-
-        // Check!
+        $this->assertSame(Command::SUCCESS, $status);
         $this->assertTrue($this->multishopContext->isShopContext(), 'isShopContext');
     }
 
     public function testSetShopGroupID(): void
     {
-        // Prepare ...
-        $command = new Command('Fake');
-        $input = new StringInput('--id_shop_group=1');
-        $output = new NullOutput();
-        $event = new ConsoleCommandEvent($command, $input, $output);
+        [$status] = $this->runApplication('multishop:probe --id_shop_group=1');
 
-        // Call ...
-        $this->commandListener->onConsoleCommand($event);
-
-        // Check!
+        $this->assertSame(Command::SUCCESS, $status);
         $this->assertTrue($this->multishopContext->isGroupShopContext());
+    }
+
+    public function testShopOptionBeforeCommandName(): void
+    {
+        [$status] = $this->runApplication('--id_shop=1 multishop:probe');
+
+        $this->assertSame(Command::SUCCESS, $status);
+        $this->assertTrue($this->multishopContext->isShopContext());
+    }
+
+    public function testDefaultContextIsNotChanged(): void
+    {
+        Shop::setContext(Shop::CONTEXT_ALL);
+
+        [$status] = $this->runApplication('multishop:probe');
+
+        $this->assertSame(Command::SUCCESS, $status);
+        $this->assertTrue($this->multishopContext->isAllShopContext());
+    }
+
+    public function testOptionsAreShownInCommandAndListHelp(): void
+    {
+        [$commandStatus, $commandOutput] = $this->runApplication('multishop:probe --help');
+        [$listStatus, $listOutput] = $this->runApplication('list --help');
+
+        $this->assertSame(Command::SUCCESS, $commandStatus);
+        $this->assertSame(Command::SUCCESS, $listStatus);
+        $this->assertStringContainsString('--id_shop[=ID_SHOP]', $commandOutput);
+        $this->assertStringContainsString('--id_shop_group[=ID_SHOP_GROUP]', $commandOutput);
+        $this->assertStringContainsString('--id_shop[=ID_SHOP]', $listOutput);
+        $this->assertStringContainsString('--id_shop_group[=ID_SHOP_GROUP]', $listOutput);
+    }
+
+    public function testShopContextWorksWithOtherGlobalOptions(): void
+    {
+        [$status] = $this->runApplication('--app-id=admin --no-interaction --id_shop=1 multishop:probe');
+
+        $this->assertSame(Command::SUCCESS, $status);
+        $this->assertTrue($this->multishopContext->isShopContext());
+    }
+
+    public function testListCommandAcceptsShopOption(): void
+    {
+        [$status] = $this->runApplication('list --id_shop=1');
+
+        $this->assertSame(Command::SUCCESS, $status);
+        $this->assertTrue($this->multishopContext->isShopContext());
+    }
+
+    public function testConflictingCommandOptionFails(): void
+    {
+        $command = new Command('multishop:conflicting-probe');
+        $command->addOption('id_shop', null, InputOption::VALUE_REQUIRED);
+        $command->setCode(static function (): int {
+            return Command::SUCCESS;
+        });
+
+        [$status, $output] = $this->runApplication('multishop:conflicting-probe --id_shop=1', $command);
+
+        $this->assertSame(Command::FAILURE, $status);
+        $this->assertStringContainsString('An option named "id_shop" already exists.', $output);
     }
 
     public function testExceptionWhenIdShopAndIdShopGroupSet(): void
     {
-        // Prepare ...
-        $command = new Command('Fake');
-        $input = new StringInput('--id_shop=2 --id_shop_group=1');
-        $output = new NullOutput();
-        $event = new ConsoleCommandEvent($command, $input, $output);
+        [$status, $output] = $this->runApplication('multishop:probe --id_shop=1 --id_shop_group=1');
 
-        // Call ...
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage(
-            'Do not specify an ID shop and an ID group shop at the same time.'
-        );
-        $this->commandListener->onConsoleCommand($event);
+        $this->assertSame(Command::FAILURE, $status);
+        $this->assertStringContainsString('Do not specify an ID shop and an ID group shop at the same time.', $output);
+    }
+
+    /**
+     * @return array{int, string}
+     */
+    private function runApplication(string $input, ?Command $command = null): array
+    {
+        $application = new PrestaShopApplication(self::$kernel);
+        $application->setAutoExit(false);
+
+        if ($command !== null) {
+            $application->add($command);
+        } else {
+            $command = new Command('multishop:probe');
+            $command->setCode(static function (): int {
+                return Command::SUCCESS;
+            });
+            $application->add($command);
+        }
+
+        $output = new BufferedOutput();
+        $status = $application->run(new StringInput($input), $output);
+
+        return [$status, $output->fetch()];
     }
 }
