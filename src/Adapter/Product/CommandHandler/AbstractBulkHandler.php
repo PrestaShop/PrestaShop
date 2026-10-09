@@ -40,8 +40,9 @@ abstract class AbstractBulkHandler
                 $bulkException->addException($productId, $e);
             }
         }
-
         if (null !== $bulkException) {
+            $bulkException->setSuccessfulResults($actionResults);
+
             throw $bulkException;
         }
 

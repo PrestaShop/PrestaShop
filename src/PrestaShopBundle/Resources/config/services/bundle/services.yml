@@ -132,3 +132,15 @@ services:
       - '@doctrine.orm.entity_manager'
 
   PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface: '@PrestaShopBundle\Service\Database\TransactionManager'
+
+  PrestaShopBundle\Service\Log\AdminActivityScope:
+    autowire: true
+
+  PrestaShopBundle\Service\Log\AdminActivityLogger:
+    autowire: true
+    arguments:
+      $logger: '@logger'
+
+  PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityLoggerInterface:
+    alias: PrestaShopBundle\Service\Log\AdminActivityLogger
+    public: false
