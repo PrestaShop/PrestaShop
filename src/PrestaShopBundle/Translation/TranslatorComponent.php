@@ -15,4 +15,10 @@ class TranslatorComponent extends BaseTranslatorComponent implements TranslatorI
 {
     use PrestaShopTranslatorTrait;
     use TranslatorLanguageTrait;
+
+    protected function initializeCatalogue(string $locale): void
+    {
+        parent::initializeCatalogue($locale);
+        $this->addDatabaseTranslations($locale);
+    }
 }
