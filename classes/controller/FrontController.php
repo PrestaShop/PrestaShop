@@ -2163,6 +2163,20 @@ class FrontControllerCore extends Controller
         return $templateContent;
     }
 
+    /**
+     * Renders a template only if it can be resolved by the current theme.
+     */
+    protected function renderOptionalTemplate(string $template): string
+    {
+        try {
+            $this->getTemplateFile($template);
+        } catch (PrestaShopException $e) {
+            return '';
+        }
+
+        return $this->render($template);
+    }
+
     protected function getTranslator()
     {
         return $this->translator;
