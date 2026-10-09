@@ -162,7 +162,7 @@ class CartControllerCore extends FrontController
         $this->ajaxRender(json_encode([
             'cart_detailed' => $this->render('checkout/_partials/cart-detailed'),
             'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals'),
-            'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal'),
+            'cart_summary_items_subtotal' => $this->renderOptionalTemplate('checkout/_partials/cart-summary-items-subtotal'),
             'cart_summary_products' => $this->render('checkout/_partials/cart-summary-products'),
             'cart_summary_subtotals_container' => $this->render('checkout/_partials/cart-summary-subtotals'),
             'cart_summary_totals' => $this->render('checkout/_partials/cart-summary-totals'),
@@ -170,6 +170,20 @@ class CartControllerCore extends FrontController
             'cart_voucher' => $this->render('checkout/_partials/cart-voucher'),
             'cart_summary_top' => $this->render('checkout/_partials/cart-summary-top'),
         ]));
+    }
+
+    /**
+     * Renders a template only if it can be resolved by the current theme.
+     */
+    protected function renderOptionalTemplate(string $template): string
+    {
+        try {
+            $this->getTemplateFile($template);
+        } catch (PrestaShopException $e) {
+            return '';
+        }
+
+        return $this->render($template);
     }
 
     /**
