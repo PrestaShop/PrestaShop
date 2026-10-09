@@ -50,6 +50,9 @@ class OrderSlipCore extends ObjectModel
     /** @var int */
     public $order_slip_type = 0;
 
+    /** @var Order * */
+    protected $order;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -239,6 +242,15 @@ class OrderSlipCore extends ObjectModel
         }
 
         return $slips;
+    }
+
+    public function getOrder()
+    {
+        if (!$this->order) {
+            $this->order = new Order($this->id_order);
+        }
+
+        return $this->order;
     }
 
     public static function create(Order $order, $product_list, $shipping_cost = false, $amount = 0, $amount_choosen = false, $add_tax = true)
