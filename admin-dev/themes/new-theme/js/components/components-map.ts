@@ -17,6 +17,7 @@ export default {
     jsScrollbar: '.js-multishop-scrollbar',
     shopLinks: 'a.multishop-modal-shop-name',
     groupShopLinks: 'a.multishop-modal-group-name',
+    allShopsLink: 'a.multishop-modal-all-name',
     setContextUrl: (
       location: string,
       urlLetter: string,
