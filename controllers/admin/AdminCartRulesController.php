@@ -93,7 +93,7 @@ class AdminCartRulesControllerCore extends AdminController
             if ($type == 'selected') {
                 $i = 1;
                 foreach ($cart_rules['selected'] as $cart_rule) {
-                    $html .= '<option value="' . (int) $cart_rule['id_cart_rule'] . '">&nbsp;' . Tools::safeOutput($cart_rule['name']) . '</option>';
+                    $html .= $this->renderCartRuleOption($cart_rule);
                     if ($i == $limit) {
                         break;
                     }
@@ -105,7 +105,7 @@ class AdminCartRulesControllerCore extends AdminController
             } else {
                 $i = 1;
                 foreach ($cart_rules['unselected'] as $cart_rule) {
-                    $html .= '<option value="' . (int) $cart_rule['id_cart_rule'] . '">&nbsp;' . Tools::safeOutput($cart_rule['name']) . '</option>';
+                    $html .= $this->renderCartRuleOption($cart_rule);
                     if ($i == $limit) {
                         break;
                     }
@@ -114,6 +114,62 @@ class AdminCartRulesControllerCore extends AdminController
             }
         }
         echo json_encode(['html' => $html, 'next_link' => $next_link]);
+    }
+
+    /**
+     * Builds one entry of the "Compatibility with other cart rules" lists.
+     *
+     * WHY the id and the state are shown: the two lists are the only place a merchant picks a cart rule
+     * out of every other cart rule in the shop, and they are not filtered - deliberately, because
+     * compatibility is a lasting relation and a rule that is disabled today can be enabled tomorrow. The
+     * name alone is not enough to choose with: nothing stops two rules sharing one, and an expired or
+     * disabled rule looks exactly like a live one. Every value used here comes from the row that is
+     * already selected, so this costs no extra query.
+     *
+     * @param array $cartRule
+     *
+     * @return string
+     */
+    protected function renderCartRuleOption(array $cartRule)
+    {
+        $label = sprintf('#%d - %s', (int) $cartRule['id_cart_rule'], $cartRule['name']);
+
+        if (!empty($cartRule['code'])) {
+            $label .= ' - ' . $cartRule['code'];
+        }
+
+        $state = $this->getCartRuleStateLabel($cartRule);
+        if (null !== $state) {
+            $label .= ' (' . $state . ')';
+        }
+
+        return '<option value="' . (int) $cartRule['id_cart_rule'] . '">&nbsp;' . Tools::safeOutput($label) . '</option>';
+    }
+
+    /**
+     * The reason a cart rule cannot be used right now, or null when it can.
+     *
+     * @param array $cartRule
+     *
+     * @return string|null
+     */
+    protected function getCartRuleStateLabel(array $cartRule)
+    {
+        if (!(bool) $cartRule['active']) {
+            return $this->trans('Disabled', [], 'Admin.Global');
+        }
+
+        $now = time();
+
+        if (!empty($cartRule['date_to']) && strtotime($cartRule['date_to']) < $now) {
+            return $this->trans('Expired', [], 'Admin.Catalog.Feature');
+        }
+
+        if (!empty($cartRule['date_from']) && strtotime($cartRule['date_from']) > $now) {
+            return $this->trans('Scheduled', [], 'Admin.Catalog.Feature');
+        }
+
+        return null;
     }
 
     public function setMedia($isNewTheme = false)
