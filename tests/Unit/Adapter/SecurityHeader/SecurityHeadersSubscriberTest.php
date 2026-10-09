@@ -80,21 +80,42 @@ class SecurityHeadersSubscriberTest extends TestCase
         $this->assertFalse($response->headers->has('X-Frame-Options'));
     }
 
-    public function testItForwardsTheRequestSchemeSoHstsIsHttpsOnly(): void
+    public function testHstsIsHttpsOnlyAndHonoursTheForwardedProtoHeader(): void
     {
         $config = ['PS_SEC_HSTS' => '1'] + self::DEFAULTS;
+        $httpsKeys = ['HTTPS', 'SSL', 'REDIRECT_HTTPS', 'HTTP_SSL', 'HTTP_X_FORWARDED_PROTO'];
+        $saved = $_SERVER;
 
-        $secure = new Response();
-        $this->subscriber($config)->onKernelResponse(
-            $this->event(HttpKernelInterface::MAIN_REQUEST, $secure, Request::create('https://shop.test/'))
-        );
-        $this->assertSame('max-age=15552000', $secure->headers->get('Strict-Transport-Security'));
+        try {
+            // Direct HTTPS: HSTS is sent.
+            foreach ($httpsKeys as $key) {
+                unset($_SERVER[$key]);
+            }
+            $_SERVER['HTTPS'] = 'on';
+            $secure = new Response();
+            $this->subscriber($config)->onKernelResponse($this->event(HttpKernelInterface::MAIN_REQUEST, $secure));
+            $this->assertSame('max-age=15552000', $secure->headers->get('Strict-Transport-Security'));
 
-        $plain = new Response();
-        $this->subscriber($config)->onKernelResponse(
-            $this->event(HttpKernelInterface::MAIN_REQUEST, $plain, Request::create('http://shop.test/'))
-        );
-        $this->assertFalse($plain->headers->has('Strict-Transport-Security'));
+            // Behind a TLS-terminating proxy: PHP sees HTTP, but X-Forwarded-Proto is https. HSTS must
+            // still be sent, the same as on the storefront, without needing PS_TRUSTED_PROXIES.
+            foreach ($httpsKeys as $key) {
+                unset($_SERVER[$key]);
+            }
+            $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+            $proxied = new Response();
+            $this->subscriber($config)->onKernelResponse($this->event(HttpKernelInterface::MAIN_REQUEST, $proxied));
+            $this->assertSame('max-age=15552000', $proxied->headers->get('Strict-Transport-Security'), 'HSTS must survive a TLS-terminating proxy');
+
+            // Plain HTTP: no HSTS.
+            foreach ($httpsKeys as $key) {
+                unset($_SERVER[$key]);
+            }
+            $plain = new Response();
+            $this->subscriber($config)->onKernelResponse($this->event(HttpKernelInterface::MAIN_REQUEST, $plain));
+            $this->assertFalse($plain->headers->has('Strict-Transport-Security'));
+        } finally {
+            $_SERVER = $saved;
+        }
     }
 
     public function testTheBackOfficeScopeReadsTheAllShopsValueAndTheStorefrontTheCurrentContext(): void
