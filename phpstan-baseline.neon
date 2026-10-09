@@ -927,7 +927,7 @@ parameters:
 
 		-
 			message: "#^Class PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
-			count: 7
+			count: 8
 			path: src/Core/Shop/LogoUploader.php
 
 		-
@@ -947,7 +947,7 @@ parameters:
 
 		-
 			message: "#^Namespace ImageManager is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
-			count: 8
+			count: 9
 			path: src/Core/Shop/LogoUploader.php
 
 		-
@@ -962,6 +962,11 @@ parameters:
 
 		-
 			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Shop/LogoUploader.php
+
+		-
+			message: "#^Namespace Validate is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
 			count: 2
 			path: src/Core/Shop/LogoUploader.php
 

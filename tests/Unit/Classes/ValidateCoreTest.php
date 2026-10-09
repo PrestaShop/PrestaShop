@@ -390,4 +390,55 @@ class ValidateCoreTest extends TestCase
             [false, [45, true, 9]],
         ];
     }
+
+    /**
+     * @dataProvider isCleanSVGDataProvider
+     */
+    public function testIsCleanSVG(bool $expected, string $svg): void
+    {
+        $this->assertSame($expected, Validate::isCleanSVG($svg));
+    }
+
+    public static function isCleanSVGDataProvider(): iterable
+    {
+        yield 'shape' => [true, '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="blue"/></svg>'];
+        yield 'xml declaration and doctype' => [true, '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z"/></svg>'];
+        yield 'inkscape' => [true, '<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns="http://www.w3.org/2000/svg"><sodipodi:namedview id="base" inkscape:zoom="1"/><metadata><rdf:RDF><dc:format>image/svg+xml</dc:format></rdf:RDF></metadata><g inkscape:label="Layer 1" inkscape:groupmode="layer"><rect width="5" height="5"/></g></svg>'];
+        yield 'illustrator entities' => [true, '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/"><!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">]><svg xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10"/></svg>'];
+        yield 'embedded image' => [true, '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><image width="1" height="1" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="/></svg>'];
+        yield 'local use, style and gradient' => [true, '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style>.a{fill:url(#g)}</style><defs><linearGradient id="g"><stop offset="0" stop-color="red"/></linearGradient><path id="p" d="M0 0L5 5"/></defs><use xlink:href="#p" class="a"/></svg>'];
+        yield 'text with references' => [true, '<svg xmlns="http://www.w3.org/2000/svg"><text x="1" y="10">Caf&#233; &amp; bar</text></svg>'];
+        yield 'entity with quotes and comment' => [true, '<?xml version="1.0"?><!DOCTYPE svg [<!-- title --><!ENTITY t \'say "hi" > 2\'>]><svg xmlns="http://www.w3.org/2000/svg"><text>&t;</text></svg>'];
+        yield 'utf-16 shape' => [true, self::toUtf16('<?xml version="1.0" encoding="UTF-16"?><svg xmlns="http://www.w3.org/2000/svg"><rect width="9" height="9"/></svg>')];
+
+        yield 'empty' => [false, ''];
+        yield 'not xml' => [false, '<svg xmlns="http://www.w3.org/2000/svg"><rect></svg>'];
+        yield 'script' => [false, '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>'];
+        yield 'event attribute' => [false, '<svg xmlns="http://www.w3.org/2000/svg"><circle r="40" onload="alert(1)"/></svg>'];
+        yield 'javascript link' => [false, '<svg xmlns="http://www.w3.org/2000/svg"><a href="javascript:alert(1)"><rect width="9" height="9"/></a></svg>'];
+        yield 'prefixed svg script' => [false, '<svg xmlns="http://www.w3.org/2000/svg" xmlns:s="http://www.w3.org/2000/svg"><s:script>alert(1)</s:script></svg>'];
+        yield 'prefixed xhtml script' => [false, '<svg xmlns="http://www.w3.org/2000/svg"><h:script xmlns:h="http://www.w3.org/1999/xhtml">alert(1)</h:script></svg>'];
+        yield 'prefixed iframe srcdoc' => [false, '<svg xmlns="http://www.w3.org/2000/svg"><foreignObject width="9" height="9"><h:iframe xmlns:h="http://www.w3.org/1999/xhtml" srcdoc="&lt;script&gt;alert(1)&lt;/script&gt;"/></foreignObject></svg>'];
+        yield 'entity script' => [false, '<?xml version="1.0"?><!DOCTYPE svg [<!ENTITY x "&#60;script&#62;alert(1)&#60;/script&#62;">]><svg xmlns="http://www.w3.org/2000/svg">&x;</svg>'];
+        yield 'split entity javascript link' => [false, '<?xml version="1.0"?><!DOCTYPE svg [<!ENTITY a "javascr"><!ENTITY b "ipt:alert(1)">]><svg xmlns="http://www.w3.org/2000/svg"><a href="&a;&b;"><rect width="9" height="9"/></a></svg>'];
+        yield 'parameter entity' => [false, '<?xml version="1.0"?><!DOCTYPE svg [<!ENTITY % d "<!ENTITY x \'&#38;#60;script&#38;#62;alert(1)&#38;#60;/script&#38;#62;\'>">%d;]><svg xmlns="http://www.w3.org/2000/svg">&x;</svg>'];
+        yield 'external entity' => [false, '<?xml version="1.0"?><!DOCTYPE svg [<!ENTITY x SYSTEM "file:///etc/passwd">]><svg xmlns="http://www.w3.org/2000/svg"><text>&x;</text></svg>'];
+        yield 'character reference javascript link' => [false, '<svg xmlns="http://www.w3.org/2000/svg"><a href="java&#115;cript:alert(1)"><rect width="9" height="9"/></a></svg>'];
+        yield 'character reference colon javascript link' => [false, '<svg xmlns="http://www.w3.org/2000/svg"><a href="javascript&#58;alert(1)"><rect width="9" height="9"/></a></svg>'];
+        yield 'tab in javascript link' => [false, '<svg xmlns="http://www.w3.org/2000/svg"><a href="javascript&#9;:alert(1)"><rect width="9" height="9"/></a></svg>'];
+        yield 'animated javascript link' => [false, '<svg xmlns="http://www.w3.org/2000/svg"><a><set attributeName="href" to="java&#115;cript:alert(1)"/><rect width="9" height="9"/></a></svg>'];
+        yield 'use data url' => [false, '<svg xmlns="http://www.w3.org/2000/svg"><use href="data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=#x"/></svg>'];
+        yield 'xslt stylesheet' => [false, '<?xml-stylesheet type="text/xsl" href="evil.svg"?><svg xmlns="http://www.w3.org/2000/svg"><rect width="9" height="9"/></svg>'];
+        yield 'default event attribute' => [false, '<?xml version="1.0"?><!DOCTYPE svg [<!ATTLIST svg onload CDATA "alert(1)">]><svg xmlns="http://www.w3.org/2000/svg"><rect width="9" height="9"/></svg>'];
+        yield 'default javascript link from entities' => [false, '<?xml version="1.0"?><!DOCTYPE svg [<!ENTITY a "javascr"><!ENTITY b "ipt:alert(1)"><!ATTLIST a href CDATA "&a;&b;">]><svg xmlns="http://www.w3.org/2000/svg"><a><rect width="9" height="9"/></a></svg>'];
+        yield 'element declaration' => [false, '<?xml version="1.0"?><!DOCTYPE svg [<!ELEMENT svg ANY>]><svg xmlns="http://www.w3.org/2000/svg"/>'];
+        yield 'utf-16 default event attribute' => [false, self::toUtf16('<?xml version="1.0" encoding="UTF-16"?><!DOCTYPE svg [<!ATTLIST svg onload CDATA "alert(1)">]><svg xmlns="http://www.w3.org/2000/svg"><rect width="9" height="9"/></svg>')];
+        yield 'utf-16 external entity' => [false, self::toUtf16('<?xml version="1.0" encoding="UTF-16"?><!DOCTYPE svg [<!ENTITY x SYSTEM "file:///etc/passwd">]><svg xmlns="http://www.w3.org/2000/svg"><text>&x;</text></svg>')];
+        yield 'utf-16 parameter entity' => [false, self::toUtf16('<?xml version="1.0" encoding="UTF-16"?><!DOCTYPE svg [<!ENTITY % d SYSTEM "file:///etc/passwd">%d;]><svg xmlns="http://www.w3.org/2000/svg"/>')];
+    }
+
+    private static function toUtf16(string $xml): string
+    {
+        return "\xFF\xFE" . mb_convert_encoding($xml, 'UTF-16LE', 'UTF-8');
+    }
 }
