@@ -54,7 +54,7 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
          * Retrieves a list of paths to all `/src/Entity` directories found across installed modules.
          */
         $modulesDirectoriesWithEntities = Finder::create()->directories()->in($modulesDir)->depth(0)->filter(
-            fn (SplFileInfo $moduleFolderWithEntity): bool => in_array($moduleFolderWithEntity->getFilename(), $installedModules) && is_dir($moduleFolderWithEntity->getRealPath() . '/src/Entity')
+            fn (SplFileInfo $moduleDirectoryWithEntity): bool => in_array($moduleDirectoryWithEntity->getFilename(), $installedModules) && is_dir($moduleDirectoryWithEntity->getRealPath() . '/src/Entity')
         );
 
         $mappingsPassList = [];
@@ -80,17 +80,11 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
             $mappingsPassList[$moduleEntityDirectory] = $moduleNamespace['has_attributes'] ?
                 DoctrineOrmMappingsPass::createAttributeMappingDriver(
                     [$moduleNamespace['namespace']],
-                    [$moduleEntityDirectory],
-                    [],
-                    false,
-                    []
+                    [$moduleEntityDirectory]
                 ) :
                 DoctrineOrmMappingsPass::createAnnotationMappingDriver(
                     [$moduleNamespace['namespace']],
-                    [$moduleEntityDirectory],
-                    [],
-                    false,
-                    []
+                    [$moduleEntityDirectory]
                 );
         }
 
@@ -100,7 +94,7 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
     /**
      * @param string $moduleEntityDirectory
      *
-     * @return array
+     * @return array|array{namespace: string, has_attributes: bool}
      */
     private function parseEntityDirectory(string $moduleEntityDirectory): array
     {
