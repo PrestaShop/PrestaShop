@@ -908,6 +908,45 @@ class AdminImportControllerCore extends AdminController
         return $tab;
     }
 
+    /**
+     * Builds the language values for an imported image caption.
+     *
+     * `createMultiLangField()` puts the same text in every language, so importing the French file
+     * writes a French caption into English too, and the next import in another language looks like it
+     * overwrote everything. The caption belongs to the language being imported.
+     *
+     * This applies the rule `fillInfo()` already uses for the other multilingual fields: the chosen
+     * language gets the value, the rest are left alone. Without a language chosen the previous
+     * behaviour is kept, since there is nothing to single out.
+     *
+     * @param string $field
+     *
+     * @return array
+     */
+    protected static function createMultiLangFieldForImportedLanguage($field)
+    {
+        $values = self::createMultiLangField($field);
+        $isoLang = Tools::getValue('iso_lang');
+
+        if (!$isoLang) {
+            return $values;
+        }
+
+        $idLang = (int) Language::getIdByIso($isoLang);
+
+        if (!$idLang) {
+            return $values;
+        }
+
+        foreach (array_keys($values) as $idLangValue) {
+            if ((int) $idLangValue !== $idLang) {
+                $values[$idLangValue] = '';
+            }
+        }
+
+        return $values;
+    }
+
     protected static function createMultiLangField($field)
     {
         $res = [];
@@ -2007,7 +2046,7 @@ class AdminImportControllerCore extends AdminController
                         $image->cover = (!$key && !$product_has_images) ? true : false;
                         $alt = $product->image_alt[$key];
                         if (strlen($alt) > 0) {
-                            $image->legend = self::createMultiLangField($alt);
+                            $image->legend = self::createMultiLangFieldForImportedLanguage($alt);
                         }
                         // file_exists doesn't work with HTTP protocol
                         if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true
@@ -2254,7 +2293,7 @@ class AdminImportControllerCore extends AdminController
                     if (isset($info['image_alt'])) {
                         $alt = self::split($info['image_alt']);
                         if (isset($alt[$key]) && strlen($alt[$key]) > 0) {
-                            $alt = self::createMultiLangField($alt[$key]);
+                            $alt = self::createMultiLangFieldForImportedLanguage($alt[$key]);
                             $image->legend = $alt;
                         }
                     }
