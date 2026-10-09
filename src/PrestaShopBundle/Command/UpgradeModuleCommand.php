@@ -10,6 +10,11 @@ namespace PrestaShopBundle\Command;
 
 final class UpgradeModuleCommand extends AbstractModuleActionCommand
 {
+    protected function supportsExplicitShopContext(): bool
+    {
+        return false;
+    }
+
     protected function getAction(): string
     {
         return 'upgrade';

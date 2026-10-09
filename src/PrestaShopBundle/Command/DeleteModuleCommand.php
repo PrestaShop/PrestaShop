@@ -10,6 +10,11 @@ namespace PrestaShopBundle\Command;
 
 final class DeleteModuleCommand extends AbstractModuleActionCommand
 {
+    protected function supportsExplicitShopContext(): bool
+    {
+        return false;
+    }
+
     protected function getAction(): string
     {
         return 'delete';

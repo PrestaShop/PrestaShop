@@ -11,6 +11,7 @@ namespace PrestaShopBundle\Command;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Symfony\Component\Console\Command\Command;
@@ -28,9 +29,10 @@ abstract class AbstractModuleActionCommand extends AbstractModuleCommand
         LegacyContext $context,
         ContextBuilderPreparer $contextBuilderPreparer,
         Configuration $configuration,
+        ShopContext $shopContext,
         protected readonly ModuleManager $moduleManager,
     ) {
-        parent::__construct($translator, $context, $contextBuilderPreparer, $configuration);
+        parent::__construct($translator, $context, $contextBuilderPreparer, $configuration, $shopContext);
     }
 
     abstract protected function getAction(): string;
@@ -57,7 +59,9 @@ abstract class AbstractModuleActionCommand extends AbstractModuleCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->initializeContext($input, $output);
+        if (!$this->initializeContext($input, $output)) {
+            return Command::INVALID;
+        }
 
         $skipOverrides = (bool) $input->getOption('skip-overrides');
         $moduleNames = $input->getArgument('modules');
@@ -72,6 +76,8 @@ abstract class AbstractModuleActionCommand extends AbstractModuleCommand
         try {
             foreach ($moduleNames as $moduleName) {
                 try {
+                    // A failing module must not prevent the remaining modules
+                    // in a bulk action from being processed.
                     if (!$this->executeModuleAction($action, $moduleName)) {
                         $hasErrors = true;
                     }

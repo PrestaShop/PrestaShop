@@ -10,6 +10,11 @@ namespace PrestaShopBundle\Command;
 
 final class InstallModuleCommand extends AbstractModuleActionCommand
 {
+    protected function supportsExplicitShopContext(): bool
+    {
+        return true;
+    }
+
     protected function getAction(): string
     {
         return 'install';

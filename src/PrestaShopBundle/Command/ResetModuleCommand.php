@@ -10,6 +10,11 @@ namespace PrestaShopBundle\Command;
 
 final class ResetModuleCommand extends AbstractModuleActionCommand
 {
+    protected function supportsExplicitShopContext(): bool
+    {
+        return false;
+    }
+
     protected function getAction(): string
     {
         return 'reset';

@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use PrestaShopBundle\Command\ConfigureModuleCommand;
 use ReflectionClass;
@@ -22,11 +23,38 @@ use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConfigureModuleCommandTest extends TestCase
 {
+    public function testDefaultContextIsAllShops(): void
+    {
+        $configurator = $this->configurator();
+        $configurator->method('validate')->willReturn([]);
+        $configurator->method('configure')->willReturn(true);
+        [, , , , $shopContext] = $this->dependencies();
+        $shopContext->expects($this->once())->method('setAllContext')->with(null);
+
+        $this->assertSame(Command::SUCCESS, $this->tester($configurator, $shopContext)->execute(['modules' => ['first']]));
+    }
+
+    public function testExplicitShopGroupContextIsPreserved(): void
+    {
+        $configurator = $this->configurator();
+        $configurator->method('validate')->willReturn([]);
+        $configurator->method('configure')->willReturn(true);
+        [, , , , $shopContext] = $this->dependencies();
+        $shopContext->expects($this->never())->method('setAllContext');
+
+        $command = $this->command($configurator, $shopContext);
+        $command->addOption('id_shop_group', null, InputOption::VALUE_OPTIONAL);
+        $tester = new CommandTester($command);
+
+        $this->assertSame(Command::SUCCESS, $tester->execute(['modules' => ['first'], '--id_shop_group' => 2]));
+    }
+
     public function testSingleModuleWithoutExplicitFile(): void
     {
         $configurator = $this->configurator();
@@ -214,13 +242,20 @@ class ConfigureModuleCommandTest extends TestCase
         return $this->getMockBuilder(ModuleSelfConfigurator::class)->disableOriginalConstructor()->getMock();
     }
 
-    private function tester(ModuleSelfConfigurator $configurator): CommandTester
+    private function tester(ModuleSelfConfigurator $configurator, ?ShopContext $shopContext = null): CommandTester
     {
-        [$translator, $context, $preparer, $configuration] = $this->dependencies();
-        $command = new ConfigureModuleCommand($translator, $context, $preparer, $configuration, $configurator);
-        $command->setHelperSet(new HelperSet([new FormatterHelper()]));
+        $command = $this->command($configurator, $shopContext);
 
         return new CommandTester($command);
+    }
+
+    private function command(ModuleSelfConfigurator $configurator, ?ShopContext $shopContext = null): ConfigureModuleCommand
+    {
+        [$translator, $context, $preparer, $configuration, $defaultShopContext] = $this->dependencies();
+        $command = new ConfigureModuleCommand($translator, $context, $preparer, $configuration, $shopContext ?? $defaultShopContext, $configurator);
+        $command->setHelperSet(new HelperSet([new FormatterHelper()]));
+
+        return $command;
     }
 
     private function dependencies(): array
@@ -238,7 +273,8 @@ class ConfigureModuleCommandTest extends TestCase
         $preparer = $this->getMockBuilder(ContextBuilderPreparer::class)->disableOriginalConstructor()->getMock();
         $configuration = $this->getMockBuilder(Configuration::class)->disableOriginalConstructor()->getMock();
         $configuration->method('get')->willReturnCallback(static fn (string $key) => $key === 'PS_LANG_DEFAULT' ? 1 : 0);
+        $shopContext = $this->getMockBuilder(ShopContext::class)->disableOriginalConstructor()->getMock();
 
-        return [$translator, $legacyContext, $preparer, $configuration];
+        return [$translator, $legacyContext, $preparer, $configuration, $shopContext];
     }
 }

@@ -11,6 +11,7 @@ namespace PrestaShopBundle\Command;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,9 +28,10 @@ final class ConfigureModuleCommand extends AbstractModuleCommand
         LegacyContext $context,
         ContextBuilderPreparer $contextBuilderPreparer,
         Configuration $configuration,
+        ShopContext $shopContext,
         private readonly ModuleSelfConfigurator $moduleSelfConfigurator,
     ) {
-        parent::__construct($translator, $context, $contextBuilderPreparer, $configuration);
+        parent::__construct($translator, $context, $contextBuilderPreparer, $configuration, $shopContext);
     }
 
     protected function configure(): void
@@ -50,9 +52,16 @@ final class ConfigureModuleCommand extends AbstractModuleCommand
             );
     }
 
+    protected function supportsExplicitShopContext(): bool
+    {
+        return true;
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->initializeContext($input, $output);
+        if (!$this->initializeContext($input, $output)) {
+            return Command::INVALID;
+        }
 
         $moduleNames = $input->getArgument('modules');
         $configFiles = $this->parseConfigFiles($moduleNames, $input->getOption('config-file'));

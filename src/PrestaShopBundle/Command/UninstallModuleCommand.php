@@ -10,6 +10,11 @@ namespace PrestaShopBundle\Command;
 
 final class UninstallModuleCommand extends AbstractModuleActionCommand
 {
+    protected function supportsExplicitShopContext(): bool
+    {
+        return false;
+    }
+
     protected function getAction(): string
     {
         return 'uninstall';
