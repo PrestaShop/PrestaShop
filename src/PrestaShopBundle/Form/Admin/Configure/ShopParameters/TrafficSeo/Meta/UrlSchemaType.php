@@ -170,6 +170,27 @@ class UrlSchemaType extends TranslatorAwareType
                     ],
                 ],
             ])
+            ->add('attachment_rule', TranslatableType::class, [
+                'label' => $this->trans(
+                    'Route to attachments',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
+                'help' => $this->getKeywords('attachment_rule'),
+                'multistore_configuration_key' => 'PS_ROUTE_attachment_rule',
+                'options' => [
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => $this->trans(
+                                'This field cannot be empty.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
+                ],
+            ])
             ->add('module', TranslatableType::class, [
                 'label' => $this->trans(
                     'Route to modules',
