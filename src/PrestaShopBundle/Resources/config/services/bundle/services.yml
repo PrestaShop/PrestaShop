@@ -52,6 +52,18 @@ services:
     tags:
       - { name: doctrine.middleware }
 
+  PrestaShop\PrestaShop\Adapter\Cache\LegacySqlCacheInvalidator:
+    arguments:
+      $legacyCacheEnabled: '%ps_cache_enable%'
+
+  # Makes writes on the Doctrine connection drop the legacy SQL query cache entries they invalidate,
+  # the way Db::execute() already does on the legacy connection (issue #18171)
+  PrestaShopBundle\Doctrine\Middleware\InvalidateLegacySqlCacheMiddleware:
+    arguments:
+      $invalidator: '@PrestaShop\PrestaShop\Adapter\Cache\LegacySqlCacheInvalidator'
+    tags:
+      - { name: doctrine.middleware }
+
   prestashop.service.translation:
     class: PrestaShopBundle\Service\TranslationService
     properties:
