@@ -27,4 +27,9 @@ class CustomerServiceException extends DomainException
      * Code is used when comment is invalid
      */
     public const INVALID_COMMENT = 30;
+
+    /**
+     * Code is used when a forward target (employee or email) is missing or ambiguous
+     */
+    public const INVALID_FORWARD_TARGET = 40;
 }
