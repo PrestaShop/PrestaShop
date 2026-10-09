@@ -310,7 +310,13 @@ class CmsPageController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.cms_page_category_form_handler')]
         FormHandlerInterface $cmsPageCategoryFormHandler,
     ): Response {
-        $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getForm();
+        $categoryParentId = $request->query->get('id_cms_category');
+        $formData = [];
+        if ($categoryParentId) {
+            $formData['parent_category'] = $categoryParentId;
+        }
+
+        $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getForm($formData);
 
         $cmsPageCategoryForm->handleRequest($request);
 
