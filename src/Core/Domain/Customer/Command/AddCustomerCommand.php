@@ -114,6 +114,11 @@ class AddCustomerCommand
     private $isGuest;
 
     /**
+     * @var int
+     */
+    private $languageId;
+
+    /**
      * @param string $firstName
      * @param string $lastName
      * @param string $email
@@ -126,6 +131,7 @@ class AddCustomerCommand
      * @param bool $isPartnerOffersSubscribed
      * @param string|null $birthday
      * @param bool $isGuest
+     * @param int $languageId
      */
     public function __construct(
         $firstName,
@@ -139,7 +145,8 @@ class AddCustomerCommand
         $isEnabled = true,
         $isPartnerOffersSubscribed = false,
         $birthday = null,
-        $isGuest = false
+        $isGuest = false,
+        int $languageId = 0
     ) {
         $this->firstName = new FirstName($firstName);
         $this->lastName = new LastName($lastName);
@@ -153,6 +160,7 @@ class AddCustomerCommand
         $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
         $this->birthday = null !== $birthday ? new Birthday($birthday) : Birthday::createEmpty();
         $this->isGuest = $isGuest;
+        $this->languageId = $languageId;
     }
 
     /**
@@ -389,5 +397,13 @@ class AddCustomerCommand
     public function isGuest(): bool
     {
         return $this->isGuest;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLanguageId()
+    {
+        return $this->languageId;
     }
 }

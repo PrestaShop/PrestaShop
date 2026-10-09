@@ -9,9 +9,11 @@ namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as DomainEmail;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Form\Admin\Type\ApeType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
@@ -42,35 +44,6 @@ use Validate;
 class CustomerType extends TranslatorAwareType
 {
     /**
-     * @var bool
-     */
-    private $isB2bFeatureEnabled;
-
-    /**
-     * @var array
-     */
-    private $riskChoices;
-
-    /**
-     * @var bool
-     */
-    private $isPartnerOffersEnabled;
-
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @var FormCloner
-     */
-    protected $formCloner;
-    /**
-     * @var GroupByIdChoiceProvider
-     */
-    private $groupByIdChoiceProvider;
-
-    /**
      * @param TranslatorInterface $translator
      * @param GroupByIdChoiceProvider $groupByIdChoiceProvider
      * @param array $locales
@@ -79,24 +52,22 @@ class CustomerType extends TranslatorAwareType
      * @param bool $isPartnerOffersEnabled
      * @param ConfigurationInterface $configuration
      * @param FormCloner $formCloner
+     * @param LanguageByIdChoiceProvider $languageByIdChoiceProvider
+     * @param ShopContext $shopContext
      */
     public function __construct(
         TranslatorInterface $translator,
-        GroupByIdChoiceProvider $groupByIdChoiceProvider,
+        private GroupByIdChoiceProvider $groupByIdChoiceProvider,
         array $locales,
-        array $riskChoices,
-        $isB2bFeatureEnabled,
-        $isPartnerOffersEnabled,
-        ConfigurationInterface $configuration,
-        FormCloner $formCloner
+        private array $riskChoices,
+        private bool $isB2bFeatureEnabled,
+        private bool $isPartnerOffersEnabled,
+        private ConfigurationInterface $configuration,
+        private FormCloner $formCloner,
+        private LanguageByIdChoiceProvider $languageByIdChoiceProvider,
+        private ShopContext $shopContext
     ) {
         parent::__construct($translator, $locales);
-        $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
-        $this->riskChoices = $riskChoices;
-        $this->isPartnerOffersEnabled = $isPartnerOffersEnabled;
-        $this->configuration = $configuration;
-        $this->formCloner = $formCloner;
-        $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
     }
 
     /**
@@ -301,6 +272,18 @@ class CustomerType extends TranslatorAwareType
                 'autocomplete' => true,
                 'placeholder' => null,
             ])
+            ->add('language_id', ChoiceType::class, [
+                'label' => $this->trans('Language', 'Admin.Global'),
+                'required' => false,
+                'placeholder' => null,
+                'choices' => $this->languageByIdChoiceProvider->getChoices([
+                    'shop_id' => $options['shop_id'],
+                ]),
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
+            ])
         ;
 
         if ($this->isB2bFeatureEnabled) {
@@ -395,9 +378,11 @@ class CustomerType extends TranslatorAwareType
                 // so it may be optional when editing customer
                 'is_password_required' => true,
                 'show_guest_field' => false,
+                'shop_id' => $this->shopContext->getId(),
             ])
             ->setAllowedTypes('is_password_required', 'bool')
             ->setAllowedTypes('show_guest_field', 'bool')
+            ->setAllowedTypes('shop_id', 'int')
         ;
     }
 }
