@@ -94,21 +94,24 @@ class CategoryControllerCore extends ProductListingFrontController
         // we treat it as not available. We will either redirect away or show error, depending
         // on settings of the category.
         if (!$this->category->active || !$this->category->existsInShop($this->context->shop->id)) {
-            // If category should redirect and we don't know where, we take the closest parent
-            if (!$this->category->id_type_redirected && in_array($this->category->redirect_type, [RedirectType::TYPE_PERMANENT, RedirectType::TYPE_TEMPORARY])) {
-                $this->category->id_type_redirected = $this->getCategoryToRedirectTo();
+            $redirectType = $this->category->redirect_type;
+            $categoryToRedirectTo = $this->getCategoryToRedirectTo();
+
+            // If category should redirect and we don't know where, we default to 404
+            if (!$categoryToRedirectTo && in_array($redirectType, [RedirectType::TYPE_PERMANENT, RedirectType::TYPE_TEMPORARY])) {
+                $redirectType = RedirectType::TYPE_NOT_FOUND;
             }
 
             // Now, we do as configured in "Redirection when not displayed" field on the category
-            switch ($this->category->redirect_type) {
+            switch ($redirectType) {
                 case RedirectType::TYPE_PERMANENT:
                     header('HTTP/1.1 301 Moved Permanently');
-                    header('Location: ' . $this->context->link->getCategoryLink($this->category->id_type_redirected));
+                    header('Location: ' . $this->context->link->getCategoryLink($categoryToRedirectTo));
                     exit;
                 case RedirectType::TYPE_TEMPORARY:
                     header('HTTP/1.1 302 Moved Temporarily');
                     header('Cache-Control: no-cache');
-                    header('Location: ' . $this->context->link->getCategoryLink($this->category->id_type_redirected));
+                    header('Location: ' . $this->context->link->getCategoryLink($categoryToRedirectTo));
                     exit;
                 case RedirectType::TYPE_GONE:
                     header('HTTP/1.1 410 Gone');
@@ -363,28 +366,31 @@ class CategoryControllerCore extends ProductListingFrontController
     /**
      * Returns a category that we will redirect into, in case we need 301/302 redirect.
      * We will try to get the closest active parent of the current category.
-     *
-     * @return int category ID
      */
-    private function getCategoryToRedirectTo(): int
+    private function getCategoryToRedirectTo(): ?int
     {
-        $categoryToRedirectTo = null;
-        foreach ($this->category->getParentsCategories() as $category) {
-            /*
-             * Or new favourite category is a one that:
-             * - Is not the current one
-             * - Is active
-             * - Is either the first candidate or deeper than the previous one
-             */
-            if ($category['id_category'] != $this->category->id
-                && $category['active'] == 1
-                && ($categoryToRedirectTo === null || $category['level_depth'] > $categoryToRedirectTo['level_depth'])
-            ) {
-                $categoryToRedirectTo = $category;
+        if (!empty($this->category->id_type_redirected)) {
+            $redirectToCategory = new Category($this->category->id_type_redirected);
+
+            if (Validate::isLoadedObject($redirectToCategory) && $redirectToCategory->active) {
+                return $this->category->id_type_redirected;
             }
         }
 
-        return $categoryToRedirectTo['id_category'];
+        foreach ($this->category->getParentsCategories() as $category) {
+            /*
+             * Our new category is one that:
+             * - Is not the current one
+             * - Is active
+             * Note: depth not tested as getParentsCategories() returns parents sorted from closest to farest
+             */
+            if ($category['id_category'] != $this->category->id
+                && $category['active'] == 1) {
+                return $category['id_category'];
+            }
+        }
+
+        return null;
     }
 
     /**
