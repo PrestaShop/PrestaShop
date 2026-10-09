@@ -286,7 +286,7 @@ class HelperListCore extends Helper
             // Check all available actions to add to the current list row
             foreach ($this->actions as $action) {
                 // Check if the action is available for the current row
-                if (!array_key_exists($action, $this->list_skip_actions) || !in_array($id, $this->list_skip_actions[$action])) {
+                if (!$this->isActionSkipped($action, $id)) {
                     $method_name = 'display' . ucfirst($action) . 'Link';
 
                     if (method_exists($this->context->controller, $method_name)) {
@@ -871,6 +871,12 @@ class HelperListCore extends Helper
      */
     protected function getViewLink($token, $id)
     {
+        // A row whose view action was skipped must not be given the link to it either: the row
+        // itself is clickable and would navigate to the action the list declared unavailable.
+        if ($this->isActionSkipped('view', $id)) {
+            return '';
+        }
+
         $linkBuilder = $this->linkBuilderFactory->getBuilderFor($this->table);
         $parameters = $this->buildLinkParameters($token, $id);
 
@@ -888,10 +894,28 @@ class HelperListCore extends Helper
      */
     protected function getEditLink($token, $id)
     {
+        if ($this->isActionSkipped('edit', $id)) {
+            return '';
+        }
+
         $linkBuilder = $this->linkBuilderFactory->getBuilderFor($this->table);
         $parameters = $this->buildLinkParameters($token, $id);
 
         return $linkBuilder->getEditLink($this->table, $parameters);
+    }
+
+    /**
+     * Whether the list declared this action unavailable for this row through $list_skip_actions.
+     *
+     * @param string $action
+     * @param int|string $id
+     *
+     * @return bool
+     */
+    protected function isActionSkipped($action, $id)
+    {
+        return array_key_exists($action, $this->list_skip_actions)
+            && in_array($id, $this->list_skip_actions[$action]);
     }
 
     /**
