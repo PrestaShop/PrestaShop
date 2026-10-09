@@ -52,7 +52,7 @@ function getOrderXmlUpdate(
       + `    <invoice_number><![CDATA[${data.invoiceNumber}]]></invoice_number>`
       + `    <invoice_date><![CDATA[${data.invoiceDate}]]></invoice_date>\n`
       + '    <shipping_number><![CDATA[123ABCDEF]]></shipping_number>\n'
-      + '    <valid>1</valid>\n'
+      + '    <valid>0</valid>\n'
       + '    <note><![CDATA[Da Ba De Da Da]]></note>\n'
       + '    <id_shop_group>1</id_shop_group>\n'
       + '    <id_shop>1</id_shop>\n'

@@ -233,10 +233,6 @@ class OrderCore extends ObjectModel
             'id_lang' => ['xlink_resource' => 'languages'],
             'id_customer' => ['xlink_resource' => 'customers'],
             'id_carrier' => ['xlink_resource' => 'carriers'],
-            'current_state' => [
-                'xlink_resource' => 'order_states',
-                'setter' => 'setWsCurrentState',
-            ],
             'module' => ['required' => true],
             'invoice_number' => [],
             'invoice_date' => [],
@@ -250,6 +246,16 @@ class OrderCore extends ObjectModel
                 'setter' => 'setWsShippingNumber',
             ],
             'note' => [],
+            /*
+             * Must stay last. Its setter runs the whole status change, which generates the invoice
+             * and writes invoice_number and invoice_date on the order. WebserviceRequest walks these
+             * fields in order and assigns null to every one the request left out, so anything listed
+             * after this would undo what the status change just produced.
+             */
+            'current_state' => [
+                'xlink_resource' => 'order_states',
+                'setter' => 'setWsCurrentState',
+            ],
         ],
         'associations' => [
             'order_rows' => ['resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
