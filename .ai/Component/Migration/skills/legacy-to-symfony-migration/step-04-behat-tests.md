@@ -30,7 +30,8 @@ The CQRS layer is the API the rest of the application sees. If a command or quer
 ## Orchestration notes
 
 - One scenario per command path; one scenario per query path. Do not merge "I edit and then I read it back" into one — they exercise different handlers.
-- Every typed `{Domain}ConstraintException::INVALID_*` code from step 2 needs a scenario that triggers it.
+- Every typed `{Domain}ConstraintException::INVALID_*` code from step 2 needs a scenario that triggers it, and every code declared must be thrown somewhere: a declared code nothing throws usually means the real check was forgotten.
+- Every **port** line of the manifest's behaviour parity checklist owned by the CQRS layer (stored shape, validation against a related record, cleared value) gets a scenario with its boundary input: a whole number where decimals are expected, a value emptied on edit, a record the related one does not accept.
 - For complex domains, split scenarios across multiple `.feature` files (one per area: management, sub-resource, multistore) so the suite can be run partially when debugging.
 
 ## Gate to next step
@@ -38,5 +39,6 @@ The CQRS layer is the API the rest of the application sees. If a command or quer
 - [ ] Every command from the manifest has at least one happy-path scenario
 - [ ] Every query has at least one scenario asserting on the DTO shape
 - [ ] Every constraint code has at least one scenario triggering it
+- [ ] Every CQRS-owned **port** line of the behaviour parity checklist has a scenario
 - [ ] Multistore scenarios cover the relevant tier (if the entity is multistore-aware)
 - [ ] Full Behat suite green in CI
