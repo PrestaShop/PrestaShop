@@ -477,11 +477,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 );
                 $numericAmount = $document->total_paid_tax_incl;
             } elseif (OrderDocumentType::CREDIT_SLIP === $type) {
-                $conf = $this->configuration->get('PS_CREDIT_SLIP_PREFIX');
-                $number = sprintf(
-                    '%s%06d',
-                    $conf[$this->contextLanguageId] ?? '',
-                    $document->id
+                $number = $document->getCreditSlipNumberFormatted(
+                    $this->contextLanguageId,
+                    $order->id_shop
                 );
                 $amount = $this->locale->formatPrice(
                     $document->total_products_tax_incl + $document->total_shipping_tax_incl,
