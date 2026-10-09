@@ -67,6 +67,11 @@ class AddEmployeeCommand
     private $hasEnabledGravatar;
 
     /**
+     * @var string|null
+     */
+    private $uploadedAvatarPath;
+
+    /**
      * @param string $firstName
      * @param string $lastName
      * @param string $email
@@ -80,6 +85,7 @@ class AddEmployeeCommand
      * @param int $minLength
      * @param int $maxLength
      * @param int $minScore
+     * @param string|null $uploadedAvatarPath
      */
     public function __construct(
         $firstName,
@@ -94,7 +100,8 @@ class AddEmployeeCommand
         bool $hasEnabledGravatar,
         int $minLength,
         int $maxLength,
-        int $minScore
+        int $minScore,
+        ?string $uploadedAvatarPath = null
     ) {
         $this->firstName = new FirstName($firstName);
         $this->lastName = new LastName($lastName);
@@ -106,6 +113,7 @@ class AddEmployeeCommand
         $this->shopAssociation = $shopAssociation;
         $this->plainPassword = new Password($plainPassword, $minLength, $maxLength, $minScore);
         $this->hasEnabledGravatar = $hasEnabledGravatar;
+        $this->uploadedAvatarPath = $uploadedAvatarPath;
     }
 
     /**
@@ -186,5 +194,10 @@ class AddEmployeeCommand
     public function hasEnabledGravatar()
     {
         return $this->hasEnabledGravatar;
+    }
+
+    public function getUploadedAvatarPath(): ?string
+    {
+        return $this->uploadedAvatarPath;
     }
 }
