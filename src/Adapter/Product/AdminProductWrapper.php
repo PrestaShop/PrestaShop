@@ -871,6 +871,7 @@ class AdminProductWrapper
         foreach ($data as $id => $position) {
             $img = new Image((int) $id);
             $img->position = (int) $position;
+            $img->setFieldsToUpdate(['position' => true]);
             $img->update();
         }
     }
