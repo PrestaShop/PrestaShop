@@ -93,11 +93,11 @@ class GenerateMailTemplatesCommand extends Command
      */
     private function initContext()
     {
-        // We need to have an employee or the module hooks don't work
-        // see LegacyHookSubscriber
+        // We need to have an employee or the module hooks don't work, see LegacyHookSubscriber
+        // which only checks that an employee object is present. An anonymous employee (without id)
+        // is enough.
         if (!$this->legacyContext->getContext()->employee) {
-            // Even a non existing employee is fine
-            $this->legacyContext->getContext()->employee = new Employee(42);
+            $this->legacyContext->getContext()->employee = new Employee();
         }
     }
 }
