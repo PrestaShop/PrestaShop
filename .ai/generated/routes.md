@@ -49,7 +49,7 @@ POST          /                                         admin_security_csp_searc
 POST          /allow-list                               admin_security_csp_rules_search  [CommonController::searchGridAction]
 POST          /settings                                 admin_security_csp_save  [CspController::saveAction]
 GET,POST      /allow-list/add                           admin_security_csp_add  [CspController::addAction]
-GET           /clear-log                                admin_security_csp_clear_log  [CspController::clearLogAction]
+POST          /clear-log                                admin_security_csp_clear_log  [CspController::clearLogAction]
 POST          /allow/{cspLogId}                         admin_security_csp_allow  [CspController::allowAction]
 POST          /revoke/{cspRuleId}                       admin_security_csp_revoke  [CspController::revokeAction]
 POST          /bulk-revoke                              admin_security_csp_bulk_revoke  [CspController::bulkRevokeAction]

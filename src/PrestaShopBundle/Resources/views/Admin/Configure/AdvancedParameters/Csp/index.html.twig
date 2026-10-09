@@ -11,6 +11,11 @@
 {% endblock %}
 
 {% block content %}
+  {# The "Clear log" toolbar button submits this CSRF-protected POST form (the toolbar itself renders only a link). #}
+  <form id="csp-clear-log-form" method="post" action="{{ path('admin_security_csp_clear_log', cspContextParams) }}" class="d-none">
+    <input type="hidden" name="_token" value="{{ csrf_token('clear-csp-log') }}">
+  </form>
+
   <ul class="nav nav-tabs mb-2" role="tablist">
     <li class="nav-item">
       <a class="nav-link{{ cspSelectedContext == 'front' ? ' active' : '' }}" href="{{ path('admin_security_csp_index') }}">

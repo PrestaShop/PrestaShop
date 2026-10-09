@@ -44,7 +44,7 @@ admin_security_csp_add:
 
 admin_security_csp_clear_log:
   path: /clear-log
-  methods: [ GET ]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::clearLogAction'
     _parent: admin_security_csp_index

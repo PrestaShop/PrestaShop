@@ -39,6 +39,8 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Throwable;
 
 /** The "Advanced parameters > Security > Content Security Policy" page: a native page gated behind the 'csp' feature flag. */
@@ -117,11 +119,12 @@ class CspController extends PrestaShopAdminController
             ];
         }
         $toolbarButtons['clear_log'] = [
-            'href' => $this->generateUrl('admin_security_csp_clear_log', $contextParams),
+            'href' => '#',
             'desc' => $this->trans('Clear log', [], 'Admin.Advparameters.Feature'),
             'icon' => 'delete',
-            // json_encode builds a safe JS string literal; the toolbar template HTML-escapes the onclick.
-            'js' => 'return confirm(' . json_encode($this->clearLogConfirmMessage($isAdmin)) . ');',
+            // Clearing the log is a CSRF-protected POST; the toolbar can only render a link, so confirm and
+            // then submit the hidden form in the template. json_encode builds a safe JS string literal.
+            'js' => 'if(confirm(' . json_encode($this->clearLogConfirmMessage($isAdmin)) . ')){document.getElementById(\'csp-clear-log-form\').submit();}return false;',
         ];
 
         return $this->render(
@@ -227,11 +230,19 @@ class CspController extends PrestaShopAdminController
 
     #[DemoRestricted(redirectRoute: 'admin_security_csp_index')]
     #[AdminSecurity("is_granted('delete', 'AdminSecurityCsp')", redirectRoute: 'admin_security_csp_index')]
-    public function clearLogAction(Request $request): RedirectResponse
+    public function clearLogAction(Request $request, CsrfTokenManagerInterface $csrfTokenManager): RedirectResponse
     {
         $this->assertFeatureEnabled();
 
         $context = $this->resolveContext($request);
+
+        // Clearing the log is a state change, so it is POST and CSRF-protected (matching Allow/Revoke).
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('clear-csp-log', (string) $request->request->get('_token')))) {
+            $this->addFlash('error', $this->trans('Invalid security token. Please try again.', [], 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));
+        }
+
         $this->dispatchCommand(new ClearCspLogCommand($this->getShopContext()->getShopConstraint(), $context));
         $this->addFlash('success', $this->trans('The Content Security Policy log has been cleared. Allowed sources were kept.', [], 'Admin.Advparameters.Notification'));
 
