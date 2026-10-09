@@ -32,14 +32,15 @@ class LegacyEmailTemplateLister
     {
         $templates = [];
 
-        $corePath = $this->mailsDir . '/' . $isoCode . '/';
+        $corePath = rtrim($this->mailsDir, '/') . '/' . $isoCode . '/';
         if (is_dir($corePath)) {
-            $templates = array_merge($templates, $this->scanDirectory($corePath, '', true));
+            $templates = $this->scanDirectory($corePath, '', true);
         }
 
-        $templates = array_merge($templates, $this->scanModuleTemplates($isoCode));
-
-        return $templates;
+        // Mail::getTemplateBasePath() searches the theme and core mail directories before it walks
+        // the modules, so when a module ships a template of the same name the core one is what gets
+        // sent. The union keeps that core entry instead of letting the module overwrite it.
+        return $templates + $this->scanModuleTemplates($isoCode);
     }
 
     private function scanDirectory(string $path, string $moduleName, bool $isCore = false): array
@@ -51,26 +52,32 @@ class LegacyEmailTemplateLister
         }
 
         $finder = new Finder();
-        $finder->files()->in($path)->depth(0)->name('*.html');
+        $finder->files()->in($path)->depth(0)->name(['*.html', '*.txt']);
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $templateName = $file->getBasename('.html');
+            $templateName = $file->getBasename('.' . $file->getExtension());
 
-            if ($templateName[0] === '.') {
+            if ($templateName === '' || $templateName[0] === '.') {
                 continue;
             }
 
+            if (isset($templates[$templateName])) {
+                continue;
+            }
+
+            // A template counts as present when either half is, which is the rule
+            // Mail::getTemplateBasePath() already applies; PS_MAIL_TYPE then decides which half
+            // is required at send time, and TYPE_BOTH_AUTOMATIC_TEXT needs no .txt at all.
+            $htmlFile = $path . $templateName . '.html';
             $txtFile = $path . $templateName . '.txt';
 
-            if (file_exists($txtFile)) {
-                $templates[$templateName] = [
-                    'module' => $moduleName,
-                    'is_core' => $isCore,
-                    'html_path' => $file->getPathname(),
-                    'txt_path' => $txtFile,
-                ];
-            }
+            $templates[$templateName] = [
+                'module' => $moduleName,
+                'is_core' => $isCore,
+                'html_path' => is_file($htmlFile) ? $htmlFile : null,
+                'txt_path' => is_file($txtFile) ? $txtFile : null,
+            ];
         }
 
         return $templates;
