@@ -164,6 +164,56 @@ class ProductLazyArrayTest extends TestCase
         $this->assertNotNull($productLazyArray);
     }
 
+    public function testPricesAreEmptiedWhenTheyMustNotBeShown(): void
+    {
+        $this->setDefaultConfiguration();
+        $this->mockProductPresentationSettings->method('shouldShowPrice')->willReturn(false);
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            $this->baseProduct,
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        foreach (['price', 'price_amount', 'regular_price', 'regular_price_amount',
+            'price_tax_included', 'price_tax_excluded', 'unit_price'] as $field) {
+            $this->assertNull($productLazyArray[$field], sprintf('"%s" still carries a price', $field));
+        }
+        $this->assertFalse($productLazyArray['has_discount']);
+    }
+
+    public function testPricesAreKeptWhenTheyMayBeShown(): void
+    {
+        $this->setDefaultConfiguration();
+        $this->mockProductPresentationSettings->method('shouldShowPrice')->willReturn(true);
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            // the per-product flag is the other half of the gate, baseProduct leaves it unset
+            array_merge($this->baseProduct, ['show_price' => 1]),
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        // the formatted strings run through the mocked PriceFormatter, so assert on the raw amounts
+        $this->assertNotNull($productLazyArray['price_amount']);
+        $this->assertNotNull($productLazyArray['regular_price_amount']);
+        $this->assertNotNull($productLazyArray['price_amount_tax_included']);
+    }
+
     /**
      * @param array $product
      * @param string $availabilityMessage
