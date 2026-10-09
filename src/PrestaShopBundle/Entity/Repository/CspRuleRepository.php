@@ -8,16 +8,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Entity\Repository;
 
-use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityRepository;
+use PrestaShop\PrestaShop\Core\Csp\CspWeakeningExpression;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CannotAddCspRuleException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CannotDeleteCspRuleException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
-use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspDirective;
-use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspSource;
 use PrestaShopBundle\Entity\CspRule;
 
 /**
@@ -105,17 +103,17 @@ class CspRuleRepository extends EntityRepository
     /** Counts a scope's allowed sources that weaken the policy, using the same rule as the grid's is_weakening. */
     public function countWeakeningRulesByShop(CspContext $context, int $shopId): int
     {
-        return (int) $this->getEntityManager()->getConnection()->createQueryBuilder()
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('COUNT(1)')
             ->from($this->getClassMetadata()->getTableName())
             ->where('id_shop = :shopId')
             ->andWhere('context = :context')
-            ->andWhere("source IN (:weakeningSources) OR source LIKE '%*%' OR (directive IN (:scriptStyleDirectives) AND source IN (:broadeningSchemes))")
+            ->andWhere(CspWeakeningExpression::sql() . ' = 1')
             ->setParameter('shopId', $shopId)
-            ->setParameter('context', $context->value)
-            ->setParameter('weakeningSources', CspSource::WEAKENING_KEYWORDS, ArrayParameterType::STRING)
-            ->setParameter('scriptStyleDirectives', [CspDirective::SCRIPT_SRC->value, CspDirective::STYLE_SRC->value], ArrayParameterType::STRING)
-            ->setParameter('broadeningSchemes', CspSource::BROADENING_SCHEMES, ArrayParameterType::STRING)
+            ->setParameter('context', $context->value);
+        CspWeakeningExpression::bindParameters($qb);
+
+        return (int) $qb
             ->executeQuery()
             ->fetchOne();
     }
