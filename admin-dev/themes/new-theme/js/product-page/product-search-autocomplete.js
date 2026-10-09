@@ -90,7 +90,7 @@ export default function () {
     }, {
       display: autocompleteObject.attr('data-mappingname'),
       source: document[`${autocompleteFormId}_source`],
-      limit: 30,
+      limit: 128,
       templates: {
         suggestion(item) {
           return `<div><img src="${item.image}" style="width:50px" /> ${item.name}</div>`;
