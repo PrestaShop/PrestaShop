@@ -41,9 +41,13 @@ final class AllowCspSourceHandler implements AllowCspSourceHandlerInterface
         $log = $this->cspLogRepository->find($command->getCspLogId());
         // The back office is the single global surface (shop id 0); the storefront resolves to the shops
         // in scope. A log outside the caller's surface is treated as missing, so a crafted id can't curate
-        // another surface's policy.
+        // another surface's policy. The context column is checked explicitly rather than relying on the
+        // shop-id-0 convention to tell the surfaces apart.
         $shopIds = CspContext::ADMIN === $command->getContext() ? [0] : $this->shopListResolver->resolveShopIds($command->getShopConstraint());
-        if (null === $log || !in_array($log->getShopId(), $shopIds, true)) {
+        if (null === $log
+            || $log->getContext() !== $command->getContext()->value
+            || !in_array($log->getShopId(), $shopIds, true)
+        ) {
             throw new CspLogNotFoundException(sprintf('CSP log entry #%d was not found.', $command->getCspLogId()));
         }
 
