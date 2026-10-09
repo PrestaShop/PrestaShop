@@ -27,6 +27,9 @@ services:
     autowire: true
     autoconfigure: true
 
+  PrestaShop\PrestaShop\Adapter\Cache\Clearer\Symfony\KernelUsageChecker:
+    autowire: true
+
   prestashop.adapter.cache.clearer.symfony_cache_clearer:
     alias: 'PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer'
     deprecated:
