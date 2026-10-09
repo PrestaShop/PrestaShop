@@ -45,7 +45,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider:
     arguments:
-      - '@prestashop.adapter.data_provider.group'
+      - '@PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider:
     arguments:
@@ -84,7 +84,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeChoiceProvider:
     arguments:
-      - '@prestashop.core.addon.theme.theme_provider'
+      - '@PrestaShop\PrestaShop\Core\Addon\Theme\ThemeProvider'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyNameByIsoCodeChoiceProvider:
     arguments:
@@ -93,12 +93,12 @@ services:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DefaultMetaPageNameChoiceProvider:
     arguments:
       - '@request_stack'
-      - '@prestashop.adapter.meta.data_provider'
+      - '@PrestaShop\PrestaShop\Adapter\Meta\MetaDataProvider'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleMetaPageNameChoiceProvider:
     arguments:
       - '@request_stack'
-      - '@prestashop.adapter.meta.data_provider'
+      - '@PrestaShop\PrestaShop\Adapter\Meta\MetaDataProvider'
 
   PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\TaxRuleGroupChoiceProvider:
     arguments:

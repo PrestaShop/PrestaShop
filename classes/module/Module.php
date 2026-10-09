@@ -6,6 +6,7 @@
  */
 
 use PrestaShop\Autoload\PrestashopAutoload;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -3810,7 +3811,7 @@ abstract class ModuleCore implements ModuleInterface
             return;
         }
 
-        $this->getContainer()->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
+        $this->getContainer()->get(SymfonyCacheClearer::class)->clear();
     }
 
     public static function resetStaticCache()
