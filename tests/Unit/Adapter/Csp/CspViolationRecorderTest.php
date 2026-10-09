@@ -16,8 +16,8 @@ use PrestaShopBundle\Entity\Repository\CspLogRepository;
 
 /**
  * The single collect/clear integration point, against a mocked repository: what gets normalized and
- * written, what untrusted browser input is dropped silently, and the per-shop row cap (new sources are
- * refused once it is full, known sources keep counting).
+ * written, what untrusted browser input is dropped silently, and the per-source page limit + per-shop
+ * row cap (new sources refused once full, known sources keep counting, extra pages folded).
  */
 class CspViolationRecorderTest extends TestCase
 {
@@ -39,7 +39,6 @@ class CspViolationRecorderTest extends TestCase
                 null
             )
             ->willReturn(true);
-        $repository->expects($this->never())->method('bumpIfExists');
 
         $this->recorder($repository)->record(
             CspContext::FRONT,
@@ -151,7 +150,7 @@ class CspViolationRecorderTest extends TestCase
     {
         $repository = $this->repository();
         $repository->expects($this->never())->method('upsert');
-        $repository->expects($this->never())->method('hasAtLeast');
+        $repository->expects($this->never())->method('bumpIfExists');
 
         $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'bogus-directive', 'https://cdn.example.com/app.js', null);
     }
@@ -164,45 +163,80 @@ class CspViolationRecorderTest extends TestCase
         $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'chrome-extension://abcdef/inject.js', null);
     }
 
-    public function testItInsertsNormallyBelowTheRowCap(): void
+    public function testItBumpsAKnownSourceOnAKnownPageWithoutInserting(): void
     {
         $repository = $this->repository();
+        // The exact (source, page) row already exists: bump it and record nothing new.
+        $repository->method('bumpIfExists')->willReturn(true);
+        $repository->expects($this->never())->method('sourceExists');
+        $repository->expects($this->never())->method('upsert');
+
+        $this->assertFalse($this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', 'https://shop.example.com/a'));
+    }
+
+    public function testItRecordsANewPageAsAnExampleWhileUnderThePerSourceLimit(): void
+    {
+        $captured = null;
+        $repository = $this->repository();
+        $repository->method('bumpIfExists')->willReturn(false);
+        $repository->method('sourceExists')->willReturn(true);
+        $repository->method('hasAtLeastPages')->willReturn(false);
+        $repository->expects($this->once())->method('upsert')->willReturnCallback(function (CspContext $c, int $s, string $d, string $src, string $documentUri) use (&$captured): bool {
+            $captured = $documentUri;
+
+            return true;
+        });
+
+        $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', 'https://shop.example.com/product-7');
+
+        $this->assertSame('https://shop.example.com/product-7', $captured, 'A new page under the limit is kept as its own example row');
+    }
+
+    public function testItFoldsExtraPagesIntoTheOtherPagesRowOnceTheLimitIsReached(): void
+    {
+        $captured = 'unset';
+        $repository = $this->repository();
+        $repository->method('bumpIfExists')->willReturn(false);
+        $repository->method('sourceExists')->willReturn(true);
+        $repository->method('hasAtLeastPages')->willReturn(true);
+        $repository->expects($this->once())->method('upsert')->willReturnCallback(function (CspContext $c, int $s, string $d, string $src, string $documentUri) use (&$captured): bool {
+            $captured = $documentUri;
+
+            return false;
+        });
+
+        $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', 'https://shop.example.com/product-999');
+
+        $this->assertSame('', $captured, 'Once the per-source example limit is reached, further pages fold into the empty "other pages" row');
+    }
+
+    public function testItInsertsANewSourceBelowTheRowCap(): void
+    {
+        $repository = $this->repository();
+        $repository->method('bumpIfExists')->willReturn(false);
+        $repository->method('sourceExists')->willReturn(false);
         $repository->method('hasAtLeast')->with(CspContext::FRONT, self::SHOP_ID, CspViolationRecorder::DEFAULT_ROW_CAP)->willReturn(false);
         $repository->expects($this->once())->method('upsert')->willReturn(true);
-        $repository->expects($this->never())->method('bumpIfExists');
 
         $this->assertTrue($this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', null));
     }
 
-    public function testItRefusesANewSourceOnceTheShopIsAtTheRowCap(): void
+    public function testItRefusesABrandNewSourceOnceTheShopIsAtTheRowCap(): void
     {
         $repository = $this->repository();
+        $repository->method('bumpIfExists')->willReturn(false);
+        $repository->method('sourceExists')->willReturn(false);
         $repository->method('hasAtLeast')->with(CspContext::FRONT, self::SHOP_ID, CspViolationRecorder::DEFAULT_ROW_CAP)->willReturn(true);
-        // A brand-new source is never inserted; it is only offered to bumpIfExists, which finds no row.
         $repository->expects($this->never())->method('upsert');
-        $repository->expects($this->once())->method('bumpIfExists')->willReturn(false);
 
-        $inserted = $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://new.example.com/app.js', null);
-
-        $this->assertFalse($inserted, 'A new source must not be recorded once the log is full');
+        $this->assertFalse($this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://new.example.com/app.js', null));
     }
 
-    public function testItKeepsCountingAKnownSourceAtTheRowCap(): void
+    public function testANonPositiveCapMeansNoCapForNewSources(): void
     {
         $repository = $this->repository();
-        $repository->method('hasAtLeast')->willReturn(true);
-        $repository->expects($this->never())->method('upsert');
-        // The source already exists, so its counter is bumped even though the log is full.
-        $repository->expects($this->once())->method('bumpIfExists')->willReturn(true);
-
-        $inserted = $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://known.example.com/app.js', null);
-
-        $this->assertFalse($inserted, 'Bumping an existing row is not a new insert');
-    }
-
-    public function testANonPositiveCapMeansNoCap(): void
-    {
-        $repository = $this->repository();
+        $repository->method('bumpIfExists')->willReturn(false);
+        $repository->method('sourceExists')->willReturn(false);
         $repository->expects($this->never())->method('hasAtLeast');
         $repository->expects($this->once())->method('upsert')->willReturn(true);
 

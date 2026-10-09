@@ -138,6 +138,18 @@ class CspFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When /^I record (\d+) pages? of CSP violation for shop (\d+) with directive "([^"]*)" and blocked source "([^"]*)" through a recorder capped at (\d+)$/
+     */
+    public function recordManyPagesThroughCappedRecorder(string $pageCount, string $shopId, string $directive, string $source, string $cap): void
+    {
+        $recorder = new CspViolationRecorder($this->getCspLogRepository(), (int) $cap);
+
+        for ($page = 1; $page <= (int) $pageCount; ++$page) {
+            $recorder->record(CspContext::FRONT, (int) $shopId, $directive, $source, 'https://shop.test/page-' . $page);
+        }
+    }
+
+    /**
      * @Then /^the CSP log for shop (\d+) should contain (\d+) rows?$/
      */
     public function assertRowCount(string $shopId, string $expectedCount): void

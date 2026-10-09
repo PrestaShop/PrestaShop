@@ -66,6 +66,14 @@ Feature: Collect CSP violation reports
     And violation "script-src" from "https://a1.example.com" for shop 41 should have 2 hits
     And violation "script-src" from "https://a3.example.com" for shop 41 should have 1 hit
 
+  Scenario: A common source spread over many pages cannot freeze the log
+    # One source on 50 pages would be 50 rows without the page fold and could fill a small cap, blocking
+    # a genuinely new source. The fold keeps it to 10 example pages plus one "other pages" row (11).
+    When I record 50 pages of CSP violation for shop 81 with directive "script-src" and blocked source "https://flood.example.com" through a recorder capped at 20
+    And I record 1 page of CSP violation for shop 81 with directive "script-src" and blocked source "https://new.example.com" through a recorder capped at 20
+    Then the CSP log for shop 81 should contain 12 rows
+    And violation "script-src" from "https://new.example.com" for shop 81 should have 1 hit
+
   Scenario: The unreviewed count excludes sources that are already allow-listed
     When I record a CSP violation for shop 71 with directive "script-src" and blocked source "https://a.example.com"
     And I record a CSP violation for shop 71 with directive "script-src" and blocked source "https://b.example.com"
