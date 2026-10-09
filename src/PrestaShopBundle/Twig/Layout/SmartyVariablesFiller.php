@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use Symfony\Component\Routing\RouterInterface;
+use Tools;
 
 /**
  * Has the role of filling Smarty variables in the context.
@@ -51,6 +52,7 @@ class SmartyVariablesFiller
 
     protected function getDefaultVariables(): array
     {
+        // Provide the default variables used by back-office Smarty templates.
         $smartyVariables = [
             'maintenance_mode' => $this->templateVariables->isMaintenanceEnabled(),
             'maintenance_allow_admins' => $this->templateVariables->isFrontOfficeAccessibleForAdmins(),
@@ -87,6 +89,7 @@ class SmartyVariablesFiller
             'img_base_path' => $this->templateVariables->getBaseUrl() . basename(_PS_ADMIN_DIR_) . '/',
             'multishop_context' => $this->legacyControllerContext->multishop_context,
             'bootstrap' => false,
+            'submit_form_ajax' => (int) Tools::getValue('submitFormAjax'),
         ];
 
         $smartyVariablesAlias = [
