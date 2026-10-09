@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CannotAddCspRuleException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspRuleId;
 use PrestaShopBundle\Entity\CspRule;
+use PrestaShopBundle\Entity\Repository\CspLogRepository;
 use PrestaShopBundle\Entity\Repository\CspRuleRepository;
 
 /**
@@ -30,6 +31,7 @@ final class AddCspRuleHandler implements AddCspRuleHandlerInterface
         private readonly CspRuleRepository $repository,
         private readonly CspRuleValidator $validator,
         private readonly CspRulesSnapshotInterface $rulesSnapshot,
+        private readonly CspLogRepository $cspLogRepository,
     ) {
     }
 
@@ -64,6 +66,10 @@ final class AddCspRuleHandler implements AddCspRuleHandlerInterface
             ->setDateAdd(new DateTimeImmutable());
 
         $ruleId = new CspRuleId($this->repository->add($rule));
+
+        // The source is now allow-listed, so its collected log rows (hidden from the grid, they only
+        // consume the row cap) are deleted, like AllowCspSourceHandler does.
+        $this->cspLogRepository->deleteByShopDirectiveSource($context, $shopId, $directive, $source);
 
         // A storefront rule changes the shop's rules snapshot; the back office is not snapshotted.
         if (CspContext::FRONT === $context) {
