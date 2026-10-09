@@ -74,9 +74,9 @@ class MetaCore extends ObjectModel
         ];
 
         foreach ($files as $file) {
-            if ($file != 'index.php' && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exludePages)) {
-                $className = str_replace('.php', '', $file);
-                $reflection = class_exists($className) ? new ReflectionClass(str_replace('.php', '', $file)) : false;
+            if ($file != 'index.php' && !in_array(strtolower(str_replace('Controller.php', '', basename($file))), $exludePages)) {
+                $className = basename($file, '.php');
+                $reflection = class_exists($className) ? new ReflectionClass($className) : false;
                 $properties = $reflection ? $reflection->getDefaultProperties() : [];
                 if (isset($properties['php_self'])) {
                     $selectedPages[$properties['php_self']] = $properties['php_self'];
