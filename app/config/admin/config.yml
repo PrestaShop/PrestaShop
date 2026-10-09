@@ -17,6 +17,11 @@ ux_icons:
 api_platform:
   # Swagger API doc is accessible from the BackOffice, you need to be logged in to access it
   title: Backoffice API
+  description: >-
+    **Multistore support is experimental.** When multistore is enabled, the Admin API is disabled by default and
+    every endpoint returns a 404. To use the Admin API with multistore, enable the "Admin API - Multistore" feature
+    flag in Advanced Parameters > New & Experimental Features. This feature flag is only displayed when multistore
+    and the Admin API are both enabled.
   version: 0.1.0
   enable_docs: true
   enable_entrypoint: false
