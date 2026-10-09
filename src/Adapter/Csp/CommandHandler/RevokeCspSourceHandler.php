@@ -34,9 +34,10 @@ final class RevokeCspSourceHandler implements RevokeCspSourceHandlerInterface
         $rule = $this->repository->getById($ruleId);
 
         // A rule outside the caller's surface (global back office = shop id 0, storefront = shops in
-        // scope) is treated as missing, so a crafted id can't revoke another surface's rule.
+        // scope) is treated as missing, so a crafted id can't revoke another surface's rule. The context
+        // column is checked explicitly rather than relying on the shop-id-0 convention.
         $shopIds = CspContext::ADMIN === $command->getContext() ? [0] : $this->shopListResolver->resolveShopIds($command->getShopConstraint());
-        if (!in_array($rule->getShopId(), $shopIds, true)) {
+        if ($rule->getContext() !== $command->getContext()->value || !in_array($rule->getShopId(), $shopIds, true)) {
             throw new CspRuleNotFoundException(sprintf('CSP rule #%d was not found.', $ruleId));
         }
 
