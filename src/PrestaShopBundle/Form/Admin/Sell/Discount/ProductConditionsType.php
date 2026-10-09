@@ -14,6 +14,8 @@ use PrestaShopBundle\Form\Admin\Type\ToggleChildrenChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\When;
@@ -36,12 +38,28 @@ class ProductConditionsType extends TranslatorAwareType
         ]);
 
         if ($discountType === DiscountType::PRODUCT_LEVEL) {
-            // Cheapest product condition has been decided not relevant
-            /*$builder
-                ->add(self::CHEAPEST_PRODUCT, HiddenType::class, [
-                    'label' => $this->trans('Cheapest product', 'Admin.Catalog.Feature'),
-                ])
-            ;*/
+            /*
+             * The cheapest product target is no longer offered when building a discount, and that is
+             * deliberate. It is still offered here to a discount that ALREADY targets it, because the
+             * cart rule keeps storing it and the price engine keeps applying it: such a discount exists
+             * on any shop that used the legacy voucher form, or that created one before the option was
+             * taken out. Without the field the selector falls back to "none", which is not a target a
+             * product level discount may have, so the merchant is shown the wrong target and then cannot
+             * save the discount at all: the save is refused with "Product discount must target at least
+             * one product", naming something the form never offered.
+             *
+             * The listener runs ahead of the one ToggleChildrenChoiceType registers, which builds the
+             * radio choices from the children present at that moment.
+             */
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
+                $data = $event->getData();
+                if (is_array($data) && ($data['children_selector'] ?? null) === self::CHEAPEST_PRODUCT) {
+                    $event->getForm()->add(self::CHEAPEST_PRODUCT, HiddenType::class, [
+                        'label' => $this->trans('Cheapest product', 'Admin.Catalog.Feature'),
+                    ]);
+                }
+            }, 10);
+
             $specificProductsLabel = $this->trans('Single product', 'Admin.Catalog.Feature');
             $specificProductsLimit = 1;
         } else {
