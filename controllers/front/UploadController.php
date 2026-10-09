@@ -10,6 +10,11 @@ class UploadControllerCore extends GetFileController
 {
     private $filename;
 
+    // Disable canonical redirection for product downloads
+    protected function canonicalRedirection(string $canonical_url = ''): void
+    {
+    }
+
     /**
      * Initialize the controller.
      *
