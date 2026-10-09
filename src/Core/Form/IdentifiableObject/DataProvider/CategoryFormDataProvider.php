@@ -90,7 +90,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        $allGroupIds = $this->groupDataProvider->getAllGroupIds();
+        $allGroupIds = $this->groupDataProvider->getAllGroupIds(true);
 
         return [
             'id_parent' => $this->shopContext->getCategoryId(),
