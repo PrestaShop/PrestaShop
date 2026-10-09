@@ -50,7 +50,7 @@ class AddOrderFromBackOfficeCommand
      * @param string $paymentModuleName
      * @param int $orderStateId
      */
-    public function __construct($cartId, $employeeId, $orderMessage, $paymentModuleName, $orderStateId)
+    public function __construct($cartId, $employeeId = NoEmployeeId::NO_EMPLOYEE_ID_VALUE, $orderMessage = '', $paymentModuleName = '', $orderStateId = 0)
     {
         $this->assertIsModuleName($paymentModuleName);
         $this->assertOrderStateIsPositiveInt($orderStateId);
