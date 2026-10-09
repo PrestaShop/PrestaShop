@@ -73,7 +73,7 @@
 				</div>
 			</div>
 			{/foreach}
-			<script>
+			<script nonce="{$cspNonce}">
 				function changeFormat(elt)
 				{ldelim}
 					$('.second-select').hide();
@@ -115,7 +115,7 @@
 		</div>
 	</form>
 
-  <script type="text/javascript">
+  <script type="text/javascript" nonce="{$cspNonce}">
     $(function() {
       $('#display_regenerate_form button[type="submit"]').on('click', function() {
         $('#modalRegenerateThumbnails').modal('show');

@@ -3,7 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
 
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 $().ready(function() {
 	$(document).on('click', '.input_all_shop', function(e) {
 		var checked = $(this).prop('checked');

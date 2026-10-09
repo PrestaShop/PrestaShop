@@ -10,7 +10,7 @@
 	</ul>
 	{/if}
 </div>
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	var currentToken="{$token|@addslashes}";
 	{if isset($use_checkbox) && $use_checkbox == true}
 		function checkAllAssociatedCategories($tree)

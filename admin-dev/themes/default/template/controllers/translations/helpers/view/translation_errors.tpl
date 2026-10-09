@@ -32,7 +32,7 @@
 			<p>{l s='Total missing expressions:' d='Admin.International.Feature'} <span class="badge">{l s='%d' sprintf=[$missing_translations|array_sum]}</p>
 		</div>
 
-		<script type="text/javascript">
+		<script type="text/javascript" nonce="{$cspNonce}">
 			$(function(){
 				$('a.useSpecialSyntax').on('click', function(){
 					var syntax = $(this).find('img').attr('alt');
