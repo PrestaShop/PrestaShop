@@ -371,7 +371,16 @@ class AddDiscountCommand
      * Note: the parameters names are important here for API serialization.
      * To unset the minimum amount set the first parameter to null (the other parameters can remain empty)
      */
-    public function setMinimumAmount(?DecimalNumber $amount, int $currencyId = 0, bool $taxIncluded = true, bool $shippingIncluded = true): self
+    /*
+     * WHY shipping is excluded by default: it is the value every other part of the stack already
+     * uses for a minimum amount nobody said anything about. The column is declared
+     * `minimum_amount_shipping tinyint(1) NOT NULL DEFAULT '0'`, the legacy cart rule form offers
+     * "Shipping excluded" first, and the discount form has had no such field since #40809 removed
+     * it, so its data handler sends false. A default of true made a caller that omits the argument
+     * - which is every Admin API request whose minimumAmount carries only amount, currency and tax -
+     * store the opposite condition from the same discount created in the back office.
+     */
+    public function setMinimumAmount(?DecimalNumber $amount, int $currencyId = 0, bool $taxIncluded = true, bool $shippingIncluded = false): self
     {
         if (null === $amount) {
             $this->minimumAmount = null;
