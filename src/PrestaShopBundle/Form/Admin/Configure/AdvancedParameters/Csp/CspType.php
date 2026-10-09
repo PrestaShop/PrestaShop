@@ -11,11 +11,10 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Csp;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Url;
 
 /** Settings block of the "Advanced parameters > Security > Content Security Policy" page. */
@@ -39,15 +38,22 @@ final class CspType extends TranslatorAwareType
                 'label' => $this->trans('Report-only mode', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Only applies when Content Security Policy is enabled above. On: violations are reported but nothing is blocked. Off: the policy is enforced and any source that is not on your allow-list is blocked in visitors\' browsers. Turn this off only once the allow-list is complete, or the storefront may break.', 'Admin.Advparameters.Help'),
             ])
-            ->add('retention_days', IntegerType::class, [
+            ->add('retention_days', ChoiceType::class, [
                 'required' => false,
+                'placeholder' => false,
                 'multistore_configuration_key' => 'PS_CSP_RETENTION_DAYS',
-                'label' => $this->trans('Delete reports older than (days)', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('When the "prestashop:csp:prune-log" command runs, delete reported violations older than this many days. 0 keeps them until the row cap evicts them. Allowed sources are never deleted. Pruning runs only while Content Security Policy is enabled.', 'Admin.Advparameters.Help'),
-                'constraints' => [
-                    new GreaterThanOrEqual(0),
+                'label' => $this->trans('Delete reports older than', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('When the "prestashop:csp:prune-log" command runs, delete reported violations older than the selected age. "Never" keeps them until the per-shop row cap evicts them. Allowed sources are never deleted. Pruning runs only while Content Security Policy is enabled.', 'Admin.Advparameters.Help'),
+                'choices' => [
+                    'Never (keep until the cap)' => 0,
+                    '7 days' => 7,
+                    '14 days' => 14,
+                    '30 days' => 30,
+                    '90 days' => 90,
+                    '180 days' => 180,
+                    '365 days' => 365,
                 ],
-                'attr' => ['min' => 0],
+                'choice_translation_domain' => 'Admin.Advparameters.Feature',
             ])
             ->add('report_uri', TextType::class, [
                 'required' => false,

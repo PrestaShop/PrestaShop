@@ -46,6 +46,9 @@ const initEnabledDependency = (): void => {
 
       if ($switch.length) {
         $switch.css('pointer-events', enabledOn ? '' : 'none');
+      } else if ($inputs.is('select')) {
+        // A <select> ignores the readonly attribute, so lock it the same way as the switch.
+        $inputs.css('pointer-events', enabledOn ? '' : 'none');
       } else {
         $inputs.prop('readonly', !enabledOn);
       }
