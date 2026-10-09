@@ -33,15 +33,16 @@
     </div>
   {{ form_end(securityHeadersForm) }}
 
-  <h2 class="mt-2">{{ 'Content Security Policy'|trans({}, 'Admin.Advparameters.Feature') }}</h2>
+  <h2 class="mt-2" id="csp_section">{{ 'Content Security Policy'|trans({}, 'Admin.Advparameters.Feature') }}</h2>
   <ul class="nav nav-tabs mb-2" role="tablist">
     <li class="nav-item">
-      <a class="nav-link{{ cspSelectedContext == 'front' ? ' active' : '' }}" href="{{ path('admin_security_headers_index') }}">
+      {# Anchor to the CSP section so switching surface keeps the merchant here instead of scrolling to the top. #}
+      <a class="nav-link{{ cspSelectedContext == 'front' ? ' active' : '' }}" href="{{ path('admin_security_headers_index') }}#csp_section">
         {{ 'Storefront'|trans({}, 'Admin.Shopparameters.Feature') }}
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{{ cspSelectedContext == 'admin' ? ' active' : '' }}" href="{{ path('admin_security_headers_index', {context: 'admin'}) }}">
+      <a class="nav-link{{ cspSelectedContext == 'admin' ? ' active' : '' }}" href="{{ path('admin_security_headers_index', {context: 'admin'}) }}#csp_section">
         {{ 'Back office'|trans({}, 'Admin.Advparameters.Feature') }}
       </a>
     </li>
