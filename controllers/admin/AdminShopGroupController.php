@@ -5,6 +5,8 @@
  */
 
 /**
+ * @deprecated since 9.3 and will be removed in 10.0 - This controller was migrated in 9.3
+ *
  * @property ShopGroup $object
  */
 class AdminShopGroupControllerCore extends AdminController
@@ -88,6 +90,7 @@ class AdminShopGroupControllerCore extends AdminController
                     }
 
                     $url['name'] = $title;
+                    $url['edit_url'] = $this->context->link->getAdminLink('AdminShopUrl', true, [], ['updateshop_url' => 1, 'id_shop_url' => $url['id_shop_url']]);
                     $shop['urls'][$url['id_shop_url']] = $url;
                 }
             }

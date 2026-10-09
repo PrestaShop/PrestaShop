@@ -23,6 +23,8 @@ parameters:
     - AdminFeatureFlag
     - AdminLanguages
     - AdminProfiles
+    - AdminShopGroup
+    - AdminShopUrl
     - AdminSpecificPriceRule
     - AdminStatuses
     - AdminSecurity

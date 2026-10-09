@@ -514,6 +514,16 @@ services:
     autowire: true
     public: true
 
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ShopGroupGridDefinitionFactory:
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    autowire: true
+    public: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ShopUrlGridDefinitionFactory:
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    autowire: true
+    public: true
+
   PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BusinessEntityGridDefinitionFactory:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     autowire: true
