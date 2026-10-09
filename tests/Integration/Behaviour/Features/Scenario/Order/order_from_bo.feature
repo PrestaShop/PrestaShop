@@ -61,6 +61,10 @@ Feature: Order from Back Office (BO)
       | status              | Awaiting bank wire payment |
     Then order "bo_order2" must have customer message with content "test"
     And order "bo_order2" must have a customer message created by employee "test@prestashop.com"
+    And the messages of order "bo_order2" should be, from the most recent:
+      | author   |
+      | employee |
+      | customer |
 
   Scenario: Update order status
     When I update order "bo_order1" status to "Awaiting Cash On Delivery validation"
