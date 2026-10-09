@@ -945,17 +945,14 @@ Country</value>
     <configuration id="PS_CSP_ADMIN_RETENTION_DAYS" name="PS_CSP_ADMIN_RETENTION_DAYS">
       <value>0</value>
     </configuration>
-    <configuration id="PS_CSP_ADMIN_REPORT_URI" name="PS_CSP_ADMIN_REPORT_URI">
+    <configuration id="PS_SEC_NOSNIFF" name="PS_SEC_NOSNIFF">
       <value></value>
     </configuration>
-    <configuration id="PS_SEC_NOSNIFF" name="PS_SEC_NOSNIFF">
-      <value>1</value>
-    </configuration>
     <configuration id="PS_SEC_FRAME_OPTIONS" name="PS_SEC_FRAME_OPTIONS">
-      <value>SAMEORIGIN</value>
+      <value></value>
     </configuration>
     <configuration id="PS_SEC_REFERRER_POLICY" name="PS_SEC_REFERRER_POLICY">
-      <value>strict-origin-when-cross-origin</value>
+      <value></value>
     </configuration>
     <configuration id="PS_SEC_HSTS" name="PS_SEC_HSTS">
       <value>0</value>
