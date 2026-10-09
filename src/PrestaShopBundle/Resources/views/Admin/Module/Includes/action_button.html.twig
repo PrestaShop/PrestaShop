@@ -10,7 +10,7 @@
 {% else %}
   {# For the 'upgrade' action, if an upload_url is provided, it is added as a data-upload-url attribute to allow file upload during module upgrade via JavaScript #}
   <form class="{{ classes_form|default() }}" method="post" action="{{ url }}" {% if action == 'upgrade' and upload_url is not empty %}data-upload-url="{{ upload_url }}"{% endif %}>
-    <button type="submit" class="{{ classes }} module_action_menu_{{ action }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ action }}">
+    <button type="submit" class="{{ classes }} module_action_menu_{{ action }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ action }}"{% if action == 'upgrade' and confirm_message is defined and confirm_message is not empty %} data-confirm-message="{{ confirm_message }}"{% endif %}>
       {{ label }}
     </button>
   </form>
