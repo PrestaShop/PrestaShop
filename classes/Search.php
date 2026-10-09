@@ -871,10 +871,12 @@ class SearchCore
             ObjectModel::updateMultishopTable('Product', ['indexed' => 0]);
         } else {
             $db->execute('DELETE si FROM `' . _DB_PREFIX_ . 'search_index` si
+                INNER JOIN `' . _DB_PREFIX_ . 'search_word` sw ON (sw.id_word = si.id_word)
 				INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (p.id_product = si.id_product)
 				' . Shop::addSqlAssociation('product', 'p') . '
 				WHERE product_shop.`visibility` IN ("both", "search")
 				AND product_shop.`active` = 1
+				AND sw.`id_shop` = '.Context::getContext()->shop->id.'
 				AND ' . ($id_product ? 'p.`id_product` = ' . (int) $id_product : 'product_shop.`indexed` = 0'));
 
             $db->execute('UPDATE `' . _DB_PREFIX_ . 'product` p
