@@ -1011,15 +1011,21 @@ class HookCore extends ObjectModel
                 );
 
                 // We throw an error - aliases are deprecated.
-                trigger_error(
-                    sprintf(
-                        'The hook "%s" is deprecated, please use "%s" instead in module "%s".',
-                        $registeredHookName,
-                        $hook_name,
-                        $hookRegistration['module']
-                    ),
-                    E_USER_DEPRECATED
-                );
+                // A module sitting on a legacy alias is a compatibility warning, so a shop that has turned
+                // those off with _PS_DISPLAY_COMPATIBILITY_WARNING_ should not get it. Tools::throwDeprecated()
+                // already honours that constant; this call did not, and it fires once per registered module
+                // per hook execution, so it can fill an error log on a shop that asked for silence.
+                if (_PS_DISPLAY_COMPATIBILITY_WARNING_) {
+                    trigger_error(
+                        sprintf(
+                            'The hook "%s" is deprecated, please use "%s" instead in module "%s".',
+                            $registeredHookName,
+                            $hook_name,
+                            $hookRegistration['module']
+                        ),
+                        E_USER_DEPRECATED
+                    );
+                }
             }
 
             // Check conditions to execute the module
