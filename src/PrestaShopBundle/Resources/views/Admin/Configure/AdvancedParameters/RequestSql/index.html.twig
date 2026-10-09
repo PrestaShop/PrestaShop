@@ -6,6 +6,8 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block content %}
+  {{ include('@PrestaShop/Admin/Common/multistore-infotip.html.twig') }}
+
   {% block sql_manager_info_block %}
     <div class="alert alert-info" role="alert">
       <p class="alert-text">{{ 'How do I create a new SQL query?'|trans({}, 'Admin.Advparameters.Help') }}</p>
