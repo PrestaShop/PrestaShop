@@ -38,14 +38,13 @@ Feature: Curate the CSP allow-list
     Then I should get a CSP error that the rule already exists
     And shop 52 should have 1 CSP rule
 
-  Scenario: Allowing a recorded violation creates a rule, and allowing it again is idempotent
+  Scenario: Allowing a recorded violation creates a rule and clears its collected log rows
     When I record a CSP violation for shop 53 with directive "script-src" and blocked source "https://cdn.example.com"
     And I allow the recorded violation "script-src" from "https://cdn.example.com" for shop 53 as CSP rule "rule1"
     Then a CSP rule for shop 53 with directive "script-src" and source "https://cdn.example.com" should exist
     And shop 53 should have 1 CSP rule
-    When I allow the recorded violation "script-src" from "https://cdn.example.com" for shop 53 as CSP rule "rule2"
-    Then CSP rules "rule1" and "rule2" should be the same rule
-    And shop 53 should have 1 CSP rule
+    # The source is now allow-listed, so its collected rows are deleted (they only consumed the row cap).
+    And the CSP log for shop 53 should not contain violation "script-src" from "https://cdn.example.com"
 
   Scenario: Revoking a rule removes it
     When I add a CSP rule "rule1" for shop 54 with directive "script-src" and source "https://cdn.example.com"

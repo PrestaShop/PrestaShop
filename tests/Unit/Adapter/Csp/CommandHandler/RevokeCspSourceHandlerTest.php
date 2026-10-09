@@ -10,7 +10,7 @@ namespace Tests\Unit\Adapter\Csp\CommandHandler;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\RevokeCspSourceHandler;
-use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface;
+use PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\RevokeCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -36,12 +36,12 @@ class RevokeCspSourceHandlerTest extends TestCase
         $shopListResolver = $this->createMock(ShopListResolverInterface::class);
         $shopListResolver->method('resolveShopIds')->willReturn([1]);
 
-        $cache = $this->createMock(CspPolicyCacheInterface::class);
-        $cache->expects($this->never())->method('invalidate');
+        $snapshot = $this->createMock(CspRulesSnapshotInterface::class);
+        $snapshot->expects($this->never())->method('refresh');
 
         $this->expectException(CspRuleNotFoundException::class);
 
-        (new RevokeCspSourceHandler($repository, $shopListResolver, $cache))
+        (new RevokeCspSourceHandler($repository, $shopListResolver, $snapshot))
             ->handle(new RevokeCspSourceCommand(7, ShopConstraint::shop(1)));
     }
 
@@ -56,10 +56,10 @@ class RevokeCspSourceHandlerTest extends TestCase
         $shopListResolver = $this->createMock(ShopListResolverInterface::class);
         $shopListResolver->method('resolveShopIds')->willReturn([1]);
 
-        $cache = $this->createMock(CspPolicyCacheInterface::class);
-        $cache->expects($this->once())->method('invalidate')->with(1);
+        $snapshot = $this->createMock(CspRulesSnapshotInterface::class);
+        $snapshot->expects($this->once())->method('refresh')->with(1);
 
-        (new RevokeCspSourceHandler($repository, $shopListResolver, $cache))
+        (new RevokeCspSourceHandler($repository, $shopListResolver, $snapshot))
             ->handle(new RevokeCspSourceCommand(7, ShopConstraint::shop(1)));
     }
 }

@@ -24,7 +24,7 @@ services:
     arguments:
       - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
       - '@PrestaShop\PrestaShop\Adapter\Csp\CspRuleValidator'
-      - '@PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface'
 
   PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AllowCspSourceHandler:
     autoconfigure: true
@@ -32,18 +32,18 @@ services:
       - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
       - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
       - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
-      - '@PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface'
 
   PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\RevokeCspSourceHandler:
     autoconfigure: true
     arguments:
       - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
       - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
-      - '@PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface'
 
   PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\BulkRevokeCspSourceHandler:
     autoconfigure: true
     arguments:
       - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
       - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
-      - '@PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface'
