@@ -55,7 +55,17 @@ export default class FormFieldToggle {
       this.toggleEmailFields.bind(this),
     );
 
-    $(window).on('load', this.toggleFields.bind(this));
+    // Coming back to this page through browser history restores the selected translation type after
+    // load has already fired, so a handler bound to load reads the value the server rendered and leaves
+    // the dependent field hidden. pageshow runs after that restoration.
+    $(window).on('pageshow', this.toggleFields.bind(this));
+
+    // On that same history restore the page can already be complete by the time this runs, which means
+    // pageshow has fired and the listener above missed it. The selected value is final at that point,
+    // so read it once straight away.
+    if (document.readyState === 'complete') {
+      this.toggleFields();
+    }
   }
 
   /**
