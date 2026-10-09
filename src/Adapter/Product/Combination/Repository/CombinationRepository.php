@@ -792,7 +792,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
      *
      * @return ShopId[]
      */
-    private function getShopIdsByConstraint(CombinationId $combinationId, ShopConstraint $shopConstraint): array
+    public function getShopIdsByConstraint(CombinationId $combinationId, ShopConstraint $shopConstraint): array
     {
         if ($shopConstraint->getShopGroupId()) {
             return $this->getAssociatedShopIdsFromGroup($combinationId, $shopConstraint->getShopGroupId());

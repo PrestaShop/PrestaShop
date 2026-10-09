@@ -34,6 +34,8 @@ prestashop.selectors = {
     additionalInfos:
       '.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info, .page-product:not(.modal-open) .product-container .product-additional-info, .quickview .js-product-additional-info, .page-product:not(.modal-open) .row .js-product-additional-info, .page-product:not(.modal-open) .js-product-container .js-product-additional-info',
     details: '.quickview #product-details, .page-product:not(.modal-open) #product-details, .quickview .js-product-details, .page-product:not(.modal-open) .js-product-details',
+    description: '.page-product:not(.modal-open) .js-product-description',
+    descriptionShort: '.quickview .js-product-description-short, .page-product:not(.modal-open) .js-product-description-short',
     flags:
       '.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags, .page-product:not(.modal-open) .product-container .product-flags, .quickview .js-product-flags, .page-product:not(.modal-open) .row .js-product-flags, .page-product:not(.modal-open) .js-product-container .js-product-flags',
     /* eslint-enable */
