@@ -238,7 +238,7 @@ class CustomerCore extends ObjectModel
          * If it's being updated, we must rebuild the date from these three fields.
          */
         $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years . '-' . (int) $this->months . '-' . (int) $this->days);
-        $this->secure_key = md5(uniqid((string) mt_rand(0, mt_getrandmax()), true));
+        $this->secure_key = bin2hex(random_bytes(32));
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_FRONT') . 'minutes'));
 
         // If subscribed to the newsletter, set the date of subscription to now, if not set
