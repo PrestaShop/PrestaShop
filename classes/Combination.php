@@ -379,9 +379,18 @@ class CombinationCore extends ObjectModel
      */
     public function setImages($idsImage)
     {
+        // WHY: the association row has no shop of its own - an image is scoped by image_shop, so
+        // the rows belonging to the current context are the ones naming an image it can see.
+        // Deleting them all discards the selection every other shop made for this combination.
+        $shopIds = Shop::getContextListShopID();
+        $shopRestriction = empty($shopIds)
+            ? ''
+            : ' AND ims.`id_shop` IN (' . implode(',', array_map('intval', $shopIds)) . ')';
+
         if (Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'product_attribute_image`
-			WHERE `id_product_attribute` = ' . (int) $this->id) === false) {
+			DELETE pai FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
+			INNER JOIN `' . _DB_PREFIX_ . 'image_shop` ims ON ims.`id_image` = pai.`id_image`' . $shopRestriction . '
+			WHERE pai.`id_product_attribute` = ' . (int) $this->id) === false) {
             return false;
         }
 
