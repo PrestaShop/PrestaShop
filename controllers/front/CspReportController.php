@@ -38,8 +38,11 @@ class CspReportControllerCore extends FrontController
     }
 
     /**
-     * The current shop's own hosts (every active shop_url domain + domain_ssl), lower-cased. A real report's
-     * document-uri is always on one of these; anything else is forged or misdirected.
+     * The current shop's own hosts (every active shop_url domain + domain_ssl), lower-cased. A genuine
+     * report's document-uri is always on one of these, so this sheds junk and misdirected reports (crawlers,
+     * other sites' pages). It is not an authenticity check: the body is public and the shop's domain is
+     * known, so a determined sender can still spoof the host. Everything downstream treats the report as
+     * untrusted regardless.
      *
      * @return array<string, true> host set, keyed for O(1) lookup
      */
@@ -120,8 +123,9 @@ class CspReportControllerCore extends FrontController
                 return;
             }
 
-            // Drop reports whose document-uri is not on a shop host: a real report comes from a page we
-            // served, so this sheds forged payloads and junk pages (the body is public and untrusted).
+            // Drop reports whose document-uri is not on a shop host: a genuine report comes from a page we
+            // served, so this sheds junk and misdirected pages. It is not an authenticity check (see
+            // shopHosts()); the body stays untrusted and is validated field by field below.
             $shopHosts = $this->shopHosts();
 
             /** @var CspViolationRecorder $recorder */
