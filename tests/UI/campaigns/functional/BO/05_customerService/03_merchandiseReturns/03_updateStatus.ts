@@ -61,7 +61,9 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
   let allEmails: MailDevEmail[];
   let numberOfEmails: number;
   let mailListener: MailDev;
-  const todayDate: string = utilsDate.getDateFormat('mm/dd/yyyy');
+  // Read when the PDF is generated rather than when this file is imported: the run can cross local
+  // midnight, and a date captured at import then differs from the one printed on the document.
+  let todayDate: string = '';
   const orderData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
@@ -287,6 +289,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
             await testContext.addContextItem(this, 'testIdentifier', 'checkPDF', baseContext);
 
             filePath = await boMerchandiseReturnsEditPage.downloadPDF(page);
+            todayDate = utilsDate.getDateFormat('mm/dd/yyyy');
 
             const exist = await utilsFile.doesFileExist(filePath);
             expect(exist, 'File does not exist').to.eq(true);
