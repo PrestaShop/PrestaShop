@@ -237,7 +237,7 @@ function checkPaymentBoxes(name, module)
     function()
     {
       if ($(this).attr('name') == module + '_' + name + '[]')
-        $(this).attr("checked", ((current.val() == 'checked') ? true : false));
+        $(this).prop("checked", ((current.val() == 'checked') ? true : false));
     }
   );
   current.val() == 'checked' ? current.val('unchecked') : current.val('checked');
@@ -253,7 +253,7 @@ function setPaymentBoxes(name, module)
     {
       if ($(this).attr('name') == module + '_' + name + '[]')
       {
-        ($(this).attr("checked") ? checked++ : '');
+        ($(this).prop("checked") ? checked++ : '');
         total++;
       }
     }
@@ -329,11 +329,11 @@ function selectCheckbox(obj)
 
 function toggleShippingCost()
 {
-  generateDiscount = $('#generateDiscount').attr("checked");
-  generateCreditSlip = $('#generateCreditSlip').attr("checked");
-  if (generateDiscount != 'checked' && generateCreditSlip != 'checked')
+  generateDiscount = $('#generateDiscount').prop("checked");
+  generateCreditSlip = $('#generateCreditSlip').prop("checked");
+  if (!generateDiscount && !generateCreditSlip)
   {
-    $('#spanShippingBack input[type=checkbox]').attr("checked", false);
+    $('#spanShippingBack input[type=checkbox]').prop("checked", false);
     $('#spanShippingBack').css('display', 'none');
   }
   else
