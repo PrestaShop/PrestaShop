@@ -90,6 +90,15 @@ services:
     tags:
       - { name: kernel.event_subscriber }
 
+  PrestaShop\PrestaShop\Adapter\Module\MailTemplate\ModuleMailTemplatesSubscriber:
+    arguments:
+      - "@PrestaShop\\PrestaShop\\Core\\CommandBus\\CommandBusInterface"
+      - "@PrestaShopBundle\\Entity\\Repository\\LangRepository"
+      - "@PrestaShop\\PrestaShop\\Adapter\\Configuration"
+      - "@logger"
+    tags:
+      - { name: kernel.event_subscriber }
+
   PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter:
     public: false
     arguments: [ "@=service('prestashop.adapter.legacy.context').getContext().currency", "@prestashop.adapter.formatter.price" ]
