@@ -120,8 +120,9 @@ class AccessCore extends ObjectModel
      */
     public static function findIdTabByAuthSlug($authSlug)
     {
+        // Same grammar as isGranted() above: the class name can carry digits and underscores.
         preg_match(
-            '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z]+)_(?P<auth>[A-Z]+)/',
+            '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
             $authSlug,
             $matches
         );

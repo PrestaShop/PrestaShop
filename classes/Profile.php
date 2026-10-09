@@ -234,8 +234,15 @@ class ProfileCore extends ObjectModel
         // Modify array to merge the class names together.
         $accessPerTab = [];
         foreach ($rolesGiven as $role) {
+            /*
+             * The class name may contain an underscore, and one of them is PrestaShop's own:
+             * ModuleTabRegister duplicates a parent tab under <ParentClass>_MTR. A group that stops at
+             * the first underscore reads that slug as the parent's, so the duplicate's own permissions
+             * are filed under the parent and its checkboxes come back empty while the rows are in place.
+             * Access::isGranted() already parses the same slugs with [A-Z0-9_]+.
+             */
             preg_match(
-                '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z][A-Z0-9]*)_[A-Z]+/',
+                '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z0-9_]+)_[A-Z]+/',
                 $role['slug'],
                 $matches
             );
