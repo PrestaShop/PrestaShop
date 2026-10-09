@@ -7,6 +7,7 @@
 namespace PrestaShopBundle\Translation;
 
 use PrestaShopBundle\Translation\Loader\ExtraPropertyTranslationLoader;
+use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as BaseTranslator;
 
 /**
@@ -74,7 +75,12 @@ class Translator extends BaseTranslator implements TranslatorInterface
             parent::addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
         }
 
-        parent::initializeCatalogue($locale);
+        SqlTranslationLoader::startCatalogueBuild();
+        try {
+            parent::initializeCatalogue($locale);
+        } finally {
+            SqlTranslationLoader::endCatalogueBuild();
+        }
 
         if ([] === $domains) {
             return;
