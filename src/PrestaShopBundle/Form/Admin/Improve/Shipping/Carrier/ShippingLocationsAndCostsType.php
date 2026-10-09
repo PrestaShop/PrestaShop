@@ -104,6 +104,10 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                 'default_empty_data' => ShippingMethod::BY_PRICE,
                 'expanded' => true,
                 'multiple' => false,
+                // One choice is always selected, so the field is never something the merchant has
+                // to fill in. `placeholder` is pinned because Symfony adds an empty one otherwise.
+                'required' => false,
+                'placeholder' => false,
                 'attr' => [
                     'data-units' => json_encode([
                         ShippingMethod::BY_PRICE => $this->currencyDataProvider->getDefaultCurrencySymbol(),
@@ -118,6 +122,8 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                     $this->trans('Disable carrier', 'Admin.Shipping.Feature') => OutOfRangeBehavior::DISABLED,
                 ],
                 'default_empty_data' => OutOfRangeBehavior::USE_HIGHEST_RANGE,
+                'required' => false,
+                'placeholder' => false,
             ])
             ->add('ranges', CarrierRangesType::class, [
                 'required' => false,
