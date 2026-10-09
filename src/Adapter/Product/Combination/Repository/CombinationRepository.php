@@ -16,6 +16,7 @@ use Doctrine\DBAL\ParameterType;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
@@ -266,6 +267,11 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
     {
         $combination = $this->get($combinationId, $sourceId);
         $this->updateObjectModelForShops($combination, [$targetId], CannotUpdateCombinationException::class);
+        $this->setCarrierReferences(
+            $combinationId,
+            array_map(static fn (int $id): CarrierReferenceId => new CarrierReferenceId($id), $this->getCarrierReferenceIds($combinationId, $sourceId)),
+            ShopConstraint::shop($targetId->getValue())
+        );
     }
 
     /**
@@ -615,6 +621,54 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         return array_map(static function (array $shop) {
             return new ShopId((int) $shop['id_shop']);
         }, $qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getCarrierReferenceIds(CombinationId $combinationId, ShopId $shopId): array
+    {
+        return array_map('intval', $this->connection->createQueryBuilder()
+            ->select('id_carrier_reference')
+            ->from($this->dbPrefix . 'product_attribute_carrier')
+            ->where('id_product_attribute = :combinationId')
+            ->andWhere('id_shop = :shopId')
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+            ->executeQuery()
+            ->fetchFirstColumn()
+        );
+    }
+
+    /**
+     * @param CarrierReferenceId[] $carrierReferenceIds
+     */
+    public function setCarrierReferences(CombinationId $combinationId, array $carrierReferenceIds, ShopConstraint $shopConstraint): void
+    {
+        $this->assertCombinationExists($combinationId);
+        $shopIds = array_map(
+            static fn (ShopId $shopId): int => $shopId->getValue(),
+            $this->getShopIdsByConstraint($combinationId, $shopConstraint)
+        );
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->delete($this->dbPrefix . 'product_attribute_carrier')
+            ->where('id_product_attribute = :combinationId')
+            ->andWhere($qb->expr()->in('id_shop', ':shopIds'))
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->setParameter('shopIds', $shopIds, ArrayParameterType::INTEGER)
+            ->executeStatement()
+        ;
+
+        foreach ($carrierReferenceIds as $carrierReferenceId) {
+            foreach ($shopIds as $shopId) {
+                $this->connection->insert($this->dbPrefix . 'product_attribute_carrier', [
+                    'id_product_attribute' => $combinationId->getValue(),
+                    'id_carrier_reference' => $carrierReferenceId->getValue(),
+                    'id_shop' => $shopId,
+                ]);
+            }
+        }
     }
 
     /**

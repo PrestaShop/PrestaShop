@@ -73,10 +73,11 @@ class CombinationFormDataProviderTest extends TestCase
         $this->assertSame($expectedData, $formData);
     }
 
-    public function testFeatureValuesAreAddedWhenFlagIsEnabled(): void
+    public function testFeatureValuesAndCarriersAreAddedWhenFlagIsEnabled(): void
     {
         $langId = 1;
         $combinationData = [
+            'carrier_reference_ids' => [3, 5],
             'feature_values' => [
                 ['feature_id' => 7, 'feature_value_id' => 70, 'localized_values' => [$langId => 'Red'], 'custom' => false],
                 ['feature_id' => 7, 'feature_value_id' => 71, 'localized_values' => [$langId => 'My color'], 'custom' => true],
@@ -124,6 +125,7 @@ class CombinationFormDataProviderTest extends TestCase
                 ],
             ],
         ], $formData['features']);
+        $this->assertSame([3, 5], $formData['carriers']);
     }
 
     public function getExpectedData(): Generator
@@ -543,7 +545,8 @@ class CombinationFormDataProviderTest extends TestCase
             $this->createStock($combination),
             $combination['image_ids'] ?? [],
             $combination['cover_url'] ?? self::COVER_URL,
-            $combination['is_default'] ?? self::IS_DEFAULT
+            $combination['is_default'] ?? self::IS_DEFAULT,
+            $combination['carrier_reference_ids'] ?? []
         );
     }
 
