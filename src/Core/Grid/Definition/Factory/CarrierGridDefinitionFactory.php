@@ -109,6 +109,13 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
+                (new DataColumn('id_reference'))
+                    ->setName($this->trans('Reference ID', [], 'Admin.Shipping.Feature'))
+                    ->setOptions([
+                        'field' => 'id_reference',
+                    ])
+            )
+            ->add(
                 (new DataColumn('name'))
                     ->setName($this->trans('Name', [], 'Admin.Global'))
                     ->setOptions([
@@ -200,6 +207,16 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setTypeOptions([
                         'attr' => [
                             'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                        ],
+                        'required' => false,
+                    ])
+            )
+            ->add(
+                (new Filter('id_reference', TextType::class))
+                    ->setAssociatedColumn('id_reference')
+                    ->setTypeOptions([
+                        'attr' => [
+                            'placeholder' => $this->trans('Search reference ID', [], 'Admin.Actions'),
                         ],
                         'required' => false,
                     ])
