@@ -2333,48 +2333,30 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Whether the module has a module_shop row for the given shop. Unlike $this->active, which is read once
-     * for the context shop when the instance is built, this answers for the given shop and follows
-     * enable()/disable() within the same request.
-     */
-    public function isEnabledForShop(int $idShop): bool
-    {
-        if (!$this->id) {
-            return false;
-        }
-
-        $cacheKey = 'Module::isEnabledForShop_' . (int) $this->id . '_' . $idShop;
-        if (!Cache::isStored($cacheKey)) {
-            Cache::store($cacheKey, (bool) Db::getInstance()->getValue(
-                'SELECT 1 FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $this->id . ' AND `id_shop` = ' . $idShop
-            ));
-        }
-
-        return Cache::retrieve($cacheKey);
-    }
-
-    /**
      * @param string $module_name
+     * @param int|null $idShop Shop to check, the context shop when null
      *
      * @return bool
      *
      * @deprecated since 1.7
      * @see  PrestaShop\PrestaShop\Core\Module\ModuleManager->isEnabled($name)
      */
-    public static function isEnabled($module_name)
+    public static function isEnabled($module_name, ?int $idShop = null)
     {
-        if (!Cache::isStored('Module::isEnabled' . $module_name)) {
+        $idShop ??= (int) Context::getContext()->shop->id;
+        $cacheKey = 'Module::isEnabled' . $module_name . '_' . $idShop;
+        if (!Cache::isStored($cacheKey)) {
             $active = false;
             $id_module = Module::getModuleIdByName($module_name);
-            if (Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $id_module . ' AND `id_shop` = ' . (int) Context::getContext()->shop->id)) {
+            if (Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $id_module . ' AND `id_shop` = ' . $idShop)) {
                 $active = true;
             }
-            Cache::store('Module::isEnabled' . $module_name, (bool) $active);
+            Cache::store($cacheKey, (bool) $active);
 
             return (bool) $active;
         }
 
-        return Cache::retrieve('Module::isEnabled' . $module_name);
+        return Cache::retrieve($cacheKey);
     }
 
     /**

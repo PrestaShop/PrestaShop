@@ -572,7 +572,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         if ($carrier->is_module) {
             $module = Module::getInstanceByName($carrier->external_module_name);
             // We need to check if this module is still installed and enabled, and if it implements the method
-            if (Validate::isLoadedObject($module) && $module->isEnabledForShop((int) $order->id_shop) && method_exists($module, 'displayInfoByCart')) {
+            if (Validate::isLoadedObject($module) && Module::isEnabled($module->name, (int) $order->id_shop) && method_exists($module, 'displayInfoByCart')) {
                 $carrierModuleInfo = $module->displayInfoByCart($order->id_cart);
             }
         }

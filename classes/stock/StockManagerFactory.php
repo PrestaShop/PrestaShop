@@ -46,7 +46,7 @@ class StockManagerFactoryCore
 
         foreach ($modules_infos as $module_infos) {
             $module_instance = Module::getInstanceByName($module_infos['name']);
-            if (!$module_instance || !$module_instance->isEnabledForShop((int) Context::getContext()->shop->id)) {
+            if (!$module_instance || !Module::isEnabled($module_instance->name)) {
                 continue;
             }
 

@@ -4044,7 +4044,7 @@ class CartCore extends ObjectModel
         /** @var CarrierModule $module */
         $module = Module::getInstanceByName($carrier->external_module_name);
 
-        if (!Validate::isLoadedObject($module) || !$module->isEnabledForShop((int) $this->id_shop)) {
+        if (!Validate::isLoadedObject($module) || !Module::isEnabled($module->name, (int) $this->id_shop)) {
             return false;
         }
 

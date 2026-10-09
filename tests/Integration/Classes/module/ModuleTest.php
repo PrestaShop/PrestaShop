@@ -109,7 +109,7 @@ class ModuleTest extends TestCase
         Module::getInstanceByName('bankwire')->uninstall();
     }
 
-    public function testIsEnabledForShopFollowsEnableAndDisable(): void
+    public function testIsEnabledPerShopFollowsEnableAndDisable(): void
     {
         if (Module::isInstalled('bankwire')) {
             Module::getInstanceByName('bankwire')->uninstall();
@@ -118,14 +118,14 @@ class ModuleTest extends TestCase
         $module = Module::getInstanceByName('bankwire');
 
         try {
-            $this->assertTrue($module->isEnabledForShop(1));
-            $this->assertFalse($module->isEnabledForShop(2));
+            $this->assertTrue(Module::isEnabled('bankwire', 1));
+            $this->assertFalse(Module::isEnabled('bankwire', 2));
 
             $this->assertTrue($module->disable());
-            $this->assertFalse($module->isEnabledForShop(1));
+            $this->assertFalse(Module::isEnabled('bankwire', 1));
 
             $this->assertTrue($module->enable());
-            $this->assertTrue($module->isEnabledForShop(1));
+            $this->assertTrue(Module::isEnabled('bankwire', 1));
         } finally {
             $module->uninstall();
         }

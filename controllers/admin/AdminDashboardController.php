@@ -417,7 +417,7 @@ class AdminDashboardControllerCore extends AdminController
         ];
 
         $module_obj = Module::getInstanceByName($module);
-        if (!$module_obj || !array_filter(Shop::getContextListShopID(), [$module_obj, 'isEnabledForShop'])) {
+        if (!$module_obj || !array_filter(Shop::getContextListShopID(), fn ($idShop) => Module::isEnabled($module_obj->name, (int) $idShop))) {
             $return['has_errors'] = true;
             $return['errors'][] = 'This module is not enabled.';
             die(json_encode($return));
