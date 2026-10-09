@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Csp\CspSurfaceResolver;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\CspLogAllowAccessibilityChecker;
@@ -44,9 +45,7 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
     /** The back office is a single global surface; the grid shows it when ?context=admin. */
     private function isAdminContext(): bool
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        return null !== $request && 'admin' === $request->query->get('context');
+        return CspSurfaceResolver::isAdminRequest($this->requestStack);
     }
 
     /** Curation links keep the current surface (?context=admin) so a back-office action stays in the back office. */

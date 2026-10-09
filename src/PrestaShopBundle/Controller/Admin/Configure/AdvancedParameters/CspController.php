@@ -11,6 +11,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
 use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider;
 use PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder;
+use PrestaShop\PrestaShop\Core\Csp\CspSurfaceResolver;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AddCspRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AllowCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\BulkRevokeCspSourceCommand;
@@ -326,9 +327,7 @@ class CspController extends PrestaShopAdminController
      */
     private function resolveContext(Request $request): CspContext
     {
-        $context = $request->query->get('context') ?? $request->attributes->get('context');
-
-        return 'admin' === $context ? CspContext::ADMIN : CspContext::FRONT;
+        return CspSurfaceResolver::fromRequest($request);
     }
 
     /** @return array<string, string> the query params that keep the current surface on a redirect back to the page */
