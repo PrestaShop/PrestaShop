@@ -47,7 +47,7 @@ final class CspPolicyProvider
         private readonly CspRuleRepository $ruleRepository,
         private readonly CspPolicyHookDispatcherInterface $hookDispatcher,
         private readonly LoggerInterface $logger,
-        private readonly CspPolicyCacheInterface $policyCache,
+        private readonly CspRulesSnapshotInterface $rulesSnapshot,
     ) {
     }
 
@@ -57,9 +57,9 @@ final class CspPolicyProvider
      */
     public function getPolicy(CspContext $context, int $shopId, array $themeContributions = []): CspPolicy
     {
-        // The storefront is served on every page, so its shop-stable part (base + curated rules + the
-        // module hook) is cached; the theme's contributions are merged on top each time (cheap, and so a
-        // theme change needs no cache invalidation).
+        // The storefront is served on every page, so its curated rules come from a cached per-shop
+        // snapshot (no per-page allow-list query); the base policy, theme contributions and the module
+        // hook still run every request.
         if (CspContext::FRONT === $context) {
             return $this->getStorefrontPolicy($shopId, $themeContributions);
         }
@@ -79,36 +79,21 @@ final class CspPolicyProvider
      */
     private function getStorefrontPolicy(int $shopId, array $themeContributions): CspPolicy
     {
-        $cached = $this->policyCache->get($shopId);
-        if (null !== $cached) {
-            $policy = $this->policyFromDirectives($cached);
-        } else {
-            $policy = new CspPolicy();
-            $this->addBasePolicy($policy);
-            $this->addCuratedRules($policy, CspContext::FRONT, $shopId);
-            $this->hookDispatcher->dispatch($policy);
-            $this->policyCache->store($shopId, $policy->getDirectives());
-        }
-
-        $this->addThemeContributions($policy, $themeContributions);
-
-        return $policy;
-    }
-
-    /**
-     * Rebuilds a policy from cached directives. The sources are already validated and coarsened, so
-     * replaying them through addSource() is idempotent.
-     *
-     * @param array<string, list<string>> $directives
-     */
-    private function policyFromDirectives(array $directives): CspPolicy
-    {
         $policy = new CspPolicy();
-        foreach ($directives as $directive => $sources) {
+        $this->addBasePolicy($policy);
+
+        // Curated rules come from the per-shop snapshot (a configuration value), so the storefront is
+        // built without an allow-list query on every page.
+        foreach ($this->rulesSnapshot->get($shopId) as $directive => $sources) {
             foreach ($sources as $source) {
-                $policy->addSource($directive, $source);
+                $policy->addSource((string) $directive, (string) $source);
             }
         }
+
+        // The hook runs on every request: module contributions are never stale, and a module may still
+        // vary its sources per page.
+        $this->hookDispatcher->dispatch($policy);
+        $this->addThemeContributions($policy, $themeContributions);
 
         return $policy;
     }

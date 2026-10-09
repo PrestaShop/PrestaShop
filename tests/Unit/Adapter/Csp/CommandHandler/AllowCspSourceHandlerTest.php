@@ -10,13 +10,14 @@ namespace Tests\Unit\Adapter\Csp\CommandHandler;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AllowCspSourceHandler;
-use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface;
+use PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AllowCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspLogNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use PrestaShopBundle\Entity\CspLog;
+use PrestaShopBundle\Entity\CspRule;
 use PrestaShopBundle\Entity\Repository\CspLogRepository;
 use PrestaShopBundle\Entity\Repository\CspRuleRepository;
 
@@ -88,32 +89,57 @@ class AllowCspSourceHandlerTest extends TestCase
             ->handle(new AllowCspSourceCommand(42, ShopConstraint::allShops(), CspContext::ADMIN));
     }
 
-    public function testItInvalidatesTheStorefrontPolicyCacheWhenAllowingAFrontSource(): void
+    public function testAllowingAFrontSourceDeletesItsLogRowsAndRefreshesTheSnapshot(): void
     {
         $log = (new CspLog())->setShopId(2)->setContext('front')->setDirective('script-src')->setSource('https://cdn.example.com');
 
         $logRepository = $this->createMock(CspLogRepository::class);
         $logRepository->method('find')->willReturn($log);
+        // The source is now allow-listed, so its collected rows (which only consume the cap) are deleted.
+        $logRepository->expects($this->once())->method('deleteByShopDirectiveSource')->with(CspContext::FRONT, 2, 'script-src', 'https://cdn.example.com');
 
         $ruleRepository = $this->createMock(CspRuleRepository::class);
         $ruleRepository->method('findOneByShopDirectiveSource')->willReturn(null);
         $ruleRepository->method('add')->willReturn(7);
 
-        $cache = $this->createMock(CspPolicyCacheInterface::class);
-        $cache->expects($this->once())->method('invalidate')->with(2);
+        $snapshot = $this->createMock(CspRulesSnapshotInterface::class);
+        $snapshot->expects($this->once())->method('refresh')->with(2);
 
-        $this->handler($logRepository, $ruleRepository, resolvedShopIds: [2], cache: $cache)
+        $this->handler($logRepository, $ruleRepository, resolvedShopIds: [2], snapshot: $snapshot)
             ->handle(new AllowCspSourceCommand(42, ShopConstraint::shop(2)));
+    }
+
+    public function testAllowingAnAlreadyAllowedSourceReturnsTheExistingRuleWithoutAddingAgain(): void
+    {
+        $log = (new CspLog())->setShopId(2)->setContext('front')->setDirective('script-src')->setSource('https://cdn.example.com');
+
+        $logRepository = $this->createMock(CspLogRepository::class);
+        $logRepository->method('find')->willReturn($log);
+        // The log rows are cleared on this (idempotent) allow too.
+        $logRepository->expects($this->once())->method('deleteByShopDirectiveSource');
+
+        $existing = $this->createMock(CspRule::class);
+        $existing->method('getId')->willReturn(7);
+
+        $ruleRepository = $this->createMock(CspRuleRepository::class);
+        $ruleRepository->method('findOneByShopDirectiveSource')->willReturn($existing);
+        // A source already on the allow-list must not be inserted a second time.
+        $ruleRepository->expects($this->never())->method('add');
+
+        $ruleId = $this->handler($logRepository, $ruleRepository, resolvedShopIds: [2])
+            ->handle(new AllowCspSourceCommand(42, ShopConstraint::shop(2)));
+
+        $this->assertSame(7, $ruleId->getValue());
     }
 
     /**
      * @param list<int> $resolvedShopIds
      */
-    private function handler(CspLogRepository $logRepository, CspRuleRepository $ruleRepository, array $resolvedShopIds, ?CspPolicyCacheInterface $cache = null): AllowCspSourceHandler
+    private function handler(CspLogRepository $logRepository, CspRuleRepository $ruleRepository, array $resolvedShopIds, ?CspRulesSnapshotInterface $snapshot = null): AllowCspSourceHandler
     {
         $shopListResolver = $this->createMock(ShopListResolverInterface::class);
         $shopListResolver->method('resolveShopIds')->willReturn($resolvedShopIds);
 
-        return new AllowCspSourceHandler($logRepository, $ruleRepository, $shopListResolver, $cache ?? $this->createMock(CspPolicyCacheInterface::class));
+        return new AllowCspSourceHandler($logRepository, $ruleRepository, $shopListResolver, $snapshot ?? $this->createMock(CspRulesSnapshotInterface::class));
     }
 }

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Csp\CommandHandler;
 
 use DateTimeImmutable;
-use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface;
+use PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AllowCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\CommandHandler\AllowCspSourceHandlerInterface;
@@ -34,7 +34,7 @@ final class AllowCspSourceHandler implements AllowCspSourceHandlerInterface
         private readonly CspLogRepository $cspLogRepository,
         private readonly CspRuleRepository $cspRuleRepository,
         private readonly ShopListResolverInterface $shopListResolver,
-        private readonly CspPolicyCacheInterface $policyCache,
+        private readonly CspRulesSnapshotInterface $rulesSnapshot,
     ) {
     }
 
@@ -58,6 +58,8 @@ final class AllowCspSourceHandler implements AllowCspSourceHandlerInterface
 
         $existing = $this->cspRuleRepository->findOneByShopDirectiveSource($context, $log->getShopId(), $log->getDirective(), $log->getSource());
         if (null !== $existing) {
+            $this->afterAllowed($context, $log->getShopId(), $log->getDirective(), $log->getSource());
+
             return new CspRuleId($existing->getId());
         }
 
@@ -70,21 +72,31 @@ final class AllowCspSourceHandler implements AllowCspSourceHandlerInterface
 
         try {
             $ruleId = new CspRuleId($this->cspRuleRepository->add($rule));
-
-            // A storefront rule changes the cached policy for that shop; the back office is not cached.
-            if (CspContext::FRONT === $context) {
-                $this->policyCache->invalidate($log->getShopId());
-            }
+            $this->afterAllowed($context, $log->getShopId(), $log->getDirective(), $log->getSource());
 
             return $ruleId;
         } catch (CannotAddCspRuleException $e) {
             // Two concurrent clicks race on the unique key; the loser returns the rule the winner inserted.
             $winner = $this->cspRuleRepository->findOneByShopDirectiveSource($context, $log->getShopId(), $log->getDirective(), $log->getSource());
             if (null !== $winner) {
+                $this->afterAllowed($context, $log->getShopId(), $log->getDirective(), $log->getSource());
+
                 return new CspRuleId($winner->getId());
             }
 
             throw $e;
+        }
+    }
+
+    private function afterAllowed(CspContext $context, int $shopId, string $directive, string $source): void
+    {
+        // The source is now on the allow-list: the grid hides its collected rows (NOT EXISTS), so they
+        // only consume the row cap. Delete them; new reports bring them back if the rule is revoked.
+        $this->cspLogRepository->deleteByShopDirectiveSource($context, $shopId, $directive, $source);
+
+        // A storefront rule changes the shop's cached rules snapshot; the back office is not snapshotted.
+        if (CspContext::FRONT === $context) {
+            $this->rulesSnapshot->refresh($shopId);
         }
     }
 }

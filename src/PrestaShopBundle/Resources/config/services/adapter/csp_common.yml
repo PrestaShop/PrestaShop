@@ -34,12 +34,16 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Csp\CspPolicyHookDispatcher: ~
 
-  # Caches the storefront policy in the legacy Cache backend (no container dependency), so it also resolves
-  # in the hand-built front-office container; public so the admin command handlers can invalidate it.
-  PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCache:
+  # Per-shop storefront allow-list snapshot, stored as a configuration value (loaded at request start, so
+  # no per-page query) in the shop's own database. Its only deps resolve in the hand-built front-office
+  # container too; public so the admin command handlers can refresh it.
+  PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshot:
     public: true
-  PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface:
-    alias: PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCache
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@prestashop.adapter.legacy.configuration'
+  PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface:
+    alias: PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshot
     public: true
 
   PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider:
@@ -47,7 +51,7 @@ services:
       - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
       - '@PrestaShop\PrestaShop\Adapter\Csp\CspPolicyHookDispatcher'
       - '@logger'
-      - '@PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface'
 
   PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder:
     public: true

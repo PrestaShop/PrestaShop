@@ -39,14 +39,8 @@ final class CspViolationRecorder
 
     /**
      * Records one reported violation; unknown directives and junk/invalid sources are dropped silently
-     * (untrusted browser data).
-     *
-     * The log keeps one row per source per page, but only up to {@see MAX_PAGES_PER_SOURCE} example pages
-     * per source — further pages fold into a single "other pages" row — so a common source reported across
-     * thousands of pages costs a bounded number of rows. The per-shop row cap then bounds the number of
-     * distinct sources: once it is reached a known source keeps counting but a brand-new one is refused
-     * (never evicting the genuine low-hit rows the merchant still curates). With the page fold in place
-     * the cap is only a backstop against a flood of forged sources.
+     * (untrusted browser data). Pages per source are folded past {@see MAX_PAGES_PER_SOURCE} and the row
+     * cap then bounds distinct sources, not pages — see the inline steps.
      *
      * @return bool whether a new row was inserted
      */

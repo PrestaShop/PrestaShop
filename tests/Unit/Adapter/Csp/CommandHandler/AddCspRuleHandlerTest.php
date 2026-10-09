@@ -10,7 +10,7 @@ namespace Tests\Unit\Adapter\Csp\CommandHandler;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AddCspRuleHandler;
-use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface;
+use PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface;
 use PrestaShop\PrestaShop\Adapter\Csp\CspRuleValidator;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AddCspRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CannotAddCspRuleException;
@@ -26,12 +26,12 @@ class AddCspRuleHandlerTest extends TestCase
         // A storefront rule is per shop; an all-shops/group command must never reach persistence.
         $repository->expects($this->never())->method('add');
 
-        $cache = $this->createMock(CspPolicyCacheInterface::class);
-        $cache->expects($this->never())->method('invalidate');
+        $snapshot = $this->createMock(CspRulesSnapshotInterface::class);
+        $snapshot->expects($this->never())->method('refresh');
 
         // CspRuleValidator is final and is not reached on the all-shops path, so a real instance over a
         // mocked repository is enough.
-        $handler = new AddCspRuleHandler($repository, new CspRuleValidator($repository), $cache);
+        $handler = new AddCspRuleHandler($repository, new CspRuleValidator($repository), $snapshot);
 
         $this->expectException(CannotAddCspRuleException::class);
 
@@ -46,10 +46,10 @@ class AddCspRuleHandlerTest extends TestCase
         $repository->expects($this->once())->method('add')->willReturn(9);
 
         // The back office is not cached, so no invalidation.
-        $cache = $this->createMock(CspPolicyCacheInterface::class);
-        $cache->expects($this->never())->method('invalidate');
+        $snapshot = $this->createMock(CspRulesSnapshotInterface::class);
+        $snapshot->expects($this->never())->method('refresh');
 
-        $handler = new AddCspRuleHandler($repository, new CspRuleValidator($repository), $cache);
+        $handler = new AddCspRuleHandler($repository, new CspRuleValidator($repository), $snapshot);
 
         $ruleId = $handler->handle(new AddCspRuleCommand('script-src', 'https://admin.example.com', ShopConstraint::allShops(), CspContext::ADMIN));
 
@@ -62,10 +62,10 @@ class AddCspRuleHandlerTest extends TestCase
         $repository->method('findOneByShopDirectiveSource')->willReturn(null);
         $repository->method('add')->willReturn(3);
 
-        $cache = $this->createMock(CspPolicyCacheInterface::class);
-        $cache->expects($this->once())->method('invalidate')->with(5);
+        $snapshot = $this->createMock(CspRulesSnapshotInterface::class);
+        $snapshot->expects($this->once())->method('refresh')->with(5);
 
-        $handler = new AddCspRuleHandler($repository, new CspRuleValidator($repository), $cache);
+        $handler = new AddCspRuleHandler($repository, new CspRuleValidator($repository), $snapshot);
 
         $handler->handle(new AddCspRuleCommand('script-src', 'https://cdn.example.com', ShopConstraint::shop(5)));
     }
