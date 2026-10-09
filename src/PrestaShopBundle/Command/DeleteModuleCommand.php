@@ -4,9 +4,11 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Command;
 
-class DeleteModuleCommand extends AbstractModuleActionCommand
+final class DeleteModuleCommand extends AbstractModuleActionCommand
 {
     protected function getAction(): string
     {

@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Command;
 
 use Employee;
@@ -41,10 +43,10 @@ abstract class AbstractModuleCommand extends Command
         }
 
         // We must initialize the language context because ModuleRepository depends on it for its cache key
-        $this->contextBuilderPreparer->prepareLanguageId($this->configuration->get('PS_LANG_DEFAULT'));
+        $this->contextBuilderPreparer->prepareLanguageId((int) $this->configuration->get('PS_LANG_DEFAULT'));
     }
 
-    protected function displayMessage($message, string $type = 'info'): void
+    protected function displayMessage(string|array $message, string $type = 'info'): void
     {
         /** @var FormatterHelper $formatter */
         $formatter = $this->getHelper('formatter');

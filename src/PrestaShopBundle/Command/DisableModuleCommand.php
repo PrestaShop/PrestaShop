@@ -4,9 +4,11 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Command;
 
-class DisableModuleCommand extends AbstractModuleActionCommand
+final class DisableModuleCommand extends AbstractModuleActionCommand
 {
     protected function getAction(): string
     {

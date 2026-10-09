@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -18,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
-class ConfigureModuleCommand extends AbstractModuleCommand
+final class ConfigureModuleCommand extends AbstractModuleCommand
 {
     public function __construct(
         TranslatorInterface $translator,
@@ -112,7 +114,11 @@ class ConfigureModuleCommand extends AbstractModuleCommand
             $separatorPosition = strpos($configFileOption, ':');
             if ($separatorPosition === false) {
                 $this->displayMessage(
-                    'When configuring multiple modules, use --config-file=module:/path/to/config.yml.',
+                    $this->translator->trans(
+                        'When configuring multiple modules, use --config-file=module:/path/to/config.yml.',
+                        [],
+                        'Admin.Modules.Notification'
+                    ),
                     'error'
                 );
 
@@ -123,7 +129,11 @@ class ConfigureModuleCommand extends AbstractModuleCommand
             $filePath = substr($configFileOption, $separatorPosition + 1);
             if ($moduleName === '' || $filePath === '') {
                 $this->displayMessage(
-                    'Invalid --config-file value. Expected module:/path/to/config.yml.',
+                    $this->translator->trans(
+                        'Invalid --config-file value. Expected module:/path/to/config.yml.',
+                        [],
+                        'Admin.Modules.Notification'
+                    ),
                     'error'
                 );
 
@@ -132,7 +142,11 @@ class ConfigureModuleCommand extends AbstractModuleCommand
 
             if (!in_array($moduleName, $moduleNames, true)) {
                 $this->displayMessage(
-                    sprintf('Configuration file provided for unknown module "%s".', $moduleName),
+                    $this->translator->trans(
+                        'Configuration file provided for unknown module "%module%".',
+                        ['%module%' => $moduleName],
+                        'Admin.Modules.Notification'
+                    ),
                     'error'
                 );
 
@@ -141,7 +155,11 @@ class ConfigureModuleCommand extends AbstractModuleCommand
 
             if (isset($configFiles[$moduleName])) {
                 $this->displayMessage(
-                    sprintf('A configuration file has already been provided for module "%s".', $moduleName),
+                    $this->translator->trans(
+                        'A configuration file has already been provided for module "%module%".',
+                        ['%module%' => $moduleName],
+                        'Admin.Modules.Notification'
+                    ),
                     'error'
                 );
 
@@ -174,8 +192,8 @@ class ConfigureModuleCommand extends AbstractModuleCommand
             array_unshift(
                 $errors,
                 $this->translator->trans(
-                    'Validation of configuration details failed:',
-                    [],
+                    'Validation of configuration details failed for module %module%:',
+                    ['%module%' => $moduleName],
                     'Admin.Modules.Notification'
                 )
             );
@@ -200,8 +218,8 @@ class ConfigureModuleCommand extends AbstractModuleCommand
 
         $this->displayMessage(
             $this->translator->trans(
-                'Configuration successfully applied.',
-                [],
+                'Configuration successfully applied to module %module%.',
+                ['%module%' => $moduleName],
                 'Admin.Modules.Notification'
             ),
             'info'
