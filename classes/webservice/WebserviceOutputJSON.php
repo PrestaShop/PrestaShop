@@ -25,6 +25,12 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
      */
     protected $content = [];
 
+    /**
+     * @var string Name of the collection currently being opened, used when no resource configuration
+     *             supplies one. The images resource renders its own nodes and passes no parameters.
+     */
+    protected $currentCollectionNodeName = '';
+
     public function __construct($languages = [])
     {
         $this->languages = $languages;
@@ -103,8 +109,19 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
         if ($isAPICall && !in_array($node_name, ['description', 'schema', 'api'])) {
             $this->content[] = $node_name;
         }
+        // A resource rendered from a configuration names its collection in the parameters. The images
+        // resource builds its nodes itself and passes none, so remember the collection it opened and
+        // use that instead of indexing a key that is not there.
+        if ($has_child && $more_attr === null) {
+            $this->currentCollectionNodeName = $node_name;
+        }
+
         if (isset($more_attr, $more_attr['id'])) {
-            $this->content[$params['objectsNodeName']][] = ['id' => $more_attr['id']];
+            $objectsNodeName = $params['objectsNodeName'] ?? $this->currentCollectionNodeName;
+
+            if ($objectsNodeName !== '') {
+                $this->content[$objectsNodeName][] = ['id' => $more_attr['id']];
+            }
         }
 
         return '';
