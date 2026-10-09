@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Gherkin\Node\TableNode;
+use Db;
+use ObjectModel;
 use PHPUnit\Framework\Assert;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
@@ -23,11 +25,49 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
     protected $lastOutput;
 
     /**
-     * @When /^I use Webservice with key "(.*)" to list "(.+)"$/
+     * @When /^I use Webservice with key "(.*)" to list "([^"]+)"$/
      */
     public function whenRequestList(string $webserviceKey, string $endpoint): void
     {
         $this->lastOutput = $this->whenRequest($webserviceKey, 'GET', $endpoint);
+    }
+
+    /**
+     * @When /^I use Webservice with key "(.*)" to list "(.+)" filtered by "(.+)" with value "(.+)"$/
+     */
+    public function whenRequestFilteredList(string $webserviceKey, string $endpoint, string $field, string $value): void
+    {
+        $_GET['filter'] = [$field => $value];
+        // date_add and date_upd only become filterable when the date feature is asked for.
+        $_GET['date'] = 1;
+
+        try {
+            $this->lastOutput = $this->whenRequest($webserviceKey, 'GET', $endpoint);
+        } finally {
+            unset($_GET['filter'], $_GET['date']);
+        }
+    }
+
+    /**
+     * A shop scoped field is stored twice, so the two tables can hold different values for the same
+     * row. This sets them apart on purpose, which is what tells a filter on the base table from a
+     * filter on the shop table.
+     *
+     * @Given /^I set "(.+)" of (.+) (\d+) to "(.+)" in the base table and "(.+)" in the shop table$/
+     */
+    public function givenDivergentShopScopedValue(
+        string $column,
+        string $className,
+        int $id,
+        string $baseValue,
+        string $shopValue
+    ): void {
+        $definition = ObjectModel::getDefinition($className);
+        $primary = $definition['primary'];
+        $db = Db::getInstance();
+
+        $db->update($definition['table'], [$column => $baseValue], $primary . ' = ' . $id, 0, true);
+        $db->update($definition['table'] . '_shop', [$column => $shopValue], $primary . ' = ' . $id, 0, true);
     }
 
     /**
