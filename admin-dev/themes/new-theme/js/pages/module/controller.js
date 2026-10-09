@@ -3,7 +3,13 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-import ConfirmModal from '@components/modal';
+import ConfirmModal, {Modal} from '@components/modal';
+import {
+  escapeHtml,
+  getModuleOverrides,
+  getModulesOverridesWarning,
+  getOverriddenFilesWarning,
+} from '@components/module-overrides-warning';
 
 const {$} = window;
 
@@ -48,6 +54,7 @@ class AdminModuleController {
 
     // Selectors into vars to make it easier to change them while keeping same code logic
     this.moduleItemListSelector = '.module-item-list';
+    this.overriddenBadgeSelector = '.module-overridden-badge';
     this.categorySelectorLabelSelector = '.module-category-selector-label';
     this.categorySelector = '.module-category-selector';
     this.categoryItemSelector = '.module-category-menu';
@@ -104,8 +111,49 @@ class AdminModuleController {
     this.initDropzone();
     this.initPageChangeProtection();
     this.initFilterStatusDropdown();
+    this.initOverriddenBadgeTooltip();
+    this.initOverriddenBadgeModal();
     this.fetchModulesList();
     this.getNotificationsCount();
+  }
+
+  /**
+   * `pstooltip` is an alias of the Bootstrap tooltip, deliberately named so that Bootstrap does not
+   * pick it up on its own, and nothing initialises it globally in the back office. It is delegated
+   * from the body here because module cards are also appended after the page has loaded.
+   */
+  initOverriddenBadgeTooltip() {
+    $('body').pstooltip({
+      selector: this.overriddenBadgeSelector,
+      placement: 'top',
+    });
+  }
+
+  /**
+   * The badge lists the overriding files in a modal rather than in its tooltip, which would grow
+   * unreadable on a module carrying several overrides.
+   */
+  initOverriddenBadgeModal() {
+    $('body').on('click', this.overriddenBadgeSelector, function showOverriddenFiles(event) {
+      event.preventDefault();
+
+      const overrides = getModuleOverrides($(this));
+
+      if (overrides === null) {
+        return;
+      }
+
+      $(this).pstooltip('hide');
+
+      new Modal({
+        id: 'module-overrides-modal',
+        // The title is assigned with innerHTML, and the display name comes from the module manifest
+        modalTitle: `${window.moduleTranslations.overridesModalTitle} - ${escapeHtml(overrides.displayName)}`,
+        closable: true,
+      })
+        .render(getOverriddenFilesWarning(overrides.files))
+        .show();
+    });
   }
 
   initFilterStatusDropdown() {
@@ -616,6 +664,9 @@ class AdminModuleController {
       timeout: 0,
       addedfile: () => {
         $(`${self.moduleImportSuccessSelector}, ${self.moduleImportFailureSelector}`).hide();
+        // A pending confirmation belongs to the previous archive, keeping it would let the
+        // employee install a file they have moved on from
+        self.clearImportConfirm();
         self.animateStartUpload();
       },
       processing: () => {
@@ -628,13 +679,15 @@ class AdminModuleController {
         if (file.status !== 'error') {
           const responseObject = $.parseJSON(file.xhr.response);
 
-          if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
-          if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
+          // The server holds back an upload replacing an overridden module until the employee confirms
+          if (responseObject.confirmation_needed === 'overrides') {
+            self.isUploadStarted = false;
+            self.confirmOverriddenModuleUpload(file, responseObject);
 
-          self.displayOnUploadDone(responseObject);
+            return;
+          }
 
-          const elem = $(`<div data-tech-name="${responseObject.module_name}"></div>`);
-          this.eventEmitter.emit((responseObject.upgraded ? 'Module Upgraded' : 'Module Installed'), elem);
+          self.handleImportResponse(responseObject);
         }
         // State that we have finish the process to unlock some actions
         self.isUploadStarted = false;
@@ -695,6 +748,108 @@ class AdminModuleController {
       $(self.moduleImportFailureMsgDetailsSelector).html(message);
       $(self.moduleImportFailureSelector).fadeIn();
     });
+  }
+
+  /**
+   * Common handling of a finished import, whether it came from the dropzone or from a replayed upload.
+   *
+   * @param object result containing the server response
+   */
+  handleImportResponse(result) {
+    if (typeof result.is_configurable === 'undefined') result.is_configurable = null;
+    if (typeof result.module_name === 'undefined') result.module_name = null;
+
+    this.displayOnUploadDone(result);
+
+    const elem = $(`<div data-tech-name="${result.module_name}"></div>`);
+    this.eventEmitter.emit(result.upgraded ? 'Module Upgraded' : 'Module Installed', elem);
+  }
+
+  /**
+   * The server refuses to replace an installed module customized in override/modules until the
+   * employee acknowledges the update may break those customizations.
+   *
+   * @param File file the archive the employee dropped
+   * @param object result containing the server response
+   */
+  confirmOverriddenModuleUpload(file, result) {
+    const self = this;
+
+    self.animateEndUpload(() => {
+      // Asked for inside the import modal, using its own confirm block and footer, rather than
+      // stacking a second modal on top of it
+      $(self.moduleImportConfirmSelector)
+        .html(getOverriddenFilesWarning(result.overridden_files || []))
+        .show();
+
+      const cancelButton = $('<button type="button" class="btn btn-outline-secondary"></button>')
+        .text(window.moduleTranslations.moduleModalUpdateCancel)
+        .on('click', () => {
+          self.clearImportConfirm();
+          self.resetImportModal();
+        });
+
+      const confirmButton = $('<button type="button" class="btn btn-primary"></button>')
+        .text(window.moduleTranslations.upgradeAnywayButtonText)
+        .on('click', () => {
+          self.clearImportConfirm();
+          self.replayOverriddenModuleUpload(file);
+        });
+
+      $(self.dropZoneModalFooterSelector).empty().append(cancelButton, confirmButton);
+    });
+  }
+
+  /**
+   * Removes the in-modal confirmation, so the modal can show the upload outcome instead.
+   */
+  clearImportConfirm() {
+    $(this.moduleImportConfirmSelector).hide().empty();
+    $(this.dropZoneModalFooterSelector).empty();
+  }
+
+  /**
+   * Sends the archive again, this time allowed to replace the overridden module.
+   *
+   * @param File file the archive the employee dropped
+   */
+  replayOverriddenModuleUpload(file) {
+    const self = this;
+    const formData = new FormData();
+    formData.append('file_uploaded', file);
+    formData.append('confirm_overrides', '1');
+
+    self.isUploadStarted = true;
+    self.animateStartUpload();
+
+    $.ajax({
+      url: window.moduleURLs.moduleImport,
+      method: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      dataType: 'json',
+    })
+      .done((result) => self.handleImportResponse(result))
+      .fail((jqXHR) => self.displayOnUploadError(
+        (jqXHR.responseJSON && jqXHR.responseJSON.msg) || jqXHR.statusText,
+      ))
+      .always(() => {
+        self.isUploadStarted = false;
+      });
+  }
+
+  /**
+   * Puts the import modal back to its initial state, so the employee can drop another archive.
+   */
+  resetImportModal() {
+    const self = this;
+
+    $(self.moduleImportProcessingSelector).hide();
+    $(`${self.moduleImportSuccessSelector}, ${self.moduleImportFailureSelector}`).hide();
+    $(self.moduleImportStartSelector).fadeIn();
+    $('.dropzone').removeAttr('style');
+    self.isUploadStarted = false;
   }
 
   /**
@@ -860,6 +1015,7 @@ class AdminModuleController {
     $('body').on('click', self.upgradeAllSource, (event) => {
       event.preventDefault();
       const isMaintenanceMode = window.isShopMaintenance;
+      const overridesWarning = getModulesOverridesWarning($(self.upgradeAllTargets));
 
       // Modal body element
       const maintenanceLink = document.createElement('a');
@@ -876,7 +1032,9 @@ class AdminModuleController {
             ? window.moduleTranslations.moduleModalUpdateUpgrade
             : window.moduleTranslations.upgradeAnywayButtonText,
           confirmButtonClass: isMaintenanceMode ? 'btn-primary' : 'btn-secondary',
-          confirmMessage: isMaintenanceMode ? '' : window.moduleTranslations.moduleModalUpdateConfirmMessage,
+          confirmMessage: isMaintenanceMode
+            ? overridesWarning
+            : overridesWarning + window.moduleTranslations.moduleModalUpdateConfirmMessage,
           closable: true,
           customButtons: isMaintenanceMode ? [] : [maintenanceLink],
         },

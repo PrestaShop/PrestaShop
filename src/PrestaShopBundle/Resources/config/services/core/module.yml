@@ -85,3 +85,9 @@ services:
     arguments:
       - '@translator'
       - !php/const _PS_OVERRIDE_DIR_
+
+  PrestaShop\PrestaShop\Core\Module\OverriddenModulesProvider:
+    arguments:
+      - !php/const _PS_OVERRIDE_DIR_
+    tags:
+      - { name: kernel.reset, method: reset }

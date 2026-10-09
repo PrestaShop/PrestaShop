@@ -256,6 +256,11 @@
       }
     }
 
+    // Clicking the badge opens the list of overriding files
+    .module-overridden-badge {
+      cursor: pointer;
+    }
+
     .module-version-author-list {
       overflow: hidden;
       font-weight: 600;
