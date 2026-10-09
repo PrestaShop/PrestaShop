@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCom
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\SendOrderInvoiceEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\SendProcessOrderEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
@@ -1868,6 +1869,28 @@ class OrderController extends PrestaShopAdminController
             $this->addFlash(
                 'success',
                 $this->trans('The message was successfully sent to the customer.', [], 'Admin.Orderscustomers.Notification')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * Sends the order's invoices to the customer without changing the order status.
+     */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function sendInvoiceAction(int $orderId): RedirectResponse
+    {
+        try {
+            $this->dispatchCommand(new SendOrderInvoiceEmailCommand($orderId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The invoice was successfully sent to the customer.', [], 'Admin.Orderscustomers.Notification')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
