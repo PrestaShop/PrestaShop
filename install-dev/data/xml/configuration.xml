@@ -924,5 +924,11 @@ Country</value>
     <configuration id="PS_MIN_LOGGER_LEVEL_IN_DB" name="PS_MIN_LOGGER_LEVEL_IN_DB">
       <value>1</value>
     </configuration>
+    <configuration id="PS_LANGUAGE_PACK_URL" name="PS_LANGUAGE_PACK_URL">
+      <value>https://i18n.prestashop-project.org/translations/%version%/%locale%/%locale%.zip</value>
+    </configuration>
+    <configuration id="PS_EMAILS_PACK_URL" name="PS_EMAILS_PACK_URL">
+      <value>https://i18n.prestashop-project.org/mails/%version%/%locale%/%locale%.zip</value>
+    </configuration>
   </entities>
 </entity_configuration>
