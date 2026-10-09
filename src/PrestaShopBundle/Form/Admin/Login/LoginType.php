@@ -51,10 +51,15 @@ class LoginType extends AbstractType
             ->add('passwd', PasswordType::class, [
                 'label' => $this->translator->trans('Password', [], 'Admin.Global'),
                 'always_empty' => false,
-                'attr' => $this->isDemoModeEnabled ? [
-                    // This is the only place we can set a value for a password input field.
-                    'value' => $this->requestStack->getCurrentRequest()->query->get('password'),
-                ] : [],
+                'attr' => array_merge(
+                    // An existing password: the browser should offer to fill it rather than to
+                    // generate a new one, which is what an unhinted password field invites.
+                    ['autocomplete' => 'current-password'],
+                    $this->isDemoModeEnabled ? [
+                        // This is the only place we can set a value for a password input field.
+                        'value' => $this->requestStack->getCurrentRequest()->query->get('password'),
+                    ] : []
+                ),
             ])
             ->add('submit_login', SubmitType::class, [
                 'label' => $this->translator->trans('Log in', [], 'Admin.Login.Feature'),
