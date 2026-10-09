@@ -55,6 +55,12 @@ final class GridDefinition implements GridDefinitionInterface
     private $filters;
 
     /**
+     * @var string|null Grid factory service id, set only for grids that opt in to server-side
+     *                  SQL export (SqlExportableGridDefinitionFactoryInterface)
+     */
+    private $sqlExportGridFactoryServiceId;
+
+    /**
      * @param string $id Unique grid identifier
      * @param string $name
      * @param ColumnCollectionInterface $columns
@@ -79,6 +85,26 @@ final class GridDefinition implements GridDefinitionInterface
         $this->gridActions = $gridActions;
         $this->bulkActions = $bulkActions;
         $this->viewOptions = $viewOptions;
+    }
+
+    /**
+     * @param string|null $serviceId
+     *
+     * @return self
+     */
+    public function setSqlExportGridFactoryServiceId(?string $serviceId): self
+    {
+        $this->sqlExportGridFactoryServiceId = $serviceId;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSqlExportGridFactoryServiceId(): ?string
+    {
+        return $this->sqlExportGridFactoryServiceId;
     }
 
     /**
