@@ -14,6 +14,8 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
@@ -148,6 +150,25 @@ class ContactsController extends PrestaShopAdminController
                 'success',
                 $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
+        }
+
+        return $this->redirectToRoute('admin_contacts_index');
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_contacts_index', message: 'You do not have permission to edit this.')]
+    public function updatePositionAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.contact.position_definition')]
+        PositionDefinition $positionDefinition,
+    ): RedirectResponse {
+        try {
+            $this->updateGridPosition($positionDefinition, [
+                'positions' => $request->request->all('positions'),
+            ]);
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
+        } catch (PositionUpdateException $e) {
+            $this->addFlashErrors([$e->toArray()]);
         }
 
         return $this->redirectToRoute('admin_contacts_index');
