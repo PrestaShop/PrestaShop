@@ -9,12 +9,16 @@ namespace PrestaShop\PrestaShop\Adapter\Cache;
 use PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * This class manages Caching configuration for a Shop.
  */
 class CachingConfiguration implements DataConfigurationInterface
 {
+    public const PARALLEL_WARMUP = 'PS_CACHE_PARALLEL_WARMUP';
+
     /**
      * @var MemcacheServerManager
      */
@@ -52,7 +56,8 @@ class CachingConfiguration implements DataConfigurationInterface
         PhpParameters $phpParameters,
         CacheClearerInterface $symfonyCacheClearer,
         $isCachingEnabled,
-        $cachingSystem
+        $cachingSystem,
+        private readonly ShopConfigurationInterface $configuration,
     ) {
         $this->memcacheServerManager = $memcacheServerManager;
         $this->phpParameters = $phpParameters;
@@ -70,6 +75,7 @@ class CachingConfiguration implements DataConfigurationInterface
             'use_cache' => $this->isCachingEnabled,
             'caching_system' => $this->cachingSystem,
             'servers' => $this->memcacheServerManager->getServers(),
+            'parallel_warmup' => (bool) $this->configuration->get(self::PARALLEL_WARMUP, false, ShopConstraint::allShops()),
         ];
     }
 
@@ -79,6 +85,10 @@ class CachingConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         $errors = [];
+
+        if (isset($configuration['parallel_warmup'])) {
+            $this->configuration->set(self::PARALLEL_WARMUP, (bool) $configuration['parallel_warmup'], ShopConstraint::allShops());
+        }
 
         if ($this->validateConfiguration($configuration)) {
             $errors = $this->updatePhpCacheConfiguration($configuration);

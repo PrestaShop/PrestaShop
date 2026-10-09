@@ -11,6 +11,7 @@ use AdminKernel;
 use AppKernel;
 use FrontKernel;
 use Hook;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\Symfony\DeferredKernelCacheClearerInterface;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\Symfony\KernelCacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Util\CacheClearLocker;
@@ -142,6 +143,16 @@ final class SymfonyCacheClearer implements CacheClearerInterface
 
                         if (!$kernelCacheCleared) {
                             $this->logError('SymfonyCacheClearer: No clearers were able to clear cache for ' . $applicationKernel->getAppId() . ' env ' . $environment);
+                        }
+                    }
+
+                    foreach ($this->kernelCacheClearers as $cacheClearer) {
+                        if ($cacheClearer instanceof DeferredKernelCacheClearerInterface) {
+                            try {
+                                $cacheClearer->finishKernelCacheClear();
+                            } catch (Throwable $e) {
+                                $this->logError('SymfonyCacheClearer: Error while finishing cache clear for env ' . $environment . ': ' . $e->getMessage());
+                            }
                         }
                     }
 
