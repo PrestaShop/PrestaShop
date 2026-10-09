@@ -31,6 +31,14 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @When /^I use Webservice with key "(.*)" to sort "(.+)" by "(.+)"$/
+     */
+    public function whenRequestSortedList(string $webserviceKey, string $endpoint, string $sort): void
+    {
+        $this->lastOutput = $this->requestWebserviceXML($webserviceKey, 'GET', $endpoint, '', ['sort' => $sort]);
+    }
+
+    /**
      * @When /^I use Webservice with key "(.*)" to fast view "(.+)"$/
      */
     public function whenRequestHead(string $webserviceKey, string $endpoint): void
@@ -179,9 +187,10 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
         string $wsKey,
         string $requestMethod,
         string $url,
-        string $postFields = ''
+        string $postFields = '',
+        array $queryParameters = []
     ): Crawler {
-        $output = $this->requestWebservice('XML', $wsKey, $requestMethod, $url, $postFields);
+        $output = $this->requestWebservice('XML', $wsKey, $requestMethod, $url, $postFields, $queryParameters);
 
         $crawler = new Crawler();
         $crawler->addXmlContent($output);
@@ -198,6 +207,7 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
      * @param string $requestMethod
      * @param string $url
      * @param string $postFields
+     * @param array $queryParameters
      *
      * @return string
      */
@@ -206,7 +216,8 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
         string $wsKey,
         string $requestMethod,
         string $url,
-        string $postFields
+        string $postFields,
+        array $queryParameters = []
     ): string {
         // Define mandatory values directly used in webservice/dispatcher.php
         $_SERVER['REQUEST_METHOD'] = $requestMethod;
@@ -215,6 +226,9 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
         $_GET['ws_key'] = $wsKey;
         $_GET['url'] = $url;
         $_GET['output_format'] = $output;
+        foreach ($queryParameters as $name => $value) {
+            $_GET[$name] = $value;
+        }
 
         if ($requestMethod == 'PUT' || $requestMethod == 'POST') {
             StreamWrapperPHP::register();
@@ -238,6 +252,9 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
             $_GET['url'],
             $_GET['output_format']
         );
+        foreach (array_keys($queryParameters) as $name) {
+            unset($_GET[$name]);
+        }
 
         StreamWrapperPHP::unregister();
 
