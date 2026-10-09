@@ -4129,6 +4129,12 @@ exit;
                         'src' => 'URI',
                         'type' => 'Text',
                     ]);
+                    // WHY: HTML Purifier knows nothing of `allowfullscreen`, so it drops the
+                    // attribute and the embed loses its fullscreen control. The attribute only
+                    // lets the frame enter fullscreen on a user gesture, which is why it is
+                    // declared while `allow` is not: that one delegates camera, microphone,
+                    // geolocation and payment to the embedded origin.
+                    $def->addAttribute('iframe', 'allowfullscreen', 'Bool');
                     if ($allow_style) {
                         $def->addElement('style', 'Block', 'Flow', 'Common', ['type' => 'Text']);
                     }
