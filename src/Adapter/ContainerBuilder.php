@@ -6,8 +6,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use Doctrine\Common\Cache\Psr6\DoctrineProvider;
-use Doctrine\ORM\Tools\Setup;
 use Exception;
 use LegacyCompilerPass;
 use PrestaShop\PrestaShop\Adapter\Container\ContainerParametersExtension;
@@ -22,7 +20,6 @@ use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\Exception\ServiceContainerException;
 use PrestaShopBundle\PrestaShopBundle;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Config\ConfigCache;
