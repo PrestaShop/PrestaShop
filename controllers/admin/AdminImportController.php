@@ -1149,15 +1149,19 @@ class AdminImportControllerCore extends AdminController
 
             return;
         }
-        AdminImportController::setDefaultValues($info);
-
         if (!$force_ids) {
             unset($info['id']);
         }
 
         if ($force_ids && isset($info['id']) && (int) $info['id'] && Category::existsInDatabase((int) $info['id'], 'category')) {
+            // An existing category keeps every column the file did not mention. The
+            // default values describe a NEW category, so applying them here would
+            // silently rewrite what was not asked for: a file carrying only a rewritten
+            // URL would reparent the category to Home, reactivate it if it was
+            // disabled, and drop its URL - none of which the row asked for.
             $category = new Category((int) $info['id']);
         } else {
+            AdminImportController::setDefaultValues($info);
             $category = new Category();
         }
 
@@ -1276,8 +1280,11 @@ class AdminImportControllerCore extends AdminController
                 $category->id_parent
             );
 
-            // If category already in base, get id category back
-            if ($category_already_created['id_category']) {
+            // If category already in base, get id category back.
+            // getRow() returns false when nothing matches, which is the normal case for
+            // a category the file is creating - indexing that directly warns on every
+            // new row.
+            if (!empty($category_already_created['id_category'])) {
                 $cat_moved[$category->id] = (int) $category_already_created['id_category'];
                 $category->id = (int) $category_already_created['id_category'];
                 if (Validate::isDate($category_already_created['date_add'])) {
