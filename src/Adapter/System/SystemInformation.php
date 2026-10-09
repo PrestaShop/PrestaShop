@@ -54,6 +54,7 @@ class SystemInformation
             'overrides' => $this->shopInformation->getOverridesList(),
             'shop' => $this->shopInformation->getShopInformation(),
             'isNativePHPmail' => $this->mailingInformation->isNativeMailUsed(),
+            'isPHPmail' => $this->mailingInformation->isPhpMailUsed(),
             'smtp' => $this->mailingInformation->getSmtpInformation(),
         ];
     }

@@ -67,6 +67,7 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
             Tools::htmlentitiesUTF8($password)
         );
 
+        // Send the test email using the selected delivery method and configuration
         $result = Mail::sendMailTest(
             Tools::htmlentitiesUTF8($smtpChecked),
             Tools::htmlentitiesUTF8($config['smtp_server']),
@@ -82,7 +83,8 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
             (bool) $config['dkim_enable'],
             (string) $config['dkim_key'],
             (string) $config['dkim_domain'],
-            (string) $config['dkim_selector']
+            (string) $config['dkim_selector'],
+            MailOption::METHOD_PHP_MAIL === (int) $config['mail_method']
         );
 
         $errors = [];
