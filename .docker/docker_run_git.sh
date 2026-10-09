@@ -113,6 +113,15 @@ if [ $PS_DEMO_MODE -ne 0 ]; then
     sed -ie "s/define('_PS_MODE_DEMO_', false);/define('_PS_MODE_DEMO_',\ true);/g" /var/www/html/config/defines.inc.php
 fi
 
+echo "**"
+echo "** Front-office: http://${PS_DOMAIN}/"
+echo "** Back-office: http://${PS_DOMAIN}/admin-dev"
+if [ $PS_INSTALL_AUTO = 1 ]; then
+    echo "**   Login with:"
+    echo "**     username: ${ADMIN_MAIL}"
+    echo "**     password: ${ADMIN_PASSWD}"
+fi
+
 echo "\n* Almost ! Starting web server now\n";
 
 exec apache2-foreground
