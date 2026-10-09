@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Csp\CspSurfaceResolver;
 use PrestaShop\PrestaShop\Core\Csp\CspWeakeningExpression;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -124,8 +125,6 @@ final class CspRuleQueryBuilder extends AbstractDoctrineQueryBuilder
     /** The surface the grid shows is selected by the ?context query param (default front). */
     private function resolveContext(): CspContext
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        return null !== $request && 'admin' === $request->query->get('context') ? CspContext::ADMIN : CspContext::FRONT;
+        return CspSurfaceResolver::fromRequestStack($this->requestStack);
     }
 }

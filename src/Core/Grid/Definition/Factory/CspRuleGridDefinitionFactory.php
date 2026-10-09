@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Csp\CspSurfaceResolver;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -43,9 +44,7 @@ final class CspRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
     /** The back office is a single global surface; the grid shows it when ?context=admin. */
     private function isAdminContext(): bool
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        return null !== $request && 'admin' === $request->query->get('context');
+        return CspSurfaceResolver::isAdminRequest($this->requestStack);
     }
 
     /** Curation links keep the current surface (?context=admin) so a back-office action stays in the back office. */
