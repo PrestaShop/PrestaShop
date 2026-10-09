@@ -41,9 +41,9 @@ final class AdminCspType extends TranslatorAwareType
                 'required' => false,
                 'placeholder' => false,
                 'label' => $this->trans('Delete reports older than', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('When the "prestashop:csp:prune-log" command runs, delete reported violations older than the selected age. "Never" keeps them until the row cap evicts them. Allowed sources are never deleted. Pruning runs only while Content Security Policy is enabled.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('When the "prestashop:csp:prune-log" command runs, delete reported violations older than the selected age. "Never" keeps them until you clear the log by hand (the row cap bounds the log but never deletes existing rows). Allowed sources are never deleted. Pruning runs only while Content Security Policy is enabled.', 'Admin.Advparameters.Help'),
                 'choices' => [
-                    'Never (keep until the cap)' => 0,
+                    'Never (keep until cleared)' => 0,
                     '7 days' => 7,
                     '14 days' => 14,
                     '30 days' => 30,

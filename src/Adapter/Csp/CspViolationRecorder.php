@@ -18,7 +18,11 @@ use PrestaShopBundle\Entity\Repository\CspLogRepository;
 /** Single integration point for collecting and clearing CSP violation reports, shared by the front- and back-office. */
 final class CspViolationRecorder
 {
-    public const DEFAULT_ROW_CAP = 1000;
+    public const DEFAULT_ROW_CAP = 5000;
+
+    // Keep at most this many example pages per (directive, source); further pages fold into one "other
+    // pages" row (document_uri = ''), so one common source spread over many pages can't fill the cap.
+    public const MAX_PAGES_PER_SOURCE = 10;
 
     // The document URI is part of the unique key (one row per source per page), so it is bounded to an
     // index-friendly length; it is already query/fragment-stripped, so the path rarely approaches this.
@@ -37,11 +41,12 @@ final class CspViolationRecorder
      * Records one reported violation; unknown directives and junk/invalid sources are dropped silently
      * (untrusted browser data).
      *
-     * At the per-shop row cap the log stops accepting *new* sources: an already-recorded source keeps
-     * counting (its hit counter is bumped), but a brand-new one is refused until the log is pruned or
-     * cleared. This holds the cap without a COUNT on every insert and, unlike evicting the lowest-hit
-     * rows, means a flood of one-off fake sources can never push out the genuine low-hit violations the
-     * merchant still has to curate.
+     * The log keeps one row per source per page, but only up to {@see MAX_PAGES_PER_SOURCE} example pages
+     * per source — further pages fold into a single "other pages" row — so a common source reported across
+     * thousands of pages costs a bounded number of rows. The per-shop row cap then bounds the number of
+     * distinct sources: once it is reached a known source keeps counting but a brand-new one is refused
+     * (never evicting the genuine low-hit rows the merchant still curates). With the page fold in place
+     * the cap is only a backstop against a flood of forged sources.
      *
      * @return bool whether a new row was inserted
      */
@@ -81,14 +86,30 @@ final class CspViolationRecorder
         $sourceFile = $this->sanitizeUri($sourceFile);
         $lineNumber = (null !== $lineNumber && $lineNumber > 0) ? $lineNumber : null;
 
-        // At the cap, keep counting a known source but refuse a new one (see the method docblock).
-        if ($this->rowCap > 0 && $this->repository->hasAtLeast($context, $shopId, $this->rowCap)) {
-            $this->repository->bumpIfExists($context, $shopId, $directive->value, $source->getValue(), $documentUri, $sample, $sourceFile, $lineNumber);
+        $directiveValue = $directive->value;
+        $sourceValue = $source->getValue();
 
+        // Known source on a known page: just bump its counter (and refresh the sample if this report has one).
+        if ($this->repository->bumpIfExists($context, $shopId, $directiveValue, $sourceValue, $documentUri, $sample, $sourceFile, $lineNumber)) {
             return false;
         }
 
-        return $this->repository->upsert($context, $shopId, $directive->value, $source->getValue(), $documentUri, $sample, $sourceFile, $lineNumber);
+        // Known source on a new page: record the page while under the per-source example limit, otherwise
+        // fold it into the single "other pages" row so the source cannot keep adding rows.
+        if ($this->repository->sourceExists($context, $shopId, $directiveValue, $sourceValue)) {
+            $page = $this->repository->hasAtLeastPages($context, $shopId, $directiveValue, $sourceValue, self::MAX_PAGES_PER_SOURCE)
+                ? ''
+                : $documentUri;
+
+            return $this->repository->upsert($context, $shopId, $directiveValue, $sourceValue, $page, $sample, $sourceFile, $lineNumber);
+        }
+
+        // A brand-new source: the row cap bounds how many distinct sources the log holds.
+        if ($this->rowCap > 0 && $this->repository->hasAtLeast($context, $shopId, $this->rowCap)) {
+            return false;
+        }
+
+        return $this->repository->upsert($context, $shopId, $directiveValue, $sourceValue, $documentUri, $sample, $sourceFile, $lineNumber);
     }
 
     public function clear(CspContext $context, int $shopId): void

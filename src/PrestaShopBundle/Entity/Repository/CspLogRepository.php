@@ -124,6 +124,69 @@ class CspLogRepository extends EntityRepository
             ->fetchOne();
     }
 
+    /** Whether this source is already recorded for the scope (on any page), via the unique index prefix. */
+    public function sourceExists(CspContext $context, int $shopId, string $directive, string $source): bool
+    {
+        return false !== $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('1')
+            ->from($this->getClassMetadata()->getTableName())
+            ->where('id_shop = :shopId')
+            ->andWhere('context = :context')
+            ->andWhere('directive = :directive')
+            ->andWhere('source = :source')
+            ->setMaxResults(1)
+            ->setParameter('shopId', $shopId)
+            ->setParameter('context', $context->value)
+            ->setParameter('directive', $directive)
+            ->setParameter('source', $source)
+            ->executeQuery()
+            ->fetchOne();
+    }
+
+    /**
+     * Whether this source already has at least $maxPages distinct example pages recorded (the folded
+     * "other pages" row, document_uri = '', is not an example page). Bounded LIMIT/OFFSET probe.
+     */
+    public function hasAtLeastPages(CspContext $context, int $shopId, string $directive, string $source, int $maxPages): bool
+    {
+        if ($maxPages <= 0) {
+            return true;
+        }
+
+        return false !== $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('1')
+            ->from($this->getClassMetadata()->getTableName())
+            ->where('id_shop = :shopId')
+            ->andWhere('context = :context')
+            ->andWhere('directive = :directive')
+            ->andWhere('source = :source')
+            ->andWhere("document_uri <> ''")
+            ->setFirstResult($maxPages - 1)
+            ->setMaxResults(1)
+            ->setParameter('shopId', $shopId)
+            ->setParameter('context', $context->value)
+            ->setParameter('directive', $directive)
+            ->setParameter('source', $source)
+            ->executeQuery()
+            ->fetchOne();
+    }
+
+    /** Deletes every log row for one source (all its pages); used when the source is allow-listed. Returns the count removed. */
+    public function deleteByShopDirectiveSource(CspContext $context, int $shopId, string $directive, string $source): int
+    {
+        return (int) $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->delete($this->getClassMetadata()->getTableName())
+            ->where('id_shop = :shopId')
+            ->andWhere('context = :context')
+            ->andWhere('directive = :directive')
+            ->andWhere('source = :source')
+            ->setParameter('shopId', $shopId)
+            ->setParameter('context', $context->value)
+            ->setParameter('directive', $directive)
+            ->setParameter('source', $source)
+            ->executeStatement();
+    }
+
     public function countByShop(CspContext $context, int $shopId): int
     {
         return (int) $this->getEntityManager()->getConnection()->createQueryBuilder()
