@@ -22,6 +22,35 @@ const zxcvbnConfig = {
 
 zxcvbnOptions.setOptions(zxcvbnConfig);
 
+let zxcvbnTranslationsApplied = false;
+
+/**
+ * Feed PrestaShop translations into zxcvbn-ts, so that the library returns feedback messages
+ * already translated. Messages are indexed by zxcvbn-ts keys (topTen, l33t, ...).
+ *
+ * @param {Object} translations the translations read from the feedback container.
+ */
+function applyZxcvbnTranslations(translations?: Record<string, Record<string, string>>): void {
+  if (zxcvbnTranslationsApplied || !translations) {
+    return;
+  }
+  zxcvbnTranslationsApplied = true;
+
+  zxcvbnOptions.setOptions({
+    translations: {
+      ...zxcvbnEnPackage.translations,
+      warnings: {
+        ...zxcvbnEnPackage.translations.warnings,
+        ...(translations.warnings || {}),
+      },
+      suggestions: {
+        ...zxcvbnEnPackage.translations.suggestions,
+        ...(translations.suggestions || {}),
+      },
+    },
+  });
+}
+
 const {$} = window;
 
 export interface ChangePasswordHandlerOptions {
@@ -70,6 +99,8 @@ export default class ChangePasswordHandler {
           $(this).parent().append($('#password-feedback').html());
           $feedbackContainer = $(this).parent().find(self.feedbackSelector);
         }
+
+        applyZxcvbnTranslations($feedbackContainer.data('translations'));
 
         const passwordRequirementsLength = $feedbackContainer.find('.password-requirements-length');
         passwordRequirementsLength.find('span').text(
@@ -124,23 +155,26 @@ export default class ChangePasswordHandler {
     $outputContainer.find('.password-strength-text').text(translations[result.score]);
     $passwordInput.popover('dispose');
 
-    if (result.feedback.warning && result.feedback.warning !== '') {
-      if (result.feedback.warning in translations) {
-        popoverContent.push(translations[result.feedback.warning]);
-      }
+    if (result.feedback.warning) {
+      popoverContent.push(result.feedback.warning);
     }
 
     result.feedback.suggestions.forEach((suggestion) => {
-      if (suggestion in translations) {
-        popoverContent.push(translations[suggestion]);
-      }
+      popoverContent.push(suggestion);
     });
 
-    $passwordInput.popover({
-      html: true,
-      placement: 'top',
-      content: popoverContent.join('<br/>'),
-    }).popover('show');
+    // zxcvbn does not always return feedback: never leave the user without a hint on a weak password.
+    if (popoverContent.length === 0 && result.score < $passwordInput.data('minscore')) {
+      popoverContent.push(translations.suggestions.anotherWord);
+    }
+
+    if (popoverContent.length > 0) {
+      $passwordInput.popover({
+        html: true,
+        placement: 'top',
+        content: popoverContent.join('<br/>'),
+      }).popover('show');
+    }
 
     const passwordLength = (<string>$passwordInput.val()).length;
 
