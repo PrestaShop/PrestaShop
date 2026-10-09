@@ -33,6 +33,7 @@ try {
 
     require_once _PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'controllerHttp.php';
     require_once _PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'HttpConfigureInterface.php';
+    InstallControllerHttp::registerFatalErrorHandler();
     InstallControllerHttp::execute();
 } catch (PrestashopInstallerException $e) {
     $e->displayMessage();
