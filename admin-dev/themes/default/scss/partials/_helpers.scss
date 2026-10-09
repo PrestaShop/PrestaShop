@@ -4,6 +4,16 @@
  */
 // Helpers
 
+// Primary text
+.text-primary {
+  color: var(--#{$cdk}blue-700);
+}
+
+// Primary backgrounds
+.bg-primary {
+  background-color: var(--#{$cdk}blue-700);
+}
+
 // Helpers class for fixing input width
 .fixed-width-xs {
   width: 48px !important;
