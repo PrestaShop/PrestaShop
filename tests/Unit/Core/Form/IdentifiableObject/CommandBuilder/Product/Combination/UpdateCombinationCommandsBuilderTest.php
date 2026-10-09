@@ -226,6 +226,17 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
         ];
 
         $command = $this->getSingleShopCommand();
+        $command->setActive(false);
+        yield [
+            [
+                'header' => [
+                    'active' => '0',
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
         $command->setLowStockThreshold(LowStockThreshold::DISABLED_VALUE);
         yield 'low stock threshold is overriden by disabling switch when it is falsy' => [
             [
@@ -475,6 +486,20 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
                 ],
             ],
             [$singleShopCommand],
+        ];
+
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setActive(true)
+        ;
+        yield [
+            [
+                'header' => [
+                    'active' => true,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'active' => true,
+                ],
+            ],
+            [$allShopsCommand],
         ];
     }
 

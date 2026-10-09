@@ -48,6 +48,19 @@ class BulkCombinationFormDataFormatterTest extends TestCase
             [],
         ];
 
+        yield 'status data' => [
+            [
+                'status' => [
+                    'active' => false,
+                ],
+            ],
+            [
+                'header' => [
+                    'active' => false,
+                ],
+            ],
+        ];
+
         yield 'references data' => [
             [
                 'references' => [

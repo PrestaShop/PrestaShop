@@ -145,5 +145,16 @@ class CombinationListFormDataFormatterTest extends TestCase
                 ],
             ],
         ];
+
+        yield 'active data' => [
+            [
+                'active' => false,
+            ],
+            [
+                'header' => [
+                    'active' => false,
+                ],
+            ],
+        ];
     }
 }

@@ -56,7 +56,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('
                 pa.reference, pa.supplier_reference, pa.ean13, pa.isbn, pa.upc, pa.mpn,
                 pas.wholesale_price, pas.price, pas.ecotax, pas.weight, pas.unit_price_impact, pas.default_on,
-                pas.minimal_quantity, pas.low_stock_threshold, pas.low_stock_alert, pas.available_date,
+                pas.minimal_quantity, pas.low_stock_threshold, pas.low_stock_alert, pas.available_date, pas.active,
                 pas.id_product_attribute, pas.id_product, pas.id_shop, sa.quantity AS quantity
             ');
 
