@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollectio
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CarrierFormDataProvider;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CarrierFormDataProviderTest extends TestCase
 {
@@ -107,7 +108,8 @@ class CarrierFormDataProviderTest extends TestCase
             $currencyDataProvider,
             $configuration,
             $zonesChoiceProvider,
-            $groupDataProvider
+            $groupDataProvider,
+            $this->createMock(TranslatorInterface::class)
         );
         $formData = $formDataProvider->getData(42);
         $this->assertEquals([
@@ -175,7 +177,8 @@ class CarrierFormDataProviderTest extends TestCase
             $this->createMock(CurrencyDataProviderInterface::class),
             $this->createMock(ConfigurationInterface::class),
             $this->createMock(ZoneByIdChoiceProvider::class),
-            $groupDataProvider
+            $groupDataProvider,
+            $this->createMock(TranslatorInterface::class)
         );
         $this->assertEquals([
             'general_settings' => [

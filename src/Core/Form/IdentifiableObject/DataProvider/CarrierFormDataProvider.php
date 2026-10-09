@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\CarrierRangesCollectio
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CarrierFormDataProvider implements FormDataProviderInterface
 {
@@ -28,6 +29,7 @@ class CarrierFormDataProvider implements FormDataProviderInterface
         private readonly ConfigurationInterface $configuration,
         private readonly ZoneByIdChoiceProvider $zonesChoiceProvider,
         private readonly GroupDataProvider $groupDataProvider,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -121,6 +123,9 @@ class CarrierFormDataProvider implements FormDataProviderInterface
         // We retrieve zones to get the correct zone name
         $zones = $this->zonesChoiceProvider->getChoices([]);
         $zones = array_flip($zones);
+        // A zone keeps its ranges once it is disabled, so it stays on this page. Asking for the
+        // active ones separately is what tells the two apart, the choices carry no such flag.
+        $activeZones = array_flip($this->zonesChoiceProvider->getChoices(['active' => true]));
 
         // We choose the right symbol for the range in function of the ShippingMethod
         switch ($carrier->getShippingMethod()) {
@@ -149,11 +154,26 @@ class CarrierFormDataProvider implements FormDataProviderInterface
 
             $ranges[] = [
                 'zoneId' => $zone->getZoneId(),
-                'zoneName' => $zones[$zone->getZoneId()] ?? $zone->getZoneId(),
+                'zoneName' => $this->getZoneLabel($zones, $activeZones, $zone->getZoneId()),
                 'ranges' => $zoneRanges,
             ];
         }
 
         return $ranges;
+    }
+
+    /**
+     * @param array<int, string> $zones
+     * @param array<int, string> $activeZones
+     */
+    private function getZoneLabel(array $zones, array $activeZones, int $zoneId): string
+    {
+        $zoneName = (string) ($zones[$zoneId] ?? $zoneId);
+
+        if (!isset($activeZones[$zoneId])) {
+            $zoneName .= ' (' . $this->translator->trans('Inactive', [], 'Admin.Global') . ')';
+        }
+
+        return $zoneName;
     }
 }
