@@ -822,6 +822,7 @@ class ProductController extends PrestaShopAdminController
             'price' => $this->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'),
             'price_final' => $this->trans('Price (tax incl.)', [], 'Admin.Catalog.Feature'),
             'sav_quantity' => $this->trans('Quantity', [], 'Admin.Global'),
+            'active' => $this->trans('Status', [], 'Admin.Global'),
         ];
 
         $data = [];
@@ -833,9 +834,12 @@ class ProductController extends PrestaShopAdminController
                 'name' => $record['name'],
                 'reference' => $record['reference'],
                 'name_category' => $record['category'],
-                'price' => $record['final_price_tax_excluded'],
+                // The listing shows ps.price in this column - final_price_tax_excluded adds the
+                // ecotax on top, so exporting it made the file disagree with the screen.
+                'price' => $record['price_tax_excluded'],
                 'price_final' => $record['price_tax_included'],
                 'sav_quantity' => $record['quantity'],
+                'active' => $record['active'],
             ];
         }
 
