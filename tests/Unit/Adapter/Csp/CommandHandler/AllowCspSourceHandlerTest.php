@@ -10,6 +10,7 @@ namespace Tests\Unit\Adapter\Csp\CommandHandler;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AllowCspSourceHandler;
+use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AllowCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspLogNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
@@ -87,14 +88,32 @@ class AllowCspSourceHandlerTest extends TestCase
             ->handle(new AllowCspSourceCommand(42, ShopConstraint::allShops(), CspContext::ADMIN));
     }
 
+    public function testItInvalidatesTheStorefrontPolicyCacheWhenAllowingAFrontSource(): void
+    {
+        $log = (new CspLog())->setShopId(2)->setContext('front')->setDirective('script-src')->setSource('https://cdn.example.com');
+
+        $logRepository = $this->createMock(CspLogRepository::class);
+        $logRepository->method('find')->willReturn($log);
+
+        $ruleRepository = $this->createMock(CspRuleRepository::class);
+        $ruleRepository->method('findOneByShopDirectiveSource')->willReturn(null);
+        $ruleRepository->method('add')->willReturn(7);
+
+        $cache = $this->createMock(CspPolicyCacheInterface::class);
+        $cache->expects($this->once())->method('invalidate')->with(2);
+
+        $this->handler($logRepository, $ruleRepository, resolvedShopIds: [2], cache: $cache)
+            ->handle(new AllowCspSourceCommand(42, ShopConstraint::shop(2)));
+    }
+
     /**
      * @param list<int> $resolvedShopIds
      */
-    private function handler(CspLogRepository $logRepository, CspRuleRepository $ruleRepository, array $resolvedShopIds): AllowCspSourceHandler
+    private function handler(CspLogRepository $logRepository, CspRuleRepository $ruleRepository, array $resolvedShopIds, ?CspPolicyCacheInterface $cache = null): AllowCspSourceHandler
     {
         $shopListResolver = $this->createMock(ShopListResolverInterface::class);
         $shopListResolver->method('resolveShopIds')->willReturn($resolvedShopIds);
 
-        return new AllowCspSourceHandler($logRepository, $ruleRepository, $shopListResolver);
+        return new AllowCspSourceHandler($logRepository, $ruleRepository, $shopListResolver, $cache ?? $this->createMock(CspPolicyCacheInterface::class));
     }
 }

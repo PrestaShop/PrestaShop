@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Csp;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface;
 use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider;
 use PrestaShop\PrestaShop\Core\Csp\CspPolicy;
 use PrestaShop\PrestaShop\Core\Csp\CspPolicyHookDispatcherInterface;
@@ -185,6 +186,46 @@ class CspPolicyProviderTest extends TestCase
         }
     }
 
+    public function testItCachesTheStorefrontPolicySoTheRulesAndHookRunOnce(): void
+    {
+        $repository = $this->createMock(CspRuleRepository::class);
+        // The expensive parts run only on the first call; the second is served from the cache.
+        $repository->expects($this->once())->method('getRulesByShop')->willReturn([]);
+        $hookDispatcher = $this->createMock(CspPolicyHookDispatcherInterface::class);
+        $hookDispatcher->expects($this->once())->method('dispatch');
+
+        $provider = new CspPolicyProvider($repository, $hookDispatcher, $this->createMock(LoggerInterface::class), $this->inMemoryCache());
+
+        $first = $provider->getPolicy(CspContext::FRONT, self::SHOP_ID)->getDirectives();
+        $second = $provider->getPolicy(CspContext::FRONT, self::SHOP_ID)->getDirectives();
+
+        $this->assertSame($first, $second);
+    }
+
+    public function testACachedPolicyStillMergesTheCurrentThemeContributions(): void
+    {
+        $provider = new CspPolicyProvider($this->createMock(CspRuleRepository::class), $this->createMock(CspPolicyHookDispatcherInterface::class), $this->createMock(LoggerInterface::class), $this->inMemoryCache());
+
+        // Prime the cache, then a later request with a theme must still get the theme merged on top.
+        $provider->getPolicy(CspContext::FRONT, self::SHOP_ID);
+        $directives = $provider->getPolicy(CspContext::FRONT, self::SHOP_ID, ['script-src' => ["'unsafe-eval'"]])->getDirectives();
+
+        $this->assertSame(["'self'", "'unsafe-eval'"], $directives['script-src']);
+    }
+
+    public function testInvalidatingTheCacheForcesARebuild(): void
+    {
+        $repository = $this->createMock(CspRuleRepository::class);
+        $repository->expects($this->exactly(2))->method('getRulesByShop')->willReturn([]);
+        $cache = $this->inMemoryCache();
+
+        $provider = new CspPolicyProvider($repository, $this->createMock(CspPolicyHookDispatcherInterface::class), $this->createMock(LoggerInterface::class), $cache);
+
+        $provider->getPolicy(CspContext::FRONT, self::SHOP_ID);
+        $cache->invalidate(self::SHOP_ID);
+        $provider->getPolicy(CspContext::FRONT, self::SHOP_ID);
+    }
+
     /**
      * @param list<array{directive: string, source: string}> $rules
      */
@@ -196,7 +237,31 @@ class CspPolicyProviderTest extends TestCase
         return new CspPolicyProvider(
             $repository,
             $hookDispatcher ?? $this->createMock(CspPolicyHookDispatcherInterface::class),
-            $logger ?? $this->createMock(LoggerInterface::class)
+            $logger ?? $this->createMock(LoggerInterface::class),
+            $this->inMemoryCache()
         );
+    }
+
+    private function inMemoryCache(): CspPolicyCacheInterface
+    {
+        return new class() implements CspPolicyCacheInterface {
+            /** @var array<int, array<string, list<string>>> */
+            private array $store = [];
+
+            public function get(int $shopId): ?array
+            {
+                return $this->store[$shopId] ?? null;
+            }
+
+            public function store(int $shopId, array $directives): void
+            {
+                $this->store[$shopId] = $directives;
+            }
+
+            public function invalidate(int $shopId): void
+            {
+                unset($this->store[$shopId]);
+            }
+        };
     }
 }

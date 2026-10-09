@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Csp\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\BulkRevokeCspSourceCommand;
@@ -32,6 +33,7 @@ final class BulkRevokeCspSourceHandler extends AbstractBulkCommandHandler implem
     public function __construct(
         private readonly CspRuleRepository $repository,
         private readonly ShopListResolverInterface $shopListResolver,
+        private readonly CspPolicyCacheInterface $policyCache,
     ) {
     }
 
@@ -54,6 +56,11 @@ final class BulkRevokeCspSourceHandler extends AbstractBulkCommandHandler implem
         }
 
         $this->repository->delete($rule);
+
+        // A storefront rule changes the cached policy for that shop; the back office is not cached.
+        if (CspContext::FRONT->value === $rule->getContext()) {
+            $this->policyCache->invalidate($rule->getShopId());
+        }
     }
 
     protected function supports($id): bool

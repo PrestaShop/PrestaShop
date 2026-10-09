@@ -34,11 +34,20 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Csp\CspPolicyHookDispatcher: ~
 
+  # Caches the storefront policy in the legacy Cache backend (no container dependency), so it also resolves
+  # in the hand-built front-office container; public so the admin command handlers can invalidate it.
+  PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCache:
+    public: true
+  PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface:
+    alias: PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCache
+    public: true
+
   PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider:
     arguments:
       - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
       - '@PrestaShop\PrestaShop\Adapter\Csp\CspPolicyHookDispatcher'
       - '@logger'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface'
 
   PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder:
     public: true
