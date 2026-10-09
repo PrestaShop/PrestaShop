@@ -119,8 +119,9 @@ class OrderStateType extends TranslatorAwareType
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Status name', 'Admin.Shopparameters.Feature'),
                 'help' => sprintf(
-                    '%s %s %s',
+                    '%s %s %s %s',
                     $this->trans('Order status (e.g. \'Pending\').', 'Admin.Shopparameters.Help'),
+                    $this->trans('The status name must be unique.', 'Admin.Shopparameters.Help'),
                     $this->trans('Invalid characters: numbers and', 'Admin.Shopparameters.Help'),
                     static::NAME_CHARS
                 ),

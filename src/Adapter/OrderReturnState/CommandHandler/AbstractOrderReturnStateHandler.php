@@ -7,10 +7,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler;
 
+use Configuration;
+use Language;
 use OrderReturnState;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\DuplicateOrderReturnStateNameException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\MissingOrderReturnStateRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\Name;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 use PrestaShopException;
 
@@ -53,6 +57,39 @@ abstract class AbstractOrderReturnStateHandler
      * @throws OrderReturnStateException
      * @throws OrderReturnStateNotFoundException
      */
+    /**
+     * Asserts that no other order return state already uses one of the given localized names.
+     *
+     * WHY: see AbstractOrderStateHandler::assertNameIsNotDuplicate() - every language is checked and
+     * not only the default one, because ObjectModel::formatFields() falls back to the default language
+     * value when a translation is left empty on a required field.
+     *
+     * @param int|null $excludeOrderReturnStateId order return state being edited, excluded from the search
+     *
+     * @throws DuplicateOrderReturnStateNameException
+     */
+    protected function assertNameIsNotDuplicate(OrderReturnState $orderReturnState, ?int $excludeOrderReturnStateId = null): void
+    {
+        $localizedNames = is_array($orderReturnState->name) ? $orderReturnState->name : [];
+        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
+
+        foreach (Language::getIDs(false) as $langId) {
+            $langId = (int) $langId;
+            $name = (string) ($localizedNames[$langId] ?? '');
+            if ('' === $name) {
+                $name = (string) ($localizedNames[$defaultLangId] ?? '');
+            }
+
+            if ('' === $name) {
+                continue;
+            }
+
+            if (OrderReturnState::existsLocalizedNameInDatabase($name, $langId, $excludeOrderReturnStateId)) {
+                throw new DuplicateOrderReturnStateNameException(new Name($name), sprintf('An order return state named "%s" already exists.', $name));
+            }
+        }
+    }
+
     protected function getOrderReturnState(OrderReturnStateId $orderReturnStateId): OrderReturnState
     {
         try {
