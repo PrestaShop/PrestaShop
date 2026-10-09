@@ -48,12 +48,18 @@ final class CspFeatureChecker
     }
 
     /**
-     * The external endpoint reports are routed to instead of the built-in collector, or '' to use the
-     * collector. Only a valid absolute http(s) URL overrides it; anything else falls back to the collector.
+     * The external endpoint storefront reports are routed to instead of the built-in collector, or '' to
+     * use the collector. Only a valid absolute http(s) URL overrides it; anything else falls back to the
+     * collector. The back office never has an external endpoint: its reports carry the admin URL's CSRF
+     * token and secret folder, so they always go to the built-in collector, which strips the query first.
      */
     public function reportTargetForContext(CspContext $context, int $shopId): string
     {
-        $value = trim((string) $this->configuration->get($this->reportUriKey($context), '', $this->scope($context, $shopId)));
+        if (!$context->isPerShop()) {
+            return '';
+        }
+
+        $value = trim((string) $this->configuration->get('PS_CSP_REPORT_URI', '', $this->scope($context, $shopId)));
 
         if ('' === $value
             || false === filter_var($value, FILTER_VALIDATE_URL)
@@ -83,11 +89,6 @@ final class CspFeatureChecker
     private function reportOnlyKey(CspContext $context): string
     {
         return $context->isPerShop() ? 'PS_CSP_REPORT_ONLY' : 'PS_CSP_ADMIN_REPORT_ONLY';
-    }
-
-    private function reportUriKey(CspContext $context): string
-    {
-        return $context->isPerShop() ? 'PS_CSP_REPORT_URI' : 'PS_CSP_ADMIN_REPORT_URI';
     }
 
     /** The storefront reads per-shop; the back office is global, so it reads the all-shops value. */

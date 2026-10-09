@@ -9,16 +9,20 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Csp;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Entity\Repository\CspRuleRepository;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Loads and saves the back-office Content Security Policy settings. Unlike the storefront settings
- * these are global (one back office across the whole installation), so they are stored as plain global
- * configuration values, and the admin allow-list lives under context=admin, shop id 0.
+ * Loads and saves the back-office Content Security Policy settings. The back office is a single global
+ * surface (one back office across the whole installation), so every value is read and written at the
+ * all-shops scope, never the shop currently selected in the back office; the header reads the same scope,
+ * so a multistore install stores and applies one admin policy. The admin allow-list lives under
+ * context=admin, shop id 0. The back office has no external reporting endpoint: its reports always go to
+ * the built-in collector, which strips the admin URL's query (CSRF token, secret folder) before storing.
  */
 final class AdminCspConfiguration implements DataConfigurationInterface
 {
@@ -26,7 +30,7 @@ final class AdminCspConfiguration implements DataConfigurationInterface
     private const ADMIN_SHOP_ID = 0;
 
     public function __construct(
-        private readonly ConfigurationInterface $configuration,
+        private readonly ShopConfigurationInterface $configuration,
         private readonly CspRuleRepository $cspRuleRepository,
         private readonly TranslatorInterface $translator,
     ) {
@@ -34,11 +38,12 @@ final class AdminCspConfiguration implements DataConfigurationInterface
 
     public function getConfiguration(): array
     {
+        $scope = ShopConstraint::allShops();
+
         return [
-            'enabled' => (bool) $this->configuration->get('PS_CSP_ADMIN_ENABLED'),
+            'enabled' => (bool) $this->configuration->get('PS_CSP_ADMIN_ENABLED', false, $scope),
             'report_only' => $this->isReportOnly(),
-            'retention_days' => (int) $this->configuration->get('PS_CSP_ADMIN_RETENTION_DAYS'),
-            'report_uri' => (string) $this->configuration->get('PS_CSP_ADMIN_REPORT_URI'),
+            'retention_days' => (int) $this->configuration->get('PS_CSP_ADMIN_RETENTION_DAYS', 0, $scope),
         ];
     }
 
@@ -60,10 +65,10 @@ final class AdminCspConfiguration implements DataConfigurationInterface
             ];
         }
 
-        $this->configuration->set('PS_CSP_ADMIN_ENABLED', $configuration['enabled'] ? '1' : '0');
-        $this->configuration->set('PS_CSP_ADMIN_REPORT_ONLY', $configuration['report_only'] ? '1' : '0');
-        $this->configuration->set('PS_CSP_ADMIN_RETENTION_DAYS', (string) max(0, (int) $configuration['retention_days']));
-        $this->configuration->set('PS_CSP_ADMIN_REPORT_URI', trim((string) $configuration['report_uri']));
+        $scope = ShopConstraint::allShops();
+        $this->configuration->set('PS_CSP_ADMIN_ENABLED', $configuration['enabled'] ? '1' : '0', $scope);
+        $this->configuration->set('PS_CSP_ADMIN_REPORT_ONLY', $configuration['report_only'] ? '1' : '0', $scope);
+        $this->configuration->set('PS_CSP_ADMIN_RETENTION_DAYS', (string) max(0, (int) $configuration['retention_days']), $scope);
 
         return [];
     }
@@ -71,13 +76,10 @@ final class AdminCspConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration): bool
     {
         (new OptionsResolver())
-            ->setRequired(['enabled', 'report_only', 'retention_days', 'report_uri'])
+            ->setRequired(['enabled', 'report_only', 'retention_days'])
             ->setAllowedTypes('enabled', 'bool')
             ->setAllowedTypes('report_only', 'bool')
             ->setAllowedTypes('retention_days', 'int')
-            // The report-uri text field is optional, so an empty submission arrives as null; it is trimmed
-            // to a string before storing.
-            ->setAllowedTypes('report_uri', ['string', 'null'])
             ->resolve($configuration);
 
         return true;
@@ -93,13 +95,13 @@ final class AdminCspConfiguration implements DataConfigurationInterface
 
     private function isAlreadyEnforcing(): bool
     {
-        return (bool) $this->configuration->get('PS_CSP_ADMIN_ENABLED') && !$this->isReportOnly();
+        return (bool) $this->configuration->get('PS_CSP_ADMIN_ENABLED', false, ShopConstraint::allShops()) && !$this->isReportOnly();
     }
 
     /** Defaults to report-only so the back office never blocks without an explicit opt-in. */
     private function isReportOnly(): bool
     {
-        $value = $this->configuration->get('PS_CSP_ADMIN_REPORT_ONLY');
+        $value = $this->configuration->get('PS_CSP_ADMIN_REPORT_ONLY', null, ShopConstraint::allShops());
 
         return null === $value ? true : (bool) $value;
     }

@@ -112,8 +112,10 @@ final class PruneCspLogCommand extends Command
 
     private function retentionDays(CspContext $context, int $shopId): int
     {
+        // The back office is global: read its retention at the all-shops scope, the same scope the header
+        // and the settings form use, never the shop selected in the CLI/back-office context.
         return CspContext::ADMIN === $context
-            ? (int) $this->configuration->get('PS_CSP_ADMIN_RETENTION_DAYS', 0)
+            ? (int) $this->configuration->get('PS_CSP_ADMIN_RETENTION_DAYS', 0, ShopConstraint::allShops())
             : (int) $this->configuration->get('PS_CSP_RETENTION_DAYS', 0, ShopConstraint::shop($shopId));
     }
 }
