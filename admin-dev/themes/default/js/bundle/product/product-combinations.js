@@ -268,7 +268,7 @@ window.combinations = (function () {
           contentElem.insertBefore('#form-nav').removeClass('hide').show();
 
           contentElem.find('.datepicker input[type="text"]').datetimepicker({
-            locale: iso_user,
+            locale: window.moment_language_code || iso_user,
             format: 'YYYY-MM-DD',
           });
 
