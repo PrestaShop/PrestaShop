@@ -9,12 +9,9 @@ namespace PrestaShopBundle\EventListener\Console;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Exception\LogicException;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Adds to optional input options to all the console commands:
- *  - id_shop to specify a shop context
- *  - id_shop_group to specify a shop group context
+ * Sets shop context from global console options.
  */
 class MultishopCommandListener
 {
@@ -35,12 +32,7 @@ class MultishopCommandListener
 
     public function onConsoleCommand(ConsoleCommandEvent $event)
     {
-        $definition = $event->getCommand()->getDefinition();
         $input = $event->getInput();
-
-        $definition->addOption(new InputOption('id_shop', null, InputOption::VALUE_OPTIONAL, 'Specify shop context.'));
-        $definition->addOption(new InputOption('id_shop_group', null, InputOption::VALUE_OPTIONAL, 'Specify shop group context.'));
-        $input->bind($definition);
 
         $id_shop = $input->getOption('id_shop');
         $id_shop_group = $input->getOption('id_shop_group');

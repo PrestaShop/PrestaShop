@@ -32,6 +32,18 @@ class PrestaShopApplication extends Application
             'admin',
             [AdminKernel::APP_ID, AdminAPIKernel::APP_ID, FrontKernel::APP_ID]
         ));
+        $definition->addOption(new InputOption(
+            'id_shop',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Specify shop context.'
+        ));
+        $definition->addOption(new InputOption(
+            'id_shop_group',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Specify shop group context.'
+        ));
 
         return $definition;
     }
