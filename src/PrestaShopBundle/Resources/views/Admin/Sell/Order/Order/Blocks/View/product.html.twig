@@ -44,6 +44,11 @@
         <strong>{{ 'View pack content'|trans({}, 'Admin.Actions') }}</strong>
       </span>
     {% endif %}
+    {{ renderhook('displayAdminOrderProductLine', {
+      id_order: orderForViewing.id,
+      id_order_detail: product.orderDetailId,
+      id_product: product.id,
+    }) }}
   </td>
   <td class="cellProductUnitPrice">{{ product.unitPrice }}</td>
   <td class="cellProductQuantity text-center">
