@@ -500,6 +500,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'meta_description' => $seoOptions->getLocalizedMetaDescriptions(),
             'link_rewrite' => $seoOptions->getLocalizedLinkRewrites(),
             'redirect_option' => $this->extractRedirectOptionData($productForEditing),
+            'indexation' => $seoOptions->getIndexation(),
             'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
         ];
         if ($productForEditing->getType() === ProductType::TYPE_COMBINATIONS) {
