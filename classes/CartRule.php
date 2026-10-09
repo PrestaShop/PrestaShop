@@ -976,7 +976,7 @@ class CartRuleCore extends ObjectModel
     {
         // Prepare a list of products to return, if the caller wishes so and provided returnProducts = true
         $selected_products = [];
-
+        
         // Do all of this only if the cart rule actually has some restrictions
         if ($this->product_restriction) {
             // Load products in cart and return if it's empty, there is no point in checking anything else
@@ -984,9 +984,14 @@ class CartRuleCore extends ObjectModel
             if (empty($products)) {
                 return (!$displayError) ? false : $this->trans('You cannot use this voucher in an empty cart', [], 'Shop.Notifications.Error');
             }
+			$eligible_products_list = [];
+			foreach ($products as $product) {
+				$eligible_products_list[] = (int) $product['id_product'] . '-' . (int) $product['id_product_attribute'];
+			}
 
             // Now we load all RULE GROUP.
             $product_rule_groups = $this->getProductRuleGroups();
+            $countRuleGroups = count($product_rule_groups);
             foreach ($product_rule_groups as $id_product_rule_group => $product_rule_group) {
                 /*
                  * Rule group is a set of rules that the cart must meet for this cart rule to be applied.
@@ -995,21 +1000,23 @@ class CartRuleCore extends ObjectModel
                  *
                  * Also, at least $product_rule_group['quantity'] must meet these rules.
                  */
-                $eligible_products_list = [];
-                foreach ($products as $product) {
-                    $eligible_products_list[] = (int) $product['id_product'] . '-' . (int) $product['id_product_attribute'];
-                }
 
                 // Now, we load the RULES inside the RULE GROUP
                 $product_rules = $this->getProductRules($id_product_rule_group);
                 $countRulesProduct = count($product_rules);
                 $condition = 0;
-                foreach ($product_rules as $product_rule) {
+                $matching_products_list = [];
+                //if product_rule_group is created but user didnt select any restriction, go to the next group.
+                if(!$countRulesProduct){
+                    continue;
+                }				
+                foreach ($product_rules as $id_rule=>$product_rule) {
+                    $matching_products_list[$id_rule] = [];							
                     /*
-                     * For the cart RULE GROUP to be validated, at least on of the RULES inside the RULE GROUP
+                     * For the cart RULE GROUP to be validated, all of the RULES inside the RULE GROUP
                      * must meet the conditions.
                      */
-                    switch ($product_rule['type']) {
+                    switch ($product_rule['type']) {				
                         case 'attributes':
                             $cart_attributes = Db::getInstance()->executeS('
 							SELECT cp.quantity, cp.`id_product`, pac.`id_attribute`, cp.`id_product_attribute`
@@ -1019,58 +1026,45 @@ class CartRuleCore extends ObjectModel
 							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')
 							AND cp.id_product_attribute > 0');
                             $count_matching_products = 0;
-                            $matching_products_list = [];
+							
                             foreach ($cart_attributes as $cart_attribute) {
                                 if (in_array($cart_attribute['id_attribute'], $product_rule['values'])) {
-                                    $count_matching_products += $cart_attribute['quantity'];
-                                    if (
-                                        $alreadyInCart
-                                        && $this->gift_product == $cart_attribute['id_product']
-                                        && $this->gift_product_attribute == $cart_attribute['id_product_attribute']) {
-                                        --$count_matching_products;
-                                    }
-                                    $matching_products_list[] = $cart_attribute['id_product'] . '-' . $cart_attribute['id_product_attribute'];
+                                    $count_matching_products += $this->checkGiftCount($cart_attribute['id_product'], $cart_attribute['id_product_attribute'], $cart_attribute['quantity'], CartRule::getGiftCount($cart));
+                                    $matching_products_list[$id_rule][]  = $cart_attribute['id_product'] . '-' . $cart_attribute['id_product_attribute'];
                                 }
                             }
+
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                if ($countRulesProduct === 1) {
-                                    return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
-                                } else {
                                     ++$condition;
 
                                     break;
-                                }
                             }
-                            $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+
 
                             break;
                         case 'products':
                             $cart_products = Db::getInstance()->executeS('
-							SELECT cp.quantity, cp.`id_product`
+							SELECT cp.quantity, cp.`id_product`, cp.`id_product_attribute`
 							FROM `' . _DB_PREFIX_ . 'cart_product` cp
 							WHERE cp.`id_cart` = ' . (int) $cart->id . '
 							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')');
                             $count_matching_products = 0;
-                            $matching_products_list = [];
+
                             foreach ($cart_products as $cart_product) {
-                                if (in_array($cart_product['id_product'], $product_rule['values'])) {
-                                    $count_matching_products += $cart_product['quantity'];
-                                    if ($alreadyInCart && $this->gift_product == $cart_product['id_product']) {
-                                        --$count_matching_products;
-                                    }
-                                    $matching_products_list[] = $cart_product['id_product'] . '-0';
+                                if (in_array($cart_product['id_product'], $product_rule['values']) 
+                                    ) {
+                                    $count_matching_products += $this->checkGiftCount($cart_product['id_product'], $cart_product['id_product_attribute'], $cart_product['quantity'], CartRule::getGiftCount($cart));
+                                    $matching_products_list[$id_rule][]  = $cart_product['id_product'] . '-'.$cart_product['id_product_attribute'];
                                 }
+                        
                             }
+
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                if ($countRulesProduct === 1) {
-                                    return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
-                                } else {
                                     ++$condition;
 
                                     break;
-                                }
                             }
-                            $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+                           
 
                             break;
                         case 'categories':
@@ -1079,111 +1073,120 @@ class CartRuleCore extends ObjectModel
 							FROM `' . _DB_PREFIX_ . 'cart_product` cp
 							LEFT JOIN `' . _DB_PREFIX_ . 'category_product` catp ON cp.id_product = catp.id_product
 							WHERE cp.`id_cart` = ' . (int) $cart->id . '
-							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')
-							AND cp.`id_product` <> ' . (int) $this->gift_product);
+							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')');
                             $count_matching_products = 0;
-                            $matching_products_list = [];
+
                             foreach ($cart_categories as $cart_category) {
                                 if (in_array($cart_category['id_category'], $product_rule['values'])
                                     /*
                                      * We also check that the product is not already in the matching product list,
                                      * because there are doubles in the query results (when the product is in multiple categories)
                                      */
+                                    
                                     && !in_array($cart_category['id_product'] . '-' . $cart_category['id_product_attribute'], $matching_products_list)) {
-                                    $count_matching_products += $cart_category['quantity'];
-                                    $matching_products_list[] = $cart_category['id_product'] . '-' . $cart_category['id_product_attribute'];
+                                    $count_matching_products += $this->checkGiftCount($cart_category['id_product'], $cart_category['id_product_attribute'], $cart_category['quantity'], CartRule::getGiftCount($cart));
+                                    $matching_products_list[$id_rule][]  = $cart_category['id_product'] . '-' . $cart_category['id_product_attribute'];
                                 }
                             }
+
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                if ($countRulesProduct === 1) {
-                                    return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
-                                } else {
                                     ++$condition;
 
                                     break;
-                                }
                             }
-                            // Attribute id is not important for this filter in the global list, so the ids are replaced by 0
-                            foreach ($matching_products_list as &$matching_product) {
-                                $matching_product = preg_replace('/^([0-9]+)-[0-9]+$/', '$1-0', $matching_product);
-                            }
-                            $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
 
                             break;
                         case 'manufacturers':
                             $cart_manufacturers = Db::getInstance()->executeS('
-							SELECT cp.quantity, cp.`id_product`, p.`id_manufacturer`
+							SELECT cp.quantity, cp.`id_product`, p.`id_manufacturer`, cp.`id_product_attribute`
 							FROM `' . _DB_PREFIX_ . 'cart_product` cp
 							LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = ' . (int) $cart->id . '
 							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')');
                             $count_matching_products = 0;
-                            $matching_products_list = [];
+
                             foreach ($cart_manufacturers as $cart_manufacturer) {
-                                if (in_array($cart_manufacturer['id_manufacturer'], $product_rule['values'])) {
-                                    $count_matching_products += $cart_manufacturer['quantity'];
-                                    $matching_products_list[] = $cart_manufacturer['id_product'] . '-0';
+                                if (in_array($cart_manufacturer['id_manufacturer'], $product_rule['values'])) {                                                                                                         
+                                    $count_matching_products += $this->checkGiftCount($cart_manufacturer['id_product'], $cart_manufacturer['id_product_attribute'], $cart_manufacturer['quantity'], CartRule::getGiftCount($cart));
+                                    $matching_products_list[$id_rule][]  = $cart_manufacturer['id_product'] . '-'.$cart_manufacturer['id_product_attribute'];
                                 }
                             }
+
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                if ($countRulesProduct === 1) {
-                                    return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
-                                } else {
-                                    ++$condition;
+                                     ++$condition;
 
                                     break;
-                                }
-                            }
-                            $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
+                            }                           
 
                             break;
                         case 'suppliers':
                             $cart_suppliers = Db::getInstance()->executeS('
-							SELECT cp.quantity, cp.`id_product`, p.`id_supplier`
+							SELECT cp.quantity, cp.`id_product`, p.`id_supplier`, cp.`id_product_attribute`
 							FROM `' . _DB_PREFIX_ . 'cart_product` cp
 							LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = ' . (int) $cart->id . '
 							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')');
                             $count_matching_products = 0;
-                            $matching_products_list = [];
+
                             foreach ($cart_suppliers as $cart_supplier) {
                                 if (in_array($cart_supplier['id_supplier'], $product_rule['values'])) {
-                                    $count_matching_products += $cart_supplier['quantity'];
-                                    $matching_products_list[] = $cart_supplier['id_product'] . '-0';
+                                    $count_matching_products += $this->checkGiftCount($cart_supplier['id_product'], $cart_supplier['id_product_attribute'],$cart_supplier['quantity'], CartRule::getGiftCount($cart));
+                                    $matching_products_list[$id_rule][]  = $cart_supplier['id_product'] . '-'.$cart_supplier['id_product_attribute'] ;
                                 }
                             }
+                            
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                if ($countRulesProduct === 1) {
-                                    return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
-                                } else {
                                     ++$condition;
-
                                     break;
-                                }
                             }
-                            $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
 
                             break;
+                        default:
+                            return (!$displayError) ? false : $this->trans('Unknown type of product restriction', [], 'Shop.Notifications.Error');  
                     }
-                    if (!count($eligible_products_list)) {
-                        if ($countRulesProduct === 1) {
-                            return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
-                        }
-                    }
+
                 }
-                if ($countRulesProduct !== 1 && $condition == $countRulesProduct) {
+
+                //if atleast one condition doesnt match from $product_rule_group with multiple conditions, we go to the next rulegroup if there are more groups
+                if($countRuleGroups>1 && $condition >0){
+                    continue;
+                }
+                //if there is single condition that doesnt match product rule we want to return error       
+                if ($condition >= $countRulesProduct) {
                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
-                }
-                $selected_products = array_merge($selected_products, $eligible_products_list);
+                }                
+                if(count($matching_products_list) !== 0){
+                    //if there are more than one rule inside rule group, we want to keep products matching both
+                    if($countRulesProduct>1){      
+                        $matching_products_list = call_user_func_array('array_intersect',$matching_products_list);
+                    }else{
+                        $matching_products_list = call_user_func_array('array_values',$matching_products_list);
+                    }
+                }             
+                /**
+                 * we are using ruleType attributes because otherwise it will strip product attribute data which we need to find products matching all rules from rule group 
+                 * we filter out product matching both rules and add them to selected_products
+                 */ 
+                $matching_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, 'attributes');
+                // Merge all eligible products for each product rule group
+                $selected_products = array_merge($selected_products, $matching_products_list);
+
+            }
+
+            /**
+             * we are using ruleType attributes because otherwise it will strip product attribute data which we need to find products matching all rules from rule group 
+             * final cart product filtering, keep only matching products
+             */ 
+            $selected_products = $this->filterProducts($eligible_products_list, $selected_products, 'attributes');
+            if (!count($selected_products)) {
+                return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
             }
         }
         if ($returnProducts) {
             return $selected_products;
         }
-
         return (!$displayError) ? true : false;
     }
-
     /**
      * The reduction value is POSITIVE.
      *
@@ -1239,7 +1242,7 @@ class CartRuleCore extends ObjectModel
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
-
+   
         // Free shipping on selected carriers
         $reduction_carrier = 0;
         if ($this->free_shipping && in_array($filter, [CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING])) {
@@ -1320,7 +1323,11 @@ class CartRuleCore extends ObjectModel
                         // use average cart VAT for price_wt
                         $price *= (1 + $context->cart->getAverageProductsTaxRate());
                     }
-
+                    //exclude gift from discount but allow price calculation for product variant or if quantity is higher than gift quantity in cart
+                    $excl_gift_quantity = $this->checkGiftCount($product['id_product'],$product['id_product_attribute'],$product['cart_quantity'],CartRule::getGiftCount($context->cart));
+                    if(!$excl_gift_quantity){
+                        continue;
+                    }
                     if ($price > 0 && ($minPrice === false || $minPrice > $price) && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                         $minPrice = $price;
                         $cheapest_product = $product['id_product'] . '-' . $product['id_product_attribute'];
@@ -1346,7 +1353,7 @@ class CartRuleCore extends ObjectModel
                 // Let's get products this cart rule applies to. We should get an array, but we can also
                 // get a false in some cases. It doesn't matter much though, as long as we check what we got.
                 $selected_products = $this->checkProductRestrictionsFromCart($context->cart, true);
-                if (is_array($selected_products)) {
+                if (is_array($selected_products)) {         
                     foreach ($package_products as $product) {
                         if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
                                 || in_array($product['id_product'] . '-0', $selected_products))
@@ -1355,7 +1362,9 @@ class CartRuleCore extends ObjectModel
                             if ($use_tax) {
                                 $price = $product['price_with_reduction'];
                             }
-
+                            //exclude gift from discount but allow price calculation for product variant or if quantity is higher than gift quantity in cart
+                            $excl_gift_quantity = $this->checkGiftCount($product['id_product'],$product['id_product_attribute'],$product['cart_quantity'],CartRule::getGiftCount($context->cart));
+                            $product['cart_quantity'] = $excl_gift_quantity;
                             $selected_products_reduction += $price * $product['cart_quantity'];
                         }
                     }
@@ -1909,4 +1918,41 @@ class CartRuleCore extends ObjectModel
 
         return $return;
     }
+    /**
+     * Allow discount for same product as gift or product variant only when it exceeds gift quantity in cart. Handle same gift from multiple cart rules.
+     * @param int $id_product
+     * @param int $id_product_attribute
+     * @param int $product_quantity
+     * @param array $gifts_in_cart
+     * @return int
+     */
+    public function checkGiftCount(int $id_product,int $id_product_attribute,int $product_quantity,array $gifts_in_cart){
+        foreach($gifts_in_cart as $i=>$gift){
+            if($gift['gift_product']==$id_product && $gift['gift_product_attribute']==$id_product_attribute){
+                if(($product_quantity-$gift['gift_count'])>0){
+                    return (int)$product_quantity-$gift['gift_count'];
+                }
+                return 0;
+            }
+        }
+        return $product_quantity;
+    }    
+    /**
+     * Retriew current gift count from cart
+     * @param CartCore $cart
+     * @return array|bool|mixed|mysqli_result|PDOStatement|resource|null
+     */
+    public static function getGiftCount(CartCore $cart){
+        $Cachekey = "CartRule::getGiftCount_".$cart->id;
+        if(Cache::isStored($Cachekey)){
+            return Cache::retrieve($Cachekey);
+        }
+        $giftsincart = Db::getInstance()->executeS('
+            SELECT count(*) as gift_count, cr.`gift_product`,cr.`gift_product_attribute` 
+            FROM `' . _DB_PREFIX_ . 'cart_cart_rule` ccr
+            INNER JOIN `' . _DB_PREFIX_ . 'cart_rule` cr ON ccr.`id_cart_rule`=cr.`id_cart_rule` 
+            WHERE ccr.`id_cart` = '. (int) $cart->id . ' GROUP BY cr.`gift_product`,cr.`gift_product_attribute`;');   
+        Cache::store($Cachekey,$giftsincart);
+        return $giftsincart;
+    }    
 }
