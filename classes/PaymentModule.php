@@ -953,6 +953,24 @@ abstract class PaymentModuleCore extends Module
         return $this->getPartialRenderer()->render($template_name, $this->context->language, $var);
     }
 
+    protected function isCarrierValidForPaymentMethod($carrier, $name, $shop_id)
+    {
+        if (!Validate::isLoadedObject($carrier)) {
+            return false;
+        }
+
+        $payment_module = Module::getInstanceByName($name);
+        $authorized_carriers = Db::getInstance()->executeS('
+            SELECT id_reference 
+            FROM ' . _DB_PREFIX_ . 'module_carrier 
+            WHERE id_module = ' . (int)$payment_module->id . '
+            AND id_reference = ' . (int) $carrier->id_reference . '
+            AND id_shop = ' . (int) $shop_id
+        );
+
+        return !empty($authorized_carriers);
+    }
+
     protected function createOrderFromCart(
         Cart $cart,
         Currency $currency,
@@ -990,6 +1008,10 @@ abstract class PaymentModuleCore extends Module
             $carrier = new Carrier((int) $carrierId, (int) $cart->id_lang);
             $order->id_carrier = (int) $carrier->id;
             $carrierId = (int) $carrier->id;
+
+            if (!$this->isCarrierValidForPaymentMethod($carrier, $name, $context->shop->id)) {
+                throw new PrestaShopException('The carrier is not valid for this payment method.');
+            }
         } else {
             $order->id_carrier = 0;
             $carrierId = 0;
