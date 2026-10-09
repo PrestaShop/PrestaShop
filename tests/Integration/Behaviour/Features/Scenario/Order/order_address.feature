@@ -181,3 +181,26 @@ Feature: Order from Back Office (BO)
     Then the preview order "bo_order1" has following shipping details
       | Tracking number | 42424242                     |
       | Tracking URL    | http://tracking.url/42424242 |
+
+  Scenario: Check tracking url placeholders are replaced by the order delivery address values
+    Given I add new address to customer "testCustomer" with following details:
+      | Address alias | test-customer-france-address |
+      | First name    | testFirstName                |
+      | Last name     | testLastName                 |
+      | Address       | 36 Avenue des Champs Elysees |
+      | City          | Paris                        |
+      | Country       | France                       |
+      | Postal code   | 75008                        |
+    And I create carrier "placeholder-carrier" with specified properties:
+      | name        | placeholder-carrier                                        |
+      | trackingUrl | http://tracking.url/@?zip={postcode}&country={country_iso} |
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    And I change order "bo_order1" shipping address to "test-customer-france-address"
+    When I update order "bo_order1" Tracking number to "42424242" and Carrier to "placeholder-carrier"
+    Then the preview order "bo_order1" has following shipping details
+      | Tracking number | 42424242                                          |
+      | Tracking URL    | http://tracking.url/42424242?zip=75008&country=FR |

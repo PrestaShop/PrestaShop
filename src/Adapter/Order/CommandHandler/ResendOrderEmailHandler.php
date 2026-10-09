@@ -10,6 +10,7 @@ use Carrier;
 use Configuration;
 use OrderHistory;
 use OrderState;
+use PrestaShop\PrestaShop\Adapter\Carrier\TrackingUrlFormatter;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ResendOrderEmailHandlerInterface;
@@ -41,7 +42,7 @@ final class ResendOrderEmailHandler extends AbstractOrderCommandHandler implemen
         $templateVars = [];
 
         if ($orderState->id == Configuration::get('PS_OS_SHIPPING') && $order->getShippingNumber()) {
-            $templateVars = ['{followup}' => str_replace('@', $order->getShippingNumber(), $carrier->url)];
+            $templateVars = ['{followup}' => TrackingUrlFormatter::format($carrier->url, $order->getShippingNumber(), $order)];
         }
 
         if (!$history->sendEmail($order, $templateVars)) {

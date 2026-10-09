@@ -10,6 +10,7 @@ use Carrier;
 use Configuration;
 use OrderHistory;
 use OrderState;
+use PrestaShop\PrestaShop\Adapter\Carrier\TrackingUrlFormatter;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
@@ -66,7 +67,7 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
         if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->getShippingNumber()) {
             $carrier = new Carrier($order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
             $templateVars = [
-                '{followup}' => str_replace('@', $order->getShippingNumber(), $carrier->url),
+                '{followup}' => TrackingUrlFormatter::format($carrier->url, $order->getShippingNumber(), $order),
             ];
         }
 

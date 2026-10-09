@@ -6,6 +6,7 @@
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
+use PrestaShop\PrestaShop\Adapter\Carrier\TrackingUrlFormatter;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
@@ -1044,6 +1045,18 @@ class ValidateCore
         }
 
         return true;
+    }
+
+    /**
+     * Check if a carrier tracking URL is absolute, its placeholders included.
+     *
+     * @param string|null $url
+     *
+     * @return bool
+     */
+    public static function isCarrierTrackingUrl($url)
+    {
+        return (bool) self::isAbsoluteUrl(TrackingUrlFormatter::fillWithSampleValues((string) $url));
     }
 
     public static function isMySQLEngine($engine)

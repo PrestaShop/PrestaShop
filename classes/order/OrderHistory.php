@@ -3,6 +3,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Adapter\Carrier\TrackingUrlFormatter;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
 use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
@@ -386,7 +387,7 @@ class OrderHistoryCore extends ObjectModel
                 '{firstname}' => $result['firstname'],
                 '{id_order}' => (int) $this->id_order,
                 '{order_name}' => $order->getUniqReference(),
-                '{followup}' => str_replace('@', $order->getShippingNumber() ?? '', $carrierUrl),
+                '{followup}' => TrackingUrlFormatter::format($carrierUrl, $order->getShippingNumber(), $order),
                 '{shipping_number}' => $order->getShippingNumber(),
             ];
 

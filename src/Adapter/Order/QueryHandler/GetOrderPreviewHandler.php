@@ -15,6 +15,7 @@ use Order;
 use OrderCarrier;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Address\AddressFormatter;
+use PrestaShop\PrestaShop\Adapter\Carrier\TrackingUrlFormatter;
 use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Core\Address\AddressFormatterInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
@@ -154,7 +155,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
 
         if (Validate::isLoadedObject($carrier)) {
             $carrierName = $carrier->name;
-            $trackingUrl = str_replace('@', $orderCarrier->tracking_number ?: '@', $carrier->url);
+            $trackingUrl = TrackingUrlFormatter::format($carrier->url, $orderCarrier->tracking_number ?: '@', $order);
         }
 
         $dni = Address::dniRequired($address->id_country) ? $address->dni : null;
