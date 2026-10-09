@@ -341,7 +341,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
             $attachment->file = $file['id'];
             $attachment->file_name = $file['file_name'];
             $attachment->mime = $file['mime_type'];
-            if ($attachment->name[$defaultLanguage] === null) {
+            if ($attachment->name === null) {
                 $attachment->name[$defaultLanguage] = $_POST['name'] ?? $file['file_name'];
             }
 
