@@ -10,8 +10,13 @@ namespace Tests\Integration\PrestaShopBundle\Translation\Loader;
 
 use Db;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
+use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopBundle\Translation\TranslatorLanguageLoader;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
+use Symfony\Component\Translation\MessageCatalogue;
 use Tests\Resources\DatabaseDump;
 
 /**
@@ -26,6 +31,8 @@ use Tests\Resources\DatabaseDump;
  *   5. Shop-theme override wins over core entry for the same key, theme set
  *   6. Multishop: all active shop themes loaded in a single query regardless of theme context
  *   7. Inactive shop theme rows are never included in the catalogue
+ *   8. A translator queries the database once per catalogue build, after the files, and only when
+ *      the language loader was asked to load the database translations
  *
  * Run:
  *   docker compose exec prestashop-git php ./vendor/phpunit/phpunit/phpunit \
@@ -43,6 +50,7 @@ class SqlTranslationLoaderTest extends TestCase
     private const KEY_THEME_A_EXCLUSIVE = '__test_sql_loader__theme_a_exclusive__';
     private const KEY_THEME_B_EXCLUSIVE = '__test_sql_loader__theme_b_exclusive__';
     private const KEY_INACTIVE_THEME = '__test_sql_loader__inactive_theme__';
+    private const KEY_FILE_ONLY = '__test_sql_loader__file_only__';
 
     private const THEME_B_NAME = '__test_sql_loader_theme_b__';
     private const INACTIVE_THEME_NAME = '__test_sql_loader_inactive__';
@@ -50,6 +58,17 @@ class SqlTranslationLoaderTest extends TestCase
     private static int $langId;
     private static string $locale;
     private static string $themeNameA;
+
+    /** @var string[] */
+    private array $xlfFiles = [];
+
+    protected function tearDown(): void
+    {
+        foreach ($this->xlfFiles as $file) {
+            @unlink($file);
+        }
+        parent::tearDown();
+    }
 
     public static function setUpBeforeClass(): void
     {
@@ -212,7 +231,63 @@ class SqlTranslationLoaderTest extends TestCase
         );
     }
 
+    // ── scenario 8 — one query per catalogue build ────────────────────────────
+
+    public function testTranslatorQueriesTheDatabaseOnceAfterTheFiles(): void
+    {
+        $loader = new QueryCountingSqlTranslationLoader();
+        $translator = new TranslatorComponent(self::$locale);
+        $translator->addLoader('xlf', new XliffFileLoader());
+        $translator->addLoader('db', $loader);
+        $translator->addResource('xlf', $this->createXlfFile([self::KEY_WITH_OVERRIDE => 'File value', self::KEY_FILE_ONLY => 'File only value']), self::$locale, self::DOMAIN_GLOBAL);
+        $translator->addResource('xlf', $this->createXlfFile([self::KEY_FILE_ONLY => 'File only value']), self::$locale, self::DOMAIN_CHECKOUT);
+
+        $catalogue = $translator->getCatalogue(self::$locale);
+
+        $this->assertSame(1, $loader->loads, 'Every domain comes from a single query');
+        $this->assertSame('Theme A override', $catalogue->get(self::KEY_WITH_OVERRIDE, self::DOMAIN_GLOBAL), 'Database translations override the files');
+        $this->assertSame('File only value', $catalogue->get(self::KEY_FILE_ONLY, self::DOMAIN_GLOBAL));
+        $this->assertSame('Theme A only value', $catalogue->get(self::KEY_THEME_A_EXCLUSIVE, self::DOMAIN_CHECKOUT), 'Database-only keys are added');
+    }
+
+    public function testLanguageLoaderLoadsTheDatabaseTranslationsOnDemand(): void
+    {
+        $languageLoader = new TranslatorLanguageLoader(new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_));
+
+        $translator = new TranslatorComponent(self::$locale);
+        $languageLoader->loadLanguage($translator, self::$locale);
+        $this->assertSame('Core only value', $translator->getCatalogue(self::$locale)->get(self::KEY_CORE_ONLY, self::DOMAIN_GLOBAL));
+
+        $translator = new TranslatorComponent(self::$locale);
+        $languageLoader->loadLanguage($translator, self::$locale, false);
+        $this->assertFalse($translator->getCatalogue(self::$locale)->defines(self::KEY_CORE_ONLY, self::DOMAIN_GLOBAL));
+    }
+
     // ── helpers ───────────────────────────────────────────────────────────────
+
+    /**
+     * @param array<string, string> $messages
+     */
+    private function createXlfFile(array $messages): string
+    {
+        $units = '';
+        foreach ($messages as $source => $target) {
+            $units .= sprintf(
+                '<trans-unit id="%s"><source>%s</source><target>%s</target></trans-unit>',
+                md5($source),
+                htmlspecialchars($source, ENT_XML1),
+                htmlspecialchars($target, ENT_XML1)
+            );
+        }
+        $file = tempnam(sys_get_temp_dir(), 'sql-loader-test-') . '.xlf';
+        file_put_contents($file, '<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="test.xlf" source-language="en" target-language="en" datatype="plaintext"><body>' . $units . '</body></file>
+</xliff>');
+        $this->xlfFiles[] = $file;
+
+        return $file;
+    }
 
     private function mockTheme(): Theme
     {
@@ -254,5 +329,17 @@ class SqlTranslationLoaderTest extends TestCase
                      ' . $themeSQL . ')'
             );
         }
+    }
+}
+
+final class QueryCountingSqlTranslationLoader extends SqlTranslationLoader
+{
+    public int $loads = 0;
+
+    public function load($resource, $locale, $domain = 'messages'): MessageCatalogue
+    {
+        ++$this->loads;
+
+        return parent::load($resource, $locale, $domain);
     }
 }
