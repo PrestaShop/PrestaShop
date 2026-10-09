@@ -19,16 +19,25 @@ use Symfony\Component\Cache\Adapter\MemcachedAdapter;
  */
 class CacheAdapterFactory
 {
-    public function getCacheAdapter(string $driver): AdapterInterface
+    /**
+     * @param int $defaultLifetime Lifetime, in seconds, given to an entry that does not carry its own.
+     *                             0 means the entry never expires, which for a driver outliving the
+     *                             request leaves a stale value in place until the cache is cleared by
+     *                             hand.
+     */
+    public function getCacheAdapter(string $driver, int $defaultLifetime = 0): AdapterInterface
     {
         if ($driver === 'apcu') {
-            return new ApcuAdapter();
+            return new ApcuAdapter('', $defaultLifetime);
         } elseif ($driver === 'memcached') {
             return new MemcachedAdapter(
-                AbstractAdapter::createConnection('memcached://localhost', ['lazy' => true])
+                AbstractAdapter::createConnection('memcached://localhost', ['lazy' => true]),
+                '',
+                $defaultLifetime
             );
         }
 
+        // The array adapter only lives for the request, so an expiration would add nothing.
         return new ArrayAdapter();
     }
 }

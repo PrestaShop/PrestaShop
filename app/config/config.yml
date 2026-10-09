@@ -15,6 +15,11 @@ parameters:
   env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
   env(PS_LOG_MAX_FILES): '30'
   env(PS_TRUSTED_PROXIES): ''
+  # Lifetime, in seconds, given to entries of the application cache pool. Drivers that outlive the
+  # request (memcached, apcu) keep an entry forever when this is 0, so a deploy or a module
+  # update keeps serving the old value until someone clears the cache by hand.
+  env(PS_CACHE_DEFAULT_LIFETIME): '86400'
+  cache.default_lifetime: '%env(int:PS_CACHE_DEFAULT_LIFETIME)%'
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
