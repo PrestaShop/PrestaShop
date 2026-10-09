@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Entity\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityRepository;
@@ -100,21 +101,31 @@ class CspRuleRepository extends EntityRepository
             ->fetchOne();
     }
 
-    /** Counts a scope's allowed sources that weaken the policy, using the same rule as the grid's is_weakening. */
-    public function countWeakeningRulesByShop(CspContext $context, int $shopId): int
+    /**
+     * Whether any of the given shops has an allowed source that weakens the policy, in one query, using
+     * the same rule as the grid's is_weakening (keyword/wildcard, wildcard host, or broadening scheme on
+     * script-/style-src). Drives the page's weakening warning across an all-shops scope without a query
+     * per shop.
+     *
+     * @param list<int> $shopIds
+     */
+    public function hasWeakeningRuleForAnyShop(CspContext $context, array $shopIds): bool
     {
+        if ($shopIds === []) {
+            return false;
+        }
+
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->select('COUNT(1)')
+            ->select('1')
             ->from($this->getClassMetadata()->getTableName())
-            ->where('id_shop = :shopId')
+            ->where('id_shop IN (:shopIds)')
             ->andWhere('context = :context')
             ->andWhere(CspWeakeningExpression::sql() . ' = 1')
-            ->setParameter('shopId', $shopId)
+            ->setMaxResults(1)
+            ->setParameter('shopIds', $shopIds, ArrayParameterType::INTEGER)
             ->setParameter('context', $context->value);
         CspWeakeningExpression::bindParameters($qb);
 
-        return (int) $qb
-            ->executeQuery()
-            ->fetchOne();
+        return false !== $qb->executeQuery()->fetchOne();
     }
 }

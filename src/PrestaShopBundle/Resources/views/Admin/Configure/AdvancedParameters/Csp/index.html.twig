@@ -29,6 +29,14 @@
     </li>
   </ul>
 
+  {% if cspLogFull %}
+    <div class="alert alert-warning" role="alert">
+      <p class="alert-text">
+        {{ 'The violation log is full. New sources are no longer recorded until you clear it; already-recorded sources keep counting. Review and clear the log to collect new sources.'|trans({}, 'Admin.Advparameters.Notification') }}
+      </p>
+    </div>
+  {% endif %}
+
   {% if cspShowEnforceNudge %}
     <div class="alert alert-info" role="alert">
       <p class="alert-text">
