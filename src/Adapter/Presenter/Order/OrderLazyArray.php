@@ -29,7 +29,7 @@ use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentTotalsCalculatorInterface;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use PrestaShopBundle\Entity\ShipmentProduct;
-use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use PrestaShopException;
 use ProductDownload;
 use ReflectionException;
@@ -47,7 +47,7 @@ class OrderLazyArray extends AbstractLazyArray
     /** @var PriceFormatter */
     private $priceFormatter;
 
-    /** @var TranslatorComponent */
+    /** @var TranslatorInterface */
     private $translator;
 
     /** @var TaxConfiguration */
