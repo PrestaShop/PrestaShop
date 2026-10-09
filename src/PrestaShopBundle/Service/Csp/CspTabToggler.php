@@ -14,11 +14,13 @@ use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
- * Enables or disables the "Content Security Policy" tab depending on the 'csp' feature flag.
+ * Enables or disables the "Security headers" and "Content Security Policy" tabs depending on the
+ * 'csp' feature flag.
  */
 final class CspTabToggler
 {
-    public const TAB_CLASS_NAME = 'AdminSecurityHeaders';
+    /** @var list<string> */
+    public const TAB_CLASS_NAMES = ['AdminSecurityHeaders', 'AdminSecurityCsp'];
 
     public function __construct(
         private readonly FeatureFlagStateCheckerInterface $featureFlagChecker,
@@ -32,9 +34,10 @@ final class CspTabToggler
             $this->featureFlagChecker->reset(); // refresh FeatureFlagChecker cache
         }
 
-        $this->tabRepository->changeStatusByClassName(
-            self::TAB_CLASS_NAME,
-            $this->featureFlagChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_CSP)
-        );
+        $enabled = $this->featureFlagChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_CSP);
+
+        foreach (self::TAB_CLASS_NAMES as $className) {
+            $this->tabRepository->changeStatusByClassName($className, $enabled);
+        }
     }
 }

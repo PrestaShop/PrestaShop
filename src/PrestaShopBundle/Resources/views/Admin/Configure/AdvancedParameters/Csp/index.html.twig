@@ -11,38 +11,14 @@
 {% endblock %}
 
 {% block content %}
-  {{ form_start(securityHeadersForm, {attr: {class: 'form'}, action: path('admin_security_headers_save')}) }}
-    <div class="card" id="configuration_fieldset_security_headers">
-      <h3 class="card-header">
-        <i class="material-icons">lock</i> {{ 'Security headers'|trans({}, 'Admin.Advparameters.Feature') }}
-      </h3>
-      <div class="card-body">
-        <p class="text-muted">
-          {{ 'Static response headers, set per shop and sent on both the storefront and back office. Content Security Policy is managed separately below.'|trans({}, 'Admin.Advparameters.Help') }}
-        </p>
-        <div class="form-wrapper">
-          {{ form_widget(securityHeadersForm) }}
-          {{ form_rest(securityHeadersForm) }}
-        </div>
-      </div>
-      <div class="card-footer">
-        <div class="d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-        </div>
-      </div>
-    </div>
-  {{ form_end(securityHeadersForm) }}
-
-  <h2 class="mt-2" id="csp_section">{{ 'Content Security Policy'|trans({}, 'Admin.Advparameters.Feature') }}</h2>
   <ul class="nav nav-tabs mb-2" role="tablist">
     <li class="nav-item">
-      {# Anchor to the CSP section so switching surface keeps the merchant here instead of scrolling to the top. #}
-      <a class="nav-link{{ cspSelectedContext == 'front' ? ' active' : '' }}" href="{{ path('admin_security_headers_index') }}#csp_section">
+      <a class="nav-link{{ cspSelectedContext == 'front' ? ' active' : '' }}" href="{{ path('admin_security_csp_index') }}">
         {{ 'Storefront'|trans({}, 'Admin.Shopparameters.Feature') }}
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{{ cspSelectedContext == 'admin' ? ' active' : '' }}" href="{{ path('admin_security_headers_index', {context: 'admin'}) }}#csp_section">
+      <a class="nav-link{{ cspSelectedContext == 'admin' ? ' active' : '' }}" href="{{ path('admin_security_csp_index', {context: 'admin'}) }}">
         {{ 'Back office'|trans({}, 'Admin.Advparameters.Feature') }}
       </a>
     </li>
@@ -68,7 +44,7 @@
     </div>
   {% endif %}
 
-  {{ form_start(cspForm, {attr: {class: 'form'}, action: path('admin_security_headers_csp_save', cspContextParams)}) }}
+  {{ form_start(cspForm, {attr: {class: 'form'}, action: path('admin_security_csp_save', cspContextParams)}) }}
     <div class="card" id="configuration_fieldset_csp">
       <h3 class="card-header">
         <i class="material-icons">security</i> {{ 'Content Security Policy'|trans({}, 'Admin.Advparameters.Feature') }}

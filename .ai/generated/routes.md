@@ -36,18 +36,23 @@ DELETE,POST   /{deleteFileName}                         admin_backups_delete  [B
 POST          /bulk-delete/                             admin_backups_bulk_delete  [BackupController::bulkDeleteAction]
 ```
 
-### admin/configure/advanced_parameters/csp
+### admin/configure/advanced_parameters/security_headers
 ```
 GET           /                                         admin_security_headers_index  [SecurityHeadersController::indexAction]
-POST          /                                         admin_security_headers_search  [CommonController::searchGridAction]
-POST          /settings                                 admin_security_headers_csp_save  [SecurityHeadersController::saveAction]
-POST          /headers                                  admin_security_headers_save  [SecurityHeadersController::saveSecurityHeadersAction]
-GET,POST      /allow-list/add                           admin_security_headers_add  [SecurityHeadersController::addAction]
-GET           /clear-log                                admin_security_headers_clear_log  [SecurityHeadersController::clearLogAction]
-GET           /allow/{cspLogId}                         admin_security_headers_allow  [SecurityHeadersController::allowAction]
-GET           /revoke/{cspRuleId}                       admin_security_headers_revoke  [SecurityHeadersController::revokeAction]
-POST          /bulk-revoke                              admin_security_headers_bulk_revoke  [SecurityHeadersController::bulkRevokeAction]
-POST          /bulk-revoke/admin                        admin_security_headers_bulk_revoke_admin  [SecurityHeadersController::bulkRevokeAction]
+POST          /save                                     admin_security_headers_save  [SecurityHeadersController::saveAction]
+```
+
+### admin/configure/advanced_parameters/csp
+```
+GET           /                                         admin_security_csp_index  [CspController::indexAction]
+POST          /                                         admin_security_csp_search  [CommonController::searchGridAction]
+POST          /settings                                 admin_security_csp_save  [CspController::saveAction]
+GET,POST      /allow-list/add                           admin_security_csp_add  [CspController::addAction]
+GET           /clear-log                                admin_security_csp_clear_log  [CspController::clearLogAction]
+GET           /allow/{cspLogId}                         admin_security_csp_allow  [CspController::allowAction]
+GET           /revoke/{cspRuleId}                       admin_security_csp_revoke  [CspController::revokeAction]
+POST          /bulk-revoke                              admin_security_csp_bulk_revoke  [CspController::bulkRevokeAction]
+POST          /bulk-revoke/admin                        admin_security_csp_bulk_revoke_admin  [CspController::bulkRevokeAction]
 ```
 
 ### admin/configure/advanced_parameters/email

@@ -1,80 +1,73 @@
-admin_security_headers_index:
+admin_security_csp_index:
   path: /
   methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::indexAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::indexAction'
 
-admin_security_headers_search:
+admin_security_csp_search:
   path: /
   methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\CommonController::searchGridAction'
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.csp_log
-    redirectRoute: admin_security_headers_index
+    redirectRoute: admin_security_csp_index
     # Keep the current surface (?context=admin) when the grid filter redirects back to the page.
     redirectQueryParamsToKeep:
       - 'context'
-    _parent: admin_security_headers_index
+    _parent: admin_security_csp_index
 
-admin_security_headers_csp_save:
+admin_security_csp_save:
   path: /settings
   methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::saveAction'
-    _parent: admin_security_headers_index
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::saveAction'
+    _parent: admin_security_csp_index
 
-admin_security_headers_save:
-  path: /headers
-  methods: [ POST ]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::saveSecurityHeadersAction'
-    _parent: admin_security_headers_index
-
-admin_security_headers_add:
+admin_security_csp_add:
   path: /allow-list/add
   methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::addAction'
-    _parent: admin_security_headers_index
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::addAction'
+    _parent: admin_security_csp_index
 
-admin_security_headers_clear_log:
+admin_security_csp_clear_log:
   path: /clear-log
   methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::clearLogAction'
-    _parent: admin_security_headers_index
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::clearLogAction'
+    _parent: admin_security_csp_index
 
-admin_security_headers_allow:
+admin_security_csp_allow:
   path: /allow/{cspLogId}
   methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::allowAction'
-    _parent: admin_security_headers_index
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::allowAction'
+    _parent: admin_security_csp_index
   requirements:
     cspLogId: \d+
 
-admin_security_headers_revoke:
+admin_security_csp_revoke:
   path: /revoke/{cspRuleId}
   methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::revokeAction'
-    _parent: admin_security_headers_index
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::revokeAction'
+    _parent: admin_security_csp_index
   requirements:
     cspRuleId: \d+
 
-admin_security_headers_bulk_revoke:
+admin_security_csp_bulk_revoke:
   path: /bulk-revoke
   methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::bulkRevokeAction'
-    _parent: admin_security_headers_index
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::bulkRevokeAction'
+    _parent: admin_security_csp_index
 
 # The bulk-action modal posts to a bare route (the shared bulk template drops route params),
 # so the back-office surface gets its own route that carries the context as a route default.
-admin_security_headers_bulk_revoke_admin:
+admin_security_csp_bulk_revoke_admin:
   path: /bulk-revoke/admin
   methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::bulkRevokeAction'
-    _parent: admin_security_headers_index
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\CspController::bulkRevokeAction'
+    _parent: admin_security_csp_index
     context: admin

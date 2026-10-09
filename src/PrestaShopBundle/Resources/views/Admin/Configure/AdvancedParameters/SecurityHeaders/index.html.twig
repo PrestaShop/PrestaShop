@@ -1,0 +1,30 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+{% block content %}
+  {{ form_start(securityHeadersForm, {attr: {class: 'form'}, action: path('admin_security_headers_save')}) }}
+    <div class="card" id="configuration_fieldset_security_headers">
+      <h3 class="card-header">
+        <i class="material-icons">lock</i> {{ 'Security headers'|trans({}, 'Admin.Advparameters.Feature') }}
+      </h3>
+      <div class="card-body">
+        <p class="text-muted">
+          {{ 'Static response headers, set per shop and sent on both the storefront and back office. The Content Security Policy is managed on its own page.'|trans({}, 'Admin.Advparameters.Help') }}
+        </p>
+        <div class="form-wrapper">
+          {{ form_widget(securityHeadersForm) }}
+          {{ form_rest(securityHeadersForm) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
+    </div>
+  {{ form_end(securityHeadersForm) }}
+{% endblock %}
