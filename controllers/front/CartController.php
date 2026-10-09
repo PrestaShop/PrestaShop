@@ -173,20 +173,6 @@ class CartControllerCore extends FrontController
     }
 
     /**
-     * Renders a template only if it can be resolved by the current theme.
-     */
-    protected function renderOptionalTemplate(string $template): string
-    {
-        try {
-            $this->getTemplateFile($template);
-        } catch (PrestaShopException $e) {
-            return '';
-        }
-
-        return $this->render($template);
-    }
-
-    /**
      * @deprecated 1.7.3.1 the product link is now accessible
      *                     in #quantity_wanted[data-url-update]
      */
