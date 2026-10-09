@@ -195,7 +195,7 @@ abstract class AppKernel extends Kernel
         $loader->load(function (ContainerBuilder $container) use ($moduleTranslationsPaths, $activeModules, $installedModules) {
             $container->setParameter('container.autowiring.strict_mode', true);
             $container->setParameter('container.dumper.inline_class_loader', false);
-            $container->setParameter('.container.dumper.inline_factories', true);
+            $container->setParameter('.container.dumper.inline_factories', !$this->isDebug());
             $container->setParameter('prestashop.module_dir', _PS_MODULE_DIR_);
             /* @deprecated kernel.active_modules is deprecated. Use prestashop.active_modules instead. */
             $container->setParameter('kernel.active_modules', $activeModules);
