@@ -10,6 +10,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
 use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider;
+use PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AddCspRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AllowCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\BulkRevokeCspSourceCommand;
@@ -72,35 +73,43 @@ class CspController extends PrestaShopAdminController
         // The storefront and back office each have their own settings form (per-shop vs global).
         $cspForm = ($isAdmin ? $adminCspFormHandler : $cspFormHandler)->getForm();
 
-        // Warn when the selected surface's allow-list has weakening sources: under enforcement they give
-        // little XSS protection. In a storefront all-shops/group scope the warning covers the whole scope.
-        $isEnforcing = false;
-        $hasWeakeningSources = false;
-        // Pre-enforcement nudge: reported sources not yet on the allow-list, i.e. what enforcing would block.
-        $unreviewedCount = 0;
+        // The shops the current scope covers: the back office is one global surface (shop id 0), the
+        // storefront is the selected shop or every shop in an all-shops/group scope.
         if ($isAdmin) {
-            $unreviewedCount = $cspLogRepository->countUnreviewedByShop(CspContext::ADMIN, 0);
-            if ($featureChecker->isEnabledForContext(CspContext::ADMIN, 0)) {
-                $isEnforcing = !$featureChecker->isReportOnlyForContext(CspContext::ADMIN, 0);
-                $hasWeakeningSources = $cspRuleRepository->countWeakeningRulesByShop(CspContext::ADMIN, 0) > 0;
-            }
+            $scopedShopIds = [0];
         } else {
             $shopConstraint = $this->getShopContext()->getShopConstraint();
             $shopId = $shopConstraint->getShopId()?->getValue();
             $scopedShopIds = null !== $shopId ? [$shopId] : $shopListResolver->resolveShopIds($shopConstraint);
-            foreach ($scopedShopIds as $scopedShopId) {
-                $unreviewedCount += $cspLogRepository->countUnreviewedByShop(CspContext::FRONT, $scopedShopId);
-                if (!$featureChecker->isEnabledForShop($scopedShopId)) {
-                    continue;
-                }
-                if (!$featureChecker->isReportOnlyForShop($scopedShopId)) {
-                    $isEnforcing = true;
-                }
-                if ($cspRuleRepository->countWeakeningRulesByShop(CspContext::FRONT, $scopedShopId) > 0) {
-                    $hasWeakeningSources = true;
-                }
+        }
+
+        // Which of those shops have CSP enabled (and of those, enforcing). The toggles are cached
+        // configuration reads, not per-shop queries; the counts below are one grouped query each.
+        $isEnforcing = false;
+        $enabledShopIds = [];
+        foreach ($scopedShopIds as $scopedShopId) {
+            $enabled = $isAdmin
+                ? $featureChecker->isEnabledForContext(CspContext::ADMIN, 0)
+                : $featureChecker->isEnabledForShop($scopedShopId);
+            if (!$enabled) {
+                continue;
+            }
+            $enabledShopIds[] = $scopedShopId;
+            $reportOnly = $isAdmin
+                ? $featureChecker->isReportOnlyForContext(CspContext::ADMIN, 0)
+                : $featureChecker->isReportOnlyForShop($scopedShopId);
+            if (!$reportOnly) {
+                $isEnforcing = true;
             }
         }
+
+        // Pre-enforcement nudge: reported sources not yet on the allow-list, i.e. what enforcing would block.
+        $unreviewedCount = $cspLogRepository->countUnreviewedByShops($context, $scopedShopIds);
+        // Warn when the scope's allow-list has weakening sources: under enforcement they give little XSS
+        // protection. Only enabled shops matter (a disabled shop sends no policy).
+        $hasWeakeningSources = $cspRuleRepository->hasWeakeningRuleForAnyShop($context, $enabledShopIds);
+        // At the row cap, new sources are no longer recorded; tell the merchant to clear the log.
+        $cspLogFull = $cspLogRepository->anyShopAtCap($context, $scopedShopIds, CspViolationRecorder::DEFAULT_ROW_CAP);
 
         // Only nudge while still report-only (not yet enforcing); once enforced the weakening banner applies.
         $showEnforceNudge = !$isEnforcing && $unreviewedCount > 0;
@@ -133,6 +142,7 @@ class CspController extends PrestaShopAdminController
                 'cspHasWeakeningSources' => $hasWeakeningSources,
                 'cspIsEnforcing' => $isEnforcing,
                 'cspShowEnforceNudge' => $showEnforceNudge,
+                'cspLogFull' => $cspLogFull,
                 'cspUnreviewedCount' => $unreviewedCount,
                 'cspSelectedContext' => $context->value,
                 'cspContextParams' => $contextParams,

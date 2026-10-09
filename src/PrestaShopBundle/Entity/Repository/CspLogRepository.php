@@ -159,6 +159,61 @@ class CspLogRepository extends EntityRepository
             ->fetchOne();
     }
 
+    /**
+     * Like countUnreviewedByShop() but summed over several shops in one query, for the all-shops page view
+     * (each shop curates independently, so a source reported on two shops counts twice). Avoids a count per
+     * shop.
+     *
+     * @param list<int> $shopIds
+     */
+    public function countUnreviewedByShops(CspContext $context, array $shopIds): int
+    {
+        if ($shopIds === []) {
+            return 0;
+        }
+
+        $ruleTable = $this->getEntityManager()->getClassMetadata(CspRule::class)->getTableName();
+
+        return (int) $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('COUNT(DISTINCT l.id_shop, l.directive, l.source)')
+            ->from($this->getClassMetadata()->getTableName(), 'l')
+            ->leftJoin('l', $ruleTable, 'r', 'r.id_shop = l.id_shop AND r.context = l.context AND r.directive = l.directive AND r.source = l.source')
+            ->where('l.id_shop IN (:shopIds)')
+            ->andWhere('l.context = :context')
+            ->andWhere('r.id_csp_rule IS NULL')
+            ->setParameter('shopIds', $shopIds, ArrayParameterType::INTEGER)
+            ->setParameter('context', $context->value)
+            ->executeQuery()
+            ->fetchOne();
+    }
+
+    /**
+     * Whether any of the given shops has a log at or over the row cap, in one grouped query. Drives the
+     * "log full" page notice (at the cap, new sources are no longer recorded).
+     *
+     * @param list<int> $shopIds
+     */
+    public function anyShopAtCap(CspContext $context, array $shopIds, int $cap): bool
+    {
+        if ($cap <= 0 || $shopIds === []) {
+            return false;
+        }
+
+        return false !== $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('1')
+            ->from($this->getClassMetadata()->getTableName())
+            ->where('id_shop IN (:shopIds)')
+            ->andWhere('context = :context')
+            ->groupBy('id_shop')
+            ->having('COUNT(*) >= :cap')
+            ->setMaxResults(1)
+            ->setParameter('shopIds', $shopIds, ArrayParameterType::INTEGER)
+            ->setParameter('context', $context->value)
+            ->setParameter('cap', $cap)
+            ->executeQuery()
+            ->fetchOne();
+    }
+
     /** Whether the scope has any log row; cheaper than countByShop() when only existence matters (the baseline check). */
     public function existsByShop(CspContext $context, int $shopId): bool
     {
