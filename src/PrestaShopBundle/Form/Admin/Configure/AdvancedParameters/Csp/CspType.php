@@ -59,7 +59,7 @@ final class CspType extends TranslatorAwareType
                 'required' => false,
                 'multistore_configuration_key' => 'PS_CSP_REPORT_URI',
                 'label' => $this->trans('External reporting endpoint', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Leave empty to collect reports in PrestaShop. To send this shop\'s violation reports to your own CSP monitoring service instead, enter its URL (https://…); the report log on this page then stays empty.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('Leave empty to collect reports in PrestaShop. To send this shop\'s violation reports to your own CSP monitoring service instead, enter its URL (https://…); the report log on this page then stays empty. Each report includes the full address of the page where the violation happened, query string included, so on some pages (password reset, order confirmation) it carries tokens or the customer\'s secure key. Only use an endpoint you trust with that data.', 'Admin.Advparameters.Help'),
                 'constraints' => [
                     new Url(['protocols' => ['http', 'https']]),
                 ],
