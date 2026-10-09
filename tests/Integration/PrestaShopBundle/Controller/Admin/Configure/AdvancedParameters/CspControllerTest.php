@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AddCspRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspRuleId;
@@ -150,6 +151,45 @@ class CspControllerTest extends GridControllerTestCase
 
         $this->assertStringContainsString('cannot be loaded', $content);
         $this->assertStringNotContainsString('already allowed', $content);
+    }
+
+    public function testClearingTheLogRequiresAPostWithAValidCsrfToken(): void
+    {
+        // Keep the same kernel/session across requests so the session-stored CSRF token stays valid.
+        $this->client->disableReboot();
+
+        // Seed one violation row for the current (storefront) shop.
+        $this->client->getContainer()->get(CspViolationRecorder::class)
+            ->record(CspContext::FRONT, self::SHOP_ID, self::DIRECTIVE, self::SOURCE, 'https://shop.example.com/page');
+        $this->assertLogCount(1, 'The seeded violation must be in the log before clearing');
+
+        // The grid renders the clear-log form with a CSRF token; clear-log is a POST (not a GET link).
+        $crawler = $this->client->request('GET', $this->generateGridUrl());
+        $this->assertResponseIsSuccessful();
+        $form = $crawler->filter('#csp-clear-log-form')->form();
+        $this->assertNotSame('', (string) $form->get('_token')->getValue(), 'The clear-log form must carry a CSRF token');
+
+        // An invalid token must not clear anything.
+        $this->client->request('POST', $this->router->generate('admin_security_csp_clear_log'), ['_token' => 'not-the-token']);
+        $this->assertLogCount(1, 'An invalid CSRF token must not clear the log');
+
+        // Submitting the form (valid token) clears the log.
+        $this->client->submit($form);
+        $this->assertResponseRedirects();
+        $this->assertLogCount(0, 'A POST with a valid CSRF token must clear the log');
+    }
+
+    private function assertLogCount(int $expected, string $message): void
+    {
+        $connection = $this->client->getContainer()->get('doctrine.dbal.default_connection');
+        $prefix = $this->client->getContainer()->getParameter('database_prefix');
+
+        $count = (int) $connection->fetchOne(
+            'SELECT COUNT(*) FROM ' . $prefix . "csp_log WHERE id_shop = :shop AND context = 'front' AND directive = :directive AND source = :source",
+            ['shop' => self::SHOP_ID, 'directive' => self::DIRECTIVE, 'source' => self::SOURCE]
+        );
+
+        $this->assertSame($expected, $count, $message);
     }
 
     private function assertRuleCount(int $expected, string $message): void
