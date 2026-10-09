@@ -1588,6 +1588,11 @@ class CartCore extends ObjectModel
      */
     public function getProductQuantity($idProduct, $idProductAttribute = 0, $idCustomization = 0, $idAddressDelivery = 0)
     {
+        // An unsaved cart has no product
+        if (!$this->id) {
+            return ['deep_quantity' => '0', 'quantity' => '0'];
+        }
+
         $defaultPackStockType = Configuration::get('PS_PACK_STOCK_TYPE');
         $packStockTypesAllowed = [
             Pack::STOCK_TYPE_PRODUCTS_ONLY,
