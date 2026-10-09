@@ -14,6 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Throwable;
+use Tools;
 
 /**
  * Adds the static security headers to Symfony-kernel responses. Registered in both the Front and Admin
@@ -45,9 +46,13 @@ final class SecurityHeadersSubscriber implements EventSubscriberInterface
         // The back office is a single global surface; the storefront reads the shop being served.
         $shopConstraint = $this->allShopsScope ? ShopConstraint::allShops() : null;
 
+        // HTTPS detection matches the legacy storefront path (Tools::usingSecureMode): it honours
+        // X-Forwarded-Proto/Port, so HSTS is still sent behind a TLS-terminating proxy (Cloudflare,
+        // Varnish, a load balancer) without requiring PS_TRUSTED_PROXIES, whereas Request::isSecure()
+        // would report the back office as plain HTTP there and drop HSTS.
         // Static headers must never turn a page into a 500; a broken configuration read is swallowed.
         try {
-            foreach ($this->provider->getHeaders($event->getRequest()->isSecure(), $shopConstraint) as $name => $value) {
+            foreach ($this->provider->getHeaders(Tools::usingSecureMode(), $shopConstraint) as $name => $value) {
                 $response->headers->set($name, $value);
             }
         } catch (Throwable $e) {
