@@ -38,6 +38,11 @@ class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
      */
     public function build(ContainerBuilder $container)
     {
+        $container->setParameter(
+            'doctrine.orm.proxy_dir',
+            $this->environment->getCacheDir()
+        );
+
         $configDirectories = [$container->getParameter('kernel.project_dir') . '/app/config'];
         $fileLocator = new FileLocator($configDirectories);
 
