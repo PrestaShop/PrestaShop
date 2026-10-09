@@ -103,7 +103,7 @@ class CartRuleCore extends ObjectModel
     public $active = true;
     public $date_add;
     public $date_upd;
-
+    protected static $productRulesCache = [];
     protected static $cartAmountCache = [];
 
     /**
@@ -673,22 +673,25 @@ class CartRuleCore extends ObjectModel
             return [];
         }
 
-        $productRules = [];
-        $results = Db::getInstance()->executeS('
-		SELECT *
-		FROM ' . _DB_PREFIX_ . 'cart_rule_product_rule pr
-		LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_product_rule_value prv ON pr.id_product_rule = prv.id_product_rule
-		WHERE pr.id_product_rule_group = ' . (int) $id_product_rule_group);
-        foreach ($results as $row) {
-            if (!isset($productRules[$row['id_product_rule']])) {
-                $productRules[$row['id_product_rule']] = ['type' => $row['type'], 'values' => []];
-            }
-            $productRules[$row['id_product_rule']]['values'][] = $row['id_item'];
+        if(!isset(static::$productRulesCache[$id_product_rule_group])){
+            $productRules = [];
+            $results = Db::getInstance()->executeS('
+    		SELECT *
+    		FROM ' . _DB_PREFIX_ . 'cart_rule_product_rule pr
+    		LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_product_rule_value prv ON pr.id_product_rule = prv.id_product_rule
+    		WHERE pr.id_product_rule_group = ' . (int) $id_product_rule_group);
+            foreach ($results as $row) {
+                if (!isset($productRules[$row['id_product_rule']])) {
+                    $productRules[$row['id_product_rule']] = ['type' => $row['type'], 'values' => []];
+                }
+                $productRules[$row['id_product_rule']]['values'][] = $row['id_item'];
+            }    
+            static::$productRulesCache[$id_product_rule_group] = $productRules;
         }
 
-        return $productRules;
+        return static::$productRulesCache[$id_product_rule_group];
     }
-
+    
     /**
      * Check if this CartRule can be applied.
      *
