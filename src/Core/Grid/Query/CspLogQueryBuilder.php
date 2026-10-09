@@ -11,9 +11,8 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Csp\CspWeakeningExpression;
 use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
-use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspDirective;
-use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspSource;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\ShopSearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
@@ -66,15 +65,10 @@ final class CspLogQueryBuilder extends AbstractDoctrineQueryBuilder
             // Correlated subquery (not a join) so the grid shows the shop per row in a multistore
             // scope without changing row counts; it reads the shop name for c.id_shop.
             '(SELECT s.name FROM ' . $this->dbPrefix . 'shop s WHERE s.id_shop = c.id_shop LIMIT 1) AS shop_name',
-            // Weakening sources get the confirm-gated "Allow" action:
-            // weakening keyword/wildcard, wildcard host, or broad scheme on script-/style-src.
-            'IF(c.source IN (:weakeningSources)'
-                . " OR c.source LIKE '%*%'"
-                . ' OR (c.directive IN (:scriptStyleDirectives) AND c.source IN (:broadeningSchemes)), 1, 0) AS is_weakening'
+            // Weakening sources get the confirm-gated "Allow" action.
+            CspWeakeningExpression::sql('c.') . ' AS is_weakening'
         );
-        $qb->setParameter('weakeningSources', CspSource::WEAKENING_KEYWORDS, ArrayParameterType::STRING);
-        $qb->setParameter('scriptStyleDirectives', [CspDirective::SCRIPT_SRC->value, CspDirective::STYLE_SRC->value], ArrayParameterType::STRING);
-        $qb->setParameter('broadeningSchemes', CspSource::BROADENING_SCHEMES, ArrayParameterType::STRING);
+        CspWeakeningExpression::bindParameters($qb);
 
         $this->searchCriteriaApplicator
             ->applySorting($searchCriteria, $qb)
