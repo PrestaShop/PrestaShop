@@ -36,42 +36,75 @@ class QuerySorting
 {
     public const ASC = 'ASC';
     public const DESC = 'DESC';
+    public const AVAILABLE_SORTING_FIELDS = ['id_product', 'date_add', 'product_reference', 'product_supplier_reference'];
+    public const AVAILABLE_SORTING_ORDER = [self::ASC, self::DESC];
+
+    /**
+     * @var array
+     */
+    private $sortingFields;
 
     /**
      * @var string
      */
-    private $sorting;
+    private $sortingOrder;
 
     /**
-     * @param string $sorting
+     * @param array $sortingFields
+     * @param string $sortingOrder
      *
      * @throws InvalidSortingException
      */
-    public function __construct(string $sorting)
+    public function __construct(array $sortingFields, string $sortingOrder)
     {
-        $sorting = strtoupper($sorting);
-        $this->assertSortingSupported($sorting);
+        $this->assertSortingFieldsSupported($sortingFields);
 
-        $this->sorting = $sorting;
+        $sortingOrder = strtoupper($sortingOrder);
+        $this->assertSortingOrderSupported($sortingOrder);
+
+        $this->sortingFields = $sortingFields;
+        $this->sortingOrder = $sortingOrder;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSortingFields(): array
+    {
+        return $this->sortingFields;
     }
 
     /**
      * @return string
      */
-    public function getValue(): string
+    public function getSortingOrder(): string
     {
-        return $this->sorting;
+        return $this->sortingOrder;
     }
 
     /**
-     * @param string $sorting
+     * @param string $sortingOrder
      *
      * @throws InvalidSortingException
      */
-    private function assertSortingSupported(string $sorting): void
+    private function assertSortingOrderSupported(string $sortingOrder): void
     {
-        if (!in_array($sorting, [self::ASC, self::DESC], true)) {
-            throw new InvalidSortingException();
+        if (!in_array($sortingOrder, self::AVAILABLE_SORTING_ORDER, true)) {
+            throw new InvalidSortingException(sprintf('Invalid sorting order parameter `%s`. You must use one of these options: %s', $sortingOrder, implode(', ', self::AVAILABLE_SORTING_ORDER)));
+        }
+    }
+
+    /**
+     * @param array $sortingFields
+     *
+     * @throws InvalidSortingException
+     */
+    private function assertSortingFieldsSupported(array $sortingFields): void
+    {
+        foreach ($sortingFields as $sortingField) {
+            if (!in_array($sortingField, self::AVAILABLE_SORTING_FIELDS, true)) {
+                throw new InvalidSortingException(sprintf('Invalid sorting field parameter `%s`. You must use one of these options: %s', $sortingField, implode(', ', self::AVAILABLE_SORTING_ORDER)));
+            }
         }
     }
 }
