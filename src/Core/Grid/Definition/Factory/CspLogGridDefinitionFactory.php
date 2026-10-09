@@ -145,7 +145,7 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     ->setIcon('check')
                                     ->setName($this->trans('Allow', [], 'Admin.Advparameters.Feature'))
                                     ->setOptions([
-                                        'route' => 'admin_security_headers_allow',
+                                        'route' => 'admin_security_csp_allow',
                                         'route_param_name' => 'cspLogId',
                                         'route_param_field' => 'id_csp_log',
                                         'extra_route_params' => $this->contextRouteParams(),
@@ -157,7 +157,7 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     ->setIcon('warning')
                                     ->setName($this->trans('Allow (weakens policy)', [], 'Admin.Advparameters.Feature'))
                                     ->setOptions([
-                                        'route' => 'admin_security_headers_allow',
+                                        'route' => 'admin_security_csp_allow',
                                         'route_param_name' => 'cspLogId',
                                         'route_param_field' => 'id_csp_log',
                                         'extra_route_params' => $this->contextRouteParams(),
@@ -170,7 +170,7 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     ->setIcon('close')
                                     ->setName($this->trans('Revoke', [], 'Admin.Advparameters.Feature'))
                                     ->setOptions([
-                                        'route' => 'admin_security_headers_revoke',
+                                        'route' => 'admin_security_csp_revoke',
                                         'route_param_name' => 'cspRuleId',
                                         'route_param_field' => 'id_csp_rule',
                                         'extra_route_params' => $this->contextRouteParams(),
@@ -220,7 +220,7 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'reset_route_params' => [
                             'filterId' => self::GRID_ID,
                         ],
-                        'redirect_route' => 'admin_security_headers_index',
+                        'redirect_route' => 'admin_security_csp_index',
                         // Keep the current surface so Reset stays on the back-office tab.
                         'redirect_route_params' => $this->contextRouteParams(),
                     ])
@@ -257,7 +257,7 @@ final class CspLogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         // The bulk modal posts to a bare route (params are dropped), so the back office
                         // uses a context-carrying route; otherwise the revoke would run on the storefront surface.
-                        'submit_route' => $this->isAdminContext() ? 'admin_security_headers_bulk_revoke_admin' : 'admin_security_headers_bulk_revoke',
+                        'submit_route' => $this->isAdminContext() ? 'admin_security_csp_bulk_revoke_admin' : 'admin_security_csp_bulk_revoke',
                         'confirm_message' => $this->trans('Revoke the selected allowed sources?', [], 'Admin.Advparameters.Feature'),
                         'modal_options' => new ModalOptions([
                             'title' => $this->trans('Revoke selection', [], 'Admin.Advparameters.Feature'),

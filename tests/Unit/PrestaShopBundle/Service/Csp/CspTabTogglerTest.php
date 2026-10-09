@@ -14,24 +14,30 @@ use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Service\Csp\CspTabToggler;
 
 /**
- * The tab visibility must follow the 'csp' feature flag.
+ * Both tabs' visibility must follow the 'csp' feature flag.
  */
 class CspTabTogglerTest extends TestCase
 {
     /**
      * @dataProvider provideFlagStates
      */
-    public function testItSyncsTheTabStatusToTheFlag(bool $flagEnabled): void
+    public function testItSyncsEveryTabStatusToTheFlag(bool $flagEnabled): void
     {
         $flagChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
         $flagChecker->method('isEnabled')->willReturn($flagEnabled);
 
+        $synced = [];
         $tabRepository = $this->createMock(TabRepository::class);
-        $tabRepository->expects($this->once())
+        $tabRepository->expects($this->exactly(count(CspTabToggler::TAB_CLASS_NAMES)))
             ->method('changeStatusByClassName')
-            ->with(CspTabToggler::TAB_CLASS_NAME, $flagEnabled);
+            ->willReturnCallback(function (string $className, bool $enabled) use (&$synced, $flagEnabled): void {
+                $this->assertSame($flagEnabled, $enabled);
+                $synced[] = $className;
+            });
 
         (new CspTabToggler($flagChecker, $tabRepository))->sync();
+
+        $this->assertSame(CspTabToggler::TAB_CLASS_NAMES, $synced);
     }
 
     /**

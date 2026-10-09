@@ -1,0 +1,12 @@
+admin_security_headers_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::indexAction'
+
+admin_security_headers_save:
+  path: /save
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::saveAction'
+    _parent: admin_security_headers_index
