@@ -163,8 +163,8 @@ Feature: Order from Back Office (BO)
     Then the first invoice from order "bo_order1" should have following details:
       | total_products          | 23.800 |
       | total_products_wt       | 25.230 |
-#      | total_discount_tax_excl | 0.0    |
-#      | total_discount_tax_incl | 0.0    |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
 #      | total_paid_tax_excl     | 30.800 |
 #      | total_paid_tax_incl     | 32.650 |
       | total_shipping_tax_excl | 7.0    |
@@ -269,8 +269,8 @@ Feature: Order from Back Office (BO)
     Then the first invoice from order "bo_order1" should have following details:
       | total_products          | 23.800 |
       | total_products_wt       | 25.230 |
-#      | total_discount_tax_excl | 0.0    |
-#      | total_discount_tax_incl | 0.0    |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
 #      | total_paid_tax_excl     | 30.800 |
 #      | total_paid_tax_incl     | 32.650 |
       | total_shipping_tax_excl | 7.0    |
@@ -278,8 +278,8 @@ Feature: Order from Back Office (BO)
     And the second invoice from order "bo_order1" should have following details:
       | total_products    | 60.000 |
       | total_products_wt | 63.600 |
-#      | total_discount_tax_excl | 5.19   |
-#      | total_discount_tax_incl | 5.50   |
+      | total_discount_tax_excl | 5.19   |
+      | total_discount_tax_incl | 5.50   |
 #      | total_paid_tax_excl     | 61.81  |
 #      | total_paid_tax_incl     | 65.52  |
 #      | total_shipping_tax_excl | 7.0    |
@@ -287,8 +287,8 @@ Feature: Order from Back Office (BO)
     And the third invoice from order "bo_order1" should have following details:
       | total_products    | 50.000 |
       | total_products_wt | 53.000 |
-#      | total_discount_tax_excl | 25.00  |
-#      | total_discount_tax_incl | 26.50  |
+      | total_discount_tax_excl | 25.00  |
+      | total_discount_tax_incl | 26.50  |
 #      | total_paid_tax_excl     | 32.00  |
 #      | total_paid_tax_incl     | 33.92  |
 #      | total_shipping_tax_excl | 7.0    |
@@ -296,8 +296,8 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have following details:
       | total_products    | 133.80 |
       | total_products_wt | 141.83 |
-#      | total_discounts_tax_excl | 30.19  |
-#      | total_discounts_tax_incl | 32.00  |
+      | total_discounts_tax_excl | 30.19  |
+      | total_discounts_tax_incl | 32.00  |
 #      | total_paid_tax_excl      | 124.61 |
 #      | total_paid_tax_incl      | 132.09 |
 #      | total_paid               | 132.09 |
