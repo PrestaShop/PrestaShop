@@ -23,9 +23,7 @@ services:
     autoconfigure: true
     arguments:
       - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
-      - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
       - '@PrestaShop\PrestaShop\Adapter\Csp\CspRuleValidator'
-      - '@doctrine.orm.entity_manager'
 
   PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AllowCspSourceHandler:
     autoconfigure: true

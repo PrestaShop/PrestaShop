@@ -66,6 +66,12 @@ services:
     autowire: true
     public: true
 
+  prestashop.core.grid.definition.factory.csp_rule:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CspRuleGridDefinitionFactory'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    autowire: true
+    public: true
+
   prestashop.core.grid.definition.factory.meta:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MetaGridDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory

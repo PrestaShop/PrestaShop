@@ -37,13 +37,13 @@ final class CspType extends TranslatorAwareType
                 'required' => false,
                 'multistore_configuration_key' => 'PS_CSP_REPORT_ONLY',
                 'label' => $this->trans('Report-only mode', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('On: violations are reported but nothing is blocked. Off: the policy is enforced and any source that is not on your allow-list is blocked in visitors\' browsers. Turn this off only once the allow-list is complete, or the storefront may break.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('Only applies when Content Security Policy is enabled above. On: violations are reported but nothing is blocked. Off: the policy is enforced and any source that is not on your allow-list is blocked in visitors\' browsers. Turn this off only once the allow-list is complete, or the storefront may break.', 'Admin.Advparameters.Help'),
             ])
             ->add('retention_days', IntegerType::class, [
                 'required' => false,
                 'multistore_configuration_key' => 'PS_CSP_RETENTION_DAYS',
                 'label' => $this->trans('Delete reports older than (days)', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('When the "prestashop:csp:prune-log" command runs, delete reported violations older than this many days. 0 keeps them until the row cap evicts them. Allowed sources are never deleted.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('When the "prestashop:csp:prune-log" command runs, delete reported violations older than this many days. 0 keeps them until the row cap evicts them. Allowed sources are never deleted. Pruning runs only while Content Security Policy is enabled.', 'Admin.Advparameters.Help'),
                 'constraints' => [
                     new GreaterThanOrEqual(0),
                 ],

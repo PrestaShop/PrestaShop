@@ -23,20 +23,23 @@ use Psr\Log\LoggerInterface;
 final class CspPolicyProvider
 {
     /**
-     * First-party sources the back office itself loads, so the base admin policy pre-allows them and a
-     * merchant never has to curate PrestaShop's own resources: the Addons marketplace and project sites
-     * (`*.prestashop.com`, `*.prestashop-project.org`), hosted assets (`assets.prestashop3.com`,
-     * `storage.googleapis.com`), Google Fonts and employee avatars (`*.gravatar.com`). Only hosts are
-     * listed: weakening keywords (`'unsafe-inline'`, `'unsafe-eval'`) that the back office also uses are
-     * deliberately left to curation, so enabling admin CSP does not silently weaken script-src.
+     * First-party sources the back office needs, pre-allowed so a merchant never curates core's own
+     * infrastructure. Each host sits on the directive it is fetched on; weakening keywords are never
+     * pre-baked, so enabling admin CSP cannot silently weaken script-src.
      *
      * @var array<string, list<string>>
      */
     private const ADMIN_FIRST_PARTY_SOURCES = [
+        // Addons marketplace / MBO module assets served from PrestaShop's CDNs.
         'script-src' => ['https://storage.googleapis.com', 'https://assets.prestashop3.com'],
+        // Google Fonts "Open Sans" loaded by the legacy Help popup (the modern BO self-hosts its fonts).
         'style-src' => ['https://fonts.googleapis.com'],
         'font-src' => ['https://fonts.gstatic.com'],
-        'img-src' => ['https://*.prestashop.com', 'https://*.prestashop-project.org', 'https://*.gravatar.com'],
+        // The distribution API client fetches the open-source project APIs (contributors, devdocs) via XHR.
+        'connect-src' => ['https://*.prestashop-project.org'],
+        // Addons marketplace / MBO thumbnails, and employee Gravatar avatars.
+        'img-src' => ['https://*.prestashop.com', 'https://*.gravatar.com'],
+        // Addons marketplace / MBO recommendation iframes.
         'frame-src' => ['https://*.prestashop.com'],
     ];
 
@@ -101,6 +104,24 @@ final class CspPolicyProvider
         $policy->addSource('manifest-src', "'self'");
         $policy->addSource('media-src', "'self'");
         $policy->addSource('worker-src', "'self'");
+    }
+
+    /**
+     * The back-office sources pre-allowed by default, flattened to {directive, source} rows so the admin UI
+     * can show the merchant what the back office permits out of the box (these never produce a violation).
+     *
+     * @return list<array{directive: string, source: string}>
+     */
+    public static function getAdminFirstPartySources(): array
+    {
+        $rows = [];
+        foreach (self::ADMIN_FIRST_PARTY_SOURCES as $directive => $sources) {
+            foreach ($sources as $source) {
+                $rows[] = ['directive' => $directive, 'source' => $source];
+            }
+        }
+
+        return $rows;
     }
 
     private function addAdminFirstPartySources(CspPolicy $policy): void

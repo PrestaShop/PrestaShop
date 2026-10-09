@@ -48,7 +48,3 @@ services:
   PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\CspLogWeakeningAllowAccessibilityChecker:
     autowire: true
     public: false
-
-  PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\CspLogRevokeAccessibilityChecker:
-    autowire: true
-    public: false

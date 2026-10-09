@@ -152,7 +152,9 @@ class CspPolicyProviderTest extends TestCase
         $this->assertSame(["'self'", 'https://storage.googleapis.com', 'https://assets.prestashop3.com'], $admin['script-src']);
         $this->assertSame(["'self'", 'https://fonts.googleapis.com'], $admin['style-src']);
         $this->assertSame(["'self'", 'data:', 'https://fonts.gstatic.com'], $admin['font-src']);
-        $this->assertSame(["'self'", 'data:', 'https://*.prestashop.com', 'https://*.prestashop-project.org', 'https://*.gravatar.com'], $admin['img-src']);
+        // The distribution client fetches the project APIs via XHR, so the host belongs on connect-src, not img-src.
+        $this->assertSame(["'self'", 'https://*.prestashop-project.org'], $admin['connect-src']);
+        $this->assertSame(["'self'", 'data:', 'https://*.prestashop.com', 'https://*.gravatar.com'], $admin['img-src']);
         $this->assertSame(["'self'", 'https://*.prestashop.com'], $admin['frame-src']);
 
         // No weakening keyword is pre-baked: admin script-src stays host-only, inline/eval are curated.
@@ -164,6 +166,23 @@ class CspPolicyProviderTest extends TestCase
         $this->assertSame(["'self'"], $front['script-src']);
         $this->assertSame(["'self'", 'data:'], $front['img-src']);
         $this->assertSame(["'self'"], $front['frame-src']);
+        $this->assertSame(["'self'"], $front['connect-src']);
+    }
+
+    public function testItExposesTheBuiltInAdminSourcesFlattenedForTheUi(): void
+    {
+        $rows = CspPolicyProvider::getAdminFirstPartySources();
+
+        // Every flattened {directive, source} pair must match what the admin policy actually pre-allows,
+        // so the read-only "Built-in sources" panel can never drift from the emitted header.
+        $this->assertContains(['directive' => 'script-src', 'source' => 'https://storage.googleapis.com'], $rows);
+        $this->assertContains(['directive' => 'img-src', 'source' => 'https://*.gravatar.com'], $rows);
+        $this->assertCount(8, $rows);
+
+        $admin = $this->provider()->getPolicy(CspContext::ADMIN, 0)->getDirectives();
+        foreach ($rows as $row) {
+            $this->assertContains($row['source'], $admin[$row['directive']], sprintf('Built-in %s %s must be in the emitted admin policy', $row['directive'], $row['source']));
+        }
     }
 
     /**

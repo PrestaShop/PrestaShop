@@ -23,8 +23,8 @@ use Tests\Resources\DatabaseDump;
  * HTTP-path coverage for the CSP curation grid controller. The Behat suite drives the command bus
  * directly, so it cannot catch a mismatch between the field name the grid's bulk checkboxes submit
  * and the field name the controller reads — exactly the class of bug that shipped once
- * (csp_log_bulk vs csp_log_bulk_action). This test posts the bulk-revoke form using the name read
- * straight out of the rendered grid, so grid and controller are verified against each other.
+ * (bulk vs bulk_action column id). This test posts the bulk-revoke form using the name read
+ * straight out of the rendered allow-list grid, so grid and controller are verified against each other.
  */
 class CspControllerTest extends GridControllerTestCase
 {
@@ -54,8 +54,8 @@ class CspControllerTest extends GridControllerTestCase
 
     public function testBulkRevokeConsumesTheFieldNameTheGridSubmits(): void
     {
-        // Seed one curated rule for the current shop; AddCspRuleHandler also inserts the matching
-        // csp_log placeholder, so the row is visible and revocable in the log-driven grid.
+        // Seed one curated rule for the current shop; it shows directly in the allow-list grid, whose
+        // bulk checkboxes carry the rule id and feed the Remove-selection action.
         /** @var CspRuleId $ruleId */
         $ruleId = $this->client->getContainer()->get('prestashop.core.command_bus')->handle(
             new AddCspRuleCommand(self::DIRECTIVE, self::SOURCE, ShopConstraint::shop(self::SHOP_ID))
@@ -65,17 +65,17 @@ class CspControllerTest extends GridControllerTestCase
         $crawler = $this->client->request('GET', $this->generateGridUrl());
         $this->assertResponseIsSuccessful();
 
-        // The seeded rule is allowed, so its bulk checkbox is rendered (an un-allowed row's checkbox is
-        // hidden by the disabled_field). Read the field name and the row value straight from the DOM.
+        // The allow-list grid renders a bulk checkbox per rule, carrying the rule id. Read the field name
+        // and the row value straight from the DOM.
         $checkbox = $crawler->filter('.js-bulk-action-checkbox')->reduce(
             fn (Crawler $node) => (int) $node->attr('value') === $ruleId
         );
-        $this->assertSame(1, $checkbox->count(), 'The seeded allowed rule must render exactly one bulk checkbox');
+        $this->assertSame(1, $checkbox->count(), 'The seeded rule must render exactly one bulk checkbox');
 
         $submittedName = (string) $checkbox->attr('name');
         // The grid composes the field as "{gridId}_{bulkColumnId}[]"; assert the exact contract so a
         // change on either side is caught here, not silently in production.
-        $this->assertSame('csp_log_bulk_action[]', $submittedName);
+        $this->assertSame('csp_rule_bulk_action[]', $submittedName);
         $fieldName = substr($submittedName, 0, -2); // strip the trailing "[]"
 
         $this->client->request(
@@ -113,7 +113,7 @@ class CspControllerTest extends GridControllerTestCase
             'The admin grid bulk action must target the admin-context route'
         );
 
-        $this->client->request('POST', $this->router->generate('admin_security_csp_bulk_revoke_admin'), ['csp_log_bulk_action' => [$ruleId]]);
+        $this->client->request('POST', $this->router->generate('admin_security_csp_bulk_revoke_admin'), ['csp_rule_bulk_action' => [$ruleId]]);
         $this->assertResponseRedirects();
 
         $this->assertAdminRuleCount(0, 'Admin bulk revoke must delete the admin rule, not run on the storefront surface');
@@ -142,7 +142,7 @@ class CspControllerTest extends GridControllerTestCase
     {
         // id 0 fails CspRuleId validation (INVALID_ID). Before the code-keyed error map this showed
         // the DUPLICATE_RULE "already allowed" message; it must now show the not-found message.
-        $this->client->request('GET', $this->router->generate('admin_security_csp_revoke', ['cspRuleId' => 0]));
+        $this->client->request('POST', $this->router->generate('admin_security_csp_revoke', ['cspRuleId' => 0]));
         $this->assertResponseRedirects();
 
         $this->client->followRedirect();

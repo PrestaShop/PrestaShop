@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
+use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AddCspRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AllowCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\BulkRevokeCspSourceCommand;
@@ -26,6 +27,7 @@ use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CspLogFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CspRuleFilters;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Entity\Repository\CspLogRepository;
@@ -46,6 +48,7 @@ class CspController extends PrestaShopAdminController
     public function indexAction(
         Request $request,
         CspLogFilters $filters,
+        CspRuleFilters $ruleFilters,
         CspFeatureChecker $featureChecker,
         CspRuleRepository $cspRuleRepository,
         CspLogRepository $cspLogRepository,
@@ -56,6 +59,8 @@ class CspController extends PrestaShopAdminController
         FormHandlerInterface $adminCspFormHandler,
         #[Autowire(service: 'prestashop.core.grid.factory.csp_log')]
         GridFactoryInterface $cspLogGridFactory,
+        #[Autowire(service: 'prestashop.core.grid.factory.csp_rule')]
+        GridFactoryInterface $cspRuleGridFactory,
     ): Response {
         $this->assertFeatureEnabled();
 
@@ -128,12 +133,16 @@ class CspController extends PrestaShopAdminController
                 'cspUnreviewedCount' => $unreviewedCount,
                 'cspSelectedContext' => $context->value,
                 'cspContextParams' => $contextParams,
+                // The back office pre-allows PrestaShop's own domains; show them read-only so the merchant
+                // sees what is permitted by default (these never produce a violation). Admin surface only.
+                'cspBuiltInSources' => $isAdmin ? CspPolicyProvider::getAdminFirstPartySources() : [],
                 'enableSidebar' => true,
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'layoutTitle' => $this->trans('Content Security Policy', [], 'Admin.Navigation.Menu'),
                 'help_link' => $this->generateSidebarLink('AdminSecurityCsp'),
                 'cspForm' => $cspForm->createView(),
                 'cspLogGrid' => $this->presentGrid($cspLogGridFactory->getGrid($filters)),
+                'cspRuleGrid' => $this->presentGrid($cspRuleGridFactory->getGrid($ruleFilters)),
             ]
         );
     }
@@ -271,11 +280,10 @@ class CspController extends PrestaShopAdminController
 
         $context = $this->resolveContext($request);
 
-        // The POST field is "{gridId}_{bulkColumnId}" = 'csp_log_bulk_action[]' (see CspLogGridDefinitionFactory).
-        $cspRuleIds = array_values(array_filter(array_map('intval', $request->request->all('csp_log_bulk_action'))));
+        // The POST field is "{gridId}_{bulkColumnId}" = 'csp_rule_bulk_action[]' (see CspRuleGridDefinitionFactory).
+        $cspRuleIds = array_values(array_filter(array_map('intval', $request->request->all('csp_rule_bulk_action'))));
 
         if ([] === $cspRuleIds) {
-            // Only allowed rows carry a rule id, so an un-allowed (or empty) selection means nothing was done.
             $this->addFlash('warning', $this->trans('Select at least one allowed source to revoke.', [], 'Admin.Advparameters.Notification'));
 
             return $this->redirectToRoute('admin_security_csp_index', $this->contextRedirectParams($context));

@@ -64,4 +64,35 @@
   {{ form_end(cspForm) }}
 
   {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: cspLogGrid}) }}
+
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: cspRuleGrid}) }}
+
+  {% if cspBuiltInSources is not empty %}
+    <div class="card mt-2" id="csp_built_in_sources">
+      <h3 class="card-header">
+        <i class="material-icons">verified_user</i> {{ 'Built-in back-office sources'|trans({}, 'Admin.Advparameters.Feature') }}
+      </h3>
+      <div class="card-body">
+        <p class="text-muted">
+          {{ 'These sources are allowed by default because the back office needs them to work correctly, so they never appear as violations above and cannot be removed.'|trans({}, 'Admin.Advparameters.Feature') }}
+        </p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{ 'Directive'|trans({}, 'Admin.Advparameters.Feature') }}</th>
+              <th>{{ 'Allowed source'|trans({}, 'Admin.Advparameters.Feature') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in cspBuiltInSources %}
+              <tr>
+                <td>{{ row.directive }}</td>
+                <td>{{ row.source }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}

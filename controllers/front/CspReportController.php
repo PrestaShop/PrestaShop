@@ -14,7 +14,8 @@ use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 /** Public, unauthenticated endpoint that receives browser CSP violation reports: read the body, record, answer 204. */
 class CspReportControllerCore extends FrontController
 {
-    private const MAX_BODY_SIZE = 65536;
+    // Real reports are a few KB; cap the body before parsing so an oversized payload is rejected cheaply.
+    private const MAX_BODY_SIZE = 32768;
 
     /**
      * The row-cap prune (COUNT + DELETE) runs on a sample of inserting requests, not every one: under a
@@ -34,6 +35,52 @@ class CspReportControllerCore extends FrontController
 
         // No body, no template: the browser ignores the response, and a 204 keeps the endpoint cheap.
         $this->terminateResponse(204);
+    }
+
+    /**
+     * The current shop's own hosts (every active shop_url domain + domain_ssl), lower-cased. A real report's
+     * document-uri is always on one of these; anything else is forged or misdirected.
+     *
+     * @return array<string, true> host set, keyed for O(1) lookup
+     */
+    private function shopHosts(): array
+    {
+        $hosts = [];
+        foreach ($this->context->shop->getUrls() as $url) {
+            foreach ([$url['domain'] ?? '', $url['domain_ssl'] ?? ''] as $domain) {
+                $domain = Tools::strtolower(trim((string) $domain));
+                if ('' !== $domain) {
+                    $hosts[$domain] = true;
+                }
+            }
+        }
+
+        // Fall back to the configured main domains, so the check never fails closed on a misconfigured shop_url.
+        foreach ([Tools::getShopDomain(false, false), Tools::getShopDomainSsl(false, false)] as $domain) {
+            $domain = Tools::strtolower(trim((string) $domain));
+            if ('' !== $domain) {
+                $hosts[$domain] = true;
+            }
+        }
+
+        return $hosts;
+    }
+
+    /**
+     * @param array<string, true> $shopHosts
+     */
+    private function isOnShopHost(?string $documentUri, array $shopHosts): bool
+    {
+        if (null === $documentUri || '' === $documentUri) {
+            return false;
+        }
+
+        $host = parse_url($documentUri, PHP_URL_HOST);
+        if (!is_string($host) || '' === $host) {
+            return false;
+        }
+
+        return isset($shopHosts[Tools::strtolower($host)]);
     }
 
     /** Sends the status and ends the request. Isolated so a test can observe the code without exiting the runner. */
@@ -73,11 +120,29 @@ class CspReportControllerCore extends FrontController
                 return;
             }
 
+            // Drop reports whose document-uri is not on a shop host: a real report comes from a page we
+            // served, so this sheds forged payloads and junk pages (the body is public and untrusted).
+            $shopHosts = $this->shopHosts();
+
             /** @var CspViolationRecorder $recorder */
             $recorder = $this->get(CspViolationRecorder::class);
             $anyInserted = false;
             foreach ($reports as $report) {
-                $anyInserted = $recorder->record($context, $shopId, $report['directive'], $report['blockedUri'], $report['documentUri'], false) || $anyInserted;
+                if (!$this->isOnShopHost($report['documentUri'], $shopHosts)) {
+                    continue;
+                }
+
+                $anyInserted = $recorder->record(
+                    $context,
+                    $shopId,
+                    $report['directive'],
+                    $report['blockedUri'],
+                    $report['documentUri'],
+                    $report['sample'],
+                    $report['sourceFile'],
+                    $report['lineNumber'],
+                    false
+                ) || $anyInserted;
             }
 
             // Enforce the row cap once per batch, only when a new row was inserted (bumped counters

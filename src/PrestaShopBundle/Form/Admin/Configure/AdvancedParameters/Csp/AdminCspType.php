@@ -34,12 +34,12 @@ final class AdminCspType extends TranslatorAwareType
             ->add('report_only', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Report-only mode', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('On: violations are reported but nothing is blocked. Off: the policy is enforced and any source not on your allow-list is blocked. Turn this off only once the allow-list is complete, or the back office may break.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('Only applies when Content Security Policy is enabled above. On: violations are reported but nothing is blocked. Off: the policy is enforced and any source not on your allow-list is blocked. Turn this off only once the allow-list is complete, or the back office may break.', 'Admin.Advparameters.Help'),
             ])
             ->add('retention_days', IntegerType::class, [
                 'required' => false,
                 'label' => $this->trans('Delete reports older than (days)', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('When the "prestashop:csp:prune-log" command runs, delete reported violations older than this many days. 0 keeps them until the row cap evicts them. Allowed sources are never deleted.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('When the "prestashop:csp:prune-log" command runs, delete reported violations older than this many days. 0 keeps them until the row cap evicts them. Allowed sources are never deleted. Pruning runs only while Content Security Policy is enabled.', 'Admin.Advparameters.Help'),
                 'constraints' => [
                     new GreaterThanOrEqual(0),
                 ],

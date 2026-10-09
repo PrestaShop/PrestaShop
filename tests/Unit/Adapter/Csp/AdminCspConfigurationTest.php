@@ -82,6 +82,22 @@ class AdminCspConfigurationTest extends TestCase
         $this->assertSame('https://monitor.example.com/csp', $written['PS_CSP_ADMIN_REPORT_URI']);
     }
 
+    public function testItAcceptsANullReportTargetFromAnEmptyFormFieldAndStoresAnEmptyString(): void
+    {
+        // The optional report-uri text field submits null when left blank; the save must accept it and
+        // store a trimmed empty string rather than rejecting the type.
+        $written = [];
+        $configuration = $this->createMock(ConfigurationInterface::class);
+        $configuration->method('set')->willReturnCallback(function (string $key, $value) use (&$written): void {
+            $written[$key] = $value;
+        });
+
+        $this->adminConfiguration($configuration, hasAdminRule: false)
+            ->updateConfiguration(['enabled' => true, 'report_only' => true, 'retention_days' => 0, 'report_uri' => null]);
+
+        $this->assertSame('', $written['PS_CSP_ADMIN_REPORT_URI']);
+    }
+
     private function adminConfiguration(ConfigurationInterface $configuration, bool $hasAdminRule): AdminCspConfiguration
     {
         $ruleRepository = $this->createMock(CspRuleRepository::class);

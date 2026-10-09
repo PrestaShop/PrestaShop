@@ -15,6 +15,7 @@ services:
       - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
       - '@PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder'
       - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker'
     tags:
       - 'console.command'
 

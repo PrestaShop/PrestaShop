@@ -20,15 +20,12 @@ use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Builds search and count queries for the CSP violation grid (one row per source per page), scoped to the
- * criteria's ShopConstraint. The grid shows only violations not yet on the allow-list: a source that has
- * been allowed (a matching csp_rule exists) is excluded, since it has moved to the allow-list grid.
+ * Builds search and count queries for the CSP allow-list grid (the curated csp_rule rows), scoped to the
+ * criteria's ShopConstraint and the selected surface (?context).
  */
-final class CspLogQueryBuilder extends AbstractDoctrineQueryBuilder
+final class CspRuleQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     private const TEXT_FILTERS = ['directive', 'source'];
-
-    private readonly string $cspLogTable;
 
     private readonly string $cspRuleTable;
 
@@ -40,34 +37,22 @@ final class CspLogQueryBuilder extends AbstractDoctrineQueryBuilder
         private readonly RequestStack $requestStack,
     ) {
         parent::__construct($connection, $dbPrefix);
-        $this->cspLogTable = $dbPrefix . 'csp_log';
         $this->cspRuleTable = $dbPrefix . 'csp_rule';
     }
 
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->connection->createQueryBuilder()
-            ->from($this->cspLogTable, 'c');
-        $this->excludeAllowed($qb);
+            ->from($this->cspRuleTable, 'c');
         $this->applyShopRestriction($qb, $searchCriteria);
         $this->applyFilters($qb, $searchCriteria->getFilters());
 
         $qb->select(
-            'c.id_csp_log',
+            'c.id_csp_rule',
             'c.directive',
             'c.source',
-            'c.document_uri',
-            // A short sample of the offending inline code and where it lives, so the merchant can see what
-            // triggered the source. "source_file:line" when both are known, just the file otherwise.
-            'c.sample',
-            "IF(c.source_file IS NULL, NULL, CONCAT(c.source_file, IFNULL(CONCAT(':', c.line_number), ''))) AS source_location",
-            'c.hits',
             'c.date_add',
-            // Correlated subquery (not a join) so the grid shows the shop per row in a multistore
-            // scope without changing row counts; it reads the shop name for c.id_shop.
             '(SELECT s.name FROM ' . $this->dbPrefix . 'shop s WHERE s.id_shop = c.id_shop LIMIT 1) AS shop_name',
-            // Weakening sources get the confirm-gated "Allow" action:
-            // weakening keyword/wildcard, wildcard host, or broad scheme on script-/style-src.
             'IF(c.source IN (:weakeningSources)'
                 . " OR c.source LIKE '%*%'"
                 . ' OR (c.directive IN (:scriptStyleDirectives) AND c.source IN (:broadeningSchemes)), 1, 0) AS is_weakening'
@@ -78,7 +63,7 @@ final class CspLogQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->searchCriteriaApplicator
             ->applySorting($searchCriteria, $qb)
-            ->applyDeterministicSorting($searchCriteria, $qb, 'c', 'id_csp_log')
+            ->applyDeterministicSorting($searchCriteria, $qb, 'c', 'id_csp_rule')
             ->applyPagination($searchCriteria, $qb);
 
         return $qb;
@@ -87,23 +72,13 @@ final class CspLogQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->connection->createQueryBuilder()
-            ->from($this->cspLogTable, 'c')
-            ->select('COUNT(c.id_csp_log)');
+            ->from($this->cspRuleTable, 'c')
+            ->select('COUNT(c.id_csp_rule)');
 
-        $this->excludeAllowed($qb);
         $this->applyShopRestriction($qb, $searchCriteria);
         $this->applyFilters($qb, $searchCriteria->getFilters());
 
         return $qb;
-    }
-
-    /** Keeps only violations whose source is not yet on the allow-list (no matching csp_rule). */
-    private function excludeAllowed(QueryBuilder $qb): void
-    {
-        $qb->andWhere(
-            'NOT EXISTS (SELECT 1 FROM ' . $this->cspRuleTable . ' r'
-            . ' WHERE r.id_shop = c.id_shop AND r.context = c.context AND r.directive = c.directive AND r.source = c.source)'
-        );
     }
 
     /**
@@ -130,7 +105,7 @@ final class CspLogQueryBuilder extends AbstractDoctrineQueryBuilder
             ->setParameter('cspContext', $context->value);
 
         // The back office is a single global surface stored under shop id 0; the storefront grid is
-        // scoped to the shops in context. Admin rows never leak into the storefront view and vice versa.
+        // scoped to the shops in context. Admin rules never leak into the storefront view and vice versa.
         if (!$context->isPerShop()) {
             $qb->andWhere('c.id_shop = 0');
 
@@ -141,7 +116,7 @@ final class CspLogQueryBuilder extends AbstractDoctrineQueryBuilder
         $shopIds = null !== $shopConstraint ? $this->shopListResolver->resolveShopIds($shopConstraint) : [];
 
         if ([] === $shopIds) {
-            // Never fall back to every shop's log when the scope cannot be resolved.
+            // Never fall back to every shop's allow-list when the scope cannot be resolved.
             $qb->andWhere('1 = 0');
 
             return;

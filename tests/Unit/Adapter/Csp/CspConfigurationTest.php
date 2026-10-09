@@ -192,6 +192,24 @@ class CspConfigurationTest extends TestCase
         $this->assertSame([], $errors);
     }
 
+    public function testItAcceptsANullReportTargetFromAnEmptyFormFieldAndStoresAnEmptyString(): void
+    {
+        // The optional report-uri text field submits null when left blank; validateConfiguration type-checks
+        // every present field, so the save must accept null and store it as a trimmed empty string.
+        $written = [];
+        $configuration = $this->createMock(Configuration::class);
+        $configuration->method('set')->willReturnCallback(function (string $key, $value) use (&$written): void {
+            $written[$key] = $value;
+        });
+
+        // report-only (the safe path) so the enforce guard does not block the save.
+        $errors = $this->cspConfiguration($configuration)
+            ->updateConfiguration(['enabled' => true, 'report_only' => true, 'retention_days' => 0, 'report_uri' => null]);
+
+        $this->assertSame([], $errors);
+        $this->assertSame('', $written['PS_CSP_REPORT_URI']);
+    }
+
     public function testItStoresAndTrimsTheExternalReportTarget(): void
     {
         $written = [];

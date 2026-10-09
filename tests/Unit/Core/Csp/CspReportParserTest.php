@@ -25,7 +25,28 @@ class CspReportParserTest extends TestCase
         ]);
 
         $this->assertSame(
-            [['directive' => 'script-src-elem', 'blockedUri' => 'https://cdn.example.com/app.js', 'documentUri' => 'https://shop.example.com/']],
+            [['directive' => 'script-src-elem', 'blockedUri' => 'https://cdn.example.com/app.js', 'documentUri' => 'https://shop.example.com/', 'sample' => null, 'sourceFile' => null, 'lineNumber' => null]],
+            CspReportParser::parse('application/csp-report', (string) $body)
+        );
+    }
+
+    public function testItParsesTheInlineSampleSourceFileAndLineFromALegacyReport(): void
+    {
+        // For an inline violation the browser adds a short code sample plus the source file and line when
+        // the policy carries 'report-sample'. These make the keyword ('unsafe-inline') source identifiable.
+        $body = json_encode([
+            'csp-report' => [
+                'document-uri' => 'https://shop.example.com/',
+                'effective-directive' => 'script-src',
+                'blocked-uri' => 'inline',
+                'script-sample' => 'window.dashboard_data = {',
+                'source-file' => 'https://shop.example.com/',
+                'line-number' => 1481,
+            ],
+        ]);
+
+        $this->assertSame(
+            [['directive' => 'script-src', 'blockedUri' => 'inline', 'documentUri' => 'https://shop.example.com/', 'sample' => 'window.dashboard_data = {', 'sourceFile' => 'https://shop.example.com/', 'lineNumber' => 1481]],
             CspReportParser::parse('application/csp-report', (string) $body)
         );
     }
@@ -55,7 +76,7 @@ class CspReportParserTest extends TestCase
         ]);
 
         $this->assertSame(
-            [['directive' => 'img-src', 'blockedUri' => 'data', 'documentUri' => null]],
+            [['directive' => 'img-src', 'blockedUri' => 'data', 'documentUri' => null, 'sample' => null, 'sourceFile' => null, 'lineNumber' => null]],
             CspReportParser::parse('application/csp-report; charset=utf-8', (string) $body)
         );
     }
@@ -70,6 +91,9 @@ class CspReportParserTest extends TestCase
                     'documentURL' => 'https://shop.example.com/cart',
                     'effectiveDirective' => 'style-src',
                     'blockedURL' => 'inline',
+                    'sample' => '.price{color:red}',
+                    'sourceFile' => 'https://shop.example.com/cart',
+                    'lineNumber' => 219,
                 ],
             ],
             [
@@ -79,7 +103,7 @@ class CspReportParserTest extends TestCase
         ]);
 
         $this->assertSame(
-            [['directive' => 'style-src', 'blockedUri' => 'inline', 'documentUri' => 'https://shop.example.com/cart']],
+            [['directive' => 'style-src', 'blockedUri' => 'inline', 'documentUri' => 'https://shop.example.com/cart', 'sample' => '.price{color:red}', 'sourceFile' => 'https://shop.example.com/cart', 'lineNumber' => 219]],
             CspReportParser::parse('application/reports+json', (string) $body)
         );
     }
@@ -91,7 +115,7 @@ class CspReportParserTest extends TestCase
         ]);
 
         $this->assertSame(
-            [['directive' => 'script-src', 'blockedUri' => 'eval', 'documentUri' => null]],
+            [['directive' => 'script-src', 'blockedUri' => 'eval', 'documentUri' => null, 'sample' => null, 'sourceFile' => null, 'lineNumber' => null]],
             CspReportParser::parse('application/reports+json', (string) $body)
         );
     }

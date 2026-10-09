@@ -45,6 +45,21 @@ class CspFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * The log holds one row per source per page, so the same source reported on two pages is two rows.
+     *
+     * @When /^I record a CSP violation for shop (\d+) with directive "([^"]*)" and blocked source "([^"]*)" on page "([^"]*)"$/
+     */
+    public function recordViolationOnPage(string $shopId, string $directive, string $source, string $page): void
+    {
+        $this->getCommandBus()->handle(new RecordCspViolationCommand(
+            $directive,
+            $source,
+            $page,
+            (int) $shopId,
+        ));
+    }
+
+    /**
      * @When /^I clear the CSP log for shop (\d+)$/
      */
     public function clearLogForShop(string $shopId): void

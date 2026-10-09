@@ -24,6 +24,9 @@ final class RecordCspViolationCommand
         private readonly ?string $documentUri,
         private readonly int $shopId,
         private readonly CspContext $context = CspContext::FRONT,
+        private readonly ?string $sample = null,
+        private readonly ?string $sourceFile = null,
+        private readonly ?int $lineNumber = null,
     ) {
     }
 
@@ -50,5 +53,20 @@ final class RecordCspViolationCommand
     public function getShopId(): int
     {
         return $this->shopId;
+    }
+
+    public function getSample(): ?string
+    {
+        return $this->sample;
+    }
+
+    public function getSourceFile(): ?string
+    {
+        return $this->sourceFile;
+    }
+
+    public function getLineNumber(): ?int
+    {
+        return $this->lineNumber;
     }
 }
