@@ -797,6 +797,32 @@ class HookCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      */
+    /**
+     * The references of the carriers a cart is actually being delivered by, read from its chosen
+     * delivery option because `id_carrier` only holds one and stays empty when the cart is split.
+     *
+     * @param Cart $cart
+     *
+     * @return int[] unique carrier references
+     */
+    protected static function getCartCarrierReferences(Cart $cart): array
+    {
+        $references = [];
+        foreach ($cart->getDeliveryOption(null, false, false) as $optionKey) {
+            foreach (explode(',', (string) $optionKey) as $carrierId) {
+                if ('' === trim($carrierId)) {
+                    continue;
+                }
+                $carrier = new Carrier((int) $carrierId);
+                if (Validate::isLoadedObject($carrier)) {
+                    $references[(int) $carrier->id_reference] = (int) $carrier->id_reference;
+                }
+            }
+        }
+
+        return array_values($references);
+    }
+
     public static function getHookModuleExecList($hookName = null)
     {
         $allHookRegistrations = self::getAllHookRegistrations(
@@ -1408,7 +1434,22 @@ class HookCore extends ObjectModel
             }
             if (Validate::isLoadedObject($context->cart)) {
                 $carrier = new Carrier($context->cart->id_carrier);
+                // A cart whose products share no carrier keeps id_carrier empty, because that column
+                // only mirrors a delivery option holding a single carrier. The restriction was then
+                // skipped altogether and every payment module was offered, including ones the merchant
+                // withheld from the carriers actually being used. Fall back to the carriers of the
+                // chosen delivery option, and require the module to be allowed by each of them, since
+                // one payment covers the whole cart.
+                $carrierReferences = [];
                 if (Validate::isLoadedObject($carrier)) {
+                    $carrierReferences[] = (int) $carrier->id_reference;
+                } else {
+                    foreach (Hook::getCartCarrierReferences($context->cart) as $carrierReference) {
+                        $carrierReferences[] = $carrierReference;
+                    }
+                }
+
+                foreach ($carrierReferences as $carrierReference) {
                     $sql->where(
                         '(
                             h.`name` IN ("displayPayment", "displayPaymentEU", "paymentOptions")
@@ -1419,14 +1460,14 @@ class HookCore extends ObjectModel
                             'module_carrier` mcar
                                 WHERE mcar.`id_module` = m.`id_module`
                                 AND `id_reference` = ' .
-                            (int) $carrier->id_reference .
+                            $carrierReference .
                             '
                                 AND `id_shop` = ' .
                             (int) $shop->id .
                             '
                                 LIMIT 1
                             ) = ' .
-                            (int) $carrier->id_reference .
+                            $carrierReference .
                             ')'
                     );
                 }
