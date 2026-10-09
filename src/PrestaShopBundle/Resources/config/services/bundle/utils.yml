@@ -11,3 +11,7 @@ services:
   prestashop.utils.html_purifier:
     class: PrestaShopBundle\Utils\HTMLPurifier
     autowire: true
+
+  prestashop.util.database.entity_schema_manager:
+    class: PrestaShopBundle\Utils\Database\EntitySchemaManager
+    autowire: true
