@@ -6,6 +6,7 @@
 import ImageSelector from '@pages/product/combination/form/image-selector';
 import CombinationMap from '@pages/product/combination/form/combination-map';
 import CombinationFormModel from '@pages/product/combination/form/combination-form-model';
+import {EventEmitter} from '@components/event-emitter';
 import FeatureValuesManager from '@pages/product/edit/manager/feature-values-manager';
 import ProductMap from '@pages/product/product-map';
 import ProductSuppliersCollection from '@pages/product/supplier/product-suppliers-collection';
@@ -13,6 +14,11 @@ import ProductSuppliersCollection from '@pages/product/supplier/product-supplier
 const {$} = window;
 
 $(() => {
+  // TinyMCE syncs the hidden textarea without any DOM event, which the modal needs to detect the change
+  EventEmitter.on('tinymceEditorSetup', (event) => {
+    event.editor.on('change', () => event.editor.getElement().dispatchEvent(new Event('change')));
+  });
+
   window.prestashop.component.initComponents([
     'TranslatableField',
     'TinyMCEEditor',

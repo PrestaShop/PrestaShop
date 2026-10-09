@@ -17,6 +17,8 @@ use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Content\Query\GetCombinationContent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Content\QueryResult\CombinationContent;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\Query\GetCombinationFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\QueryResult\CombinationFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
@@ -32,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSup
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\NoSupplierId;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
 use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
@@ -124,6 +127,38 @@ class CombinationFormDataProviderTest extends TestCase
                 ],
             ],
         ], $formData['features']);
+    }
+
+    public function testContentIsAddedWhenFlagIsEnabled(): void
+    {
+        $localizedValues = [1 => 'english', 2 => 'français'];
+        $featureFlagStateChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
+        $featureFlagStateChecker
+            ->method('isEnabled')
+            ->willReturnCallback(static fn (string $flag): bool => FeatureFlagSettings::FEATURE_FLAG_COMBINATION_SEO === $flag)
+        ;
+
+        $provider = new CombinationFormDataProvider(
+            $this->createQueryBusMock([
+                'description' => $localizedValues,
+                'description_short' => [],
+                'link_rewrite' => $localizedValues,
+                'meta_description' => [],
+                'meta_title' => $localizedValues,
+            ]),
+            $this->mockShopContext(),
+            $this->createMock(LanguageContext::class),
+            $this->createMock(FeaturesChoiceProvider::class),
+            $featureFlagStateChecker
+        );
+
+        $this->assertSame([
+            'description' => $localizedValues,
+            'description_short' => [],
+            'link_rewrite' => $localizedValues,
+            'meta_description' => [],
+            'meta_title' => $localizedValues,
+        ], $provider->getData(self::COMBINATION_ID)['content']);
     }
 
     public function getExpectedData(): Generator
@@ -493,7 +528,8 @@ class CombinationFormDataProviderTest extends TestCase
                 $this->isInstanceOf(GetAssociatedSuppliers::class),
                 $this->isInstanceOf(GetCombinationSuppliers::class),
                 $this->isInstanceOf(GetCombinationStockMovements::class),
-                $this->isInstanceOf(GetCombinationFeatureValues::class)
+                $this->isInstanceOf(GetCombinationFeatureValues::class),
+                $this->isInstanceOf(GetCombinationContent::class)
             ))
             ->willReturnCallback(function ($query) use ($combinationData) {
                 return $this->createResultBasedOnQuery($query, $combinationData);
@@ -522,6 +558,14 @@ class CombinationFormDataProviderTest extends TestCase
                 return $this->createStockMovementHistories($combinationData);
             case GetCombinationFeatureValues::class:
                 return $this->createCombinationFeatureValues($combinationData);
+            case GetCombinationContent::class:
+                return new CombinationContent(
+                    $combinationData['description'] ?? [],
+                    $combinationData['description_short'] ?? [],
+                    $combinationData['link_rewrite'] ?? [],
+                    $combinationData['meta_description'] ?? [],
+                    $combinationData['meta_title'] ?? []
+                );
         }
 
         throw new RuntimeException(sprintf('Query "%s" was not expected in query bus mock', $queryClass));
