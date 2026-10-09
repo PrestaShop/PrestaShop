@@ -53,6 +53,7 @@ class LegacyLinkLinterCommand extends Command
         'admin_carts_edit_product_quantity',
         'admin_carts_info',
         'admin_carts_set_delivery_settings',
+        'admin_carts_set_order_message',
         'admin_catalog_price_rules_list_for_product',
         'admin_categories_get_ajax_categories',
         'admin_categories_delete_thumbnail_image',
