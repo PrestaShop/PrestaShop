@@ -10,6 +10,7 @@ use Cart;
 use Context;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use RuntimeException;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
@@ -117,6 +118,39 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     public function totalCartWithoutTaxShouldBe($precisely, $expectedTotal)
     {
         $this->expectsTotal($expectedTotal, false, !empty($precisely));
+    }
+
+    /**
+     * The cart shows the selling price and the price before reduction side by side. They are formatted from
+     * two different values, and only one of them used to be rounded with the shop's rounding mode, so a
+     * price with more decimals than the currency could show a cent of difference between the two.
+     *
+     * @see https://github.com/PrestaShop/PrestaShop/issues/28621
+     *
+     * @Then /^the displayed price and price before reduction of product "(.+)" in my cart should be identical$/
+     */
+    public function displayedPriceAndPriceBeforeReductionShouldMatch($productName)
+    {
+        $presented = (new CartPresenter())->present($this->getCurrentCart());
+
+        foreach ($presented['products'] as $product) {
+            if ($product['name'] !== $productName) {
+                continue;
+            }
+
+            if ($product['price'] !== $product['regular_price']) {
+                throw new RuntimeException(sprintf(
+                    'Product "%s" is displayed at %s but with a price before reduction of %s',
+                    $productName,
+                    $product['price'],
+                    $product['regular_price']
+                ));
+            }
+
+            return;
+        }
+
+        throw new RuntimeException(sprintf('Product "%s" is not in the cart', $productName));
     }
 
     protected function expectsTotal($expectedTotal, $withTax = true, $precisely = false)
