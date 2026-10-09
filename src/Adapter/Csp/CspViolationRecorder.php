@@ -37,7 +37,13 @@ final class CspViolationRecorder
      * Records one reported violation; unknown directives and junk/invalid sources are dropped silently
      * (untrusted browser data).
      *
-     * @return bool whether a new row was inserted, so a batch caller can enforce the cap once
+     * At the per-shop row cap the log stops accepting *new* sources: an already-recorded source keeps
+     * counting (its hit counter is bumped), but a brand-new one is refused until the log is pruned or
+     * cleared. This holds the cap without a COUNT on every insert and, unlike evicting the lowest-hit
+     * rows, means a flood of one-off fake sources can never push out the genuine low-hit violations the
+     * merchant still has to curate.
+     *
+     * @return bool whether a new row was inserted
      */
     public function record(
         CspContext $context,
@@ -48,7 +54,6 @@ final class CspViolationRecorder
         ?string $sample = null,
         ?string $sourceFile = null,
         ?int $lineNumber = null,
-        bool $enforceCap = true,
     ): bool {
         $directiveName = CspReportNormalizer::normalizeDirective($rawDirective);
         if (null === $directiveName) {
@@ -71,23 +76,19 @@ final class CspViolationRecorder
             return false;
         }
 
-        $inserted = $this->repository->upsert(
-            $context,
-            $shopId,
-            $directive->value,
-            $source->getValue(),
-            $this->sanitizeUri($documentUri) ?? '',
-            $this->normalizeSample($sample),
-            $this->sanitizeUri($sourceFile),
-            (null !== $lineNumber && $lineNumber > 0) ? $lineNumber : null,
-        );
+        $documentUri = $this->sanitizeUri($documentUri) ?? '';
+        $sample = $this->normalizeSample($sample);
+        $sourceFile = $this->sanitizeUri($sourceFile);
+        $lineNumber = (null !== $lineNumber && $lineNumber > 0) ? $lineNumber : null;
 
-        // Only a fresh insert can exceed the cap, so a repeat-report flood (bumped counter) skips the COUNT.
-        if ($inserted && $enforceCap) {
-            $this->enforceRowCap($context, $shopId);
+        // At the cap, keep counting a known source but refuse a new one (see the method docblock).
+        if ($this->rowCap > 0 && $this->repository->hasAtLeast($context, $shopId, $this->rowCap)) {
+            $this->repository->bumpIfExists($context, $shopId, $directive->value, $source->getValue(), $documentUri, $sample, $sourceFile, $lineNumber);
+
+            return false;
         }
 
-        return $inserted;
+        return $this->repository->upsert($context, $shopId, $directive->value, $source->getValue(), $documentUri, $sample, $sourceFile, $lineNumber);
     }
 
     public function clear(CspContext $context, int $shopId): void

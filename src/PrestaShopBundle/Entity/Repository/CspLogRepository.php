@@ -72,6 +72,58 @@ class CspLogRepository extends EntityRepository
         return 1 === $affectedRows;
     }
 
+    /**
+     * Bumps hits/date_upd (and refreshes the sample when the report carries one) for a source already in
+     * the log, without inserting anything. Returns true when a row was updated, false when the source is
+     * not yet recorded. Used at the row cap: a known source keeps counting, a brand-new one is refused.
+     */
+    public function bumpIfExists(CspContext $context, int $shopId, string $directive, string $source, string $documentUri, ?string $sample, ?string $sourceFile, ?int $lineNumber): bool
+    {
+        $table = $this->getClassMetadata()->getTableName();
+        $now = (new DateTimeImmutable())->format('Y-m-d H:i:s');
+
+        $sql = 'UPDATE ' . $table . ' SET hits = hits + 1, date_upd = :dateUpd,'
+            . ' sample = COALESCE(:sample, sample),'
+            . ' source_file = COALESCE(:sourceFile, source_file),'
+            . ' line_number = COALESCE(:lineNumber, line_number)'
+            . ' WHERE id_shop = :shopId AND context = :context AND directive = :directive AND source = :source AND document_uri = :documentUri';
+
+        return $this->getEntityManager()->getConnection()->executeStatement($sql, [
+            'dateUpd' => $now,
+            'sample' => $sample,
+            'sourceFile' => $sourceFile,
+            'lineNumber' => $lineNumber,
+            'shopId' => $shopId,
+            'context' => $context->value,
+            'directive' => $directive,
+            'source' => $source,
+            'documentUri' => $documentUri,
+        ]) > 0;
+    }
+
+    /**
+     * Whether the scope already holds at least $cap rows, using a bounded LIMIT/OFFSET probe (it stops at
+     * the cap) rather than a full COUNT. Non-positive $cap means "no cap", so it always returns false.
+     */
+    public function hasAtLeast(CspContext $context, int $shopId, int $cap): bool
+    {
+        if ($cap <= 0) {
+            return false;
+        }
+
+        return false !== $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('1')
+            ->from($this->getClassMetadata()->getTableName())
+            ->where('id_shop = :shopId')
+            ->andWhere('context = :context')
+            ->setFirstResult($cap - 1)
+            ->setMaxResults(1)
+            ->setParameter('shopId', $shopId)
+            ->setParameter('context', $context->value)
+            ->executeQuery()
+            ->fetchOne();
+    }
+
     public function countByShop(CspContext $context, int $shopId): int
     {
         return (int) $this->getEntityManager()->getConnection()->createQueryBuilder()

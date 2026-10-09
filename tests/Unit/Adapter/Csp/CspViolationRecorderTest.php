@@ -16,7 +16,8 @@ use PrestaShopBundle\Entity\Repository\CspLogRepository;
 
 /**
  * The single collect/clear integration point, against a mocked repository: what gets normalized and
- * written, what untrusted browser input is dropped silently, and the per-shop row cap.
+ * written, what untrusted browser input is dropped silently, and the per-shop row cap (new sources are
+ * refused once it is full, known sources keep counting).
  */
 class CspViolationRecorderTest extends TestCase
 {
@@ -38,8 +39,7 @@ class CspViolationRecorderTest extends TestCase
                 null
             )
             ->willReturn(true);
-        $repository->method('countByShop')->willReturn(0);
-        $repository->expects($this->never())->method('deleteLeastReportedByShop');
+        $repository->expects($this->never())->method('bumpIfExists');
 
         $this->recorder($repository)->record(
             CspContext::FRONT,
@@ -56,7 +56,6 @@ class CspViolationRecorderTest extends TestCase
         $captured = null;
 
         $repository = $this->repository();
-        $repository->method('countByShop')->willReturn(0);
         $repository->expects($this->once())
             ->method('upsert')
             ->willReturnCallback(function (CspContext $context, int $shopId, string $directive, string $source, ?string $documentUri) use (&$captured): bool {
@@ -76,7 +75,6 @@ class CspViolationRecorderTest extends TestCase
         $captured = null;
 
         $repository = $this->repository();
-        $repository->method('countByShop')->willReturn(0);
         $repository->expects($this->once())
             ->method('upsert')
             ->willReturnCallback(function (CspContext $context, int $shopId, string $directive, string $source, ?string $documentUri) use (&$captured): bool {
@@ -103,7 +101,6 @@ class CspViolationRecorderTest extends TestCase
         $captured = [];
 
         $repository = $this->repository();
-        $repository->method('countByShop')->willReturn(0);
         $repository->expects($this->once())
             ->method('upsert')
             ->willReturnCallback(function (CspContext $context, int $shopId, string $directive, string $source, string $documentUri, ?string $sample, ?string $sourceFile, ?int $lineNumber) use (&$captured): bool {
@@ -136,7 +133,6 @@ class CspViolationRecorderTest extends TestCase
         $captured = ['set' => false];
 
         $repository = $this->repository();
-        $repository->method('countByShop')->willReturn(0);
         $repository->expects($this->once())
             ->method('upsert')
             ->willReturnCallback(function (CspContext $context, int $shopId, string $directive, string $source, string $documentUri, ?string $sample, ?string $sourceFile, ?int $lineNumber) use (&$captured): bool {
@@ -155,7 +151,7 @@ class CspViolationRecorderTest extends TestCase
     {
         $repository = $this->repository();
         $repository->expects($this->never())->method('upsert');
-        $repository->expects($this->never())->method('countByShop');
+        $repository->expects($this->never())->method('hasAtLeast');
 
         $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'bogus-directive', 'https://cdn.example.com/app.js', null);
     }
@@ -168,56 +164,55 @@ class CspViolationRecorderTest extends TestCase
         $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'chrome-extension://abcdef/inject.js', null);
     }
 
-    public function testItPrunesTheOverflowWhenTheShopIsOverTheRowCap(): void
+    public function testItInsertsNormallyBelowTheRowCap(): void
     {
         $repository = $this->repository();
-        $repository->method('upsert')->willReturn(true);
-        $repository->method('countByShop')->willReturn(CspViolationRecorder::DEFAULT_ROW_CAP + 5);
-        $repository->expects($this->once())
-            ->method('deleteLeastReportedByShop')
-            ->with(CspContext::FRONT, self::SHOP_ID, 5);
+        $repository->method('hasAtLeast')->with(CspContext::FRONT, self::SHOP_ID, CspViolationRecorder::DEFAULT_ROW_CAP)->willReturn(false);
+        $repository->expects($this->once())->method('upsert')->willReturn(true);
+        $repository->expects($this->never())->method('bumpIfExists');
 
-        $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', null);
+        $this->assertTrue($this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', null));
     }
 
-    public function testItDoesNotPruneWhenTheShopIsAtOrUnderTheRowCap(): void
+    public function testItRefusesANewSourceOnceTheShopIsAtTheRowCap(): void
     {
         $repository = $this->repository();
-        $repository->method('upsert')->willReturn(true);
-        $repository->method('countByShop')->willReturn(CspViolationRecorder::DEFAULT_ROW_CAP);
-        $repository->expects($this->never())->method('deleteLeastReportedByShop');
+        $repository->method('hasAtLeast')->with(CspContext::FRONT, self::SHOP_ID, CspViolationRecorder::DEFAULT_ROW_CAP)->willReturn(true);
+        // A brand-new source is never inserted; it is only offered to bumpIfExists, which finds no row.
+        $repository->expects($this->never())->method('upsert');
+        $repository->expects($this->once())->method('bumpIfExists')->willReturn(false);
 
-        $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', null);
+        $inserted = $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://new.example.com/app.js', null);
+
+        $this->assertFalse($inserted, 'A new source must not be recorded once the log is full');
     }
 
-    public function testItSkipsTheRowCapCheckWhenTheReportOnlyBumpsAnExistingRow(): void
+    public function testItKeepsCountingAKnownSourceAtTheRowCap(): void
     {
         $repository = $this->repository();
-        $repository->method('upsert')->willReturn(false);
-        $repository->expects($this->never())->method('countByShop');
-        $repository->expects($this->never())->method('deleteLeastReportedByShop');
+        $repository->method('hasAtLeast')->willReturn(true);
+        $repository->expects($this->never())->method('upsert');
+        // The source already exists, so its counter is bumped even though the log is full.
+        $repository->expects($this->once())->method('bumpIfExists')->willReturn(true);
 
-        $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', null);
+        $inserted = $this->recorder($repository)->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://known.example.com/app.js', null);
+
+        $this->assertFalse($inserted, 'Bumping an existing row is not a new insert');
     }
 
-    public function testABatchCallerCanDeferTheRowCapAndRunItOnceForTheRequest(): void
+    public function testANonPositiveCapMeansNoCap(): void
     {
         $repository = $this->repository();
-        $repository->method('upsert')->willReturn(true);
-        // With $enforceCap = false the per-report path never touches the cap...
-        $repository->expects($this->never())->method('countByShop');
-        $repository->expects($this->never())->method('deleteLeastReportedByShop');
+        $repository->expects($this->never())->method('hasAtLeast');
+        $repository->expects($this->once())->method('upsert')->willReturn(true);
 
-        $recorder = $this->recorder($repository);
-        $recorder->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://a.example.com/x.js', null, null, null, null, false);
-        $recorder->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://b.example.com/x.js', null, null, null, null, false);
+        (new CspViolationRecorder($repository, 0))->record(CspContext::FRONT, self::SHOP_ID, 'script-src', 'https://cdn.example.com/app.js', null);
     }
 
-    public function testEnforceRowCapCanBeCalledOnceForAWholeBatch(): void
+    public function testEnforceRowCapTrimsTheOverflowForThePruneCommand(): void
     {
         $repository = $this->repository();
         $repository->method('countByShop')->willReturn(CspViolationRecorder::DEFAULT_ROW_CAP + 3);
-        // ...and the collector enforces it exactly once for the request.
         $repository->expects($this->once())->method('deleteLeastReportedByShop')->with(CspContext::FRONT, self::SHOP_ID, 3);
 
         $this->recorder($repository)->enforceRowCap(CspContext::FRONT, self::SHOP_ID);
