@@ -47,6 +47,7 @@ final class CspPolicyProvider
         private readonly CspRuleRepository $ruleRepository,
         private readonly CspPolicyHookDispatcherInterface $hookDispatcher,
         private readonly LoggerInterface $logger,
+        private readonly CspPolicyCacheInterface $policyCache,
     ) {
     }
 
@@ -56,23 +57,57 @@ final class CspPolicyProvider
      */
     public function getPolicy(CspContext $context, int $shopId, array $themeContributions = []): CspPolicy
     {
-        $policy = new CspPolicy();
-
-        $this->addBasePolicy($policy);
-
-        // The back office pulls a handful of PrestaShop-owned resources; pre-allow them so admin CSP is
-        // usable without curating core's own first-party domains. The storefront keeps the tight base.
-        if (CspContext::ADMIN === $context) {
-            $this->addAdminFirstPartySources($policy);
+        // The storefront is served on every page, so its shop-stable part (base + curated rules + the
+        // module hook) is cached; the theme's contributions are merged on top each time (cheap, and so a
+        // theme change needs no cache invalidation).
+        if (CspContext::FRONT === $context) {
+            return $this->getStorefrontPolicy($shopId, $themeContributions);
         }
 
+        // The back office is one low-traffic page, built fresh. It is a core-owned surface: the base plus
+        // the pre-allowed first-party resources plus its own curated rules — no theme, no storefront hook.
+        $policy = new CspPolicy();
+        $this->addBasePolicy($policy);
+        $this->addAdminFirstPartySources($policy);
         $this->addCuratedRules($policy, $context, $shopId);
 
-        // Theme contributions and the storefront policy hook only apply to the front office; the back
-        // office is a core-owned surface whose policy is the base plus its own curated rules.
-        if (CspContext::FRONT === $context) {
-            $this->addThemeContributions($policy, $themeContributions);
+        return $policy;
+    }
+
+    /**
+     * @param array<string, list<string>> $themeContributions
+     */
+    private function getStorefrontPolicy(int $shopId, array $themeContributions): CspPolicy
+    {
+        $cached = $this->policyCache->get($shopId);
+        if (null !== $cached) {
+            $policy = $this->policyFromDirectives($cached);
+        } else {
+            $policy = new CspPolicy();
+            $this->addBasePolicy($policy);
+            $this->addCuratedRules($policy, CspContext::FRONT, $shopId);
             $this->hookDispatcher->dispatch($policy);
+            $this->policyCache->store($shopId, $policy->getDirectives());
+        }
+
+        $this->addThemeContributions($policy, $themeContributions);
+
+        return $policy;
+    }
+
+    /**
+     * Rebuilds a policy from cached directives. The sources are already validated and coarsened, so
+     * replaying them through addSource() is idempotent.
+     *
+     * @param array<string, list<string>> $directives
+     */
+    private function policyFromDirectives(array $directives): CspPolicy
+    {
+        $policy = new CspPolicy();
+        foreach ($directives as $directive => $sources) {
+            foreach ($sources as $source) {
+                $policy->addSource($directive, $source);
+            }
         }
 
         return $policy;

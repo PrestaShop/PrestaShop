@@ -11,6 +11,7 @@ namespace Tests\Unit\Adapter\Csp;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
 use PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder;
+use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface;
 use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider;
 use PrestaShop\PrestaShop\Core\Csp\CspPolicyHookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
@@ -126,7 +127,8 @@ class CspHeaderBuilderTest extends TestCase
             new CspPolicyProvider(
                 $ruleRepository,
                 $this->createMock(CspPolicyHookDispatcherInterface::class),
-                $this->createMock(LoggerInterface::class)
+                $this->createMock(LoggerInterface::class),
+                $this->createMock(CspPolicyCacheInterface::class)
             )
         );
     }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Csp\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\RevokeCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\CommandHandler\RevokeCspSourceHandlerInterface;
@@ -25,6 +26,7 @@ final class RevokeCspSourceHandler implements RevokeCspSourceHandlerInterface
     public function __construct(
         private readonly CspRuleRepository $repository,
         private readonly ShopListResolverInterface $shopListResolver,
+        private readonly CspPolicyCacheInterface $policyCache,
     ) {
     }
 
@@ -42,5 +44,10 @@ final class RevokeCspSourceHandler implements RevokeCspSourceHandlerInterface
         }
 
         $this->repository->delete($rule);
+
+        // A storefront rule changes the cached policy for that shop; the back office is not cached.
+        if (CspContext::FRONT->value === $rule->getContext()) {
+            $this->policyCache->invalidate($rule->getShopId());
+        }
     }
 }

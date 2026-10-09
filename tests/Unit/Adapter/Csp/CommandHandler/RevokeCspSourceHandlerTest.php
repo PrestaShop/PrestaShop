@@ -10,6 +10,7 @@ namespace Tests\Unit\Adapter\Csp\CommandHandler;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\RevokeCspSourceHandler;
+use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\RevokeCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CspRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -35,9 +36,30 @@ class RevokeCspSourceHandlerTest extends TestCase
         $shopListResolver = $this->createMock(ShopListResolverInterface::class);
         $shopListResolver->method('resolveShopIds')->willReturn([1]);
 
+        $cache = $this->createMock(CspPolicyCacheInterface::class);
+        $cache->expects($this->never())->method('invalidate');
+
         $this->expectException(CspRuleNotFoundException::class);
 
-        (new RevokeCspSourceHandler($repository, $shopListResolver))
+        (new RevokeCspSourceHandler($repository, $shopListResolver, $cache))
+            ->handle(new RevokeCspSourceCommand(7, ShopConstraint::shop(1)));
+    }
+
+    public function testItInvalidatesTheStorefrontPolicyCacheWhenRevokingAFrontRule(): void
+    {
+        $rule = (new CspRule())->setShopId(1)->setContext('front')->setDirective('script-src')->setSource('https://cdn.example.com');
+
+        $repository = $this->createMock(CspRuleRepository::class);
+        $repository->method('getById')->willReturn($rule);
+        $repository->expects($this->once())->method('delete');
+
+        $shopListResolver = $this->createMock(ShopListResolverInterface::class);
+        $shopListResolver->method('resolveShopIds')->willReturn([1]);
+
+        $cache = $this->createMock(CspPolicyCacheInterface::class);
+        $cache->expects($this->once())->method('invalidate')->with(1);
+
+        (new RevokeCspSourceHandler($repository, $shopListResolver, $cache))
             ->handle(new RevokeCspSourceCommand(7, ShopConstraint::shop(1)));
     }
 }

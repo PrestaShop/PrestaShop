@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Csp\CommandHandler;
 
 use DateTimeImmutable;
+use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface;
 use PrestaShop\PrestaShop\Adapter\Csp\CspRuleValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AddCspRuleCommand;
@@ -28,6 +29,7 @@ final class AddCspRuleHandler implements AddCspRuleHandlerInterface
     public function __construct(
         private readonly CspRuleRepository $repository,
         private readonly CspRuleValidator $validator,
+        private readonly CspPolicyCacheInterface $policyCache,
     ) {
     }
 
@@ -61,6 +63,13 @@ final class AddCspRuleHandler implements AddCspRuleHandlerInterface
             ->setSource($source)
             ->setDateAdd(new DateTimeImmutable());
 
-        return new CspRuleId($this->repository->add($rule));
+        $ruleId = new CspRuleId($this->repository->add($rule));
+
+        // A storefront rule changes the cached policy for that shop; the back office is not cached.
+        if (CspContext::FRONT === $context) {
+            $this->policyCache->invalidate($shopId);
+        }
+
+        return $ruleId;
     }
 }

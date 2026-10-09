@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Csp\CommandHandler;
 
 use DateTimeImmutable;
+use PrestaShop\PrestaShop\Adapter\Csp\CspPolicyCacheInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AllowCspSourceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Csp\CommandHandler\AllowCspSourceHandlerInterface;
@@ -33,6 +34,7 @@ final class AllowCspSourceHandler implements AllowCspSourceHandlerInterface
         private readonly CspLogRepository $cspLogRepository,
         private readonly CspRuleRepository $cspRuleRepository,
         private readonly ShopListResolverInterface $shopListResolver,
+        private readonly CspPolicyCacheInterface $policyCache,
     ) {
     }
 
@@ -67,7 +69,14 @@ final class AllowCspSourceHandler implements AllowCspSourceHandlerInterface
             ->setDateAdd(new DateTimeImmutable());
 
         try {
-            return new CspRuleId($this->cspRuleRepository->add($rule));
+            $ruleId = new CspRuleId($this->cspRuleRepository->add($rule));
+
+            // A storefront rule changes the cached policy for that shop; the back office is not cached.
+            if (CspContext::FRONT === $context) {
+                $this->policyCache->invalidate($log->getShopId());
+            }
+
+            return $ruleId;
         } catch (CannotAddCspRuleException $e) {
             // Two concurrent clicks race on the unique key; the loser returns the rule the winner inserted.
             $winner = $this->cspRuleRepository->findOneByShopDirectiveSource($context, $log->getShopId(), $log->getDirective(), $log->getSource());
