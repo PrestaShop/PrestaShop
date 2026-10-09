@@ -43,11 +43,16 @@ class CspLogRepository extends EntityRepository
         $now = (new DateTimeImmutable())->format('Y-m-d H:i:s');
 
         // sample/source_file/line_number are informational (not in the unique key); refresh them to the
-        // latest report so the grid shows a current example of what triggered the source on this page.
+        // latest report that carries one, but keep the last known value when a later report arrives
+        // without it (COALESCE) so an example captured once is not wiped by a plain re-report. VALUES()
+        // is the established core upsert idiom; the row-alias form is MySQL 8.0.19+ only and breaks the
+        // MariaDB / older MySQL that PrestaShop still supports.
         $sql = 'INSERT INTO ' . $table . ' (id_shop, context, directive, source, document_uri, sample, source_file, line_number, hits, date_add, date_upd)'
             . ' VALUES (:shopId, :context, :directive, :source, :documentUri, :sample, :sourceFile, :lineNumber, 1, :dateAdd, :dateUpd)'
             . ' ON DUPLICATE KEY UPDATE hits = hits + 1, date_upd = :dateUpdOnDuplicate,'
-            . ' sample = VALUES(sample), source_file = VALUES(source_file), line_number = VALUES(line_number)';
+            . ' sample = COALESCE(VALUES(sample), sample),'
+            . ' source_file = COALESCE(VALUES(source_file), source_file),'
+            . ' line_number = COALESCE(VALUES(line_number), line_number)';
 
         $affectedRows = $this->getEntityManager()->getConnection()->executeStatement($sql, [
             'shopId' => $shopId,
