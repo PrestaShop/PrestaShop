@@ -27,15 +27,21 @@ class CartDeliveryOption
     private $carrierDelay;
 
     /**
+     * @var string
+     */
+    private $extraContent;
+
+    /**
      * @param int $carrierId
      * @param string $carrierName
      * @param string $carrierDelay
      */
-    public function __construct(int $carrierId, string $carrierName, string $carrierDelay)
+    public function __construct(int $carrierId, string $carrierName, string $carrierDelay, string $extraContent = '')
     {
         $this->carrierId = $carrierId;
         $this->carrierName = $carrierName;
         $this->carrierDelay = $carrierDelay;
+        $this->extraContent = $extraContent;
     }
 
     /**
@@ -60,5 +66,14 @@ class CartDeliveryOption
     public function getCarrierDelay(): string
     {
         return $this->carrierDelay;
+    }
+
+    /**
+     * Markup a carrier's own module contributed for this delivery option, empty when the
+     * carrier belongs to no module or that module is not allowed to emit back office HTML.
+     */
+    public function getExtraContent(): string
+    {
+        return $this->extraContent;
     }
 }
