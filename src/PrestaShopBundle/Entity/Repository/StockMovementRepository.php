@@ -117,6 +117,7 @@ class StockMovementRepository extends StockManagementRepository
               pa.isbn                                     AS combination_isbn,
               pa.upc                                      AS combination_upc,
               pa.mpn                                      AS combination_mpn,
+              COALESCE(sa.location, "")                   AS product_location,
               p.id_supplier                               AS supplier_id,
               COALESCE(s.name, "N/A")                     AS supplier_name,
               COALESCE(ic.id_image, 0)                    AS product_cover_id,
