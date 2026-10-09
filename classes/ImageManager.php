@@ -551,6 +551,54 @@ class ImageManagerCore
     }
 
     /**
+     * Validate image dimensions for product customization uploads.
+     *
+     * @param array $file Upload $_FILE value
+     * @param int $maxWidth Maximum allowed width in pixels
+     * @param int $maxHeight Maximum allowed height in pixels
+     *
+     * @return bool|string Return false if no error encountered, error message otherwise
+     */
+    public static function validateImageDimensions($file, $maxWidth, $maxHeight)
+    {
+        if (!isset($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
+            return Context::getContext()->getTranslator()->trans('Invalid file upload.', [], 'Shop.Notifications.Error');
+        }
+
+        $imageInfo = @getimagesize($file['tmp_name']);
+        if ($imageInfo === false) {
+            return Context::getContext()->getTranslator()->trans('Unable to read image dimensions.', [], 'Shop.Notifications.Error');
+        }
+
+        $width = $imageInfo[0];
+        $height = $imageInfo[1];
+
+        $errors = [];
+        
+        if ($width > $maxWidth) {
+            $errors[] = Context::getContext()->getTranslator()->trans(
+                'The image is too wide (%1$d pixels). Maximum allowed: %2$d pixels',
+                [$width, $maxWidth],
+                'Shop.Notifications.Error'
+            );
+        }
+
+        if ($height > $maxHeight) {
+            $errors[] = Context::getContext()->getTranslator()->trans(
+                'The image is too high (%1$d pixels). Maximum allowed: %2$d pixels',
+                [$height, $maxHeight],
+                'Shop.Notifications.Error'
+            );
+        }
+
+        if (!empty($errors)) {
+            return implode(' ', $errors);
+        }
+
+        return false;
+    }
+
+    /**
      * Cut image.
      *
      * @param string $srcFile Origin filename
