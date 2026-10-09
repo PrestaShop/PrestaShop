@@ -28,7 +28,7 @@ function toggleStockLocationColumn($container: JQuery): void {
   let showColumn = false;
   $(
     '.js-cell-product-stock-location',
-    // eslint-disable-next-line
+    // eslint-disable-next-line consistent-return
     $container.find('tr:not(.d-none)')).filter('td').each((index, element) => {
     if ($(element).html().trim() !== '') {
       showColumn = true;

@@ -459,14 +459,14 @@ module.exports = {
       index: 'preload.tpl',
       extensions: ['woff2'],
       filter: /preload/,
-      // eslint-disable-next-line
+      // eslint-disable-next-line max-len
       replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{$admin_dir}')),
     }),
     new FontPreloadPlugin({
       index: 'preload.html.twig',
       extensions: ['woff2'],
       filter: /preload/,
-      // eslint-disable-next-line
+      // eslint-disable-next-line max-len
       replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="([^"]+)"/g, 'href="{{ asset(\'themes/new-theme/public/$1\') }}"')),
     }),
     new CssoWebpackPlugin({

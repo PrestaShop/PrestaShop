@@ -90,7 +90,6 @@ Tree.prototype = {
       if ($('select#id_category_default').length) {
         this.$element.find(':input[type=checkbox]').off('click');
         this.$element.find(':input[type=checkbox]').on('click', function () {
-          // eslint-disable-next-line
           if ($(this).prop('checked')) addDefaultCategory($(this));
           else {
             $(`select#id_category_default option[value=${$(this).val()}]`).remove();
@@ -104,7 +103,6 @@ Tree.prototype = {
       if (typeof (treeClickFunc) !== 'undefined') {
         this.$element.find(':input[type=radio]').off('click');
 
-        // eslint-disable-next-line
         this.$element.find(':input[type=radio]').on('click', treeClickFunc);
       }
     }

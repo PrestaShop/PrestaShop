@@ -21,7 +21,6 @@ window.relatedProduct = (function () {
       });
       resetButton.on('click', (e) => {
         e.preventDefault();
-        // eslint-disable-next-line
         modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function onContinue() {
             const items = productItems.find('li').toArray();
@@ -41,7 +40,6 @@ window.relatedProduct = (function () {
   };
 }());
 
-// eslint-disable-next-line
 BOEvent.on('Product Related Management started', () => {
   relatedProduct.init();
 }, 'Back office');
