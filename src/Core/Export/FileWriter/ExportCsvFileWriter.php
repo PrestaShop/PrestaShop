@@ -46,12 +46,37 @@ final class ExportCsvFileWriter implements FileWriterInterface
             );
         }
 
-        $exportFile->fputcsv($data->getTitles(), $separator, '"', '');
+        $exportFile->fputcsv($this->sanitizeRow($data->getTitles()), $separator, '"', '');
 
         foreach ($data->getRows() as $row) {
-            $exportFile->fputcsv($row, $separator, '"', '');
+            $exportFile->fputcsv($this->sanitizeRow($row), $separator, '"', '');
         }
 
         return $exportFile;
+    }
+
+    /**
+     * Neutralizes spreadsheet formula injection in a row of data, following the
+     * same policy as CsvResponse: a value starting with =, +, -, @, a tab or a
+     * carriage return is prefixed with a single quote so spreadsheet
+     * applications read it as text instead of executing it.
+     *
+     * @param array $row
+     *
+     * @return array
+     */
+    private function sanitizeRow(array $row): array
+    {
+        return array_map(function ($value) {
+            if (null === $value) {
+                return '';
+            }
+            $value = (string) $value;
+            if (isset($value[0]) && in_array($value[0], ['=', '+', '-', '@', "\t", "\r"], true)) {
+                $value = "'" . $value;
+            }
+
+            return $value;
+        }, $row);
     }
 }
