@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Container;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
+use Doctrine\ORM\Proxy\ProxyFactory;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
 use PrestaShopBundle\DependencyInjection\Config\ConfigYamlLoader;
@@ -41,6 +42,14 @@ class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
         $container->setParameter(
             'doctrine.orm.proxy_dir',
             $this->environment->getCacheDir()
+        );
+
+        /*
+         * Generate proxy classes
+         */
+        $container->setParameter(
+            'doctrine.orm.auto_generate_proxy_classes',
+            $container->getParameter('kernel.debug') ? ProxyFactory::AUTOGENERATE_ALWAYS : ProxyFactory::AUTOGENERATE_FILE_NOT_EXISTS
         );
 
         $configDirectories = [$container->getParameter('kernel.project_dir') . '/app/config'];
