@@ -121,13 +121,10 @@ class ProductAssemblerCore
                     pl.*,
                     sa.out_of_stock,
                     IFNULL(sa.quantity, 0) as quantity,
-                    (DATEDIFF(
-                        p.`date_add`,
-                        DATE_SUB(
-                            '$now',
-                            INTERVAL $nbDaysNewProduct DAY
-                        )
-                    ) > 0) as new
+                    (p.`date_add` >= DATE_SUB(
+                        '$now',
+                        INTERVAL " . ($nbDaysNewProduct - 1) . " DAY
+                    )) as new
                 FROM {$prefix}product p
                 LEFT JOIN {$prefix}product_lang pl
                     ON pl.id_product = p.id_product
