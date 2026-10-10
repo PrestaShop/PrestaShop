@@ -390,6 +390,13 @@ class ImageRetriever
     {
         $urls = [];
 
+        // Resolve the formats generated for image thumbnails.
+        $configuredImageFormats = ServiceLocator::get(ImageFormatConfiguration::class)->getGenerationFormats();
+        $firstImageFormat = reset($configuredImageFormats);
+        if (!is_string($firstImageFormat)) {
+            throw new PrestaShopException('No valid image format is configured.');
+        }
+
         // Share source information across fallback images only for this retrieval
         $sourceImageSizes = [];
 
@@ -430,28 +437,64 @@ class ImageRetriever
 
             // Get all image sizes for product objects
             foreach ($imageTypes as $imageType) {
-                // Check or generate the thumbnail and get its path and dimensions
+                // Check or generate the first configured thumbnail and get its path and dimensions
                 $thumbnail = $this->checkOrGenerateImageType(
                     $originalImagePath,
                     rtrim($object['dir'], DIRECTORY_SEPARATOR),
                     $language->getIsoCode() . '-default',
                     $imageType,
-                    'jpg',
+                    $firstImageFormat,
                     $sourceImageSizes
                 );
 
-                // Build image URL for that thumbnail
-                $imageUrl = $this->link->getImageLink(
-                    '',
-                    $language->iso_code . '-default',
-                    $imageType['name']
-                );
+                $sources = [
+                    $firstImageFormat => $this->link->getImageLink(
+                        '',
+                        $language->iso_code . '-default',
+                        $imageType['name'],
+                        $firstImageFormat
+                    ),
+                ];
+
+                foreach ($configuredImageFormats as $imageFormat) {
+                    if ($imageFormat === $firstImageFormat) {
+                        continue;
+                    }
+
+                    // Check or generate the thumbnail and get its path and dimensions
+                    $this->checkOrGenerateImageType(
+                        $originalImagePath,
+                        rtrim($object['dir'], DIRECTORY_SEPARATOR),
+                        $language->getIsoCode() . '-default',
+                        $imageType,
+                        $imageFormat,
+                        $sourceImageSizes
+                    );
+
+                    // Build image URL for that thumbnail
+                    $sources[$imageFormat] = $this->link->getImageLink(
+                        '',
+                        $language->iso_code . '-default',
+                        $imageType['name'],
+                        $imageFormat
+                    );
+                }
+
+                // Let's resolve the base image URL we will use
+                if (isset($sources['jpg'])) {
+                    $imageUrl = $sources['jpg'];
+                } elseif (isset($sources['png'])) {
+                    $imageUrl = $sources['png'];
+                } else {
+                    $imageUrl = reset($sources);
+                }
 
                 // And add it to the list
                 $urls[$imageType['name']] = [
                     'url' => $imageUrl,
                     'width' => $thumbnail['width'],
                     'height' => $thumbnail['height'],
+                    'sources' => $sources,
                 ];
             }
         }
