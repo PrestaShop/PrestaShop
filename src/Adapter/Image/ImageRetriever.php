@@ -392,6 +392,10 @@ class ImageRetriever
 
         // Resolve the formats generated for image thumbnails.
         $configuredImageFormats = ServiceLocator::get(ImageFormatConfiguration::class)->getGenerationFormats();
+        $firstImageFormat = reset($configuredImageFormats);
+        if (!is_string($firstImageFormat)) {
+            throw new PrestaShopException('No valid image format is configured.');
+        }
 
         // Share source information across fallback images only for this retrieval
         $sourceImageSizes = [];
@@ -433,26 +437,27 @@ class ImageRetriever
 
             // Get all image sizes for product objects
             foreach ($imageTypes as $imageType) {
-                // Check or generate the JPG thumbnail and get its path and dimensions
+                // Check or generate the first configured thumbnail and get its path and dimensions
                 $thumbnail = $this->checkOrGenerateImageType(
                     $originalImagePath,
                     rtrim($object['dir'], DIRECTORY_SEPARATOR),
                     $language->getIsoCode() . '-default',
                     $imageType,
-                    'jpg',
+                    $firstImageFormat,
                     $sourceImageSizes
                 );
 
                 $sources = [
-                    'jpg' => $this->link->getImageLink(
+                    $firstImageFormat => $this->link->getImageLink(
                         '',
                         $language->iso_code . '-default',
-                        $imageType['name']
+                        $imageType['name'],
+                        $firstImageFormat
                     ),
                 ];
 
                 foreach ($configuredImageFormats as $imageFormat) {
-                    if ($imageFormat === 'jpg') {
+                    if ($imageFormat === $firstImageFormat) {
                         continue;
                     }
 
@@ -475,8 +480,14 @@ class ImageRetriever
                     );
                 }
 
-                // Use JPG as the base image, keeping the existing fallback behavior.
-                $imageUrl = $sources['jpg'];
+                // Let's resolve the base image URL we will use
+                if (isset($sources['jpg'])) {
+                    $imageUrl = $sources['jpg'];
+                } elseif (isset($sources['png'])) {
+                    $imageUrl = $sources['png'];
+                } else {
+                    $imageUrl = reset($sources);
+                }
 
                 // And add it to the list
                 $urls[$imageType['name']] = [
