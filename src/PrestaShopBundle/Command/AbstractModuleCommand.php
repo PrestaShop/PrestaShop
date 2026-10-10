@@ -8,15 +8,16 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Command;
 
-use Employee;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractModuleCommand extends Command
@@ -29,6 +30,8 @@ abstract class AbstractModuleCommand extends Command
         protected readonly ContextBuilderPreparer $contextBuilderPreparer,
         protected readonly Configuration $configuration,
         protected readonly ShopContext $shopContext,
+        #[Autowire(service: 'prestashop.adapter.legacy_context_loader')]
+        protected readonly LegacyContextLoader $legacyContextLoader,
     ) {
         parent::__construct();
     }
@@ -66,14 +69,12 @@ abstract class AbstractModuleCommand extends Command
                 return false;
             }
         } else {
-            $this->shopContext->setAllContext(null);
+            $this->shopContext->setAllContext(0);
         }
 
-        // We need to have an employee or the module hooks don't work
-        // see LegacyHookSubscriber
+        // LegacyHookSubscriber only checks that an employee object is present.
         if (!$this->context->getContext()->employee) {
-            // Even a non existing employee is fine
-            $this->context->getContext()->employee = new Employee(42);
+            $this->legacyContextLoader->loadEmployeeContext();
         }
 
         // We must initialize the language context because ModuleRepository depends on it for its cache key

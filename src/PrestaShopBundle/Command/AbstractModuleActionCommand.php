@@ -10,6 +10,7 @@ namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
@@ -19,6 +20,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
@@ -30,9 +32,11 @@ abstract class AbstractModuleActionCommand extends AbstractModuleCommand
         ContextBuilderPreparer $contextBuilderPreparer,
         Configuration $configuration,
         ShopContext $shopContext,
+        #[Autowire(service: 'prestashop.adapter.legacy_context_loader')]
+        LegacyContextLoader $legacyContextLoader,
         protected readonly ModuleManager $moduleManager,
     ) {
-        parent::__construct($translator, $context, $contextBuilderPreparer, $configuration, $shopContext);
+        parent::__construct($translator, $context, $contextBuilderPreparer, $configuration, $shopContext, $legacyContextLoader);
     }
 
     abstract protected function getAction(): string;

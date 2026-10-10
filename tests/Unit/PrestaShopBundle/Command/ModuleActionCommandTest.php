@@ -13,6 +13,7 @@ use Employee;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
@@ -36,24 +37,48 @@ class ModuleActionCommandTest extends TestCase
 {
     public function testDefaultContextIsAllShops(): void
     {
-        [$translator, $context, $preparer, $configuration, $shopContext] = $this->dependencies();
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
         $shopContext->expects($this->once())->method('setAllContext')->with(null);
         $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
         $manager->method('install')->willReturn(true);
 
-        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $manager));
+        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager));
         $this->assertSame(Command::SUCCESS, $tester->execute(['modules' => ['first']]));
+    }
+
+    public function testAnonymousEmployeeContextIsLoadedWhenMissing(): void
+    {
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies(false);
+        $legacyContextLoader->expects($this->once())->method('loadEmployeeContext')->with();
+        $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
+        $manager->method('install')->willReturn(true);
+
+        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager));
+        $this->assertSame(Command::SUCCESS, $tester->execute(['modules' => ['first']]));
+    }
+
+    public function testExistingEmployeeContextIsPreserved(): void
+    {
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
+        $employee = $context->getContext()->employee;
+        $legacyContextLoader->expects($this->never())->method('loadEmployeeContext');
+        $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
+        $manager->method('install')->willReturn(true);
+
+        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager));
+        $this->assertSame(Command::SUCCESS, $tester->execute(['modules' => ['first']]));
+        $this->assertSame($employee, $context->getContext()->employee);
     }
 
     /** @dataProvider explicitShopContextOptionsProvider */
     public function testExplicitShopContextIsPreserved(string $option): void
     {
-        [$translator, $context, $preparer, $configuration, $shopContext] = $this->dependencies();
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
         $shopContext->expects($this->never())->method('setAllContext');
         $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
         $manager->method('install')->willReturn(true);
 
-        $command = new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $manager);
+        $command = new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager);
         $command->addOption($option, null, InputOption::VALUE_OPTIONAL);
         $tester = $this->createCommandTester($command);
 
@@ -69,9 +94,9 @@ class ModuleActionCommandTest extends TestCase
     /** @dataProvider shopContextOptionsProvider */
     public function testShopContextOptionWithoutValueIsRejected(string $option, ?string $value): void
     {
-        [$translator, $context, $preparer, $configuration, $shopContext] = $this->dependencies();
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
         $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
-        $command = new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $manager);
+        $command = new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager);
         $command->addOption($option, null, InputOption::VALUE_OPTIONAL);
         $tester = $this->createCommandTester($command);
 
@@ -90,9 +115,9 @@ class ModuleActionCommandTest extends TestCase
     /** @dataProvider globalActionsProvider */
     public function testGlobalActionsRejectExplicitShopContext(string $commandClass): void
     {
-        [$translator, $context, $preparer, $configuration, $shopContext] = $this->dependencies();
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
         $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
-        $command = new $commandClass($translator, $context, $preparer, $configuration, $shopContext, $manager);
+        $command = new $commandClass($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager);
         $command->addOption('id_shop_group', null, InputOption::VALUE_OPTIONAL);
         $tester = $this->createCommandTester($command);
 
@@ -110,18 +135,18 @@ class ModuleActionCommandTest extends TestCase
 
     public function testInstallOneModule(): void
     {
-        [$translator, $context, $preparer, $configuration, $shopContext] = $this->dependencies();
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
         $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
         $manager->expects($this->once())->method('install')->with('first')->willReturn(true);
 
-        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $manager));
+        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager));
         $this->assertSame(Command::SUCCESS, $tester->execute(['modules' => ['first']]));
         $this->assertStringContainsString('first', $tester->getDisplay());
     }
 
     public function testBulkActionContinuesAfterFailure(): void
     {
-        [$translator, $context, $preparer, $configuration, $shopContext] = $this->dependencies();
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
         $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
         $seen = [];
         $manager->method('install')->willReturnCallback(static function (string $module) use (&$seen): bool {
@@ -131,7 +156,7 @@ class ModuleActionCommandTest extends TestCase
         });
         $manager->method('getError')->willReturn('failed');
 
-        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $manager));
+        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager));
         $this->assertSame(Command::FAILURE, $tester->execute(['modules' => ['first', 'broken', 'last']]));
         $this->assertSame(['first', 'broken', 'last'], $seen);
         foreach (['first', 'broken', 'last'] as $name) {
@@ -141,7 +166,7 @@ class ModuleActionCommandTest extends TestCase
 
     public function testBulkActionContinuesAfterException(): void
     {
-        [$translator, $context, $preparer, $configuration, $shopContext] = $this->dependencies();
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
         $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
         $seen = [];
         $manager->method('install')->willReturnCallback(static function (string $module) use (&$seen): bool {
@@ -153,7 +178,7 @@ class ModuleActionCommandTest extends TestCase
             return true;
         });
 
-        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $manager));
+        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager));
         $this->assertSame(Command::FAILURE, $tester->execute(['modules' => ['broken', 'last']]));
         $this->assertSame(['broken', 'last'], $seen);
         $this->assertStringContainsString('expected failure', $tester->getDisplay());
@@ -161,7 +186,7 @@ class ModuleActionCommandTest extends TestCase
 
     public function testSkipOverridesIsRestoredAfterAction(): void
     {
-        [$translator, $context, $preparer, $configuration, $shopContext] = $this->dependencies();
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
         $changes = [];
         $configuration->expects($this->exactly(2))->method('setTemporary')
             ->willReturnCallback(static function (string $key, $value) use (&$changes): void {
@@ -170,7 +195,7 @@ class ModuleActionCommandTest extends TestCase
         $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
         $manager->method('disable')->willReturn(true);
 
-        $tester = $this->createCommandTester(new DisableModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $manager));
+        $tester = $this->createCommandTester(new DisableModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager));
         $this->assertSame(Command::SUCCESS, $tester->execute(['modules' => ['first'], '--skip-overrides' => true]));
         $this->assertSame([
             ['PS_DISABLE_MODULE_OVERRIDES', 1],
@@ -181,11 +206,11 @@ class ModuleActionCommandTest extends TestCase
     /** @dataProvider moduleActionsProvider */
     public function testEachConcreteCommandCallsItsMatchingManagerAction(string $commandClass, string $action): void
     {
-        [$translator, $context, $preparer, $configuration, $shopContext] = $this->dependencies();
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
         $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
         $manager->expects($this->once())->method($action)->with('first')->willReturn(true);
 
-        $tester = $this->createCommandTester(new $commandClass($translator, $context, $preparer, $configuration, $shopContext, $manager));
+        $tester = $this->createCommandTester(new $commandClass($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager));
         $this->assertSame(Command::SUCCESS, $tester->execute(['modules' => ['first']]));
         $this->assertStringContainsString('first', $tester->getDisplay());
     }
@@ -203,7 +228,7 @@ class ModuleActionCommandTest extends TestCase
 
     public function testBulkActionSuccess(): void
     {
-        [$translator, $context, $preparer, $configuration, $shopContext] = $this->dependencies();
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
         $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
         $seen = [];
         $manager->method('install')->willReturnCallback(static function (string $module) use (&$seen): bool {
@@ -212,7 +237,7 @@ class ModuleActionCommandTest extends TestCase
             return true;
         });
 
-        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $manager));
+        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager));
         $this->assertSame(Command::SUCCESS, $tester->execute(['modules' => ['first', 'second']]));
         $this->assertSame(['first', 'second'], $seen);
         $this->assertStringContainsString('first', $tester->getDisplay());
@@ -221,7 +246,7 @@ class ModuleActionCommandTest extends TestCase
 
     public function testSkipOverridesIsRestoredAfterException(): void
     {
-        [$translator, $context, $preparer, $configuration, $shopContext] = $this->dependencies();
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
         $changes = [];
         $configuration->expects($this->exactly(2))->method('setTemporary')
             ->willReturnCallback(static function (string $key, $value) use (&$changes): void {
@@ -230,7 +255,7 @@ class ModuleActionCommandTest extends TestCase
         $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
         $manager->method('disable')->willThrowException(new RuntimeException('expected failure'));
 
-        $tester = $this->createCommandTester(new DisableModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $manager));
+        $tester = $this->createCommandTester(new DisableModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager));
         $this->assertSame(Command::FAILURE, $tester->execute(['modules' => ['broken'], '--skip-overrides' => true]));
         $this->assertSame([
             ['PS_DISABLE_MODULE_OVERRIDES', 1],
@@ -241,12 +266,12 @@ class ModuleActionCommandTest extends TestCase
 
     public function testManagerErrorIsShownForFailedModule(): void
     {
-        [$translator, $context, $preparer, $configuration, $shopContext] = $this->dependencies();
+        [$translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader] = $this->dependencies();
         $manager = $this->getMockBuilder(ModuleManager::class)->disableOriginalConstructor()->getMock();
         $manager->method('install')->willReturn(false);
         $manager->expects($this->once())->method('getError')->with('broken')->willReturn('manager error details');
 
-        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $manager));
+        $tester = $this->createCommandTester(new InstallModuleCommand($translator, $context, $preparer, $configuration, $shopContext, $legacyContextLoader, $manager));
         $this->assertSame(Command::FAILURE, $tester->execute(['modules' => ['broken']]));
         $this->assertStringContainsString('broken', $tester->getDisplay());
         $this->assertStringContainsString('manager error details', $tester->getDisplay());
@@ -259,7 +284,7 @@ class ModuleActionCommandTest extends TestCase
         return new CommandTester($command);
     }
 
-    private function dependencies(): array
+    private function dependencies(bool $withEmployee = true): array
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator->method('trans')->willReturnCallback(
@@ -268,14 +293,17 @@ class ModuleActionCommandTest extends TestCase
 
         $legacyContext = $this->getMockBuilder(LegacyContext::class)->disableOriginalConstructor()->getMock();
         $context = (new ReflectionClass(Context::class))->newInstanceWithoutConstructor();
-        $context->employee = (new ReflectionClass(Employee::class))->newInstanceWithoutConstructor();
+        if ($withEmployee) {
+            $context->employee = (new ReflectionClass(Employee::class))->newInstanceWithoutConstructor();
+        }
         $legacyContext->method('getContext')->willReturn($context);
 
         $preparer = $this->getMockBuilder(ContextBuilderPreparer::class)->disableOriginalConstructor()->getMock();
         $configuration = $this->getMockBuilder(Configuration::class)->disableOriginalConstructor()->getMock();
         $configuration->method('get')->willReturnCallback(static fn (string $key) => $key === 'PS_LANG_DEFAULT' ? 1 : 0);
         $shopContext = $this->getMockBuilder(ShopContext::class)->disableOriginalConstructor()->getMock();
+        $legacyContextLoader = $this->getMockBuilder(LegacyContextLoader::class)->disableOriginalConstructor()->getMock();
 
-        return [$translator, $legacyContext, $preparer, $configuration, $shopContext];
+        return [$translator, $legacyContext, $preparer, $configuration, $shopContext, $legacyContextLoader];
     }
 }

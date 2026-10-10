@@ -14,6 +14,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
@@ -242,17 +243,23 @@ class ConfigureModuleCommandTest extends TestCase
         return $this->getMockBuilder(ModuleSelfConfigurator::class)->disableOriginalConstructor()->getMock();
     }
 
-    private function tester(ModuleSelfConfigurator $configurator, ?ShopContext $shopContext = null): CommandTester
-    {
-        $command = $this->command($configurator, $shopContext);
+    private function tester(
+        ModuleSelfConfigurator $configurator,
+        ?ShopContext $shopContext = null,
+        ?LegacyContextLoader $legacyContextLoader = null,
+    ): CommandTester {
+        $command = $this->command($configurator, $shopContext, $legacyContextLoader);
 
         return new CommandTester($command);
     }
 
-    private function command(ModuleSelfConfigurator $configurator, ?ShopContext $shopContext = null): ConfigureModuleCommand
-    {
-        [$translator, $context, $preparer, $configuration, $defaultShopContext] = $this->dependencies();
-        $command = new ConfigureModuleCommand($translator, $context, $preparer, $configuration, $shopContext ?? $defaultShopContext, $configurator);
+    private function command(
+        ModuleSelfConfigurator $configurator,
+        ?ShopContext $shopContext = null,
+        ?LegacyContextLoader $legacyContextLoader = null,
+    ): ConfigureModuleCommand {
+        [$translator, $context, $preparer, $configuration, $defaultShopContext, $defaultLegacyContextLoader] = $this->dependencies();
+        $command = new ConfigureModuleCommand($translator, $context, $preparer, $configuration, $shopContext ?? $defaultShopContext, $legacyContextLoader ?? $defaultLegacyContextLoader, $configurator);
         $command->setHelperSet(new HelperSet([new FormatterHelper()]));
 
         return $command;
@@ -274,7 +281,8 @@ class ConfigureModuleCommandTest extends TestCase
         $configuration = $this->getMockBuilder(Configuration::class)->disableOriginalConstructor()->getMock();
         $configuration->method('get')->willReturnCallback(static fn (string $key) => $key === 'PS_LANG_DEFAULT' ? 1 : 0);
         $shopContext = $this->getMockBuilder(ShopContext::class)->disableOriginalConstructor()->getMock();
+        $legacyContextLoader = $this->getMockBuilder(LegacyContextLoader::class)->disableOriginalConstructor()->getMock();
 
-        return [$translator, $legacyContext, $preparer, $configuration, $shopContext];
+        return [$translator, $legacyContext, $preparer, $configuration, $shopContext, $legacyContextLoader];
     }
 }
