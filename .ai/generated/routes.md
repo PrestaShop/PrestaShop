@@ -1,5 +1,5 @@
 # Routes Index (generated 2026-04-25)
-# ~812 routes across admin / admin-api / api
+# ~822 routes across admin / admin-api / api
 #
 # Paths are relative to the routing file's prefix (see parent _*.yml for full prefix).
 # Route name is the canonical identifier — use it with $this->generateUrl() or $router->generate().
@@ -34,6 +34,26 @@ GET           /view/{downloadFileName}                  admin_backups_download_v
 GET           /download/{downloadFileName}              admin_backup_download  [BackupController::downloadContentAction]
 DELETE,POST   /{deleteFileName}                         admin_backups_delete  [BackupController::deleteAction]
 POST          /bulk-delete/                             admin_backups_bulk_delete  [BackupController::bulkDeleteAction]
+```
+
+### admin/configure/advanced_parameters/security_headers
+```
+GET           /                                         admin_security_headers_index  [SecurityHeadersController::indexAction]
+POST          /save                                     admin_security_headers_save  [SecurityHeadersController::saveAction]
+```
+
+### admin/configure/advanced_parameters/csp
+```
+GET           /                                         admin_security_csp_index  [CspController::indexAction]
+POST          /                                         admin_security_csp_search  [CommonController::searchGridAction]
+POST          /allow-list                               admin_security_csp_rules_search  [CommonController::searchGridAction]
+POST          /settings                                 admin_security_csp_save  [CspController::saveAction]
+GET,POST      /allow-list/add                           admin_security_csp_add  [CspController::addAction]
+POST          /clear-log                                admin_security_csp_clear_log  [CspController::clearLogAction]
+POST          /allow/{cspLogId}                         admin_security_csp_allow  [CspController::allowAction]
+POST          /revoke/{cspRuleId}                       admin_security_csp_revoke  [CspController::revokeAction]
+POST          /bulk-revoke                              admin_security_csp_bulk_revoke  [CspController::bulkRevokeAction]
+POST          /bulk-revoke/admin                        admin_security_csp_bulk_revoke_admin  [CspController::bulkRevokeAction]
 ```
 
 ### admin/configure/advanced_parameters/email

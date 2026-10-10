@@ -34,6 +34,24 @@ services:
       - '@prestashop.adapter.feature.multistore'
     public: true
 
+  prestashop.core.grid.query_builder.csp_log:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\CspLogQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+      - '@request_stack'
+    public: true
+
+  prestashop.core.grid.query_builder.csp_rule:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\CspRuleQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+      - '@request_stack'
+    public: true
+
   prestashop.core.grid.query_builder.product:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProductQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'

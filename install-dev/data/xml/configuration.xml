@@ -924,5 +924,50 @@ Country</value>
     <configuration id="PS_MIN_LOGGER_LEVEL_IN_DB" name="PS_MIN_LOGGER_LEVEL_IN_DB">
       <value>1</value>
     </configuration>
+    <configuration id="PS_CSP_ENABLED" name="PS_CSP_ENABLED">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_CSP_REPORT_ONLY" name="PS_CSP_REPORT_ONLY">
+      <value>1</value>
+    </configuration>
+    <configuration id="PS_CSP_RETENTION_DAYS" name="PS_CSP_RETENTION_DAYS">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_CSP_REPORT_URI" name="PS_CSP_REPORT_URI">
+      <value></value>
+    </configuration>
+    <configuration id="PS_CSP_ADMIN_ENABLED" name="PS_CSP_ADMIN_ENABLED">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_CSP_ADMIN_REPORT_ONLY" name="PS_CSP_ADMIN_REPORT_ONLY">
+      <value>1</value>
+    </configuration>
+    <configuration id="PS_CSP_ADMIN_RETENTION_DAYS" name="PS_CSP_ADMIN_RETENTION_DAYS">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_SEC_NOSNIFF" name="PS_SEC_NOSNIFF">
+      <value></value>
+    </configuration>
+    <configuration id="PS_SEC_FRAME_OPTIONS" name="PS_SEC_FRAME_OPTIONS">
+      <value></value>
+    </configuration>
+    <configuration id="PS_SEC_REFERRER_POLICY" name="PS_SEC_REFERRER_POLICY">
+      <value></value>
+    </configuration>
+    <configuration id="PS_SEC_HSTS" name="PS_SEC_HSTS">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_SEC_HSTS_MAX_AGE" name="PS_SEC_HSTS_MAX_AGE">
+      <value>15552000</value>
+    </configuration>
+    <configuration id="PS_SEC_HSTS_SUBDOMAINS" name="PS_SEC_HSTS_SUBDOMAINS">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_SEC_HSTS_PRELOAD" name="PS_SEC_HSTS_PRELOAD">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_SEC_PERMISSIONS_POLICY" name="PS_SEC_PERMISSIONS_POLICY">
+      <value></value>
+    </configuration>
   </entities>
 </entity_configuration>

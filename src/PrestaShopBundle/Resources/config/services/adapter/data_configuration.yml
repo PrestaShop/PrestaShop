@@ -238,6 +238,29 @@ services:
       - '@prestashop.adapter.shop.context'
       - '@prestashop.adapter.multistore_feature'
 
+  prestashop.adapter.csp.settings_configuration:
+    class: 'PrestaShop\PrestaShop\Adapter\Csp\CspConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@translator'
+
+  prestashop.adapter.csp.admin_settings_configuration:
+    class: 'PrestaShop\PrestaShop\Adapter\Csp\AdminCspConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@translator'
+
+  prestashop.adapter.security_headers.configuration:
+    class: 'PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
+
   prestashop.core.email.email_configurator:
     class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'
     arguments:

@@ -7,10 +7,13 @@
 
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+use PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -774,9 +777,71 @@ class FrontControllerCore extends Controller
             $html = $this->context->smarty->fetch($content, null, $theme . $this->getLayout());
         }
 
+        // Before the output hooks: once a hook echoes, headers_sent() is true and the header is dropped.
+        $this->sendContentSecurityPolicyHeaders();
+        $this->sendSecurityHeaders();
+
         Hook::exec('actionOutputHTMLBefore', ['html' => &$html]);
         Hook::exec('actionOutput' . $this->getControllerName() . 'HTMLBefore', ['html' => &$html]);
         echo trim($html);
+    }
+
+    /**
+     * Sends the storefront CSP headers on the default FO path (HTML, headers not yet sent). Mirror on
+     * the FrontKernel path: CspHeaderSubscriber. Logic lives in CspHeaderBuilder.
+     */
+    private function sendContentSecurityPolicyHeaders(): void
+    {
+        if (headers_sent()) {
+            return;
+        }
+
+        // Mirror the subscriber's guards: a broken context (CLI, test, module) must not fatal.
+        if (null === $this->context->link || null === $this->context->shop || null === $this->context->shop->theme) {
+            return;
+        }
+
+        // Guard build() too (csp_rule query + actionCspPolicyModifier hook): never 500 a page over a header.
+        try {
+            /** @var CspHeaderBuilder $cspHeaderBuilder */
+            $cspHeaderBuilder = $this->get(CspHeaderBuilder::class);
+            $reportUri = $this->context->link->getPageLink('cspreport', null);
+            $themeContributions = $this->context->shop->theme->get('global_settings.csp', []);
+            foreach ($cspHeaderBuilder->build(CspContext::FRONT, (int) $this->context->shop->id, $reportUri, is_array($themeContributions) ? $themeContributions : []) as $name => $value) {
+                header($name . ': ' . $value);
+            }
+        } catch (Throwable $e) {
+            try {
+                PrestaShopLogger::addLog('CSP header not sent: ' . $e->getMessage(), 2, null, 'Csp');
+            } catch (Throwable) {
+                error_log('CSP header not sent: ' . $e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Sends the static security headers on the default FO path (HTML, headers not yet sent). Mirror on
+     * the FrontKernel path: SecurityHeadersSubscriber. Logic lives in SecurityHeadersProvider.
+     */
+    private function sendSecurityHeaders(): void
+    {
+        if (headers_sent()) {
+            return;
+        }
+
+        try {
+            /** @var SecurityHeadersProvider $securityHeadersProvider */
+            $securityHeadersProvider = $this->get(SecurityHeadersProvider::class);
+            foreach ($securityHeadersProvider->getHeaders(Tools::usingSecureMode()) as $name => $value) {
+                header($name . ': ' . $value);
+            }
+        } catch (Throwable $e) {
+            try {
+                PrestaShopLogger::addLog('Security headers not sent: ' . $e->getMessage(), 2, null, 'SecurityHeaders');
+            } catch (Throwable) {
+                error_log('Security headers not sent: ' . $e->getMessage());
+            }
+        }
     }
 
     protected function prepareNotifications()

@@ -1,0 +1,79 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace Tests\Unit\Adapter\Csp\CommandHandler;
+
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AddCspRuleHandler;
+use PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface;
+use PrestaShop\PrestaShop\Adapter\Csp\CspRuleValidator;
+use PrestaShop\PrestaShop\Core\Domain\Csp\Command\AddCspRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Csp\Exception\CannotAddCspRuleException;
+use PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Entity\Repository\CspLogRepository;
+use PrestaShopBundle\Entity\Repository\CspRuleRepository;
+
+class AddCspRuleHandlerTest extends TestCase
+{
+    public function testItRefusesToAddAStorefrontRuleWithoutASingleShop(): void
+    {
+        $repository = $this->createMock(CspRuleRepository::class);
+        // A storefront rule is per shop; an all-shops/group command must never reach persistence.
+        $repository->expects($this->never())->method('add');
+
+        $snapshot = $this->createMock(CspRulesSnapshotInterface::class);
+        $snapshot->expects($this->never())->method('refresh');
+
+        // CspRuleValidator is final and is not reached on the all-shops path, so a real instance over a
+        // mocked repository is enough.
+        $handler = new AddCspRuleHandler($repository, new CspRuleValidator($repository), $snapshot, $this->createMock(CspLogRepository::class));
+
+        $this->expectException(CannotAddCspRuleException::class);
+
+        $handler->handle(new AddCspRuleCommand('script-src', 'https://cdn.example.com', ShopConstraint::allShops()));
+    }
+
+    public function testItAddsABackOfficeRuleUnderShopZeroWithoutASingleShop(): void
+    {
+        // The back office is a single global surface, so an admin rule is accepted with no single shop.
+        $repository = $this->createMock(CspRuleRepository::class);
+        $repository->method('findOneByShopDirectiveSource')->willReturn(null);
+        $repository->expects($this->once())->method('add')->willReturn(9);
+
+        // The back office is not snapshotted, so no refresh; its log rows are still cleared.
+        $snapshot = $this->createMock(CspRulesSnapshotInterface::class);
+        $snapshot->expects($this->never())->method('refresh');
+
+        $logRepository = $this->createMock(CspLogRepository::class);
+        $logRepository->expects($this->once())->method('deleteByShopDirectiveSource')->with(CspContext::ADMIN, 0, 'script-src', 'https://admin.example.com');
+
+        $handler = new AddCspRuleHandler($repository, new CspRuleValidator($repository), $snapshot, $logRepository);
+
+        $ruleId = $handler->handle(new AddCspRuleCommand('script-src', 'https://admin.example.com', ShopConstraint::allShops(), CspContext::ADMIN));
+
+        $this->assertSame(9, $ruleId->getValue());
+    }
+
+    public function testAddingAStorefrontRuleRefreshesTheSnapshotAndClearsTheSourceLog(): void
+    {
+        $repository = $this->createMock(CspRuleRepository::class);
+        $repository->method('findOneByShopDirectiveSource')->willReturn(null);
+        $repository->method('add')->willReturn(3);
+
+        $snapshot = $this->createMock(CspRulesSnapshotInterface::class);
+        $snapshot->expects($this->once())->method('refresh')->with(5);
+
+        $logRepository = $this->createMock(CspLogRepository::class);
+        $logRepository->expects($this->once())->method('deleteByShopDirectiveSource')->with(CspContext::FRONT, 5, 'script-src', 'https://cdn.example.com');
+
+        $handler = new AddCspRuleHandler($repository, new CspRuleValidator($repository), $snapshot, $logRepository);
+
+        $handler->handle(new AddCspRuleCommand('script-src', 'https://cdn.example.com', ShopConstraint::shop(5)));
+    }
+}

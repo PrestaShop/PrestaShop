@@ -1,0 +1,68 @@
+services:
+  # Front-office-shared CSP services: registered here (not in bundle/repository.yml or adapter/csp.yml)
+  # because config/services/common.yml imports this file into the hand-built front-office container,
+  # which serves the storefront header builder and the report collector. Every dependency below must
+  # resolve in that container too. Public are only the services fetched from the container by id
+  # rather than injected: CspHeaderBuilder (from FrontController), CspViolationRecorder and
+  # CspFeatureChecker (from the report collector), and the two repositories (from the Behat context).
+  # The policy provider and hook dispatcher are injected only, so they stay private.
+  _defaults:
+    public: false
+
+  PrestaShopBundle\Entity\Repository\CspLogRepository:
+    public: true
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\CspLog
+
+  PrestaShopBundle\Entity\Repository\CspRuleRepository:
+    public: true
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\CspRule
+
+  PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder:
+    public: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker:
+    public: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@prestashop.adapter.legacy.configuration'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CspPolicyHookDispatcher: ~
+
+  # Per-shop storefront allow-list snapshot, stored as a configuration value (loaded at request start, so
+  # no per-page query) in the shop's own database. Its only deps resolve in the hand-built front-office
+  # container too; public so the admin command handlers can refresh it.
+  PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshot:
+    public: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@prestashop.adapter.legacy.configuration'
+  PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface:
+    alias: PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshot
+    public: true
+
+  PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider:
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspPolicyHookDispatcher'
+      - '@logger'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder:
+    public: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspPolicyProvider'
+
+  # Static security headers (non-CSP). Public so FrontController can fetch it for the legacy dispatch,
+  # like CspHeaderBuilder; the two kernel subscribers inject it.
+  PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersProvider:
+    public: true
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'

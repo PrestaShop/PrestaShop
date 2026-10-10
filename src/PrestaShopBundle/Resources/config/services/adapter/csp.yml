@@ -1,0 +1,50 @@
+services:
+  _defaults:
+    public: true
+
+  # CspViolationRecorder and CspLogRepository are registered in adapter/csp_common.yml so the
+  # front-office collector can resolve them too; the command handlers below are back-office only.
+  PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\RecordCspViolationHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\ClearCspLogHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder'
+      - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CspRuleValidator:
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AddCspRuleHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspRuleValidator'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface'
+      - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\AllowCspSourceHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspLogRepository'
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\RevokeCspSourceHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface'
+
+  PrestaShop\PrestaShop\Adapter\Csp\CommandHandler\BulkRevokeCspSourceHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CspRuleRepository'
+      - '@PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Csp\CspRulesSnapshotInterface'

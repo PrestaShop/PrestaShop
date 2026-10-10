@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Module\Banner\Repository\FrontRepository;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+use PrestaShop\PrestaShop\Adapter\Csp\CspFeatureChecker;
+use PrestaShop\PrestaShop\Adapter\Csp\CspHeaderBuilder;
+use PrestaShop\PrestaShop\Adapter\Csp\CspViolationRecorder;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShopBundle\Exception\ServiceContainerException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -59,6 +62,21 @@ class ContainerBuilderTest extends TestCase
         $repository = $container->get(ExtraPropertyDefinitionRepositoryInterface::class);
 
         $this->assertInstanceOf(ExtraPropertyDefinitionRepositoryInterface::class, $repository);
+    }
+
+    /**
+     * The CSP collector and the storefront header both run on the front-office dispatch, so the
+     * recorder, the feature checker and the header builder (with its policy provider, rule repository
+     * and hook dispatcher) must all resolve in the hand-built front container, which imports
+     * config/services/common.yml but not adapter/services.yml.
+     */
+    public function testFrontContainerBuildsTheCspCollectorServices(): void
+    {
+        $container = ContainerBuilder::getContainer('front', true);
+
+        $this->assertInstanceOf(CspViolationRecorder::class, $container->get(CspViolationRecorder::class));
+        $this->assertInstanceOf(CspFeatureChecker::class, $container->get(CspFeatureChecker::class));
+        $this->assertInstanceOf(CspHeaderBuilder::class, $container->get(CspHeaderBuilder::class));
     }
 
     public function testContainerLoadsModuleAutoload()
