@@ -137,6 +137,7 @@ class CustomerController extends PrestaShopAdminController
             [],
             [
                 'show_guest_field' => (bool) $this->getConfiguration()->get('PS_GUEST_CHECKOUT_ENABLED'),
+                'shop_id' => (int) $this->getShopContext()->getId(),
             ]
         );
         $customerForm->handleRequest($request);
@@ -208,6 +209,7 @@ class CustomerController extends PrestaShopAdminController
         $customerFormOptions = [
             'is_password_required' => false,
             'show_guest_field' => false,
+            'shop_id' => (int) $customerInformation->getShopId(),
         ];
 
         try {

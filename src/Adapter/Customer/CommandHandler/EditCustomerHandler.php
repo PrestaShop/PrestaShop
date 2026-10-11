@@ -153,6 +153,10 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
             $customer->newsletter = $command->isNewsletterSubscribed();
         }
 
+        if (null !== $command->getLanguageId()) {
+            $customer->id_lang = $command->getLanguageId();
+        }
+
         $this->updateCustomerB2bData($customer, $command);
     }
 
