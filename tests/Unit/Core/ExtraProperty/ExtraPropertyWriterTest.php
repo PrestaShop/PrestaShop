@@ -292,6 +292,27 @@ class ExtraPropertyWriterTest extends TestCase
         $this->assertSame([7, 1], $this->statements[0]['params']);
     }
 
+    public function testToggleUsesDefaultValueWhenNoStoredRowExists(): void
+    {
+        $this->currentToggleValue = false;
+        $writer = $this->buildWriter();
+
+        $writer->toggleExtraProperty(
+            $this->definition(
+                'is_dangerous',
+                ExtraPropertyType::BOOL,
+                ExtraPropertyScope::COMMON,
+                nullable: false,
+                defaultValue: true,
+            ),
+            7,
+            ShopConstraint::allShops()
+        );
+
+        $this->assertCount(1, $this->statements);
+        $this->assertSame([7, 0], $this->statements[0]['params']);
+    }
+
     public function testToggleShopScopeUsesConstraintShopId(): void
     {
         $writer = $this->buildWriter();
@@ -491,6 +512,7 @@ class ExtraPropertyWriterTest extends TestCase
         bool $nullable,
         string $entityName = 'product',
         ?bool $multiShop = null,
+        int|float|string|bool|null $defaultValue = null,
     ): ExtraPropertyDefinition {
         return new ExtraPropertyDefinition(
             entityName: $entityName,
@@ -500,6 +522,7 @@ class ExtraPropertyWriterTest extends TestCase
             moduleName: 'demoextrafield',
             nullable: $nullable,
             multiShop: $multiShop ?? (ExtraPropertyScope::COMMON !== $scope),
+            defaultValue: $defaultValue,
         );
     }
 }
