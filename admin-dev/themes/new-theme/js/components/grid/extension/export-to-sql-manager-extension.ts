@@ -81,28 +81,30 @@ export default class ExportToSqlManagerExtension {
   /**
    * Get export name from page's breadcrumb
    *
-   * @return {String}
+   * @return {string}
    *
    * @private
    */
   private getNameFromBreadcrumb(): string {
-    const $breadcrumbs = $(GridMap.headerToolbar).find(GridMap.breadcrumbItem);
-    let name = '';
+    const headerToolbar = document.querySelector<HTMLElement>(GridMap.headerToolbar);
+    if (!headerToolbar) return '';
 
-    $breadcrumbs.each((i, item) => {
-      const $breadcrumb = $(item);
+    const breadcrumbItems = headerToolbar.querySelectorAll<HTMLElement>(GridMap.breadcrumbItem);
 
-      const breadcrumbTitle = $breadcrumb.find('a').length > 0
-        ? $breadcrumb.find('a').text()
-        : $breadcrumb.text();
+    return Array.from(breadcrumbItems)
+      .map((breadcrumbItem) => {
+        const breadcrumbItemClone = breadcrumbItem.cloneNode(true) as HTMLElement;
 
-      if (name.length > 0) {
-        name = name.concat(' > ');
-      }
+        breadcrumbItemClone.querySelectorAll('.material-icons').forEach((breadcrumbIcon) => {
+          breadcrumbIcon.remove();
+        });
 
-      name = name.concat(breadcrumbTitle);
-    });
+        const breadcrumbLink = breadcrumbItemClone.querySelector<HTMLAnchorElement>('a');
+        const breadcrumbTitle = breadcrumbLink ? breadcrumbLink.textContent : breadcrumbItemClone.textContent;
 
-    return name;
+        return breadcrumbTitle ? breadcrumbTitle.trim() : '';
+      })
+      .filter(Boolean)
+      .join(' > ');
   }
 }
