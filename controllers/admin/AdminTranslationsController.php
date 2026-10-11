@@ -2271,12 +2271,12 @@ class AdminTranslationsControllerCore extends AdminController
                     $base_uri = str_replace('//', '/', $base_uri);
                     $url_mail = $base_uri . $mail_name . '.html';
 
-                    $mail_files_html = empty($mail_files['html']) ? false : $mail_files['html'];
+                    $mail_files_html = empty($mail_files['html']) ? [] : $mail_files['html'];
                     $str_return .= '<div class="tab-pane active" id="' . $mail_name . '-html">';
                     $str_return .= $this->displayMailBlockHtml($mail_files_html, $obj_lang->iso_code, $url_mail, $mail_name, $group_name, $name_for_module);
                     $str_return .= '</div>';
 
-                    $mail_files_txt = empty($mail_files['txt']) ? false : $mail_files['txt'];
+                    $mail_files_txt = empty($mail_files['txt']) ? [] : $mail_files['txt'];
                     $str_return .= '<div class="tab-pane" id="' . $mail_name . '-text">';
                     $str_return .= $this->displayMailBlockTxt($mail_files_txt, $obj_lang->iso_code, $mail_name, $group_name, $name_for_module);
                     $str_return .= '</div>';
