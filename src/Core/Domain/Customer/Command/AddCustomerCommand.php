@@ -64,6 +64,11 @@ class AddCustomerCommand
     private $isPartnerOffersSubscribed;
 
     /**
+     * @var bool
+     */
+    private $isNewsletterSubscribed;
+
+    /**
      * @var Birthday
      */
     private $birthday;
@@ -126,6 +131,7 @@ class AddCustomerCommand
      * @param bool $isPartnerOffersSubscribed
      * @param string|null $birthday
      * @param bool $isGuest
+     * @param bool $isNewsletterSubscribed
      */
     public function __construct(
         $firstName,
@@ -139,7 +145,8 @@ class AddCustomerCommand
         $isEnabled = true,
         $isPartnerOffersSubscribed = false,
         $birthday = null,
-        $isGuest = false
+        $isGuest = false,
+        $isNewsletterSubscribed = false
     ) {
         $this->firstName = new FirstName($firstName);
         $this->lastName = new LastName($lastName);
@@ -153,6 +160,7 @@ class AddCustomerCommand
         $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
         $this->birthday = null !== $birthday ? new Birthday($birthday) : Birthday::createEmpty();
         $this->isGuest = $isGuest;
+        $this->isNewsletterSubscribed = $isNewsletterSubscribed;
     }
 
     /**
@@ -225,6 +233,14 @@ class AddCustomerCommand
     public function isPartnerOffersSubscribed()
     {
         return $this->isPartnerOffersSubscribed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNewsletterSubscribed()
+    {
+        return $this->isNewsletterSubscribed;
     }
 
     /**

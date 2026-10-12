@@ -59,6 +59,7 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
 
         // validateFieldsRequiredDatabase() below is using $_POST to check if required fields are set
         $_POST[RequiredField::PARTNER_OFFERS] = $command->isPartnerOffersSubscribed();
+        $_POST[RequiredField::NEWSLETTER] = $command->isNewsletterSubscribed();
 
         $this->assertRequiredFieldsAreNotMissing($customer);
 
@@ -126,6 +127,7 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
         $customer->id_gender = $command->getGenderId();
         $customer->active = $command->isEnabled();
         $customer->optin = $command->isPartnerOffersSubscribed();
+        $customer->newsletter = $command->isNewsletterSubscribed();
         $customer->birthday = $command->getBirthday()->getValue();
         $customer->id_shop = $command->getShopId();
         $customer->is_guest = $command->isGuest();
