@@ -87,6 +87,7 @@ export default class ExportToSqlManagerExtension {
    */
   private getNameFromBreadcrumb(): string {
     const headerToolbar = document.querySelector<HTMLElement>(GridMap.headerToolbar);
+
     if (!headerToolbar) return '';
 
     const breadcrumbItems = headerToolbar.querySelectorAll<HTMLElement>(GridMap.breadcrumbItem);
