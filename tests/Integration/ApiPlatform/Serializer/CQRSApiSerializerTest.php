@@ -682,6 +682,7 @@ class CQRSApiSerializerTest extends KernelTestCase
                 ],
                 'redirectTarget' => null,
                 'availableDate' => null,
+                'virtualProductFile' => null,
             ],
         ];
 
