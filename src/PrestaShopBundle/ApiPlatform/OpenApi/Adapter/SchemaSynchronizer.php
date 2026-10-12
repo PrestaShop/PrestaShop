@@ -182,15 +182,30 @@ class SchemaSynchronizer implements OpenApiSchemaAdapterInterface
             $properties = $this->propertyInfoExtractor->getProperties($resourceClass) ?? [];
 
             if (!empty($properties)) {
-                return array_filter($properties, function ($property) {
-                    return !in_array($property, ['@context', '@id', '@type']);
-                });
+                return array_values(array_unique(array_merge(
+                    array_filter($properties, function ($property) {
+                        return !in_array($property, ['@context', '@id', '@type']);
+                    }),
+                    $this->getConstructorParameters($resourceClass)
+                )));
             }
         } catch (Throwable $e) {
             return $this->getPropertiesUsingReflection($resourceClass);
         }
 
         return $this->getPropertiesUsingReflection($resourceClass);
+    }
+
+    /**
+     * The constructor parameters are inputs even when no accessor exposes them (e.g. a getter without get/is/has prefix).
+     *
+     * @return string[]
+     */
+    protected function getConstructorParameters(string $class): array
+    {
+        $constructor = (new ReflectionClass($class))->getConstructor();
+
+        return null === $constructor ? [] : array_map(fn ($parameter) => $parameter->getName(), $constructor->getParameters());
     }
 
     /**

@@ -224,6 +224,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     ]),
                     'type' => new ArrayObject([
                         'type' => 'string',
+                        'enum' => ['standard', 'pack', 'virtual', 'combinations'],
                     ]),
                     'enabled' => new ArrayObject([
                         'type' => 'boolean',
@@ -300,6 +301,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     ]),
                     'visibility' => new ArrayObject([
                         'type' => 'string',
+                        'enum' => ['catalog', 'search', 'both', 'none'],
                     ]),
                     'availableForOrder' => new ArrayObject([
                         'type' => 'boolean',
@@ -312,6 +314,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     ]),
                     'condition' => new ArrayObject([
                         'type' => 'string',
+                        'enum' => ['new', 'used', 'refurbished', 'open_box', 'damaged', 'new_with_defects'],
                     ]),
                     'showCondition' => new ArrayObject([
                         'type' => 'boolean',
@@ -321,18 +324,23 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     ]),
                     'isbn' => new ArrayObject([
                         'type' => 'string',
+                        'maxLength' => 32,
                     ]),
                     'upc' => new ArrayObject([
                         'type' => 'string',
+                        'maxLength' => 12,
                     ]),
                     'gtin' => new ArrayObject([
                         'type' => 'string',
+                        'maxLength' => 14,
                     ]),
                     'mpn' => new ArrayObject([
                         'type' => 'string',
+                        'maxLength' => 40,
                     ]),
                     'reference' => new ArrayObject([
                         'type' => 'string',
+                        'maxLength' => 64,
                     ]),
                     'width' => new ArrayObject([
                         'type' => 'number',
@@ -369,6 +377,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     ]),
                     'deliveryTimeNoteType' => new ArrayObject([
                         'type' => 'integer',
+                        'enum' => [0, 1, 2],
                     ]),
                     'deliveryTimeInStockNotes' => new ArrayObject([
                         'type' => 'object',
@@ -407,18 +416,22 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     ]),
                     'redirectType' => new ArrayObject([
                         'type' => 'string',
+                        'enum' => ['default', '404', '410', '301-category', '302-category', '301-product', '302-product', '200-displayed', '404-displayed', '410-displayed'],
                     ]),
                     'packStockType' => new ArrayObject([
                         'type' => 'integer',
+                        'enum' => [0, 1, 2, 3],
                     ]),
                     'outOfStockType' => new ArrayObject([
                         'type' => 'integer',
+                        'enum' => [1, 0, 2],
                     ]),
                     'quantity' => new ArrayObject([
                         'type' => 'integer',
                     ]),
                     'minimalQuantity' => new ArrayObject([
                         'type' => 'integer',
+                        'exclusiveMinimum' => 0,
                     ]),
                     'lowStockThreshold' => new ArrayObject([
                         'type' => 'integer',
@@ -489,6 +502,19 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     'defaultCategoryId' => new ArrayObject([
                         'type' => 'integer',
                     ]),
+                    'virtualProductFile' => new ArrayObject([
+                        'type' => 'object',
+                        'nullable' => true,
+                        'properties' => [
+                            'id' => ['type' => 'integer'],
+                            'fileName' => ['type' => 'string'],
+                            'displayName' => ['type' => 'string'],
+                            'accessDays' => ['type' => 'integer'],
+                            'downloadTimesLimit' => ['type' => 'integer'],
+                            'expirationDate' => ['type' => 'string', 'format' => 'date-time', 'nullable' => true],
+                            'productId' => ['type' => 'integer'],
+                        ],
+                    ]),
                 ],
             ]),
         ];
@@ -528,9 +554,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                 'description' => '',
                 'deprecated' => false,
                 'properties' => [
-                    'productId' => new ArrayObject([
-                        'type' => 'integer',
-                    ]),
+                    // productId is a URI variable, read from the URL and not from the payload
                     'enabled' => new ArrayObject([
                         'type' => 'boolean',
                     ]),
@@ -834,9 +858,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                 'description' => '',
                 'deprecated' => false,
                 'properties' => [
-                    'carrierId' => new ArrayObject([
-                        'type' => 'integer',
-                    ]),
+                    // carrierId is a URI variable, read from the URL and not from the payload
                     'ranges' => new ArrayObject([
                         'type' => 'array',
                         'items' => [
@@ -932,6 +954,299 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
             ]),
         ];
 
+        // Sub objects typed with DTOs are documented as references to their own schema, and the arrays
+        // documented with a @var Foo[] PHPDoc as lists of these references
+        yield 'CustomerDetails schema' => [
+            'CustomerDetails',
+            new ArrayObject([
+                'type' => 'object',
+                'description' => '',
+                'deprecated' => false,
+                'properties' => [
+                    'customerId' => new ArrayObject([
+                        'type' => 'integer',
+                        'example' => 1,
+                    ]),
+                    'personalInformation' => new ArrayObject([
+                        '$ref' => '#/components/schemas/CustomerPersonalInformation',
+                    ]),
+                    'ordersInformation' => new ArrayObject([
+                        '$ref' => '#/components/schemas/CustomerOrdersInformation',
+                    ]),
+                    'cartsInformation' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            '$ref' => '#/components/schemas/CustomerCartInformation',
+                        ],
+                    ]),
+                    'productsInformation' => new ArrayObject([
+                        '$ref' => '#/components/schemas/CustomerProductsInformation',
+                    ]),
+                    'messagesInformation' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            '$ref' => '#/components/schemas/CustomerMessageInformation',
+                        ],
+                    ]),
+                    'discountsInformation' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            '$ref' => '#/components/schemas/CustomerDiscountInformation',
+                        ],
+                    ]),
+                    'sentEmailsInformation' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            '$ref' => '#/components/schemas/CustomerSentEmail',
+                        ],
+                    ]),
+                    'lastConnectionsInformation' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            '$ref' => '#/components/schemas/CustomerLastConnection',
+                        ],
+                    ]),
+                    'groupsInformation' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            '$ref' => '#/components/schemas/CustomerGroupInformation',
+                        ],
+                    ]),
+                    'addressesInformation' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            '$ref' => '#/components/schemas/CustomerAddressInformation',
+                        ],
+                    ]),
+                    'generalInformation' => new ArrayObject([
+                        '$ref' => '#/components/schemas/CustomerGeneralInformation',
+                    ]),
+                    'privateNote' => new ArrayObject([
+                        'writeOnly' => true,
+                        'type' => [
+                            'string',
+                            'null',
+                        ],
+                    ]),
+                ],
+                'required' => [
+                    'privateNote',
+                ],
+            ]),
+        ];
+
+        // The URI variable customerId is not part of the request body, and the command parameters without type
+        // declaration (firstName, birthday, ...) use the type of the resource property
+        yield 'Customer.EditCustomerCommand schema' => [
+            'Customer.EditCustomerCommand',
+            new ArrayObject([
+                'type' => 'object',
+                'description' => '',
+                'deprecated' => false,
+                'properties' => [
+                    'firstName' => new ArrayObject([
+                        'type' => 'string',
+                    ]),
+                    'lastName' => new ArrayObject([
+                        'type' => 'string',
+                    ]),
+                    'email' => new ArrayObject([
+                        'type' => 'string',
+                    ]),
+                    'password' => new ArrayObject([
+                        'type' => 'string',
+                    ]),
+                    'defaultGroupId' => new ArrayObject([
+                        'type' => 'integer',
+                        'example' => 3,
+                    ]),
+                    'groupIds' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            'type' => 'integer',
+                        ],
+                        'example' => [
+                            1,
+                            3,
+                        ],
+                    ]),
+                    'genderId' => new ArrayObject([
+                        'type' => 'integer',
+                        'example' => 1,
+                    ]),
+                    'newsletterSubscribed' => new ArrayObject([
+                        'type' => 'boolean',
+                        'example' => false,
+                    ]),
+                    'enabled' => new ArrayObject([
+                        'type' => 'boolean',
+                        'example' => true,
+                    ]),
+                    'partnerOffersSubscribed' => new ArrayObject([
+                        'type' => 'boolean',
+                        'example' => false,
+                    ]),
+                    'birthday' => new ArrayObject([
+                        'type' => [
+                            'string',
+                            'null',
+                        ],
+                    ]),
+                    'companyName' => new ArrayObject([
+                        'type' => [
+                            'string',
+                            'null',
+                        ],
+                    ]),
+                    'siretCode' => new ArrayObject([
+                        'type' => [
+                            'string',
+                            'null',
+                        ],
+                    ]),
+                    'apeCode' => new ArrayObject([
+                        'type' => [
+                            'string',
+                            'null',
+                        ],
+                    ]),
+                    'website' => new ArrayObject([
+                        'type' => [
+                            'string',
+                            'null',
+                        ],
+                    ]),
+                    'allowedOutstandingAmount' => new ArrayObject([
+                        'type' => 'number',
+                        'example' => 1000.5,
+                    ]),
+                    'maxPaymentDays' => new ArrayObject([
+                        'type' => 'integer',
+                        'example' => 30,
+                    ]),
+                    'riskId' => new ArrayObject([
+                        'type' => 'integer',
+                        'example' => 1,
+                    ]),
+                ],
+            ]),
+        ];
+
+        // The constructor parameters whose getter has no get/is/has prefix (displayPriceTaxExcluded, showPrice) are
+        // documented and required, shopIds is not required since the context shops are its default value
+        yield 'CustomerGroup.AddCustomerGroupCommand schema' => [
+            'CustomerGroup.AddCustomerGroupCommand',
+            new ArrayObject([
+                'type' => 'object',
+                'description' => '',
+                'deprecated' => false,
+                'properties' => [
+                    'reductionPercent' => new ArrayObject([
+                        'type' => 'number',
+                        'example' => 42.99,
+                    ]),
+                    'shopIds' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            'type' => 'integer',
+                        ],
+                    ]),
+                    'displayPriceTaxExcluded' => new ArrayObject([
+                        'type' => 'boolean',
+                    ]),
+                    'showPrice' => new ArrayObject([
+                        'type' => 'boolean',
+                    ]),
+                    'names' => new ArrayObject([
+                        'type' => 'object',
+                        'example' => [
+                            'en-US' => 'value',
+                            'fr-FR' => 'valeur',
+                        ],
+                    ]),
+                ],
+                'required' => [
+                    'names',
+                    'reductionPercent',
+                    'displayPriceTaxExcluded',
+                    'showPrice',
+                ],
+            ]),
+        ];
+
+        // A nullable DecimalNumber is documented as a nullable number, and the plain comment of the class is not
+        // used as description
+        yield 'CustomerList schema' => [
+            'CustomerList',
+            new ArrayObject([
+                'type' => 'object',
+                'description' => '',
+                'deprecated' => false,
+                'properties' => [
+                    'customerId' => new ArrayObject([
+                        'type' => 'integer',
+                    ]),
+                    'socialTitle' => new ArrayObject([
+                        'type' => [
+                            'string',
+                            'null',
+                        ],
+                    ]),
+                    'firstName' => new ArrayObject([
+                        'type' => 'string',
+                    ]),
+                    'lastName' => new ArrayObject([
+                        'type' => 'string',
+                    ]),
+                    'email' => new ArrayObject([
+                        'type' => 'string',
+                    ]),
+                    'companyName' => new ArrayObject([
+                        'type' => [
+                            'string',
+                            'null',
+                        ],
+                    ]),
+                    'totalSpent' => new ArrayObject([
+                        'type' => [
+                            'number',
+                            'null',
+                        ],
+                        'example' => 42.99,
+                    ]),
+                    'enabled' => new ArrayObject([
+                        'type' => 'boolean',
+                    ]),
+                    'newsletterSubscribed' => new ArrayObject([
+                        'type' => 'boolean',
+                    ]),
+                    'partnerOffersSubscribed' => new ArrayObject([
+                        'type' => 'boolean',
+                    ]),
+                    'defaultGroupName' => new ArrayObject([
+                        'type' => [
+                            'string',
+                            'null',
+                        ],
+                    ]),
+                    'shopName' => new ArrayObject([
+                        'type' => 'string',
+                    ]),
+                    'dateAdd' => new ArrayObject([
+                        'type' => 'string',
+                        'format' => 'date-time',
+                    ]),
+                    'lastVisitDate' => new ArrayObject([
+                        'type' => [
+                            'string',
+                            'null',
+                        ],
+                        'format' => 'date-time',
+                    ]),
+                ],
+            ]),
+        ];
+
         // @todo Add a schema with a dateTime like discount when it is released or virtual product's expiration date.
     }
 
@@ -985,6 +1300,35 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
             'get',
             ['ApiClient'],
         ];
+    }
+
+    /**
+     * @dataProvider provideIntegerPathParameters
+     */
+    public function testIntegerPathParameters(string $path, string $method, string $parameterName, string $expectedType): void
+    {
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        /** @var OpenApi $openApi */
+        $openApi = $openApiFactory->__invoke();
+        $pathItem = $openApi->getPaths()->getPath($path);
+        $this->assertNotNull($pathItem);
+
+        $methodGetter = 'get' . ucfirst(strtolower($method));
+        /** @var Operation $operation */
+        $operation = $pathItem->$methodGetter();
+        $this->assertNotNull($operation);
+
+        $pathParameters = array_filter($operation->getParameters(), fn ($parameter) => 'path' === $parameter->getIn() && $parameterName === $parameter->getName());
+        $this->assertCount(1, $pathParameters);
+        $this->assertEquals(['type' => $expectedType], reset($pathParameters)->getSchema());
+    }
+
+    public static function provideIntegerPathParameters(): iterable
+    {
+        yield 'identifier with a digits requirement' => ['/customers/{customerId}', 'get', 'customerId', 'integer'];
+        yield 'identifier without requirement, based on the int property of the resource' => ['/customers/groups/{customerGroupId}', 'get', 'customerGroupId', 'integer'];
+        yield 'string identifier' => ['/modules/{technicalName}', 'get', 'technicalName', 'string'];
     }
 
     public function testMultipartFileUploadRequestBody(): void
