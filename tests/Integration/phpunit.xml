@@ -9,6 +9,8 @@
   <testsuites>
     <testsuite name="Integration">
       <directory>.</directory>
+      <!-- Run by phpunit-api.xml, without the back office bootstrap -->
+      <exclude>ApiPlatform</exclude>
     </testsuite>
   </testsuites>
 
