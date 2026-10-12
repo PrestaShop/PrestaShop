@@ -34,8 +34,30 @@ class ThemeValidator
 
     public function isValid(Theme $theme)
     {
-        return $this->hasRequiredFiles($theme)
+        return $this->hasValidName($theme)
+            && $this->hasRequiredFiles($theme)
             && $this->hasRequiredProperties($theme);
+    }
+
+    /**
+     * The theme name is used to build the theme folder path, so it must be a plain folder name
+     * (same rule as Validate::isThemeName()).
+     */
+    private function hasValidName(Theme $theme): bool
+    {
+        $themeName = $theme->getName();
+        if (is_string($themeName) && preg_match('/^[\w-]{3,255}$/u', $themeName)) {
+            return true;
+        }
+
+        $errorKey = is_string($themeName) ? $themeName : '';
+        $this->errors[$errorKey][] = $this->translator->trans(
+            'The theme name "%s" is not valid.',
+            [is_string($themeName) ? $themeName : ''],
+            'Admin.Design.Notification'
+        );
+
+        return false;
     }
 
     private function hasRequiredProperties(Theme $theme)

@@ -11,6 +11,7 @@ namespace PrestaShopBundle\Command;
 use Exception;
 use Language;
 use Module;
+use PrestaShop\PrestaShop\Core\Security\SafeZipExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Export\TranslationCatalogueExporter;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -22,7 +23,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Throwable;
-use ZipArchive;
 
 /**
  * Command to export module translations from command line
@@ -37,6 +37,7 @@ class ExportModuleTranslationsCommand extends Command
         private readonly TranslationCatalogueExporter $translationCatalogueExporter,
         private readonly Filesystem $filesystem,
         private readonly string $moduleDir,
+        private readonly SafeZipExtractor $zipExtractor,
     ) {
         parent::__construct();
     }
@@ -348,13 +349,9 @@ class ExportModuleTranslationsCommand extends Command
         $this->filesystem->mkdir($tempDir);
 
         try {
-            $zip = new ZipArchive();
-            if ($zip->open($zipFilePath) !== true) {
-                throw new Exception('Failed to open the exported zip file');
+            if (!$this->zipExtractor->extract($zipFilePath, $tempDir)) {
+                throw new Exception('Failed to extract the exported zip file');
             }
-
-            $zip->extractTo($tempDir);
-            $zip->close();
 
             $moduleTranslationsDir = $this->moduleDir . $moduleName . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR . $locale;
             $this->filesystem->mkdir($moduleTranslationsDir);

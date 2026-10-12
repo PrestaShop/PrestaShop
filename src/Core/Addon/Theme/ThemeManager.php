@@ -421,7 +421,12 @@ class ThemeManager implements AddonManagerInterface
         $this->finder = $finderClass::create();
 
         $sandboxPath = $this->getSandboxPath();
-        Tools::ZipExtract($source, $sandboxPath);
+        if (!Tools::ZipExtract($source, $sandboxPath)) {
+            $this->filesystem->remove($sandboxPath);
+            $errorMessage = 'The theme archive cannot be extracted: it is not a valid zip file, or one of its files would be written outside the theme folder';
+            $this->logger->error($errorMessage);
+            throw new ThemeConstraintException($errorMessage, ThemeConstraintException::INVALID_DATA);
+        }
 
         $themeConfigurationFile = $sandboxPath . '/config/theme.yml';
 
