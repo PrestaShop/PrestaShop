@@ -42,6 +42,7 @@ services:
     public: false
     arguments:
       $modulePath: '%modules_dir%'
+      $sandboxPath: '%ps_cache_dir%sandbox'
     tags: [ core.module.source_handler ]
 
   PrestaShop\PrestaShop\Core\Module\SourceHandler\RemoteZipSourceHandler:

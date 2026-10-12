@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 use PrestaShop\PrestaShop\Core\Security\Hashing;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
+use PrestaShop\PrestaShop\Core\Security\SafeZipExtractor;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use Symfony\Component\Filesystem\Filesystem;
@@ -3561,7 +3562,7 @@ exit;
     }
 
     /**
-     * Extract a zip file to the given directory
+     * Extract a zip file to the given directory, only when all its entries stay inside it
      *
      * @param string $from_file
      * @param string $to_dir
@@ -3574,12 +3575,7 @@ exit;
             mkdir($to_dir, PsFileSystem::DEFAULT_MODE_FOLDER);
         }
 
-        $zip = new ZipArchive();
-        if ($zip->open($from_file) === true && $zip->extractTo($to_dir) && $zip->close()) {
-            return true;
-        }
-
-        return false;
+        return (new SafeZipExtractor())->extract($from_file, $to_dir);
     }
 
     /**

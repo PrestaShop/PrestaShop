@@ -129,7 +129,7 @@ final class ThemeManagerTest extends TestCase
             $this->createThemeManager()->install('http://example.com/' . $fileName);
             $this->fail('An invalid archive should not be installed');
         } catch (ThemeConstraintException $e) {
-            $this->assertSame(ThemeConstraintException::MISSING_CONFIGURATION_FILE, $e->getCode());
+            $this->assertSame(ThemeConstraintException::INVALID_DATA, $e->getCode());
         }
 
         $this->assertSame(['http://example.com/' . $fileName], FakeHttpStreamWrapper::$openedUrls);
