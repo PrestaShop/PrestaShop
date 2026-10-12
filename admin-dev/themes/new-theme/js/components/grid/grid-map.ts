@@ -65,6 +65,7 @@ export default {
   dropdownItem: '.js-dropdown-item',
   table: 'table.table',
   headerToolbar: '.header-toolbar',
+  breadcrumbIcons: '.mat-icon, .material-icons',
   breadcrumbItem: '.breadcrumb-item',
   resetSearch: '.js-reset-search',
   expand: '.js-expand',

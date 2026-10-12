@@ -96,7 +96,7 @@ export default class ExportToSqlManagerExtension {
       .map((breadcrumbItem) => {
         const breadcrumbItemClone = breadcrumbItem.cloneNode(true) as HTMLElement;
 
-        breadcrumbItemClone.querySelectorAll('.material-icons').forEach((breadcrumbIcon) => {
+        breadcrumbItemClone.querySelectorAll(GridMap.breadcrumbIcons).forEach((breadcrumbIcon) => {
           breadcrumbIcon.remove();
         });
 
