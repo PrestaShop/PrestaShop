@@ -1323,7 +1323,7 @@ class HookCore extends ObjectModel
     {
         $cacheId = 'hook_idsbyname';
         if ($withAliases) {
-            $cacheId .= 'hook_idsbyname_withalias';
+            $cacheId = 'hook_idsbyname_withalias';
         }
 
         if (!$refreshCache && Cache::isStored($cacheId)) {
