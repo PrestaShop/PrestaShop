@@ -50,4 +50,9 @@ class ThemeConstraintException extends ThemeException
      * Some mandatory files are missing.
      */
     public const INVALID_DATA = 4;
+
+    /**
+     * When the theme cannot be downloaded from the provided URL.
+     */
+    public const CANNOT_DOWNLOAD_FROM_URL = 5;
 }
