@@ -9,8 +9,6 @@ namespace PrestaShopBundle\DependencyInjection\Compiler;
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -68,34 +66,11 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
             if (empty($moduleNamespace)) {
                 continue;
             }
-            $mappingPass = $this->createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory);
+            $mappingPass = DoctrineOrmMappingsPass::createAnnotationMappingDriver([$moduleNamespace], [$moduleEntityDirectory]);
             $mappingsPassList[$moduleEntityDirectory] = $mappingPass;
         }
 
         return $mappingsPassList;
-    }
-
-    /**
-     * This method is derived from DoctrineOrmMappingsPass::createAnnotationMappingDriver, sadly the driver includes
-     * ALL the files present in the folder and as modules include an index.php file containing an exit statement the
-     * whole process was stopped. So we manually create the DoctrineOrmMappingsPass so that AnnotationDriver ignores
-     * the index.php file.
-     *
-     * @param string $moduleNamespace
-     * @param string $moduleEntityDirectory
-     *
-     * @return DoctrineOrmMappingsPass
-     */
-    private function createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory)
-    {
-        $reader = new Reference('annotation_reader');
-        $driverDefinition = new Definition('Doctrine\ORM\Mapping\Driver\AnnotationDriver', [$reader, [$moduleEntityDirectory]]);
-        $indexFile = $moduleEntityDirectory . '/index.php';
-        if (file_exists($indexFile)) {
-            $driverDefinition->addMethodCall('addExcludePaths', [[$indexFile]]);
-        }
-
-        return new DoctrineOrmMappingsPass($driverDefinition, [$moduleNamespace], [], false, []);
     }
 
     /**
