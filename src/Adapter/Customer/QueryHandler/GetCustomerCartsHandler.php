@@ -34,10 +34,6 @@ final class GetCustomerCartsHandler extends AbstractCustomerHandler implements G
      */
     private $contextStateManager;
 
-    /**
-     * @param LocaleInterface $locale
-     * @param ContextStateManager $contextStateManager
-     */
     public function __construct(
         LocaleInterface $locale,
         ContextStateManager $contextStateManager
