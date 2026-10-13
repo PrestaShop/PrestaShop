@@ -7,8 +7,6 @@
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
-use Symfony\Component\Config\Resource\DirectoryResource;
-use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -33,11 +31,11 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
         /** @var CompilerPassInterface $compilerPass */
         foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {
             $compilerPass->process($container);
-            $container->addResource(
-                is_dir($compilerResourcePath) ?
-                new DirectoryResource($compilerResourcePath) :
-                new FileResource($compilerResourcePath)
-            );
+            /*
+             * If the src/Entity directory has not already been registered as a resource by PrestaShopExtension,
+             * register them here.
+             */
+            $container->fileExists($compilerResourcePath, '/\.(xml|ya?ml|php)$/');
         }
     }
 
