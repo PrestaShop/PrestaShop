@@ -52,7 +52,7 @@ final class SecurityHeadersSubscriber implements EventSubscriberInterface
         // would report the back office as plain HTTP there and drop HSTS.
         // Static headers must never turn a page into a 500; a broken configuration read is swallowed.
         try {
-            foreach ($this->provider->getHeaders(Tools::usingSecureMode(), $shopConstraint) as $name => $value) {
+            foreach ($this->provider->getHeaders(Tools::usingSecureMode(), $shopConstraint, $this->allShopsScope) as $name => $value) {
                 $response->headers->set($name, $value);
             }
         } catch (Throwable $e) {

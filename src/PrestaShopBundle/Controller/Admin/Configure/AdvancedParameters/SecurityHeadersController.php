@@ -25,6 +25,8 @@ class SecurityHeadersController extends PrestaShopAdminController
     public function indexAction(
         #[Autowire(service: 'prestashop.admin.security_headers.form_handler')]
         FormHandlerInterface $securityHeadersFormHandler,
+        #[Autowire(service: 'prestashop.admin.security_headers.admin_form_handler')]
+        FormHandlerInterface $adminSecurityHeadersFormHandler,
     ): Response {
         $this->assertFeatureEnabled();
 
@@ -35,6 +37,7 @@ class SecurityHeadersController extends PrestaShopAdminController
                 'layoutTitle' => $this->trans('Security headers', [], 'Admin.Navigation.Menu'),
                 'help_link' => $this->generateSidebarLink('AdminSecurityHeaders'),
                 'securityHeadersForm' => $securityHeadersFormHandler->getForm()->createView(),
+                'adminSecurityHeadersForm' => $adminSecurityHeadersFormHandler->getForm()->createView(),
             ]
         );
     }
@@ -53,6 +56,31 @@ class SecurityHeadersController extends PrestaShopAdminController
 
         if ($form->isSubmitted()) {
             $saveErrors = $securityHeadersFormHandler->save($form->getData());
+
+            if (0 === count($saveErrors)) {
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
+            } else {
+                $this->addFlashErrors($saveErrors);
+            }
+        }
+
+        return $this->redirectToRoute('admin_security_headers_index');
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_security_headers_index')]
+    #[AdminSecurity("is_granted('update', 'AdminSecurityHeaders')", redirectRoute: 'admin_security_headers_index')]
+    public function saveAdminAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.security_headers.admin_form_handler')]
+        FormHandlerInterface $adminSecurityHeadersFormHandler,
+    ): RedirectResponse {
+        $this->assertFeatureEnabled();
+
+        $form = $adminSecurityHeadersFormHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $saveErrors = $adminSecurityHeadersFormHandler->save($form->getData());
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));

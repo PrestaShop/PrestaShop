@@ -10,3 +10,10 @@ admin_security_headers_save:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::saveAction'
     _parent: admin_security_headers_index
+
+admin_security_headers_admin_save:
+  path: /save-back-office
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityHeadersController::saveAdminAction'
+    _parent: admin_security_headers_index
