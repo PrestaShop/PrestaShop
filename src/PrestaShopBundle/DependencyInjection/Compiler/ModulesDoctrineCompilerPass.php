@@ -129,7 +129,7 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * Returns a list of installed modules.
+     * Returns the immediate subdirectories of the modules directory.
      *
      * @return Finder
      */
