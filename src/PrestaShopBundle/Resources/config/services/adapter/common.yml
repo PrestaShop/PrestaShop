@@ -79,6 +79,13 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
+  # Defined here rather than in adapter/order.yml: PaymentModule::validateOrder() runs in the
+  # hand-built front-office container, which imports this file, not adapter/order.yml.
+  PrestaShop\PrestaShop\Adapter\Order\OrderCreationLock:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
   PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository: ~
 
   # Legacy logger (writes ps_log), defined here so that every container has it: the hand-built

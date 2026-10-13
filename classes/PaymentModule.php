@@ -6,6 +6,7 @@
 
 use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleQuantityReserver;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
+use PrestaShop\PrestaShop\Adapter\Order\OrderCreationLock;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentCreator;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService;
 use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater;
@@ -40,6 +41,8 @@ abstract class PaymentModuleCore extends Module
      * @var int[]
      */
     private $orderIdsUsingCartRuleQuantities = [];
+
+    private ?OrderCreationLock $orderCreationLock = null;
 
     public function install()
     {
@@ -219,31 +222,44 @@ abstract class PaymentModuleCore extends Module
         ?Shop $shop = null,
         ?string $order_reference = null
     ) {
-        $this->reservedCartRules = [];
-        $this->orderIdsUsingCartRuleQuantities = [];
+        $orderCreationLock = $this->getOrderCreationLock();
+        if (!$orderCreationLock->acquire((int) $id_cart)) {
+            PrestaShopLogger::addLog('PaymentModule::validateOrder - Another order is already being created from this cart', 3, null, 'Cart', (int) $id_cart, true);
+
+            throw new PrestaShopException('Error processing order. Another order is already being created from this cart.');
+        }
 
         try {
-            return $this->validateOrderWithCartRuleReservations(
-                $id_cart,
-                $id_order_state,
-                $amount_paid,
-                $payment_method,
-                $message,
-                $extra_vars,
-                $currency_special,
-                $dont_touch_amount,
-                $secure_key,
-                $shop,
-                $order_reference
-            );
+            $this->reservedCartRules = [];
+            $this->orderIdsUsingCartRuleQuantities = [];
+
+            try {
+                return $this->validateOrderWithCartRuleReservations(
+                    $id_cart,
+                    $id_order_state,
+                    $amount_paid,
+                    $payment_method,
+                    $message,
+                    $extra_vars,
+                    $currency_special,
+                    $dont_touch_amount,
+                    $secure_key,
+                    $shop,
+                    $order_reference
+                );
+            } finally {
+                // Also gives back the quantities taken when the validation stops on an exception
+                $this->releaseUnusedCartRuleQuantities();
+            }
         } finally {
-            // Also gives back the quantities taken when the validation stops on an exception
-            $this->releaseUnusedCartRuleQuantities();
+            $orderCreationLock->release((int) $id_cart);
         }
     }
 
     /**
-     * Same contract as validateOrder(). The cart rule quantities it takes and that no order uses
+     * Same contract as validateOrder(). Must only run while the cart's OrderCreationLock is held,
+     * so that the "order already placed" check and the order INSERTs cannot interleave with
+     * another request on the same cart. The cart rule quantities it takes and that no order uses
      * are given back by validateOrder() once it ends, whether it returns or throws.
      *
      * @param int $id_cart
@@ -1094,6 +1110,17 @@ abstract class PaymentModuleCore extends Module
         }
 
         return $this->partialRenderer;
+    }
+
+    private function getOrderCreationLock(): OrderCreationLock
+    {
+        if ($this->orderCreationLock === null) {
+            /** @var OrderCreationLock $orderCreationLock */
+            $orderCreationLock = $this->get(OrderCreationLock::class);
+            $this->orderCreationLock = $orderCreationLock;
+        }
+
+        return $this->orderCreationLock;
     }
 
     /**
