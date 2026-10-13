@@ -27,7 +27,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class SecurityHeadersSubscriberTest extends TestCase
 {
-    /** The three low-risk headers the provider ships on by default. */
+    /** A representative storefront config with the three low-risk headers set; the install ships them all empty/off. */
     private const DEFAULTS = [
         'PS_SEC_NOSNIFF' => '1',
         'PS_SEC_FRAME_OPTIONS' => 'SAMEORIGIN',
@@ -118,6 +118,28 @@ class SecurityHeadersSubscriberTest extends TestCase
         }
     }
 
+    public function testTheBackOfficeSubscriberEmitsTheAdminHeadersAndTheStorefrontTheStorefrontOnes(): void
+    {
+        $config = [
+            'PS_SEC_ADMIN_NOSNIFF' => '1',
+            'PS_SEC_ADMIN_FRAME_OPTIONS' => 'SAMEORIGIN',
+            'PS_SEC_ADMIN_REFERRER_POLICY' => 'strict-origin',
+            'PS_SEC_NOSNIFF' => '0',
+        ];
+
+        $admin = new Response();
+        $this->subscriber($config, allShopsScope: true)->onKernelResponse($this->event(HttpKernelInterface::MAIN_REQUEST, $admin));
+        $this->assertSame('nosniff', $admin->headers->get('X-Content-Type-Options'));
+        $this->assertSame('SAMEORIGIN', $admin->headers->get('X-Frame-Options'));
+        $this->assertSame('strict-origin', $admin->headers->get('Referrer-Policy'));
+
+        // The storefront reads PS_SEC_* (nosniff off here) and ignores the admin keys.
+        $storefront = new Response();
+        $this->subscriber($config)->onKernelResponse($this->event(HttpKernelInterface::MAIN_REQUEST, $storefront));
+        $this->assertFalse($storefront->headers->has('X-Content-Type-Options'));
+        $this->assertFalse($storefront->headers->has('Referrer-Policy'));
+    }
+
     public function testTheBackOfficeScopeReadsTheAllShopsValueAndTheStorefrontTheCurrentContext(): void
     {
         // The back office is a single global surface; the storefront reads the shop being served
@@ -156,15 +178,15 @@ class SecurityHeadersSubscriberTest extends TestCase
     /**
      * @param array<string, string> $config
      */
-    private function subscriber(array $config, bool $flagEnabled = true): SecurityHeadersSubscriber
+    private function subscriber(array $config, bool $flagEnabled = true, bool $allShopsScope = false): SecurityHeadersSubscriber
     {
         $configuration = $this->createMock(ShopConfigurationInterface::class);
-        $configuration->method('get')->willReturnCallback(fn (string $key) => $config[$key] ?? null);
+        $configuration->method('get')->willReturnCallback(fn (string $key, $default = null) => $config[$key] ?? $default);
 
         $flagChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
         $flagChecker->method('isEnabled')->willReturn($flagEnabled);
 
-        return new SecurityHeadersSubscriber(new SecurityHeadersProvider($configuration, $flagChecker));
+        return new SecurityHeadersSubscriber(new SecurityHeadersProvider($configuration, $flagChecker), $allShopsScope);
     }
 
     private function event(int $requestType, Response $response, ?Request $request = null): ResponseEvent

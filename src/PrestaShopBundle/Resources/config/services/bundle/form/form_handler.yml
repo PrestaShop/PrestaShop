@@ -161,6 +161,16 @@ services:
       - 'SecurityHeaders'
       - 'security-headers'
 
+  prestashop.admin.security_headers.admin_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.security_headers.admin_data_provider'
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SecurityHeaders\AdminSecurityHeadersType'
+      - 'AdminSecurityHeadersSettings'
+      - 'security-headers-admin'
+
   prestashop.admin.order.invoices.by_date.form_handler:
     class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByDateFormHandler'
     arguments:

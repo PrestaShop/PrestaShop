@@ -6,25 +6,66 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block content %}
-  {{ form_start(securityHeadersForm, {attr: {class: 'form'}, action: path('admin_security_headers_save')}) }}
-    <div class="card" id="configuration_fieldset_security_headers">
-      <h3 class="card-header">
-        <i class="material-icons">lock</i> {{ 'Security headers'|trans({}, 'Admin.Advparameters.Feature') }}
-      </h3>
-      <div class="card-body">
-        <p class="text-muted">
-          {{ 'Static response headers, set per shop and sent on both the storefront and back office. The Content Security Policy is managed on its own page.'|trans({}, 'Admin.Advparameters.Help') }}
-        </p>
-        <div class="form-wrapper">
-          {{ form_widget(securityHeadersForm) }}
-          {{ form_rest(securityHeadersForm) }}
+  <ul class="nav nav-tabs mb-2" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="security-headers-storefront-tab" data-toggle="tab" data-target="#security-headers-storefront" href="#security-headers-storefront" role="tab" aria-controls="security-headers-storefront" aria-selected="true">
+        {{ 'Storefront'|trans({}, 'Admin.Shopparameters.Feature') }}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="security-headers-back-office-tab" data-toggle="tab" data-target="#security-headers-back-office" href="#security-headers-back-office" role="tab" aria-controls="security-headers-back-office" aria-selected="false">
+        {{ 'Back office'|trans({}, 'Admin.Advparameters.Feature') }}
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="security-headers-storefront" role="tabpanel" aria-labelledby="security-headers-storefront-tab">
+      {{ form_start(securityHeadersForm, {attr: {class: 'form'}, action: path('admin_security_headers_save')}) }}
+        <div class="card" id="configuration_fieldset_security_headers">
+          <h3 class="card-header">
+            <i class="material-icons">lock</i> {{ 'Storefront security headers'|trans({}, 'Admin.Advparameters.Feature') }}
+          </h3>
+          <div class="card-body">
+            <p class="text-muted">
+              {{ 'Static response headers sent on this shop\'s storefront, all off by default. HSTS set here is per host, so it applies to both the storefront and the back office.'|trans({}, 'Admin.Advparameters.Help') }}
+            </p>
+            <div class="form-wrapper">
+              {{ form_widget(securityHeadersForm) }}
+              {{ form_rest(securityHeadersForm) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="card-footer">
-        <div class="d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-        </div>
-      </div>
+      {{ form_end(securityHeadersForm) }}
     </div>
-  {{ form_end(securityHeadersForm) }}
+
+    <div class="tab-pane fade" id="security-headers-back-office" role="tabpanel" aria-labelledby="security-headers-back-office-tab">
+      {{ form_start(adminSecurityHeadersForm, {attr: {class: 'form'}, action: path('admin_security_headers_admin_save')}) }}
+        <div class="card" id="configuration_fieldset_admin_security_headers">
+          <h3 class="card-header">
+            <i class="material-icons">lock</i> {{ 'Back-office security headers'|trans({}, 'Admin.Advparameters.Feature') }}
+          </h3>
+          <div class="card-body">
+            <p class="text-muted">
+              {{ 'Static response headers sent on the back office, one global set for the whole installation. These ship with secure defaults. HSTS is configured on the Storefront tab and applies here too.'|trans({}, 'Admin.Advparameters.Help') }}
+            </p>
+            <div class="form-wrapper">
+              {{ form_widget(adminSecurityHeadersForm) }}
+              {{ form_rest(adminSecurityHeadersForm) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
+        </div>
+      {{ form_end(adminSecurityHeadersForm) }}
+    </div>
+  </div>
 {% endblock %}
