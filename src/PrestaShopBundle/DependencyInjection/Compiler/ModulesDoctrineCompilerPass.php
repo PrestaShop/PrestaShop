@@ -42,9 +42,9 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
      *
      * @param array $installedModules
      *
-     * @return array
+     * @return array<string, DoctrineOrmMappingsPass>
      */
-    private function getCompilerPassList(array $installedModules, string $moduleDir)
+    private function getCompilerPassList(array $installedModules, string $moduleDir): array
     {
         $modulesDirectories = $this->getModulesFolders($moduleDir);
 
@@ -66,8 +66,15 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
             if (empty($moduleNamespace)) {
                 continue;
             }
-            $mappingPass = DoctrineOrmMappingsPass::createAnnotationMappingDriver([$moduleNamespace], [$moduleEntityDirectory]);
-            $mappingsPassList[$moduleEntityDirectory] = $mappingPass;
+            $mappingsPassList[$moduleEntityDirectory] = $moduleNamespace['uses_attributes'] ?
+                DoctrineOrmMappingsPass::createAttributeMappingDriver(
+                    [$moduleNamespace['namespace']],
+                    [$moduleEntityDirectory]
+                ) :
+                DoctrineOrmMappingsPass::createAnnotationMappingDriver(
+                    [$moduleNamespace['namespace']],
+                    [$moduleEntityDirectory]
+                );
         }
 
         return $mappingsPassList;
@@ -76,17 +83,27 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
     /**
      * @param string $moduleEntityDirectory
      *
-     * @return string
+     * @return array|array{namespace: string, uses_attributes: bool}
      */
-    private function getModuleNamespace(string $moduleEntityDirectory)
+    private function getModuleNamespace(string $moduleEntityDirectory): array
     {
         $finder = new Finder();
         $finder->files()->in($moduleEntityDirectory)->name('*.php');
 
         foreach ($finder as $phpFile) {
-            if (preg_match('~namespace[ \t]+(.*)[ \t]*;~Um', $phpFile->getContents(), $matches)) {
+            $fileContents = $phpFile->getContents();
+            if (preg_match('~namespace[ \t]+(.*)[ \t]*;~Um', $fileContents, $matches)) {
                 if (($namespace = trim($matches[1])) === '') {
                     continue;
+                }
+
+                $usesAttributes = false;
+
+                foreach (token_get_all($fileContents) as $token) {
+                    if (is_array($token) && $token[0] === T_ATTRIBUTE) {
+                        $usesAttributes = true;
+                        break;
+                    }
                 }
 
                 // We strip the last part of the namespace to get the namespace matching with the entity folder
@@ -94,15 +111,21 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
                 // The first matching PHP file would be in a sub namespace and be returned, thus the Entity
                 // namespace would not be parsed completely
                 if (($pos = strpos($namespace, '\\Entity')) !== false) {
-                    return substr($namespace, 0, $pos + strlen('\\Entity'));
+                    return [
+                        'namespace' => substr($namespace, 0, $pos + strlen('\\Entity')),
+                        'uses_attributes' => $usesAttributes,
+                    ];
                 }
 
                 // Fallback: if for some reason there's no '\Entity', I'll use what was found anyway
-                return $namespace;
+                return [
+                    'namespace' => $namespace,
+                    'uses_attributes' => $usesAttributes,
+                ];
             }
         }
 
-        return '';
+        return [];
     }
 
     /**
