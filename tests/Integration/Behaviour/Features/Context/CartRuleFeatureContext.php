@@ -372,6 +372,23 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Then /^cart rule "(.+)" should have a quantity of (\d+)$/
+     */
+    public function assertCartRuleQuantity(string $cartRuleName, int $quantity): void
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        // Read from the database directly, the CartRule object may come from the object cache
+        $storedQuantity = CommonFeatureContext::getContainer()->get('doctrine.dbal.default_connection')->fetchOne(
+            'SELECT `quantity` FROM `' . _DB_PREFIX_ . 'cart_rule` WHERE `id_cart_rule` = :cartRuleId',
+            ['cartRuleId' => (int) $this->cartRules[$cartRuleName]->id]
+        );
+
+        if ($quantity !== (int) $storedQuantity) {
+            throw new \RuntimeException(sprintf('Expected cart rule quantity %d, got %d', $quantity, (int) $storedQuantity));
+        }
+    }
+
+    /**
      * @Then /^cart rule "(.+)" cannot be applied to my cart$/
      */
     public function cartRuleNamedCannotBeAppliedToMyCart($cartRuleName)
