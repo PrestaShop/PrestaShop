@@ -9,6 +9,7 @@ namespace PrestaShopBundle\DependencyInjection\Compiler;
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -62,6 +63,12 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
             if ($moduleEntityDirectory === false) {
                 continue;
             }
+            /*
+            * PrestaShopExtension::prependApiConfig() only removes index.php files from active_modules.
+            * This method also removes index.php files from installed_modules.
+            */
+            (new Filesystem())->remove(Finder::create()->files()->in($moduleEntityDirectory)->name('index.php'));
+
             $moduleNamespace = $this->getModuleNamespace($moduleEntityDirectory);
             if (empty($moduleNamespace)) {
                 continue;
