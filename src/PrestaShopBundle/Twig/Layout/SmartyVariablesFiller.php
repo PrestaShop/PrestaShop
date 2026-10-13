@@ -33,7 +33,7 @@ class SmartyVariablesFiller
         private readonly LegacyContext $legacyContext,
         private readonly Configuration $configuration,
         private readonly RouterInterface $router,
-        private readonly RequestStack requestStack
+        private readonly RequestStack $requestStack
     ) {
     }
 
