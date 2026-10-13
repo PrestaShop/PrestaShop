@@ -27,7 +27,8 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $installedModules = $container->getParameter('prestashop.installed_modules');
-        $compilerPassList = $this->getCompilerPassList($installedModules);
+        $moduleDir = $container->getParameter('prestashop.module_dir');
+        $compilerPassList = $this->getCompilerPassList($installedModules, $moduleDir);
         /** @var CompilerPassInterface $compilerPass */
         foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {
             $compilerPass->process($container);
@@ -46,11 +47,12 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
      *
      * @return array
      */
-    private function getCompilerPassList(array $activeModules)
+    private function getCompilerPassList(array $activeModules, string $moduleDir)
     {
+        $modulesDirectories = $this->getModulesFolders($moduleDir);
         $mappingsPassList = [];
         /** @var SplFileInfo $moduleFolder */
-        foreach ($this->getModulesFolders() as $moduleFolder) {
+        foreach ($modulesDirectories as $moduleFolder) {
             if (in_array($moduleFolder->getFilename(), $activeModules)
                 && is_dir($moduleFolder . '/src/Entity')
             ) {
@@ -126,10 +128,12 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
     }
 
     /**
+     * Returns a list of installed modules.
+     *
      * @return Finder
      */
-    private function getModulesFolders()
+    private function getModulesFolders(string $moduleDir): Finder
     {
-        return Finder::create()->directories()->in(_PS_MODULE_DIR_)->depth(0);
+        return Finder::create()->directories()->in($moduleDir)->depth(0);
     }
 }
