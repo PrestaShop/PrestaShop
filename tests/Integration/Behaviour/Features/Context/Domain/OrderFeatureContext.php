@@ -69,6 +69,9 @@ use TaxManagerFactory;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Integration\Utility\OrderCartRulesOverridingPaymentModuleFake;
+use Tests\Integration\Utility\OrderCartRulesPaymentModuleFake;
+use Tests\Integration\Utility\OrderCreationFailingPaymentModuleFake;
 use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
@@ -138,6 +141,58 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         );
 
         SharedStorage::getStorage()->set($orderReference, $orderId->getValue());
+    }
+
+    /**
+     * @When I validate cart :cartReference with a payment module failing to create the order
+     */
+    public function validateCartWithOrderCreationFailingPaymentModule(string $cartReference): void
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+
+        try {
+            (new OrderCreationFailingPaymentModuleFake())->validateOrder(
+                $cartId,
+                (int) Configuration::get('PS_OS_BANKWIRE'),
+                (new Cart($cartId))->getOrderTotal()
+            );
+        } catch (PrestaShopException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I validate cart :cartReference with a payment module overriding the order cart rules creation
+     */
+    public function validateCartWithOrderCartRulesOverridingPaymentModule(string $cartReference): void
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+
+        (new OrderCartRulesOverridingPaymentModuleFake())->validateOrder(
+            $cartId,
+            (int) Configuration::get('PS_OS_BANKWIRE'),
+            (new Cart($cartId))->getOrderTotal()
+        );
+    }
+
+    /**
+     * @When I add the cart rules of cart :cartReference to order :orderReference with a payment module validating orders on its own
+     */
+    public function addCartRulesToOrderWithOwnOrderValidation(string $cartReference, string $orderReference): void
+    {
+        (new OrderCartRulesPaymentModuleFake())->addCartRulesToOrder(
+            new Order((int) SharedStorage::getStorage()->get($orderReference)),
+            new Cart((int) SharedStorage::getStorage()->get($cartReference)),
+            (int) Configuration::get('PS_OS_BANKWIRE')
+        );
+    }
+
+    /**
+     * @Then I should get error that the order creation failed
+     */
+    public function assertLastErrorIsOrderCreationFailure(): void
+    {
+        $this->assertLastErrorIs(PrestaShopException::class);
     }
 
     /**
