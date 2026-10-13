@@ -21,6 +21,8 @@ class OverrideTranslatorServiceCompilerPass implements CompilerPassInterface
     {
         $definition = $container->getDefinition('translator.default');
         $definition->setClass($container->getParameter('translator.class'));
+        // Locales to warm up: installed language packs only, not every locale of the vendor translations
+        $definition->setArgument(5, array_map('basename', glob($container->getParameter('kernel.project_dir') . '/translations/*-*', GLOB_ONLYDIR) ?: []));
         // Feed the extra property registry wordings into the back-office translator so their domains
         // exist in its catalogue (makes Module::isUsingNewTranslationSystem() detect a module whose
         // only new-system wordings come from extra properties).
