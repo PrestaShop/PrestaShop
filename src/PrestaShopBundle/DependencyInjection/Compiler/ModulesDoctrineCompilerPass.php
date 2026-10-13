@@ -44,30 +44,34 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
     /**
      * Returns a list of CompilerPassInterface indexed with their associated resource.
      *
-     * @param array $activeModules
+     * @param array $installedModules
      *
      * @return array
      */
-    private function getCompilerPassList(array $activeModules, string $moduleDir)
+    private function getCompilerPassList(array $installedModules, string $moduleDir)
     {
         $modulesDirectories = $this->getModulesFolders($moduleDir);
+
+        /*
+         * Filters directories to include only installed modules containing a `/src/Entity` directory.
+         */
+        $modulesDirectories->filter(
+            fn (SplFileInfo $moduleDirectoryWithEntity): bool => in_array($moduleDirectoryWithEntity->getFilename(), $installedModules) && is_dir($moduleDirectoryWithEntity->getRealPath() . '/src/Entity')
+        );
+
         $mappingsPassList = [];
-        /** @var SplFileInfo $moduleFolder */
-        foreach ($modulesDirectories as $moduleFolder) {
-            if (in_array($moduleFolder->getFilename(), $activeModules)
-                && is_dir($moduleFolder . '/src/Entity')
-            ) {
-                $moduleEntityDirectory = realpath($moduleFolder . '/src/Entity');
-                if ($moduleEntityDirectory === false) {
-                    continue;
-                }
-                $moduleNamespace = $this->getModuleNamespace($moduleEntityDirectory);
-                if (empty($moduleNamespace)) {
-                    continue;
-                }
-                $mappingPass = $this->createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory);
-                $mappingsPassList[$moduleEntityDirectory] = $mappingPass;
+
+        foreach ($modulesDirectories as $moduleDirectory) {
+            $moduleEntityDirectory = realpath($moduleDirectory->getRealPath() . '/src/Entity');
+            if ($moduleEntityDirectory === false) {
+                continue;
             }
+            $moduleNamespace = $this->getModuleNamespace($moduleEntityDirectory);
+            if (empty($moduleNamespace)) {
+                continue;
+            }
+            $mappingPass = $this->createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory);
+            $mappingsPassList[$moduleEntityDirectory] = $mappingPass;
         }
 
         return $mappingsPassList;
