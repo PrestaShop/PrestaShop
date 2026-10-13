@@ -973,25 +973,10 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     'ordersInformation' => new ArrayObject([
                         '$ref' => '#/components/schemas/CustomerOrdersInformation',
                     ]),
-                    'cartsInformation' => new ArrayObject([
-                        'type' => 'array',
-                        'items' => [
-                            '$ref' => '#/components/schemas/CustomerCartInformation',
-                        ],
-                    ]),
-                    'productsInformation' => new ArrayObject([
-                        '$ref' => '#/components/schemas/CustomerProductsInformation',
-                    ]),
                     'messagesInformation' => new ArrayObject([
                         'type' => 'array',
                         'items' => [
                             '$ref' => '#/components/schemas/CustomerMessageInformation',
-                        ],
-                    ]),
-                    'discountsInformation' => new ArrayObject([
-                        'type' => 'array',
-                        'items' => [
-                            '$ref' => '#/components/schemas/CustomerDiscountInformation',
                         ],
                     ]),
                     'sentEmailsInformation' => new ArrayObject([
@@ -1010,12 +995,6 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                         'type' => 'array',
                         'items' => [
                             '$ref' => '#/components/schemas/CustomerGroupInformation',
-                        ],
-                    ]),
-                    'addressesInformation' => new ArrayObject([
-                        'type' => 'array',
-                        'items' => [
-                            '$ref' => '#/components/schemas/CustomerAddressInformation',
                         ],
                     ]),
                     'generalInformation' => new ArrayObject([
@@ -1150,6 +1129,8 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                         'items' => [
                             'type' => 'integer',
                         ],
+                        'description' => 'Shops associated with the group. On creation, optional from PrestaShop 9.2.0 where it defaults '
+                            . 'to the shops of the context. Required on older versions, where omitting it results in a 500 error.',
                     ]),
                     'displayPriceTaxExcluded' => new ArrayObject([
                         'type' => 'boolean',

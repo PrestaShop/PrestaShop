@@ -5380,12 +5380,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaEdit/ps_apiresources.git",
-                "reference": "baa878054455821c84bd0a4e2864e28c8c6a502e"
+                "reference": "09de93a140d00be387d7eb8e4ecd6e98e5c3edce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaEdit/ps_apiresources/zipball/baa878054455821c84bd0a4e2864e28c8c6a502e",
-                "reference": "baa878054455821c84bd0a4e2864e28c8c6a502e",
+                "url": "https://api.github.com/repos/PrestaEdit/ps_apiresources/zipball/09de93a140d00be387d7eb8e4ecd6e98e5c3edce",
+                "reference": "09de93a140d00be387d7eb8e4ecd6e98e5c3edce",
                 "shasum": ""
             },
             "require": {
