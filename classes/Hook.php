@@ -968,12 +968,18 @@ class HookCore extends ObjectModel
         }
 
         $different_shop = false;
+        $old_context_id = null;
         if (
             $id_shop !== null
             && Validate::isUnsignedId($id_shop)
             && $id_shop != $context->shop->getContextShopID()
         ) {
             $old_context = $context->shop->getContext();
+            $old_context_id = match ($old_context) {
+                Shop::CONTEXT_GROUP => Shop::getContextShopGroupID(),
+                Shop::CONTEXT_SHOP => Shop::getContextShopID(),
+                default => null,
+            };
             $old_shop = clone $context->shop;
             $shop = new Shop((int) $id_shop);
             if (Validate::isLoadedObject($shop)) {
@@ -1192,7 +1198,7 @@ class HookCore extends ObjectModel
 
         if ($different_shop && isset($old_shop, $old_context, $shop->id)) {
             $context->shop = $old_shop;
-            $context->shop->setContext($old_context, $shop->id);
+            $context->shop->setContext($old_context, $old_context_id);
         }
 
         if (true === $chain) {
