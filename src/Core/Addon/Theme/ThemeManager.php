@@ -77,6 +77,13 @@ class ThemeManager implements AddonManagerInterface
     public function install($source)
     {
         if (filter_var($source, FILTER_VALIDATE_URL)) {
+            // Only a zip archive can be installed, any other file is not downloaded
+            if (!preg_match('/\.zip$/', basename($source))) {
+                throw new ThemeConstraintException(
+                    sprintf('Theme URL "%s" does not point to a zip archive.', $source),
+                    ThemeConstraintException::CANNOT_DOWNLOAD_FROM_URL
+                );
+            }
             $downloaded = Tools::createFileFromUrl($source);
             if (false === $downloaded) {
                 throw new ThemeConstraintException(
@@ -84,7 +91,14 @@ class ThemeManager implements AddonManagerInterface
                     ThemeConstraintException::CANNOT_DOWNLOAD_FROM_URL
                 );
             }
-            $source = $downloaded;
+
+            try {
+                $this->installFromZip($downloaded);
+            } finally {
+                @unlink($downloaded);
+            }
+
+            return true;
         }
         if (preg_match('/\.zip$/', $source)) {
             $this->installFromZip($source);
