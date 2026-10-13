@@ -251,8 +251,6 @@ class BusinessEntitiesController extends PrestaShopAdminController
                 'success',
                 $this->trans('Successful deletion.', [], 'Admin.Notifications.Success')
             );
-        } catch (BusinessEntityException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
@@ -270,6 +268,11 @@ class BusinessEntitiesController extends PrestaShopAdminController
         );
 
         if (empty($businessEntityIds)) {
+            $this->addFlash(
+                'error',
+                $this->trans('You must select at least one element to delete.', [], 'Admin.Notifications.Error')
+            );
+
             return $this->redirectToRoute('admin_business_entities_list');
         }
 
@@ -292,20 +295,12 @@ class BusinessEntitiesController extends PrestaShopAdminController
 
             $this->addFlash(
                 'warning',
-                1 === $skippedCount
-                    ? $this->trans(
-                        'One of the selected business entities could not be deleted.',
-                        [],
-                        'Admin.Orderscustomers.Notification'
-                    )
-                    : $this->trans(
-                        '%count% of the selected business entities could not be deleted.',
-                        ['%count%' => $skippedCount],
-                        'Admin.Orderscustomers.Notification'
-                    )
+                $this->trans(
+                    '%count% of the selected business entities could not be deleted.',
+                    ['%count%' => $skippedCount],
+                    'Admin.Orderscustomers.Notification'
+                )
             );
-        } catch (BusinessEntityException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }

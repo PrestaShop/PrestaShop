@@ -20,6 +20,7 @@ use PrestaShopBundle\Entity\B2B\BusinessEntityCustomerB2b;
 use PrestaShopBundle\Entity\B2B\CustomerB2b;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Entity\Enum\CustomerB2bStatus;
+use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
@@ -561,9 +562,9 @@ class BusinessEntityControllerTest extends GridControllerTestCase
 
         $this->assertCount(1, $deleteAction);
         $this->assertStringContainsString(
-            '2 B2B customers are linked to this business entity. They will be kept,',
+            '2 linked B2B customer(s) will be kept.',
             (string) $deleteAction->attr('data-confirm-message'),
-            'AC6: the warning must reach the rendered list, not just the data factory'
+            'AC6: the count must reach the rendered attribute, not just the template source'
         );
     }
 
@@ -580,7 +581,7 @@ class BusinessEntityControllerTest extends GridControllerTestCase
 
         $this->assertCount(1, $deleteAction);
         $this->assertStringNotContainsString(
-            'linked to this business entity',
+            'will be kept',
             (string) $deleteAction->attr('data-confirm-message'),
             'an entity without linked customers must carry no AC6 warning'
         );
@@ -614,7 +615,7 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         );
         $this->assertArrayHasKey('warning', $messages);
         $this->assertContains(
-            'One of the selected business entities could not be deleted.',
+            '1 of the selected business entities could not be deleted.',
             $messages['warning'],
             print_r($messages['warning'], true)
         );
@@ -697,6 +698,32 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         );
     }
 
+    public function testAnInfrastructureFailureStillFlashesInsteadOfReaching500(): void
+    {
+        $this->client->disableReboot();
+
+        $commandBus = $this->createMock(CommandBusInterface::class);
+        $commandBus->method('handle')->willThrowException(new RuntimeException('Connection lost'));
+
+        self::$kernel->getContainer()->set('prestashop.core.command_bus', $commandBus);
+
+        $this->deleteEntityFromPage(
+            'admin_business_entities_delete',
+            ['businessEntityId' => self::$activeBusinessEntityId]
+        );
+
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
+
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+
+        $this->assertArrayHasKey(
+            'error',
+            $session->getFlashBag()->all(),
+            'a failure outside the domain must reach the merchant as a message, not as a 500'
+        );
+    }
+
     public function testTheDeletionIsRecordedInTheAdministrationLog(): void
     {
         $this->client->disableReboot();
@@ -773,7 +800,7 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         );
     }
 
-    public function testBulkDeletingAnEmptySelectionRaisesNoMessageAtAll(): void
+    public function testBulkDeletingAnEmptySelectionAsksForASelectionInsteadOfClaimingSuccess(): void
     {
         $this->bulkDeleteEntitiesFromPage(
             'admin_business_entities_bulk_delete',
@@ -784,11 +811,18 @@ class BusinessEntityControllerTest extends GridControllerTestCase
 
         /** @var Session $session */
         $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
 
-        $this->assertSame(
-            [],
-            $session->getFlashBag()->all(),
-            'the early return on an empty selection must not flash a success nor an error'
+        $this->assertArrayNotHasKey(
+            'success',
+            $messages,
+            'an empty selection deletes nothing, so it must never report a success'
+        );
+        $this->assertArrayHasKey('error', $messages, print_r($messages, true));
+        $this->assertContains(
+            'You must select at least one element to delete.',
+            $messages['error'],
+            print_r($messages['error'], true)
         );
     }
 

@@ -301,6 +301,7 @@ Feature: Manage business entities
     Then the business entity "Bulk One" should be soft deleted
     And the business entity "Bulk One" should no longer be returned by the repository
     And the business entity "Bulk Two" should be soft deleted
+    And the business entity "Bulk Two" should no longer be returned by the repository
     And the business entity "Bulk Keep" should not be deleted
 
   Scenario: Bulk deleting an empty selection does nothing and raises no error

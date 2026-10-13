@@ -14,8 +14,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\BusinessEntity\DeleteBusinessEntityRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -33,7 +33,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class BusinessEntityGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
-    use DeleteActionTrait;
 
     public const GRID_ID = 'business_entity';
 
@@ -151,21 +150,14 @@ final class BusinessEntityGridDefinitionFactory extends AbstractGridDefinitionFa
                                     ])
                             )
                             ->add(
-                                $this->buildDeleteAction(
-                                    'admin_business_entities_delete',
-                                    'businessEntityId',
-                                    'id_business_entity',
-                                    'POST',
-                                    [],
-                                    [
-                                        'confirm_message_type' => SubmitRowAction::MESSAGE_TYPE_DYNAMIC,
-                                        'dynamic_message_field' => 'delete_confirm_message',
-                                        'modal_options' => [
-                                            'title' => $this->trans('Delete this business entity', [], 'Admin.Orderscustomers.Feature'),
-                                            'confirm_button_label' => $this->trans('Yes, I want to delete this entity', [], 'Admin.Orderscustomers.Feature'),
-                                        ],
-                                    ]
-                                )
+                                (new DeleteBusinessEntityRowAction('delete'))
+                                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                                    ->setIcon('delete')
+                                    ->setOptions([
+                                        'route' => 'admin_business_entities_delete',
+                                        'route_param_name' => 'businessEntityId',
+                                        'route_param_field' => 'id_business_entity',
+                                    ])
                             ),
                     ])
             );

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\DeleteBusinessEntityHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityId;
 
 /**
@@ -20,6 +21,9 @@ class DeleteBusinessEntityCommand
 {
     private readonly BusinessEntityId $businessEntityId;
 
+    /**
+     * @throws BusinessEntityConstraintException
+     */
     public function __construct(
         int $businessEntityId,
     ) {
