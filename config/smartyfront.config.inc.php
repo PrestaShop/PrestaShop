@@ -3,6 +3,8 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeAssetInliner;
+
 global $smarty;
 
 $template_dirs = array(_PS_THEME_DIR_.'templates');
@@ -37,6 +39,64 @@ smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
 smartyRegisterFunction($smarty, 'function', 'render', 'smartyRender');
 smartyRegisterFunction($smarty, 'function', 'form_field', 'smartyFormField');
 smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
+smartyRegisterFunction($smarty, 'function', 'inline_svg', 'smartyInlineSvg');
+
+/**
+ * {inline_svg file='img/icon.svg'} writes the contents of an SVG living in the theme's assets
+ * directory straight into the page, so it can be styled by CSS.
+ *
+ * The file is read verbatim, never compiled: {include} would treat minified CSS inside the SVG
+ * ({fill:red}) or a custom property ({--c:red}) as Smarty tags and throw.
+ *
+ * The path is relative to `assets/`; a child theme's own assets win over its parent's, the way
+ * template directories already resolve.
+ *
+ * @param array $params
+ * @param Smarty_Internal_Template $smarty
+ *
+ * @return string
+ */
+function smartyInlineSvg($params, $smarty)
+{
+    if (empty($params['file'])) {
+        if (_PS_MODE_DEV_) {
+            trigger_error(
+                sprintf(
+                    'When using {inline_svg}, you must provide the `file` parameter. Template - %1$s',
+                    $smarty->source->filepath
+                ),
+                E_USER_NOTICE
+            );
+        }
+
+        return '';
+    }
+
+    $assetRoots = array(_PS_THEME_DIR_.'assets');
+    // @phpstan-ignore notIdentical.alwaysTrue
+    if (_PS_PARENT_THEME_DIR_ !== '') {
+        $assetRoots[] = _PS_PARENT_THEME_DIR_.'assets';
+    }
+
+    $svg = (new ThemeAssetInliner($assetRoots))->inline((string) $params['file']);
+
+    if ($svg === null) {
+        if (_PS_MODE_DEV_) {
+            trigger_error(
+                sprintf(
+                    '{inline_svg} could not read "%1$s" from the theme assets. Template - %2$s',
+                    $params['file'],
+                    $smarty->source->filepath
+                ),
+                E_USER_NOTICE
+            );
+        }
+
+        return '';
+    }
+
+    return $svg;
+}
 
 function withWidget($params, callable $cb, $smarty)
 {
