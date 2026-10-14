@@ -5,6 +5,8 @@
 
 {% extends '@PrestaShop/Admin/Layout/login_layout.html.twig' %}
 
+{% block head_tag %}{{ component('TwoFactorHeadTag') }}{% endblock %}
+
 {% block content %}
 
   {% set hasMultipleProviders = availableTwoFactorProviders|length > 1 %}
