@@ -47,7 +47,7 @@ class InstallControllerHttp
     public $language;
 
     /**
-     * @var \Symfony\Component\Translation\Translator
+     * @var \PrestaShopBundle\Translation\TranslatorInterface
      */
     public $translator;
 
