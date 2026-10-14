@@ -485,7 +485,7 @@ class EmployeeController extends PrestaShopAdminController
     }
 
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
-    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('ROLE_EMPLOYEE')", redirectRoute: 'admin_employees_index')]
     public function generateBackupCodesAction(
         int $employeeId,
         Request $request,
@@ -500,18 +500,7 @@ class EmployeeController extends PrestaShopAdminController
         }
 
         if ($this->getEmployeeContext()->getEmployee()->getId() !== $employeeId) {
-            if (!$this->isGranted(Permission::UPDATE, $request->get('_legacy_controller'))) {
-                $this->addFlash(
-                    'error',
-                    $this->trans(
-                        'You do not have permission to update this.',
-                        [],
-                        'Admin.Notifications.Error'
-                    )
-                );
-
-                return $this->redirectToRoute('admin_employees_index');
-            }
+            return $this->redirectToRoute('admin_employees_index');
         }
 
         if (!$formAccessChecker->isRestrictedAccess($employeeId)) {
@@ -594,7 +583,7 @@ class EmployeeController extends PrestaShopAdminController
     }
 
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
-    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('ROLE_EMPLOYEE')", redirectRoute: 'admin_employees_index')]
     public function confirmRegenerateBackupCodesAction(
         int $employeeId,
         Request $request,
@@ -606,18 +595,7 @@ class EmployeeController extends PrestaShopAdminController
         EntityManagerInterface $entityManager,
     ): Response {
         if ($this->getEmployeeContext()->getEmployee()->getId() !== $employeeId) {
-            if (!$this->isGranted(Permission::UPDATE, $request->get('_legacy_controller'))) {
-                $this->addFlash(
-                    'error',
-                    $this->trans(
-                        'You do not have permission to update this.',
-                        [],
-                        'Admin.Notifications.Error'
-                    )
-                );
-
-                return $this->redirectToRoute('admin_employees_index');
-            }
+            return $this->redirectToRoute('admin_employees_index');
         }
 
         if (!$formAccessChecker->isRestrictedAccess($employeeId)) {
@@ -731,7 +709,7 @@ class EmployeeController extends PrestaShopAdminController
     }
 
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
-    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('ROLE_EMPLOYEE')", redirectRoute: 'admin_employees_index')]
     public function regenerateBackupCodesAction(
         int $employeeId,
         Request $request,
