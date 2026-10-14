@@ -310,8 +310,8 @@ class EmployeeController extends PrestaShopAdminController
 
         /** @var Employee|null $employee */
         $employee = $employeeRepository->findOneBy(['id' => $employeeId]);
-        $wasTotpAuthenticationEnabled = $employee?->isTotpAuthenticationEnabled() ?? false;
-        $hasBackupCodes = !empty($employee?->getTwoFactorBackupCodes());
+        $wasTwoFactorAuthenticationEnabled = null !== $employee
+            && ($employee->isTotpAuthenticationEnabled() || $employee->isEmailAuthEnabled());
 
         $twoFactorData = $this->buildTwoFactorFormData(
             $isRestrictedAccess,
@@ -341,12 +341,11 @@ class EmployeeController extends PrestaShopAdminController
 
             if ($result->isSubmitted() && $result->isValid()) {
                 if (null !== $employee) {
-                    $this->generateBackupCodesAfterTotpActivation(
+                    $this->updateBackupCodesAfterTwoFactorChange(
                         $employeeForm,
                         $employee,
                         $isRestrictedAccess,
-                        $wasTotpAuthenticationEnabled,
-                        $hasBackupCodes,
+                        $wasTwoFactorAuthenticationEnabled,
                         $employeeBackupCodeManager,
                         $entityManager,
                     );
@@ -398,24 +397,36 @@ class EmployeeController extends PrestaShopAdminController
         );
     }
 
-    private function generateBackupCodesAfterTotpActivation(
+    private function updateBackupCodesAfterTwoFactorChange(
         FormInterface $employeeForm,
         Employee $employee,
         bool $isRestrictedAccess,
-        bool $wasTotpAuthenticationEnabled,
-        bool $hasBackupCodes,
+        bool $wasTwoFactorAuthenticationEnabled,
         EmployeeBackupCodeManager $employeeBackupCodeManager,
         EntityManagerInterface $entityManager,
     ): void {
         if (
             !$isRestrictedAccess
-            || $wasTotpAuthenticationEnabled
-            || $hasBackupCodes
             || !$employeeForm->has('two_factor_enabled')
             || !$employeeForm->has('two_factor_totp_enabled')
-            || !$employeeForm->get('two_factor_enabled')->getData()
-            || !$employeeForm->get('two_factor_totp_enabled')->getData()
+            || !$employeeForm->has('two_factor_email_enabled')
         ) {
+            return;
+        }
+
+        $isTwoFactorAuthenticationEnabled = $employeeForm->get('two_factor_enabled')->getData()
+            && ($employeeForm->get('two_factor_totp_enabled')->getData() || $employeeForm->get('two_factor_email_enabled')->getData());
+
+        if (!$isTwoFactorAuthenticationEnabled) {
+            if (null !== $employee->getTwoFactorBackupCodes()) {
+                $employee->setTwoFactorBackupCodes(null);
+                $entityManager->flush();
+            }
+
+            return;
+        }
+
+        if ($wasTwoFactorAuthenticationEnabled) {
             return;
         }
 

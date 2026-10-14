@@ -10,10 +10,15 @@ use Employee;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetEmployeeTwoFactorCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
+use PrestaShopBundle\Entity\Repository\EmployeeRepository;
 
 #[AsCommandHandler]
 final class ResetEmployeeTwoFactorHandler extends AbstractEmployeeHandler
 {
+    public function __construct(private readonly EmployeeRepository $employeeRepository)
+    {
+    }
+
     public function handle(ResetEmployeeTwoFactorCommand $command): void
     {
         $employee = new Employee($command->getEmployeeId()->getValue());
@@ -29,5 +34,7 @@ final class ResetEmployeeTwoFactorHandler extends AbstractEmployeeHandler
         if (false === $employee->update()) {
             throw new EmployeeException(sprintf('Cannot reset 2FA for employee with id "%s"', $employee->id));
         }
+
+        $this->employeeRepository->clearBackupCodes((int) $employee->id);
     }
 }

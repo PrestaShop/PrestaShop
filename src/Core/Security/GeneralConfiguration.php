@@ -50,7 +50,7 @@ class GeneralConfiguration implements DataConfigurationInterface
 
             if ($wasEnabled && !$willBeEnabled) {
                 // 2FA is being disabled - clear all employee 2FA data
-                if ($this->employeeRepository->hasAnyEmployeeWith2FAEnabled()) {
+                if ($this->employeeRepository->hasAnyEmployeeWithTwoFactorData()) {
                     $this->employeeRepository->resetAllTwoFactorData();
                     $infoMessages[] = [
                         'type' => 'info',
