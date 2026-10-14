@@ -1258,7 +1258,10 @@ class WebserviceRequestCore
                     if ($assoc !== false && $assoc['type'] == 'shop' && ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']) || $fieldName == 'id')) {
                         $table_alias = 'multi_shop_' . $this->resourceConfiguration['retrieveData']['table'];
                     } else {
-                        $table_alias = '';
+                        // WHY: getWebserviceObjectList() aliases the resource table `main`, and the joins
+                        // built above reference it as such. An empty alias emits ``.`field`, which MySQL
+                        // rejects as ambiguous as soon as a joined table carries a column of that name.
+                        $table_alias = 'main';
                     }
                     $sql_sort .= (isset($this->resourceConfiguration['retrieveData']['tableAlias']) ? '`' . bqSQL($this->resourceConfiguration['retrieveData']['tableAlias']) . '`.' : '`' . bqSQL($table_alias) . '`.') . '`' . pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']) . '` ' . $direction . ', '; // ORDER BY `field` ASC|DESC
                 }
