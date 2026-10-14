@@ -22,14 +22,22 @@ services:
       $decorated: '@.inner'
       $commandsAndQueries: '%prestashop.commands_and_queries%'
 
+  # Also part of the global type extractor chain, ahead of the framework extractors: the serializer types the CQRS
+  # command arguments from their constructor (e.g. an int) and not from their getters (e.g. a value object).
   prestashop_bundle.api_platform.open_api.constructor_extractor:
     class: Symfony\Component\PropertyInfo\Extractor\ConstructorExtractor
+    autoconfigure: false
     arguments:
       $extractors:
         - '@prestashop_bundle.api_platform.open_api.reflection_extractor'
+    tags:
+      - { name: 'property_info.type_extractor', priority: 0 }
 
   prestashop_bundle.api_platform.open_api.reflection_extractor:
     class: Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor
+    autoconfigure: false
+    tags:
+      - { name: 'property_info.type_extractor', priority: 0 }
 
   # OpenAPI Schema Adapters - individual adapters for different schema transformations
   PrestaShopBundle\ApiPlatform\OpenApi\Adapter\LocalizedValueAdapter:
