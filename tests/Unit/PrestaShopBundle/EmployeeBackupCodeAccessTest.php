@@ -9,7 +9,9 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle;
 
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -70,6 +72,7 @@ class EmployeeBackupCodeAccessTest extends TestCase
 
         $response = $controller->generateBackupCodesAction(...$arguments);
 
+        self::assertInstanceOf(RedirectResponse::class, $response);
         self::assertSame('/admin_employees_edit', $response->getTargetUrl());
         self::assertCount(8, $employee->getTwoFactorBackupCodes());
     }
@@ -104,6 +107,7 @@ class EmployeeBackupCodeAccessTest extends TestCase
 
         $response = $controller->regenerateBackupCodesAction(...$arguments);
 
+        self::assertInstanceOf(RedirectResponse::class, $response);
         self::assertSame('/admin_employees_edit', $response->getTargetUrl());
         self::assertCount(8, $employee->getTwoFactorBackupCodes());
         self::assertNotContains('old-hash', $employee->getTwoFactorBackupCodes());
@@ -129,60 +133,13 @@ class EmployeeBackupCodeAccessTest extends TestCase
     }
 
     /**
-     * @return array{EmployeeController, array, EmployeeRepository, Employee}
+     * @return array{EmployeeBackupCodeTestController, array<mixed>, EmployeeRepository&MockObject, Employee}
      */
     private function createActionCase(string $methodName, int $targetId, bool $hasCodes, string $authCode = '654321', string $csrfToken = 'valid'): array
     {
         $contextEmployee = $this->createMock(ContextEmployee::class);
         $contextEmployee->method('getId')->willReturn(7);
-        $controller = new class(new EmployeeContext($contextEmployee, [])) extends EmployeeController {
-            public array $renderParameters = [];
-
-            public function __construct(private readonly EmployeeContext $employeeContext)
-            {
-            }
-
-            protected function getEmployeeContext(): EmployeeContext
-            {
-                return $this->employeeContext;
-            }
-
-            protected function isCsrfTokenValid(string $id, ?string $token): bool
-            {
-                return $token === 'valid';
-            }
-
-            protected function redirectToRoute(string $route, array $parameters = [], int $status = 302): RedirectResponse
-            {
-                return new RedirectResponse('/' . $route, $status);
-            }
-
-            protected function generateUrl(string $route, array $parameters = [], int $referenceType = 1): string
-            {
-                return '/' . $route;
-            }
-
-            protected function generateSidebarLink(string $section, ?string $title = null): string
-            {
-                return '';
-            }
-
-            protected function render(string $view, array $parameters = [], ?Response $response = null): Response
-            {
-                $this->renderParameters = $parameters;
-
-                return new Response('confirmation');
-            }
-
-            protected function trans(string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
-            {
-                return $id;
-            }
-
-            protected function addFlash(string $type, mixed $message): void
-            {
-            }
-        };
+        $controller = new EmployeeBackupCodeTestController(new EmployeeContext($contextEmployee, []));
 
         $employee = new Employee();
         $employee->setTwoFactorEnabled(true);
@@ -212,8 +169,62 @@ class EmployeeBackupCodeAccessTest extends TestCase
             'generateBackupCodesAction' => [$targetId, $request, $accessChecker, $repository, $manager, $entityManager, $configuration],
             'confirmRegenerateBackupCodesAction' => [$targetId, $request, $accessChecker, $repository, $configuration, $mailer, $userTokenManager, $entityManager],
             'regenerateBackupCodesAction' => [$targetId, $request, $accessChecker, $repository, $manager, $entityManager, $configuration, $this->createMock(TotpAuthenticatorInterface::class), $mailer, $userTokenManager],
+            default => throw new InvalidArgumentException(sprintf('Unknown backup code action: %s', $methodName)),
         };
 
         return [$controller, $arguments, $repository, $employee];
+    }
+}
+
+/**
+ * Test controller that captures render parameters without changing production code.
+ */
+class EmployeeBackupCodeTestController extends EmployeeController
+{
+    public array $renderParameters = [];
+
+    public function __construct(private readonly EmployeeContext $employeeContext)
+    {
+    }
+
+    protected function getEmployeeContext(): EmployeeContext
+    {
+        return $this->employeeContext;
+    }
+
+    protected function isCsrfTokenValid(string $id, ?string $token): bool
+    {
+        return $token === 'valid';
+    }
+
+    protected function redirectToRoute(string $route, array $parameters = [], int $status = 302): RedirectResponse
+    {
+        return new RedirectResponse('/' . $route, $status);
+    }
+
+    protected function generateUrl(string $route, array $parameters = [], int $referenceType = 1): string
+    {
+        return '/' . $route;
+    }
+
+    protected function generateSidebarLink(string $section, ?string $title = null): string
+    {
+        return '';
+    }
+
+    protected function render(string $view, array $parameters = [], ?Response $response = null): Response
+    {
+        $this->renderParameters = $parameters;
+
+        return new Response('confirmation');
+    }
+
+    protected function trans(string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
+    {
+        return $id;
+    }
+
+    protected function addFlash(string $type, mixed $message): void
+    {
     }
 }
