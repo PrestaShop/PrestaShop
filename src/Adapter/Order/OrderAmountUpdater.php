@@ -218,9 +218,16 @@ class OrderAmountUpdater
         $combinationId = null === $productUpdate->getCombinationId()
             ? 0
             : $productUpdate->getCombinationId()->getValue();
+        // WHY the customization: CartProductUpdate::productMatches() counts it as part of a product's
+        // identity, so two order lines that differ only by it are different lines and matching on the
+        // product alone returns whichever comes first.
+        $customizationId = null === $productUpdate->getCustomizationId()
+            ? 0
+            : $productUpdate->getCustomizationId()->getValue();
         foreach ($order->getProducts() as $product) {
             if ((int) $product['product_id'] === $productUpdate->getProductId()->getValue()
-                && (int) $product['product_attribute_id'] === $combinationId) {
+                && (int) $product['product_attribute_id'] === $combinationId
+                && (int) $product['id_customization'] === $customizationId) {
                 return $product;
             }
         }
