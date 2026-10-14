@@ -1,0 +1,50 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  <div class="card">
+    <h3 class="card-header">
+      {{ 'Regenerate backup codes'|trans({}, 'Admin.Advparameters.Feature') }}
+    </h3>
+    <div class="card-body">
+      <div class="alert alert-warning" role="alert">
+        <div class="alert-text">
+          {{ 'Regenerating backup codes will immediately invalidate the previous ones. Please confirm this action with your verification code.'|trans({}, 'Admin.Advparameters.Feature') }}
+        </div>
+      </div>
+
+      {% if authenticationError %}
+        <div class="alert alert-danger" role="alert">
+          <div class="alert-text">
+            <p>{{ authenticationError|trans(authenticationErrorData, 'Admin.Login.Notification') }}</p>
+          </div>
+        </div>
+      {% endif %}
+
+      {{ include('@PrestaShop/Admin/TwoFactorAuthentication/Blocks/two_factor_code_form.html.twig', {
+        checkPathRoute: checkPathRoute,
+        checkPathUrl: checkPathUrl,
+        authCodeParameterName: authCodeParameterName,
+        displayTrustedOption: displayTrustedOption,
+        trustedParameterName: null,
+        isCsrfProtectionEnabled: isCsrfProtectionEnabled,
+        csrfParameterName: csrfParameterName,
+        csrfTokenId: csrfTokenId,
+        submitLabel: submitLabel,
+        logoutPath: logoutPath,
+        availableTwoFactorProviders: availableTwoFactorProviders,
+        providerSwitchRoute: providerSwitchRoute,
+        providerSwitchRouteParams: providerSwitchRouteParams,
+        twoFactorProvider: twoFactorProvider,
+      }) }}
+    </div>
+    <div class="card-footer">
+      <a href="{{ path('admin_employees_edit', {employeeId: employeeId}) }}" class="btn btn-outline-secondary">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+  </div>
+{% endblock %}

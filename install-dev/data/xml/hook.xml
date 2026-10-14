@@ -641,6 +641,11 @@
       <title>Set media on admin login page header</title>
       <description>This hook is called after adding media to admin login page header</description>
     </hook>
+    <hook id="actionAdminTwoFactorControllerSetMedia">
+      <name>actionAdminTwoFactorControllerSetMedia</name>
+      <title>Set media on admin two-factor authentication page header</title>
+      <description>This hook is called after adding media to admin two-factor authentication page header</description>
+    </hook>
     <hook id="actionOrderEdited">
       <name>actionOrderEdited</name>
       <title>Order edited</title>

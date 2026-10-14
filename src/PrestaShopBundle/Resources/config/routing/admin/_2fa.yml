@@ -1,0 +1,11 @@
+2fa_login:
+  path: /2fa
+  controller: "scheb_two_factor.form_controller::form"
+
+2fa_login_check:
+  path: /2fa_check
+
+2fa_resend:
+  path: /2fa_resend
+  controller: PrestaShopBundle\Controller\Admin\TwoFactorResendController::resend
+  methods: [ POST ]
