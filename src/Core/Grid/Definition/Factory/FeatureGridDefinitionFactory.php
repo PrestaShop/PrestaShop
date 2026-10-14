@@ -24,17 +24,34 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
-class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
+class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory implements SqlExportableGridDefinitionFactoryInterface
 {
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
     public const GRID_ID = 'feature';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFiltersClass(): string
+    {
+        return FeatureFilters::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getGridFactoryServiceId(): string
+    {
+        return 'prestashop.core.grid.grid_factory.feature';
+    }
 
     /**
      * {@inheritdoc}

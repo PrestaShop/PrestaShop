@@ -33,6 +33,17 @@ class GridFactory implements GridFactoryInterface
     }
 
     /**
+     * Exposes the definition factory this grid factory was built with. Used by the authorized
+     * SQL export endpoint to read the grid's Filters class server-side.
+     *
+     * @return GridDefinitionFactoryInterface
+     */
+    public function getDefinitionFactory(): GridDefinitionFactoryInterface
+    {
+        return $this->definitionFactory;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getGrid(SearchCriteriaInterface $searchCriteria): GridInterface
