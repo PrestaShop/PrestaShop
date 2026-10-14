@@ -224,8 +224,12 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This file no longer exists.');
             }
 
-            if (isset($info['product_quantity_refunded'], $info['product_quantity_return'])
-                && ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0)) {
+            /* Only block the download when every purchased unit has been refunded or returned */
+            $qtyBought = (int) ($info['product_quantity'] ?? 0);
+            $qtyRefundedOrReturned = (int) ($info['product_quantity_refunded'] ?? 0)
+                + (int) ($info['product_quantity_return'] ?? 0);
+
+            if ($qtyBought > 0 && $qtyRefundedOrReturned >= $qtyBought) {
                 $this->displayCustomError('This product has been refunded.');
             }
 
