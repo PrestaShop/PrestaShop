@@ -104,20 +104,34 @@ class EmployeeRepository extends EntityRepository
             ->set('e.twoFactorEmailEnabled', ':false')
             ->set('e.twoFactorTotpSecretEncrypted', ':null')
             ->set('e.twoFactorEmailAuthCode', ':null')
+            ->set('e.twoFactorBackupCodes', ':null')
             ->setParameter('false', false)
             ->setParameter('null', null)
             ->getQuery()
             ->execute();
     }
 
+    public function clearBackupCodes(int $employeeId): void
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->update($this->getEntityName(), 'e')
+            ->set('e.twoFactorBackupCodes', ':null')
+            ->where('e.id = :employeeId')
+            ->setParameter('null', null)
+            ->setParameter('employeeId', $employeeId)
+            ->getQuery()
+            ->execute();
+    }
+
     /**
-     * Check if any employee has 2FA enabled.
+     * Check if any employee has 2FA data.
      */
-    public function hasAnyEmployeeWith2FAEnabled(): bool
+    public function hasAnyEmployeeWithTwoFactorData(): bool
     {
         $qb = $this->createQueryBuilder('e')
             ->select('COUNT(e.id)')
             ->where('e.twoFactorEnabled = :true')
+            ->orWhere('e.twoFactorBackupCodes IS NOT NULL')
             ->setParameter('true', true);
 
         return (int) $qb->getQuery()->getSingleScalarResult() > 0;
