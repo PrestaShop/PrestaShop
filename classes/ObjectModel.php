@@ -798,6 +798,18 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         if (!empty($multiLangFieldsToUpdate)) {
             $multiLangFieldsToUpdate = $this->getFieldsLang();
             if (is_array($multiLangFieldsToUpdate)) {
+                $shopIdsByLang = [];
+                if ($this->isLangMultishop() && $id_shop_list) {
+                    $id_shop_list = array_unique(array_map('intval', $id_shop_list));
+                    $langRows = Db::getInstance()->executeS(
+                        'SELECT id_lang, id_shop FROM ' . pSQL(_DB_PREFIX_ . $this->def['table']) . '_lang
+                        WHERE ' . pSQL($this->def['primary']) . ' = ' . (int) $this->id
+                    );
+                    foreach ($langRows ?: [] as $langRow) {
+                        $shopIdsByLang[(int) $langRow['id_lang']][] = (int) $langRow['id_shop'];
+                    }
+                }
+
                 foreach ($multiLangFieldsToUpdate as $field) {
                     foreach (array_keys($field) as $key) {
                         if (!Validate::isTableOrIdentifier($key)) {
@@ -807,21 +819,20 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
 
                     // If this table is linked to multishop system, update / insert for all shops from context
                     if ($this->isLangMultishop()) {
-                        $id_shop_list = Shop::getContextListShopID();
-                        if (count($this->id_shop_list)) {
-                            $id_shop_list = $this->id_shop_list;
+                        unset($field['id_shop']);
+                        $existingShopIds = array_intersect($id_shop_list, $shopIdsByLang[(int) $field['id_lang']] ?? []);
+                        if ($existingShopIds && array_diff_key($field, [$this->def['primary'] => true, 'id_lang' => true])) {
+                            $result &= Db::getInstance()->update(
+                                $this->def['table'] . '_lang',
+                                $field,
+                                pSQL($this->def['primary']) . ' = ' . (int) $this->id
+                                    . ' AND id_lang = ' . (int) $field['id_lang']
+                                    . ' AND id_shop IN (' . implode(',', $existingShopIds) . ')'
+                            );
                         }
-                        foreach ($id_shop_list as $id_shop) {
-                            $field['id_shop'] = (int) $id_shop;
-                            $where = pSQL($this->def['primary']) . ' = ' . (int) $this->id
-                                        . ' AND id_lang = ' . (int) $field['id_lang']
-                                        . ' AND id_shop = ' . (int) $id_shop;
 
-                            if (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . pSQL(_DB_PREFIX_ . $this->def['table']) . '_lang WHERE ' . $where)) {
-                                $result &= Db::getInstance()->update($this->def['table'] . '_lang', $field, $where);
-                            } else {
-                                $result &= Db::getInstance()->insert($this->def['table'] . '_lang', $field);
-                            }
+                        foreach (array_diff($id_shop_list, $existingShopIds) as $id_shop) {
+                            $result &= Db::getInstance()->insert($this->def['table'] . '_lang', $field + ['id_shop' => $id_shop]);
                         }
                     } else {
                         // If this table is not linked to multishop system ...
