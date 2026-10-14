@@ -233,7 +233,7 @@ window.displayFieldsManager = (function () {
         || typeProduct.val() === '2')
       ) {
         const typeOfProduct = this.getProductType();
-        // eslint-disable-next-line
+        // eslint-disable-next-line max-len
         const errorMessage = `You can't create ${typeOfProduct} product with variations. Are you sure to disable variations ? they will all be deleted.`;
         modalConfirmation.create(translate_javascripts[errorMessage], null, {
           onCancel() {
@@ -244,7 +244,7 @@ window.displayFieldsManager = (function () {
           onContinue() {
             $.ajax({
               type: 'GET',
-              // eslint-disable-next-line
+              // eslint-disable-next-line max-len
               url: $('#accordion_combinations').attr('data-action-delete-all').replace(/delete-all\/\d+/, `delete-all/${$('#form_id_product').val()}`),
               success() {
                 $('#accordion_combinations .combination').remove();
@@ -323,7 +323,7 @@ const formCategory = (function () {
         }
 
         // inject new category in parent category selector
-        // eslint-disable-next-line
+        // eslint-disable-next-line max-len
         $('#form_step1_new_category_id_parent').append(`<option value="${response.category.id}">${response.category.name[1]}</option>`);
 
         // create label
@@ -461,7 +461,7 @@ const featuresCollection = (function () {
  */
 const supplier = (function () {
   const supplierInputManage = function (input) {
-    // eslint-disable-next-line
+    // eslint-disable-next-line max-len
     const supplierDefaultInput = $(`#form_step6_suppliers input[name="form[step6][default_supplier]"][value=${$(input).val()}]`);
 
     if ($(input).is(':checked')) {
@@ -503,7 +503,7 @@ window.supplierCombinations = (function () {
       const url = collectionHolder.attr('data-url')
         .replace(
           /refresh-product-supplier-combination-form\/\d+\/\d+/,
-          // eslint-disable-next-line
+          // eslint-disable-next-line max-len
           `refresh-product-supplier-combination-form/${idProduct}${suppliers.length > 0 ? `/${suppliers.join('-')}` : ''}`,
         );
       $.ajax({
@@ -569,7 +569,7 @@ window.form = (function () {
   function send(redirect, target, callBack) {
     // target value by default
     if (typeof (target) === 'undefined') {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-param-reassign
       target = false;
     }
     seo.onSave();
@@ -871,12 +871,12 @@ window.form = (function () {
             selected.push($(this).val());
           });
 
-          // eslint-disable-next-line
+          // eslint-disable-next-line max-len
           return $.grep(suggestions, (suggestion) => $.inArray(suggestion.value, selected) === -1 && $.inArray(`group-${suggestion.data.id_group}`, selected) === -1);
         };
 
         /** On event "tokenfield:createtoken" : check values are valid if its not a typehead result */
-        // eslint-disable-next-line
+        // eslint-disable-next-line consistent-return
         $('#form_step3_attributes').on('tokenfield:createtoken', (e) => {
           if (!e.attrs.data) {
             if (e.handleObj.origType !== 'tokenfield:createtoken') {
@@ -915,7 +915,7 @@ window.form = (function () {
         /** On event "tokenfield:createdtoken" : store attributes in input when add a token */
         $('#form_step3_attributes').on('tokenfield:createdtoken', (e) => {
           if (e.attrs.data) {
-            // eslint-disable-next-line
+            // eslint-disable-next-line max-len
             $('#attributes-generator').append(`<input type="hidden" id="attribute-generator-${e.attrs.value}" class="attribute-generator" value="${e.attrs.value}" name="options[${e.attrs.data.id_group}][${e.attrs.value}]" />`);
           } else {
             $(e.relatedTarget).addClass('invalid');
@@ -1152,7 +1152,7 @@ window.attachmentProduct = (function () {
       }
 
       /** add attachment */
-      // eslint-disable-next-line
+      // eslint-disable-next-line prefer-arrow-callback
       $('#form_step6_attachment_product_add').on('click', function () {
         const data = new FormData();
 
@@ -1336,7 +1336,7 @@ window.imagesProduct = (function () {
           } if ($.type(response) === 'string') {
             message = response;
           } else if (response.message) {
-            // eslint-disable-next-line
+            // eslint-disable-next-line prefer-destructuring
             message = response.message;
           }
 
@@ -1414,7 +1414,7 @@ window.imagesProduct = (function () {
       checkDropzoneMode();
     },
     getOlderImageId() {
-      // eslint-disable-next-line
+      // eslint-disable-next-line prefer-spread
       return Math.min.apply(Math, $('.dz-preview').map(function () {
         return $(this).data('id');
       }));
@@ -1562,7 +1562,7 @@ window.priceCalculation = (function () {
     let i = 0;
 
     if (computationMethod === '0') {
-      // eslint-disable-next-line
+      // eslint-disable-next-line guard-for-in, no-restricted-syntax, no-unreachable-loop
       for (i in rates) {
         priceWithTaxes *= (1.00 + parseFloat(rates[i]) / 100.00);
         break;
@@ -1570,13 +1570,13 @@ window.priceCalculation = (function () {
     } else if (computationMethod === '1') {
       let rate = 0;
 
-      // eslint-disable-next-line
+      // eslint-disable-next-line guard-for-in, no-restricted-syntax
       for (i in rates) {
         rate += rates[i];
       }
       priceWithTaxes *= (1.00 + parseFloat(rate) / 100.00);
     } else if (computationMethod === '2') {
-      // eslint-disable-next-line
+      // eslint-disable-next-line guard-for-in, no-restricted-syntax
       for (i in rates) {
         priceWithTaxes *= (1.00 + parseFloat(rates[i]) / 100.00);
       }
@@ -1729,7 +1729,7 @@ window.priceCalculation = (function () {
       });
 
       /** combinations : update wholesale price, unity and price TE field on blur */
-      // eslint-disable-next-line
+      // eslint-disable-next-line max-len
       $(document).on('blur', '.combination-form .attribute_wholesale_price,.combination-form .attribute_unity,.combination-form .attribute_priceTE', function () {
         $(this).val(priceCalculation.normalizePrice($(this).val()));
       });
@@ -2225,7 +2225,7 @@ window.recommendedModules = (function () {
   return {
     init() {
       this.moduleActionMenuLinkSelectors = 'button.module_action_menu_install, button.module_action_menu_enable, '
-        // eslint-disable-next-line
+        // eslint-disable-next-line max-len
         + 'button.module_action_menu_uninstall, button.module_action_menu_disable, button.module_action_menu_reset, button.module_action_menu_update';
       $(this.moduleActionMenuLinkSelectors).on('module_card_action_event', this.saveProduct);
     },

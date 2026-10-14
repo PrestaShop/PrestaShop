@@ -37,7 +37,6 @@ export default class SubmitRowActionExtension {
           method,
         );
       } else {
-        // eslint-disable-next-line
         if (confirmMessage.length && !window.confirm(confirmMessage)) {
           return;
         }

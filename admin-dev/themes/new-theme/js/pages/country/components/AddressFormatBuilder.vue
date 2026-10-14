@@ -704,7 +704,6 @@
       confirmClear(): void {
         // window.confirm is fine here — the dropdown is closed by Bootstrap on item click
         // and we want a lightweight confirmation rather than pulling in a modal for this single case.
-        // eslint-disable-next-line no-alert
         if (window.confirm(this.$t('reset.confirm') as string)) {
           this.lines = [[]];
           this.rawText = '';

@@ -35,7 +35,6 @@ export default class ProductSearchInput extends EntitySearchInput {
           const combination = response[key];
 
           if (combination.reference) {
-            // eslint-disable-next-line no-param-reassign
             response[key].reference = referenceLabel.replace('%s', combination.reference);
           }
         }

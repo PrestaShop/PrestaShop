@@ -17,6 +17,9 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint',
   },
+  // A disable directive that suppresses nothing is dead weight and hides the next real one,
+  // so an unused one is an error rather than something only the CLI flag reveals.
+  reportUnusedDisableDirectives: true,
   extends: [
     'airbnb-base',
   ],

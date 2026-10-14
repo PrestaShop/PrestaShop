@@ -104,7 +104,6 @@
 
   const DEFAULT_SORT = 'desc';
 
-  /* eslint-disable camelcase */
   export interface StockMovement {
     attribute_name: string | null;
     combination_cover_id: number;
@@ -134,7 +133,6 @@
     supplier_id: number;
     supplier_name: string;
   }
-  /* eslint-enable camelcase */
 
   export default defineComponent({
     computed: {
