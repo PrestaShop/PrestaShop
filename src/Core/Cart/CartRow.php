@@ -254,12 +254,22 @@ class CartRow
         $quantity = (int) $rowData['cart_quantity'];
         $this->initialUnitPrice = $this->getProductPrice($cart, $rowData);
 
-        // store not rounded values, except in round_mode_item, we still need to round individual items
+        // store not rounded values, except in round_mode_item and round_mode_line, where the row
+        // must already carry the amount applyRound() will produce
         if ($this->roundType == self::ROUND_MODE_ITEM) {
             $tools = new Tools();
             $this->initialTotalPrice = new AmountImmutable(
                 $tools->round($this->initialUnitPrice->getTaxIncluded(), $this->precision) * $quantity,
                 $tools->round($this->initialUnitPrice->getTaxExcluded(), $this->precision) * $quantity
+            );
+        } elseif ($this->roundType == self::ROUND_MODE_LINE) {
+            // WHY: Calculator::getRowTotalWithoutDiscount() re-rounds only the tax included side of
+            // each row, so leaving the tax excluded side raw here made Cart::BOTH sum unrounded lines
+            // while Cart::ONLY_PRODUCTS summed rounded ones, and the two totals drifted by a cent.
+            $tools = new Tools();
+            $this->initialTotalPrice = new AmountImmutable(
+                $tools->round($this->initialUnitPrice->getTaxIncluded() * $quantity, $this->precision),
+                $tools->round($this->initialUnitPrice->getTaxExcluded() * $quantity, $this->precision)
             );
         } else {
             $this->initialTotalPrice = new AmountImmutable(
