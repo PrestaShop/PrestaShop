@@ -24,12 +24,13 @@
 					{if isset($params.position)}
 						id="td_{if !empty($position_group_identifier)}{$position_group_identifier}{else}0{/if}_{$tr.$identifier}{if $smarty.capture.tr_count > 1}_{($smarty.capture.tr_count - 1)|intval}{/if}"
 					{/if}
-					class="{strip}{if !$no_link}pointer{/if}
+					class="{strip}{if !$no_link && !(isset($tr.link) && $tr.link == '')}pointer{/if}
 					{if isset($key)} column-{$key|lower}{/if}
 					{if isset($params.position) && $order_by == 'position'  && $order_way != 'DESC'} dragHandle{/if}
 					{if isset($params.class)} {$params.class}{/if}
 					{if isset($params.align)} {$params.align}{/if}{/strip}"
-					{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick))}
+					{* A row whose link was emptied by $list_skip_actions must not carry the click either *}
+					{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick) && !(isset($tr.link) && $tr.link == ''))}
             {if isset($tr.link) }
               onclick="document.location = '{$tr.link|addslashes|escape:'html':'UTF-8'}'">
             {else}
