@@ -848,10 +848,7 @@ class AdminImportControllerCore extends AdminController
         if (!is_resource($handle)) {
             return false;
         }
-        rewind($handle);
-        if (($bom = fread($handle, 3)) != "\xEF\xBB\xBF") {
-            rewind($handle);
-        }
+        PrestaShop\PrestaShop\Core\Util\File\Utf8Bom::skip($handle);
     }
 
     protected static function getBoolean($field)
