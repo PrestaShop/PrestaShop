@@ -148,6 +148,10 @@ class ModuleManager implements ModuleManagerInterface
 
         $uninstalled = $module->onUninstall();
 
+        if (!$uninstalled) {
+            return false;
+        }
+
         if ($deleteFiles && $path = $this->moduleRepository->getModulePath($name)) {
             $this->filesystem->remove($path);
             $this->dispatch(ModuleManagementEvent::DELETE, $module);
