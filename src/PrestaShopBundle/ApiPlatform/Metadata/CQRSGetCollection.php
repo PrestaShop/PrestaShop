@@ -110,34 +110,11 @@ class CQRSGetCollection extends AbstractCQRSOperation implements CollectionOpera
         ?string $minVersion = null,
         ?string $maxVersion = null,
         ?array $defaultValues = null,
-        ?bool $collectionAsList = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_GET;
         $passedArguments['provider'] = $provider ?? QueryProvider::class;
 
-        if (null !== $collectionAsList) {
-            $this->checkArgumentAndExtraParameterValidity('collectionAsList', $collectionAsList, $passedArguments['extraProperties']);
-            $passedArguments['extraProperties']['collectionAsList'] = $collectionAsList;
-        }
-        unset($passedArguments['collectionAsList']);
-
         parent::__construct(...$passedArguments);
-    }
-
-    /**
-     * When true, a query result indexed by keys (e.g. ids) is returned as a JSON list instead of an object.
-     */
-    public function getCollectionAsList(): bool
-    {
-        return $this->extraProperties['collectionAsList'] ?? false;
-    }
-
-    public function withCollectionAsList(bool $collectionAsList): static
-    {
-        $self = clone $this;
-        $self->extraProperties['collectionAsList'] = $collectionAsList;
-
-        return $self;
     }
 }
