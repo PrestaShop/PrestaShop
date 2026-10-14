@@ -147,7 +147,7 @@ describe('API : GET /customers/groups/{customerGroupId}', async () => {
 
       expect(jsonResponse).to.have.all.keys(
         'customerGroupId',
-        'localizedNames',
+        'names',
         'reductionPercent',
         'displayPriceTaxExcluded',
         'showPrice',
@@ -163,13 +163,13 @@ describe('API : GET /customers/groups/{customerGroupId}', async () => {
       expect(jsonResponse.customerGroupId).to.be.equal(idCustomerGroup);
     });
 
-    it('should check the JSON Response : `localizedNames`', async function () {
+    it('should check the JSON Response : `names`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLocalizedNames', baseContext);
 
-      expect(jsonResponse).to.have.property('localizedNames');
-      expect(jsonResponse.localizedNames).to.be.a('object');
-      expect(jsonResponse.localizedNames[dataLanguages.english.locale]).to.be.equal(nameEn);
-      expect(jsonResponse.localizedNames[dataLanguages.french.locale]).to.be.equal(nameFr);
+      expect(jsonResponse).to.have.property('names');
+      expect(jsonResponse.names).to.be.a('object');
+      expect(jsonResponse.names[dataLanguages.english.locale]).to.be.equal(nameEn);
+      expect(jsonResponse.names[dataLanguages.french.locale]).to.be.equal(nameFr);
     });
 
     it('should check the JSON Response : `reductionPercent`', async function () {

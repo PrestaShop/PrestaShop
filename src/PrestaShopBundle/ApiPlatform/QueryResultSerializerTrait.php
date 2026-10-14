@@ -47,6 +47,12 @@ trait QueryResultSerializerTrait
                 $normalizedQueryResult[$key] = $this->domainSerializer->denormalize(array_merge($extraParameters, $result), $operation->getClass(), null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation)]);
             }
 
+            // The keys of the query result are kept unless the operation asks for a list (e.g. a result indexed by id
+            // that would otherwise be returned as a JSON object)
+            if (!empty($operation->getExtraProperties()['collectionAsList'])) {
+                return array_values($normalizedQueryResult);
+            }
+
             return $normalizedQueryResult;
         } else {
             $normalizedQueryResult = array_merge($extraParameters, $normalizedQueryResult);

@@ -67,7 +67,7 @@ describe('API : POST /customers/groups', async () => {
           Authorization: `Bearer ${accessToken}`,
         },
         data: {
-          localizedNames: {
+          names: {
             [dataLanguages.french.locale]: createGroup.frName,
             [dataLanguages.english.locale]: createGroup.name,
           },
@@ -88,7 +88,7 @@ describe('API : POST /customers/groups', async () => {
 
       expect(jsonResponse).to.have.all.keys(
         'customerGroupId',
-        'localizedNames',
+        'names',
         'reductionPercent',
         'displayPriceTaxExcluded',
         'showPrice',
@@ -100,7 +100,7 @@ describe('API : POST /customers/groups', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseJSON', baseContext);
 
       expect(jsonResponse.customerGroupId).to.be.gt(0);
-      expect(jsonResponse.localizedNames).to.deep.equal({
+      expect(jsonResponse.names).to.deep.equal({
         [dataLanguages.english.locale]: createGroup.name,
         [dataLanguages.french.locale]: createGroup.frName,
       });
@@ -169,18 +169,18 @@ describe('API : POST /customers/groups', async () => {
       expect(jsonResponse.customerGroupId).to.be.equal(idCustomerGroup);
     });
 
-    it('should check the JSON Response : `localizedNames` (EN)', async function () {
+    it('should check the JSON Response : `names` (EN)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLocalizedNamesEN', baseContext);
 
       const value = await boCustomerGroupsCreatePage.getValue(page, 'localizedNames', dataLanguages.english.id);
-      expect(jsonResponse.localizedNames[dataLanguages.english.locale]).to.be.equal(value);
+      expect(jsonResponse.names[dataLanguages.english.locale]).to.be.equal(value);
     });
 
-    it('should check the JSON Response : `localizedNames` (FR)', async function () {
+    it('should check the JSON Response : `names` (FR)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLocalizedNamesFR', baseContext);
 
       const value = await boCustomerGroupsCreatePage.getValue(page, 'localizedNames', dataLanguages.french.id);
-      expect(jsonResponse.localizedNames[dataLanguages.french.locale]).to.be.equal(value);
+      expect(jsonResponse.names[dataLanguages.french.locale]).to.be.equal(value);
     });
 
     it('should check the JSON Response : `reductionPercent`', async function () {

@@ -15,6 +15,13 @@ services:
       $constructorExtractor: '@prestashop_bundle.api_platform.open_api.constructor_extractor'
       $commandsAndQueries: '%prestashop.commands_and_queries%'
 
+  # Adds the constructor parameters of the CQRS commands to their documented properties
+  PrestaShopBundle\ApiPlatform\Metadata\Property\Factory\CQRSConstructorPropertyNameCollectionFactory:
+    decorates: 'api_platform.metadata.property.name_collection_factory'
+    arguments:
+      $decorated: '@.inner'
+      $commandsAndQueries: '%prestashop.commands_and_queries%'
+
   prestashop_bundle.api_platform.open_api.constructor_extractor:
     class: Symfony\Component\PropertyInfo\Extractor\ConstructorExtractor
     arguments:
@@ -63,6 +70,23 @@ services:
     tags:
       - { name: 'prestashop.openapi.schema_adapter.resource', priority: -50 }
       - { name: 'prestashop.openapi.schema_adapter.operation', priority: -50 }
+
+  # Types the request properties left untyped by the CQRS command with the native type of the resource property. Runs
+  # before ApiPropertyOpenApiContextAdapter, so that an explicit openapiContext still wins.
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\ResourcePropertyTypeAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: -45 }
+
+  # Turns the enums documented from the Choice constraints into lists, even for associative choices
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\EnumListAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: -40 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: -40 }
+
+  # Removes the URI variables from the documented request body, the API reads them from the URL
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\UriVariablesAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: -55 }
 
   # Lists the required properties of the write operations, based on the CQRS command constructor. Runs after the
   # SchemaSynchronizer so that only documented properties are listed.

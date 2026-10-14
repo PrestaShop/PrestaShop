@@ -266,7 +266,7 @@ class CustomerThreadCore extends ObjectModel
 			WHERE ct.id_customer = ' . (int) $id_customer .
                 ' AND ct.`id_order` = ' . (int) $id_order . '
             GROUP BY cm.id_customer_message
-		 	ORDER BY cm.date_add DESC
+		 	ORDER BY cm.date_add DESC, cm.id_customer_message DESC
             LIMIT 2';
 
         return Db::getInstance()->executeS($sql);

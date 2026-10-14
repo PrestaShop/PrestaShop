@@ -92,7 +92,7 @@ class CustomerDataProvider
         }
 
         $mainSql .= ' GROUP BY cm.id_customer_message
-            ORDER BY cm.date_add DESC';
+            ORDER BY cm.date_add DESC, cm.id_customer_message DESC';
 
         $count = Db::getInstance()->executeS("SELECT COUNT(*) AS total FROM ($mainSql) AS messages");
 

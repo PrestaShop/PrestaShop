@@ -242,7 +242,7 @@ class CustomerCore extends ObjectModel
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_FRONT') . 'minutes'));
 
         // If subscribed to the newsletter, set the date of subscription to now, if not set
-        if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
+        if ($this->newsletter && !Validate::isDate((string) $this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
         }
 
@@ -1523,8 +1523,7 @@ class CustomerCore extends ObjectModel
      */
     public function stampResetPasswordToken()
     {
-        $salt = $this->id . '-' . $this->secure_key;
-        $this->reset_password_token = sha1(time() . $salt);
+        $this->reset_password_token = bin2hex(random_bytes(20));
         $validity = (int) Configuration::get('PS_PASSWD_RESET_VALIDITY') ?: 1440;
         $this->reset_password_validity = date('Y-m-d H:i:s', strtotime('+' . $validity . ' minutes'));
     }

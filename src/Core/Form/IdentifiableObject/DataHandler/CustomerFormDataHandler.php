@@ -125,7 +125,8 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             $isEnabled,
             (bool) $data['is_partner_offers_subscribed'],
             $data['birthday'] ?: Birthday::EMPTY_BIRTHDAY,
-            (bool) $data['is_guest']
+            (bool) $data['is_guest'],
+            (bool) $data['is_newsletter_subscribed']
         );
 
         // Optional data processed only if B2B mode is enabled

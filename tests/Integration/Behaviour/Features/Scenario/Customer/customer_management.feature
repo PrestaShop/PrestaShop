@@ -218,3 +218,40 @@ Feature: Customer Management
     And I attempt to edit customer "CUST-13" and I change the following properties:
       | defaultGroupId | Visitor |
     Then I should be returned an error message 'Customer default group with id "1" must be in access groups'
+
+  Scenario: Create a customer subscribed to the newsletter
+    When I create a customer "CUST-14" with following properties:
+      | firstName            | Mathieu                         |
+      | lastName             | Newsletter                      |
+      | email                | customerfourteen@prestashop.com |
+      | password             | PrestaShopForever1_!            |
+      | newsletterSubscribed | true                            |
+    Then I query customer "CUST-14" I should get a Customer with properties:
+      | firstName               | Mathieu    |
+      | lastName                | Newsletter |
+      | newsletterSubscribed    | true       |
+      | partnerOffersSubscribed | false      |
+
+  Scenario: Edit the newsletter and partner offers subscriptions together
+    When I create a customer "CUST-15" with following properties:
+      | firstName                 | Mathieu                        |
+      | lastName                  | Subscriptions                  |
+      | email                     | customerfifteen@prestashop.com |
+      | password                  | PrestaShopForever1_!           |
+      | isPartnerOffersSubscribed | true                           |
+      | newsletterSubscribed      | true                           |
+    Then I query customer "CUST-15" I should get a Customer with properties:
+      | partnerOffersSubscribed | true |
+      | newsletterSubscribed    | true |
+    When I edit customer "CUST-15" and I change the following properties:
+      | isPartnerOffersSubscribed | false |
+      | newsletterSubscribed      | false |
+    Then I query customer "CUST-15" I should get a Customer with properties:
+      | partnerOffersSubscribed | false |
+      | newsletterSubscribed    | false |
+    When I edit customer "CUST-15" and I change the following properties:
+      | isPartnerOffersSubscribed | true |
+      | newsletterSubscribed      | true |
+    Then I query customer "CUST-15" I should get a Customer with properties:
+      | partnerOffersSubscribed | true |
+      | newsletterSubscribed    | true |
