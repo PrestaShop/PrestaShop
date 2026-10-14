@@ -48,8 +48,8 @@ export default class TaxRulesListRenderer implements RendererType {
   }
 
   public render(data: Record<string, any>): void {
-    const tbody = this.listContainer.querySelector('tbody') as HTMLElement;
-    const trTemplateEl = this.listContainer.querySelector(ROW_TEMPLATE_ID) as HTMLScriptElement;
+    const tbody = this.listContainer.querySelector<HTMLElement>('tbody')!;
+    const trTemplateEl = this.listContainer.querySelector<HTMLScriptElement>(ROW_TEMPLATE_ID)!;
     const trTemplate = trTemplateEl.innerHTML;
     tbody.innerHTML = '';
 
