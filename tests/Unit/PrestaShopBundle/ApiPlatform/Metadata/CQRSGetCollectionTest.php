@@ -515,4 +515,58 @@ class CQRSGetCollectionTest extends TestCase
         $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
         $this->assertEquals('Specifying an extra property defaultValues and a defaultValues argument that are different is invalid', $caughtException->getMessage());
     }
+
+    public function testCollectionAsList(): void
+    {
+        // Default value is false (no extra property added)
+        $operation = new CQRSGetCollection();
+        $this->assertEquals([], $operation->getExtraProperties());
+        $this->assertEquals(false, $operation->getCollectionAsList());
+
+        // collectionAsList parameter in constructor
+        $operation = new CQRSGetCollection(
+            collectionAsList: true,
+        );
+        $this->assertEquals(['collectionAsList' => true], $operation->getExtraProperties());
+        $this->assertEquals(true, $operation->getCollectionAsList());
+
+        // Extra properties parameter in constructor
+        $operation = new CQRSGetCollection(
+            extraProperties: ['collectionAsList' => true],
+        );
+        $this->assertEquals(['collectionAsList' => true], $operation->getExtraProperties());
+        $this->assertEquals(true, $operation->getCollectionAsList());
+
+        // Extra properties AND collectionAsList parameters in constructor, no conflict when the values are equal
+        $operation = new CQRSGetCollection(
+            extraProperties: ['collectionAsList' => true],
+            collectionAsList: true,
+        );
+        $this->assertEquals(['collectionAsList' => true], $operation->getExtraProperties());
+        $this->assertEquals(true, $operation->getCollectionAsList());
+
+        // Use with method, returned object is a clone All values are replaced
+        $operation2 = $operation->withCollectionAsList(false);
+        $this->assertNotEquals($operation2, $operation);
+        $this->assertEquals(['collectionAsList' => false], $operation2->getExtraProperties());
+        $this->assertEquals(false, $operation2->getCollectionAsList());
+        // Initial operation not modified of course
+        $this->assertEquals(['collectionAsList' => true], $operation->getExtraProperties());
+        $this->assertEquals(true, $operation->getCollectionAsList());
+
+        // When both values are specified, but they are different trigger an exception
+        $caughtException = null;
+        try {
+            new CQRSGetCollection(
+                extraProperties: ['collectionAsList' => true],
+                collectionAsList: false,
+            );
+        } catch (InvalidArgumentException $e) {
+            $caughtException = $e;
+        }
+
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
+        $this->assertEquals('Specifying an extra property collectionAsList and a collectionAsList argument that are different is invalid', $caughtException->getMessage());
+    }
 }
