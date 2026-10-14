@@ -50,10 +50,11 @@ final class UpdateCategoryPositionHandler implements UpdateCategoryPositionHandl
         }
 
         if ($category->updatePosition((bool) $command->getWay(), $position)) {
-            /* Position '0' was not found in given positions so try to reorder parent category */
-            if (!$command->isFoundFirst()) {
-                Category::cleanPositions((int) $category->id_parent);
-            }
+            // Re-index unconditionally. updatePosition() shifts a range of siblings and can leave a
+            // duplicate or a gap when the requested way and position do not match the stored order,
+            // which the back office never produces but any other caller can. cleanPositions() is the
+            // only normalizer that also rewrites category_shop.position, so it has to run every time.
+            Category::cleanPositions((int) $category->id_parent);
         }
     }
 }

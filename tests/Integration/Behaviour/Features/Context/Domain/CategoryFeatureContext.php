@@ -9,6 +9,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Category;
 use Configuration;
+use Db;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
@@ -208,7 +209,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $categoryReference
      */
-    public function updatePosition(string $categoryReference, string $way, int $newPosition)
+    public function updatePosition(string $categoryReference, string $way, int $newPosition, bool $foundFirst = false)
     {
         $categoryId = SharedStorage::getStorage()->get($categoryReference);
         $parentCategoryId = $this->getEditableCategory($categoryReference)->getParentId();
@@ -251,8 +252,49 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $parentCategoryId,
             self::CATEGORY_POSITION_WAYS_MAP[$way],
             $generatedPositions,
-            false
+            $foundFirst
         ));
+    }
+
+    /**
+     * Same move, but with the "found first" flag the back office sets when position 0 is part of the
+     * moved range. It is the flag that used to skip the re-index, so it is the case worth pinning.
+     *
+     * @When /^I move category "(.*)" (up|down) to a position "(.*)" with the found first flag$/
+     */
+    public function updatePositionFoundFirst(string $categoryReference, string $way, int $newPosition): void
+    {
+        $this->updatePosition($categoryReference, $way, $newPosition, true);
+    }
+
+    /**
+     * @Then categories sharing the parent of ":categoryReference" should have contiguous positions
+     */
+    public function assertContiguousPositions(string $categoryReference): void
+    {
+        $parentCategoryId = (int) $this->getCategory($this->getSharedStorage()->get($categoryReference))->id_parent;
+
+        $rows = Db::getInstance()->executeS(sprintf(
+            'SELECT c.`id_category`, c.`position`, cs.`position` AS shop_position
+             FROM `%1$scategory` c
+             INNER JOIN `%1$scategory_shop` cs ON cs.`id_category` = c.`id_category`
+             WHERE c.`id_parent` = %2$d
+             ORDER BY cs.`position`',
+            _DB_PREFIX_,
+            $parentCategoryId
+        ));
+
+        $expected = range(0, count($rows) - 1);
+        Assert::assertSame(
+            $expected,
+            array_map(static fn (array $row): int => (int) $row['position'], $rows),
+            'category.position must stay a contiguous sequence without duplicates'
+        );
+        Assert::assertSame(
+            $expected,
+            array_map(static fn (array $row): int => (int) $row['shop_position'], $rows),
+            'category_shop.position must stay a contiguous sequence without duplicates'
+        );
     }
 
     /**
