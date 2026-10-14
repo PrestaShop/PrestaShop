@@ -15,7 +15,6 @@ use OrderInvoice;
 use OrderReturn;
 use OrderSlip;
 use Pack;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
@@ -33,6 +32,7 @@ use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use Product;
 use Shop;
 use StockAvailable;
+use Tools;
 
 /**
  * Handles GetOrderProductsForViewing query using legacy object models
@@ -146,10 +146,18 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $product['unit_price_tax_incl']
             ;
 
-            // if rounding type is set to "per item" we must round the unit price now, otherwise values won't match
-            // the totals in the order summary
+            /*
+             * If rounding type is set to "per item" we must round the unit price now, otherwise values
+             * won't match the totals in the order summary.
+             *
+             * WHY Tools::ps_round and not DecimalNumber::round: the shop offers six rounding modes and
+             * the decimal library implements five of them - it has no half-odd - so asking the converter
+             * for the sixth threw "Cannot map round mode 5" and no order could be opened at all on a shop
+             * set to "Round towards the next odd value". ps_round reads PS_PRICE_ROUND_MODE itself, covers
+             * all six, and is what computed these amounts in the first place.
+             */
             if ((int) $order->round_type === Order::ROUND_ITEM) {
-                $unitPrice = (new DecimalNumber((string) $unitPrice))->round($precision, $this->getNumberRoundMode());
+                $unitPrice = Tools::ps_round((float) $unitPrice, $precision);
             }
 
             $totalPrice = $unitPrice * $product['product_quantity'];
@@ -229,8 +237,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $totalPriceFormatted,
                 $product['current_stock'],
                 $imagePath,
-                (new DecimalNumber((string) $product['unit_price_tax_excl']))->round($precision, $this->getNumberRoundMode()),
-                (new DecimalNumber((string) $product['unit_price_tax_incl']))->round($precision, $this->getNumberRoundMode()),
+                (string) Tools::ps_round((float) $product['unit_price_tax_excl'], $precision),
+                (string) Tools::ps_round((float) $product['unit_price_tax_incl'], $precision),
                 (string) $product['tax_rate'],
                 $this->locale->formatPrice($product['amount_refunded'], $currency->iso_code),
                 $product['product_quantity_refunded'] + $product['product_quantity_return'],
