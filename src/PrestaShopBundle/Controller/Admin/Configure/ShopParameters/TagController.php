@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\Domain\Tag\Command\BulkDeleteTagCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Command\DeleteTagCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\CannotAddTagException;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\CannotUpdateTagException;
+use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\TagConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\TagException;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\TagNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -212,6 +213,13 @@ class TagController extends PrestaShopAdminController
                 [],
                 'Admin.Advparameters.Notification'
             ),
+            TagConstraintException::class => [
+                TagConstraintException::INVALID_NAME => $this->trans(
+                    'This tag cannot be found by the search engine, which ignores it. Use a tag containing a word.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
+            ],
         ];
     }
 }
