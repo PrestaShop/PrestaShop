@@ -3910,8 +3910,9 @@ class CartCore extends ObjectModel
          */
         Hook::exec('actionOverrideShippingFreePrice', ['shippingFreePrice' => &$shippingFreePrice, 'id_zone' => $id_zone, 'id_currency' => $this->id_currency]);
 
-        $orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
-        if ($orderTotalwithDiscounts >= (float) $shippingFreePrice && (float) $shippingFreePrice > 0) {
+        // Test the threshold first: the order total is a full cart calculation, and this runs for every carrier
+        if ((float) $shippingFreePrice > 0
+            && $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false) >= (float) $shippingFreePrice) {
             // Allow module to override the shipping cost and return their custom value
             $shipping_cost = $this->getPackageShippingCostFromModule($carrier, $shipping_cost, $products);
 
