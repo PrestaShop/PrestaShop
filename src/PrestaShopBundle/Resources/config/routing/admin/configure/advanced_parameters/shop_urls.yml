@@ -1,0 +1,82 @@
+admin_shop_urls_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopUrlController::indexAction'
+    _legacy_controller: AdminShopUrl
+    _legacy_link: AdminShopUrl
+    _legacy_feature_flag: shop_url
+
+admin_shop_urls_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ShopUrlGridDefinitionFactory'
+    redirectRoute: admin_shop_urls_index
+    _legacy_controller: AdminShopUrl
+    _legacy_link: AdminShopUrl:submitFiltershop_url
+    _legacy_feature_flag: shop_url
+
+admin_shop_urls_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopUrlController::createAction'
+    _legacy_controller: AdminShopUrl
+    _legacy_link: AdminShopUrl:addshop_url
+    _legacy_feature_flag: shop_url
+    _legacy_parameters:
+      shop_id: shopId
+
+admin_shop_urls_edit:
+  path: /{shopUrlId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopUrlController::editAction'
+    _legacy_controller: AdminShopUrl
+    _legacy_link: AdminShopUrl:updateshop_url
+    _legacy_feature_flag: shop_url
+    _legacy_parameters:
+      id_shop_url: shopUrlId
+  requirements:
+    shopUrlId: \d+
+
+admin_shop_urls_toggle_status:
+  path: /{shopUrlId}/toggle-status
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopUrlController::toggleStatusAction'
+    _legacy_controller: AdminShopUrl
+    _legacy_link: AdminShopUrl:statusshop_url
+    _legacy_feature_flag: shop_url
+    _legacy_parameters:
+      id_shop_url: shopUrlId
+  requirements:
+    shopUrlId: \d+
+
+admin_shop_urls_toggle_main:
+  path: /{shopUrlId}/toggle-main
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopUrlController::toggleMainAction'
+    _legacy_controller: AdminShopUrl
+    _legacy_link: AdminShopUrl:mainshop_url
+    _legacy_feature_flag: shop_url
+    _legacy_parameters:
+      id_shop_url: shopUrlId
+  requirements:
+    shopUrlId: \d+
+
+admin_shop_urls_delete:
+  path: /{shopUrlId}/delete
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopUrlController::deleteAction'
+    _legacy_controller: AdminShopUrl
+    _legacy_link: AdminShopUrl:deleteshop_url
+    _legacy_feature_flag: shop_url
+    _legacy_parameters:
+      id_shop_url: shopUrlId
+  requirements:
+    shopUrlId: \d+

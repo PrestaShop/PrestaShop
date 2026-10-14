@@ -86,3 +86,84 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopUrlRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Shop\Validate\ShopGroupValidator:
+    public: false
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\MultistoreOptionsConfiguration:
+    public: false
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopUrlRepository'
+
+  PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\AddShopGroupHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\DeleteShopGroupHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\EditShopGroupHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\GetShopGroupForEditingHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\GetShopTreeHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\Validate\ShopUrlValidator:
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Shop\ShopUrlChangeHandler:
+    public: false
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Tools'
+      - '@PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'
+      - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
+      - '@prestashop.adapter.cache.clearer.media_cache_clearer'
+
+  PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\AddShopUrlHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\DeleteShopUrlHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\EditShopUrlHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\ToggleShopUrlMainHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\ToggleShopUrlStatusHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\GetShopUrlForEditingHandler:
+    public: false
+    autowire: true
+    autoconfigure: true

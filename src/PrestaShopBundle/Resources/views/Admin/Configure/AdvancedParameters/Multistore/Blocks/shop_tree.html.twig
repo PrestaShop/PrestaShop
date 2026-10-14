@@ -1,0 +1,51 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<div class="card" id="shop-tree">
+  <h3 class="card-header d-flex align-items-center justify-content-between">
+    <span>
+      <i class="material-icons">account_tree</i>
+      {{ 'Multistore tree'|trans({}, 'Admin.Advparameters.Feature') }}
+    </span>
+    <span>
+      <button type="button" class="btn btn-link btn-sm js-shop-tree-collapse-all">
+        <i class="material-icons">expand_less</i>
+        {{ 'Collapse'|trans({}, 'Admin.Actions') }}
+      </button>
+      <button type="button" class="btn btn-link btn-sm js-shop-tree-expand-all">
+        <i class="material-icons">expand_more</i>
+        {{ 'Expand'|trans({}, 'Admin.Actions') }}
+      </button>
+    </span>
+  </h3>
+  <div class="card-body">
+    <ul class="list-unstyled mb-0">
+      {% for group in shopTree %}
+        <li class="mb-2">
+          <a href="#shop-tree-group-{{ group.id }}" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="shop-tree-group-{{ group.id }}">
+            <i class="material-icons">folder</i>
+          </a>
+          <a href="{{ getAdminLink('AdminShopGroup', true, {updateshop_group: 1, id_shop_group: group.id}) }}">{{ group.name }}</a>
+          <ul class="list-unstyled pl-4 collapse show js-shop-tree-group" id="shop-tree-group-{{ group.id }}">
+            {% for shop in group.shops %}
+              <li>
+                <i class="material-icons">store</i>
+                <a href="{{ getAdminLink('AdminShop', true, {shop_id: shop.id}) }}">{{ shop.name }}</a>
+                <ul class="list-unstyled pl-4">
+                  {% for url in shop.urls %}
+                    <li class="text-truncate">
+                      <i class="material-icons">link</i>
+                      <a href="{{ getAdminLink('AdminShopUrl', true, {updateshop_url: 1, id_shop_url: url.id}) }}" title="{{ url.url }}">{{ url.url }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

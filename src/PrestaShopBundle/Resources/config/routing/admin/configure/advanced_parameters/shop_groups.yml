@@ -1,0 +1,63 @@
+admin_shop_groups_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopGroupController::indexAction'
+    _legacy_controller: AdminShopGroup
+    _legacy_link: AdminShopGroup
+    _legacy_feature_flag: shop_group
+
+admin_shop_groups_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ShopGroupGridDefinitionFactory'
+    redirectRoute: admin_shop_groups_index
+    _legacy_controller: AdminShopGroup
+    _legacy_link: AdminShopGroup:submitFiltershop_group
+    _legacy_feature_flag: shop_group
+
+admin_shop_groups_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopGroupController::createAction'
+    _legacy_controller: AdminShopGroup
+    _legacy_link: AdminShopGroup:addshop_group
+    _legacy_feature_flag: shop_group
+
+admin_shop_groups_edit:
+  path: /{shopGroupId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopGroupController::editAction'
+    _legacy_controller: AdminShopGroup
+    _legacy_link: AdminShopGroup:updateshop_group
+    _legacy_feature_flag: shop_group
+    _legacy_parameters:
+      id_shop_group: shopGroupId
+  requirements:
+    shopGroupId: \d+
+
+admin_shop_groups_delete:
+  path: /{shopGroupId}/delete
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopGroupController::deleteAction'
+    _legacy_controller: AdminShopGroup
+    _legacy_link: AdminShopGroup:deleteshop_group
+    _legacy_feature_flag: shop_group
+    _legacy_parameters:
+      id_shop_group: shopGroupId
+  requirements:
+    shopGroupId: \d+
+
+admin_shop_groups_save_options:
+  path: /options
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopGroupController::saveOptionsAction'
+    _legacy_controller: AdminShopGroup
+    _legacy_link: AdminShopGroup:submitOptionsshop_group
+    _legacy_feature_flag: shop_group
