@@ -8,6 +8,7 @@ namespace Tests\Integration\PrestaShopBundle\ApiPlatform;
 
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Parameter;
 use ApiPlatform\OpenApi\Model\SecurityScheme;
 use ApiPlatform\OpenApi\Model\Server;
 use ApiPlatform\OpenApi\OpenApi;
@@ -208,6 +209,57 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         /** @var ArrayObject $resourceDefinition */
         $resourceDefinition = $schemas[$schemaDefinitionName];
         $this->assertEquals($expectedDefinition, $resourceDefinition);
+    }
+
+    public function testClassPhpDocIsNotPublished(): void
+    {
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        $openApi = $openApiFactory->__invoke();
+
+        // UpdatePositionResource has a class PHPDoc and no description
+        $operation = $openApi->getPaths()->getPath('/test/positions')->getPatch();
+        $this->assertStringNotContainsString('Developer note', (string) $operation->getDescription());
+        $this->assertSame('', $openApi->getComponents()->getSchemas()['UpdatePositionResource']['description']);
+    }
+
+    public function testCollectionsDocumentation(): void
+    {
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        $paths = $openApiFactory->__invoke()->getPaths();
+
+        // A paginated list documents the parameters read by QueryListProvider and its envelope
+        $paginatedList = $paths->getPath('/customers')->getGet();
+        $this->assertSame(
+            ['limit', 'offset', 'orderBy', 'sortOrder', 'filters'],
+            array_map(fn (Parameter $parameter) => $parameter->getName(), $paginatedList->getParameters())
+        );
+        $this->assertSame('deepObject', $paginatedList->getParameters()[4]->getStyle());
+        $schema = $paginatedList->getResponses()['200']->getContent()['application/json']->getSchema();
+        $this->assertSame('object', $schema['type']);
+        $this->assertSame(['totalItems', 'orderBy', 'sortOrder', 'limit', 'offset', 'filters', 'items'], array_keys($schema['properties']));
+        $this->assertEquals(['type' => 'array', 'items' => ['$ref' => '#/components/schemas/CustomerList']], $schema['properties']['items']);
+
+        // A collection that is not paginated has no page parameter, API Platform doesn't paginate it
+        $collection = $paths->getPath('/customers/{customerId}/orders')->getGet();
+        $this->assertSame(['customerId'], array_map(fn (Parameter $parameter) => $parameter->getName(), $collection->getParameters()));
+    }
+
+    public function testUnusedSchemasAreRemoved(): void
+    {
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        $schemas = $openApiFactory->__invoke()->getComponents()->getSchemas();
+
+        // Value objects of the CQRS commands are never referenced by the documented operations
+        $this->assertArrayNotHasKey('ShopConstraint', $schemas);
+        // The input of a multipart only operation is documented inline
+        $this->assertArrayNotHasKey('Title.AddTitleCommand', $schemas);
+        // The input of an operation accepting JSON and multipart is still referenced by the JSON request body
+        $this->assertArrayHasKey('Carrier.AddCarrierCommand', $schemas);
+        // Sub objects of the resources are referenced by their resource
+        $this->assertArrayHasKey('CustomerOrderRow', $schemas);
     }
 
     public static function provideJsonSchemaFactoryCases(): iterable
@@ -956,6 +1008,31 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
 
         // Sub objects typed with DTOs are documented as references to their own schema, and the arrays
         // documented with a @var Foo[] PHPDoc as lists of these references
+        yield 'Sub object of a resource, adapted like the resource (DecimalNumber documented as number)' => [
+            'CustomerOrderRow',
+            new ArrayObject([
+                'type' => 'object',
+                'description' => '',
+                'deprecated' => false,
+                'properties' => [
+                    'orderId' => new ArrayObject([
+                        'type' => 'integer',
+                    ]),
+                    'valid' => new ArrayObject([
+                        'type' => 'boolean',
+                    ]),
+                    'totalPaidTaxIncl' => new ArrayObject([
+                        'type' => 'number',
+                        'example' => 42.99,
+                    ]),
+                    'conversionRate' => new ArrayObject([
+                        'type' => 'number',
+                        'example' => 42.99,
+                    ]),
+                ],
+            ]),
+        ];
+
         yield 'CustomerDetails schema' => [
             'CustomerDetails',
             new ArrayObject([
@@ -1130,7 +1207,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                             'type' => 'integer',
                         ],
                         'description' => 'Shops associated with the group. On creation, optional from PrestaShop 9.2.0 where it defaults '
-                            . 'to the shops of the context. Required on older versions, where omitting it results in a 500 error.',
+                            . 'to the shops of the context, required on older versions.',
                     ]),
                     'displayPriceTaxExcluded' => new ArrayObject([
                         'type' => 'boolean',
