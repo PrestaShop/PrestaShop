@@ -13,14 +13,11 @@ use PrestaShopBundle\ApiPlatform\LocalizedValueUpdater;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
 use PrestaShopBundle\ApiPlatform\NormalizationMapper;
 use PrestaShopBundle\ApiPlatform\PositionCollectionUpdater;
-use ReflectionNamedType;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Serializer\Encoder\ContextAwareDecoderInterface;
 use Symfony\Component\Serializer\Encoder\ContextAwareEncoderInterface;
 use Symfony\Component\Serializer\Exception\UnsupportedFormatException;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -39,11 +36,10 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
     public function __construct(
         protected readonly Serializer $decorated,
         protected readonly ContextParametersProvider $contextParametersProvider,
-        protected readonly ClassMetadataFactoryInterface $classMetadataFactory,
         protected readonly LocalizedValueUpdater $localizedValueUpdater,
         protected readonly NormalizationMapper $normalizationMapper,
         protected readonly PositionCollectionUpdater $positionCollectionUpdater,
-        protected readonly ?PropertyTypeExtractorInterface $propertyTypeExtractor = null,
+        protected readonly PropertyTypeExtractorInterface $propertyTypeExtractor,
     ) {
     }
 
@@ -201,7 +197,7 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
      */
     protected function castBooleans(array $data, string $type): array
     {
-        if (null === $this->propertyTypeExtractor || !class_exists($type)) {
+        if (!class_exists($type)) {
             return $data;
         }
 
@@ -243,41 +239,6 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
         }
 
         return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $value;
-    }
-
-    /**
-     * Force casting boolean properties so that values like (1, 0, true, on, false, ...) are valid, this is useful for
-     * data coming from DB where boolean are returned as tiny integers. To enable this casting the CQRSApiSerializer::CAST_BOOL
-     * context option must be true.
-     *
-     * Note: in Symfony 7.1 a new option AbstractNormalizer::FILTER_BOOL has been introduced, when we upgrade our
-     * Symfony dependencies our custom casting (inspired by the Symfony one) can be removed.
-     *
-     * https://symfony.com/doc/7.1/serializer.html#handling-boolean-values
-     *
-     * @deprecated since 9.2.1, use castBooleans() which also casts the nested objects
-     */
-    protected function addBooleanCastCallbacks(string $type, array &$context): void
-    {
-        if (empty($context[self::CAST_BOOL])) {
-            return;
-        }
-
-        if (!$this->classMetadataFactory->hasMetadataFor($type)) {
-            return;
-        }
-
-        $metadata = $this->classMetadataFactory->getMetadataFor($type);
-        foreach ($metadata->getAttributesMetadata() as $attributeMetadata) {
-            if (!$metadata->getReflectionClass()->hasProperty($attributeMetadata->getName())) {
-                continue;
-            }
-
-            $reflectionProperty = $metadata->getReflectionClass()->getProperty($attributeMetadata->getName());
-            if ($reflectionProperty->getType() instanceof ReflectionNamedType && $reflectionProperty->getType()->getName() === 'bool') {
-                $context[AbstractNormalizer::CALLBACKS][$attributeMetadata->getName()] = fn (mixed $value): bool => filter_var($value, FILTER_VALIDATE_BOOLEAN);
-            }
-        }
     }
 
     /**
