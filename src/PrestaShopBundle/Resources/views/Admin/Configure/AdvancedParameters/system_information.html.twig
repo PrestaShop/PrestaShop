@@ -240,7 +240,12 @@
       missing: '{{ 'Missing files'|trans({}, 'Admin.Advparameters.Notification')|e('js') }}',
       updated: '{{ 'Updated files'|trans({}, 'Admin.Advparameters.Notification')|e('js') }}',
       changesDetected: '{{ 'Changed/missing files have been detected.'|trans({}, 'Admin.Advparameters.Notification')|e('js') }}',
-      noChangeDetected: '{{ 'No change has been detected in your files.'|trans({}, 'Admin.Advparameters.Notification')|e('js') }}'
+      noChangeDetected: '{{ 'No change has been detected in your files.'|trans({}, 'Admin.Advparameters.Notification')|e('js') }}',
+      checkFailed: '{{ 'Your files could not be checked. The list of official checksums could not be downloaded.'|trans({}, 'Admin.Advparameters.Notification')|e('js') }}'
+    };
+
+    var displayCheckFailure = function() {
+      $('#changedFiles').html('<div class="alert alert-warning mb-0" role="alert"><p class="alert-text">' + translations.checkFailed + '</p></div>');
     };
 
     $.ajax({
@@ -254,6 +259,12 @@
           'missing': translations.missing,
           'updated': translations.updated,
         };
+
+        if (json.error) {
+          displayCheckFailure();
+
+          return;
+        }
 
         if (json.missing.length || json.updated.length) {
           $('#changedFiles').html('<div class="alert alert-warning" role="alert"><p class="alert-text">' + translations.changesDetected + '</p></div>');
@@ -272,7 +283,8 @@
               .append(html);
           }
         });
-      }
+      },
+      error: displayCheckFailure
     });
   });
 </script>
