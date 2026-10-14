@@ -58,6 +58,20 @@ services:
     tags:
       - { name: 'property_info.type_extractor', priority: 10 }
 
+  # The item type of the API resources arrays documented in PHPDoc, ahead of the reflection extractors
+  PrestaShopBundle\ApiPlatform\Serializer\ApiResourceCollectionTypeExtractor:
+    arguments:
+      $phpDocExtractor: '@property_info.phpstan_extractor'
+    tags:
+      - { name: 'property_info.type_extractor', priority: 5 }
+
+  # Registered by FrameworkBundle as a global type extractor, it would make the PHPDoc types of the CQRS commands
+  # (value objects, getters nullability) prevail in the serializer and the API documentation. It is only used
+  # through ApiResourceCollectionTypeExtractor.
+  property_info.phpstan_extractor:
+    class: Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor
+    autoconfigure: false
+
   # Ahead of every other type extractor: a union mixing scalars and classes is answered with its
   # scalar members first (PHP reflects the classes first, which makes the serializer try e.g.
   # DecimalNumber on every scalar value). Silent for any other property.

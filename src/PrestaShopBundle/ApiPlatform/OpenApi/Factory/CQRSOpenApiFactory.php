@@ -24,6 +24,8 @@ use ArrayObject;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShopBundle\ApiPlatform\OpenApi\Adapter\SchemaAdapterChain;
 use PrestaShopBundle\ApiPlatform\OpenApi\FileUploadRequestBodyBuilder;
+use ReflectionNamedType;
+use ReflectionProperty;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -69,6 +71,7 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         $parentOpenApi = $this->decorated->__invoke($context);
         $domainsByUri = [];
         $scopesByUri = [];
+        $integerUriVariablesByUri = [];
         $uploadedFilesByUri = [];
 
         foreach ($this->resourceNameCollectionFactory->create() as $resourceClass) {
@@ -89,6 +92,12 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
                         $operationDomain = $this->getOperationDomain($operation);
                         if (!empty($operationDomain) && empty($domainsByUri[$operation->getUriTemplate()])) {
                             $domainsByUri[$operation->getUriTemplate()] = $this->getOperationDomain($operation);
+                        }
+                    }
+                    if ($operation instanceof HttpOperation && !empty($operation->getUriTemplate())) {
+                        $integerUriVariables = $this->getIntegerUriVariables($operation);
+                        if (!empty($integerUriVariables)) {
+                            $integerUriVariablesByUri[$operation->getUriTemplate()][strtolower($operation->getMethod())] = $integerUriVariables;
                         }
                     }
                     if ($operation instanceof HttpOperation && !empty($operation->getExtraProperties()['scopes'])) {
@@ -140,6 +149,16 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
                         $updatedOperation = $updatedOperation->withSecurity([['oauth' => $scopesByUri[$path][$httpMethod]]]);
                     }
 
+                    // The identifiers in the path are integers, ApiPlatform documents every path parameter as a string
+                    if (!empty($integerUriVariablesByUri[$path][$httpMethod]) && !empty($updatedOperation->getParameters())) {
+                        $updatedOperation = $updatedOperation->withParameters(array_map(
+                            fn (Parameter $parameter) => 'path' === $parameter->getIn() && in_array($parameter->getName(), $integerUriVariablesByUri[$path][$httpMethod], true)
+                                ? $parameter->withSchema(['type' => 'integer'])
+                                : $parameter,
+                            $updatedOperation->getParameters()
+                        ));
+                    }
+
                     // Add multishop context parameters if needed
                     if ($this->multistoreFeature->isActive()) {
                         $existingParameters = $updatedOperation->getParameters() ?? [];
@@ -175,6 +194,36 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
             $parentOpenApi->getJsonSchemaDialect(),
             $parentOpenApi->getWebhooks(),
         );
+    }
+
+    /**
+     * Returns the URI variables that are integers: matching a digits only requirement, or an int property of the resource.
+     *
+     * @return string[]
+     */
+    protected function getIntegerUriVariables(HttpOperation $operation): array
+    {
+        $integerUriVariables = [];
+        foreach (array_keys($operation->getUriVariables() ?? []) as $uriVariable) {
+            $requirement = $operation->getRequirements()[$uriVariable] ?? null;
+            if (null !== $requirement) {
+                if (in_array($requirement, ['\\d+', '[0-9]+'], true)) {
+                    $integerUriVariables[] = $uriVariable;
+                }
+
+                continue;
+            }
+
+            $class = $operation->getClass();
+            if (null !== $class && property_exists($class, $uriVariable)) {
+                $type = (new ReflectionProperty($class, $uriVariable))->getType();
+                if ($type instanceof ReflectionNamedType && 'int' === $type->getName()) {
+                    $integerUriVariables[] = $uriVariable;
+                }
+            }
+        }
+
+        return $integerUriVariables;
     }
 
     /**

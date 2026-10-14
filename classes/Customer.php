@@ -242,7 +242,7 @@ class CustomerCore extends ObjectModel
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_FRONT') . 'minutes'));
 
         // If subscribed to the newsletter, set the date of subscription to now, if not set
-        if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
+        if ($this->newsletter && !Validate::isDate((string) $this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
         }
 
