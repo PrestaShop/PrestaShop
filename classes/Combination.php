@@ -142,6 +142,11 @@ class CombinationCore extends ObjectModel
             return false;
         }
 
+        Db::getInstance()->delete(
+            'product_attribute_carrier',
+            'id_product_attribute = ' . (int) $this->id . ($this->hasMultishopEntries() ? ' AND id_shop IN (' . implode(',', array_map('intval', $shopIdsList)) . ')' : '')
+        );
+
         if (!$this->deleteCartProductCombination()) {
             return false;
         }
