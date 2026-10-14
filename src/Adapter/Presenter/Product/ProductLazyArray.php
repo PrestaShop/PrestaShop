@@ -1041,6 +1041,42 @@ class ProductLazyArray extends AbstractLazyArray
      * @param ProductPresentationSettings $settings
      * @param array $product
      */
+    /**
+     * Everything addPriceInformation() computes from a price. Emptied as a set rather than one by one,
+     * so a partial list cannot leak a value through one of the tax or discount variants.
+     */
+    private const HIDDEN_WHEN_PRICES_ARE_HIDDEN = [
+        'discount_amount',
+        'discount_amount_tax_excluded',
+        'discount_amount_tax_included',
+        'discount_amount_to_display',
+        'discount_amount_to_display_tax_excluded',
+        'discount_amount_to_display_tax_included',
+        'discount_percentage',
+        'discount_percentage_absolute',
+        'discount_to_display',
+        'discount_to_display_tax_excluded',
+        'discount_to_display_tax_included',
+        'discount_type',
+        'price',
+        'price_amount',
+        'price_amount_tax_excluded',
+        'price_amount_tax_included',
+        'price_tax_excluded',
+        'price_tax_included',
+        'reduction',
+        'reduction_tax_excluded',
+        'reduction_tax_included',
+        'regular_price',
+        'regular_price_amount',
+        'regular_price_amount_tax_excluded',
+        'regular_price_amount_tax_included',
+        'regular_price_tax_excluded',
+        'regular_price_tax_included',
+        'unit_price',
+        'unit_price_full',
+    ];
+
     protected function addPriceInformation(
         ProductPresentationSettings $settings,
         array $product,
@@ -1187,6 +1223,18 @@ class ProductLazyArray extends AbstractLazyArray
             $this->product['nopackprice'] = null;
             $this->product['nopackprice_to_display'] = null;
         }
+
+        /*
+         * A shop that hides prices from this customer must not hand them over either. Templates stop
+         * rendering them, but the presented product is also serialised straight to JSON by the search
+         * and product listing endpoints, so every value computed above would still reach the browser.
+         */
+        if (!$this->shouldShowPrice($settings, $this->product)) {
+            $this->product['has_discount'] = false;
+            foreach (self::HIDDEN_WHEN_PRICES_ARE_HIDDEN as $field) {
+                $this->product[$field] = null;
+            }
+        }
     }
 
     /**
@@ -1196,7 +1244,7 @@ class ProductLazyArray extends AbstractLazyArray
     public function getRoundedDisplayPrice()
     {
         return Tools::ps_round(
-            $this->product['price_amount'],
+            (float) $this->product['price_amount'],
             Context::getContext()->currency->precision
         );
     }
