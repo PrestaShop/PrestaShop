@@ -52,6 +52,8 @@ export default {
     specificLocale: (selectedLocale: string): string => `.nav-item a[data-locale="${selectedLocale}"]`,
   },
   entitySearchInput: {
+    // Only set on containers whose form type asked for automatic initialisation
+    autoInitSelector: '.js-entity-search-input',
     searchInputSelector: '.entity-search-input',
     entitiesContainerSelector: '.entities-list',
     listContainerSelector: '.entities-list-container',
