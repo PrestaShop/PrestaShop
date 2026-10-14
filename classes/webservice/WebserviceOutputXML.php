@@ -67,12 +67,28 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
     {
         $str_output = '<error>' . "\n";
         if ($code !== null) {
-            $str_output .= '<code><![CDATA[' . $code . ']]></code>' . "\n";
+            $str_output .= '<code><![CDATA[' . $this->escapeCdataContent($code) . ']]></code>' . "\n";
         }
-        $str_output .= '<message><![CDATA[' . $message . ']]></message>' . "\n";
+        $str_output .= '<message><![CDATA[' . $this->escapeCdataContent($message) . ']]></message>' . "\n";
         $str_output .= '</error>' . "\n";
 
         return $str_output;
+    }
+
+    /**
+     * Escape a string meant to be placed inside a CDATA section. The sequence
+     * ]]> terminates the section, so any occurrence is split by ending and
+     * reopening the section. A caller supplied value such as an unknown filter
+     * name or resource name is reflected in error messages, and this keeps it
+     * from altering the structure of the error document.
+     *
+     * @param string $value content to place in a CDATA section
+     *
+     * @return string
+     */
+    private function escapeCdataContent($value)
+    {
+        return str_replace(']]>', ']]]]><![CDATA[>', (string) $value);
     }
 
     public function renderField($field)
