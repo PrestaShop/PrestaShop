@@ -32,6 +32,18 @@ class CurrencyPrecisionTest extends TestCase
             [
                 -42,
             ],
+            [
+                7,
+            ],
+            [
+                '981',
+            ],
+            [
+                49,
+            ],
+            [
+                8,
+            ],
         ];
     }
 
@@ -49,32 +61,24 @@ class CurrencyPrecisionTest extends TestCase
     {
         return [
             [
-                '008',
-                8,
+                '006',
+                6,
             ],
             [
-                '8',
-                8,
+                '6',
+                6,
             ],
             [
-                '981',
-                981,
-            ],
-            [
-                '49',
-                49,
+                '2',
+                2,
             ],
             [
                 '0',
                 0,
             ],
             [
-                8,
-                8,
-            ],
-            [
-                981,
-                981,
+                4,
+                4,
             ],
             [
                 0,
