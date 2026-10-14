@@ -15,7 +15,6 @@ use PrestaShop\PrestaShop\Adapter\Container\DoctrineBuilderExtension;
 use PrestaShop\PrestaShop\Adapter\Container\LegacyContainer;
 use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerBuilder;
 use PrestaShop\PrestaShop\Adapter\Container\ValidatorBuilderExtension;
-use PrestaShop\PrestaShop\Adapter\Doctrine\FrontDoctrineProxyWarmer;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\CachedModuleRepository;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
@@ -181,11 +180,6 @@ class ContainerBuilder
         $this->loadServicesFromConfig($container);
         $this->loadModulesAutoloader($container->getParameter('prestashop.installed_modules'));
         $container->compile();
-
-        if ($this->environment->isDebug() === false) {
-            $proxyWarmer = new FrontDoctrineProxyWarmer($container);
-            $proxyWarmer->run();
-        }
 
         // Dump the container file
         $dumper = new PhpDumper($container);
