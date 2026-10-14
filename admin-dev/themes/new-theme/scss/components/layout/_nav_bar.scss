@@ -50,6 +50,7 @@
   }
 
   .material-icons {
+    width: var(--#{$cdk}size-24);
     font-size: var(--#{$cdk}size-24);
     line-height: 1;
     color: currentcolor;

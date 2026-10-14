@@ -8,22 +8,35 @@ declare(strict_types=1);
 
 namespace Tests\Integration\ApiPlatform\EndPoint;
 
+use Address;
 use AdminAPIKernel;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase as ApiPlatformTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use Cache;
+use Carrier;
+use Cart;
+use CartRule;
 use Configuration;
+use Context;
+use Currency;
+use Customer;
+use ObjectModel;
+use Pack;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\AddApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use Product;
 use RuntimeException;
 use Shop;
 use ShopGroup;
+use SpecificPrice;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Tests\Integration\Utility\LanguageTrait;
 use Tests\Resources\Resetter\ApiClientResetter;
+use Tools;
 
 abstract class ApiTestCase extends ApiPlatformTestCase
 {
@@ -189,6 +202,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
                     'content-type' => 'application/x-www-form-urlencoded',
                 ],
             ];
+            static::resetLegacyStaticCaches();
             $response = static::createClient($kernelOptions, $clientOptions)->request('POST', '/access_token', $options);
 
             return json_decode($response->getContent())->access_token;
@@ -230,6 +244,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         ];
         // Forward the kernel/client options so the token is requested against the same kernel configuration as the
         // subsequent calls (this also warms the route cache under those options before the actual request).
+        static::resetLegacyStaticCaches();
         $response = static::createClient($kernelOptions, $clientOptions)->request('POST', '/access_token', $options);
         self::assertResponseStatusCodeSame(200);
 
@@ -244,6 +259,27 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         }
 
         return $bearerToken;
+    }
+
+    /**
+     * A real API request starts in a new PHP process, the tests send all of them from this one.
+     */
+    protected static function resetLegacyStaticCaches(): void
+    {
+        Product::flushPriceCache();
+        SpecificPrice::flushCache();
+        Configuration::resetStaticCache();
+        Cache::clear();
+        Cart::resetStaticCache();
+        Carrier::resetStaticCache();
+        CartRule::resetStaticCache();
+        Currency::resetStaticCache();
+        Pack::resetStaticCache();
+        Customer::resetAddressCache();
+        Address::resetStaticCache();
+        ObjectModel::resetStaticCache();
+        Tools::resetStaticCache();
+        Cache::clean('*');
     }
 
     /**
@@ -274,7 +310,19 @@ abstract class ApiTestCase extends ApiPlatformTestCase
             $options = array_merge($options, $requestOptions);
         }
 
-        $response = static::createClient()->request($httpMethod, $endPointUrl, $options);
+        // Same legacy context as a real API request: no employee nor cart, which test fixtures may have set
+        static::resetLegacyStaticCaches();
+        $legacyContext = Context::getContext();
+        $testEmployee = $legacyContext->employee;
+        $testCart = $legacyContext->cart;
+        $legacyContext->employee = null;
+        $legacyContext->cart = null;
+        try {
+            $response = static::createClient()->request($httpMethod, $endPointUrl, $options);
+        } finally {
+            $legacyContext->employee = $testEmployee;
+            $legacyContext->cart = $testCart;
+        }
 
         // Unless you mean to test a specific code (for invalid requests mostly) the expected code can be deduced from the
         // HTTP method by convention
@@ -374,19 +422,14 @@ abstract class ApiTestCase extends ApiPlatformTestCase
      */
     protected function listItems(string $listUrl, array $scopes = [], array $filters = []): array
     {
-        $bearerToken = $this->getBearerToken($scopes);
-        $response = static::createClient()->request('GET', $listUrl, [
-            'auth_bearer' => $bearerToken,
+        $decodedResponse = $this->requestApi('GET', $listUrl, null, [], Response::HTTP_OK, [
+            'auth_bearer' => $this->getBearerToken($scopes),
             'extra' => [
                 'parameters' => [
                     'filters' => $filters,
                 ],
             ],
         ]);
-        self::assertResponseStatusCodeSame(200);
-
-        $decodedResponse = json_decode($response->getContent(), true);
-        $this->assertNotFalse($decodedResponse);
         $this->assertArrayHasKey('totalItems', $decodedResponse);
         $this->assertArrayHasKey('sortOrder', $decodedResponse);
         $this->assertArrayHasKey('limit', $decodedResponse);

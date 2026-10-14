@@ -44,10 +44,12 @@ class DecimalNumberAdapter implements OpenApiSchemaAdapterInterface
             if ($property->hasType() && $property->getType() instanceof ReflectionNamedType) {
                 $propertyType = $property->getType()->getName();
                 if ($propertyType === DecimalNumber::class || is_subclass_of($propertyType, DecimalNumber::class)) {
-                    $definition['properties'][$propertyName]['type'] = 'number';
+                    // A nullable DecimalNumber is documented by ApiPlatform as anyOf the DecimalNumber object and null
+                    $definition['properties'][$propertyName]['type'] = $property->getType()->allowsNull() ? ['number', 'null'] : 'number';
                     $definition['properties'][$propertyName]['example'] = 42.99;
                     unset($definition['properties'][$propertyName]['$ref']);
                     unset($definition['properties'][$propertyName]['allOf']);
+                    unset($definition['properties'][$propertyName]['anyOf']);
                 }
             }
         }

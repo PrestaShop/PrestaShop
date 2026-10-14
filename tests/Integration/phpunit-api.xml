@@ -1,0 +1,20 @@
+<phpunit
+    bootstrap="bootstrap-api.php"
+    convertDeprecationsToExceptions="false"
+    processIsolation="false">
+  <php>
+    <env name="KERNEL_CLASS" value="AdminKernel" />
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
+  </php>
+  <testsuites>
+    <testsuite name="AdminAPI">
+      <directory>ApiPlatform</directory>
+    </testsuite>
+  </testsuites>
+
+  <groups>
+    <exclude>
+      <group>isolatedProcess</group>
+    </exclude>
+  </groups>
+</phpunit>

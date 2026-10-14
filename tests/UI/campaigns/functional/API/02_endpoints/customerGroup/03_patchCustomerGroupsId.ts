@@ -20,9 +20,9 @@ import {
 
 import {expect} from 'chai';
 
-const baseContext: string = 'functional_API_endpoints_customerGroup_putCustomerGroupsId';
+const baseContext: string = 'functional_API_endpoints_customerGroup_patchCustomerGroupsId';
 
-describe('API : PUT /customers/groups/{customerGroupId}', async () => {
+describe('API : PATCH /customers/groups/{customerGroupId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -142,13 +142,12 @@ describe('API : PUT /customers/groups/{customerGroupId}', async () => {
     it('should request the endpoint /customers/groups/{customerGroupId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.put(`customers/groups/${idCustomerGroup}`, {
+      const apiResponse = await apiContext.patch(`customers/groups/${idCustomerGroup}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
         data: {
-          customerGroupId: idCustomerGroup,
-          localizedNames: {
+          names: {
             [dataLanguages.french.locale]: updateGroupData.frName,
             [dataLanguages.english.locale]: updateGroupData.name,
           },
@@ -169,7 +168,7 @@ describe('API : PUT /customers/groups/{customerGroupId}', async () => {
 
       expect(jsonResponse).to.have.all.keys(
         'customerGroupId',
-        'localizedNames',
+        'names',
         'reductionPercent',
         'displayPriceTaxExcluded',
         'showPrice',
@@ -181,7 +180,7 @@ describe('API : PUT /customers/groups/{customerGroupId}', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseJSON', baseContext);
 
       expect(jsonResponse.customerGroupId).to.equal(idCustomerGroup);
-      expect(jsonResponse.localizedNames).to.deep.equal({
+      expect(jsonResponse.names).to.deep.equal({
         [dataLanguages.english.locale]: updateGroupData.name,
         [dataLanguages.french.locale]: updateGroupData.frName,
       });
@@ -215,18 +214,18 @@ describe('API : PUT /customers/groups/{customerGroupId}', async () => {
       expect(pageTitle).to.contains(boCustomerGroupsCreatePage.pageTitleEdit);
     });
 
-    it('should check the JSON Response : `localizedNames` (EN)', async function () {
+    it('should check the JSON Response : `names` (EN)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLocalizedNamesEN', baseContext);
 
       const value = await boCustomerGroupsCreatePage.getValue(page, 'localizedNames', dataLanguages.english.id);
-      expect(jsonResponse.localizedNames[dataLanguages.english.locale]).to.be.equal(value);
+      expect(jsonResponse.names[dataLanguages.english.locale]).to.be.equal(value);
     });
 
-    it('should check the JSON Response : `localizedNames` (FR)', async function () {
+    it('should check the JSON Response : `names` (FR)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLocalizedNamesFR', baseContext);
 
       const value = await boCustomerGroupsCreatePage.getValue(page, 'localizedNames', dataLanguages.french.id);
-      expect(jsonResponse.localizedNames[dataLanguages.french.locale]).to.be.equal(value);
+      expect(jsonResponse.names[dataLanguages.french.locale]).to.be.equal(value);
     });
 
     it('should check the JSON Response : `reductionPercent`', async function () {

@@ -156,8 +156,8 @@ describe('API : Check endpoints', async () => {
     '/customers/groups/{customerGroupId}: DELETE',
     // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/02_getCustomerGroupsId.ts
     '/customers/groups/{customerGroupId}: GET',
-    // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/03_putCustomerGroupsId.ts
-    '/customers/groups/{customerGroupId}: PUT',
+    // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/03_patchCustomerGroupsId.ts
+    '/customers/groups/{customerGroupId}: PATCH',
     // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/04_getCustomersGroups.ts
     '/customers/groups: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/05_postCustomersGroup.ts
@@ -169,13 +169,25 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/customers/search: GET',
     // @todo: add tests
+    '/customers/{customerId}/carts: GET',
+    // @todo: add tests
+    '/customers/{customerId}/carts: POST',
+    // @todo: add tests
     '/customers/{customerId}/details: GET',
+    // @todo: add tests
+    '/customers/{customerId}/orders: GET',
+    // @todo: add tests
+    '/customers/{customerId}/set-private-note: PATCH',
+    // @todo: add tests
+    '/customers/{customerId}/transform-to-customer: PUT',
     // @todo: add tests
     '/customers/{customerId}: DELETE',
     // @todo: add tests
     '/customers/{customerId}: GET',
     // @todo: add tests
     '/customers/{customerId}: PATCH',
+    // @todo: add tests
+    '/customers: GET',
     // @todo: add tests
     '/customers: POST',
     // @todo: add tests
@@ -242,6 +254,20 @@ describe('API : Check endpoints', async () => {
     '/hooks/{hookId}: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/hook/03_getHooks.ts
     '/hooks: GET',
+    // @todo: add tests
+    '/image-types/bulk-delete: DELETE',
+    // @todo: add tests
+    '/image-types/regenerate-thumbnails: PUT',
+    // @todo: add tests
+    '/image-types/{imageTypeId}/images: DELETE',
+    // @todo: add tests
+    '/image-types/{imageTypeId}: DELETE',
+    // @todo: add tests
+    '/image-types/{imageTypeId}: GET',
+    // @todo: add tests
+    '/image-types/{imageTypeId}: PATCH',
+    // @todo: add tests
+    '/image-types: POST',
     // tests/UI/campaigns/functional/API/02_endpoints/language/01_getLanguages.ts
     '/languages: GET',
     // @todo: add tests
@@ -307,7 +333,11 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/order-returns/{orderReturnId}: PATCH',
     // @todo: add tests
+    '/products/combinations/{combinationId}/stock: PATCH',
+    // @todo: add tests
     '/products/combinations/{combinationId}: GET',
+    // @todo: add tests
+    '/products/free-gift-candidates: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/product/01_deleteProductImageId.ts
     '/products/images/{imageId}: DELETE',
     // tests/UI/campaigns/functional/API/02_endpoints/product/02_getProductImageId.ts
@@ -317,7 +347,15 @@ describe('API : Check endpoints', async () => {
     // tests/UI/campaigns/functional/API/02_endpoints/product/11_getProductsSearch.ts
     '/products/search: GET',
     // @todo: add tests
-    '/products/{productId}/assign-to-categories: POST',
+    '/products/virtual-files/{virtualProductFileId}: DELETE',
+    // @todo: add tests
+    '/products/virtual-files/{virtualProductFileId}: GET',
+    // @todo: add tests
+    '/products/virtual-files/{virtualProductFileId}: POST',
+    // @todo: add tests
+    '/products/{productId}/assign-to-categories: PATCH',
+    // @todo: add tests
+    '/products/{productId}/attribute-groups: GET',
     // @todo: add tests
     '/products/{productId}/carriers: GET',
     // @todo: add tests
@@ -325,19 +363,39 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/products/{productId}/categories: DELETE',
     // @todo: add tests
-    '/products/{productId}/categories: POST',
+    '/products/{productId}/categories: PUT',
     // @todo: add tests
     '/products/{productId}/combination-ids: GET',
     // @todo: add tests
     '/products/{productId}/combinations: GET',
+    // @todo: add tests
+    '/products/{productId}/default-supplier: PUT',
     // @todo: add tests
     '/products/{productId}/generate-combinations: POST',
     // tests/UI/campaigns/functional/API/02_endpoints/product/05_getProductIdImages.ts
     '/products/{productId}/images: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/product/04_postProductIdImage.ts
     '/products/{productId}/images: POST',
+    // @todo: add tests
+    '/products/{productId}/shop-images: GET',
+    // @todo: add tests
+    '/products/{productId}/shop-images: PUT',
     // tests/UI/campaigns/functional/API/02_endpoints/product/06_patchProductIdShops.ts
     '/products/{productId}/shops: PATCH',
+    // @todo: add tests
+    '/products/{productId}/stock-movements: GET',
+    // @todo: add tests
+    '/products/{productId}/stock: PATCH',
+    // @todo: add tests
+    '/products/{productId}/suppliers: DELETE',
+    // @todo: add tests
+    '/products/{productId}/suppliers: GET',
+    // @todo: add tests
+    '/products/{productId}/suppliers: PATCH',
+    // @todo: add tests
+    '/products/{productId}/suppliers: PUT',
+    // @todo: add tests
+    '/products/{productId}/virtual-files: POST',
     // tests/UI/campaigns/functional/API/02_endpoints/product/07_deleteProductId.ts
     '/products/{productId}: DELETE',
     // tests/UI/campaigns/functional/API/02_endpoints/product/08_getProductId.ts

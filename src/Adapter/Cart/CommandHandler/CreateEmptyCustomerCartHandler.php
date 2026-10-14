@@ -10,6 +10,7 @@ use Cart;
 use Configuration;
 use Currency;
 use Customer;
+use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\CreateEmptyCustomerCartHandlerInterface;
@@ -22,13 +23,17 @@ use PrestaShopException;
 #[AsCommandHandler]
 final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHandlerInterface
 {
+    public function __construct(
+        private readonly CustomerRepository $customerRepository,
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(CreateEmptyCustomerCartCommand $command)
     {
-        $customer = new Customer($command->getCustomerId()->getValue());
-
+        $customer = $this->customerRepository->get($command->getCustomerId());
         $lastEmptyCartId = $customer->getLastEmptyCart(false);
 
         if ($lastEmptyCartId) {

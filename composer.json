@@ -53,7 +53,9 @@
         "nikic/php-parser": "^4.0",
         "nyholm/psr7": "^1.8",
         "pelago/emogrifier": "^7.0.0",
+        "phpdocumentor/type-resolver": "^2.1",
         "phpoffice/phpspreadsheet": "^1.30.5",
+        "phpstan/phpdoc-parser": "^2.3",
         "prestashop/autoload": "^1.0.2",
         "prestashop/blockreassurance": "^6",
         "prestashop/blockwishlist": "^4.0",
@@ -71,7 +73,7 @@
         "prestashop/hummingbird": "^2.1",
         "prestashop/pagesnotfound": "^4",
         "prestashop/productcomments": "^9.0",
-        "prestashop/ps_apiresources": "^0.9.0",
+        "prestashop/ps_apiresources": "dev-domain/customer",
         "prestashop/ps_banner": "^3",
         "prestashop/ps_bestsellers": "^2.0",
         "prestashop/ps_brandlist": "^1.0",
@@ -216,7 +218,7 @@
         },
         "ps_apiresources": {
             "type": "vcs",
-            "url": "https://github.com/PrestaShop/ps_apiresources"
+            "url": "https://github.com/PrestaEdit/ps_apiresources"
         }
     },
     "minimum-stability": "dev",
@@ -300,6 +302,7 @@
         "integration-tests": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml",
+            "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit-api.xml",
             "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit-isolated.xml"
         ],
         "php-cs-fixer": "@php ./vendor/bin/php-cs-fixer fix",
