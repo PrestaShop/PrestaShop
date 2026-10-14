@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCo
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CartRuleNameTooLongException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
@@ -2287,6 +2288,12 @@ class OrderController extends PrestaShopAdminController
         if ($e instanceof DuplicateProductInOrderInvoiceException) {
             $orderInvoiceNumber = $e->getOrderInvoiceNumber();
         }
+        $cartRuleNameLength = 0;
+        $cartRuleNameMaxLength = 0;
+        if ($e instanceof CartRuleNameTooLongException) {
+            $cartRuleNameLength = $e->getGivenLength();
+            $cartRuleNameMaxLength = $e->getMaxLength();
+        }
 
         return [
             ProductSearchEmptyPhraseException::class => $this->trans(
@@ -2452,6 +2459,16 @@ class OrderController extends PrestaShopAdminController
             CannotFindProductInOrderException::class => $this->trans(
                 'You cannot edit the price of a product that no longer exists in your catalog.',
                 [],
+                'Admin.Notifications.Error'
+            ),
+            CartRuleNameTooLongException::class => $this->trans(
+                'The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.',
+                [
+                    '%1$s' => 'name',
+                    '%2$d' => $cartRuleNameLength,
+                    '%3$d' => 1,
+                    '%4$d' => $cartRuleNameMaxLength,
+                ],
                 'Admin.Notifications.Error'
             ),
         ];
