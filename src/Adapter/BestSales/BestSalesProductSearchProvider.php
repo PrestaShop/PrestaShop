@@ -44,19 +44,20 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
         ProductSearchContext $context,
         ProductSearchQuery $query
     ) {
-        // If provided sort order is unsupported random, we set a fallback
-        if ($query->getSortOrder()->isRandom()) {
-            $query->setSortOrder((new SortOrder('product', 'sales', 'desc'))->setLabel(
-                $this->translator->trans('Sales, highest to lowest', [], 'Shop.Theme.Catalog')
-            ));
-        }
+        /*
+         * A random order is honoured rather than replaced by the default one, the way
+         * CategoryProductSearchProvider already does it: silently answering a different order than the
+         * caller asked for gave a caller no way to tell it had been ignored.
+         */
+        $random = $query->getSortOrder()->isRandom();
 
         if (!$products = ProductSale::getBestSales(
             $context->getIdLang(),
             $query->getPage(),
             $query->getResultsPerPage(),
-            $query->getSortOrder()->toLegacyOrderBy(),
-            $query->getSortOrder()->toLegacyOrderWay()
+            $random ? null : $query->getSortOrder()->toLegacyOrderBy(),
+            $random ? null : $query->getSortOrder()->toLegacyOrderWay(),
+            $random
         )) {
             $products = [];
         }
