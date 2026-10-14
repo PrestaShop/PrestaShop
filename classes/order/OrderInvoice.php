@@ -716,8 +716,7 @@ class OrderInvoiceCore extends ObjectModel
             'order_invoice_payment',
             'oip2',
             'oip2.id_order_payment = oip1.id_order_payment
-                AND oip2.id_order_invoice <> oip1.id_order_invoice
-                AND oip2.id_order = oip1.id_order'
+                AND oip2.id_order_invoice <> oip1.id_order_invoice'
         );
         $query->where('oip1.id_order_invoice = ' . (int) $this->id);
 
@@ -753,8 +752,7 @@ class OrderInvoiceCore extends ObjectModel
             'order_invoice_payment',
             'oip2',
             'oip2.id_order_payment = oip1.id_order_payment
-                AND oip2.id_order_invoice <> oip1.id_order_invoice
-                AND oip2.id_order = oip1.id_order'
+                AND oip2.id_order_invoice <> oip1.id_order_invoice'
         );
         $query->leftJoin(
             'order_invoice',
