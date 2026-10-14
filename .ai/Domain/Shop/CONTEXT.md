@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Provides the multi-shop context model — `ShopConstraint`, `ShopId`, `ShopGroupId` — used pervasively across all other domains to scope operations to one shop, a group, or all shops. Also handles shop logo uploads and shop search. It does NOT manage shop creation/deletion (that remains in legacy admin).
+Provides the multi-shop context model — `ShopConstraint`, `ShopId`, `ShopGroupId` — used pervasively across all other domains to scope operations to one shop, a group, or all shops. Also handles shop logo uploads, shop search and shop group CRUD. It does NOT manage shop or shop URL creation/deletion (that remains in legacy admin).
 
 ## Layers
 
@@ -10,7 +10,7 @@ Provides the multi-shop context model — `ShopConstraint`, `ShopId`, `ShopGroup
 |-------|------|
 | Core CQRS | `src/Core/Domain/Shop/` — Commands, Queries, QueryResults, ValueObjects, DTOs, Exceptions |
 | Adapter | `src/Adapter/Shop/` — handler implementations, `Context.php`, `MaintenanceConfiguration`, `ShopUrlDataProvider`, `ShopInformation`, URL providers, Doctrine repositories |
-| Back-office UI | `src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ShopController.php` |
+| Back-office UI | `src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ShopController.php`, `ShopGroupController.php` (behind the `shop_group` feature flag) |
 
 ## Non-obvious patterns
 
@@ -19,6 +19,7 @@ Provides the multi-shop context model — `ShopConstraint`, `ShopId`, `ShopGroup
 - `src/Adapter/Shop/Context.php` wraps the legacy `Context::getContext()->shop` for use in DI — it is a compatibility shim, not a CQRS handler.
 - The Adapter's `Url/` directory contains multiple URL providers (Category, CMS, Help, ImageFolder, Product, ProductPreview) that are front-end asset helpers, not CQRS concerns.
 - Doctrine repositories (`ShopRepository`, `ShopGroupRepository`) live in `src/Adapter/Shop/Repository/`, not in `src/PrestaShopBundle/Entity/Repository/`.
+- Shop group sharing options (`share_customer`, `share_stock`, `share_order`) are locked once the store has more than one active shop, and `share_order` requires the other two. Toggling `share_stock` resets the group's `stock_available` quantities (legacy `StockAvailable::resetProductFromStockAvailableByShopGroup()`).
 
 ## Canonical examples
 
