@@ -688,6 +688,26 @@ class CombinationController extends PrestaShopAdminController
                     [sprintf('"%s"', $this->trans('Minimum order quantity', [], 'Admin.Catalog.Feature'))],
                     'Admin.Notifications.Error'
                 ),
+                ProductConstraintException::INVALID_DESCRIPTION => $this->trans(
+                    'The %s field is invalid.',
+                    [sprintf('"%s"', $this->trans('Description', [], 'Admin.Global'))],
+                    'Admin.Notifications.Error'
+                ),
+                ProductConstraintException::INVALID_SHORT_DESCRIPTION => $this->trans(
+                    'The %s field is invalid.',
+                    [sprintf('"%s"', $this->trans('Summary', [], 'Admin.Global'))],
+                    'Admin.Notifications.Error'
+                ),
+                ProductConstraintException::INVALID_META_DESCRIPTION => $this->trans(
+                    'The %s field is invalid.',
+                    [sprintf('"%s"', $this->trans('Meta description', [], 'Admin.Catalog.Feature'))],
+                    'Admin.Notifications.Error'
+                ),
+                ProductConstraintException::INVALID_META_TITLE => $this->trans(
+                    'The %s field is invalid.',
+                    [sprintf('"%s"', $this->trans('Meta title', [], 'Admin.Catalog.Feature'))],
+                    'Admin.Notifications.Error'
+                ),
             ],
             ProductStockConstraintException::class => [
                 ProductStockConstraintException::INVALID_QUANTITY => $this->trans(
