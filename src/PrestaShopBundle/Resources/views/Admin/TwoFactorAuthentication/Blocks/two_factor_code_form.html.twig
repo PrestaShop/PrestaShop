@@ -7,7 +7,7 @@
 {% set providerSwitchRoute = providerSwitchRoute|default('2fa_login') %}
 {% set providerSwitchRouteParams = providerSwitchRouteParams|default({}) %}
 {% set displayProviderSelector = displayProviderSelector|default(true) %}
-{% set displayCodeForm = displayCodeForm|default(true) %}
+{% set displayCodeForm = displayCodeForm ?? true %}
 
 {% if displayProviderSelector and availableTwoFactorProviders|default([])|length > 1 %}
   <div class="form-group">
