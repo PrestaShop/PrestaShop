@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSup
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\NoSupplierId;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
 use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
@@ -53,6 +54,25 @@ class CombinationFormDataProviderTest extends TestCase
         $provider = $this->createFormDataProvider($queryBusMock);
 
         $this->assertEquals([], $provider->getDefaultData());
+    }
+
+    public function testStatusIsAddedOnlyWhenFlagIsEnabled(): void
+    {
+        $featureFlagStateChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
+        $featureFlagStateChecker
+            ->method('isEnabled')
+            ->willReturnCallback(fn (string $flag): bool => $flag === FeatureFlagSettings::FEATURE_FLAG_COMBINATION_STATUS)
+        ;
+        $provider = new CombinationFormDataProvider(
+            $this->createQueryBusMock(['active' => false]),
+            $this->mockShopContext(),
+            $this->createMock(LanguageContext::class),
+            $this->createMock(FeaturesChoiceProvider::class),
+            $featureFlagStateChecker
+        );
+
+        $this->assertFalse($provider->getData(self::COMBINATION_ID)['header']['active']);
+        $this->assertArrayNotHasKey('active', $this->createFormDataProvider($this->createQueryBusMock([]))->getData(self::COMBINATION_ID)['header']);
     }
 
     /**
@@ -543,7 +563,8 @@ class CombinationFormDataProviderTest extends TestCase
             $this->createStock($combination),
             $combination['image_ids'] ?? [],
             $combination['cover_url'] ?? self::COVER_URL,
-            $combination['is_default'] ?? self::IS_DEFAULT
+            $combination['is_default'] ?? self::IS_DEFAULT,
+            $combination['active'] ?? true
         );
     }
 

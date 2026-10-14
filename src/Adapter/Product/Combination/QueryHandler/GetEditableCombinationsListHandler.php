@@ -175,7 +175,8 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
                 new DecimalNumber($combination['price']),
                 (int) $combination['quantity'],
                 $imagePath,
-                new DecimalNumber($combination['ecotax'])
+                new DecimalNumber($combination['ecotax']),
+                (bool) $combination['active']
             );
         }
 

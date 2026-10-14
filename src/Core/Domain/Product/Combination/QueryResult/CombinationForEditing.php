@@ -59,6 +59,11 @@ class CombinationForEditing
     private $isDefault;
 
     /**
+     * @var bool
+     */
+    private $active;
+
+    /**
      * @param int $combinationId
      * @param int $productId
      * @param string $name
@@ -68,6 +73,7 @@ class CombinationForEditing
      * @param int[] $imageIds
      * @param string $coverThumbnailUrl
      * @param bool $isDefault
+     * @param bool $active
      */
     public function __construct(
         int $combinationId,
@@ -78,7 +84,8 @@ class CombinationForEditing
         CombinationStock $stock,
         array $imageIds,
         string $coverThumbnailUrl,
-        bool $isDefault
+        bool $isDefault,
+        bool $active = true
     ) {
         $this->combinationId = $combinationId;
         $this->productId = $productId;
@@ -89,6 +96,7 @@ class CombinationForEditing
         $this->imageIds = $imageIds;
         $this->coverThumbnailUrl = $coverThumbnailUrl;
         $this->isDefault = $isDefault;
+        $this->active = $active;
     }
 
     /**
@@ -161,5 +169,10 @@ class CombinationForEditing
     public function isDefault(): bool
     {
         return $this->isDefault;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
     }
 }
