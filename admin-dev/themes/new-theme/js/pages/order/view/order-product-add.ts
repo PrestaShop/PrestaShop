@@ -295,12 +295,16 @@ export default class OrderProductAdd {
   setCombinations(combinations: Record<string, any>): void {
     this.combinationsSelect.empty();
 
-    Object.values(combinations).forEach((val) => {
-      this.combinationsSelect.append(
-        /* eslint-disable-next-line max-len */
-        `<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}" data-location="${val.location}">${val.attribute}</option>`,
-      );
-    });
+    // Combinations are keyed by their id, which JS enumerates numerically: sort them back on the
+    // position sent by the server.
+    Object.values(combinations)
+      .sort((a, b) => a.position - b.position)
+      .forEach((val) => {
+        this.combinationsSelect.append(
+          /* eslint-disable-next-line max-len */
+          `<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}" data-location="${val.location}">${val.attribute}</option>`,
+        );
+      });
 
     this.combinationsBlock.toggleClass(
       'd-none',

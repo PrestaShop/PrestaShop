@@ -54,6 +54,11 @@ class ProductCombination
     private $formattedPrice;
 
     /**
+     * @var int
+     */
+    private $position;
+
+    /**
      * @param int $attributeCombinationId
      * @param string $attribute
      * @param int $stock
@@ -62,6 +67,7 @@ class ProductCombination
      * @param float $priceTaxIncluded
      * @param string $location
      * @param string $reference
+     * @param int $position
      */
     public function __construct(
         int $attributeCombinationId,
@@ -71,7 +77,8 @@ class ProductCombination
         float $priceTaxExcluded,
         float $priceTaxIncluded,
         string $location,
-        string $reference
+        string $reference,
+        int $position = 0
     ) {
         $this->attributeCombinationId = $attributeCombinationId;
         $this->attribute = $attribute;
@@ -81,6 +88,7 @@ class ProductCombination
         $this->priceTaxIncluded = $priceTaxIncluded;
         $this->location = $location;
         $this->reference = $reference;
+        $this->position = $position;
     }
 
     /**
@@ -145,6 +153,17 @@ class ProductCombination
     public function getReference(): string
     {
         return $this->reference;
+    }
+
+    /**
+     * Position of the combination in the list, based on the attribute position
+     * configured in Catalog > Attributes & Features.
+     *
+     * @return int
+     */
+    public function getPosition(): int
+    {
+        return $this->position;
     }
 
     /**
