@@ -16,7 +16,7 @@
   {% set activeProvider = selectedProvider ?: twoFactorProvider %}
 
   {# With multiple providers, wait for an explicit user choice before displaying the verification form. #}
-  {% set shouldDisplayVerificationForm = not hasMultipleProviders or selectedProvider is not empty or authenticationError %}
+  {% set shouldDisplayVerificationForm = not hasMultipleProviders or selectedProvider is not empty %}
 
   {% set providerLabels = {
     email: 'Email'|trans({}, 'Admin.Global'),
