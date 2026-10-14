@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Tests\Integration\ApiPlatform\EndPoint;
 
+use PrestaShopBundle\Entity\Repository\ApiClientRepository;
+
 class ApiAccessTokenEndpointTest extends ApiTestCase
 {
     public static function setUpBeforeClass(): void
@@ -82,6 +84,75 @@ class ApiAccessTokenEndpointTest extends ApiTestCase
         static::assertNotNull($decodedToken->nbf);
         static::assertNotNull($decodedToken->exp);
         static::assertNotNull($decodedToken->sub);
+    }
+
+    public function testADisabledApiClientCannotGetAToken(): void
+    {
+        $this->setApiClientEnabled(false);
+        try {
+            $response = static::createClient()->request('POST', '/access_token', $this->buildTokenRequestOptions());
+            $this->assertEquals(401, $response->getInfo('http_code'));
+            $decodedResponse = json_decode($response->getContent(false), true);
+            $this->assertNotFalse($decodedResponse);
+            $this->assertEquals([
+                'error' => 'invalid_client',
+                'error_description' => 'Client authentication failed',
+                'message' => 'Client authentication failed',
+            ], $decodedResponse);
+        } finally {
+            $this->setApiClientEnabled(true);
+        }
+
+        $response = static::createClient()->request('POST', '/access_token', $this->buildTokenRequestOptions());
+        $this->assertEquals(200, $response->getInfo('http_code'));
+    }
+
+    /**
+     * Tokens are self-contained JWTs, disabling the client must cut the access of the tokens already issued.
+     */
+    public function testATokenIssuedBeforeTheApiClientWasDisabledIsRejected(): void
+    {
+        $bearerToken = $this->getBearerToken();
+        static::createClient()->request('GET', '/api-clients/infos', ['auth_bearer' => $bearerToken]);
+        self::assertResponseStatusCodeSame(200);
+
+        $this->setApiClientEnabled(false);
+        try {
+            static::createClient()->request('GET', '/api-clients/infos', ['auth_bearer' => $bearerToken]);
+            self::assertResponseStatusCodeSame(401);
+        } finally {
+            $this->setApiClientEnabled(true);
+        }
+
+        static::createClient()->request('GET', '/api-clients/infos', ['auth_bearer' => $bearerToken]);
+        self::assertResponseStatusCodeSame(200);
+    }
+
+    private function buildTokenRequestOptions(): array
+    {
+        return [
+            'extra' => ['parameters' => [
+                'client_id' => static::CLIENT_ID,
+                'client_secret' => static::$clientSecret,
+                'grant_type' => 'client_credentials',
+                'scope' => ['hook_read'],
+            ]],
+            'headers' => [
+                'content-type' => 'application/x-www-form-urlencoded',
+            ],
+        ];
+    }
+
+    /**
+     * Same effect as toggling the client in Advanced Parameters > API Client in the back office.
+     */
+    private function setApiClientEnabled(bool $enabled): void
+    {
+        /** @var ApiClientRepository $apiClientRepository */
+        $apiClientRepository = static::createClient()->getContainer()->get(ApiClientRepository::class);
+        $apiClient = $apiClientRepository->getByClientId(static::CLIENT_ID);
+        $apiClient->setEnabled($enabled);
+        $apiClientRepository->save($apiClient);
     }
 
     public function testNonExistentScope(): void
