@@ -35,6 +35,7 @@ class Dummy_Payment extends PaymentModule
         parent::__construct();
 
         $this->displayName = 'Dummy payment';
+        $this->confirmUpgrade = 'Your dummy payment settings will be reset by this update.';
 
         $this->active = true;
     }
