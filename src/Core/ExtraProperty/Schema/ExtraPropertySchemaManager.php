@@ -328,6 +328,8 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
      *
      * Entities without a resolvable ObjectModel class are skipped: the physical schema is
      * then the only source of truth and the mirrored shape is coherent by construction.
+     * A class of that name that is not an ObjectModel does not count: the `attribute`
+     * entity classifies to PHP's native \Attribute, its ObjectModel being ProductAttribute.
      *
      * @throws ExtraPropertyRegistryException when the declaration and the schema disagree
      */
@@ -338,7 +340,7 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
         }
 
         $className = Inflector::getInflector()->classify($definition->getEntityName());
-        if (!class_exists('ObjectModelCore') || !class_exists($className) || !ObjectModelCore::isClassLangMultishop($className)) {
+        if (!is_subclass_of($className, ObjectModelCore::class) || !ObjectModelCore::isClassLangMultishop($className)) {
             return;
         }
 
