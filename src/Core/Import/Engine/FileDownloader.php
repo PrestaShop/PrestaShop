@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Import\Engine;
 
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -23,8 +24,6 @@ use Symfony\Component\Filesystem\Path;
  */
 class FileDownloader
 {
-    protected const DOWNLOAD_TIMEOUT_SECONDS = 20;
-
     /**
      * Hard cap on the fetched size, whatever the source claims: without it a
      * single file_url row could exhaust the disk. 128 MB, because virtual
@@ -43,6 +42,7 @@ class FileDownloader
      */
     public function __construct(
         protected readonly Filesystem $filesystem,
+        protected readonly Tools $tools,
         protected readonly array $allowedLocalRoots = [],
     ) {
     }
@@ -77,39 +77,25 @@ class FileDownloader
         $sanitizedUrl = $this->sanitizeUrl($url);
         $targetPath = $this->createTemporaryFile();
 
-        $context = stream_context_create([
-            'http' => [
-                'timeout' => self::DOWNLOAD_TIMEOUT_SECONDS,
-                'follow_location' => 1,
-                'max_redirects' => 3,
-            ],
-        ]);
-
-        $source = @fopen($sanitizedUrl, 'rb', false, $context);
-        if (false === $source) {
+        // The image/file_url cells are untrusted import data, so the fetch goes
+        // through the SSRF-hardened path (rejects private/loopback/link-local
+        // hosts, pins the resolved IP against DNS rebinding and re-validates
+        // every redirect hop) instead of the http stream wrapper, which pins
+        // nothing and follows redirects unchecked. This is the protection the
+        // deprecated ImageCopier applied to the same columns.
+        if (!$this->tools->copyFromUntrustedSource($sanitizedUrl, $targetPath)) {
             $this->filesystem->remove($targetPath);
             throw new FileDownloadException(sprintf('Could not download "%s"', $url));
         }
 
-        $target = fopen($targetPath, 'wb');
-        if (false === $target) {
-            fclose($source);
-            $this->filesystem->remove($targetPath);
-            throw new FileDownloadException(sprintf('Could not open temporary file "%s"', $targetPath));
-        }
+        clearstatcache(true, $targetPath);
+        $downloadedBytes = filesize($targetPath);
 
-        // copy at most one byte over the cap: landing exactly at cap+1 is the
-        // cheapest way to tell "too big" from "exactly max size". Deliberately
-        // a raw stream copy: Filesystem::copy() cannot express a byte limit.
-        $copiedBytes = stream_copy_to_stream($source, $target, static::MAX_FILE_SIZE_BYTES + 1);
-        fclose($source);
-        fclose($target);
-
-        if (false === $copiedBytes || 0 === $copiedBytes) {
+        if (false === $downloadedBytes || 0 === $downloadedBytes) {
             $this->filesystem->remove($targetPath);
             throw new FileDownloadException(sprintf('Downloaded file from "%s" is empty', $url));
         }
-        if ($copiedBytes > static::MAX_FILE_SIZE_BYTES) {
+        if ($downloadedBytes > static::MAX_FILE_SIZE_BYTES) {
             $this->filesystem->remove($targetPath);
             throw new FileDownloadException(sprintf('File from "%s" exceeds the maximum import file size (%d bytes)', $url, static::MAX_FILE_SIZE_BYTES));
         }
