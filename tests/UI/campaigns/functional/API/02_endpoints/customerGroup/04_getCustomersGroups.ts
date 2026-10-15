@@ -26,6 +26,8 @@ describe('API : GET /customers/groups', async () => {
   let accessToken: string;
   let jsonResponse: any;
 
+  const clientScope: string = 'customer_group_read';
+
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -40,7 +42,7 @@ describe('API : GET /customers/groups', async () => {
   describe('API : Fetch the access token', async () => {
     it('should request the endpoint /access_token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
-      accessToken = await requestAccessToken('');
+      accessToken = await requestAccessToken(clientScope);
     });
   });
 
