@@ -280,7 +280,7 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
                         'orderBy' => ['type' => ['string', 'null']],
                         'sortOrder' => ['type' => ['string', 'null']],
                         'limit' => ['type' => 'integer'],
-                        'offset' => ['type' => ['integer', 'null']],
+                        'offset' => ['type' => 'integer'],
                         'filters' => ['type' => 'object'],
                         'items' => $itemsSchema->getArrayCopy(),
                     ],

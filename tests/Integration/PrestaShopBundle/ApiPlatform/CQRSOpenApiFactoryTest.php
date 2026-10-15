@@ -239,6 +239,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         $schema = $paginatedList->getResponses()['200']->getContent()['application/json']->getSchema();
         $this->assertSame('object', $schema['type']);
         $this->assertSame(['totalItems', 'orderBy', 'sortOrder', 'limit', 'offset', 'filters', 'items'], array_keys($schema['properties']));
+        $this->assertSame(['type' => 'integer'], $schema['properties']['offset']);
         $this->assertEquals(['type' => 'array', 'items' => ['$ref' => '#/components/schemas/CustomerList']], $schema['properties']['items']);
 
         // A collection that is not paginated has no page parameter, API Platform doesn't paginate it
