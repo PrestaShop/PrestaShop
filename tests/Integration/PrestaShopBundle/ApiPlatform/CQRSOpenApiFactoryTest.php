@@ -271,7 +271,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
 
         // UpdateDiscountCommand::setReductionAmount(DecimalNumber $amount, int $currencyId, bool $taxIncluded)
         $reductionAmount = (array) $schemas['Discount.UpdateDiscountCommand']['properties']['reductionAmount'];
-        $this->assertSame('object', $reductionAmount['type']);
+        $this->assertSame(['object', 'null'], $reductionAmount['type']);
         $this->assertArrayNotHasKey('anyOf', $reductionAmount);
         $this->assertArrayNotHasKey('readOnly', $reductionAmount);
         $this->assertSame('number', $reductionAmount['properties']['amount']['type']);
@@ -280,7 +280,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
 
         // UpdateDiscountCommand::setMinimumAmount(?DecimalNumber $amount, ...)
         $minimumAmount = (array) $schemas['Discount.UpdateDiscountCommand']['properties']['minimumAmount'];
-        $this->assertSame('object', $minimumAmount['type']);
+        $this->assertSame(['object', 'null'], $minimumAmount['type']);
         $this->assertArrayNotHasKey('anyOf', $minimumAmount);
         $this->assertSame('number', $minimumAmount['properties']['amount']['type']);
 
