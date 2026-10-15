@@ -38,11 +38,16 @@
           <td data-role="invoice-column">{% if payment.invoiceNumber %}{{ payment.invoiceNumber }}{% endif %}</td>
           <td data-role="invoice-column">{% if payment.employeeName %}{{ payment.employeeName }}{% else %}-{% endif %}</td>
           <td class="text-right">
-            <button class="btn btn-sm btn-outline-secondary js-payment-details-btn">
-              {{ 'Details'|trans({}, 'Admin.Global') }}
-            </button>
+            {# A payment with no card data has nothing to show, so the button would only ever open
+               a panel of "Not defined" rows. #}
+            {% if payment.hasCardDetails %}
+              <button class="btn btn-sm btn-outline-secondary js-payment-details-btn">
+                {{ 'Details'|trans({}, 'Admin.Global') }}
+              </button>
+            {% endif %}
           </td>
         </tr>
+        {% if payment.hasCardDetails %}
         <tr class="d-none" data-role="payment-details">
           <td colspan="6">
             <p class="mb-0">
@@ -79,6 +84,7 @@
             </p>
           </td>
         </tr>
+        {% endif %}
       {% endfor %}
       <tr class="d-print-none">
         {{ form_start(addOrderPaymentForm, {action: path('admin_orders_add_payment', {orderId: orderForViewing.id})}) }}
