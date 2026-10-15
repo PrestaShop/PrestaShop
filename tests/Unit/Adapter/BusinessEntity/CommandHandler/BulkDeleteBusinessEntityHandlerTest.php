@@ -20,30 +20,42 @@ use Psr\Log\LoggerInterface;
 
 class BulkDeleteBusinessEntityHandlerTest extends TestCase
 {
-    public function testItDeletesEveryBusinessEntityInASingleCall(): void
+    public function testItDeletesEveryBusinessEntityOfTheSelection(): void
     {
         $first = new BusinessEntity();
         $second = new BusinessEntity();
 
         $repository = $this->createMock(BusinessEntityRepository::class);
-        $repository->method('findByIds')->willReturn([4 => $first, 8 => $second]);
-        $repository->expects($this->once())->method('bulkDelete')->with([4 => $first, 8 => $second]);
+        $repository->method('findById')->willReturnMap([
+            [4, null, $first],
+            [8, null, $second],
+        ]);
+
+        $deleted = [];
+        $repository->expects($this->exactly(2))->method('delete')->willReturnCallback(
+            function (BusinessEntity $businessEntity) use (&$deleted): void {
+                $deleted[] = $businessEntity;
+            }
+        );
 
         $handler = new BulkDeleteBusinessEntityHandler($repository, $this->allShopContext(), $this->createMock(LoggerInterface::class));
         $handler->handle(new BulkDeleteBusinessEntityCommand([4, 8]));
+
+        $this->assertSame([$first, $second], $deleted);
     }
 
-    public function testItReadsTheWholeSelectionInASingleScopedLookup(): void
+    public function testItLooksEachEntityUpWithinTheShopsOfTheContext(): void
     {
-        $first = new BusinessEntity();
-        $second = new BusinessEntity();
-
         $repository = $this->createMock(BusinessEntityRepository::class);
-        $repository->expects($this->once())
-            ->method('findByIds')
-            ->with([4, 8], [2])
-            ->willReturn([4 => $first, 8 => $second]);
-        $repository->expects($this->once())->method('bulkDelete');
+        $repository->expects($this->exactly(2))
+            ->method('findById')
+            ->willReturnCallback(
+                function (int $businessEntityId, ?array $shopIds): BusinessEntity {
+                    $this->assertSame([2], $shopIds, 'a lookup without the shop scope would reach another shop entity');
+
+                    return new BusinessEntity();
+                }
+            );
 
         $shopContext = $this->createMock(ShopContext::class);
         $shopContext->method('isAllShopContext')->willReturn(false);
@@ -56,10 +68,15 @@ class BulkDeleteBusinessEntityHandlerTest extends TestCase
     public function testItReadsEveryShopWhenTheContextIsAllShops(): void
     {
         $repository = $this->createMock(BusinessEntityRepository::class);
-        $repository->expects($this->once())
-            ->method('findByIds')
-            ->with([4, 8], null)
-            ->willReturn([4 => new BusinessEntity(), 8 => new BusinessEntity()]);
+        $repository->expects($this->exactly(2))
+            ->method('findById')
+            ->willReturnCallback(
+                function (int $businessEntityId, ?array $shopIds): BusinessEntity {
+                    $this->assertNull($shopIds);
+
+                    return new BusinessEntity();
+                }
+            );
 
         $handler = new BulkDeleteBusinessEntityHandler($repository, $this->allShopContext(), $this->createMock(LoggerInterface::class));
         $handler->handle(new BulkDeleteBusinessEntityCommand([4, 8]));
@@ -70,8 +87,11 @@ class BulkDeleteBusinessEntityHandlerTest extends TestCase
         $existing = new BusinessEntity();
 
         $repository = $this->createMock(BusinessEntityRepository::class);
-        $repository->method('findByIds')->willReturn([4 => $existing]);
-        $repository->expects($this->once())->method('bulkDelete')->with([4 => $existing]);
+        $repository->method('findById')->willReturnMap([
+            [4, null, $existing],
+            [999, null, null],
+        ]);
+        $repository->expects($this->once())->method('delete')->with($existing);
 
         $loggedIds = [];
         $logger = $this->createMock(LoggerInterface::class);
@@ -93,29 +113,31 @@ class BulkDeleteBusinessEntityHandlerTest extends TestCase
         $this->assertSame([4], $loggedIds, 'an id that was never deleted must not be logged as deleted');
     }
 
-    public function testAPersistenceFailureAbortsTheWholeSelectionInsteadOfCascading(): void
+    public function testAPersistenceFailureIsReportedAmongTheSkippedIds(): void
     {
         $repository = $this->createMock(BusinessEntityRepository::class);
-        $repository->method('findByIds')->willReturn([4 => new BusinessEntity(), 8 => new BusinessEntity()]);
-        $repository->expects($this->once())
-            ->method('bulkDelete')
-            ->willThrowException(new DbalException('Deadlock found'));
+        $repository->method('findById')->willReturn(new BusinessEntity());
+        $repository->method('delete')->willThrowException(new DbalException('Deadlock found'));
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects($this->never())->method('info');
 
         $handler = new BulkDeleteBusinessEntityHandler($repository, $this->allShopContext(), $logger);
 
-        $this->expectException(CannotDeleteBusinessEntityException::class);
-
-        $handler->handle(new BulkDeleteBusinessEntityCommand([4, 8]));
+        try {
+            $handler->handle(new BulkDeleteBusinessEntityCommand([4, 8]));
+            $this->fail('A BulkDeleteBusinessEntityException should have been thrown.');
+        } catch (BulkDeleteBusinessEntityException $e) {
+            $this->assertCount(2, $e->getExceptions());
+            $this->assertContainsOnlyInstancesOf(CannotDeleteBusinessEntityException::class, $e->getExceptions());
+        }
     }
 
     public function testItNeverWritesWhenNoBusinessEntityWasFound(): void
     {
         $repository = $this->createMock(BusinessEntityRepository::class);
-        $repository->method('findByIds')->willReturn([]);
-        $repository->expects($this->never())->method('bulkDelete');
+        $repository->method('findById')->willReturn(null);
+        $repository->expects($this->never())->method('delete');
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects($this->never())->method('info');
@@ -130,7 +152,7 @@ class BulkDeleteBusinessEntityHandlerTest extends TestCase
     public function testItLogsEveryDeletionWithItsObjectId(): void
     {
         $repository = $this->createMock(BusinessEntityRepository::class);
-        $repository->method('findByIds')->willReturn([4 => new BusinessEntity(), 8 => new BusinessEntity()]);
+        $repository->method('findById')->willReturn(new BusinessEntity());
 
         $loggedIds = [];
         $logger = $this->createMock(LoggerInterface::class);

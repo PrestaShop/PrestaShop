@@ -12,12 +12,12 @@
 {% set entityName %}<strong>{{ record.name }}</strong>{% endset %}
 
 {% set confirmation_message %}
-  {{- 'Are you sure you want to delete %name% from the list of business entities?'|trans({'%name%': entityName}, 'Admin.Orderscustomers.Feature')|raw -}}
+  {{ 'Are you sure you want to delete %name% from the list of business entities?'|trans({'%name%': entityName}, 'Admin.Orderscustomers.Feature')|raw_purified }}
   <br><small class="text-muted">
-    {{- 'This action is irreversible.'|trans({}, 'Admin.Notifications.Warning') -}}
-    {%- if record.customers_count > 0 -%}
+    {{ 'This action is irreversible.'|trans({}, 'Admin.Notifications.Warning') }}
+    {% if record.customers_count > 0 %}
       <br>{{ '%count% linked B2B customer(s) will be kept.'|trans({'%count%': record.customers_count}, 'Admin.Orderscustomers.Notification') }}
-    {%- endif -%}
+    {% endif %}
   </small>
 {% endset %}
 

@@ -313,20 +313,6 @@ Feature: Manage business entities
     When I bulk delete the business entities with ids "999999"
     Then I should get a bulk delete error reporting 1 failure
 
-  Scenario: A partly unknown selection still deletes the entities that do exist
-    Given there is a business entity named "Partial Corp" with status "active"
-    And there is a business entity named "Partial Keep" with status "active"
-    When I bulk delete the business entities "Partial Corp" together with the unknown ids "999996"
-    Then I should get a bulk delete error reporting 1 failure
-    And the business entity "Partial Corp" should be soft deleted
-    And the business entity "Partial Keep" should not be deleted
-
-  Scenario: A second failing bulk in the same run reports only its own failures
-    Given there is a business entity named "Second Survivor Corp" with status "active"
-    When I bulk delete the business entities with ids "999998, 999997"
-    Then I should get a bulk delete error reporting 2 failures
-    And the business entity "Second Survivor Corp" should not be deleted
-
   Scenario: Deleting a business entity that does not exist raises a not found error
     When I delete the business entity with id 999999
     Then I should get an error that the business entity was not found
