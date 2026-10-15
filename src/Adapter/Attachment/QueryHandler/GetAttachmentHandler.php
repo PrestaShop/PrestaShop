@@ -40,6 +40,10 @@ final class GetAttachmentHandler extends AbstractAttachmentHandler implements Ge
     public function handle(GetAttachment $query): Attachment
     {
         $attachment = $this->getAttachment($query->getAttachmentId());
+        // Same rule as Attachment::getFilePath(): the stored name must be a plain file name of the download directory
+        if (null === $attachment->getFilePath()) {
+            throw new AttachmentNotFoundException(sprintf('Attachment file was not found for attachment %d', $query->getAttachmentId()->getValue()));
+        }
         $path = $this->downloadDirectory . $attachment->file;
 
         if (!file_exists($path)) {
