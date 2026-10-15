@@ -52,9 +52,9 @@ class EditZoneCommand
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -71,10 +71,7 @@ class EditZoneCommand
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isEnabled(): bool
+    public function isEnabled(): ?bool
     {
         return $this->enabled;
     }
