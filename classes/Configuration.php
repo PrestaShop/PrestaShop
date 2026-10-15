@@ -66,12 +66,12 @@ class ConfigurationCore extends ObjectModel
     /**
      * @see ObjectModel::getFieldsLang()
      *
-     * @return bool|array Multilingual fields
+     * @return array Multilingual fields
      */
     public function getFieldsLang()
     {
         if (!is_array($this->value)) {
-            return true;
+            return [];
         }
 
         return parent::getFieldsLang();
