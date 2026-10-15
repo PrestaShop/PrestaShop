@@ -8,8 +8,10 @@ permissions:
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+# Pull-requests on a private repository are not coming from a fork, so avoid running the same job twice with push and pull_request events.
 jobs:
   stylelint:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: SCSS Lint
     runs-on: ubuntu-latest
     steps:
@@ -27,6 +29,7 @@ jobs:
         run: cd ./admin-dev/themes/default && npm ci && npm run scss-lint
 
   eslint:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: ESLint
     runs-on: ubuntu-latest
     steps:
@@ -50,6 +53,7 @@ jobs:
         run: cd ./admin-dev/themes/new-theme && npm ci && npm run lint
 
   yamllint_sf:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: YAML Lint (Symfony Check)
     runs-on: ubuntu-latest
     steps:
@@ -86,6 +90,7 @@ jobs:
         run: php bin/console lint:yaml .t9n.yml
 
   yamllint:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: YAML Lint (YamlLint Check)
     runs-on: ubuntu-latest
     steps:
@@ -110,6 +115,7 @@ jobs:
         run: yamllint -c .github/workflows/yamllint/.yamllint.yml .t9n.yml
 
   legacy_link_lint:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: Legacy Link Lint
     runs-on: ubuntu-latest
     steps:
@@ -140,6 +146,7 @@ jobs:
         run: php bin/console prestashop:linter:legacy-link
 
   security_attribute_lint:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: Admin Security Attribute Linter
     runs-on: ubuntu-latest
     steps:
@@ -174,6 +181,7 @@ jobs:
           docker exec ${{ env.DOCKER_PREFIX }}-prestashop-git-1 php bin/console prestashop:linter:security-attribute find-missing
 
   header-stamp:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: Check license headers
     runs-on: ubuntu-latest
     steps:

@@ -3,8 +3,10 @@ on:
   push:
   pull_request:
 
+# Pull-requests on a private repository are not coming from a fork, so avoid running the same job twice with push and pull_request events.
 jobs:
   check-translations:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: Check translations
 
     runs-on: ubuntu-latest
