@@ -5,6 +5,7 @@
  */
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PrestaShop\PrestaShop\Core\Security\PharDetector;
 
 @ini_set('max_execution_time', '0');
 /* No max line limit since the lines can be more than 4096. Performance impact is not significant. */
@@ -71,9 +72,15 @@ class AdminImportControllerCore extends AdminController
      */
     private $importExecuted = false;
 
+    /**
+     * @var PharDetector
+     */
+    private $pharDetector;
+
     public function __construct()
     {
         $this->bootstrap = true;
+        $this->pharDetector = new PharDetector();
 
         parent::__construct();
 
@@ -689,6 +696,8 @@ class AdminImportControllerCore extends AdminController
             }
         } elseif (!preg_match('#([^\.]*?)\.(csv|xls[xt]?|o[dt]s)$#is', $_FILES['file']['name'])) {
             $_FILES['file']['error'] = $this->trans('The extension of your file should be ".csv".', [], 'Admin.Advparameters.Notification');
+        } elseif ($this->pharDetector->isPhar($_FILES['file']['tmp_name'])) {
+            $_FILES['file']['error'] = $this->trans('The uploaded file is not a valid import file.', [], 'Admin.Advparameters.Notification');
         } elseif (!@filemtime($_FILES['file']['tmp_name'])
             || !@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath() . $filename_prefix . str_replace("\0", '', $_FILES['file']['name']))) {
             $_FILES['file']['error'] = $this->trans('An error occurred while uploading / copying the file.', [], 'Admin.Advparameters.Notification');
