@@ -166,6 +166,8 @@ class QueryProviderTest extends KernelTestCase
         $this->assertSame(5, $result->items[0]->itemId);
         $this->assertTrue($result->items[0]->valid);
         $this->assertFalse($result->items[1]->valid);
+        // The filters return a null offset for the first page
+        $this->assertSame(0, $result->offset);
     }
 
     private function createQueryProvider(array $queryResult): QueryProvider
