@@ -64,8 +64,10 @@ describe('API : GET /customers/groups', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseKeys', baseContext);
       expect(jsonResponse).to.have.all.keys(
         'totalItems',
+        'orderBy',
         'sortOrder',
         'limit',
+        'offset',
         'filters',
         'items',
       );

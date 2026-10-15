@@ -70,6 +70,7 @@ describe('API : GET /addresses', async () => {
         'orderBy',
         'sortOrder',
         'limit',
+        'offset',
         'filters',
         'items',
       );
