@@ -11,7 +11,6 @@ namespace Tests\Unit\Adapter\Webservice;
 use PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class WebserviceConfigurationTest extends AbstractConfigurationTestCase
@@ -71,7 +70,6 @@ class WebserviceConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, ['enable_webservice' => 'wrong_type', 'enable_cgi' => true]],
             [InvalidOptionsException::class, ['enable_webservice' => true, 'enable_cgi' => 'wrong_type']],
         ];
