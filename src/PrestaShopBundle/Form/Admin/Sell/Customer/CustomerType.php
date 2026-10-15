@@ -6,6 +6,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
@@ -70,6 +71,8 @@ class CustomerType extends TranslatorAwareType
      */
     private $groupByIdChoiceProvider;
 
+    private GenderByIdChoiceProvider $genderByIdChoiceProvider;
+
     /**
      * @param TranslatorInterface $translator
      * @param GroupByIdChoiceProvider $groupByIdChoiceProvider
@@ -79,6 +82,7 @@ class CustomerType extends TranslatorAwareType
      * @param bool $isPartnerOffersEnabled
      * @param ConfigurationInterface $configuration
      * @param FormCloner $formCloner
+     * @param GenderByIdChoiceProvider|null $genderByIdChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -88,7 +92,8 @@ class CustomerType extends TranslatorAwareType
         $isB2bFeatureEnabled,
         $isPartnerOffersEnabled,
         ConfigurationInterface $configuration,
-        FormCloner $formCloner
+        FormCloner $formCloner,
+        ?GenderByIdChoiceProvider $genderByIdChoiceProvider = null
     ) {
         parent::__construct($translator, $locales);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
@@ -97,6 +102,7 @@ class CustomerType extends TranslatorAwareType
         $this->configuration = $configuration;
         $this->formCloner = $formCloner;
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
+        $this->genderByIdChoiceProvider = $genderByIdChoiceProvider ?? new GenderByIdChoiceProvider();
     }
 
     /**
@@ -149,12 +155,17 @@ class CustomerType extends TranslatorAwareType
                 ]);
         }
 
-        $builder
-            ->add('gender_id', GenderType::class, [
+        // Only add gender field if there are gender options available
+        $genderChoices = $this->genderByIdChoiceProvider->getChoices();
+        if (!empty($genderChoices)) {
+            $builder->add('gender_id', GenderType::class, [
                 'expanded' => true,
                 'required' => false,
                 'placeholder' => null,
-            ])
+            ]);
+        }
+
+        $builder
             ->add('first_name', TextType::class, [
                 'label' => $this->trans('First name', 'Admin.Global'),
                 'help' => $this->trans(
