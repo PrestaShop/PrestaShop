@@ -34,6 +34,11 @@ class MultishopCommandListener
     {
         $input = $event->getInput();
 
+        // Multishop options are only registered when the feature is enabled.
+        if (!$input->hasOption('id_shop') || !$input->hasOption('id_shop_group')) {
+            return;
+        }
+
         $id_shop = $input->getOption('id_shop');
         $id_shop_group = $input->getOption('id_shop_group');
 

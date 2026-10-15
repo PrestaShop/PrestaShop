@@ -6,6 +6,7 @@
 
 namespace Tests\Integration\PrestaShopBundle\EventListener;
 
+use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShopBundle\Console\PrestaShopApplication;
 use Shop;
@@ -22,12 +23,22 @@ class MultishopCommandListenerTest extends KernelTestCase
      */
     public $multishopContext;
 
+    private bool $multishopEnabled = true;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         self::bootKernel();
         Shop::resetContext();
+
+        // Control feature availability without changing the test shop configuration.
+        $this->multishopEnabled = true;
+        $multistoreFeature = $this->createMock(MultistoreFeature::class);
+        $multistoreFeature->method('isUsed')->willReturnCallback(
+            fn (): bool => $this->multishopEnabled
+        );
+        self::$kernel->getContainer()->set(MultistoreFeature::class, $multistoreFeature);
 
         $this->multishopContext = self::$kernel->getContainer()->get('prestashop.adapter.shop.context');
     }
@@ -85,6 +96,44 @@ class MultishopCommandListenerTest extends KernelTestCase
         $this->assertStringContainsString('--id_shop_group[=ID_SHOP_GROUP]', $commandOutput);
         $this->assertStringContainsString('--id_shop[=ID_SHOP]', $listOutput);
         $this->assertStringContainsString('--id_shop_group[=ID_SHOP_GROUP]', $listOutput);
+    }
+
+    public function testOptionsAreNotShownWhenMultishopIsDisabled(): void
+    {
+        $this->multishopEnabled = false;
+
+        [$commandStatus, $commandOutput] = $this->runApplication('multishop:probe --help');
+        [$listStatus, $listOutput] = $this->runApplication('list --help');
+
+        $this->assertSame(Command::SUCCESS, $commandStatus);
+        $this->assertSame(Command::SUCCESS, $listStatus);
+        $this->assertStringNotContainsString('--id_shop', $commandOutput);
+        $this->assertStringNotContainsString('--id_shop_group', $commandOutput);
+        $this->assertStringNotContainsString('--id_shop', $listOutput);
+        $this->assertStringNotContainsString('--id_shop_group', $listOutput);
+    }
+
+    public function testCommandRunsWithoutMultishopOptionsWhenDisabled(): void
+    {
+        $this->multishopEnabled = false;
+        Shop::setContext(Shop::CONTEXT_ALL);
+
+        [$status] = $this->runApplication('multishop:probe');
+
+        $this->assertSame(Command::SUCCESS, $status);
+        $this->assertTrue($this->multishopContext->isAllShopContext());
+    }
+
+    public function testMultishopOptionsAreRejectedWhenDisabled(): void
+    {
+        $this->multishopEnabled = false;
+
+        foreach (['id_shop', 'id_shop_group'] as $option) {
+            [$status, $output] = $this->runApplication(sprintf('multishop:probe --%s=1', $option));
+
+            $this->assertSame(Command::FAILURE, $status);
+            $this->assertStringContainsString('--' . $option, $output);
+        }
     }
 
     public function testShopContextWorksWithOtherGlobalOptions(): void
