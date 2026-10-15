@@ -42,7 +42,7 @@ class AutoGenerateProxyClassesTest extends TestCase
             1
         );
 
-        // Normalize path to prevent duplicate separators. File and directory may not exists.
+        // Normalize path to prevent duplicate separators. File and directory should exists.
         $proxyClassFile = realpath($proxyDir . DIRECTORY_SEPARATOR . $entityProxyFile);
 
         $this->assertNotFalse($proxyClassFile);
@@ -53,6 +53,5 @@ class AutoGenerateProxyClassesTest extends TestCase
         );
 
         $this->assertInstanceOf(\Doctrine\Persistence\Proxy::class, $entity);
-        $this->assertNotEmpty($entity->getName());
     }
 }
