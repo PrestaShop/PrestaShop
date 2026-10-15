@@ -88,6 +88,28 @@ class FrontControllerTest extends TestCase
         yield 'external back' => ['https://external.example.test/order'];
     }
 
+    public function testThePageIdentifierIsPhpSelfWhenTheControllerSetsOne(): void
+    {
+        $controller = new TestFrontController(new Context());
+        $controller->php_self = 'category';
+        $controller->page_name = 'category';
+
+        $this->assertSame('category', $controller->getThemePageIdentifier());
+    }
+
+    /**
+     * A module front controller never assigns php_self; ModuleFrontController's constructor gives it a
+     * page_name of 'module-<module>-<controller>' instead. Without the fallback, theme.yml's assets key
+     * is looked up under an empty identifier and can never match such a page.
+     */
+    public function testThePageIdentifierFallsBackToPageNameForAModuleController(): void
+    {
+        $controller = new TestFrontController(new Context());
+        $controller->page_name = 'module-ps_emailsubscription-verification';
+
+        $this->assertSame('module-ps_emailsubscription-verification', $controller->getThemePageIdentifier());
+    }
+
     private function getController(string $expectedPageName, ?array $expectedRequest, string $expectedPageLink): TestFrontController
     {
         $context = new Context();
@@ -122,5 +144,10 @@ class TestFrontController extends FrontControllerCore
     public function getPageLinkForTemplate(string $pageName): string
     {
         return parent::getPageLinkForTemplate($pageName);
+    }
+
+    public function getThemePageIdentifier()
+    {
+        return parent::getThemePageIdentifier();
     }
 }
