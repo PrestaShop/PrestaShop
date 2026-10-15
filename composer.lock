@@ -5380,12 +5380,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "a9816380b1f9d0603a99a37127d7e1570f34e61a"
+                "reference": "8e415f925795b22732eac1577f5d29f1c49962ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/a9816380b1f9d0603a99a37127d7e1570f34e61a",
-                "reference": "a9816380b1f9d0603a99a37127d7e1570f34e61a",
+                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/8e415f925795b22732eac1577f5d29f1c49962ad",
+                "reference": "8e415f925795b22732eac1577f5d29f1c49962ad",
                 "shasum": ""
             },
             "require": {
