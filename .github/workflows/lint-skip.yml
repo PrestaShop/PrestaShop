@@ -10,32 +10,38 @@ on:
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+# Pull-requests on a private repository are not coming from a fork, so avoid running the same job twice with push and pull_request events.
 jobs:
   stylelint:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: SCSS Lint
     runs-on: ubuntu-latest
     steps:
       - run: 'echo "No tests required"'
 
   eslint:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: ESLint
     runs-on: ubuntu-latest
     steps:
       - run: 'echo "No tests required"'
 
   yamllint_sf:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: YAML Lint (Symfony Check)
     runs-on: ubuntu-latest
     steps:
       - run: 'echo "No tests required"'
 
   yamllint:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: YAML Lint (YamlLint Check)
     runs-on: ubuntu-latest
     steps:
       - run: 'echo "No tests required"'
 
   twiglint:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: Twig Lint
     runs-on: ubuntu-latest
     steps:

@@ -10,14 +10,17 @@ on:
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+# Pull-requests on a private repository are not coming from a fork, so avoid running the same job twice with push and pull_request events.
 jobs:
   php-cs-fixer:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: PHP CS Fixer
     runs-on: ubuntu-latest
     steps:
       - run: 'echo "No tests required"'
 
   phpstan:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: PHP Static Analysis
     runs-on: ubuntu-latest
     strategy:
@@ -28,6 +31,7 @@ jobs:
       - run: 'echo "No tests required"'
 
   phpunit:
+    if: github.event_name != 'push' || !github.event.repository.private
     name: PHPUnit
     runs-on: ubuntu-latest
     strategy:
