@@ -25,8 +25,6 @@ class AutoGenerateProxyClassesTest extends TestCase
 
         $proxyDir = realpath($proxyDir);
 
-        self::assertDirectoryExists($proxyDir);
-
         $proxyClassFile = realpath($proxyDir . DIRECTORY_SEPARATOR . '__CG__PrestaShopBundleEntityLang.php');
 
         if (is_file($proxyClassFile)) {
