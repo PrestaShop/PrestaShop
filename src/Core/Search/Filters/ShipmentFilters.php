@@ -3,6 +3,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
@@ -23,8 +24,8 @@ class ShipmentFilters extends Filters
         return [
             'limit' => self::LIST_LIMIT,
             'offset' => 0,
-            'orderBy' => 'shipment_number',
-            'sortOrder' => 'asc',
+            'orderBy' => 'date_add',
+            'sortOrder' => 'desc',
             'filters' => [],
         ];
     }
