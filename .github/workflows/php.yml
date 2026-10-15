@@ -11,8 +11,10 @@ permissions:
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+# Pull-requests on a private repository are not coming from a fork, so avoid running the same job twice with push and pull_request events.
 jobs:
   php-cs-fixer:
+    if: github.event_name != 'push' || !github.event.repository.private
     permissions:
       contents: read  # for actions/checkout to fetch code
     name: PHP CS Fixer
@@ -50,6 +52,7 @@ jobs:
       - name: Run ergebnis/composer-normalize
         run: composer normalize --dry-run --no-check-lock
   phpstan:
+    if: github.event_name != 'push' || !github.event.repository.private
     permissions:
       contents: read  # for actions/checkout to fetch code
     name: PHP Static Analysis
@@ -89,6 +92,7 @@ jobs:
       - name: Run phpstan
         run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist
   phpunit:
+    if: github.event_name != 'push' || !github.event.repository.private
     permissions:
       contents: read  # for actions/checkout to fetch code
     name: PHPUnit

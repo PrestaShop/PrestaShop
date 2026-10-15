@@ -11,8 +11,10 @@ concurrency:
 env:
   TEST_CAMPAIGN: 'sanity:productV2:fast-fail'
 
+# Pull-requests on a private repository are not coming from a fork, so avoid running the same job twice with push and pull_request events.
 jobs:
   sanity:
+    if: github.event_name != 'push' || !github.event.repository.private
     permissions:
       contents: read   #   to fetch code (actions/checkout)
     runs-on: ubuntu-22.04
