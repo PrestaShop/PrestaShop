@@ -400,6 +400,18 @@ export default class ModuleCard {
         } else if (action === 'update' || action === 'upgrade') { // because the action is update on ModuleManager button and upgrade on bulk actions
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
 
+          // The version sits outside the action menu, so it survives the replacement below and would
+          // keep showing the number the module had before the upgrade until the page is reloaded.
+          const upgraded = result[moduleTechName];
+
+          if (upgraded.version !== undefined) {
+            mainElement.attr('data-version', upgraded.version);
+          }
+
+          if (upgraded.version_html !== undefined) {
+            mainElement.find('.js-module-version').html(upgraded.version_html);
+          }
+
           this.eventEmitter.emit('Module Upgraded', mainElement);
         }
 
