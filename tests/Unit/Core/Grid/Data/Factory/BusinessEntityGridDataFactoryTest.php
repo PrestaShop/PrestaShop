@@ -22,10 +22,10 @@ class BusinessEntityGridDataFactoryTest extends TestCase
     public function testItAddsTranslatedStatusLabelAndBadgeTypeToEachRecordAndKeepsRawStatus(): void
     {
         $records = new RecordCollection([
-            ['id_business_entity' => 1, 'status' => 'active'],
-            ['id_business_entity' => 2, 'status' => 'pending'],
-            ['id_business_entity' => 3, 'status' => 'inactive'],
-            ['id_business_entity' => 4, 'status' => 'rejected'],
+            ['id_business_entity' => 1, 'status' => 'active', 'name' => 'Active Corp'],
+            ['id_business_entity' => 2, 'status' => 'pending', 'name' => 'Pending Corp'],
+            ['id_business_entity' => 3, 'status' => 'inactive', 'name' => 'Inactive Corp'],
+            ['id_business_entity' => 4, 'status' => 'rejected', 'name' => 'Rejected Corp'],
         ]);
 
         $query = 'SELECT be.id_business_entity FROM ps_business_entity be';
@@ -85,8 +85,9 @@ class BusinessEntityGridDataFactoryTest extends TestCase
     private function buildFactory(GridDataFactoryInterface $inner): BusinessEntityGridDataFactory
     {
         $translator = $this->createMock(TranslatorInterface::class);
-        // trans() echoes the source string so we can assert the label went through translation.
-        $translator->method('trans')->willReturnCallback(static fn (string $id): string => $id);
+        $translator->method('trans')->willReturnCallback(
+            static fn (string $id, array $parameters = []): string => strtr($id, $parameters)
+        );
 
         return new BusinessEntityGridDataFactory($inner, $translator);
     }

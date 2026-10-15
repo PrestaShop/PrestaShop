@@ -10,13 +10,17 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\BusinessEntityStatusChoiceProvider;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\BusinessEntity\DeleteBusinessEntityRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BadgeColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -28,6 +32,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class BusinessEntityGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     public const GRID_ID = 'business_entity';
 
     public function __construct(
@@ -60,6 +66,12 @@ final class BusinessEntityGridDefinitionFactory extends AbstractGridDefinitionFa
     protected function getColumns(): ColumnCollection
     {
         $columns = (new ColumnCollection())
+            ->add(
+                (new BulkActionColumn('business_entities_bulk'))
+                    ->setOptions([
+                        'bulk_field' => 'id_business_entity',
+                    ])
+            )
             ->add(
                 (new DataColumn('id_business_entity'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
@@ -133,6 +145,16 @@ final class BusinessEntityGridDefinitionFactory extends AbstractGridDefinitionFa
                                     ->setIcon('edit')
                                     ->setOptions([
                                         'route' => 'admin_business_entities_edit',
+                                        'route_param_name' => 'businessEntityId',
+                                        'route_param_field' => 'id_business_entity',
+                                    ])
+                            )
+                            ->add(
+                                (new DeleteBusinessEntityRowAction('delete'))
+                                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                                    ->setIcon('delete')
+                                    ->setOptions([
+                                        'route' => 'admin_business_entities_delete',
                                         'route_param_name' => 'businessEntityId',
                                         'route_param_field' => 'id_business_entity',
                                     ])
@@ -214,6 +236,26 @@ final class BusinessEntityGridDefinitionFactory extends AbstractGridDefinitionFa
                     ->setAssociatedColumn('actions')
             )
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions(): BulkActionCollectionInterface
+    {
+        return (new BulkActionCollection())
+            ->add(
+                $this->buildBulkDeleteAction(
+                    'admin_business_entities_bulk_delete',
+                    [
+                        'confirm_message' => $this->trans(
+                            'Are you sure you want to delete the selected item(s)? Linked B2B customers will be kept.',
+                            [],
+                            'Admin.Orderscustomers.Feature'
+                        ),
+                    ]
+                )
+            );
     }
 
     /**

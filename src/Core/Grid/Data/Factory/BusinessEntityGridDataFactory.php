@@ -36,13 +36,13 @@ final class BusinessEntityGridDataFactory implements GridDataFactoryInterface
         $data = $this->businessEntityDataFactory->getData($searchCriteria);
 
         return new GridData(
-            $this->addStatusPresentation($data->getRecords()),
+            $this->addPresentationFields($data->getRecords()),
             $data->getRecordsTotal(),
             $data->getQuery()
         );
     }
 
-    private function addStatusPresentation(RecordCollectionInterface $records): RecordCollectionInterface
+    private function addPresentationFields(RecordCollectionInterface $records): RecordCollectionInterface
     {
         $modifiedRecords = [];
         foreach ($records as $record) {

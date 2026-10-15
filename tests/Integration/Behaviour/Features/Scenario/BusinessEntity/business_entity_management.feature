@@ -286,3 +286,33 @@ Feature: Manage business entities
   Scenario: Editing a business entity that does not exist raises a not found error
     When I edit the business entity with id 999999
     Then I should get an error that the business entity was not found
+
+  Scenario: Delete a business entity
+    Given there is a business entity named "Deletable Corp" with status "active"
+    When I delete the business entity "Deletable Corp"
+    Then the business entity "Deletable Corp" should be soft deleted
+    And the business entity "Deletable Corp" should no longer be returned by the repository
+
+  Scenario: Bulk delete business entities leaves non-selected entities untouched
+    Given there is a business entity named "Bulk One" with status "active"
+    And there is a business entity named "Bulk Two" with status "active"
+    And there is a business entity named "Bulk Keep" with status "active"
+    When I bulk delete the business entities "Bulk One, Bulk Two"
+    Then the business entity "Bulk One" should be soft deleted
+    And the business entity "Bulk One" should no longer be returned by the repository
+    And the business entity "Bulk Two" should be soft deleted
+    And the business entity "Bulk Two" should no longer be returned by the repository
+    And the business entity "Bulk Keep" should not be deleted
+
+  Scenario: Bulk deleting an empty selection does nothing and raises no error
+    Given there is a business entity named "Untouched Corp" with status "active"
+    When I bulk delete an empty selection of business entities
+    Then the business entity "Untouched Corp" should not be deleted
+
+  Scenario: Bulk deleting a selection that contains an unknown id reports the failure
+    When I bulk delete the business entities with ids "999999"
+    Then I should get a bulk delete error reporting 1 failure
+
+  Scenario: Deleting a business entity that does not exist raises a not found error
+    When I delete the business entity with id 999999
+    Then I should get an error that the business entity was not found

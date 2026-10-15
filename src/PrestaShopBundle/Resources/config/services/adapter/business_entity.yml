@@ -4,6 +4,10 @@ services:
     autowire: true
   PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\AddBusinessEntityHandler: ~
 
+  PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\BulkDeleteBusinessEntityHandler: ~
+
+  PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\DeleteBusinessEntityHandler: ~
+
   PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\EditBusinessEntityHandler: ~
 
   PrestaShop\PrestaShop\Adapter\BusinessEntity\Address\BusinessEntityAddressFormatter: ~
