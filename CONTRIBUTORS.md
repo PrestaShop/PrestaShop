@@ -5,6 +5,7 @@ GitHub contributors:
 - 123monsite-regis
 - 1RV34
 - 202 ecommerce
+- dhairyadev26
 - 23b
 - Abdelaziz JRIBI
 - Abdullah
