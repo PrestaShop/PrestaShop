@@ -79,14 +79,8 @@ class SqlTranslationLoader implements LoaderInterface
      * Builds the WHERE sub-condition that restricts which ps_translation rows are loaded.
      *
      * Always covers both core rows (theme IS NULL) and theme-specific rows for every
-     * active shop. This is required because in PS9 the Symfony container is always active,
-     * so getTranslator() never calls TranslatorLanguageLoader::loadLanguage() and setTheme()
-     * is never invoked. A single loader instance must therefore handle both row types.
-     *
-     * In the PS8 legacy path, TranslatorLanguageLoader registers two separate instances
-     * (a plain 'db' loader and a 'db.theme' loader with setTheme() called). With the
-     * unified condition both instances load the same rows; the second pass is redundant
-     * but harmless.
+     * active shop, setTheme() is never called by the core. A single loader instance
+     * therefore handles both row types.
      *
      * ORDER BY theme IS NOT NULL in the caller ensures theme=NULL rows are processed first
      * inside addTranslationsToCatalogue(), so shop-specific overrides win on duplicate keys.
