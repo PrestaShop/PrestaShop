@@ -26,6 +26,7 @@ class MultiParameterSetterAdapterTest extends TestCase
             new ClassMetadataFactory(new AttributeLoader()),
             new DomainObjectDetector([], ['PrestaShop\\PrestaShop\\Core\\Domain\\']),
         );
+        /** @var ArrayObject<string, mixed> $definition */
         $definition = new ArrayObject(['type' => 'object', 'properties' => []]);
         $adapter->adapt(AddDiscountCommand::class, $definition, new Post(input: ['class' => AddDiscountCommand::class]));
 
