@@ -3,6 +3,11 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+import {
+  describeDuplicateImportColumns,
+  ImportColumnSelection,
+} from '@app/utils/duplicate-import-columns';
+
 const {$} = window;
 
 export default class EntityFieldsValidator {
@@ -24,26 +29,33 @@ export default class EntityFieldsValidator {
    * @private
    */
   checkDuplicateSelectedValues(): boolean {
-    const uniqueFields: Array<string | number | string[] | undefined> = [];
-    let valid = true;
+    const selections: ImportColumnSelection[] = [];
 
-    $('.js-entity-field select').each(function () {
+    $('.js-entity-field select').each(function (index: number) {
       const value = $(this).val();
 
-      if (value === 'no') {
+      if (value === undefined || value === 'no') {
         return;
       }
 
-      if ($.inArray(value, uniqueFields) !== -1) {
-        valid = false;
-        $('.js-duplicate-columns-warning').removeClass('d-none');
-        return;
-      }
-
-      uniqueFields.push(value);
+      selections.push({
+        // The merchant counts the columns of the file from one, left to right.
+        column: index + 1,
+        value: String(value),
+        label: $(this).find('option:selected').text().trim(),
+      });
     });
 
-    return valid;
+    const duplicates = describeDuplicateImportColumns(selections);
+
+    if (duplicates === '') {
+      return true;
+    }
+
+    $('.js-duplicate-columns-warning').removeClass('d-none');
+    $('.js-duplicate-columns').text(duplicates);
+
+    return false;
   }
 
   /**
