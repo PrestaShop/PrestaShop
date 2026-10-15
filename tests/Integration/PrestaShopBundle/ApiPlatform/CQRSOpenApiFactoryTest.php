@@ -262,6 +262,32 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         $this->assertArrayHasKey('CustomerOrderRow', $schemas);
     }
 
+    public function testMultiParameterSetterWithDecimalNumber(): void
+    {
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        $schemas = $openApiFactory->__invoke()->getComponents()->getSchemas();
+
+        // UpdateDiscountCommand::setReductionAmount(DecimalNumber $amount, int $currencyId, bool $taxIncluded)
+        $reductionAmount = (array) $schemas['Discount.UpdateDiscountCommand']['properties']['reductionAmount'];
+        $this->assertSame('object', $reductionAmount['type']);
+        $this->assertArrayNotHasKey('anyOf', $reductionAmount);
+        $this->assertArrayNotHasKey('readOnly', $reductionAmount);
+        $this->assertSame('number', $reductionAmount['properties']['amount']['type']);
+        $this->assertSame('integer', $reductionAmount['properties']['currencyId']['type']);
+        $this->assertSame('boolean', $reductionAmount['properties']['taxIncluded']['type']);
+
+        // UpdateDiscountCommand::setMinimumAmount(?DecimalNumber $amount, ...)
+        $minimumAmount = (array) $schemas['Discount.UpdateDiscountCommand']['properties']['minimumAmount'];
+        $this->assertSame('object', $minimumAmount['type']);
+        $this->assertArrayNotHasKey('anyOf', $minimumAmount);
+        $this->assertSame('number', $minimumAmount['properties']['amount']['type']);
+
+        // The value objects are not documented anymore
+        $this->assertArrayNotHasKey('Money', $schemas);
+        $this->assertArrayNotHasKey('DecimalNumber', $schemas);
+    }
+
     public static function provideJsonSchemaFactoryCases(): iterable
     {
         yield 'Product output is based on the ApiPlatform resource' => [
