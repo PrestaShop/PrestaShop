@@ -281,6 +281,7 @@ class AdminShopControllerCore extends AdminController
         } elseif (!Shop::hasDependency($object->id)) {
             $result = Category::deleteCategoriesFromShop($object->id) && parent::processDelete();
             Tools::generateHtaccess();
+            Tools::generateRobotsFile(true);
 
             return $result;
         } else {
