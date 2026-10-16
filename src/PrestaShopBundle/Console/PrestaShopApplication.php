@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Dedicated application for Symfony console that addition adds default parameter app-id
@@ -24,6 +25,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class PrestaShopApplication extends Application
 {
+    public function __construct(
+        KernelInterface $kernel,
+        private readonly bool $legacyBootstrapSucceeded = true
+    ) {
+        parent::__construct($kernel);
+    }
+
     public function doRun(InputInterface $input, OutputInterface $output): int
     {
         // Multishop options must be registered before input parsing, but the
@@ -31,9 +39,9 @@ class PrestaShopApplication extends Application
         $kernel = $this->getKernel();
         $kernel->boot();
 
-        // Some CLI commands can run without a database configuration,
-        // so avoid checking the multishop feature when it is unavailable.
-        if (defined('_DB_PREFIX_') && $kernel->getContainer()->get(MultistoreFeature::class)->isUsed()) {
+        // Some CLI commands can run even if the legacy bootstrap fails,
+        // so skip the multishop feature check in that case.
+        if ($this->legacyBootstrapSucceeded && $kernel->getContainer()->get(MultistoreFeature::class)->isUsed()) {
             $definition = $this->getDefinition();
 
             $definition->addOption(new InputOption(

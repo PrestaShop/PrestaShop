@@ -24,9 +24,13 @@ require_once __DIR__ . '/../autoload.php';
   ->loadEnv(_PS_ENV_FILE_PATH_)
 ;
 
+$legacyBootstrapSucceeded = true;
+
 try {
     require_once __DIR__ . '/../config/config.inc.php';
 } catch (PrestaShopException $e) {
+    $legacyBootstrapSucceeded = false;
+
     // Prevent breaking all CLI command when the shop is not installed, define fallback values
     if (!defined('__PS_BASE_URI__')) {
       define('__PS_BASE_URI__', '/');
@@ -60,5 +64,5 @@ if ($debug) {
 }
 
 $kernel = new $kernelClass($env, $debug);
-$application = new PrestaShopApplication($kernel);
+$application = new PrestaShopApplication($kernel, $legacyBootstrapSucceeded);
 $application->run($input);
