@@ -81,8 +81,8 @@ class CommonController extends PrestaShopAdminController
     /**
      * Toggle one extra property value from a grid toggle column.
      *
-     * This endpoint is designed for ToggleColumn async usage in BO grids.
-     * It performs an UPSERT and toggles the value in SQL without doing a preliminary SELECT.
+     * Async grid toggles receive a JSON response, while regular ToggleColumn submissions
+     * are redirected back to the originating grid so both toggle modes are supported.
      *
      * Security: the permission subject is the registry-hydrated definition's controller name
      * (ExtraPropertyDefinition::getControllerName()), NOT any client-supplied value. This
@@ -94,6 +94,7 @@ class CommonController extends PrestaShopAdminController
      * The shop context of shop-scoped properties is resolved from ShopContext (not from the
      * route): the writer receives the current ShopConstraint and toggles the matching row.
      *
+     * @param Request $request
      * @param string $entityName
      * @param int $entityId
      * @param string $moduleName normalized module name, can be "_core" for core properties
@@ -101,11 +102,12 @@ class CommonController extends PrestaShopAdminController
      */
     #[AdminSecurity("is_granted('ROLE_EMPLOYEE')")]
     public function toggleExtraPropertyAction(
+        Request $request,
         string $entityName,
         int $entityId,
         string $moduleName,
         string $propertyName,
-    ): JsonResponse {
+    ): Response {
         /** @var ExtraPropertyDefinitionRepositoryInterface $repository */
         $repository = $this->container->get(ExtraPropertyDefinitionRepositoryInterface::class);
 
@@ -120,10 +122,7 @@ class CommonController extends PrestaShopAdminController
         // whether a definition exists.
         $matched = $repository->findDefinitionByModuleAndField($entityName, $resolvedModuleName, $propertyName);
         if (null === $matched || !$this->isGranted('update', $matched->getControllerName())) {
-            return new JsonResponse([
-                'status' => false,
-                'message' => 'Access denied.',
-            ], 403);
+            return $this->buildExtraPropertyToggleResponse($request, false, 'Access denied.', Response::HTTP_FORBIDDEN);
         }
 
         /** @var ExtraPropertyWriterInterface $writer */
@@ -140,16 +139,44 @@ class CommonController extends PrestaShopAdminController
                 $this->getLanguageContext()->getId()
             );
         } catch (Throwable) {
-            return new JsonResponse([
-                'status' => false,
-                'message' => $this->trans('An error occurred while saving.', [], 'Admin.Notifications.Error'),
-            ], 500);
+            return $this->buildExtraPropertyToggleResponse(
+                $request,
+                false,
+                $this->trans('An error occurred while saving.', [], 'Admin.Notifications.Error'),
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+            );
         }
 
-        return new JsonResponse([
-            'status' => true,
-            'message' => $this->trans('Update successful.', [], 'Admin.Notifications.Success'),
-        ]);
+        return $this->buildExtraPropertyToggleResponse(
+            $request,
+            true,
+            $this->trans('Update successful.', [], 'Admin.Notifications.Success'),
+        );
+    }
+
+    private function buildExtraPropertyToggleResponse(
+        Request $request,
+        bool $status,
+        string $message,
+        int $statusCode = Response::HTTP_OK,
+    ): Response {
+        // Some grids handle toggle actions asynchronously, while others submit a regular POST request.
+        // Return JSON for AJAX requests and redirect back to the originating grid otherwise.
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse([
+                'status' => $status,
+                'message' => $message,
+            ], $statusCode);
+        }
+
+        $this->addFlash($status ? 'success' : 'error', $message);
+
+        $referer = $request->headers->get('referer');
+        if (is_string($referer) && parse_url($referer, PHP_URL_HOST) === $request->getHost()) {
+            return new RedirectResponse($referer);
+        }
+
+        return $this->redirectToRoute('admin_dashboard');
     }
 
     /**
