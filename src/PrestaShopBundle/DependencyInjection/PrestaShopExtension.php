@@ -14,6 +14,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -61,6 +62,48 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('prestashop.admin_cookie_lifetime', $this->getAdminCookieLifetime());
         $this->preprendApiConfig($container);
         $this->preprendSessionConfig($container);
+    }
+
+    /**
+     * ApiPlatform reads a mapping path with ReflectionClassRecursiveIterator, which requires a
+     * directory and does a require_once on every PHP file it finds there. A module index.php holds
+     * an `exit` statement, so including it stops the whole build - and it cannot be caught, since
+     * the iterator only guards against Throwable.
+     *
+     * Rather than delete files from a directory the shop does not own, which is what used to happen
+     * here and what made those files show up as missing during an update, we point ApiPlatform at a
+     * directory of our own holding one link per entity file. Symlinks resolve back to the module
+     * file, so a class is still loaded from its own path; copying is the fallback where linking is
+     * not available.
+     *
+     * @return string the directory to hand to ApiPlatform
+     */
+    private function mirrorModuleEntities(ContainerBuilder $container, string $moduleName, string $entitiesPath): string
+    {
+        $mirrorPath = sprintf('%s/api_platform/module_entities/%s', $container->getParameter('kernel.cache_dir'), $moduleName);
+
+        $filesystem = new Filesystem();
+        $filesystem->remove($mirrorPath);
+        $filesystem->mkdir($mirrorPath);
+
+        $entityFiles = Finder::create()
+            ->files()
+            ->in($entitiesPath)
+            ->name('*.php')
+            ->notName('index.php');
+
+        foreach ($entityFiles as $entityFile) {
+            $target = $mirrorPath . DIRECTORY_SEPARATOR . $entityFile->getRelativePathname();
+            $filesystem->mkdir(dirname($target));
+
+            try {
+                $filesystem->symlink($entityFile->getRealPath(), $target);
+            } catch (IOException $e) {
+                $filesystem->copy($entityFile->getRealPath(), $target);
+            }
+        }
+
+        return $mirrorPath;
     }
 
     protected function preprendSessionConfig(ContainerBuilder $container)
@@ -126,16 +169,7 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
             // Load Doctrine entities that could be used as ApiPlatform DTO resources as well in the src/Entity folder
             $entitiesRessourcesPath = sprintf('%s/src/Entity', $modulePath);
             if (file_exists($entitiesRessourcesPath)) {
-                // APIPlatform is looping on included resources and doing a require_once on those resources in ReflectionClassRecursiveIterator::getReflectionClassesFromDirectories.
-                // This means that everything in those files is interpreted including the exit statement in some of those files ( especially in some index.php files used as an old way to make the directory read only ).
-                // Since we cannot override or decorate the reflection class itself we have no other choice but to delete those files.
-                (new Filesystem())->remove(
-                    Finder::create()
-                        ->files()
-                        ->in($entitiesRessourcesPath)
-                        ->name('index.php')
-                );
-                $paths[] = $entitiesRessourcesPath;
+                $paths[] = $this->mirrorModuleEntities($container, $moduleName, $entitiesRessourcesPath);
             }
 
             // Load ApiPlatform DTOs from the src/ApiPlatform/Resources folder
