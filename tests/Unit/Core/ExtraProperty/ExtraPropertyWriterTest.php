@@ -51,6 +51,9 @@ class ExtraPropertyWriterTest extends TestCase
      */
     private array $associationRows = [['id_shop' => 1], ['id_shop' => 2]];
 
+    /** @var list<string> */
+    private array $associationQueries = [];
+
     public function testGroupedValuesAreRoutedPerScope(): void
     {
         $writer = $this->buildWriter();
@@ -340,6 +343,36 @@ class ExtraPropertyWriterTest extends TestCase
         $this->assertSame([7, 2, 1], $this->statements[0]['params']);
     }
 
+    public function testToggleShopScopeUsesPhysicalTableNameForAssociationLookup(): void
+    {
+        $this->associationRows = [['id_shop' => 1]];
+        $writer = $this->buildWriter();
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'cms_page',
+            propertyName: 'shop_flag',
+            type: ExtraPropertyType::BOOL,
+            scope: ExtraPropertyScope::SHOP,
+            moduleName: 'demoextrafield',
+            nullable: false,
+            multiShop: true,
+            primaryKeyName: 'id_cms',
+        );
+
+        $writer->toggleExtraProperty(
+            $definition,
+            7,
+            ShopConstraint::allShops()
+        );
+
+        $this->assertCount(1, $this->associationQueries);
+        $this->assertStringContainsString('FROM ps_cms_shop ', $this->associationQueries[0]);
+        $this->assertStringNotContainsString('FROM ps_cms_page_shop ', $this->associationQueries[0]);
+        $this->assertStringContainsString('a.`id_cms` = :entityId', $this->associationQueries[0]);
+        $this->assertCount(1, $this->statements);
+        $this->assertStringContainsString('`ps_cms_extra_shop`', $this->statements[0]['sql']);
+        $this->assertSame([7, 1, 1], $this->statements[0]['params']);
+    }
+
     public function testToggleLangScopeWritesLangAndShopColumns(): void
     {
         $writer = $this->buildWriter();
@@ -391,6 +424,7 @@ class ExtraPropertyWriterTest extends TestCase
     private function buildWriter(array $shopRestrictionsByProperty = []): ExtraPropertyWriter
     {
         $this->statements = [];
+        $this->associationQueries = [];
 
         $connection = $this->createMock(Connection::class);
         $connection->method('quoteIdentifier')->willReturnCallback(
@@ -412,7 +446,11 @@ class ExtraPropertyWriterTest extends TestCase
         );
         // The only fetchAllAssociative issued by the writer is the {entity}_shop association lookup.
         $connection->method('fetchAllAssociative')->willReturnCallback(
-            fn (): array => $this->associationRows
+            function (string $sql): array {
+                $this->associationQueries[] = $sql;
+
+                return $this->associationRows;
+            }
         );
 
         $repository = $this->createMock(ExtraPropertyDefinitionRepositoryInterface::class);
