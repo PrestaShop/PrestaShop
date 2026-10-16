@@ -65,6 +65,7 @@ describe('API : GET /admin-api/search-engines', async () => {
         'orderBy',
         'sortOrder',
         'limit',
+        'offset',
         'filters',
         'items',
       );

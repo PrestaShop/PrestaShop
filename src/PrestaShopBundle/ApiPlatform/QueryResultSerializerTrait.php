@@ -44,7 +44,7 @@ trait QueryResultSerializerTrait
 
         if ($operation instanceof CollectionOperationInterface) {
             foreach ($normalizedQueryResult as $key => $result) {
-                $normalizedQueryResult[$key] = $this->domainSerializer->denormalize(array_merge($extraParameters, $result), $operation->getClass(), null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation)]);
+                $normalizedQueryResult[$key] = $this->domainSerializer->denormalize(array_merge($extraParameters, $result), $operation->getClass(), null, $this->getQueryResultDenormalizationContext($operation));
             }
 
             // The keys of the query result are kept unless the operation asks for a list (e.g. a result indexed by id
@@ -57,8 +57,19 @@ trait QueryResultSerializerTrait
         } else {
             $normalizedQueryResult = array_merge($extraParameters, $normalizedQueryResult);
 
-            return $this->domainSerializer->denormalize($normalizedQueryResult, $operation->getClass(), null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation)]);
+            return $this->domainSerializer->denormalize($normalizedQueryResult, $operation->getClass(), null, $this->getQueryResultDenormalizationContext($operation));
         }
+    }
+
+    /**
+     * Query results return booleans as tiny integers when they come from the database, so they are cast.
+     */
+    protected function getQueryResultDenormalizationContext(Operation $operation): array
+    {
+        return [
+            NormalizationMapper::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation),
+            CQRSApiSerializer::CAST_BOOL => true,
+        ];
     }
 
     /**

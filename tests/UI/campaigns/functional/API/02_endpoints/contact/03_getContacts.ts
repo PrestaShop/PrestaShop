@@ -64,6 +64,7 @@ describe('API : GET /contacts', async () => {
         'orderBy',
         'sortOrder',
         'limit',
+        'offset',
         'filters',
         'items',
       );

@@ -14,6 +14,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\DeleteCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
@@ -34,17 +35,21 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $this->localizeByRows($tableNode);
 
-        $command = new AddCustomerGroupCommand(
-            $data['name'],
-            new DecimalNumber($data['reduction']),
-            (bool) $data['displayPriceTaxExcluded'],
-            (bool) $data['showPrice'],
-            $this->referencesToIds($data['shopIds'])
-        );
+        try {
+            $command = new AddCustomerGroupCommand(
+                $data['name'],
+                new DecimalNumber($data['reduction']),
+                (bool) $data['displayPriceTaxExcluded'],
+                (bool) $data['showPrice'],
+                $this->referencesToIds($data['shopIds'])
+            );
 
-        /** @var GroupId $id */
-        $id = $this->getCommandBus()->handle($command);
-        $this->getSharedStorage()->set($customerGroupReference, $id->getValue());
+            /** @var GroupId $id */
+            $id = $this->getCommandBus()->handle($command);
+            $this->getSharedStorage()->set($customerGroupReference, $id->getValue());
+        } catch (GroupConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -59,24 +64,36 @@ class CustomerGroupFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $this->localizeByRows($tableNode);
 
-        $command = new EditCustomerGroupCommand($this->referenceToId($customerGroupReference));
-        if (!empty($data['name'])) {
-            $command->setLocalizedNames($data['name']);
-        }
-        if (!empty($data['reduction'])) {
-            $command->setReductionPercent(new DecimalNumber($data['reduction']));
-        }
-        if (!empty($data['displayPriceTaxExcluded'])) {
-            $command->setDisplayPriceTaxExcluded(PrimitiveUtils::castStringBooleanIntoBoolean($data['displayPriceTaxExcluded']));
-        }
-        if (!empty($data['showPrice'])) {
-            $command->setShowPrice(PrimitiveUtils::castStringBooleanIntoBoolean($data['showPrice']));
-        }
-        if (!empty($data['shopIds'])) {
-            $command->setShopIds($this->referencesToIds($data['shopIds']));
-        }
+        try {
+            $command = new EditCustomerGroupCommand($this->referenceToId($customerGroupReference));
+            if (!empty($data['name'])) {
+                $command->setLocalizedNames($data['name']);
+            }
+            if (!empty($data['reduction'])) {
+                $command->setReductionPercent(new DecimalNumber($data['reduction']));
+            }
+            if (!empty($data['displayPriceTaxExcluded'])) {
+                $command->setDisplayPriceTaxExcluded(PrimitiveUtils::castStringBooleanIntoBoolean($data['displayPriceTaxExcluded']));
+            }
+            if (!empty($data['showPrice'])) {
+                $command->setShowPrice(PrimitiveUtils::castStringBooleanIntoBoolean($data['showPrice']));
+            }
+            if (!empty($data['shopIds'])) {
+                $command->setShopIds($this->referencesToIds($data['shopIds']));
+            }
 
-        $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle($command);
+        } catch (GroupConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get an error that the customer group reduction is invalid
+     */
+    public function assertLastErrorIsInvalidReduction(): void
+    {
+        $this->assertLastErrorIs(GroupConstraintException::class, GroupConstraintException::INVALID_REDUCTION);
     }
 
     /**

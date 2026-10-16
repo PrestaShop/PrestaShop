@@ -55,6 +55,8 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Tests\Integration\Utility\LanguageTrait;
+use Tests\Resources\ApiPlatform\Resources\BooleanCastItem;
+use Tests\Resources\ApiPlatform\Resources\BooleanCastResource;
 use Tests\Resources\ApiPlatform\Resources\LocalizedResource;
 use Tests\Resources\ApiPlatform\Resources\UpdatePositionResource;
 use Tests\Resources\ApiPlatform\ScalarUnionResource;
@@ -621,6 +623,61 @@ class CQRSApiSerializerTest extends KernelTestCase
         $this->expectException(NotNormalizableValueException::class);
         $this->expectExceptionMessage('cannot be interpreted as a number');
         $serializer->denormalize(['amount' => 'abc'], ScalarUnionResource::class);
+    }
+
+    public function testDenormalizeCastsBooleansAtEveryLevel(): void
+    {
+        $serializer = self::getContainer()->get(CQRSApiSerializer::class);
+
+        $item = new BooleanCastItem();
+        $item->itemId = 1;
+        $item->valid = false;
+        $firstListItem = new BooleanCastItem();
+        $firstListItem->itemId = 2;
+        $firstListItem->valid = true;
+        $secondListItem = new BooleanCastItem();
+        $secondListItem->itemId = 3;
+        $secondListItem->valid = false;
+        $expected = new BooleanCastResource();
+        $expected->id = 42;
+        $expected->enabled = true;
+        $expected->optional = null;
+        // Union types are ambiguous, they are not cast
+        $expected->union = 1;
+        $expected->item = $item;
+        $expected->items = [$firstListItem, $secondListItem];
+
+        // Database rows return booleans as tiny integers or numeric strings
+        $resource = $serializer->denormalize([
+            'id' => 42,
+            'enabled' => '1',
+            'optional' => null,
+            'union' => 1,
+            'item' => ['itemId' => 1, 'valid' => 0],
+            'items' => [
+                ['itemId' => 2, 'valid' => 1],
+                ['itemId' => 3, 'valid' => '0'],
+            ],
+        ], BooleanCastResource::class, null, [CQRSApiSerializer::CAST_BOOL => true]);
+        $this->assertEquals($expected, $resource);
+    }
+
+    public function testDenormalizeDoesNotCastBooleansByDefault(): void
+    {
+        $serializer = self::getContainer()->get(CQRSApiSerializer::class);
+
+        // Request bodies are not cast, a wrong type must be reported
+        $this->expectException(NotNormalizableValueException::class);
+        $serializer->denormalize(['enabled' => 1], BooleanCastResource::class);
+    }
+
+    public function testDenormalizeKeepsInvalidBooleans(): void
+    {
+        $serializer = self::getContainer()->get(CQRSApiSerializer::class);
+
+        // A value that doesn't represent a boolean is not turned into false
+        $this->expectException(NotNormalizableValueException::class);
+        $serializer->denormalize(['item' => ['valid' => 2]], BooleanCastResource::class, null, [CQRSApiSerializer::CAST_BOOL => true]);
     }
 
     public function testNormalize(): void

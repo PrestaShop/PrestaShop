@@ -180,6 +180,7 @@ class QueryListProvider implements ProviderInterface
                 null,
                 [
                     NormalizationMapper::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation),
+                    CQRSApiSerializer::CAST_BOOL => true,
                 ]
             );
         }
@@ -205,10 +206,12 @@ class QueryListProvider implements ProviderInterface
             $orderBy,
             $filter->getOrderWay(),
             $filter->getLimit(),
-            $filter->getOffset(),
+            // Filters return a null offset for the first page
+            $filter->getOffset() ?? 0,
             // Keep the same filters provided in query parameters
             $context['filters']['filters'] ?? [],
-            $items
+            // The items of a page are always a JSON list, even when the query result indexes them (e.g. by id)
+            array_values($items)
         );
     }
 

@@ -67,6 +67,7 @@ describe('API : GET /attributes/groups', async () => {
         'totalItems',
         'sortOrder',
         'limit',
+        'offset',
         'filters',
         'items',
       );

@@ -11,6 +11,7 @@ namespace PrestaShopBundle\ApiPlatform\OpenApi\Adapter;
 use ApiPlatform\Metadata\Operation;
 use ArrayObject;
 use DateTimeInterface;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateImmutable;
 use PrestaShopBundle\ApiPlatform\DomainObjectDetector;
 use ReflectionClass;
@@ -78,6 +79,11 @@ class MultiParameterSetterAdapter implements OpenApiSchemaAdapterInterface
                     } else {
                         $methodParameterSchema['example'] = '2025-11-05 16:02:06';
                     }
+                } elseif ($this->isDecimalNumber($methodParameter->getType())) {
+                    $methodParameterSchema = new ArrayObject([
+                        'type' => $methodParameter->getType()->allowsNull() ? ['number', 'null'] : 'number',
+                        'example' => 42.99,
+                    ]);
                 } elseif ($methodParameter->getType()->isBuiltin()) {
                     $methodParameterSchema = new ArrayObject([
                         'type' => $this->getSchemaType($methodParameter->getType()->getName()),
@@ -103,6 +109,11 @@ class MultiParameterSetterAdapter implements OpenApiSchemaAdapterInterface
             'bool' => 'boolean',
             default => $builtInType,
         };
+    }
+
+    protected function isDecimalNumber(ReflectionNamedType $methodParameter): bool
+    {
+        return $methodParameter->getName() === DecimalNumber::class || is_subclass_of($methodParameter->getName(), DecimalNumber::class);
     }
 
     protected function isDateTime(ReflectionNamedType $methodParameter): bool
