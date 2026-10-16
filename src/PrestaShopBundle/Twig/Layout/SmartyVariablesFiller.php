@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Context\CountryContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -32,6 +33,7 @@ class SmartyVariablesFiller
         private readonly LegacyContext $legacyContext,
         private readonly Configuration $configuration,
         private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack
     ) {
     }
 
@@ -51,6 +53,7 @@ class SmartyVariablesFiller
 
     protected function getDefaultVariables(): array
     {
+        // Provide the default variables used by back-office Smarty templates.
         $smartyVariables = [
             'maintenance_mode' => $this->templateVariables->isMaintenanceEnabled(),
             'maintenance_allow_admins' => $this->templateVariables->isFrontOfficeAccessibleForAdmins(),
@@ -87,6 +90,7 @@ class SmartyVariablesFiller
             'img_base_path' => $this->templateVariables->getBaseUrl() . basename(_PS_ADMIN_DIR_) . '/',
             'multishop_context' => $this->legacyControllerContext->multishop_context,
             'bootstrap' => false,
+            'submit_form_ajax' => (int) $this->requestStack->getCurrentRequest()?->get('submitFormAjax', 0),
         ];
 
         $smartyVariablesAlias = [
