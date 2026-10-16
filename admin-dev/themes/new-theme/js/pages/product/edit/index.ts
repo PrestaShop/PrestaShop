@@ -31,6 +31,7 @@ import ProductShippingManager from '@pages/product/edit/manager/product-shipping
 import ProductDetailsManager from '@pages/product/edit/manager/product-details-manager';
 import SummaryQuantityUpdater from '@pages/product/edit/summary-quantity-updater';
 import initCarrierSelector from '@pages/product/carrier';
+import ProductSubmitFieldsManager from '@pages/product/edit/manager/product-submit-fields-manager';
 
 const {$} = window;
 
@@ -117,4 +118,6 @@ $(() => {
   }
 
   new ProductShopsModal();
+
+  new ProductSubmitFieldsManager($productForm);
 });
