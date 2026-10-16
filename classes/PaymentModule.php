@@ -445,13 +445,13 @@ abstract class PaymentModuleCore extends Module
             }
             // Optional message to attach to this order
             if (!empty($message)) {
-                $message = strip_tags($message, '<br>');
-                if (Validate::isCleanHtml($message)) {
+                $strippedMessage = strip_tags($message, '<br>');
+                if (!empty($strippedMessage) && Validate::isCleanHtml($strippedMessage)) {
                     if (self::DEBUG_MODE) {
                         PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int) $id_cart, true);
                     }
                     $msg = new Message();
-                    $msg->message = $message;
+                    $msg->message = $strippedMessage;
                     $msg->id_cart = (int) $id_cart;
                     $msg->id_customer = (int) $order->id_customer;
                     $msg->id_order = (int) $order->id;
@@ -572,7 +572,7 @@ abstract class PaymentModuleCore extends Module
 
             // Specify order id for message
             $old_message = Message::getMessageByCartId((int) $this->context->cart->id);
-            if ($old_message && !$old_message['private']) {
+            if ($old_message && !$old_message['private'] && !empty($old_message['message'])) {
                 $update_message = new Message((int) $old_message['id_message']);
                 $update_message->id_order = (int) $order->id;
                 $update_message->update();
