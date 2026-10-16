@@ -98,6 +98,27 @@ All 28 shared infrastructure components have a context file at `Component/{Compo
 
 Components: AdminAPI, BackOfficeHelp, Behat, Configuration, Console, Context, ContextStateManager, Controller, Cookie, CQRS, Database, Export, ExtraProperty, FacetedSearch, Forms, Grid, Hook, Import, Javascript, Link, Locale, MailTemplate, Migration, Playwright, PositionUpdater, Router, Smarty, TinyMCE, Twig
 
+## Which context to read
+
+Match the task against this table before touching code; a task that mentions a keyword or a path in the second column needs the contexts in the third one. The domain context of the entity involved is always read too.
+
+| Topic | Keywords / paths | Read |
+|-------|------------------|------|
+| Admin API (REST endpoints) | "Admin API", "endpoint", "API resource", `/admin-api/`, scopes, OpenAPI, Swagger, `ps_apiresources`; paths: rule [rules/admin-api.md](rules/admin-api.md) | [Component/AdminAPI/CONTEXT.md](Component/AdminAPI/CONTEXT.md) (core infrastructure), then `modules/ps_apiresources/.ai/CONTEXT.md` (endpoint conventions) and `modules/ps_apiresources/.ai/REVIEW.md` when reviewing. Endpoint inventory: [generated/api-resources.md](generated/api-resources.md) |
+| Commands, queries, handlers | `src/Core/Domain/**`, `src/Adapter/**/CommandHandler`, `QueryHandler` | [Component/CQRS/CONTEXT.md](Component/CQRS/CONTEXT.md) |
+| Back-office listings | grid, `QueryBuilder`, `Filters`, `src/Core/Grid/**` | [Component/Grid/CONTEXT.md](Component/Grid/CONTEXT.md) |
+| Back-office forms | form type, `FormDataProvider`, `FormDataHandler`, `src/PrestaShopBundle/Form/**` | [Component/Forms/CONTEXT.md](Component/Forms/CONTEXT.md) |
+| Symfony controllers, routing | `src/PrestaShopBundle/Controller/Admin/**`, `routing/admin/**` | [Component/Controller/CONTEXT.md](Component/Controller/CONTEXT.md), [Component/Router/CONTEXT.md](Component/Router/CONTEXT.md) |
+| Multistore | `ShopConstraint`, `shopId`, shop association | [MULTISTORE.md](MULTISTORE.md) |
+| Behat / Playwright tests | `tests/Integration/Behaviour/**`, `tests/UI/**` | [Component/Behat/CONTEXT.md](Component/Behat/CONTEXT.md), [Component/Playwright/CONTEXT.md](Component/Playwright/CONTEXT.md) |
+| Legacy to Symfony migration | `AdminXController`, ObjectModel removal, feature flags | [Component/Migration/CONTEXT.md](Component/Migration/CONTEXT.md) |
+| Hooks | `dispatchHook`, `hook.xml` | [Component/Hook/CONTEXT.md](Component/Hook/CONTEXT.md) |
+| Extra properties (custom fields) | `ExtraProperty`, `extra_property_definition` | [Component/ExtraProperty/CONTEXT.md](Component/ExtraProperty/CONTEXT.md) |
+
+### Cross-repository work: `ps_apiresources`
+
+The Admin API endpoints live in the `ps_apiresources` module, installed by composer under `modules/ps_apiresources/` (gitignored). On a developer machine that folder is often a symlink to a separate clone, so its `CLAUDE.md`, rules and skills are not loaded automatically from this repository: read `modules/ps_apiresources/.ai/CONTEXT.md` explicitly, and refer to module files through the `modules/ps_apiresources/...` path. With Claude Code, `claude --add-dir <path to the module clone>` loads the module context as well. A core change that the module depends on is paired with a module PR: see the `link-apiresources-fork` skill.
+
 ## Generated indexes
 
 Pre-built snapshots in `generated/` — useful when no PHP runtime is available (web-based assistants, CI contexts). Regenerate with `bash bin/generate-ai-index.sh`.
@@ -114,3 +135,4 @@ When PHP is available, prefer the authoritative live sources:
 | [generated/routes.md](generated/routes.md) | Symfony admin/API routes | Before adding a route or looking up a controller action |
 | [generated/entities.md](generated/entities.md) | Doctrine entity columns and relations | Before writing a query or migration |
 | [generated/hooks.md](generated/hooks.md) | Hook names discovered in source | Before dispatching or listening to a hook |
+| [generated/api-resources.md](generated/api-resources.md) | Admin API endpoints per domain, from `modules/ps_apiresources` when it is installed | Before adding an endpoint or looking up which resource exposes a domain |
