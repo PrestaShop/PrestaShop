@@ -73,6 +73,11 @@ class EditEmployeeCommand
     private $hasEnabledGravatar = false;
 
     /**
+     * @var string|null
+     */
+    private $uploadedAvatarPath;
+
+    /**
      * @param int $employeeId
      */
     public function __construct($employeeId)
@@ -299,6 +304,21 @@ class EditEmployeeCommand
     public function setHasEnabledGravatar(bool $hasEnabledGravatar)
     {
         $this->hasEnabledGravatar = $hasEnabledGravatar;
+
+        return $this;
+    }
+
+    public function getUploadedAvatarPath(): ?string
+    {
+        return $this->uploadedAvatarPath;
+    }
+
+    /**
+     * @return EditEmployeeCommand
+     */
+    public function setUploadedAvatarPath(?string $uploadedAvatarPath): self
+    {
+        $this->uploadedAvatarPath = $uploadedAvatarPath;
 
         return $this;
     }
