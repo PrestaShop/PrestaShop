@@ -417,13 +417,17 @@ class AdminDashboardControllerCore extends AdminController
         ];
 
         $module_obj = Module::getInstanceByName($module);
-        if (Validate::isModuleName($module) && $module_obj) {
-            $return['errors'] = $module_obj->validateDashConfig($configs);
-            if (count($return['errors'])) {
-                $return['has_errors'] = true;
-            } else {
-                $return['has_errors'] = $module_obj->saveDashConfig($configs);
-            }
+        if (!$module_obj || !array_filter(Shop::getContextListShopID(), fn ($idShop) => Module::isEnabled($module_obj->name, (int) $idShop))) {
+            $return['has_errors'] = true;
+            $return['errors'][] = 'This module is not enabled.';
+            die(json_encode($return));
+        }
+
+        $return['errors'] = $module_obj->validateDashConfig($configs);
+        if (count($return['errors'])) {
+            $return['has_errors'] = true;
+        } else {
+            $return['has_errors'] = $module_obj->saveDashConfig($configs);
         }
 
         if (method_exists($module_obj, $hook)) {
