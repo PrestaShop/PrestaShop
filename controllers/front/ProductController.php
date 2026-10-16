@@ -1312,7 +1312,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         if ($product['id_product_attribute']) {
             $combination = $this->findProductCombinationById($product['id_product_attribute']);
-            if ($combination['minimal_quantity']) {
+            if (!empty($combination['minimal_quantity'])) {
                 $minimalQuantity = (int) $combination['minimal_quantity'];
             }
         } else {
