@@ -169,6 +169,10 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
             $this->object->price = -1;
         }
 
+        if (Tools::getIsset('id_product')) {
+            self::$currentIndex .= '&id_product=' . ((int) Tools::getValue('id_product'));
+        }
+
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Catalog price rules', [], 'Admin.Catalog.Feature'),
@@ -367,6 +371,14 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 }
             }
             $object->apply();
+
+            if (Tools::getIsset('id_product')) {
+                $this->setRedirectAfter(
+                    $this->get('router')->generate('admin_products_edit', [
+                        'productId' => (int) Tools::getValue('id_product'),
+                    ])
+                );
+            }
 
             return $object;
         }
