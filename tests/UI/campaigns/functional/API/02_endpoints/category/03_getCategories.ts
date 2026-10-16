@@ -68,6 +68,7 @@ describe('API : GET /categories', async () => {
         'totalItems',
         'sortOrder',
         'limit',
+        'offset',
         'orderBy',
         'filters',
         'items',

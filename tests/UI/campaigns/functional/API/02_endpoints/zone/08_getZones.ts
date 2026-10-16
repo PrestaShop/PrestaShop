@@ -66,6 +66,7 @@ describe('API : GET /admin-api/zones', async () => {
         'orderBy',
         'sortOrder',
         'limit',
+        'offset',
         'filters',
         'items',
       );

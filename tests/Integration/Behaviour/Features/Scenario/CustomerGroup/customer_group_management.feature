@@ -81,6 +81,48 @@ Feature: CustomerGroup Management
       | showPrice               | true                |
       | shopIds                 | shop2,shop3         |
 
+  Scenario: The reduction must be between 0 and 100
+    When I create a customer group "InvalidCustomerGroup" with the following details:
+      | name[en-US]             | Name EN |
+      | name[fr-FR]             | Name FR |
+      | reduction               | 150     |
+      | displayPriceTaxExcluded | true    |
+      | showPrice               | true    |
+      | shopIds                 | shop1   |
+    Then I should get an error that the customer group reduction is invalid
+    When I create a customer group "InvalidCustomerGroup" with the following details:
+      | name[en-US]             | Name EN |
+      | name[fr-FR]             | Name FR |
+      | reduction               | -1      |
+      | displayPriceTaxExcluded | true    |
+      | showPrice               | true    |
+      | shopIds                 | shop1   |
+    Then I should get an error that the customer group reduction is invalid
+    When I create a customer group "CustomerGroup2" with the following details:
+      | name[en-US]             | Name EN |
+      | name[fr-FR]             | Name FR |
+      | reduction               | 0       |
+      | displayPriceTaxExcluded | true    |
+      | showPrice               | true    |
+      | shopIds                 | shop1   |
+    And I update customer group "CustomerGroup2" with the following details:
+      | reduction | 150 |
+    Then I should get an error that the customer group reduction is invalid
+    When I update customer group "CustomerGroup2" with the following details:
+      | reduction | -1 |
+    Then I should get an error that the customer group reduction is invalid
+    When I update customer group "CustomerGroup2" with the following details:
+      | reduction | 100 |
+    Then customer group "CustomerGroup2" have the following values:
+      | customer group          | value          |
+      | reference_id            | CustomerGroup2 |
+      | name[en-US]             | Name EN        |
+      | name[fr-FR]             | Name FR        |
+      | reduction               | 100            |
+      | displayPriceTaxExcluded | true           |
+      | showPrice               | true           |
+      | shopIds                 | shop1          |
+
   Scenario: Delete the customer group
     Given customer group CustomerGroup1 exists
     When I delete customer group CustomerGroup1

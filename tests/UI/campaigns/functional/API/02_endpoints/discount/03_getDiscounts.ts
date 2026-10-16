@@ -148,6 +148,7 @@ describe('API : GET /admin-api/discounts', async () => {
         'orderBy',
         'sortOrder',
         'limit',
+        'offset',
         'filters',
         'items',
       );

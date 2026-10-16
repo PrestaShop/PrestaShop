@@ -67,6 +67,7 @@ describe('API : GET /languages', async () => {
         'totalItems',
         'sortOrder',
         'limit',
+        'offset',
         'filters',
         'items',
       );
