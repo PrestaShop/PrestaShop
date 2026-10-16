@@ -201,6 +201,21 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * @return bool|int
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getAllowOosp()
+    {
+        if (!isset($this->product['allow_oosp'])) {
+            $this->product['allow_oosp'] = Product::isAvailableWhenOutOfStock(
+                (int) $this->product['out_of_stock']
+            );
+        }
+
+        return $this->product['allow_oosp'];
+    }
+
+    /**
      * @return string
      */
     #[LazyArrayAttribute(arrayAccess: true)]
@@ -382,10 +397,17 @@ class ProductLazyArray extends AbstractLazyArray
     {
         $whitelist = $this->getProductAttributeWhitelist();
         $embeddedProductAttributes = [];
+
         foreach ($this->product as $attribute => $value) {
             if (in_array($attribute, $whitelist)) {
                 $embeddedProductAttributes[$attribute] = $value;
             }
+        }
+
+        // allow_oosp can now be computed lazily, so make sure it is exposed
+        // in embedded attributes even when it was not precomputed beforehand.
+        if (in_array('allow_oosp', $whitelist)) {
+            $embeddedProductAttributes['allow_oosp'] = $this->getAllowOosp();
         }
 
         return $embeddedProductAttributes;
@@ -537,7 +559,7 @@ class ProductLazyArray extends AbstractLazyArray
         // If it's not in stock, but available for order
         } elseif (
             $this->product['quantity'] <= 0
-            && $this->product['allow_oosp']
+            && $this->getAllowOosp()
         ) {
             return 'https://schema.org/BackOrder';
         // If it's not in stock and not available for order
@@ -1251,7 +1273,7 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         // Disable because of stock management
-        if ($settings->stock_management_enabled && !$product['allow_oosp']
+        if ($settings->stock_management_enabled && !$this->getAllowOosp()
             && ($product['quantity'] <= 0 || $product['quantity'] - $this->getQuantityWanted() < 0)
         ) {
             $shouldEnable = false;
@@ -1455,7 +1477,7 @@ class ProductLazyArray extends AbstractLazyArray
             }
 
         // Case 2 - Product not in stock, available for order
-        } elseif ($product['allow_oosp']) {
+        } elseif ($this->getAllowOosp()) {
             $this->product['availability_date'] = $product['available_date'];
             $this->product['availability'] = 'available';
 
