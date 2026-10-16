@@ -103,6 +103,12 @@ class TokenAuthenticator extends AbstractAuthenticator
             $this->autoSaveApiClient($jwtTokenUser);
         }
 
+        // The token stays valid until it expires, so the client must be checked on every request
+        if (!$this->isApiClientEnabled($jwtTokenUser)) {
+            $this->logger->error('TokenAuthenticator: API client is disabled or does not exist');
+            throw new CustomUserMessageAuthenticationException(json_encode('Invalid credentials'));
+        }
+
         // Returns passport purely based on JWT token here, we set a specific loader that returns the
         // user object directly since it was already resolved by our authorization server
         return new SelfValidatingPassport(new UserBadge($jwtTokenUser->getUserIdentifier(), fn () => $jwtTokenUser));
@@ -130,6 +136,17 @@ class TokenAuthenticator extends AbstractAuthenticator
             ;
             $this->apiClientRepository->save($apiClient);
         }
+    }
+
+    private function isApiClientEnabled(JwtTokenUser $jwtTokenUser): bool
+    {
+        try {
+            $apiClient = $this->apiClientRepository->getByClientId($jwtTokenUser->getUserIdentifier(), $jwtTokenUser->getExternalIssuer());
+        } catch (NoResultException) {
+            return false;
+        }
+
+        return $apiClient->isEnabled();
     }
 
     private function getAuthorizationServer(Request $request): ?AuthorisationServerInterface

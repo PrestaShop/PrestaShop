@@ -8,11 +8,13 @@ namespace Tests\Unit\PrestaShopBundle\Security\OAuth2\Repository;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Security\OAuth2\Repository\ClientRepository;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\InMemoryUserProvider;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class ClientRepositoryTest extends TestCase
 {
@@ -55,6 +57,34 @@ class ClientRepositoryTest extends TestCase
     {
         $response = $this->clientRepository->validateClient('myclientid', 'myclientsecret', $grantType);
         $this->assertSame($valid, $response);
+    }
+
+    /**
+     * @dataProvider enabledProvider
+     */
+    public function testValidateClientChecksApiClientIsEnabled(bool $enabled): void
+    {
+        $apiClient = (new ApiClient())
+            ->setClientId('myapiclient')
+            ->setClientSecret('myclientsecret')
+            ->setEnabled($enabled)
+        ;
+        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider->method('loadUserByIdentifier')->willReturn($apiClient);
+        $clientRepository = new ClientRepository(
+            $userProvider,
+            new UserPasswordHasher(new PasswordHasherFactory([
+                ApiClient::class => ['algorithm' => 'plaintext', 'ignore_case' => false],
+            ]))
+        );
+
+        $this->assertSame($enabled, $clientRepository->validateClient('myapiclient', 'myclientsecret', 'client_credentials'));
+    }
+
+    public function enabledProvider(): iterable
+    {
+        yield [true];
+        yield [false];
     }
 
     public function userDataProvider(): iterable
