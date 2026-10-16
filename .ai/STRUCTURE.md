@@ -23,6 +23,9 @@ Each AI tool has its own configuration format (`CLAUDE.md`, `.cursorrules`, `.gi
 │   └── {skill-name}/
 │       └── SKILL.md
 │
+├── rules/                  # Path-scoped rules: source of the per-tool copies the generator writes (.claude/rules symlinks to it)
+│   └── {name}.md
+│
 ├── Domain/                 # Business domain contexts (maps to src/Core/Domain/)
 │   ├── {DomainName}/
 │   │   ├── CONTEXT.md      # Domain-specific conventions, patterns, do/don't rules
@@ -120,12 +123,48 @@ These fields are **a PrestaShop project convention**, not part of any official s
 
 | Tool | Pointer file | How it works |
 |------|-------------|--------------|
-| **Claude Code** | `CLAUDE.md` | Uses `@.ai/CONTEXT.md` reference — loaded at session start. Agent reads domain/component files on demand. |
+| **Claude Code** | `CLAUDE.md` + `.claude/rules/*.md` | Uses `@.ai/CONTEXT.md` reference — loaded at session start. Agent reads domain/component files on demand. `.claude/rules/*.md` are symlinks to the shared path-scoped rules of `.ai/rules/` (see below). |
 | **Gemini CLI** | `GEMINI.md` | Instructs Gemini to read `.ai/CONTEXT.md` and domain files when relevant. |
 | **Cursor** | `.cursor/rules/*.mdc` | One `.mdc` rule per domain/component with glob patterns to auto-attach. |
 | **GitHub Copilot** | `.github/copilot-instructions.md` + `.github/instructions/*.instructions.md` | Repo-wide instructions reference `.ai/CONTEXT.md`. Path-specific files use `applyTo` globs. |
 | **Windsurf** | `.windsurf/rules/*.md` | Project-wide rules instruct Cascade to read `.ai/` files when working on matching paths. |
 | **AGENTS.md** | `AGENTS.md` | Multi-agent systems reference `.ai/CONTEXT.md`. |
+
+### Path-scoped rules (`.ai/rules/`)
+
+A rule that must load only when the agent touches a given area (the Admin API, a component with its own conventions) is written **once**, in `.ai/rules/{name}.md`, with the frontmatter Claude Code reads natively and a short body:
+
+```yaml
+---
+description: "Admin API: ..."
+paths:
+  - "src/PrestaShopBundle/ApiPlatform/**"
+  - "modules/ps_apiresources/**"
+---
+
+Read `.ai/Component/AdminAPI/CONTEXT.md` before changing these files. ...
+```
+
+The body says which `CONTEXT.md` files to read and why, never the conventions themselves (they live in the contexts). `paths` is the single source of the globs (YAML list form only). The index generator (`sync_rules` in `bash .ai/bin/generate-ai-index.sh`) exposes the rule to every tool:
+
+```
+.ai/rules/admin-api.md                         ← the source (hand-maintained)
+.claude/rules/admin-api.md                     → symlink to the source (Claude Code reads `paths`)
+.cursor/rules/admin-api.mdc                    ← generated: `description`, `globs: a/**,b/**`, `alwaysApply: false`
+.windsurf/rules/admin-api.md                   ← generated: `trigger: glob`, `globs: a/**,b/**`, `description`
+.github/instructions/admin-api.instructions.md ← generated: `applyTo: "a/**,b/**"`
+```
+
+The generated copies carry a "generated from … do not edit" header and the same body; they are committed like `generated/*.md`, and a stale copy is a generator run away. A new rule only needs its `.ai/rules/{name}.md` file, a generator run, and a row in the "Which context to read" table of `.ai/CONTEXT.md` (the table names the rule instead of repeating its globs). `admin-api` is the first rule; the other components keep the always-on pointers until they get their own. Verified with Claude Code; Cursor, Windsurf and Copilot copies follow their documented keys but are not tested here (Windsurf documents one glob per rule, the comma-separated list is an assumption) — report a tool rejecting a copy so the generator can adapt its format.
+
+### Maintenance
+
+The context rots when the code moves. Regular hygiene, ideally after each merge touching the areas concerned:
+
+- `bash .ai/bin/generate-ai-index.sh`: regenerates `generated/*.md`, creates the missing skill symlinks, regenerates the per-tool copies of the `.ai/rules/*.md` rules, lists the module skills without component association. To run at least monthly and after any change to `.ai/rules/` (a GitHub action or a skill can carry it).
+- Check the links of the `CONTEXT.md` files (paths, class names, section anchors) against the code; a renamed class or moved file is a stale context.
+- Keep the examples in the contexts and skills aligned with the reference resources: an outdated example propagates (a resource copied from an older one carries its obsolete options).
+- When a review (human or automated) finds a rule the context does not state, or a false positive it should prevent, update the context in the same PR as the fix (see `modules/ps_apiresources/.ai/REVIEW.md` → "Maintaining the automated review" for the module side).
 
 ### Web-based assistants (ChatGPT, Claude.ai, Gemini)
 
@@ -150,7 +189,7 @@ Contributors using web-based AI assistants should copy-paste the relevant `CONTE
 
 1. Create `.ai/Domain/{DomainName}/CONTEXT.md` using the template above. A skill exists to help: use the `domain-context-generator` skill.
 2. Add an entry to the index in `.ai/CONTEXT.md`.
-3. Optionally create `.cursor/rules/{domain}.mdc` and `.github/instructions/{domain}.instructions.md` pointer files.
+3. Optionally create a path-scoped rule `.ai/rules/{name}.md` so the context loads when matching files are touched (see "Path-scoped rules"), run the index generator for the symlinks, and add the topic to the "Which context to read" table of `.ai/CONTEXT.md`.
 
 ### Adding context for a new component
 
