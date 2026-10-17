@@ -65,6 +65,7 @@ describe('API : GET /features', async () => {
         'orderBy',
         'sortOrder',
         'limit',
+        'offset',
         'filters',
         'items',
       );

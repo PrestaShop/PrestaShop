@@ -68,6 +68,7 @@ describe('API : GET /products', async () => {
         'orderBy',
         'sortOrder',
         'limit',
+        'offset',
         'filters',
         'items',
       );

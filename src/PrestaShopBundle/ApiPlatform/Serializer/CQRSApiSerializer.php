@@ -13,12 +13,11 @@ use PrestaShopBundle\ApiPlatform\LocalizedValueUpdater;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
 use PrestaShopBundle\ApiPlatform\NormalizationMapper;
 use PrestaShopBundle\ApiPlatform\PositionCollectionUpdater;
-use ReflectionNamedType;
+use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Serializer\Encoder\ContextAwareDecoderInterface;
 use Symfony\Component\Serializer\Encoder\ContextAwareEncoderInterface;
 use Symfony\Component\Serializer\Exception\UnsupportedFormatException;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -37,10 +36,10 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
     public function __construct(
         protected readonly Serializer $decorated,
         protected readonly ContextParametersProvider $contextParametersProvider,
-        protected readonly ClassMetadataFactoryInterface $classMetadataFactory,
         protected readonly LocalizedValueUpdater $localizedValueUpdater,
         protected readonly NormalizationMapper $normalizationMapper,
         protected readonly PositionCollectionUpdater $positionCollectionUpdater,
+        protected readonly PropertyTypeExtractorInterface $propertyTypeExtractor,
     ) {
     }
 
@@ -94,8 +93,10 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
         $this->normalizationMapper->mapNormalizedData($data, $context);
 
         // Boolean casting is only implemented in Serializer 7.1, so for now we handle it manually
-        // This is important for list results mainly where boolean are returned as tiny int (0, 1)
-        $this->addBooleanCastCallbacks($type, $context);
+        // This is important for query results where boolean are returned as tiny int (0, 1)
+        if (!empty($context[self::CAST_BOOL]) && is_array($data)) {
+            $data = $this->castBooleans($data, $type);
+        }
 
         // Update localized value to be adapted for denormalization
         if (is_array($data)) {
@@ -186,36 +187,58 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
     }
 
     /**
-     * Force casting boolean properties so that values like (1, 0, true, on, false, ...) are valid, this is useful for
-     * data coming from DB where boolean are returned as tiny integers. To enable this casting the CQRSApiSerializer::CAST_BOOL
-     * context option must be true.
+     * Casts the values of the boolean properties (1, 0, "1", "true", "on", ...) when the CQRSApiSerializer::CAST_BOOL
+     * context option is true, useful for query results where booleans are returned as tiny integers. The nested
+     * objects and the lists of objects (typed with a PHPDoc like Foo[]) are cast too. A value that doesn't
+     * represent a boolean is left untouched, so the denormalization still rejects it.
      *
-     * Note: in Symfony 7.1 a new option AbstractNormalizer::FILTER_BOOL has been introduced, when we upgrade our
-     * Symfony dependencies our custom casting (inspired by the Symfony one) can be removed.
-     *
-     * https://symfony.com/doc/7.1/serializer.html#handling-boolean-values
+     * Note: in Symfony 7.1 a new option AbstractNormalizer::FILTER_BOOL has been introduced, but it doesn't cast
+     * integers.
      */
-    protected function addBooleanCastCallbacks(string $type, array &$context): void
+    protected function castBooleans(array $data, string $type): array
     {
-        if (empty($context[self::CAST_BOOL])) {
-            return;
+        if (!class_exists($type)) {
+            return $data;
         }
 
-        if (!$this->classMetadataFactory->hasMetadataFor($type)) {
-            return;
-        }
-
-        $metadata = $this->classMetadataFactory->getMetadataFor($type);
-        foreach ($metadata->getAttributesMetadata() as $attributeMetadata) {
-            if (!$metadata->getReflectionClass()->hasProperty($attributeMetadata->getName())) {
+        foreach ($data as $property => $value) {
+            if (!is_string($property) || null === $value) {
                 continue;
             }
 
-            $reflectionProperty = $metadata->getReflectionClass()->getProperty($attributeMetadata->getName());
-            if ($reflectionProperty->getType() instanceof ReflectionNamedType && $reflectionProperty->getType()->getName() === 'bool') {
-                $context[AbstractNormalizer::CALLBACKS][$attributeMetadata->getName()] = fn (mixed $value): bool => filter_var($value, FILTER_VALIDATE_BOOLEAN);
+            $types = $this->propertyTypeExtractor->getTypes($type, $property);
+            // Union types are ambiguous, the value is left as is
+            if (null === $types || count($types) !== 1) {
+                continue;
+            }
+
+            $propertyType = $types[0];
+            if (Type::BUILTIN_TYPE_BOOL === $propertyType->getBuiltinType()) {
+                $data[$property] = $this->castBoolean($value);
+            } elseif (is_array($value) && null !== $propertyType->getClassName()) {
+                $data[$property] = $this->castBooleans($value, $propertyType->getClassName());
+            } elseif (is_array($value) && $propertyType->isCollection()) {
+                $itemClass = ($propertyType->getCollectionValueTypes()[0] ?? null)?->getClassName();
+                if (null !== $itemClass) {
+                    foreach ($value as $key => $item) {
+                        if (is_array($item)) {
+                            $data[$property][$key] = $this->castBooleans($item, $itemClass);
+                        }
+                    }
+                }
             }
         }
+
+        return $data;
+    }
+
+    protected function castBoolean(mixed $value): mixed
+    {
+        if (!is_scalar($value)) {
+            return $value;
+        }
+
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $value;
     }
 
     /**

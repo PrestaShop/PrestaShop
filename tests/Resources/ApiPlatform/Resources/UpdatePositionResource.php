@@ -10,6 +10,9 @@ use ApiPlatform\Metadata\ApiResource;
 use PrestaShopBundle\ApiPlatform\Metadata\PositionCollection;
 use PrestaShopBundle\ApiPlatform\Metadata\UpdatePosition;
 
+/**
+ * Developer note: the class PHPDoc must not be published in the API documentation.
+ */
 #[ApiResource(
     operations: [
         new UpdatePosition(

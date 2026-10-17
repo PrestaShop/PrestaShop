@@ -45,6 +45,10 @@ class ApiPlatformCompilerPass implements CompilerPassInterface
 
         // Update parameter of the APIPlatform framework so these scopes are displayed in the Swagger UI
         $container->setParameter('api_platform.oauth.scopes', $scopes);
+
+        // API Platform documents a resource and its operations with the summary of the class PHPDoc when they have no
+        // description, the PHPDoc holds developer notes that must not be published: only the description argument is used
+        $container->removeDefinition('api_platform.metadata.resource.metadata_collection_factory.php_doc');
     }
 
     private function humanizeScope(string $scope): string

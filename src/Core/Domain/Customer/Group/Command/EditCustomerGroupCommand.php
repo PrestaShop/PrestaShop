@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
@@ -61,6 +62,12 @@ class EditCustomerGroupCommand
 
     public function setReductionPercent(DecimalNumber $reductionPercent): self
     {
+        if ($reductionPercent->isLowerThanZero() || $reductionPercent->isGreaterThan(new DecimalNumber('100'))) {
+            throw new GroupConstraintException(
+                'Reduction percent must be between 0 and 100',
+                GroupConstraintException::INVALID_REDUCTION
+            );
+        }
         $this->reductionPercent = $reductionPercent;
 
         return $this;

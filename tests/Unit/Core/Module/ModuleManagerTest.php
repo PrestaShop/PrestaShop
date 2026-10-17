@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
+use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -38,6 +39,15 @@ class ModuleManagerTest extends TestCase
     /** @var LegacyModule&MockObject */
     private $legacyModule;
 
+    /** @var ModuleRepository&MockObject */
+    private $moduleRepository;
+
+    /** @var EventDispatcherInterface&MockObject */
+    private $eventDispatcher;
+
+    /** @var bool */
+    private $onUninstallResult = true;
+
     public function setUp(): void
     {
         $translatorMock = $this->createMock(TranslatorInterface::class);
@@ -48,17 +58,19 @@ class ModuleManagerTest extends TestCase
 
         $this->module = $this->getModuleMock();
 
-        $moduleRepository = $this->createMock(ModuleRepository::class);
-        $moduleRepository->method('getModule')->willReturn($this->module);
+        $this->moduleRepository = $this->createMock(ModuleRepository::class);
+        $this->moduleRepository->method('getModule')->willReturn($this->module);
+
+        $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $this->moduleManager = $this->getMockBuilder(ModuleManager::class)
             ->setConstructorArgs([
-                $moduleRepository,
+                $this->moduleRepository,
                 $this->getModuleDataProviderMock(),
                 $adminModuleDataProvider,
                 $this->createMock(SourceHandlerFactory::class),
                 $translatorMock,
-                $this->createMock(EventDispatcherInterface::class),
+                $this->eventDispatcher,
                 $this->createMock(HookManager::class),
                 _PS_MODULE_DIR_,
                 new XliffFileLoader(),
@@ -83,6 +95,26 @@ class ModuleManagerTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->uninstall(self::UNINSTALLED_MODULE_NAME);
+    }
+
+    public function testUninstallFailureStopsPostUninstallActions(): void
+    {
+        $this->onUninstallResult = false;
+
+        $this->moduleRepository
+            ->expects($this->never())
+            ->method('getModulePath')
+        ;
+        $this->eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->isInstanceOf(ModuleManagementEvent::class),
+                ModuleManagementEvent::PRE_ACTION
+            )
+        ;
+
+        $this->assertFalse($this->moduleManager->uninstall(self::INSTALLED_MODULE_NAME, true));
     }
 
     public function testEnable(): void
@@ -188,7 +220,9 @@ class ModuleManagerTest extends TestCase
 
         $module->method('get')->with('version')->willReturn('1.0.0');
         $module->method('onInstall')->willReturn(true);
-        $module->method('onUninstall')->willReturn(true);
+        $module->method('onUninstall')->willReturnCallback(function (): bool {
+            return $this->onUninstallResult;
+        });
         $module->method('onEnable')->willReturn(true);
         $module->method('onDisable')->willReturn(true);
         $module->method('onUpgrade')->willReturn(true);
