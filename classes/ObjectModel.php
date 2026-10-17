@@ -477,6 +477,97 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         return str_replace('\\', '', get_class($this));
     }
 
+    private function hasUpdateAfterListeners(): bool
+    {
+        if (defined('PS_INSTALLATION_IN_PROGRESS') || !$this->id) {
+            return false;
+        }
+
+        foreach (['actionObjectUpdateAfter', 'actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter'] as $hookName) {
+            if (Hook::getHookStatusByName($hookName) && Hook::getHookModuleExecList($hookName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns a copy of the object holding the values currently stored in database,
+     * loaded with the same language and shop as the current object.
+     */
+    private function loadPersistedState(): self
+    {
+        $persistedState = clone $this;
+        /** @var PrestaShop\PrestaShop\Adapter\EntityMapper $entity_mapper */
+        $entity_mapper = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper');
+        $entity_mapper->load($this->id, $this->id_lang, $persistedState, $this->def, $this->id_shop, false);
+
+        return $persistedState;
+    }
+
+    /**
+     * Lists the fields whose value differs between the persisted state and the current object.
+     * Multilang fields only contain the languages that changed, indexed by language ID.
+     *
+     * @return array<string, array{old: mixed, new: mixed}>
+     */
+    private function computeChanges(self $persistedState): array
+    {
+        $changes = [];
+        foreach ($this->def['fields'] as $field => $data) {
+            if (is_array($this->update_fields) && empty($this->update_fields[$field])) {
+                continue;
+            }
+
+            $oldValue = $persistedState->{$field} ?? null;
+            $newValue = $this->{$field} ?? null;
+
+            if (empty($data['lang']) || (!is_array($oldValue) && !is_array($newValue))) {
+                if ($this->normalizeFieldValue($oldValue, $data) !== $this->normalizeFieldValue($newValue, $data)) {
+                    $changes[$field] = ['old' => $oldValue, 'new' => $newValue];
+                }
+
+                continue;
+            }
+
+            $oldValues = is_array($oldValue) ? $oldValue : [(int) $this->id_lang => $oldValue];
+            $newValues = is_array($newValue) ? $newValue : [(int) $this->id_lang => $newValue];
+            foreach ($newValues as $idLang => $newLangValue) {
+                if (is_array($this->update_fields) && is_array($this->update_fields[$field]) && empty($this->update_fields[$field][$idLang])) {
+                    continue;
+                }
+
+                $oldLangValue = $oldValues[$idLang] ?? null;
+                if ($this->normalizeFieldValue($oldLangValue, $data) !== $this->normalizeFieldValue($newLangValue, $data)) {
+                    $changes[$field]['old'][$idLang] = $oldLangValue;
+                    $changes[$field]['new'][$idLang] = $newLangValue;
+                }
+            }
+        }
+
+        return $changes;
+    }
+
+    /**
+     * Casts a value the way it is stored, so that "1" and 1 (or true) are not reported as a change.
+     */
+    private function normalizeFieldValue(mixed $value, array $fieldDefinition): mixed
+    {
+        if (null === $value && !empty($fieldDefinition['allow_null'])) {
+            return null;
+        }
+
+        return match ($fieldDefinition['type']) {
+            self::TYPE_INT, self::TYPE_BOOL => (int) $value,
+            self::TYPE_FLOAT => (float) str_replace(',', '.', (string) $value),
+            // Empty dates are stored as zero dates
+            self::TYPE_DATE => !$value || str_starts_with((string) $value, '0000-00-00') ? '' : (string) $value,
+            self::TYPE_NOTHING => $value,
+            default => (string) $value,
+        };
+    }
+
     /**
      * Get object name
      * Used for read/write in required fields table.
@@ -716,6 +807,9 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         Hook::exec('actionObjectUpdateBefore', ['object' => $this]);
         Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateBefore', ['object' => $this]);
 
+        // Only pay for the extra read when a module listens to the after hooks
+        $persistedState = $this->hasUpdateAfterListeners() ? $this->loadPersistedState() : null;
+
         $this->clearCache();
 
         // Automatically fill dates
@@ -842,9 +936,11 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             $extraResult = $this->persistExtraProperties();
         }
 
+        $changes = null !== $persistedState ? $this->computeChanges($persistedState) : [];
+
         // @hook actionObject<ObjectClassName>UpdateAfter — runs even if extra persistence fails.
-        Hook::exec('actionObjectUpdateAfter', ['object' => $this]);
-        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter', ['object' => $this]);
+        Hook::exec('actionObjectUpdateAfter', ['object' => $this, 'changes' => $changes]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter', ['object' => $this, 'changes' => $changes]);
 
         return $result && $extraResult;
     }
