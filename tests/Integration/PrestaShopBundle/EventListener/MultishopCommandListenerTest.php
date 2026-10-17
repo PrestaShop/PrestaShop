@@ -4,41 +4,74 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\PrestaShopBundle\EventListener;
 
-use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
+use Configuration;
+use Db;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShopBundle\Console\PrestaShopApplication;
+use PrestaShopBundle\Entity\Shop as ShopEntity;
+use PrestaShopBundle\Entity\ShopGroup;
+use PrestaShopException;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Tests\Resources\DatabaseDump;
 
 class MultishopCommandListenerTest extends KernelTestCase
 {
+    private const TABLES_TO_RESTORE = ['configuration', 'shop'];
+
     /**
      * @var Context
      */
     public $multishopContext;
 
-    private bool $multishopEnabled = true;
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        DatabaseDump::restoreTables(self::TABLES_TO_RESTORE);
+        Configuration::resetStaticCache();
+        Shop::resetStaticCache();
+        self::bootKernel();
+
+        $entityManager = self::$kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $shopGroup = $entityManager->find(ShopGroup::class, 1);
+        $shop = new ShopEntity();
+        $shop->setActive(true);
+        $shop->setIdCategory(2);
+        $shop->setName('test_shop_multishop_command_listener');
+        $shop->setShopGroup($shopGroup);
+        $shop->setColor('red');
+        $shop->setThemeName(Theme::getDefaultTheme());
+        $shop->setDeleted(false);
+        $entityManager->persist($shop);
+        $entityManager->flush();
+
+        self::setMultishopFeatureActive(true);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        DatabaseDump::restoreTables(self::TABLES_TO_RESTORE);
+        Shop::resetStaticCache();
+        Configuration::resetStaticCache();
+    }
 
     protected function setUp(): void
     {
         parent::setUp();
 
         self::bootKernel();
+        self::setMultishopFeatureActive(true);
         Shop::resetContext();
-
-        // Control feature availability without changing the test shop configuration.
-        $this->multishopEnabled = true;
-        $multistoreFeature = $this->createMock(MultistoreFeature::class);
-        $multistoreFeature->method('isUsed')->willReturnCallback(
-            fn (): bool => $this->multishopEnabled
-        );
-        self::$kernel->getContainer()->set(MultistoreFeature::class, $multistoreFeature);
 
         $this->multishopContext = self::$kernel->getContainer()->get('prestashop.adapter.shop.context');
     }
@@ -100,7 +133,7 @@ class MultishopCommandListenerTest extends KernelTestCase
 
     public function testOptionsAreNotShownWhenMultishopIsDisabled(): void
     {
-        $this->multishopEnabled = false;
+        self::setMultishopFeatureActive(false);
 
         [$commandStatus, $commandOutput] = $this->runApplication('multishop:probe --help');
         [$listStatus, $listOutput] = $this->runApplication('list --help');
@@ -115,7 +148,7 @@ class MultishopCommandListenerTest extends KernelTestCase
 
     public function testCommandRunsWithoutMultishopOptionsWhenDisabled(): void
     {
-        $this->multishopEnabled = false;
+        self::setMultishopFeatureActive(false);
         Shop::setContext(Shop::CONTEXT_ALL);
 
         [$status] = $this->runApplication('multishop:probe');
@@ -126,13 +159,53 @@ class MultishopCommandListenerTest extends KernelTestCase
 
     public function testMultishopOptionsAreRejectedWhenDisabled(): void
     {
-        $this->multishopEnabled = false;
+        self::setMultishopFeatureActive(false);
 
         foreach (['id_shop', 'id_shop_group'] as $option) {
             [$status, $output] = $this->runApplication(sprintf('multishop:probe --%s=1', $option));
 
             $this->assertSame(Command::FAILURE, $status);
             $this->assertStringContainsString('--' . $option, $output);
+        }
+    }
+
+    public function testOptionsAreNotRegisteredWhenLegacyConfigurationIsNotLoaded(): void
+    {
+        Configuration::resetStaticCache();
+        $this->assertFalse(Configuration::configurationIsLoaded());
+
+        try {
+            $definition = $this->createApplication()->getDefinition();
+
+            $this->assertFalse($definition->hasOption('id_shop'));
+            $this->assertFalse($definition->hasOption('id_shop_group'));
+        } finally {
+            Configuration::loadConfiguration();
+            Shop::resetStaticCache();
+        }
+    }
+
+    public function testCommandRunsWhenMultishopCheckFails(): void
+    {
+        $database = Db::getInstance();
+        $unavailableDatabase = $this->createMock(Db::class);
+        $unavailableDatabase->expects($this->atLeastOnce())->method('getValue')->willThrowException(
+            new PrestaShopException('Database unavailable')
+        );
+        Shop::resetStaticCache();
+        Db::setInstanceForTesting($unavailableDatabase);
+
+        try {
+            $this->assertTrue(Configuration::configurationIsLoaded());
+            $definition = $this->createApplication()->getDefinition();
+            [$status] = $this->runApplication('multishop:probe');
+
+            $this->assertFalse($definition->hasOption('id_shop'));
+            $this->assertFalse($definition->hasOption('id_shop_group'));
+            $this->assertSame(Command::SUCCESS, $status);
+        } finally {
+            Db::setInstanceForTesting($database);
+            Shop::resetStaticCache();
         }
     }
 
@@ -179,8 +252,7 @@ class MultishopCommandListenerTest extends KernelTestCase
      */
     private function runApplication(string $input, ?Command $command = null): array
     {
-        $application = new PrestaShopApplication(self::$kernel);
-        $application->setAutoExit(false);
+        $application = $this->createApplication();
 
         if ($command !== null) {
             $application->add($command);
@@ -196,5 +268,21 @@ class MultishopCommandListenerTest extends KernelTestCase
         $status = $application->run(new StringInput($input), $output);
 
         return [$status, $output->fetch()];
+    }
+
+    private static function setMultishopFeatureActive(bool $active): void
+    {
+        Configuration::updateGlobalValue('PS_MULTISHOP_FEATURE_ACTIVE', (int) $active);
+        Configuration::resetStaticCache();
+        Configuration::loadConfiguration();
+        Shop::resetStaticCache();
+    }
+
+    private function createApplication(): PrestaShopApplication
+    {
+        $application = new PrestaShopApplication(self::$kernel);
+        $application->setAutoExit(false);
+
+        return $application;
     }
 }

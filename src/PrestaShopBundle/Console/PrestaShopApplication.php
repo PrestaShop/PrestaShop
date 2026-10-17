@@ -10,14 +10,13 @@ namespace PrestaShopBundle\Console;
 
 use AdminAPIKernel;
 use AdminKernel;
+use Configuration;
 use FrontKernel;
-use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
+use PrestaShopException;
+use Shop;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Dedicated application for Symfony console that addition adds default parameter app-id
@@ -25,25 +24,31 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 class PrestaShopApplication extends Application
 {
-    public function __construct(
-        KernelInterface $kernel,
-        private readonly bool $legacyBootstrapSucceeded = true
-    ) {
-        parent::__construct($kernel);
-    }
-
-    public function doRun(InputInterface $input, OutputInterface $output): int
+    protected function getDefaultInputDefinition(): InputDefinition
     {
-        // Multishop options must be registered before input parsing, but the
-        // kernel must be booted first to check whether multishop is enabled.
-        $kernel = $this->getKernel();
-        $kernel->boot();
+        $definition = parent::getDefaultInputDefinition();
+        $definition->addOption(new InputOption(
+            'app-id',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'Specify a PrestaShop Application ID.',
+            'admin',
+            [AdminKernel::APP_ID, AdminAPIKernel::APP_ID, FrontKernel::APP_ID]
+        ));
 
-        // Some CLI commands can run even if the legacy bootstrap fails,
-        // so skip the multishop feature check in that case.
-        if ($this->legacyBootstrapSucceeded && $kernel->getContainer()->get(MultistoreFeature::class)->isUsed()) {
-            $definition = $this->getDefinition();
+        $multishopUsed = false;
 
+        // The input definition is built before the Symfony kernel boots.
+        // Only check the multishop feature when the legacy configuration is loaded.
+        if (Configuration::configurationIsLoaded()) {
+            try {
+                $multishopUsed = Shop::isFeatureActive();
+            } catch (PrestaShopException $e) {
+                // Multishop options are unavailable when the legacy database check fails.
+            }
+        }
+
+        if ($multishopUsed) {
             $definition->addOption(new InputOption(
                 'id_shop',
                 null,
@@ -58,21 +63,6 @@ class PrestaShopApplication extends Application
                 'Specify shop group context.'
             ));
         }
-
-        return parent::doRun($input, $output);
-    }
-
-    protected function getDefaultInputDefinition(): InputDefinition
-    {
-        $definition = parent::getDefaultInputDefinition();
-        $definition->addOption(new InputOption(
-            'app-id',
-            null,
-            InputOption::VALUE_REQUIRED,
-            'Specify a PrestaShop Application ID.',
-            'admin',
-            [AdminKernel::APP_ID, AdminAPIKernel::APP_ID, FrontKernel::APP_ID]
-        ));
 
         return $definition;
     }
