@@ -10,7 +10,7 @@
 	</ul>
 	{/if}
 </div>
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	function checkAllAssociatedShops($tree)
 	{
 		$tree.find(":input[type=checkbox]").each(
