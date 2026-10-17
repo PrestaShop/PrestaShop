@@ -73,3 +73,80 @@ services:
       arguments:
         $employeeRepository: '@PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository'
         $requestStack: '@request_stack'
+
+    # The FO legacy container has no FlysystemBundle, so the storages declared under
+    # "flysystem.storages" in app/config/config.yml are wired manually here. A shop moving a
+    # storage to another backend has to redefine the matching "prestashop.filesystem.<name>"
+    # service for this container too, from its module's config/front/services.yml.
+    prestashop.flysystem.visibility_converter:
+        class: League\Flysystem\UnixVisibility\PortableVisibilityConverter
+        # Files and directories keep the permissions PrestaShop has always used (0644 / 0755),
+        # as the web server has to read them
+        arguments: [ 0o644, 0o600, 0o755, 0o700, 'public' ]
+
+    prestashop.filesystem.default:
+        class: League\Flysystem\Filesystem
+        arguments:
+            - !service
+                class: League\Flysystem\Local\LocalFilesystemAdapter
+                arguments: [ !php/const _PS_ROOT_DIR_, '@prestashop.flysystem.visibility_converter' ]
+            - { visibility: 'public', directory_visibility: 'public' }
+
+    prestashop.filesystem.images:
+        class: League\Flysystem\Filesystem
+        arguments:
+            - !service
+                class: League\Flysystem\Local\LocalFilesystemAdapter
+                arguments: [ !php/const _PS_IMG_DIR_, '@prestashop.flysystem.visibility_converter' ]
+            - { visibility: 'public', directory_visibility: 'public' }
+
+    prestashop.filesystem.uploads:
+        class: League\Flysystem\Filesystem
+        arguments:
+            - !service
+                class: League\Flysystem\Local\LocalFilesystemAdapter
+                arguments: [ !php/const _PS_UPLOAD_DIR_, '@prestashop.flysystem.visibility_converter' ]
+            - { visibility: 'public', directory_visibility: 'public' }
+
+    prestashop.filesystem.downloads:
+        class: League\Flysystem\Filesystem
+        arguments:
+            - !service
+                class: League\Flysystem\Local\LocalFilesystemAdapter
+                arguments: [ !php/const _PS_DOWNLOAD_DIR_, '@prestashop.flysystem.visibility_converter' ]
+            - { visibility: 'public', directory_visibility: 'public' }
+
+    prestashop.storage.default:
+        class: PrestaShopBundle\Storage\FlysystemStorage
+        arguments:
+            - '@prestashop.filesystem.default'
+        tags:
+            - { name: prestashop.storage, storage_name: default }
+
+    prestashop.storage.images:
+        class: PrestaShopBundle\Storage\FlysystemStorage
+        arguments:
+            - '@prestashop.filesystem.images'
+        tags:
+            - { name: prestashop.storage, storage_name: images }
+
+    prestashop.storage.uploads:
+        class: PrestaShopBundle\Storage\FlysystemStorage
+        arguments:
+            - '@prestashop.filesystem.uploads'
+        tags:
+            - { name: prestashop.storage, storage_name: uploads }
+
+    prestashop.storage.downloads:
+        class: PrestaShopBundle\Storage\FlysystemStorage
+        arguments:
+            - '@prestashop.filesystem.downloads'
+        tags:
+            - { name: prestashop.storage, storage_name: downloads }
+
+    PrestaShop\PrestaShop\Core\Storage\FactoryStorageInterface:
+        class: PrestaShopBundle\Storage\FactoryStorage
+        public: true
+        # The locator is filled with every tagged storage by StorageCollectorPass.
+        arguments:
+            $storages: !service_locator { }
