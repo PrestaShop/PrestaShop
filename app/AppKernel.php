@@ -4,6 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+use League\FlysystemBundle\FlysystemBundle;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\CachedModuleRepository;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
@@ -52,6 +53,7 @@ abstract class AppKernel extends Kernel
             new Symfony\UX\TwigComponent\TwigComponentBundle(),
             new Twig\Extra\TwigExtraBundle\TwigExtraBundle(),
             new Symfony\UX\Icons\UXIconsBundle(),
+            new FlysystemBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
@@ -196,6 +198,11 @@ abstract class AppKernel extends Kernel
             $container->setParameter('container.autowiring.strict_mode', true);
             $container->setParameter('container.dumper.inline_class_loader', false);
             $container->setParameter('prestashop.module_dir', _PS_MODULE_DIR_);
+            // Roots of the storages defined under "flysystem.storages", as those directories can
+            // be moved by overriding the matching constants
+            $container->setParameter('prestashop.img_dir', _PS_IMG_DIR_);
+            $container->setParameter('prestashop.upload_dir', _PS_UPLOAD_DIR_);
+            $container->setParameter('prestashop.download_dir', _PS_DOWNLOAD_DIR_);
             /* @deprecated kernel.active_modules is deprecated. Use prestashop.active_modules instead. */
             $container->setParameter('kernel.active_modules', $activeModules);
             $container->setParameter('prestashop.active_modules', $activeModules);

@@ -1,0 +1,45 @@
+services:
+  _defaults:
+    public: false
+
+  # Storages provided by the core. Each one wraps the Flysystem filesystem of the same name,
+  # configured under "flysystem.storages" in app/config/config.yml, and is collected by
+  # PrestaShopBundle\DependencyInjection\Compiler\StorageCollectorPass thanks to its tag.
+  #
+  # A shop moves a storage to another backend by redefining its "prestashop.filesystem.<name>"
+  # service from a module, and a module needing a storage of its own registers it by tagging a
+  # service as "prestashop.storage".
+  prestashop.storage.default:
+    class: PrestaShopBundle\Storage\FlysystemStorage
+    arguments:
+      - '@prestashop.filesystem.default'
+    tags:
+      - { name: prestashop.storage, storage_name: default }
+
+  prestashop.storage.images:
+    class: PrestaShopBundle\Storage\FlysystemStorage
+    arguments:
+      - '@prestashop.filesystem.images'
+    tags:
+      - { name: prestashop.storage, storage_name: images }
+
+  prestashop.storage.uploads:
+    class: PrestaShopBundle\Storage\FlysystemStorage
+    arguments:
+      - '@prestashop.filesystem.uploads'
+    tags:
+      - { name: prestashop.storage, storage_name: uploads }
+
+  prestashop.storage.downloads:
+    class: PrestaShopBundle\Storage\FlysystemStorage
+    arguments:
+      - '@prestashop.filesystem.downloads'
+    tags:
+      - { name: prestashop.storage, storage_name: downloads }
+
+  PrestaShop\PrestaShop\Core\Storage\FactoryStorageInterface:
+    class: PrestaShopBundle\Storage\FactoryStorage
+    public: true
+    # The locator is filled with every tagged storage by StorageCollectorPass.
+    arguments:
+      $storages: !service_locator { }

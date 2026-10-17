@@ -116,3 +116,43 @@ api_platform:
   mapping:
     paths:
       - '%kernel.project_dir%/src/PrestaShopBundle/ApiPlatform/Resources'
+
+# Pluggable file storage (league/flysystem-bundle).
+# These are the core defaults: every storage targets the local disk, so that behavior is
+# unchanged. A shop willing to store its files elsewhere (S3, SFTP, ...) installs the matching
+# adapter package and redefines the "prestashop.filesystem.<name>" service it wants to move,
+# from a module of its own, which survives upgrades as this file does not:
+#
+#   modules/<module>/config/services.yml        for the Symfony containers
+#   modules/<module>/config/front/services.yml  for the legacy front office container
+#
+# Credentials belong in environment variables, not in these files.
+# See https://github.com/thephpleague/flysystem-bundle
+flysystem:
+  storages:
+    prestashop.filesystem.default:
+      adapter: 'local'
+      options:
+        directory: '%kernel.project_dir%/'
+      # Files and directories keep the permissions PrestaShop has always used (0644 / 0755),
+      # as the web server has to read them
+      visibility: 'public'
+      directory_visibility: 'public'
+    prestashop.filesystem.images:
+      adapter: 'local'
+      options:
+        directory: '%prestashop.img_dir%'
+      visibility: 'public'
+      directory_visibility: 'public'
+    prestashop.filesystem.uploads:
+      adapter: 'local'
+      options:
+        directory: '%prestashop.upload_dir%'
+      visibility: 'public'
+      directory_visibility: 'public'
+    prestashop.filesystem.downloads:
+      adapter: 'local'
+      options:
+        directory: '%prestashop.download_dir%'
+      visibility: 'public'
+      directory_visibility: 'public'
