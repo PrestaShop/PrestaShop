@@ -1,0 +1,111 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/csp.bundle.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+  {# The "Clear log" toolbar button submits this CSRF-protected POST form (the toolbar itself renders only a link). #}
+  <form id="csp-clear-log-form" method="post" action="{{ path('admin_security_csp_clear_log', cspContextParams) }}" class="d-none">
+    <input type="hidden" name="_token" value="{{ csrf_token('clear-csp-log') }}">
+  </form>
+
+  <ul class="nav nav-tabs mb-2" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link{{ cspSelectedContext == 'front' ? ' active' : '' }}" href="{{ path('admin_security_csp_index') }}">
+        {{ 'Storefront'|trans({}, 'Admin.Shopparameters.Feature') }}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{{ cspSelectedContext == 'admin' ? ' active' : '' }}" href="{{ path('admin_security_csp_index', {context: 'admin'}) }}">
+        {{ 'Back office'|trans({}, 'Admin.Advparameters.Feature') }}
+      </a>
+    </li>
+  </ul>
+
+  {% if cspLogFull %}
+    <div class="alert alert-warning" role="alert">
+      <p class="alert-text">
+        {{ 'The violation log is full. New sources are no longer recorded until you clear it; already-recorded sources keep counting. Review and clear the log to collect new sources.'|trans({}, 'Admin.Advparameters.Notification') }}
+      </p>
+    </div>
+  {% endif %}
+
+  {% if cspShowEnforceNudge %}
+    <div class="alert alert-info" role="alert">
+      <p class="alert-text">
+        {{ '%count% reported source(s) are not yet on your allow-list. If you turn off report-only mode now, they will be blocked. Review them in the log below and allow the ones your site needs first.'|trans({'%count%': cspUnreviewedCount}, 'Admin.Advparameters.Notification') }}
+      </p>
+    </div>
+  {% endif %}
+
+  {% if cspHasWeakeningSources %}
+    <div class="alert alert-warning" role="alert">
+      <p class="alert-text">
+        {% if cspIsEnforcing %}
+          {{ 'Your allow-list contains sources that weaken the policy (such as \'unsafe-inline\' or \'unsafe-eval\'). The policy is enforced, but allowing \'unsafe-inline\' means it no longer protects against inline-script cross-site scripting.'|trans({}, 'Admin.Advparameters.Notification') }}
+        {% else %}
+          {{ 'Your allow-list contains sources that weaken the policy (such as \'unsafe-inline\' or \'unsafe-eval\'). If you enforce it as is, allowing \'unsafe-inline\' means it will not protect against inline-script cross-site scripting.'|trans({}, 'Admin.Advparameters.Notification') }}
+        {% endif %}
+      </p>
+    </div>
+  {% endif %}
+
+  {{ form_start(cspForm, {attr: {class: 'form'}, action: path('admin_security_csp_save', cspContextParams)}) }}
+    <div class="card" id="configuration_fieldset_csp">
+      <h3 class="card-header">
+        <i class="material-icons">security</i> {{ 'Content Security Policy'|trans({}, 'Admin.Advparameters.Feature') }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_widget(cspForm) }}
+          {{ form_rest(cspForm) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
+    </div>
+  {{ form_end(cspForm) }}
+
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: cspLogGrid}) }}
+
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: cspRuleGrid}) }}
+
+  {% if cspBuiltInSources is not empty %}
+    <div class="card mt-2" id="csp_built_in_sources">
+      <h3 class="card-header">
+        <i class="material-icons">verified_user</i> {{ 'Built-in back-office sources'|trans({}, 'Admin.Advparameters.Feature') }}
+      </h3>
+      <div class="card-body">
+        <p class="text-muted">
+          {{ 'These sources are allowed by default because the back office needs them to work correctly, so they never appear as violations above and cannot be removed.'|trans({}, 'Admin.Advparameters.Feature') }}
+        </p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{ 'Directive'|trans({}, 'Admin.Advparameters.Feature') }}</th>
+              <th>{{ 'Allowed source'|trans({}, 'Admin.Advparameters.Feature') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in cspBuiltInSources %}
+              <tr>
+                <td>{{ row.directive }}</td>
+                <td>{{ row.source }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

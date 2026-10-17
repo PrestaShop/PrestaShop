@@ -1,5 +1,5 @@
 # Doctrine Entities Index (generated 2026-04-25)
-# 24 entities in src/PrestaShopBundle/Entity/
+# 26 entities in src/PrestaShopBundle/Entity/
 #
 # Columns: scalar DB-mapped fields. Relations: association targets.
 
@@ -24,6 +24,12 @@
 ## AttributeLang
   columns: name 
   relations: ManyToOne→Attribute ManyToOne→Lang 
+
+## CspLog
+  columns: id shopId context directive source documentUri sample sourceFile lineNumber hits dateAdd dateUpd 
+
+## CspRule
+  columns: id shopId context directive source dateAdd 
 
 ## FeatureFlag
   columns: id name type state labelWording labelDomain descriptionWording descriptionDomain stability 
