@@ -77,6 +77,8 @@ Common slips unrelated to the feature itself — check before pushing:
 - **Squash noise commits** (review fixups, reverts) so history stays readable.
 - **Target the lowest applicable branch** (`9.2.x` for bug fixes, `develop` for features) — see Branching & Versioning above.
 
+`php .ai/bin/check-conventions.php <target branch>` checks a branch diff before pushing: the context files it falls under, the slips above that a script can see, and the coding standards of the added code.
+
 ## Skills
 
 | Skill | Path | Trigger |
