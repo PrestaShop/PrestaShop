@@ -1,5 +1,11 @@
-/*! jQuery UI - v1.10.3 - 2013-06-12
-* http://jqueryui.com
-* Copyright 2013 jQuery Foundation and other contributors; Licensed MIT */
-
+/*!
+ * jQuery UI Autocomplete 1.13.3
+ * https://jqueryui.com
+ *
+ * Copyright OpenJS Foundation and other contributors
+ * Released under the MIT license.
+ * https://jquery.org/license
+ *
+ * https://api.jqueryui.com/autocomplete/#theming
+ */
 .ui-autocomplete{position:absolute;top:0;left:0;cursor:default}
