@@ -15,7 +15,10 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\BulkDeleteBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\DeleteBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\EditBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BulkDeleteBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForEditing;
@@ -609,6 +612,169 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
             $this->getBusinessEntityByName($name)->getUpdatedAt(),
             'The updated_at timestamp was not refreshed by the edit.'
         );
+    }
+
+    /**
+     * @When I delete the business entity :name
+     */
+    public function iDeleteTheBusinessEntity(string $name)
+    {
+        $businessEntity = $this->getBusinessEntityByName($name);
+
+        try {
+            $this->getCommandBus()->handle(new DeleteBusinessEntityCommand($businessEntity->getId()));
+        } catch (BusinessEntityException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I bulk delete the business entities :names
+     */
+    public function iBulkDeleteTheBusinessEntities(string $names)
+    {
+        $ids = [];
+        foreach (array_map('trim', explode(',', $names)) as $name) {
+            $ids[] = $this->getBusinessEntityByName($name)->getId();
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteBusinessEntityCommand($ids));
+        } catch (BusinessEntityException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I bulk delete the business entities :names together with the unknown ids :ids
+     */
+    public function iBulkDeleteTheBusinessEntitiesTogetherWithUnknownIds(string $names, string $ids): void
+    {
+        $businessEntityIds = [];
+        foreach (array_map('trim', explode(',', $names)) as $name) {
+            $businessEntityIds[] = $this->getBusinessEntityByName($name)->getId();
+        }
+        foreach (array_map('trim', explode(',', $ids)) as $id) {
+            $businessEntityIds[] = (int) $id;
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteBusinessEntityCommand($businessEntityIds));
+        } catch (BusinessEntityException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I bulk delete the business entities with ids :ids
+     */
+    public function iBulkDeleteTheBusinessEntitiesWithIds(string $ids): void
+    {
+        $businessEntityIds = array_map('intval', array_map('trim', explode(',', $ids)));
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteBusinessEntityCommand($businessEntityIds));
+        } catch (BusinessEntityException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I bulk delete an empty selection of business entities
+     */
+    public function iBulkDeleteAnEmptySelection(): void
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteBusinessEntityCommand([]));
+        } catch (BusinessEntityException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get a bulk delete error reporting :count failure(s)
+     */
+    public function assertLastErrorIsBulkDeleteWithFailures(int $count): void
+    {
+        /** @var BulkDeleteBusinessEntityException $exception */
+        $exception = $this->assertLastErrorIs(BulkDeleteBusinessEntityException::class);
+
+        Assert::assertCount(
+            $count,
+            $exception->getExceptions(),
+            sprintf('Expected the bulk delete to report %d failure(s)', $count)
+        );
+    }
+
+    /**
+     * @Then the business entity :name should be soft deleted
+     */
+    public function businessEntityShouldBeSoftDeleted(string $name)
+    {
+        $businessEntityId = $this->getBusinessEntityByName($name)->getId();
+
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $entityManager->clear();
+
+        $deleted = (bool) $entityManager->getConnection()->fetchOne(
+            'SELECT deleted FROM ' . _DB_PREFIX_ . 'business_entity WHERE id_business_entity = ?',
+            [$businessEntityId]
+        );
+
+        Assert::assertTrue(
+            $deleted,
+            sprintf('Business entity "%s" was expected to be soft deleted in database', $name)
+        );
+    }
+
+    /**
+     * @Then the business entity :name should not be deleted
+     */
+    public function businessEntityShouldNotBeDeleted(string $name)
+    {
+        $businessEntityId = $this->getBusinessEntityByName($name)->getId();
+
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $entityManager->clear();
+
+        $deleted = (bool) $entityManager->getConnection()->fetchOne(
+            'SELECT deleted FROM ' . _DB_PREFIX_ . 'business_entity WHERE id_business_entity = ?',
+            [$businessEntityId]
+        );
+
+        Assert::assertFalse(
+            $deleted,
+            sprintf('Business entity "%s" was not expected to be deleted in database', $name)
+        );
+    }
+
+    /**
+     * @Then the business entity :name should no longer be returned by the repository
+     */
+    public function businessEntityShouldNoLongerBeReturnedByTheRepository(string $name)
+    {
+        $businessEntityId = $this->getBusinessEntityByName($name)->getId();
+
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        /** @var BusinessEntity|null $businessEntity */
+        $businessEntity = $entityManager->getRepository(BusinessEntity::class)->findById($businessEntityId);
+
+        Assert::assertNull(
+            $businessEntity,
+            sprintf('Business entity "%s" should no longer be returned by the repository', $name)
+        );
+    }
+
+    /**
+     * @When I delete the business entity with id :businessEntityId
+     */
+    public function iDeleteTheBusinessEntityWithId(int $businessEntityId): void
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteBusinessEntityCommand($businessEntityId));
+        } catch (BusinessEntityException $e) {
+            $this->setLastException($e);
+        }
     }
 
     private function getBusinessEntityByName(string $name): BusinessEntity
