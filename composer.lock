@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "da8da52e2ffda4036d9d5f3d3685ee4f",
+    "content-hash": "a99f696bd47f2c8b277d693af5321f60",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5376,16 +5376,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-customer-follow-up",
+            "version": "dev-domain/country",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "26de4de3e54594d38acade3f8c22246b18031d8b"
+                "url": "https://github.com/PrestaEdit/ps_apiresources.git",
+                "reference": "552faca547b8ac772ca4c91a3166a67d5ec92be3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/26de4de3e54594d38acade3f8c22246b18031d8b",
-                "reference": "26de4de3e54594d38acade3f8c22246b18031d8b",
+                "url": "https://api.github.com/repos/PrestaEdit/ps_apiresources/zipball/552faca547b8ac772ca4c91a3166a67d5ec92be3",
+                "reference": "552faca547b8ac772ca4c91a3166a67d5ec92be3",
                 "shasum": ""
             },
             "require": {
@@ -5469,9 +5469,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/jolelievre/ps_apiresources/tree/customer-follow-up"
+                "source": "https://github.com/PrestaEdit/ps_apiresources/tree/domain/country"
             },
-            "time": "2026-10-14T22:25:04+00:00"
+            "time": "2026-10-20T08:43:44+00:00"
         },
         {
             "name": "prestashop/ps_banner",
