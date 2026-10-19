@@ -22,9 +22,12 @@ use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionProvider;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenter;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
+use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
+use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use ReflectionClass;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -95,6 +98,7 @@ class CommonController extends PrestaShopAdminController
      * route): the writer receives the current ShopConstraint and toggles the matching row.
      *
      * @param Request $request
+     * @param LegacyUrlConverter $legacyUrlConverter
      * @param string $entityName
      * @param int $entityId
      * @param string $moduleName normalized module name, can be "_core" for core properties
@@ -103,6 +107,7 @@ class CommonController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('ROLE_EMPLOYEE')")]
     public function toggleExtraPropertyAction(
         Request $request,
+        #[Autowire(service: 'prestashop.bundle.routing.converter.legacy_url_converter')] LegacyUrlConverter $legacyUrlConverter,
         string $entityName,
         int $entityId,
         string $moduleName,
@@ -122,7 +127,7 @@ class CommonController extends PrestaShopAdminController
         // whether a definition exists.
         $matched = $repository->findDefinitionByModuleAndField($entityName, $resolvedModuleName, $propertyName);
         if (null === $matched || !$this->isGranted('update', $matched->getControllerName())) {
-            return $this->buildExtraPropertyToggleResponse($request, false, 'Access denied.', Response::HTTP_FORBIDDEN);
+            return $this->buildExtraPropertyToggleResponse($request, $legacyUrlConverter, false, 'Access denied.', Response::HTTP_FORBIDDEN);
         }
 
         /** @var ExtraPropertyWriterInterface $writer */
@@ -141,6 +146,7 @@ class CommonController extends PrestaShopAdminController
         } catch (Throwable) {
             return $this->buildExtraPropertyToggleResponse(
                 $request,
+                $legacyUrlConverter,
                 false,
                 $this->trans('An error occurred while saving.', [], 'Admin.Notifications.Error'),
                 Response::HTTP_INTERNAL_SERVER_ERROR,
@@ -149,6 +155,7 @@ class CommonController extends PrestaShopAdminController
 
         return $this->buildExtraPropertyToggleResponse(
             $request,
+            $legacyUrlConverter,
             true,
             $this->trans('Update successful.', [], 'Admin.Notifications.Success'),
         );
@@ -156,6 +163,7 @@ class CommonController extends PrestaShopAdminController
 
     private function buildExtraPropertyToggleResponse(
         Request $request,
+        LegacyUrlConverter $legacyUrlConverter,
         bool $status,
         string $message,
         int $statusCode = Response::HTTP_OK,
@@ -176,7 +184,18 @@ class CommonController extends PrestaShopAdminController
             return new RedirectResponse($referer);
         }
 
-        return $this->redirectToRoute('admin_dashboard');
+        // Resolve the Dashboard through the route converter so that a migrated Symfony
+        // route is used only when its feature flag is enabled. PrestaShop 9.2.x and
+        // installations without the migration still use the legacy controller route.
+        try {
+            return $this->redirect($legacyUrlConverter->convertByParameters([
+                'controller' => 'AdminDashboard',
+            ]));
+        } catch (RouteNotFoundException) {
+            return $this->redirectToRoute('admin_legacy_controller_route', [
+                'controller' => 'AdminDashboard',
+            ]);
+        }
     }
 
     /**
