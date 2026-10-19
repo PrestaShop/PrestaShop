@@ -146,6 +146,34 @@ Feature: country management
       | shop_association           | 1                                                |
     Then I should get error that call prefix is invalid
 
+  Scenario: adding a country with an unknown zone is rejected
+    Given language "language1" with locale "en-US" exists
+    When I add new country "unknownZone" with following properties:
+      | name[en-US]                | unknownZoneName                                  |
+      | iso_code                   | TZ                                               |
+      | call_prefix                | 5                                                |
+      | default_currency           | 1                                                |
+      | zone                       | 99999                                            |
+      | need_zip_code              | false                                            |
+      | zip_code_format            |                                                  |
+      | address_format             | firstname lastname\naddress1\ncity\nCountry:name |
+      | is_enabled                 | true                                             |
+      | contains_states            | false                                            |
+      | need_identification_number | false                                            |
+      | display_tax_label          | true                                             |
+      | shop_association           | 1                                                |
+    Then I should get error that zone was not found
+
+  Scenario: editing a country with an unknown zone is rejected
+    When I edit country "test" with following properties:
+      | zone | 99999 |
+    Then I should get error that zone was not found
+
+  Scenario: deleting the default country of the shop is refused
+    Given the default country of the shop is referenced as "defaultCountry"
+    When I delete country "defaultCountry"
+    Then I should get an error that the default country cannot be deleted
+
   Scenario: Delete country
     When I delete country "test"
     Then country "test" should be deleted

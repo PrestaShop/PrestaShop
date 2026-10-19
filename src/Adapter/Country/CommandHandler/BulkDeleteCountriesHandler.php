@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Adapter\Country\Validate\CountryValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkDeleteCountriesCommand;
@@ -23,6 +24,7 @@ final class BulkDeleteCountriesHandler extends AbstractBulkCommandHandler implem
 {
     public function __construct(
         private readonly CountryRepository $countryRepository,
+        private readonly CountryValidator $countryValidator,
     ) {
     }
 
@@ -39,6 +41,7 @@ final class BulkDeleteCountriesHandler extends AbstractBulkCommandHandler implem
      */
     protected function handleSingleAction(mixed $id, mixed $command): void
     {
+        $this->countryValidator->assertIsNotDefaultCountry($id);
         $this->countryRepository->delete($id);
     }
 
