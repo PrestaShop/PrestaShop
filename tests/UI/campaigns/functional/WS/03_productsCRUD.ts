@@ -443,8 +443,6 @@ describe('WS - Products : CRUD', async () => {
                 '2',
               );
               expect(objectNodeValueFR).to.eq(createNodeValueFR);
-            } else if (oNode.nodeName === 'position_in_category') {
-              // @todo : https://github.com/PrestaShop/PrestaShop/issues/14903
             } else if (oNode.nodeName === 'associations') {
               // Don't check all associations at the moment
             } else {
@@ -1135,8 +1133,6 @@ describe('WS - Products : CRUD', async () => {
                 '2',
               );
               expect(objectNodeValueFR).to.eq(updateNodeValueFR);
-            } else if (oNode.nodeName === 'position_in_category') {
-              // @todo : https://github.com/PrestaShop/PrestaShop/issues/14903
             } else if (oNode.nodeName === 'associations') {
               // Don't check all associations at the moment
             } else {
