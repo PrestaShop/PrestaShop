@@ -110,7 +110,6 @@ export const saveTranslations = async ({commit}: {commit: Commit}, payload: Reco
   }
 };
 
-/* eslint-disable-next-line no-unused-vars */
 export const resetTranslation = async (params: Record<string, any>, payload: Record<string, any>): Promise<void> => {
   const {url} = payload;
   const {translations} = payload;

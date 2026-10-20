@@ -47,7 +47,6 @@ $(() => {
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input.js-copier-source-title',
-    /* eslint-disable-next-line max-len */
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input.js-copier-destination-friendly-url`,
   });
 

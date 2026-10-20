@@ -50,13 +50,11 @@ $(() => {
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="category[name]"]',
-    /* eslint-disable-next-line max-len */
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="category[link_rewrite]"]`,
   });
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="root_category[name]"]',
-    /* eslint-disable-next-line max-len */
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="root_category[link_rewrite]"]`,
   });
 
