@@ -357,7 +357,16 @@ class OrderSlipCore extends ObjectModel
             }
         }
 
-        $order_slip->{'total_products_tax_' . $inc_or_ex_2} -= (float) $amount && !$amount_choosen ? (float) $amount : 0;
+        // WHY: the voucher comes off BOTH totals, each in its own tax base. $amount is the order's
+        // voucher from Order::$total_discounts and is tax included, so on a tax-included shop this used
+        // to subtract it from the tax-excluded total. Mirrors
+        // src/Adapter/Order/Refund/OrderSlipCreator.php, which carries the same two defects.
+        if ((float) $amount && !$amount_choosen) {
+            $order_slip->total_products_tax_incl -= (float) $order->total_discounts_tax_incl;
+            $order_slip->total_products_tax_excl -= (float) $order->total_discounts_tax_excl;
+        }
+
+        // WHY: read AFTER the deduction; which total it mirrors is unchanged.
         $order_slip->amount = $amount_choosen ? (float) $amount : $order_slip->{'total_products_tax_' . $inc_or_ex_1};
         $order_slip->shipping_cost_amount = $order_slip->total_shipping_tax_incl;
 
