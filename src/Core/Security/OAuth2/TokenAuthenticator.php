@@ -100,11 +100,13 @@ class TokenAuthenticator extends AbstractAuthenticator
                 $this->logger->error('TokenAuthenticator: No external issuer specified');
                 throw new CustomUserMessageAuthenticationException(json_encode('No external issuer specified'));
             }
-            $this->autoSaveApiClient($jwtTokenUser);
+            $apiClient = $this->autoSaveApiClient($jwtTokenUser);
+        } else {
+            $apiClient = $this->findApiClient($jwtTokenUser);
         }
 
         // The token stays valid until it expires, so the client must be checked on every request
-        if (!$this->isApiClientEnabled($jwtTokenUser)) {
+        if (null === $apiClient || !$apiClient->isEnabled()) {
             $this->logger->error('TokenAuthenticator: API client is disabled or does not exist');
             throw new CustomUserMessageAuthenticationException(json_encode('Invalid credentials'));
         }
@@ -121,32 +123,33 @@ class TokenAuthenticator extends AbstractAuthenticator
      *
      * @param JwtTokenUser $jwtTokenUser
      */
-    private function autoSaveApiClient(JwtTokenUser $jwtTokenUser): void
+    private function autoSaveApiClient(JwtTokenUser $jwtTokenUser): ApiClient
     {
-        try {
-            $this->apiClientRepository->getByClientId($jwtTokenUser->getUserIdentifier(), $jwtTokenUser->getExternalIssuer());
-        } catch (NoResultException) {
-            $apiClient = new ApiClient();
-            $apiClient
-                ->setClientId($jwtTokenUser->getUserIdentifier())
-                ->setClientName($jwtTokenUser->getUserIdentifier())
-                ->setExternalIssuer($jwtTokenUser->getExternalIssuer())
-                ->setLifetime(3600)
-                ->setEnabled(true)
-            ;
-            $this->apiClientRepository->save($apiClient);
+        $apiClient = $this->findApiClient($jwtTokenUser);
+        if (null !== $apiClient) {
+            return $apiClient;
         }
+
+        $apiClient = new ApiClient();
+        $apiClient
+            ->setClientId($jwtTokenUser->getUserIdentifier())
+            ->setClientName($jwtTokenUser->getUserIdentifier())
+            ->setExternalIssuer($jwtTokenUser->getExternalIssuer())
+            ->setLifetime(3600)
+            ->setEnabled(true)
+        ;
+        $this->apiClientRepository->save($apiClient);
+
+        return $apiClient;
     }
 
-    private function isApiClientEnabled(JwtTokenUser $jwtTokenUser): bool
+    private function findApiClient(JwtTokenUser $jwtTokenUser): ?ApiClient
     {
         try {
-            $apiClient = $this->apiClientRepository->getByClientId($jwtTokenUser->getUserIdentifier(), $jwtTokenUser->getExternalIssuer());
+            return $this->apiClientRepository->getByClientId($jwtTokenUser->getUserIdentifier(), $jwtTokenUser->getExternalIssuer());
         } catch (NoResultException) {
-            return false;
+            return null;
         }
-
-        return $apiClient->isEnabled();
     }
 
     private function getAuthorizationServer(Request $request): ?AuthorisationServerInterface

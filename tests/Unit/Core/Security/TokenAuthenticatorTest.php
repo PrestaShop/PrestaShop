@@ -100,7 +100,7 @@ class TokenAuthenticatorTest extends TestCase
         $authorizationServer->method('isTokenValid')->willReturn(true);
         $authorizationServer->method('getJwtTokenUser')->willReturn(new JwtTokenUser('myclientid', [], 'https://issuer.example'));
         $apiClientRepository = $this->createMock(ApiClientRepository::class);
-        $apiClientRepository->method('getByClientId')->willReturn((new ApiClient())->setClientId('myclientid')->setEnabled($enabled));
+        $apiClientRepository->expects($this->once())->method('getByClientId')->willReturn((new ApiClient())->setClientId('myclientid')->setEnabled($enabled));
         $translator = $this->createMock(TranslatorInterface::class);
         $tokenAuthenticator = new TokenAuthenticator(
             [$authorizationServer],
