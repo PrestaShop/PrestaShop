@@ -158,9 +158,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
         // Disable legacy object model cache to prevent conflicts between scenarios.
         ObjectModel::disableCache();
-        /** @var ContextBuilderPreparer $preparer */
-        $preparer = static::getContainer()->get(ContextBuilderPreparer::class);
-        $preparer->prepareFromLegacyContext(Context::getContext());
+        self::prepareContextBuilders();
     }
 
     /**
@@ -625,6 +623,28 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         $realCacheDir = self::$kernel->getContainer()->getParameter('kernel.cache_dir');
         $warmupDir = substr($realCacheDir, 0, -1) . ('_' === substr($realCacheDir, -1) ? '-' : '_');
         self::$kernel->reboot($warmupDir);
+        // The rebooted container has fresh context builders
+        self::prepareContextBuilders();
+    }
+
+    /**
+     * The context services are built lazily from their builders: they start from the defaults of a fresh
+     * legacy context (default shop in single shop mode, default language), whatever the previous
+     * scenarios changed in it statically; a scenario sets the context it needs after the hooks.
+     */
+    protected static function prepareContextBuilders(): void
+    {
+        $legacyContext = Context::getContext();
+        $defaultShopId = (int) Configuration::get('PS_SHOP_DEFAULT');
+        Shop::setContext(Shop::CONTEXT_SHOP, $defaultShopId);
+        $legacyContext->shop = new Shop($defaultShopId);
+        Cache::clean('Shop::getCompleteListOfShopsID');
+        Cache::clean('StockAvailable::*');
+        $legacyContext->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+
+        /** @var ContextBuilderPreparer $preparer */
+        $preparer = static::getContainer()->get(ContextBuilderPreparer::class);
+        $preparer->prepareFromLegacyContext($legacyContext);
     }
 
     /**
