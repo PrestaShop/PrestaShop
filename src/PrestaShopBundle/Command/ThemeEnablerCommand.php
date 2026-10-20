@@ -31,7 +31,7 @@ final class ThemeEnablerCommand extends Command
 
     public function __construct(
         #[Autowire(service: 'prestashop.core.addon.theme.theme_manager')]
-        private ThemeManager $themeManager,
+        private readonly ThemeManager $themeManager,
         private readonly ContextBuilderPreparer $contextBuilderPreparer,
         private readonly Configuration $configuration,
     ) {
