@@ -445,8 +445,17 @@ class Module implements ModuleInterface
      */
     public function hasNewVersionAvailable(): bool
     {
-        return $this->attributes->get('version_available') !== 0
-            && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<');
+        if ($this->attributes->get('version_available') === 0) {
+            return false;
+        }
+
+        /*
+         * Compared against the version on disk rather than the one recorded in database, because the
+         * files are what a download would replace. A module updated by hand - a git clone, an upload
+         * over FTP - is ahead on disk while the database still holds the old version, and comparing
+         * against the database made an older package from the API look like an update.
+         */
+        return version_compare($this->disk->get('version'), $this->attributes->get('version_available'), '<');
     }
 
     /**
