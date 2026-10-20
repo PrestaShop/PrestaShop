@@ -85,8 +85,9 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
 
     private function updateOrderStateWithCommandData(OrderState $orderState, EditOrderStateCommand $command)
     {
+        // The localized values are merged: a language absent from the command keeps its stored value
         if (null !== $command->getName()) {
-            $orderState->name = $command->getName();
+            $orderState->name = array_replace(is_array($orderState->name) ? $orderState->name : [], $command->getName());
         }
 
         if (null !== $command->getColor()) {
@@ -109,7 +110,7 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
             $orderState->send_email = $command->isSendEmailEnabled();
 
             if ($orderState->send_email && null !== $command->getTemplate()) {
-                $orderState->template = $command->getTemplate();
+                $orderState->template = array_replace(is_array($orderState->template) ? $orderState->template : [], $command->getTemplate());
             }
         }
 
