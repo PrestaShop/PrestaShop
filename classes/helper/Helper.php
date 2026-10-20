@@ -82,9 +82,23 @@ class HelperCore
 
         if (isset($override_tpl_path) && file_exists($override_tpl_path)) {
             return $this->context->smarty->createTemplate($override_tpl_path, $this->context->smarty);
-        } else {
-            return $this->context->smarty->createTemplate($this->base_folder . $tpl_name, $this->context->smarty);
         }
+
+        // The helper templates are only shipped by the default back office theme, but Smarty resolves
+        // this relative path against the *current* theme - and on a Symfony page, where hooks such as
+        // displayAdminOrderTop are rendered, against no admin theme at all. Fall back to the default
+        // theme's copy rather than letting Smarty fail to find the template. Only used when the path
+        // does not resolve, so an existing theme override still wins.
+        if (defined('_PS_BO_ALL_THEMES_DIR_') && !$this->context->smarty->templateExists($this->base_folder . $tpl_name)) {
+            $defaultThemeTplPath = _PS_BO_ALL_THEMES_DIR_ . 'default' . DIRECTORY_SEPARATOR . 'template'
+                . DIRECTORY_SEPARATOR . $this->base_folder . $tpl_name;
+
+            if (file_exists($defaultThemeTplPath)) {
+                return $this->context->smarty->createTemplate($defaultThemeTplPath, $this->context->smarty);
+            }
+        }
+
+        return $this->context->smarty->createTemplate($this->base_folder . $tpl_name, $this->context->smarty);
     }
 
     /**
