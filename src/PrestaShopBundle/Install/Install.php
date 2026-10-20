@@ -1036,8 +1036,7 @@ class Install extends AbstractInstall
             return false;
         }
 
-        // Remove the install lock file
-        return Tools::deleteFile(PS_INSTALLATION_LOCK_FILE);
+        return true;
     }
 
     protected function executeAction(array $modules, string $action, string $errorMessage): bool
@@ -1255,7 +1254,8 @@ class Install extends AbstractInstall
 
         $this->removeInstallFolder();
 
-        return true;
+        // The installation is complete, remove the install lock file
+        return Tools::deleteFile(PS_INSTALLATION_LOCK_FILE);
     }
 
     /**
