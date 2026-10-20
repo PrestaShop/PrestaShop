@@ -39,6 +39,7 @@ final class AddCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler imp
 
         $this->assertIsValidLinkRewrite($command->getLocalisedFriendlyUrl());
         $this->assertDescriptionContainsCleanHtml($command->getLocalisedDescription());
+        $this->assertParentCategoryExists($command->getParentId());
 
         try {
             $cmsPageCategory = new CMSCategory();
