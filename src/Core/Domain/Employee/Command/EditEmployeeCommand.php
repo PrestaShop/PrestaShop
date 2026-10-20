@@ -68,9 +68,9 @@ class EditEmployeeCommand
     private $plainPassword;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    private $hasEnabledGravatar = false;
+    private $hasEnabledGravatar;
 
     /**
      * @param int $employeeId
@@ -101,7 +101,7 @@ class EditEmployeeCommand
     }
 
     /**
-     * @return FirstName
+     * @return FirstName|null
      */
     public function getFirstName()
     {
@@ -121,7 +121,7 @@ class EditEmployeeCommand
     }
 
     /**
-     * @return LastName
+     * @return LastName|null
      */
     public function getLastName()
     {
@@ -141,7 +141,7 @@ class EditEmployeeCommand
     }
 
     /**
-     * @return Email
+     * @return Email|null
      */
     public function getEmail()
     {
@@ -161,7 +161,7 @@ class EditEmployeeCommand
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getDefaultPageId()
     {
@@ -181,7 +181,7 @@ class EditEmployeeCommand
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getLanguageId()
     {
@@ -201,7 +201,7 @@ class EditEmployeeCommand
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
     public function isActive()
     {
@@ -221,7 +221,7 @@ class EditEmployeeCommand
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getProfileId()
     {
@@ -241,7 +241,7 @@ class EditEmployeeCommand
     }
 
     /**
-     * @return array
+     * @return array|null
      */
     public function getShopAssociation()
     {
@@ -284,7 +284,7 @@ class EditEmployeeCommand
     }
 
     /**
-     * @return bool
+     * @return bool|null Null when the gravatar setting is not changed
      */
     public function hasEnabledGravatar()
     {

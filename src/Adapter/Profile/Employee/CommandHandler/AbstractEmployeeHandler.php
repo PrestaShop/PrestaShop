@@ -54,7 +54,8 @@ abstract class AbstractEmployeeHandler extends AbstractObjectModelHandler
      */
     protected function assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee(Employee $employee)
     {
-        if (Context::getContext()->employee->id === $employee->id) {
+        // No employee in the context when the command comes from the Admin API or the CLI
+        if (Context::getContext()->employee?->id === $employee->id) {
             throw new EmployeeCannotChangeItselfException('Employee cannot change status of itself.', EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS);
         }
     }
