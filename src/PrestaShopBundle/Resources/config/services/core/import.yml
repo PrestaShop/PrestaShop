@@ -6,7 +6,7 @@ services:
     public: false
     arguments:
       - '@translator'
-      - '@prestashop.core.import.dir'
+      - '@PrestaShop\PrestaShop\Core\Import\ImportDirectory'
 
   prestashop.core.import.file_uploader:
     alias: 'PrestaShop\PrestaShop\Core\Import\File\FileUploader'
@@ -17,7 +17,7 @@ services:
   PrestaShop\PrestaShop\Core\Import\File\FileFinder:
     public: false
     arguments:
-      - '@prestashop.core.import.dir'
+      - '@PrestaShop\PrestaShop\Core\Import\ImportDirectory'
 
   prestashop.core.import.file_finder:
     alias: 'PrestaShop\PrestaShop\Core\Import\File\FileFinder'
@@ -39,7 +39,7 @@ services:
   PrestaShop\PrestaShop\Core\Import\File\FileRemoval:
     public: false
     arguments:
-      - '@prestashop.core.import.dir'
+      - '@PrestaShop\PrestaShop\Core\Import\ImportDirectory'
 
   prestashop.core.import.file_removal:
     alias: 'PrestaShop\PrestaShop\Core\Import\File\FileRemoval'
@@ -166,7 +166,7 @@ services:
       - '@prestashop.core.import.access_checker'
       - '@prestashop.adapter.import.entity_deleter'
       - '@prestashop.core.import.csv_file_reader'
-      - '@prestashop.core.import.dir'
-      - '@prestashop.core.configuration.ini_configuration'
+      - '@PrestaShop\PrestaShop\Core\Import\ImportDirectory'
+      - '@PrestaShop\PrestaShop\Core\Configuration\IniConfiguration'
 
   PrestaShop\PrestaShop\Core\Import\ImporterInterface: '@prestashop.core.import.importer'

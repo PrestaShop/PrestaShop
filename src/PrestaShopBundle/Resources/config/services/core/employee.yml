@@ -6,7 +6,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsChecker'
     arguments:
       - '@prestashop.adapter.multistore_feature'
-      - '@prestashop.adapter.shop.context'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Context'
 
   PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsCheckerInterface: '@prestashop.core.team.employee.configuration.options_checker'
 

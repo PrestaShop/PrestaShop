@@ -6,6 +6,7 @@
 
 use Composer\CaBundle\CaBundle;
 use PHPSQLParser\PHPSQLParser;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
@@ -3558,7 +3559,7 @@ exit;
         }
 
         /** @var CacheClearerInterface|null $symfonyCacheClearer */
-        $symfonyCacheClearer = $container->get('prestashop.adapter.cache.clearer.symfony_cache_clearer');
+        $symfonyCacheClearer = $container->get(SymfonyCacheClearer::class);
         if ($symfonyCacheClearer) {
             $symfonyCacheClearer->clear();
         }

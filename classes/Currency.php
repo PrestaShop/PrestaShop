@@ -321,7 +321,7 @@ class CurrencyCore extends ObjectModel
     {
         $container = Context::getContext()->container;
         /** @var LocaleRepository $localeCldr */
-        $localeCldr = $container->get('prestashop.core.localization.cldr.locale_repository');
+        $localeCldr = $container->get(LocaleRepository::class);
         /** @var Configuration $configuration */
         $configuration = $container->get('prestashop.adapter.legacy.configuration');
         $languages = Language::getIDs();

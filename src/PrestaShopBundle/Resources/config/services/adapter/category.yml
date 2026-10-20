@@ -7,7 +7,7 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.feature.multistore'
-      - '@prestashop.adapter.shop.context'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Context'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
 
   prestashop.adapter.category.command_handler.bulk_update_categories_status_handler:

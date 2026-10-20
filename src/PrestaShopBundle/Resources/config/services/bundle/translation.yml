@@ -162,7 +162,7 @@ services:
   prestashop.translation.loader.database:
     class: PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader
     arguments:
-      - "@prestashop.core.admin.lang.repository"
+      - '@PrestaShopBundle\Entity\Repository\LangRepository'
       - "@prestashop.core.admin.translation.repository"
 
   prestashop.translation.sql_loader:
