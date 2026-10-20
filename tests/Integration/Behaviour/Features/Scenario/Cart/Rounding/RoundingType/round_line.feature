@@ -16,11 +16,13 @@ Feature: Cart calculation with rounding type LINE
   Scenario: one product in cart, quantity 1
     When I add 1 items of product "product1" in my cart
     Then my cart total should be precisely 26.81 tax included
+    And my cart total should be precisely 26.81 tax excluded
     And my cart total shipping fees should be 7.0 tax included
 
   Scenario: one product in cart, quantity 3
     When I add 3 items of product "product1" in my cart
     Then my cart total should be precisely 66.44 tax included
+    And my cart total should be precisely 66.44 tax excluded
     And my cart total shipping fees should be 7.0 tax included
 
   Scenario: 3 products in cart, several quantities
@@ -28,6 +30,7 @@ Feature: Cart calculation with rounding type LINE
     And I add 3 items of product "product1" in my cart
     And I add 1 items of product "product3" in my cart
     Then my cart total should be precisely 162.41 tax included
+    And my cart total should be precisely 162.41 tax excluded
     And my cart total shipping fees should be 7.0 tax included
 
   @restore-cart-rules-after-scenario
@@ -38,6 +41,7 @@ Feature: Cart calculation with rounding type LINE
       | discount_percentage | 15        |
     When I add 3 items of product "product1" in my cart
     Then my cart total should be precisely 57.52 tax included
+    And my cart total should be precisely 57.52 tax excluded
     And my cart total shipping fees should be 7.0 tax included
 
   Scenario: one product in cart, quantity 3 with an amount cart rule
@@ -49,4 +53,5 @@ Feature: Cart calculation with rounding type LINE
       | discount_includes_tax | false     |
     When I add 3 items of product "product1" in my cart
     Then my cart total should be precisely 61.44 tax included
+    And my cart total should be precisely 61.44 tax excluded
     And my cart total shipping fees should be 7.0 tax included
