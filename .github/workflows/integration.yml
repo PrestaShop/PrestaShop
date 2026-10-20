@@ -1,6 +1,12 @@
 name: Integration tests
 on:
   push:
+    branches-ignore:
+      - 'chore/**'
+      - 'dependabot/**'
+      - 'merge-*'
+    tags:
+      - '**'
   pull_request:
 
 permissions:
@@ -10,22 +16,15 @@ concurrency:
   cancel-in-progress: true
 # Pull-requests on a private repository are not coming from a fork, so avoid running the same job twice with push and pull_request events.
 jobs:
-  # Define which PHP versions need to be used
-  workflow_matrix_generator:
-    if: github.event_name != 'push' || !github.event.repository.private
-    name: PHP matrix
-    uses: ./.github/workflows/workflow-matrix-generator.yml
-    with:
-      matrix_type: PHP
   integration:
     permissions:
       contents: read   #   to clone the repos and get release assets (shivammathur/setup-php)
     name: Integration tests
     runs-on: ubuntu-latest
-    needs: workflow_matrix_generator
+    if: github.event_name != 'push' || !github.event.repository.private
     strategy:
       matrix:
-        php: ${{ fromJSON(needs.workflow_matrix_generator.outputs.dynamic_matrix) }}
+        php: ${{ fromJSON((contains(github.event.pull_request.labels.*.name, 'Run all versions') || contains(github.event.pull_request.body, '| Category?         | ME')) && '["8.1", "8.2", "8.3", "8.4", "8.5"]' || '["8.1", "8.5"]') }}
       fail-fast: false
     steps:
       - name: Setup PHP

@@ -2,6 +2,12 @@ name: PHP
 on:
   pull_request:
   push:
+    branches-ignore:
+      - 'chore/**'
+      - 'dependabot/**'
+      - 'merge-*'
+    tags:
+      - '**'
 
 permissions:
   contents: read
@@ -49,22 +55,15 @@ jobs:
       - name: Run ergebnis/composer-normalize
         run: composer normalize --dry-run --no-check-lock
 
-  # Define which PHP versions need to be used
-  workflow_matrix_generator:
-    if: github.event_name != 'push' || !github.event.repository.private
-    name: PHP matrix
-    uses: ./.github/workflows/workflow-matrix-generator.yml
-    with:
-      matrix_type: PHP
   phpstan:
     permissions:
       contents: read  # for actions/checkout to fetch code
     name: PHP Static Analysis
     runs-on: ubuntu-latest
-    needs: workflow_matrix_generator
+    if: github.event_name != 'push' || !github.event.repository.private
     strategy:
       matrix:
-        php: ${{ fromJSON(needs.workflow_matrix_generator.outputs.dynamic_matrix) }}
+        php: ${{ fromJSON((contains(github.event.pull_request.labels.*.name, 'Run all versions') || contains(github.event.pull_request.body, '| Category?         | ME')) && '["8.1", "8.2", "8.3", "8.4", "8.5"]' || '["8.1", "8.5"]') }}
       fail-fast: false
     steps:
       - name: Setup PHP
@@ -102,10 +101,10 @@ jobs:
       contents: read  # for actions/checkout to fetch code
     name: PHPUnit
     runs-on: ubuntu-latest
-    needs: workflow_matrix_generator
+    if: github.event_name != 'push' || !github.event.repository.private
     strategy:
       matrix:
-        php: ${{ fromJSON(needs.workflow_matrix_generator.outputs.dynamic_matrix) }}
+        php: ${{ fromJSON((contains(github.event.pull_request.labels.*.name, 'Run all versions') || contains(github.event.pull_request.body, '| Category?         | ME')) && '["8.1", "8.2", "8.3", "8.4", "8.5"]' || '["8.1", "8.5"]') }}
       fail-fast: false
     steps:
       - name: Setup PHP
