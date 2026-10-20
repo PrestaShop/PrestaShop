@@ -35,12 +35,24 @@ class MultishopCommandListener
 
     public function onConsoleCommand(ConsoleCommandEvent $event)
     {
-        $definition = $event->getCommand()->getDefinition();
+        $command = $event->getCommand();
         $input = $event->getInput();
 
-        $definition->addOption(new InputOption('id_shop', null, InputOption::VALUE_OPTIONAL, 'Specify shop context.'));
-        $definition->addOption(new InputOption('id_shop_group', null, InputOption::VALUE_OPTIONAL, 'Specify shop group context.'));
-        $input->bind($definition);
+        // The options go on the command's own definition, not on the merged one getDefinition()
+        // returns: Command::run() calls mergeApplicationDefinition() before binding, which rebuilds
+        // the merged definition from this one, so anything added to the merged copy is discarded and
+        // the option is rejected as unknown. Merging again here is what lets this listener read the
+        // values it just declared.
+        $definition = $command->getNativeDefinition();
+        if (!$definition->hasOption('id_shop')) {
+            $definition->addOption(new InputOption('id_shop', null, InputOption::VALUE_OPTIONAL, 'Specify shop context.'));
+        }
+        if (!$definition->hasOption('id_shop_group')) {
+            $definition->addOption(new InputOption('id_shop_group', null, InputOption::VALUE_OPTIONAL, 'Specify shop group context.'));
+        }
+
+        $command->mergeApplicationDefinition();
+        $input->bind($command->getDefinition());
 
         $id_shop = $input->getOption('id_shop');
         $id_shop_group = $input->getOption('id_shop_group');
