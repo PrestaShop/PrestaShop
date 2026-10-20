@@ -94,3 +94,16 @@ Feature: OrderState
     And the order state "order_state_1st" should exist
     And the order state "order_state_2nd" should be deleted
     And the order state "order_state_2nd" should exist
+
+  Scenario: Bulk delete keeps the unremovable order states
+    Given the order state "order_state_2nd" is unremovable
+    When I bulk delete order states "order_state_1st,order_state_2nd"
+    Then I should get an error that some order states could not be deleted
+    And the order state "order_state_1st" should be deleted
+    And the order state "order_state_2nd" shouldn't be deleted
+
+  Scenario: Updating the name in one language keeps the other languages
+    Given language "french" with locale "fr-FR" exists
+    When I update the order state "order_state_1st" name in language "fr-FR" to "Le 1er statut"
+    Then the order state "order_state_1st" should be named "Le 1er statut" in language "fr-FR"
+    And the order state "order_state_1st" should be named "The 1st Order State" in language "en-US"

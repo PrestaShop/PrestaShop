@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler;
 
 use OrderState;
+use PrestaShop\PrestaShop\Adapter\Domain\LocalizedObjectModelTrait;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\CommandHandler\EditOrderStateHandlerInterface;
@@ -23,6 +24,8 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\OrderStateFileUploaderInterface
 #[AsCommandHandler]
 final class EditOrderStateHandler extends AbstractOrderStateHandler implements EditOrderStateHandlerInterface
 {
+    use LocalizedObjectModelTrait;
+
     /**
      * @var OrderStateFileUploaderInterface
      */
@@ -85,8 +88,10 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
 
     private function updateOrderStateWithCommandData(OrderState $orderState, EditOrderStateCommand $command)
     {
+        $propertiesToUpdate = [];
+        // The localized values are merged: a language absent from the command keeps its stored value
         if (null !== $command->getName()) {
-            $orderState->name = $command->getName();
+            $this->fillLocalizedValues($orderState, 'name', $command->getName(), $propertiesToUpdate);
         }
 
         if (null !== $command->getColor()) {
@@ -109,7 +114,7 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
             $orderState->send_email = $command->isSendEmailEnabled();
 
             if ($orderState->send_email && null !== $command->getTemplate()) {
-                $orderState->template = $command->getTemplate();
+                $this->fillLocalizedValues($orderState, 'template', $command->getTemplate(), $propertiesToUpdate);
             }
         }
 

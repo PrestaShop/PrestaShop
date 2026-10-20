@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Language;
+use OrderState;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\AddOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\BulkDeleteOrderStateCommand;
@@ -152,6 +154,61 @@ class OrderStateFeatureContext extends AbstractDomainFeatureContext
         } catch (BulkDeleteOrderStateException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @Given the order state :orderStateReference is unremovable
+     *
+     * @param string $orderStateReference
+     */
+    public function markOrderStateAsUnremovable(string $orderStateReference): void
+    {
+        // The native states of a shop are unremovable, the API cannot create one
+        $orderState = new OrderState((int) SharedStorage::getStorage()->get($orderStateReference));
+        $orderState->unremovable = true;
+        $orderState->update();
+    }
+
+    /**
+     * @When I update the order state :orderStateReference name in language :locale to :name
+     *
+     * @param string $orderStateReference
+     * @param string $locale
+     * @param string $name
+     */
+    public function updateOrderStateNameInLanguage(string $orderStateReference, string $locale, string $name): void
+    {
+        $command = new EditOrderStateCommand((int) SharedStorage::getStorage()->get($orderStateReference));
+        $command->setName([(int) Language::getIdByLocale($locale, true) => $name]);
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (OrderStateException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then the order state :orderStateReference should be named :name in language :locale
+     *
+     * @param string $orderStateReference
+     * @param string $name
+     * @param string $locale
+     */
+    public function checkOrderStateNameInLanguage(string $orderStateReference, string $name, string $locale): void
+    {
+        $this->assertLastErrorIsNull();
+        $localizedNames = $this->getOrderState($orderStateReference)->getLocalizedNames();
+
+        Assert::assertEquals($name, $localizedNames[(int) Language::getIdByLocale($locale, true)]);
+    }
+
+    /**
+     * @Then I should get an error that some order states could not be deleted
+     */
+    public function assertBulkDeleteError(): void
+    {
+        $this->assertLastErrorIs(BulkDeleteOrderStateException::class);
     }
 
     /**
