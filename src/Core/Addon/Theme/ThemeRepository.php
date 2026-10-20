@@ -70,12 +70,12 @@ class ThemeRepository implements AddonRepositoryInterface
         }
 
         $ymlConf = $dir . '/config/theme.yml';
-        $ymlChecksum = $this->filesystem->exists($ymlConf) ? (md5_file($ymlConf) ?: null) : null;
         $data = null;
         $customizedLayouts = [];
 
         if ($this->filesystem->exists($jsonConf)) {
             $cachedData = $this->getConfigFromFile($jsonConf);
+            $ymlChecksum = $this->getConfigChecksum($ymlConf, $cachedData['parent'] ?? null);
 
             // The JSON file is a copy of theme.yml kept to skip the parsing, but the page layout
             // customization is saved into it as well, so it cannot just be dropped when it goes out
@@ -94,6 +94,12 @@ class ThemeRepository implements AddonRepositoryInterface
 
         if (null === $data) {
             $data = $this->getConfigFromFile($ymlConf);
+            // A child theme runs on its parent's attributes for every key it does not declare (the
+            // shallow merge of Theme::__construct()), and that merged set is what saveTheme() stores.
+            // Write the copy the same way, so its layouts are compared with the ones actually in use.
+            if (isset($data['parent'])) {
+                $data = array_merge($this->getConfigFromFile($this->getThemeYmlPath($data['parent'])), $data);
+            }
             $themeLayouts = $data['theme_settings']['layouts'] ?? [];
 
             // A layout the new theme.yml no longer offers cannot be rendered - getLayoutPath()
@@ -106,7 +112,10 @@ class ThemeRepository implements AddonRepositoryInterface
                 }
             }
 
-            $data[self::SOURCE_KEY] = ['checksum' => $ymlChecksum, 'layouts' => $themeLayouts];
+            $data[self::SOURCE_KEY] = [
+                'checksum' => $this->getConfigChecksum($ymlConf, $data['parent'] ?? null),
+                'layouts' => $themeLayouts,
+            ];
 
             // Write parsed yml data into json conf (faster parsing next time)
             $this->filesystem->dumpFile($jsonConf, json_encode($data));
@@ -114,7 +123,7 @@ class ThemeRepository implements AddonRepositoryInterface
 
         $data['directory'] = $dir;
 
-        return new Theme($data);
+        return new Theme($data, null, $this->appConfiguration->get('_PS_ALL_THEMES_DIR_'));
     }
 
     /**
@@ -132,6 +141,29 @@ class ThemeRepository implements AddonRepositoryInterface
             $cachedData['theme_settings']['layouts'] ?? [],
             $cachedData[self::SOURCE_KEY]['layouts'] ?? []
         );
+    }
+
+    /**
+     * Checksum of the theme.yml the copy is made from, combined with the parent's for a child theme,
+     * since the copy holds the parent's attributes too and a parent update has to be picked up.
+     */
+    private function getConfigChecksum(string $ymlConf, ?string $parent): ?string
+    {
+        if (!$this->filesystem->exists($ymlConf)) {
+            return null;
+        }
+
+        $checksum = md5_file($ymlConf) ?: null;
+        if (null !== $checksum && null !== $parent && $this->filesystem->exists($this->getThemeYmlPath($parent))) {
+            $checksum = md5($checksum . md5_file($this->getThemeYmlPath($parent)));
+        }
+
+        return $checksum;
+    }
+
+    private function getThemeYmlPath(string $name): string
+    {
+        return $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $name . '/config/theme.yml';
     }
 
     public function getList()

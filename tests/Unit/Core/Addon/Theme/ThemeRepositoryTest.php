@@ -17,6 +17,7 @@ use Symfony\Component\Yaml\Dumper;
 class ThemeRepositoryTest extends TestCase
 {
     private const THEME_NAME = 'unit-test-theme';
+    private const CHILD_NAME = 'unit-test-child-theme';
 
     /**
      * @var string
@@ -134,6 +135,49 @@ class ThemeRepositoryTest extends TestCase
         $this->assertSame('1.0.0', $this->getRepository()->getInstanceByName(self::THEME_NAME)->get('version'));
     }
 
+    public function testAChildThemePicksUpAnUpdateOfItsParent(): void
+    {
+        $this->writeChildTheme('1.0.0');
+        $this->writeThemeYml('1.0.0', null, null, 'old');
+        $this->enableAndCustomize(['contact' => 'layout-right-column']);
+
+        // The update replaces the parent's files; the child, which the merchant customizes, is untouched.
+        $this->writeThemeYml('2.0.0', null, null, 'new');
+
+        $theme = $this->getRepository()->getInstanceByName(self::CHILD_NAME);
+
+        $this->assertSame('new', $theme->get('global_settings.configuration.PS_UNIT_TEST_SETTING'));
+        $this->assertSame('layout-right-column', $theme->getPageLayouts()['contact']);
+    }
+
+    public function testAChildThemeKeepsItsCustomizedLayoutWhenItIsUpdated(): void
+    {
+        $this->writeChildTheme('1.0.0');
+        $this->writeThemeYml('1.0.0');
+        $this->enableAndCustomize(['contact' => 'layout-right-column']);
+
+        $this->writeChildTheme('1.1.0');
+
+        $theme = $this->getRepository()->getInstanceByName(self::CHILD_NAME);
+
+        $this->assertSame('1.1.0', $theme->get('version'));
+        $this->assertSame('layout-right-column', $theme->getPageLayouts()['contact']);
+    }
+
+    public function testAChildThemeCopyWrittenBeforeTheBaselineExistedKeepsItsLayouts(): void
+    {
+        $this->writeChildTheme('1.0.0');
+        $this->writeThemeYml('1.0.0');
+        $this->enableAndCustomize(['contact' => 'layout-right-column']);
+
+        // What every child theme copy on disk looks like before the upgrade: saveTheme() output, no record.
+        $saved = json_decode((string) file_get_contents($this->jsonConfPath(self::CHILD_NAME)), true);
+        unset($saved['_source']);
+        (new Filesystem())->dumpFile($this->jsonConfPath(self::CHILD_NAME), (string) json_encode($saved));
+
+        $this->assertSame('layout-right-column', $this->getRepository()->getInstanceByName(self::CHILD_NAME)->getPageLayouts()['contact']);
+    }
+
     private function getRepository(): ThemeRepository
     {
         $configuration = $this->createMock(ConfigurationInterface::class);
@@ -145,9 +189,33 @@ class ThemeRepositoryTest extends TestCase
         return new ThemeRepository($configuration, $this->filesystem, null);
     }
 
-    private function jsonConfPath(): string
+    private function jsonConfPath(string $name = self::THEME_NAME): string
     {
-        return $this->workspace . '/config/themes/' . self::THEME_NAME . '/theme.json';
+        return $this->workspace . '/config/themes/' . $name . '/theme.json';
+    }
+
+    private function writeChildTheme(string $version): void
+    {
+        $file = $this->workspace . '/themes/' . self::CHILD_NAME . '/config/theme.yml';
+        (new Filesystem())->dumpFile($file, (new Dumper())->dump([
+            'parent' => self::THEME_NAME,
+            'name' => self::CHILD_NAME,
+            'display_name' => 'Unit test child theme',
+            'version' => $version,
+        ], 4));
+    }
+
+    /**
+     * Replays ThemeManager::enable() - a first read, then saveTheme() writing the merged attributes -
+     * followed by a page layout customization, which is saveTheme() again.
+     *
+     * @param array<string, string> $layouts
+     */
+    private function enableAndCustomize(array $layouts): void
+    {
+        $theme = $this->getRepository()->getInstanceByName(self::CHILD_NAME);
+        $theme->setPageLayouts(array_merge($theme->getPageLayouts(), $layouts));
+        (new Filesystem())->dumpFile($this->jsonConfPath(self::CHILD_NAME), (string) json_encode($theme->get(null)));
     }
 
     private function themeYmlPath(): string
@@ -159,12 +227,13 @@ class ThemeRepositoryTest extends TestCase
      * @param array<string, array<string, string>>|null $availableLayouts
      * @param array<string, string>|null $layouts
      */
-    private function writeThemeYml(string $version, ?array $availableLayouts = null, ?array $layouts = null): void
+    private function writeThemeYml(string $version, ?array $availableLayouts = null, ?array $layouts = null, string $setting = 'default'): void
     {
         $configuration = [
             'name' => self::THEME_NAME,
             'display_name' => 'Unit test theme',
             'version' => $version,
+            'global_settings' => ['configuration' => ['PS_UNIT_TEST_SETTING' => $setting]],
             'meta' => ['available_layouts' => $availableLayouts ?? [
                 'layout-full-width' => ['name' => 'Full width'],
                 'layout-left-column' => ['name' => 'Left column'],
