@@ -168,13 +168,19 @@
       },
     },
     mounted() {
-      EventEmitter.on('toggleCheckbox', (tag: any) => {
-        const checkbox = this.$refs[tag];
+      // Only a tree that renders checkboxes can answer this, and only the stock filters emit it.
+      // Every node used to subscribe, so a tree of more than ten nodes - the back office
+      // translations sidebar, which passes no checkboxes at all - filled the shared emitter
+      // with listeners that had nothing to toggle, and Node warned about the eleventh.
+      if (this.hasCheckbox) {
+        EventEmitter.on('toggleCheckbox', (tag: any) => {
+          const checkbox = this.$refs[tag];
 
-        if (checkbox) {
-          (<VCheckbox>checkbox).$data.checked = !(<VCheckbox>checkbox).$data.checked;
-        }
-      });
+          if (checkbox) {
+            (<VCheckbox>checkbox).$data.checked = !(<VCheckbox>checkbox).$data.checked;
+          }
+        });
+      }
       EventEmitter.on('expand', () => {
         this.open = true;
       });
