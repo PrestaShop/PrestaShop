@@ -335,8 +335,15 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         // Assign template vars related to the price and tax
         $this->assignPriceAndTax();
 
-        // Assign attributes combinations to the template
-        $this->assignAttributesCombinations();
+        // WHY: assignAttributesCombinations() is not called any more. It builds an array sized by the
+        // product's attributes times its combinations and str2url()s every cell of it, and nothing in
+        // core, in either shipped theme or in any native module reads the `attributesCombinations`
+        // variable it produced - it was last used by a 1.6 theme. The separator it also assigned is a
+        // single Configuration read, so that one is kept.
+        $this->context->smarty->assign(
+            'attribute_anchor_separator',
+            Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR')
+        );
 
         // Add notification about this product being in cart
         $this->addCartQuantityNotification();
@@ -855,6 +862,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     /**
      * Get and assign attributes combinations informations.
+     *
+     * @deprecated since 9.2.0 and will be removed in 10.0.0. It is no longer called: the
+     *             `attributesCombinations` variable it assigns has not been read by core or by a shipped
+     *             theme since 1.6, while building it costs one row per attribute per combination and a
+     *             Tools::str2url() call on every cell of every row. Call it from an override if a theme
+     *             still needs that variable.
      */
     protected function assignAttributesCombinations(): void
     {
