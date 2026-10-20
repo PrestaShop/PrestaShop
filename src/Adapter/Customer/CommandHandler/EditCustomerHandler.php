@@ -64,6 +64,10 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
 
         $this->assertCustomerCanAccessDefaultGroup($customer, $command);
 
+        if (null !== $command->getGroupIds()) {
+            $this->assertGroupsAreAssociatedToCustomerShop($command->getGroupIds(), (int) $customer->id_shop);
+        }
+
         $this->updateCustomerWithCommandData($customer, $command);
 
         // validateFieldsRequiredDatabase() below is using $_POST
