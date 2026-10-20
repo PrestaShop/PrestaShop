@@ -167,3 +167,33 @@ services:
     public: false
     autowire: true
     autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\Validate\ShopValidator:
+    public: false
+    autowire: true
+    arguments:
+      $themeRepository: '@prestashop.core.addon.theme.repository'
+
+  PrestaShop\PrestaShop\Adapter\Shop\ShopCategoriesUpdater:
+    public: false
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\AddShopHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\DeleteShopHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\EditShopHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\GetShopForEditingHandler:
+    public: false
+    autowire: true
+    autoconfigure: true

@@ -184,6 +184,8 @@ module.exports = {
     security: './js/pages/security',
     shipping_preferences: './js/pages/shipping-preferences',
     specific_price_form: './js/pages/product/specific-price/form',
+    shop: './js/pages/shop',
+    shop_form: './js/pages/shop/form',
     shop_group: './js/pages/shop-group',
     shop_group_form: './js/pages/shop-group/form',
     shop_url: './js/pages/shop-url',

@@ -13,7 +13,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetShopTree;
 interface GetShopTreeHandlerInterface
 {
     /**
-     * @return array<int, array{id: int, name: string, shops: array<int, array{id: int, name: string, urls: list<array{id: int, url: string}>}>}>
+     * @return array<int, array{id: int, name: string, shops: array<int, array{id: int, name: string, root_category_id: int, urls: list<array{id: int, url: string}>}>}>
      */
     public function handle(GetShopTree $query): array;
 }

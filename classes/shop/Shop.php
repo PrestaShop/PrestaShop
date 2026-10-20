@@ -1285,7 +1285,7 @@ class ShopCore extends ObjectModel
                     }
 
                     $categories = Tools::getValue('categoryBox');
-                    if ($table_name == 'product_shop' && count($categories) == 1) {
+                    if ($table_name == 'product_shop' && is_array($categories) && count($categories) == 1) {
                         unset($res['id_category_default']);
                         $keys = implode('`, `', array_keys($res));
                         $sql = 'INSERT IGNORE INTO `' . _DB_PREFIX_ . $table_name . '` (`' . $keys . '`, `id_category_default`, ' . $id . ')

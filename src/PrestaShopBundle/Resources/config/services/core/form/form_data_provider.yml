@@ -315,6 +315,13 @@ services:
     autowire: true
     public: false
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ShopFormDataProvider:
+    autowire: true
+    public: false
+    arguments:
+      $categoryTreeChoiceProvider: '@prestashop.adapter.form.choice_provider.all_categories_tree_choice_provider'
+      $importDataChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopDataImportChoiceProvider'
+
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ShopGroupFormDataProvider:
     autowire: true
     public: false

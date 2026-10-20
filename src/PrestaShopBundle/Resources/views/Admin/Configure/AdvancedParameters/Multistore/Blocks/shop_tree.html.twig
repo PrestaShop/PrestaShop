@@ -32,7 +32,7 @@
             {% for shop in group.shops %}
               <li>
                 <i class="material-icons">store</i>
-                <a href="{{ getAdminLink('AdminShop', true, {shop_id: shop.id}) }}">{{ shop.name }}</a>
+                <a href="{{ getAdminLink('AdminShop', true, {updateshop: 1, shop_id: shop.id}) }}">{{ shop.name }}</a>
                 <ul class="list-unstyled pl-4">
                   {% for url in shop.urls %}
                     <li class="text-truncate">
