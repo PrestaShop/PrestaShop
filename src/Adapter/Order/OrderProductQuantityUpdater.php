@@ -390,7 +390,8 @@ class OrderProductQuantityUpdater
             (int) Configuration::get('PS_OS_ERROR'),
             (int) Configuration::get('PS_OS_CANCELED'),
             null,
-            (int) $orderDetail->id_order
+            (int) $orderDetail->id_order,
+            (int) Configuration::get('PS_OS_REFUND')
         );
 
         if ($delete) {
