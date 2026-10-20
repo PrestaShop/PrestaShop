@@ -34,6 +34,11 @@
 
     .card-details-actions {
       display: flex;
+      // The button carries mt-3 mt-md-0 ml-0 ml-md-3, i.e. it is meant to sit under the status
+      // selector on small screens and beside it from md up. Without wrapping it can never move
+      // down: the selector holds a min-width of 208px and the button is nowrap, so on a phone the
+      // two are forced onto one line and the selector's arrow ends up under the button.
+      flex-wrap: wrap;
       align-items: center;
 
       .btn.update-status{
