@@ -29,11 +29,17 @@ class HookConfigurator
      *     ],
      *     "someOtherHookName" => [
      *         null,
-     *         "blockmenu" => [
-     *             "except_pages" => ["category", "product"]
+     *         [
+     *             "blockmenu" => [
+     *                 "except_pages" => ["category", "product"]
+     *             ]
      *         ]
      *     ]
      * ].
+     *
+     * The second hook shows a module carrying settings. It is a list entry rather than an array
+     * key because that is what parsing a theme.yml produces, and a mapping cannot be written
+     * alongside the `~` placeholder in the same YAML sequence.
      */
     public function getThemeHooksConfiguration(array $hooks)
     {
@@ -43,7 +49,11 @@ class HookConfigurator
 
         foreach ($currentHooks as $hookName => $moduleList) {
             foreach ($moduleList as $key => $value) {
-                if (in_array($value, $uniqueModuleList)) {
+                // A module hooked with exceptions comes back under its own name, holding them.
+                // Comparing the raw value left those entries hooked where they already were as
+                // well as where the theme asks for them.
+                [$moduleName] = $this->readModuleEntry($key, $value);
+                if (in_array($moduleName, $uniqueModuleList, true)) {
                     unset($currentHooks[$hookName][$key]);
                 }
             }
@@ -58,21 +68,23 @@ class HookConfigurator
             foreach ($modules as $key => $module) {
                 if ($module === null && $firstNullValueFound) {
                     $firstNullValueFound = false;
-                    foreach ($existing as $m) {
+                    foreach ($existing as $existingKey => $m) {
+                        [$existingName, $existingSettings] = $this->readModuleEntry($existingKey, $m);
                         // If module has been removed we ignore it but inform via a warning
-                        if ($this->moduleManager && !$this->moduleManager->isOnDisk($m)) {
-                            $this->logger?->warning(sprintf('Module %s was removed from disk, impossible to hook it', $m));
+                        if ($this->moduleManager && !$this->moduleManager->isOnDisk($existingName)) {
+                            $this->logger?->warning(sprintf('Module %s was removed from disk, impossible to hook it', $existingName));
                             continue;
                         }
-                        $currentHooks[$hookName][] = $m;
+                        $currentHooks[$hookName][] = $existingSettings === [] ? $existingName : [$existingName => $existingSettings];
                     }
                 } elseif (is_array($module)) {
+                    [$moduleName, $moduleSettings] = $this->readModuleEntry($key, $module);
                     // If module has been removed we ignore it but inform via a warning
-                    if ($this->moduleManager && !$this->moduleManager->isOnDisk($key)) {
-                        $this->logger?->warning(sprintf('Module %s was removed from disk, impossible to hook it', $key));
+                    if ($this->moduleManager && !$this->moduleManager->isOnDisk($moduleName)) {
+                        $this->logger?->warning(sprintf('Module %s was removed from disk, impossible to hook it', $moduleName));
                         continue;
                     }
-                    $currentHooks[$hookName][$key] = $module;
+                    $currentHooks[$hookName][] = [$moduleName => $moduleSettings];
                 } elseif ($module !== null) {
                     // If module has been removed we ignore it but inform via a warning
                     if ($this->moduleManager && !$this->moduleManager->isOnDisk($module)) {
@@ -131,9 +143,49 @@ class HookConfigurator
     {
         $list = [];
         foreach ($hooks as $modules) {
-            $list = array_merge($list, $modules);
+            foreach ($modules as $key => $module) {
+                if ($module === null) {
+                    // The placeholder keeping existing modules, not a module of its own.
+                    continue;
+                }
+                // Only the name identifies the module. Keeping the whole entry left the
+                // comparison above unable to match it.
+                [$moduleName] = $this->readModuleEntry($key, $module);
+                $list[] = $moduleName;
+            }
         }
 
         return $list;
+    }
+
+    /**
+     * A module in a hook list is either a plain name, or - when it carries settings - a
+     * single-entry map of that name to them. YAML can express the second form only as a list
+     * item (`- blocklanguages: {except_pages: [...]}`), which is also the only form that can sit
+     * next to the `~` placeholder every shipped theme uses, so the name is inside the entry and
+     * never in its position. Configurations written as an array key are still accepted.
+     *
+     * The name is what `HookRepository::persistHooksConfiguration()` reads back out of the entry,
+     * so both forms are normalised here rather than in each caller.
+     *
+     * The same two shapes come back out of `HookRepository::getDisplayHooksWithModules()`, where a
+     * module without exceptions is a list value and one with exceptions is a key holding them.
+     *
+     * @param int|string $key the entry's position, or the module name in the array-key form
+     * @param mixed $module a module name, or an entry carrying its settings
+     *
+     * @return array{0: string, 1: array} the module name and its settings
+     */
+    private function readModuleEntry($key, $module): array
+    {
+        if (!is_array($module)) {
+            return [(string) $module, []];
+        }
+
+        if (is_int($key)) {
+            return [(string) key($module), (array) current($module)];
+        }
+
+        return [(string) $key, $module];
     }
 }
