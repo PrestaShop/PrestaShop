@@ -8,6 +8,9 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Stock;
 
+use Configuration;
+use Context;
+use Mail;
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Product\PackItemsManager;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -16,8 +19,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use Product;
+use ReflectionMethod;
+use ReflectionProperty;
 use StockAvailable;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StockManagerTest extends KernelTestCase
 {
@@ -361,6 +367,47 @@ class StockManagerTest extends KernelTestCase
                 'expected' => [2, 14, 2],
             ],
         ];
+    }
+
+    public function testLowStockAlertSubjectIsTakenFromTheEmailsSubjectCatalogue(): void
+    {
+        // The fake configuration bound in setUp() is only meant for the pack tests
+        ServiceLocator::setServiceContainerInstance($this->savedContainer);
+
+        $context = Context::getContext();
+        $locale = $context->language->locale;
+
+        $translated = [];
+        $translator = $this->createMock(TranslatorInterface::class);
+        // Context::getTranslator() replaces the translator unless it already carries the
+        // context locale, so the double has to answer that question the same way
+        $translator->method('getLocale')->willReturn($locale);
+        $translator->method('trans')->willReturnCallback(
+            function (string $id, array $parameters = [], ?string $domain = null, ?string $translatorLocale = null) use (&$translated) {
+                $translated[] = [$id, $domain, $translatorLocale];
+
+                return $id;
+            }
+        );
+
+        $translatorProperty = new ReflectionProperty(Context::class, 'translator');
+        $translatorProperty->setAccessible(true);
+        $previousTranslator = $translatorProperty->getValue($context);
+        $translatorProperty->setValue($context, $translator);
+
+        $previousMailMethod = Configuration::get('PS_MAIL_METHOD');
+        Configuration::updateValue('PS_MAIL_METHOD', Mail::METHOD_DISABLE);
+
+        try {
+            $sendLowStockAlert = new ReflectionMethod(StockManager::class, 'sendLowStockAlert');
+            $sendLowStockAlert->setAccessible(true);
+            $sendLowStockAlert->invoke(new StockManager(), new Product(1), 0, 0);
+        } finally {
+            Configuration::updateValue('PS_MAIL_METHOD', $previousMailMethod);
+            $translatorProperty->setValue($context, $previousTranslator);
+        }
+
+        $this->assertContains(['Product out of stock', 'Emails.Subject', $locale], $translated);
     }
 }
 
