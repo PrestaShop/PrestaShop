@@ -183,6 +183,30 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
     });
 
+    it('should go to add new page category from the current category', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddSubCategoryPage', baseContext);
+
+      await boCMSPagesPage.goToAddNewPageCategory(page);
+
+      const pageTitle = await boCMSPageCategoriesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPageCategoriesCreatePage.pageTitleCreate);
+    });
+
+    it('should have the current category preselected as parent category', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPreselectedParentCategory', baseContext);
+
+      const selectedParentCategoryId = await page
+        .locator('input[name$="[parent_category]"]:checked')
+        .inputValue();
+
+      expect(parseInt(selectedParentCategoryId, 10)).to.equal(categoryID);
+
+      await page.goBack();
+
+      const pageTitle = await boCMSPagesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
+    });
+
     it('should get the pages number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfPages', baseContext);
 
