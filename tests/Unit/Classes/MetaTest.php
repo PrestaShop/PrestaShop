@@ -9,37 +9,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Classes;
 
-use Context;
-use Language;
 use Meta;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use ReflectionProperty;
-use Symfony\Component\Translation\Translator;
 
 final class MetaTest extends TestCase
 {
-    private mixed $previousLanguage;
-    private mixed $previousTranslator;
-
-    protected function setUp(): void
-    {
-        $context = Context::getContext();
-        $this->previousLanguage = $context->language;
-        $translator = new ReflectionProperty($context, 'translator');
-        $this->previousTranslator = $translator->getValue($context);
-        $context->language = (new ReflectionClass(Language::class))->newInstanceWithoutConstructor();
-        $context->language->locale = 'en-US';
-        $translator->setValue($context, new Translator('en-US'));
-    }
-
-    protected function tearDown(): void
-    {
-        $context = Context::getContext();
-        $context->language = $this->previousLanguage;
-        (new ReflectionProperty($context, 'translator'))->setValue($context, $this->previousTranslator);
-    }
-
     /**
      * @dataProvider listingPageProvider
      */
@@ -62,6 +36,15 @@ final class MetaTest extends TestCase
     public function testExcludedControllersInSubdirectoriesRemainUnavailable(): void
     {
         self::assertNotContains('category', Meta::getPages());
+    }
+
+    public function testDirectoryIndexFilesAreNotOfferedAsPages(): void
+    {
+        $pages = Meta::getPages();
+
+        self::assertSame('index', $pages['index']);
+        self::assertNotContains('index.php', $pages);
+        self::assertCount(1, array_keys($pages, 'index', true));
     }
 
     public function testRootControllerKeepsItsDeclaredPageName(): void
