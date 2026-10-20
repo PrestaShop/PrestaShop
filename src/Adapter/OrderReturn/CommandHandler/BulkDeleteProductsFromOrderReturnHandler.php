@@ -16,7 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductsFrom
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\BulkDeleteProductsFromOrderReturnHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\BulkDeleteProductsFromOrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\CannotDeleteLastProductFromOrderReturnException;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteProductFromOrderReturnException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnProductId;
 
 #[AsCommandHandler]
@@ -51,7 +51,8 @@ class BulkDeleteProductsFromOrderReturnHandler extends AbstractBulkCommandHandle
             );
         }
 
-        $this->handleBulkAction($productIds, DeleteProductFromOrderReturnException::class, $command);
+        // An unknown line throws OrderReturnProductNotFoundException: it is collected like a failed deletion
+        $this->handleBulkAction($productIds, OrderReturnException::class, $command);
     }
 
     /**
