@@ -15,7 +15,7 @@ use PrestaShopBundle\Twig\Layout\TemplateVariables;
 use ReflectionClass;
 use ReflectionProperty;
 
-class HeadTagTest extends TestCase
+final class HeadTagTest extends TestCase
 {
     /**
      * @dataProvider isoUserForEditorProvider
@@ -27,7 +27,6 @@ class HeadTagTest extends TestCase
 
         $headTag = (new ReflectionClass(HeadTag::class))->newInstanceWithoutConstructor();
         $property = new ReflectionProperty(HeadTag::class, 'templateVariables');
-        $property->setAccessible(true);
         $property->setValue($headTag, $templateVariables);
 
         $this->assertSame($expected, $headTag->getIsoUserForEditor());
@@ -35,11 +34,9 @@ class HeadTagTest extends TestCase
 
     public static function isoUserForEditorProvider(): Generator
     {
-        // Languages that ship a TinyMCE pack in js/tiny_mce/langs are kept as-is.
         yield 'pack exists (en)' => ['en', 'en'];
         yield 'pack exists (fr)' => ['fr', 'fr'];
-        // Languages without a matching pack fall back to English to avoid a 404 on langs/<iso>.js.
+        yield 'no pack (gb)' => ['gb', 'en'];
         yield 'no pack (mk)' => ['mk', 'en'];
-        yield 'no pack (ne)' => ['ne', 'en'];
     }
 }
