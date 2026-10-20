@@ -13,6 +13,12 @@ import {escape} from 'lodash';
 
 const EntitySearchInputMap = ComponentsMap.entitySearchInput;
 
+/**
+ * jQuery data key holding the instance bound to a widget container, so that a container is never
+ * initialized twice and an already initialized widget can be retrieved by its owner.
+ */
+export const ENTITY_SEARCH_INPUT_DATA_KEY = 'entitySearchInput';
+
 type RemoveFunction = (item: any) => void;
 type SelectFunction = ($node: JQuery, item: any) => void;
 type SuggestionFunction = (entity: any) => string;
@@ -77,10 +83,25 @@ export default class EntitySearchInput {
 
   private autoSearch!: AutoCompleteSearch;
 
-  constructor($entitySearchInputContainer: JQuery, options: OptionsObject) {
+  constructor($entitySearchInputContainer: JQuery, options: OptionsObject = {}) {
+    // WHY: this class is exposed via window.prestashop.component, where every other component is
+    // built with no argument. Called that way it used to fail deep inside buildOptions with an
+    // opaque "Cannot read properties of undefined", so point the caller at the component that does
+    // support that contract instead. An empty selection stays a silent no-op, as before, because
+    // several pages build their manager unconditionally on widgets that are not always rendered.
+    if (!$entitySearchInputContainer) {
+      throw new Error(
+        'EntitySearchInput must be constructed with the container of a single widget. '
+          + 'To initialize every EntitySearchInputType widget of a page at once, use the '
+          + 'EntitySearchWidget component instead.',
+      );
+    }
+
     this.$entitySearchInputContainer = $entitySearchInputContainer;
     this.options = <EntitySearchInputOptions>{};
     this.buildOptions(options);
+
+    this.$entitySearchInputContainer.data(ENTITY_SEARCH_INPUT_DATA_KEY, this);
 
     this.$entitySearchInput = $(this.options.searchInputSelector, this.$entitySearchInputContainer);
     this.$entitiesContainer = $(this.options.entitiesContainerSelector, this.$entitySearchInputContainer);
