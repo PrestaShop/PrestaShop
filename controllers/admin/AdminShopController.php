@@ -8,6 +8,8 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 use PrestaShopBundle\Utils\Tree;
 
 /**
+ * @deprecated since 9.3 and will be removed in 10.0 - This controller was migrated in 9.3
+ *
  * @property Shop|null $object
  */
 class AdminShopControllerCore extends AdminController

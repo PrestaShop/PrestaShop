@@ -18,6 +18,11 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ExtraPropertyDefinitionFormOptionsProvider: ~
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ShopFormOptionsProvider:
+    public: false
+    arguments:
+      - '@prestashop.core.query_bus'
+
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ShopGroupFormOptionsProvider:
     public: false
     arguments:

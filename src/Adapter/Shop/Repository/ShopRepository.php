@@ -8,9 +8,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Shop\Repository;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\CannotAddShopException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\CannotDeleteShopException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\CannotUpdateShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Shop\ShopThemesNamesProviderInterface;
@@ -201,5 +207,109 @@ class ShopRepository extends AbstractObjectModelRepository implements ShopThemes
             ->groupBy('s.theme_name')
             ->executeQuery()
             ->fetchFirstColumn();
+    }
+
+    public function add(Shop $shop): ShopId
+    {
+        return new ShopId($this->addObjectModel($shop, CannotAddShopException::class));
+    }
+
+    /**
+     * @param string[] $propertiesToUpdate
+     */
+    public function partialUpdate(Shop $shop, array $propertiesToUpdate): void
+    {
+        $this->partiallyUpdateObjectModel($shop, $propertiesToUpdate, CannotUpdateShopException::class, CannotUpdateShopException::FAILED_UPDATE);
+    }
+
+    public function delete(Shop $shop): void
+    {
+        $this->deleteObjectModel($shop, CannotDeleteShopException::class, CannotDeleteShopException::FAILED_DELETE);
+    }
+
+    public function isNameUsedInGroup(string $name, ShopGroupId $shopGroupId, ?ShopId $excludedShopId = null): bool
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('s.id_shop')
+            ->from($this->dbPrefix . 'shop', 's')
+            ->where('s.name = :name')
+            ->andWhere('s.id_shop_group = :shopGroupId')
+            ->setParameter('name', $name)
+            ->setParameter('shopGroupId', $shopGroupId->getValue())
+            ->setMaxResults(1)
+        ;
+
+        if (null !== $excludedShopId) {
+            $qb
+                ->andWhere('s.id_shop != :excludedShopId')
+                ->setParameter('excludedShopId', $excludedShopId->getValue())
+            ;
+        }
+
+        return false !== $qb->executeQuery()->fetchOne();
+    }
+
+    public function hasCustomersOrOrders(ShopId $shopId): bool
+    {
+        foreach (['customer', 'orders'] as $table) {
+            $row = $this->connection->createQueryBuilder()
+                ->select('t.id_shop')
+                ->from($this->dbPrefix . $table, 't')
+                ->where('t.id_shop = :shopId')
+                ->setParameter('shopId', $shopId->getValue())
+                ->setMaxResults(1)
+                ->executeQuery()
+                ->fetchOne()
+            ;
+
+            if (false !== $row) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param int[] $customerGroupIds
+     */
+    public function addCustomerGroups(ShopId $shopId, array $customerGroupIds): void
+    {
+        foreach ($customerGroupIds as $customerGroupId) {
+            $this->connection->insert($this->dbPrefix . 'group_shop', [
+                'id_group' => $customerGroupId,
+                'id_shop' => $shopId->getValue(),
+            ]);
+        }
+    }
+
+    /**
+     * @param int[] $languageIds
+     */
+    public function addCmsRootCategory(ShopId $shopId, array $languageIds): void
+    {
+        $this->connection->insert($this->dbPrefix . 'cms_category_shop', [
+            'id_cms_category' => CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
+            'id_shop' => $shopId->getValue(),
+        ]);
+
+        foreach ($languageIds as $languageId) {
+            $this->connection->insert($this->dbPrefix . 'cms_category_lang', [
+                'id_cms_category' => CmsPageCategoryId::ROOT_CMS_PAGE_CATEGORY_ID,
+                'id_lang' => $languageId,
+                'id_shop' => $shopId->getValue(),
+                'name' => 'Home',
+                'link_rewrite' => 'home',
+            ]);
+        }
+    }
+
+    public function setProductsDefaultCategory(ShopId $shopId, CategoryId $categoryId): void
+    {
+        $this->connection->update(
+            $this->dbPrefix . 'product_shop',
+            ['id_category_default' => $categoryId->getValue()],
+            ['id_shop' => $shopId->getValue()]
+        );
     }
 }

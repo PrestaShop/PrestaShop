@@ -437,6 +437,14 @@ services:
       - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\QuickAccess\QuickAccessType'
       - '@prestashop.core.form.identifiable_object.data_provider.quick_access_form_data_provider'
 
+  prestashop.core.form.identifiable_object.builder.shop_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Shop\ShopType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ShopFormDataProvider'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ShopFormOptionsProvider'
+
   prestashop.core.form.identifiable_object.builder.shop_group_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
