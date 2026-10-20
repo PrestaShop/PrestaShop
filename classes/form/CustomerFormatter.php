@@ -102,7 +102,7 @@ class CustomerFormatterCore implements FormFormatterInterface
             ->setRequired(true)
             ->addAvailableValue(
                 'comment',
-                $this->translator->trans('Only letters and the dot (.) character, followed by a space, are allowed.', [], 'Shop.Forms.Help')
+                $this->translator->trans('Letters, spaces, hyphens (-) and apostrophes (\') are allowed. Numbers are not, and a dot (.) must be followed by a space.', [], 'Shop.Forms.Help')
             );
 
         $format['lastname'] = (new FormField())
@@ -118,7 +118,7 @@ class CustomerFormatterCore implements FormFormatterInterface
             ->setRequired(true)
             ->addAvailableValue(
                 'comment',
-                $this->translator->trans('Only letters and the dot (.) character, followed by a space, are allowed.', [], 'Shop.Forms.Help')
+                $this->translator->trans('Letters, spaces, hyphens (-) and apostrophes (\') are allowed. Numbers are not, and a dot (.) must be followed by a space.', [], 'Shop.Forms.Help')
             );
 
         if (Configuration::get('PS_B2B_ENABLE')) {
