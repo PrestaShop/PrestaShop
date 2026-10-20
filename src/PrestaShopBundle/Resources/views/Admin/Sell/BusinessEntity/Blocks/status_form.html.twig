@@ -1,0 +1,21 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% form_theme editStatusForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+
+{% set entityName %}<strong>{{ businessEntityName }}</strong>{% endset %}
+
+<p class="mb-3">
+  {{ 'Change the status of %name%'|trans({'%name%': entityName}, 'Admin.Orderscustomers.Feature')|raw_purified }}
+</p>
+
+{{ form_start(editStatusForm, {
+  action: path('admin_business_entities_update_status', {businessEntityId: businessEntityId}),
+  attr: {id: 'edit_business_entity_status_form'},
+}) }}
+  {{ form_row(editStatusForm.status) }}
+  {{ form_row(editStatusForm.comment) }}
+  {{ form_rest(editStatusForm) }}
+{{ form_end(editStatusForm, {render_rest: false}) }}

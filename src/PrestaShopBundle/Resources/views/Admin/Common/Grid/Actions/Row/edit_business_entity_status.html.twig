@@ -1,0 +1,26 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% set class = 'btn tooltip-link' %}
+
+{% if attributes.class is defined %}
+  {% set class = class ~ ' ' ~ attributes.class %}
+{% endif %}
+
+<a class="{{ class }} grid-{{ action.name|lower|replace({' ': '-'}) }}-row-link"
+   href="#"
+   aria-label="{{ action.name }}"
+   data-toggle="modal"
+   data-target="#editBusinessEntityStatusModal"
+   data-show-modal="edit-business-entity-status"
+   data-status-form-url="{{ path(action.options.route, {(action.options.route_param_name): record[action.options.route_param_field]}) }}"
+>
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
+  {% if not attributes.tooltip_name %}
+    {{ action.name }}
+  {% endif %}
+</a>
