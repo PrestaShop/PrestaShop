@@ -11,6 +11,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\AddEmployeeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\EmployeeImageUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
@@ -42,18 +43,26 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
     private $contextEmployeeProvider;
 
     /**
+     * @var EmployeeImageUploaderInterface
+     */
+    private $imageUploader;
+
+    /**
      * @param Hashing $hashing
      * @param ProfileAccessCheckerInterface $profileAccessChecker
      * @param ContextEmployeeProviderInterface $contextEmployeeProvider
+     * @param EmployeeImageUploaderInterface $imageUploader
      */
     public function __construct(
         Hashing $hashing,
         ProfileAccessCheckerInterface $profileAccessChecker,
-        ContextEmployeeProviderInterface $contextEmployeeProvider
+        ContextEmployeeProviderInterface $contextEmployeeProvider,
+        EmployeeImageUploaderInterface $imageUploader
     ) {
         $this->hashing = $hashing;
         $this->profileAccessChecker = $profileAccessChecker;
         $this->contextEmployeeProvider = $contextEmployeeProvider;
+        $this->imageUploader = $imageUploader;
     }
 
     /**
@@ -76,6 +85,10 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
         $employee = $this->createLegacyEmployeeObjectFromCommand($command);
 
         $this->associateWithShops($employee, $command->getShopAssociation());
+
+        if (null !== $command->getUploadedAvatarPath()) {
+            $this->imageUploader->upload((int) $employee->id, $command->getUploadedAvatarPath());
+        }
 
         return new EmployeeId((int) $employee->id);
     }
