@@ -143,6 +143,26 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            // File size is stored in bytes but displayed in a human-readable unit (kB, MB...),
+            // so it is filtered through a min/max range (expressed in bytes) instead of a LIKE.
+            if ('file_size' === $filterName) {
+                if (!is_array($value)) {
+                    continue;
+                }
+
+                if (isset($value['min_field']) && '' !== $value['min_field']) {
+                    $qb->andWhere($allowedFiltersMap[$filterName] . ' >= :file_size_min')
+                        ->setParameter('file_size_min', $value['min_field']);
+                }
+
+                if (isset($value['max_field']) && '' !== $value['max_field']) {
+                    $qb->andWhere($allowedFiltersMap[$filterName] . ' <= :file_size_max')
+                        ->setParameter('file_size_max', $value['max_field']);
+                }
+
+                continue;
+            }
+
             $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
                 ->setParameter($filterName, '%' . $value . '%');
         }
