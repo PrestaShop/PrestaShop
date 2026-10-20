@@ -1386,9 +1386,12 @@ class ToolsCore
         if (Tools::strlen($str) <= $max_length) {
             return $str;
         }
-        $str = utf8_decode($str);
 
-        return utf8_encode(substr($str, 0, $max_length - Tools::strlen($suffix)) . $suffix);
+        // WHY mb_substr and not substr: the previous implementation converted to ISO-8859-1 so that a
+        // byte offset would equal a character offset, then converted back. Every character outside
+        // Latin-1 does not survive that round trip and came back as "?", so truncating Cyrillic, Greek
+        // or CJK text destroyed it. mb_substr counts characters directly and needs no conversion.
+        return mb_substr($str, 0, $max_length - Tools::strlen($suffix)) . $suffix;
     }
 
     /* Copied from CakePHP String utility file */
