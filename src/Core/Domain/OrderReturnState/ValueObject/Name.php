@@ -50,9 +50,13 @@ class Name
      */
     private function assertNameIsValid($name)
     {
-        $matchesFirstNamePattern = preg_match('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u', stripslashes($name));
+        // WHY: the pattern must be the one the name field itself accepts (Validate::isGenericName),
+        // otherwise this object rejects names the shop stores happily. It used to carry a person name
+        // pattern that forbids digits and most punctuation, so a status legitimately called "Status 2"
+        // could not be represented here at all.
+        $matchesGenericNamePattern = preg_match('/^[^<>{}]*$/u', stripslashes($name));
 
-        if (!$matchesFirstNamePattern) {
+        if (!$matchesGenericNamePattern) {
             throw new OrderReturnStateConstraintException(sprintf('Order return state name %s is invalid', var_export($name, true)), OrderReturnStateConstraintException::INVALID_NAME);
         }
     }
