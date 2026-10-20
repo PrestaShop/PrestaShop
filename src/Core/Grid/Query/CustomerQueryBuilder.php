@@ -56,18 +56,45 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $searchQueryBuilder = $this->getCustomerQueryBuilder($searchCriteria)
+        // Resolve the page of customer ids first, then hydrate only those rows. The `total_spent`
+        // and `connect` columns are correlated sub-selects over the (potentially huge) orders and
+        // guest/connections tables; selecting them directly evaluates them for every matched
+        // customer before the LIMIT is applied. Paginating on the ids first keeps those sub-selects
+        // limited to the page that is actually displayed.
+        $paginatedCustomerIds = $this->getCustomerQueryBuilder($searchCriteria)
+            ->select('c.id_customer');
+
+        // total_spent and connect are computed columns, so expose them on the id query only when
+        // the grid is sorted by one of them, so its ORDER BY can reference the alias.
+        if ('total_spent' === $searchCriteria->getOrderBy()) {
+            $this->appendTotalSpentQuery($paginatedCustomerIds);
+        } elseif ('connect' === $searchCriteria->getOrderBy()) {
+            $this->appendLastVisitQuery($paginatedCustomerIds);
+        }
+
+        $this->applySorting($paginatedCustomerIds, $searchCriteria);
+        $this->criteriaApplicator
+            ->applyPagination($searchCriteria, $paginatedCustomerIds)
+            ->applyDeterministicSorting($searchCriteria, $paginatedCustomerIds, 'c', 'id_customer')
+        ;
+
+        $searchQueryBuilder = $this->connection->createQueryBuilder()
+            ->from('(' . $paginatedCustomerIds->getSQL() . ')', 'paginated')
+            ->innerJoin('paginated', $this->dbPrefix . 'customer', 'c', 'c.id_customer = paginated.id_customer')
             ->select('c.id_customer, c.firstname, c.lastname, c.email, c.active, c.newsletter, c.optin')
             ->addSelect('c.date_add, gl.name as social_title, grl.name as default_group, s.name as shop_name, c.company');
+        $this->applyJoins($searchQueryBuilder);
+
+        $searchQueryBuilder->setParameters(
+            $paginatedCustomerIds->getParameters(),
+            $paginatedCustomerIds->getParameterTypes()
+        );
 
         $this->appendTotalSpentQuery($searchQueryBuilder);
         $this->appendLastVisitQuery($searchQueryBuilder);
+        // Re-apply the sorting: the join to the paginated subquery does not preserve its order.
         $this->applySorting($searchQueryBuilder, $searchCriteria);
-
-        $this->criteriaApplicator
-            ->applyPagination($searchCriteria, $searchQueryBuilder)
-            ->applyDeterministicSorting($searchCriteria, $searchQueryBuilder, 'c', 'id_customer')
-        ;
+        $this->criteriaApplicator->applyDeterministicSorting($searchCriteria, $searchQueryBuilder, 'c', 'id_customer');
 
         return $searchQueryBuilder;
     }
@@ -92,6 +119,25 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $queryBuilder = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'customer', 'c')
+            ->where('c.deleted = 0')
+            ->andWhere('c.id_shop IN (:context_shop_ids)')
+            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('context_lang_id', $this->contextLangId);
+
+        $this->applyJoins($queryBuilder);
+        $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
+
+        return $queryBuilder;
+    }
+
+    /**
+     * Add the joins shared by the id and hydration queries (gender, default group and shop names).
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    private function applyJoins(QueryBuilder $queryBuilder)
+    {
+        $queryBuilder
             ->leftJoin(
                 'c',
                 $this->dbPrefix . 'gender_lang',
@@ -109,15 +155,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'shop',
                 's',
                 'c.id_shop = s.id_shop'
-            )
-            ->where('c.deleted = 0')
-            ->andWhere('c.id_shop IN (:context_shop_ids)')
-            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
-            ->setParameter('context_lang_id', $this->contextLangId);
-
-        $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
-
-        return $queryBuilder;
+            );
     }
 
     /**
