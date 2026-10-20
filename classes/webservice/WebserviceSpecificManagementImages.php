@@ -4,6 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
+use PrestaShop\PrestaShop\Core\Image\ImageDimensions;
 
 class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManagementInterface
 {
@@ -405,7 +406,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 if ($this->writePostedImageOnDisk($path, null, null)) {
                     if ($this->wsObject->urlSegment[2] == 'header') {
                         $logo_name = Configuration::get('PS_LOGO') ? Configuration::get('PS_LOGO') : 'logo.jpg';
-                        list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_ . $logo_name);
+                        [$width, $height] = ImageDimensions::of(_PS_IMG_DIR_ . $logo_name);
                         Configuration::updateValue('SHOP_LOGO_WIDTH', (int) round($width));
                         Configuration::updateValue('SHOP_LOGO_HEIGHT', (int) round($height));
                     }
