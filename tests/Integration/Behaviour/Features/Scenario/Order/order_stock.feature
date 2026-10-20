@@ -62,3 +62,49 @@ Feature: Stock management of order from Back Office (BO)
       | index | order_status |
       | 1     | Shipped      |
       | 2     | Delivered    |
+
+  Scenario: Cancelling an order does not restock quantities that a partial refund already restocked
+    Given there is a product in the catalog named "product_restock_then_cancel" with a price of 17.0 and 100 items in stock
+    When I create an empty cart "cart_restock_then_cancel" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "cart_restock_then_cancel"
+    And I add 1 products "product_restock_then_cancel" to the cart "cart_restock_then_cancel"
+    And I add order "order_restock_then_cancel" with the following details:
+      | cart                | cart_restock_then_cancel |
+      | message             | test                     |
+      | payment module name | dummy_payment            |
+      | status              | Payment accepted         |
+    Then the available stock for product "product_restock_then_cancel" should be 99
+    When I issue a partial refund on "order_restock_then_cancel" with restock with credit slip without voucher on following products:
+      | product_name                | quantity | amount |
+      | product_restock_then_cancel | 1        | 17.0   |
+    Then the available stock for product "product_restock_then_cancel" should be 100
+    And product "product_restock_then_cancel" in order "order_restock_then_cancel" has following details:
+      | product_quantity            | 1 |
+      | product_quantity_refunded   | 1 |
+      | product_quantity_reinjected | 1 |
+    When I update order "order_restock_then_cancel" status to "Canceled"
+    Then the available stock for product "product_restock_then_cancel" should be 100
+    When I update order "order_restock_then_cancel" status to "Payment accepted"
+    Then the available stock for product "product_restock_then_cancel" should be 100
+
+  Scenario: Cancelling an order still restocks the quantity a refund without restock left out of stock
+    Given there is a product in the catalog named "product_refund_no_restock" with a price of 17.0 and 100 items in stock
+    When I create an empty cart "cart_refund_no_restock" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "cart_refund_no_restock"
+    And I add 1 products "product_refund_no_restock" to the cart "cart_refund_no_restock"
+    And I add order "order_refund_no_restock" with the following details:
+      | cart                | cart_refund_no_restock |
+      | message             | test                   |
+      | payment module name | dummy_payment          |
+      | status              | Payment accepted       |
+    Then the available stock for product "product_refund_no_restock" should be 99
+    When I update order "order_refund_no_restock" status to "Delivered"
+    And I issue a partial refund on "order_refund_no_restock" without restock with credit slip without voucher on following products:
+      | product_name             | quantity | amount |
+      | product_refund_no_restock | 1        | 17.0   |
+    Then the available stock for product "product_refund_no_restock" should be 99
+    And product "product_refund_no_restock" in order "order_refund_no_restock" has following details:
+      | product_quantity            | 1 |
+      | product_quantity_reinjected | 0 |
+    When I update order "order_refund_no_restock" status to "Canceled"
+    Then the available stock for product "product_refund_no_restock" should be 100
