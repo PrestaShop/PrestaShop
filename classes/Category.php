@@ -89,6 +89,9 @@ class CategoryCore extends ObjectModel
 
     protected static $_links = [];
 
+    /** @var array<string, string|false> keyed by id_category-id_lang-id_shop */
+    protected static $_names = [];
+
     /**
      * @see ObjectModel::$definition
      */
@@ -1382,6 +1385,42 @@ class CategoryCore extends ObjectModel
         }
 
         return self::$_links[$idCategory . '-' . $idLang];
+    }
+
+    /**
+     * Get a category name without loading the Category, memoized per request.
+     *
+     * The instance getName() reads an already loaded object; this one is for callers that hold an id
+     * and would otherwise pay a query each time. A product listing asks for the same handful of
+     * categories once per product, so the memo is what keeps that from scaling with the listing.
+     *
+     * @param int $idCategory
+     * @param int $idLang
+     * @param int|null $idShop defaults to the current shop
+     *
+     * @return string|false
+     */
+    public static function getNameById($idCategory, $idLang, $idShop = null)
+    {
+        if (!Validate::isUnsignedId($idCategory) || !Validate::isUnsignedId($idLang)) {
+            return false;
+        }
+
+        if (null === $idShop) {
+            $idShop = (int) Context::getContext()->shop->id;
+        }
+
+        $key = $idCategory . '-' . $idLang . '-' . (int) $idShop;
+        if (!isset(self::$_names[$key])) {
+            self::$_names[$key] = Db::getInstance()->getValue('
+            SELECT cl.`name`
+            FROM `' . _DB_PREFIX_ . 'category_lang` cl
+            WHERE cl.`id_shop` = ' . (int) $idShop . '
+            AND cl.`id_lang` = ' . (int) $idLang . '
+            AND cl.`id_category` = ' . (int) $idCategory);
+        }
+
+        return self::$_names[$key];
     }
 
     /**
