@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Media;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
@@ -19,9 +20,15 @@ class MediaServerConfiguration implements DataConfigurationInterface
      */
     private $configuration;
 
-    public function __construct(Configuration $configuration)
+    /**
+     * @var Tools
+     */
+    private $tools;
+
+    public function __construct(Configuration $configuration, Tools $tools)
     {
         $this->configuration = $configuration;
+        $this->tools = $tools;
     }
 
     /**
@@ -48,6 +55,10 @@ class MediaServerConfiguration implements DataConfigurationInterface
             $serverTwo = $configuration['media_server_two'];
             $serverThree = $configuration['media_server_three'];
 
+            $hasChanged = $serverOne !== $this->configuration->get('PS_MEDIA_SERVER_1')
+                || $serverTwo !== $this->configuration->get('PS_MEDIA_SERVER_2')
+                || $serverThree !== $this->configuration->get('PS_MEDIA_SERVER_3');
+
             $this->configuration->set('PS_MEDIA_SERVER_1', $serverOne);
             $this->configuration->set('PS_MEDIA_SERVER_2', $serverTwo);
             $this->configuration->set('PS_MEDIA_SERVER_3', $serverThree);
@@ -56,6 +67,17 @@ class MediaServerConfiguration implements DataConfigurationInterface
                 $this->configuration->set('PS_MEDIA_SERVERS', 1);
             } else {
                 $this->configuration->set('PS_MEDIA_SERVERS', 0);
+            }
+
+            // .htaccess carries a RewriteCond per media server, so the file has to be
+            // rewritten for the setting to take effect. Without this the value is stored
+            // and shown in the back office while the server it names is never used.
+            if ($hasChanged && !$this->tools->generateHtaccess()) {
+                $errors[] = [
+                    'key' => 'Before being able to use this tool, you need to:[1][2]Create a blank .htaccess in your root directory.[/2][2]Give it write permissions (CHMOD 666 on Unix system).[/2][/1]',
+                    'domain' => 'Admin.Advparameters.Notification',
+                    'parameters' => [],
+                ];
             }
         } else {
             $errors = $isValid;
