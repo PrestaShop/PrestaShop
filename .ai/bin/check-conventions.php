@@ -23,7 +23,8 @@ declare(strict_types=1);
  *
  * Three sections:
  *   1. the .ai/ files to read: the root CONTEXT.md, then each Domain or Component
- *      CONTEXT.md whose "## Layers" table declares a changed path, and the cross-cutting
+ *      CONTEXT.md whose "## Layers" table declares a changed path or that a path-scoped
+ *      rule of .ai/rules/ names for it (its `paths` frontmatter), and the cross-cutting
  *      guides the diff calls for. The .ai/ folder is read from the base ref.
  *   2. PR hygiene (root CONTEXT.md, "PR hygiene"), on the diff.
  *   3. Coding standards (root CONTEXT.md, "Coding standards") a script can decide, on the
@@ -304,6 +305,61 @@ function buildIndex(array $docs): array
 }
 
 /**
+ * Turns a glob of a rule's `paths` into an anchored regex: ** spans folders, * stays in one.
+ */
+function globToRegex(string $glob): string
+{
+    $regex = '';
+    foreach (preg_split('#(\*\*/|\*\*|\*|\?)#', $glob, -1, PREG_SPLIT_DELIM_CAPTURE) as $chunk) {
+        $regex .= match ($chunk) {
+            '**/' => '(.*/)?',
+            '**' => '.*',
+            '*' => '[^/]*',
+            '?' => '[^/]',
+            default => preg_quote($chunk, '#'),
+        };
+    }
+
+    return '#^' . $regex . '$#';
+}
+
+/**
+ * Rule => [regexes, targets], from the `paths` frontmatter of every .ai/rules/*.md. A target is a
+ * context the rule's body names (Component/X, Domain/X) or a root guide (MULTISTORE.md...).
+ *
+ * @param array<string, string> $docs
+ *
+ * @return array<string, array{0: string[], 1: string[]}>
+ */
+function pathRules(array $docs): array
+{
+    $rules = [];
+    foreach ($docs as $path => $text) {
+        if (!preg_match('#^\.ai/rules/[^/]+\.md$#', $path) || !preg_match('#^---\s*\n(.*?)\n---\s*\n(.*)$#s', $text, $parts)) {
+            continue;
+        }
+        if (!preg_match('#^paths:\s*\n((?:\s+-\s+.*\n?)+)#m', $parts[1], $list)) {
+            continue;
+        }
+        preg_match_all('#^\s+-\s+["\']?([^"\'\n]+?)["\']?\s*$#m', $list[1], $globs);
+        $targets = [];
+        preg_match_all('#((?:Component|Domain)/[A-Za-z]+)/CONTEXT\.md#', $parts[2], $contexts);
+        foreach ($contexts[1] as $context) {
+            $targets[$context] = true;
+        }
+        preg_match_all('#\b([A-Z][A-Z_-]*\.md)\b#', $parts[2], $guides);
+        foreach ($guides[1] as $guide) {
+            if (!in_array($guide, ['CONTEXT.md', 'STRUCTURE.md'], true) && isset($docs['.ai/' . $guide])) {
+                $targets[$guide] = true;
+            }
+        }
+        $rules[$path] = [array_map('globToRegex', $globs[1]), array_keys($targets)];
+    }
+
+    return $rules;
+}
+
+/**
  * @param array<int, array<string, mixed>> $files
  * @param array<string, string> $docs
  * @param string[] $allAiFiles
@@ -313,9 +369,11 @@ function buildIndex(array $docs): array
 function contextsToRead(array $files, array $docs, array $allAiFiles): array
 {
     $index = buildIndex($docs);
+    $rules = pathRules($docs);
     $paths = array_column(array_filter($files, fn (array $f): bool => $f['status'] !== 'deleted'), 'path');
     $hits = [];
     $unmatched = [];
+    $ruleGuides = [];
     foreach ($paths as $path) {
         // A test is judged by the context of the code it covers: tests/Unit/Core/Grid/X.php -> src/Core/Grid/X.php
         $candidates = [$path];
@@ -346,6 +404,19 @@ function contextsToRead(array $files, array $docs, array $allAiFiles): array
         foreach (EXTRA_RULES as $regex => $context) {
             if (isset($index[$context]) && preg_match($regex, $path)) {
                 $matched[$context] = true;
+            }
+        }
+        // The path-scoped rules of .ai/rules/ declare their own paths, beyond the Layers tables.
+        foreach ($rules as $rule => [$regexes, $targets]) {
+            if (!array_filter($regexes, fn (string $regex): bool => (bool) preg_match($regex, $path))) {
+                continue;
+            }
+            foreach ($targets as $target) {
+                if (isset($index[$target])) {
+                    $matched[$target] = true;
+                } else {
+                    $ruleGuides['.ai/' . $target] = basename($rule) . ' matches ' . $path;
+                }
             }
         }
         foreach (array_keys($matched) as $context) {
@@ -381,7 +452,7 @@ function contextsToRead(array $files, array $docs, array $allAiFiles): array
             $added .= $text . "\n";
         }
     }
-    $crossCutting = [];
+    $crossCutting = $ruleGuides;
     if (isset($docs['.ai/MULTISTORE.md']) && preg_match_all('#ShopConstraint|MultistoreConfiguration|isAllShopContext|Shop::getContext|id_shop\b|shopIds?\b|multistore#i', $added, $m)) {
         $crossCutting['.ai/MULTISTORE.md'] = 'diff adds ' . implode(', ', array_slice(array_unique($m[0]), 0, 3));
     }
