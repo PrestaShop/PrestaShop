@@ -1030,16 +1030,40 @@ class CategoryCore extends ObjectModel
             $nbDaysNewProduct = 20;
         }
 
+        $filters = ($active ? ' AND product_shop.`active` = 1' : '')
+            . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
+            . ($idSupplier ? ' AND p.id_supplier = ' . (int) $idSupplier : '');
+
+        // When picking random products, first narrow down to a handful of ids using a lightweight
+        // query (no product_lang/image/manufacturer/sales joins) so ORDER BY RAND() only ever has to
+        // sort a thin id-only result set instead of the full, heavily joined product catalog. This
+        // keeps the query fast even on catalogs with hundreds of thousands of products.
+        $categoryProductFrom = '`' . _DB_PREFIX_ . 'category_product` cp
+				LEFT JOIN `' . _DB_PREFIX_ . 'product` p
+					ON p.`id_product` = cp.`id_product`
+				' . Shop::addSqlAssociation('product', 'p');
+
+        if ($random === true) {
+            $sqlRandomIds = 'SELECT cp.`id_product`
+				FROM ' . $categoryProductFrom . '
+				WHERE product_shop.`id_shop` = ' . (int) $context->shop->id . '
+					AND cp.`id_category` = ' . (int) $this->id
+                . $filters . '
+				ORDER BY RAND() LIMIT ' . (int) $randomNumberProducts;
+
+            $categoryProductFrom = '(' . $sqlRandomIds . ') random_product
+				INNER JOIN `' . _DB_PREFIX_ . 'product` p
+					ON p.`id_product` = random_product.`id_product`
+				' . Shop::addSqlAssociation('product', 'p');
+        }
+
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) AS quantity' . (Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute, 0) AS id_product_attribute,
 					product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity' : '') . ', pl.`description`, pl.`description_short`, pl.`available_now`,
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_title`, pl.`name`, image_shop.`id_image` id_image,
 					il.`legend` as legend, m.`name` AS manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
 					INTERVAL ' . (int) $nbDaysNewProduct . ' DAY)) > 0 AS new, product_shop.price AS orderprice, psales.`quantity` as sales
-				FROM `' . _DB_PREFIX_ . 'category_product` cp
-				LEFT JOIN `' . _DB_PREFIX_ . 'product` p
-					ON p.`id_product` = cp.`id_product`
-				' . Shop::addSqlAssociation('product', 'p') .
+				FROM ' . $categoryProductFrom .
                 (Combination::isFeatureActive() ? ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
 				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
 				' . Product::sqlStock('p', 0) . '
@@ -1058,15 +1082,15 @@ class CategoryCore extends ObjectModel
 					ON m.`id_manufacturer` = p.`id_manufacturer`
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_sale` psales
 					ON psales.`id_product` = p.`id_product`
-				WHERE product_shop.`id_shop` = ' . (int) $context->shop->id . '
-					AND cp.`id_category` = ' . (int) $this->id
-                    . ($active ? ' AND product_shop.`active` = 1' : '')
-                    . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
-                    . ($idSupplier ? ' AND p.id_supplier = ' . (int) $idSupplier : '');
+				WHERE product_shop.`id_shop` = ' . (int) $context->shop->id .
+                (
+                    $random === true
+                    ? ''
+                    : ' AND cp.`id_category` = ' . (int) $this->id . $filters
+                );
 
-        if ($random === true) {
-            $sql .= ' ORDER BY RAND() LIMIT ' . (int) $randomNumberProducts;
-        } elseif ($orderBy !== 'orderprice') {
+        // When random, ordering is already random from the id subquery above; no further ORDER BY/LIMIT needed here.
+        if ($random !== true && $orderBy !== 'orderprice') {
             $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
 			LIMIT ' . (((int) $pageNumber - 1) * (int) $productPerPage) . ',' . (int) $productPerPage;
         }
