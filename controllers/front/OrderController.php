@@ -330,9 +330,7 @@ class OrderControllerCore extends FrontController
     {
         $addressForm = $this->makeAddressForm();
 
-        // The form being refreshed may be the delivery or the invoice one. Rendering it
-        // always as 'delivery' turns an edited invoice address into the delivery address
-        // on submit, because this type drives the saveAddress hidden input.
+        // Keep the type of the form being refreshed, the template branches on it.
         $addressType = Tools::getValue('type') === 'invoice' ? 'invoice' : 'delivery';
 
         if (Tools::getIsset('id_address') && ($id_address = (int) Tools::getValue('id_address'))) {
