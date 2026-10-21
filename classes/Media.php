@@ -99,7 +99,7 @@ class MediaCore
     {
         // RTL Ready: search and load rtl css file if it's not originally rtl
         if ($needRtl && Context::getContext()->language->is_rtl) {
-            $cssUriRtl = preg_replace('/(^[^.].*)(\.css)$/', '$1_rtl.css', $cssUri);
+            $cssUriRtl = preg_replace('/(^[^.].*)(\.css)([?#].*)?$/', '$1_rtl.css$3', $cssUri);
             $rtlMedia = Media::getMediaPath($cssUriRtl, $cssMediaType);
             if ($rtlMedia != false) {
                 return $rtlMedia;
