@@ -20,6 +20,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Repository\CachedModuleRepository;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
+use PrestaShopBundle\DependencyInjection\Compiler\StorageCollectorPass;
 use PrestaShopBundle\Exception\ServiceContainerException;
 use PrestaShopBundle\PrestaShopBundle;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -166,6 +167,7 @@ class ContainerBuilder
 
         $container->addCompilerPass(new LoadServicesFromModulesPass($this->containerName), PassConfig::TYPE_BEFORE_OPTIMIZATION, PrestaShopBundle::LOAD_MODULE_SERVICES_PASS_PRIORITY);
         $container->addCompilerPass(new LegacyCompilerPass());
+        $container->addCompilerPass(new StorageCollectorPass());
 
         // Build extensions
         $builderExtensions = [
