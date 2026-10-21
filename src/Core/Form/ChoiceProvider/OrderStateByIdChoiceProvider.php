@@ -72,6 +72,10 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface,
         // or deleted & active order state
         $orderStates = array_filter($orderStates, function (array $item) use ($options) {
             if ($item['deleted'] == 1) {
+                if (isset($options['include_deleted']) && !$options['include_deleted']) {
+                    return false;
+                }
+
                 if (!empty($options['current_state']) && $options['current_state'] != $item['id_order_state']) {
                     return false;
                 }
