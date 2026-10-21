@@ -325,6 +325,29 @@ class CartTest extends KernelTestCase
         $this->assertEquals(12, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
     }
 
+    public function testProductQuantityOfAnUnsavedCartIsZeroWithoutQuery(): void
+    {
+        $cart = new Cart(null, (int) Configuration::get('PS_LANG_DEFAULT'));
+
+        $database = $this->createMock(Db::class);
+        $database->expects($this->never())->method('getRow');
+        Db::setInstanceForTesting($database);
+        try {
+            $this->assertSame(['deep_quantity' => '0', 'quantity' => '0'], $cart->getProductQuantity(1));
+        } finally {
+            Db::deleteTestingInstance();
+        }
+    }
+
+    public function testProductQuantityOfASavedCart(): void
+    {
+        $product = self::makeProduct('Saved cart product', 10, self::getIdTaxRulesGroup(20));
+        $cart = self::makeCart();
+        $cart->updateQty(2, $product->id);
+
+        $this->assertEquals(['deep_quantity' => 2, 'quantity' => 2], $cart->getProductQuantity((int) $product->id));
+    }
+
     public function testCartBothWithFreeCarrier(): void
     {
         $product = self::makeProduct('Hello Product', 10, self::getIdTaxRulesGroup(20));
