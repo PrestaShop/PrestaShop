@@ -54,6 +54,9 @@ class FrontControllerCore extends Controller
     /** @var string[] Adds excluded `$_GET` keys for redirection */
     protected $redirectionExtraExcludedKeys = [];
 
+    /** @var array|null */
+    private $breadcrumbLinks;
+
     /**
      * True if controller has already been initialized.
      * Prevents initializing controller more than once.
@@ -1999,7 +2002,7 @@ class FrontControllerCore extends Controller
         }
 
         // Add breadcrumbs, if at least 2 links are present (home + at least one other)
-        $breadcrumbLinks = $this->getBreadcrumbLinks();
+        $breadcrumbLinks = $this->breadcrumbLinks ?? $this->getBreadcrumbLinks();
         if (!empty($breadcrumbLinks['links'][1])) {
             $breadcrumbStructuredData = [
                 '@context' => 'https://schema.org',
@@ -2029,7 +2032,7 @@ class FrontControllerCore extends Controller
      */
     public function getBreadcrumb()
     {
-        $breadcrumb = $this->getBreadcrumbLinks();
+        $breadcrumb = $this->breadcrumbLinks = $this->getBreadcrumbLinks();
         $breadcrumb['count'] = count($breadcrumb['links']);
 
         return $breadcrumb;
