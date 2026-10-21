@@ -18,12 +18,18 @@ class AttachmentControllerCore extends FrontController
             ob_end_clean();
         }
 
+        // The path is resolved after the hook, so that a module changing the attachment cannot point outside the download directory
+        $filePath = $attachment->getFilePath();
+        if (null === $filePath || !is_file($filePath)) {
+            Tools::redirect('index.php');
+        }
+
         header('Content-Transfer-Encoding: binary');
         header('Content-Type: ' . $attachment->mime);
-        header('Content-Length: ' . filesize(_PS_DOWNLOAD_DIR_ . $attachment->file));
+        header('Content-Length: ' . filesize($filePath));
         header('Content-Disposition: attachment; filename="' . utf8_decode($attachment->file_name) . '"');
         @set_time_limit(0);
-        $this->readfileChunked(_PS_DOWNLOAD_DIR_ . $attachment->file);
+        $this->readfileChunked($filePath);
         exit;
     }
 

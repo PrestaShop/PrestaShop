@@ -79,7 +79,11 @@ class AttachmentFileUploader implements AttachmentFileUploaderInterface
     {
         try {
             $attachment = new Attachment($attachmentId);
-            $fileLink = _PS_DOWNLOAD_DIR_ . $attachment->file;
+            $fileLink = $attachment->getFilePath();
+            if (null === $fileLink) {
+                // Not a file of the download directory: there is nothing to delete, and the attachment gets a new valid file
+                return;
+            }
 
             try {
                 unlink($fileLink);
