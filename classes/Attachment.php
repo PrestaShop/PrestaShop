@@ -47,7 +47,7 @@ class AttachmentCore extends ObjectModel
         'primary' => 'id_attachment',
         'multilang' => true,
         'fields' => [
-            'file' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 40],
+            'file' => ['type' => self::TYPE_STRING, 'validate' => 'isFileName', 'required' => true, 'size' => 40],
             'mime' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 128],
             'file_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 128],
             'file_size' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
@@ -82,12 +82,27 @@ class AttachmentCore extends ObjectModel
     ];
 
     /**
+     * Returns the path of the attachment file, or null when the stored file name is not a plain file name
+     * of the download directory (the file is always stored there under a generated name).
+     */
+    public function getFilePath(): ?string
+    {
+        $file = (string) $this->file;
+        if (!Validate::isFileName($file) || $file === '.' || $file === '..') {
+            return null;
+        }
+
+        return _PS_DOWNLOAD_DIR_ . $file;
+    }
+
+    /**
      * @see ObjectModel::add()
      */
     public function add($autoDate = true, $nullValues = false)
     {
-        if (file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
-            $this->file_size = filesize(_PS_DOWNLOAD_DIR_ . $this->file);
+        $filePath = $this->getFilePath();
+        if (null !== $filePath && file_exists($filePath)) {
+            $this->file_size = filesize($filePath);
         }
 
         return parent::add($autoDate, $nullValues);
@@ -98,8 +113,9 @@ class AttachmentCore extends ObjectModel
      */
     public function update($nullValues = false)
     {
-        if (file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
-            $this->file_size = filesize(_PS_DOWNLOAD_DIR_ . $this->file);
+        $filePath = $this->getFilePath();
+        if (null !== $filePath && file_exists($filePath)) {
+            $this->file_size = filesize($filePath);
         }
 
         return parent::update($nullValues);
@@ -110,8 +126,9 @@ class AttachmentCore extends ObjectModel
      */
     public function delete()
     {
-        if (file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
-            @unlink(_PS_DOWNLOAD_DIR_ . basename($this->file));
+        $filePath = $this->getFilePath();
+        if (null !== $filePath && file_exists($filePath)) {
+            @unlink($filePath);
         }
 
         $sql = new DbQuery();
