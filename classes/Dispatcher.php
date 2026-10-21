@@ -1226,9 +1226,9 @@ class DispatcherCore
                             }
 
                             // Resolve the controller from the route or request, falling back to the not-found controller.
-                            if ($routeDefinition['controller']) {
+                            if (!empty($routeDefinition['controller'])) {
                                 $controller = $routeDefinition['controller'];
-                            } elseif (isset($_GET['controller'])) {
+                            } elseif (!empty($_GET['controller'])) {
                                 $controller = $_GET['controller'];
                             } else {
                                 $controller = $this->controller_not_found;
