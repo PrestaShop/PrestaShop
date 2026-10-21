@@ -14,7 +14,6 @@ use PrestaShop\PrestaShop\Core\Context\CountryContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -33,7 +32,6 @@ class SmartyVariablesFiller
         private readonly LegacyContext $legacyContext,
         private readonly Configuration $configuration,
         private readonly RouterInterface $router,
-        private readonly RequestStack $requestStack
     ) {
     }
 
@@ -90,7 +88,7 @@ class SmartyVariablesFiller
             'img_base_path' => $this->templateVariables->getBaseUrl() . basename(_PS_ADMIN_DIR_) . '/',
             'multishop_context' => $this->legacyControllerContext->multishop_context,
             'bootstrap' => false,
-            'submit_form_ajax' => (int) $this->requestStack->getCurrentRequest()?->get('submitFormAjax', 0),
+            'submit_form_ajax' => $this->templateVariables->getSubmitFormAjax(),
         ];
 
         $smartyVariablesAlias = [
