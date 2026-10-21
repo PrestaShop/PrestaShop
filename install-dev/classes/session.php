@@ -87,7 +87,7 @@ class InstallSession
         if (static::$_cookie_mode) {
             $ref = static::$_cookie->{$varname};
             if (0 === strncmp($ref, 'serialized_array:', strlen('serialized_array:'))) {
-                $ref = unserialize(substr($ref, strlen('serialized_array:')));
+                $ref = unserialize(substr($ref, strlen('serialized_array:')), ['allowed_classes' => false]);
             }
         } else {
             if (isset($_SESSION[$varname])) {
