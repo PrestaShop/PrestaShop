@@ -15,18 +15,8 @@ function handleCountryChange(selectors) {
   $('body').on('change', selectors.country, (event) => {
     const target = $(event.target);
 
-    // The checkout shows the delivery and the invoice address form at the same time,
-    // so every lookup below has to be scoped to the form that actually changed. A
-    // page-wide selector reads the first form on the page instead, which is why
-    // changing the country on the invoice form used the delivery form's country.
     const addressForm = target.closest(selectors.address);
-
-    // In the checkout the address partial renders inside the step's own <form> and
-    // browsers drop the nested start tag, so the data attributes end up on the
-    // enclosing form. On the my-account address page they stay inside the wrapper.
-    const dataHolder = addressForm.find('form').first().length
-      ? addressForm.find('form').first()
-      : target.closest('form');
+    const dataHolder = target.closest('form');
 
     const requestData = {
       id_country: target.val(),
