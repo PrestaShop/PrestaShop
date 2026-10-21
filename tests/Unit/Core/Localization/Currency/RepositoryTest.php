@@ -121,6 +121,18 @@ class RepositoryTest extends TestCase
         ];
     }
 
+    public function testGetCurrencyIsMemoizedPerLocale()
+    {
+        $this->assertSame(
+            $this->currencyRepository->getCurrency('EUR', 'fr-FR'),
+            $this->currencyRepository->getCurrency('EUR', 'fr-FR')
+        );
+        $this->assertNotSame(
+            $this->currencyRepository->getCurrency('EUR', 'fr-FR'),
+            $this->currencyRepository->getCurrency('EUR', 'en-US')
+        );
+    }
+
     /**
      * Given an unknown or invalid currency code
      * When asking the currency repository for the corresponding Currency
