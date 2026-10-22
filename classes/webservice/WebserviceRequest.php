@@ -190,6 +190,22 @@ class WebserviceRequestCore
      */
     public static $shopIDs = [];
 
+    /**
+     * Records with no shop of their own belong to the shop of their owner: owner field => owner table, matched column and sharing flag of the group.
+     */
+    protected const SHOP_OWNER_FIELDS = [
+        'id_cart' => ['table' => 'cart', 'column' => 'id_cart', 'share' => Shop::SHARE_ORDER],
+        'id_customer' => ['table' => 'customer', 'column' => 'id_customer', 'share' => Shop::SHARE_CUSTOMER],
+        'id_customer_thread' => ['table' => 'customer_thread', 'column' => 'id_customer_thread', 'share' => null],
+        'id_order' => ['table' => 'orders', 'column' => 'id_order', 'share' => Shop::SHARE_ORDER],
+        'order_reference' => ['table' => 'orders', 'column' => 'reference', 'share' => Shop::SHARE_ORDER],
+    ];
+
+    /**
+     * @var int[]|null
+     */
+    protected $allowedShopIDs = null;
+
     public function getOutputEnabled()
     {
         return $this->_outputEnabled;
@@ -219,6 +235,7 @@ class WebserviceRequestCore
     public static function resetStaticCache(): void
     {
         static::$_instance = null;
+        self::$shopIDs = [];
     }
 
     protected function getOutputObject($type)
@@ -843,21 +860,105 @@ class WebserviceRequestCore
      */
     protected function shopHasRight($key)
     {
-        $sql = 'SELECT 1
-				FROM ' . _DB_PREFIX_ . 'webservice_account wsa LEFT JOIN ' . _DB_PREFIX_ . 'webservice_account_shop wsas ON (wsa.id_webservice_account = wsas.id_webservice_account)
-				WHERE wsa.key = \'' . pSQL($key) . '\'';
-        $OR = [];
-        foreach (self::$shopIDs as $id_shop) {
-            $OR[] = ' wsas.id_shop = ' . (int) $id_shop . ' ';
+        $selectedShopIds = $this->normalizeShopIds(self::$shopIDs);
+        if (empty($selectedShopIds)) {
+            $this->setError(403, 'No permission for this key on this shop', 132);
+
+            return false;
         }
-        $sql .= ' AND (' . implode('OR', $OR) . ') ';
-        if (!Db::getInstance()->getValue($sql)) {
+
+        $sql = 'SELECT COUNT(DISTINCT wsas.id_shop)
+				FROM ' . _DB_PREFIX_ . 'webservice_account wsa
+				LEFT JOIN ' . _DB_PREFIX_ . 'webservice_account_shop wsas ON (wsa.id_webservice_account = wsas.id_webservice_account)
+				WHERE wsa.key = \'' . pSQL($key) . '\'';
+        $sql .= ' AND wsas.id_shop IN (' . implode(', ', $selectedShopIds) . ')';
+
+        $authorizedShopCount = (int) Db::getInstance()->getValue($sql);
+        if ($authorizedShopCount !== count($selectedShopIds)) {
             $this->setError(403, 'No permission for this key on this shop', 132);
 
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * @return int[]
+     */
+    protected function normalizeShopIds(array $shopIds)
+    {
+        $normalizedShopIds = [];
+        foreach ($shopIds as $shopId) {
+            $shopId = (int) $shopId;
+            if ($shopId > 0) {
+                $normalizedShopIds[] = $shopId;
+            }
+        }
+
+        return array_values(array_unique($normalizedShopIds));
+    }
+
+    /**
+     * @return int[]
+     */
+    protected function getAllowedShopIdsForCurrentKey()
+    {
+        if (null !== $this->allowedShopIDs) {
+            return $this->allowedShopIDs;
+        }
+
+        if (empty($this->_key)) {
+            $this->allowedShopIDs = [];
+
+            return $this->allowedShopIDs;
+        }
+
+        $rows = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT wsas.id_shop
+			FROM `' . _DB_PREFIX_ . 'webservice_account` wsa
+			INNER JOIN `' . _DB_PREFIX_ . 'webservice_account_shop` wsas ON (wsa.id_webservice_account = wsas.id_webservice_account)
+			WHERE wsa.key = \'' . pSQL($this->_key) . '\'');
+
+        $allowedShopIds = [];
+        foreach ((array) $rows as $row) {
+            $allowedShopIds[] = (int) $row['id_shop'];
+        }
+
+        $this->allowedShopIDs = $this->normalizeShopIds($allowedShopIds);
+
+        return $this->allowedShopIDs;
+    }
+
+    protected function setNarrowShopContextFromSelection()
+    {
+        $selectedShopIds = $this->normalizeShopIds(self::$shopIDs);
+        if (empty($selectedShopIds)) {
+            return;
+        }
+
+        $allShopIds = $this->normalizeShopIds(Shop::getShops(true, null, true));
+        if (!empty($allShopIds) && count($selectedShopIds) === count($allShopIds) && count(array_intersect($selectedShopIds, $allShopIds)) === count($allShopIds)) {
+            Shop::setContext(Shop::CONTEXT_ALL);
+
+            return;
+        }
+
+        $selectedGroupIds = [];
+        foreach ($selectedShopIds as $shopId) {
+            $selectedGroupIds[(int) Shop::getGroupFromShop((int) $shopId)] = true;
+        }
+
+        if (1 === count($selectedGroupIds)) {
+            $groupId = (int) array_key_first($selectedGroupIds);
+            $groupShopIds = $this->normalizeShopIds(Shop::getShops(true, $groupId, true));
+            if (!empty($groupShopIds) && count($selectedShopIds) === count($groupShopIds) && count(array_intersect($selectedShopIds, $groupShopIds)) === count($groupShopIds)) {
+                Shop::setContext(Shop::CONTEXT_GROUP, $groupId);
+
+                return;
+            }
+        }
+
+        Shop::setContext(Shop::CONTEXT_SHOP, (int) reset($selectedShopIds));
     }
 
     /**
@@ -868,23 +969,48 @@ class WebserviceRequestCore
     protected function shopExists($params)
     {
         if (is_countable(self::$shopIDs) && count(self::$shopIDs)) {
+            self::$shopIDs = $this->normalizeShopIds(self::$shopIDs);
+            $this->setNarrowShopContextFromSelection();
+
             return true;
+        }
+
+        $allowedShopIds = $this->getAllowedShopIdsForCurrentKey();
+        if (empty($allowedShopIds)) {
+            $this->setError(403, 'No permission for this key on this shop', 132);
+
+            return false;
         }
 
         if (isset($params['id_shop'])) {
             if ($params['id_shop'] != 'all' && is_numeric($params['id_shop'])) {
-                Shop::setContext(Shop::CONTEXT_SHOP, (int) $params['id_shop']);
-                self::$shopIDs[] = (int) $params['id_shop'];
+                $requestedShopId = (int) $params['id_shop'];
+                if (!in_array($requestedShopId, $allowedShopIds, true)) {
+                    $this->setError(403, 'No permission for this key on this shop', 132);
+
+                    return false;
+                }
+
+                self::$shopIDs[] = $requestedShopId;
+                $this->setNarrowShopContextFromSelection();
 
                 return true;
             } elseif ($params['id_shop'] == 'all') {
-                Shop::setContext(Shop::CONTEXT_ALL);
-                self::$shopIDs = Shop::getShops(true, null, true);
+                $allShopIds = $this->normalizeShopIds(Shop::getShops(true, null, true));
+                if (empty($allShopIds) || count(array_intersect($allShopIds, $allowedShopIds)) !== count($allShopIds)) {
+                    $this->setError(403, 'No permission for this key on this shop', 132);
+
+                    return false;
+                }
+
+                self::$shopIDs = $allShopIds;
+                $this->setNarrowShopContextFromSelection();
 
                 return true;
             }
         } else {
             self::$shopIDs[] = Context::getContext()->shop->id;
+            $this->setNarrowShopContextFromSelection();
 
             return true;
         }
@@ -908,14 +1034,23 @@ class WebserviceRequestCore
         }
 
         if (null !== $idShopGroup) {
-            Shop::setContext(Shop::CONTEXT_GROUP, $idShopGroup);
-            self::$shopIDs = Shop::getShops(true, $idShopGroup, true);
-            if (!is_countable(self::$shopIDs) || count(self::$shopIDs) == 0) {
+            $groupShopIds = Shop::getShops(true, $idShopGroup, true);
+            if (!is_countable($groupShopIds) || count($groupShopIds) == 0) {
                 // @FIXME Set ErrorCode !
                 $this->setError(500, 'This shop group doesn\'t have shops', 999);
 
                 return false;
             }
+
+            $allowedShopIds = $this->getAllowedShopIdsForCurrentKey();
+            self::$shopIDs = $this->normalizeShopIds(array_intersect($groupShopIds, $allowedShopIds));
+            if (empty(self::$shopIDs) || count(self::$shopIDs) !== count($groupShopIds)) {
+                $this->setError(403, 'No permission for this key on this shop', 132);
+
+                return false;
+            }
+
+            $this->setNarrowShopContextFromSelection();
         }
 
         // id_shop_group isn't mandatory
@@ -1294,6 +1429,8 @@ class WebserviceRequestCore
         /* If we only need to display the synopsis, analyzing the first row is sufficient */
         if (isset($this->urlFragments['schema']) && in_array($this->urlFragments['schema'], ['blank', 'synopsis'])) {
             $filters = ['sql_join' => '', 'sql_filter' => '', 'sql_sort' => '', 'sql_limit' => ' LIMIT 1'];
+        } elseif ($this->resourceConfiguration['retrieveData']['retrieveMethod'] === 'getWebserviceObjectList') {
+            $filters['sql_filter'] .= $this->getShopsSqlFilter();
         }
 
         $this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_join'];
@@ -1333,34 +1470,13 @@ class WebserviceRequestCore
         // get entity details
         $object = new $this->resourceConfiguration['retrieveData']['className']((int) $this->urlSegment[1]);
         if ($object->id) {
-            $objects[] = $object;
-            // Check if Object is accessible for this/those id_shop
-            $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
-            if ($assoc !== false) {
-                $check_shop_group = false;
+            if (!$this->isObjectAccessibleFromShops($object)) {
+                $this->setError(404, 'This ' . $this->resourceConfiguration['retrieveData']['className'] . ' (' . (int) $this->urlSegment[1] . ') does not exists on this shop', 131);
 
-                $sql = 'SELECT 1
-	 						FROM `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']);
-                if ($assoc['type'] != 'fk_shop') {
-                    $sql .= '_' . $assoc['type'];
-                } else {
-                    $def = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
-                    if (isset($def['fields']['id_shop_group'])) {
-                        $check_shop_group = true;
-                    }
-                }
-                $sql .= '`';
-
-                $OR = [];
-                foreach (self::$shopIDs as $id_shop) {
-                    $OR[] = ' (id_shop = ' . (int) $id_shop . ($check_shop_group ? ' OR (id_shop = 0 AND id_shop_group=' . (int) Shop::getGroupFromShop((int) $id_shop) . ')' : '') . ') ';
-                }
-
-                $check = ' WHERE (' . implode('OR', $OR) . ') AND `' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = ' . (int) $this->urlSegment[1];
-                if (!Db::getInstance()->getValue($sql . $check)) {
-                    $this->setError(404, 'This ' . $this->resourceConfiguration['retrieveData']['className'] . ' (' . (int) $this->urlSegment[1] . ') does not exists on this shop', 131);
-                }
+                return false;
             }
+
+            $objects[] = $object;
 
             return $objects;
         }
@@ -1454,6 +1570,8 @@ class WebserviceRequestCore
             foreach ($ids as $id) {
                 $object = new $this->resourceConfiguration['retrieveData']['className']((int) $id);
                 if (!$object->id) {
+                    $arr_avoid_id[] = $id;
+                } elseif (!$this->isObjectAccessibleFromShops($object)) {
                     $arr_avoid_id[] = $id;
                 } else {
                     $objects[] = $object;
@@ -1557,6 +1675,12 @@ class WebserviceRequestCore
 
                     return false;
                 }
+
+                if (!$this->isObjectAccessibleFromShops($object)) {
+                    $this->setError(404, 'This ' . $this->resourceConfiguration['retrieveData']['className'] . ' (' . (int) $attributes->id . ') does not exists on this shop', 131);
+
+                    return false;
+                }
             }
 
             if ($object instanceof Category) {
@@ -1617,6 +1741,13 @@ class WebserviceRequestCore
                 if (isset($fieldProperties['modifier']['modifier']) && $fieldProperties['modifier']['http_method'] & constant('WebserviceRequest::HTTP_' . $this->method)) {
                     $object->{$fieldProperties['modifier']['modifier']}();
                 }
+            }
+
+            // The XML may have moved the record, or attached it to an owner, outside the shops of the key
+            if (!$this->hasErrors() && !$this->isObjectAccessibleFromShops($object)) {
+                $this->setError(403, 'No permission for this key on this shop', 132);
+
+                return false;
             }
 
             if (!$this->hasErrors()) {
@@ -1695,6 +1826,168 @@ class WebserviceRequestCore
         }
 
         return false;
+    }
+
+    /**
+     * Checks whether the loaded object belongs to one of the currently authorized shops.
+     *
+     * @param ObjectModel $object
+     *
+     * @return bool
+     */
+    protected function isObjectAccessibleFromShops($object)
+    {
+        $selectedShopIds = $this->normalizeShopIds(self::$shopIDs);
+        if (empty($selectedShopIds)) {
+            return false;
+        }
+
+        if (property_exists($object, 'id_shop') && (int) $object->id_shop > 0) {
+            return in_array((int) $object->id_shop, $this->getReachableShopIds($this->getShopShareType($object)), true);
+        }
+
+        $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
+        if ($assoc === false) {
+            return $this->areShopOwnersReachable($object);
+        }
+
+        // A new record is associated to the selected shops once added
+        if (!$object->id) {
+            return true;
+        }
+
+        $checkShopGroup = false;
+        $sql = 'SELECT 1
+			FROM `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']);
+        if ($assoc['type'] != 'fk_shop') {
+            $sql .= '_' . $assoc['type'];
+        } else {
+            $def = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
+            if (isset($def['fields']['id_shop_group'])) {
+                $checkShopGroup = true;
+            }
+        }
+        $sql .= '`';
+
+        $OR = [];
+        foreach ($selectedShopIds as $idShop) {
+            $OR[] = ' (id_shop = ' . (int) $idShop . ($checkShopGroup ? ' OR (id_shop = 0 AND id_shop_group=' . (int) Shop::getGroupFromShop((int) $idShop) . ')' : '') . ') ';
+        }
+
+        $check = ' WHERE (' . implode('OR', $OR) . ') AND `' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = ' . (int) $object->id;
+
+        return (bool) Db::getInstance()->getValue($sql . $check);
+    }
+
+    /**
+     * Group sharing flag under which the other shops of a group may reach this object; null when it is never shared.
+     *
+     * @param ObjectModel $object
+     *
+     * @return string|null
+     */
+    protected function getShopShareType($object)
+    {
+        if ($object instanceof Customer) {
+            return Shop::SHARE_CUSTOMER;
+        }
+
+        if ($object instanceof Order || $object instanceof OrderDetail || $object instanceof Cart) {
+            return Shop::SHARE_ORDER;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string|null $shareType
+     *
+     * @return int[]
+     */
+    protected function getReachableShopIds($shareType)
+    {
+        $reachableShopIds = [];
+        foreach ($this->normalizeShopIds(self::$shopIDs) as $selectedShopId) {
+            $reachableShopIds = array_merge(
+                $reachableShopIds,
+                $shareType === null ? [$selectedShopId] : Shop::getSharedShops($selectedShopId, $shareType)
+            );
+        }
+
+        return $this->normalizeShopIds($reachableShopIds);
+    }
+
+    /**
+     * Owner fields of the current resource, among SHOP_OWNER_FIELDS.
+     *
+     * @return array<string, array{table: string, column: string, share: string|null}>
+     */
+    protected function getShopOwnerFields()
+    {
+        $definition = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
+        if (isset($definition['fields']['id_shop'])) {
+            return [];
+        }
+
+        return array_intersect_key(static::SHOP_OWNER_FIELDS, $definition['fields']);
+    }
+
+    /**
+     * @param ObjectModel $object
+     *
+     * @return bool
+     */
+    protected function areShopOwnersReachable($object)
+    {
+        foreach ($this->getShopOwnerFields() as $field => $owner) {
+            $value = (string) $object->{$field};
+            if ($value === '' || $value === '0') {
+                continue;
+            }
+
+            $reachableShopIds = $this->getReachableShopIds($owner['share']);
+            if (empty($reachableShopIds) || !Db::getInstance()->getValue(
+                'SELECT 1 FROM `' . _DB_PREFIX_ . $owner['table'] . '`
+                WHERE `' . $owner['column'] . '` = \'' . pSQL($value) . '\' AND id_shop IN (' . implode(', ', $reachableShopIds) . ')'
+            )) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Restricts a resource list as isObjectAccessibleFromShops() restricts a record.
+     *
+     * @return string
+     */
+    protected function getShopsSqlFilter()
+    {
+        if (Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']) !== false) {
+            return '';
+        }
+
+        $className = $this->resourceConfiguration['retrieveData']['className'];
+        if (isset(ObjectModel::getDefinition($className)['fields']['id_shop'])) {
+            $reachableShopIds = $this->getReachableShopIds($this->getShopShareType(new $className()));
+
+            return ' AND (main.`id_shop` IS NULL OR main.`id_shop` = 0'
+                . (empty($reachableShopIds) ? '' : ' OR main.`id_shop` IN (' . implode(', ', $reachableShopIds) . ')')
+                . ')';
+        }
+
+        $sqlFilter = '';
+        foreach ($this->getShopOwnerFields() as $field => $owner) {
+            $reachableShopIds = $this->getReachableShopIds($owner['share']);
+            $sqlFilter .= ' AND (main.`' . $field . '` IS NULL OR main.`' . $field . '` IN (\'\', \'0\')';
+            if (!empty($reachableShopIds)) {
+                $sqlFilter .= ' OR main.`' . $field . '` IN (SELECT `' . $owner['column'] . '` FROM `' . _DB_PREFIX_ . $owner['table'] . '` WHERE id_shop IN (' . implode(', ', $reachableShopIds) . '))';
+            }
+            $sqlFilter .= ')';
+        }
+
+        return $sqlFilter;
     }
 
     /**
