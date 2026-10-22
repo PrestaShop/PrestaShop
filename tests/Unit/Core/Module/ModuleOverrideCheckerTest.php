@@ -75,6 +75,18 @@ class ModuleOverrideCheckerTest extends TestCase
                 'testconstantconflict',
                 true,
             ],
+            [
+                'teststaticmethodconflict',
+                true,
+            ],
+            [
+                'testtypedpropertyconflict',
+                true,
+            ],
+            [
+                'testcasemethodconflict',
+                true,
+            ],
         ];
     }
 }
