@@ -706,6 +706,37 @@ class ObjectModelTest extends TestCase
         ]);
     }
 
+    public function testUpdateChangesReportTheValuesStored(): void
+    {
+        $createdId = $this->createObjectForChanges([$this->defaultShopId]);
+        $this->installChangesModule();
+
+        // The missing translation is stored as an empty string
+        $objectToUpdate = new TestableObjectModel($createdId);
+        $objectToUpdate->name = [$this->defaultLanguageId => 'Default name'];
+        $this->assertTrue((bool) $objectToUpdate->update());
+
+        $this->assertChangesReceived([
+            'name' => [
+                'old' => [$this->secondLanguageId => 'Second name'],
+                'new' => [$this->secondLanguageId => ''],
+            ],
+        ]);
+        $this->assertSame('', (new TestableObjectModel($createdId, $this->secondLanguageId))->name);
+
+        // An object loaded in one language only writes that language
+        objectchangestest::$calls = [];
+        $objectToUpdate = new TestableObjectModel($createdId, $this->defaultLanguageId);
+        $objectToUpdate->name = [
+            $this->defaultLanguageId => 'Default name',
+            $this->secondLanguageId => 'Not written',
+        ];
+        $this->assertTrue((bool) $objectToUpdate->update());
+
+        $this->assertChangesReceived([]);
+        $this->assertSame('', (new TestableObjectModel($createdId, $this->secondLanguageId))->name);
+    }
+
     public function testUpdateChangesAreComputedForTheObjectShop(): void
     {
         $createdId = $this->createObjectForChanges([$this->defaultShopId, $this->secondShopId]);

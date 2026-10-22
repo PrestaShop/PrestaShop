@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Classes;
 
+use Language;
 use ObjectModel;
 use ObjectModelCore;
 use PHPUnit\Framework\TestCase;
@@ -41,6 +42,24 @@ class ObjectModelChangesTestEntity extends ObjectModel
 
 class ObjectModelChangesTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Changes are computed for the languages an update writes
+        (static function (): void {
+            static::$_LANGUAGES = [
+                1 => ['id_lang' => 1, 'active' => 1, 'locale' => 'en-US', 'shops' => [1 => true]],
+                2 => ['id_lang' => 2, 'active' => 1, 'locale' => 'fr-FR', 'shops' => [1 => true]],
+            ];
+        })->bindTo(null, Language::class)();
+    }
+
+    protected function tearDown(): void
+    {
+        Language::resetCache();
+        parent::tearDown();
+    }
+
     public function testUnchangedValuesWithDifferentTypesAreNotReported(): void
     {
         // Values hydrated from database are strings
@@ -137,6 +156,34 @@ class ObjectModelChangesTest extends TestCase
             ['quantity' => ['old' => '3', 'new' => 5]],
             $this->computeChanges($current, $persisted)
         );
+    }
+
+    public function testMissingTranslationIsReportedAsTheEmptyValueStored(): void
+    {
+        $persisted = $this->createEntity(['name' => [1 => 'Name', 2 => 'Nom']]);
+        $current = $this->createEntity(['name' => [1 => 'Name']]);
+
+        $this->assertSame(
+            ['name' => ['old' => [2 => 'Nom'], 'new' => [2 => '']]],
+            $this->computeChanges($current, $persisted)
+        );
+    }
+
+    public function testSingleLanguageObjectOnlyReportsItsLanguage(): void
+    {
+        $persisted = $this->createEntity(['name' => 'Nom'], 2);
+        // Only the object language is written, whatever the other entries hold
+        $current = $this->createEntity(['name' => [1 => 'New name', 2 => 'Nom']], 2);
+
+        $this->assertSame([], $this->computeChanges($current, $persisted));
+    }
+
+    public function testFloatsAreComparedWithTheStoredPrecision(): void
+    {
+        $persisted = $this->createEntity(['price' => '10.416667']);
+        $current = $this->createEntity(['price' => 12.5 / 1.2]);
+
+        $this->assertSame([], $this->computeChanges($current, $persisted));
     }
 
     private function createEntity(array $values, ?int $idLang = null): ObjectModelChangesTestEntity

@@ -297,23 +297,53 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         $is_lang_multishop = $this->isLangMultishop();
 
         $fields = [];
-        if (!is_int($this->id_lang) || $this->id_lang <= 0) {
-            foreach (Language::getIDs(false) as $id_lang) {
-                $fields[$id_lang] = $this->formatFields(self::FORMAT_LANG, $id_lang);
-                $fields[$id_lang]['id_lang'] = $id_lang;
-                if ($this->id_shop && $is_lang_multishop) {
-                    $fields[$id_lang]['id_shop'] = (int) $this->id_shop;
-                }
-            }
-        } else {
-            $fields = [$this->id_lang => $this->formatFields(self::FORMAT_LANG, $this->id_lang)];
-            $fields[$this->id_lang]['id_lang'] = $this->id_lang;
+        foreach ($this->getLanguageIdsToStore() as $id_lang) {
+            $fields[$id_lang] = $this->formatFields(self::FORMAT_LANG, $id_lang);
+            $fields[$id_lang]['id_lang'] = $id_lang;
             if ($this->id_shop && $is_lang_multishop) {
-                $fields[$this->id_lang]['id_shop'] = (int) $this->id_shop;
+                $fields[$id_lang]['id_shop'] = (int) $this->id_shop;
             }
         }
 
         return $fields;
+    }
+
+    /**
+     * Languages written by an update: only the object language when it was loaded with one, all of them otherwise.
+     *
+     * @return int[]
+     */
+    private function getLanguageIdsToStore(): array
+    {
+        if (!is_int($this->id_lang) || $this->id_lang <= 0) {
+            return Language::getIDs(false);
+        }
+
+        return [$this->id_lang];
+    }
+
+    /**
+     * Value written for one language of a multilang field: an empty translation falls back
+     * to the default language for required fields, and to an empty string otherwise.
+     */
+    private function getLangValueToStore(mixed $value, array $fieldDefinition, int $idLang): mixed
+    {
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        if (!empty($value[$idLang])) {
+            return $value[$idLang];
+        }
+
+        if (!empty($fieldDefinition['required']) || in_array(
+            Tools::strtolower($fieldDefinition['validate'] ?? ''),
+            ['isrequiredwhenactive', 'defaultlanguagerequiredwhenactive']
+        )) {
+            return $value[Configuration::get('PS_LANG_DEFAULT')];
+        }
+
+        return '';
     }
 
     /**
@@ -383,17 +413,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
 
             // Get field value, if value is multilang and field is empty, use value from default lang
             $value = $this->$field;
-            if ($type == self::FORMAT_LANG && $id_lang && is_array($value)) {
-                if (!empty($value[$id_lang])) {
-                    $value = $value[$id_lang];
-                } elseif (!empty($data['required']) || in_array(
-                    Tools::strtolower($data['validate'] ?? ''),
-                    ['isrequiredwhenactive', 'defaultlanguagerequiredwhenactive']
-                )) {
-                    $value = $value[Configuration::get('PS_LANG_DEFAULT')];
-                } else {
-                    $value = '';
-                }
+            if ($type == self::FORMAT_LANG && $id_lang) {
+                $value = $this->getLangValueToStore($value, $data, (int) $id_lang);
             }
 
             $purify = isset($data['validate']) && Tools::strtolower($data['validate']) == 'iscleanhtml';
@@ -499,9 +520,16 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     private function loadPersistedState(): self
     {
         $persistedState = clone $this;
+        // Values missing from the database must not keep the new ones from the clone
+        foreach (array_keys($this->def['fields']) as $field) {
+            $persistedState->{$field} = null;
+        }
+
+        // Read the same languages as the update writes
+        $languageIds = $this->getLanguageIdsToStore();
         /** @var PrestaShop\PrestaShop\Adapter\EntityMapper $entity_mapper */
         $entity_mapper = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper');
-        $entity_mapper->load($this->id, $this->id_lang, $persistedState, $this->def, $this->id_shop, false);
+        $entity_mapper->load($this->id, count($languageIds) === 1 ? $languageIds[0] : null, $persistedState, $this->def, $this->id_shop, false);
 
         return $persistedState;
     }
@@ -524,6 +552,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             $newValue = $this->{$field} ?? null;
 
             if (empty($data['lang'])) {
+                $newValue = $this->purifyValueToStore($newValue, $data);
                 if ($this->normalizeFieldValue($oldValue, $data) !== $this->normalizeFieldValue($newValue, $data)) {
                     $changes[$field] = ['old' => $oldValue, 'new' => $newValue];
                 }
@@ -531,14 +560,14 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                 continue;
             }
 
-            $oldValues = is_array($oldValue) ? $oldValue : [(int) $this->id_lang => $oldValue];
-            $newValues = is_array($newValue) ? $newValue : [(int) $this->id_lang => $newValue];
-            foreach ($newValues as $idLang => $newLangValue) {
+            foreach ($this->getLanguageIdsToStore() as $idLang) {
                 if (is_array($this->update_fields) && empty($this->update_fields[$field][$idLang])) {
                     continue;
                 }
 
-                $oldLangValue = $oldValues[$idLang] ?? null;
+                // The persisted value is a scalar when the object was loaded in a single language
+                $oldLangValue = is_array($oldValue) ? ($oldValue[$idLang] ?? null) : $oldValue;
+                $newLangValue = $this->purifyValueToStore($this->getLangValueToStore($newValue, $data, $idLang), $data);
                 if ($this->normalizeFieldValue($oldLangValue, $data) !== $this->normalizeFieldValue($newLangValue, $data)) {
                     $changes[$field]['old'][$idLang] = $oldLangValue;
                     $changes[$field]['new'][$idLang] = $newLangValue;
@@ -547,6 +576,21 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         }
 
         return $changes;
+    }
+
+    /**
+     * HTML is stored purified, see formatFields().
+     */
+    private function purifyValueToStore(mixed $value, array $fieldDefinition): mixed
+    {
+        if (is_string($value)
+            && self::TYPE_HTML === $fieldDefinition['type']
+            && Tools::strtolower($fieldDefinition['validate'] ?? '') === 'iscleanhtml'
+        ) {
+            return Tools::purifyHTML($value);
+        }
+
+        return $value;
     }
 
     /**
@@ -560,7 +604,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
 
         return match ($fieldDefinition['type']) {
             self::TYPE_INT, self::TYPE_BOOL => (int) $value,
-            self::TYPE_FLOAT => (float) str_replace(',', '.', (string) $value),
+            // Float columns are DECIMAL(x,6) at most
+            self::TYPE_FLOAT => round((float) str_replace(',', '.', (string) $value), 6),
             // Empty dates are stored as zero dates
             self::TYPE_DATE => !$value || str_starts_with((string) $value, '0000-00-00') ? '' : (string) $value,
             self::TYPE_NOTHING => $value,
