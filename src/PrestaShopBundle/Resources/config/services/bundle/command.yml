@@ -90,6 +90,15 @@ services:
     tags:
       - 'console.command'
 
+  PrestaShopBundle\Command\ExportPdfCommand:
+    arguments:
+      $orderInvoiceDataProvider: '@prestashop.adapter.data_provider.order_invoice'
+      $invoicePdfGenerator: '@prestashop.adapter.pdf.generator.invoice'
+      $filesystem: '@filesystem'
+      $projectDir: '%kernel.project_dir%'
+    tags:
+      - 'console.command'
+
   PrestaShopBundle\Command\ExportModuleTranslationsCommand:
     arguments:
       $translationCatalogueExporter: '@prestashop.translation.export.translation_catalogue'
