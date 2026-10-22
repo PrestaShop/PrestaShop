@@ -21,6 +21,13 @@ class SpecificPriceRuleCore extends ObjectModel
     protected static $rules_application_enable = true;
 
     /**
+     * Condition types getAffectedProducts() knows how to turn into a product filter.
+     * A condition of any other type contributes no restriction, which would silently
+     * widen the rule to the whole catalog.
+     */
+    public const CONDITION_TYPES = ['attribute', 'category', 'feature', 'manufacturer', 'supplier'];
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -50,6 +57,17 @@ class SpecificPriceRuleCore extends ObjectModel
             'id_country' => ['xlink_resource' => 'countries', 'required' => true],
             'id_currency' => ['xlink_resource' => 'currencies', 'required' => true],
             'id_group' => ['xlink_resource' => 'groups', 'required' => true],
+        ],
+        'associations' => [
+            'specific_price_rule_conditions' => [
+                'resource' => 'specific_price_rule_condition',
+                'virtual_entity' => true,
+                'fields' => [
+                    'id_specific_price_rule_condition_group' => ['required' => true],
+                    'type' => ['required' => true],
+                    'value' => ['required' => true],
+                ],
+            ],
         ],
     ];
 
@@ -89,10 +107,44 @@ class SpecificPriceRuleCore extends ObjectModel
         SpecificPriceRule::$rules_application_enable = true;
     }
 
+    /**
+     * An empty group adds no restriction to getAffectedProducts() and would apply the
+     * rule to every product of the shop, and a condition of an unhandled type is skipped
+     * there the same way, so neither is accepted as a condition group.
+     *
+     * @param array $conditions
+     *
+     * @return bool
+     */
+    protected static function areValidConditions($conditions)
+    {
+        if (!is_array($conditions) || !$conditions) {
+            return false;
+        }
+
+        foreach ($conditions as $condition) {
+            if (!is_array($condition)
+                || !isset($condition['type'], $condition['value'])
+                || !in_array($condition['type'], self::CONDITION_TYPES, true)
+                || !Validate::isUnsignedInt($condition['value'])
+                || 0 === (int) $condition['value']
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $conditions AND-combined conditions forming one condition group
+     *
+     * @return bool
+     */
     public function addConditions($conditions)
     {
-        if (!is_array($conditions)) {
-            return;
+        if (!self::areValidConditions($conditions)) {
+            return false;
         }
 
         $result = Db::getInstance()->insert('specific_price_rule_condition_group', [
@@ -182,6 +234,84 @@ class SpecificPriceRuleCore extends ObjectModel
         }
 
         return $conditions_group;
+    }
+
+    /**
+     * Flatten the condition groups into the rows exposed by the webservice. The group a
+     * condition belongs to is carried by id_specific_price_rule_condition_group.
+     *
+     * @return array
+     */
+    public function getWsSpecificPriceRuleConditions()
+    {
+        $rows = [];
+        foreach ($this->getConditions() as $idConditionGroup => $conditions) {
+            foreach ($conditions as $condition) {
+                // getConditions() left-joins the conditions, so a group holding none
+                // yields a single row with no type.
+                if (empty($condition['type'])) {
+                    continue;
+                }
+                $rows[] = [
+                    'id_specific_price_rule_condition_group' => (int) $idConditionGroup,
+                    'type' => $condition['type'],
+                    'value' => $condition['value'],
+                ];
+            }
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Replace the conditions of the rule with the rows received from the webservice.
+     *
+     * The association carries a flat list of rows because the webservice only reads two
+     * levels of XML; id_specific_price_rule_condition_group groups the rows into the
+     * condition groups the rule is made of. On write it is a grouping key only: rows
+     * sharing a value land in the same group, and the stored group ids are generated.
+     *
+     * @param array $values
+     *
+     * @return bool
+     */
+    public function setWsSpecificPriceRuleConditions($values)
+    {
+        if (!is_array($values)) {
+            return false;
+        }
+
+        $groups = [];
+        foreach ($values as $value) {
+            if (!is_array($value) || !isset($value['type'], $value['value'])) {
+                return false;
+            }
+            $idConditionGroup = isset($value['id_specific_price_rule_condition_group'])
+                ? (int) $value['id_specific_price_rule_condition_group']
+                : 0;
+            $groups[$idConditionGroup][] = ['type' => $value['type'], 'value' => $value['value']];
+        }
+
+        // Validated before anything is removed: a rejected payload must not leave the rule
+        // without conditions, which would widen it to the whole catalog.
+        foreach ($groups as $conditions) {
+            if (!self::areValidConditions($conditions)) {
+                return false;
+            }
+        }
+
+        $this->deleteConditions();
+        foreach ($groups as $conditions) {
+            if (!$this->addConditions($conditions)) {
+                return false;
+            }
+        }
+
+        // The generated specific prices are derived from the conditions, so they have to
+        // be rebuilt here the same way AdminSpecificPriceRuleController does on save.
+        $this->apply();
+
+        return true;
     }
 
     /**
