@@ -54,19 +54,9 @@ class CommonController extends PrestaShopAdminController
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', 'AdminOrders') || is_granted('read', 'AdminCustomers') || is_granted('read', 'AdminCustomerThreads')", message: 'You do not have permission to view this.')]
     public function notificationsAction(): JsonResponse
     {
-        /*
-         * Prevents 403 errors while preserving security checks and returning an empty array when access is denied.
-         */
-        if (
-            !$this->isGranted('read', 'AdminOrders')
-             && !$this->isGranted('read', 'AdminCustomers')
-             && !$this->isGranted('read', 'AdminCustomerThreads')
-        ) {
-            return new JsonResponse([]);
-        }
-
         /** @var NotificationsResults $elements */
         $elements = $this->dispatchQuery(new GetNotificationLastElements($this->getEmployeeContext()->getEmployee()->getId()));
 
