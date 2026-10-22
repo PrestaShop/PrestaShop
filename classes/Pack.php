@@ -329,7 +329,7 @@ class PackCore extends Product
                     $packQuantity = $nbPackAvailableForItem;
                 }
             }
-        } elseif (!empty($cart)) {
+        } elseif ($cart !== null && (int) $cart->id > 0) {
             $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
 
             if (!empty($cartProduct['deep_quantity'])) {
