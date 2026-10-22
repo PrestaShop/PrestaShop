@@ -226,7 +226,7 @@ class OrderLazyArray extends AbstractLazyArray
 
         $orderProducts = $this->cartPresenter->addCustomizedData($orderProducts, $cart);
 
-        return $this->addOrderReferenceToCustomizationFileUrls($orderProducts);
+        return $this->addOrderOwnershipProofToCustomizationFileUrls($orderProducts);
     }
 
     /**
@@ -470,7 +470,11 @@ class OrderLazyArray extends AbstractLazyArray
         ];
     }
 
-    private function addOrderReferenceToCustomizationFileUrls(array $products): array
+    /**
+     * Customization files are served by UploadController only to the owner of the cart they were
+     * uploaded in, or to a visitor proving ownership of the order with its reference AND secure key.
+     */
+    private function addOrderOwnershipProofToCustomizationFileUrls(array $products): array
     {
         /**
          * @param array|string $url
@@ -483,10 +487,13 @@ class OrderLazyArray extends AbstractLazyArray
                     $imageUrl[$key] = $addReferenceFunction($url);
                 }
             } else {
-                // deconstruct the url and rebuild it with the reference query added
+                // deconstruct the url and rebuild it with the order reference and secure key added
                 $parsedUrl = parse_url($imageUrl);
                 parse_str($parsedUrl['query'] ?? '', $parsedQuery);
-                $newQuery = http_build_query(array_merge($parsedQuery, ['reference' => $this->order->reference]));
+                $newQuery = http_build_query(array_merge($parsedQuery, [
+                    'reference' => $this->order->reference,
+                    'secure_key' => $this->order->secure_key,
+                ]));
                 $imageUrl = http_build_url(array_merge($parsedUrl, ['query' => $newQuery]));
             }
 
