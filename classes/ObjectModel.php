@@ -1146,20 +1146,14 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      */
     public function validateField($field, $value, $id_lang = null, $skip = [], $human_errors = false)
     {
-        // The default language depends on the shop context, which can change during the request
-        static $ps_lang_default = [];
-
-        $id_shop = (int) Shop::getContextShopID(true);
-        if (!isset($ps_lang_default[$id_shop])) {
-            $ps_lang_default[$id_shop] = Configuration::get('PS_LANG_DEFAULT');
-        }
+        $ps_lang_default = (int) Configuration::get('PS_LANG_DEFAULT');
 
         $this->cacheFieldsRequiredDatabase();
         $data = $this->def['fields'][$field];
 
         // Check if field is required
         $required_fields = $this->getCachedFieldsRequiredDatabase();
-        if (!$id_lang || $id_lang == $ps_lang_default[$id_shop]) {
+        if (!$id_lang || $id_lang == $ps_lang_default) {
             if (!in_array('required', $skip) && (!empty($data['required']) || in_array($field, $required_fields))) {
                 if (Tools::isEmpty($value)) {
                     if ($human_errors) {
