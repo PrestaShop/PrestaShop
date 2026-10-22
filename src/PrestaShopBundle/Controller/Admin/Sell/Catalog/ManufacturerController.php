@@ -591,7 +591,7 @@ class ManufacturerController extends PrestaShopAdminController
      *
      * @return Response
      */
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_manufacturers_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('update', 'AdminAddresses')", redirectRoute: 'admin_manufacturers_index')]
     public function editAddressAction(
         Request $request,
         int $addressId,
