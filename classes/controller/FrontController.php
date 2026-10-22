@@ -2329,6 +2329,11 @@ class FrontControllerCore extends Controller
             $alternativeLangs[$lang['language_code']] = $this->sanitizeUrl($langUrl);
         }
 
+        // setting default language link for x-default value
+        $defaultIdLang = (int) Configuration::get('PS_LANG_DEFAULT');
+        $langUrl = $this->context->link->getLanguageLink($defaultIdLang);
+        $alternativeLangs['x-default'] = $this->sanitizeUrl($langUrl);
+
         return $alternativeLangs;
     }
 
