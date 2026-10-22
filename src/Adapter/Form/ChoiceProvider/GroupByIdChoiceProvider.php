@@ -6,8 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-use Group;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
@@ -16,9 +15,9 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var ConfigurationInterface
+     * @var GroupDataProvider
      */
-    private $configuration;
+    private $groupDataProvider;
 
     /**
      * @var int
@@ -26,12 +25,12 @@ final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
     private $contextLangId;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @param GroupDataProvider $groupDataProvider
      * @param int $contextLangId
      */
-    public function __construct(ConfigurationInterface $configuration, int $contextLangId)
+    public function __construct(GroupDataProvider $groupDataProvider, int $contextLangId)
     {
-        $this->configuration = $configuration;
+        $this->groupDataProvider = $groupDataProvider;
         $this->contextLangId = $contextLangId;
     }
 
@@ -41,21 +40,9 @@ final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
     public function getChoices(): array
     {
         $choices = [];
-        $groups = Group::getGroups($this->contextLangId, true);
 
-        $groupsToSkip = [
-            (int) $this->configuration->get('PS_UNIDENTIFIED_GROUP'),
-            (int) $this->configuration->get('PS_GUEST_GROUP'),
-        ];
-
-        foreach ($groups as $group) {
-            $groupId = $group['id_group'];
-
-            if (in_array($groups, $groupsToSkip)) {
-                continue;
-            }
-
-            $choices[$group['name']] = (int) $groupId;
+        foreach ($this->groupDataProvider->getGroups($this->contextLangId, true) as $group) {
+            $choices[$group['name']] = (int) $group['id_group'];
         }
 
         return $choices;
