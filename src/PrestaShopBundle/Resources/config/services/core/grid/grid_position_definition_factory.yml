@@ -40,6 +40,13 @@ services:
       $idField: 'id_attribute_group'
       $positionField: 'position'
 
+  prestashop.core.grid.contact.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'contact'
+      $idField: 'id_contact'
+      $positionField: 'position'
+
   prestashop.core.grid.carrier.position_definition:
     class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
     arguments:
