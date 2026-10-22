@@ -76,19 +76,11 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
     }
 
     /**
-     * Escape a string meant to be placed inside a CDATA section. The sequence
-     * ]]> terminates the section, so any occurrence is split by ending and
-     * reopening the section. A caller supplied value such as an unknown filter
-     * name or resource name is reflected in error messages, and this keeps it
-     * from altering the structure of the error document.
-     *
-     * @param string $value content to place in a CDATA section
-     *
-     * @return string
+     * Splits "]]>" so the value cannot close the CDATA section.
      */
-    private function escapeCdataContent($value)
+    private function escapeCdataContent(string $value): string
     {
-        return str_replace(']]>', ']]]]><![CDATA[>', (string) $value);
+        return str_replace(']]>', ']]]]><![CDATA[>', $value);
     }
 
     public function renderField($field)
@@ -109,7 +101,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
                 $node_content .= '<language id="' . $language . '"' . $more_attr . '>';
                 $node_content .= '<![CDATA[';
                 if (isset($field['value'][$language])) {
-                    $node_content .= $field['value'][$language];
+                    $node_content .= $this->escapeCdataContent($field['value'][$language]);
                 }
                 $node_content .= ']]>';
                 $node_content .= '</language>';
@@ -134,7 +126,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
             }
 
             if (array_key_exists('value', $field)) {
-                $node_content .= '<![CDATA[' . $field['value'] . ']]>';
+                $node_content .= '<![CDATA[' . $this->escapeCdataContent($field['value']) . ']]>';
             }
         }
 
