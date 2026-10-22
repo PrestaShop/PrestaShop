@@ -22,7 +22,7 @@ class FormHandlerFactoryTest extends TestCase
         $factory = new FormHandlerFactory(
             $this->createMock(HookDispatcherInterface::class),
             $this->createMock(TranslatorInterface::class),
-            true,
+            false,
             $this->createMock(ExtraPropertiesFormDataPersister::class)
         );
 
