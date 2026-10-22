@@ -82,7 +82,8 @@ class ExecKernelCacheClearer implements KernelCacheClearerInterface
 
     protected function execCommand(AppKernel $kernel, string $command, string $successMessage, $errorMessage): bool
     {
-        $commandLine = 'php -d memory_limit=-1 ' . $kernel->getProjectDir() . '/bin/console ' . $command;
+        $phpPath = getenv('PS_PHP_BIN_PATH') ?: 'php';
+        $commandLine = $phpPath . ' -d memory_limit=-1 ' . $kernel->getProjectDir() . '/bin/console ' . $command;
         $output = [];
         $result = 0;
         exec($commandLine, $output, $result);
