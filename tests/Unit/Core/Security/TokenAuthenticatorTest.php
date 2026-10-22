@@ -7,14 +7,18 @@
 namespace Tests\Unit\Core\Security;
 
 use DateTimeImmutable;
+use Doctrine\ORM\NoResultException;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\JwtFacade;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\JwtTokenUser;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator;
+use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
+use PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -87,5 +91,80 @@ class TokenAuthenticatorTest extends TestCase
         $this->expectException(CustomUserMessageAuthenticationException::class);
         $this->expectExceptionMessage('Invalid credentials');
         $this->tokenAuthenticator->authenticate($request);
+    }
+
+    public function testAnEnabledApiClientIsAuthenticated(): void
+    {
+        $passport = $this->buildTokenAuthenticatorForApiClient($this->buildApiClient(true))->authenticate($this->buildBearerRequest());
+
+        $this->assertSame('myclientid', $passport->getUser()->getUserIdentifier());
+    }
+
+    /**
+     * Access tokens are self-contained JWTs that stay valid until they expire, so disabling the
+     * client is the only way for a merchant to cut the access of a leaked or obsolete token.
+     */
+    public function testADisabledApiClientIsRefusedEvenWithAValidToken(): void
+    {
+        $this->expectException(CustomUserMessageAuthenticationException::class);
+        $this->expectExceptionMessage('API client is disabled');
+
+        $this->buildTokenAuthenticatorForApiClient($this->buildApiClient(false))->authenticate($this->buildBearerRequest());
+    }
+
+    public function testADeletedApiClientIsRefusedEvenWithAValidToken(): void
+    {
+        $this->expectException(CustomUserMessageAuthenticationException::class);
+        $this->expectExceptionMessage('Unknown API client');
+
+        $this->buildTokenAuthenticatorForApiClient(null)->authenticate($this->buildBearerRequest());
+    }
+
+    private function buildApiClient(bool $enabled): ApiClient
+    {
+        $apiClient = new ApiClient();
+        $apiClient
+            ->setClientId('myclientid')
+            ->setClientName('myclientname')
+            ->setLifetime(3600)
+            ->setEnabled($enabled)
+        ;
+
+        return $apiClient;
+    }
+
+    /**
+     * The internal authorization server validates the token, the repository tells what the client became since.
+     */
+    private function buildTokenAuthenticatorForApiClient(?ApiClient $apiClient): TokenAuthenticator
+    {
+        $authorizationServer = $this->createMock(PrestashopAuthorisationServer::class);
+        $authorizationServer->method('isTokenValid')->willReturn(true);
+        $authorizationServer->method('getJwtTokenUser')->willReturn(new JwtTokenUser('myclientid', []));
+
+        $apiClientRepository = $this->createMock(ApiClientRepository::class);
+        if (null === $apiClient) {
+            $apiClientRepository->method('getByClientId')->willThrowException(new NoResultException());
+        } else {
+            $apiClientRepository->method('getByClientId')->with('myclientid', null)->willReturn($apiClient);
+        }
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')->willReturnArgument(0);
+
+        return new TokenAuthenticator(
+            [$authorizationServer],
+            $translator,
+            $apiClientRepository,
+            $this->createMock(LoggerInterface::class),
+        );
+    }
+
+    private function buildBearerRequest(): Request
+    {
+        $request = Request::create('/');
+        $request->headers->add(['Authorization' => 'Bearer ' . $this->buildTestToken()]);
+
+        return $request;
     }
 }

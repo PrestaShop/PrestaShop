@@ -67,12 +67,22 @@ class ClientRepository implements ClientRepositoryInterface
         return $this->passwordEncoder->isPasswordValid($client, $clientSecret);
     }
 
+    /**
+     * A disabled API client is treated like an unknown one: disabling a client in the back office
+     * must stop the issuance of new access tokens.
+     */
     private function getUser($clientIdentifier): ?UserInterface
     {
         try {
-            return $this->userProvider->loadUserByIdentifier($clientIdentifier);
+            $user = $this->userProvider->loadUserByIdentifier($clientIdentifier);
         } catch (UserNotFoundException) {
             return null;
         }
+
+        if ($user instanceof ApiClient && !$user->isEnabled()) {
+            return null;
+        }
+
+        return $user;
     }
 }
