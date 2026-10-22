@@ -1,10 +1,10 @@
 ---
 name: create-position-column
 description: >
-  Documents how to add drag-and-drop row reordering to a PrestaShop grid.
-  Requires a PositionColumn in the definition, a ReorderPositionsButtonType
-  filter, a dedicated update-position route, and position handling in the
-  repository.
+  Add drag-and-drop row reordering to a PrestaShop grid: a PositionColumn in the
+  definition, a ReorderPositionsButtonType filter, a dedicated update-position
+  route, and position handling in the repository. Trigger: "add position to the
+  Xxx grid", "make Xxx rows reorderable by drag and drop".
 needs: [create-grid-definition, create-admin-routing]
 produces: "PositionColumn + ReorderPositionsButtonType filter and position-update route wiring"
 conditional: "only for entities with position/sort support"
