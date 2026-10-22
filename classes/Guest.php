@@ -235,13 +235,7 @@ class GuestCore extends ObjectModel
         // Guest::getFromCustomer(0) matches any anonymous guest, so only look one up for a real customer
         $guest = new Guest($idCustomer ? (int) Guest::getFromCustomer($idCustomer) : null);
         $guest->userAgent();
-
-        // A logged-in customer with no guest yet gets a new one, and it has to carry the customer:
-        // otherwise the visit stays anonymous and its connections are unreachable from the customer
-        if ($idCustomer) {
-            $guest->id_customer = $idCustomer;
-        }
-
+        $guest->id_customer = $idCustomer;
         $guest->save();
         $cookie->id_guest = (int) $guest->id;
     }
