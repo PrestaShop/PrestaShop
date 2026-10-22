@@ -89,13 +89,13 @@ class ObjectModelChangesTest extends TestCase
         ], $this->computeChanges($current, $persisted));
     }
 
-    public function testSingleLanguageObjectReportsLangFieldAsScalar(): void
+    public function testSingleLanguageObjectReportsLangFieldIndexedByLanguage(): void
     {
-        $persisted = $this->createEntity(['name' => 'Name']);
-        $current = $this->createEntity(['name' => 'New name']);
+        $persisted = $this->createEntity(['name' => 'Nom'], 2);
+        $current = $this->createEntity(['name' => 'Nouveau nom'], 2);
 
         $this->assertSame(
-            ['name' => ['old' => 'Name', 'new' => 'New name']],
+            ['name' => ['old' => [2 => 'Nom'], 'new' => [2 => 'Nouveau nom']]],
             $this->computeChanges($current, $persisted)
         );
     }
@@ -120,9 +120,30 @@ class ObjectModelChangesTest extends TestCase
         ], $this->computeChanges($current, $persisted));
     }
 
-    private function createEntity(array $values): ObjectModelChangesTestEntity
+    public function testLangFieldNotUpdatedPerLanguageIsNotReported(): void
+    {
+        $persisted = $this->createEntity([
+            'quantity' => '3',
+            'name' => [1 => 'Name', 2 => 'Nom'],
+        ]);
+        $current = $this->createEntity([
+            'quantity' => 5,
+            'name' => [1 => 'New name', 2 => 'Nouveau nom'],
+        ]);
+        // formatFields() only writes lang fields flagged per language, so `true` writes nothing
+        $current->setFieldsToUpdate(['quantity' => true, 'name' => true]);
+
+        $this->assertSame(
+            ['quantity' => ['old' => '3', 'new' => 5]],
+            $this->computeChanges($current, $persisted)
+        );
+    }
+
+    private function createEntity(array $values, ?int $idLang = null): ObjectModelChangesTestEntity
     {
         $entity = new ObjectModelChangesTestEntity();
+        // The constructor would check the language against the database
+        (fn () => $this->id_lang = $idLang)->call($entity);
         foreach ($values as $field => $value) {
             $entity->{$field} = $value;
         }

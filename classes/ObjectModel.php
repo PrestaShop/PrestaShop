@@ -477,13 +477,13 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         return str_replace('\\', '', get_class($this));
     }
 
-    private function hasUpdateAfterListeners(): bool
+    private function hasUpdateChangesListeners(): bool
     {
         if (defined('PS_INSTALLATION_IN_PROGRESS') || !$this->id) {
             return false;
         }
 
-        foreach (['actionObjectUpdateAfter', 'actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter'] as $hookName) {
+        foreach (['actionObjectUpdateChanges', 'actionObject' . $this->getFullyQualifiedName() . 'UpdateChanges'] as $hookName) {
             if (Hook::getHookStatusByName($hookName) && Hook::getHookModuleExecList($hookName)) {
                 return true;
             }
@@ -523,7 +523,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             $oldValue = $persistedState->{$field} ?? null;
             $newValue = $this->{$field} ?? null;
 
-            if (empty($data['lang']) || (!is_array($oldValue) && !is_array($newValue))) {
+            if (empty($data['lang'])) {
                 if ($this->normalizeFieldValue($oldValue, $data) !== $this->normalizeFieldValue($newValue, $data)) {
                     $changes[$field] = ['old' => $oldValue, 'new' => $newValue];
                 }
@@ -534,7 +534,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             $oldValues = is_array($oldValue) ? $oldValue : [(int) $this->id_lang => $oldValue];
             $newValues = is_array($newValue) ? $newValue : [(int) $this->id_lang => $newValue];
             foreach ($newValues as $idLang => $newLangValue) {
-                if (is_array($this->update_fields) && is_array($this->update_fields[$field]) && empty($this->update_fields[$field][$idLang])) {
+                if (is_array($this->update_fields) && empty($this->update_fields[$field][$idLang])) {
                     continue;
                 }
 
@@ -807,8 +807,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         Hook::exec('actionObjectUpdateBefore', ['object' => $this]);
         Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateBefore', ['object' => $this]);
 
-        // Only pay for the extra read when a module listens to the after hooks
-        $persistedState = $this->hasUpdateAfterListeners() ? $this->loadPersistedState() : null;
+        // Only pay for the extra read when a module listens to the changes hooks
+        $persistedState = $this->hasUpdateChangesListeners() ? $this->loadPersistedState() : null;
 
         $this->clearCache();
 
@@ -936,11 +936,16 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             $extraResult = $this->persistExtraProperties();
         }
 
-        $changes = null !== $persistedState ? $this->computeChanges($persistedState) : [];
-
         // @hook actionObject<ObjectClassName>UpdateAfter — runs even if extra persistence fails.
-        Hook::exec('actionObjectUpdateAfter', ['object' => $this, 'changes' => $changes]);
-        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter', ['object' => $this, 'changes' => $changes]);
+        Hook::exec('actionObjectUpdateAfter', ['object' => $this]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter', ['object' => $this]);
+
+        if ($result && null !== $persistedState) {
+            $changes = $this->computeChanges($persistedState);
+            // @hook actionObject<ObjectClassName>UpdateChanges
+            Hook::exec('actionObjectUpdateChanges', ['object' => $this, 'changes' => $changes]);
+            Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateChanges', ['object' => $this, 'changes' => $changes]);
+        }
 
         return $result && $extraResult;
     }
