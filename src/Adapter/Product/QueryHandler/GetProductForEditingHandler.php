@@ -483,7 +483,8 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             $product->meta_description,
             $product->link_rewrite,
             $product->redirect_type,
-            $redirectTarget
+            $redirectTarget,
+            (bool) $product->indexation
         );
     }
 

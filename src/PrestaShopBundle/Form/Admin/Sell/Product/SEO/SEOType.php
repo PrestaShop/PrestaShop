@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -169,6 +170,11 @@ class SEOType extends TranslatorAwareType
                     ],
                 ],
                 'modify_all_shops' => true,
+            ])
+            ->add('indexation', SwitchType::class, [
+                'label' => $this->trans('Indexation by search engines', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Uncheck to ask search engines not to index this product.', 'Admin.Catalog.Help'),
+                'required' => false,
             ])
             ->add('redirect_option', RedirectOptionType::class, [
                 'product_id' => $options['product_id'],
