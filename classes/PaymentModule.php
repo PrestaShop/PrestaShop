@@ -4,6 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleQuantityReserver;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentCreator;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService;
@@ -25,6 +26,20 @@ abstract class PaymentModuleCore extends Module
 
     /** @var MailPartialTemplateRenderer|null */
     protected $partialRenderer;
+
+    /**
+     * Cart rules whose quantity was taken by the current validateOrder() call
+     *
+     * @var array<int, true>
+     */
+    private $reservedCartRules = [];
+
+    /**
+     * Orders created by the current validateOrder() call that use the quantity of their cart rules
+     *
+     * @var int[]
+     */
+    private $orderIdsUsingCartRuleQuantities = [];
 
     public function install()
     {
@@ -204,6 +219,62 @@ abstract class PaymentModuleCore extends Module
         ?Shop $shop = null,
         ?string $order_reference = null
     ) {
+        $this->reservedCartRules = [];
+        $this->orderIdsUsingCartRuleQuantities = [];
+
+        try {
+            return $this->validateOrderWithCartRuleReservations(
+                $id_cart,
+                $id_order_state,
+                $amount_paid,
+                $payment_method,
+                $message,
+                $extra_vars,
+                $currency_special,
+                $dont_touch_amount,
+                $secure_key,
+                $shop,
+                $order_reference
+            );
+        } finally {
+            // Also gives back the quantities taken when the validation stops on an exception
+            $this->releaseUnusedCartRuleQuantities();
+        }
+    }
+
+    /**
+     * Same contract as validateOrder(). The cart rule quantities it takes and that no order uses
+     * are given back by validateOrder() once it ends, whether it returns or throws.
+     *
+     * @param int $id_cart
+     * @param int $id_order_state
+     * @param float $amount_paid
+     * @param string $payment_method
+     * @param string|null $message
+     * @param array $extra_vars
+     * @param int|null $currency_special
+     * @param bool $dont_touch_amount
+     * @param string|bool $secure_key
+     * @param Shop|null $shop
+     * @param string|null $order_reference
+     *
+     * @return bool
+     *
+     * @throws PrestaShopException
+     */
+    private function validateOrderWithCartRuleReservations(
+        $id_cart,
+        $id_order_state,
+        $amount_paid,
+        $payment_method,
+        $message,
+        $extra_vars,
+        $currency_special,
+        $dont_touch_amount,
+        $secure_key,
+        ?Shop $shop,
+        ?string $order_reference
+    ) {
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int) $id_cart, true);
         }
@@ -303,9 +374,20 @@ abstract class PaymentModuleCore extends Module
         foreach ($cart_rules as $cart_rule) {
             $rule = new CartRule((int) $cart_rule['obj']->id);
             if (Validate::isLoadedObject($rule)) {
-                if ($error = $rule->checkValidity($this->context, true, true)) {
+                $error = $rule->checkValidity($this->context, true, true);
+                // A cart rule with a limited quantity takes its unit now, so that orders validated
+                // at the same time cannot use more units than available
+                if (!$error && $rule->quantity !== null) {
+                    if ($this->getCartRuleQuantityReserver()->reserve((int) $rule->id)) {
+                        $this->reservedCartRules[(int) $rule->id] = true;
+                    } else {
+                        $error = $this->trans('This voucher has already been used', [], 'Shop.Notifications.Error');
+                    }
+                }
+                if ($error) {
                     $this->context->cart->removeCartRule((int) $rule->id);
                     if (!empty($this->context->customer->id) && !empty($rule->code)) {
+                        $this->releaseUnusedCartRuleQuantities();
                         Tools::redirect($this->context->link->getPageLink(
                             'order',
                             null,
@@ -393,6 +475,10 @@ abstract class PaymentModuleCore extends Module
             $order = $orderData['order'];
             $order_list[] = $order;
             $order_detail_list[] = $orderData['orderDetail'];
+        }
+        // Orders in error or canceled do not use the quantity of their cart rules
+        if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED')) {
+            $this->orderIdsUsingCartRuleQuantities = array_map(static fn (Order $order): int => (int) $order->id, $order_list);
         }
         // The country can only change if the address used for the calculation is the delivery address, and if multi-shipping is activated
         if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery' && isset($context_country)) {
@@ -1361,13 +1447,11 @@ abstract class PaymentModuleCore extends Module
             if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && !in_array($cartRule->id, $cart_rule_used)) {
                 $cart_rule_used[] = $cartRule->id;
 
-                // Create a new instance of Cart Rule without id_lang, in order to update its quantity
-                $cart_rule_to_update = new CartRule((int) $cartRule->id);
-                // if the cart rule isn't in nolimit mode, we decrease the quantity available
-                if ($cart_rule_to_update->quantity !== null) {
-                    $cart_rule_to_update->quantity = max(0, $cart_rule_to_update->quantity - 1);
+                // validateOrder() takes the quantity when it checks the cart rule, it is taken here
+                // only for an order validated without it
+                if (!isset($this->reservedCartRules[(int) $cartRule->id]) && $cartRule->quantity !== null) {
+                    $this->getCartRuleQuantityReserver()->reserve((int) $cartRule->id);
                 }
-                $cart_rule_to_update->update();
             }
 
             $cart_rules_list[] = [
@@ -1380,6 +1464,35 @@ abstract class PaymentModuleCore extends Module
         }
 
         return $cart_rules_list;
+    }
+
+    /**
+     * Gives back the quantity taken for the cart rules that no order of the current validateOrder() call kept
+     * (order in error or canceled, cart rule not applicable to the orders, validation stopped to withdraw a cart rule,
+     * or validation interrupted by an exception). The cart rules kept are read from the saved order cart rules,
+     * so that it does not depend on the code that saved them.
+     */
+    private function releaseUnusedCartRuleQuantities(): void
+    {
+        if (!empty($this->reservedCartRules)) {
+            $cartRuleQuantityReserver = $this->getCartRuleQuantityReserver();
+            $keptCartRuleIds = $cartRuleQuantityReserver->getCartRuleIdsKeptByOrders($this->orderIdsUsingCartRuleQuantities);
+            foreach (array_keys($this->reservedCartRules) as $cartRuleId) {
+                if (!in_array($cartRuleId, $keptCartRuleIds, true)) {
+                    $cartRuleQuantityReserver->release($cartRuleId);
+                }
+            }
+        }
+        $this->reservedCartRules = [];
+        $this->orderIdsUsingCartRuleQuantities = [];
+    }
+
+    private function getCartRuleQuantityReserver(): CartRuleQuantityReserver
+    {
+        /** @var CartRuleQuantityReserver $cartRuleQuantityReserver */
+        $cartRuleQuantityReserver = $this->get(CartRuleQuantityReserver::class);
+
+        return $cartRuleQuantityReserver;
     }
 
     private function addShipmentToOrder(Order $order, array $productsByCarrier)

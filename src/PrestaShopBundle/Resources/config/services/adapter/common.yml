@@ -21,6 +21,11 @@ services:
       - "%mail_themes_uri%"
       - '@PrestaShop\PrestaShop\Adapter\Tools'
 
+  PrestaShop\PrestaShop\Adapter\CartRule\CartRuleQuantityReserver:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+
   PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentCreator:
     arguments:
       - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
