@@ -166,7 +166,7 @@ export default class ModuleCard {
         const maintenanceLink = document.createElement('a');
         maintenanceLink.classList.add('btn', 'btn-primary', 'btn-lg');
         maintenanceLink.setAttribute('href', window.moduleURLs.maintenancePage);
-        maintenanceLink.innerHTML = window.moduleTranslations.moduleModalUpdateMaintenance;
+        maintenanceLink.innerText = window.moduleTranslations.moduleModalUpdateMaintenance;
 
         const updateConfirmModal = new ConfirmModal(
           {
