@@ -82,6 +82,15 @@ class JavascriptManagerCore extends AbstractAssetManager
         $attribute = $this->getSanitizedAttribute($attribute);
 
         $srcPath = $fullPath;
+
+        // Auto-generate version from file modification time for cache busting
+        if ($version === null && $server !== 'remote') {
+            $physicalPath = $this->getPathFromUri($fullPath);
+            if (file_exists($physicalPath)) {
+                $version = (string) filemtime($physicalPath);
+            }
+        }
+
         $fullPath = $version ? $fullPath . '?' . $version : $fullPath;
 
         if ('remote' === $server) {
