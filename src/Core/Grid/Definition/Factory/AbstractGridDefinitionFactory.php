@@ -65,6 +65,10 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->extraPropertiesGridDefinitionModifier->apply($definition, $definition->getId());
         }
 
+        if ($this instanceof SqlExportableGridDefinitionFactoryInterface) {
+            $definition->setSqlExportGridFactoryServiceId($this->getGridFactoryServiceId());
+        }
+
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDefinitionModifier', [
             'definition' => $definition,
         ]);
