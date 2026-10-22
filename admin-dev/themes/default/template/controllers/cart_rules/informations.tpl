@@ -128,6 +128,6 @@
 		</span>
 	</div>
 </div>
-<script type="text/javascript">
+<script type="text/javascript" nonce="{$cspNonce}">
 	$(".textarea-autosize").autosize();
 </script>

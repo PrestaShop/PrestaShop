@@ -19,7 +19,7 @@
   <meta name="robots" content="NOFOLLOW, NOINDEX">
   <title>{if $meta_title != ''}{$meta_title|escape:'html':'UTF-8'} • {/if}{$shop_name|escape:'html':'UTF-8'}</title>
   {if !isset($display_header_javascript) || $display_header_javascript}
-  <script type="text/javascript">
+  <script type="text/javascript" nonce="{$cspNonce}">
     var help_class_name = '{$controller_name|@addcslashes:'\''}';
     var iso_user = '{$iso_user|escape:'javascript'|@addcslashes:'\''}';
     var lang_is_rtl = '{$lang_is_rtl|intval}';

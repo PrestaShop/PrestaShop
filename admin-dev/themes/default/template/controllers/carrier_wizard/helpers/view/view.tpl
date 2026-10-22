@@ -5,7 +5,7 @@
 
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
-<script>
+<script nonce="{$cspNonce}">
 	var labelNext = '{$labels.next|addslashes}';
 	var labelPrevious = '{$labels.previous|addslashes}';
 	var	labelFinish = '{$labels.finish|addslashes}';

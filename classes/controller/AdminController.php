@@ -1966,6 +1966,13 @@ class AdminControllerCore extends Controller
     {
         header('Cache-Control: no-store, no-cache');
 
+        // Phase 1 of the Content Security Policy rollout: a report-only header with a
+        // per-request nonce, also exposed to templates as `cspNonce` for progressive
+        // adoption on inline scripts.
+        $cspNonce = base64_encode(random_bytes(16));
+        header('Content-Security-Policy-Report-Only: default-src \'self\'; script-src \'self\' \'nonce-' . $cspNonce . '\'; style-src \'self\' \'unsafe-inline\'');
+        $this->context->smarty->assign('cspNonce', $cspNonce);
+
         $this->context->smarty->assign([
             'table' => $this->table,
             'current' => self::$currentIndex,

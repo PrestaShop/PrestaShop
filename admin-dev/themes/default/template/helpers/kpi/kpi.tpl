@@ -21,7 +21,7 @@
 
 </{if isset($href) && $href}a{else}div{/if}>
 
-<script>
+<script nonce="{$cspNonce}">
 	function refresh_{$id|replace:'-':'_'|addslashes}()
 	{
 		{if !isset($source) || $source == '' || !isset($refresh) || $refresh == ''}
@@ -56,7 +56,7 @@
 </script>
 
 {if $chart}
-<script>
+<script nonce="{$cspNonce}">
 	function set_d3_{$id|str_replace:'-':'_'|addslashes}(jsonObject)
 	{
 		var data = new Array;

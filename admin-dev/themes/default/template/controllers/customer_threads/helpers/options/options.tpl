@@ -17,7 +17,7 @@
 			</div>
 		</div>
 
-		<script type="text/javascript">
+		<script type="text/javascript" nonce="{$cspNonce}">
 			var ajaxQueries = new Array();
 			function run_sync()
 			{
