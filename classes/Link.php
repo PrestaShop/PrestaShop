@@ -471,22 +471,30 @@ class LinkCore
         }
         $params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
 
+        // A category not created yet (e.g. the BO add form SEO preview) has no meta title or parents to load
+        $isNewCategory = (int) $params['id'] === 0;
+
         // Only pass the meta title parameter when the active route uses it
         if ($dispatcher->hasKeyword($rule, $idLang, 'meta_title', $idShop)) {
-            $category = $this->getCategoryObject($category, $idLang);
-            $params['meta_title'] = Tools::str2url($category->getFieldByLang('meta_title'));
+            $params['meta_title'] = '';
+            if (!$isNewCategory) {
+                $category = $this->getCategoryObject($category, $idLang);
+                $params['meta_title'] = Tools::str2url($category->getFieldByLang('meta_title'));
+            }
         }
 
         // Only pass the categories parameter when the active route uses it
         if ($dispatcher->hasKeyword($rule, $idLang, 'categories', $idShop)) {
-            $category = $this->getCategoryObject($category, $idLang);
             $cats = [];
-            foreach (array_reverse($category->getParentsCategories($idLang)) as $cat) {
-                if ($cat['id_category'] == $category->id) {
-                    continue;
-                }
-                if (!in_array($cat['id_category'], Link::$category_disable_rewrite)) {
-                    $cats[] = $cat['link_rewrite'];
+            if (!$isNewCategory) {
+                $category = $this->getCategoryObject($category, $idLang);
+                foreach (array_reverse($category->getParentsCategories($idLang)) as $cat) {
+                    if ($cat['id_category'] == $category->id) {
+                        continue;
+                    }
+                    if (!in_array($cat['id_category'], Link::$category_disable_rewrite)) {
+                        $cats[] = $cat['link_rewrite'];
+                    }
                 }
             }
             $params['categories'] = implode('/', $cats);
