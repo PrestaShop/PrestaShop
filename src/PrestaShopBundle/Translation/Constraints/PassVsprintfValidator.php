@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Translation\Constraints;
 
 use Exception;
@@ -25,13 +27,25 @@ class PassVsprintfValidator extends ConstraintValidator
             throw new UnexpectedTypeException($translation, 'PrestaShopBundle\Entity\Translation');
         }
 
-        if ($this->countArgumentsOfTranslation($translation->getKey()) != $this->countArgumentsOfTranslation($translation->getTranslation())) {
+        $sourceArgumentCount = $this->countArgumentsOfTranslation($translation->getKey());
+        $translatedString = $translation->getTranslation();
+
+        if (0 === $sourceArgumentCount) {
+            // Without source format specifiers, the translator never calls vsprintf().
+            // Do not mistake percentages followed by prose ("10 % de remise") for arguments.
+            $translatedString = preg_replace('/(?<=\d)\h*%\h*(?=\p{L}(?:\p{L}|[\'’]\p{L}))/u', '', $translatedString);
+            if (null === $translatedString) {
+                throw new Exception('Preg_replace failed');
+            }
+        }
+
+        if ($sourceArgumentCount != $this->countArgumentsOfTranslation($translatedString)) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
         }
     }
 
-    private function countArgumentsOfTranslation($property)
+    private function countArgumentsOfTranslation(string $property): int
     {
         if (empty($property)) {
             return 0;
