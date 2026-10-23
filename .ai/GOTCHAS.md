@@ -13,6 +13,7 @@ Naming mismatches, identity traps, and non-obvious cross-domain relationships th
 | `ContactController` | `ContactsController` (plural) | `src/PrestaShopBundle/Controller/Admin/` |
 | `CmsPage` adapter path | `src/Adapter/CMS/Page/` (not `Adapter/CmsPage/`) | — |
 | `CmsPageCategory` adapter path | `src/Adapter/CMS/PageCategory/` | — |
+| `ShopConstraintException` about the `ShopConstraint` value object | Invalid shop properties (name, color, theme, root category); an invalid `ShopConstraint` throws `InvalidShopConstraintException` | `src/Core/Domain/Shop/Exception/` |
 
 ## Identity traps
 

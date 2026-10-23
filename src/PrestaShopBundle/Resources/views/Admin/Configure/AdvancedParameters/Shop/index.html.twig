@@ -1,0 +1,30 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% set layoutHeaderToolbarBtn = {
+  add_shop: {
+    href: path('admin_shops_create'),
+    desc: 'Add new shop'|trans({}, 'Admin.Shopparameters.Feature'),
+    icon: 'add_circle_outline',
+  },
+} %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-lg-4">
+      {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Multistore/Blocks/shop_tree.html.twig') }}
+    </div>
+    <div class="col-lg-8">
+      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: shopGrid}) }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/shop.bundle.js') }}"></script>
+{% endblock %}
