@@ -14,11 +14,17 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentAssociatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachmentsByProduct;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentAssociatedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\ProductAttachmentMatch;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\DummyFileUploader;
 
 class AttachmentFeatureContext extends AbstractDomainFeatureContext
@@ -136,6 +142,117 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
             $caughtException = $e;
         }
         Assert::assertNotNull($caughtException, 'Expected to get no results for this search');
+    }
+
+    /**
+     * @Then attachment :attachmentReference should be associated with following products:
+     */
+    public function assertAssociatedProducts(string $attachmentReference, TableNode $tableNode): void
+    {
+        $expectedProducts = array_map(
+            fn (array $row): array => [
+                'id' => $this->referenceToId($row['product']),
+                'reference' => $row['reference'],
+                'name' => $row['name'],
+                'active' => PrimitiveUtils::castStringBooleanIntoBoolean($row['active']),
+            ],
+            $tableNode->getColumnsHash()
+        );
+
+        Assert::assertSame($expectedProducts, $this->getAssociatedProducts($attachmentReference));
+    }
+
+    /**
+     * @Then attachment :attachmentReference should have no associated products
+     */
+    public function assertNoAssociatedProducts(string $attachmentReference): void
+    {
+        Assert::assertSame([], $this->getAssociatedProducts($attachmentReference));
+    }
+
+    /**
+     * @Then searching attachments by product :phrase should find:
+     */
+    public function assertSearchByProduct(string $phrase, TableNode $tableNode): void
+    {
+        Assert::assertSame($this->getExpectedMatches($tableNode), $this->searchByProduct($phrase));
+    }
+
+    /**
+     * @Then searching attachments by the ID of product :productReference should find:
+     */
+    public function assertSearchByProductId(string $productReference, TableNode $tableNode): void
+    {
+        Assert::assertSame(
+            $this->getExpectedMatches($tableNode),
+            $this->searchByProduct((string) $this->referenceToId($productReference))
+        );
+    }
+
+    /**
+     * @Then searching attachments by product :phrase should find nothing
+     */
+    public function assertSearchByProductFindsNothing(string $phrase): void
+    {
+        Assert::assertSame([], $this->searchByProduct($phrase));
+    }
+
+    /**
+     * @return array<int, array{product: int, attachment: int}>
+     */
+    private function getExpectedMatches(TableNode $tableNode): array
+    {
+        return array_map(
+            fn (array $row): array => [
+                'product' => $this->referenceToId($row['product']),
+                'attachment' => $this->referenceToId($row['attachment']),
+            ],
+            $tableNode->getColumnsHash()
+        );
+    }
+
+    /**
+     * @return array<int, array{product: int, attachment: int}>
+     */
+    private function searchByProduct(string $phrase): array
+    {
+        /** @var ProductAttachmentMatch[] $matches */
+        $matches = $this->getQueryBus()->handle(new SearchAttachmentsByProduct(
+            $phrase,
+            $this->getDefaultLangId(),
+            ShopConstraint::shop($this->getDefaultShopId())
+        ));
+
+        return array_map(
+            static fn (ProductAttachmentMatch $match): array => [
+                'product' => $match->getProduct()->getProductId(),
+                'attachment' => $match->getAttachmentId(),
+            ],
+            $matches
+        );
+    }
+
+    /**
+     * @return array<int, array{id: int, reference: string, name: string, active: bool}>
+     */
+    private function getAssociatedProducts(string $attachmentReference): array
+    {
+        /** @var AttachmentAssociatedProduct[] $products */
+        $products = $this->getQueryBus()->handle(new GetAttachmentAssociatedProducts(
+            $this->referenceToId($attachmentReference),
+            $this->getDefaultLangId(),
+            ShopConstraint::shop($this->getDefaultShopId())
+        ));
+
+        return array_map(
+            static fn (AttachmentAssociatedProduct $product): array => [
+                'id' => $product->getProductId(),
+                'reference' => $product->getReference(),
+                'name' => $product->getName(),
+                'active' => $product->isActive(),
+            ],
+            $products
+        );
     }
 
     /**

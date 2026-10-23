@@ -19,13 +19,18 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmen
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptyFileException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchInputException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentAssociatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachmentsByProduct;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentAssociatedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\ProductAttachmentMatch;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
@@ -239,6 +244,68 @@ class AttachmentController extends PrestaShopAdminController
         $attachmentInfo = $this->dispatchQuery(new GetAttachmentInformation($attachmentId));
 
         return $this->json(['attachmentInfo' => $this->presentAttachmentInfo($attachmentInfo)]);
+    }
+
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function getAssociatedProductsAction(int $attachmentId): JsonResponse
+    {
+        /** @var AttachmentAssociatedProduct[] $products */
+        $products = $this->dispatchQuery(new GetAttachmentAssociatedProducts(
+            $attachmentId,
+            $this->getLanguageContext()->getId(),
+            $this->getShopContext()->getShopConstraint()
+        ));
+
+        return $this->json([
+            'products' => array_map(
+                fn (AttachmentAssociatedProduct $product): array => $this->presentAssociatedProduct($product),
+                $products
+            ),
+        ]);
+    }
+
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function searchByProductAction(Request $request): JsonResponse
+    {
+        try {
+            /** @var ProductAttachmentMatch[] $matches */
+            $matches = $this->dispatchQuery(new SearchAttachmentsByProduct(
+                (string) $request->query->get('phrase', ''),
+                $this->getLanguageContext()->getId(),
+                $this->getShopContext()->getShopConstraint()
+            ));
+        } catch (EmptySearchInputException) {
+            return $this->json(['products' => []]);
+        }
+
+        $products = [];
+        foreach ($matches as $match) {
+            $productId = $match->getProduct()->getProductId();
+            $products[$productId] ??= $this->presentAssociatedProduct($match->getProduct()) + ['attachments' => []];
+            $products[$productId]['attachments'][] = [
+                'id' => $match->getAttachmentId(),
+                'name' => $match->getAttachmentName(),
+                'editUrl' => $this->generateUrl('admin_attachments_edit', ['attachmentId' => $match->getAttachmentId()]),
+            ];
+        }
+
+        return $this->json([
+            'products' => array_values($products),
+            'limited' => count($matches) >= SearchAttachmentsByProduct::MAX_RESULTS,
+        ]);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function presentAssociatedProduct(AttachmentAssociatedProduct $product): array
+    {
+        return [
+            'id' => $product->getProductId(),
+            'reference' => $product->getReference(),
+            'name' => $product->getName(),
+            'active' => $product->isActive(),
+        ];
     }
 
     /**

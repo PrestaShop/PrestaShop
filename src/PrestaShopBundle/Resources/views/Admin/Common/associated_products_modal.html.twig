@@ -1,0 +1,44 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
+  id: 'associated-products-modal',
+  class: 'modal-lg',
+  title: 'Products'|trans({}, 'Admin.Global'),
+  closable: true,
+  actions: [],
+} %}
+  {% block content %}
+    <div class="modal-body">
+      <p class="js-associated-products-loading d-none">{{ 'Loading...'|trans({}, 'Admin.Global') }}</p>
+      <p class="js-associated-products-error alert alert-danger d-none">{{ 'An error occurred while loading the products.'|trans({}, 'Admin.Catalog.Notification') }}</p>
+      <div class="js-associated-products-table d-none">
+        <input
+          type="search"
+          class="form-control mb-3 js-associated-products-filter"
+          placeholder="{{ 'Search by ID, reference or name'|trans({}, 'Admin.Catalog.Feature') }}"
+          aria-label="{{ 'Search by ID, reference or name'|trans({}, 'Admin.Catalog.Feature') }}"
+        >
+        <div class="overflow-auto" style="max-height: 60vh">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+                <th class="text-center">{{ 'Status'|trans({}, 'Admin.Global') }}</th>
+              </tr>
+            </thead>
+            <tbody
+              data-enabled-label="{{ 'Enabled'|trans({}, 'Admin.Global') }}"
+              data-disabled-label="{{ 'Disabled'|trans({}, 'Admin.Global') }}"
+            ></tbody>
+          </table>
+        </div>
+        <p class="text-muted d-none js-associated-products-no-match">{{ 'No products match this search.'|trans({}, 'Admin.Catalog.Notification') }}</p>
+      </div>
+    </div>
+  {% endblock %}
+{% endembed %}

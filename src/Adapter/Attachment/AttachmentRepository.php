@@ -10,9 +10,14 @@ namespace PrestaShop\PrestaShop\Adapter\Attachment;
 
 use Attachment;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentAssociatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\ProductAttachmentMatch;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
@@ -138,6 +143,112 @@ class AttachmentRepository extends AbstractObjectModelRepository
         }
 
         return $this->addLocalizedValues($results);
+    }
+
+    /**
+     * @return AttachmentAssociatedProduct[]
+     */
+    public function getAssociatedProducts(AttachmentId $attachmentId, LanguageId $languageId, ShopConstraint $shopConstraint): array
+    {
+        $qb = $this->createProductAttachmentQueryBuilder($languageId, $shopConstraint)
+            ->where('pa.`id_attachment` = :attachmentId')
+            ->setParameter('attachmentId', $attachmentId->getValue())
+            ->orderBy('p.`id_product`', 'ASC')
+        ;
+
+        return array_map(
+            fn (array $row): AttachmentAssociatedProduct => $this->buildAssociatedProduct($row),
+            $qb->executeQuery()->fetchAllAssociative()
+        );
+    }
+
+    /**
+     * @return ProductAttachmentMatch[]
+     */
+    public function searchByProduct(string $phrase, LanguageId $languageId, ShopConstraint $shopConstraint, int $limit): array
+    {
+        $qb = $this->createProductAttachmentQueryBuilder($languageId, $shopConstraint)
+            ->addSelect('pa.`id_attachment`, al.`name` AS attachment_name')
+            ->leftJoin(
+                'pa',
+                $this->dbPrefix . 'attachment_lang',
+                'al',
+                'al.`id_attachment` = pa.`id_attachment` AND al.`id_lang` = :languageId'
+            )
+            ->setParameter('phrase', '%' . addcslashes($phrase, '%_\\') . '%')
+            ->orderBy('p.`reference`', 'ASC')
+            ->addOrderBy('p.`id_product`', 'ASC')
+            ->addOrderBy('pa.`id_attachment`', 'ASC')
+            ->setMaxResults($limit)
+        ;
+
+        $conditions = [
+            $qb->expr()->like('p.`reference`', ':phrase'),
+            $qb->expr()->like('pl.`name`', ':phrase'),
+        ];
+        // The ID must match exactly, a part of it would find nearly every product
+        if (ctype_digit($phrase)) {
+            $conditions[] = $qb->expr()->eq('p.`id_product`', ':productId');
+            $qb->setParameter('productId', (int) $phrase);
+        }
+        $qb->where($qb->expr()->or(...$conditions));
+
+        return array_map(
+            fn (array $row): ProductAttachmentMatch => new ProductAttachmentMatch(
+                $this->buildAssociatedProduct($row),
+                (int) $row['id_attachment'],
+                (string) $row['attachment_name'],
+            ),
+            $qb->executeQuery()->fetchAllAssociative()
+        );
+    }
+
+    /**
+     * Products linked to attachments, with their name and status in the constraint's shop, or in each
+     * product's default shop when the constraint is not a single shop.
+     */
+    private function createProductAttachmentQueryBuilder(LanguageId $languageId, ShopConstraint $shopConstraint): QueryBuilder
+    {
+        $shopId = $shopConstraint->getShopId();
+        $productShop = null !== $shopId ? ':shopId' : 'p.`id_shop_default`';
+
+        $qb = $this->connection->createQueryBuilder()
+            ->select('p.`id_product`, p.`reference`, pl.`name`, ps.`active`')
+            ->from($this->dbPrefix . 'product_attachment', 'pa')
+            ->innerJoin('pa', $this->dbPrefix . 'product', 'p', 'p.`id_product` = pa.`id_product`')
+            ->leftJoin(
+                'p',
+                $this->dbPrefix . 'product_shop',
+                'ps',
+                'ps.`id_product` = p.`id_product` AND ps.`id_shop` = ' . $productShop
+            )
+            ->leftJoin(
+                'p',
+                $this->dbPrefix . 'product_lang',
+                'pl',
+                'pl.`id_product` = p.`id_product` AND pl.`id_lang` = :languageId AND pl.`id_shop` = ' . $productShop
+            )
+            ->setParameter('languageId', $languageId->getValue())
+        ;
+
+        if (null !== $shopId) {
+            $qb->setParameter('shopId', $shopId->getValue());
+        }
+
+        return $qb;
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function buildAssociatedProduct(array $row): AttachmentAssociatedProduct
+    {
+        return new AttachmentAssociatedProduct(
+            (int) $row['id_product'],
+            (string) $row['reference'],
+            (string) $row['name'],
+            (bool) $row['active'],
+        );
     }
 
     /**

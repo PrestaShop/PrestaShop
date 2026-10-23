@@ -1,0 +1,64 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<div class="card">
+  <div class="card-body">
+    <form
+      class="form-inline js-product-search"
+      action="{{ path('admin_attachments_search_by_product') }}"
+      method="get"
+    >
+      <label class="mr-2" for="product-search-input">{{ 'Find files by product'|trans({}, 'Admin.Catalog.Feature') }}</label>
+      <input
+        id="product-search-input"
+        type="search"
+        name="phrase"
+        class="form-control mr-2"
+        placeholder="{{ 'ID, reference or name'|trans({}, 'Admin.Catalog.Feature') }}"
+        required
+      >
+      <button type="submit" class="btn btn-primary">
+        <i class="material-icons">search</i>
+        {{ 'Search'|trans({}, 'Admin.Actions') }}
+      </button>
+    </form>
+  </div>
+</div>
+
+{% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
+  id: 'product-search-modal',
+  class: 'modal-lg',
+  title: 'Find files by product'|trans({}, 'Admin.Catalog.Feature'),
+  closable: true,
+  actions: [],
+} %}
+  {% block content %}
+    <div class="modal-body">
+      <p class="js-product-search-loading d-none">{{ 'Loading...'|trans({}, 'Admin.Global') }}</p>
+      <p class="js-product-search-error alert alert-danger d-none">{{ 'An error occurred while loading the products.'|trans({}, 'Admin.Catalog.Notification') }}</p>
+      <p class="js-product-search-empty text-muted d-none">{{ 'No products match this search.'|trans({}, 'Admin.Catalog.Notification') }}</p>
+      <div class="js-product-search-results d-none">
+        <div class="overflow-auto" style="max-height: 60vh">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+                <th class="text-center">{{ 'Status'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Files'|trans({}, 'Admin.Navigation.Menu') }}</th>
+              </tr>
+            </thead>
+            <tbody
+              data-enabled-label="{{ 'Enabled'|trans({}, 'Admin.Global') }}"
+              data-disabled-label="{{ 'Disabled'|trans({}, 'Admin.Global') }}"
+            ></tbody>
+          </table>
+        </div>
+        <p class="text-muted d-none js-product-search-limited">{{ 'Only the first results are shown. Type more to narrow the search.'|trans({}, 'Admin.Catalog.Notification') }}</p>
+      </div>
+    </div>
+  {% endblock %}
+{% endembed %}
