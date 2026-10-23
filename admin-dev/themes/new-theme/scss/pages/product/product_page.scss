@@ -2052,6 +2052,10 @@ $product-page-padding-bottom: 80px !default;
       margin: var(--#{$cdk}size-6);
       border: var(--#{$cdk}size-3) solid transparent;
 
+      img {
+        max-width: none;
+      }
+
       .form-check-radio {
         display: none;
       }
