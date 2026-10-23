@@ -108,6 +108,28 @@ class ModuleTest extends TestCase
 
         Module::getInstanceByName('bankwire')->uninstall();
     }
+
+    public function testIsEnabledPerShopFollowsEnableAndDisable(): void
+    {
+        if (Module::isInstalled('bankwire')) {
+            Module::getInstanceByName('bankwire')->uninstall();
+        }
+        $this->assertTrue(ModuleManagerBuilder::getInstance()->build()->install('bankwire'));
+        $module = Module::getInstanceByName('bankwire');
+
+        try {
+            $this->assertTrue(Module::isEnabled('bankwire', 1));
+            $this->assertFalse(Module::isEnabled('bankwire', 2));
+
+            $this->assertTrue($module->disable());
+            $this->assertFalse(Module::isEnabled('bankwire', 1));
+
+            $this->assertTrue($module->enable());
+            $this->assertTrue(Module::isEnabled('bankwire', 1));
+        } finally {
+            $module->uninstall();
+        }
+    }
 }
 
 define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__, 4) . '/Resources/modules_tests/'));
