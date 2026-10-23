@@ -8,6 +8,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
+use PrestaShop\PrestaShop\Adapter\PDF\OrderReturnPdfGenerator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteOrderReturnsCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\BulkDeleteOrderReturnsException;
@@ -29,12 +30,12 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface as OptionFormHandlerInt
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
-use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -147,7 +148,7 @@ class OrderReturnController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.adapter.order_return.repository.order_return_repository')]
         OrderReturnRepository $orderReturnRepository,
         #[Autowire(service: 'prestashop.adapter.pdf.order_return_pdf_generator')]
-        PDFGeneratorInterface $pdfGenerator,
+        OrderReturnPdfGenerator $pdfGenerator,
     ): Response {
         try {
             $orderReturn = $orderReturnRepository->get(new OrderReturnId($orderReturnId));
@@ -167,12 +168,14 @@ class OrderReturnController extends PrestaShopAdminController
             return $this->redirectToRoute('admin_order_returns_edit', ['orderReturnId' => $orderReturnId]);
         }
 
-        $body = $pdfGenerator->generatePDF([$orderReturnId]);
+        // Return the merchandise return document as a PDF attachment
+        $generatedPdf = $pdfGenerator->generatePDFForResponse([$orderReturnId]);
+        $response = new Response($generatedPdf->getContent());
+        $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, sprintf('OrderReturn_%d.pdf', $orderReturnId));
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', $disposition);
 
-        return new Response($body, Response::HTTP_OK, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => sprintf('attachment; filename="OrderReturn_%d.pdf"', $orderReturnId),
-        ]);
+        return $response;
     }
 
     /**
