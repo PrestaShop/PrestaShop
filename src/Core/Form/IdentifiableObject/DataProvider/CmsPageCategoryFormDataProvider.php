@@ -47,7 +47,7 @@ final class CmsPageCategoryFormDataProvider implements FormDataProviderInterface
         return [
             'name' => $editableCmsPageCategory->getLocalisedName(),
             'is_displayed' => $editableCmsPageCategory->isDisplayed(),
-            'parent_category' => $editableCmsPageCategory->getParentId()->getValue(),
+            'parent_category' => $editableCmsPageCategory->getParentId()?->getValue() ?? 0,
             'description' => $editableCmsPageCategory->getLocalisedDescription(),
             'meta_title' => $editableCmsPageCategory->getMetaTitle(),
             'meta_description' => $editableCmsPageCategory->getLocalisedMetaDescription(),
