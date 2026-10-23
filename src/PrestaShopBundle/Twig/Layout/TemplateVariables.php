@@ -27,6 +27,7 @@ class TemplateVariables
     private bool $isFrontOfficeAccessibleForAdmins;
     private bool $isDisplayedWithTabs;
     private string $baseUrl;
+    private int $submitFormAjax;
 
     public function __construct(
         string $isoUser,
@@ -43,7 +44,9 @@ class TemplateVariables
         bool $isFrontOfficeAccessibleForAdmins,
         bool $isDisplayedWithTabs,
         string $baseUrl,
+        int $submitFormAjax = 0,
     ) {
+        // Store the variables shared by back-office templates and components.
         $this->isoUser = $isoUser;
         $this->isRtlLanguage = $isRtlLanguage;
         $this->controllerName = $controllerName;
@@ -58,6 +61,7 @@ class TemplateVariables
         $this->isFrontOfficeAccessibleForAdmins = $isFrontOfficeAccessibleForAdmins;
         $this->isDisplayedWithTabs = $isDisplayedWithTabs;
         $this->baseUrl = $baseUrl;
+        $this->submitFormAjax = $submitFormAjax;
     }
 
     public function getIsoUser(): string
@@ -128,5 +132,10 @@ class TemplateVariables
     public function getBaseUrl(): string
     {
         return $this->baseUrl;
+    }
+
+    public function getSubmitFormAjax(): int
+    {
+        return $this->submitFormAjax;
     }
 }
