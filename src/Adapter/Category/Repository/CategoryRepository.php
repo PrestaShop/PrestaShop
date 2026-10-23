@@ -13,6 +13,8 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryAssociatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryAssociatedProductList;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -290,6 +292,87 @@ class CategoryRepository extends AbstractObjectModelRepository
         }
 
         return $categoryIds;
+    }
+
+    /**
+     * Products associated directly with the category, in their position in it, with their name and status in the
+     * constraint's shop, or in each product's default shop when the constraint is not a single shop.
+     *
+     * The search phrase keeps the products with this ID, or with a part of their reference or name.
+     */
+    public function getAssociatedProducts(
+        CategoryId $categoryId,
+        LanguageId $languageId,
+        ShopConstraint $shopConstraint,
+        ?int $limit,
+        ?int $offset,
+        string $searchPhrase,
+    ): CategoryAssociatedProductList {
+        $shopId = $shopConstraint->getShopId();
+        $productShop = null !== $shopId ? ':shopId' : 'p.`id_shop_default`';
+
+        $qb = $this->connection->createQueryBuilder()
+            ->select('p.`id_product`, p.`reference`, pl.`name`, ps.`active`')
+            ->from($this->dbPrefix . 'category_product', 'cp')
+            ->innerJoin('cp', $this->dbPrefix . 'product', 'p', 'p.`id_product` = cp.`id_product`')
+            ->leftJoin(
+                'p',
+                $this->dbPrefix . 'product_shop',
+                'ps',
+                'ps.`id_product` = p.`id_product` AND ps.`id_shop` = ' . $productShop
+            )
+            ->leftJoin(
+                'p',
+                $this->dbPrefix . 'product_lang',
+                'pl',
+                'pl.`id_product` = p.`id_product` AND pl.`id_lang` = :languageId AND pl.`id_shop` = ' . $productShop
+            )
+            ->where('cp.`id_category` = :categoryId')
+            ->setParameter('categoryId', $categoryId->getValue())
+            ->setParameter('languageId', $languageId->getValue())
+        ;
+
+        if (null !== $shopId) {
+            $qb->setParameter('shopId', $shopId->getValue());
+        }
+
+        if ('' !== $searchPhrase) {
+            $conditions = [
+                $qb->expr()->like('p.`reference`', ':phrase'),
+                $qb->expr()->like('pl.`name`', ':phrase'),
+            ];
+            // The ID must match exactly, a part of it would find nearly every product
+            if (ctype_digit($searchPhrase)) {
+                $conditions[] = $qb->expr()->eq('p.`id_product`', ':productId');
+                $qb->setParameter('productId', (int) $searchPhrase);
+            }
+            $qb
+                ->andWhere($qb->expr()->or(...$conditions))
+                ->setParameter('phrase', '%' . addcslashes($searchPhrase, '%_\\') . '%')
+            ;
+        }
+
+        $totalCount = (int) (clone $qb)->select('COUNT(*)')->executeQuery()->fetchOne();
+
+        $qb
+            ->orderBy('cp.`position`', 'ASC')
+            ->addOrderBy('p.`id_product`', 'ASC')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset ?? 0)
+        ;
+
+        return new CategoryAssociatedProductList(
+            array_map(
+                fn (array $row): CategoryAssociatedProduct => new CategoryAssociatedProduct(
+                    (int) $row['id_product'],
+                    (string) $row['reference'],
+                    (string) $row['name'],
+                    (bool) $row['active'],
+                ),
+                $qb->executeQuery()->fetchAllAssociative()
+            ),
+            $totalCount
+        );
     }
 
     /**

@@ -3,6 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+import AssociatedProductsModal from '@components/associated-products-modal/associated-products-modal';
 import CategoryPositionExtension from '@components/grid/extension/column/catalog/category-position-extension';
 /* eslint-disable */
 import DeleteCategoryRowActionExtension from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
@@ -32,6 +33,10 @@ $(() => {
   categoriesGrid.addExtension(new DeleteCategoryRowActionExtension());
   categoriesGrid.addExtension(new DeleteCategoriesBulkActionExtension());
   categoriesGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+
+  if (document.getElementById('associated-products-modal')) {
+    new AssociatedProductsModal();
+  }
 
   const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());

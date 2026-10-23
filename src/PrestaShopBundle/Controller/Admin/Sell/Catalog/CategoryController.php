@@ -29,8 +29,11 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryAssociatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryAssociatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryAssociatedProductList;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
@@ -60,6 +63,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class CategoryController extends PrestaShopAdminController
 {
+    /**
+     * Same choices as in the associated products modal
+     */
+    private const ASSOCIATED_PRODUCTS_LIMIT_CHOICES = [25, 50, 100];
+
     /**
      * Show categories listing.
      *
@@ -475,6 +483,35 @@ class CategoryController extends PrestaShopAdminController
         }
 
         return $this->json($response);
+    }
+
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function getAssociatedProductsAction(Request $request, int $categoryId): JsonResponse
+    {
+        $limit = $request->query->getInt('limit');
+
+        /** @var CategoryAssociatedProductList $productList */
+        $productList = $this->dispatchQuery(new GetCategoryAssociatedProducts(
+            $categoryId,
+            $this->getLanguageContext()->getId(),
+            $this->getShopContext()->getShopConstraint(),
+            in_array($limit, self::ASSOCIATED_PRODUCTS_LIMIT_CHOICES, true) ? $limit : self::ASSOCIATED_PRODUCTS_LIMIT_CHOICES[0],
+            $request->query->getInt('offset'),
+            trim((string) $request->query->get('phrase', ''))
+        ));
+
+        return $this->json([
+            'products' => array_map(
+                fn (CategoryAssociatedProduct $product): array => [
+                    'id' => $product->getProductId(),
+                    'reference' => $product->getReference(),
+                    'name' => $product->getName(),
+                    'active' => $product->isActive(),
+                ],
+                $productList->getProducts()
+            ),
+            'total' => $productList->getTotalCount(),
+        ]);
     }
 
     /**

@@ -133,6 +133,7 @@ final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefiniti
                         'field' => 'products_count',
                         'sortable' => false,
                         'alignment' => 'center',
+                        'clickable' => false,
                     ])
             )
             ->add(
