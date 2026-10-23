@@ -21,6 +21,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionProvider;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenter;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
@@ -60,9 +61,9 @@ class CommonController extends PrestaShopAdminController
          * Prevents 403 errors while preserving security checks and returning an empty array when access is denied.
          */
         if (
-            !$this->isGranted('read', 'AdminOrders')
-             && !$this->isGranted('read', 'AdminCustomers')
-             && !$this->isGranted('read', 'AdminCustomerThreads')
+            !$this->isGranted(Permission::READ, 'AdminOrders')
+             && !$this->isGranted(Permission::READ, 'AdminCustomers')
+             && !$this->isGranted(Permission::READ, 'AdminCustomerThreads')
         ) {
             return new JsonResponse([]);
         }
