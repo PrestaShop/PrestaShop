@@ -77,6 +77,57 @@ Feature: country management
       | iso_code | TE |
     Then I should get an "DuplicateCountryIsoCode" error
 
+  Scenario: Adding a country with a three-letter ISO code keeps the three letters
+    When I add new country "three_letters" with following properties:
+      | name[en-US]                | threeLettersName                                 |
+      | name[fr-FR]                | threeLettersNameFr                               |
+      | iso_code                   | xab                                              |
+      | call_prefix                | 123                                              |
+      | default_currency           | 1                                                |
+      | zone                       | 1                                                |
+      | need_zip_code              | true                                             |
+      | zip_code_format            | 1 NL                                             |
+      | address_format             | firstname lastname\naddress1\ncity\nCountry:name |
+      | is_enabled                 | true                                             |
+      | contains_states            | false                                            |
+      | need_identification_number | false                                            |
+      | display_tax_label          | true                                             |
+      | shop_association           | 1                                                |
+    Then the country "three_letters" should have the following properties:
+      | name[en-US]                | threeLettersName                                 |
+      | name[fr-FR]                | threeLettersNameFr                               |
+      | iso_code                   | XAB                                              |
+      | call_prefix                | 123                                              |
+      | default_currency           | 1                                                |
+      | zone                       | 1                                                |
+      | need_zip_code              | true                                             |
+      | zip_code_format            | 1 NL                                             |
+      | address_format             | firstname lastname\naddress1\ncity\nCountry:name |
+      | is_enabled                 | true                                             |
+      | contains_states            | false                                            |
+      | need_identification_number | false                                            |
+      | display_tax_label          | true                                             |
+      | shop_association           | 1                                                |
+
+  Scenario: Editing a country to a three-letter ISO code keeps the three letters
+    When I edit country "second" with following properties:
+      | iso_code | XTS |
+    Then the country "second" should have the following properties:
+      | name[en-US]                | secondName                                       |
+      | name[fr-FR]                | secondNameFr                                     |
+      | iso_code                   | XTS                                              |
+      | call_prefix                | 123                                              |
+      | default_currency           | 1                                                |
+      | zone                       | 1                                                |
+      | need_zip_code              | true                                             |
+      | zip_code_format            | 1 NL                                             |
+      | address_format             | firstname lastname\naddress1\ncity\nCountry:name |
+      | is_enabled                 | true                                             |
+      | contains_states            | false                                            |
+      | need_identification_number | false                                            |
+      | display_tax_label          | true                                             |
+      | shop_association           | 1                                                |
+
   Scenario: edit country
     Given language "language1" with locale "en-US" exists
     And language "language2" with locale "fr-FR" exists

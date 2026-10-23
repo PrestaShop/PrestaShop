@@ -42,7 +42,7 @@ class AddCountryCommand
         private bool $displayTaxLabel,
         private array $shopAssociation,
     ) {
-        $this->isoCode = Tools::strtoupper(Tools::substr($isoCode, 0, 2));
+        $this->isoCode = Tools::strtoupper($isoCode);
         $this->callPrefix = new CallPrefix($callPrefix);
         $this->zoneId = new ZoneId($zoneId);
         $this->zipCodeFormat = $zipCodeFormat ? new CountryZipCodeFormat($zipCodeFormat) : null;
