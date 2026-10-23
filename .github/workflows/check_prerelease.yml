@@ -1,7 +1,17 @@
 name: Check for Release
 on:
   push:
+    branches-ignore:
+      - 'chore/**'
+      - 'dependabot/**'
+      - 'merge-*'
+    tags:
+      - '**'
   pull_request:
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 # Pull-requests on a private repository are not coming from a fork, so avoid running the same job twice with push and pull_request events.
 jobs:

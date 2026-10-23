@@ -1,6 +1,14 @@
 name: UI tests
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches-ignore:
+      - 'chore/**'
+      - 'dependabot/**'
+      - 'merge-*'
+    tags:
+      - '**'
+  pull_request:
 
 permissions:
   contents: read   #   to fetch code (actions/checkout)
@@ -14,21 +22,24 @@ env:
 
 # Pull-requests on a private repository are not coming from a fork, so avoid running the same job twice with push and pull_request events.
 jobs:
-  # Define which PHP versions need to be used
-  workflow_matrix_generator:
-    if: github.event_name != 'push' || !github.event.repository.private
-    name: Sanity matrix
-    uses: ./.github/workflows/workflow-matrix-generator.yml
-    with:
-      matrix_type: sanity
   sanity:
     permissions:
       contents: read   #   to fetch code (actions/checkout)
     runs-on: ubuntu-latest
     name: Sanity
-    needs: workflow_matrix_generator
+    if: github.event_name != 'push' || !github.event.repository.private
     strategy:
-      matrix: ${{ fromJSON(needs.workflow_matrix_generator.outputs.dynamic_matrix) }}
+      matrix:
+        php: ${{ fromJSON((contains(github.event.pull_request.labels.*.name, 'Run all versions') || contains(github.event.pull_request.body, '| Category?         | ME')) && '["8.1", "8.2", "8.3", "8.4", "8.5"]' || '["8.1", "8.5"]') }}
+        browser: [ chromium ]
+        db: [ mysql ]
+        include:
+          - php: '8.5'
+            browser: firefox
+            db: mysql
+          - php: '8.5'
+            browser: chromium
+            db: mariadb
       fail-fast: false
     steps:
       - name: Prepare docker prefix with repository name lower cased

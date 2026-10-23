@@ -1,6 +1,12 @@
 name: Twig
 on:
   push:
+    branches-ignore:
+      - 'chore/**'
+      - 'dependabot/**'
+      - 'merge-*'
+    tags:
+      - '**'
   pull_request:
 
 permissions:
