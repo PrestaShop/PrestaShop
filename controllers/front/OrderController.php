@@ -348,21 +348,10 @@ class OrderControllerCore extends FrontController
             }
         }
 
-        $extraParams = ['type' => $addressType];
-
-        if ($addressType === 'invoice') {
-            // This request carries only the country change, so the step recomputes
-            // form_has_continue_button as false and the refreshed markup downgrades
-            // "Continue" to "Save". The submit then omits confirm-addresses and the
-            // address step can never complete. The invoice form is always last in the
-            // step, which is exactly when CheckoutAddressesStep sets this itself.
-            $extraParams['form_has_continue_button'] = true;
-        }
-
         $templateParams = array_merge(
             $addressForm->getTemplateVariables(),
             $stepTemplateParameters,
-            $extraParams
+            ['type' => $addressType]
         );
 
         ob_end_clean();

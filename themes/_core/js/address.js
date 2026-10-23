@@ -21,8 +21,6 @@ function handleCountryChange(selectors) {
     const requestData = {
       id_country: target.val(),
       id_address: dataHolder.data('id-address'),
-      // Which form this is. Without it the controller cannot tell the delivery form
-      // from the invoice one and renders both as 'delivery'.
       type: addressForm.find('[name="saveAddress"]').val(),
     };
     const getFormViewUrl = dataHolder.data('refresh-url');
