@@ -574,6 +574,18 @@ services:
       $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
       $languageContext: '@PrestaShop\PrestaShop\Core\Context\LanguageContext'
 
+  PrestaShop\PrestaShop\Core\Grid\Query\ShopGroupQueryBuilder:
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: false
+    arguments:
+      $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
+
+  PrestaShop\PrestaShop\Core\Grid\Query\ShopUrlQueryBuilder:
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: false
+    arguments:
+      $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
+
   PrestaShop\PrestaShop\Core\Grid\Query\BusinessEntityQueryBuilder:
     parent: 'prestashop.core.grid.abstract_query_builder'
     public: false
