@@ -83,6 +83,10 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
 
+  PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetCombinationCarriersHandler:
+    autowire: true
+    autoconfigure: true
+
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetCombinationImagesHandler:
     autoconfigure: true
     arguments:
