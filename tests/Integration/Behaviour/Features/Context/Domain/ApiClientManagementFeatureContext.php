@@ -271,6 +271,17 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get an error that scopes cannot be granted
+     */
+    public function iShouldGetAnErrorThatScopesCannotBeGranted(): void
+    {
+        $this->assertLastErrorIs(
+            ApiClientConstraintException::class,
+            ApiClientConstraintException::INVALID_SCOPES
+        );
+    }
+
+    /**
      * @Then I should get an error that :fieldName is too large
      */
     public function iShouldGetAnErrorThatFieldIsTooLarge(string $fieldName): void
@@ -368,6 +379,8 @@ class ApiClientManagementFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @AfterScenario @reset-api-client-context-after-scenario
+     *
      * @AfterFeature
      */
     public static function resetApiClientContext(): void
