@@ -20,6 +20,7 @@ Feature: Apply cart rule to cart from Back Office (BO)
     And reduction value of voucher "gift+freeShip" in cart "dummy_cart_1" should be "19.9"
 
   Scenario: Add multiple cart rules which uses same gift product to the cart which already has paid products identical to those gifts
+    Given shop configuration for "PS_CART_RULE_ALLOW_MULTIPLE_CODES" is set to 1
     Given I create an empty cart "dummy_cart_2" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_2"
     And I add 2 products "Mountain fox notebook" to the cart "dummy_cart_2"

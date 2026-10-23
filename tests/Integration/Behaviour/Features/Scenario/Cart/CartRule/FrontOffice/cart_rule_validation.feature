@@ -7,6 +7,7 @@ Feature: Cart rule application is validated before it is applied to cart
 
   Background:
     Given I have an empty default cart
+    And shop configuration for "PS_CART_RULE_ALLOW_MULTIPLE_CODES" is set to 1
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock

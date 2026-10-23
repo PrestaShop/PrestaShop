@@ -449,6 +449,9 @@
   <configuration id="PS_CART_RULE_FEATURE_ACTIVE" name="PS_CART_RULE_FEATURE_ACTIVE">
     <value>0</value>
   </configuration>
+  <configuration id="PS_CART_RULE_ALLOW_MULTIPLE_CODES" name="PS_CART_RULE_ALLOW_MULTIPLE_CODES">
+    <value>0</value>
+  </configuration>
   <configuration id="PS_PACK_FEATURE_ACTIVE" name="PS_PACK_FEATURE_ACTIVE">
     <value>0</value>
   </configuration>

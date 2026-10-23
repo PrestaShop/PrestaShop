@@ -131,6 +131,11 @@
         <target>Allow iframes on HTML fields</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 138]</note>
       </trans-unit>
+      <trans-unit id="c7e6043664d103a85d8d8cadb09ed83a">
+        <source>Allow multiple promo codes in one cart</source>
+        <target>Allow multiple promo codes in one cart</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php [Line: 78]</note>
+      </trans-unit>
       <trans-unit id="be6be43cab36ddf8024d237c4a2414f7">
         <source>Allow ordering of out-of-stock products</source>
         <target>Allow ordering of out-of-stock products</target>

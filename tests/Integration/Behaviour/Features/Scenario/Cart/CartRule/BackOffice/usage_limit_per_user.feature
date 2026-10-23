@@ -12,6 +12,7 @@ Feature: Apply cart rule to cart from Back Office (BO)
     And customer "testCustomer" has address in "US" country
     And I am logged in as "test@prestashop.com" employee
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    And shop configuration for "PS_CART_RULE_ALLOW_MULTIPLE_CODES" is set to 1
     And the module "dummy_payment" is installed
     And there is a cart rule limitedCartRule with following properties:
       | name[en-US]           | limitedCartRule |
