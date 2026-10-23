@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCo
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\BulkDeleteBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\DeleteBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\EditBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\UpdateBusinessEntityStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BulkDeleteBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNotFoundException;
@@ -629,6 +630,22 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I change the status of the business entity :name to :status
+     */
+    public function iChangeTheStatusOfTheBusinessEntity(string $name, string $status)
+    {
+        $this->changeBusinessEntityStatus($this->getBusinessEntityByName($name)->getId(), $status);
+    }
+
+    /**
+     * @When I change the status of the business entity with id :businessEntityId to :status
+     */
+    public function iChangeTheStatusOfTheBusinessEntityWithId(int $businessEntityId, string $status)
+    {
+        $this->changeBusinessEntityStatus($businessEntityId, $status);
+    }
+
+    /**
      * @When I bulk delete the business entities :names
      */
     public function iBulkDeleteTheBusinessEntities(string $names)
@@ -772,6 +789,19 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
     {
         try {
             $this->getCommandBus()->handle(new DeleteBusinessEntityCommand($businessEntityId));
+        } catch (BusinessEntityException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    private function changeBusinessEntityStatus(int $businessEntityId, string $status): void
+    {
+        try {
+            $this->getCommandBus()->handle(new UpdateBusinessEntityStatusCommand(
+                $businessEntityId,
+                BusinessEntityStatus::from($status),
+                null
+            ));
         } catch (BusinessEntityException $e) {
             $this->setLastException($e);
         }
