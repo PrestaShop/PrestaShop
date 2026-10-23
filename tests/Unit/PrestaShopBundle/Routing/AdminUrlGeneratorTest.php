@@ -11,18 +11,32 @@ namespace Tests\Unit\PrestaShopBundle\Routing;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShopBundle\Routing\AdminUrlGenerator;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class AdminUrlGeneratorTest extends TestCase
 {
     /**
      * @dataProvider provideAdminUrlCases
      */
-    public function testGenerateAdminUrl(string $baseUrl, string $adminFolder, string $urlPath, string $expected): void
-    {
+    public function testGenerateAdminUrl(
+        string $requestUrl,
+        string $physicalUri,
+        string $adminFolder,
+        string $urlPath,
+        string $expected
+    ): void {
         $shopContext = $this->createMock(ShopContext::class);
-        $shopContext->method('getBaseURL')->willReturn($baseUrl);
+        $shopContext->method('getPhysicalUri')->willReturn($physicalUri);
 
-        $generator = new AdminUrlGenerator($shopContext, $adminFolder);
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create($requestUrl));
+
+        $generator = new AdminUrlGenerator(
+            $shopContext,
+            $adminFolder,
+            $requestStack,
+        );
 
         self::assertSame($expected, $generator->generateAdminUrl($urlPath));
     }
@@ -30,28 +44,32 @@ class AdminUrlGeneratorTest extends TestCase
     public static function provideAdminUrlCases(): iterable
     {
         yield 'reset password route' => [
-            'https://example.com/',
+            'https://example.com/admin123/index.php',
+            '/',
             'admin123',
             '/reset-password/some-token',
             'https://example.com/admin123/index.php/reset-password/some-token',
         ];
 
         yield 'legacy controller query string' => [
-            'https://example.com',
+            'https://example.com/admin123/index.php',
+            '/',
             'admin123',
             '?controller=LegacyAdminController',
             'https://example.com/admin123/index.php?controller=LegacyAdminController',
         ];
 
-        yield 'trims trailing slash on base URL and slashes on admin folder' => [
-            'https://example.com/shop/',
+        yield 'installation in subdirectory' => [
+            'https://example.com/shop/admin123/index.php',
+            '/shop/',
             '/admin123/',
             '/reset-password/token',
             'https://example.com/shop/admin123/index.php/reset-password/token',
         ];
 
         yield 'empty url path' => [
-            'https://example.com',
+            'https://example.com/admin123/index.php',
+            '/',
             'admin123',
             '',
             'https://example.com/admin123/index.php',
