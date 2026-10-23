@@ -223,6 +223,7 @@ default:
       contexts:
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\OrderStateFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
         - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
     currency:
       paths:
