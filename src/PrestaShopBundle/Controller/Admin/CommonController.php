@@ -21,6 +21,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionProvider;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenter;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
@@ -54,9 +55,19 @@ class CommonController extends PrestaShopAdminController
      *
      * @return JsonResponse
      */
-    #[AdminSecurity("is_granted('read', 'AdminOrders') || is_granted('read', 'AdminCustomers') || is_granted('read', 'AdminCustomerThreads')", message: 'You do not have permission to view this.')]
     public function notificationsAction(): JsonResponse
     {
+        /*
+         * Prevents 403 errors while preserving security checks and returning an empty array when access is denied.
+         */
+        if (
+            !$this->isGranted(Permission::READ, 'AdminOrders')
+             && !$this->isGranted(Permission::READ, 'AdminCustomers')
+             && !$this->isGranted(Permission::READ, 'AdminCustomerThreads')
+        ) {
+            return new JsonResponse([]);
+        }
+
         /** @var NotificationsResults $elements */
         $elements = $this->dispatchQuery(new GetNotificationLastElements($this->getEmployeeContext()->getEmployee()->getId()));
 
