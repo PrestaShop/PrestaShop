@@ -67,12 +67,20 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
     {
         $str_output = '<error>' . "\n";
         if ($code !== null) {
-            $str_output .= '<code><![CDATA[' . $code . ']]></code>' . "\n";
+            $str_output .= '<code><![CDATA[' . $this->escapeCdataContent($code) . ']]></code>' . "\n";
         }
-        $str_output .= '<message><![CDATA[' . $message . ']]></message>' . "\n";
+        $str_output .= '<message><![CDATA[' . $this->escapeCdataContent($message) . ']]></message>' . "\n";
         $str_output .= '</error>' . "\n";
 
         return $str_output;
+    }
+
+    /**
+     * Splits "]]>" so the value cannot close the CDATA section.
+     */
+    private function escapeCdataContent(string $value): string
+    {
+        return str_replace(']]>', ']]]]><![CDATA[>', $value);
     }
 
     public function renderField($field)
@@ -93,7 +101,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
                 $node_content .= '<language id="' . $language . '"' . $more_attr . '>';
                 $node_content .= '<![CDATA[';
                 if (isset($field['value'][$language])) {
-                    $node_content .= $field['value'][$language];
+                    $node_content .= $this->escapeCdataContent($field['value'][$language]);
                 }
                 $node_content .= ']]>';
                 $node_content .= '</language>';
@@ -118,7 +126,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
             }
 
             if (array_key_exists('value', $field)) {
-                $node_content .= '<![CDATA[' . $field['value'] . ']]>';
+                $node_content .= '<![CDATA[' . $this->escapeCdataContent($field['value']) . ']]>';
             }
         }
 
