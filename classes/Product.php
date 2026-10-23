@@ -4484,7 +4484,8 @@ class ProductCore extends ObjectModel
                 p.`id_product` = pl.`id_product`
                 AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
             )
-            WHERE `id_product_1` = ' . (int) $id_product
+            WHERE `id_product_1` = ' . (int) $id_product . '
+            ORDER BY `id_product_2`'
         );
     }
 
