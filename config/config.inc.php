@@ -155,8 +155,13 @@ setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.utf8');
 
 /* Instantiate cookie */
 $cookie_lifetime = defined('_PS_ADMIN_DIR_') ? (int) Configuration::get('PS_COOKIE_LIFETIME_BO') : (int) Configuration::get('PS_COOKIE_LIFETIME_FO');
+// WHY two variables: Cookie takes the absolute moment the cookie expires, while
+// session_set_cookie_params() - which SessionHandler feeds - takes a DURATION in seconds. Handing the
+// absolute timestamp to both gave PHPSESSID a Max-Age of about 1.8 billion seconds, i.e. decades.
+$session_cookie_lifetime = 0;
 if ($cookie_lifetime > 0) {
-    $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
+    $session_cookie_lifetime = max($cookie_lifetime, 1) * 3600;
+    $cookie_lifetime = time() + $session_cookie_lifetime;
 }
 
 $force_ssl = Configuration::get('PS_SSL_ENABLED');
@@ -177,7 +182,7 @@ if (defined('_PS_ADMIN_DIR_')) {
 
 if (PHP_SAPI !== 'cli') {
     $sessionHandler = new SessionHandler(
-        $cookie_lifetime,
+        $session_cookie_lifetime,
         $force_ssl,
         Configuration::get('PS_COOKIE_SAMESITE'),
         Context::getContext()->shop->physical_uri
