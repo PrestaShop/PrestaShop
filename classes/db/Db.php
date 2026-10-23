@@ -20,6 +20,9 @@ abstract class DbCore
     /** @var int Constant used by insert() method */
     public const ON_DUPLICATE_KEY = 4;
 
+    /** @var int MySQL error number for a connection the server has closed */
+    public const SERVER_GONE_AWAY = 2006;
+
     /** @var string Server (eg. localhost) */
     protected $server;
 
@@ -358,9 +361,20 @@ abstract class DbCore
             $sql = $sql->build();
         }
 
-        $this->result = $this->_query($sql);
+        try {
+            $this->result = $this->_query($sql);
+        } catch (Throwable $exception) {
+            // Drivers report a closed connection by throwing rather than by returning false since
+            // PHP 8, which made the reconnection below unreachable. Every other failure is still
+            // the caller's to handle.
+            if (!$this->hasServerGoneAway()) {
+                throw $exception;
+            }
 
-        if (!$this->result && $this->getNumberError() == 2006) {
+            $this->result = false;
+        }
+
+        if (!$this->result && $this->hasServerGoneAway()) {
             $this->connect();
             $this->result = $this->_query($sql);
         }
@@ -370,6 +384,22 @@ abstract class DbCore
         }
 
         return $this->result;
+    }
+
+    /**
+     * Whether the last failure was the server closing the connection, which is the one failure
+     * worth reconnecting for.
+     *
+     * @return bool
+     */
+    private function hasServerGoneAway()
+    {
+        try {
+            return self::SERVER_GONE_AWAY === (int) $this->getNumberError();
+        } catch (Throwable $exception) {
+            // Reading the driver's error must not replace the failure being handled.
+            return false;
+        }
     }
 
     /**
