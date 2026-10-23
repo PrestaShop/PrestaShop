@@ -268,6 +268,7 @@ Feature: Order from Back Office (BO)
     When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "default_carrier"
     Then cart "dummy_cart" should have "default_carrier" as a carrier
     And order "bo_order1" should have "default_carrier" as a carrier
+    And order "bo_order1" should have a logged carrier change from "weight_carrier" to "default_carrier"
     And order "bo_order1" should have following details:
       | total_products           | 53.800 |
       | total_products_wt        | 57.030 |
@@ -287,6 +288,7 @@ Feature: Order from Back Office (BO)
     When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "price_carrier"
     Then cart "dummy_cart" should have "price_carrier" as a carrier
     And order "bo_order1" should have "price_carrier" as a carrier
+    And order "bo_order1" should have a logged carrier change from "default_carrier" to "price_carrier"
     And order "bo_order1" should have following details:
       | total_products           | 53.800 |
       | total_products_wt        | 57.030 |
