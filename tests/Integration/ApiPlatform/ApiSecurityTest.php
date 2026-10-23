@@ -11,6 +11,8 @@ namespace Tests\Integration\ApiPlatform;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Token\Plain;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\EditApiClientCommand;
+use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use Tests\Integration\ApiPlatform\EndPoint\ApiTestCase;
 use Tests\Resources\Resetter\ApiClientResetter;
 
@@ -110,6 +112,42 @@ class ApiSecurityTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testDisabledApiClientIsRejected(): void
+    {
+        self::createApiClient();
+        $bearerToken = $this->getBearerToken();
+        static::createClient()->request('GET', '/test/unscoped/product/1', [
+            'auth_bearer' => $bearerToken,
+        ]);
+        self::assertResponseStatusCodeSame(200);
+
+        $container = static::createClient()->getContainer();
+        $apiClient = $container->get(ApiClientRepository::class)->getByClientId(static::CLIENT_ID);
+        $container->get('prestashop.core.command_bus')->handle(
+            (new EditApiClientCommand($apiClient->getId()))->setEnabled(false)
+        );
+
+        $response = static::createClient()->request('GET', '/test/unscoped/product/1', [
+            'auth_bearer' => $bearerToken,
+        ]);
+        self::assertResponseStatusCodeSame(401);
+        $this->assertEquals('"Invalid credentials"', $response->getContent(false));
+
+        static::createClient()->request('POST', '/access_token', [
+            'extra' => [
+                'parameters' => [
+                    'client_id' => static::CLIENT_ID,
+                    'client_secret' => static::$clientSecret,
+                    'grant_type' => 'client_credentials',
+                ],
+            ],
+            'headers' => [
+                'content-type' => 'application/x-www-form-urlencoded',
+            ],
+        ]);
+        self::assertResponseStatusCodeSame(401);
     }
 
     /**

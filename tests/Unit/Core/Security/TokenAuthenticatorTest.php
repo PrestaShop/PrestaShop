@@ -13,7 +13,9 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\JwtTokenUser;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator;
+use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,5 +89,40 @@ class TokenAuthenticatorTest extends TestCase
         $this->expectException(CustomUserMessageAuthenticationException::class);
         $this->expectExceptionMessage('Invalid credentials');
         $this->tokenAuthenticator->authenticate($request);
+    }
+
+    /**
+     * @dataProvider enabledProvider
+     */
+    public function testAuthenticateChecksApiClientIsEnabled(bool $enabled): void
+    {
+        $authorizationServer = $this->createMock(AuthorisationServerInterface::class);
+        $authorizationServer->method('isTokenValid')->willReturn(true);
+        $authorizationServer->method('getJwtTokenUser')->willReturn(new JwtTokenUser('myclientid', [], 'https://issuer.example'));
+        $apiClientRepository = $this->createMock(ApiClientRepository::class);
+        $apiClientRepository->expects($this->once())->method('getByClientId')->willReturn((new ApiClient())->setClientId('myclientid')->setEnabled($enabled));
+        $translator = $this->createMock(TranslatorInterface::class);
+        $tokenAuthenticator = new TokenAuthenticator(
+            [$authorizationServer],
+            $translator,
+            $apiClientRepository,
+            $this->createMock(LoggerInterface::class),
+        );
+
+        $request = Request::create('/');
+        $request->headers->add(['Authorization' => 'Bearer ' . $this->buildTestToken()]);
+        if (!$enabled) {
+            $this->expectException(CustomUserMessageAuthenticationException::class);
+            $this->expectExceptionMessage('Invalid credentials');
+        }
+
+        $passport = $tokenAuthenticator->authenticate($request);
+        $this->assertSame('myclientid', $passport->getUser()->getUserIdentifier());
+    }
+
+    public function enabledProvider(): iterable
+    {
+        yield [true];
+        yield [false];
     }
 }

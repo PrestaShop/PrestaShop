@@ -56,7 +56,7 @@ class ClientRepository implements ClientRepositoryInterface
 
         $client = $this->getUser($clientIdentifier);
 
-        if ($client === null) {
+        if ($client === null || ($client instanceof ApiClient && !$client->isEnabled())) {
             return false;
         }
 
