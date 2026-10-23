@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkUpdateCountryZoneComma
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\ToggleCountryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\BulkCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotDeleteCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotToggleCountryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
@@ -39,6 +40,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * CountryController is responsible for handling "Improve > International > Locations > Countries"
@@ -306,6 +308,12 @@ class CountryController extends PrestaShopAdminController
                 'success',
                 $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
             );
+        } catch (BulkCountryException $e) {
+            $errorMessages = $this->getErrorMessages($e);
+            $this->addFlashErrors(array_unique(array_map(
+                fn (Throwable $exception): string => $this->getErrorMessageForException($exception, $errorMessages),
+                $e->getExceptions()
+            )));
         } catch (CountryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -396,6 +404,13 @@ class CountryController extends PrestaShopAdminController
                 [],
                 'Admin.International.Feature'
             ),
+            CannotDeleteCountryException::class => [
+                CannotDeleteCountryException::DEFAULT_COUNTRY => $this->trans(
+                    'You cannot delete the default country of a store.',
+                    [],
+                    'Admin.International.Notification'
+                ),
+            ],
             ZoneNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
                 [],

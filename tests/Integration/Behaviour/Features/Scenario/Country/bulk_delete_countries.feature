@@ -69,3 +69,25 @@ Feature: Bulk delete countries
     When I bulk delete countries "bulk_delete_partial_country, bulk_delete_partial_missing"
     Then I should get a bulk country exception containing 1 errors
     And country "bulk_delete_partial_country" should be deleted
+
+  Scenario: Bulk delete refuses the default country of the shop and deletes the others
+    Given language "language1" with locale "en-US" exists
+    And the default country of the shop is referenced as "defaultCountry"
+    And I add new country "bulk_delete_with_default" with following properties:
+      | name[en-US]                | Bulk Delete With Default                         |
+      | iso_code                   | QD                                               |
+      | call_prefix                | 24                                               |
+      | default_currency           | 1                                                |
+      | zone                       | 1                                                |
+      | need_zip_code              | true                                             |
+      | zip_code_format            | NNNNN                                            |
+      | address_format             | firstname lastname\naddress1\ncity\nCountry:name |
+      | is_enabled                 | false                                            |
+      | contains_states            | false                                            |
+      | need_identification_number | false                                            |
+      | display_tax_label          | true                                             |
+      | shop_association           | 1                                                |
+    And no exception should have been thrown
+    When I bulk delete countries "defaultCountry, bulk_delete_with_default"
+    Then I should get a bulk country exception refusing the default country
+    And country "bulk_delete_with_default" should be deleted

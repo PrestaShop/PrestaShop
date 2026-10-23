@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 use AddressFormat;
 use Cache;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Adapter\Zone\Repository\ZoneRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\AddressFormat\AddressFormatCheckerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
@@ -18,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerI
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\InvalidAddressFormatException;
+use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 
 /**
  * Handles update of country and address format
@@ -28,6 +30,7 @@ class EditCountryHandler implements EditCountryHandlerInterface
     public function __construct(
         private readonly CountryRepository $countryRepository,
         private readonly AddressFormatCheckerInterface $addressFormatChecker,
+        private readonly ZoneRepository $zoneRepository,
     ) {
     }
 
@@ -82,6 +85,7 @@ class EditCountryHandler implements EditCountryHandlerInterface
         }
 
         if (null !== $command->getZoneId()) {
+            $this->zoneRepository->assertZoneExists(new ZoneId($command->getZoneId()));
             $country->id_zone = $command->getZoneId();
         }
 

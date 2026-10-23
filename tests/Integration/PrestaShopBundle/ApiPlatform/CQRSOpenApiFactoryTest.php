@@ -1259,6 +1259,35 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
             ]),
         ];
 
+        // The command only declares an array (a list of value objects): the items of the request body list are typed
+        // from the @var int[] docblock of the resource property, the openapiContext of the resource adds the example
+        // and the description on top of the inferred types
+        yield 'BulkCountries.BulkToggleCountriesStatusCommand schema' => [
+            'BulkCountries.BulkToggleCountriesStatusCommand',
+            new ArrayObject([
+                'type' => 'object',
+                'description' => '',
+                'deprecated' => false,
+                'properties' => [
+                    'countryIds' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            'type' => 'integer',
+                        ],
+                        'example' => [1, 3],
+                    ]),
+                    'enabled' => new ArrayObject([
+                        'type' => 'boolean',
+                        'description' => 'Status to set on every listed country.',
+                    ]),
+                ],
+                'required' => [
+                    'enabled',
+                    'countryIds',
+                ],
+            ]),
+        ];
+
         // A nullable DecimalNumber is documented as a nullable number, and the plain comment of the class is not
         // used as description
         yield 'CustomerList schema' => [

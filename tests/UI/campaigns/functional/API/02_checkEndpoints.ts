@@ -137,6 +137,14 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/contacts: POST',
     // @todo: add tests
+    '/countries/bulk-delete: DELETE',
+    // @todo: add tests
+    '/countries/bulk-update-status: PUT',
+    // @todo: add tests
+    '/countries/bulk-update-zone: PUT',
+    // @todo: add tests
+    '/countries/{countryId}/toggle-status: PUT',
+    // @todo: add tests
     '/countries/{countryId}: DELETE',
     // @todo: add tests
     '/countries/{countryId}: GET',
