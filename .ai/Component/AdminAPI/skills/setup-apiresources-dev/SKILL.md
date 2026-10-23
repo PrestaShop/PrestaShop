@@ -5,7 +5,7 @@ description: >
   to existing local clone or fresh clone with upstream + fork remotes), then
   provision the local test DB. Trigger: "set up ps_apiresources for development",
   "develop on the API module", "fix the API integration tests", "work on
-  ps_apiresources locally".
+  ps_apiresources locally", "work on a ps_apiresources PR", "run the API module tests".
 needs: []
 produces: "modules/ps_apiresources/ as a git checkout (in-place or symlinked) with upstream + fork remotes wired, and a provisioned local test DB ready for `composer run-api-module-tests-local`."
 ---
