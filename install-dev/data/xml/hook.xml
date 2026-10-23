@@ -11,6 +11,11 @@
       <title>Modify Swift Message before sending</title>
       <description>This hook is called before the Swift Message is sent in Mail.php</description>
     </hook>
+    <hook id="actionCspPolicyModifier">
+      <name>actionCspPolicyModifier</name>
+      <title>Modify the Content Security Policy</title>
+      <description>This hook is called while the storefront Content Security Policy is being built. Modules receive the mutable policy in the "policy" parameter and may add sources to it (additive only).</description>
+    </hook>
     <hook id="actionValidateOrder">
       <name>actionValidateOrder</name>
       <title>New orders</title>

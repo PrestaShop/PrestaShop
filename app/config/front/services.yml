@@ -4,3 +4,15 @@ services:
     public: false
     autowire: true
     autoconfigure: true
+
+  # Sends the storefront CSP headers on FrontKernel (PS_FF_FRONT_CONTAINER_V2) responses; the default
+  # legacy dispatch is covered by a delegate in FrontController. autoconfigure tags it as an event
+  # subscriber. The same class serves the back office, registered with CspContext::ADMIN in app/config/admin.
+  PrestaShop\PrestaShop\Adapter\Csp\CspHeaderSubscriber:
+    arguments:
+      $cspContext: !php/enum PrestaShop\PrestaShop\Core\Domain\Csp\ValueObject\CspContext::FRONT
+
+  # Static (non-CSP) security headers on storefront FrontKernel responses, read for the shop being
+  # served (current context); the legacy dispatch is in FrontController. The same class serves the
+  # back office, registered in app/config/admin with the all-shops scope.
+  PrestaShop\PrestaShop\Adapter\SecurityHeader\SecurityHeadersSubscriber: ~
