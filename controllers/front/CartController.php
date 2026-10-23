@@ -402,6 +402,16 @@ class CartControllerCore extends FrontController
             }
         }
 
+        if (Combination::isDisabledInShop((int) $this->id_product_attribute, (int) $this->context->shop->id)) {
+            $this->{$ErrorKey}[] = $this->trans(
+                'This product (%product%) is no longer available.',
+                ['%product%' => $product->name],
+                'Shop.Notifications.Error'
+            );
+
+            return;
+        }
+
         $qty_to_check = $this->qty;
         $cart_products = $this->context->cart->getProducts();
 
@@ -671,7 +681,7 @@ class CartControllerCore extends FrontController
 
         $productName = !empty($product['attributes']) ? $product['name'] . ' ' . $product['attributes'] : $product['name'];
 
-        if ($product['active'] && $product['quantity_available'] > 0) {
+        if ($product['active'] && ($product['combination_active'] ?? true) && $product['quantity_available'] > 0) {
             return $this->trans(
                 'You can only buy %quantity% "%product%". Please adjust the quantity in your cart to continue.',
                 [

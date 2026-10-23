@@ -147,6 +147,9 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         if (isset($dataRows['is default'])) {
             $command->setIsDefault(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']));
         }
+        if (isset($dataRows['active'])) {
+            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['active']));
+        }
         // References
         if (isset($dataRows['ean13'])) {
             $command->setGtin($dataRows['ean13']);

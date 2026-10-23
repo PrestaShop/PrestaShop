@@ -268,6 +268,13 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 $editableCombinationForListing->isDefault(),
                 'Unexpected default combination'
             );
+            if (isset($expectedCombination['active'])) {
+                Assert::assertSame(
+                    PrimitiveUtils::castStringBooleanIntoBoolean($expectedCombination['active']),
+                    $editableCombinationForListing->isActive(),
+                    'Unexpected combination status'
+                );
+            }
             Assert::assertTrue(
                 $editableCombinationForListing->getImpactOnPrice()->equals(new DecimalNumber($expectedCombination['impact on price'])),
                 'Unexpected combination impact on price'

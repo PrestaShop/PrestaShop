@@ -62,6 +62,11 @@ class EditableCombinationForListing
     private $ecoTax;
 
     /**
+     * @var bool
+     */
+    private $active;
+
+    /**
      * @param int $combinationId
      * @param string $combinationName
      * @param string $reference
@@ -71,6 +76,7 @@ class EditableCombinationForListing
      * @param int $quantity
      * @param string $imageUrl
      * @param DecimalNumber $ecoTax
+     * @param bool $active
      */
     public function __construct(
         int $combinationId,
@@ -81,7 +87,8 @@ class EditableCombinationForListing
         DecimalNumber $impactOnPrice,
         int $quantity,
         string $imageUrl,
-        DecimalNumber $ecoTax
+        DecimalNumber $ecoTax,
+        bool $active = true
     ) {
         $this->combinationId = $combinationId;
         $this->attributesInformation = $attributesInformation;
@@ -92,6 +99,7 @@ class EditableCombinationForListing
         $this->quantity = $quantity;
         $this->imageUrl = $imageUrl;
         $this->ecoTax = $ecoTax;
+        $this->active = $active;
     }
 
     /**
@@ -132,6 +140,11 @@ class EditableCombinationForListing
     public function isDefault(): bool
     {
         return $this->default;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
     }
 
     /**
