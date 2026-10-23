@@ -15,9 +15,18 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CostsRangeType extends TranslatorAwareType
 {
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        private readonly string $defaultCurrencyIsoCode,
+    ) {
+        parent::__construct($translator, $locales);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -44,6 +53,7 @@ class CostsRangeType extends TranslatorAwareType
             ->add('price', MoneyWithSuffixType::class, [
                 'label' => $this->trans('Price (VAT excl.)', 'Admin.Shipping.Feature'),
                 'empty_data' => '0.0', // string instead number needed for DecimalNumber.php validation
+                'currency' => $this->defaultCurrencyIsoCode,
             ]);
     }
 

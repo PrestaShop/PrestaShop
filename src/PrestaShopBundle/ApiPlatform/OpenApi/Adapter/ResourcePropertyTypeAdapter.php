@@ -14,10 +14,14 @@ use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 use ReflectionNamedType;
 use ReflectionProperty;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
+use Symfony\Component\PropertyInfo\Type;
 
 /**
  * Types the request body properties left untyped by the CQRS command (a legacy constructor parameter without type
- * declaration, like AddCustomerCommand::$firstName), using the native type of the matching API resource property.
+ * declaration, like AddCustomerCommand::$firstName), using the native type of the matching API resource property,
+ * and types the items of a scalar list from the resource docblock (`@var int[]`): the command declares a plain
+ * array or a list of value objects, which the generator documents as strings.
  */
 class ResourcePropertyTypeAdapter implements OpenApiSchemaAdapterInterface
 {
@@ -28,6 +32,11 @@ class ResourcePropertyTypeAdapter implements OpenApiSchemaAdapterInterface
         'bool' => 'boolean',
         'array' => 'array',
     ];
+
+    public function __construct(
+        protected readonly PropertyInfoExtractorInterface $propertyInfoExtractor,
+    ) {
+    }
 
     public function adapt(string $class, ArrayObject $definition, ?Operation $operation = null): void
     {
@@ -44,18 +53,31 @@ class ResourcePropertyTypeAdapter implements OpenApiSchemaAdapterInterface
 
         $properties = $definition['properties'];
         foreach ($properties as $propertyName => $propertySchema) {
-            if ($this->isTyped($propertySchema) || !property_exists($resourceClass, $propertyName)) {
+            if (!property_exists($resourceClass, $propertyName)) {
                 continue;
             }
 
-            $type = (new ReflectionProperty($resourceClass, $propertyName))->getType();
-            if (!$type instanceof ReflectionNamedType || null === ($openApiType = $this->getOpenApiType($type->getName()))) {
-                continue;
-            }
+            if (!$this->isTyped($propertySchema)) {
+                $type = (new ReflectionProperty($resourceClass, $propertyName))->getType();
+                if (!$type instanceof ReflectionNamedType || null === ($openApiType = $this->getOpenApiType($type->getName()))) {
+                    continue;
+                }
 
-            $propertySchema['type'] = $type->allowsNull() ? [$openApiType, 'null'] : $openApiType;
-            if (is_subclass_of($type->getName(), DateTimeInterface::class) || DateTimeInterface::class === $type->getName()) {
-                $propertySchema['format'] = 'date-time';
+                $propertySchema['type'] = $type->allowsNull() ? [$openApiType, 'null'] : $openApiType;
+                if (is_subclass_of($type->getName(), DateTimeInterface::class) || DateTimeInterface::class === $type->getName()) {
+                    $propertySchema['format'] = 'date-time';
+                }
+            } elseif ($this->isArray($propertySchema) && empty($propertySchema['items']['$ref'])) {
+                $itemType = $this->getScalarItemType($resourceClass, $propertyName);
+                if (null === $itemType) {
+                    continue;
+                }
+
+                $items = $propertySchema['items'] ?? [];
+                $items['type'] = $itemType;
+                $propertySchema['items'] = $items;
+            } else {
+                continue;
             }
             $properties[$propertyName] = $propertySchema;
         }
@@ -71,6 +93,37 @@ class ResourcePropertyTypeAdapter implements OpenApiSchemaAdapterInterface
         }
 
         return false;
+    }
+
+    protected function isArray(mixed $propertySchema): bool
+    {
+        $type = $propertySchema['type'] ?? null;
+
+        return 'array' === $type || (is_array($type) && in_array('array', $type, true));
+    }
+
+    /**
+     * The OpenAPI type of the items of a scalar list (`@var int[]`), null for a list of objects or an untyped list.
+     */
+    protected function getScalarItemType(string $resourceClass, string $propertyName): ?string
+    {
+        foreach ($this->propertyInfoExtractor->getTypes($resourceClass, $propertyName) ?? [] as $type) {
+            if (!$type->isCollection()) {
+                continue;
+            }
+
+            foreach ($type->getCollectionValueTypes() as $valueType) {
+                $builtinType = $valueType->getBuiltinType();
+                if (Type::BUILTIN_TYPE_ARRAY === $builtinType || Type::BUILTIN_TYPE_OBJECT === $builtinType) {
+                    return null;
+                }
+                if (isset(self::OPENAPI_TYPES[$builtinType])) {
+                    return self::OPENAPI_TYPES[$builtinType];
+                }
+            }
+        }
+
+        return null;
     }
 
     protected function getOpenApiType(string $phpType): ?string

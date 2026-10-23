@@ -28,6 +28,9 @@ abstract class AbstractBulkCommandHandler
      */
     protected function handleBulkAction(array $ids, string $exceptionToCatch, mixed $command = null): void
     {
+        // The handler is a shared service: the exceptions of a previous bulk command must not leak into this one
+        $this->exceptions = [];
+
         foreach ($ids as $id) {
             try {
                 if (!$this->supports($id)) {

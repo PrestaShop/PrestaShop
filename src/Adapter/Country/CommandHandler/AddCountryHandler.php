@@ -12,6 +12,7 @@ use AddressFormat;
 use Cache;
 use Country;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Adapter\Zone\Repository\ZoneRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\AddressFormat\AddressFormatCheckerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
@@ -30,6 +31,7 @@ class AddCountryHandler implements AddCountryHandlerInterface
     public function __construct(
         private readonly CountryRepository $countryRepository,
         private readonly AddressFormatCheckerInterface $addressFormatChecker,
+        private readonly ZoneRepository $zoneRepository,
     ) {
     }
 
@@ -38,6 +40,8 @@ class AddCountryHandler implements AddCountryHandlerInterface
      */
     public function handle(AddCountryCommand $command): CountryId
     {
+        $this->zoneRepository->assertZoneExists($command->getZoneId());
+
         $errors = $this->addressFormatChecker->validate($command->getAddressFormat());
         if ([] !== $errors) {
             throw new InvalidAddressFormatException(

@@ -9,8 +9,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
 
 /**
- * Is thrown when adding new country fails
+ * Is thrown when a country cannot be deleted
  */
 class CannotDeleteCountryException extends CountryException
 {
+    /**
+     * The default country of the shop cannot be deleted
+     */
+    public const DEFAULT_COUNTRY = 1;
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d95e2809c9acc20e6138bc5280128714",
+    "content-hash": "251cdcde987601898ee389c2c1835f9c",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5376,16 +5376,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-customer-follow-up",
+            "version": "dev-domain/country",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "26de4de3e54594d38acade3f8c22246b18031d8b"
+                "url": "https://github.com/PrestaEdit/ps_apiresources.git",
+                "reference": "b6809df6dce5e77b9d42b8bc1bff0befa0566d3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/26de4de3e54594d38acade3f8c22246b18031d8b",
-                "reference": "26de4de3e54594d38acade3f8c22246b18031d8b",
+                "url": "https://api.github.com/repos/PrestaEdit/ps_apiresources/zipball/b6809df6dce5e77b9d42b8bc1bff0befa0566d3a",
+                "reference": "b6809df6dce5e77b9d42b8bc1bff0befa0566d3a",
                 "shasum": ""
             },
             "require": {
@@ -5469,9 +5469,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/jolelievre/ps_apiresources/tree/customer-follow-up"
+                "source": "https://github.com/PrestaEdit/ps_apiresources/tree/domain/country"
             },
-            "time": "2026-10-15T14:54:11+00:00"
+            "time": "2026-10-20T08:43:44+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -18938,5 +18938,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
