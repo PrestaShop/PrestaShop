@@ -5188,6 +5188,11 @@
       <title/>
       <description/>
     </hook>
+    <hook id="actionObjectUpdateChanges">
+      <name>actionObjectUpdateChanges</name>
+      <title>Object fields changed by an update</title>
+      <description>Called after a successful ObjectModel update, with the changed fields and their old and new values. They are only computed when a module listens to this hook or to actionObject[ClassName]UpdateChanges.</description>
+    </hook>
     <hook id="actionObjectDeleteBefore">
       <name>actionObjectDeleteBefore</name>
       <title/>

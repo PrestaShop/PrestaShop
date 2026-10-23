@@ -8,9 +8,13 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Classes;
 
+use Cache;
 use Configuration;
 use Db;
+use Hook;
 use Language;
+use Module;
+use objectchangestest;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Install\SqlLoader;
 use ReflectionException;
@@ -18,6 +22,7 @@ use ReflectionMethod;
 use Shop;
 use Tests\Resources\classes\TestableObjectModel;
 use Tests\Resources\DatabaseDump;
+use Tools;
 
 class ObjectModelTest extends TestCase
 {
@@ -75,6 +80,18 @@ class ObjectModelTest extends TestCase
         $this->secondLanguageId = (int) Language::getIdByIso('fr');
         $this->defaultShopId = (int) Configuration::get('PS_SHOP_DEFAULT');
         $this->secondShopId = Shop::getIdByName('Shop 2');
+    }
+
+    protected function tearDown(): void
+    {
+        if (Module::isInstalled('objectchangestest')) {
+            Module::getInstanceByName('objectchangestest')->uninstall();
+        }
+        if (is_dir(_PS_MODULE_DIR_ . 'objectchangestest')) {
+            Tools::deleteDirectory(_PS_MODULE_DIR_ . 'objectchangestest');
+        }
+
+        parent::tearDown();
     }
 
     /**
@@ -620,6 +637,169 @@ class ObjectModelTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    public function testUpdateChangesHooksReceiveTheChangedFields(): void
+    {
+        $createdId = $this->createObjectForChanges([$this->defaultShopId]);
+        $this->installChangesModule();
+
+        $objectToUpdate = new TestableObjectModel($createdId);
+        $objectToUpdate->quantity = 51;
+        $objectToUpdate->name[$this->secondLanguageId] = 'New second name';
+        $this->assertTrue((bool) $objectToUpdate->update());
+
+        $this->assertChangesReceived([
+            'quantity' => ['old' => 42, 'new' => 51],
+            'name' => [
+                'old' => [$this->secondLanguageId => 'Second name'],
+                'new' => [$this->secondLanguageId => 'New second name'],
+            ],
+        ]);
+    }
+
+    public function testUpdateChangesOnPartialUpdate(): void
+    {
+        $createdId = $this->createObjectForChanges([$this->defaultShopId]);
+        $this->installChangesModule();
+
+        $objectToUpdate = new TestableObjectModel($createdId);
+        $objectToUpdate->quantity = 51;
+        $objectToUpdate->enabled = false;
+        $objectToUpdate->name = [
+            $this->defaultLanguageId => 'New default name',
+            $this->secondLanguageId => 'New second name',
+        ];
+        // A lang field flagged with true instead of per language is not written, so not reported either
+        $objectToUpdate->setFieldsToUpdate(['quantity' => true, 'name' => true]);
+        $this->assertTrue((bool) $objectToUpdate->update());
+
+        $this->assertChangesReceived(['quantity' => ['old' => 42, 'new' => 51]]);
+
+        objectchangestest::$calls = [];
+        $objectToUpdate->setFieldsToUpdate(['name' => [$this->secondLanguageId => true]]);
+        $this->assertTrue((bool) $objectToUpdate->update());
+
+        $this->assertChangesReceived([
+            'name' => [
+                'old' => [$this->secondLanguageId => 'Second name'],
+                'new' => [$this->secondLanguageId => 'New second name'],
+            ],
+        ]);
+    }
+
+    public function testUpdateChangesOfObjectLoadedInOneLanguage(): void
+    {
+        $createdId = $this->createObjectForChanges([$this->defaultShopId]);
+        $this->installChangesModule();
+
+        $objectToUpdate = new TestableObjectModel($createdId, $this->secondLanguageId);
+        $objectToUpdate->name = 'New second name';
+        $this->assertTrue((bool) $objectToUpdate->update());
+
+        // Same shape as for an object loaded in all languages
+        $this->assertChangesReceived([
+            'name' => [
+                'old' => [$this->secondLanguageId => 'Second name'],
+                'new' => [$this->secondLanguageId => 'New second name'],
+            ],
+        ]);
+    }
+
+    public function testUpdateChangesReportTheValuesStored(): void
+    {
+        $createdId = $this->createObjectForChanges([$this->defaultShopId]);
+        $this->installChangesModule();
+
+        // The missing translation is stored as an empty string
+        $objectToUpdate = new TestableObjectModel($createdId);
+        $objectToUpdate->name = [$this->defaultLanguageId => 'Default name'];
+        $this->assertTrue((bool) $objectToUpdate->update());
+
+        $this->assertChangesReceived([
+            'name' => [
+                'old' => [$this->secondLanguageId => 'Second name'],
+                'new' => [$this->secondLanguageId => ''],
+            ],
+        ]);
+        $this->assertSame('', (new TestableObjectModel($createdId, $this->secondLanguageId))->name);
+
+        // An object loaded in one language only writes that language
+        objectchangestest::$calls = [];
+        $objectToUpdate = new TestableObjectModel($createdId, $this->defaultLanguageId);
+        $objectToUpdate->name = [
+            $this->defaultLanguageId => 'Default name',
+            $this->secondLanguageId => 'Not written',
+        ];
+        $this->assertTrue((bool) $objectToUpdate->update());
+
+        $this->assertChangesReceived([]);
+        $this->assertSame('', (new TestableObjectModel($createdId, $this->secondLanguageId))->name);
+    }
+
+    public function testUpdateChangesAreComputedForTheObjectShop(): void
+    {
+        $createdId = $this->createObjectForChanges([$this->defaultShopId, $this->secondShopId]);
+
+        $secondShopObject = new TestableObjectModel($createdId, null, $this->secondShopId);
+        $secondShopObject->id_shop_list = [$this->secondShopId];
+        $secondShopObject->enabled = false;
+        $this->assertTrue((bool) $secondShopObject->update());
+
+        $this->installChangesModule();
+
+        // Disabled in the second shop only, so still a change for the default shop
+        $defaultShopObject = new TestableObjectModel($createdId, null, $this->defaultShopId);
+        $defaultShopObject->id_shop_list = [$this->defaultShopId];
+        $defaultShopObject->enabled = false;
+        $this->assertTrue((bool) $defaultShopObject->update());
+
+        $this->assertChangesReceived(['enabled' => ['old' => 1, 'new' => false]]);
+    }
+
+    /**
+     * @param int[] $shopIds
+     */
+    private function createObjectForChanges(array $shopIds): int
+    {
+        $newObject = new TestableObjectModel();
+        $newObject->id_shop_list = $shopIds;
+        $newObject->quantity = 42;
+        $newObject->enabled = true;
+        $newObject->name = [
+            $this->defaultLanguageId => 'Default name',
+            $this->secondLanguageId => 'Second name',
+        ];
+        $this->assertTrue((bool) $newObject->add());
+
+        return (int) $newObject->id;
+    }
+
+    private function installChangesModule(): void
+    {
+        Tools::recurseCopy(dirname(__DIR__, 2) . '/Resources/modules_tests/objectchangestest', _PS_MODULE_DIR_ . 'objectchangestest');
+        $module = Module::getInstanceByName('objectchangestest');
+        $this->assertInstanceOf(Module::class, $module);
+        // Translating the multilang tables needs the Symfony container, not booted here
+        Module::updateTranslationsAfterInstall(false);
+        try {
+            $this->assertTrue((bool) $module->install());
+        } finally {
+            Module::updateTranslationsAfterInstall(true);
+        }
+        // A new request would start with empty hook caches
+        Cache::clean('active_hooks');
+        Cache::clean(Hook::MODULE_LIST_BY_HOOK_KEY . '*');
+        objectchangestest::$calls = [];
+    }
+
+    private function assertChangesReceived(array $expectedChanges): void
+    {
+        // Values read from the database are strings, hence the loose comparison
+        $this->assertEquals([
+            ['hook' => 'actionObjectUpdateChanges', 'changes' => $expectedChanges],
+            ['hook' => objectchangestest::CLASS_HOOK, 'changes' => $expectedChanges],
+        ], objectchangestest::$calls);
     }
 
     /**
