@@ -15,7 +15,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteOrderReturnsCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\BulkDeleteOrderReturnsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\BulkDeleteOrderReturnsException;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteOrderReturnException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 
 #[AsCommandHandler]
@@ -38,7 +38,9 @@ class BulkDeleteOrderReturnsHandler extends AbstractBulkCommandHandler implement
             return;
         }
 
-        $this->handleBulkAction($orderReturnIds, DeleteOrderReturnException::class);
+        // The repository throws OrderReturnNotFoundException for an unknown id: every exception of the domain is
+        // collected, so one failing id does not stop the others
+        $this->handleBulkAction($orderReturnIds, OrderReturnException::class);
     }
 
     /**
