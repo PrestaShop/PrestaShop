@@ -120,6 +120,12 @@ body {
   background: var(--#{$cdk}primary-200);
 }
 
+// Primary backgrounds
+.bg-primary {
+  /* stylelint-disable-next-line declaration-no-important */
+  background-color: var(--#{$cdk}blue-700) !important;
+}
+
 // To put into the PrestaKit
 ._fullspace {
   width: 100%;
@@ -182,6 +188,12 @@ span.twitter-typeahead {
 
 table.table {
   font-size: 0.8rem;
+}
+
+// Table header borders
+.table thead th,
+.table thead .column-filters th {
+  border-bottom-color: var(--#{$cdk}blue-700);
 }
 
 // Needed to override the default inline style of modal header in translations-app
