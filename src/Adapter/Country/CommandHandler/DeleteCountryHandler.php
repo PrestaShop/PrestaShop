@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
 use Country;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Adapter\Country\Validate\CountryValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\DeleteCountryHandlerInterface;
@@ -20,14 +21,10 @@ use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\DeleteCountryHandle
 #[AsCommandHandler]
 class DeleteCountryHandler implements DeleteCountryHandlerInterface
 {
-    /**
-     * @var CountryRepository
-     */
-    private $countryRepository;
-
-    public function __construct(CountryRepository $countryRepository)
-    {
-        $this->countryRepository = $countryRepository;
+    public function __construct(
+        private readonly CountryRepository $countryRepository,
+        private readonly CountryValidator $countryValidator,
+    ) {
     }
 
     /**
@@ -35,6 +32,7 @@ class DeleteCountryHandler implements DeleteCountryHandlerInterface
      */
     public function handle(DeleteCountryCommand $command): void
     {
+        $this->countryValidator->assertIsNotDefaultCountry($command->getCountryId());
         $this->countryRepository->delete($command->getCountryId());
     }
 }

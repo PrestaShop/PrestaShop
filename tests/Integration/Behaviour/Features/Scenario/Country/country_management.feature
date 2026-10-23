@@ -77,6 +77,57 @@ Feature: country management
       | iso_code | TE |
     Then I should get an "DuplicateCountryIsoCode" error
 
+  Scenario: Adding a country with a three-letter ISO code keeps the three letters
+    When I add new country "three_letters" with following properties:
+      | name[en-US]                | threeLettersName                                 |
+      | name[fr-FR]                | threeLettersNameFr                               |
+      | iso_code                   | xab                                              |
+      | call_prefix                | 123                                              |
+      | default_currency           | 1                                                |
+      | zone                       | 1                                                |
+      | need_zip_code              | true                                             |
+      | zip_code_format            | 1 NL                                             |
+      | address_format             | firstname lastname\naddress1\ncity\nCountry:name |
+      | is_enabled                 | true                                             |
+      | contains_states            | false                                            |
+      | need_identification_number | false                                            |
+      | display_tax_label          | true                                             |
+      | shop_association           | 1                                                |
+    Then the country "three_letters" should have the following properties:
+      | name[en-US]                | threeLettersName                                 |
+      | name[fr-FR]                | threeLettersNameFr                               |
+      | iso_code                   | XAB                                              |
+      | call_prefix                | 123                                              |
+      | default_currency           | 1                                                |
+      | zone                       | 1                                                |
+      | need_zip_code              | true                                             |
+      | zip_code_format            | 1 NL                                             |
+      | address_format             | firstname lastname\naddress1\ncity\nCountry:name |
+      | is_enabled                 | true                                             |
+      | contains_states            | false                                            |
+      | need_identification_number | false                                            |
+      | display_tax_label          | true                                             |
+      | shop_association           | 1                                                |
+
+  Scenario: Editing a country to a three-letter ISO code keeps the three letters
+    When I edit country "second" with following properties:
+      | iso_code | XTS |
+    Then the country "second" should have the following properties:
+      | name[en-US]                | secondName                                       |
+      | name[fr-FR]                | secondNameFr                                     |
+      | iso_code                   | XTS                                              |
+      | call_prefix                | 123                                              |
+      | default_currency           | 1                                                |
+      | zone                       | 1                                                |
+      | need_zip_code              | true                                             |
+      | zip_code_format            | 1 NL                                             |
+      | address_format             | firstname lastname\naddress1\ncity\nCountry:name |
+      | is_enabled                 | true                                             |
+      | contains_states            | false                                            |
+      | need_identification_number | false                                            |
+      | display_tax_label          | true                                             |
+      | shop_association           | 1                                                |
+
   Scenario: edit country
     Given language "language1" with locale "en-US" exists
     And language "language2" with locale "fr-FR" exists
@@ -145,6 +196,34 @@ Feature: country management
       | display_tax_label          | true                                             |
       | shop_association           | 1                                                |
     Then I should get error that call prefix is invalid
+
+  Scenario: adding a country with an unknown zone is rejected
+    Given language "language1" with locale "en-US" exists
+    When I add new country "unknownZone" with following properties:
+      | name[en-US]                | unknownZoneName                                  |
+      | iso_code                   | TZ                                               |
+      | call_prefix                | 5                                                |
+      | default_currency           | 1                                                |
+      | zone                       | 99999                                            |
+      | need_zip_code              | false                                            |
+      | zip_code_format            |                                                  |
+      | address_format             | firstname lastname\naddress1\ncity\nCountry:name |
+      | is_enabled                 | true                                             |
+      | contains_states            | false                                            |
+      | need_identification_number | false                                            |
+      | display_tax_label          | true                                             |
+      | shop_association           | 1                                                |
+    Then I should get error that zone was not found
+
+  Scenario: editing a country with an unknown zone is rejected
+    When I edit country "test" with following properties:
+      | zone | 99999 |
+    Then I should get error that zone was not found
+
+  Scenario: deleting the default country of the shop is refused
+    Given the default country of the shop is referenced as "defaultCountry"
+    When I delete country "defaultCountry"
+    Then I should get an error that the default country cannot be deleted
 
   Scenario: Delete country
     When I delete country "test"
