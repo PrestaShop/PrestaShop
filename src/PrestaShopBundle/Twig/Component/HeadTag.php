@@ -107,6 +107,14 @@ class HeadTag
         return $this->templateVariables->getIsoUser();
     }
 
+    public function getIsoUserForEditor(): string
+    {
+        $iso = $this->templateVariables->getIsoUser();
+
+        // TinyMCE fails loading langs/<iso>.js when no pack ships for the employee language
+        return file_exists(_PS_ROOT_DIR_ . '/js/tiny_mce/langs/' . $iso . '.js') ? $iso : 'en';
+    }
+
     public function getCountryIsoCode(): string
     {
         return $this->countryContext->getIsoCode();
