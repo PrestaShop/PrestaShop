@@ -52,6 +52,7 @@ services:
           - 'AdminLogin'
           - 'AdminQuickAccesses'
           - 'AdminTabs'
+        - '@PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface'
 
     security.csrf.token_storage:
       class: Tests\Integration\Utility\CsrfTokenStorage
