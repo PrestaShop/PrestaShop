@@ -84,55 +84,52 @@ class CarrierRangeRepository
         $rangeTable = $this->getRangeMethodTable((int) $carrier->shipping_method);
 
         // Use transaction to ensure data consistency
-        $this->connection->beginTransaction();
+        $this->connection->transactional(function () use ($carrierId, $rangesCollection, $shopConstraint, $rangeTable): void {
+            // Reset carrier ranges
+            $this->reset($carrierId, $shopConstraint);
 
-        // Reset carrier ranges
-        $this->reset($carrierId, $shopConstraint);
+            // Foreach zones
+            $rangesIds = [];
+            foreach ($rangesCollection->getZones() as $zone) {
+                $idZone = $zone->getZoneId();
 
-        // Foreach zones
-        $rangesIds = [];
-        foreach ($rangesCollection->getZones() as $zone) {
-            $idZone = $zone->getZoneId();
+                // Foreach ranges in current zone
+                foreach ($zone->getRanges() as $range) {
+                    // To avoid duplicated content in database, we will use a unique key for each range based on from-to values
+                    $rangeKey = $range->getFrom() . '-' . $range->getTo();
+                    // Check if range already exist in database
+                    if (!in_array($rangeKey, array_keys($rangesIds), true)) {
+                        // Insert range
+                        $this->connection->insert(
+                            $this->dbPrefix . $rangeTable,
+                            [
+                                'id_carrier' => $carrierId->getValue(),
+                                'delimiter1' => $range->getFrom(),
+                                'delimiter2' => $range->getTo(),
+                            ]
+                        );
+                        $rangeId = $this->connection->lastInsertId();
+                        $rangesIds[$rangeKey] = $rangeId;
+                    } else {
+                        $rangeId = $rangesIds[$rangeKey];
+                    }
 
-            // Foreach ranges in current zone
-            foreach ($zone->getRanges() as $range) {
-                // To avoid duplicated content in database, we will use a unique key for each range based on from-to values
-                $rangeKey = $range->getFrom() . '-' . $range->getTo();
-                // Check if range already exist in database
-                if (!in_array($rangeKey, array_keys($rangesIds), true)) {
-                    // Insert range
+                    // Insert price in delivery table
                     $this->connection->insert(
-                        $this->dbPrefix . $rangeTable,
+                        $this->dbPrefix . 'delivery',
                         [
                             'id_carrier' => $carrierId->getValue(),
-                            'delimiter1' => $range->getFrom(),
-                            'delimiter2' => $range->getTo(),
+                            'id_' . $rangeTable => $rangeId,
+                            'id_zone' => $idZone,
+                            'price' => $range->getPrice(),
+                            // Only all shops is handled for now
+                            'id_shop' => null,
+                            'id_shop_group' => null,
                         ]
                     );
-                    $rangeId = $this->connection->lastInsertId();
-                    $rangesIds[$rangeKey] = $rangeId;
-                } else {
-                    $rangeId = $rangesIds[$rangeKey];
                 }
-
-                // Insert price in delivery table
-                $this->connection->insert(
-                    $this->dbPrefix . 'delivery',
-                    [
-                        'id_carrier' => $carrierId->getValue(),
-                        'id_' . $rangeTable => $rangeId,
-                        'id_zone' => $idZone,
-                        'price' => $range->getPrice(),
-                        // Only all shops is handled for now
-                        'id_shop' => null,
-                        'id_shop_group' => null,
-                    ]
-                );
             }
-        }
-
-        // Commit transaction
-        $this->connection->commit();
+        });
     }
 
     /**
