@@ -73,4 +73,18 @@ class ProductFormOptionsProviderTest extends TestCase
         $this->assertArrayHasKey('product_type', $options);
         $this->assertEquals(ProductType::TYPE_COMBINATIONS, $options['product_type']);
     }
+
+    public function testHasMultipleShopsOption(): void
+    {
+        $provider = new ProductFormOptionsProvider();
+        $options = $provider->getOptions(self::PRODUCT_ID, []);
+        $this->assertFalse($options['has_multiple_shops']);
+
+        foreach ([false, true] as $hasMultipleShops) {
+            $options = $provider->getOptions(self::PRODUCT_ID, [
+                'has_multiple_shops' => $hasMultipleShops,
+            ]);
+            $this->assertSame($hasMultipleShops, $options['has_multiple_shops']);
+        }
+    }
 }
