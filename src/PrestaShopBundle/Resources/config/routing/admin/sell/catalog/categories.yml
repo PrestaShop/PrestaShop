@@ -49,6 +49,15 @@ admin_categories_toggle_status:
     _legacy_parameters:
       id_category: categoryId
 
+admin_categories_associated_products:
+  path: /{categoryId}/products
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::getAssociatedProductsAction
+    _legacy_controller: AdminCategories
+  requirements:
+    categoryId: \d+
+
 admin_categories_bulk_delete:
   path: /bulk-delete
   methods: [ POST ]

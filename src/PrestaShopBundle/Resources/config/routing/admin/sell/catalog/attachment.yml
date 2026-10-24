@@ -78,6 +78,22 @@ admin_attachments_attachment_info:
   options:
     expose: true
 
+admin_attachments_associated_products:
+  path: /{attachmentId}/products
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::getAssociatedProductsAction
+    _legacy_controller: AdminAttachments
+  requirements:
+    attachmentId: \d+
+
+admin_attachments_search_by_product:
+  path: /search-by-product
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::searchByProductAction
+    _legacy_controller: AdminAttachments
+
 admin_attachments_search:
   path: /search/{searchPhrase}
   methods: GET

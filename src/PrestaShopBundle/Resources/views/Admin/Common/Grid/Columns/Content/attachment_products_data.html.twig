@@ -1,0 +1,17 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% if record.products_count > 0 %}
+  <button
+    type="button"
+    class="btn btn-link p-0 mr-1 align-middle js-associated-products-preview"
+    data-url="{{ path('admin_attachments_associated_products', {attachmentId: record.id_attachment}) }}"
+    data-title="{{ 'Products associated with %name%'|trans({'%name%': record.name}, 'Admin.Catalog.Feature') }}"
+    title="{{ 'Preview'|trans({}, 'Admin.Actions') }}"
+  >
+    <i class="material-icons">visibility</i>
+  </button>
+{% endif %}
+{{ record[column.options.field] }}

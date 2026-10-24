@@ -109,3 +109,7 @@ services:
       - '@prestashop.adapter.context_state_manager'
       - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_ROOT_CATEGORY')"
+
+  PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryAssociatedProductsHandler:
+    autowire: true
+    autoconfigure: true

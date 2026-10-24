@@ -24,13 +24,17 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCom
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryAssociatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryAssociatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryAssociatedProductList;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectOption;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Shop;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -551,6 +555,95 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->getSharedStorage()->set($categoryReference, (int) $foundCategory['id_category']);
+    }
+
+    /**
+     * @Then category :categoryReference should be associated with following products:
+     */
+    public function assertAssociatedProducts(string $categoryReference, TableNode $tableNode): void
+    {
+        $expectedProducts = $this->getExpectedAssociatedProducts($tableNode);
+
+        Assert::assertSame(
+            ['products' => $expectedProducts, 'total' => count($expectedProducts)],
+            $this->getAssociatedProducts($categoryReference)
+        );
+    }
+
+    /**
+     * @Then listing :limit products from offset :offset of category :categoryReference should give :total in total and:
+     */
+    public function assertAssociatedProductsPage(
+        int $limit,
+        int $offset,
+        string $categoryReference,
+        int $total,
+        TableNode $tableNode,
+    ): void {
+        Assert::assertSame(
+            ['products' => $this->getExpectedAssociatedProducts($tableNode), 'total' => $total],
+            $this->getAssociatedProducts($categoryReference, $limit, $offset)
+        );
+    }
+
+    /**
+     * @Then the products of category :categoryReference matching :phrase should be:
+     */
+    public function assertAssociatedProductsMatching(string $categoryReference, string $phrase, TableNode $tableNode): void
+    {
+        $expectedProducts = $this->getExpectedAssociatedProducts($tableNode);
+
+        Assert::assertSame(
+            ['products' => $expectedProducts, 'total' => count($expectedProducts)],
+            $this->getAssociatedProducts($categoryReference, null, null, $phrase)
+        );
+    }
+
+    /**
+     * @return array<int, array{reference: string, name: string, active: bool}>
+     */
+    private function getExpectedAssociatedProducts(TableNode $tableNode): array
+    {
+        return array_map(
+            fn (array $row): array => [
+                'reference' => $row['reference'],
+                'name' => $row['name'],
+                'active' => PrimitiveUtils::castStringBooleanIntoBoolean($row['active']),
+            ],
+            $tableNode->getColumnsHash()
+        );
+    }
+
+    /**
+     * @return array{products: array<int, array{reference: string, name: string, active: bool}>, total: int}
+     */
+    private function getAssociatedProducts(
+        string $categoryReference,
+        ?int $limit = null,
+        ?int $offset = null,
+        string $searchPhrase = '',
+    ): array {
+        /** @var CategoryAssociatedProductList $productList */
+        $productList = $this->getQueryBus()->handle(new GetCategoryAssociatedProducts(
+            $this->referenceToId($categoryReference),
+            $this->getDefaultLangId(),
+            ShopConstraint::shop($this->getDefaultShopId()),
+            $limit,
+            $offset,
+            $searchPhrase
+        ));
+
+        return [
+            'products' => array_map(
+                static fn (CategoryAssociatedProduct $product): array => [
+                    'reference' => $product->getReference(),
+                    'name' => $product->getName(),
+                    'active' => $product->isActive(),
+                ],
+                $productList->getProducts()
+            ),
+            'total' => $productList->getTotalCount(),
+        ];
     }
 
     /**
