@@ -11,6 +11,9 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\EditCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\SetCarrierRangesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\SetCarrierTaxRuleGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -19,11 +22,15 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
 {
     public function __construct(
         private readonly CommandBusInterface $commandBus,
+        private readonly CommandBusInterface $queryBus,
     ) {
     }
 
     public function create(array $data)
     {
+        // A carrier created here is never a module carrier, so the checkout lists it only once it has a range.
+        $this->assertRangesAreDefined($data, true);
+
         /** @var UploadedFile|null $logo */
         $logo = $data['general_settings']['logo'];
         if ($logo instanceof UploadedFile) {
@@ -64,6 +71,10 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
 
     public function update($id, array $data)
     {
+        /** @var EditableCarrier $carrier */
+        $carrier = $this->queryBus->handle(new GetCarrierForEditing((int) $id, ShopConstraint::allShops()));
+        $this->assertRangesAreDefined($data, $this->canBeOfferedAtCheckout($carrier));
+
         // If the courier has no costs, 'has_additional_handling_fee' must be false.
         if ((bool) $data['shipping_settings']['is_free'] === true) {
             $data['shipping_settings']['has_additional_handling_fee'] = false;
@@ -106,6 +117,43 @@ class CarrierFormDataHandler implements FormDataHandlerInterface
         $carrierId = $this->setCarrierTaxRuleGroup($carrierId, $data);
 
         return $carrierId->getValue();
+    }
+
+    /**
+     * A carrier that is priced from its ranges but has none is accepted by the back office and then never
+     * offered at checkout, with nothing to tell the merchant why - the reported defect. Refuse the save
+     * instead, so the message arrives where the mistake was made.
+     *
+     * A free carrier is exempt because it has no cost to look up: update() already skips saving ranges for
+     * one, and requiring them would block a shop that offers free delivery.
+     */
+    private function assertRangesAreDefined(array $data, bool $offeredAtCheckout): void
+    {
+        if (!$offeredAtCheckout || (bool) $data['shipping_settings']['is_free']) {
+            return;
+        }
+
+        if ([] !== $this->formatFormRangesData($data)) {
+            return;
+        }
+
+        throw new CarrierConstraintException(
+            'A carrier priced from its own ranges must have at least one range.',
+            CarrierConstraintException::MISSING_RANGES
+        );
+    }
+
+    /**
+     * Mirrors the filter Carrier::getCarriersForOrder() applies before it looks at any range:
+     * PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE, i.e. is_module = 0 OR need_range = 1.
+     *
+     * A module carrier with need_range off is never listed by the native checkout, whether it has ranges
+     * or not, so a range would not make it available and refusing its save for lack of one would send the
+     * merchant to a fix that does not work. Every other carrier is listed only once it has a range.
+     */
+    private function canBeOfferedAtCheckout(EditableCarrier $carrier): bool
+    {
+        return !$carrier->isModule() || $carrier->needsRange();
     }
 
     /**

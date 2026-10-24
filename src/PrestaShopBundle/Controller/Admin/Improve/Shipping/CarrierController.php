@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\ToggleCarrierStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotDeleteCarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotToggleCarrierIsFreeStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotToggleCarrierStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
@@ -360,6 +361,13 @@ class CarrierController extends PrestaShopAdminController
                 [],
                 'Admin.Notifications.Error'
             ),
+            CarrierConstraintException::class => [
+                CarrierConstraintException::MISSING_RANGES => $this->trans(
+                    'You must set at least one range and its price, otherwise this carrier will not be offered at checkout.',
+                    [],
+                    'Admin.Shipping.Notification'
+                ),
+            ],
             CannotToggleCarrierStatusException::class => [
                 CannotToggleCarrierStatusException::SINGLE_TOGGLE => $this->trans(
                     'An error occurred while updating the status for an object.',
