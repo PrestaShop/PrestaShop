@@ -101,6 +101,7 @@ final class AttachmentGridDefinitionFactory extends AbstractFilterableGridDefini
                     ->setName($this->trans('Products', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'products',
+                        'clickable' => false,
                     ])
             )
             ->add((new ActionColumn('actions'))

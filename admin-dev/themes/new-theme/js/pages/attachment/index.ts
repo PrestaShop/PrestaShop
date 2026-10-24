@@ -3,6 +3,9 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+import AssociatedProductsModal from '@components/associated-products-modal/associated-products-modal';
+import ProductSearch from './product-search';
+
 $(() => {
   const attachmentGrid = new window.prestashop.component.Grid('attachment');
 
@@ -14,6 +17,9 @@ $(() => {
   attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
   attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   attachmentGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+
+  new AssociatedProductsModal();
+  new ProductSearch();
 
   window.prestashop.component.initComponents(
     [

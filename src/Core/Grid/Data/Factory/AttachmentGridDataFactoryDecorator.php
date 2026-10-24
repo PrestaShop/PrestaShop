@@ -76,6 +76,7 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
             }
 
             $attachment['file_size'] = $this->fileSizeConverter->convert((int) $attachment['file_size']);
+            $attachment['products_count'] = (int) $attachment['products'];
             $attachment['products'] .= ' ' . $this->trans('product(s)', [], 'Admin.Catalog.Feature');
 
             $modifiedAttachments[] = $attachment;

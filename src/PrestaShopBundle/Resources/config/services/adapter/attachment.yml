@@ -68,3 +68,11 @@ services:
     autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'
+
+  PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentAssociatedProductsHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\SearchAttachmentsByProductHandler:
+    autowire: true
+    autoconfigure: true

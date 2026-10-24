@@ -5,9 +5,13 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
+  {{ include('@PrestaShop/Admin/Sell/Catalog/Attachment/Blocks/product_search.html.twig') }}
+
   {% block attachments_listing %}
     {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: attachmentGrid}) }}
   {% endblock %}
+
+  {{ include('@PrestaShop/Admin/Common/associated_products_modal.html.twig') }}
 {% endblock %}
 
 {% block javascripts %}
