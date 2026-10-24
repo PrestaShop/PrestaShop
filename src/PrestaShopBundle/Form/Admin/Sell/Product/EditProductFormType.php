@@ -101,6 +101,7 @@ class EditProductFormType extends TranslatorAwareType
             ->add('footer', FooterType::class, [
                 'product_id' => $productId,
                 'active' => $options['active'],
+                'has_multiple_shops' => $options['has_multiple_shops'],
             ])
         ;
 
@@ -138,6 +139,7 @@ class EditProductFormType extends TranslatorAwareType
             ->setDefaults([
                 'virtual_product_file_id' => null,
                 'active' => false,
+                'has_multiple_shops' => false,
                 'force_default_active' => false,
                 'allow_extra_fields' => true,
                 'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig',
@@ -158,6 +160,7 @@ class EditProductFormType extends TranslatorAwareType
             ->setAllowedTypes('product_type', 'string')
             ->setAllowedTypes('virtual_product_file_id', ['null', 'int'])
             ->setAllowedTypes('active', ['bool'])
+            ->setAllowedTypes('has_multiple_shops', 'bool')
             ->setNormalizer('toolbar_buttons', function (Options $options, $toolbarButtons) {
                 return array_merge(
                     $this->toolbarButtonsProvider->getToolbarButtonsOptions(['productId' => $options->offsetGet('product_id')]),
