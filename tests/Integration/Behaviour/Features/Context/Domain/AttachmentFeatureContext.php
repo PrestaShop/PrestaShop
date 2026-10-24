@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachmentsByProduct;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentAssociatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentAssociatedProductList;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\ProductAttachmentMatch;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
@@ -149,7 +150,68 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertAssociatedProducts(string $attachmentReference, TableNode $tableNode): void
     {
-        $expectedProducts = array_map(
+        $expectedProducts = $this->getExpectedAssociatedProducts($tableNode);
+
+        Assert::assertSame(
+            ['products' => $expectedProducts, 'total' => count($expectedProducts)],
+            $this->getAssociatedProducts($attachmentReference)
+        );
+    }
+
+    /**
+     * @Then attachment :attachmentReference should have no associated products
+     */
+    public function assertNoAssociatedProducts(string $attachmentReference): void
+    {
+        Assert::assertSame(['products' => [], 'total' => 0], $this->getAssociatedProducts($attachmentReference));
+    }
+
+    /**
+     * @Then listing :limit products from offset :offset of attachment :attachmentReference should give :total in total and:
+     */
+    public function assertAssociatedProductsPage(
+        int $limit,
+        int $offset,
+        string $attachmentReference,
+        int $total,
+        TableNode $tableNode,
+    ): void {
+        Assert::assertSame(
+            ['products' => $this->getExpectedAssociatedProducts($tableNode), 'total' => $total],
+            $this->getAssociatedProducts($attachmentReference, $limit, $offset)
+        );
+    }
+
+    /**
+     * @Then the products of attachment :attachmentReference matching :phrase should be:
+     */
+    public function assertAssociatedProductsMatching(string $attachmentReference, string $phrase, TableNode $tableNode): void
+    {
+        $expectedProducts = $this->getExpectedAssociatedProducts($tableNode);
+
+        Assert::assertSame(
+            ['products' => $expectedProducts, 'total' => count($expectedProducts)],
+            $this->getAssociatedProducts($attachmentReference, null, null, $phrase)
+        );
+    }
+
+    /**
+     * @Then no product of attachment :attachmentReference should match :phrase
+     */
+    public function assertNoAssociatedProductMatches(string $attachmentReference, string $phrase): void
+    {
+        Assert::assertSame(
+            ['products' => [], 'total' => 0],
+            $this->getAssociatedProducts($attachmentReference, null, null, $phrase)
+        );
+    }
+
+    /**
+     * @return array<int, array{id: int, reference: string, name: string, active: bool}>
+     */
+    private function getExpectedAssociatedProducts(TableNode $tableNode): array
+    {
+        return array_map(
             fn (array $row): array => [
                 'id' => $this->referenceToId($row['product']),
                 'reference' => $row['reference'],
@@ -158,16 +220,6 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
             ],
             $tableNode->getColumnsHash()
         );
-
-        Assert::assertSame($expectedProducts, $this->getAssociatedProducts($attachmentReference));
-    }
-
-    /**
-     * @Then attachment :attachmentReference should have no associated products
-     */
-    public function assertNoAssociatedProducts(string $attachmentReference): void
-    {
-        Assert::assertSame([], $this->getAssociatedProducts($attachmentReference));
     }
 
     /**
@@ -233,26 +285,36 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @return array<int, array{id: int, reference: string, name: string, active: bool}>
+     * @return array{products: array<int, array{id: int, reference: string, name: string, active: bool}>, total: int}
      */
-    private function getAssociatedProducts(string $attachmentReference): array
-    {
-        /** @var AttachmentAssociatedProduct[] $products */
-        $products = $this->getQueryBus()->handle(new GetAttachmentAssociatedProducts(
+    private function getAssociatedProducts(
+        string $attachmentReference,
+        ?int $limit = null,
+        ?int $offset = null,
+        string $searchPhrase = '',
+    ): array {
+        /** @var AttachmentAssociatedProductList $productList */
+        $productList = $this->getQueryBus()->handle(new GetAttachmentAssociatedProducts(
             $this->referenceToId($attachmentReference),
             $this->getDefaultLangId(),
-            ShopConstraint::shop($this->getDefaultShopId())
+            ShopConstraint::shop($this->getDefaultShopId()),
+            $limit,
+            $offset,
+            $searchPhrase
         ));
 
-        return array_map(
-            static fn (AttachmentAssociatedProduct $product): array => [
-                'id' => $product->getProductId(),
-                'reference' => $product->getReference(),
-                'name' => $product->getName(),
-                'active' => $product->isActive(),
-            ],
-            $products
-        );
+        return [
+            'products' => array_map(
+                static fn (AttachmentAssociatedProduct $product): array => [
+                    'id' => $product->getProductId(),
+                    'reference' => $product->getReference(),
+                    'name' => $product->getName(),
+                    'active' => $product->isActive(),
+                ],
+                $productList->getProducts()
+            ),
+            'total' => $productList->getTotalCount(),
+        ];
     }
 
     /**

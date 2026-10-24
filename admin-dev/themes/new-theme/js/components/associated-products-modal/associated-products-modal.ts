@@ -3,111 +3,97 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-import {AssociatedProduct, buildProductRow, showLoadingWhenSlow} from './product-cells';
+import DynamicPaginator from '@components/pagination/dynamic-paginator';
+import RendererType from '@PSTypes/renderers';
+import AssociatedProductsService, {AssociatedProductsPage} from './associated-products-service';
+import {buildProductRow, showLoadingWhenSlow} from './product-cells';
 
 const {$} = window;
 
+const SEARCH_DELAY = 300;
+
 /**
- * Lists the products of a grid row (an attachment, a category) in a modal opened from its preview button, with a filter
- * on the ID, reference or name. The list is requested as soon as the pointer reaches the button and kept for the page.
+ * Lists the products of a grid row (an attachment, a category) page by page in a modal opened from its preview
+ * button, with a search on the ID, reference or name. The first page is requested as soon as the pointer reaches
+ * the button.
  */
-export default class AssociatedProductsModal {
+export default class AssociatedProductsModal implements RendererType {
   private readonly $modal: JQuery;
 
   private readonly tbody: HTMLTableSectionElement;
 
-  private readonly filterInput: HTMLInputElement;
+  private readonly searchInput: HTMLInputElement;
 
-  private readonly products = new Map<string, Promise<AssociatedProduct[]>>();
+  private readonly limitSelect: HTMLSelectElement;
 
-  private openedUrl: string | null = null;
+  private readonly service = new AssociatedProductsService();
+
+  private readonly paginator: DynamicPaginator;
+
+  private cancelLoading?: () => void;
+
+  private searchTimer?: number;
 
   constructor() {
     this.$modal = $('#associated-products-modal');
     this.tbody = <HTMLTableSectionElement> this.$modal.find('tbody').get(0);
-    this.filterInput = <HTMLInputElement> this.$modal.find('.js-associated-products-filter').get(0);
+    this.searchInput = <HTMLInputElement> this.$modal.find('.js-associated-products-search').get(0);
+    this.limitSelect = <HTMLSelectElement> this.$modal.find('#paginator-limit').get(0);
+    this.paginator = new DynamicPaginator('#associated-products-pagination', this.service, this);
 
     $(document)
       .on('mouseenter focusin', '.js-associated-products-preview', (event: JQuery.TriggeredEvent) => {
-        this.load(<string>(event.currentTarget as HTMLElement).dataset.url);
+        this.service.prefetch(<string>(event.currentTarget as HTMLElement).dataset.url, Number(this.limitSelect.value));
       })
       .on('click', '.js-associated-products-preview', (event: JQuery.ClickEvent) => {
         const button = event.currentTarget as HTMLElement;
         this.open(<string>button.dataset.url, <string>button.dataset.title);
       });
-    this.filterInput.addEventListener('input', () => this.filter());
-    this.$modal.on('shown.bs.modal', () => this.filterInput.focus());
+    this.searchInput.addEventListener('input', () => {
+      window.clearTimeout(this.searchTimer);
+      this.searchTimer = window.setTimeout(() => this.search(), SEARCH_DELAY);
+    });
+    this.$modal.on('shown.bs.modal', () => this.searchInput.focus());
   }
 
-  private load(url: string): Promise<AssociatedProduct[]> {
-    let products = this.products.get(url);
+  setLoading(loading: boolean): void {
+    this.cancelLoading?.();
 
-    if (!products) {
-      products = fetch(url)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(response.statusText);
-          }
-
-          return response.json();
-        })
-        .then((data: {products: AssociatedProduct[]}) => data.products);
-      // A failed request is retried on the next opening
-      products.catch(() => this.products.delete(url));
-      this.products.set(url, products);
-    }
-
-    return products;
-  }
-
-  private async open(url: string, title: string): Promise<void> {
-    this.openedUrl = url;
-    this.$modal.find('.modal-title').text(title);
-    this.filterInput.value = '';
-    this.showState('none');
-    const cancelLoading = showLoadingWhenSlow(() => this.showState('loading'));
-    this.$modal.modal('show');
-
-    try {
-      const products = await this.load(url);
-
-      // Another row may have been opened while this list was loading
-      if (this.openedUrl === url) {
-        this.render(products);
-        this.showState('table');
-      }
-    } catch (error) {
-      if (this.openedUrl === url) {
-        this.showState('error');
-      }
-    } finally {
-      cancelLoading();
+    if (loading) {
+      this.cancelLoading = showLoadingWhenSlow(() => this.showState('loading'));
     }
   }
 
-  private render(products: AssociatedProduct[]): void {
+  render(data: Record<string, unknown>): void {
+    const page = <AssociatedProductsPage> data;
+
+    if (page.failed) {
+      this.showState('error');
+
+      return;
+    }
+
     const rows = document.createDocumentFragment();
-    products.forEach((product) => {
-      const row = buildProductRow(product, this.tbody);
-      row.dataset.id = String(product.id);
-      row.dataset.text = `${product.reference}\n${product.name}`.toLowerCase();
-      rows.appendChild(row);
-    });
+    page.products.forEach((product) => rows.appendChild(buildProductRow(product, this.tbody)));
     this.tbody.replaceChildren(rows);
-    this.filter();
+    this.$modal.find('.js-associated-products-no-match').toggleClass('d-none', page.products.length > 0);
+    this.showState('table');
   }
 
-  private filter(): void {
-    const phrase = this.filterInput.value.trim().toLowerCase();
-    let visibleRows = 0;
+  private open(url: string, title: string): void {
+    window.clearTimeout(this.searchTimer);
+    this.$modal.find('.modal-title').text(title);
+    this.searchInput.value = '';
+    this.service.setListUrl(url);
+    this.service.setSearchPhrase('');
+    this.showState('none');
+    this.$modal.modal('show');
+    this.paginator.paginate(1);
+  }
 
-    Array.from(this.tbody.rows).forEach((row) => {
-      // Same rule as the search by product: the ID must match exactly
-      const matches = row.dataset.id === phrase || (<string>row.dataset.text).includes(phrase);
-      row.toggleAttribute('hidden', !matches);
-      visibleRows += matches ? 1 : 0;
-    });
-    this.$modal.find('.js-associated-products-no-match').toggleClass('d-none', visibleRows > 0);
+  private search(): void {
+    this.service.setSearchPhrase(this.searchInput.value);
+    this.paginator.paginate(1);
   }
 
   private showState(state: 'none' | 'loading' | 'table' | 'error'): void {

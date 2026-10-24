@@ -13,7 +13,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
- * Gets the products an attachment is associated with
+ * Gets a paginated list of the products an attachment is associated with
  */
 class GetAttachmentAssociatedProducts
 {
@@ -26,11 +26,17 @@ class GetAttachmentAssociatedProducts
      * @param int $languageId language of the product names
      * @param ShopConstraint $shopConstraint shop whose name and status are returned, each product's default shop
      *                                       when the constraint is not a single shop
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param string $searchPhrase keeps only the products with this ID, or with a part of their reference or name
      */
     public function __construct(
         int $attachmentId,
         int $languageId,
         private readonly ShopConstraint $shopConstraint,
+        private readonly ?int $limit = null,
+        private readonly ?int $offset = null,
+        private readonly string $searchPhrase = '',
     ) {
         $this->attachmentId = new AttachmentId($attachmentId);
         $this->languageId = new LanguageId($languageId);
@@ -49,5 +55,20 @@ class GetAttachmentAssociatedProducts
     public function getShopConstraint(): ShopConstraint
     {
         return $this->shopConstraint;
+    }
+
+    public function getLimit(): ?int
+    {
+        return $this->limit;
+    }
+
+    public function getOffset(): ?int
+    {
+        return $this->offset;
+    }
+
+    public function getSearchPhrase(): string
+    {
+        return $this->searchPhrase;
     }
 }

@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachmentsByProduct;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentAssociatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentAssociatedProductList;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\ProductAttachmentMatch;
@@ -49,6 +50,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AttachmentController extends PrestaShopAdminController
 {
+    /**
+     * Same choices as in the associated products modal
+     */
+    private const ASSOCIATED_PRODUCTS_LIMIT_CHOICES = [25, 50, 100];
+
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
@@ -247,20 +253,24 @@ class AttachmentController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function getAssociatedProductsAction(int $attachmentId): JsonResponse
+    public function getAssociatedProductsAction(Request $request, int $attachmentId): JsonResponse
     {
-        /** @var AttachmentAssociatedProduct[] $products */
-        $products = $this->dispatchQuery(new GetAttachmentAssociatedProducts(
+        /** @var AttachmentAssociatedProductList $productList */
+        $productList = $this->dispatchQuery(new GetAttachmentAssociatedProducts(
             $attachmentId,
             $this->getLanguageContext()->getId(),
-            $this->getShopContext()->getShopConstraint()
+            $this->getShopContext()->getShopConstraint(),
+            $this->getAssociatedProductsLimit($request),
+            $request->query->getInt('offset'),
+            trim((string) $request->query->get('phrase', ''))
         ));
 
         return $this->json([
             'products' => array_map(
                 fn (AttachmentAssociatedProduct $product): array => $this->presentAssociatedProduct($product),
-                $products
+                $productList->getProducts()
             ),
+            'total' => $productList->getTotalCount(),
         ]);
     }
 
@@ -293,6 +303,13 @@ class AttachmentController extends PrestaShopAdminController
             'products' => array_values($products),
             'limited' => count($matches) >= SearchAttachmentsByProduct::MAX_RESULTS,
         ]);
+    }
+
+    private function getAssociatedProductsLimit(Request $request): int
+    {
+        $limit = $request->query->getInt('limit');
+
+        return in_array($limit, self::ASSOCIATED_PRODUCTS_LIMIT_CHOICES, true) ? $limit : self::ASSOCIATED_PRODUCTS_LIMIT_CHOICES[0];
     }
 
     /**

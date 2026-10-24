@@ -11,7 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler;
 use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentAssociatedProducts;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentAssociatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentAssociatedProductList;
 
 /**
  * Handles @see GetAttachmentAssociatedProducts query
@@ -24,15 +24,15 @@ final class GetAttachmentAssociatedProductsHandler
     ) {
     }
 
-    /**
-     * @return AttachmentAssociatedProduct[]
-     */
-    public function handle(GetAttachmentAssociatedProducts $query): array
+    public function handle(GetAttachmentAssociatedProducts $query): AttachmentAssociatedProductList
     {
         return $this->attachmentRepository->getAssociatedProducts(
             $query->getAttachmentId(),
             $query->getLanguageId(),
-            $query->getShopConstraint()
+            $query->getShopConstraint(),
+            $query->getLimit(),
+            $query->getOffset(),
+            $query->getSearchPhrase()
         );
     }
 }

@@ -71,3 +71,30 @@ Feature: List the products an attachment is associated with from Back Office (BO
     # LIKE wildcards are searched literally
     And searching attachments by product "%" should find nothing
     And searching attachments by product "MUG_01" should find nothing
+
+  Scenario: The products of an attachment are listed page by page and can be searched
+    When I add product "product3" with following information:
+      | name[en-US] | poster   |
+      | type        | standard |
+    And I update product "product3" with following values:
+      | reference | POS-03 |
+    And I associate product product1 with following attachments: "[att1]"
+    And I associate product product2 with following attachments: "[att1]"
+    And I associate product product3 with following attachments: "[att1]"
+    Then listing 2 products from offset 0 of attachment "att1" should give 3 in total and:
+      | product  | reference | name           | active |
+      | product1 | MUG-01    | mug with photo | true   |
+      | product2 | TS-02     | t-shirt        | false  |
+    And listing 2 products from offset 2 of attachment "att1" should give 3 in total and:
+      | product  | reference | name   | active |
+      | product3 | POS-03    | poster | false  |
+    # Same search as by product: the ID exactly, or a part of the reference or name
+    And the products of attachment "att1" matching "t-sh" should be:
+      | product  | reference | name    | active |
+      | product2 | TS-02     | t-shirt | false  |
+    And the products of attachment "att1" matching "-0" should be:
+      | product  | reference | name           | active |
+      | product1 | MUG-01    | mug with photo | true   |
+      | product2 | TS-02     | t-shirt        | false  |
+      | product3 | POS-03    | poster         | false  |
+    And no product of attachment "att2" should match "poster"

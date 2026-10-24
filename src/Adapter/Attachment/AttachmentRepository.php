@@ -10,9 +10,11 @@ namespace PrestaShop\PrestaShop\Adapter\Attachment;
 
 use Attachment;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\Expression\CompositeExpression;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentAssociatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentAssociatedProductList;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\ProductAttachmentMatch;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -145,20 +147,36 @@ class AttachmentRepository extends AbstractObjectModelRepository
         return $this->addLocalizedValues($results);
     }
 
-    /**
-     * @return AttachmentAssociatedProduct[]
-     */
-    public function getAssociatedProducts(AttachmentId $attachmentId, LanguageId $languageId, ShopConstraint $shopConstraint): array
-    {
+    public function getAssociatedProducts(
+        AttachmentId $attachmentId,
+        LanguageId $languageId,
+        ShopConstraint $shopConstraint,
+        ?int $limit,
+        ?int $offset,
+        string $searchPhrase,
+    ): AttachmentAssociatedProductList {
         $qb = $this->createProductAttachmentQueryBuilder($languageId, $shopConstraint)
             ->where('pa.`id_attachment` = :attachmentId')
             ->setParameter('attachmentId', $attachmentId->getValue())
+        ;
+        if ('' !== $searchPhrase) {
+            $qb->andWhere($this->createProductPhraseCondition($qb, $searchPhrase));
+        }
+
+        $totalCount = (int) (clone $qb)->select('COUNT(*)')->executeQuery()->fetchOne();
+
+        $qb
             ->orderBy('p.`id_product`', 'ASC')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset ?? 0)
         ;
 
-        return array_map(
-            fn (array $row): AttachmentAssociatedProduct => $this->buildAssociatedProduct($row),
-            $qb->executeQuery()->fetchAllAssociative()
+        return new AttachmentAssociatedProductList(
+            array_map(
+                fn (array $row): AttachmentAssociatedProduct => $this->buildAssociatedProduct($row),
+                $qb->executeQuery()->fetchAllAssociative()
+            ),
+            $totalCount
         );
     }
 
@@ -175,23 +193,12 @@ class AttachmentRepository extends AbstractObjectModelRepository
                 'al',
                 'al.`id_attachment` = pa.`id_attachment` AND al.`id_lang` = :languageId'
             )
-            ->setParameter('phrase', '%' . addcslashes($phrase, '%_\\') . '%')
             ->orderBy('p.`reference`', 'ASC')
             ->addOrderBy('p.`id_product`', 'ASC')
             ->addOrderBy('pa.`id_attachment`', 'ASC')
             ->setMaxResults($limit)
         ;
-
-        $conditions = [
-            $qb->expr()->like('p.`reference`', ':phrase'),
-            $qb->expr()->like('pl.`name`', ':phrase'),
-        ];
-        // The ID must match exactly, a part of it would find nearly every product
-        if (ctype_digit($phrase)) {
-            $conditions[] = $qb->expr()->eq('p.`id_product`', ':productId');
-            $qb->setParameter('productId', (int) $phrase);
-        }
-        $qb->where($qb->expr()->or(...$conditions));
+        $qb->where($this->createProductPhraseCondition($qb, $phrase));
 
         return array_map(
             fn (array $row): ProductAttachmentMatch => new ProductAttachmentMatch(
@@ -236,6 +243,25 @@ class AttachmentRepository extends AbstractObjectModelRepository
         }
 
         return $qb;
+    }
+
+    /**
+     * Matches the products with this ID, or with a part of their reference or name
+     */
+    private function createProductPhraseCondition(QueryBuilder $qb, string $phrase): CompositeExpression
+    {
+        $qb->setParameter('phrase', '%' . addcslashes($phrase, '%_\\') . '%');
+        $conditions = [
+            $qb->expr()->like('p.`reference`', ':phrase'),
+            $qb->expr()->like('pl.`name`', ':phrase'),
+        ];
+        // The ID must match exactly, a part of it would find nearly every product
+        if (ctype_digit($phrase)) {
+            $conditions[] = $qb->expr()->eq('p.`id_product`', ':productId');
+            $qb->setParameter('productId', (int) $phrase);
+        }
+
+        return $qb->expr()->or(...$conditions);
     }
 
     /**
