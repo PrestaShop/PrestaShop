@@ -77,12 +77,7 @@ class ThemeRepository implements AddonRepositoryInterface
             $cachedData = $this->getConfigFromFile($jsonConf);
             $ymlChecksum = $this->getConfigChecksum($ymlConf, $cachedData['parent'] ?? null);
 
-            // The JSON file is a copy of theme.yml kept to skip the parsing, but the page layout
-            // customization is saved into it as well, so it cannot just be dropped when it goes out
-            // of date. Whatever replaced the theme's files - an update, a re-imported archive, a
-            // deployment - left this copy behind, still advertising the version and the settings of
-            // the theme that was installed. Rewrite it from theme.yml, and carry the customization
-            // over.
+            // Rebuilt rather than deleted when theme.yml changed: the page layout customization is saved in this copy
             if (null === $ymlChecksum
                 || (isset($cachedData[self::SOURCE_KEY]['checksum']) && $cachedData[self::SOURCE_KEY]['checksum'] === $ymlChecksum)
             ) {
@@ -94,17 +89,13 @@ class ThemeRepository implements AddonRepositoryInterface
 
         if (null === $data) {
             $data = $this->getConfigFromFile($ymlConf);
-            // A child theme runs on its parent's attributes for every key it does not declare (the
-            // shallow merge of Theme::__construct()), and that merged set is what saveTheme() stores.
-            // Write the copy the same way, so its layouts are compared with the ones actually in use.
+            // Merged with the parent like Theme::__construct() does, which is what saveTheme() stores
             if (isset($data['parent'])) {
                 $data = array_merge($this->getConfigFromFile($this->getThemeYmlPath($data['parent'])), $data);
             }
             $themeLayouts = $data['theme_settings']['layouts'] ?? [];
 
-            // A layout the new theme.yml no longer offers cannot be rendered - getLayoutPath()
-            // builds the template path from the name with no fallback - so the theme's own value is
-            // kept for those pages.
+            // A layout the new theme.yml no longer offers has no template to render
             $availableLayouts = $data['meta']['available_layouts'] ?? [];
             foreach ($customizedLayouts as $page => $layout) {
                 if (isset($availableLayouts[$layout])) {
@@ -127,9 +118,8 @@ class ThemeRepository implements AddonRepositoryInterface
     }
 
     /**
-     * Page layouts the merchant has changed, which is what the saved copy holds on top of the
-     * layouts theme.yml declared when that copy was written. A copy written before this was
-     * recorded has no baseline to compare against, so all of its layouts are kept.
+     * Page layouts the merchant has changed: what the copy holds on top of the layouts theme.yml declared when
+     * it was written. A copy written before that baseline was recorded keeps every layout but the default one.
      *
      * @param array<string, mixed> $cachedData
      *
@@ -137,9 +127,14 @@ class ThemeRepository implements AddonRepositoryInterface
      */
     private function getCustomizedLayouts(array $cachedData): array
     {
-        return array_diff_assoc(
-            $cachedData['theme_settings']['layouts'] ?? [],
-            $cachedData[self::SOURCE_KEY]['layouts'] ?? []
+        $baseline = $cachedData[self::SOURCE_KEY]['layouts'] ?? [];
+        $defaultLayout = $cachedData['theme_settings']['default_layout'] ?? null;
+
+        return array_filter(
+            array_diff_assoc($cachedData['theme_settings']['layouts'] ?? [], $baseline),
+            // The layouts form saves every page, the ones theme.yml does not declare with the default layout
+            static fn (mixed $layout, int|string $page): bool => isset($baseline[$page]) || $layout !== $defaultLayout,
+            ARRAY_FILTER_USE_BOTH
         );
     }
 

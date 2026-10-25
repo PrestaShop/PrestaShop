@@ -18,6 +18,7 @@ class ThemeRepositoryTest extends TestCase
 {
     private const THEME_NAME = 'unit-test-theme';
     private const CHILD_NAME = 'unit-test-child-theme';
+    private const CUSTOMIZABLE_PAGES = ['index', 'category', 'contact', 'cms'];
 
     /**
      * @var string
@@ -135,6 +136,33 @@ class ThemeRepositoryTest extends TestCase
         $this->assertSame('1.0.0', $this->getRepository()->getInstanceByName(self::THEME_NAME)->get('version'));
     }
 
+    public function testAPageTheNewThemeStartsDeclaringFollowsItAfterTheLayoutsFormWasSaved(): void
+    {
+        $this->writeThemeYml('1.0.0');
+        $this->saveLayoutsForm(['category' => 'layout-left-column']);
+
+        // The form saved every customizable page, the undeclared ones with the default layout
+        $this->writeThemeYml('2.0.0', null, ['category' => 'layout-full-width', 'contact' => 'layout-full-width', 'cms' => 'layout-right-column']);
+
+        $layouts = $this->getRepository()->getInstanceByName(self::THEME_NAME)->getPageLayouts();
+
+        $this->assertSame('layout-left-column', $layouts['category'], 'the customized layout must survive');
+        $this->assertSame('layout-right-column', $layouts['cms'], 'a page the new theme declares must follow it');
+    }
+
+    public function testANewDefaultLayoutAppliesToTheUndeclaredPagesAfterTheLayoutsFormWasSaved(): void
+    {
+        $this->writeThemeYml('1.0.0');
+        $this->saveLayoutsForm(['category' => 'layout-left-column']);
+
+        $this->writeThemeYml('2.0.0', null, null, 'default', 'layout-right-column');
+
+        $theme = $this->getRepository()->getInstanceByName(self::THEME_NAME);
+
+        $this->assertSame('layout-left-column', $theme->getLayoutNameForPage('category'));
+        $this->assertSame('layout-right-column', $theme->getLayoutNameForPage('index'));
+    }
+
     public function testAChildThemePicksUpAnUpdateOfItsParent(): void
     {
         $this->writeChildTheme('1.0.0');
@@ -218,6 +246,24 @@ class ThemeRepositoryTest extends TestCase
         (new Filesystem())->dumpFile($this->jsonConfPath(self::CHILD_NAME), (string) json_encode($theme->get(null)));
     }
 
+    /**
+     * Replays the Choose layouts form: PageLayoutCustomizationFormFactory fills every customizable page,
+     * the ones the theme does not declare with the default layout, and ThemePageLayoutsCustomizer saves
+     * the whole set with saveTheme().
+     *
+     * @param array<string, string> $changes
+     */
+    private function saveLayoutsForm(array $changes): void
+    {
+        $theme = $this->getRepository()->getInstanceByName(self::THEME_NAME);
+        $layouts = [];
+        foreach (self::CUSTOMIZABLE_PAGES as $page) {
+            $layouts[$page] = $theme->getPageLayouts()[$page] ?? $theme->getDefaultLayout()['key'];
+        }
+        $theme->setPageLayouts(array_merge($layouts, $changes));
+        (new Filesystem())->dumpFile($this->jsonConfPath(), (string) json_encode($theme->get(null)));
+    }
+
     private function themeYmlPath(): string
     {
         return $this->workspace . '/themes/' . self::THEME_NAME . '/config/theme.yml';
@@ -227,7 +273,7 @@ class ThemeRepositoryTest extends TestCase
      * @param array<string, array<string, string>>|null $availableLayouts
      * @param array<string, string>|null $layouts
      */
-    private function writeThemeYml(string $version, ?array $availableLayouts = null, ?array $layouts = null, string $setting = 'default'): void
+    private function writeThemeYml(string $version, ?array $availableLayouts = null, ?array $layouts = null, string $setting = 'default', string $defaultLayout = 'layout-full-width'): void
     {
         $configuration = [
             'name' => self::THEME_NAME,
@@ -240,7 +286,7 @@ class ThemeRepositoryTest extends TestCase
                 'layout-right-column' => ['name' => 'Right column'],
             ]],
             'theme_settings' => [
-                'default_layout' => 'layout-full-width',
+                'default_layout' => $defaultLayout,
                 'layouts' => $layouts ?? ['category' => 'layout-full-width', 'contact' => 'layout-full-width'],
             ],
         ];
