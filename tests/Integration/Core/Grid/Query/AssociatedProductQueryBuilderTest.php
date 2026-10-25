@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractAssociatedProductQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\AttachmentProductQueryBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Query\CategoryProductQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -43,12 +44,18 @@ class AssociatedProductQueryBuilderTest extends KernelTestCase
                 'id_product' => $productId,
                 'id_attachment' => self::ENTITY_ID,
             ]);
+            $this->connection->insert($this->dbPrefix . 'category_product', [
+                'id_product' => $productId,
+                'id_category' => self::ENTITY_ID,
+                'position' => $productId,
+            ]);
         }
     }
 
     protected function tearDown(): void
     {
         $this->connection->delete($this->dbPrefix . 'product_attachment', ['id_attachment' => self::ENTITY_ID]);
+        $this->connection->delete($this->dbPrefix . 'category_product', ['id_category' => self::ENTITY_ID]);
 
         parent::tearDown();
     }
@@ -56,6 +63,7 @@ class AssociatedProductQueryBuilderTest extends KernelTestCase
     public static function provideQueryBuilderClasses(): iterable
     {
         yield 'products of a file' => [AttachmentProductQueryBuilder::class];
+        yield 'products of a category' => [CategoryProductQueryBuilder::class];
     }
 
     /**

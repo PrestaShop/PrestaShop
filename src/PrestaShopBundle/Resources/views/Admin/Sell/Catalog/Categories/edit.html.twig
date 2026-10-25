@@ -8,6 +8,8 @@
   {{ include('@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/form.html.twig', {
     categoryForm: editCategoryForm,
   }) }}
+
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: categoryProductGrid}) }}
 {% endblock %}
 
 {% block javascripts %}
@@ -15,4 +17,5 @@
 
   {{ include('@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/javascripts.html.twig') }}
   <script src="{{ asset('themes/new-theme/public/category_edit.bundle.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/associated_products.bundle.js') }}"></script>
 {% endblock %}

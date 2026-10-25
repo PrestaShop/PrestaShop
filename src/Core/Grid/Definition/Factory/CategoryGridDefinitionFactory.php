@@ -20,7 +20,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Category\CategoryPositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DraggableColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\HtmlColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
@@ -127,10 +126,13 @@ final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefiniti
                     ])
             )
             ->add(
-                (new DataColumn('products_count'))
+                (new LinkColumn('products_count'))
                     ->setName($this->trans('Products', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'products_count',
+                        'route' => 'admin_categories_edit',
+                        'route_param_name' => 'categoryId',
+                        'route_param_field' => 'id_category',
                         'sortable' => false,
                         'alignment' => 'center',
                     ])

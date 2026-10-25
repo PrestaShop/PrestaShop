@@ -330,6 +330,14 @@ services:
     arguments:
       $associatedEntityId: '@=service("request_stack").getCurrentRequest().attributes.getInt("attachmentId")'
 
+  prestashop.core.grid.query_builder.category_product:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\CategoryProductQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: true
+    autowire: true
+    arguments:
+      $associatedEntityId: '@=service("request_stack").getCurrentRequest().attributes.getInt("categoryId")'
+
   prestashop.core.grid.query_builder.attribute:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\AttributeQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'

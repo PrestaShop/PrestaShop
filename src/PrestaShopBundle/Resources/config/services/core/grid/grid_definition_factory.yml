@@ -303,6 +303,13 @@ services:
       $associatedEntityId: '@=service("request_stack").getCurrentRequest().attributes.getInt("attachmentId")'
     public: true
 
+  prestashop.core.grid.definition.factory.category_product:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryProductGridDefinitionFactory'
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    arguments:
+      $associatedEntityId: '@=service("request_stack").getCurrentRequest().attributes.getInt("categoryId")'
+    public: true
+
   prestashop.core.grid.definition.factory.attribute:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
