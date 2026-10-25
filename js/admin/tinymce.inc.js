@@ -57,7 +57,7 @@ function tinySetup(config) {
     external_plugins: {
       filemanager: baseAdminDir + 'filemanager/plugin.min.js'
     },
-    language: iso_user,
+    language: window.iso_user_editor || iso_user,
     content_style: lang_is_rtl === '1' ? 'body {direction:rtl;}' : '',
     skin: 'prestashop',
     mobile: {
