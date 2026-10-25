@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\DependencyInjection;
 
+use Memcached;
+use PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -33,6 +35,15 @@ class CacheAdapterFactory
         }
 
         return new ArrayAdapter();
+    }
+
+    /**
+     * Connection of the Symfony cache pool, which framework.cache.default_memcached_provider points at: without
+     * it the pool connects to Symfony's default, memcached://localhost.
+     */
+    public function createMemcachedConnection(MemcacheServerManager $serverManager): Memcached
+    {
+        return MemcachedAdapter::createConnection($this->buildServerDsn($serverManager->getServers()), ['lazy' => true]);
     }
 
     /**
