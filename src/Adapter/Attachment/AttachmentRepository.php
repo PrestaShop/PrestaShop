@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Attachment;
 
 use Attachment;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
@@ -100,6 +101,40 @@ class AttachmentRepository extends AbstractObjectModelRepository
     public function assertAttachmentExists(AttachmentId $attachmentId): void
     {
         $this->assertObjectModelExists($attachmentId->getValue(), 'attachment', AttachmentNotFoundException::class);
+    }
+
+    /**
+     * @param ProductId[] $productIds
+     */
+    public function removeProducts(AttachmentId $attachmentId, array $productIds): void
+    {
+        if (empty($productIds)) {
+            return;
+        }
+
+        $productIdValues = array_map(static fn (ProductId $productId): int => $productId->getValue(), $productIds);
+
+        $this->connection->createQueryBuilder()
+            ->delete($this->dbPrefix . 'product_attachment')
+            ->where('id_attachment = :attachmentId')
+            ->andWhere('id_product IN (:productIds)')
+            ->setParameter('attachmentId', $attachmentId->getValue())
+            ->setParameter('productIds', $productIdValues, ArrayParameterType::INTEGER)
+            ->executeStatement()
+        ;
+
+        // Keep the flag the front office relies on to display the attachments block
+        $productTable = $this->dbPrefix . 'product';
+        $this->connection->createQueryBuilder()
+            ->update($productTable)
+            ->set(
+                'cache_has_attachments',
+                'EXISTS (SELECT 1 FROM ' . $this->dbPrefix . 'product_attachment pa WHERE pa.id_product = ' . $productTable . '.id_product)'
+            )
+            ->where('id_product IN (:productIds)')
+            ->setParameter('productIds', $productIdValues, ArrayParameterType::INTEGER)
+            ->executeStatement()
+        ;
     }
 
     public function search(string $searchPhrase): array

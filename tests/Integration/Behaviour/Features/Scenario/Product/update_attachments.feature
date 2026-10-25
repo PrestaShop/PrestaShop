@@ -63,3 +63,22 @@ Feature: Update product attachments from Back Office (BO).
       | att2                 | en-US:myShop;fr-Fr:myShop   | en-US:my shop logo;fr-Fr:     | logo.jpg     | image/jpeg | 2758  |
     When I remove product product1 attachments association
     Then product product1 should have no attachments associated
+
+  Scenario: Remove products from an attachment
+    Given I add product "product2" with following information:
+      | name[en-US] | mug with logo |
+      | type        | standard      |
+    And I add product "product3" with following information:
+      | name[en-US] | mug with text |
+      | type        | standard      |
+    And I associate product product1 with following attachments: "[att1,att2]"
+    And I associate product product2 with following attachments: "[att1]"
+    And I associate product product3 with following attachments: "[att1]"
+    When I remove products "[product1,product2]" from attachment "att1"
+    Then product product1 should have following attachments associated:
+      | attachment reference | title                     | description               | file name | type       | size |
+      | att2                 | en-US:myShop;fr-Fr:myShop | en-US:my shop logo;fr-Fr: | logo.jpg  | image/jpeg | 2758 |
+    And product product2 should have no attachments associated
+    And product product3 should have following attachments associated:
+      | attachment reference | title                       | description                   | file name    | type      | size  |
+      | att1                 | en-US:puffin;fr-Fr:frpuffin | en-US:puffin photo nr1;fr-Fr: | app_icon.png | image/png | 19187 |
