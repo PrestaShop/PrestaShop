@@ -329,9 +329,11 @@ class CustomerCore extends ObjectModel
 
         // Check if registered customer exists with the email we are trying to add.
         // Also check if the customer found is a different customer than our object.
-        $customerExists = (int) Customer::customerExists($this->email, true);
-        if (!$this->isGuest() && $customerExists > 0 && $customerExists !== (int) $this->id) {
-            return false;
+        if ($this->shouldCheckEmailUniqueness()) {
+            $customerExists = (int) Customer::customerExists($this->email, true);
+            if (!$this->isGuest() && $customerExists > 0 && $customerExists !== (int) $this->id) {
+                return false;
+            }
         }
 
         // If the customer is being soft-deleted, we also soft-delete his addresses
@@ -361,22 +363,43 @@ class CustomerCore extends ObjectModel
     {
         // Check if registered customer exists with the email we are trying to add.
         // Also check if the customer found is a different customer than our object.
-        $customerExists = (int) Customer::customerExists($this->email, true);
-        if (!$this->isGuest() && $customerExists > 0 && $customerExists !== (int) $this->id) {
-            WebserviceRequest::getInstance()->setError(
-                500,
-                $this->trans(
-                    'The email is already used, please choose another one',
-                    [],
-                    'Admin.Notifications.Error'
-                ),
-                141
-            );
+        if ($this->shouldCheckEmailUniqueness()) {
+            $customerExists = (int) Customer::customerExists($this->email, true);
+            if (!$this->isGuest() && $customerExists > 0 && $customerExists !== (int) $this->id) {
+                WebserviceRequest::getInstance()->setError(
+                    500,
+                    $this->trans(
+                        'The email is already used, please choose another one',
+                        [],
+                        'Admin.Notifications.Error'
+                    ),
+                    141
+                );
 
-            return false;
+                return false;
+            }
         }
 
         return $this->update($nullValues = false);
+    }
+
+    /**
+     * Checks whether persisted data affecting email uniqueness has changed.
+     */
+    private function shouldCheckEmailUniqueness(): bool
+    {
+        $customer = Db::getInstance()->getRow(
+            'SELECT `email`, `is_guest`, `id_shop`, `id_shop_group`
+            FROM `' . _DB_PREFIX_ . 'customer`
+            WHERE `id_customer` = ' . (int) $this->id,
+            false
+        );
+
+        return !$customer
+            || (string) $customer['email'] !== (string) $this->email
+            || (bool) $customer['is_guest'] !== $this->isGuest()
+            || (int) $customer['id_shop'] !== (int) $this->id_shop
+            || (int) $customer['id_shop_group'] !== (int) $this->id_shop_group;
     }
 
     /**
