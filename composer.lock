@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9105ce746129f5d1113ac82146d835b0",
+    "content-hash": "e361ff8eac9e9bdd9077e02b61ed136c",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5376,16 +5376,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-domain/country",
+            "version": "dev-ai-context",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PrestaEdit/ps_apiresources.git",
-                "reference": "b6809df6dce5e77b9d42b8bc1bff0befa0566d3a"
+                "url": "https://github.com/jolelievre/ps_apiresources.git",
+                "reference": "10abc94c51f2af6739f54b20a5660d8fcc5b6c2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaEdit/ps_apiresources/zipball/b6809df6dce5e77b9d42b8bc1bff0befa0566d3a",
-                "reference": "b6809df6dce5e77b9d42b8bc1bff0befa0566d3a",
+                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/10abc94c51f2af6739f54b20a5660d8fcc5b6c2c",
+                "reference": "10abc94c51f2af6739f54b20a5660d8fcc5b6c2c",
                 "shasum": ""
             },
             "require": {
@@ -5448,10 +5448,10 @@
                     "vendor/bin/rector process"
                 ],
                 "phpstan": [
-                    "_PS_ROOT_DIR_=${_PS_ROOT_DIR_:?'Set _PS_ROOT_DIR_ to your PrestaShop installation path'} _PS_BRANCH_=${_PS_BRANCH_:?'Set _PS_BRANCH_ to 9.1.x|develop'} php -d memory_limit=-1 vendor/bin/phpstan analyse --configuration=tests/PHPStan/phpstan-${_PS_BRANCH_}.neon --no-progress"
+                    "_PS_ROOT_DIR_=${_PS_ROOT_DIR_:?'Set _PS_ROOT_DIR_ to your PrestaShop installation path'} _PS_BRANCH_=${_PS_BRANCH_:?'Set _PS_BRANCH_ to 9.0.3|9.1.5|9.2.x|develop'} php -d memory_limit=-1 vendor/bin/phpstan analyse --configuration=tests/PHPStan/phpstan-${_PS_BRANCH_}.neon --no-progress"
                 ],
                 "phpstan-baseline": [
-                    "_PS_ROOT_DIR_=${_PS_ROOT_DIR_:?'Set _PS_ROOT_DIR_ to your PrestaShop installation path'} _PS_BRANCH_=${_PS_BRANCH_:?'Set _PS_BRANCH_ to 9.1.x|develop'} php -d memory_limit=-1 vendor/bin/phpstan analyse --configuration=tests/PHPStan/phpstan-${_PS_BRANCH_}.neon --no-progress --generate-baseline=tests/PHPStan/phpstan-${_PS_BRANCH_}-baseline.neon"
+                    "_PS_ROOT_DIR_=${_PS_ROOT_DIR_:?'Set _PS_ROOT_DIR_ to your PrestaShop installation path'} _PS_BRANCH_=${_PS_BRANCH_:?'Set _PS_BRANCH_ to 9.0.3|9.1.5|9.2.x|develop'} php -d memory_limit=-1 vendor/bin/phpstan analyse --configuration=tests/PHPStan/phpstan-${_PS_BRANCH_}.neon --no-progress --generate-baseline=tests/PHPStan/phpstan-${_PS_BRANCH_}-baseline.neon"
                 ],
                 "phpstan:docker": [
                     "bash tests/phpstan.sh"
@@ -5469,9 +5469,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/PrestaEdit/ps_apiresources/tree/domain/country"
+                "source": "https://github.com/jolelievre/ps_apiresources/tree/ai-context"
             },
-            "time": "2026-10-20T08:43:44+00:00"
+            "time": "2026-10-28T17:34:36+00:00"
         },
         {
             "name": "prestashop/ps_banner",
