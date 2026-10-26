@@ -11,6 +11,8 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Value;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\DeadlockException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -20,6 +22,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionS
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -30,8 +33,8 @@ use Throwable;
  * definition and routes the value to the table matching its scope. Storage column
  * names never leave the storage layer.
  *
- * All writes use UPSERT (INSERT … ON DUPLICATE KEY UPDATE) to handle the case where
- * a row may or may not already exist.
+ * Writes update by the complete storage identity before inserting missing rows.
+ * A secondary UNIQUE conflict must never select another entity's row for update.
  *
  * Per-shop values (SHOP scope, and LANG scope on multilang-multishop entities) follow the
  * ShopConstraint the same way native ObjectModel fields follow the legacy shop context:
@@ -40,7 +43,7 @@ use Throwable;
  * SHOP-scope rows additionally follow the native association rule — broad scopes only
  * refresh shops the entity is associated with, explicitly named shops always get their
  * row — while LANG rows cover the full scope like native lang-multishop writes do.
- * Fan-out writes are batched into one multi-row UPSERT per table.
+ * Fan-out writes are atomic per batch, including inside a caller's transaction.
  *
  * DEFINITION-level shop availability (extra_property_definition_shop + module fallback,
  * see ExtraPropertyDefinition::isAvailableForShops()) is enforced on top of all of this:
@@ -275,8 +278,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
             $rows[] = $row;
         }
 
-        $sql = $this->buildUpsertSql($fullTableName, $primaryKeyName, array_keys($keyColumns), [$columnName], count($rows));
-        $this->connection->executeStatement($sql, array_merge(...$rows));
+        $this->writeRows($fullTableName, $primaryKeyName, array_keys($keyColumns), [$columnName], $rows);
     }
 
     /**
@@ -418,16 +420,14 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
      */
     protected function writeCommon(string $extraTableName, string $primaryKeyName, int $entityId, array $columnValues): void
     {
-        $sql = $this->buildUpsertSql($this->prefix . $extraTableName, $primaryKeyName, [], array_keys($columnValues));
-        $this->connection->executeStatement($sql, [$entityId, ...array_values($columnValues)]);
+        $this->writeRows($this->prefix . $extraTableName, $primaryKeyName, [], array_keys($columnValues), [[$entityId, ...array_values($columnValues)]]);
     }
 
     /**
      * Writes lang-scope values for one entity instance: one row per language, times one
-     * per shop when the lang table is shop-aware — batched into a single multi-row UPSERT
-     * per distinct column set (an all-shops save is one statement, not shops × languages
-     * round trips). Languages carrying different column sets (a value provided for some
-     * languages only) get their own statement so absent columns are never overwritten.
+     * per shop when the lang table is shop-aware, in an atomic batch per distinct column
+     * set. Languages carrying different column sets (a value provided for some languages
+     * only) get their own batch so absent columns are never overwritten.
      *
      * @param string $extraTableName Extra table name without DB prefix (from ExtraPropertyDefinition::getExtraTableName())
      * @param int[]|null $shopIds Shops the rows belong to; null when the entity's lang table has no id_shop column
@@ -442,7 +442,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
         $fullTableName = $this->prefix . $extraTableName;
         $systemColumns = null !== $shopIds ? ['id_shop', 'id_lang'] : ['id_lang'];
 
-        // Group languages sharing the same column set into one multi-row statement.
+        // Group languages sharing the same column set into one atomic batch.
         $langIdsByColumnSet = [];
         foreach ($langValuesByIdLang as $idLang => $columnValues) {
             if (empty($columnValues)) {
@@ -466,14 +466,12 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
                 }
             }
 
-            $sql = $this->buildUpsertSql($fullTableName, $primaryKeyName, $systemColumns, $dataColumns, count($rows));
-            $this->connection->executeStatement($sql, array_merge(...$rows));
+            $this->writeRows($fullTableName, $primaryKeyName, $systemColumns, $dataColumns, $rows);
         }
     }
 
     /**
-     * Writes shop-scope values for one entity instance: one row per shop, batched into a
-     * single multi-row UPSERT.
+     * Writes shop-scope values for one entity instance: one row per shop in an atomic batch.
      *
      * @param string $extraTableName Extra table name without DB prefix (from ExtraPropertyDefinition::getExtraTableName())
      * @param int[] $shopIds
@@ -486,46 +484,141 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
             $rows[] = [$entityId, $shopId, ...array_values($columnValues)];
         }
 
-        $sql = $this->buildUpsertSql($this->prefix . $extraTableName, $primaryKeyName, ['id_shop'], array_keys($columnValues), count($rows));
-        $this->connection->executeStatement($sql, array_merge(...$rows));
+        $this->writeRows($this->prefix . $extraTableName, $primaryKeyName, ['id_shop'], array_keys($columnValues), $rows);
     }
 
     /**
-     * Builds a (multi-row) INSERT … ON DUPLICATE KEY UPDATE statement.
-     *
-     * $systemColumns are fixed keys inserted before the data columns (e.g. id_shop, id_lang).
-     * Callers must pass parameters row by row, each row in order: entityId, systemColumn
-     * values, then data values.
+     * Updates rows by their full key, inserting only when that identity is absent.
+     * Multi-row batches retain statement-level atomicity using a transaction or a
+     * savepoint, without committing or rolling back the caller's other changes.
      *
      * @param string[] $systemColumns Fixed system key column names (order matters for bindings)
      * @param string[] $dataColumns Data column names (order matters for bindings)
-     * @param int $rowCount Number of value rows the statement covers
+     * @param list<list<mixed>> $rows Each row contains entityId, system keys, then data values
      */
-    protected function buildUpsertSql(string $fullTableName, string $primaryKeyName, array $systemColumns, array $dataColumns, int $rowCount = 1): string
+    protected function writeRows(string $fullTableName, string $primaryKeyName, array $systemColumns, array $dataColumns, array $rows): void
     {
-        $quotedPk = $this->connection->quoteIdentifier($primaryKeyName);
-        $quotedSystemCols = array_map(
-            fn (string $col): string => $this->connection->quoteIdentifier($col),
-            $systemColumns
-        );
-        $quotedDataCols = array_map(
-            fn (string $col): string => $this->connection->quoteIdentifier($col),
-            $dataColumns
-        );
+        if ([] === $rows) {
+            return;
+        }
 
-        $allColsList = implode(', ', [$quotedPk, ...($quotedSystemCols ?: []), ...$quotedDataCols]);
-        $rowPlaceholders = '(' . implode(', ', array_fill(0, 1 + count($systemColumns) + count($dataColumns), '?')) . ')';
-        $updateParts = implode(', ', array_map(
-            fn (string $quotedCol): string => $quotedCol . ' = VALUES(' . $quotedCol . ')',
-            $quotedDataCols
+        $table = $this->connection->quoteIdentifier($fullTableName);
+        $keyColumns = [$primaryKeyName, ...$systemColumns];
+        $where = implode(' AND ', array_map(
+            fn (string $col): string => $this->connection->quoteIdentifier($col) . ' = ?',
+            $keyColumns
         ));
-
-        return sprintf(
-            'INSERT INTO %s (%s) VALUES %s ON DUPLICATE KEY UPDATE %s',
-            $this->connection->quoteIdentifier($fullTableName),
-            $allColsList,
-            implode(', ', array_fill(0, $rowCount, $rowPlaceholders)),
-            $updateParts
+        $assignments = implode(', ', array_map(
+            fn (string $col): string => $this->connection->quoteIdentifier($col) . ' = ?',
+            $dataColumns
+        ));
+        $columns = array_map(
+            fn (string $col): string => $this->connection->quoteIdentifier($col),
+            [...$keyColumns, ...$dataColumns]
         );
+        $updateSql = sprintf('UPDATE %s SET %s WHERE %s', $table, $assignments, $where);
+        // A locking read sees the current row even in an existing REPEATABLE READ
+        // transaction. An ordinary SELECT could instead read an outdated snapshot.
+        $existsSql = sprintf('SELECT 1 FROM %s WHERE %s FOR UPDATE', $table, $where);
+        $insertSql = sprintf(
+            'INSERT INTO %s (%s) VALUES (%s)',
+            $table,
+            implode(', ', $columns),
+            implode(', ', array_fill(0, count($columns), '?'))
+        );
+
+        $isBatch = count($rows) > 1;
+        $externalTransaction = $this->connection->isTransactionActive();
+        $ownsTransaction = false;
+        $savepoint = null;
+
+        try {
+            if ($isBatch) {
+                if ($externalTransaction) {
+                    $savepoint = uniqid('extra_property_');
+                    $this->connection->createSavepoint($savepoint);
+                } else {
+                    $this->connection->beginTransaction();
+                    $ownsTransaction = true;
+                }
+            }
+
+            foreach ($rows as $row) {
+                $keys = array_slice($row, 0, count($keyColumns));
+                $updateValues = [...array_slice($row, count($keyColumns)), ...$keys];
+                if ($this->connection->executeStatement($updateSql, $updateValues) > 0) {
+                    continue;
+                }
+
+                if (!$externalTransaction && !$ownsTransaction) {
+                    // In autocommit an existence check cannot protect the following
+                    // UPDATE from a concurrent insert/delete. Only this ambiguous
+                    // path needs a transaction for a single-row write.
+                    $this->connection->beginTransaction();
+                    $ownsTransaction = true;
+                }
+                if (false !== $this->connection->fetchOne($existsSql, $keys)) {
+                    // The row may have appeared since UPDATE returned zero. Apply
+                    // our values while holding its lock; zero now means unchanged.
+                    $this->connection->executeStatement($updateSql, $updateValues);
+                    continue;
+                }
+
+                try {
+                    $this->connection->executeStatement($insertSql, $row);
+                } catch (UniqueConstraintViolationException $e) {
+                    // An insert race can occur under READ COMMITTED. Recover only
+                    // when our exact identity exists, holding its lock during UPDATE.
+                    if (false === $this->connection->fetchOne($existsSql, $keys)) {
+                        throw $e;
+                    }
+                    $this->connection->executeStatement($updateSql, $updateValues);
+                }
+            }
+
+            if (null !== $savepoint) {
+                $this->connection->releaseSavepoint($savepoint);
+            } elseif ($ownsTransaction) {
+                $this->connection->commit();
+            }
+        } catch (Throwable $e) {
+            if ($e instanceof DeadlockException) {
+                // InnoDB has rolled back the entire transaction, including savepoints.
+                // DBAL's nesting counter can still be active: forbid a later commit.
+                if ($externalTransaction && $this->connection->isTransactionActive()) {
+                    $this->connection->setRollbackOnly();
+                } elseif ($ownsTransaction) {
+                    $this->connection->close();
+                }
+
+                throw $e;
+            }
+
+            try {
+                if ($this->connection->isTransactionActive()) {
+                    if (null !== $savepoint) {
+                        $this->connection->rollbackSavepoint($savepoint);
+                        $this->connection->releaseSavepoint($savepoint);
+                    } elseif ($ownsTransaction) {
+                        $this->connection->rollBack();
+                    }
+                }
+            } catch (Throwable $rollbackError) {
+                if ($ownsTransaction) {
+                    // A failed rollback leaves the underlying session unsafe to reuse.
+                    $this->connection->close();
+                } elseif ($this->connection->isTransactionActive()) {
+                    $this->connection->setRollbackOnly();
+                }
+
+                throw new RuntimeException(
+                    sprintf('Extra property write failed: %s; transaction cleanup failed: %s', $e->getMessage(), $rollbackError->getMessage()),
+                    0,
+                    $e
+                );
+            }
+
+            throw $e;
+        }
     }
 }
