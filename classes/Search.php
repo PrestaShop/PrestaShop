@@ -80,11 +80,6 @@ class SearchCore
     /**
      * @var int
      */
-    private static $totalWordInSearchWordTable;
-
-    /**
-     * @var int
-     */
     public static $coefMin;
 
     /**
@@ -102,7 +97,8 @@ class SearchCore
      */
     public static $targetLengthMax;
 
-    public const PS_SEARCH_MAX_WORDS_IN_TABLE = 100000; /* Max numer of words in ps_search_word, above which $coefs for target length will be everytime equal to 1 */
+    // Coefficient scale: 100000 words correspond to minimum and maximum multipliers of 1.
+    public const PS_SEARCH_MAX_WORDS_IN_TABLE = 100000;
     public const PS_DEFAULT_SEARCH_MAX_WORD_LENGTH = 30; /* default max word length, for when we are not in fuzzy search mode */
     public const PS_SEARCH_ORDINATE_MIN = 0.5;
     public const PS_SEARCH_ORDINATE_MAX = -1;
@@ -130,7 +126,8 @@ class SearchCore
 
         // First, we take the string and clean it as a whole.
         // This removes special characters, tags, blacklisted words, hyphens etc.
-        // So, "Prestashop Tést A-1000" becomes "prestashop test a 1000";
+        // For a search query, "Prestashop Tést A-1000" becomes "prestashop test a 1000".
+        // Indexing also adds "a1000" and filters words below the configured minimum length.
         $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, false);
 
         // And we separate it by words to get array
@@ -200,6 +197,19 @@ class SearchCore
         $string = implode(' ', $terms);
 
         if ($indexation) {
+            // Add joined forms of separator-containing words before applying the index filters.
+            if (!$keepHyphens && strpbrk($string, '-._') !== false) {
+                foreach (preg_split('/\s+/u', $string) as $indexWord) {
+                    if (strpbrk($indexWord, '-._') !== false) {
+                        $joinedWord = str_replace(['-', '.', '_'], '', $indexWord);
+                        if ($joinedWord !== '') {
+                            $string .= ' ' . $joinedWord;
+                        }
+                    }
+                }
+            }
+
+            // Split dots and underscores, and optionally hyphens, into separate index words.
             if (!$keepHyphens) {
                 $string = str_replace(['.', '_', '-'], ' ', $string);
             } else {
@@ -1178,69 +1188,22 @@ class SearchCore
      */
     public static function findClosestWeightestWord($context, $queryString)
     {
-        $distance = []; // cache levenshtein distance
+        // Read the indexed word-length limits and the maximum accepted edit distance.
         $searchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
         $psSearchMaxWordLength = (int) Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
         $levenshteinMaxWordDifference = (int) Configuration::get('PS_SEARCH_FUZZY_MAX_DIFFERENCE');
 
-        if (!self::$totalWordInSearchWordTable) {
-            $sql = 'SELECT count(*) FROM `' . _DB_PREFIX_ . 'search_word`;';
-            self::$totalWordInSearchWordTable = (int) Db::getInstance()->getValue($sql);
+        // A candidate's byte length can differ by at most the accepted Levenshtein distance.
+        $queryLength = strlen($queryString);
+        self::$targetLengthMin = max($searchMinWordLength, $queryLength - $levenshteinMaxWordDifference);
+        self::$targetLengthMax = min($psSearchMaxWordLength, $queryLength + $levenshteinMaxWordDifference);
+
+        // No indexed word can match when the permitted length ranges do not overlap.
+        if (self::$targetLengthMax < self::$targetLengthMin) {
+            return '';
         }
 
-        /* If the ps_search_word table size is superior to PS_SEARCH_MAX_WORDS_IN_TABLE, that mean that the DB is really huge.
-         * To reduce the server load, we are looking only for words with same length that the query word.
-         * If we use the auto-acale && self::$totalWordInSearchWordTable > PS_SEARCH_MAX_WORDS_IN_TABLE,
-         * we will get $coefMax < 1 following by $coefMax < $coefMin, this is a non-sense.
-         * So, we test it before and assign a right value for both target lengths */
-        if (self::$totalWordInSearchWordTable > static::PS_SEARCH_MAX_WORDS_IN_TABLE) {
-            self::$targetLengthMin = self::$targetLengthMax = (int) strlen($queryString);
-        } else {
-            /* This part of code can be considered like an auto-scale mechanism.
-            *  The table ps_search_word can grow huge, and exceed server resources.
-            *  So, we need a mechanism to reduce the server load depending the DB size.
-            *  Here will be calculated ranges of target length depending the ps_search_word table size.
-            *  If ps_search_word table size tends to PS_SEARCH_MAX_WORDS_IN_TABLE, $coefMax and $coefMin will tend to 1.
-            *  If ps_search_word table size tends to 0, $coefMax will tends to 2, and $coefMin will tends to 0.5.
-            *  Computations are made with the linear function y = ax + b.
-            *  With actual constant values, we have :
-            *  Linear function for $coefMin : a = 0.5 / 100000, b = 0.5
-            *  Linear function for $coefMax : a = -1 / 100000, b = 2
-            *  Results :
-            *  500 words id DB give coefMin : 0.5025, coefMax : 1.995
-            *  20,000 words id DB give $coefMin : 0.6, $coefMax : 1.8
-            *  40,000 words id DB give $coefMin : 0.7, $coefMax : 1.6
-            *  60,000 words id DB give $coefMin : 0.8, $coefMax : 1.4
-            *  80,000 words id DB give $coefMin : 0.9, $coefMax : 1.2
-            *  100,000 words id DB give $coefMin : 1, $coefMax : 1*/
-            if (!self::$coefMin) {
-                // self::$coefMin && self::$coefMax depend on the number of total words in ps_search_word table, need to calculate only for every search
-                self::$coefMin = (
-                    (static::PS_SEARCH_ORDINATE_MIN / static::PS_SEARCH_MAX_WORDS_IN_TABLE)
-                    * self::$totalWordInSearchWordTable
-                ) + static::PS_SEARCH_ABSCISSA_MIN; // y = ax + b
-
-                self::$coefMax = (
-                    (static::PS_SEARCH_ORDINATE_MAX / static::PS_SEARCH_MAX_WORDS_IN_TABLE)
-                    * self::$totalWordInSearchWordTable
-                ) + static::PS_SEARCH_ABSCISSA_MAX; // y = ax + b
-            }
-            // self::$targetLengthMin depends of the length of the $queryString, need to calculate for every word
-            self::$targetLengthMin = (int) (strlen($queryString) * self::$coefMin);
-            self::$targetLengthMax = (int) (strlen($queryString) * self::$coefMax);
-
-            if (self::$targetLengthMin < $searchMinWordLength) {
-                self::$targetLengthMin = $searchMinWordLength;
-            }
-            if (self::$targetLengthMax > $psSearchMaxWordLength) {
-                self::$targetLengthMax = $psSearchMaxWordLength;
-            }
-            // Could happen when $queryString length * $coefMin > $psSearchMaxWordLength
-            if (self::$targetLengthMax < self::$targetLengthMin) {
-                return '';
-            }
-        }
-
+        // Select searchable candidate words within the permitted length range.
         $sql = 'SELECT null as levenshtein, -SUM(weight) as weight, sw.`word` ' .
              'FROM `' . _DB_PREFIX_ . 'search_word` sw ' .
              'LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.`id_word` = si.`id_word`) ' .
@@ -1256,6 +1219,7 @@ class SearchCore
 
         $selectedWords = Db::getInstance()->executeS($sql);
 
+        // Rank candidates by edit distance, then by their accumulated search weight.
         $closestWord = array_reduce(
             $selectedWords,
             static function ($a, $b) use ($queryString) {
@@ -1270,6 +1234,7 @@ class SearchCore
             ['word' => 'initial', 'weight' => 0, 'levenshtein' => 100]
         );
 
+        // Return the best candidate only if it satisfies the configured edit-distance limit.
         return $closestWord['levenshtein'] <= $levenshteinMaxWordDifference ? $closestWord['word'] : '';
     }
 
