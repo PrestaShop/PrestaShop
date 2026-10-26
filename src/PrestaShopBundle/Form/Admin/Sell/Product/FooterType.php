@@ -80,8 +80,9 @@ class FooterType extends TranslatorAwareType
     {
         $productId = $options['product_id'];
 
-        $deleteUrl = $this->router->generate('admin_products_delete_from_all_shops', [
+        $deleteUrl = $this->router->generate('admin_products_delete_from_shop', [
             'productId' => $productId,
+            'shopId' => $this->contextShopId,
         ]);
         $duplicateUrl = $this->router->generate('admin_products_duplicate_shop', [
             'productId' => $productId,
@@ -133,7 +134,9 @@ class FooterType extends TranslatorAwareType
                             'icon' => 'delete',
                             'attr' => [
                                 'class' => 'tooltip-link delete-product-button btn-outline-secondary',
-                                'data-modal-title' => $this->trans('Permanently delete this product?', 'Admin.Catalog.Notification'),
+                                'data-modal-title' => $options['has_multiple_shops']
+                                    ? $this->trans('Delete this product from the current shop?', 'Admin.Catalog.Notification')
+                                    : $this->trans('Permanently delete this product?', 'Admin.Catalog.Notification'),
                                 'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
                                 'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
                                 'data-confirm-button-class' => 'btn-danger',
@@ -206,6 +209,7 @@ class FooterType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'active' => false,
+                'has_multiple_shops' => false,
                 'required' => false,
                 'label' => false,
                 'attr' => [
@@ -220,6 +224,7 @@ class FooterType extends TranslatorAwareType
             ])
             ->setAllowedTypes('product_id', 'int')
             ->setAllowedTypes('active', ['bool'])
+            ->setAllowedTypes('has_multiple_shops', 'bool')
         ;
     }
 }

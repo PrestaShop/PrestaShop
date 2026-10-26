@@ -51,6 +51,7 @@ class SmartyVariablesFiller
 
     protected function getDefaultVariables(): array
     {
+        // Provide the default variables used by back-office Smarty templates.
         $smartyVariables = [
             'maintenance_mode' => $this->templateVariables->isMaintenanceEnabled(),
             'maintenance_allow_admins' => $this->templateVariables->isFrontOfficeAccessibleForAdmins(),
@@ -87,6 +88,7 @@ class SmartyVariablesFiller
             'img_base_path' => $this->templateVariables->getBaseUrl() . basename(_PS_ADMIN_DIR_) . '/',
             'multishop_context' => $this->legacyControllerContext->multishop_context,
             'bootstrap' => false,
+            'submit_form_ajax' => $this->templateVariables->getSubmitFormAjax(),
         ];
 
         $smartyVariablesAlias = [
