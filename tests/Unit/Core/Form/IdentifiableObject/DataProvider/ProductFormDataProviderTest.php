@@ -165,6 +165,24 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
+     * @dataProvider getShopAssociations
+     */
+    public function testHasMultipleShops(array $shopIds, bool $expected): void
+    {
+        $provider = $this->buildProvider($this->createQueryBusMock(['shop_ids' => $shopIds]));
+
+        $formData = $provider->getData(self::PRODUCT_ID);
+
+        Assert::assertSame($expected, $formData['has_multiple_shops']);
+    }
+
+    public static function getShopAssociations(): iterable
+    {
+        yield 'last shop' => [[1], false];
+        yield 'multiple shops' => [[1, 2], true];
+    }
+
+    /**
      * @return array
      */
     private function getDatasetsForVirtualProductFile(): array
@@ -1133,7 +1151,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->createProductStockInformation($product),
             $this->createVirtualProductFile($product),
             $product['cover_thumbnail'] ?? self::COVER_URL,
-            [1],
+            $product['shop_ids'] ?? [1],
         );
     }
 
@@ -1574,6 +1592,7 @@ class ProductFormDataProviderTest extends TestCase
     {
         return [
             'id' => self::PRODUCT_ID,
+            'has_multiple_shops' => false,
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
                 'initial_type' => ProductType::TYPE_STANDARD,

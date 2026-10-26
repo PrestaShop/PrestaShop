@@ -44,6 +44,7 @@ class TemplateVariablesBuilder
 
     public function build(): TemplateVariables
     {
+        // Build the shared template variables from the context and current request.
         return new TemplateVariables(
             $this->languageContext->getIsoCode(),
             $this->languageContext->isRTL(),
@@ -59,6 +60,7 @@ class TemplateVariablesBuilder
             $this->isFrontOfficeAccessibleForAdmins(),
             $this->isDisplayedWithTabs(),
             $this->getBaseUrl(),
+            (int) $this->requestStack->getCurrentRequest()?->get('submitFormAjax', 0),
         );
     }
 
