@@ -8,7 +8,6 @@
 webpack.config.js
 postcss.config.js
 /template/
-js/modernizr-loads.js
 js/jquery.*
 js/date-range-picker.js
 js/bundle/plugins/
