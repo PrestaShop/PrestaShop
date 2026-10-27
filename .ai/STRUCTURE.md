@@ -88,6 +88,7 @@ Skill descriptions must front-load **what the skill does + trigger phrases** —
 
 - **Do not write "Read Component/X/CONTEXT.md for conventions" in the description.** That instruction belongs in the skill body. Repeating it in the description wastes characters and is redundant for any tool that reads the body.
 - The body of every skill that depends on a component context already starts with `Read @.ai/Component/{Component}/CONTEXT.md for ...` — that is the canonical location.
+- **Include a trigger phrase** (`Trigger: "…"`): the prompts that should load the skill, plus the concrete signals of the task (the file edited, the command run). Agents choose a skill from its description alone, so a description that only says what the skill does is rarely picked. `bash .ai/bin/generate-ai-index.sh` lists the skills whose description has none.
 
 #### Custom frontmatter fields (`needs`, `produces`, `conditional`, `subagent`)
 
