@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 #
-# Runs the three integration PHPUnit suites concurrently.
+# Runs the integration PHPUnit suites in four concurrent lanes of similar duration, one per CPU of the CI runner:
+# the main suite, each of the two Admin API endpoint variant classes (most of the isolated suite), and the api suite
+# followed by the rest of the isolated suite.
 #
-# Tests reset shared files (img/, download/, tests/Resources/modules/, var/cache/), so each suite runs in its own
+# Tests reset shared files (img/, download/, tests/Resources/modules/, var/cache/), so each lane runs in its own
 # copy of the project, with its own temp dir (dumps, resource backups) and its own database (PS_TEST_DB_SUFFIX).
-# The isolated suite, the longest one, runs in the project itself.
+# The main suite, the longest lane, runs in the project itself.
 
 set -u
 
@@ -14,18 +16,22 @@ DB_SUFFIX=${PS_TEST_DB_SUFFIX:-}
 WORK_DIR=$(mktemp -d "${RUNNER_TEMP:-${TMPDIR:-/tmp}}/ps-integration.XXXXXX")
 trap 'rm -rf "$WORK_DIR"' EXIT
 
-SUITES="main api isolated"
+SUITES="main versioned disabled api"
+PHPUNIT="./vendor/phpunit/phpunit/phpunit"
+VARIANT_CLASSES="VersionedEndpointsTest|DisabledEndpointsTest"
 
 run_phpunit() {
     case $1 in
-        main) "$PHP" -d date.timezone=UTC -d memory_limit=-1 ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml ;;
-        api) "$PHP" -d date.timezone=UTC -d memory_limit=-1 ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit-api.xml ;;
-        isolated) "$PHP" -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit-isolated.xml ;;
+        main) "$PHP" -d date.timezone=UTC -d memory_limit=-1 $PHPUNIT -c tests/Integration/phpunit.xml ;;
+        versioned) "$PHP" -d date.timezone=UTC $PHPUNIT -c tests/Integration/phpunit-isolated.xml tests/Integration/ApiPlatform/VersionedEndpointsTest.php ;;
+        disabled) "$PHP" -d date.timezone=UTC $PHPUNIT -c tests/Integration/phpunit-isolated.xml tests/Integration/ApiPlatform/DisabledEndpointsTest.php ;;
+        api) "$PHP" -d date.timezone=UTC -d memory_limit=-1 $PHPUNIT -c tests/Integration/phpunit-api.xml \
+            && "$PHP" -d date.timezone=UTC $PHPUNIT -c tests/Integration/phpunit-isolated.xml --filter "^(?!.*($VARIANT_CLASSES)::)" ;;
     esac
 }
 
 suite_dir() {
-    if [ "$1" = isolated ]; then
+    if [ "$1" = main ]; then
         echo "$ROOT_DIR"
     else
         echo "$WORK_DIR/project-$1"
