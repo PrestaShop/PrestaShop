@@ -276,9 +276,12 @@ class ImageManagerCore
         if ($sourceHash !== (self::$decodedSource[0] ?? null)) {
             self::$decodedSource = null;
             $srcImage = ImageManager::create($sourceFileType, $sourceFile);
-            if ($rotationToApply) {
+            if ($srcImage && $rotationToApply) {
                 /** @phpstan-ignore-next-line */
                 $srcImage = imagerotate($srcImage, $rotationToApply, 0);
+            }
+            if (!$srcImage) {
+                return false;
             }
             self::$decodedSource = [$sourceHash, [$srcImage]];
         }
