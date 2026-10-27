@@ -77,7 +77,7 @@ if ($lastParametersModificationTime) {
 
     define('_DB_SERVER_', $database_host);
     if (defined('_PS_IN_TEST_')) {
-        define('_DB_NAME_', 'test_'.$config['parameters']['database_name']);
+        define('_DB_NAME_', 'test_'.$config['parameters']['database_name'].(getenv('PS_TEST_DB_SUFFIX') ?: ''));
     } else {
         define('_DB_NAME_', $config['parameters']['database_name']);
     }

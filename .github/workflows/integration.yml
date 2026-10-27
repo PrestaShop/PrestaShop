@@ -79,7 +79,7 @@ jobs:
         run: make assets
 
       - name: Run integration-tests
-        run: composer run-script integration-tests --timeout=0
+        run: composer run-script integration-tests-parallel --timeout=0
         env:
           SYMFONY_DEPRECATIONS_HELPER: disabled
 
