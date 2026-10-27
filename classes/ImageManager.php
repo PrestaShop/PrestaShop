@@ -43,6 +43,16 @@ class ImageManagerCore
      */
     protected const SVG_MIMETYPES = ['image/svg+xml', 'image/svg'];
 
+    private static ?array $decodedSource = null;
+
+    /**
+     * Frees the source image kept in memory to generate its next thumbnails.
+     */
+    public static function clearDecodedSource(): void
+    {
+        self::$decodedSource = null;
+    }
+
     /**
      * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc).
      *
@@ -122,6 +132,7 @@ class ImageManagerCore
      */
     public static function checkImageMemoryLimit($image)
     {
+        self::$decodedSource = null;
         $infos = @getimagesize($image);
 
         if (!is_array($infos) || !isset($infos['bits'])) {
@@ -233,7 +244,8 @@ class ImageManagerCore
             $imageFitment
         );
 
-        if (!ImageManager::checkImageMemoryLimit($sourceFile)) {
+        $sourceHash = hash_file('xxh128', $sourceFile);
+        if ($sourceHash !== (self::$decodedSource[0] ?? null) && !ImageManager::checkImageMemoryLimit($sourceFile)) {
             $error = self::ERROR_MEMORY_LIMIT;
 
             return false;
@@ -260,11 +272,16 @@ class ImageManagerCore
             imagefilledrectangle($destImage, 0, 0, $destinationWidth, $destinationHeight, $white);
         }
 
-        $srcImage = ImageManager::create($sourceFileType, $sourceFile);
-        if ($rotationToApply) {
-            /** @phpstan-ignore-next-line */
-            $srcImage = imagerotate($srcImage, $rotationToApply, 0);
+        if ($sourceHash !== (self::$decodedSource[0] ?? null)) {
+            self::$decodedSource = null;
+            $srcImage = ImageManager::create($sourceFileType, $sourceFile);
+            if ($rotationToApply) {
+                /** @phpstan-ignore-next-line */
+                $srcImage = imagerotate($srcImage, $rotationToApply, 0);
+            }
+            self::$decodedSource = [$sourceHash, [$srcImage]];
         }
+        $srcImage = self::$decodedSource[1][0];
 
         if ($destinationWidth >= $sourceWidth && $destinationHeight >= $sourceHeight) {
             imagecopyresized($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight);
@@ -907,6 +924,7 @@ class ImageManagerCore
             return false;
         }
         unlink($orig_tmpfile);
+        ImageManager::clearDecodedSource();
 
         return true;
     }

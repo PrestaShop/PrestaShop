@@ -132,9 +132,11 @@ final class CategoryCoverImageUploader extends AbstractImageUploader implements 
                 );
 
                 if (!$generated) {
+                    ImageManager::clearDecodedSource();
                     throw new ImageUploadException('Error occurred when uploading image');
                 }
             }
         }
+        ImageManager::clearDecodedSource();
     }
 }
