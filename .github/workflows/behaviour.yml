@@ -32,14 +32,26 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, opcache
+          coverage: none
+          # Each Behat suite runs in a new PHP process: the file cache shares the compiled scripts between them
+          ini-values: opcache.enable_cli=1, opcache.file_cache=/tmp/php-opcache, opcache.memory_consumption=256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create the OPcache file cache folder
+        run: mkdir -p /tmp/php-opcache
       - name: Setup MySQL
         uses: shogo82148/actions-setup-mysql@v1
         with:
           mysql-version: "8.0"
           root-password: 'password'
+          # The test databases are throwaway: no durability, no binary log, more memory for the concurrent lanes
+          my-cnf: |
+            innodb_flush_log_at_trx_commit=2
+            innodb_doublewrite=OFF
+            skip-log-bin
+            innodb_buffer_pool_size=1G
+            performance_schema=OFF
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -82,7 +94,7 @@ jobs:
           bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} http://localhost:1080)" != "200" ]]; do echo "Wait for maildev"; sleep 5; done'
 
       - name: Run integration-behaviour-tests
-        run: composer run-script integration-behaviour-tests --timeout=0
+        run: composer run-script integration-behaviour-tests-parallel --timeout=0
         env:
           SYMFONY_DEPRECATIONS_HELPER: disabled
 
