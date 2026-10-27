@@ -305,7 +305,22 @@ class ImageManagerCore
                 ++$level;
             }
             $srcImage = self::$decodedSource[1][$level];
-            ImageManager::imagecopyresampled($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, imagesx($srcImage), imagesy($srcImage), $quality);
+            $destinationX = (int) (($destinationWidth - $nextWidth) / 2);
+            $destinationY = (int) (($destinationHeight - $nextHeight) / 2);
+            $transparentCanvas = in_array($destinationFileType, ['png', 'webp', 'avif']);
+            $previous = self::$decodedSource[2] ?? null;
+
+            // Formats of the same thumbnail size reuse the previous resampled pixels. Those were blended
+            // on the previous canvas background, so only an opaque source can switch background.
+            if ($cascade && $previous !== null && $previous[0] === [$nextWidth, $nextHeight]
+                && ($previous[2] === $transparentCanvas || $sourceFileType === IMAGETYPE_JPEG)) {
+                imagecopy($destImage, $previous[1], $destinationX, $destinationY, $previous[3], $previous[4], $nextWidth, $nextHeight);
+            } else {
+                ImageManager::imagecopyresampled($destImage, $srcImage, $destinationX, $destinationY, 0, 0, $nextWidth, $nextHeight, imagesx($srcImage), imagesy($srcImage), $quality);
+                if ($cascade) {
+                    self::$decodedSource[2] = [[$nextWidth, $nextHeight], $destImage, $transparentCanvas, $destinationX, $destinationY];
+                }
+            }
         }
         $writeFile = ImageManager::write($destinationFileType, $destImage, $destinationFile);
         Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $destinationFileType]);
