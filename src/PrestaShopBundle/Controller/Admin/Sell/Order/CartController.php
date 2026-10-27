@@ -88,7 +88,7 @@ class CartController extends PrestaShopAdminController
                 ],
             ],
             'cartGrid' => $this->presentGrid($cartGrid),
-            'cartsKpi' => $cartsKpiFactory->build(),
+            'cartsKpi' => ($this->getConfiguration()->get('PS_DISPLAY_BACKOFFICE_KPIS') ?? true) ? $cartsKpiFactory->build() : null,
         ]);
     }
 

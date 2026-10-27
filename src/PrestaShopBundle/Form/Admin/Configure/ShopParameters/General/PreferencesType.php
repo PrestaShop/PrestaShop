@@ -207,6 +207,13 @@ class PreferencesType extends TranslatorAwareType
                         'Admin.Shopparameters.Help'
                     ),
                 ])
+            ->add('display_backoffice_kpis', SwitchType::class, [
+                'label' => $this->trans('Display back-office KPIs', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans(
+                    'Show key performance indicators on the Orders, Shopping Carts, Categories, Customers, Customer Service and Translations pages. The total on individual cart pages remains visible.',
+                    'Admin.Shopparameters.Help'
+                ),
+            ])
             ->add('multishop_feature_active', SwitchType::class, [
                 // Disable the checkbox if multistore feature is active and at least 2 shops exist (@see PrestaShop/PrestaShop/Adapter/Feature/MultistoreFeature)
                 'disabled' => $this->isShopFeatureEnabled,

@@ -99,7 +99,7 @@ class CustomerController extends PrestaShopAdminController
         return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerGrid' => $this->presentGrid($customerGrid),
-            'customersKpi' => $customersKpiFactory->build(),
+            'customersKpi' => ($this->getConfiguration()->get('PS_DISPLAY_BACKOFFICE_KPIS') ?? true) ? $customersKpiFactory->build() : null,
             'customerRequiredFieldsForm' => $this->getRequiredFieldsForm()->createView(),
             'isSingleShopContext' => $this->getShopContext()->getShopConstraint()->isSingleShopContext(),
             'deleteCustomersForm' => $deleteCustomerForm->createView(),

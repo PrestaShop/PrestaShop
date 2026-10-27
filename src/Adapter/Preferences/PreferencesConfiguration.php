@@ -46,6 +46,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             'display_suppliers' => $this->configuration->getBoolean('PS_DISPLAY_SUPPLIERS'),
             'display_manufacturers' => $this->configuration->getBoolean('PS_DISPLAY_MANUFACTURERS'),
             'display_best_sellers' => $this->configuration->getBoolean('PS_DISPLAY_BEST_SELLERS'),
+            'display_backoffice_kpis' => $this->configuration->getBoolean('PS_DISPLAY_BACKOFFICE_KPIS', true),
             'multishop_feature_active' => $this->configuration->getBoolean('PS_MULTISHOP_FEATURE_ACTIVE'),
         ];
     }
@@ -106,6 +107,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
         $this->configuration->set('PS_DISPLAY_SUPPLIERS', $configuration['display_suppliers']);
         $this->configuration->set('PS_DISPLAY_MANUFACTURERS', $configuration['display_manufacturers']);
         $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
+        $this->configuration->set('PS_DISPLAY_BACKOFFICE_KPIS', $configuration['display_backoffice_kpis']);
         $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
 
         return [];
@@ -140,6 +142,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             $configuration['display_suppliers'],
             $configuration['display_manufacturers'],
             $configuration['display_best_sellers'],
+            $configuration['display_backoffice_kpis'],
             $configuration['multishop_feature_active']
         );
     }

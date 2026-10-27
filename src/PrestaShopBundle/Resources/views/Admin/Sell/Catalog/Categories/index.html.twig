@@ -10,10 +10,12 @@
   {% endblock %}
 
   {% block categories_kpis %}
-    {{ render(controller(
-      'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
-      {kpiRow: categoriesKpi},
-    )) }}
+    {% if categoriesKpi is not null %}
+      {{ render(controller(
+        'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
+        {kpiRow: categoriesKpi},
+      )) }}
+    {% endif %}
   {% endblock %}
 
   {% block categories_breadcrumb %}
