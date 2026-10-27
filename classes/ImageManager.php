@@ -306,20 +306,42 @@ class ImageManagerCore
                 ++$level;
             }
             $srcImage = self::$decodedSource[1][$level];
-            $destinationX = (int) (($destinationWidth - $nextWidth) / 2);
-            $destinationY = (int) (($destinationHeight - $nextHeight) / 2);
+            $nextX = (int) (($destinationWidth - $nextWidth) / 2);
+            $nextY = (int) (($destinationHeight - $nextHeight) / 2);
+
+            // Only resample the part of the image visible on the canvas, cropped fitments overflow it
+            $destinationX = max(0, $nextX);
+            $destinationY = max(0, $nextY);
+            $visibleWidth = min($nextWidth, $destinationWidth);
+            $visibleHeight = min($nextHeight, $destinationHeight);
+            $scaleX = $nextWidth > 0 ? imagesx($srcImage) / $nextWidth : 0;
+            $scaleY = $nextHeight > 0 ? imagesy($srcImage) / $nextHeight : 0;
+
+            $sharedKey = [$nextWidth, $nextHeight, $destinationX - $nextX, $destinationY - $nextY, $visibleWidth, $visibleHeight];
             $transparentCanvas = in_array($destinationFileType, ['png', 'webp', 'avif']);
             $previous = self::$decodedSource[2] ?? null;
 
             // Formats of the same thumbnail size reuse the previous resampled pixels. Those were blended
             // on the previous canvas background, so only an opaque source can switch background.
-            if ($cascade && $previous !== null && $previous[0] === [$nextWidth, $nextHeight]
+            if ($cascade && $previous !== null && $previous[0] === $sharedKey
                 && ($previous[2] === $transparentCanvas || $sourceFileType === IMAGETYPE_JPEG)) {
-                imagecopy($destImage, $previous[1], $destinationX, $destinationY, $previous[3], $previous[4], $nextWidth, $nextHeight);
+                imagecopy($destImage, $previous[1], $destinationX, $destinationY, $previous[3], $previous[4], $visibleWidth, $visibleHeight);
             } else {
-                ImageManager::imagecopyresampled($destImage, $srcImage, $destinationX, $destinationY, 0, 0, $nextWidth, $nextHeight, imagesx($srcImage), imagesy($srcImage), $quality);
+                ImageManager::imagecopyresampled(
+                    $destImage,
+                    $srcImage,
+                    $destinationX,
+                    $destinationY,
+                    (int) round(($destinationX - $nextX) * $scaleX),
+                    (int) round(($destinationY - $nextY) * $scaleY),
+                    $visibleWidth,
+                    $visibleHeight,
+                    (int) round($visibleWidth * $scaleX),
+                    (int) round($visibleHeight * $scaleY),
+                    $quality
+                );
                 if ($cascade) {
-                    self::$decodedSource[2] = [[$nextWidth, $nextHeight], $destImage, $transparentCanvas, $destinationX, $destinationY];
+                    self::$decodedSource[2] = [$sharedKey, $destImage, $transparentCanvas, $destinationX, $destinationY];
                 }
             }
         }
