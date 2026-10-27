@@ -8,10 +8,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\ApiPlatform;
 
+use AdminAPIKernel;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor;
-use RuntimeException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Tests\Integration\ApiPlatform\EndPoint\ApiTestCase;
 use Tests\Resources\DatabaseDump;
 
@@ -25,11 +27,12 @@ class DisabledEndpointsTest extends ApiTestCase
 {
     private FeatureFlagManager $featureFlagManager;
 
+    private static bool $debug = true;
+
     public static function setUpBeforeClass(): void
     {
-        parent::setUpBeforeClass();
-        DatabaseDump::restoreTables(['feature_flag']);
         self::clearCache();
+        DatabaseDump::restoreTables(['feature_flag']);
     }
 
     public static function tearDownAfterClass(): void
@@ -42,23 +45,29 @@ class DisabledEndpointsTest extends ApiTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        self::clearCache();
+        // Each test runs in its own process: the parent class setup, which boots the kernel, is deferred until the
+        // debug mode of the test is known, so the only container compiled is the one of the tested variant
+        $isDebug = $this->providedData()[0] ?? true;
+        self::$debug = is_bool($isDebug) ? $isDebug : true;
+        parent::setUpBeforeClass();
         $this->featureFlagManager = self::getContainer()->get(FeatureFlagManager::class);
     }
 
+    protected static function bootKernel(array $options = []): KernelInterface
+    {
+        return parent::bootKernel($options + ['debug' => self::$debug]);
+    }
+
     /**
-     * Since the variant configurations influence the cache we MUST clear it between each tests,
-     * and clear it again after to avoid impacting the following tests in the suite
+     * Since the variant configurations influence the cache we MUST clear it between each tests (each one runs
+     * in its own process, which clears it in setUpBeforeClass), and clear it again after to avoid impacting
+     * the following tests in the suite
      */
     protected static function clearCache(): void
     {
-        $baseCommandLine = 'php -d memory_limit=-1 ' . __DIR__ . '/../../../bin/console ';
-        $commandLine = $baseCommandLine . 'cache:clear --no-warmup --no-interaction --env=test --app-id=admin-api --quiet';
-        $result = 0;
-        system($commandLine, $result);
-        if ($result !== 0) {
-            throw new RuntimeException('Could not clear the cache');
-        }
+        // Removing the folder directly avoids the bin/console sub-process, which compiles its own container to run
+        static::ensureKernelShutdown();
+        (new Filesystem())->remove(dirname(__DIR__, 3) . '/var/cache/test/' . AdminAPIKernel::APP_ID);
     }
 
     /**
