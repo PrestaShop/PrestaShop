@@ -32,9 +32,14 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, opcache
+          coverage: none
+          # Isolated tests run each test in a new PHP process: the file cache shares the compiled scripts between them
+          ini-values: opcache.enable_cli=1, opcache.file_cache=/tmp/php-opcache, opcache.memory_consumption=256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create the OPcache file cache folder
+        run: mkdir -p /tmp/php-opcache
       - name: Setup MySQL
         uses: shogo82148/actions-setup-mysql@v1
         with:
