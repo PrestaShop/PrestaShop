@@ -167,7 +167,7 @@ class AdminLoginControllerCore extends AdminController
             $employee = new Employee($id_employee);
             $valid_reset_token = $employee->getValidResetPasswordToken();
 
-            if ($valid_reset_token !== false && $valid_reset_token === $reset_token) {
+            if ($valid_reset_token !== false && hash_equals($valid_reset_token, (string) $reset_token)) {
                 $this->context->smarty->assign('reset_email', $employee->email);
             }
         }
@@ -438,7 +438,7 @@ class AdminLoginControllerCore extends AdminController
                 $this->errors[] = $this->trans('This account does not exist.', [], 'Admin.Login.Notification');
             } elseif ((strtotime($employee->last_passwd_gen . '+' . Configuration::get('PS_PASSWD_TIME_BACK') . ' minutes') - time()) > 0) {
                 $this->errors[] = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', ['%interval%' => Configuration::get('PS_PASSWD_TIME_BACK')], 'Admin.Login.Notification');
-            } elseif ($employee->getValidResetPasswordToken() !== $reset_token_value) {
+            } elseif (!($validResetToken = $employee->getValidResetPasswordToken()) || !hash_equals($validResetToken, (string) $reset_token_value)) {
                 // To update password, we must have the temporary reset token that matches.
                 $this->errors[] = $this->trans('Your password reset request expired. Please start again.', [], 'Admin.Login.Notification');
             }
