@@ -63,14 +63,19 @@ final class SafeZipExtractor
         try {
             $this->extractTo($archivePath, $extractionFolder);
 
-            $source = $extractionFolder . (null === $folder ? '' : DIRECTORY_SEPARATOR . $folder);
-            if (!is_dir($source) || is_link($source)) {
-                throw new ZipExtractionException(sprintf('The archive has no "%s" folder.', $folder), ZipExtractionException::MISSING_FOLDER);
+            $source = $extractionFolder;
+            $target = rtrim($destination, '/\\');
+            if (null !== $folder) {
+                $source .= DIRECTORY_SEPARATOR . $folder;
+                $target .= DIRECTORY_SEPARATOR . $folder;
+                if (!is_dir($source) || is_link($source)) {
+                    throw new ZipExtractionException(sprintf('The archive has no "%s" folder.', $folder), ZipExtractionException::MISSING_FOLDER);
+                }
             }
 
             $this->filesystem->mirror(
                 $source,
-                rtrim($destination, '/\\') . (null === $folder ? '' : DIRECTORY_SEPARATOR . $folder),
+                $target,
                 null,
                 ['override' => true]
             );

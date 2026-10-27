@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Security;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Security\Exception\ZipExtractionException;
 use PrestaShop\PrestaShop\Core\Security\SafeZipExtractor;
 use ReflectionProperty;
@@ -168,6 +169,42 @@ final class SafeZipExtractorTest extends TestCase
         yield 'parent folder' => ['..'];
         yield 'nested folder' => ['my_module/views'];
         yield 'backslash' => ['my_module\\views'];
+    }
+
+    /**
+     * @dataProvider provideFolders
+     */
+    public function testExtractedFilesGetTheDefaultModes(?string $folder): void
+    {
+        // Modes stored in the archive (a private folder and file here) are not applied to the extracted files
+        $archive = $this->workDir . '/modes.zip';
+        $zip = new ZipArchive();
+        $zip->open($archive, ZipArchive::CREATE);
+        $zip->addEmptyDir('my_module/views');
+        $zip->setExternalAttributesName('my_module/views/', ZipArchive::OPSYS_UNIX, 040700 << 16);
+        $zip->addFromString('my_module/my_module.php', '<?php');
+        $zip->setExternalAttributesName('my_module/my_module.php', ZipArchive::OPSYS_UNIX, 0100600 << 16);
+        $zip->close();
+
+        // The usual umask of a web server
+        $umask = umask(022);
+        try {
+            $this->createExtractor()->extract($archive, $this->workDir . '/destination', $folder);
+        } finally {
+            umask($umask);
+        }
+
+        clearstatcache();
+        $module = $this->workDir . '/destination/my_module';
+        self::assertSame(PsFileSystem::DEFAULT_MODE_FOLDER, fileperms($module) & 0777);
+        self::assertSame(PsFileSystem::DEFAULT_MODE_FOLDER, fileperms($module . '/views') & 0777);
+        self::assertSame(PsFileSystem::DEFAULT_MODE_FILE, fileperms($module . '/my_module.php') & 0777);
+    }
+
+    public static function provideFolders(): iterable
+    {
+        yield 'whole archive' => [null];
+        yield 'one folder' => ['my_module'];
     }
 
     public function testFilesAlreadyInTheDestinationAreKept(): void
