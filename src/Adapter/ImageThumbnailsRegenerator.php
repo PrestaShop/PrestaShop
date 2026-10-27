@@ -32,6 +32,7 @@ class ImageThumbnailsRegenerator
     private int $startTime = 0;
     private int $workerCount = 1;
     private ?int $workerIndex = null;
+    private bool $workersErasePreviousImages = false;
 
     public function __construct(
         private readonly ProductImageRepository $productImageRepository,
@@ -60,6 +61,17 @@ class ImageThumbnailsRegenerator
     {
         $this->workerCount = $workerCount;
         $this->workerIndex = $workerIndex;
+        $this->workersErasePreviousImages = false;
+    }
+
+    private function delegatesToWorkers(): bool
+    {
+        return $this->workerCount > 1 && $this->workerIndex === null;
+    }
+
+    private function isHandledByThisProcess(int $imageId): bool
+    {
+        return $this->workerIndex === null || $imageId % $this->workerCount === $this->workerIndex;
     }
 
     /**
@@ -90,18 +102,25 @@ class ImageThumbnailsRegenerator
          * Scan all files in the given folder.
          * We do this also in case of products, because it will take care of placeholder thumbnails, hence the second regex.
          */
-        $filesToDelete = scandir($dir, SCANDIR_SORT_NONE);
-        foreach ($filesToDelete as $file) {
-            if ((preg_match($regexStandard, $file) || preg_match($regexPlaceholders, $file)) && file_exists($dir . $file)) {
-                unlink($dir . $file);
+        if ($this->workerIndex === null) {
+            $filesToDelete = scandir($dir, SCANDIR_SORT_NONE);
+            foreach ($filesToDelete as $file) {
+                if ((preg_match($regexStandard, $file) || preg_match($regexPlaceholders, $file)) && file_exists($dir . $file)) {
+                    unlink($dir . $file);
+                }
             }
         }
 
-        // Delete product images
-        if ($isProduct) {
+        // Workers delete the thumbnails of their own product images before regenerating them
+        if ($isProduct && $this->delegatesToWorkers()) {
+            $this->workersErasePreviousImages = true;
+        } elseif ($isProduct) {
             // Get all product images in the shop
             $productsImages = $this->productImageRepository->iterateImagesForThumbnailGeneration();
             foreach ($productsImages as $image) {
+                if (!$this->isHandledByThisProcess($image->getImageId()->getValue())) {
+                    continue;
+                }
                 // Get path to current image folder, example: /img/p/1/2/3
                 $pathToImageFolder = $this->productImagePathFactory->getImageFolder($image->getImageId());
                 if (file_exists($pathToImageFolder)) {
@@ -200,11 +219,11 @@ class ImageThumbnailsRegenerator
                     }
                 }
             }
-        } elseif ($this->workerCount > 1 && $this->workerIndex === null) {
+        } elseif ($this->delegatesToWorkers()) {
             return $this->regenerateProductImagesInWorkers($type);
         } else {
             foreach ($this->productImageRepository->iterateImagesForThumbnailGeneration() as $imageForThumbnailGeneration) {
-                if ($this->workerIndex !== null && $imageForThumbnailGeneration->getImageId()->getValue() % $this->workerCount !== $this->workerIndex) {
+                if (!$this->isHandledByThisProcess($imageForThumbnailGeneration->getImageId()->getValue())) {
                     continue;
                 }
                 $originalImagePath = $this->productImagePathFactory->getPath(
@@ -283,7 +302,13 @@ class ImageThumbnailsRegenerator
         $imageTypeId = count($types) === 1 ? (string) reset($types)->getId() : '0';
         $processes = [];
         for ($workerIndex = 0; $workerIndex < $this->workerCount; ++$workerIndex) {
-            $process = new Process([...$this->getWorkerCommand(), 'products', $imageTypeId, '--worker=' . $workerIndex . '/' . $this->workerCount]);
+            $process = new Process([
+                ...$this->getWorkerCommand(),
+                'products',
+                $imageTypeId,
+                '--worker=' . $workerIndex . '/' . $this->workerCount,
+                ...($this->workersErasePreviousImages ? ['--delete'] : []),
+            ]);
             $process->setTimeout(null);
             $process->start();
             $processes[] = $process;
@@ -321,7 +346,8 @@ class ImageThumbnailsRegenerator
     /* Hook watermark optimization */
     public function regenerateWatermark(string $dir, ?array $formats = null): bool|string
     {
-        if ($this->workerIndex !== null) {
+        // Workers apply the watermark to their own product images
+        if ($this->delegatesToWorkers()) {
             return true;
         }
 
@@ -334,6 +360,9 @@ class ImageThumbnailsRegenerator
         if ($result && count($result)) {
             $productsImages = $this->productImageRepository->iterateImagesForThumbnailGeneration();
             foreach ($productsImages as $imageForThumbnailGeneration) {
+                if (!$this->isHandledByThisProcess($imageForThumbnailGeneration->getImageId()->getValue())) {
+                    continue;
+                }
                 if (file_exists($this->productImagePathFactory->getPath($imageForThumbnailGeneration->getImageId()))) {
                     foreach ($result as $module) {
                         $moduleInstance = LegacyModule::getInstanceByName($module['name']);
