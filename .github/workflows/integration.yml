@@ -56,13 +56,6 @@ jobs:
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-      - name: Cache Node Directory
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
-
       - name: Cache Composer Directory
         uses: actions/cache@v4
         with:
@@ -73,9 +66,23 @@ jobs:
       - name: Composer Install
         run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
+      # After Composer, which empties the folders of the themes it installs
+      - name: Cache built assets
+        id: assets
+        uses: ./.github/actions/cache-built-assets
+
+      - name: Cache Node Directory
+        if: steps.assets.outputs.cache-hit != 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
       # Front assets are needed for the theme to be installed and image types to be inserted in DB, admin assets required especially
       # because some built files (like preload.html.twig) are included and cause errors when absent
       - name: Build all assets
+        if: steps.assets.outputs.cache-hit != 'true'
         run: make assets
 
       - name: Run integration-tests

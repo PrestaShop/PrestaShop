@@ -1,0 +1,43 @@
+name: Cache built assets
+description: Restores the built theme assets, and saves them at the end of the job when they were missing
+
+inputs:
+  NODE_VERSION:
+    description: Node version building the assets, the one of the runner by default
+    default: ''
+  PRESTASHOP_DIR:
+    description: PrestaShop folder
+    default: '.'
+
+outputs:
+  cache-hit:
+    description: Whether the built assets were restored
+    value: ${{ steps.cache.outputs.cache-hit }}
+
+runs:
+  using: 'composite'
+  steps:
+    # Built assets only depend on the sources of the themes, from git or from the composer.lock references of the
+    # themes installed by Composer, and on the build tooling
+    - name: Compute built assets cache key
+      if: github.repository == 'PrestaShop/PrestaShop'
+      id: key
+      shell: bash
+      working-directory: ${{ inputs.PRESTASHOP_DIR }}
+      run: |
+        sources=$(git rev-parse HEAD:admin-dev/themes HEAD:themes HEAD:tools/assets; jq -r '.packages[] | select(.type == "prestashop-theme") | .name + "@" + .dist.reference' composer.lock)
+        echo "key=${{ runner.os }}-assets-node${{ inputs.NODE_VERSION || '$(node -v)' }}-$(echo "$sources" | sha256sum | cut -c1-40)" >> $GITHUB_OUTPUT
+
+    - name: Cache built assets
+      if: github.repository == 'PrestaShop/PrestaShop'
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ inputs.PRESTASHOP_DIR }}/admin-dev/themes/default/public
+          ${{ inputs.PRESTASHOP_DIR }}/admin-dev/themes/new-theme/public
+          ${{ inputs.PRESTASHOP_DIR }}/themes/core.js
+          ${{ inputs.PRESTASHOP_DIR }}/themes/*-chunk.js
+          ${{ inputs.PRESTASHOP_DIR }}/themes/classic/assets
+          ${{ inputs.PRESTASHOP_DIR }}/themes/hummingbird/assets
+        key: ${{ steps.key.outputs.key }}

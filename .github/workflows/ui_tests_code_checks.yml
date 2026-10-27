@@ -45,7 +45,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies in UI tests directory
-        run: npm ci
+        uses: ./.github/actions/npm-install
+        with:
+          DIRECTORY: ./tests/UI
 
       - name: Check eslint errors
         run: npm run lint
@@ -71,7 +73,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies in UI tests directory
-        run: npm ci
+        uses: ./.github/actions/npm-install
+        with:
+          DIRECTORY: ./tests/UI
 
       - name: Check TypeScript errors
         run: npm run check:typescript
@@ -97,7 +101,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies in UI tests directory
-        run: npm ci
+        uses: ./.github/actions/npm-install
+        with:
+          DIRECTORY: ./tests/UI
 
       - name: Install browsers
         run: npx playwright install --with-deps
@@ -130,7 +136,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies in UI tests directory
-        run: npm ci
+        uses: ./.github/actions/npm-install
+        with:
+          DIRECTORY: ./tests/UI
 
       - name: Install browsers
         run: npx playwright install --with-deps
