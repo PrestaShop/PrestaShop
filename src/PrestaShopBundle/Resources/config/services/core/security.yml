@@ -12,3 +12,5 @@ services:
 
   PrestaShop\PrestaShop\Core\Security\SafeZipExtractor:
     public: false
+    arguments:
+      $sandboxPath: '%ps_cache_dir%sandbox'

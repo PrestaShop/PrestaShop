@@ -31,7 +31,7 @@ namespace Tests\Unit\Core\Module\SourceHandler;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
-use ReflectionProperty;
+use PrestaShop\PrestaShop\Core\Security\SafeZipExtractor;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tests\Resources\ResourceResetter;
 use ZipArchive;
@@ -157,7 +157,7 @@ class ZipSourceHandlerTest extends TestCase
         $sandbox = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'ps-zip-sandbox-' . uniqid();
         $translator = $this->createMock(TranslatorInterface::class);
         $translator->method('trans')->willReturnArgument(0);
-        $handler = new ZipSourceHandler($this->resourceResetter::TEST_MODULES_DIR, $translator, $sandbox);
+        $handler = new ZipSourceHandler($this->resourceResetter::TEST_MODULES_DIR, $translator, new SafeZipExtractor($sandbox));
 
         try {
             $handler->handle($this->createArchive(['archive_module/archive_module.php' => '<?php']));
@@ -167,14 +167,6 @@ class ZipSourceHandlerTest extends TestCase
         } finally {
             @rmdir($sandbox);
         }
-    }
-
-    public function testSandboxDefaultsToTheShopCacheSandbox(): void
-    {
-        $sandboxPath = new ReflectionProperty(ZipSourceHandler::class, 'sandboxPath');
-        $sandboxPath->setAccessible(true);
-
-        $this->assertSame(_PS_CACHE_DIR_ . 'sandbox/', $sandboxPath->getValue($this->zipSourceHandler));
     }
 
     /**

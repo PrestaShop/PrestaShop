@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -358,7 +359,7 @@ class AdminModulesControllerCore extends AdminController
                 $folder = $sandbox . 'module_' . bin2hex(random_bytes(8));
                 // exists() does not see a link whose target is missing, hence is_link()
                 if (!$filesystem->exists($folder) && !is_link($folder)) {
-                    $filesystem->mkdir($folder, 0700);
+                    $filesystem->mkdir($folder, PsFileSystem::PRIVATE_MODE_FOLDER);
 
                     return $folder;
                 }
