@@ -40,6 +40,13 @@ jobs:
         with:
           mysql-version: "8.0"
           root-password: 'password'
+          # The test databases are throwaway: no durability, no binary log, more memory for the concurrent lanes
+          my-cnf: |
+            innodb_flush_log_at_trx_commit=2
+            innodb_doublewrite=OFF
+            skip-log-bin
+            innodb_buffer_pool_size=1G
+            performance_schema=OFF
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
