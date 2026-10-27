@@ -72,7 +72,11 @@ echo "Project copied in $(($(date +%s) - start))s"
 
 pids=""
 for suite in $SUITES; do
-    run_suite "$suite" > "$WORK_DIR/$suite.log" 2>&1 &
+    # Live output prefixed by the lane, the full log of each lane is printed again unmixed at the end
+    (
+        set -o pipefail
+        run_suite "$suite" 2>&1 | tee "$WORK_DIR/$suite.log" | sed -u "s/^/[$suite] /"
+    ) &
     pids="$pids $!"
 done
 
@@ -84,8 +88,9 @@ for suite in $SUITES; do
 done
 
 for suite in $SUITES; do
-    echo "===== Suite $suite ====="
+    echo "::group::Suite $suite"
     cat "$WORK_DIR/$suite.log"
+    echo "::endgroup::"
 done
 for suite in $SUITES; do
     tail -n 1 "$WORK_DIR/$suite.log"
