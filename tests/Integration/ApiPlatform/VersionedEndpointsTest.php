@@ -8,71 +8,28 @@ declare(strict_types=1);
 
 namespace Tests\Integration\ApiPlatform;
 
-use AdminAPIKernel;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Tests\Integration\ApiPlatform\EndPoint\ApiTestCase;
-use Tests\Resources\DatabaseDump;
 
 /**
  * Tests for CoreVersionCompatibilityMetadataCollectionFactoryDecorator, based on the versioned test
  * operations declared in Tests\Resources\ApiPlatform\Resources\ApiTest which use extreme min/max
  * versions (1.0.0 and 99.99.99) so the expected filtering does not depend on the actual core version.
  *
- * These tests must be executed independently because their variants have impact on the cache,
- * that is also why the cache must be cleared before, after the tests and in between them.
- *
  * @group isolatedProcess
+ *
+ * @runTestsInSeparateProcesses
  */
-class VersionedEndpointsTest extends ApiTestCase
+class VersionedEndpointsTest extends KernelVariantApiTestCase
 {
     private FeatureFlagManager $featureFlagManager;
-
-    private static bool $debug = true;
-
-    public static function setUpBeforeClass(): void
-    {
-        self::clearCache();
-        DatabaseDump::restoreTables(['feature_flag']);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-        DatabaseDump::restoreTables(['feature_flag']);
-        self::clearCache();
-    }
 
     protected function setUp(): void
     {
         parent::setUp();
-        // Each test runs in its own process: the parent class setup, which boots the kernel, is deferred until the
-        // debug mode of the test is known, so the only container compiled is the one of the tested variant
-        $isDebug = $this->providedData()[0] ?? true;
-        self::$debug = is_bool($isDebug) ? $isDebug : true;
-        parent::setUpBeforeClass();
         $this->featureFlagManager = self::getContainer()->get(FeatureFlagManager::class);
-    }
-
-    protected static function bootKernel(array $options = []): KernelInterface
-    {
-        return parent::bootKernel($options + ['debug' => self::$debug]);
-    }
-
-    /**
-     * Since the variant configurations influence the cache we MUST clear it between each tests (each one runs
-     * in its own process, which clears it in setUpBeforeClass), and clear it again after to avoid impacting
-     * the following tests in the suite
-     */
-    protected static function clearCache(): void
-    {
-        // Removing the folder directly avoids the bin/console sub-process, which compiles its own container to run
-        static::ensureKernelShutdown();
-        (new Filesystem())->remove(dirname(__DIR__, 3) . '/var/cache/test/' . AdminAPIKernel::APP_ID);
     }
 
     /**
@@ -171,10 +128,7 @@ class VersionedEndpointsTest extends ApiTestCase
                 true,
             ];
 
-            // Incompatible operations are filtered in debug mode as well (this case must remain the last one:
-            // it leaves a debug kernel which supports the cache clearing performed in tearDownAfterClass, a
-            // prod kernel would fail on shutdown because its compiled container files have been invalidated
-            // by the feature flag update)
+            // Incompatible operations are filtered in debug mode as well
             yield $description . ', debug mode on, force config off => ' . ($compatible ? 'available' : 'filtered') => [
                 true,
                 false,
