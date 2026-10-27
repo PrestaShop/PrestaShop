@@ -329,11 +329,8 @@ class CustomerCore extends ObjectModel
 
         // Check if registered customer exists with the email we are trying to add.
         // Also check if the customer found is a different customer than our object.
-        if ($this->shouldCheckEmailUniqueness()) {
-            $customerExists = (int) Customer::customerExists($this->email, true);
-            if (!$this->isGuest() && $customerExists > 0 && $customerExists !== (int) $this->id) {
-                return false;
-            }
+        if (!$this->isGuest() && $this->hasDuplicateEmail($this->email)) {
+            return false;
         }
 
         // If the customer is being soft-deleted, we also soft-delete his addresses
@@ -363,43 +360,21 @@ class CustomerCore extends ObjectModel
     {
         // Check if registered customer exists with the email we are trying to add.
         // Also check if the customer found is a different customer than our object.
-        if ($this->shouldCheckEmailUniqueness()) {
-            $customerExists = (int) Customer::customerExists($this->email, true);
-            if (!$this->isGuest() && $customerExists > 0 && $customerExists !== (int) $this->id) {
-                WebserviceRequest::getInstance()->setError(
-                    500,
-                    $this->trans(
-                        'The email is already used, please choose another one',
-                        [],
-                        'Admin.Notifications.Error'
-                    ),
-                    141
-                );
+        if (!$this->isGuest() && $this->hasDuplicateEmail($this->email)) {
+            WebserviceRequest::getInstance()->setError(
+                500,
+                $this->trans(
+                    'The email is already used, please choose another one',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
+                141
+            );
 
-                return false;
-            }
+            return false;
         }
 
         return $this->update($nullValues = false);
-    }
-
-    /**
-     * Checks whether persisted data affecting email uniqueness has changed.
-     */
-    private function shouldCheckEmailUniqueness(): bool
-    {
-        $customer = Db::getInstance()->getRow(
-            'SELECT `email`, `is_guest`, `id_shop`, `id_shop_group`
-            FROM `' . _DB_PREFIX_ . 'customer`
-            WHERE `id_customer` = ' . (int) $this->id,
-            false
-        );
-
-        return !$customer
-            || (string) $customer['email'] !== (string) $this->email
-            || (bool) $customer['is_guest'] !== $this->isGuest()
-            || (int) $customer['id_shop'] !== (int) $this->id_shop
-            || (int) $customer['id_shop_group'] !== (int) $this->id_shop_group;
     }
 
     /**
@@ -621,6 +596,80 @@ class CustomerCore extends ObjectModel
         ' . ($ignoreGuest ? ' AND `is_guest` = 0' : ''), false);
 
         return $returnId ? (int) $result : (bool) $result;
+    }
+
+    /**
+     * Checks for another registered customer in this customer's actual shop-sharing scope.
+     * Soft-deleted customers reserve their email unless explicitly excluded by the caller.
+     *
+     * @param string $email Email to check
+     * @param bool $excludeDeleted Whether to ignore soft-deleted customers
+     *
+     * @return bool Whether a duplicate exists
+     *
+     * @throws InvalidArgumentException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function hasDuplicateEmail(string $email, bool $excludeDeleted = false): bool
+    {
+        if (!Validate::isEmail($email)) {
+            throw new InvalidArgumentException('Cannot check duplicate customers with an invalid email');
+        }
+
+        $db = Db::getInstance();
+
+        // Read only the required shop-sharing settings directly from the database,
+        // avoiding unnecessary ObjectModel loading and caching.
+        $shop = $db->getRow(
+            'SELECT s.`id_shop_group`, sg.`share_customer`
+            FROM `' . _DB_PREFIX_ . 'shop` s
+            INNER JOIN `' . _DB_PREFIX_ . 'shop_group` sg ON sg.`id_shop_group` = s.`id_shop_group`
+            WHERE s.`id_shop` = ' . (int) $this->id_shop,
+            false
+        );
+
+        if (false === $shop) {
+            if ($db->getNumberError()) {
+                throw new PrestaShopDatabaseException('Failed to determine customer shop-sharing scope');
+            }
+
+            throw new PrestaShopException('Customer shop or shop group does not exist');
+        }
+
+        if ((int) $this->id_shop <= 0 || (int) $shop['id_shop_group'] <= 0) {
+            throw new PrestaShopException('Invalid customer shop-sharing scope');
+        }
+
+        // Resolve candidate shop groups from their actual shops,
+        // rather than relying on customer.id_shop_group.
+        $scope = (bool) $shop['share_customer']
+            ? 's.`id_shop_group` = ' . (int) $shop['id_shop_group']
+            : 'c.`id_shop` = ' . (int) $this->id_shop;
+
+        $join = $shop['share_customer']
+            ? ' INNER JOIN `' . _DB_PREFIX_ . 'shop` s ON s.`id_shop` = c.`id_shop`'
+            : '';
+
+        $result = $db->executeS(
+            'SELECT c.`id_customer`
+            FROM `' . _DB_PREFIX_ . 'customer` c'
+                . $join . '
+            WHERE ' . $scope . '
+                AND c.`email` = \'' . pSQL($email) . '\'
+                AND c.`id_customer` != ' . (int) $this->id . '
+                AND c.`is_guest` = 0'
+                . ($excludeDeleted ? ' AND c.`deleted` = 0' : '') . '
+            LIMIT 1',
+            true,
+            false
+        );
+
+        if (false === $result) {
+            throw new PrestaShopDatabaseException('Failed to check duplicate customer emails');
+        }
+
+        return !empty($result);
     }
 
     /**
