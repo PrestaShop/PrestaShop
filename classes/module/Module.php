@@ -1036,11 +1036,13 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
+        // Override files are shared by all shops, they are already installed if another shop uses the module
+        $hasShopAssociations = $this->hasShopAssociations();
         $moduleOverrideChecker = $this->get(ModuleOverrideChecker::class);
         if (!$moduleOverrideChecker) {
             $moduleOverrideChecker = new ModuleOverrideChecker($this->getTranslator(), _PS_OVERRIDE_DIR_);
         }
-        if ($this->getOverrides() != null && !Configuration::get('PS_DISABLE_MODULE_OVERRIDES')) {
+        if (!$hasShopAssociations && $this->getOverrides() != null && !Configuration::get('PS_DISABLE_MODULE_OVERRIDES')) {
             if (!$moduleOverrideChecker->hasOverrideConflict($this->getLocalPath() . 'override')) {
                 // Install overrides
                 try {
@@ -1178,9 +1180,6 @@ abstract class ModuleCore implements ModuleInterface
         Hook::exec('actionModuleDisable', ['module' => $this]);
 
         $result = true;
-        if (!Configuration::get('PS_DISABLE_MODULE_OVERRIDES') && $this->getOverrides() != null) {
-            $result &= $this->uninstallOverrides();
-        }
 
         // Disable module for all shops or contextual shops
         $whereIdShop = $force_all ? '' : ' AND `id_shop` IN(' . implode(', ', Shop::getContextListShopID()) . ')';
@@ -1188,6 +1187,10 @@ abstract class ModuleCore implements ModuleInterface
 
         // if module has no more shop associations, set module.active = 0
         if (!$this->hasShopAssociations()) {
+            // Override files are shared by all shops, keep them while another shop still uses the module
+            if (!Configuration::get('PS_DISABLE_MODULE_OVERRIDES') && $this->getOverrides() != null) {
+                $result &= $this->uninstallOverrides();
+            }
             $result &= Db::getInstance()->update('module', ['active' => 0], 'id_module = ' . (int) $this->id);
         }
 
