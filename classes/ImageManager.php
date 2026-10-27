@@ -228,6 +228,7 @@ class ImageManagerCore
 
             return false;
         }
+        $fullSizeCopy = !$destinationWidth && !$destinationHeight;
         if (!$destinationWidth) {
             $destinationWidth = $sourceWidth;
         }
@@ -323,7 +324,17 @@ class ImageManagerCore
             }
         }
         $writeFile = ImageManager::write($destinationFileType, $destImage, $destinationFile);
+
+        // Uploads write the original at full size then generate its thumbnails from that file: keep its pixels.
+        // They are keyed by the written content, so a file changed by the hook below is decoded again.
+        $writtenHash = null;
+        if ($writeFile && $fullSizeCopy && $nextWidth === $sourceWidth && $nextHeight === $sourceHeight) {
+            $writtenHash = hash_file('xxh128', $destinationFile);
+        }
         Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $destinationFileType]);
+        if ($writtenHash !== null) {
+            self::$decodedSource = [$writtenHash, [$destImage]];
+        }
 
         return $writeFile;
     }
