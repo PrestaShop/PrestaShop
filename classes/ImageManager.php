@@ -286,7 +286,26 @@ class ImageManagerCore
         if ($destinationWidth >= $sourceWidth && $destinationHeight >= $sourceHeight) {
             imagecopyresized($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight);
         } else {
-            ImageManager::imagecopyresampled($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight, $quality);
+            // Palette outputs and the fast quality modes keep resampling from the full source
+            $cascade = $quality >= 5 && $nextWidth > 0 && $nextHeight > 0 && $nextWidth <= $sourceWidth && $nextHeight <= $sourceHeight && imageistruecolor($destImage);
+            $memoryLimit = Tools::getMemoryLimit();
+
+            // Resample from the smallest halved copy of the source still at least twice the target size
+            $level = 0;
+            while ($cascade && $sourceWidth >> ($level + 1) >= 2 * $nextWidth && $sourceHeight >> ($level + 1) >= 2 * $nextHeight) {
+                if (!isset(self::$decodedSource[1][$level + 1])) {
+                    if ($memoryLimit != -1 && memory_get_usage() + ($sourceWidth >> ($level + 1)) * ($sourceHeight >> ($level + 1)) * 5 > $memoryLimit - 1048576) {
+                        break;
+                    }
+                    $halvedImage = imagecreatetruecolor($sourceWidth >> ($level + 1), $sourceHeight >> ($level + 1));
+                    imagealphablending($halvedImage, false);
+                    imagecopyresampled($halvedImage, self::$decodedSource[1][$level], 0, 0, 0, 0, $sourceWidth >> ($level + 1), $sourceHeight >> ($level + 1), imagesx(self::$decodedSource[1][$level]), imagesy(self::$decodedSource[1][$level]));
+                    self::$decodedSource[1][$level + 1] = $halvedImage;
+                }
+                ++$level;
+            }
+            $srcImage = self::$decodedSource[1][$level];
+            ImageManager::imagecopyresampled($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, imagesx($srcImage), imagesy($srcImage), $quality);
         }
         $writeFile = ImageManager::write($destinationFileType, $destImage, $destinationFile);
         Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $destinationFileType]);
