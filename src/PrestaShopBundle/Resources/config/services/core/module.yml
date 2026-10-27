@@ -41,7 +41,6 @@ services:
     autowire: true
     arguments:
       $modulePath: '%prestashop.module_dir%'
-      $sandboxPath: '%prestashop.legacy_cache_dir%sandbox'
     tags: [ core.module.source_handler ]
 
   PrestaShop\PrestaShop\Core\Module\SourceHandler\RemoteZipSourceHandler:

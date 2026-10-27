@@ -10,6 +10,7 @@ namespace Tests\Unit\Core\Security;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Security\SafeZipExtractor;
+use ReflectionProperty;
 use Symfony\Component\Filesystem\Filesystem;
 use ZipArchive;
 
@@ -61,17 +62,19 @@ final class SafeZipExtractorTest extends TestCase
     {
         $archive = $this->createArchive(['my_module/my_module.php' => '<?php', 'my_module/logo.png' => 'png']);
 
-        self::assertTrue((new SafeZipExtractor())->extract($archive, $this->workDir . '/destination'));
+        self::assertTrue($this->createExtractor()->extract($archive, $this->workDir . '/destination'));
         self::assertFileExists($this->workDir . '/destination/my_module/my_module.php');
         self::assertFileExists($this->workDir . '/destination/my_module/logo.png');
+        self::assertSame([], $this->listFiles($this->workDir . '/sandbox'));
     }
 
     public function testArchiveWithAnEntryOutsideTheDestinationIsNotExtracted(): void
     {
         $archive = $this->createArchive(['my_module/my_module.php' => '<?php', '../outside.txt' => 'text']);
 
-        self::assertFalse((new SafeZipExtractor())->extract($archive, $this->workDir . '/destination'));
+        self::assertFalse($this->createExtractor()->extract($archive, $this->workDir . '/destination'));
         self::assertSame([], $this->listFiles($this->workDir . '/destination'));
+        self::assertSame([], $this->listFiles($this->workDir . '/sandbox'));
         self::assertFalse(file_exists($this->workDir . '/outside.txt'));
     }
 
@@ -85,13 +88,97 @@ final class SafeZipExtractorTest extends TestCase
         $zip->setExternalAttributesName('my_module/link', ZipArchive::OPSYS_UNIX, 0120777 << 16);
         $zip->close();
 
-        self::assertFalse((new SafeZipExtractor())->extract($archive, $this->workDir . '/destination'));
+        self::assertFalse($this->createExtractor()->extract($archive, $this->workDir . '/destination'));
         self::assertSame([], $this->listFiles($this->workDir . '/destination'));
     }
 
     public function testMissingArchiveIsNotExtracted(): void
     {
-        self::assertFalse((new SafeZipExtractor())->extract($this->workDir . '/missing.zip', $this->workDir . '/destination'));
+        self::assertFalse($this->createExtractor()->extract($this->workDir . '/missing.zip', $this->workDir . '/destination'));
+    }
+
+    public function testOnlyTheGivenFolderIsCopied(): void
+    {
+        $archive = $this->createArchive([
+            'my_module/my_module.php' => '<?php',
+            'other_module/other_module.php' => '<?php',
+            'readme.txt' => 'text',
+        ]);
+
+        self::assertTrue($this->createExtractor()->extract($archive, $this->workDir . '/destination', 'my_module'));
+        self::assertSame(['my_module'], $this->listFiles($this->workDir . '/destination'));
+        self::assertFileExists($this->workDir . '/destination/my_module/my_module.php');
+        self::assertSame([], $this->listFiles($this->workDir . '/sandbox'));
+    }
+
+    public function testFolderMissingFromTheArchiveIsNotCopied(): void
+    {
+        $archive = $this->createArchive(['other_module/other_module.php' => '<?php']);
+
+        self::assertFalse($this->createExtractor()->extract($archive, $this->workDir . '/destination', 'my_module'));
+        self::assertSame([], $this->listFiles($this->workDir . '/destination'));
+        self::assertSame([], $this->listFiles($this->workDir . '/sandbox'));
+    }
+
+    /**
+     * @dataProvider provideUnsafeFolderNames
+     */
+    public function testUnsafeFolderNameIsRefused(string $folder): void
+    {
+        $archive = $this->createArchive(['my_module/my_module.php' => '<?php']);
+
+        self::assertFalse($this->createExtractor()->extract($archive, $this->workDir . '/destination/sub', $folder));
+        self::assertSame([], $this->listFiles($this->workDir . '/destination'));
+    }
+
+    public static function provideUnsafeFolderNames(): iterable
+    {
+        yield 'empty' => [''];
+        yield 'current folder' => ['.'];
+        yield 'parent folder' => ['..'];
+        yield 'nested folder' => ['my_module/views'];
+        yield 'backslash' => ['my_module\\views'];
+    }
+
+    public function testFilesAlreadyInTheDestinationAreKept(): void
+    {
+        file_put_contents($this->workDir . '/destination/kept.txt', 'text');
+        $archive = $this->createArchive(['my_module/my_module.php' => '<?php']);
+
+        self::assertTrue($this->createExtractor()->extract($archive, $this->workDir . '/destination'));
+        self::assertSame(['kept.txt', 'my_module'], $this->listFiles($this->workDir . '/destination'));
+    }
+
+    public function testNothingIsExtractedWhenTheSandboxCannotBeCreated(): void
+    {
+        // A file where the sandbox folder should be
+        file_put_contents($this->workDir . '/not-a-folder', 'text');
+        $archive = $this->createArchive(['my_module/my_module.php' => '<?php']);
+
+        self::assertFalse((new SafeZipExtractor($this->workDir . '/not-a-folder'))->extract($archive, $this->workDir . '/destination'));
+        self::assertSame([], $this->listFiles($this->workDir . '/destination'));
+    }
+
+    public function testIsSafeArchive(): void
+    {
+        $extractor = $this->createExtractor();
+
+        self::assertTrue($extractor->isSafeArchive($this->createArchive(['my_module/my_module.php' => '<?php'])));
+        self::assertFalse($extractor->isSafeArchive($this->createArchive(['../outside.txt' => 'text'])));
+        self::assertFalse($extractor->isSafeArchive($this->workDir . '/missing.zip'));
+    }
+
+    public function testSandboxDefaultsToTheShopCacheSandbox(): void
+    {
+        $sandboxPath = new ReflectionProperty(SafeZipExtractor::class, 'sandboxPath');
+        $sandboxPath->setAccessible(true);
+
+        self::assertSame(_PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR, $sandboxPath->getValue(new SafeZipExtractor()));
+    }
+
+    private function createExtractor(): SafeZipExtractor
+    {
+        return new SafeZipExtractor($this->workDir . '/sandbox');
     }
 
     /**
