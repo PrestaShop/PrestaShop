@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
+use PrestaShop\PrestaShop\Core\Security\Exception\ZipExtractionException;
 use PrestaShop\PrestaShop\Core\Security\SafeZipExtractor;
 use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\Intl\Countries;
@@ -1294,7 +1295,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        if (!(new SafeZipExtractor())->extract(self::getPathToCachedTranslationPack($locale), self::SF_TRANSLATIONS_DIR)) {
+        try {
+            (new SafeZipExtractor())->extract(self::getPathToCachedTranslationPack($locale), self::SF_TRANSLATIONS_DIR);
+        } catch (ZipExtractionException $e) {
             $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification');
 
             return false;

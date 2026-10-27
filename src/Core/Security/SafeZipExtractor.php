@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Security;
 
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
+use PrestaShop\PrestaShop\Core\Security\Exception\ZipExtractionException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use ZipArchive;
@@ -49,23 +50,22 @@ final class SafeZipExtractor
      * Extracts the archive into the destination. With a folder, only this top level folder of the archive
      * is copied, into the destination folder of the same name: nothing else from the archive is written.
      *
-     * @return bool true when the archive was checked, extracted and copied, false otherwise
+     * @throws ZipExtractionException when the archive is not extracted, the code gives the reason
      */
-    public function extract(string $archivePath, string $destination, ?string $folder = null): bool
+    public function extract(string $archivePath, string $destination, ?string $folder = null): void
     {
         if (null !== $folder && !$this->isSafeFolderName($folder)) {
-            return false;
+            throw new ZipExtractionException(sprintf('"%s" is not a single folder name.', $folder), ZipExtractionException::INVALID_FOLDER);
         }
 
         $extractionFolder = $this->createExtractionFolder();
-        if (null === $extractionFolder) {
-            return false;
-        }
 
         try {
+            $this->extractTo($archivePath, $extractionFolder);
+
             $source = $extractionFolder . (null === $folder ? '' : DIRECTORY_SEPARATOR . $folder);
-            if (!$this->extractTo($archivePath, $extractionFolder) || !is_dir($source) || is_link($source)) {
-                return false;
+            if (!is_dir($source) || is_link($source)) {
+                throw new ZipExtractionException(sprintf('The archive has no "%s" folder.', $folder), ZipExtractionException::MISSING_FOLDER);
             }
 
             $this->filesystem->mirror(
@@ -74,11 +74,9 @@ final class SafeZipExtractor
                 null,
                 ['override' => true]
             );
-
-            return true;
         } catch (IOException $e) {
-            // The message of the exception holds the sandbox path, the caller reports its own error
-            return false;
+            // The message of the exception holds the sandbox path, it is only kept as the previous exception
+            throw new ZipExtractionException('The archive cannot be copied into its destination.', ZipExtractionException::EXTRACTION_FAILED, $e);
         } finally {
             try {
                 $this->filesystem->remove($extractionFolder);
@@ -88,24 +86,7 @@ final class SafeZipExtractor
         }
     }
 
-    /**
-     * Tells whether the archive can be opened and has only entries that stay inside their destination.
-     */
-    public function isSafeArchive(string $archivePath): bool
-    {
-        $zip = new ZipArchive();
-        if ($zip->open($archivePath) !== true) {
-            return false;
-        }
-
-        try {
-            return $this->hasOnlySafeEntries($zip);
-        } finally {
-            $zip->close();
-        }
-    }
-
-    public function isSafeEntryName(string $entryName): bool
+    private function isSafeEntryName(string $entryName): bool
     {
         if ('' === $entryName || false !== strpos($entryName, "\0")) {
             return false;
@@ -125,30 +106,31 @@ final class SafeZipExtractor
         return true;
     }
 
-    private function extractTo(string $archivePath, string $folder): bool
+    /**
+     * @throws ZipExtractionException
+     */
+    private function extractTo(string $archivePath, string $folder): void
     {
         $zip = new ZipArchive();
         if ($zip->open($archivePath) !== true) {
-            return false;
+            throw new ZipExtractionException('The archive cannot be opened.', ZipExtractionException::CANNOT_OPEN_ARCHIVE);
         }
 
         try {
-            return $this->hasOnlySafeEntries($zip) && $zip->extractTo($folder);
+            // Every entry is checked before anything is written
+            for ($index = 0; $index < $zip->numFiles; ++$index) {
+                $entryName = $zip->getNameIndex($index);
+                if (false === $entryName || !$this->isSafeEntryName($entryName) || $this->isSymbolicLink($zip, $index)) {
+                    throw new ZipExtractionException(sprintf('The entry "%s" points outside the destination or is a link.', (string) $entryName), ZipExtractionException::UNSAFE_ENTRY);
+                }
+            }
+
+            if (!$zip->extractTo($folder)) {
+                throw new ZipExtractionException('The archive cannot be extracted.', ZipExtractionException::EXTRACTION_FAILED);
+            }
         } finally {
             $zip->close();
         }
-    }
-
-    private function hasOnlySafeEntries(ZipArchive $zip): bool
-    {
-        for ($index = 0; $index < $zip->numFiles; ++$index) {
-            $entryName = $zip->getNameIndex($index);
-            if (false === $entryName || !$this->isSafeEntryName($entryName) || $this->isSymbolicLink($zip, $index)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private function isSymbolicLink(ZipArchive $zip, int $index): bool
@@ -172,10 +154,12 @@ final class SafeZipExtractor
     }
 
     /**
-     * Creates an empty private folder with a random name in the sandbox, or returns null when it cannot be created.
+     * Creates an empty private folder with a random name in the sandbox.
      * An existing path (folder, file or link) is never reused, another name is tried.
+     *
+     * @throws ZipExtractionException
      */
-    private function createExtractionFolder(): ?string
+    private function createExtractionFolder(): string
     {
         try {
             $this->filesystem->mkdir($this->sandboxPath);
@@ -191,9 +175,10 @@ final class SafeZipExtractor
                 return $extractionFolder;
             }
         } catch (IOException $e) {
-            // The message of the exception holds the sandbox path, the caller reports its own error
+            // The message of the exception holds the sandbox path, it is only kept as the previous exception
+            throw new ZipExtractionException('No extraction folder can be created in the sandbox.', ZipExtractionException::SANDBOX_UNAVAILABLE, $e);
         }
 
-        return null;
+        throw new ZipExtractionException('No extraction folder can be created in the sandbox.', ZipExtractionException::SANDBOX_UNAVAILABLE);
     }
 }
