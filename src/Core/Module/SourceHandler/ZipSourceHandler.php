@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Module\SourceHandler;
 
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
+use PrestaShop\PrestaShop\Core\Security\Exception\ZipExtractionException;
 use PrestaShop\PrestaShop\Core\Security\SafeZipExtractor;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use ZipArchive;
@@ -96,19 +97,22 @@ class ZipSourceHandler implements SourceHandlerInterface
     {
         $moduleName = $this->getModuleName($source);
 
-        // Checked first so that an unsafe archive is not reported as a filesystem error
-        if (!$this->zipExtractor->isSafeArchive($source)) {
-            throw new ModuleErrorException(
-                $this->translator->trans(
-                    'This file does not seem to be a valid module zip',
-                    [],
-                    'Admin.Modules.Notification'
-                )
-            );
-        }
+        try {
+            // Only the module folder is installed: nothing else from the archive reaches the modules directory
+            $this->zipExtractor->extract($source, $this->modulePath, $moduleName);
+        } catch (ZipExtractionException $e) {
+            if ($e->isInvalidArchive()) {
+                throw new ModuleErrorException(
+                    $this->translator->trans(
+                        'This file does not seem to be a valid module zip',
+                        [],
+                        'Admin.Modules.Notification'
+                    ),
+                    0,
+                    $e
+                );
+            }
 
-        // Only the module folder is installed: nothing else from the archive reaches the modules directory
-        if (!$this->zipExtractor->extract($source, $this->modulePath, $moduleName)) {
             throw new ModuleErrorException(
                 $this->translator->trans(
                     'Cannot extract module in %path%. %error%',
@@ -117,7 +121,9 @@ class ZipSourceHandler implements SourceHandlerInterface
                         '%error%' => '',
                     ],
                     'Admin.Modules.Notification'
-                )
+                ),
+                0,
+                $e
             );
         }
     }

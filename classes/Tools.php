@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use PrestaShop\PrestaShop\Core\Security\Exception\ZipExtractionException;
 use PrestaShop\PrestaShop\Core\Security\Hashing;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
@@ -3575,7 +3576,13 @@ exit;
             mkdir($to_dir, PsFileSystem::DEFAULT_MODE_FOLDER);
         }
 
-        return (new SafeZipExtractor())->extract($from_file, $to_dir);
+        try {
+            (new SafeZipExtractor())->extract($from_file, $to_dir);
+        } catch (ZipExtractionException $e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

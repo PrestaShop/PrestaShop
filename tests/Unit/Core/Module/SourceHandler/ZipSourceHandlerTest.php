@@ -31,6 +31,7 @@ namespace Tests\Unit\Core\Module\SourceHandler;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
+use PrestaShop\PrestaShop\Core\Security\Exception\ZipExtractionException;
 use PrestaShop\PrestaShop\Core\Security\SafeZipExtractor;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tests\Resources\ResourceResetter;
@@ -144,6 +145,7 @@ class ZipSourceHandlerTest extends TestCase
             $this->fail('The archive should have been rejected');
         } catch (ModuleErrorException $exception) {
             $this->assertSame('This file does not seem to be a valid module zip', $exception->getMessage());
+            $this->assertInstanceOf(ZipExtractionException::class, $exception->getPrevious());
         }
 
         $this->assertFalse(is_dir($this->resourceResetter::TEST_MODULES_DIR . 'archive_module'));
