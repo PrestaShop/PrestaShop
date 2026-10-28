@@ -24,6 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 
 class AdminModulesControllerCore extends AdminController
 {
@@ -291,22 +294,33 @@ class AdminModulesControllerCore extends AdminController
     protected function extractArchive($file, $redirect = true)
     {
         $zip_folders = [];
-        $tmp_folder = _PS_MODULE_DIR_ . md5((string) time());
+        $filesystem = new Filesystem();
+        $tmp_folder = $this->createExtractionFolder($filesystem);
 
         $success = false;
-        if (substr($file, -4) == '.zip') {
-            if (Tools::ZipExtract($file, $tmp_folder)) {
-                $zip_folders = scandir($tmp_folder, SCANDIR_SORT_NONE);
-                if (Tools::ZipExtract($file, _PS_MODULE_DIR_)) {
+        if (null !== $tmp_folder) {
+            try {
+                // The archive is extracted aside (links refused), then only the uploaded module folder is installed:
+                // nothing else from the archive reaches the modules directory, so it cannot overwrite another module
+                if (substr($file, -4) == '.zip') {
+                    $extracted = Tools::ZipExtract($file, $tmp_folder);
+                } else {
+                    $extracted = (new Archive_Tar($file))->extract($tmp_folder, false, false);
+                }
+                $moduleName = $extracted ? $this->getExtractedModuleName($tmp_folder) : null;
+                if (null !== $moduleName) {
+                    $filesystem->mirror($tmp_folder . DIRECTORY_SEPARATOR . $moduleName, _PS_MODULE_DIR_ . $moduleName, null, ['override' => true]);
+                    $zip_folders = [$moduleName];
                     $success = true;
                 }
-            }
-        } else {
-            $archive = new Archive_Tar($file);
-            if ($archive->extract($tmp_folder)) {
-                $zip_folders = scandir($tmp_folder, SCANDIR_SORT_NONE);
-                if ($archive->extract(_PS_MODULE_DIR_)) {
-                    $success = true;
+            } catch (IOException $e) {
+                // Reported below as an extraction error, the message of the exception holds the sandbox path
+                $success = false;
+            } finally {
+                try {
+                    $filesystem->remove($tmp_folder);
+                } catch (IOException $e) {
+                    // Left in the cache sandbox, removed with the cache
                 }
             }
         }
@@ -324,13 +338,52 @@ class AdminModulesControllerCore extends AdminController
         }
 
         @unlink($file);
-        $this->recursiveDeleteOnDisk($tmp_folder);
 
         if ($success && $redirect) {
             Tools::redirectAdmin(self::$currentIndex . '&conf=8&anchor=' . ucfirst($folder ?? '') . '&token=' . $this->token);
         }
 
         return $success;
+    }
+
+    /**
+     * Creates an empty folder with a random name in the cache sandbox, or returns null when it cannot be created.
+     * An existing path (folder, file or link) is never reused, another name is tried.
+     */
+    private function createExtractionFolder(Filesystem $filesystem): ?string
+    {
+        $sandbox = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
+        try {
+            $filesystem->mkdir($sandbox);
+            for ($attempt = 0; $attempt < 5; ++$attempt) {
+                $folder = $sandbox . 'module_' . bin2hex(random_bytes(8));
+                // exists() does not see a link whose target is missing, hence is_link()
+                if (!$filesystem->exists($folder) && !is_link($folder)) {
+                    $filesystem->mkdir($folder, PsFileSystem::PRIVATE_MODE_FOLDER);
+
+                    return $folder;
+                }
+            }
+        } catch (IOException $e) {
+            // Reported as an extraction error by the caller, without the sandbox path
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the name of the module extracted in the folder (module_name/module_name.php), or null when there is none.
+     */
+    private function getExtractedModuleName(string $folder): ?string
+    {
+        foreach (scandir($folder) ?: [] as $entry) {
+            $path = $folder . DIRECTORY_SEPARATOR . $entry;
+            if (preg_match('/^[a-zA-Z0-9_-]+$/', $entry) && is_dir($path) && !is_link($path) && is_file($path . DIRECTORY_SEPARATOR . $entry . '.php')) {
+                return $entry;
+            }
+        }
+
+        return null;
     }
 
     protected function recursiveDeleteOnDisk($dir)
