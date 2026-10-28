@@ -102,6 +102,24 @@ jobs:
           rm composer.lock
           composer config platform.php ${{ matrix.php }}
 
+      # Default tmpDir of PHPStan, which invalidates the result cache itself when its configuration or the dependencies change.
+      # The key changes with every commit: only the branches save it, the pull requests reuse the one of their base branch.
+      - name: Cache PHPStan result
+        if: github.event_name != 'pull_request'
+        uses: actions/cache@v5
+        with:
+          path: /tmp/phpstan
+          key: phpstan-${{ matrix.php }}-${{ github.sha }}
+          restore-keys: phpstan-${{ matrix.php }}-
+
+      - name: Restore PHPStan result
+        if: github.event_name == 'pull_request'
+        uses: actions/cache/restore@v5
+        with:
+          path: /tmp/phpstan
+          key: phpstan-${{ matrix.php }}-${{ github.sha }}
+          restore-keys: phpstan-${{ matrix.php }}-
+
       - name: Run phpstan
         run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist
   phpunit:
