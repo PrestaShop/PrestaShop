@@ -11,54 +11,20 @@ namespace Tests\Integration\ApiPlatform;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor;
-use RuntimeException;
-use Tests\Integration\ApiPlatform\EndPoint\ApiTestCase;
-use Tests\Resources\DatabaseDump;
 
 /**
- * These tests muste be executed independently because their variants have impact on the cache,
- * that is also hy the cache must be cleared before, after the tests and in between them.
- *
  * @group isolatedProcess
+ *
+ * @runTestsInSeparateProcesses
  */
-class DisabledEndpointsTest extends ApiTestCase
+class DisabledEndpointsTest extends KernelVariantApiTestCase
 {
     private FeatureFlagManager $featureFlagManager;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-        DatabaseDump::restoreTables(['feature_flag']);
-        self::clearCache();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-        DatabaseDump::restoreTables(['feature_flag']);
-        self::clearCache();
-    }
 
     protected function setUp(): void
     {
         parent::setUp();
-        self::clearCache();
         $this->featureFlagManager = self::getContainer()->get(FeatureFlagManager::class);
-    }
-
-    /**
-     * Since the variant configurations influence the cache we MUST clear it between each tests,
-     * and clear it again after to avoid impacting the following tests in the suite
-     */
-    protected static function clearCache(): void
-    {
-        $baseCommandLine = 'php -d memory_limit=-1 ' . __DIR__ . '/../../../bin/console ';
-        $commandLine = $baseCommandLine . 'cache:clear --no-warmup --no-interaction --env=test --app-id=admin-api --quiet';
-        $result = 0;
-        system($commandLine, $result);
-        if ($result !== 0) {
-            throw new RuntimeException('Could not clear the cache');
-        }
     }
 
     /**

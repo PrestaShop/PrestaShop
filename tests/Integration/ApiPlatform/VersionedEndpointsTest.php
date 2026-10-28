@@ -11,59 +11,25 @@ namespace Tests\Integration\ApiPlatform;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor;
-use RuntimeException;
 use Symfony\Component\Routing\RouterInterface;
-use Tests\Integration\ApiPlatform\EndPoint\ApiTestCase;
-use Tests\Resources\DatabaseDump;
 
 /**
  * Tests for CoreVersionCompatibilityMetadataCollectionFactoryDecorator, based on the versioned test
  * operations declared in Tests\Resources\ApiPlatform\Resources\ApiTest which use extreme min/max
  * versions (1.0.0 and 99.99.99) so the expected filtering does not depend on the actual core version.
  *
- * These tests must be executed independently because their variants have impact on the cache,
- * that is also why the cache must be cleared before, after the tests and in between them.
- *
  * @group isolatedProcess
+ *
+ * @runTestsInSeparateProcesses
  */
-class VersionedEndpointsTest extends ApiTestCase
+class VersionedEndpointsTest extends KernelVariantApiTestCase
 {
     private FeatureFlagManager $featureFlagManager;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-        DatabaseDump::restoreTables(['feature_flag']);
-        self::clearCache();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-        DatabaseDump::restoreTables(['feature_flag']);
-        self::clearCache();
-    }
 
     protected function setUp(): void
     {
         parent::setUp();
-        self::clearCache();
         $this->featureFlagManager = self::getContainer()->get(FeatureFlagManager::class);
-    }
-
-    /**
-     * Since the variant configurations influence the cache we MUST clear it between each tests,
-     * and clear it again after to avoid impacting the following tests in the suite
-     */
-    protected static function clearCache(): void
-    {
-        $baseCommandLine = 'php -d memory_limit=-1 ' . __DIR__ . '/../../../bin/console ';
-        $commandLine = $baseCommandLine . 'cache:clear --no-warmup --no-interaction --env=test --app-id=admin-api --quiet';
-        $result = 0;
-        system($commandLine, $result);
-        if ($result !== 0) {
-            throw new RuntimeException('Could not clear the cache');
-        }
     }
 
     /**
@@ -162,10 +128,7 @@ class VersionedEndpointsTest extends ApiTestCase
                 true,
             ];
 
-            // Incompatible operations are filtered in debug mode as well (this case must remain the last one:
-            // it leaves a debug kernel which supports the cache clearing performed in tearDownAfterClass, a
-            // prod kernel would fail on shutdown because its compiled container files have been invalidated
-            // by the feature flag update)
+            // Incompatible operations are filtered in debug mode as well
             yield $description . ', debug mode on, force config off => ' . ($compatible ? 'available' : 'filtered') => [
                 true,
                 false,

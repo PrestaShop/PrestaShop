@@ -299,11 +299,17 @@
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml --format progress --no-snippets --strict"
         ],
+        "integration-behaviour-tests-parallel": [
+            "bash ./tests/bin/run-behaviour-tests-in-parallel.sh"
+        ],
         "integration-tests": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml",
             "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit-api.xml",
             "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit-isolated.xml"
+        ],
+        "integration-tests-parallel": [
+            "bash ./tests/bin/run-integration-tests-in-parallel.sh"
         ],
         "php-cs-fixer": "@php ./vendor/bin/php-cs-fixer fix",
         "php-cs-fixer:dry": "@php ./vendor/bin/php-cs-fixer fix --dry-run --diff",

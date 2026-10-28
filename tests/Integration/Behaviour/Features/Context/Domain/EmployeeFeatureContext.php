@@ -236,7 +236,11 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
 
         $this->getCommandBus()->handle(new SendEmployeePasswordResetEmailCommand($employeeEmail));
 
-        $emails = $mailDevClient->getAllEmails();
+        // maildev stores the received email asynchronously, which takes a while on a busy runner
+        $deadline = microtime(true) + 5;
+        while (empty($emails = $mailDevClient->getAllEmails()) && microtime(true) < $deadline) {
+            usleep(100000);
+        }
         Assert::assertCount(1, $emails);
         $resetEmail = $emails[0];
         Assert::assertStringContainsString('Your new password', $resetEmail['subject']);

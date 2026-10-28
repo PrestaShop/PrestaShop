@@ -8,6 +8,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
+use Context;
 use Country;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\AddSupplierCommand;
@@ -23,11 +24,26 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use RuntimeException;
 use State;
+use stdClass;
 use Supplier;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class SupplierFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @BeforeScenario
+     */
+    public function before(): void
+    {
+        // Supplier::getProductsLite() reads the controller type from the legacy context
+        $adminControllerTestDouble = new stdClass();
+        $adminControllerTestDouble->controller_type = 'admin';
+        $adminControllerTestDouble->php_self = 'dummyTestDouble';
+        // a duck-typed stdClass double is enough for the legacy context here
+        // @phpstan-ignore assign.propertyType
+        Context::getContext()->controller = $adminControllerTestDouble;
+    }
+
     /**
      * @Then /^supplier "(.+)" should have following details for product "(.+)":$/
      *

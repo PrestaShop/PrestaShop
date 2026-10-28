@@ -1,6 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s pricing --tags cart-price-calculation
 @restore-all-tables-before-feature
 @clear-cache-before-feature
+@mock-context-on-feature
 @cart-price-calculation
 Feature: Cart price calculation through the new pricing pipeline
   As a developer
