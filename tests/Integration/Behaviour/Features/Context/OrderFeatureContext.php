@@ -109,6 +109,19 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Then /^current cart order total paid should be (\d+\.\d+)( tax included| tax excluded)?$/
+     */
+    public function checkOrderTotalPaid($expectedTotal, $taxes = null)
+    {
+        $order = $this->getCurrentCartOrder();
+        $withTaxes = $taxes == ' tax excluded' ? false : true;
+        $total = $withTaxes ? $order->total_paid_tax_incl : $order->total_paid_tax_excl;
+        if ((float) $expectedTotal != (float) $total) {
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
+        }
+    }
+
+    /**
      * @Then /^current cart order cart rules count should be (\d+)$/
      */
     public function checkOrderCartRulesCount($expectedCount)

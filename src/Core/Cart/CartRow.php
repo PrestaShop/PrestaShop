@@ -250,26 +250,9 @@ class CartRow
      */
     public function processCalculation(CartCore $cart)
     {
-        $rowData = $this->getRowData();
-        $quantity = (int) $rowData['cart_quantity'];
-        $this->initialUnitPrice = $this->getProductPrice($cart, $rowData);
-
-        // store not rounded values, except in round_mode_item, we still need to round individual items
-        if ($this->roundType == self::ROUND_MODE_ITEM) {
-            $tools = new Tools();
-            $this->initialTotalPrice = new AmountImmutable(
-                $tools->round($this->initialUnitPrice->getTaxIncluded(), $this->precision) * $quantity,
-                $tools->round($this->initialUnitPrice->getTaxExcluded(), $this->precision) * $quantity
-            );
-        } else {
-            $this->initialTotalPrice = new AmountImmutable(
-                $this->initialUnitPrice->getTaxIncluded() * $quantity,
-                $this->initialUnitPrice->getTaxExcluded() * $quantity
-            );
-        }
-
-        $this->finalTotalPrice = clone $this->initialTotalPrice;
+        $this->initialUnitPrice = $this->getProductPrice($cart, $this->getRowData());
         $this->applyRound();
+        $this->initialTotalPrice = clone $this->finalTotalPrice;
         // store state
         $this->isProcessed = true;
     }
