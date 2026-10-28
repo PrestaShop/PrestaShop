@@ -207,6 +207,7 @@ class OrderSlipCreator
         $orderSlip->total_products_tax_excl = 0;
         $orderSlip->total_products_tax_incl = 0;
         $total_products = [];
+        $roundType = (int) $order->round_type ?: (int) $this->configuration->get('PS_ROUND_TYPE');
         foreach ($product_list as &$product) {
             $order_detail = new OrderDetail((int) $product['id_order_detail']);
             $price = (float) $product['unit_price'];
@@ -224,7 +225,7 @@ class OrderSlipCreator
                 $orderSlip->total_products_tax_incl += $price * $quantity;
             }
 
-            if (in_array($this->configuration->get('PS_ROUND_TYPE'), [Order::ROUND_ITEM, Order::ROUND_LINE])) {
+            if (in_array($roundType, [Order::ROUND_ITEM, Order::ROUND_LINE])) {
                 if (!isset($total_products[$id_tax_rules_group])) {
                     $total_products[$id_tax_rules_group] = 0;
                 }
@@ -239,7 +240,7 @@ class OrderSlipCreator
             } else {
                 $product_tax_incl_line = Tools::ps_round($tax_calculator->removeTaxes($price) * $quantity, $precision);
             }
-            switch ($this->configuration->get('PS_ROUND_TYPE')) {
+            switch ($roundType) {
                 case Order::ROUND_ITEM:
                     if ($add_tax) {
                         $product_tax_incl = Tools::ps_round($tax_calculator->addTaxes($price), $precision) * $quantity;
@@ -276,7 +277,7 @@ class OrderSlipCreator
         unset($product);
 
         foreach ($total_products as $key => $price) {
-            if ($this->configuration->get('PS_ROUND_TYPE') == Order::ROUND_TOTAL) {
+            if ($roundType === Order::ROUND_TOTAL) {
                 $tmp = explode('_', $key);
                 $address = Address::initialize((int) $tmp[1], true);
                 $tax_calculator = TaxManagerFactory::getManager($address, (int) $tmp[0])->getTaxCalculator();
