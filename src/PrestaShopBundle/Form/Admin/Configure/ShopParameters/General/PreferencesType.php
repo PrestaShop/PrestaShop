@@ -210,7 +210,7 @@ class PreferencesType extends TranslatorAwareType
             ->add('display_backoffice_kpis', SwitchType::class, [
                 'label' => $this->trans('Display back-office KPIs', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
-                    'Show key performance indicators on the Orders, Shopping Carts, Categories, Customers, Customer Service and Translations pages. The total on individual cart pages remains visible.',
+                    'Show key performance indicators at the top of selected Back Office pages.',
                     'Admin.Shopparameters.Help'
                 ),
             ])
