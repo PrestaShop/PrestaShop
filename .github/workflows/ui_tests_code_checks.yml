@@ -5,10 +5,14 @@ on:
     paths:
       - 'tests/UI/**'
       - '.github/workflows/ui_tests_code_checks.yml'
+      - '.github/actions/npm-install/**'
+      - '.github/actions/playwright-browsers/**'
   pull_request:
     paths:
       - 'tests/UI/**'
       - '.github/workflows/ui_tests_code_checks.yml'
+      - '.github/actions/npm-install/**'
+      - '.github/actions/playwright-browsers/**'
 
 defaults:
   run:
@@ -33,12 +37,6 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v5
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright/
-          key: ${{ runner.os }}-browsers
-
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -60,12 +58,6 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v5
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright/
-          key: ${{ runner.os }}-browsers
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -89,12 +81,6 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v5
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright/
-          key: ${{ runner.os }}-browsers
-
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -105,8 +91,11 @@ jobs:
         with:
           DIRECTORY: ./tests/UI
 
+      # The default browser of the tests, which launch it even to only list their steps
       - name: Install browsers
-        run: npx playwright install --with-deps
+        uses: ./.github/actions/playwright-browsers
+        with:
+          DIRECTORY: ./tests/UI
 
       - name: Generate mocha reports with failed steps
         run: GENERATE_FAILED_STEPS=true npm run test:all
@@ -124,12 +113,6 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v5
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright/
-          key: ${{ runner.os }}-browsers
-
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -140,8 +123,11 @@ jobs:
         with:
           DIRECTORY: ./tests/UI
 
+      # The default browser of the tests, which launch it even to only list their steps
       - name: Install browsers
-        run: npx playwright install --with-deps
+        uses: ./.github/actions/playwright-browsers
+        with:
+          DIRECTORY: ./tests/UI
 
       - name: Checking that all suites are executed
         run: npm run check:suites

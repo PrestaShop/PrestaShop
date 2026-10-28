@@ -57,9 +57,10 @@ runs:
 
     - name: Install browsers
       if: inputs.INSTALL_BROWSERS == 'true'
-      working-directory: ${{ inputs.TESTS_DIR }}
-      shell: bash
-      run: npx playwright install ${{ inputs.BROWSER }} --with-deps
+      uses: ./.github/actions/playwright-browsers
+      with:
+        DIRECTORY: ${{ inputs.TESTS_DIR }}
+        BROWSER: ${{ inputs.BROWSER }}
 
     # Run tests
     - name: Run tests
