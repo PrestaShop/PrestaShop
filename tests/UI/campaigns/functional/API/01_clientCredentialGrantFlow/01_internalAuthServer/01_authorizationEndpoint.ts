@@ -26,6 +26,7 @@ describe('API : Internal Auth Server - Authorization Endpoint', async () => {
   let clientSecret: string;
 
   const apiClient: FakerAPIClient = new FakerAPIClient({
+    enabled: true,
     scopes: [
       'hook_read',
     ],
