@@ -65,13 +65,18 @@ class PaginationFormDataProvider implements FormDataProviderInterface
     protected function validate(array $data)
     {
         $errors = [];
-        $productsPerPage = $data['products_per_page'];
-        if (!is_numeric($productsPerPage) || 0 >= $productsPerPage) {
-            $errors[] = [
-                'key' => 'The %s field is invalid. Please enter a positive integer.',
-                'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$this->translator->trans('Products per page', [], 'Admin.Shopparameters.Feature')],
-            ];
+        $fieldLabels = [
+            'products_per_page' => 'Products per page',
+            'max_products_per_page' => 'Maximum products per page',
+        ];
+        foreach ($fieldLabels as $field => $label) {
+            if (!is_numeric($data[$field]) || 0 >= $data[$field]) {
+                $errors[] = [
+                    'key' => 'The %s field is invalid. Please enter a positive integer.',
+                    'domain' => 'Admin.Notifications.Error',
+                    'parameters' => [$this->translator->trans($label, [], 'Admin.Shopparameters.Feature')],
+                ];
+            }
         }
 
         return $errors;

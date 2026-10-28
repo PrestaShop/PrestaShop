@@ -35,6 +35,15 @@ class PaginationType extends TranslatorAwareType
                 'required' => false,
                 'multistore_configuration_key' => 'PS_PRODUCTS_PER_PAGE',
             ])
+            ->add('max_products_per_page', IntegerType::class, [
+                'label' => $this->trans(
+                    'Maximum products per page',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans('Highest number of products a page can display when the theme lets customers choose. Default is 96', 'Admin.Shopparameters.Help'),
+                'required' => false,
+                'multistore_configuration_key' => 'PS_PRODUCTS_PER_PAGE_MAX',
+            ])
             ->add('default_order_by', ChoiceType::class, [
                 'label' => $this->trans(
                     'Default order by',

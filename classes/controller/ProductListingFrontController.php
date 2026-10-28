@@ -322,10 +322,13 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $provider = $this->getDefaultProductSearchProvider();
         }
 
+        $productsPerPage = (int) Configuration::get('PS_PRODUCTS_PER_PAGE');
+        $maxProductsPerPage = max($productsPerPage, (int) Configuration::get('PS_PRODUCTS_PER_PAGE_MAX', null, null, null, 96));
         $resultsPerPage = (int) Tools::getValue('resultsPerPage');
         if ($resultsPerPage <= 0) {
-            $resultsPerPage = Configuration::get('PS_PRODUCTS_PER_PAGE');
+            $resultsPerPage = $productsPerPage;
         }
+        $resultsPerPage = min($resultsPerPage, $maxProductsPerPage);
 
         // we need to set a few parameters from back-end preferences
         $query
