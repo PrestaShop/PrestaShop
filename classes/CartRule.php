@@ -104,6 +104,9 @@ class CartRuleCore extends ObjectModel
 
     protected static $cartAmountCache = [];
 
+    /** @var array<string, true> Order level discounts whose shipping part is being computed */
+    private static array $orderLevelShippingInProgress = [];
+
     /**
      * @see ObjectModel::$definition
      */
@@ -1441,6 +1444,32 @@ class CartRuleCore extends ObjectModel
     }
 
     /**
+     * Shipping cost an order level discount applies to.
+     *
+     * Computing the shipping cost needs the discounted total, which evaluates this cart rule again:
+     * that nested evaluation leaves the shipping out, otherwise it loops forever.
+     */
+    private function getOrderLevelShippingTotal(Context $context, bool $useTax, array $packageProducts): float
+    {
+        $inProgressKey = $this->getOrderLevelShippingKey($context);
+        if (isset(self::$orderLevelShippingInProgress[$inProgressKey])) {
+            return 0.0;
+        }
+
+        self::$orderLevelShippingInProgress[$inProgressKey] = true;
+        try {
+            return (float) $context->cart->getOrderTotal($useTax, Cart::ONLY_SHIPPING, $packageProducts);
+        } finally {
+            unset(self::$orderLevelShippingInProgress[$inProgressKey]);
+        }
+    }
+
+    private function getOrderLevelShippingKey(Context $context): string
+    {
+        return (int) $this->id . '_' . (int) $context->cart->id;
+    }
+
+    /**
      * The reduction value is POSITIVE.
      *
      * @param bool $use_tax Apply taxes
@@ -1548,7 +1577,7 @@ class CartRuleCore extends ObjectModel
             if (self::isDiscountFeatureFlagEnabled()) {
                 if ($this->getType() === DiscountType::ORDER_LEVEL && $this->reduction_percent > 0.00 && $this->reduction_product == 0) {
                     $order_products_total = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS, $package_products);
-                    $order_shipping_total = $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, $package_products);
+                    $order_shipping_total = $this->getOrderLevelShippingTotal($context, (bool) $use_tax, $package_products);
                     $order_total = $order_products_total + $order_shipping_total;
                     $reduction_value += $order_total * $this->reduction_percent / 100;
 
@@ -1735,9 +1764,8 @@ class CartRuleCore extends ObjectModel
                         // The reduction cannot exceed the products total, except when we do not want it to be limited (for the partial use calculation)
                         if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP) {
                             if (self::isDiscountFeatureFlagEnabled() && $this->getType() === DiscountType::ORDER_LEVEL) {
-                                $max_reduction_amount = $this->reduction_tax
-                                    ? $cart_amount_ti + $context->cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $package_products)
-                                    : $cart_amount_te + $context->cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $package_products);
+                                $max_reduction_amount = ($this->reduction_tax ? $cart_amount_ti : $cart_amount_te)
+                                    + $this->getOrderLevelShippingTotal($context, (bool) $this->reduction_tax, $package_products);
                                 $reduction_amount = min(
                                     $reduction_amount,
                                     $max_reduction_amount,
@@ -1791,9 +1819,7 @@ class CartRuleCore extends ObjectModel
                     }
 
                     if (self::isDiscountFeatureFlagEnabled() && $this->getType() === DiscountType::ORDER_LEVEL) {
-                        $current_cart_amount += $this->reduction_tax
-                            ? $context->cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $package_products)
-                            : $context->cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $package_products);
+                        $current_cart_amount += $this->getOrderLevelShippingTotal($context, (bool) $this->reduction_tax, $package_products);
                     }
 
                     $reduction_value = min($reduction_value, $current_cart_amount);
@@ -1823,7 +1849,10 @@ class CartRuleCore extends ObjectModel
             }
         }
 
-        Cache::store($cache_id, $reduction_value);
+        // A nested evaluation leaves the shipping out, see getOrderLevelShippingTotal()
+        if (!isset(self::$orderLevelShippingInProgress[$this->getOrderLevelShippingKey($context)])) {
+            Cache::store($cache_id, $reduction_value);
+        }
 
         // update virtual total values, for percentage reductions that might be applied later
         // but remove the carrier as free shipping is not a real reduction
