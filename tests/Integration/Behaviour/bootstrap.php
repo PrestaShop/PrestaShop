@@ -17,5 +17,9 @@ const _PS_ALL_THEMES_DIR_ = _PS_ROOT_DIR_ . '/tests/Resources/themes/';
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
+// The kernel registers this folder as a Twig path when it compiles the container, so it must exist
+if (!is_dir(_PS_ADMIN_DIR_ . '/themes/new-theme')) {
+    mkdir(_PS_ADMIN_DIR_ . '/themes/new-theme', 0777, true);
+}
 require_once $rootDirectory . 'config/config.inc.php';
 require_once $rootDirectory . 'app/AppKernel.php';

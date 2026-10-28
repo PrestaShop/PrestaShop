@@ -1,6 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags unit-price-specific-price
 @restore-products-before-feature
 @clear-cache-before-feature
+@mock-context-on-feature
 @unit-price-specific-price
 @specific-prices
 Feature: Calculate product unit price for Front Office with specific prices
