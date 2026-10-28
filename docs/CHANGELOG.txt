@@ -29,28 +29,30 @@ Changelog for PrestaShop 8
 
 - Back Office:
   - Bug fix:
-    - #480: Only load translation files of installed modules and reject PHP archives in import uploads [OS-3] (8.2.x) (by @nicosomb)
-    - #454: Download theme archives from a URL into the cache directory (8.2.x) [OS-5] (by @mattgoud)
+    - GHSA-fxq4-2mc8-99pr Only load translation files of installed modules and reject PHP archives in import uploads (by @nicosomb)
+    - GHSA-95w6-v2wq-cv8w Download theme archives from a URL into the cache directory (by @mattgoud)
 - Front Office:
   - Bug fix:
-    - #467: Require the order secure key to download a customization file by reference (8.2) [OS-13] (by @M0rgan01)
+    - GHSA-fg9q-mm4c-h5xc Require the order secure key to download a customization file by reference (by @M0rgan01)
 - Core:
   - Bug fix:
-    - #509: Update ps_emailsubscription [OS-142] (by @jolelievre)
-    - #498: Generate the password reset tokens with a CSPRNG (8.2) [OS-8] (by @M0rgan01)
-    - #486: Keep extracted archives and installed themes inside their destination folder [OS-4] (8.2.x) (by @nicosomb)
-    - #485: Keep attachment files inside the download directory (8.2.x) [OS-7] (by @nicosomb)
-    - #465: Block corrupted SVG files uploaded through the FileManager & logo uploader (8.2.9) - OS-6 (by @Quetzacoalt91)
-    - #463: Fix order creation race and add-product permission (8.2) [OS-12]  (by @M0rgan01)
-    - #461: Take the cart rule quantity when the order validation checks it (8.2.x) [OS-11] (by @mattgoud)
-    - #398: Always validate the mail template name before writing translation files (8.2.x) [OS-10] (by @mattgoud)
+    - Update ps_emailsubscription (by @jolelievre)
+    - GHSA-g6p7-cx52-hcrj Generate the password reset tokens with a CSPRNG (by @M0rgan01)
+    - GHSA-7q68-ch46-pxmc Keep extracted archives and installed themes inside their destination folder (by @nicosomb)
+    - GHSA-wrmc-gmx5-9hhc Keep attachment files inside the download directory (by @nicosomb)
+    - GHSA-99cp-c6mm-p7h5 Block corrupted SVG files uploaded through the FileManager and the logo uploader (by @Quetzacoalt91)
+    - GHSA-2676-hc74-gg7v Prevent duplicate orders from a single cart in concurrent checkouts (by @M0rgan01)
+    - GHSA-mgcf-mrg4-mcxv Require the order edit permission to add a product to an existing order (by @M0rgan01)
+    - GHSA-r246-6gw4-pj3p Take the cart rule quantity when the order validation checks it (by @mattgoud)
+    - GHSA-5p6p-mx64-96jf Always validate the mail template name before writing translation files (by @mattgoud)
 - Installer:
   - Bug fix:
-    - #481: Fix dangerous unserialization in the installer session (8.2.9) [OS-9] (by @clotairer)
-    - #441: Refuse to run the web installer on an already installed shop (8.2.x) [OS-33] (by @mattgoud)
+    - GHSA-h2q4-7fp7-m5jp Fix dangerous unserialization in the installer session (by @clotairer)
+    - GHSA-8rxw-79mh-gmm5 Refuse to run the web installer on an already installed shop (by @mattgoud)
 - Web Services:
   - Bug fix:
-    - #497: Keep webservice keys within the shops they are allowed on (8.2) [OS-15] (by @M0rgan01)
+    - GHSA-hjwq-7qvv-qxj4 Keep webservice record access within the shops a key is allowed on (by @M0rgan01)
+    - GHSA-3f36-4qv4-vfgh Keep webservice keys within the shops they are allowed on (by @M0rgan01)
 
 ####################################
 #   v8.2.8 - (2026-08-12)

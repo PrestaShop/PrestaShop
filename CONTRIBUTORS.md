@@ -158,7 +158,6 @@ GitHub contributors:
 - cippest
 - cirykpopeye
 - Claire Meuriot
-- Clotaire
 - Clotaire Renaud
 - cmouleyre
 - cocoweb
@@ -909,7 +908,6 @@ GitHub contributors:
 - Thomas Leguillant
 - Thomas Leone
 - Thomas Leviandier
-- Thomas N
 - Thomas Nabord
 - Thomas Nares
 - Thomas Roux
