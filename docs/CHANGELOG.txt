@@ -24,6 +24,41 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
+#   v9.2.1 - (2026-10-28)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #453: Download theme archives from a URL into the cache directory [OS-5] (by @mattgoud)
+    - #406: Only load translation files of installed modules and reject PHP archives in import uploads [OS-3] (by @nicosomb)
+    - #399: Validate the debug cookie name and value before writing the debug mode [OS-16] (by @mattgoud)
+- Front Office:
+  - Bug fix:
+    - #466: Require the order secure key to download a customization file by reference [OS-13] (by @M0rgan01)
+- Core:
+  - Bug fix:
+    - #510: Update dependencies [OS-142] (by @jolelievre)
+    - #482: Keep attachment files inside the download directory [OS-7] (by @nicosomb)
+    - #470: Cut the Admin API access of a disabled or deleted API client [OS-13] (by @M0rgan01)
+    - #464: Block corrupted SVG files uploaded through the FileManager & logo uploader (9.2.1) - OS-6 (by @Quetzacoalt91)
+    - #462: Fix order creation race and add-product permission [OS-12] (by @M0rgan01)
+    - #460: Take the cart rule quantity when the order validation checks it [OS-11] (by @mattgoud)
+    - #450: Keep extracted archives and installed themes inside their destination folder [OS-4] (by @nicosomb)
+    - #397: Always validate the mail template name before writing translation files [OS-10] (by @mattgoud)
+    - #268: Fix privilege escalation via unrestricted scope assignment on api-clients [OS-14] (by @matthieu-rolland)
+    - #168: Generate the password reset tokens with a CSPRNG [OS-8] (by @clotairer)
+- Installer:
+  - Bug fix:
+    - #440: Refuse to run the web installer on an already installed shop [OS-33] (by @mattgoud)
+    - #298: Fix dangerous unserialization in the installer session [OS-9] (by @clotairer)
+- Web Services:
+  - Bug fix:
+    - #385: Keep webservice keys within the shops they are allowed on [OS-15] (by @clotairer)
+- Tests:
+  - Bug fix:
+    - #508: Create the API client enabled in the authorization endpoint UI test [OS-13] (by @mattgoud)
+
+####################################
 #   v9.2.0 - (2026-09-29)
 ####################################
 

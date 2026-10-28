@@ -172,6 +172,7 @@ GitHub contributors:
 - cippest
 - cirykpopeye
 - Claire Meuriot
+- Clotaire
 - Clotaire Renaud
 - Clément Hervouet
 - cmouleyre
