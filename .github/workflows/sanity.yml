@@ -30,7 +30,7 @@ jobs:
     if: github.event_name != 'push' || !github.event.repository.private
     strategy:
       matrix:
-        php: ${{ fromJSON((contains(github.event.pull_request.labels.*.name, 'Run all versions') || contains(github.event.pull_request.body, '| Category?         | ME')) && '["8.1", "8.2", "8.3", "8.4", "8.5"]' || '["8.1", "8.5"]') }}
+        php: ${{ fromJSON((contains(github.event.pull_request.labels.*.name, 'Run all versions') || startsWith(github.head_ref, 'merge-') || contains(github.event.pull_request.body, '| Category?         | ME')) && '["8.1", "8.2", "8.3", "8.4", "8.5"]' || '["8.1", "8.5"]') }}
         browser: [ chromium ]
         db: [ mysql ]
         include:

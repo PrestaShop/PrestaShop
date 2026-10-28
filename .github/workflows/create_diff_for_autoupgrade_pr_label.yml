@@ -13,7 +13,7 @@ jobs:
   install_prestashop_and_dump:
     name: Install Prestashop and create database dump
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.pull_request.body, '| Category?         | ME') }}
+    if: ${{ !startsWith(github.head_ref, 'merge-') && !contains(github.event.pull_request.body, '| Category?         | ME') }}
     strategy:
       matrix:
         branch: [ base, head ]
