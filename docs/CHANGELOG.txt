@@ -24,6 +24,45 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
+#   v9.2.1 - (2026-10-28)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #43171: Keep the creation order of order messages created in the same second (by @mattgoud)
+    - #43159: Only open the row link when the press started on a clickable cell (by @mattgoud)
+    - GHSA-95w6-v2wq-cv8w Download theme archives from a URL into the cache directory (by @mattgoud)
+    - GHSA-fxq4-2mc8-99pr Only load translation files of installed modules and reject PHP archives in import uploads (by @nicosomb)
+    - GHSA-95f5-jc9c-gg3q Validate the debug cookie name and value before writing the debug mode (by @mattgoud)
+- Front Office:
+  - Bug fix:
+    - GHSA-fg9q-mm4c-h5xc Require the order secure key to download a customization file by reference (by @M0rgan01)
+- Core:
+  - Bug fix:
+    - Update dependencies (by @jolelievre)
+    - GHSA-wrmc-gmx5-9hhc Keep attachment files inside the download directory (by @nicosomb)
+    - GHSA-6c2j-pgwm-95m9 Cut the Admin API access of a disabled or deleted API client (by @M0rgan01)
+    - GHSA-99cp-c6mm-p7h5 Block corrupted SVG files uploaded through the FileManager and the logo uploader (by @Quetzacoalt91)
+    - GHSA-2676-hc74-gg7v Prevent duplicate orders from a single cart in concurrent checkouts (by @M0rgan01)
+    - GHSA-mgcf-mrg4-mcxv Require the order edit permission to add a product to an existing order (by @M0rgan01)
+    - GHSA-r246-6gw4-pj3p Take the cart rule quantity when the order validation checks it (by @mattgoud)
+    - GHSA-7q68-ch46-pxmc Keep extracted archives and installed themes inside their destination folder (by @nicosomb)
+    - GHSA-5p6p-mx64-96jf Always validate the mail template name before writing translation files (by @mattgoud)
+    - GHSA-p292-3rh4-vm4p Fix privilege escalation via unrestricted scope assignment on API clients (by @matthieu-rolland)
+    - GHSA-g6p7-cx52-hcrj Generate the password reset tokens with a CSPRNG (by @clotairer)
+- Installer:
+  - Bug fix:
+    - GHSA-8rxw-79mh-gmm5 Refuse to run the web installer on an already installed shop (by @mattgoud)
+    - GHSA-h2q4-7fp7-m5jp Fix dangerous unserialization in the installer session (by @clotairer)
+- Web Services:
+  - Bug fix:
+    - GHSA-hjwq-7qvv-qxj4 Keep webservice record access within the shops a key is allowed on (by @clotairer)
+    - GHSA-3f36-4qv4-vfgh Keep webservice keys within the shops they are allowed on (by @clotairer)
+- Tests:
+  - Bug fix:
+    - Create the API client enabled in the authorization endpoint UI test (by @mattgoud)
+
+####################################
 #   v9.2.0 - (2026-09-29)
 ####################################
 
