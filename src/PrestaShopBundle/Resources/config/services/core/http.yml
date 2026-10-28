@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+
+  PrestaShop\PrestaShop\Core\Http\UntrustedUrl\DnsHostResolver: ~
+
+  PrestaShop\PrestaShop\Core\Http\UntrustedUrl\HostResolverInterface:
+    alias: 'PrestaShop\PrestaShop\Core\Http\UntrustedUrl\DnsHostResolver'
+
+  PrestaShop\PrestaShop\Core\Http\UntrustedUrl\PublicIpChecker: ~
+
+  PrestaShop\PrestaShop\Core\Http\UntrustedUrl\UntrustedUrlValidator: ~
