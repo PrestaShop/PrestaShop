@@ -91,7 +91,7 @@
         "prestashop/ps_dataprivacy": "^2.0",
         "prestashop/ps_distributionapiclient": "^1.2",
         "prestashop/ps_emailalerts": "^3",
-        "prestashop/ps_emailsubscription": "^2.7",
+        "prestashop/ps_emailsubscription": "^3.0",
         "prestashop/ps_facetedsearch": "^4",
         "prestashop/ps_faviconnotificationbo": "^2",
         "prestashop/ps_featuredproducts": "^2",
