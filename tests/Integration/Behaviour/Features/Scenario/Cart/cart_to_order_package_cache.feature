@@ -45,3 +45,28 @@ Feature: Order contains every cart product when packages were computed before th
     Then current cart order total for products should be 30.0 tax included
     And current cart order total discount should be 7.0 tax included
     And current cart order shipping fees should be 7.0 tax included
+
+  # The free shipping cart rule makes the cart compute its shipping cost while it only contains 1 item
+  @restore-cart-rules-after-scenario
+  Scenario: Shipping cost follows the quantity added after it was computed
+    Given I have an empty default cart
+    And there is a cart rule "freeshipping" with following properties:
+      | name[en-US]   | freeshipping |
+      | priority      | 1            |
+      | free_shipping | true         |
+    And I create carrier "carrier2" with specified properties:
+      | name  | carrier 2 |
+      | zones | zone1     |
+    And I set ranges for carrier "carrier2" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 20       | 5.0         |
+      | zone1   | 20         | 10000    | 1.0         |
+    When I am logged in as "customer1"
+    And I select address "address1" in my cart
+    And I select carrier "carrier2" in my cart
+    And I add 1 items of product "product1" in my cart
+    And I add 4 items of product "product1" in my cart
+    Then my cart total should be precisely 50.0 tax included
+    When I validate my cart using payment module fake
+    Then current cart order total for products should be 50.0 tax included
+    And current cart order shipping fees should be 3.0 tax included

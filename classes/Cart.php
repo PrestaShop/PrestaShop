@@ -258,6 +258,8 @@ class CartCore extends ObjectModel
         static::$cacheNbPackages = self::withoutCartEntries(static::$cacheNbPackages, $cacheKey);
         static::$cachePackageList = self::withoutCartEntries(static::$cachePackageList, $cacheKey);
         static::$cacheDeliveryOptionList = self::withoutCartEntries(static::$cacheDeliveryOptionList, $cacheKey);
+        // Keyed by products but not by quantities
+        Cache::clean('getPackageShippingCost_' . $cacheKey . '_*');
     }
 
     /**
