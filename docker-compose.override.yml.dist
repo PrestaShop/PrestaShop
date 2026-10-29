@@ -1,6 +1,6 @@
 services:
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin
     ports:
       - "${PHPMYADMIN_HOST_PORT:-8080}:80"
     environment:
