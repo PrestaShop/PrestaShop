@@ -643,6 +643,8 @@ class CustomerCore extends ObjectModel
             self::$_customer_groups = [];
             self::$_defaultGroupId = [];
         }
+        Cache::clean('Address::getFirstCustomerAddressId_' . ($idCustomer === null ? '' : (int) $idCustomer . '-') . '*');
+        Cache::clean('Customer::getAddresses-' . ($idCustomer === null ? '' : (int) $idCustomer . '-') . '*');
         $key = (int) $idCustomer . '-' . (int) $idAddress;
         if (array_key_exists($key, self::$_customerHasAddress)) {
             unset(self::$_customerHasAddress[$key]);
