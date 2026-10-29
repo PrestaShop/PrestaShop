@@ -31,6 +31,11 @@ services:
     autowire: true
     tags:
       - { name: 'serializer.normalizer', priority: 10 }
+  # The status of the error payloads follows the exceptionToStatus map, like the response status
+  PrestaShopBundle\ApiPlatform\Normalizer\ProblemStatusNormalizer:
+    decorates: serializer.normalizer.problem
+    arguments:
+      $decorated: '@.inner'
   # DateImmutableNormalizer needs a higher priority than DateTimeImmutableNormalizer, or DateImmutable are normalized by DateTimeImmutableNormalizer
   PrestaShopBundle\ApiPlatform\Normalizer\DateImmutableNormalizer:
     autowire: true
@@ -72,14 +77,14 @@ services:
     class: Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor
     autoconfigure: false
 
-  # Ahead of every other type extractor: a union mixing scalars and classes is answered with its
-  # scalar members first (PHP reflects the classes first, which makes the serializer try e.g.
-  # DecimalNumber on every scalar value). Silent for any other property.
+  # A union mixing scalars and classes is answered with its scalar members first (PHP reflects the classes first,
+  # which makes the serializer try e.g. DecimalNumber on every scalar value). It reorders the final answer of the
+  # extractor chain, inside the property_info.cache decorator of the prod environment.
   PrestaShopBundle\ApiPlatform\Serializer\ScalarFirstUnionTypeExtractor:
+    decorates: property_info
+    decoration_priority: 1
     arguments:
-      $reflectionExtractor: '@property_info.reflection_extractor'
-    tags:
-      - { name: 'property_info.type_extractor', priority: 20 }
+      $decorated: '@.inner'
 
   PrestaShopBundle\ApiPlatform\ContextParametersProvider:
     autowire: true

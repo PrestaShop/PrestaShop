@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Processor;
 
+use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
@@ -86,10 +87,14 @@ class CommandProcessor implements ProcessorInterface
         if (!empty($commandResult)) {
             $normalizedCommandResult = $this->domainSerializer->normalize($commandResult, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSCommandMapping($operation)]);
         }
+        $queryClass = $this->getCQRSQueryClass($operation);
+        if (!$queryClass && $operation instanceof CollectionOperationInterface) {
+            return $this->denormalizeApiPlatformDTOCollection($normalizedCommandResult, $operation, $uriVariables);
+        }
+
         // Merge uri variables and normalized command result to have all needed data to create the CQRS query (it probably contains all the needed info to create the CQRS query)
         $normalizedCommandResult = array_merge($uriVariables, $normalizedCommandResult, $this->contextParametersProvider->getContextParameters());
 
-        $queryClass = $this->getCQRSQueryClass($operation);
         if (!$queryClass) {
             return $this->denormalizeApiPlatformDTO($normalizedCommandResult, $operation);
         }
@@ -109,6 +114,24 @@ class CommandProcessor implements ProcessorInterface
     protected function denormalizeApiPlatformDTO(array $normalizedCommandResult, Operation $operation): mixed
     {
         return $this->domainSerializer->denormalize($normalizedCommandResult, $operation->getClass(), null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation)]);
+    }
+
+    /**
+     * A collection operation without query answers the list returned by the command (e.g. the IDs of the created
+     * rows): each element is denormalized into a resource, like the rows of a query result.
+     */
+    protected function denormalizeApiPlatformDTOCollection(array $normalizedCommandResult, Operation $operation, array $uriVariables): array
+    {
+        $contextParameters = $this->contextParametersProvider->getContextParameters();
+        foreach ($normalizedCommandResult as $key => $result) {
+            $normalizedCommandResult[$key] = $this->denormalizeApiPlatformDTO(array_merge($uriVariables, $result, $contextParameters), $operation);
+        }
+
+        if (!empty($operation->getExtraProperties()['collectionAsList'])) {
+            return array_values($normalizedCommandResult);
+        }
+
+        return $normalizedCommandResult;
     }
 
     /**

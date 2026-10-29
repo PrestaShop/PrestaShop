@@ -14,11 +14,12 @@ use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use ApiPlatform\State\OptionsInterface;
 use Attribute;
 use Stringable;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class CQRSUpdate is a custom operation that provides extra parameters to help configure an operation
- * based on a CQRS command, it is custom tailed for update operations and forces using the PUT method by default,
- * but you can also use PATCH method.
+ * Class CQRSDelete is a custom operation that provides extra parameters to help configure an operation
+ * based on a CQRS command, it is custom tailed for delete operations and forces using the DELETE method.
+ * It answers no content, unless a CQRS query is set to read the resource back after the command.
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class CQRSDelete extends CQRSCommand
@@ -109,11 +110,16 @@ class CQRSDelete extends CQRSCommand
         ?string $minVersion = null,
         ?string $maxVersion = null,
         ?array $defaultValues = null,
+        ?string $CQRSQuery = null,
+        ?array $CQRSQueryMapping = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_DELETE;
-        // Usually DELETE operation has nothing to show so no output is needed
-        $passedArguments['output'] = $output ?? false;
+        // Usually DELETE operation has nothing to show so no output is needed, unless a query reads the resource back
+        // after the command (e.g. a bulk removal of some rows answering the updated parent)
+        $hasQuery = !empty($CQRSQuery) || !empty($extraProperties['CQRSQuery']);
+        $passedArguments['output'] = $output ?? ($hasQuery ? null : false);
+        $passedArguments['status'] = $status ?? ($hasQuery ? Response::HTTP_OK : null);
         // By default, the ReadProvider will trigger a 404 exception with DELETE method, so we disable it unless said otherwise
         $passedArguments['read'] = $read ?? false;
         // For methods POST, PUT and PATCH deserialization is automatically enabled, not with DELETE and we need it to deserialize the command input

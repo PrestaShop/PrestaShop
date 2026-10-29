@@ -139,3 +139,5 @@ services:
       $definitionNameFactory: '@api_platform.json_schema.definition_name_factory'
       $resourceSchemaAdapterChain: '@prestashop_bundle.api_platform.open_api.resource_schema_adapter_chain'
       $operationSchemaAdapterChain: '@prestashop_bundle.api_platform.open_api.operation_schema_adapter_chain'
+      $bulkCommands: '%prestashop.bulk_commands%'
+      $schemaFactory: '@api_platform.json_schema.schema_factory'

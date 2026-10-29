@@ -9,7 +9,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Serializer;
 
-use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
@@ -22,28 +23,25 @@ use Symfony\Component\PropertyInfo\Type;
  * tried. With the scalars first, a JSON value that matches a declared scalar member keeps its type
  * and a class member only catches what no scalar accepts (a float for DecimalNumber, for instance).
  *
- * Registered as a property_info type extractor ahead of the others: it only answers for a union
- * mixing scalar and class members (the reflected types, reordered) and stays silent otherwise, so
- * every other property keeps going through the regular extractor chain. Being part of
- * property_info, it applies to every consumer — API Platform property metadata, Symfony's
- * ObjectNormalizer and the CQRS normalizer alike.
+ * Decorates the property_info service, so it reorders the final answer of the extractor chain (a
+ * collection type refined by a PHPDoc extractor is kept) and applies to every consumer — API
+ * Platform property metadata, Symfony's ObjectNormalizer and the CQRS normalizer alike.
  */
-final class ScalarFirstUnionTypeExtractor implements PropertyTypeExtractorInterface
+final class ScalarFirstUnionTypeExtractor implements PropertyInfoExtractorInterface, PropertyInitializableExtractorInterface
 {
     public function __construct(
-        private readonly PropertyTypeExtractorInterface $reflectionExtractor,
+        private readonly PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface $decorated,
     ) {
     }
 
     /**
-     * @return list<Type>|null the reordered union, or null when there is nothing to reorder (the
-     *                         next extractors of the chain then answer as usual)
+     * @return list<Type>|null
      */
     public function getTypes(string $class, string $property, array $context = []): ?array
     {
-        $types = $this->reflectionExtractor->getTypes($class, $property, $context);
+        $types = $this->decorated->getTypes($class, $property, $context);
         if (null === $types || count($types) < 2) {
-            return null;
+            return $types;
         }
 
         // Stable partition: the relative order inside each group is kept.
@@ -57,10 +55,36 @@ final class ScalarFirstUnionTypeExtractor implements PropertyTypeExtractorInterf
             }
         }
 
-        if ([] === $scalars || [] === $objects) {
-            return null;
-        }
-
         return [...$scalars, ...$objects];
+    }
+
+    public function getProperties(string $class, array $context = []): ?array
+    {
+        return $this->decorated->getProperties($class, $context);
+    }
+
+    public function getShortDescription(string $class, string $property, array $context = []): ?string
+    {
+        return $this->decorated->getShortDescription($class, $property, $context);
+    }
+
+    public function getLongDescription(string $class, string $property, array $context = []): ?string
+    {
+        return $this->decorated->getLongDescription($class, $property, $context);
+    }
+
+    public function isReadable(string $class, string $property, array $context = []): ?bool
+    {
+        return $this->decorated->isReadable($class, $property, $context);
+    }
+
+    public function isWritable(string $class, string $property, array $context = []): ?bool
+    {
+        return $this->decorated->isWritable($class, $property, $context);
+    }
+
+    public function isInitializable(string $class, string $property, array $context = []): ?bool
+    {
+        return $this->decorated->isInitializable($class, $property, $context);
     }
 }

@@ -89,6 +89,14 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
             $data = $this->applyDefaultValues($data, $context['operation'] ?? null);
         }
 
+        // A request body is converted into a CQRS command based on language IDs: the localized values of its sub objects
+        // are converted before the mapping, so that the mapped copies are converted too (the root ones are handled by the
+        // CQRSApiNormalizer)
+        $isCommandInput = is_array($data) && !empty($context['input']['class']) && $context['input']['class'] !== $type;
+        if ($isCommandInput) {
+            $data = $this->updateSubObjectsLocalizedValues($data, $type, [LocalizedValue::DENORMALIZED_KEY => LocalizedValue::ID_KEY], true);
+        }
+
         // Before anything perform the mapping if specified
         $this->normalizationMapper->mapNormalizedData($data, $context);
 
@@ -101,6 +109,9 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
         // Update localized value to be adapted for denormalization
         if (is_array($data)) {
             $data = $this->denormalizeLocalizedValues($data, $type, $context);
+            if (!$isCommandInput) {
+                $data = $this->updateSubObjectsLocalizedValues($data, $type, $context, true);
+            }
         }
 
         return $this->decorated->denormalize($data, $type, $format, $context);
@@ -119,6 +130,9 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
         // Then update the localized values to use the appropriate indexes
         if (is_object($object) && class_exists(get_class($object))) {
             $normalizedData = $this->normalizeLocalizedValues($normalizedData, get_class($object), $context);
+            if (is_array($normalizedData)) {
+                $normalizedData = $this->updateSubObjectsLocalizedValues($normalizedData, get_class($object), $context, false);
+            }
             $normalizedData = $this->positionCollectionUpdater->normalizePositionCollection($normalizedData, get_class($object));
         }
 
@@ -184,6 +198,62 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
         }
 
         return $data;
+    }
+
+    /**
+     * The localized values of the sub objects of the API resources (DTOs, and lists of DTOs typed with a PHPDoc like
+     * Foo[]) are converted like the ones of the resource, at every level.
+     */
+    protected function updateSubObjectsLocalizedValues(array $data, string $type, array $context, bool $denormalize): array
+    {
+        if (!class_exists($type)) {
+            return $data;
+        }
+
+        // The mapping and the localized parameters of the context are those of the root object
+        $subObjectContext = array_diff_key($context, [
+            NormalizationMapper::NORMALIZATION_MAPPING => true,
+            NormalizationMapper::APPLIED_NORMALIZATION_MAPPING => true,
+            LocalizedValue::LOCALIZED_VALUE_PARAMETERS => true,
+            'operation' => true,
+        ]);
+        foreach ($data as $property => $value) {
+            if (!is_string($property) || !is_array($value) || empty($value)) {
+                continue;
+            }
+
+            foreach ($this->propertyTypeExtractor->getTypes($type, $property) ?? [] as $propertyType) {
+                $subObjectClass = $propertyType->getClassName();
+                if (null !== $subObjectClass && $this->isApiResourceSubObject($subObjectClass)) {
+                    $data[$property] = $this->updateLocalizedValues($value, $subObjectClass, $subObjectContext, $denormalize);
+                    break;
+                }
+
+                $itemClass = $propertyType->isCollection() ? ($propertyType->getCollectionValueTypes()[0] ?? null)?->getClassName() : null;
+                if (null !== $itemClass && $this->isApiResourceSubObject($itemClass)) {
+                    foreach ($value as $key => $item) {
+                        if (is_array($item)) {
+                            $data[$property][$key] = $this->updateLocalizedValues($item, $itemClass, $subObjectContext, $denormalize);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    protected function updateLocalizedValues(array $data, string $type, array $context, bool $denormalize): array
+    {
+        $data = $denormalize ? $this->denormalizeLocalizedValues($data, $type, $context) : $this->normalizeLocalizedValues($data, $type, $context);
+
+        return $this->updateSubObjectsLocalizedValues($data, $type, $context, $denormalize);
+    }
+
+    protected function isApiResourceSubObject(string $class): bool
+    {
+        return str_contains($class, '\\ApiPlatform\\Resources\\');
     }
 
     /**

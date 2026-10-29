@@ -15,6 +15,9 @@ class NormalizationMapper
 {
     public const NORMALIZATION_MAPPING = 'normalization_mapping';
 
+    // The mapping already applied, kept to report an error on the original path
+    public const APPLIED_NORMALIZATION_MAPPING = 'applied_normalization_mapping';
+
     protected PropertyAccessorInterface $propertyAccessor;
 
     public function __construct()
@@ -60,6 +63,7 @@ class NormalizationMapper
 
         // Mapping is only done once, so we unset it for next recursive calls
         unset($context[self::NORMALIZATION_MAPPING]);
+        $context[self::APPLIED_NORMALIZATION_MAPPING] = $normalizationMapping;
     }
 
     /**

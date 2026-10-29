@@ -9,9 +9,12 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\CollectionOperationInterface;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSDeleteCollection;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
+use Symfony\Component\HttpFoundation\Response;
 
 class CQRSDeleteTest extends TestCase
 {
@@ -166,6 +169,43 @@ class CQRSDeleteTest extends TestCase
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
         $this->assertEquals('Specifying an extra property CQRSCommand and a CQRSCommand argument that are different is invalid', $caughtException->getMessage());
+    }
+
+    public function testCQRSQuery(): void
+    {
+        // Without query the operation answers no content
+        $operation = new CQRSDelete();
+        $this->assertFalse($operation->getOutput());
+        $this->assertNull($operation->getStatus());
+
+        // With a query the resource is read back and answered with a 200
+        $operation = new CQRSDelete(
+            CQRSQuery: 'My\\Namespace\\MyQuery',
+            CQRSQueryMapping: ['[id]' => '[myId]'],
+        );
+        $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
+        $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
+        $this->assertEquals(['[id]' => '[myId]'], $operation->getCQRSQueryMapping());
+        $this->assertEquals(['CQRSQuery' => 'My\\Namespace\\MyQuery', 'CQRSQueryMapping' => ['[id]' => '[myId]'], 'allowEmptyBody' => true], $operation->getExtraProperties());
+        $this->assertNull($operation->getOutput());
+        $this->assertEquals(200, $operation->getStatus());
+
+        // Same defaults when the query is passed as an extra property
+        $operation = new CQRSDelete(
+            extraProperties: ['CQRSQuery' => 'My\\Namespace\\MyQuery'],
+        );
+        $this->assertEquals('My\\Namespace\\MyQuery', $operation->getCQRSQuery());
+        $this->assertNull($operation->getOutput());
+        $this->assertEquals(200, $operation->getStatus());
+
+        // Explicit output and status are kept
+        $operation = new CQRSDelete(
+            status: 202,
+            output: 'My\\Namespace\\MyOutput',
+            CQRSQuery: 'My\\Namespace\\MyQuery',
+        );
+        $this->assertEquals('My\\Namespace\\MyOutput', $operation->getOutput());
+        $this->assertEquals(202, $operation->getStatus());
     }
 
     public function testCQRSCommandMapping(): void
@@ -539,5 +579,27 @@ class CQRSDeleteTest extends TestCase
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
         $this->assertEquals('Specifying an extra property defaultValues and a defaultValues argument that are different is invalid', $caughtException->getMessage());
+    }
+
+    public function testCollectionOperation(): void
+    {
+        $operation = new CQRSDeleteCollection(
+            uriTemplate: '/parents/{parentId}/rows',
+            CQRSCommand: 'Command',
+            CQRSQuery: 'Query',
+            scopes: ['parent_write'],
+        );
+        $this->assertInstanceOf(CollectionOperationInterface::class, $operation);
+        $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
+        $this->assertEquals(CQRSDelete::METHOD_DELETE, $operation->getMethod());
+        $this->assertEquals('/parents/{parentId}/rows', $operation->getUriTemplate());
+        // With a query the list is answered
+        $this->assertEquals(Response::HTTP_OK, $operation->getStatus());
+        $this->assertNull($operation->getOutput());
+        // Same settings as the item operation
+        $this->assertEquals(
+            (new CQRSDelete(CQRSCommand: 'Command', CQRSQuery: 'Query', scopes: ['parent_write']))->getExtraProperties(),
+            $operation->getExtraProperties()
+        );
     }
 }

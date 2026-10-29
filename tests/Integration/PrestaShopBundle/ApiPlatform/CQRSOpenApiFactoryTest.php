@@ -15,6 +15,8 @@ use ApiPlatform\OpenApi\OpenApi;
 use ArrayObject;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkDeleteCountriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Command\BulkDeleteZoneCommand;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionWriterInterface;
@@ -245,6 +247,119 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         // A collection that is not paginated has no page parameter, API Platform doesn't paginate it
         $collection = $paths->getPath('/customers/{customerId}/orders')->getGet();
         $this->assertSame(['customerId'], array_map(fn (Parameter $parameter) => $parameter->getName(), $collection->getParameters()));
+    }
+
+    public function testErrorResponsesFromExceptionToStatus(): void
+    {
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        $paths = $openApiFactory->__invoke()->getPaths();
+
+        // The statuses mapped by the resource, described by their exceptions
+        $responses = $paths->getPath('/test/open-api/zones/{zoneId}')->getGet()->getResponses();
+        $this->assertSame(['200', '404', '422'], array_map('strval', array_keys($responses)));
+        $this->assertSame('Zone not found, Shop not found', $responses['404']->getDescription());
+        $this->assertSame('Missing zone required fields', $responses['422']->getDescription());
+
+        // The generic 404 of API Platform is removed when no exception is mapped to it
+        $responses = $paths->getPath('/test/open-api/zones/{zoneId}/unmapped')->getGet()->getResponses();
+        $this->assertSame(['200'], array_map('strval', array_keys($responses)));
+
+        // The operation mapping replaces the resource one, like at runtime
+        $responses = $paths->getPath('/test/open-api/zones/{zoneId}/own-mapping')->getGet()->getResponses();
+        $this->assertSame(['200', '404'], array_map('strval', array_keys($responses)));
+        $this->assertSame('Zone not found', $responses['404']->getDescription());
+
+        // A status documented by API Platform keeps its description, completed by the exceptions
+        $responses = $paths->getPath('/test/open-api/zones')->getPost()->getResponses();
+        $this->assertSame(['201', '400', '404', '422'], array_map('strval', array_keys($responses)));
+        $this->assertSame('Invalid input', $responses['400']->getDescription());
+        $this->assertSame('Unprocessable entity: Missing zone required fields', $responses['422']->getDescription());
+
+        // The command of a bulk handler can partially fail
+        $this->assertContains(BulkDeleteCountriesCommand::class, $this->getContainer()->getParameter('prestashop.bulk_commands'));
+        $this->assertNotContains(BulkDeleteZoneCommand::class, $this->getContainer()->getParameter('prestashop.bulk_commands'));
+        $responses = $paths->getPath('/test/open-api/countries/bulk-delete')->getDelete()->getResponses();
+        $this->assertSame(['204', '207', '404', '422'], array_map('strval', array_keys($responses)));
+        $this->assertSame('Some items could not be processed, each failed item is listed with its error', $responses['207']->getDescription());
+        $this->assertArrayNotHasKey('207', $paths->getPath('/test/open-api/zones/bulk-delete')->getDelete()->getResponses());
+    }
+
+    public function testDeleteOperations(): void
+    {
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        $openApi = $openApiFactory->__invoke();
+        $paths = $openApi->getPaths();
+        $schemas = $openApi->getComponents()->getSchemas();
+
+        // A DELETE requiring a body documents its input, built from the command
+        $requestBody = $paths->getPath('/test/open-api/zones/bulk-delete')->getDelete()->getRequestBody();
+        $this->assertNotNull($requestBody);
+        $this->assertTrue($requestBody->getRequired());
+        $this->assertSame(
+            ['$ref' => '#/components/schemas/OpenApiResponsesResource.BulkDeleteZoneCommand'],
+            $requestBody->getContent()['application/json']->getSchema()->getArrayCopy()
+        );
+        $inputSchema = $schemas['OpenApiResponsesResource.BulkDeleteZoneCommand'];
+        $this->assertSame(['zoneIds'], array_keys((array) $inputSchema['properties']));
+        $this->assertEquals(['type' => 'array', 'items' => ['type' => 'integer']], (array) $inputSchema['properties']['zoneIds']);
+
+        // A DELETE answering the resource read back by its query documents it
+        $operation = $paths->getPath('/test/open-api/zones/{zoneId}/delete-with-query')->getDelete();
+        $this->assertNull($operation->getRequestBody());
+        $response = $operation->getResponses()['200'];
+        $this->assertSame(
+            ['$ref' => '#/components/schemas/OpenApiResponsesResource'],
+            $response->getContent()['application/json']->getSchema()->getArrayCopy()
+        );
+        $this->assertArrayHasKey('active', (array) $schemas['OpenApiResponsesResource']['properties']);
+
+        // A usual DELETE has no body and no content
+        $operation = $paths->getPath('/test/open-api/zones/{zoneId}')->getDelete();
+        $this->assertNull($operation->getRequestBody());
+        $this->assertNull($operation->getResponses()['204']->getContent());
+    }
+
+    public function testWriteCollectionOperations(): void
+    {
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        $openApi = $openApiFactory->__invoke();
+        $pathItem = $openApi->getPaths()->getPath('/test/collections/products/{productId}/feature-values');
+        $listContent = ['type' => 'array', 'items' => ['$ref' => '#/components/schemas/CollectionOperationsResource']];
+
+        $operations = [
+            'POST' => [$pathItem->getPost(), '201'],
+            'PUT' => [$pathItem->getPut(), '200'],
+            'PATCH' => [$pathItem->getPatch(), '200'],
+            'DELETE' => [$pathItem->getDelete(), '200'],
+        ];
+        foreach ($operations as $method => [$operation, $successStatus]) {
+            // The list is answered like a CQRSGetCollection, without the pagination of API Platform
+            $this->assertEquals($listContent, $operation->getResponses()[$successStatus]->getContent()['application/json']->getSchema()->getArrayCopy(), $method);
+            $this->assertSame(['productId'], array_map(fn (Parameter $parameter) => $parameter->getName(), $operation->getParameters()), $method);
+        }
+
+        // The body of a creation or an update is one resource, not a list
+        foreach (['POST' => $pathItem->getPost(), 'PUT' => $pathItem->getPut(), 'PATCH' => $pathItem->getPatch()] as $method => $operation) {
+            foreach ($operation->getRequestBody()->getContent() as $mediaType) {
+                $this->assertArrayHasKey('$ref', $mediaType->getSchema()->getArrayCopy(), $method);
+            }
+        }
+        $this->assertNull($pathItem->getDelete()->getRequestBody());
+
+        // Without query, the creation answers the list of the IDs returned by the command
+        $createWithoutQuery = $openApi->getPaths()->getPath('/test/collections/products/{productId}/feature-value-ids')->getPost();
+        $this->assertEquals($listContent, $createWithoutQuery->getResponses()['201']->getContent()['application/json']->getSchema()->getArrayCopy());
+
+        // A bulk delete documents its body as one resource, and answers the list
+        $bulkDelete = $openApi->getPaths()->getPath('/test/collections/products/{productId}/feature-values/bulk-delete')->getDelete();
+        $this->assertEquals($listContent, $bulkDelete->getResponses()['200']->getContent()['application/json']->getSchema()->getArrayCopy());
+        $this->assertTrue($bulkDelete->getRequestBody()->getRequired());
+        foreach ($bulkDelete->getRequestBody()->getContent() as $mediaType) {
+            $this->assertArrayHasKey('$ref', $mediaType->getSchema()->getArrayCopy());
+        }
     }
 
     public function testUnusedSchemasAreRemoved(): void
