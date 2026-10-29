@@ -611,6 +611,16 @@
             <wording>Customer Sessions</wording>
             <wording_domain>Admin.Navigation.Menu</wording_domain>
         </tab>
+        <tab id="AdminSecurityHeaders" id_parent="Security" active="0" enabled="1" route_name="admin_security_headers_index">
+            <class_name>AdminSecurityHeaders</class_name>
+            <wording>Security headers</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="AdminSecurityCsp" id_parent="Security" active="0" enabled="1" route_name="admin_security_csp_index">
+            <class_name>AdminSecurityCsp</class_name>
+            <wording>Content Security Policy</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
 
         <!--QUICK ACCESS-->
         <tab id="Quick_Access" id_parent="Advanced_Parameters" active="0" enabled="1">

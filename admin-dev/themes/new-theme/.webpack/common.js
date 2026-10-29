@@ -102,6 +102,7 @@ module.exports = {
     create_product: './js/pages/product/create/create-product',
     create_product_default_theme: './scss/pages/product/create_product_default_theme.scss',
     credit_slip: './js/pages/credit-slip',
+    csp: './js/pages/csp',
     currency: './js/pages/currency',
     currency_form: './js/pages/currency/form',
     customer: './js/pages/customer/index',

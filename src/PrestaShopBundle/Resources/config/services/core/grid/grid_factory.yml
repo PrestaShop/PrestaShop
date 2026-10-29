@@ -58,6 +58,22 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
+  prestashop.core.grid.factory.csp_log:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.core.grid.definition.factory.csp_log'
+      - '@prestashop.core.grid.data_factory.csp_log'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
+  prestashop.core.grid.factory.csp_rule:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.core.grid.definition.factory.csp_rule'
+      - '@prestashop.core.grid.data_factory.csp_rule'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
   prestashop.core.grid.factory.meta:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
