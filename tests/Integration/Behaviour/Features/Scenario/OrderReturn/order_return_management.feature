@@ -60,3 +60,14 @@ Feature: Order return Management
     And I stage for deletion in order return "testOrderReturn" the product with reference "demo_12"
     And I try to commit staged deletions on order return "testOrderReturn"
     Then I should get a "CannotDeleteLastProductFromOrderReturnException"
+
+  Scenario: Deleting a line that is not part of the order return is refused
+    When I try to delete from order return "testOrderReturn" the unknown order detail 999999
+    Then I should get a "OrderReturnProductNotFoundException"
+    When I query the products of order return "testOrderReturn"
+    Then the queried products of order return "testOrderReturn" should contain 2 rows
+
+  Scenario: An unknown order return does not stop the bulk delete of the others
+    When I try to bulk delete the order return "testOrderReturn" and the unknown order return 999999
+    Then I should get a "BulkDeleteOrderReturnsException"
+    And the order return "testOrderReturn" should not exist
