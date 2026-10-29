@@ -97,6 +97,10 @@ class CategoryControllerCore extends ProductListingFrontController
             // If category should redirect and we don't know where, we take the closest parent
             if (!$this->category->id_type_redirected && in_array($this->category->redirect_type, [RedirectType::TYPE_PERMANENT, RedirectType::TYPE_TEMPORARY])) {
                 $this->category->id_type_redirected = $this->getCategoryToRedirectTo();
+
+                if ($this->category->id_type_redirected === null) {
+                    $this->category->redirect_type = RedirectType::TYPE_NOT_FOUND;
+                }
             }
 
             // Now, we do as configured in "Redirection when not displayed" field on the category
@@ -364,9 +368,9 @@ class CategoryControllerCore extends ProductListingFrontController
      * Returns a category that we will redirect into, in case we need 301/302 redirect.
      * We will try to get the closest active parent of the current category.
      *
-     * @return int category ID
+     * @return int|null category ID to redirect to, or null if no active parent category is found
      */
-    private function getCategoryToRedirectTo(): int
+    private function getCategoryToRedirectTo(): ?int
     {
         $categoryToRedirectTo = null;
         foreach ($this->category->getParentsCategories() as $category) {
@@ -384,7 +388,9 @@ class CategoryControllerCore extends ProductListingFrontController
             }
         }
 
-        return $categoryToRedirectTo['id_category'];
+        return $categoryToRedirectTo !== null
+            ? (int) $categoryToRedirectTo['id_category']
+            : null;
     }
 
     /**
