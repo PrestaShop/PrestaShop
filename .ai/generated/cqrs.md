@@ -1,5 +1,5 @@
-# CQRS Index (generated 2026-04-25)
-# 360 commands · 126 queries · 62 top-level domains
+# CQRS Index (generated 2026-10-20)
+# 385 commands · 135 queries · 64 top-level domains
 #
 # Sub-domain shown in [brackets] when command/query lives below the top-level domain dir.
 
@@ -188,8 +188,12 @@
 ## Country
 ### Commands
 - AddCountryCommand
+- BulkDeleteCountriesCommand
+- BulkToggleCountriesStatusCommand
+- BulkUpdateCountryZoneCommand
 - DeleteCountryCommand
 - EditCountryCommand
+- ToggleCountryStatusCommand
 ### Queries
 - GetCountryForEditing
 - GetCountryRequiredFields
@@ -281,6 +285,15 @@
 - GetEmployeeEmailById
 - GetEmployeeForEditing
 
+## ExtraProperty
+### Commands
+- AddExtraPropertyDefinitionCommand
+- BulkDeleteExtraPropertyDefinitionCommand
+- DeleteExtraPropertyDefinitionCommand
+- UpdateExtraPropertyDefinitionCommand
+### Queries
+- GetExtraPropertyDefinitionForEditing
+
 ## Feature
 ### Commands
 - AddFeatureCommand
@@ -297,10 +310,13 @@
 
 ## Hook
 ### Commands
+- EditHookedModuleCommand
+- HookModuleCommand
 - UpdateHookStatusCommand
 ### Queries
 - GetHook
 - GetHookStatus
+- GetPossibleHooksForModule
 
 ## ImageSettings
 ### Commands
@@ -328,7 +344,11 @@
 
 ## MailTemplate
 ### Commands
+- EditEmailBodyTemplateCommand
 - GenerateThemeMailTemplatesCommand
+### Queries
+- GetEmailBodyTemplateForEditing
+- GetEmailBodyTemplatesForListing
 
 ## Manufacturer
 ### Commands
@@ -413,9 +433,14 @@
 
 ## OrderReturn
 ### Commands
+- BulkDeleteOrderReturnsCommand
+- BulkDeleteProductsFromOrderReturnCommand
+- DeleteOrderReturnCommand
+- DeleteProductFromOrderReturnCommand
 - UpdateOrderReturnStateCommand
 ### Queries
 - GetOrderReturnForEditing
+- GetOrderReturnProducts
 
 ## OrderReturnState
 ### Commands
@@ -508,6 +533,7 @@
 - GetRelatedProducts
 - SearchProducts
 - SearchProductsForAssociation
+- SearchProductsForFreeGift
 - GetSpecificPriceForEditing  [SpecificPrice]
 - GetSpecificPriceList  [SpecificPrice]
 - GetCombinationStockMovements  [Stock]
@@ -527,6 +553,16 @@
 ### Queries
 - GetPermissionsForConfiguration  [Permission]
 - GetProfileForEditing
+
+## QuickAccess
+### Commands
+- AddQuickAccessCommand
+- BulkDeleteQuickAccessCommand
+- DeleteQuickAccessCommand
+- EditQuickAccessCommand
+- ToggleQuickAccessNewWindowCommand
+### Queries
+- GetQuickAccessForEditing
 
 ## Search
 ### Commands
@@ -556,6 +592,7 @@
 - CreateShipment
 - DeleteProductFromShipment
 - EditShipment
+- FulfillShipmentCommand
 - MergeProductsToShipment
 - SplitShipment
 - SwitchShipmentCarrierCommand
@@ -663,8 +700,14 @@
 - DeleteTaxRulesGroupCommand
 - EditTaxRulesGroupCommand
 - SetTaxRulesGroupStatusCommand
+- AddTaxRuleCommand  [TaxRule]
+- BulkDeleteTaxRuleCommand  [TaxRule]
+- DeleteTaxRuleCommand  [TaxRule]
+- EditTaxRuleCommand  [TaxRule]
 ### Queries
 - GetTaxRulesGroupForEditing
+- GetTaxRuleForEditing  [TaxRule]
+- GetTaxRuleList  [TaxRule]
 
 ## Theme
 ### Commands

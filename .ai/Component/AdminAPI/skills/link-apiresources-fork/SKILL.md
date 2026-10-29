@@ -2,13 +2,14 @@
 name: link-apiresources-fork
 description: >
   Pair the core PR with a ps_apiresources fork branch for coordinated review,
-  or revert that pairing to upstream dev-dev once both PRs are merged. Edits
-  composer.json (repository URL + dev-<branch> pin) and refreshes composer.lock.
+  or point the core back to upstream ps_apiresources (the released version when
+  the core is released, dev-dev to bring newer module changes). Edits
+  composer.json (repository URL + version pin) and refreshes composer.lock.
   Trigger: "pair core with ps_apiresources branch", "link ps_apiresources fork
-  branch", "use my ps_apiresources fork in the core PR", "revert ps_apiresources
-  to dev-dev", "unlink the ps_apiresources fork".
+  branch", "use my ps_apiresources fork in the core PR", "point ps_apiresources
+  to its release", "revert ps_apiresources to dev-dev".
 needs: []
-produces: "Modified core composer.json + composer.lock pointing at the fork's branch (link mode), or reverted to upstream dev-dev (cleanup mode)."
+produces: "Modified core composer.json + composer.lock pointing at the fork's branch (link mode), or at upstream ps_apiresources, a released version or dev-dev (upstream mode)."
 ---
 
 # link-apiresources-fork
@@ -17,7 +18,7 @@ Read @.ai/Component/AdminAPI/CONTEXT.md for the architectural background.
 
 This skill coordinates a core PR with a matching `ps_apiresources` PR — required when a change to PrestaShop core depends on (or breaks the contract of) the API module, so both sides must compile together during review. The sibling [`setup-apiresources-dev`](../setup-apiresources-dev/SKILL.md) skill sets up a local dev environment when needed; this skill works without it (e.g. when integrating an existing module PR into a core PR).
 
-**Workflow recap:** the contributor pushes the module branch to a fork → this skill points the core's `composer.json` at that fork branch and refreshes `composer.lock` → both PRs reference each other → the core PR is the one whose CI must be green (the module PR's CI will be red until the core PR merges) → after the core PR merges, close-reopen the module PR for fresh CI → merge the module PR → run this skill in **cleanup mode** to revert the core back to upstream `dev-dev`.
+**Workflow recap:** the contributor pushes the module branch to a fork → this skill points the core's `composer.json` at that fork branch and refreshes `composer.lock` → both PRs reference each other → the core PR is the one whose CI must be green (the module PR's CI is red on the branches the core change has not reached) → the core PR is merged, then merged up to `develop` → close-reopen the module PR for fresh CI and merge it once green (never with red jobs; its review and QA do not wait). The pin then stays on the version branch (`.ai/Component/AdminAPI/CONTEXT.md` → "Testing the API"): **link mode** replaces it at the next pairing, **upstream mode** when newer module changes are needed (`dev-dev`) or at the core release.
 
 The skill branches at runtime — every choice is an explicit `AskUserQuestion`. Never auto-decide anything that mutates `composer.json`, `composer.lock`, or `modules/ps_apiresources/`.
 
@@ -30,21 +31,21 @@ grep -nE '"prestashop/ps_apiresources"|"ps_apiresources":[[:space:]]*\{' compose
 ```
 
 - `repositories.ps_apiresources.url` — upstream `https://github.com/PrestaShop/ps_apiresources`, or a fork URL?
-- `require.prestashop/ps_apiresources` — `dev-dev`, or `dev-<branch>`?
+- `require.prestashop/ps_apiresources` — a released version (`^0.9.0`), `dev-dev`, or `dev-<branch>`?
 
 | Detected state | Natural mode |
 |----------------|--------------|
-| Both at upstream defaults | **Link** |
-| Either pointing at a fork / non-`dev-dev` branch | **Cleanup** (or relink to a different fork/branch) |
+| Upstream (a released version or `dev-dev`) | **Link** |
+| A fork branch, from this pairing or a previous one, merged or not | **Link** to the new branch; **Upstream** when the core is released, or to bring newer module changes (`dev-dev`) |
 
 ## 1. Pick the mode (`AskUserQuestion`)
 
 Show the detected state, then ask:
 
-- **Link to a fork branch** — pin `repositories.ps_apiresources` to a contributor fork and pin the dependency to `dev-<branch>`.
-- **Cleanup (revert to upstream dev-dev)** — restore upstream URL + `dev-dev`.
+- **Link to a fork branch** — pin `repositories.ps_apiresources` to a contributor fork and pin the dependency to `dev-<branch>`, replacing whatever is pinned.
+- **Upstream** — restore the upstream URL and pin the released module version when the core is released (`^X.Y.Z`, the module tag released with it), or `dev-dev` to bring the latest changes of the module `dev` branch. Not right after a merge for the same content: the pin of the last pairing already holds it.
 
-If the user picks the "natural" action for the detected state, proceed. If they pick the inverse (e.g. cleanup when the state is already upstream defaults), confirm — the skill should still no-op gracefully but warn there's nothing to do.
+If the user picks the "natural" action for the detected state, proceed. If they pick the inverse (e.g. upstream when the state is already upstream), confirm — the skill should still no-op gracefully but warn there's nothing to do.
 
 ## 2. Local-clone protection (always runs before any `composer update`)
 
@@ -191,10 +192,10 @@ A PR URL isn't required for this path. Optionally ask for one to use in the "Rel
 
 ### 3b. Edit `composer.json` (two surgical replacements)
 
-Both target strings are unique in the file as of HEAD:
+Read the current values first (the upstream URL with a released version or `dev-dev`, or the fork and branch of a previous pairing), then:
 
-1. Inside the `repositories.ps_apiresources` entry: replace `"url": "https://github.com/PrestaShop/ps_apiresources"` with `"url": "<fork-url>"`.
-2. Replace `"prestashop/ps_apiresources": "dev-dev"` with `"prestashop/ps_apiresources": "dev-<branch>"`.
+1. Inside the `repositories.ps_apiresources` entry: replace the current `"url"` with `"url": "<fork-url>"`.
+2. Replace the current `"prestashop/ps_apiresources"` constraint with `"prestashop/ps_apiresources": "dev-<branch>"`.
 
 Use the `Edit` tool — do **not** use `composer config repositories.ps_apiresources vcs <url>` because it may rewrite key order or strip fields and produce a noisy diff.
 
@@ -241,8 +242,8 @@ If the user declines, leave the working tree dirty and remind them that the link
 - **Add to the core PR description table:** `Related PR: <module PR URL>` (use the PR URL collected via Path A or Path B; if Path B was used and the user didn't provide one, just point at the fork branch).
 - **Expected CI state during the transitory phase:**
   - Core PR CI: must be green (it has both sides linked).
-  - Module PR CI: will be red until the core PR merges — that's expected, the core PR is the reference.
-- **After both PRs are merged**, run this skill again in **cleanup mode** to revert.
+  - Module PR CI: red on the branches the core change has not reached (until the core PR merges, and on `develop` until the merge-up) — expected, it does not block the review nor the QA; the module PR is merged only once its CI is green.
+- **After both PRs are merged**, nothing to revert: the pin already holds the merged module content, it moves at the next pairing, to `dev-dev` when newer module changes are needed, or to the release (upstream mode).
 
 ### 3g. Symlink-restore offer
 
@@ -259,7 +260,7 @@ ln -s <target> modules/ps_apiresources
 
 Note: after restoring the symlink, the module's working state in `modules/` is whatever the user has at `<target>`, **not** the version composer just locked. If the user is on the fork branch locally, those should align — but warn that running tests will use the local working state, not the locked commit.
 
-## 4. Mode B — Cleanup (revert to upstream dev-dev)
+## 4. Mode B — Upstream (released version, or dev-dev for newer module changes)
 
 ### 4a. Local-clone protection
 
@@ -270,7 +271,7 @@ Run step 2 again. Same logic: protect any in-place clone with uncommitted/unpush
 Two surgical replacements:
 
 1. Inside the `repositories.ps_apiresources` entry: replace `"url": "<current fork URL>"` with `"url": "https://github.com/PrestaShop/ps_apiresources"`.
-2. Replace `"prestashop/ps_apiresources": "dev-<current branch>"` with `"prestashop/ps_apiresources": "dev-dev"`.
+2. Replace `"prestashop/ps_apiresources": "dev-<current branch>"` with the released version when the core is released (`"^X.Y.Z"`, ask for the module tag released with it), or with `"dev-dev"` to bring the latest module changes.
 
 Read the current values from `composer.json` first to compute the exact replacement strings.
 
@@ -284,7 +285,7 @@ Same revert-on-failure handling as 3c.
 
 ### 4d. Verify
 
-Mirror of 3d. Bonus check: `composer show prestashop/ps_apiresources` should now report `dev-dev` again.
+Mirror of 3d. Bonus check: `composer show prestashop/ps_apiresources` should now report the released version (or `dev-dev`).
 
 ### 4e. Commit and push (`AskUserQuestion`)
 
@@ -294,7 +295,7 @@ If yes:
 
 ```bash
 git add composer.json composer.lock
-git commit -m "Revert ps_apiresources to upstream dev-dev"
+git commit -m "Point ps_apiresources to the vX.Y.Z release"   # or "Update ps_apiresources to the latest dev-dev"
 git push
 ```
 

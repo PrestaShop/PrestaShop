@@ -1,0 +1,12 @@
+---
+description: "Admin API: API Platform infrastructure in the core, endpoints in the ps_apiresources module"
+globs: src/PrestaShopBundle/ApiPlatform/**,src/PrestaShopBundle/Resources/config/services/bundle/api_platform.yml,src/PrestaShopBundle/Resources/config/services/bundle/open_api.yml,modules/ps_apiresources/**,tests/Integration/ApiPlatform/**,tests/Integration/PrestaShopBundle/ApiPlatform/**,tests/Unit/PrestaShopBundle/ApiPlatform/**,tests/UI/campaigns/functional/API/**
+alwaysApply: false
+---
+<!-- Generated from .ai/rules/admin-api.md by .ai/bin/generate-ai-index.sh: edit the source, not this copy -->
+
+# Admin API
+
+Read `.ai/Component/AdminAPI/CONTEXT.md` (core infrastructure: providers, processors, normalizers, OpenAPI adapters, test environment) and the domain context of the entity (`.ai/Domain/{Domain}/CONTEXT.md`) before changing these files.
+
+Endpoint conventions (URI, scopes, mappings, DTOs, errors, tests) are in `modules/ps_apiresources/.ai/CONTEXT.md`; the review checklist is `modules/ps_apiresources/.ai/REVIEW.md`. Read them for any work on a resource, even when `modules/ps_apiresources` is a symlink to another clone.

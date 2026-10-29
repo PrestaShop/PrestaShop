@@ -38,17 +38,29 @@ class MultiParameterSetterAdapterTest extends TestCase
                 'currencyId' => new ArrayObject(['type' => 'integer']),
                 'taxIncluded' => new ArrayObject(['type' => 'boolean']),
             ],
+            'required' => ['amount', 'currencyId', 'taxIncluded'],
         ]), $definition['properties']['reductionAmount']);
 
         // setMinimumAmount(?DecimalNumber $amount, int $currencyId = 0, bool $taxIncluded = true, bool $shippingIncluded = true)
         $this->assertEquals(new ArrayObject([
-            'type' => 'object',
+            'type' => ['object', 'null'],
             'properties' => [
                 'amount' => new ArrayObject(['type' => ['number', 'null'], 'example' => 42.99]),
                 'currencyId' => new ArrayObject(['type' => 'integer']),
                 'taxIncluded' => new ArrayObject(['type' => 'boolean']),
                 'shippingIncluded' => new ArrayObject(['type' => 'boolean']),
             ],
+            'required' => ['amount'],
         ]), $definition['properties']['minimumAmount']);
+
+        // setValidityDateRange(DateTimeImmutable $from, ?DateTimeImmutable $to = null)
+        $this->assertEquals(new ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'from' => new ArrayObject(['format' => 'date-time', 'type' => 'string', 'example' => '2025-11-05 16:02:06']),
+                'to' => new ArrayObject(['format' => 'date-time', 'type' => ['string', 'null'], 'example' => '2025-11-05 16:02:06']),
+            ],
+            'required' => ['from'],
+        ]), $definition['properties']['validityDateRange']);
     }
 }

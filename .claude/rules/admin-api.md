@@ -1,0 +1,1 @@
+../../.ai/rules/admin-api.md
