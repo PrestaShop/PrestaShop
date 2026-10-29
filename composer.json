@@ -33,6 +33,7 @@
         "composer/installers": "^2.2.0",
         "curl/curl": "^2.3.2",
         "defuse/php-encryption": "^2.3.1",
+        "doctrine/annotations": "^1.13.1",
         "doctrine/cache": "^2.0",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/orm": "^2.15",
