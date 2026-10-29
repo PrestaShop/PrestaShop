@@ -40,7 +40,7 @@ Changelog for PrestaShop 9
 - Core:
   - Bug fix:
     - Update dependencies (by @jolelievre)
-    - Update symfony/mime to 6.4.49 (by @mattgoud)
+    - Update Symfony components to 6.4.49 (by @mattgoud)
     - GHSA-wrmc-gmx5-9hhc Keep attachment files inside the download directory (by @nicosomb)
     - GHSA-6c2j-pgwm-95m9 Cut the Admin API access of a disabled or deleted API client (by @M0rgan01)
     - GHSA-99cp-c6mm-p7h5 Block corrupted SVG files uploaded through the FileManager and the logo uploader (by @Quetzacoalt91)
