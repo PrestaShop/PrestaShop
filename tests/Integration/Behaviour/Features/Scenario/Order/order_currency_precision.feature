@@ -147,3 +147,45 @@ Feature: Order in a currency with a different precision than the default currenc
       | total_shipping_tax_incl  | 74.20  |
     # Put the default currency back in the context for the next scenarios
     And the context currency is the default one and its computing precision is cached
+
+  Scenario: Change the currency of an order to the default currency and back, the amounts keep the precision of each currency
+    # A rate that does not give round amounts when converting back from the default currency
+    Given I edit currency "currency2" with following properties:
+      | exchange_rate | 0.9 |
+    When I change for the order "bo_order1" the currency "EUR" to "USD"
+    # The context is restored with the precision of the default currency
+    Then the context computing precision should be 0
+    # EUR => USD : / 0.9, rounded with the precision of USD (0)
+    And order "bo_order1" should have following details:
+      | total_products           | 264.00 |
+      | total_products_wt        | 280.00 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 342.00 |
+      | total_paid_tax_incl      | 363.00 |
+      | total_paid               | 363.00 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 78.00  |
+      | total_shipping_tax_incl  | 82.00  |
+    When I change for the order "bo_order1" the currency "USD" to "EUR"
+    Then the context computing precision should be 0
+    # USD => EUR : * 0.9, rounded with the precision of EUR (2), not with the precision of the default currency (0)
+    And order "bo_order1" should have following details:
+      | total_products           | 237.60 |
+      | total_products_wt        | 252.00 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 307.80 |
+      | total_paid_tax_incl      | 326.70 |
+      | total_paid               | 326.70 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 70.20  |
+      | total_shipping_tax_incl  | 73.80  |
+    # product_price is not checked: Order::getProducts() rounds it again with the context computing precision when reading
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity       | 2      |
+      | original_product_price | 118.80 |
+      | unit_price_tax_incl    | 126.00 |
+      | unit_price_tax_excl    | 118.80 |
+      | total_price_tax_incl   | 252.00 |
+      | total_price_tax_excl   | 237.60 |
