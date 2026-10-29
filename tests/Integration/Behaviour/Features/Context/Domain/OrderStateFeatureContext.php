@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use Language;
 use OrderState;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\AddOrderStateCommand;
@@ -35,14 +34,12 @@ class OrderStateFeatureContext extends AbstractDomainFeatureContext
      */
     public function addNewOrderState(string $orderStateReference, TableNode $table): void
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
 
         try {
             /** @var OrderStateId $orderStateId */
             $orderStateId = $this->getCommandBus()->handle(new AddOrderStateCommand(
-                [
-                    $this->getDefaultLangId() => $data['name'],
-                ],
+                $data['name'],
                 $data['color'],
                 (bool) $data['isLoggable'],
                 (bool) $data['isInvoice'],
@@ -74,11 +71,9 @@ class OrderStateFeatureContext extends AbstractDomainFeatureContext
 
         $editableOrderState = new EditOrderStateCommand((int) $orderStateId);
 
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
         if (isset($data['name'])) {
-            $editableOrderState->setName([
-                $this->getDefaultLangId() => $data['name'],
-            ]);
+            $editableOrderState->setName($data['name']);
         }
         if (isset($data['color'])) {
             $editableOrderState->setColor($data['color']);
@@ -108,9 +103,7 @@ class OrderStateFeatureContext extends AbstractDomainFeatureContext
             $editableOrderState->setDelivery((bool) $data['isDelivery']);
         }
         if (isset($data['template'])) {
-            $editableOrderState->setTemplate([
-                $this->getDefaultLangId() => $data['template'],
-            ]);
+            $editableOrderState->setTemplate($data['template']);
         }
 
         try {
@@ -170,40 +163,6 @@ class OrderStateFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update the order state :orderStateReference name in language :locale to :name
-     *
-     * @param string $orderStateReference
-     * @param string $locale
-     * @param string $name
-     */
-    public function updateOrderStateNameInLanguage(string $orderStateReference, string $locale, string $name): void
-    {
-        $command = new EditOrderStateCommand((int) SharedStorage::getStorage()->get($orderStateReference));
-        $command->setName([(int) Language::getIdByLocale($locale, true) => $name]);
-
-        try {
-            $this->getCommandBus()->handle($command);
-        } catch (OrderStateException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @Then the order state :orderStateReference should be named :name in language :locale
-     *
-     * @param string $orderStateReference
-     * @param string $name
-     * @param string $locale
-     */
-    public function checkOrderStateNameInLanguage(string $orderStateReference, string $name, string $locale): void
-    {
-        $this->assertLastErrorIsNull();
-        $localizedNames = $this->getOrderState($orderStateReference)->getLocalizedNames();
-
-        Assert::assertEquals($name, $localizedNames[(int) Language::getIdByLocale($locale, true)]);
-    }
-
-    /**
      * @Then I should get an error that some order states could not be deleted
      */
     public function assertBulkDeleteError(): void
@@ -223,18 +182,21 @@ class OrderStateFeatureContext extends AbstractDomainFeatureContext
 
         $this->assertLastErrorIsNull();
 
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
 
-        $localizedNames = $editableOrderState->getLocalizedNames();
-        $localizedTemplates = $editableOrderState->getLocalizedTemplates();
-        Assert::assertIsArray($localizedNames);
-        Assert::assertArrayHasKey($this->getDefaultLangId(), $localizedNames);
-        Assert::assertEquals($data['name'], $localizedNames[$this->getDefaultLangId()]);
-        Assert::assertEquals($data['color'], $editableOrderState->getColor());
-        Assert::assertEquals((bool) $data['hasSendMail'], $editableOrderState->isSendEmailEnabled());
-        Assert::assertIsArray($localizedTemplates);
-        Assert::assertArrayHasKey($this->getDefaultLangId(), $localizedTemplates);
-        Assert::assertEquals($data['template'], $localizedTemplates[$this->getDefaultLangId()]);
+        // Only the languages listed in the table are checked
+        foreach ($data['name'] ?? [] as $langId => $name) {
+            Assert::assertEquals($name, $editableOrderState->getLocalizedNames()[$langId] ?? null);
+        }
+        foreach ($data['template'] ?? [] as $langId => $template) {
+            Assert::assertEquals($template, $editableOrderState->getLocalizedTemplates()[$langId] ?? null);
+        }
+        if (isset($data['color'])) {
+            Assert::assertEquals($data['color'], $editableOrderState->getColor());
+        }
+        if (isset($data['hasSendMail'])) {
+            Assert::assertEquals((bool) $data['hasSendMail'], $editableOrderState->isSendEmailEnabled());
+        }
     }
 
     /**
