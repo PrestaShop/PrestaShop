@@ -11,6 +11,7 @@ use Exception;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\PDF\CreditSlipPdfGenerator;
 use PrestaShop\PrestaShop\Adapter\PDF\DeliverySlipPdfGenerator;
 use PrestaShop\PrestaShop\Adapter\PDF\OrderInvoicePdfGenerator;
 use PrestaShop\PrestaShop\Adapter\Tools;
@@ -18,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarriersForProduct;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
+use PrestaShop\PrestaShop\Core\Domain\CreditSlip\ValueObject\CreditSlipId;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
@@ -93,6 +95,7 @@ use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ShipmentFilters;
 use PrestaShopBundle\Component\CsvResponse;
+use PrestaShopBundle\Component\PdfResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
@@ -114,7 +117,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -309,17 +311,7 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         #[Autowire(service: 'prestashop.adapter.pdf.order_invoice_pdf_generator')] OrderInvoicePdfGenerator $invoicePdfGenerator,
     ): Response {
-        $generatedPdf = $invoicePdfGenerator->generatePDFForResponse([$orderId]);
-
-        $response = new Response($generatedPdf->getContent());
-        $disposition = HeaderUtils::makeDisposition(
-            HeaderUtils::DISPOSITION_ATTACHMENT,
-            $generatedPdf->getFileName()
-        );
-        $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-Disposition', $disposition);
-
-        return $response;
+        return new PdfResponse($invoicePdfGenerator->generatePDFForResponse([$orderId]));
     }
 
     /**
@@ -332,17 +324,24 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         #[Autowire(service: 'prestashop.adapter.pdf.delivery_slip_pdf_generator')] DeliverySlipPdfGenerator $deliverySlipPdfGenerator,
     ): Response {
-        $generatedPdf = $deliverySlipPdfGenerator->generatePDFForResponse([$orderId]);
+        return new PdfResponse($deliverySlipPdfGenerator->generatePDFForResponse([$orderId]));
+    }
 
-        $response = new Response($generatedPdf->getContent());
-        $disposition = HeaderUtils::makeDisposition(
-            HeaderUtils::DISPOSITION_ATTACHMENT,
-            $generatedPdf->getFileName()
-        );
-        $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-Disposition', $disposition);
+    /**
+     * Same PDF as the credit slips page, but only requires access to orders, like the invoice and delivery slip links of the order page
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    public function generateCreditSlipPdfAction(
+        int $creditSlipId,
+        #[Autowire(service: 'prestashop.adapter.pdf.credit_slip_pdf_generator')] CreditSlipPdfGenerator $creditSlipPdfGenerator,
+    ): Response {
+        try {
+            return new PdfResponse($creditSlipPdfGenerator->generatePDFForResponse([new CreditSlipId($creditSlipId)]));
+        } catch (CoreException) {
+            $this->addFlash('error', $this->trans('The object cannot be loaded (or found).', [], 'Admin.Notifications.Error'));
 
-        return $response;
+            return $this->redirectToRoute('admin_orders_index');
+        }
     }
 
     /**

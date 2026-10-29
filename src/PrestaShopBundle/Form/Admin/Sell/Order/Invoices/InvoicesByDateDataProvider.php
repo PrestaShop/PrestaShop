@@ -59,8 +59,9 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
     {
         $errors = [];
 
-        $dateFrom = date_create($data['date_from']);
-        $dateTo = date_create($data['date_to']);
+        // date_create('') would silently fall back to today
+        $dateFrom = DateTime::createFromFormat('!Y-m-d', (string) $data['date_from']);
+        $dateTo = DateTime::createFromFormat('!Y-m-d', (string) $data['date_to']);
 
         if (false === $dateFrom) {
             $errors[] = [

@@ -6,6 +6,9 @@
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
+/**
+ * @deprecated since 9.3 and will be removed in 10.0 - The back office generates its PDFs through Symfony routes
+ */
 class AdminPdfControllerCore extends AdminController
 {
     public function postProcess()
