@@ -980,6 +980,46 @@ class ProductLazyArrayTest extends TestCase
             'out_of_stock' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
             'quantity' => 1,
         ]), [], false];
+
+        yield 'combination in stock' => [array_merge($this->baseProduct, [
+            'id_product_attribute' => 1,
+            'quantity' => 2,
+            'quantity_all_versions' => 2,
+        ]), [], false];
+
+        yield 'combination out of stock, another one in stock' => [array_merge($this->baseProduct, [
+            'id_product_attribute' => 1,
+            'quantity' => 0,
+            'quantity_all_versions' => 3,
+        ]), [], false];
+
+        yield 'combination in stock, product stock negative' => [array_merge($this->baseProduct, [
+            'id_product_attribute' => 1,
+            'quantity' => 2,
+            'quantity_all_versions' => -3,
+        ]), [], false];
+
+        yield 'all combinations out of stock' => [array_merge($this->baseProduct, [
+            'id_product_attribute' => 1,
+            'quantity' => 0,
+            'quantity_all_versions' => 0,
+        ]), [
+            'out_of_stock' => [
+                'type' => 'out_of_stock',
+                'label' => 'Out-of-Stock',
+            ],
+        ], false];
+
+        yield 'combination with a negative stock' => [array_merge($this->baseProduct, [
+            'id_product_attribute' => 1,
+            'quantity' => -2,
+            'quantity_all_versions' => -2,
+        ]), [
+            'out_of_stock' => [
+                'type' => 'out_of_stock',
+                'label' => 'Out-of-Stock',
+            ],
+        ], false];
     }
 
     /**
