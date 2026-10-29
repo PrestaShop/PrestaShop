@@ -7,10 +7,12 @@
 
 {% block content %}
   {% block translations_kpis_row %}
-    {{ render(controller(
-      'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
-      {kpiRow: kpiRow},
-    )) }}
+    {% if kpiRow is not null %}
+      {{ render(controller(
+        'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
+        {kpiRow: kpiRow},
+      )) }}
+    {% endif %}
   {% endblock %}
 
   {{ include('@PrestaShop/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig') }}

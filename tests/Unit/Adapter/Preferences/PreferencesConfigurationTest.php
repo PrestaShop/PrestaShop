@@ -60,6 +60,7 @@ class PreferencesConfigurationTest extends TestCase
                     ['PS_DISPLAY_SUPPLIERS', false, false],
                     ['PS_DISPLAY_MANUFACTURERS', false, true],
                     ['PS_DISPLAY_BEST_SELLERS', false, false],
+                    ['PS_DISPLAY_BACKOFFICE_KPIS', true, true],
                     ['PS_MULTISHOP_FEATURE_ACTIVE', false, true],
                 ]
             );
@@ -85,6 +86,7 @@ class PreferencesConfigurationTest extends TestCase
                 'display_suppliers' => false,
                 'display_manufacturers' => true,
                 'display_best_sellers' => false,
+                'display_backoffice_kpis' => true,
                 'multishop_feature_active' => true,
             ],
             $result
@@ -136,6 +138,7 @@ class PreferencesConfigurationTest extends TestCase
                     'display_suppliers' => false,
                     'display_manufacturers' => true,
                     'display_best_sellers' => false,
+                    'display_backoffice_kpis' => true,
                     'multishop_feature_active' => true,
                 ]
             )
@@ -144,6 +147,8 @@ class PreferencesConfigurationTest extends TestCase
 
     public function testUpdateConfiguration()
     {
+        $this->mockConfiguration->method('getEnum')->willReturn(ShopModeEnum::SHOP_MODE_B2C_ONLY);
+
         $this->mockConfiguration
             ->method('get')
             ->willReturnMap(
@@ -184,9 +189,40 @@ class PreferencesConfigurationTest extends TestCase
                     'display_suppliers' => false,
                     'display_manufacturers' => true,
                     'display_best_sellers' => false,
+                    'display_backoffice_kpis' => true,
                     'multishop_feature_active' => true,
                 ]
             )
         );
+    }
+
+    /**
+     * @dataProvider provideKpiStates
+     */
+    public function testPersistKpiVisibility(bool $enabled): void
+    {
+        $this->mockConfiguration->method('getEnum')->willReturn(ShopModeEnum::SHOP_MODE_B2C_ONLY);
+        $this->mockConfiguration->method('getBoolean')->willReturn(true);
+        $this->mockConfiguration->method('get')->willReturn(1);
+        $data = $this->object->getConfiguration();
+        $data['display_backoffice_kpis'] = $enabled;
+        $saved = [];
+        $this->mockConfiguration->method('set')->willReturnCallback(
+            function ($key, $value) use (&$saved) {
+                $saved[$key] = $value;
+
+                return $this->mockConfiguration;
+            }
+        );
+
+        self::assertSame([], $this->object->updateConfiguration($data));
+        self::assertArrayHasKey('PS_DISPLAY_BACKOFFICE_KPIS', $saved);
+        self::assertSame($enabled, $saved['PS_DISPLAY_BACKOFFICE_KPIS']);
+    }
+
+    public static function provideKpiStates(): iterable
+    {
+        yield 'enabled' => [true];
+        yield 'disabled' => [false];
     }
 }

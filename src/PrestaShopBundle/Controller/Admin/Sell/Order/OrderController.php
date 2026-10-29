@@ -166,7 +166,7 @@ class OrderController extends PrestaShopAdminController
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
                 'changeOrderStatusesForm' => $changeOrderStatusesForm->createView(),
-                'orderKpi' => $orderKpiFactory->build(),
+                'orderKpi' => ($this->getConfiguration()->get('PS_DISPLAY_BACKOFFICE_KPIS') ?? true) ? $orderKpiFactory->build() : null,
                 'layoutHeaderToolbarBtn' => $this->getOrderToolbarButtons(),
             ]
         );

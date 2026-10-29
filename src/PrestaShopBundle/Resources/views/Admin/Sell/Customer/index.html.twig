@@ -10,10 +10,12 @@
   {% endblock %}
 
   {% block customers_kpis %}
-    {{ render(controller(
-      'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
-      {kpiRow: customersKpi},
-    )) }}
+    {% if customersKpi is not null %}
+      {{ render(controller(
+        'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
+        {kpiRow: customersKpi},
+      )) }}
+    {% endif %}
   {% endblock %}
 
   {% block customers_listing %}
