@@ -4177,13 +4177,13 @@ class ProductCore extends ObjectModel
         // has already been updated, this is only useful when the order has not yet been created.
         // @todo This logic should probably be moved somewhere else, this method should not do anything with orders.
         $nbProductInCart = 0;
-        if ($cart && empty(Order::getByCartId($cart->id))) {
+        if ($cart) {
             /*
              * Now, we get the quantity of the product in cart. This method is clever and in deep_quantity,
              * it will get us the quantity products in all the packs, if there are some in the cart, not just standard products.
              */
             $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
-            if (!empty($cartProduct['deep_quantity'])) {
+            if (!empty($cartProduct['deep_quantity']) && !Order::getIdByCartId($cart->id)) {
                 $nbProductInCart = $cartProduct['deep_quantity'];
             }
         }
