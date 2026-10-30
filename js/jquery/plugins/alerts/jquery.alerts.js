@@ -12,9 +12,16 @@
 //     jConfirm( message, [title, callback] )
 //     jPrompt( message, [value, title, callback] )
 //
-// The $.alerts properties (okButton, cancelButton, dialogClass, ...) remain
-// read/writable. Dialog markup keeps the historical #popup_* ids so custom
-// back-office CSS targeting them keeps working.
+// The $.alerts properties (okButton, cancelButton, okButtonClass,
+// cancelButtonClass, dialogClass, ...) remain read/writable.
+//
+// The dialogs are now built with the exact same Bootstrap markup and
+// classes as the native back-office ConfirmModal component
+// (admin-dev/themes/new-theme/js/components/modal/confirm-modal.ts):
+// .modal-dialog / .modal-content / .modal-header / .modal-message /
+// .btn-confirm-submit, and they are opened with the Bootstrap modal
+// plugin itself, so styling, animations, Escape/Enter handling, backdrop
+// and focus management are identical to every other back-office modal.
 //
 // License:
 //
@@ -25,14 +32,10 @@
 
         // These properties can be read/written by accessing $.alerts.propertyName from your scripts at any time
 
-        verticalOffset: -75, // vertical offset of the dialog from center screen, in pixels
-        horizontalOffset: 0, // horizontal offset of the dialog from center screen, in pixels/
-        repositionOnResize: true, // re-centers the dialog on window resize
-        overlayOpacity: 0.45, // transparency level of overlay
-        overlayColor: '#0f172a', // base color of overlay
-        draggable: false, // make the dialogs draggable (requires UI Draggables plugin)
         okButton: '&nbsp;OK&nbsp;', // text for the OK button
         cancelButton: '&nbsp;Cancel&nbsp;', // text for the Cancel button
+        okButtonClass: 'btn-primary', // class(es) of the OK button (native ConfirmModal default: btn-primary, deletion dialogs use btn-danger)
+        cancelButtonClass: 'btn-outline-secondary', // class(es) of the Cancel button
         dialogClass: null, // if specified, this class will be applied to all dialogs
 
         // Public methods
@@ -61,153 +64,90 @@
         // Private methods
 
         _show(title, msg, value, type, callback) {
-            const previouslyFocused = document.activeElement;
-
-            $.alerts._hide();
-            $.alerts._overlay('show');
-
-            $('BODY').append(
-                '<div id="popup_container" role="dialog" aria-modal="true" aria-labelledby="popup_title">'
-                + '<h1 id="popup_title"></h1>'
-                + '<div id="popup_content">'
-                  + '<div id="popup_message"></div>'
-                + '</div>'
-              + '</div>');
-
-            if ($.alerts.dialogClass) $('#popup_container').addClass($.alerts.dialogClass);
-
-            $('#popup_title').text(title);
-            $('#popup_content').addClass(type);
-            // \n is not between double quotes here because in the callers \n is replaced by <br> (see AdminCartRulesController).
-            $('#popup_message').text(msg);
-            $('#popup_message').html($('#popup_message').text().replace(/\n/g, '<br />'));
-
-            $.alerts._reposition();
-            $.alerts._maintainPosition(true);
-
-            let buttonsHtml = '<div id="popup_panel">'
-                + `<button type="button" class="jsa-btn jsa-btn-primary" id="popup_ok">${$.alerts.okButton}</button>`;
-            if (type !== 'alert') {
-                buttonsHtml += ` <button type="button" class="jsa-btn jsa-btn-secondary" id="popup_cancel">${$.alerts.cancelButton}</button>`;
-            }
-            buttonsHtml += '</div>';
-
-            switch (type) {
-                case 'alert':
-                    $('#popup_message').after(buttonsHtml);
-                    $('#popup_ok').on('click', () => {
-                        $.alerts._hide(previouslyFocused);
-                        callback(true);
-                    });
-                    $('#popup_ok').trigger('focus');
-                    break;
-                case 'confirm':
-                    $('#popup_message').after(buttonsHtml);
-                    $('#popup_ok').on('click', () => {
-                        $.alerts._hide(previouslyFocused);
-                        if (callback) callback(true);
-                    });
-                    $('#popup_cancel').on('click', () => {
-                        $.alerts._hide(previouslyFocused);
-                        if (callback) callback(false);
-                    });
-                    $('#popup_ok').trigger('focus');
-                    break;
-                case 'prompt':
-                    $('#popup_message').append('<input type="text" size="30" id="popup_prompt" class="jsa-prompt-input" />').after(buttonsHtml);
-                    $('#popup_ok').on('click', () => {
-                        const val = $('#popup_prompt').val();
-                        $.alerts._hide(previouslyFocused);
-                        if (callback) callback(val);
-                    });
-                    $('#popup_cancel').on('click', () => {
-                        $.alerts._hide(previouslyFocused);
-                        if (callback) callback(null);
-                    });
-                    if (value) $('#popup_prompt').val(value);
-                    $('#popup_prompt').trigger('focus').select();
-                    break;
-            }
-
-            // Keyboard: Enter confirms, Escape cancels, Tab stays inside the dialog.
-            $('#popup_container').on('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    $('#popup_ok').trigger('click');
-                } else if (e.key === 'Escape') {
-                    $('#popup_cancel').trigger('click');
-                } else if (e.key === 'Tab') {
-                    const focusable = $('#popup_container').find('button, input').filter(':visible');
-                    if (!focusable.length) {
-                        return;
-                    }
-                    const first = focusable.first()[0];
-                    const last = focusable.last()[0];
-                    if (e.shiftKey && document.activeElement === first) {
-                        e.preventDefault();
-                        last.focus();
-                    } else if (!e.shiftKey && document.activeElement === last) {
-                        e.preventDefault();
-                        first.focus();
-                    }
-                }
-            });
-
-            // Make draggable
-            if ($.alerts.draggable) {
-                try {
-                    $('#popup_container').draggable({handle: $('#popup_title')});
-                    $('#popup_title').css({cursor: 'move'});
-                } catch (e) { /* requires jQuery UI draggables */ }
-            }
-        },
-
-        _hide(previouslyFocused) {
+            // Remove any dialog that is still open.
             $('#popup_container').remove();
-            $.alerts._overlay('hide');
-            $.alerts._maintainPosition(false);
-            if (previouslyFocused && $.contains(document.documentElement, previouslyFocused)) {
-                previouslyFocused.focus();
+
+            let confirmed = false;
+
+            // Same DOM structure as the native ConfirmModalContainer component.
+            // \n is not escaped here because in the callers \n is replaced by <br> (see AdminCartRulesController).
+            const $modal = $('<div class="modal fade" id="popup_container"></div>').append(
+                $('<div class="modal-dialog"></div>').append(
+                    $('<div class="modal-content"></div>').append(
+                        $('<div class="modal-header"></div>').append(
+                            $('<h4 class="modal-title" id="popup_title"></h4>').text(title),
+                            $('<button type="button" class="close" data-dismiss="modal">&times;</button>'),
+                        ),
+                        $('<div class="modal-body text-left font-weight-normal"></div>').append(
+                            $('<p class="modal-message" id="popup_message"></p>').text(msg),
+                        ),
+                        $('<div class="modal-footer" id="popup_panel"></div>'),
+                    ),
+                ),
+            );
+
+            if ($.alerts.dialogClass) $modal.addClass($.alerts.dialogClass);
+
+            const $footer = $('#popup_panel', $modal);
+
+            // Cancel/Close button (same classes as the native ConfirmModal close button).
+            if (type !== 'alert') {
+                $footer.append(
+                    `<button type="button" class="btn ${$.alerts.cancelButtonClass} btn-lg" id="popup_cancel" data-dismiss="modal">${$.alerts.cancelButton}</button>`,
+                );
             }
-        },
 
-        _overlay(status) {
-            switch (status) {
-                case 'show':
-                    $.alerts._overlay('hide');
-                    $('BODY').append('<div id="popup_overlay"></div>');
-                    $('#popup_overlay').css({
-                        opacity: $.alerts.overlayOpacity,
-                    });
-                    break;
-                case 'hide':
-                    $('#popup_overlay').remove();
-                    break;
+            // Confirm button (same classes as the native ConfirmModal confirm button).
+            $footer.append(
+                `<button type="button" class="btn ${$.alerts.okButtonClass} btn-lg btn-confirm-submit" id="popup_ok" data-dismiss="modal">${$.alerts.okButton}</button>`,
+            );
+
+            if (type === 'prompt') {
+                $('#popup_message', $modal).append(
+                    '<input type="text" size="30" id="popup_prompt" class="form-control" />',
+                );
+                $('#popup_prompt', $modal).val(value);
             }
-        },
 
-        _reposition() {
-            const top = (($('#popup_container').outerHeight() / 2) * -1) + $.alerts.verticalOffset;
-            const left = (($('#popup_container').outerWidth() / 2) * -1) + $.alerts.horizontalOffset;
-
-            $('#popup_container').css({
-                top: '50%',
-                left: '50%',
-                marginTop: `${top}px`,
-                marginLeft: `${left}px`,
-            });
-        },
-
-        _maintainPosition(status) {
-            if ($.alerts.repositionOnResize) {
-                switch (status) {
-                    case true:
-                        $(window).on('resize', $.alerts._reposition);
-                        break;
-                    case false:
-                        $(window).off('resize', $.alerts._reposition);
-                        break;
+            $modal.on('click', '#popup_ok', () => {
+                confirmed = true;
+                if (type === 'prompt') {
+                    callback($('#popup_prompt', $modal).val());
+                } else {
+                    callback(true);
                 }
-            }
+            });
+
+            // Bootstrap fires hidden.bs.modal for dismiss, backdrop click and Escape.
+            $modal.on('hidden.bs.modal', () => {
+                $modal.remove();
+                if (!confirmed) {
+                    if (type === 'prompt') {
+                        callback(null);
+                    } else {
+                        callback(false);
+                    }
+                }
+            });
+
+            $('BODY').append($modal);
+
+            // Open it with the Bootstrap modal plugin: backdrop, focus trap,
+            // Escape/Enter handling and animations come from the same
+            // component as every other back-office dialog.
+            $modal.modal({
+                backdrop: 'static',
+                keyboard: true,
+            });
+            $modal.modal('show');
+
+            const $focusTarget = type === 'prompt' ? $('#popup_prompt', $modal) : $('#popup_ok', $modal);
+            $modal.on('shown.bs.modal', () => {
+                $focusTarget.trigger('focus');
+                if (type === 'prompt') {
+                    $focusTarget.select();
+                }
+            });
         },
 
     };
