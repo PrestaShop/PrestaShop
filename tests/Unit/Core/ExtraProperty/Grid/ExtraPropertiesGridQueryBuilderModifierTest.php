@@ -236,14 +236,32 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         $this->assertStringNotContainsString('extra_entity', $countQb->getSQL());
     }
 
+    public function testMainTableIsFoundWithMixedCaseDatabasePrefix(): void
+    {
+        $modifier = $this->buildModifier($this->definition('note', ExtraPropertyScope::COMMON), dbPrefix: 'pS_');
+        $searchQb = $this->createQueryBuilder();
+        $searchQb->select('p.id_product')->from('pS_product', 'p');
+        $countQb = $this->createQueryBuilder();
+        $countQb->select('COUNT(*)')->from('pS_product', 'p');
+
+        $modifier->apply($searchQb, $countQb, $this->criteria(), 'product');
+
+        foreach ([$searchQb, $countQb] as $qb) {
+            $this->assertStringContainsString(
+                'LEFT JOIN pS_product_extra extra_entity ON extra_entity.`id_product` = p.`id_product`',
+                $qb->getSQL()
+            );
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Fixtures
     // -------------------------------------------------------------------------
 
-    private function buildModifier(ExtraPropertyDefinition ...$definitions): ExtraPropertiesGridQueryBuilderModifier
+    private function buildModifier(ExtraPropertyDefinition $definition, string $dbPrefix = 'ps_'): ExtraPropertiesGridQueryBuilderModifier
     {
         $repository = $this->createMock(ExtraPropertyDefinitionRepositoryInterface::class);
-        $repository->method('getAllDefinitions')->willReturn(new ExtraPropertyDefinitionCollection($definitions));
+        $repository->method('getAllDefinitions')->willReturn(new ExtraPropertyDefinitionCollection([$definition]));
 
         $languageContext = $this->createMock(LanguageContext::class);
         $languageContext->method('getId')->willReturn(self::CONTEXT_LANG_ID);
@@ -254,7 +272,7 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         $definitionShopFilter = $this->createMock(ExtraPropertyDefinitionShopFilterInterface::class);
         $definitionShopFilter->method('filterByShopConstraint')->willReturnArgument(0);
 
-        return new ExtraPropertiesGridQueryBuilderModifier($repository, 'ps_', $languageContext, $shopContext, $definitionShopFilter, new NullLogger());
+        return new ExtraPropertiesGridQueryBuilderModifier($repository, $dbPrefix, $languageContext, $shopContext, $definitionShopFilter, new NullLogger());
     }
 
     /**
