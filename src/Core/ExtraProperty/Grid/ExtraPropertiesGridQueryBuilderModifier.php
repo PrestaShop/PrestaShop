@@ -430,8 +430,8 @@ class ExtraPropertiesGridQueryBuilderModifier
         }
 
         $mainTables = array_values(array_unique([
-            $this->dbPrefix . strtolower($gridId),
-            $this->dbPrefix . strtolower($tableName),
+            strtolower($this->dbPrefix . $gridId),
+            strtolower($this->dbPrefix . $tableName),
         ]));
         foreach ($fromParts as $from) {
             if (!is_array($from)) {
